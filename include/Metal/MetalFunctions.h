@@ -16,25 +16,16 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
-#import <MessageUI/MessageUIExport.h>
-#import <MessageUI/MFMailComposeViewControllerDelegate.h>
+#import <Metal/MetalExport.h>
+#import <Metal/MetalDataTypes.h>
 
-MESSAGEUI_EXPORT NSString* const MFMailComposeErrorDomain;
+@protocol MTLDevice;
 
-MESSAGEUI_EXPORT_CLASS
-@interface MFMailComposeViewController
-
-+ (BOOL)canSendMail;
-
-@property (nonatomic, assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
-
-- (void)setSubject:(NSString*)subject;
-- (void)setToRecipients:(NSArray*)toRecipients;
-- (void)setMessageBody:(NSString*)body isHTML:(BOOL)isHTML;
-- (void)setCcRecipients:(NSArray*)ccRecipients;
-- (void)setBccRecipients:(NSArray*)bccRecipients;
-- (void)addAttachmentData:(NSData*)attachment mimeType:(NSString*)mimeType fileName:(NSString*)filename;
-
-@property (nonatomic,assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
-
-@end
+METAL_EXPORT id<MTLDevice> MTLCreateSystemDefaultDevice() STUB_METHOD;
+METAL_EXPORT MTLOrigin MTLOriginMake(NSUInteger x, NSUInteger y, NSUInteger z) STUB_METHOD;
+METAL_EXPORT MTLRegion MTLRegionMake1D(NSUInteger x, NSUInteger width) STUB_METHOD;
+METAL_EXPORT MTLRegion MTLRegionMake2D(NSUInteger x, NSUInteger y, NSUInteger width, NSUInteger height) STUB_METHOD;
+METAL_EXPORT MTLRegion MTLRegionMake3D(NSUInteger x, NSUInteger y, NSUInteger z, NSUInteger width, NSUInteger height, NSUInteger depth)
+    STUB_METHOD;
+METAL_EXPORT MTLSize MTLSizeMake(NSUInteger width, NSUInteger height, NSUInteger depth) STUB_METHOD;
+METAL_EXPORT MTLClearColor MTLClearColorMake(double red, double green, double blue, double alpha) STUB_METHOD;

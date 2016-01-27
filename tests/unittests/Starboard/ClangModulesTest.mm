@@ -41,6 +41,7 @@
 @import MediaPlayer;
 @import MessageUI;
 @import MobileCoreServices;
+@import Metal;
 @import OpenAL;
 @import OpenGLES;
 @import QuartzCore;

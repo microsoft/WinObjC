@@ -32,6 +32,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libkern\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libxml\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MessageUI\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Metal\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\objc\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenAL\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenGLES\*.h" />
