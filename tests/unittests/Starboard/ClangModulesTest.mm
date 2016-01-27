@@ -37,6 +37,7 @@
 @import Foundation;
 @import GameKit;
 @import GLKit;
+@import iAd;
 @import ImageIO;
 @import MediaPlayer;
 @import MessageUI;

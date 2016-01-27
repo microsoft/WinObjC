@@ -61,6 +61,7 @@
 #import "UIAccessibility.h"
 #import "UIAccessibilityElement.h"
 #import "UIControl.h"
+#import "UICoordinateSpace.h"
 #import "UIButton.h"
 #import "UIBezierPath.h"
 #import "UIViewController.h"
@@ -111,6 +112,7 @@
 #import "UISwipeGestureRecognizer.h"
 #import "UIDatePicker.h"
 #import "UIAppearance.h"
+#import "UIAppearanceContainer.h"
 #import "UIUserNotificationSettings.h"
 #import <UIKit/UIDocument.h>
 #import <UIKit/UIManagedDocument.h>
@@ -152,11 +154,14 @@
 #import <UIKit/UICollectionViewFlowLayout.h>
 #import <UIKit/UIDynamicAnimator.h>
 #import <UIKit/UIDynamicBehavior.h>
+#import <UIKit/UIDynamicItem.h>
 #import <UIkit/UIAttachmentBehavior.h>
 #import <UIKit/UIDocumentInteractionController.h>
+#import <UIKit/UIFocusEnvironment.h>
 #import <UIKit/UIMotionEffect.h>
 #import <UIKit/UIPrintInfo.h>
 #import <UIKit/UIPrintFormatter.h>
+#import <UIKit/UITraitEnvironment.h>
 
 #import <UIKit/UIUserNotificationSettings.h>
 #import <UIKit/NSLayoutManager.h>
