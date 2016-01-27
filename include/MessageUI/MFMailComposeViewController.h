@@ -35,6 +35,4 @@ MESSAGEUI_EXPORT_CLASS
 - (void)setBccRecipients:(NSArray*)bccRecipients;
 - (void)addAttachmentData:(NSData*)attachment mimeType:(NSString*)mimeType fileName:(NSString*)filename;
 
-@property (nonatomic,assign) id<MFMailComposeViewControllerDelegate> mailComposeDelegate;
-
 @end
