@@ -50,6 +50,7 @@
       <IncludeLibEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('libeay32.lib'))">true</IncludeLibEAY32>
       <IncludeLibXML2 Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or '$(IncludeUIKit)' == 'true' or $(LinkAdditionalDependencies.Contains('libxml2.lib'))">true</IncludeLibXML2>
       <IncludeSSLEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
+      <IncludeStoreKit Condition="$(LinkAdditionalDependencies.Contains('StoreKit.lib'))">true</IncludeStoreKit>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeLogging>true</IncludeLogging>
       <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
@@ -103,6 +104,7 @@
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
       <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
+      <SBResourceCopy Condition="'$(IncludeStoreKit)' == 'true'" Include="$(StarboardLibDirs)\StoreKit.dll" />
     </ItemGroup>
   </Target>
 
