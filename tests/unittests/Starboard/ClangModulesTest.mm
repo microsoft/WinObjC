@@ -37,6 +37,7 @@
 @import CoreText;
 @import CoreVideo;
 @import EventKit;
+@import EventKitUI;
 @import Foundation;
 @import GameKit;
 @import GLKit;

@@ -15,13 +15,14 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UIKitExport.h>
+#import <EventKitUI/EventKitUIExport.h>
+@class EKEventEditViewController;
+@class EKCalendar;
 
-@class UITraitCollection;
-
-@protocol UITraitEnvironment
+typedef enum { EKEventEditViewActionCanceled, EKEventEditViewActionSaved, EKEventEditViewActionDeleted } EKEventEditViewAction;
+@protocol EKEventEditViewDelegate
 @required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
+- (void)eventEditViewController:(EKEventEditViewController*)controller didCompleteWithAction:(EKEventEditViewAction)action;
+@optional
+- (EKCalendar*)eventEditViewControllerDefaultCalendarForNewEvents:(EKEventEditViewController*)controller;
 @end

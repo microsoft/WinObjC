@@ -13,15 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <UIKit/UIKitExport.h>
+#import <EventKitUI/EventKitUI.h>
+#import <StubReturn.h>
 
-@class UITraitCollection;
-
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
+@implementation EKEventEditViewController
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)cancelEditing {
+    UNIMPLEMENTED();
+}
 
 @end

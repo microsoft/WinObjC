@@ -1,3 +1,4 @@
+
 //******************************************************************************
 //
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
@@ -15,13 +16,11 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UIKitExport.h>
-
-@class UITraitCollection;
-
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
-@end
+#import <StubIncludes.h>
+#import <EventKitUI/EKCalendarChooser.h>
+#import <EventKitUI/EKCalendarChooserDelegate.h>
+#import <EventKitUI/EKEventEditViewController.h>
+#import <EventKitUI/EKEventEditViewDelegate.h>
+#import <EventKitUI/EKEventViewController.h>
+#import <EventKitUI/EKEventViewDelegate.h>
+#import <EventKitUI/EventKitUIExport.h>

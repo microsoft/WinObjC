@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
-
-#import <UIKit/UIKitExport.h>
-
-@class UITraitCollection;
-
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
-@end

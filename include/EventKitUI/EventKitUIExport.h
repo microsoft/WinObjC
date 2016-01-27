@@ -15,13 +15,26 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UIKitExport.h>
+#ifndef EVENTKITUI_IMPEXP
+#define EVENTKITUI_IMPEXP __declspec(dllimport)
+#endif
 
-@class UITraitCollection;
+#ifndef EVENTKITUI_EXPORT
+#ifdef __cplusplus
+#define EVENTKITUI_EXPORT EVENTKITUI_IMPEXP extern "C"
+#define EVENTKITUI_EXPORT_CLASS EVENTKITUI_IMPEXP
+#else
+#define EVENTKITUI_EXPORT EVENTKITUI_IMPEXP extern
+#define EVENTKITUI_EXPORT_CLASS EVENTKITUI_IMPEXP
+#endif
+#endif
 
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
-@end
+#ifndef EVENTKITUI_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define EVENTKITUI_EXTERNC_BEGIN extern "C" {
+#define EVENTKITUI_EXTERNC_END }
+#else
+#define EVENTKITUI_EXTERNC_BEGIN
+#define EVENTKITUI_EXTERNC_END
+#endif
+#endif

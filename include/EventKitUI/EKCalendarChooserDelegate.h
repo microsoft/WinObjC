@@ -15,13 +15,12 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UIKitExport.h>
+#import <EventKitUI/EventKitUIExport.h>
+@class EKCalendarChooser;
 
-@class UITraitCollection;
-
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
+@protocol EKCalendarChooserDelegate
+@optional
+- (void)calendarChooserSelectionDidChange:(EKCalendarChooser*)calendarChooser;
+- (void)calendarChooserDidFinish:(EKCalendarChooser*)calendarChooser;
+- (void)calendarChooserDidCancel:(EKCalendarChooser*)calendarChooser;
 @end

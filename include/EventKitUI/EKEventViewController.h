@@ -15,13 +15,23 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UIKitExport.h>
+#import <EventKitUI/EventKitUIExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSObject.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
+#import <UIKit/UIViewController.h>
 
-@class UITraitCollection;
+@class EKEvent;
+@protocol EKEventViewDelegate;
 
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
+EVENTKITUI_EXPORT_CLASS
+@interface EKEventViewController
+    : UIViewController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
+@property (retain, nonatomic) EKEvent* event STUB_PROPERTY;
+@property (nonatomic) BOOL allowsCalendarPreview STUB_PROPERTY;
+@property (nonatomic) BOOL allowsEditing STUB_PROPERTY;
+@property (nonatomic, assign) id<EKEventViewDelegate> delegate STUB_PROPERTY;
 @end

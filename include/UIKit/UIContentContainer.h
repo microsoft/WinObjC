@@ -16,12 +16,18 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
-
+#import <CoreGraphics/CGGeometry.h>
+@protocol UIViewControllerTransitionCoordinator;
 @class UITraitCollection;
 
-@protocol UITraitEnvironment
+@protocol UIContentContainer
 @required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
+- (void)willTransitionToTraitCollection:(UITraitCollection*)newCollection
+              withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
+- (CGSize)sizeForChildContentContainer:(id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize;
+- (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container;
+- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container;
+@property (nonatomic, readonly) CGSize preferredContentSize;
 
 @end

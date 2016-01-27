@@ -15,13 +15,11 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UIKitExport.h>
+#import <EventKitUI/EventKitUIExport.h>
+@class EKEventViewController;
 
-@class UITraitCollection;
-
-@protocol UITraitEnvironment
+typedef enum { EKEventViewActionDone, EKEventViewActionResponded, EKEventViewActionDeleted } EKEventViewAction;
+@protocol EKEventViewDelegate
 @required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
+- (void)eventViewController:(EKEventViewController*)controller didCompleteWithAction:(EKEventViewAction)action;
 @end

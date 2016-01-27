@@ -13,15 +13,32 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <UIKit/UIKitExport.h>
+#import <EventKitUI/EventKitUI.h>
+#import <StubReturn.h>
 
-@class UITraitCollection;
+@implementation EKCalendarChooser
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithSelectionStyle:(EKCalendarChooserSelectionStyle)selectionStyle
+                displayStyle:(EKCalendarChooserDisplayStyle)displayStyle
+                  eventStore:(EKEventStore*)eventStore {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-@protocol UITraitEnvironment
-@required
-@property (nonatomic, readonly) UITraitCollection* traitCollection;
-- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithSelectionStyle:(EKCalendarChooserSelectionStyle)selectionStyle
+                displayStyle:(EKCalendarChooserDisplayStyle)displayStyle
+                  entityType:(EKEntityType)entityType
+                  eventStore:(EKEventStore*)eventStore {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 @end
