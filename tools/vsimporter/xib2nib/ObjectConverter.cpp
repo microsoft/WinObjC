@@ -182,6 +182,8 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "stepper", UIStepper)
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
+    IS_CONVERTER(ret, className, "customObject", ObjectConverterSwapper)
+
 
     if (ret == NULL) {
 #ifdef _DEBUG
