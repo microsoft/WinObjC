@@ -16,6 +16,8 @@
 
 #import "TextDisplayViewController.h"
 
+#import <CoreText/CoreText.h>
+
 int const NumberOfDrawWithAttrTestCases = 4;
 int const NumberOfSizeWithAttrTestCases = 5;
 int const DefaultHeightOfCell = 70;
@@ -409,7 +411,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:fontsize];
     UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:fontsize];
 
-    CTFontRef fontref = CTFontCreateCopyWithSymbolicTraits((CTFontRef)font, fontsize, NULL, kCTFontTraitBold, kCTFontTraitBold);
+    CTFontRef fontref = CTFontCreateCopyWithSymbolicTraits((__bridge CTFontRef)font, fontsize, NULL, kCTFontTraitBold, kCTFontTraitBold);
     NSRange wholeRange = NSMakeRange(0, 11);
     NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
     [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];

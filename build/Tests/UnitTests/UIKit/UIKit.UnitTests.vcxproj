@@ -34,6 +34,9 @@
     <ProjectReference Include="..\..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\CoreText\dll\CoreText.vcxproj">
+      <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>

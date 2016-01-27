@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,21 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _CTSTRINGATTRIBUTES_H_
-#define _CTSTRINGATTRIBUTES_H_
+#pragma once
 
 #import <CoreText/CoreTextExport.h>
 #import <CoreFoundation/CFString.h>
 
-enum {
-    kCTUnderlineStyleNone = 0x00,
-    kCTUnderlineStyleSingle = 0x01,
-    kCTUnderlineStyleThick = 0x02,
-    kCTUnderlineStyleDouble = 0x09,
-};
 typedef int32_t CTUnderlineStyle;
+typedef int32_t CTUnderlineStyleModifiers;
 
+enum { kCTUnderlineStyleNone = 0x00, kCTUnderlineStyleSingle = 0x01, kCTUnderlineStyleThick = 0x02, kCTUnderlineStyleDouble = 0x09 };
 enum {
     kCTUnderlinePatternSolid = 0x0000,
     kCTUnderlinePatternDot = 0x0100,
@@ -35,7 +29,6 @@ enum {
     kCTUnderlinePatternDashDot = 0x0300,
     kCTUnderlinePatternDashDotDot = 0x0400
 };
-typedef int32_t CTUnderlineStyleModifiers;
 
 CORETEXT_EXPORT const CFStringRef kCTCharacterShapeAttributeName;
 CORETEXT_EXPORT const CFStringRef kCTFontAttributeName;
@@ -52,5 +45,3 @@ CORETEXT_EXPORT const CFStringRef kCTUnderlineStyleAttributeName;
 CORETEXT_EXPORT const CFStringRef kCTVerticalFormsAttributeName;
 CORETEXT_EXPORT const CFStringRef kCTGlyphInfoAttributeName;
 CORETEXT_EXPORT const CFStringRef kCTRunDelegateAttributeName;
-
-#endif /* _CTSTRINGATTRIBUTES_H_ */

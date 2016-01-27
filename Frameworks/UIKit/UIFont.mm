@@ -52,6 +52,7 @@ NSMutableDictionary* _fontDataCache;
     bool _cachedCapHeight, _cachedXHeight;
     float _capHeight, _xHeight;
 }
+
 static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     FT_Error err;
 
@@ -617,19 +618,19 @@ void loadFont(UIFont* self) {
     return (uint32_t)_sizingFont;
 }
 
-@end
+// Internal methods
 
-/**
-@Status Interoperable
-*/
-bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
-    if (error)
+// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterGraphicsFont
+- (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error {
+    if (error) {
         *error = nullptr;
+    }
 
     UIFont* fnt = font;
-
-    if (((FT_Face)fnt->_font)->family_name == NULL)
+    if (((FT_Face)fnt->_font)->family_name == NULL) {
         return FALSE;
+    }
+
     FT_Face fntFace = (FT_Face)fnt->_font;
     id faceName = [NSString stringWithCString:((FT_Face)fnt->_font)->family_name];
 
@@ -644,20 +645,4 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     return true;
 }
 
-/**
-@Status Caveat
-@Notes matrix parameter not supported
-*/
-CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix) {
-    id ret = [[UIFont fontWithName:(NSString*)name size:size] retain];
-
-    return (CTFontRef)ret;
-}
-
-/**
-@Status Stub
-*/
-bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return false;
-}
+@end

@@ -240,77 +240,7 @@ LIBRARY CoreGraphics
         CGRectUnion
         CGRectZero DATA
         CGSizeZero DATA
-        CTFontCopyFamilyName
-        CTFontCopyFullName
-        CTFontCopyName
-        CTFontCopyPostScriptName
-        CTFontCreateCopyWithSymbolicTraits
-        CTFontCreateWithFontDescriptor
-        CTFontCreateWithGraphicsFont
-        CTFontGetAdvancesForGlyphs
-        CTFontGetAscent
-        CTFontGetDescent
-        CTFontGetSize
-        CTFontGetUnderlineThickness
-        CTFrameDraw
-        CTFrameGetLineOrigins
-        CTFrameGetLines
-        CTFramesetterCreateFrame
-        CTFramesetterCreateWithAttributedString
-        CTFramesetterSuggestFrameSizeWithConstraints
-        CTLineCreateTruncatedLine
-        CTLineCreateWithAttributedString
-        CTLineDraw
-        CTLineGetGlyphRuns
-        CTLineGetOffsetForStringIndex
-        CTLineGetPenOffsetForFlush
-        CTLineGetStringIndexForPosition
-        CTLineGetStringRange
-        CTLineGetTypographicBounds
-        CTLineGetGlyphCount
-        CTParagraphStyleCreate
-        CTRunGetAttributes
-        CTRunGetStringRange
-        CTRunGetGlyphCount
-        CTRunGetTypographicBounds
-        CTRunGetPositions
-        CTRunGetAdvances
-        CTTypesetterCreateLineWithOffset
-        CTTypesetterCreateWithAttributedString
-        CTTypesetterSuggestLineBreakWithOffsetAndCallback
         EbrCenterTextInRectVertically
         _CGFontLock
         _CGFontUnlock
-        kCTCharacterShapeAttributeName DATA
-        kCTFontAttributeName DATA
-        kCTFontCopyrightNameKey DATA
-        kCTFontFamilyNameKey DATA
-        kCTFontSubFamilyNameKey DATA
-        kCTFontStyleNameKey DATA
-        kCTFontUniqueNameKey DATA
-        kCTFontFullNameKey DATA
-        kCTFontVersionNameKey DATA
-        kCTFontPostScriptNameKey DATA
-        kCTFontTrademarkNameKey DATA
-        kCTFontManufacturerNameKey DATA
-        kCTFontDesignerNameKey DATA
-        kCTFontDescriptionNameKey DATA
-        kCTFontVendorURLNameKey DATA
-        kCTFontDesignerURLNameKey DATA
-        kCTFontLicenseNameKey DATA
-        kCTFontLicenseURLNameKey DATA
-        kCTFontSampleTextNameKey DATA
-        kCTFontPostScriptCIDNameKey DATA
-        kCTForegroundColorAttributeName DATA
-        kCTForegroundColorFromContextAttributeName DATA
-        kCTGlyphInfoAttributeName DATA
-        kCTKernAttributeName DATA
-        kCTLigatureAttributeName DATA
-        kCTParagraphStyleAttributeName DATA
-        kCTRunDelegateAttributeName DATA
-        kCTStrokeColorAttributeName DATA
-        kCTStrokeWidthAttributeName DATA
-        kCTSuperscriptAttributeName DATA
-        kCTUnderlineColorAttributeName DATA
-        kCTUnderlineStyleAttributeName DATA
-        kCTVerticalFormsAttributeName DATA
+        CGFontGetGlyphsForUnichars

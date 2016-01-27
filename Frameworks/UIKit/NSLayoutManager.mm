@@ -17,7 +17,9 @@
 #include "Starboard.h"
 
 #include "UIKit/NSLayoutManager.h"
-#import <CoreText/CoreText.h>
+
+#include "CoreTextInternal.h"
+
 #include <vector>
 
 @implementation NSLayoutManager {
@@ -72,45 +74,45 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
             //  to ask what the maximum width is, once it figures out the height it needs to put
             //  a single character in
             CFIndex pos =
-                CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts,
-                                                                  curIdx,
-                                                                  0,
-                                                                  invokeWidthBlock,
-                                                                  ^float(CFIndex idx, float offset, float height) {
-                                                                      lastFontHeight = height;
-                                                                      if (height > maxFontHeight) {
-                                                                          maxFontHeight = height;
-                                                                      }
-                                                                      CGRect proposed = CGRectMake(curX + offset,
-                                                                                                   y + maxFontHeight - height,
-                                                                                                   containerSize.width - (curX + offset),
-                                                                                                   height);
-                                                                      CGRect remaining;
-                                                                      CGRect lineRect = [container
-                                                                          lineFragmentRectForProposedRect:proposed
-                                                                                                  atIndex:idx
-                                                                                         writingDirection:NSWritingDirectionLeftToRight
-                                                                                            remainingRect:&proposed];
+                _CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts,
+                                                                   curIdx,
+                                                                   0,
+                                                                   invokeWidthBlock,
+                                                                   ^float(CFIndex idx, float offset, float height) {
+                                                                       lastFontHeight = height;
+                                                                       if (height > maxFontHeight) {
+                                                                           maxFontHeight = height;
+                                                                       }
+                                                                       CGRect proposed = CGRectMake(curX + offset,
+                                                                                                    y + maxFontHeight - height,
+                                                                                                    containerSize.width - (curX + offset),
+                                                                                                    height);
+                                                                       CGRect remaining;
+                                                                       CGRect lineRect = [container
+                                                                           lineFragmentRectForProposedRect:proposed
+                                                                                                   atIndex:idx
+                                                                                          writingDirection:NSWritingDirectionLeftToRight
+                                                                                             remainingRect:&proposed];
 
-                                                                      if (lineRect.size.width == 0.0f) {
-                                                                          stop = true;
-                                                                          return 0.0f;
-                                                                      }
+                                                                       if (lineRect.size.width == 0.0f) {
+                                                                           stop = true;
+                                                                           return 0.0f;
+                                                                       }
 
-                                                                      if (lineRect.origin.x != curX + offset) {
-                                                                          newX = lineRect.origin.x;
-                                                                          return 0.0f;
-                                                                      }
-                                                                      if (lineRect.origin.x + lineRect.size.width > newX) {
-                                                                          newX = lineRect.origin.x + lineRect.size.width;
-                                                                      }
+                                                                       if (lineRect.origin.x != curX + offset) {
+                                                                           newX = lineRect.origin.x;
+                                                                           return 0.0f;
+                                                                       }
+                                                                       if (lineRect.origin.x + lineRect.size.width > newX) {
+                                                                           newX = lineRect.origin.x + lineRect.size.width;
+                                                                       }
 
-                                                                      float ret = lineRect.size.width;
-                                                                      if (ret < 0.0f) {
-                                                                          ret = 0.0f;
-                                                                      }
-                                                                      return ret;
-                                                                  });
+                                                                       float ret = lineRect.size.width;
+                                                                       if (ret < 0.0f) {
+                                                                           ret = 0.0f;
+                                                                       }
+                                                                       return ret;
+                                                                   });
 
             //  Always advance at least 5px
             curX = newX;
@@ -137,7 +139,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 _lineOrigins.push_back(lineOrigin);
                 CFRelease(line);
 
-                //  Record what the height of the line was; we'll need to adjust all lines that fit within 
+                //  Record what the height of the line was; we'll need to adjust all lines that fit within
                 curIdx = pos;
                 if (lineOrigin.x + width > _totalSize.width) {
                     _totalSize.width = lineOrigin.x + width;

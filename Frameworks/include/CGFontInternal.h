@@ -19,24 +19,25 @@
 
 #define FT_EXPORT(x) extern "C" x
 
-COREGRAPHICS_EXPORT DWORD CGFontMeasureGlyphs(id font, float size, WORD* glyphs, unsigned count, CGSize* sizeOut);
-COREGRAPHICS_EXPORT DWORD CGFontFitChars(id font, float size, WORD* chars, unsigned count, float width, CGSize* sizeOut);
-COREGRAPHICS_EXPORT DWORD CGFontGetGlyphs(id font, WORD* str, DWORD length, WORD* glyphs);
-CGSize CGFontDrawGlyphsToContext(CGContextRef ctx, WORD* glyphs, DWORD length, float x, float y);
+COREGRAPHICS_EXPORT unsigned long CGFontMeasureGlyphs(id font, float size, unsigned short* glyphs, unsigned count, CGSize* sizeOut);
+COREGRAPHICS_EXPORT unsigned long CGFontFitChars(id font, float size, unsigned short* chars, unsigned count, float width, CGSize* sizeOut);
+COREGRAPHICS_EXPORT unsigned long CGFontGetGlyphs(id font, unsigned short* str, unsigned long length, unsigned short* glyphs);
+COREGRAPHICS_EXPORT unsigned long CGFontGetGlyphsForUnichars(id font, unsigned short* chars, unsigned short* glyphs, int num);
+CGSize CGFontDrawGlyphsToContext(CGContextRef ctx, unsigned short* glyphs, unsigned long length, float x, float y);
 float CGFontGetDescentAtSize(id font, float size);
 float CGFontGetAscentAtSize(id font, float size);
-DWORD CGFontGetFontBBox(CGRect* ret, id font);
+unsigned long CGFontGetFontBBox(CGRect* ret, id font);
 COREGRAPHICS_EXPORT void CGFontSetFTFontSize(id uiFont, void* ftFont, float pointSize, float scale = 1.0f);
 
 typedef struct {
     //  The array of characters
-    WORD* chars;
+    unsigned short* chars;
     int curIndex;
     int count;
     bool hitLinebreak;
 
     //  The start of the line to draw, and it's length
-    WORD* lineStart;
+    unsigned short* lineStart;
     int lineLen;
 } CGFontWrapState;
 
@@ -44,7 +45,7 @@ COREGRAPHICS_EXPORT bool CGFontWrap(id font, float size, CGFontWrapState* state,
 COREGRAPHICS_EXPORT bool CGFontWrapFunc(CGFontWrapState* state,
                                         float width,
                                         CGSize* sizeOut,
-                                        int (*getCharWidth)(WORD*, void* opaque, unsigned idx),
+                                        int (*getCharWidth)(unsigned short*, void* opaque, unsigned idx),
                                         void* opaque,
                                         bool wrapChars = false);
 

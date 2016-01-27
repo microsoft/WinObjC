@@ -15,26 +15,14 @@
 //******************************************************************************
 #pragma once
 
-#ifndef CORETEXT_IMPEXP
-#define CORETEXT_IMPEXP __declspec(dllimport)
-#endif
+#import <CoreText/CoreTextExport.h>
 
-#ifndef CORETEXT_EXPORT
-#ifdef __cplusplus
-#define CORETEXT_EXPORT CORETEXT_IMPEXP extern "C"
-#define CORETEXT_EXPORT_CLASS CORETEXT_IMPEXP
-#else
-#define CORETEXT_EXPORT CORETEXT_IMPEXP extern
-#define CORETEXT_EXPORT_CLASS CORETEXT_IMPEXP
-#endif
-#endif
+#include <stdint.h>
 
-#ifndef CORETEXT_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define CORETEXT_EXTERNC_BEGIN extern "C" {
-#define CORETEXT_EXTERNC_END }
-#else
-#define CORETEXT_EXTERNC_BEGIN
-#define CORETEXT_EXTERNC_END
-#endif
-#endif
+CORETEXT_EXPORT uint32_t CTGetCoreTextVersion() STUB_METHOD;
+
+#define kCTVersionNumber10_5 0x00020000
+#define kCTVersionNumber10_5_2 0x00020001
+#define kCTVersionNumber10_5_3 0x00020002
+#define kCTVersionNumber10_5_5 0x00020003
+#define kCTVersionNumber10_6 0x00030000

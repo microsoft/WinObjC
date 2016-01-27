@@ -15,26 +15,10 @@
 //******************************************************************************
 #pragma once
 
-#ifndef CORETEXT_IMPEXP
-#define CORETEXT_IMPEXP __declspec(dllimport)
-#endif
+#import <CoreFoundation/CoreFoundation.h>
+#import <UIKit/UIFont.h>
 
-#ifndef CORETEXT_EXPORT
-#ifdef __cplusplus
-#define CORETEXT_EXPORT CORETEXT_IMPEXP extern "C"
-#define CORETEXT_EXPORT_CLASS CORETEXT_IMPEXP
-#else
-#define CORETEXT_EXPORT CORETEXT_IMPEXP extern
-#define CORETEXT_EXPORT_CLASS CORETEXT_IMPEXP
-#endif
-#endif
-
-#ifndef CORETEXT_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define CORETEXT_EXTERNC_BEGIN extern "C" {
-#define CORETEXT_EXTERNC_END }
-#else
-#define CORETEXT_EXTERNC_BEGIN
-#define CORETEXT_EXTERNC_END
-#endif
-#endif
+@interface UIFont (Internal)
+- (uint32_t)_sizingFontHandle;
+- (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error;
+@end

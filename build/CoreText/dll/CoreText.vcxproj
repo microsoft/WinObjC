@@ -19,40 +19,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CoreText\dll\CoreText.vcxproj">
-      <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
+    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CoreText.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
-      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
+      <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
-      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
+      <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\AutoLayout\dll\AutoLayout.vcxproj">
-      <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
+    <ProjectReference Include="..\lib\CoreTextLib.vcxproj">
+      <Project>{39d93f30-f8f9-4d8e-a428-c188e918aa48}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
-      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
-      <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\lib\UIKitLib.vcxproj">
-      <Project>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="UIKit.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</ProjectGuid>
-    <RootNamespace>UIKit</RootNamespace>
+    <ProjectGuid>{36DEEC5D-F77B-4C94-A63C-86FB716833DE}</ProjectGuid>
+    <RootNamespace>CoreText</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -61,7 +52,7 @@
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>UIKit</OutputName>
+    <OutputName>CoreText</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -145,14 +136,15 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
+      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -169,13 +161,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -193,14 +186,15 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
+      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -217,13 +211,14 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>UIKit.def</ModuleDefinitionFile>
-      <AdditionalDependencies>freetype.lib;objcuwp.lib;libdispatch.lib;Windowscodecs.lib;libxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>CoreText.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>
+      </IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>

@@ -36,6 +36,7 @@
       <IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib')) or '$(IncludeGLKit)' == 'true'">true</IncludeOpenGLES>
       <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
       <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
+      <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
       <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
@@ -98,6 +99,7 @@
       <SBResourceCopy Condition="'$(IncludeGLKit)' == 'true'" Include="$(StarboardLibDirs)\GLKit.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreText)' == 'true'" Include="$(StarboardLibDirs)\CoreText.dll" />
       <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
       <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
       <SBResourceCopy Condition="'$(IncludeAutoLayout)' == 'true'" Include="$(StarboardLibDirs)\AutoLayout.dll" />

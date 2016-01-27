@@ -32,7 +32,7 @@ NSAttributedString* getAttributedString() {
 
 extern bool isValid(double testValue, double expectedValue, double delta);
 
-TEST(CoreGraphics, CTLineGetStringIndexForPosition) {
+TEST(CoreText, CTLineGetStringIndexForPosition) {
     CFAttributedStringRef string = (__bridge CFAttributedStringRef)getAttributedString();
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
     CFRange range = { 0, CFAttributedStringGetLength(string) };
