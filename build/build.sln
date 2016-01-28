@@ -323,7 +323,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EventKitLib", "EventKit\lib
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EventKit", "EventKit\dll\EventKit.vcxproj", "{75DE8D5A-3A9C-4255-AF8E-C1B081B79EF0}"
 EndProject
-<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MobileCoreservicesLib", "MobileCoreServices\lib\MobileCoreServicesLib.vcxproj", "{3FB3DD16-59E3-4CB6-B91D-5095A933B645}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MobileCoreServices", "MobileCoreServices", "{80C67D67-E7FA-4733-B1E1-2CD882FB3C20}"
