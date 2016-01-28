@@ -22,6 +22,9 @@
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037b568f-4104-417e-9fb8-b6899e398903}</Project>
     </ProjectReference>
@@ -33,6 +36,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\AVFoundation\lib\AVFoundationLib.vcxproj">
       <Project>{3A523866-D9FD-4778-9BA7-4E1470F49286}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +145,7 @@
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -161,6 +168,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -185,6 +193,7 @@
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -207,6 +216,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
