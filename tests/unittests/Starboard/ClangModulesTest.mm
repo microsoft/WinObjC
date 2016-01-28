@@ -46,6 +46,7 @@
 @import HomeKit;
 @import iAd;
 @import ImageIO;
+@import LocalAuthentication;
 @import MapKit;
 @import MediaPlayer;
 @import MessageUI;

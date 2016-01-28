@@ -41,6 +41,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\ImageIO\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libkern\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libxml\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\LocalAuthentication\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaPlayer\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MapKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaPlayer\*.h" />
