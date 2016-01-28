@@ -47,6 +47,7 @@
       <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
       <IncludeAccounts Condition="$(LinkAdditionalDependencies.Contains('Accounts.lib'))">true</IncludeAccounts>
       <IncludeLocalAuthentication Condition="$(LinkAdditionalDependencies.Contains('LocalAuthentication.lib'))">true</IncludeLocalAuthentication>
+      <IncludeCloudKit Condition="$(LinkAdditionalDependencies.Contains('CloudKit.lib'))">true</IncludeCloudKit>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeFreeType Condition="$(LinkAdditionalDependencies.Contains('freetype.lib')) or '$(IncludeAutoLayout)' == 'true' or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true'">true</IncludeFreeType>
       <IncludeICUDT Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icudt.lib'))">true</IncludeICUDT>
@@ -123,6 +124,7 @@
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
       <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
       <SBResourceCopy Condition="'$(IncludeLocalAuthentication)' == 'true'" Include="$(StarboardLibDirs)\LocalAuthentication.dll" />
+      <SBResourceCopy Condition="'$(IncludeCloudKit)' == 'true'" Include="$(StarboardLibDirs)\CloudKit.dll" />
       <SBResourceCopy Condition="'$(IncludeStoreKit)' == 'true'" Include="$(StarboardLibDirs)\StoreKit.dll" />
       <SBResourceCopy Condition="'$(IncludeEventKitUI)' == 'true'" Include="$(StarboardLibDirs)\EventKitUI.dll" />
       <SBResourceCopy Condition="'$(IncludeQuickLook)' == 'true'" Include="$(StarboardLibDirs)\QuickLook.dll" />

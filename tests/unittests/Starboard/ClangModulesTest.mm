@@ -23,6 +23,7 @@
 @import AudioToolbox;
 @import AVFoundation;
 @import CFNetwork;
+@import CloudKit;
 @import CommonCrypto;
 @import CoreAudio;
 @import CoreAudioKit;

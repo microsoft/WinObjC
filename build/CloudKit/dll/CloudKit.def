@@ -1,0 +1,151 @@
+LIBRARY CloudKit
+    EXPORTS
+        ; CKAsset.mm
+        _OBJC_CLASS_CKAsset DATA
+        __objc_class_name_CKAsset CONSTANT
+
+        ; CKContainer.mm
+        CKOwnerDefaultName DATA
+        CKAccountChangedNotification DATA
+        _OBJC_CLASS_CKContainer DATA
+        __objc_class_name_CKContainer CONSTANT
+
+        ; CKDatabase.mm
+        _OBJC_CLASS_CKDatabase DATA
+        __objc_class_name_CKDatabase CONSTANT
+
+        ; CKDatabaseOperation.mm
+        _OBJC_CLASS_CKDatabaseOperation DATA
+        __objc_class_name_CKDatabaseOperation CONSTANT
+
+        ; CKDiscoverAllContactsOperation.mm
+        _OBJC_CLASS_CKDiscoverAllContactsOperation DATA
+        __objc_class_name_CKDiscoverAllContactsOperation CONSTANT
+
+        ; CKDiscoveredUserInfo.mm
+        _OBJC_CLASS_CKDiscoveredUserInfo DATA
+        __objc_class_name_CKDiscoveredUserInfo CONSTANT
+
+        ; CKDiscoverUserInfosOperation.mm
+        _OBJC_CLASS_CKDiscoverUserInfosOperation DATA
+        __objc_class_name_CKDiscoverUserInfosOperation CONSTANT
+
+        ; CKFetchNotificationChangesOperation.mm
+        _OBJC_CLASS_CKFetchNotificationChangesOperation DATA
+        __objc_class_name_CKFetchNotificationChangesOperation CONSTANT
+
+        ; CKFetchRecordChangesOperation.mm
+        _OBJC_CLASS_CKFetchRecordChangesOperation DATA
+        __objc_class_name_CKFetchRecordChangesOperation CONSTANT
+
+        ; CKFetchRecordsOperation.mm
+        _OBJC_CLASS_CKFetchRecordsOperation DATA
+        __objc_class_name_CKFetchRecordsOperation CONSTANT
+
+        ; CKFetchRecordZonesOperation.mm
+        _OBJC_CLASS_CKFetchRecordZonesOperation DATA
+        __objc_class_name_CKFetchRecordZonesOperation CONSTANT
+
+        ; CKFetchSubscriptionsOperation.mm
+        _OBJC_CLASS_CKFetchSubscriptionsOperation DATA
+        __objc_class_name_CKFetchSubscriptionsOperation CONSTANT
+
+        ; CKLocationSortDescriptor.mm
+        _OBJC_CLASS_CKLocationSortDescriptor DATA
+        __objc_class_name_CKLocationSortDescriptor CONSTANT
+
+        ; CKMarkNotificationsReadOperation.mm
+        _OBJC_CLASS_CKMarkNotificationsReadOperation DATA
+        __objc_class_name_CKMarkNotificationsReadOperation CONSTANT
+
+        ; CKModifyBadgeOperation.mm
+        _OBJC_CLASS_CKModifyBadgeOperation DATA
+        __objc_class_name_CKModifyBadgeOperation CONSTANT
+
+        ; CKModifyRecordsOperation.mm
+        _OBJC_CLASS_CKModifyRecordsOperation DATA
+        __objc_class_name_CKModifyRecordsOperation CONSTANT
+
+        ; CKModifyRecordZonesOperation.mm
+        _OBJC_CLASS_CKModifyRecordZonesOperation DATA
+        __objc_class_name_CKModifyRecordZonesOperation CONSTANT
+
+        ; CKModifySubscriptionsOperation.mm
+        _OBJC_CLASS_CKModifySubscriptionsOperation DATA
+        __objc_class_name_CKModifySubscriptionsOperation CONSTANT
+
+        ; CKNotification.mm
+        _OBJC_CLASS_CKNotification DATA
+        __objc_class_name_CKNotification CONSTANT
+
+        ; CKNotificationID.mm
+        _OBJC_CLASS_CKNotificationID DATA
+        __objc_class_name_CKNotificationID CONSTANT
+
+        ; CKNotificationInfo.mm
+        _OBJC_CLASS_CKNotificationInfo DATA
+        __objc_class_name_CKNotificationInfo CONSTANT
+
+        ; CKOperation.mm
+        _OBJC_CLASS_CKOperation DATA
+        __objc_class_name_CKOperation CONSTANT
+
+        ; CKQuery.mm
+        _OBJC_CLASS_CKQuery DATA
+        __objc_class_name_CKQuery CONSTANT
+
+        ; CKQueryCursor.mm
+        _OBJC_CLASS_CKQueryCursor DATA
+        __objc_class_name_CKQueryCursor CONSTANT
+
+        ; CKQueryNotification.mm
+        _OBJC_CLASS_CKQueryNotification DATA
+        __objc_class_name_CKQueryNotification CONSTANT
+
+        ; CKQueryOperation.mm
+        CKQueryOperationMaximumResults DATA
+        _OBJC_CLASS_CKQueryOperation DATA
+        __objc_class_name_CKQueryOperation CONSTANT
+
+        ; CKRecord.mm
+        CKRecordTypeUserRecord DATA
+        _OBJC_CLASS_CKRecord DATA
+        __objc_class_name_CKRecord CONSTANT
+
+        ; CKRecordID.mm
+        _OBJC_CLASS_CKRecordID DATA
+        __objc_class_name_CKRecordID CONSTANT
+
+        ; CKRecordZone.mm
+        CKRecordZoneDefaultName DATA
+        _OBJC_CLASS_CKRecordZone DATA
+        __objc_class_name_CKRecordZone CONSTANT
+
+        ; CKRecordZoneID.mm
+        _OBJC_CLASS_CKRecordZoneID DATA
+        __objc_class_name_CKRecordZoneID CONSTANT
+
+        ; CKRecordZoneNotification.mm
+        _OBJC_CLASS_CKRecordZoneNotification DATA
+        __objc_class_name_CKRecordZoneNotification CONSTANT
+
+        ; CKReference.mm
+        _OBJC_CLASS_CKReference DATA
+        __objc_class_name_CKReference CONSTANT
+
+        ; CKServerChangeToken.mm
+        _OBJC_CLASS_CKServerChangeToken DATA
+        __objc_class_name_CKServerChangeToken CONSTANT
+
+        ; CKSubscription.mm
+        _OBJC_CLASS_CKSubscription DATA
+        __objc_class_name_CKSubscription CONSTANT
+
+        ; CloudKit Framework Constants Reference.mm
+        CKErrorDomain DATA
+        CKPartialErrorsByItemIDKey DATA
+        CKRecordChangedErrorAncestorRecordKey DATA
+        CKRecordChangedErrorServerRecordKey DATA
+        CKRecordChangedErrorClientRecordKey DATA
+        CKErrorRetryAfterKey DATA
+
