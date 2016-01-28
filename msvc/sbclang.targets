@@ -75,6 +75,7 @@
       <IncludeAddressBook Condition="$(LinkAdditionalDependencies.Contains('AddressBook.lib'))">true</IncludeAddressBook>
       <IncludeAddressBookUI Condition="$(LinkAdditionalDependencies.Contains('AddressBookUI.lib'))">true</IncludeAddressBookUI>
       <IncludeHealthKit Condition="$(LinkAdditionalDependencies.Contains('HealthKit.lib'))">true</IncludeHealthKit>
+      <IncludeAVKit Condition="$(LinkAdditionalDependencies.Contains('AVKit.lib'))">true</IncludeAVKit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -146,6 +147,7 @@
       <SBResourceCopy Condition="'$(IncludeGamePlayKit)' == 'true'" Include="$(StarboardLibDirs)\GamePlayKit.dll" />
       
       <SBResourceCopy Condition="'$(IncludeCoreTelephony)' == 'true'" Include="$(StarboardLibDirs)\CoreTelephony.dll" />
+      <SBResourceCopy Condition="'$(IncludeAVKit)' == 'true'" Include="$(StarboardLibDirs)\AVKit.dll" />
     </ItemGroup>
   </Target>
 

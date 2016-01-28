@@ -22,6 +22,7 @@
 @import AssetsLibrary;
 @import AudioToolbox;
 @import AVFoundation;
+@import AVKit;
 @import CFNetwork;
 @import CloudKit;
 @import CommonCrypto;

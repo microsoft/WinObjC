@@ -19,6 +19,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AssetsLibrary\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AudioToolbox\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AVFoundation\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AVKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CFNetwork\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CloudKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CommonCrypto\*.h" />
