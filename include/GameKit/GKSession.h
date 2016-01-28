@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,49 +13,76 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _GKSESSION_H_
-#define _GKSESSION_H_
-
+#import <GameKit/GameKitExport.h>
 #import <Foundation/NSObject.h>
-#import <GameKit/GKPublicConstants.h>
 
-enum {
+@class NSString;
+@protocol GKSessionDelegate;
+@class NSArray;
+@class NSError;
+@class NSData;
+
+typedef enum {
+    GKSendDataReliable,
+    GKSendDataUnreliable,
+} GKSendDataMode;
+
+typedef enum {
     GKSessionModeServer,
     GKSessionModeClient,
     GKSessionModePeer,
-};
-typedef uint32_t GKSessionMode;
+} GKSessionMode;
 
-enum {
+typedef enum {
     GKPeerStateAvailable,
     GKPeerStateUnavailable,
     GKPeerStateConnected,
     GKPeerStateDisconnected,
-    GKPeerStateConnecting,
-};
-typedef uint32_t GKPeerConnectionState;
+    GKPeerStateConnecting
+} GKPeerConnectionState;
 
-@class NSArray;
-@class NSData;
-@class NSError;
+typedef enum {
+    GKSessionInvalidParameterError = 30500,
+    GKSessionPeerNotFoundError = 30501,
+    GKSessionDeclinedError = 30502,
+    GKSessionTimedOutError = 30503,
+    GKSessionCancelledError = 30504,
+    GKSessionConnectionFailedError = 30505,
+    GKSessionConnectionClosedError = 30506,
+    GKSessionDataTooBigError = 30507,
+    GKSessionNotConnectedError = 30508,
+    GKSessionCannotEnableError = 30509,
+    GKSessionInProgressError = 30510,
+    GKSessionConnectivityError = 30201,
+    GKSessionTransportError = 30202,
+    GKSessionInternalError = 30203,
+    GKSessionUnknownError = 30204,
+    GKSessionSystemError = 30205,
+} GKSessionError;
 
-@protocol GKSessionDelegate
+GAMEKIT_EXPORT NSString* const GKSessionErrorDomain;
+
+GAMEKIT_EXPORT_CLASS
+@interface GKSession : NSObject <NSObject>
+- (id)initWithSessionID:(NSString*)sessionID displayName:(NSString*)name sessionMode:(GKSessionMode)mode STUB_METHOD;
+- (NSArray*)peersWithConnectionState:(GKPeerConnectionState)state STUB_METHOD;
+- (NSString*)displayNameForPeer:(NSString*)peerID STUB_METHOD;
+- (void)connectToPeer:(NSString*)peerID withTimeout:(NSTimeInterval)timeout STUB_METHOD;
+- (void)cancelConnectToPeer:(NSString*)peerID STUB_METHOD;
+- (BOOL)acceptConnectionFromPeer:(NSString*)peerID error:(NSError**)error STUB_METHOD;
+- (void)denyConnectionFromPeer:(NSString*)peerID STUB_METHOD;
+- (void)setDataReceiveHandler:(id)handler withContext:(void*)context STUB_METHOD;
+- (BOOL)sendData:(NSData*)data toPeers:(NSArray*)peers withDataMode:(GKSendDataMode)mode error:(NSError**)error STUB_METHOD;
+- (BOOL)sendDataToAllPeers:(NSData*)data withDataMode:(GKSendDataMode)mode error:(NSError**)error STUB_METHOD;
+- (void)disconnectFromAllPeers STUB_METHOD;
+- (void)disconnectPeerFromAllPeers:(NSString*)peerID STUB_METHOD;
+@property (readonly) NSString* displayName STUB_PROPERTY;
+@property (readonly) NSString* peerID STUB_PROPERTY;
+@property (readonly) NSString* sessionID STUB_PROPERTY;
+@property (readonly) GKSessionMode sessionMode STUB_PROPERTY;
+@property (assign) id<GKSessionDelegate> delegate STUB_PROPERTY;
+@property (getter=isAvailable) BOOL available STUB_PROPERTY;
+@property (assign) NSTimeInterval disconnectTimeout STUB_PROPERTY;
 @end
-
-@interface GKSession : NSObject
-
-@property (assign) id<GKSessionDelegate> delegate;
-@property (getter=isAvailable) BOOL available;
-@property (readonly) NSString* peerID;
-
-- (id)initWithSessionID:(NSString*)sessionID displayName:(NSString*)name sessionMode:(GKSessionMode)mode;
-- (void)disconnectFromAllPeers;
-- (void)setDataReceiveHandler:(id)handler withContext:(void*)context;
-- (BOOL)sendDataToAllPeers:(NSData*)data withDataMode:(GKSendDataMode)mode error:(NSError**)error;
-- (BOOL)sendData:(NSData*)data toPeers:(NSArray*)peers withDataMode:(GKSendDataMode)mode error:(NSError**)error;
-- (NSString*)displayNameForPeer:(NSString*)peerID;
-
-@end
-
-#endif // _GKSESSION_H_

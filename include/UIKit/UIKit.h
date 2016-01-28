@@ -166,7 +166,5 @@
 #import <UIKit/UIPrintFormatter.h>
 #import <UIKit/UITraitEnvironment.h>
 #import <UIKit/UIContentContainer.h>
-
-#import <UIKit/UIUserNotificationSettings.h>
 #import <UIKit/NSLayoutManager.h>
 #import <UIKit/NSTextStorage.h>

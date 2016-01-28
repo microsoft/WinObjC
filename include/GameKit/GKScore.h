@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,31 +13,50 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _GKSCORE_H_
-#define _GKSCORE_H_
+#pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <Foundation/NSObject.h>
 
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSSecureCoding.h>
+#import <Foundation/NSObjcRuntime.h>
+
+#import <GameKit/GKChallenge.h>
+
+@class NSString;
+@class GKPlayer;
 @class NSDate;
+@class NSArray;
 @class NSError;
+@class UIViewController;
 
 GAMEKIT_EXPORT_CLASS
-@interface GKScore : NSObject
-
-@property (nonatomic, assign) int64_t value;
-@property (nonatomic, readonly, assign) NSInteger rank;
-@property (nonatomic, readonly, retain) NSString* playerID;
-@property (nonatomic, readonly, retain) NSDate* date;
-@property (nonatomic, readonly, retain) NSString* formattedValue;
-@property (nonatomic, assign) uint64_t context;
-@property (nonatomic, retain) NSString* category;
-@property (copy, nonatomic) NSString* leaderboardIdentifier;
-
-- (id)initWithCategory:(NSString*)category;
-- (void)reportScoreWithCompletionHandler:(void (^)(NSError* error))completionHandler;
-
+@interface GKScore : NSObject <NSCoding, NSObject, NSSecureCoding>
+- (instancetype)initWithLeaderboardIdentifier:(NSString*)initializer STUB_METHOD;
+- (instancetype)initWithLeaderboardIdentifier:(NSString*)identifier player:(GKPlayer*)player STUB_METHOD;
++ (void)reportScores:(NSArray*)scores withCompletionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
++ (void)reportScores:(NSArray*)scores
+    withEligibleChallenges:(NSArray*)challenges
+     withCompletionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+- (UIViewController*)challengeComposeControllerWithMessage:(NSString*)message
+                                                   players:(NSArray*)players
+                                         completionHandler:(GKChallengeComposeCompletionBlock)completionHandler STUB_METHOD;
+- (UIViewController*)challengeComposeControllerWithPlayers:(NSArray*)playerIDs
+                                                   message:(NSString*)message
+                                         completionHandler:(GKChallengeComposeCompletionBlock)completionHandler STUB_METHOD;
+- (instancetype)initWithCategory:(NSString*)category STUB_METHOD;
+- (instancetype)initWithLeaderboardIdentifier:(NSString*)identifier forPlayer:(NSString*)playerID STUB_METHOD;
+- (void)issueChallengeToPlayers:(NSArray*)playerIDs message:(NSString*)message STUB_METHOD;
+- (void)reportScoreWithCompletionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+@property (assign, nonatomic) uint64_t context STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSDate* date STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* formattedValue STUB_PROPERTY;
+@property (copy, nonatomic) NSString* leaderboardIdentifier STUB_PROPERTY;
+@property (readonly, retain, nonatomic) GKPlayer* player STUB_PROPERTY;
+@property (readonly, assign, nonatomic) NSInteger rank STUB_PROPERTY;
+@property (assign, nonatomic) int64_t value STUB_PROPERTY;
+@property (assign, nonatomic) BOOL shouldSetDefaultLeaderboard STUB_PROPERTY;
+@property (copy, nonatomic) NSString* category STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSString* playerID STUB_PROPERTY;
 @end
-
-#endif /* _GKSCORE_H_ */

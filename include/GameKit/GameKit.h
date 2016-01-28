@@ -13,7 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <StubIncludes.h>
 #import <GameKit/GameKitExport.h>
 #import <GameKit/GKPublicConstants.h>
 #import <GameKit/GKLeaderboardViewController.h>
@@ -32,3 +34,20 @@
 #import <GameKit/GKAchievementDescription.h>
 #import <GameKit/GKGameCenterViewController.h>
 #import <GameKit/GKNotificationBanner.h>
+#import <GameKit/GKAchievementChallenge.h>
+#import <GameKit/GKChallenge.h>
+#import <GameKit/GKChallengeEventHandler.h>
+#import <GameKit/GKFriendRequestComposeViewController.h>
+#import <GameKit/GKInvite.h>
+#import <GameKit/GKLeaderboardSet.h>
+#import <GameKit/GKMatchRequest.h>
+#import <GameKit/GKSavedGame.h>
+#import <GameKit/GKScoreChallenge.h>
+#import <GameKit/GKTurnBasedEventHandler.h>
+#import <GameKit/GKTurnBasedExchange.h>
+#import <GameKit/GKTurnBasedExchangeReply.h>
+#import <GameKit/GKTurnBasedMatch.h>
+#import <GameKit/GKTurnBasedMatchmakerViewController.h>
+#import <GameKit/GKTurnBasedParticipant.h>
+#import <GameKit/GKVoiceChat.h>
+#import <GameKit/GKVoiceChatService.h>

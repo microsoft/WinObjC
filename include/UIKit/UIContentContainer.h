@@ -17,6 +17,7 @@
 
 #import <UIKit/UIKitExport.h>
 #import <CoreGraphics/CGGeometry.h>
+
 @protocol UIViewControllerTransitionCoordinator;
 @class UITraitCollection;
 
@@ -29,5 +30,4 @@
 - (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container;
 - (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container;
 @property (nonatomic, readonly) CGSize preferredContentSize;
-
 @end

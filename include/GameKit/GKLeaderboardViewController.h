@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,18 +13,27 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <GameKit/GameKitExport.h>
+#import <GameKit/GKGameCenterViewController.h>
 #import <GameKit/GKLeaderboard.h>
-#import <UIKit/UIViewController.h>
 
-@protocol GKLeaderboardViewControllerDelegate
-@end
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSObject.h>
+
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
+
+@class NSString;
+@protocol GKLeaderboardViewControllerDelegate;
 
 GAMEKIT_EXPORT_CLASS
-@interface GKLeaderboardViewController : UIViewController
-
-@property (nonatomic, assign) id<GKLeaderboardViewControllerDelegate> leaderboardDelegate;
-@property (nonatomic, retain) NSString* category;
-@property (nonatomic, assign) GKLeaderboardTimeScope timeScope;
-
+@interface GKLeaderboardViewController
+    : GKGameCenterViewController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
+@property (copy, nonatomic) NSString* category STUB_PROPERTY;
+@property (assign, nonatomic) id<GKLeaderboardViewControllerDelegate> leaderboardDelegate STUB_PROPERTY;
+@property (assign, nonatomic) GKLeaderboardTimeScope timeScope STUB_PROPERTY;
 @end

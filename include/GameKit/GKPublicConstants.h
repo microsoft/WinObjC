@@ -14,18 +14,11 @@
 //
 //******************************************************************************
 
-#ifndef _GKPUBLICONSTANTS_H_
-#define _GKPUBLICONSTANTS_H_
+#pragma once
 
 #import <GameKit/GameKitExport.h>
 #import <Foundation/Foundation.h>
 #include <stdint.h>
-
-enum {
-    GKSendDataReliable,
-    GKSendDataUnreliable,
-};
-typedef uint32_t GKSendDataMode;
 
 GAMEKIT_EXPORT NSString* const GKErrorDomain;
 
@@ -58,5 +51,3 @@ typedef NS_ENUM(NSInteger, GKErrorCode) {
     GKErrorPlayerPhotoFailure = 26,
     GKErrorUbiquityContainerUnavailable = 27
 };
-
-#endif // _GKPUBLICONSTANTS_H_

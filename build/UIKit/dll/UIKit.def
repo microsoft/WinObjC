@@ -197,11 +197,6 @@ LIBRARY UIKit
         UITransitionContextToViewControllerKey DATA
         UIViewNoIntrinsicMetric DATA
         _OBJC_CLASS_CBCentralManager DATA
-        _OBJC_CLASS_GKAchievement DATA
-        _OBJC_CLASS_GKAchievementViewController DATA
-        _OBJC_CLASS_GKLeaderboardViewController DATA
-        _OBJC_CLASS_GKLocalPlayer DATA
-        _OBJC_CLASS_GKScore DATA
         _OBJC_CLASS_NSLayoutConstraint DATA
         _OBJC_CLASS_NSLayoutManager DATA
         _OBJC_CLASS_NSMutableParagraphStyle DATA
@@ -285,11 +280,6 @@ LIBRARY UIKit
         _OBJC_CLASS__UILayoutGuide DATA
         __inet_ntoa
         __objc_class_name_CBCentralManager CONSTANT
-        __objc_class_name_GKAchievement CONSTANT
-        __objc_class_name_GKAchievementViewController CONSTANT
-        __objc_class_name_GKLeaderboardViewController CONSTANT
-        __objc_class_name_GKLocalPlayer CONSTANT
-        __objc_class_name_GKScore CONSTANT
         __objc_class_name_NSLayoutConstraint CONSTANT
         __objc_class_name_NSLayoutManager CONSTANT
         __objc_class_name_NSMutableParagraphStyle CONSTANT

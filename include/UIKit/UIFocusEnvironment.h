@@ -25,5 +25,5 @@
 - (void)updateFocusIfNeeded;
 - (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context;
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator;
-@property (nonatomic, weak, readonly) UIView* preferredFocusedView;
+@property (nonatomic, retain, readonly) UIView* preferredFocusedView;
 @end

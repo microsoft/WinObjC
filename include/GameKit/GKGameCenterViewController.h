@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <GameKit/GKGameCenterController.h>
+#import <GameKit/GameKitExport.h>
+#import <GameKit/GKLeaderboard.h>
 
-@interface GKGameCenterViewController : UINavigationController
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSObject.h>
 
-@property (nonatomic, assign) id<GKGameCenterControllerDelegate> gameCenterDelegate;
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
+#import <UIKit/UINavigationController.h>
 
+@protocol GKGameCenterControllerDelegate;
+@class NSString;
+
+typedef enum {
+    GKGameCenterViewControllerStateDefault = -1,
+    GKGameCenterViewControllerStateLeaderboards,
+    GKGameCenterViewControllerStateAchievements,
+    GKGameCenterViewControllerStateChallenges,
+} GKGameCenterViewControllerState;
+
+GAMEKIT_EXPORT_CLASS
+@interface GKGameCenterViewController
+    : UINavigationController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
+@property (assign, nonatomic) id<GKGameCenterControllerDelegate> gameCenterDelegate STUB_PROPERTY;
+@property (assign, nonatomic) GKGameCenterViewControllerState viewState STUB_PROPERTY;
+@property (retain, nonatomic) NSString* leaderboardIdentifier STUB_PROPERTY;
+@property (retain, nonatomic) NSString* leaderboardCategory STUB_PROPERTY;
+@property (assign, nonatomic) GKLeaderboardTimeScope leaderboardTimeScope STUB_PROPERTY;
 @end

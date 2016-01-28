@@ -26,8 +26,9 @@
     </PropertyGroup>
 
     <PropertyGroup>
-      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
+      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib')) or '$(IncludeGameKit)' == 'true' ">true</IncludeUIKit>
       <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
+      <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
       <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
@@ -35,7 +36,7 @@
       <IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib')) or '$(IncludeGLKit)' == 'true'">true</IncludeOpenGLES>
       <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
       <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
-      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
@@ -110,13 +111,11 @@
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
       <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
       <SBResourceCopy Condition="'$(IncludeStoreKit)' == 'true'" Include="$(StarboardLibDirs)\StoreKit.dll" />
-
       <SBResourceCopy Condition="'$(IncludeEventKitUI)' == 'true'" Include="$(StarboardLibDirs)\EventKitUI.dll" />
-
       <SBResourceCopy Condition="'$(IncludeQuickLook)' == 'true'" Include="$(StarboardLibDirs)\QuickLook.dll" />
-
       <SBResourceCopy Condition="'$(IncludeMediaPlayer)' == 'true'" Include="$(StarboardLibDirs)\MediaPlayer.dll" />
       <SBResourceCopy Condition="'$(IncludeMapKit)' == 'true'" Include="$(StarboardLibDirs)\MapKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeGameKit)' == 'true'" Include="$(StarboardLibDirs)\GameKit.dll" />
     </ItemGroup>
   </Target>
 

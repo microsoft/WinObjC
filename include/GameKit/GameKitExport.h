@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,9 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#ifndef GAMEKIT_IMPEXP
+#pragma once
+
 #define GAMEKIT_IMPEXP __declspec(dllimport)
-#endif
 
 #ifndef GAMEKIT_EXPORT
 #ifdef __cplusplus
@@ -24,5 +24,15 @@
 #else
 #define GAMEKIT_EXPORT GAMEKIT_IMPEXP extern
 #define GAMEKIT_EXPORT_CLASS GAMEKIT_IMPEXP
+#endif
+#endif
+
+#ifndef GAMEKIT_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define GAMEKIT_EXTERNC_BEGIN extern "C" {
+#define GAMEKIT_EXTERNC_END }
+#else
+#define GAMEKIT_EXTERNC_BEGIN
+#define GAMEKIT_EXTERNC_END
 #endif
 #endif
