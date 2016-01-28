@@ -13,16 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#include <StubIncludes.h>
-#include <CoreFoundation/CFBase.h>
+#import <CoreAudio/CoreAudioExport.h>
+#import <CoreFoundation/CFBase.h>
 
-typedef enum AudioChannelLayoutTag : UInt32 AudioChannelLayoutTag;
-typedef enum AudioChannelLabel : UInt32 AudioChannelLabel;
-
-typedef struct {
+struct SMPTETime {
     SInt16 mSubframes;
     SInt16 mSubframeDivisor;
     UInt32 mCounter;
@@ -32,39 +28,42 @@ typedef struct {
     SInt16 mMinutes;
     SInt16 mSeconds;
     SInt16 mFrames;
-} SMPTETime;
+};
+typedef struct SMPTETime SMPTETime;
+typedef UInt32 AudioChannelLabel;
+typedef UInt32 AudioChannelLayoutTag;
 
-typedef struct {
+typedef struct AudioBuffer {
     UInt32 mNumberChannels;
     UInt32 mDataByteSize;
     void* mData;
 } AudioBuffer;
 
-typedef struct {
+struct AudioBufferList {
     UInt32 mNumberBuffers;
     AudioBuffer mBuffers[1];
-} AudioBufferList;
+};
 
-typedef struct {
+typedef struct AudioChannelDescription {
     AudioChannelLabel mChannelLabel;
     UInt32 mChannelFlags;
     Float32 mCoordinates[3];
 } AudioChannelDescription;
 
-typedef struct {
+struct AudioChannelLayout {
     AudioChannelLayoutTag mChannelLayoutTag;
     UInt32 mChannelBitmap;
     UInt32 mNumberChannelDescriptions;
     AudioChannelDescription mChannelDescriptions[1];
-} AudioChannelLayout;
+};
 
-typedef struct {
+struct AudioClassDescription {
     OSType mType;
     OSType mSubType;
     OSType mManufacturer;
-} AudioClassDescription;
+};
 
-typedef struct {
+typedef struct AudioStreamBasicDescription {
     Float64 mSampleRate;
     UInt32 mFormatID;
     UInt32 mFormatFlags;
@@ -76,13 +75,13 @@ typedef struct {
     UInt32 mReserved;
 } AudioStreamBasicDescription;
 
-typedef struct {
+struct AudioStreamPacketDescription {
     SInt64 mStartOffset;
     UInt32 mVariableFramesInPacket;
     UInt32 mDataByteSize;
-} AudioStreamPacketDescription;
+};
 
-typedef struct {
+typedef struct AudioTimeStamp {
     Float64 mSampleTime;
     UInt64 mHostTime;
     Float64 mRateScalar;
@@ -92,26 +91,48 @@ typedef struct {
     UInt32 mReserved;
 } AudioTimeStamp;
 
-typedef struct {
+struct AudioValueRange {
     Float64 mMinimum;
     Float64 mMaximum;
-} AudioValueRange;
+};
 
-typedef struct {
+struct AudioValueTranslation {
     void* mInputData;
     UInt32 mInputDataSize;
     void* mOutputData;
     UInt32 mOutputDataSize;
-} AudioValueTranslation;
+};
 
+typedef struct AudioBufferList AudioBufferList;
+typedef struct AudioChannelLayout AudioChannelLayout;
+typedef struct AudioClassDescription AudioClassDescription;
 typedef SInt16 AudioSampleType;
 typedef SInt32 AudioUnitSampleType;
 #define kAudioUnitSampleFractionBits 24;
+typedef struct AudioStreamPacketDescription AudioStreamPacketDescription;
+typedef struct AudioValueRange AudioValueRange;
+typedef struct AudioValueTranslation AudioValueTranslation;
 
 #define TestAudioFormatNativeEndian(f) \
     ((f.mFormatID == kAudioFormatLinearPCM) && ((f.mFormatFlags & kAudioFormatFlagIsBigEndian) == kAudioFormatFlagsNativeEndian))
 
+COREAUDIO_EXPORT bool IsAudioFormatNativeEndian(const AudioStreamBasicDescription* f) STUB_METHOD;
 #define AudioChannelLayoutTag_GetNumberOfChannels(layoutTag) ((UInt32)((layoutTag)&0x0000FFFF))
+COREAUDIO_EXPORT UInt32 CalculateLPCMFlags(
+    UInt32 inValidBitsPerChannel, UInt32 inTotalBitsPerChannel, bool inIsFloat, bool inIsBigEndian, bool inIsNonInterleaved) STUB_METHOD;
+COREAUDIO_EXPORT void FillOutASBDForLPCM(AudioStreamBasicDescription* outASBD,
+                                         Float64 inSampleRate,
+                                         UInt32 inChannelsPerFrame,
+                                         UInt32 inValidBitsPerChannel,
+                                         UInt32 inTotalBitsPerChannel,
+                                         bool inIsFloat,
+                                         bool inIsBigEndian,
+                                         bool inIsNonInterleaved) STUB_METHOD;
+COREAUDIO_EXPORT void FillOutAudioTimeStampWithHostTime(AudioTimeStamp* outATS, UInt64 inHostTime) STUB_METHOD;
+COREAUDIO_EXPORT void FillOutAudioTimeStampWithSampleTime(AudioTimeStamp* outATS, Float64 inSampleTime) STUB_METHOD;
+COREAUDIO_EXPORT void FillOutAudioTimeStampWithSampleAndHostTime(AudioTimeStamp* outATS,
+                                                                 Float64 inSampleTime,
+                                                                 UInt64 inHostTime) STUB_METHOD;
 #define kAudioUnitSampleFractionBits 24
 enum { kAudioStreamAnyRate = 0 };
 enum {
@@ -150,7 +171,6 @@ enum {
     kAudioFormatMicrosoftGSM = 0x6D730031,
     kAudioFormatAES3 = 'aes3'
 };
-
 enum {
     kAudioFormatFlagIsFloat = (1 << 0), // 0x1,
     kAudioFormatFlagIsBigEndian = (1 << 1), // 0x2,
@@ -175,7 +195,6 @@ enum {
     kAppleLosslessFormatFlag_24BitSourceData = 3,
     kAppleLosslessFormatFlag_32BitSourceData = 4
 };
-
 enum {
 #if TARGET_RT_BIG_ENDIAN
     kAudioFormatFlagsNativeEndian = kAudioFormatFlagIsBigEndian,
@@ -194,7 +213,6 @@ enum {
 #endif
     kAudioFormatFlagsNativeFloatPacked = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked
 };
-
 enum {
     kMPEG4Object_AAC_Main = 1,
     kMPEG4Object_AAC_LC = 2,
@@ -206,7 +224,6 @@ enum {
     kMPEG4Object_CELP = 8,
     kMPEG4Object_HVXC = 9
 };
-
 enum {
     kSMPTETimeType24 = 0,
     kSMPTETimeType25 = 1,
@@ -221,9 +238,7 @@ enum {
     kSMPTETimeType50 = 10,
     kSMPTETimeType2398 = 11
 };
-
 enum { kSMPTETimeValid = (1 << 0), kSMPTETimeRunning = (1 << 1) };
-
 enum {
     kAudioTimeStampSampleTimeValid = (1 << 0),
     kAudioTimeStampHostTimeValid = (1 << 1),
@@ -231,10 +246,8 @@ enum {
     kAudioTimeStampWordClockTimeValid = (1 << 3),
     kAudioTimeStampSMPTETimeValid = (1 << 4)
 };
-
 enum { kAudioTimeStampSampleHostTimeValid = (kAudioTimeStampSampleTimeValid | kAudioTimeStampHostTimeValid) };
-
-enum AudioChannelLabel : UInt32 {
+enum {
     kAudioChannelLabel_Unknown = 0xFFFFFFFF,
     kAudioChannelLabel_Unused = 0,
     kAudioChannelLabel_UseCoordinates = 100,
@@ -306,7 +319,6 @@ enum AudioChannelLabel : UInt32 {
     kAudioChannelLabel_Discrete_15 = (1 << 16) | 15,
     kAudioChannelLabel_Discrete_65535 = (1 << 16) | 65535
 };
-
 enum {
     kAudioChannelBit_Left = (1 << 0),
     kAudioChannelBit_Right = (1 << 1),
@@ -327,14 +339,12 @@ enum {
     kAudioChannelBit_TopBackCenter = (1 << 16),
     kAudioChannelBit_TopBackRight = (1 << 17)
 };
-
 enum {
     kAudioChannelFlags_AllOff = 0,
     kAudioChannelFlags_RectangularCoordinates = (1 << 0),
     kAudioChannelFlags_SphericalCoordinates = (1 << 1),
     kAudioChannelFlags_Meters = (1 << 2)
 };
-
 enum {
     kAudioChannelCoordinates_LeftRight = 0,
     kAudioChannelCoordinates_BackFront = 1,
@@ -343,8 +353,7 @@ enum {
     kAudioChannelCoordinates_Elevation = 1,
     kAudioChannelCoordinates_Distance = 2
 };
-
-enum AudioChannelLayoutTag : UInt32 {
+enum {
     kAudioChannelLayoutTag_UseChannelDescriptions = (0 << 16) | 0,
     kAudioChannelLayoutTag_UseChannelBitmap = (1 << 16) | 0,
     //  General layouts,
@@ -479,55 +488,4 @@ enum AudioChannelLayoutTag : UInt32 {
     kAudioChannelLayoutTag_Unknown = 0xFFFF0000
 };
 
-#define kAudio_UnimplementedError -4
-#define kAudio_FileNotFoundError -43
-#define kAudio_ParamError -50
-#define kAudio_MemFullError -108
-
-#ifdef __cplusplus
-static inline bool IsAudioFormatNativeEndian(const AudioStreamBasicDescription& f) {
-    return TestAudioFormatNativeEndian(f);
-}
-
-static inline UInt32 CalculateLPCMFlags(
-    UInt32 inValidBitsPerChannel, UInt32 inTotalBitsPerChannel, bool inIsFloat, bool inIsBigEndian, bool inIsNonInterleaved) {
-    UInt32 lpcmFlags = 0;
-    lpcmFlags |= (inTotalBitsPerChannel == inValidBitsPerChannel ? kAudioFormatFlagIsPacked : kAudioFormatFlagIsAlignedHigh);
-    lpcmFlags |= (inIsFloat ? kAudioFormatFlagIsFloat : kAudioFormatFlagIsSignedInteger);
-    lpcmFlags |= (inIsBigEndian ? kAudioFormatFlagIsBigEndian : 0);
-    lpcmFlags |= (inIsNonInterleaved ? kAudioFormatFlagIsNonInterleaved : 0);
-    return lpcmFlags;
-}
-
-static inline void FillOutASBDForLPCM(AudioStreamBasicDescription& outASBD,
-                                      Float64 inSampleRate,
-                                      UInt32 inChannelsPerFrame,
-                                      UInt32 inValidBitsPerChannel,
-                                      UInt32 inTotalBitsPerChannel,
-                                      bool inIsFloat,
-                                      bool inIsBigEndian,
-                                      bool inIsNonInterleaved) STUB_METHOD {
-    outASBD.mSampleRate = inSampleRate;
-    outASBD.mChannelsPerFrame = inChannelsPerFrame;
-    outASBD.mFormatID = kAudioFormatLinearPCM;
-    outASBD.mFormatFlags = CalculateLPCMFlags(inValidBitsPerChannel, inTotalBitsPerChannel, inIsFloat, inIsBigEndian, inIsNonInterleaved);
-    outASBD.mBitsPerChannel = inValidBitsPerChannel;
-
-    // TODO: AudioStreamBasicDescription has some byte/frame length fields
-    // that need to be calculated, presumably from channel size.
-}
-
-static inline void FillOutAudioTimeStampWithHostTime(AudioTimeStamp& outATS, UInt64 inHostTime) {
-    outATS.mHostTime = inHostTime;
-}
-
-static inline void FillOutAudioTimeStampWithSampleTime(AudioTimeStamp& outATS, Float64 inSampleTime) {
-    outATS.mSampleTime = inSampleTime;
-}
-
-static inline void FillOutAudioTimeStampWithSampleAndHostTime(AudioTimeStamp& outATS, Float64 inSampleTime, UInt64 inHostTime) {
-    outATS.mHostTime = inHostTime;
-    outATS.mSampleTime = inSampleTime;
-}
-
-#endif
+enum { kAudio_UnimplementedError = -4, kAudio_FileNotFoundError = -43, kAudio_ParamError = -50, kAudio_MemFullError = -108 };

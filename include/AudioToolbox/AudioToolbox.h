@@ -13,12 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <AudioToolbox/AudioServices.h>
+#import <StubIncludes.h>
+#import <AudioToolbox/AudioConverter.h>
 #import <AudioToolbox/AudioFile.h>
-#import <AudioToolbox/ExtendedAudioFile.h>
-#import <AudioToolbox/AudioSession.h>
-#import <AudioToolbox/AudioQueue.h>
 #import <AudioToolbox/AudioFileStream.h>
 #import <AudioToolbox/AudioFormat.h>
-#import <AudioToolbox/AudioConverter.h>
+#import <AudioToolbox/AudioQueue.h>
+#import <AudioToolbox/AudioServices.h>
+#import <AudioToolbox/AudioSession.h>
+#import <AudioToolbox/AudioToolbox.h>
+#import <AudioToolbox/AudioToolboxDebugging.h>
+#import <AudioToolbox/AudioUnitProcessingGraph.h>
+#import <AudioToolbox/ExtendedAudioFile.h>
+#import <AudioToolbox/MusicSequence.h>
+#import <AudioToolbox/MusicTrack.h>
+#import <AudioToolbox/SystemSound.h>

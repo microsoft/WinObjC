@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #ifndef AUDIOTOOLBOX_IMPEXP
 #define AUDIOTOOLBOX_IMPEXP __declspec(dllimport)
@@ -25,5 +26,15 @@
 #else
 #define AUDIOTOOLBOX_EXPORT AUDIOTOOLBOX_IMPEXP extern
 #define AUDIOTOOLBOX_EXPORT_CLASS AUDIOTOOLBOX_IMPEXP
+#endif
+#endif
+
+#ifndef AUDIOTOOLBOX_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define AUDIOTOOLBOX_EXTERNC_BEGIN extern "C" {
+#define AUDIOTOOLBOX_EXTERNC_END }
+#else
+#define AUDIOTOOLBOX_EXTERNC_BEGIN
+#define AUDIOTOOLBOX_EXTERNC_END
 #endif
 #endif

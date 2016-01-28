@@ -13,15 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
 #import <AudioUnit/AudioUnitExport.h>
 #import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFBase.h>
 
 typedef struct OpaqueAudioComponent* AudioComponent;
 typedef struct OpaqueAudioComponentInstance* AudioComponentInstance;
+
 typedef struct AudioComponentDescription {
     OSType componentType;
     OSType componentSubType;

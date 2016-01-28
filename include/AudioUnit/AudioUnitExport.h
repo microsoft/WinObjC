@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #ifndef AUDIOUNIT_IMPEXP
 #define AUDIOUNIT_IMPEXP __declspec(dllimport)

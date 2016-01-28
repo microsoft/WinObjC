@@ -1,7 +1,7 @@
 module CoreAudio [extern_c] {
-    umbrella "."
+    umbrella header "CoreAudio.h"
     export *
-    
+
     module * {
         export *
     }
