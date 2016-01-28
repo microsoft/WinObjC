@@ -41,6 +41,7 @@
 @import Foundation;
 @import GameKit;
 @import GLKit;
+@import HomeKit;
 @import iAd;
 @import ImageIO;
 @import MapKit;

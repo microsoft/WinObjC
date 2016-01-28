@@ -66,6 +66,7 @@
       <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
       <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
+      <IncludeHomeKit Condition="$(LinkAdditionalDependencies.Contains('HomeKit.lib'))">true</IncludeHomeKit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -124,6 +125,7 @@
       <SBResourceCopy Condition="'$(IncludeCoreData)' == 'true'" Include="$(StarboardLibDirs)\CoreData.dll" />
 
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeHomeKit)' == 'true'" Include="$(StarboardLibDirs)\HomeKit.dll" />
     </ItemGroup>
   </Target>
 
