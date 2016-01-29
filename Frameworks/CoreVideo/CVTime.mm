@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,18 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <StubIncludes.h>
-#import <CoreVideo/CoreVideoConstants.h>
-#import <CoreVideo/CoreVideoExport.h>
-#import <CoreVideo/CVBuffer.h>
-#import <CoreVideo/CVImageBuffer.h>
-#import <CoreVideo/CVMetalTexture.h>
-#import <CoreVideo/CVMetalTextureCache.h>
-#import <CoreVideo/CVOpenGLESTexture.h>
-#import <CoreVideo/CVOpenGLESTextureCache.h>
-#import <CoreVideo/CVPixelBuffer.h>
-#import <CoreVideo/CVPixelBufferPool.h>
-#import <CoreVideo/CVPixelFormatDescription.h>
+#import <StubReturn.h>
 #import <CoreVideo/CVTime.h>
+
+const CVTime kCVZeroTime = { 0, 0, 0 };
+const CVTime kCVIndefiniteTime = { INT64_MAX, INT64_MAX, 0 };
+
+/**
+ @Status Stub
+ @Notes
+*/
+uint64_t CVGetCurrentHostTime() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+double CVGetHostClockFrequency() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+uint32_t CVGetHostClockMinimumTimeDelta() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}

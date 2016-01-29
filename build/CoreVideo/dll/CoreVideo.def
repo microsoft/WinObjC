@@ -1,0 +1,189 @@
+LIBRARY CoreVideo
+    EXPORTS
+        ; CVBuffer Reference.mm
+        kCVBufferMovieTimeKey DATA
+        kCVBufferTimeValueKey DATA
+        kCVBufferTimeScaleKey DATA
+        kCVBufferPropagatedAttachmentsKey DATA
+        kCVBufferNonPropagatedAttachmentsKey DATA
+        CVBufferGetAttachment
+        CVBufferGetAttachments
+        CVBufferPropagateAttachments
+        CVBufferRelease
+        CVBufferRemoveAllAttachments
+        CVBufferRemoveAttachment
+        CVBufferRetain
+        CVBufferSetAttachment
+        CVBufferSetAttachments
+
+        ; CVImageBuffer Reference.mm
+        kCVImageBufferCGColorSpaceKey DATA
+        kCVImageBufferGammaLevelKey DATA
+        kCVImageBufferPreferredCleanApertureKey DATA
+        kCVImageBufferCleanApertureKey DATA
+        kCVImageBufferFieldCountKey DATA
+        kCVImageBufferFieldDetailKey DATA
+        kCVImageBufferPixelAspectRatioKey DATA
+        kCVImageBufferDisplayDimensionsKey DATA
+        kCVImageBufferICCProfileKey DATA
+        kCVImageBufferYCbCrMatrixKey DATA
+        kCVImageBufferColorPrimariesKey DATA
+        kCVImageBufferTransferFunctionKey DATA
+        kCVImageBufferChromaLocationTopFieldKey DATA
+        kCVImageBufferChromaLocationBottomFieldKey DATA
+        kCVImageBufferChromaSubsamplingKey DATA
+        kCVImageBufferCleanApertureWidthKey DATA
+        kCVImageBufferCleanApertureHeightKey DATA
+        kCVImageBufferCleanApertureHorizontalOffsetKey DATA
+        kCVImageBufferCleanApertureVerticalOffsetKey DATA
+        kCVImageBufferFieldDetailTemporalTopFirst DATA
+        kCVImageBufferFieldDetailTemporalBottomFirst DATA
+        kCVImageBufferFieldDetailSpatialFirstLineEarly DATA
+        kCVImageBufferFieldDetailSpatialFirstLineLate DATA
+        kCVImageBufferPixelAspectRatioHorizontalSpacingKey DATA
+        kCVImageBufferPixelAspectRatioVerticalSpacingKey DATA
+        kCVImageBufferDisplayWidthKey DATA
+        kCVImageBufferDisplayHeightKey DATA
+        kCVImageBufferYCbCrMatrix_ITU_R_709_2 DATA
+        kCVImageBufferYCbCrMatrix_ITU_R_601_4 DATA
+        kCVImageBufferYCbCrMatrix_SMPTE_240M_1995 DATA
+        kCVImageBufferColorPrimaries_ITU_R_709_2 DATA
+        kCVImageBufferColorPrimaries_EBU_3213 DATA
+        kCVImageBufferColorPrimaries_SMPTE_C DATA
+        kCVImageBufferColorPrimaries_P22 DATA
+        kCVImageBufferTransferFunction_ITU_R_709_2 DATA
+        kCVImageBufferTransferFunction_SMPTE_240M_1995 DATA
+        kCVImageBufferTransferFunction_UseGamma DATA
+        kCVImageBufferChromaLocation_Left DATA
+        kCVImageBufferChromaLocation_Center DATA
+        kCVImageBufferChromaLocation_TopLeft DATA
+        kCVImageBufferChromaLocation_Top DATA
+        kCVImageBufferChromaLocation_BottomLeft DATA
+        kCVImageBufferChromaLocation_Bottom DATA
+        kCVImageBufferChromaLocation_DV420 DATA
+        kCVImageBufferChromaSubsampling_420 DATA
+        kCVImageBufferChromaSubsampling_422 DATA
+        kCVImageBufferChromaSubsampling_411 DATA
+        CVImageBufferGetCleanRect
+        CVImageBufferGetDisplaySize
+        CVImageBufferGetEncodedSize
+        CVImageBufferIsFlipped
+
+        ; CVMetalTexture Reference.mm
+        CVMetalTextureGetTypeID
+        CVMetalTextureGetTexture
+        CVMetalTextureIsFlipped
+        CVMetalTextureGetCleanTexCoords
+
+        ; CVMetalTextureCache Reference.mm
+        kCVMetalTextureCacheMaximumTextureAgeKey DATA
+        CVMetalTextureCacheGetTypeID
+        CVMetalTextureCacheCreate
+        CVMetalTextureCacheCreateTextureFromImage
+        CVMetalTextureCacheFlush
+
+        ; CVOpenGLESTexture Reference.mm
+        CVOpenGLESTextureGetTypeID
+        CVOpenGLESTextureGetTarget
+        CVOpenGLESTextureGetName
+        CVOpenGLESTextureIsFlipped
+        CVOpenGLESTextureGetCleanTexCoords
+
+        ; CVOpenGLESTextureCache Reference.mm
+        kCVOpenGLESTextureCacheMaximumTextureAgeKey DATA
+        CVOpenGLESTextureCacheGetTypeID
+        CVOpenGLESTextureCacheCreate
+        CVOpenGLESTextureCacheCreateTextureFromImage
+        CVOpenGLESTextureCacheFlush
+
+        ; CVPixelBuffer Reference.mm
+        kCVPixelBufferPixelFormatTypeKey DATA
+        kCVPixelBufferMemoryAllocatorKey DATA
+        kCVPixelBufferWidthKey DATA
+        kCVPixelBufferHeightKey DATA
+        kCVPixelBufferExtendedPixelsLeftKey DATA
+        kCVPixelBufferExtendedPixelsTopKey DATA
+        kCVPixelBufferExtendedPixelsRightKey DATA
+        kCVPixelBufferExtendedPixelsBottomKey DATA
+        kCVPixelBufferBytesPerRowAlignmentKey DATA
+        kCVPixelBufferCGBitmapContextCompatibilityKey DATA
+        kCVPixelBufferCGImageCompatibilityKey DATA
+        kCVPixelBufferOpenGLCompatibilityKey DATA
+        kCVPixelBufferPlaneAlignmentKey DATA
+        kCVPixelBufferIOSurfacePropertiesKey DATA
+        kCVPixelBufferOpenGLESCompatibilityKey DATA
+        kCVPixelBufferMetalCompatibilityKey DATA
+        CVPixelBufferCreate
+        CVPixelBufferCreateResolvedAttributesDictionary
+        CVPixelBufferCreateWithBytes
+        CVPixelBufferCreateWithPlanarBytes
+        CVPixelBufferFillExtendedPixels
+        CVPixelBufferGetBaseAddress
+        CVPixelBufferGetBaseAddressOfPlane
+        CVPixelBufferGetBytesPerRow
+        CVPixelBufferGetBytesPerRowOfPlane
+        CVPixelBufferGetDataSize
+        CVPixelBufferGetExtendedPixels
+        CVPixelBufferGetHeight
+        CVPixelBufferGetHeightOfPlane
+        CVPixelBufferGetPixelFormatType
+        CVPixelBufferGetPlaneCount
+        CVPixelBufferGetTypeID
+        CVPixelBufferGetWidth
+        CVPixelBufferGetWidthOfPlane
+        CVPixelBufferIsPlanar
+        CVPixelBufferLockBaseAddress
+        CVPixelBufferRelease
+        CVPixelBufferRetain
+        CVPixelBufferUnlockBaseAddress
+
+        ; CVPixelBufferPool Reference.mm
+        kCVPixelBufferPoolMinimumBufferCountKey DATA
+        kCVPixelBufferPoolMaximumBufferAgeKey DATA
+        kCVPixelBufferPoolAllocationThresholdKey DATA
+        kCVPixelBufferPoolFreeBufferNotification DATA
+        CVPixelBufferPoolCreate
+        CVPixelBufferPoolCreatePixelBuffer
+        CVPixelBufferPoolCreatePixelBufferWithAuxAttributes
+        CVPixelBufferPoolGetAttributes
+        CVPixelBufferPoolGetPixelBufferAttributes
+        CVPixelBufferPoolGetTypeID
+        CVPixelBufferPoolRelease
+        CVPixelBufferPoolRetain
+
+        ; CVPixelFormatDescription Reference.mm
+        kCVPixelFormatName DATA
+        kCVPixelFormatConstant DATA
+        kCVPixelFormatCodecType DATA
+        kCVPixelFormatFourCC DATA
+        kCVPixelFormatContainsAlpha DATA
+        kCVPixelFormatPlanes DATA
+        kCVPixelFormatBlockWidth DATA
+        kCVPixelFormatBlockHeight DATA
+        kCVPixelFormatBitsPerBlock DATA
+        kCVPixelFormatBlockHorizontalAlignment DATA
+        kCVPixelFormatBlockVerticalAlignment DATA
+        kCVPixelFormatBlackBlock DATA
+        kCVPixelFormatHorizontalSubsampling DATA
+        kCVPixelFormatVerticalSubsampling DATA
+        kCVPixelFormatOpenGLFormat DATA
+        kCVPixelFormatOpenGLType DATA
+        kCVPixelFormatOpenGLInternalFormat DATA
+        kCVPixelFormatCGBitmapInfo DATA
+        kCVPixelFormatQDCompatibility DATA
+        kCVPixelFormatCGBitmapContextCompatibility DATA
+        kCVPixelFormatCGImageCompatibility DATA
+        kCVPixelFormatOpenGLCompatibility DATA
+        kCVPixelFormatOpenGLESCompatibility DATA
+        kCVPixelFormatFillExtendedPixelsCallback DATA
+        CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType
+        CVPixelFormatDescriptionCreateWithPixelFormatType
+        CVPixelFormatDescriptionArrayCreateWithAllPixelFormatTypes
+
+        ; CVTime Reference.mm
+        kCVZeroTime DATA
+        kCVIndefiniteTime DATA
+        CVGetCurrentHostTime
+        CVGetHostClockFrequency
+        CVGetHostClockMinimumTimeDelta
+

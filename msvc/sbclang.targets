@@ -67,6 +67,7 @@
       <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
       <IncludeHomeKit Condition="$(LinkAdditionalDependencies.Contains('HomeKit.lib'))">true</IncludeHomeKit>
+      <IncludeCoreVideo Condition="$(LinkAdditionalDependencies.Contains('CoreVideo.lib'))">true</IncludeCoreVideo>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -126,6 +127,8 @@
 
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
       <SBResourceCopy Condition="'$(IncludeHomeKit)' == 'true'" Include="$(StarboardLibDirs)\HomeKit.dll" />
+      
+      <SBResourceCopy Condition="'$(IncludeCoreVideo)' == 'true'" Include="$(StarboardLibDirs)\CoreVideo.dll" />
     </ItemGroup>
   </Target>
 

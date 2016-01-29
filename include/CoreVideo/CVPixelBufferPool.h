@@ -13,7 +13,34 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-typedef struct __CVPixelBufferPool* CVPixelBufferPoolRef;
+#import <CoreVideo/CoreVideoExport.h>
+#import <CoreVideo/CVPixelBuffer.h>
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <CoreFoundation/CFType.h>
+#import <CoreFoundation/CFString.h>
+
+typedef struct _CVPixelBufferPool* CVPixelBufferPoolRef;
+
+COREVIDEO_EXPORT CVReturn CVPixelBufferPoolCreate(CFAllocatorRef allocator,
+                                                  CFDictionaryRef poolAttributes,
+                                                  CFDictionaryRef pixelBufferAttributes,
+                                                  CVPixelBufferPoolRef _Nullable* poolOut) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferPoolCreatePixelBuffer(CFAllocatorRef allocator,
+                                                             CVPixelBufferPoolRef pixelBufferPool,
+                                                             CVPixelBufferRef _Nullable* pixelBufferOut) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferPoolCreatePixelBufferWithAuxAttributes(CFAllocatorRef allocator,
+                                                                              CVPixelBufferPoolRef pixelBufferPool,
+                                                                              CFDictionaryRef auxAttributes,
+                                                                              CVPixelBufferRef _Nullable* pixelBufferOut) STUB_METHOD;
+COREVIDEO_EXPORT CFDictionaryRef CVPixelBufferPoolGetAttributes(CVPixelBufferPoolRef pool) STUB_METHOD;
+COREVIDEO_EXPORT CFDictionaryRef CVPixelBufferPoolGetPixelBufferAttributes(CVPixelBufferPoolRef pool) STUB_METHOD;
+COREVIDEO_EXPORT CFTypeID CVPixelBufferPoolGetTypeID() STUB_METHOD;
+COREVIDEO_EXPORT void CVPixelBufferPoolRelease(CVPixelBufferPoolRef pixelBufferPool) STUB_METHOD;
+COREVIDEO_EXPORT CVPixelBufferPoolRef CVPixelBufferPoolRetain(CVPixelBufferPoolRef pixelBufferPool) STUB_METHOD;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferPoolMinimumBufferCountKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferPoolMaximumBufferAgeKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferPoolAllocationThresholdKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferPoolFreeBufferNotification;

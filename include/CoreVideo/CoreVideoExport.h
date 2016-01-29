@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,16 +15,26 @@
 //******************************************************************************
 #pragma once
 
-#import <StubIncludes.h>
-#import <CoreVideo/CoreVideoConstants.h>
-#import <CoreVideo/CoreVideoExport.h>
-#import <CoreVideo/CVBuffer.h>
-#import <CoreVideo/CVImageBuffer.h>
-#import <CoreVideo/CVMetalTexture.h>
-#import <CoreVideo/CVMetalTextureCache.h>
-#import <CoreVideo/CVOpenGLESTexture.h>
-#import <CoreVideo/CVOpenGLESTextureCache.h>
-#import <CoreVideo/CVPixelBuffer.h>
-#import <CoreVideo/CVPixelBufferPool.h>
-#import <CoreVideo/CVPixelFormatDescription.h>
-#import <CoreVideo/CVTime.h>
+#ifndef COREVIDEO_IMPEXP
+#define COREVIDEO_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef COREVIDEO_EXPORT
+#ifdef __cplusplus
+#define COREVIDEO_EXPORT COREVIDEO_IMPEXP extern "C"
+#define COREVIDEO_EXPORT_CLASS COREVIDEO_IMPEXP
+#else
+#define COREVIDEO_EXPORT COREVIDEO_IMPEXP extern
+#define COREVIDEO_EXPORT_CLASS COREVIDEO_IMPEXP
+#endif
+#endif
+
+#ifndef COREVIDEO_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define COREVIDEO_EXTERNC_BEGIN extern "C" {
+#define COREVIDEO_EXTERNC_END }
+#else
+#define COREVIDEO_EXTERNC_BEGIN
+#define COREVIDEO_EXTERNC_END
+#endif
+#endif

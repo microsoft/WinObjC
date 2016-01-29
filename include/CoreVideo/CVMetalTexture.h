@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,16 +15,17 @@
 //******************************************************************************
 #pragma once
 
-#import <StubIncludes.h>
-#import <CoreVideo/CoreVideoConstants.h>
 #import <CoreVideo/CoreVideoExport.h>
-#import <CoreVideo/CVBuffer.h>
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFType.h>
 #import <CoreVideo/CVImageBuffer.h>
-#import <CoreVideo/CVMetalTexture.h>
-#import <CoreVideo/CVMetalTextureCache.h>
-#import <CoreVideo/CVOpenGLESTexture.h>
-#import <CoreVideo/CVOpenGLESTextureCache.h>
-#import <CoreVideo/CVPixelBuffer.h>
-#import <CoreVideo/CVPixelBufferPool.h>
-#import <CoreVideo/CVPixelFormatDescription.h>
-#import <CoreVideo/CVTime.h>
+
+@protocol MTLTexture;
+
+typedef CVImageBufferRef CVMetalTextureRef;
+
+COREVIDEO_EXPORT CFTypeID CVMetalTextureGetTypeID() STUB_METHOD;
+COREVIDEO_EXPORT id<MTLTexture> CVMetalTextureGetTexture(CVMetalTextureRef image) STUB_METHOD;
+COREVIDEO_EXPORT Boolean CVMetalTextureIsFlipped(CVMetalTextureRef image) STUB_METHOD;
+COREVIDEO_EXPORT void CVMetalTextureGetCleanTexCoords(
+    CVMetalTextureRef image, float lowerLeft[2], float lowerRight[2], float upperRight[2], float upperLeft[2]) STUB_METHOD;
