@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include <math.h>
 #include "CoreGraphics/CGContext.h"
 #include "CGContextInternal.h"
@@ -35,11 +36,32 @@
 
 #include "..\include\CACompositor.h"
 #include "CAAnimationInternal.h"
+#include "CATransactionInternal.h"
+
+NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
+NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
+NSString* const kCATransition = @"kCATransition";
+NSString* const kCAGravityCenter = @"kCAGravityCenter";
+NSString* const kCAGravityTop = @"kCAGravityTop";
+NSString* const kCAGravityBottom = @"kCAGravityBottom";
+NSString* const kCAGravityLeft = @"kCAGravityLeft";
+NSString* const kCAGravityRight = @"kCAGravityRight";
+NSString* const kCAGravityTopLeft = @"kCAGravityTopLeft";
+NSString* const kCAGravityTopRight = @"kCAGravityTopRight";
+NSString* const kCAGravityBottomLeft = @"kCAGravityBottomLeft";
+NSString* const kCAGravityBottomRight = @"kCAGravityBottomRight";
+NSString* const kCAGravityResize = @"kCAGravityResize";
+NSString* const kCAGravityResizeAspect = @"kCAGravityResizeAspect";
+NSString* const kCAGravityResizeAspectFill = @"kCAGravityResizeAspectFill";
+NSString* const kCAFilterLinear = @"kCAFilterLinear";
+NSString* const kCAFilterNearest = @"kCAFilterNearest";
+NSString* const kCAFilterTrilinear = @"kCAFilterTrilinear";
 
 // FIXME(DH): Compatibility shim to avoid rewriting parts of CA for libobjc2.
 // VSO 6149838
 static BOOL object_isMethodFromClass(id object, SEL selector, const char* className) {
-    return class_getMethodImplementation(objc_getClass(className), selector) != class_getMethodImplementation(object_getClass(object), selector);
+    return class_getMethodImplementation(objc_getClass(className), selector) !=
+           class_getMethodImplementation(object_getClass(object), selector);
 }
 
 @interface NSValue (CATransform3D)
@@ -1130,7 +1152,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     (int) bounds.size.width, (int) bounds.size.height);
     bounds.size.height = 32;
     bounds.size.width = 32;
-    //*((char *) 0) = 0;
+    //((char *) 0) = 0;
     //assert(0);
     }
     */
@@ -1218,7 +1240,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Interoperable
 */
 
--(CGRect) contentsCenter {
+- (CGRect)contentsCenter {
     return priv->contentsCenter;
 }
 
@@ -1268,6 +1290,40 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     NSNumber* newGravity = [[NSNumber alloc] initWithInt:priv->gravity];
     [CATransaction _setPropertyForLayer:self name:@"gravity" value:newGravity];
     [newGravity release];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)contentsGravity {
+    if (priv->gravity == kGravityCenter) {
+        return kCAGravityCenter;
+    } else if (priv->gravity == kGravityResize) {
+        return kCAGravityResize;
+    } else if (priv->gravity == kGravityTop) {
+        return kCAGravityTop;
+    } else if (priv->gravity == kGravityResizeAspect) {
+        return kCAGravityResizeAspect;
+    } else if (priv->gravity == kGravityTopLeft) {
+        return kCAGravityTopLeft;
+    } else if (priv->gravity == kGravityTopRight) {
+        return kCAGravityTopRight;
+    } else if (priv->gravity == kGravityBottomLeft) {
+        return kCAGravityBottomLeft;
+    } else if (priv->gravity == kGravityLeft) {
+        return kCAGravityLeft;
+    } else if (priv->gravity == kGravityAspectFill) {
+        return kCAGravityResizeAspectFill;
+    } else if (priv->gravity == kGravityBottom) {
+        return kCAGravityBottom;
+    } else if (priv->gravity == kGravityRight) {
+        return kCAGravityRight;
+    } else if (priv->gravity == kGravityBottomRight) {
+        return kCAGravityBottomRight;
+    } else {
+        assert(0);
+    }
+    return nil;
 }
 
 /**
@@ -1355,7 +1411,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return nil;
 }
 
--(UIImageOrientation)contentsOrientation {
+- (UIImageOrientation)contentsOrientation {
     return priv->contentsOrientation;
 }
 
@@ -1483,7 +1539,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
-- (void)animationForKey:(NSString*)key {
+- (CAAnimation*)animationForKey:(NSString*)key {
     if (priv->_animations == nil) {
         priv->_animations = [NSMutableDictionary new];
     }
@@ -1611,17 +1667,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Stub
-*/
-- (void)setDoubleSided:(BOOL)doubleSided {
-    UNIMPLEMENTED();
-}
-
-- (void)setGeometryFlipped:(BOOL)flipped {
-    EbrDebugLog("setGeometryFlipped not supported\n");
-}
-
-/**
  @Status Interoperable
 */
 - (void)setBackgroundColor:(CGColorRef)color {
@@ -1640,6 +1685,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     CGColorRelease(old);
 
     [self setNeedsDisplay];
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGColorRef)backgroundColor {
+    return priv->_backgroundColor;
 }
 
 - (void)_setContentColor:(CGColorRef)newColor {
@@ -1715,14 +1767,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     NSNumber* newScale = [[NSNumber alloc] initWithFloat:priv->contentsScale];
     [CATransaction _setPropertyForLayer:self name:@"contentsScale" value:newScale];
     [newScale release];
-}
-
-/**
- @Status Stub
-*/
-- (void)setRasterizationScale:(float)scale {
-    UNIMPLEMENTED();
-    EbrDebugLog("setRasterizationScale not supported\n");
 }
 
 /**
@@ -1811,23 +1855,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Stub
-*/
-- (void)setMagnificationFilter:(NSString*)filter {
-    UNIMPLEMENTED();
-}
-
-- (void)setEdgeAntialiasingMask:(unsigned)mask {
-}
-
-/**
- @Status Stub
-*/
-- (void)setMinificationFilter:(NSString*)filter {
-    UNIMPLEMENTED();
-}
-
-/**
  @Status Interoperable
 */
 - (void)setOpacity:(float)value {
@@ -1867,6 +1894,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (NSString*)name {
     return priv->_name;
+}
+
+/**
+ @Status Sub
+*/
+- (void)setSublayers:(NSArray*)sublayers {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1979,6 +2013,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setNeedsDisplayOnBoundsChange:(BOOL)needsDisplayOnBoundsChange {
     priv->needsDisplayOnBoundsChange = needsDisplayOnBoundsChange;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)needsDisplayOnBoundsChange {
+    return priv->needsDisplayOnBoundsChange;
 }
 
 - (CALayer*)hitTest:(CGPoint)point {
@@ -2136,10 +2177,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     UNIMPLEMENTED();
     EbrDebugLog("mask not supported\n");
     return nil;
-}
-
-- (void)setFillMode:(NSString*)mode {
-    EbrDebugLog("setFillMode not supported\n");
 }
 
 /**
@@ -2374,6 +2411,137 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
 
 - (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
     GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)needsDisplay {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)needsDisplayForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setNeedsDisplayInRect:(CGRect)theRect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)needsLayout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)modelLayer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)contentsAreFlipped {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGSize)preferredFrameSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval toLayer:(CALayer*)layer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)scrollPoint:(CGPoint)thePoint {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)scrollRectToVisible:(CGRect)theRect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)shouldArchiveValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)defaultValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

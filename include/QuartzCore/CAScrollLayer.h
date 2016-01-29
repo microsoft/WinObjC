@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,20 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#ifndef QUARTZCORE_IMPEXP
-#ifdef __QUARTZCORE_INSIDE_BUILD
-#define QUARTZCORE_IMPEXP __declspec(dllexport)
-#else
-#define QUARTZCORE_IMPEXP __declspec(dllimport)
-#endif
-#endif
+#pragma once
 
-#ifndef QUARTZCORE_EXPORT
-#ifdef __cplusplus
-#define QUARTZCORE_EXPORT QUARTZCORE_IMPEXP extern "C"
-#define QUARTZCORE_EXPORT_CLASS QUARTZCORE_IMPEXP
-#else
-#define QUARTZCORE_EXPORT QUARTZCORE_IMPEXP extern
-#define QUARTZCORE_EXPORT_CLASS QUARTZCORE_IMPEXP
-#endif
-#endif
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
+#import <QuartzCore/CALayer.h>
+
+@class NSString;
+
+CA_EXPORT NSString* const kCAScrollNone;
+CA_EXPORT NSString* const kCAScrollVertically;
+CA_EXPORT NSString* const kCAScrollHorizontally;
+CA_EXPORT NSString* const kCAScrollBoth;
+
+CA_EXPORT_CLASS
+@interface CAScrollLayer : CALayer <CAMediaTiming, NSCoding>
+@property (copy) NSString* scrollMode STUB_PROPERTY;
+- (void)scrollToPoint:(CGPoint)thePoint STUB_METHOD;
+- (void)scrollToRect:(CGRect)theRect STUB_METHOD;
+@end

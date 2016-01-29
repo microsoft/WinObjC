@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,25 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
+#import <QuartzCore/CALayer.h>
+#import <Metal/MetalConstants.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
+@protocol MTLDevice;
+@protocol CAMetalDrawable;
 
-@implementation CAGradientLayer
+CA_EXPORT_CLASS
+@interface CAMetalLayer : CALayer <CAMediaTiming, NSCoding>
+
+@property (retain) id<MTLDevice> device STUB_PROPERTY;
+@property MTLPixelFormat pixelFormat STUB_PROPERTY;
+@property BOOL framebufferOnly STUB_PROPERTY;
+@property CGSize drawableSize STUB_PROPERTY;
+- (id<CAMetalDrawable>)nextDrawable STUB_METHOD;
+@property BOOL presentsWithTransaction STUB_PROPERTY;
+
 @end

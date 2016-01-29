@@ -13,20 +13,35 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <QuartzCore/CABase.h>
+#import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAAnimation.h>
+#import <QuartzCore/CAAnimationGroup.h>
 #import <QuartzCore/CABasicAnimation.h>
-#import <QuartzCore/CAEAGLLayer.h>
-#import <QuartzCore/CAEmitterLayer.h>
-#import <QuartzCore/CAEmitterCell.h>
-#import <QuartzCore/CALayer.h>
-#import <QuartzCore/CAGradientLayer.h>
-#import <QuartzCore/CAMediaTimingFunction.h>
-#import <QuartzCore/CATransaction.h>
-#import <QuartzCore/CATextLayer.h>
-#import <QuartzCore/CAShapeLayer.h>
 #import <QuartzCore/CADisplayLink.h>
-#import <QuartzCore/CAReplicatorLayer.h>
+#import <QuartzCore/CAEAGLLayer.h>
+#import <QuartzCore/CAEmitterCell.h>
+#import <QuartzCore/CAEmitterLayer.h>
+#import <QuartzCore/CAGradientLayer.h>
 #import <QuartzCore/CAKeyframeAnimation.h>
+#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CALayerDelegate.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <QuartzCore/CAMediaTimingFunction.h>
+#import <QuartzCore/CAMetalDrawable.h>
+#import <QuartzCore/CAMetalLayer.h>
+#import <QuartzCore/CAPropertyAnimation.h>
+#import <QuartzCore/CARenderer.h>
+#import <QuartzCore/CAReplicatorLayer.h>
+#import <QuartzCore/CAScrollLayer.h>
+#import <QuartzCore/CAShapeLayer.h>
+#import <QuartzCore/CATextLayer.h>
 #import <QuartzCore/CATiledLayer.h>
+#import <QuartzCore/CATransaction.h>
+#import <QuartzCore/CATransform3D.h>
+#import <QuartzCore/CATransformLayer.h>
+#import <QuartzCore/CATransition.h>
+#import <QuartzCore/CAValueFunction.h>
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CoreAnimationFunctions.h>

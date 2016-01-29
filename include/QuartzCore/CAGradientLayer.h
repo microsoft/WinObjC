@@ -13,21 +13,25 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAGRADIENTLAYER_H_
-#define _CAGRADIENTLAYER_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
 #import <QuartzCore/CALayer.h>
-#import <QuartzCore/QuartzCoreExport.h>
 
-QUARTZCORE_EXPORT_CLASS
-@interface CAGradientLayer : CALayer
+@class NSString;
+@class NSArray;
+
+CA_EXPORT NSString* const kCAGradientLayerAxial;
+
+CA_EXPORT_CLASS
+@interface CAGradientLayer : CALayer <CAMediaTiming, NSCoding>
 
 @property (copy) NSArray* colors;
 @property (copy) NSArray* locations;
-@property CGPoint startPoint;
 @property CGPoint endPoint;
+@property CGPoint startPoint;
+@property (copy) NSString* type STUB_PROPERTY;
 
 @end
-
-#endif /* _CAGRADIENTLAYER_H_ */

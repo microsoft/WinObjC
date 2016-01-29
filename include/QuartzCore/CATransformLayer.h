@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
+#import <QuartzCore/CALayer.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
-
-@implementation CAGradientLayer
+CA_EXPORT_CLASS
+@interface CATransformLayer : CALayer <CAMediaTiming, NSCoding>
+- (CALayer*)hitTest:(CGPoint)thePoint STUB_METHOD;
 @end

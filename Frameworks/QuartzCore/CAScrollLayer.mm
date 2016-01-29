@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,29 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#import <StubReturn.h>
+#import <QuartzCore/CAScrollLayer.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
+NSString* const kCAScrollNone = @"kCAScrollNone";
+NSString* const kCAScrollVertically = @"kCAScrollVertically";
+NSString* const kCAScrollHorizontally = @"kCAScrollHorizontally";
+NSString* const kCAScrollBoth = @"kCAScrollBoth";
 
-@implementation CAGradientLayer
+@implementation CAScrollLayer
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)scrollToPoint:(CGPoint)thePoint {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)scrollToRect:(CGRect)theRect {
+    UNIMPLEMENTED();
+}
+
 @end

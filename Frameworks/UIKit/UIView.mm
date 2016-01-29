@@ -17,6 +17,7 @@
 #include "Starboard.h"
 #include "UIAnimationNotification.h"
 #include "QuartzCore/CABasicAnimation.h"
+#include "QuartzCore/CALayer.h"
 #include "UIAppearanceSetter.h"
 
 #import "UIViewInternal.h"
@@ -1613,7 +1614,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (BOOL)isOpaque {
-    return [layer opaque];
+    return [layer isOpaque];
 }
 
 /**

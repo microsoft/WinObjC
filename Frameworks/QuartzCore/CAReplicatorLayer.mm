@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,8 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#import <StubReturn.h>
+#import <QuartzCore/CAReplicatorLayer.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
-
-@implementation CAGradientLayer
+@implementation CAReplicatorLayer
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#import <QuartzCore/CoreAnimationExport.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
+@protocol MTLTexture;
+@class CAMetalLayer;
 
-@implementation CAGradientLayer
+@protocol CAMetalDrawable
+
+@required
+@property (readonly) id<MTLTexture> texture;
+@property (readonly) CAMetalLayer* layer;
+
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,13 +14,17 @@
 //
 //******************************************************************************
 
-#ifndef _CABASE_H_
-#define _CABASE_H_
+#import <StubReturn.h>
+#import <QuartzCore/CATiledLayer.h>
 
-#import <CoreFoundation/CoreFoundation.h>
-#import <TargetConditionals.h>
-#import <QuartzCore/CoreAnimationExport.h>
+@implementation CATiledLayer
+/**
+ @Status Stub
+ @Notes
+*/
++ (CFTimeInterval)fadeDuration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-CA_EXPORT CFTimeInterval CACurrentMediaTime(void);
-
-#endif // _CABASE_H_
+@end

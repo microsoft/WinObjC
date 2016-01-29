@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#include <QuartzCore/CoreAnimationFunctions.h>
+#include <Platform/EbrPlatform.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
-
-@implementation CAGradientLayer
-@end
+/**
+ @Status Interoperable
+*/
+double CACurrentMediaTime() {
+    return EbrGetMediaTime();
+}

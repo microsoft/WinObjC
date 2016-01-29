@@ -13,12 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CATRANSACTION_H_
-#define _CATRANSACTION_H_
-
-#import <Foundation/NSObject.h>
-#import <QuartzCore/CABase.h>
+#import <QuartzCore/CoreAnimationExport.h>
 
 @class CAMediaTimingFunction;
 
@@ -33,12 +30,12 @@ CA_EXPORT_CLASS
 + (BOOL)disableActions;
 + (CFTimeInterval)animationDuration;
 + (CAMediaTimingFunction*)animationTimingFunction;
-+ valueForKey:(NSString*)key;
++ (id)valueForKey:(NSString*)key;
 
-+ (void)setAnimationDuration:(CFTimeInterval)value;
-+ (void)setAnimationTimingFunction:(CAMediaTimingFunction*)value;
-+ (void)setDisableActions:(BOOL)value;
-+ (void)setValue:value forKey:(NSString*)key;
++ (void)setAnimationDuration:(CFTimeInterval)duration;
++ (void)setAnimationTimingFunction:(CAMediaTimingFunction*)function;
++ (void)setDisableActions:(BOOL)flag;
++ (void)setValue:(id)anObject forKey:(NSString*)key;
 
 + (void)begin;
 + (void)commit;
@@ -47,11 +44,7 @@ CA_EXPORT_CLASS
 + (void)lock;
 + (void)unlock;
 
-#if __BLOCKS__
 + (void)setCompletionBlock:(void (^)(void))block;
 + (void (^)(void))completionBlock;
-#endif
 
 @end
-
-#endif /* _CATRANSACTION_H_ */

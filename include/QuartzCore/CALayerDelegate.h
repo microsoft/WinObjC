@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "Starboard.h"
-#import <QuartzCore\CAGradientLayer.h>
+#import <QuartzCore/CoreAnimationExport.h>
 
-NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
+@class CALayer;
+@protocol CAAction;
+@class NSString;
 
-@implementation CAGradientLayer
+@interface NSObject (CALayerDelegate)
+- (void)displayLayer:(CALayer*)layer;
+- (void)drawLayer:(CALayer*)layer inContext:(CGContextRef)ctx;
+- (void)layoutSublayersOfLayer:(CALayer*)layer;
+- (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key;
 @end

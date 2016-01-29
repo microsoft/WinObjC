@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,37 +15,28 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include "Starboard.h"
-#include "QuartzCore/CAEmitterCell.h"
+#import <QuartzCore/CAValueFunction.h>
 
-@implementation CAEmitterCell
+NSString* const kCAValueFunctionRotateX = @"kCAValueFunctionRotateX";
+NSString* const kCAValueFunctionRotateY = @"kCAValueFunctionRotateY";
+NSString* const kCAValueFunctionRotateZ = @"kCAValueFunctionRotateZ";
+NSString* const kCAValueFunctionScale = @"kCAValueFunctionScale";
+NSString* const kCAValueFunctionScaleX = @"kCAValueFunctionScaleX";
+NSString* const kCAValueFunctionScaleY = @"kCAValueFunctionScaleY";
+NSString* const kCAValueFunctionScaleZ = @"kCAValueFunctionScaleZ";
+NSString* const kCAValueFunctionTranslate = @"kCAValueFunctionTranslate";
+NSString* const kCAValueFunctionTranslateX = @"kCAValueFunctionTranslateX";
+NSString* const kCAValueFunctionTranslateY = @"kCAValueFunctionTranslateY";
+NSString* const kCAValueFunctionTranslateZ = @"kCAValueFunctionTranslateZ";
 
+@implementation CAValueFunction
 /**
  @Status Stub
+ @Notes
 */
-+ (instancetype)emitterCell {
++ (instancetype)functionWithName:(NSString*)name {
     UNIMPLEMENTED();
-    return [CAEmitterCell new];
-}
-
-- (id)init {
-    return self;
-}
-
-/**
- @Status Stub
-*/
-+ (id)defaultValueForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return nil;
-}
-
-/**
- @Status Stub
-*/
-- (BOOL)shouldArchiveValueForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return NO;
+    return StubReturn();
 }
 
 /**

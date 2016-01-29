@@ -1,83 +1,215 @@
 LIBRARY QuartzCore
     EXPORTS
-        CACurrentMediaTime
-        CASignalDisplayLink
-        CATransform3DConcat
-        CATransform3DGetPosition
-        CATransform3DGetScale
-        CATransform3DIdentity DATA
-        CATransform3DIsIdentity
-        CATransform3DMakeOrtho
-        CATransform3DMakeRotation
-        CATransform3DMakeScale
-        CATransform3DMakeTranslation
-        CATransform3DRotate
-        CATransform3DScale
-        CATransform3DTransformPoints
-        CATransform3DTranslate
-        GetCACompositor
-        SetCACompositor
+        ; CAAnimation.mm
+        _OBJC_CLASS_CAAnimation DATA
+        __objc_class_name_CAAnimation CONSTANT
+
+        ; CAAnimationGroup.mm
         _OBJC_CLASS_CAAnimationGroup DATA
-        _OBJC_CLASS_CABasicAnimation DATA
-        _OBJC_CLASS_CADisplayLink DATA
-        _OBJC_CLASS_CAEAGLLayer DATA
-        _OBJC_CLASS_CAEmitterCell DATA
-        _OBJC_CLASS_CAEmitterLayer DATA
-        _OBJC_CLASS_CAGradientLayer DATA
-        _OBJC_CLASS_CAKeyframeAnimation DATA
-        _OBJC_CLASS_CALayer DATA
-        _OBJC_CLASS_CAMediaTimingFunction DATA
-        _OBJC_CLASS_CAShapeLayer DATA
-        _OBJC_CLASS_CATextLayer DATA
-        _OBJC_CLASS_CATransaction DATA
-        _OBJC_CLASS_CATransition DATA
         __objc_class_name_CAAnimationGroup CONSTANT
+
+        ; CABasicAnimation.mm
+        _OBJC_CLASS_CABasicAnimation DATA
         __objc_class_name_CABasicAnimation CONSTANT
+
+        ; CADisplayLink.mm
+        _OBJC_CLASS_CADisplayLink DATA
         __objc_class_name_CADisplayLink CONSTANT
+
+        ; CAEAGLLayer.mm
+        _OBJC_CLASS_CAEAGLLayer DATA
         __objc_class_name_CAEAGLLayer CONSTANT
+
+        ; CAEmitterCell.mm
+        _OBJC_CLASS_CAEmitterCell DATA
         __objc_class_name_CAEmitterCell CONSTANT
-        __objc_class_name_CAEmitterLayer CONSTANT
-        __objc_class_name_CAGradientLayer CONSTANT
-        __objc_class_name_CAKeyframeAnimation CONSTANT
-        __objc_class_name_CALayer CONSTANT
-        __objc_class_name_CAMediaTimingFunction CONSTANT
-        __objc_class_name_CAShapeLayer CONSTANT
-        __objc_class_name_CATextLayer CONSTANT
-        __objc_class_name_CATransaction CONSTANT
-        __objc_class_name_CATransition CONSTANT
-        kCAEmitterLayerAdditive DATA
-        kCAEmitterLayerBackToFront DATA
-        kCAEmitterLayerCircle DATA
-        kCAEmitterLayerCuboid DATA
+
+        ; CAEmitterLayer.mm
+        kCAEmitterLayerPoint DATA
         kCAEmitterLayerLine DATA
+        kCAEmitterLayerRectangle DATA
+        kCAEmitterLayerCuboid DATA
+        kCAEmitterLayerCircle DATA
+        kCAEmitterLayerSphere DATA
+        kCAEmitterLayerPoints DATA
+        kCAEmitterLayerOutline DATA
+        kCAEmitterLayerSurface DATA
+        kCAEmitterLayerVolume DATA
+        kCAEmitterLayerUnordered DATA
         kCAEmitterLayerOldestFirst DATA
         kCAEmitterLayerOldestLast DATA
-        kCAEmitterLayerOutline DATA
-        kCAEmitterLayerPoint DATA
-        kCAEmitterLayerPoints DATA
-        kCAEmitterLayerRectangle DATA
-        kCAEmitterLayerSphere DATA
-        kCAEmitterLayerSurface DATA
-        kCAEmitterLayerUnordered DATA
-        kCAEmitterLayerVolume DATA
-        kCAFillModeBackwards DATA
-        kCAFillModeBoth DATA
-        kCAFillModeForwards DATA
-        kCAFillModeFrozen DATA
-        kCAFillModeRemoved DATA
+        kCAEmitterLayerBackToFront DATA
+        kCAEmitterLayerAdditive DATA
+        _OBJC_CLASS_CAEmitterLayer DATA
+        __objc_class_name_CAEmitterLayer CONSTANT
+
+        ; CAGradientLayer.mm
+        kCAGradientLayerAxial DATA
+        _OBJC_CLASS_CAGradientLayer DATA
+        __objc_class_name_CAGradientLayer CONSTANT
+
+        ; CAKeyframeAnimation.mm
+        kCAAnimationRotateAuto DATA
+        kCAAnimationRotateAutoReverse DATA
+        kCAAnimationLinear DATA
+        kCAAnimationDiscrete DATA
+        kCAAnimationPaced DATA
+        kCAAnimationCubic DATA
+        kCAAnimationCubicPaced DATA
+        _OBJC_CLASS_CAKeyframeAnimation DATA
+        __objc_class_name_CAKeyframeAnimation CONSTANT
+
+        ; CALayer.mm
+        kCAOnOrderIn DATA
+        kCAOnOrderOut DATA
+        kCATransition DATA
+        kCAGravityCenter DATA
+        kCAGravityTop DATA
         kCAGravityBottom DATA
+        kCAGravityLeft DATA
+        kCAGravityRight DATA
+        kCAGravityTopLeft DATA
+        kCAGravityTopRight DATA
         kCAGravityBottomLeft DATA
         kCAGravityBottomRight DATA
-        kCAGravityCenter DATA
-        kCAGravityLeft DATA
         kCAGravityResize DATA
         kCAGravityResizeAspect DATA
         kCAGravityResizeAspectFill DATA
-        kCAGravityRight DATA
-        kCAGravityTop DATA
-        kCAGravityTopLeft DATA
-        kCAGravityTopRight DATA
-        kCAMediaTimingFunctionEaseInEaseOut DATA
+        CATransform3DIdentity DATA
+        kCAFilterLinear DATA
+        kCAFilterNearest DATA
+        kCAFilterTrilinear DATA
+        _OBJC_CLASS_CALayer DATA
+        __objc_class_name_CALayer CONSTANT
+
+        ; CALayerDelegate.mm
+
+        ; CAMediaTiming.mm
+        kCAFillModeRemoved DATA
+        kCAFillModeForwards DATA
+        kCAFillModeBackwards DATA
+        kCAFillModeBoth DATA
+        kCAFillModeFrozen DATA
+
+        ; CAMediaTimingFunction.mm
         kCAMediaTimingFunctionLinear DATA
+        kCAMediaTimingFunctionEaseIn DATA
+        kCAMediaTimingFunctionEaseOut DATA
+        kCAMediaTimingFunctionEaseInEaseOut DATA
+        kCAMediaTimingFunctionDefault DATA
+        _OBJC_CLASS_CAMediaTimingFunction DATA
+        __objc_class_name_CAMediaTimingFunction CONSTANT
+
+        ; CAMetalLayer.mm
+        _OBJC_CLASS_CAMetalLayer DATA
+        __objc_class_name_CAMetalLayer CONSTANT
+
+        ; CAPropertyAnimation.mm
+        _OBJC_CLASS_CAPropertyAnimation DATA
+        __objc_class_name_CAPropertyAnimation CONSTANT
+
+        ; CAReplicatorLayer.mm
+        _OBJC_CLASS_CAReplicatorLayer DATA
+        __objc_class_name_CAReplicatorLayer CONSTANT
+
+        ; CAScrollLayer.mm
+        kCAScrollNone DATA
+        kCAScrollVertically DATA
+        kCAScrollHorizontally DATA
+        kCAScrollBoth DATA
+        _OBJC_CLASS_CAScrollLayer DATA
+        __objc_class_name_CAScrollLayer CONSTANT
+
+        ; CAShapeLayer.mm
+        kCAFillRuleNonZero DATA
+        kCAFillRuleEvenOdd DATA
+        kCALineJoinMiter DATA
+        kCALineJoinRound DATA
+        kCALineJoinBevel DATA
+        kCALineCapButt DATA
+        kCALineCapRound DATA
+        kCALineCapSquare DATA
+        _OBJC_CLASS_CAShapeLayer DATA
+        __objc_class_name_CAShapeLayer CONSTANT
+
+        ; CATextLayer.mm
+        kCATruncationNone DATA
+        kCATruncationStart DATA
+        kCATruncationEnd DATA
+        kCATruncationMiddle DATA
+        kCAAlignmentNatural DATA
+        kCAAlignmentLeft DATA
+        kCAAlignmentRight DATA
+        kCAAlignmentCenter DATA
+        kCAAlignmentJustified DATA
+        _OBJC_CLASS_CATextLayer DATA
+        __objc_class_name_CATextLayer CONSTANT
+
+        ; CATiledLayer.mm
+        _OBJC_CLASS_CATiledLayer DATA
+        __objc_class_name_CATiledLayer CONSTANT
+
+        ; CATransaction.mm
         kCATransactionAnimationDuration DATA
         kCATransactionDisableActions DATA
+        kCATransactionAnimationTimingFunction DATA
+        kCATransactionCompletionBlock DATA
+        _OBJC_CLASS_CATransaction DATA
+        __objc_class_name_CATransaction CONSTANT
+
+        ; CATransformLayer.mm
+        _OBJC_CLASS_CATransformLayer DATA
+        __objc_class_name_CATransformLayer CONSTANT
+
+        ; CATransition.mm
+        kCATransitionFade DATA
+        kCATransitionMoveIn DATA
+        kCATransitionPush DATA
+        kCATransitionReveal DATA
+        kCATransitionFromRight DATA
+        kCATransitionFromLeft DATA
+        kCATransitionFromTop DATA
+        kCATransitionFromBottom DATA
+        _OBJC_CLASS_CATransition DATA
+        __objc_class_name_CATransition CONSTANT
+
+        ; CAValueFunction.mm
+        kCAValueFunctionRotateX DATA
+        kCAValueFunctionRotateY DATA
+        kCAValueFunctionRotateZ DATA
+        kCAValueFunctionScale DATA
+        kCAValueFunctionScaleX DATA
+        kCAValueFunctionScaleY DATA
+        kCAValueFunctionScaleZ DATA
+        kCAValueFunctionTranslate DATA
+        kCAValueFunctionTranslateX DATA
+        kCAValueFunctionTranslateY DATA
+        kCAValueFunctionTranslateZ DATA
+        _OBJC_CLASS_CAValueFunction DATA
+        __objc_class_name_CAValueFunction CONSTANT
+
+        ; Core Animation Function Reference.mm
+        CACurrentMediaTime
+        CATransform3DIsIdentity
+        CATransform3DEqualToTransform
+        CATransform3DMakeTranslation
+        CATransform3DMakeScale
+        CATransform3DMakeRotation
+        CATransform3DTranslate
+        CATransform3DScale
+        CATransform3DRotate
+        CATransform3DConcat
+        CATransform3DInvert
+        CATransform3DMakeAffineTransform
+        CATransform3DIsAffine
+        CATransform3DGetAffineTransform
+
+        ; NSValue.mm
+
+        CASignalDisplayLink
+        CATransform3DGetPosition
+        CATransform3DGetScale
+        CATransform3DMakeOrtho
+        CATransform3DTransformPoints
+        GetCACompositor
+        SetCACompositor
