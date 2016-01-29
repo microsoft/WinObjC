@@ -16,9 +16,8 @@
 
 #pragma once
 
-#include <CoreAudio/CoreAudioExport.h>
-#include <CoreFoundation/CFBase.h>
 #include <StubIncludes.h>
+#include <CoreFoundation/CFBase.h>
 
 typedef enum AudioChannelLayoutTag : UInt32 AudioChannelLayoutTag;
 typedef enum AudioChannelLabel : UInt32 AudioChannelLabel;
@@ -109,29 +108,10 @@ typedef SInt16 AudioSampleType;
 typedef SInt32 AudioUnitSampleType;
 #define kAudioUnitSampleFractionBits 24;
 
-#define TestAudioFormatNativeEndian \
-    (f)((f.mFormatID == kAudioFormatLinearPCM) && ((f.mFormatFlags & kAudioFormatFlagIsBigEndian) == kAudioFormatFlagsNativeEndian))
-COREAUDIO_EXPORT bool IsAudioFormatNativeEndian(const AudioStreamBasicDescription& f) STUB_METHOD;
+#define TestAudioFormatNativeEndian(f) \
+    ((f.mFormatID == kAudioFormatLinearPCM) && ((f.mFormatFlags & kAudioFormatFlagIsBigEndian) == kAudioFormatFlagsNativeEndian))
 
 #define AudioChannelLayoutTag_GetNumberOfChannels(layoutTag) ((UInt32)((layoutTag)&0x0000FFFF))
-
-COREAUDIO_EXPORT UInt32 CalculateLPCMFlags(
-    UInt32 inValidBitsPerChannel, UInt32 inTotalBitsPerChannel, bool inIsFloat, bool inIsBigEndian, bool inIsNonInterleaved) STUB_METHOD;
-
-COREAUDIO_EXPORT void FillOutASBDForLPCM(AudioStreamBasicDescription& outASBD,
-                                         Float64 inSampleRate,
-                                         UInt32 inChannelsPerFrame,
-                                         UInt32 inValidBitsPerChannel,
-                                         UInt32 inTotalBitsPerChannel,
-                                         bool inIsFloat,
-                                         bool inIsBigEndian,
-                                         bool inIsNonInterleaved) STUB_METHOD;
-COREAUDIO_EXPORT void FillOutAudioTimeStampWithHostTime(AudioTimeStamp& outATS, UInt64 inHostTime) STUB_METHOD;
-COREAUDIO_EXPORT void FillOutAudioTimeStampWithSampleTime(AudioTimeStamp& outATS, Float64 inSampleTime) STUB_METHOD;
-COREAUDIO_EXPORT void FillOutAudioTimeStampWithSampleAndHostTime(AudioTimeStamp& outATS,
-                                                                 Float64 inSampleTime,
-                                                                 UInt64 inHostTime) STUB_METHOD;
-
 #define kAudioUnitSampleFractionBits 24
 enum { kAudioStreamAnyRate = 0 };
 enum {
@@ -503,3 +483,51 @@ enum AudioChannelLayoutTag : UInt32 {
 #define kAudio_FileNotFoundError -43
 #define kAudio_ParamError -50
 #define kAudio_MemFullError -108
+
+#ifdef __cplusplus
+static inline bool IsAudioFormatNativeEndian(const AudioStreamBasicDescription& f) {
+    return TestAudioFormatNativeEndian(f);
+}
+
+static inline UInt32 CalculateLPCMFlags(
+    UInt32 inValidBitsPerChannel, UInt32 inTotalBitsPerChannel, bool inIsFloat, bool inIsBigEndian, bool inIsNonInterleaved) {
+    UInt32 lpcmFlags = 0;
+    lpcmFlags |= (inTotalBitsPerChannel == inValidBitsPerChannel ? kAudioFormatFlagIsPacked : kAudioFormatFlagIsAlignedHigh);
+    lpcmFlags |= (inIsFloat ? kAudioFormatFlagIsFloat : kAudioFormatFlagIsSignedInteger);
+    lpcmFlags |= (inIsBigEndian ? kAudioFormatFlagIsBigEndian : 0);
+    lpcmFlags |= (inIsNonInterleaved ? kAudioFormatFlagIsNonInterleaved : 0);
+    return lpcmFlags;
+}
+
+static inline void FillOutASBDForLPCM(AudioStreamBasicDescription& outASBD,
+                                      Float64 inSampleRate,
+                                      UInt32 inChannelsPerFrame,
+                                      UInt32 inValidBitsPerChannel,
+                                      UInt32 inTotalBitsPerChannel,
+                                      bool inIsFloat,
+                                      bool inIsBigEndian,
+                                      bool inIsNonInterleaved) STUB_METHOD {
+    outASBD.mSampleRate = inSampleRate;
+    outASBD.mChannelsPerFrame = inChannelsPerFrame;
+    outASBD.mFormatID = kAudioFormatLinearPCM;
+    outASBD.mFormatFlags = CalculateLPCMFlags(inValidBitsPerChannel, inTotalBitsPerChannel, inIsFloat, inIsBigEndian, inIsNonInterleaved);
+    outASBD.mBitsPerChannel = inValidBitsPerChannel;
+
+    // TODO: AudioStreamBasicDescription has some byte/frame length fields
+    // that need to be calculated, presumably from channel size.
+}
+
+static inline void FillOutAudioTimeStampWithHostTime(AudioTimeStamp& outATS, UInt64 inHostTime) {
+    outATS.mHostTime = inHostTime;
+}
+
+static inline void FillOutAudioTimeStampWithSampleTime(AudioTimeStamp& outATS, Float64 inSampleTime) {
+    outATS.mSampleTime = inSampleTime;
+}
+
+static inline void FillOutAudioTimeStampWithSampleAndHostTime(AudioTimeStamp& outATS, Float64 inSampleTime, UInt64 inHostTime) {
+    outATS.mHostTime = inHostTime;
+    outATS.mSampleTime = inSampleTime;
+}
+
+#endif

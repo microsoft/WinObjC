@@ -76,10 +76,6 @@ enum {
     kAudioSessionProperty_AudioRoute = 'rout'
 };
 
-enum {
-    AVAudioSessionInterruptionFlags_ShouldResume = 1,
-};
-
 typedef uint32_t AudioSessionPropertyID;
 
 enum {
