@@ -14,18 +14,13 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreTelephony/CTCall.h>
 
-#import <CoreTelephony/CoreTelephonyExport.h>
-#import <Foundation/NSObject.h>
+const NSString* CTCallStateDialing = @"CTCallStateDialing";
+const NSString* CTCallStateIncoming = @"CTCallStateIncoming";
+const NSString* CTCallStateConnected = @"CTCallStateConnected";
+const NSString* CTCallStateDisconnected = @"CTCallStateDisconnected";
 
-@class NSString;
-
-CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
+@implementation CTCall
 @end

@@ -14,18 +14,8 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreTelephony/CTCallCenter.h>
 
-#import <CoreTelephony/CoreTelephonyExport.h>
-#import <Foundation/NSObject.h>
-
-@class NSString;
-
-CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
+@implementation CTCallCenter
 @end

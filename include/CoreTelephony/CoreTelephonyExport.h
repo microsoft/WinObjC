@@ -16,16 +16,26 @@
 
 #pragma once
 
-#import <CoreTelephony/CoreTelephonyExport.h>
-#import <Foundation/NSObject.h>
+#ifndef CORETELEPHONY_IMPEXP
+#define CORETELEPHONY_IMPEXP __declspec(dllimport)
+#endif
 
-@class NSString;
+#ifndef CORETELEPHONY_EXPORT
+#ifdef __cplusplus
+#define CORETELEPHONY_EXPORT CORETELEPHONY_IMPEXP extern "C"
+#define CORETELEPHONY_EXPORT_CLASS CORETELEPHONY_IMPEXP
+#else
+#define CORETELEPHONY_EXPORT CORETELEPHONY_IMPEXP extern
+#define CORETELEPHONY_EXPORT_CLASS CORETELEPHONY_IMPEXP
+#endif
+#endif
 
-CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
-@end
+#ifndef CORETELEPHONY_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define CORETELEPHONY_EXTERNC_BEGIN extern "C" {
+#define CORETELEPHONY_EXTERNC_END }
+#else
+#define CORETELEPHONY_EXTERNC_BEGIN
+#define CORETELEPHONY_EXTERNC_END
+#endif
+#endif

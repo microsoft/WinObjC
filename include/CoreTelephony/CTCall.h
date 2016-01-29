@@ -21,11 +21,13 @@
 
 @class NSString;
 
+CORETELEPHONY_EXPORT const NSString* CTCallStateDialing;
+CORETELEPHONY_EXPORT const NSString* CTCallStateIncoming;
+CORETELEPHONY_EXPORT const NSString* CTCallStateConnected;
+CORETELEPHONY_EXPORT const NSString* CTCallStateDisconnected;
+
 CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
+@interface CTCall : NSObject <NSObject>
+@property (readonly, copy, nonatomic) NSString* callID STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* callState STUB_PROPERTY;
 @end

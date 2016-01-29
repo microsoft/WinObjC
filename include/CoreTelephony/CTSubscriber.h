@@ -17,15 +17,12 @@
 #pragma once
 
 #import <CoreTelephony/CoreTelephonyExport.h>
-#import <Foundation/NSObject.h>
 
 @class NSString;
+@class NSData;
 
+CORETELEPHONY_EXPORT NSString* const CTSubscriberTokenRefreshed;
 CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
+@interface CTSubscriber
+@property (readonly, retain, nonatomic) NSData* carrierToken STUB_PROPERTY;
 @end

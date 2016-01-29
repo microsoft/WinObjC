@@ -39,6 +39,7 @@
       <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
       <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
       <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+      <IncludeCoreTelephony Condition="$(LinkAdditionalDependencies.Contains('CoreTelephony.lib'))">true</IncludeCoreTelephony>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
@@ -132,6 +133,7 @@
       <SBResourceCopy Condition="'$(IncludeCoreData)' == 'true'" Include="$(StarboardLibDirs)\CoreData.dll" />
 
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
+
       <SBResourceCopy Condition="'$(IncludeHomeKit)' == 'true'" Include="$(StarboardLibDirs)\HomeKit.dll" />
       
       <SBResourceCopy Condition="'$(IncludeCoreVideo)' == 'true'" Include="$(StarboardLibDirs)\CoreVideo.dll" />
@@ -140,6 +142,8 @@
       <SBResourceCopy Condition="'$(IncludeHealthKit)' == 'true'" Include="$(StarboardLibDirs)\HealthKit.dll" />
 
       <SBResourceCopy Condition="'$(IncludeGamePlayKit)' == 'true'" Include="$(StarboardLibDirs)\GamePlayKit.dll" />
+      
+      <SBResourceCopy Condition="'$(IncludeCoreTelephony)' == 'true'" Include="$(StarboardLibDirs)\CoreTelephony.dll" />
     </ItemGroup>
   </Target>
 

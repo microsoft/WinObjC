@@ -2,9 +2,7 @@ LIBRARY Foundation
     EXPORTS
         ; CF ObjC classes
         _OBJC_CLASS_CFConstantString CONSTANT ; This needs to be CONSTANT because CFConstantString is special for @"" syntax
-        _OBJC_CLASS_CTTelephonyNetworkInfo DATA
         __objc_class_name_CFConstantString CONSTANT
-        __objc_class_name_CTTelephonyNetworkInfo CONSTANT
 
         ; Foundation ObjC classes
         _OBJC_CLASS_NSArray DATA

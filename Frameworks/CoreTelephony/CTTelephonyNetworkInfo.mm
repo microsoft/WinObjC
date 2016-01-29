@@ -14,18 +14,20 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 
-#import <CoreTelephony/CoreTelephonyExport.h>
-#import <Foundation/NSObject.h>
+NSString* const CTRadioAccessTechnologyGPRS = @"GPRS";
+NSString* const CTRadioAccessTechnologyEdge = @"Edge";
+NSString* const CTRadioAccessTechnologyWCDMA = @"WCDMA";
+NSString* const CTRadioAccessTechnologyHSDPA = @"HSDPA";
+NSString* const CTRadioAccessTechnologyHSUPA = @"HSUPA";
+NSString* const CTRadioAccessTechnologyCDMA1x = @"CDMA1x";
+NSString* const CTRadioAccessTechnologyCDMAEVDORev0 = @"CDMAEVDORev0";
+NSString* const CTRadioAccessTechnologyCDMAEVDORevA = @"CDMAEVDORevA";
+NSString* const CTRadioAccessTechnologyCDMAEVDORevB = @"CDMAEVDORevB";
+NSString* const CTRadioAccessTechnologyeHRPD = @"eHRPD";
+NSString* const CTRadioAccessTechnologyLTE = @"LTE";
 
-@class NSString;
-
-CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
+@implementation CTTelephonyNetworkInfo
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#pragma once
 
-#include "CoreTelephony/CTTelephonyNetworkInfo.h"
-
-@implementation CTTelephonyNetworkInfo
-
-@end
+#import <StubIncludes.h>
+#import <CoreTelephony/CoreTelephonyExport.h>
+#import <CoreTelephony/CTCall.h>
+#import <CoreTelephony/CTCallCenter.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTSubscriber.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>

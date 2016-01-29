@@ -19,13 +19,11 @@
 #import <CoreTelephony/CoreTelephonyExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSString;
+@class CTCall;
+@class NSSet;
 
 CORETELEPHONY_EXPORT_CLASS
-@interface CTCarrier : NSObject <NSObject>
-@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
-@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
+@interface CTCallCenter : NSObject <NSObject>
+@property (copy, nonatomic, nonnull) void (^callEventHandler)(CTCall*) STUB_PROPERTY;
+@property (readonly, retain) NSSet* currentCalls STUB_PROPERTY;
 @end
