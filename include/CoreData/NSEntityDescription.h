@@ -1,50 +1,57 @@
-/* Copyright (c) 2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSEnumerator.h>
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+@class NSManagedObject;
+@class NSString;
+@class NSManagedObjectModel;
+@class NSDictionary;
+@class NSArray;
+@class NSManagedObjectContext;
+@class NSData;
 
-#ifndef _NSENTITYDESCRIPTION_H_
-#define _NSENTITYDESCRIPTION_H_
-
-#import <Foundation/Foundation.h>
-
-@class NSManagedObject, NSManagedObjectContext, NSManagedObjectModel, NSPropertyDescription, NSAttributeDescription;
-
-@interface NSEntityDescription : NSObject
-
-- (BOOL) _hasBeenInstantiated;
-
-+ (NSEntityDescription *)entityForName:(NSString *) entityName inManagedObjectContext: (NSManagedObjectContext *) moc;
-        
-+ insertNewObjectForEntityForName: (NSString *) entityName inManagedObjectContext: (NSManagedObjectContext *) moc;
-
-- (NSManagedObjectModel *) managedObjectModel;
-
-- (NSString *) name;
-- (BOOL) isAbstract;
-- (NSString *) managedObjectClassName;
-- (NSArray *) properties;
-- (NSArray *) subentities;
-- (NSDictionary *) userInfo;
-
-- (void) setName: (NSString *) value;
-- (void) setAbstract: (BOOL) value;
-- (void) setManagedObjectClassName: (NSString *) value;
-- (void) setProperties: (NSArray *) value;
-- (void) setSubentities: (NSArray *) value;
-- (void) setUserInfo: (NSDictionary *) value;
-
-- (NSEntityDescription *) superentity;
-- (NSDictionary *) subentitiesByName;
-- (NSDictionary *) attributesByName;
-- (NSDictionary *) propertiesByName;
-- (NSDictionary *) relationshipsByName;
-- (NSArray *) relationshipsWithDestinationEntity: (NSEntityDescription *) entity;
-- (BOOL)isKindOfEntity:(NSEntityDescription *)entity;
-
+COREDATA_EXPORT_CLASS
+@interface NSEntityDescription : NSObject <NSCoding, NSCopying, NSFastEnumeration>
+@property (copy) NSString* name STUB_PROPERTY;
+@property (readonly, assign) NSManagedObjectModel* managedObjectModel STUB_PROPERTY;
+@property (copy) NSString* managedObjectClassName STUB_PROPERTY;
+@property (copy) NSString* renamingIdentifier STUB_PROPERTY;
+@property (getter=isAbstract) BOOL abstract STUB_PROPERTY;
+@property (nonatomic, strong) NSDictionary* userInfo STUB_PROPERTY;
+@property (readonly, copy) NSDictionary* subentitiesByName STUB_PROPERTY;
+@property (strong) NSArray* subentities STUB_PROPERTY;
+@property (readonly, assign) NSEntityDescription* superentity STUB_PROPERTY;
+- (BOOL)isKindOfEntity:(NSEntityDescription*)entity STUB_METHOD;
+@property (readonly, copy) NSDictionary* propertiesByName STUB_PROPERTY;
+@property (strong) NSArray* properties STUB_PROPERTY;
+@property (readonly, copy) NSDictionary* attributesByName STUB_PROPERTY;
+@property (readonly, copy) NSDictionary* relationshipsByName STUB_PROPERTY;
+- (NSArray*)relationshipsWithDestinationEntity:(NSEntityDescription*)entity STUB_METHOD;
++ (NSEntityDescription*)entityForName:(NSString*)entityName inManagedObjectContext:(NSManagedObjectContext*)context STUB_METHOD;
++ (NSManagedObject*)insertNewObjectForEntityForName:(NSString*)entityName
+                             inManagedObjectContext:(NSManagedObjectContext*)context STUB_METHOD;
+@property (readonly, copy) NSData* versionHash STUB_PROPERTY;
+@property (copy) NSString* versionHashModifier STUB_PROPERTY;
+- (id)copy STUB_METHOD;
+@property (strong) NSArray* compoundIndexes STUB_PROPERTY;
 @end
-
-#endif /* _NSENTITYDESCRIPTION_H_ */

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,8 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _COREDATADEFINES_H
-#define _COREDATADEFINES_H
-
-#endif /* _COREDATADEFINES_H */

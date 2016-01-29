@@ -23,7 +23,7 @@ FOUNDATION_EXPORT NSString * const NSKeyValueChangeOldKey;
 FOUNDATION_EXPORT NSString * const NSKeyValueChangeIndexesKey;
 FOUNDATION_EXPORT NSString * const NSKeyValueChangeNotificationIsPriorKey;
 
-enum {
+typedef NS_OPTIONS(NSUInteger, NSKeyValueObservingOptions) {
     // Requests that a change notification include the new value of the keypath.
     NSKeyValueObservingOptionNew = 0x01,
 
@@ -40,9 +40,8 @@ enum {
     // NSKeyValueChangeNotificationIsPriorKey.
     NSKeyValueObservingOptionPrior = 0x08,
 };
-typedef NSUInteger NSKeyValueObservingOptions;
 
-enum {
+typedef NS_ENUM(NSUInteger, NSKeyValueChange) {
     // Indicates that the observed keypath was set to a new value.
     NSKeyValueChangeSetting=1,
     // Indicates that an object has been inserted into a to-many relationship.
@@ -52,7 +51,17 @@ enum {
     // Indicates that an object in a to-many relationship has been replaced.
     NSKeyValueChangeReplacement=4,
 };
-typedef NSUInteger NSKeyValueChange;
+
+typedef NS_ENUM(NSUInteger, NSKeyValueSetMutationKind) {
+    // Indicates that the objects in the specified set are being added to the receiving keypath.
+    NSKeyValueUnionSetMutation = 1,
+    // Indicates that the objects in the specified set are being removed from the receiving keypath.
+    NSKeyValueMinusSetMutation,
+    // Indicates that the objects not in the specified set are being removed from the receiving keypath.
+    NSKeyValueIntersectSetMutation,
+    // Indicates that this set is replacing the receiving keypath value.
+    NSKeyValueSetSetMutation
+};
 
 @interface NSObject (NSKeyValueObserving)
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key;

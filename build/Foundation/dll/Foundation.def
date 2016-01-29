@@ -41,8 +41,6 @@ LIBRARY Foundation
      _OBJC_CLASS_NSKeyedUnarchiver DATA
      _OBJC_CLASS_NSLocale DATA
      _OBJC_CLASS_NSLock DATA
-     _OBJC_CLASS_NSManagedObjectContext DATA
-     _OBJC_CLASS_NSManagedObjectModel DATA
      _OBJC_CLASS_NSMutableArray DATA
      _OBJC_CLASS_NSMutableAttributedString DATA
      _OBJC_CLASS_NSMutableCharacterSet DATA
@@ -64,7 +62,6 @@ LIBRARY Foundation
      _OBJC_CLASS_NSOperation DATA
      _OBJC_CLASS_NSOperationQueue DATA
      _OBJC_CLASS_NSOrderedSet DATA
-     _OBJC_CLASS_NSPersistentStoreCoordinator DATA
      _OBJC_CLASS_NSPredicate DATA
      _OBJC_CLASS_NSComparisonPredicate DATA
      _OBJC_CLASS_NSCompoundPredicate DATA
@@ -141,8 +138,6 @@ LIBRARY Foundation
      __objc_class_name_NSKeyedUnarchiver CONSTANT
      __objc_class_name_NSLocale CONSTANT
      __objc_class_name_NSLock CONSTANT
-     __objc_class_name_NSManagedObjectContext CONSTANT
-     __objc_class_name_NSManagedObjectModel CONSTANT
      __objc_class_name_NSMutableArray CONSTANT
      __objc_class_name_NSMutableAttributedString CONSTANT
      __objc_class_name_NSMutableCharacterSet CONSTANT
@@ -164,7 +159,6 @@ LIBRARY Foundation
      __objc_class_name_NSOperation CONSTANT
      __objc_class_name_NSOperationQueue CONSTANT
      __objc_class_name_NSOrderedSet CONSTANT
-     __objc_class_name_NSPersistentStoreCoordinator CONSTANT
      __objc_class_name_NSPredicate CONSTANT
      __objc_class_name_NSComparisonPredicate CONSTANT
      __objc_class_name_NSCompoundPredicate CONSTANT
@@ -325,7 +319,6 @@ LIBRARY Foundation
      sleep
      sysctlbyname
      usleep
-     NSAllocateObject
      NSClassFromString
      NSEqualRanges
      NSHomeDirectory
@@ -353,17 +346,14 @@ LIBRARY Foundation
      NSUnionRange
      WinObjC_SetMissingSelectorFatal
      NSAMPMDesignation DATA
-     NSAddedPersistentStoresKey DATA
      NSArgumentDomain DATA
      NSAssertionHandlerKey DATA
-     NSBinaryStoreType DATA
      NSBuddhistCalendar DATA
      NSChineseCalendar DATA
      NSCocoaErrorDomain DATA
      NSCurrentLocaleDidChangeNotification DATA
      NSDateFormatString DATA
      NSDefaultRunLoopMode DATA
-     NSDeletedObjectsKey DATA
      NSDestinationInvalidException DATA
      NSErrorFailingURLStringKey DATA
      NSFileAppendOnly DATA
@@ -418,16 +408,10 @@ LIBRARY Foundation
      NSHTTPCookieSecure DATA
      NSHTTPCookieValue DATA
      NSHTTPCookieVersion DATA
-     NSIgnorePersistentStoreVersioningOption DATA
-     NSInMemoryStoreType DATA
      NSIndianCalendar DATA
-     NSInferMappingModelAutomaticallyOption DATA
-     NSInsertedObjectsKey DATA
      NSInternalInconsistencyException DATA
      NSInvalidArgumentException DATA
      NSInvalidUnarchiveOperationException DATA
-     NSInvalidatedAllObjectsKey DATA
-     NSInvalidatedObjectsKey DATA
      NSIslamicCalendar DATA
      NSIslamicCivilCalendar DATA
      NSISO8601Calendar DATA
@@ -461,22 +445,12 @@ LIBRARY Foundation
      NSLocalizedRecoveryOptionsErrorKey DATA
      NSLocalizedRecoverySuggestionErrorKey DATA
      NSMachErrorDomain DATA
-     NSManagedObjectContextDidSaveNotification DATA
-     NSManagedObjectContextObjectsDidChangeNotification DATA
-     NSManagedObjectContextWillSaveNotification DATA
-     NSMigratePersistentStoresAutomaticallyOption DATA
      NSMonthNameArray DATA
      NSOSStatusErrorDomain DATA
      NSObjectNotAvailableException DATA
      NSOverflowException DATA
      NSPOSIXErrorDomain DATA
      NSPersianCalendar DATA
-     NSPersistentStoreCoordinatorStoresDidChangeNotification DATA
-     NSPersistentStoreDidImportUbiquitousContentChangesNotification DATA
-     NSPersistentStoreFileProtectionKey DATA
-     NSPersistentStoreTimeoutOption DATA
-     NSPersistentStoreUbiquitousContentNameKey DATA
-     NSPersistentStoreUbiquitousContentURLKey DATA
      NSProgressEstimatedTimeRemainingKey DATA
      NSProgressThroughputKey DATA
      NSProgressKindFile DATA
@@ -488,21 +462,12 @@ LIBRARY Foundation
      NSProgressFileOperationKindReceiving DATA
      NSProgressFileOperationKindCopying DATA
      NSRangeException DATA
-     NSReadOnlyPersistentStoreOption DATA
      NSRecoveryAttempterErrorKey DATA
-     NSRefreshedObjectsKey DATA
      NSRegistrationDomain DATA
-     NSRemovedPersistentStoresKey DATA
      NSRepublicOfChinaCalendar DATA
      NSRunLoopCommonModes DATA
-     NSSQLiteAnalyzeOption DATA
-     NSSQLiteManualVacuumOption DATA
-     NSSQLitePragmasOption DATA
-     NSSQLiteStoreType DATA
      NSShortMonthNameArray DATA
      NSShortWeekDayNameArray DATA
-     NSStoreTypeKey DATA
-     NSStoreUUIDKey DATA
      NSStringEncodingErrorKey DATA
      NSTimeDateFormatString DATA
      NSTimeFormatString DATA
@@ -580,14 +545,11 @@ LIBRARY Foundation
      NSURLTypeIdentifierKey DATA
      NSURLVolumeIdentifierKey DATA
      NSURLVolumeURLKey DATA
-     NSUUIDChangedPersistentStoresKey DATA
      NSUnderlyingErrorKey DATA
-     NSUpdatedObjectsKey DATA
      NSUserDefaultsDidChangeNotification DATA
      NSWINSOCKErrorDomain DATA
      NSWeekDayNameArray DATA
      NSWin32ErrorDomain DATA
-     NSXMLStoreType DATA
      UINibExternalObjects DATA
      _NSDictionaryOfVariableBindings
 

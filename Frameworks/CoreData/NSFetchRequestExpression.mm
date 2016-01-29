@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,28 +14,17 @@
 //
 //******************************************************************************
 
-#ifdef __cplusplus
+#import <StubReturn.h>
+#import <CoreData/NSFetchRequestExpression.h>
 
-#if defined(__WIN32__)
-#if defined(COREDATA_INSIDE_BUILD)
-#define COREDATA_EXPORT extern "C" __declspec(dllexport)
-#else
-#define COREDATA_EXPORT extern "C" __declspec(dllimport)
-#endif
-#else
-#define COREDATA_EXPORT extern "C"
-#endif
+@implementation NSFetchRequestExpression
+/**
+@Status Stub
+@Notes
+*/
++ (NSExpression*)expressionForFetch:(NSExpression*)fetch context:(NSExpression*)context countOnly:(BOOL)countFlag {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-#else
-
-#if defined(__WIN32__)
-#if defined(COREDATA_INSIDE_BUILD)
-#define COREDATA_EXPORT __declspec(dllexport) extern
-#else
-#define COREDATA_EXPORT __declspec(dllimport) extern
-#endif
-#else
-#define COREDATA_EXPORT extern
-#endif
-
-#endif
+@end

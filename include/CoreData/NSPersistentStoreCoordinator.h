@@ -1,89 +1,111 @@
-/* Copyright (c) 2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+#import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSString.h>
 #import <Foundation/NSLock.h>
-#import <StarboardExport.h>
 
-@class NSManagedObjectModel, NSPersistentStore, NSManagedObjectID;
+@class NSString;
+@class NSDictionary;
+@class NSManagedObjectModel;
+@class NSURL;
+@class NSError;
+@class NSPersistentStore;
+@class NSArray;
+@class NSPersistentStoreRequest;
+@class NSManagedObjectContext;
+@class NSManagedObjectID;
 
-FOUNDATION_EXPORT NSString* const NSStoreTypeKey;
-FOUNDATION_EXPORT NSString* const NSStoreUUIDKey;
+typedef NS_ENUM(NSUInteger, NSPersistentStoreUbiquitousTransitionType) {
+    NSPersistentStoreUbiquitousTransitionTypeAccountAdded,
+    NSPersistentStoreUbiquitousTransitionTypeAccountRemoved,
+    NSPersistentStoreUbiquitousTransitionTypeContentRemoved,
+    NSPersistentStoreUbiquitousTransitionTypeInitialImportCompleted
+};
 
-FOUNDATION_EXPORT NSString* const NSXMLStoreType;
-FOUNDATION_EXPORT NSString* const NSInMemoryStoreType;
-FOUNDATION_EXPORT NSString* const NSMigratePersistentStoresAutomaticallyOption;
+COREDATA_EXPORT NSString* const NSSQLiteStoreType;
+COREDATA_EXPORT NSString* const NSBinaryStoreType;
+COREDATA_EXPORT NSString* const NSInMemoryStoreType;
+COREDATA_EXPORT NSString* const NSStoreTypeKey;
+COREDATA_EXPORT NSString* const NSStoreUUIDKey;
+COREDATA_EXPORT NSString* const NSAddedPersistentStoresKey;
+COREDATA_EXPORT NSString* const NSRemovedPersistentStoresKey;
+COREDATA_EXPORT NSString* const NSUUIDChangedPersistentStoresKey;
+COREDATA_EXPORT NSString* const NSPersistentStoreUbiquitousTransitionTypeKey;
+COREDATA_EXPORT NSString* const NSReadOnlyPersistentStoreOption;
+COREDATA_EXPORT NSString* const NSPersistentStoreTimeoutOption;
+COREDATA_EXPORT NSString* const NSSQLitePragmasOption;
+COREDATA_EXPORT NSString* const NSSQLiteAnalyzeOption;
+COREDATA_EXPORT NSString* const NSSQLiteManualVacuumOption;
+COREDATA_EXPORT NSString* const NSPersistentStoreFileProtectionKey;
+COREDATA_EXPORT NSString* const NSPersistentStoreUbiquitousContentNameKey;
+COREDATA_EXPORT NSString* const NSPersistentStoreUbiquitousContentURLKey;
+COREDATA_EXPORT NSString* const NSPersistentStoreUbiquitousPeerTokenOption;
+COREDATA_EXPORT NSString* const NSPersistentStoreRemoveUbiquitousMetadataOption;
+COREDATA_EXPORT NSString* const NSPersistentStoreUbiquitousContainerIdentifierKey;
+COREDATA_EXPORT NSString* const NSPersistentStoreRebuildFromUbiquitousContentOption;
+COREDATA_EXPORT NSString* const NSIgnorePersistentStoreVersioningOption;
+COREDATA_EXPORT NSString* const NSMigratePersistentStoresAutomaticallyOption;
+COREDATA_EXPORT NSString* const NSInferMappingModelAutomaticallyOption;
+COREDATA_EXPORT NSString* const NSStoreModelVersionHashesKey;
+COREDATA_EXPORT NSString* const NSStoreModelVersionIdentifiersKey;
+COREDATA_EXPORT NSString* const NSPersistentStoreOSCompatibility;
+COREDATA_EXPORT NSString* const NSPersistentStoreCoordinatorStoresDidChangeNotification;
+COREDATA_EXPORT NSString* const NSPersistentStoreCoordinatorStoresWillChangeNotification;
+COREDATA_EXPORT NSString* const NSPersistentStoreCoordinatorWillRemoveStoreNotification;
+COREDATA_EXPORT NSString* const NSPersistentStoreDidImportUbiquitousContentChangesNotification;
 
-FOUNDATION_EXPORT NSString* const NSPersistentStoreCoordinatorStoresDidChangeNotification;
-FOUNDATION_EXPORT NSString* const NSAddedPersistentStoresKey;
-FOUNDATION_EXPORT NSString* const NSRemovedPersistentStoresKey;
-FOUNDATION_EXPORT NSString* const NSUUIDChangedPersistentStoresKey;
-
-FOUNDATION_EXPORT NSString* const NSPersistentStoreDidImportUbiquitousContentChangesNotification;
-
-FOUNDATION_EXPORT NSString* const NSReadOnlyPersistentStoreOption;
-FOUNDATION_EXPORT NSString* const NSPersistentStoreTimeoutOption;
-FOUNDATION_EXPORT NSString* const NSSQLitePragmasOption;
-FOUNDATION_EXPORT NSString* const NSSQLiteAnalyzeOption;
-FOUNDATION_EXPORT NSString* const NSSQLiteManualVacuumOption;
-FOUNDATION_EXPORT NSString* const NSPersistentStoreUbiquitousContentNameKey;
-FOUNDATION_EXPORT NSString* const NSPersistentStoreUbiquitousContentURLKey;
-FOUNDATION_EXPORT NSString* const NSPersistentStoreFileProtectionKey;
-
-FOUNDATION_EXPORT NSString* const NSIgnorePersistentStoreVersioningOption;
-FOUNDATION_EXPORT NSString* const NSInferMappingModelAutomaticallyOption;
-
-FOUNDATION_EXPORT NSString* const NSSQLiteStoreType;
-FOUNDATION_EXPORT NSString* const NSBinaryStoreType;
-
-FOUNDATION_EXPORT_CLASS
+COREDATA_EXPORT_CLASS
 @interface NSPersistentStoreCoordinator : NSObject <NSLocking>
-
-+ (NSDictionary*)registeredStoreTypes;
-+ (void)registerStoreClass:(Class)storeClass forStoreType:(NSString*)storeType;
-
-- initWithManagedObjectModel:(NSManagedObjectModel*)model;
-
-- (NSManagedObjectModel*)managedObjectModel;
-
++ (NSDictionary*)registeredStoreTypes STUB_METHOD;
++ (void)registerStoreClass:(Class)storeClass forStoreType:(NSString*)storeType STUB_METHOD;
+- (instancetype)initWithManagedObjectModel:(NSManagedObjectModel*)model STUB_METHOD;
+@property (readonly, strong) NSManagedObjectModel* managedObjectModel STUB_PROPERTY;
 - (NSPersistentStore*)addPersistentStoreWithType:(NSString*)storeType
                                    configuration:(NSString*)configuration
                                              URL:(NSURL*)storeURL
                                          options:(NSDictionary*)options
-                                           error:(NSError**)error;
-
-- (BOOL)setURL:(NSURL*)url forPersistentStore:(NSPersistentStore*)store;
-
-- (BOOL)removePersistentStore:(NSPersistentStore*)store error:(NSError**)error;
+                                           error:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)setURL:(NSURL*)url forPersistentStore:(NSPersistentStore*)store STUB_METHOD;
+- (BOOL)removePersistentStore:(NSPersistentStore*)store error:(NSError* _Nullable*)error STUB_METHOD;
 - (NSPersistentStore*)migratePersistentStore:(NSPersistentStore*)store
                                        toURL:(NSURL*)URL
                                      options:(NSDictionary*)options
                                     withType:(NSString*)storeType
-                                       error:(NSError**)error;
-- (NSArray*)persistentStores;
-- (NSPersistentStore*)persistentStoreForURL:(NSURL*)URL;
-- (NSURL*)URLForPersistentStore:(NSPersistentStore*)store;
-
-- (NSManagedObjectID*)managedObjectIDForURIRepresentation:(NSURL*)URL;
-
-- (void)lock;
-- (BOOL)tryLock;
-- (void)unlock;
-
-- (NSDictionary*)metadataForPersistentStore:(NSPersistentStore*)store;
-- (void)setMetadata:(NSDictionary*)metadata forPersistentStore:(NSPersistentStore*)store;
-+ (BOOL)setMetadata:(NSDictionary*)metadata forPersistentStoreOfType:(NSString*)storeType URL:(NSURL*)url error:(NSError**)error;
-+ (NSDictionary*)metadataForPersistentStoreOfType:(NSString*)storeType URL:(NSURL*)url error:(NSError**)error;
-
+                                       error:(NSError* _Nullable*)error STUB_METHOD;
+@property (readonly, strong) NSArray* persistentStores STUB_PROPERTY;
+- (NSPersistentStore*)persistentStoreForURL:(NSURL*)URL STUB_METHOD;
+- (NSURL*)URLForPersistentStore:(NSPersistentStore*)store STUB_METHOD;
++ (BOOL)removeUbiquitousContentAndPersistentStoreAtURL:(NSURL*)storeURL
+                                               options:(NSDictionary*)options
+                                                 error:(NSError* _Nullable*)error STUB_METHOD;
+- (id)executeRequest:(NSPersistentStoreRequest*)request
+         withContext:(NSManagedObjectContext*)context
+               error:(NSError* _Nullable*)error STUB_METHOD;
+- (void)lock STUB_METHOD;
+- (BOOL)tryLock STUB_METHOD;
+- (void)unlock STUB_METHOD;
+- (NSDictionary*)metadataForPersistentStore:(NSPersistentStore*)store STUB_METHOD;
+- (void)setMetadata:(NSDictionary*)metadata forPersistentStore:(NSPersistentStore*)store STUB_METHOD;
++ (BOOL)setMetadata:(NSDictionary*)metadata
+    forPersistentStoreOfType:(NSString*)storeType
+                         URL:(NSURL*)url
+                       error:(NSError* _Nullable*)error STUB_METHOD;
++ (NSDictionary*)metadataForPersistentStoreOfType:(NSString*)storeType URL:(NSURL*)url error:(NSError* _Nullable*)error STUB_METHOD;
+- (NSManagedObjectID*)managedObjectIDForURIRepresentation:(NSURL*)URL STUB_METHOD;
 @end

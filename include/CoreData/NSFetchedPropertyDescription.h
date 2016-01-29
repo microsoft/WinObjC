@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,17 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
 #import <CoreData/NSPropertyDescription.h>
 
 @class NSFetchRequest;
 
-@interface NSFetchedPropertyDescription : NSPropertyDescription {
-    NSFetchRequest* _fetchRequest;
-}
-
-- (NSFetchRequest*)fetchRequest;
-
-- (void)setFetchRequest:(NSFetchRequest*)value;
-
+COREDATA_EXPORT_CLASS
+@interface NSFetchedPropertyDescription : NSPropertyDescription <NSCoding, NSCopying>
+@property (strong) NSFetchRequest* fetchRequest STUB_PROPERTY;
 @end

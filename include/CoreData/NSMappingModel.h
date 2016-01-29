@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,26 @@
 //
 //******************************************************************************
 
-#ifndef _NSMAPPINGMODEL_H_
-#define _NSMAPPINGMODEL_H_
+#pragma once
 
+#import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
 
+@class NSArray;
 @class NSManagedObjectModel;
 @class NSError;
+@class NSURL;
+@class NSDictionary;
 
+COREDATA_EXPORT_CLASS
 @interface NSMappingModel : NSObject
-
++ (NSMappingModel*)mappingModelFromBundles:(NSArray*)bundles
+                            forSourceModel:(NSManagedObjectModel*)sourceModel
+                          destinationModel:(NSManagedObjectModel*)destinationModel STUB_METHOD;
 + (NSMappingModel*)inferredMappingModelForSourceModel:(NSManagedObjectModel*)source
                                      destinationModel:(NSManagedObjectModel*)destination
-                                                error:(NSError**)error;
-
+                                                error:(NSError* _Nullable*)error STUB_METHOD;
+- (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
+@property (strong) NSArray* entityMappings STUB_PROPERTY;
+@property (readonly, copy) NSDictionary* entityMappingsByName STUB_PROPERTY;
 @end
-
-#endif /* _NSMAPPINGMODEL_H_ */

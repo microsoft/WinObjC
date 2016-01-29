@@ -64,6 +64,7 @@
       <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibCurl)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
       <IncludeEventKitUI Condition="$(LinkAdditionalDependencies.Contains('EventKitUI.lib'))">true</IncludeEventKitUI>
       <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
+      <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -118,6 +119,8 @@
       <SBResourceCopy Condition="'$(IncludeMediaPlayer)' == 'true'" Include="$(StarboardLibDirs)\MediaPlayer.dll" />
       <SBResourceCopy Condition="'$(IncludeMapKit)' == 'true'" Include="$(StarboardLibDirs)\MapKit.dll" />
       <SBResourceCopy Condition="'$(IncludeGameKit)' == 'true'" Include="$(StarboardLibDirs)\GameKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeCoreData)' == 'true'" Include="$(StarboardLibDirs)\CoreData.dll" />
     </ItemGroup>
   </Target>
 

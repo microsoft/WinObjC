@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,19 @@
 //
 //******************************************************************************
 
-#ifndef _NSEXPRESSIONDESCRIPTION_H_
-#define _NSEXPRESSIONDESCRIPTION_H_
+#pragma once
 
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
+#import <Foundation/NSObject.h>
 #import <CoreData/NSPropertyDescription.h>
 #import <CoreData/NSAttributeDescription.h>
 
 @class NSExpression;
 
-@interface NSExpressionDescription : NSPropertyDescription
-
-- (NSExpression*)expression;
-- (void)setExpression:(NSExpression*)expression;
-- (NSAttributeType)expressionResultType;
-- (void)setExpressionResultType:(NSAttributeType)type;
-
+COREDATA_EXPORT_CLASS
+@interface NSExpressionDescription : NSPropertyDescription <NSCoding, NSCopying>
+@property (strong) NSExpression* expression STUB_PROPERTY;
+@property NSAttributeType expressionResultType STUB_PROPERTY;
 @end
-
-#endif /* _NSEXPRESSIONDESCRIPTION_H_ */

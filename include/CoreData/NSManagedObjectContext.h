@@ -1,125 +1,92 @@
-/* Copyright(c)2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSMANAGEDOBJECTCONTEXT_H_
-#define _NSMANAGEDOBJECTCONTEXT_H_
-
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSString.h>
-#import <Foundation/NSDate.h>
 #import <Foundation/NSLock.h>
-#import <StarboardExport.h>
 
-enum {
-    NSConfinementConcurrencyType = 0,
-    NSPrivateQueueConcurrencyType = 1,
-    NSMainQueueConcurrencyType = 2,
+@class NSString;
+@class NSArray;
+@class NSFetchRequest;
+@class NSError;
+@class NSManagedObjectID;
+@class NSSet;
+@class NSManagedObject;
+@class NSPersistentStore;
+@class NSNotification;
+@class NSUndoManager;
+@class NSPersistentStoreCoordinator;
+@class NSMutableDictionary;
+
+typedef NS_ENUM(NSUInteger, NSManagedObjectContextConcurrencyType) {
+    NSConfinementConcurrencyType = 0x00,
+    NSPrivateQueueConcurrencyType = 0x01,
+    NSMainQueueConcurrencyType = 0x02
 };
-typedef uint32_t NSManagedObjectContextConcurrencyType;
+COREDATA_EXPORT NSString* const NSInsertedObjectsKey;
+COREDATA_EXPORT NSString* const NSUpdatedObjectsKey;
+COREDATA_EXPORT NSString* const NSDeletedObjectsKey;
+COREDATA_EXPORT NSString* const NSRefreshedObjectsKey;
+COREDATA_EXPORT NSString* const NSInvalidatedObjectsKey;
+COREDATA_EXPORT NSString* const NSInvalidatedAllObjectsKey;
+COREDATA_EXPORT NSString* const NSManagedObjectContextObjectsDidChangeNotification;
+COREDATA_EXPORT NSString* const NSManagedObjectContextDidSaveNotification;
+COREDATA_EXPORT NSString* const NSManagedObjectContextWillSaveNotification;
 
-@class NSSet, NSMutableSet, NSNotification, NSUndoManager, NSMapTable;
-@class NSManagedObject, NSManagedObjectID, NSFetchRequest, NSPersistentStore, NSPersistentStoreCoordinator;
-
-FOUNDATION_EXPORT NSString* const NSManagedObjectContextWillSaveNotification;
-FOUNDATION_EXPORT NSString* const NSManagedObjectContextDidSaveNotification;
-FOUNDATION_EXPORT NSString* const NSManagedObjectContextObjectsDidChangeNotification;
-
-FOUNDATION_EXPORT NSString* const NSInsertedObjectsKey;
-FOUNDATION_EXPORT NSString* const NSUpdatedObjectsKey;
-FOUNDATION_EXPORT NSString* const NSDeletedObjectsKey;
-FOUNDATION_EXPORT NSString* const NSRefreshedObjectsKey;
-FOUNDATION_EXPORT NSString* const NSInvalidatedObjectsKey;
-FOUNDATION_EXPORT NSString* const NSInvalidatedAllObjectsKey;
-
-SB_EXPORT id NSErrorMergePolicy;
-SB_EXPORT id NSOverwriteMergePolicy;
-SB_EXPORT id NSRollbackMergePolicy;
-SB_EXPORT id NSMergeByPropertyStoreTrumpMergePolicy;
-SB_EXPORT id NSMergeByPropertyObjectTrumpMergePolicy;
-
-FOUNDATION_EXPORT_CLASS
-@interface NSManagedObjectContext : NSObject <NSLocking>
-
-- (NSPersistentStoreCoordinator*)persistentStoreCoordinator;
-- (NSUndoManager*)undoManager;
-- (BOOL)retainsRegisteredObjects;
-- (BOOL)propagatesDeletesAtEndOfEvent;
-- (NSTimeInterval)stalenessInterval;
-- (id)mergePolicy;
-
-- (void)setPersistentStoreCoordinator:(NSPersistentStoreCoordinator*)value;
-- (void)setUndoManager:(NSUndoManager*)value;
-- (void)setRetainsRegisteredObjects:(BOOL)value;
-- (void)setPropagatesDeletesAtEndOfEvent:(BOOL)value;
-- (void)setStalenessInterval:(NSTimeInterval)value;
-- (void)setMergePolicy:(id)value;
-
-- (NSSet*)registeredObjects;
-- (NSSet*)insertedObjects;
-- (NSSet*)updatedObjects;
-- (NSSet*)deletedObjects;
-
-- (BOOL)hasChanges;
-
-- (void)lock;
-- (void)unlock;
-- (BOOL)tryLock;
-
-- (void)undo;
-- (void)redo;
-- (void)reset;
-- (void)rollback;
-
-- (NSManagedObject*)objectRegisteredForID:(NSManagedObjectID*)objectID;
-
-- (NSManagedObject*)objectWithID:(NSManagedObjectID*)objectID;
-
-- (NSArray*)executeFetchRequest:(NSFetchRequest*)request error:(NSError**)error;
-- (NSUInteger)countForFetchRequest:(NSFetchRequest*)request error:(NSError**)error;
-
-- (void)insertObject:(NSManagedObject*)object;
-- (void)deleteObject:(NSManagedObject*)object;
-
-- (void)assignObject:object toPersistentStore:(NSPersistentStore*)store;
-
-- (void)detectConflictsForObject:(NSManagedObject*)object;
-
-- (void)refreshObject:(NSManagedObject*)object mergeChanges:(BOOL)flag;
-
-- (void)processPendingChanges;
-
-- (BOOL)obtainPermanentIDsForObjects:(NSArray*)objects error:(NSError**)error;
-- (BOOL)save:(NSError**)error;
-- (void)mergeChangesFromContextDidSaveNotification:(NSNotification*)notification;
-
-- (BOOL)commitEditing;
-- (void)commitEditingWithDelegate:(id)delegate didCommitSelector:(SEL)didCommitSelector contextInfo:(void*)contextInfo;
-- (void)discardEditing;
-- (void)objectDidBeginEditing:(id)editor;
-- (void)objectDidEndEditing:(id)editor;
-
-- (void)performBlock:(void (^)())block;
-- (void)performBlockAndWait:(void (^)())block;
-
-- (NSManagedObject*)existingObjectWithID:(NSManagedObjectID*)objectID error:(NSError**)error;
-
-- (NSManagedObjectContext*)parentContext;
-- (void)setParentContext:(NSManagedObjectContext*)parent;
-
-- (NSManagedObjectContextConcurrencyType)concurrencyType;
-- (id)initWithConcurrencyType:(NSManagedObjectContextConcurrencyType)ct;
-
+COREDATA_EXPORT_CLASS
+@interface NSManagedObjectContext : NSObject <NSCoding, NSLocking>
+- (NSArray*)executeFetchRequest:(NSFetchRequest*)request error:(NSError* _Nullable*)error STUB_METHOD;
+- (NSUInteger)countForFetchRequest:(NSFetchRequest*)request error:(NSError* _Nullable*)error STUB_METHOD;
+- (NSManagedObject*)objectRegisteredForID:(NSManagedObjectID*)objectID STUB_METHOD;
+- (NSManagedObject*)objectWithID:(NSManagedObjectID*)objectID STUB_METHOD;
+- (NSManagedObject*)existingObjectWithID:(NSManagedObjectID*)objectID error:(NSError* _Nullable*)error STUB_METHOD;
+@property (readonly, nonatomic, strong) NSSet* registeredObjects STUB_PROPERTY;
+- (void)insertObject:(NSManagedObject*)object STUB_METHOD;
+- (void)deleteObject:(NSManagedObject*)object STUB_METHOD;
+- (void)assignObject:(id)object toPersistentStore:(NSPersistentStore*)store STUB_METHOD;
+- (BOOL)obtainPermanentIDsForObjects:(NSArray*)objects error:(NSError* _Nullable*)error STUB_METHOD;
+- (void)detectConflictsForObject:(NSManagedObject*)object STUB_METHOD;
+- (void)refreshObject:(NSManagedObject*)object mergeChanges:(BOOL)flag STUB_METHOD;
+- (void)processPendingChanges STUB_METHOD;
+@property (readonly, nonatomic, strong) NSSet* insertedObjects STUB_PROPERTY;
+@property (readonly, nonatomic, strong) NSSet* updatedObjects STUB_PROPERTY;
+@property (readonly, nonatomic, strong) NSSet* deletedObjects STUB_PROPERTY;
+- (instancetype)initWithConcurrencyType:(NSManagedObjectContextConcurrencyType)type STUB_METHOD;
+@property (readonly) NSManagedObjectContextConcurrencyType concurrencyType STUB_PROPERTY;
+- (void)mergeChangesFromContextDidSaveNotification:(NSNotification*)notification STUB_METHOD;
+@property (nonatomic, strong) NSUndoManager* undoManager STUB_PROPERTY;
+- (void)undo STUB_METHOD;
+- (void)redo STUB_METHOD;
+- (void)reset STUB_METHOD;
+- (void)rollback STUB_METHOD;
+- (BOOL)save:(NSError* _Nullable*)error STUB_METHOD;
+@property (readonly, nonatomic) BOOL hasChanges STUB_PROPERTY;
+@property (strong) NSPersistentStoreCoordinator* persistentStoreCoordinator STUB_PROPERTY;
+@property (strong) NSManagedObjectContext* parentContext STUB_PROPERTY;
+- (void)lock STUB_METHOD;
+- (void)unlock STUB_METHOD;
+- (BOOL)tryLock STUB_METHOD;
+@property (nonatomic) BOOL propagatesDeletesAtEndOfEvent STUB_PROPERTY;
+@property (nonatomic) BOOL retainsRegisteredObjects STUB_PROPERTY;
+@property NSTimeInterval stalenessInterval STUB_PROPERTY;
+@property (strong) id mergePolicy STUB_PROPERTY;
+- (void)performBlock:(void (^)(void))block STUB_METHOD;
+- (void)performBlockAndWait:(void (^)(void))block STUB_METHOD;
+@property (readonly, nonatomic, strong) NSMutableDictionary* userInfo STUB_PROPERTY;
 @end
-
-#endif /* _NSMANAGEDOBJECTCONTEXT_H_ */
