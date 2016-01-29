@@ -62,6 +62,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\UIKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\VCInclude\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\VCInclude\winobjc\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WebKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\arm\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\arpa\*.h" />

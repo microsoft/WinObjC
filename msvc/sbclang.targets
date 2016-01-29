@@ -65,6 +65,7 @@
       <IncludeEventKitUI Condition="$(LinkAdditionalDependencies.Contains('EventKitUI.lib'))">true</IncludeEventKitUI>
       <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
       <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
+      <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -121,6 +122,8 @@
       <SBResourceCopy Condition="'$(IncludeGameKit)' == 'true'" Include="$(StarboardLibDirs)\GameKit.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreData)' == 'true'" Include="$(StarboardLibDirs)\CoreData.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
     </ItemGroup>
   </Target>
 
