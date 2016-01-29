@@ -1,0 +1,8 @@
+module CoreAudioKit [extern_c] {
+    umbrella header "CoreAudioKit.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

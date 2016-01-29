@@ -25,6 +25,7 @@
 @import CFNetwork;
 @import CommonCrypto;
 @import CoreAudio;
+@import CoreAudioKit;
 @import CoreBluetooth;
 @import CoreData;
 @import CoreFoundation;
