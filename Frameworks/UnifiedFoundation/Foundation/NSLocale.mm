@@ -226,7 +226,7 @@ static NSLocale* _currentLocale;
         for (NSString* userPreferredLanguage in _userPreferredLanguages) {
             NSArray* userPreferredLanguageSeperatedByString = [userPreferredLanguage componentsSeparatedByString:@"-"];
             [languageCodes addObject:[userPreferredLanguageSeperatedByString objectAtIndex:0]];
-            if ([userPreferredLanguageSeperatedByString count] > 0) {
+            if ([userPreferredLanguageSeperatedByString count] > 1) {
                 [countryCodes addObject:[userPreferredLanguageSeperatedByString objectAtIndex:1]];
             }
         }
