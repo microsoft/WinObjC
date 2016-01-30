@@ -37,6 +37,7 @@
 #include "..\include\CACompositor.h"
 #include "CAAnimationInternal.h"
 #include "CATransactionInternal.h"
+#include "Quaternion.h"
 
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
@@ -1500,6 +1501,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 /**
  @Status Interoperable
+ @Notes For CABasicAnimation when all three animation properties are nil, our behavior (i.e. no animation)
+        remains consistent with what happens on Mac, but varies from Apple Documentation.
 */
 - (void)addAnimation:(CAAnimation*)anim forKey:(NSString*)key {
     if (priv->_animations == nil) {
@@ -2095,32 +2098,77 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 - (id)valueForUndefinedKey:(NSString*)keyPath {
     char* pPath = (char*)[keyPath UTF8String];
-    if (strcmp(pPath, "position.y") == 0) {
+    if (strcmp(pPath, "position.x") == 0) {
+        return [NSNumber numberWithFloat:priv->position.x];
+    } else if (strcmp(pPath, "position.y") == 0) {
         return [NSNumber numberWithFloat:priv->position.y];
-    } else if (strcmp(pPath, "transform.rotation.z") == 0) {
+    } else if (strcmp(pPath, "transform.rotation.z") == 0 || strcmp(pPath, "transform.rotation") == 0) {
         CATransform3D curTransform = [self transform];
-        EbrDebugLog("Should get rotation\n");
-        return [NSNumber numberWithFloat:0.0f];
-    } else if (strcmp(pPath, "transform.rotation") == 0) {
-        CATransform3D curTransform = [self transform];
-
+        Quaternion qval;
+        qval.CreateFromMatrix(reinterpret_cast<float*>(&curTransform));
+        return [NSNumber numberWithFloat:(float)-qval.roll() * 180.0f / M_PI];
+    } else if (strcmp(pPath, "transform.rotation.x") == 0 ||
+               strcmp(pPath, "transform.rotation.y") == 0) {
         EbrDebugLog("Should get rotation\n");
         return [NSNumber numberWithFloat:0.0f];
     } else if (strcmp(pPath, "transform.scale") == 0) {
         CATransform3D curTransform = [self transform];
-
         float scale[3];
-
         CATransform3DGetScale(curTransform, scale);
         return [NSNumber numberWithFloat:(scale[0] + scale[1] + scale[2]) / 3.0f];
+    } else if (strcmp(pPath, "transform.scale.x") == 0) {
+        CATransform3D curTransform = [self transform];
+        float scale[3];
+        CATransform3DGetScale(curTransform, scale);
+        return [NSNumber numberWithFloat:scale[0]];
+    } else if (strcmp(pPath, "transform.scale.y") == 0) {
+        CATransform3D curTransform = [self transform];
+        float scale[3];
+        CATransform3DGetScale(curTransform, scale);
+        return [NSNumber numberWithFloat:scale[1]];
+    } else if (strcmp(pPath, "transform.scale.z") == 0) {
+        CATransform3D curTransform = [self transform];
+        float scale[3];
+        CATransform3DGetScale(curTransform, scale);
+        return [NSNumber numberWithFloat:scale[2]];
+    } else if (strcmp(pPath, "transform.translation") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSValue valueWithCGSize:CGSizeMake(translation[0] - priv->position.x, translation[1] - priv->position.y)];
+    } else if (strcmp(pPath, "transform.translation.x") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSNumber numberWithFloat:translation[0]];
+    } else if (strcmp(pPath, "transform.translation.y") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSNumber numberWithFloat:translation[1]];
+    } else if (strcmp(pPath, "transform.translation.z") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSNumber numberWithFloat:translation[2]];
     } else if (strcmp(pPath, "bounds.origin") == 0) {
         CGRect bounds = [self bounds];
-
         return [NSValue valueWithCGPoint:bounds.origin];
     } else if (strcmp(pPath, "bounds.size") == 0) {
         CGRect bounds = [self bounds];
-
         return [NSValue valueWithCGSize:bounds.size];
+    } else if (strcmp(pPath, "bounds.size.width") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.size.width];
+    } else if (strcmp(pPath, "bounds.size.height") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.size.height];
+    } else if (strcmp(pPath, "bounds.origin.x") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.origin.x];
+    } else if (strcmp(pPath, "bounds.origin.y") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.origin.y];
     } else {
         id ret = [priv->_undefinedKeys valueForKey:keyPath];
         if (ret == nil) {

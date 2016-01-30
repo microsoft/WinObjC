@@ -165,6 +165,9 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
@@ -201,7 +204,9 @@
     <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
+    <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />

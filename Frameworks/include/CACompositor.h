@@ -75,8 +75,12 @@ public:
                                              bool centerVertically) = 0;
     virtual DisplayTexture* CreateDisplayTextureForElement(id xamlElement) = 0;
 
-    virtual DisplayAnimation* GetBasicDisplayAnimation(
-        id caanim, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) = 0;
+    virtual DisplayAnimation* GetBasicDisplayAnimation(id caanim,
+                                                       NSString* propertyName,
+                                                       NSObject* fromValue,
+                                                       NSObject* toValue,
+                                                       NSObject* byValue,
+                                                       CAMediaTimingProperties* timingProperties) = 0;
     virtual DisplayAnimation* GetMoveDisplayAnimation(DisplayAnimation** secondAnimRet,
                                                       id caanim,
                                                       DisplayNode* animNode,
