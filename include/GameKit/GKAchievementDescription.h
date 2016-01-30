@@ -20,7 +20,7 @@
 #import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
-#import <Foundation/NSObjcRuntime.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSArray;
 @class NSError;

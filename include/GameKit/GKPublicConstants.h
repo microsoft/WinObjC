@@ -17,7 +17,7 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObjCRuntime.h>
 #include <stdint.h>
 
 GAMEKIT_EXPORT NSString* const GKErrorDomain;

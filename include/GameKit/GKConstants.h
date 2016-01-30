@@ -16,7 +16,7 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <Foundation/NSObjcRuntime.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSString;
 

@@ -18,7 +18,8 @@
 #import <GameKit/GameKitExport.h>
 
 #import <Foundation/NSObject.h>
-#import <Foundation/NSObjcRuntime.h>
+#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSRange.h>
 
 @class NSArray;
 @class NSError;
