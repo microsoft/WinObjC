@@ -13,24 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <StubIncludes.h>
-#import <CoreBluetooth/CBATTRequest.h>
-#import <CoreBluetooth/CBATTRequest.h>
 #import <CoreBluetooth/CBCentral.h>
-#import <CoreBluetooth/CBCentralManager.h>
-#import <CoreBluetooth/CBCentralManagerDelegate.h>
-#import <CoreBluetooth/CBCharacteristic.h>
-#import <CoreBluetooth/CBConstants.h>
-#import <CoreBluetooth/CBDescriptor.h>
-#import <CoreBluetooth/CBMutableCharacteristic.h>
-#import <CoreBluetooth/CBMutableDescriptor.h>
-#import <CoreBluetooth/CBMutableService.h>
-#import <CoreBluetooth/CBPeripheral.h>
-#import <CoreBluetooth/CBPeripheralDelegate.h>
-#import <CoreBluetooth/CBPeripheralManager.h>
-#import <CoreBluetooth/CBPeripheralManagerDelegate.h>
-#import <CoreBluetooth/CBService.h>
-#import <CoreBluetooth/CBUUID.h>
-#import <CoreBluetooth/CoreBluetoothExport.h>
+#import <StubReturn.h>
+
+@implementation CBCentral
+@end

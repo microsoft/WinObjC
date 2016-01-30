@@ -13,28 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once 
 
-#ifndef COREBLUETOOTH_IMPEXP
-#define COREBLUETOOTH_IMPEXP __declspec(dllimport)
-#endif
+#import <CoreBluetooth/CBAttribute.h>
+#import <StubReturn.h>
 
-#ifndef COREBLUETOOTH_EXPORT
-#ifdef __cplusplus
-#define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern "C"
-#define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP
-#else
-#define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern
-#define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP
-#endif
-#endif
-
-#ifndef COREBLUETOOTH_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define COREBLUETOOTH_EXTERNC_BEGIN extern "C" {
-#define COREBLUETOOTH_EXTERNC_END }
-#else
-#define COREBLUETOOTH_EXTERNC_BEGIN
-#define COREBLUETOOTH_EXTERNC_END
-#endif
-#endif
+@implementation CBAttribute
+@end

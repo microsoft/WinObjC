@@ -14,6 +14,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AddressBook\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AddressBookUI\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AdSupport\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\ApplicationServices\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AssetsLibrary\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AudioToolbox\*.h" />
@@ -21,6 +22,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CFNetwork\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CommonCrypto\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreAudio\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreAudioKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreBluetooth\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreData\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreFoundation\*.h" />
@@ -29,16 +31,21 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreMedia\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreText\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreVideo\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\EventKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\EventKitUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GameKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GLKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\HomeKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\iAd\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\ImageIO\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libkern\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libxml\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaPlayer\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MapKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaPlayer\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MessageUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Metal\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MobileCoreServices\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\objc\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenAL\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\OpenGLES\*.h" />

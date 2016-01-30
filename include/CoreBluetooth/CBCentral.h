@@ -15,22 +15,17 @@
 //******************************************************************************
 #pragma once
 
-#import <StubIncludes.h>
-#import <CoreBluetooth/CBATTRequest.h>
-#import <CoreBluetooth/CBATTRequest.h>
-#import <CoreBluetooth/CBCentral.h>
-#import <CoreBluetooth/CBCentralManager.h>
-#import <CoreBluetooth/CBCentralManagerDelegate.h>
-#import <CoreBluetooth/CBCharacteristic.h>
-#import <CoreBluetooth/CBConstants.h>
-#import <CoreBluetooth/CBDescriptor.h>
-#import <CoreBluetooth/CBMutableCharacteristic.h>
-#import <CoreBluetooth/CBMutableDescriptor.h>
-#import <CoreBluetooth/CBMutableService.h>
-#import <CoreBluetooth/CBPeripheral.h>
-#import <CoreBluetooth/CBPeripheralDelegate.h>
-#import <CoreBluetooth/CBPeripheralManager.h>
-#import <CoreBluetooth/CBPeripheralManagerDelegate.h>
-#import <CoreBluetooth/CBService.h>
-#import <CoreBluetooth/CBUUID.h>
 #import <CoreBluetooth/CoreBluetoothExport.h>
+
+#import <CoreFoundation/CFUUID.h>
+
+#import <Foundation/Foundation.h>
+
+@class NSUUID;
+
+COREBLUETOOTH_EXPORT_CLASS
+@interface CBCentral
+@property (readonly, nonatomic) CFUUIDRef UUID STUB_PROPERTY;
+@property (readonly, nonatomic) NSUUID* identifier STUB_PROPERTY;
+@property (readonly, nonatomic) NSUInteger maximumUpdateValueLength STUB_PROPERTY;
+@end

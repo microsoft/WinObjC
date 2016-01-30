@@ -19,14 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\ImageIO\CGImageDestination.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\ImageIO\CGImageProperties.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\ImageIO\CGImageSource.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBATTRequest.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBAttribute.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBCentral.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBCentralManager.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBCentralManagerDelegate.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBCharacteristic.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBConstants.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBDescriptor.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBMutableCharacteristic.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBMutableDescriptor.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBMutableService.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBPeer.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBPeripheral.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBPeripheralManager.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBPeripheralManagerDelegate.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBService.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\CoreBluetooth\CBUUID.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BA535474-97E6-4FCF-8711-0F0374487FA9}</ProjectGuid>
-    <ProjectName>ImageIOLib</ProjectName>
-    <RootNamespace>ImageIO</RootNamespace>
+    <ProjectGuid>{25269720-4CDC-407F-B54C-D1B87732FFC5}</ProjectGuid>
+    <ProjectName>CoreBluetoothLib</ProjectName>
+    <RootNamespace>CoreBluetooth</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -35,7 +49,7 @@
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
-    <OutputName>ImageIOLib</OutputName>
+    <OutputName>CoreBluetoothLib</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
@@ -121,10 +135,11 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,11 +156,12 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -163,10 +179,11 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -183,11 +200,12 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DIMAGEIO_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
