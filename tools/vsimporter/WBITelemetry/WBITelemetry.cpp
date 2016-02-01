@@ -89,6 +89,6 @@ namespace WBITelemetry
     {
         //Need to validate m_tc
         WBITelemetryManager::m_tc.TrackMetric(eventMessage, value);
-        WBITelemetryManager::m_tc.Flush();    
+        WBITelemetryManager::m_tc.Flush();
     }
 }

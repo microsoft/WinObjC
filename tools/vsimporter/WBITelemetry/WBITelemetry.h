@@ -15,7 +15,7 @@
 //******************************************************************************
 #pragma once
 
-#include "..\..\..\Frameworks\AppInsights\src\core\TelemetryClient.h" //  ...\ApplicationInsights-CPP-master\src\core\TelemetryClient.h
+#include "..\..\..\deps\3rdparty\AppInsights\src\core\TelemetryClient.h" //  ...\ApplicationInsights-CPP-master\src\core\TelemetryClient.h
 
 
 #define TELEMETRY_INIT(ikey) {\
