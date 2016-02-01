@@ -30,7 +30,7 @@
 
 typedef void (^GKChallengeComposeCompletionBlock)(UIViewController* composeController, BOOL didIssueChallenge, NSArray* sentPlayerIDs);
 
-typedef enum GKChallengeState {
+typedef NS_ENUM(NSUInteger, GKChallengeState){
     GKChallengeStateInvalid = 0,
     GKChallengeStatePending = 1,
     GKChallengeStateCompleted = 2,
