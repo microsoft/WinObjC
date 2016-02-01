@@ -28,6 +28,7 @@
     <PropertyGroup>
       <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib')) or '$(IncludeGameKit)' == 'true' ">true</IncludeUIKit>
       <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
+      <IncludeGamePlayKit Condition="$(LinkAdditionalDependencies.Contains('GamePlayKit.lib'))">true</IncludeGamePlayKit>
       <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
@@ -137,6 +138,8 @@
       <SBResourceCopy Condition="'$(IncludeAddressBook)' == 'true'" Include="$(StarboardLibDirs)\AddressBook.dll" />
       <SBResourceCopy Condition="'$(IncludeAddressBookUI)' == 'true'" Include="$(StarboardLibDirs)\AddressBookUI.dll" />
       <SBResourceCopy Condition="'$(IncludeHealthKit)' == 'true'" Include="$(StarboardLibDirs)\HealthKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeGamePlayKit)' == 'true'" Include="$(StarboardLibDirs)\GamePlayKit.dll" />
     </ItemGroup>
   </Target>
 

@@ -41,6 +41,7 @@
 @import EventKitUI;
 @import Foundation;
 @import GameKit;
+@import GamePlayKit;
 @import GLKit;
 @import HealthKit;
 @import HomeKit;
