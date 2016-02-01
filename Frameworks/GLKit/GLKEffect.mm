@@ -503,18 +503,20 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         // Need to generate a new shader based on the supplied material here.
         ShaderContext shd(pp ? pixelVsh : standardVsh, pp ? pixelPsh : standardPsh);
         ShaderMaterial* m = (ShaderMaterial*)self.shaderMat;
-        GLKShaderPair* p = shd.generate(*m);
-        if (p) {
-            NSLog(@"For shader named: %@", self.shaderName);
-            NSLog(@"---[ VERTEX SHADER ]------------------------------------------------------------");
-            NSLog(p.vertexShader);
-            NSLog(@"---[ PIXEL SHADER ]-------------------------------------------------------------");
-            NSLog(p.pixelShader);
-            self.shader = [[GLKShaderCache get] addShaderNamed:self.shaderName source:p];
-            if (self.shader == nil) {
-                NSLog(@"There was a problem generating a shader for material %@", self.shaderName);
-                return FALSE;
-            }
+        GLKShaderPair* p = [[GLKShaderPair alloc] init];
+
+        shd.generate(*m, p);
+
+        NSLog(@"For shader named: %@", self.shaderName);
+        NSLog(@"---[ VERTEX SHADER ]------------------------------------------------------------");
+        NSLog(p.vertexShader);
+        NSLog(@"---[ PIXEL SHADER ]-------------------------------------------------------------");
+        NSLog(p.pixelShader);
+        self.shader = [[GLKShaderCache get] addShaderNamed:self.shaderName source:p];
+        if (self.shader == nil) {
+            NSLog(@"There was a problem generating a shader for material %@", self.shaderName);
+            [p release];
+            return FALSE;
         }
     }
 
