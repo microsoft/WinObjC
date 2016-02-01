@@ -19,6 +19,7 @@
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
+#import <Foundation/NSRange.h>
 
 @class NSString;
 @class NSLocale;

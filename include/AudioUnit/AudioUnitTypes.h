@@ -18,6 +18,7 @@
 
 #import <AudioUnit/AudioComponent.h>
 #import <CoreFoundation/CFBase.h>
+#import <CoreAudio/CoreAudioTypes.h>
 
 typedef Float32 AudioUnitParameterValue;
 typedef UInt32 AUParameterEventType;

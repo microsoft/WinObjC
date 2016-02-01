@@ -15,8 +15,9 @@
 //******************************************************************************
 #pragma once
 
-#import <Metal/MetalDataTypes.h>
 #import <Metal/MetalExport.h>
+#import <Metal/MetalDataTypes.h>
+#import <Foundation/NSRange.h>
 
 @protocol MTLDepthStencilState;
 @protocol MTLRenderPipelineState;

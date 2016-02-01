@@ -16,6 +16,10 @@
 #pragma once
 
 #import <QuartzCore/CoreAnimationExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSCoding.h>
+
+@class NSString;
 
 CA_EXPORT NSString* const kCAValueFunctionRotateX;
 CA_EXPORT NSString* const kCAValueFunctionRotateY;

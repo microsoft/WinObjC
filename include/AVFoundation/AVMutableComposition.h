@@ -24,6 +24,7 @@
 #import <AVFoundation/AVComposition.h>
 #import <CoreMedia/CMTime.h>
 #import <CoreMedia/CMTypes.h>
+#import <CoreMedia/CMTimeRange.h>
 
 @class AVAsset;
 @class NSError;

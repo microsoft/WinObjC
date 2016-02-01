@@ -17,10 +17,8 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSURLSessionTask.h>
-#import <Foundation/NSURLSessionDataTask.h>
-#import <Foundation/NSURLSessionDownloadTask.h>
-#import <Foundation/NSURLSessionUploadTask.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSURLAuthenticationChallenge.h>
 
 @class NSString;
 @class NSURLSessionConfiguration;

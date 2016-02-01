@@ -16,6 +16,7 @@
 #pragma once
 
 #import <QuartzCore/CoreAnimationExport.h>
+#import <Foundation/NSObject.h>
 #import <CoreFoundation/CFDate.h>
 
 enum CADisplayLinkRunMode {

@@ -19,6 +19,7 @@
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSString.h>
 
 @class NSArray;
 @class NSData;

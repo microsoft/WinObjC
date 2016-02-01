@@ -17,6 +17,8 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObjCRuntime.h>
+#import <CoreMedia/CMTimeRange.h>
 
 @class AVVideoComposition;
 @class NSString;

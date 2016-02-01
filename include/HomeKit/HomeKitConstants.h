@@ -16,6 +16,7 @@
 #pragma once
 
 #import <HomeKit/HomeKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSString;
 

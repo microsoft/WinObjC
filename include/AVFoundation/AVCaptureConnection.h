@@ -19,6 +19,7 @@
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSObject.h>
 #import <CoreMedia/CMTime.h>
+#import <AVFoundation/AVFoundationTypes.h>
 
 @class NSArray;
 @class AVCaptureOutput;

@@ -18,6 +18,8 @@
 #import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAAnimation.h>
 
+@class NSString;
+
 CA_EXPORT NSString* const kCATransitionFade;
 CA_EXPORT NSString* const kCATransitionMoveIn;
 CA_EXPORT NSString* const kCATransitionPush;

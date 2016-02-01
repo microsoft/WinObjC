@@ -16,6 +16,7 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
+#import <Foundation/NSObject.h>
 
 @class MPRemoteCommand;
 

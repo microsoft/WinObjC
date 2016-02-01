@@ -18,6 +18,7 @@
 #define _UIPRINTIINFO_H_
 
 #import <Foundation/NSObject.h>
+#import <Foundation/NSCoding.h>
 
 typedef enum {
     UIPrintInfoOutputGeneral,

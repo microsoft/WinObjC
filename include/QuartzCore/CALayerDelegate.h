@@ -16,6 +16,8 @@
 #pragma once
 
 #import <QuartzCore/CoreAnimationExport.h>
+#import <Foundation/NSObject.h>
+#import <CoreGraphics/CGContext.h>
 
 @class CALayer;
 @protocol CAAction;

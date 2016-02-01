@@ -16,6 +16,7 @@
 #pragma once
 
 #import <GamePlayKit/GameplayKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSArray;
 @protocol GKGameModelPlayer;

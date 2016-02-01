@@ -16,6 +16,7 @@
 #pragma once
 
 #import <CoreFoundation/CFDate.h>
+#import <Foundation/NSObjCRuntime.h>
 #import <Metal/MetalExport.h>
 
 @class NSString;

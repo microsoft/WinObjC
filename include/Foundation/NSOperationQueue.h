@@ -20,6 +20,7 @@
 #import <dispatch/dispatch.h>
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSOperation.h>
 
 @class NSOperation;
 @class NSArray;

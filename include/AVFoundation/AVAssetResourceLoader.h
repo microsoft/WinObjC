@@ -18,6 +18,8 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <dispatch/dispatch.h>
+
 @protocol AVAssetResourceLoaderDelegate;
 
 AVFOUNDATION_EXPORT_CLASS

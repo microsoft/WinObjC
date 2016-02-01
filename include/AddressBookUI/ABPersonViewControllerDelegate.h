@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSObjCRuntime.h>
 #import <AddressBookUI/AddressBookUIExport.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABMultiValue.h>

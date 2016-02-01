@@ -16,7 +16,10 @@
 #pragma once
 
 #import <QuartzCore/CoreAnimationExport.h>
+#import <CoreFoundation/CFDate.h>
+#import <Foundation/NSObject.h>
 
+@class NSString;
 @class CAMediaTimingFunction;
 
 CA_EXPORT NSString* const kCATransactionAnimationDuration;

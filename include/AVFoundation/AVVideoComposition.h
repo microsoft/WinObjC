@@ -21,6 +21,7 @@
 #import <Foundation/NSObject.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreMedia/CMTime.h>
+#import <CoreMedia/CMTimeRange.h>
 
 @class AVAsset;
 @class NSArray;

@@ -16,6 +16,7 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSArray;
 @class GKTurnBasedMatch;

@@ -16,7 +16,7 @@
 #pragma once
 
 #import <MessageUI/MessageUIExport.h>
-#import <MessageUI/MFMessageComposeViewController.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class MFMessageComposeViewController;
 

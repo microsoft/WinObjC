@@ -17,6 +17,7 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @protocol AVAudioSessionDelegate
 @optional

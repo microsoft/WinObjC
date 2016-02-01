@@ -18,6 +18,7 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <CoreMedia/CMTimeRange.h>
 
 @class AVAsset;
 @class NSError;

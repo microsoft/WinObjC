@@ -17,6 +17,8 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSCopying.h>
 
 AVFOUNDATION_EXPORT_CLASS
 @interface AVMetadataGroup : NSObject <NSCopying, NSMutableCopying>
