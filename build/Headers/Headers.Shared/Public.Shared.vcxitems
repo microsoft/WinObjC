@@ -37,6 +37,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\EventKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\EventKitUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Foundation\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GameController\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GameKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GamePlayKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\GLKit\*.h" />
@@ -87,7 +88,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\netinet\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\netinet6\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\os\*.h" />
-    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\sys\*.h" />	
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\WOCStdLib\sys\*.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

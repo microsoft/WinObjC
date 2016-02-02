@@ -42,6 +42,7 @@
 @import EventKit;
 @import EventKitUI;
 @import Foundation;
+@import GameController;
 @import GameKit;
 @import GamePlayKit;
 @import GLKit;
