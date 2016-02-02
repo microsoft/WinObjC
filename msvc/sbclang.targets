@@ -26,7 +26,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib')) or '$(IncludeGameKit)' == 'true' ">true</IncludeUIKit>
+      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreImage)' == 'true'">true</IncludeUIKit>
       <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
       <IncludeGameController Condition="$(LinkAdditionalDependencies.Contains('GameController.lib'))">true</IncludeGameController>
       <IncludeGamePlayKit Condition="$(LinkAdditionalDependencies.Contains('GamePlayKit.lib'))">true</IncludeGamePlayKit>
@@ -42,6 +42,10 @@
       <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
       <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
       <IncludeCoreTelephony Condition="$(LinkAdditionalDependencies.Contains('CoreTelephony.lib'))">true</IncludeCoreTelephony>
+      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeCoreGraphics>
+      <IncludeCoreImage Condition="$(LinkAdditionalDependencies.Contains('CoreImage.lib'))">true</IncludeCoreImage>
+      <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
+      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeFoundation>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
@@ -115,6 +119,7 @@
       <SBResourceCopy Condition="'$(IncludeGLKit)' == 'true'" Include="$(StarboardLibDirs)\GLKit.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreImage)' == 'true'" Include="$(StarboardLibDirs)\CoreImage.dll" />
       <SBResourceCopy Condition="'$(IncludeCoreText)' == 'true'" Include="$(StarboardLibDirs)\CoreText.dll" />
       <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
       <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />

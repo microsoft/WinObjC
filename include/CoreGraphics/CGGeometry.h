@@ -26,6 +26,7 @@ COREGRAPHICS_EXPORT const CGRect CGRectZero;
 COREGRAPHICS_EXPORT const CGRect CGRectNull;
 COREGRAPHICS_EXPORT const CGPoint CGPointZero;
 COREGRAPHICS_EXPORT const CGSize CGSizeZero;
+COREGRAPHICS_EXPORT const CGRect CGRectInfinite;
 
 enum CGRectEdge { CGRectMinXEdge, CGRectMinYEdge, CGRectMaxXEdge, CGRectMaxYEdge };
 typedef enum CGRectEdge CGRectEdge;
@@ -155,7 +156,7 @@ static inline bool CGRectEqualToRect(CGRect a, CGRect b) {
 }
 
 static inline bool CGRectIsInfinite(CGRect rect) {
-    return (isinf(rect.origin.x) || isinf(rect.origin.y) || isinf(rect.size.width) || isinf(rect.size.height));
+    return (isinf(rect.origin.x) || isinf(rect.origin.y) || (rect.size.width == CGFLOAT_MAX) || (rect.size.height == CGFLOAT_MAX));
 }
 
 static inline bool CGRectIsNull(CGRect rect) {

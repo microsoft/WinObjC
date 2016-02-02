@@ -13,10 +13,3 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#import <CoreGraphics/CoreGraphics.h>
-
-const CGRect CGRectZero = { 0.0f, 0.0f, 0.0f, 0.0f };
-const CGPoint CGPointZero = { 0.0f, 0.0f };
-const CGSize CGSizeZero = { 0.0f, 0.0f };
-const CGRect CGRectInfinite = {INFINITY, INFINITY, CGFLOAT_MAX, CGFLOAT_MAX};

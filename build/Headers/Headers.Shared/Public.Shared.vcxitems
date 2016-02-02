@@ -30,6 +30,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreData\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreFoundation\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreGraphics\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreImage\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreLocation\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreMedia\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreText\*.h" />

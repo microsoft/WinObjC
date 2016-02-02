@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,9 +14,28 @@
 //
 //******************************************************************************
 
-#import <CoreGraphics/CoreGraphics.h>
+#pragma once
 
-const CGRect CGRectZero = { 0.0f, 0.0f, 0.0f, 0.0f };
-const CGPoint CGPointZero = { 0.0f, 0.0f };
-const CGSize CGSizeZero = { 0.0f, 0.0f };
-const CGRect CGRectInfinite = {INFINITY, INFINITY, CGFLOAT_MAX, CGFLOAT_MAX};
+#ifndef COREIMAGE_IMPEXP
+#define COREIMAGE_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef COREIMAGE_EXPORT
+#ifdef __cplusplus
+#define COREIMAGE_EXPORT COREIMAGE_IMPEXP extern "C"
+#define COREIMAGE_EXPORT_CLASS COREIMAGE_IMPEXP
+#else
+#define COREIMAGE_EXPORT COREIMAGE_IMPEXP extern
+#define COREIMAGE_EXPORT_CLASS COREIMAGE_IMPEXP
+#endif
+#endif
+
+#ifndef COREIMAGE_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define COREIMAGE_EXTERNC_BEGIN extern "C" {
+#define COREIMAGE_EXTERNC_END }
+#else
+#define COREIMAGE_EXTERNC_BEGIN
+#define COREIMAGE_EXTERNC_END
+#endif
+#endif

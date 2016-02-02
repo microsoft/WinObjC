@@ -240,6 +240,7 @@ LIBRARY CoreGraphics
         CGRectUnion
         CGRectZero DATA
         CGSizeZero DATA
+        CGRectInfinite DATA
         EbrCenterTextInRectVertically
         _CGFontLock
         _CGFontUnlock
