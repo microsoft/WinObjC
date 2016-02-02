@@ -78,6 +78,7 @@
       <IncludeAddressBookUI Condition="$(LinkAdditionalDependencies.Contains('AddressBookUI.lib'))">true</IncludeAddressBookUI>
       <IncludeHealthKit Condition="$(LinkAdditionalDependencies.Contains('HealthKit.lib'))">true</IncludeHealthKit>
       <IncludeAVKit Condition="$(LinkAdditionalDependencies.Contains('AVKit.lib'))">true</IncludeAVKit>
+      <IncludeMediaAccessibility Condition="$(LinkAdditionalDependencies.Contains('MediaAccessibility.lib'))">true</IncludeMediaAccessibility>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -152,6 +153,7 @@
 
       <SBResourceCopy Condition="'$(IncludeCoreTelephony)' == 'true'" Include="$(StarboardLibDirs)\CoreTelephony.dll" />
       <SBResourceCopy Condition="'$(IncludeAVKit)' == 'true'" Include="$(StarboardLibDirs)\AVKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeMediaAccessibilitya)' == 'true'" Include="$(StarboardLibDirs)\MediaAccessibility.dll" />
     </ItemGroup>
   </Target>
 

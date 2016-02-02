@@ -50,6 +50,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\libxml\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\LocalAuthentication\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MapKit\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaAccessibility\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MediaPlayer\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\MessageUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Metal\*.h" />

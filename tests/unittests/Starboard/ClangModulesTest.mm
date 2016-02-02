@@ -53,6 +53,7 @@
 @import ImageIO;
 @import LocalAuthentication;
 @import MapKit;
+@import MediaAccessibility;
 @import MediaPlayer;
 @import MessageUI;
 @import MobileCoreServices;
