@@ -281,7 +281,7 @@ ret->height += ascenderDelta;
 + (UIFont*)systemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:12.0] size:0];
+    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:size] size:size];
 
     return ret;
 }
@@ -304,7 +304,7 @@ ret->height += ascenderDelta;
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
     UIFontDescriptor* fontDes =
-        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:12.0] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:size] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
     UIFont* ret = [self fontWithDescriptor:fontDes size:0];
 
     return ret;
@@ -313,7 +313,7 @@ ret->height += ascenderDelta;
 + (UIFont*)italicSystemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:12.0]
+    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:size]
         fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
     UIFont* ret = [self fontWithDescriptor:fontDes size:0];
 
