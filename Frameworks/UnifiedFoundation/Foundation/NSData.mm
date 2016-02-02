@@ -55,10 +55,17 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
-    ComPtr<IBuffer> wrlBuffer = BufferFromRawData(_bytes, _length);
-    if (!wrlBuffer) {
+    ComPtr<IBuffer> wrlBuffer;
+    IBuffer* rawBuffer = nullptr; 
+    HRESULT result;
+    
+    result = BufferFromRawData(&rawBuffer, _bytes, _length);
+
+    if (FAILED(result)) {
         return nil;
     }
+
+    wrlBuffer.Attach(rawBuffer);
 
     ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
     RETURN_NULL_IF_FAILED(

@@ -30,4 +30,4 @@ struct __declspec(uuid("905a0fef-bc53-11df-8c49-001e4fc686da")) __declspec(novta
 
 // Interop between WRL and ObjC is *incredibly* frustrating so define a helper function
 // to help isolate the code as much as possible.
-Microsoft::WRL::ComPtr<ABI::Windows::Storage::Streams::IBuffer> BufferFromRawData(unsigned char* data, unsigned int length);
+extern "C" HRESULT BufferFromRawData(ABI::Windows::Storage::Streams::IBuffer** buffer, unsigned char* data, unsigned int length);

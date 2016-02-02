@@ -665,6 +665,9 @@ LIBRARY Foundation
         _NSErrorFromFailureInfo
         _NSExceptionFromFailureInfo
 
+        ; Utility exports
+        BufferFromRawData
+        
         ; Private
         _OBJC_CLASS__NSBlockAdapter DATA ; Ensure that this gets included in the .dll
         _OBJC_CLASS_NSCFBridgeBase DATA

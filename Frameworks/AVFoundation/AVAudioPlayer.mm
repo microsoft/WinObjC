@@ -38,6 +38,8 @@ static const wchar_t* TAG = L"AVFoundation";
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Storage::Streams;
 
+using namespace Microsoft::WRL;
+
 @interface _UIHiddenMediaView : UIView
 
 @end
@@ -71,7 +73,7 @@ using namespace ABI::Windows::Storage::Streams;
         _lastState = _mediaElement.currentState;
 
         // Set up events
-        __weak auto weakSelf = self;
+        __weak AVAudioPlayer* weakSelf = self;
 
         [_mediaElement addCurrentStateChangedEvent:^(RTObject* sender, WXRoutedEventArgs* e){
                 [weakSelf _handleMediaElementStateChange:sender args:e];
@@ -123,18 +125,24 @@ using namespace ABI::Windows::Storage::Streams;
         NSString* scheme = [_url scheme];
         WFUri* mediaUri;
 
-        if ([scheme isEqualToString:@"file"]) {
+        if (scheme == nil || [scheme isEqualToString:@"file"]) {
+            NSURL* appxurl = [[NSURL alloc] initFileURLWithPath:_url.path];
+
+            TraceInfo(TAG, L"Loading media at file URL: %hs\n", [appxurl.absoluteString UTF8String]);
+
             // TODO: Implement internal NSURL function to return a valid ms-appx from the bundle path
-            mediaUri = [WFUri createWithRelativeUri:@"ms-appx://" relativeUri:_url.path];
+            mediaUri = [WFUri createUri:[NSString stringWithFormat:@"ms-appx://%@", appxurl.path]];
         } else {
             mediaUri = [WFUri createUri:_url.absoluteString];
         }
 
-        TraceInfo(TAG, L"Loading media at uri: %s\n", [mediaUri.absoluteUri UTF8String]);
+        TraceInfo(TAG, L"Loading media at URI: %hs\n", [mediaUri.absoluteUri UTF8String]);
         _mediaElement.source = mediaUri;
 
         if (outError) {
-            // TODO: Some modicum of failure returns. Right now everything is async, so that's not possible.
+            // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so 
+            // that's not possible.
+            *outError = nil;
         }
     }
 
@@ -157,10 +165,25 @@ using namespace ABI::Windows::Storage::Streams;
 
         WSSInMemoryRandomAccessStream* stream = [WSSInMemoryRandomAccessStream create];
         WSSDataWriter* rw = [WSSDataWriter createDataWriter:[stream getOutputStreamAt:0]];
+        ComPtr<IBuffer> buffer;
+        IBuffer* rawBuffer = nullptr;
+        HRESULT result;
 
-        auto buffer = BufferFromRawDataCopy((const unsigned char*)[_data bytes], [_data length]);
+        result = BufferFromRawData(&rawBuffer, (unsigned char*)[_data bytes], [_data length]);
+        
+        if (FAILED(result)) {
+            @throw [NSException exceptionWithName:NSGenericException
+                                           reason:@"Internal error: Failed to create IBuffer from NSData"
+                                         userInfo:nil];
+        }
 
-        // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll open up StoreAsync.
+        buffer.Attach(rawBuffer);
+
+        // WARNING: If someone deletes this AVAudioPlayer before the StoreAsync is completed, _data may be released
+        // causing IBuffer to segfault. 
+
+        // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll 
+        // open up StoreAsync.
         IDataWriter* writer = (__bridge IDataWriter*)[rw internalObject];
         IAsyncOperation<UInt32>* comp = nullptr;
         writer->WriteBuffer(buffer.Get());
@@ -172,7 +195,9 @@ using namespace ABI::Windows::Storage::Streams;
         [rw detachStream];
 
         if (outError) {
-            // TODO: Some modicum of failure returns. Right now everything is async, so that's not possible.
+            // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so 
+            // that's not possible.
+            *outError = nil;
         }
     }
 
@@ -207,7 +232,8 @@ using namespace ABI::Windows::Storage::Streams;
 
             case WUXMMediaElementStateStopped:
             case WUXMMediaElementStatePaused:
-                if ([self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
+                if ((_lastState == WUXMMediaElementStatePlaying)
+                    && [self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
                     [self.delegate audioPlayerDidFinishPlaying:self successfully:TRUE];
                 }
 
@@ -234,7 +260,14 @@ using namespace ABI::Windows::Storage::Streams;
 */
 - (BOOL)play {
     _playing = TRUE;
+
+    // This is to catch the scenario where we play before the media is loaded. 
+    // It may be possibile the sound will play erroneously if someone plays, and a short time later pauses and catches
+    // MediaElement in a (Loaded & !Playing) state 
+    _mediaElement.autoPlay = YES;
+
     [_mediaElement play];
+
     return TRUE;
 }
 
@@ -251,6 +284,7 @@ using namespace ABI::Windows::Storage::Streams;
 */
 - (void)pause {
     _playing = FALSE;
+    _mediaElement.autoPlay = NO;
     [_mediaElement pause];
 }
 
@@ -259,6 +293,7 @@ using namespace ABI::Windows::Storage::Streams;
 */
 - (void)stop {
     _playing = FALSE;
+    _mediaElement.autoPlay = NO;
     [_mediaElement stop];
 }
 
@@ -452,6 +487,10 @@ using namespace ABI::Windows::Storage::Streams;
 */
 - (void)setVolume:(float)volume {
     _mediaElement.volume = volume;
+}
+
+- (void)dealloc {
+    [_hiddenView removeFromSuperview];
 }
 
 @end
