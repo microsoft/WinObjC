@@ -588,39 +588,4 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(double)delay inModes:(NSArray*)modes {
     [[self class] object:self performSelector:selector withObject:obj1 afterDelay:delay inModes:modes];
 }
-
-/**
- @Status Interoperable
-*/
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
-    return [[self class] instanceMethodSignatureForSelector:selector];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector {
-    id cls = self;
-    const char* methodTypes;
-    while (cls) {
-        auto method = class_getInstanceMethod(cls, selector);
-        methodTypes = method_getTypeEncoding(method);
-        if (methodTypes) {
-            break;
-        }
-
-        // Couldn't find it..
-        cls = [cls superclass];
-        if (!cls) {
-            return nil;
-        }
-    }
-
-    if (!methodTypes) {
-        printf("Cannot find selector %s::%s\n", class_getName(self), sel_getName(selector));
-        return nil;
-    }
-
-    return [NSMethodSignature signatureWithObjCTypes:methodTypes];
-}
 @end

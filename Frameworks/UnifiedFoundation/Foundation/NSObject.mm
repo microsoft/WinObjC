@@ -27,6 +27,7 @@
 #import <Foundation/NSAutoreleasePool.h>
 #import <Foundation/NSException.h>
 #import <Foundation/NSString.h>
+#import <Foundation/NSMethodSignature.h>
 
 #import <Starboard/String.h>
 #import <StringHelpers.h>
@@ -44,6 +45,13 @@ static BOOL _NSSelectorNotFoundIsNonFatal;
 @end
 
 @implementation NSObject
+/**
+ @Status Interoperable
+*/
++ (void)initialize {
+    // does nothing (by design).
+}
+
 /**
  @Status Interoperable
 */
@@ -311,9 +319,32 @@ static id _NSWeakLoad(id obj) {
 /**
  @Status Interoperable
 */
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
+    return [[self class] instanceMethodSignatureForSelector:selector];
+}
+
+/**
+ @Status Interoperable
+*/
 + (IMP)instanceMethodForSelector:(SEL)selector {
     IMP ret = class_getMethodImplementation(self, selector);
     return ret;
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector {
+    Method method = class_getInstanceMethod(self, selector);
+
+    if (!method) {
+        TraceWarning(L"Objective-C", L"-[%hs %hs]: unrecognized selector in signature lookup.", class_getName(self), sel_getName(selector));
+        return nil;
+    }
+
+    const char* methodTypes = method_getTypeEncoding(method);
+
+    return [NSMethodSignature signatureWithObjCTypes:methodTypes];
 }
 
 // NOTE: long return value to allow nonfatal continuation to get a "valid" result (for non-fpret/non-stret calls)
@@ -341,6 +372,13 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
 - (void)doesNotRecognizeSelector:(SEL)selector {
     Class cls = object_getClass(self);
     _throwUnrecognizedSelectorException(self, cls, selector);
+}
+
+/**
+ @Status Stub
+*/
+- (void)forwardInvocation:(NSInvocation*)invocation {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -435,7 +473,7 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     /**
      @Status Interoperable
     */
-    + (Class)superclass {
++ (Class)superclass {
     return class_getSuperclass(self);
 }
 
@@ -506,44 +544,17 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
 }
 
 /**
- @Status Stub
- @Notes
-*/
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)aSelector {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)forwardInvocation:(NSInvocation*)anInvocation {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (void)initialize {
-    UNIMPLEMENTED();
-}
-/**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (void)setVersion:(NSInteger)aVersion {
-    UNIMPLEMENTED();
+    class_setVersion(self, aVersion);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (NSInteger)version {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return class_getVersion(self);
 }
 
 /**
@@ -560,15 +571,6 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
 */
 + (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument {
     UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)aSelector {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**

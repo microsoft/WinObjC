@@ -44,61 +44,85 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @end
 
 FOUNDATION_EXPORT_CLASS
-__attribute__((objc_root_class)) @interface NSObject<NSObject> {
+__attribute__((objc_root_class))
+@interface NSObject <NSObject> {
 @public
     Class isa;
 }
 
-+ (void)initialize STUB_METHOD;
+/* Class Initialization */
 + (void)load;
-+ (instancetype)alloc;
-+ (instancetype)allocWithZone:(NSZone*)zone;
-- (instancetype)init;
-- (id)copy;
-+ (id)copyWithZone:(NSZone*)zone;
-- (id)mutableCopy;
-+ (id)mutableCopyWithZone:(NSZone*)zone;
++ (void)initialize;
+
+/* Creation and Destruction */
++ (id)new;
++ (id)alloc;
++ (id)allocWithZone:(NSZone*)zone;
+
+- (id)init;
 - (void)dealloc;
-+ (instancetype) new;
-+ (Class) class;
-+ (Class)superclass;
-+ (BOOL)isSubclassOfClass:(Class)aClass;
-+ (BOOL)instancesRespondToSelector:(SEL)aSelector;
-+ (BOOL)conformsToProtocol:(Protocol*)aProtocol;
-- (IMP)methodForSelector:(SEL)aSelector;
-+ (IMP)instanceMethodForSelector:(SEL)aSelector;
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector STUB_METHOD;
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector STUB_METHOD;
-+ (NSString*)description;
-@property (readonly, copy) NSString* description;
-@property (readonly, retain) id autoContentAccessingProxy STUB_PROPERTY;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget STUB_METHOD;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument STUB_METHOD;
-- (id)forwardingTargetForSelector:(SEL)aSelector;
-- (void)forwardInvocation:(NSInvocation*)invocation STUB_METHOD;
-+ (BOOL)resolveClassMethod:(SEL)selector STUB_METHOD;
-+ (BOOL)resolveInstanceMethod:(SEL)selector STUB_METHOD;
-- (void)doesNotRecognizeSelector:(SEL)aSelector;
-+ (NSInteger)version STUB_METHOD;
-+ (void)setVersion:(NSInteger)version STUB_METHOD;
 - (void)finalize;
 
++ (NSInteger)version;
++ (void)setVersion:(NSInteger)version;
+
++ (id)self;
+- (id)self;
+
+/* Inheritance Introspection */
++ (Class)class;
+- (Class)class;
++ (Class)superclass;
++ (BOOL)isSubclassOfClass:(Class)cls;
+- (BOOL)isKindOfClass:(Class)aClass;
+- (BOOL)isMemberOfClass:(Class)aClass;
++ (BOOL)conformsToProtocol:(Protocol*)protocol;
+- (BOOL)conformsToProtocol:(Protocol*)protocol;
+
+/* Dynamic Invocation */
+- (id)performSelector:(SEL)selector;
+- (id)performSelector:(SEL)selector withObject:(id)object0;
+- (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget STUB_METHOD;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument STUB_METHOD;
+
+/* Method Introspection */
++ (BOOL)instancesRespondToSelector:(SEL)selector;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector STUB_METHOD;
+- (IMP)methodForSelector:(SEL)selector;
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector STUB_METHOD;
++ (IMP)instanceMethodForSelector:(SEL)selector;
+- (void)doesNotRecognizeSelector:(SEL)selector;
+
+/* Forwarding */
++ (BOOL)resolveClassMethod:(SEL)selector STUB_METHOD;
++ (BOOL)resolveInstanceMethod:(SEL)selector STUB_METHOD;
+- (id)forwardingTargetForSelector:(SEL)aSelector;
+- (void)forwardInvocation:(NSInvocation*)invocation STUB_METHOD;
+
++ (NSString*)description;
+@property (readonly, copy) NSString* description;
+
+@property (readonly, retain) id autoContentAccessingProxy STUB_PROPERTY;
+
+- (id)copy;
+- (id)mutableCopy;
 @end
 
 // clang-format off
 @interface NSObject (NSCoding)
-- (Class) classForCoder; // really should be a property but *bad* things happen if an ivar is produced.
+@property (readonly) Class classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
 - (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
 
 @interface NSObject (NSArchiver)
-- (Class)classForArchiver;
+@property (readonly) Class classForArchiver;
 - (id)replacementObjectForArchiver:(NSArchiver*)archiver;
 @end
 
 @interface NSObject (NSKeyedArchiver)
-- (Class)classForKeyedArchiver;
+@property (readonly) Class classForKeyedArchiver;
 + (Class)classForKeyedUnarchiver;
 + (NSArray*)classFallbacksForKeyedArchiver;
 - (id)replacementObjectForKeyedArchiver:(NSKeyedArchiver*)archiver;
@@ -116,8 +140,6 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 + (void)object:(id)object performSelector:(SEL)selector withObject:(id)argument afterDelay:(NSTimeInterval)delay inModes:(NSArray*)modes;
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(NSTimeInterval)delay;
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(NSTimeInterval)delay inModes:(NSArray*)modes;
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
 @end
 // clang-format on
 
