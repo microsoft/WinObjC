@@ -146,11 +146,18 @@ void TelemetryChannel::Send()
     {
         std::wstring buffer;
 
-        buffer += L"[";
         for (auto &buf : m_buffer) {
             buffer += buf + L",";
         }
-        buffer += L"]";
+
+        // Remove trailing comma so JSON conforms to expected format.
+        if (!buffer.empty()) 
+        {
+            if (buffer.back() ==',')
+            {
+                buffer.pop_back();
+            }
+        }
 
         m_buffer.clear();
 
