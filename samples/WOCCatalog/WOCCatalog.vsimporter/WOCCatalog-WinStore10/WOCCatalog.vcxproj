@@ -164,6 +164,7 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="WOCCatalog_TemporaryKey.pfx" />
+    <Image Include="..\..\WOCCatalog\Images\tf_bgimage.jpg" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
