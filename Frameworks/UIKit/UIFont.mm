@@ -24,6 +24,7 @@
 #include "UIKit/UIFont.h"
 #include "UIKit/UIFontDescriptor.h"
 #include "UIFontDescriptorInternal.h"
+#include "CoreText/CTFont.h"
 
 extern "C" {
 #include <ft2build.h>
@@ -375,6 +376,14 @@ void loadFont(UIFont* self) {
     return _name;
 }
 
+/**
+ @Status Caveat
+ @Notes Supports only English language and limited encodings.
+*/
+- (NSString*)familyName {
+    CFStringRef name = CTFontCopyName(static_cast<CTFontRef>(self), kCTFontFamilyNameKey);
+    return static_cast<NSString*>(name);
+}
 /**
  @Status Interoperable
 */
