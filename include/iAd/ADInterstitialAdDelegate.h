@@ -16,6 +16,7 @@
 #pragma once
 
 #import <iAd/iAdExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class ADInterstitialAd;
 @class NSError;

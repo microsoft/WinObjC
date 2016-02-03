@@ -16,6 +16,8 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSRange.h>
 
 @class NSString;
 

@@ -39,6 +39,7 @@ TEST(CoreText, FontCopyName) {
 
     const CFStringRef fontName = static_cast<CFStringRef>(@"SegoeUI");
     const CTFontRef font = CTFontCreateWithName(fontName, 0.0, NULL);
+    ASSERT_TRUE_MSG(font != nil, "Failed: Font is nil.");
 
     const CFStringRef fontCopyrightName = CTFontCopyName(font, kCTFontCopyrightNameKey);
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(fontCopyrightName), copyrightName, "FAILED: Incorrect copyright name\n");

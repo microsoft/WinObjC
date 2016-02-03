@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CALayer.h>
 #import <QuartzCore/CAMediaTiming.h>
 

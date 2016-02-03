@@ -36,16 +36,15 @@
 /**
  @Status Interoperable
 */
-- (void)setToValue:(id)value {
-    _to.attach([value copy]);
+- (id)fromValue {
+    return _from;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)setByValue:(id)value {
-    UNIMPLEMENTED();
-    EbrDebugLog("CABasicAnimation::setByValue not supported\n");
+- (void)setToValue:(id)value {
+    _to.attach([value copy]);
 }
 
 /**
@@ -65,14 +64,12 @@
     return [ret autorelease];
 }
 
-- (id)runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
+- (void)runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
     if (_to == nil) {
         _to = [object valueForKey:_keyPath];
     }
 
     [object addAnimation:self forKey:key];
-
-    return self;
 }
 
 - (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(id)forKey {

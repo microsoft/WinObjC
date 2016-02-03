@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,32 +13,56 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _AUDIOSERVICES_H_
-#define _AUDIOSERVICES_H_
-
-#import <AudioToolbox/AudioSession.h>
-#import <StarboardExport.h>
 #import <AudioToolbox/AudioToolboxExport.h>
-#import <stdint.h>
+#import <AudioToolbox/AudioConverter.h>
+#import <CoreFoundation/CFRunLoop.h>
+#import <CoreFoundation/CFString.h>
 
-#define kSystemSoundID_Vibrate 0x00000FFF
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_AudioRouteKey_Inputs;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_AudioRouteKey_Outputs;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_InputSourceKey_ID;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_InputSourceKey_Description;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_OutputDestinationKey_ID;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_OutputDestinationKey_Description;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_AudioRouteKey_Type;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionInputRoute_LineIn;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionInputRoute_BuiltInMic;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionInputRoute_HeadsetMic;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionInputRoute_BluetoothHFP;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionInputRoute_USBAudio;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_LineOut;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_Headphones;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_BluetoothHFP;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_BluetoothA2DP;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_BuiltInReceiver;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_BuiltInSpeaker;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_USBAudio;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_HDMI;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSessionOutputRoute_AirPlay;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_RouteChangeKey_Reason;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_AudioRouteChangeKey_PreviousRouteDescription;
+AUDIOTOOLBOX_EXPORT const CFStringRef kAudioSession_AudioRouteChangeKey_CurrentRouteDescription;
 
-enum {
-    kAudioServicesNoError = 0,
-    kAudioServicesUnsupportedPropertyError = 'pty?',
-    kAudioServicesBadPropertySizeError = '!siz',
-    kAudioServicesBadSpecifierSizeError = '!spc',
-    kAudioServicesSystemSoundUnspecifiedError = -1500,
-    kAudioServicesSystemSoundClientTimedOutError = -1501
-};
+typedef UInt32 AudioSessionPropertyID;
+typedef void (*AudioSessionInterruptionListener)(void* inClientData, UInt32 inInterruptionState);
+typedef void (*AudioSessionPropertyListener)(void* inClientData, AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData);
+typedef UInt32 AudioSessionInterruptionType;
 
-typedef uint32_t SystemSoundID;
-
-AUDIOTOOLBOX_EXPORT void AudioServicesPlaySystemSound(SystemSoundID soundID);
-// AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef fileURL, SystemSoundID soundID);
-AUDIOTOOLBOX_EXPORT OSStatus AudioServicesDisposeSystemSoundID(SystemSoundID soundID);
-AUDIOTOOLBOX_EXPORT void AudioServicesPlayAlertSound(SystemSoundID inSystemSoundID);
-AUDIOTOOLBOX_EXPORT OSStatus AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID* outSystemSoundID);
-
-#endif // _AUDIOSERVICES_H_
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionInitialize(CFRunLoopRef inRunLoop,
+                                                    CFStringRef inRunLoopMode,
+                                                    AudioSessionInterruptionListener inInterruptionListener,
+                                                    void* inClientData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionSetActive(Boolean active) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionSetActiveWithFlags(Boolean active, UInt32 inFlags) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionGetProperty(AudioSessionPropertyID inID, UInt32* ioDataSize, void* outData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionSetProperty(AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionGetPropertySize(AudioSessionPropertyID inID, UInt32* outDataSize) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionAddPropertyListener(AudioSessionPropertyID inID,
+                                                             AudioSessionPropertyListener inProc,
+                                                             void* inClientData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionRemovePropertyListenerWithUserData(AudioSessionPropertyID inID,
+                                                                            AudioSessionPropertyListener inProc,
+                                                                            void* inClientData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioSessionRemovePropertyListener(AudioSessionPropertyID inID) STUB_METHOD;

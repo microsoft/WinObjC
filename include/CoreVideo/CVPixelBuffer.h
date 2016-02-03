@@ -25,36 +25,36 @@
 typedef UInt64 CVOptionFlags;
 typedef SInt32 CVReturn;
 
-struct CVPlanarComponentInfo {
+struct CVPlanarComponentInfo{
     int32_t offset;
     uint32_t rowBytes;
 };
+typedef struct CVPlanarComponentInfo CVPlanarComponentInfo;
 
 struct CVPlanarPixelBufferInfo {
     CVPlanarComponentInfo componentInfo[1];
 };
+typedef struct CVPlanarPixelBufferInfo CVPlanarPixelBufferInfo;
 
 struct CVPlanarPixelBufferInfo_YCbCrPlanar {
     CVPlanarComponentInfo componentInfoY;
     CVPlanarComponentInfo componentInfoCb;
     CVPlanarComponentInfo componentInfoCr;
 };
+typedef struct CVPlanarPixelBufferInfo_YCbCrPlanar CVPlanarPixelBufferInfo_YCbCrPlanar;
 
 struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
     CVPlanarComponentInfo componentInfoY;
     CVPlanarComponentInfo componentInfoCbCr;
 };
+typedef struct CVPlanarPixelBufferInfo_YCbCrBiPlanar CVPlanarPixelBufferInfo_YCbCrBiPlanar;
 
 typedef CVImageBufferRef CVPixelBufferRef;
 typedef void (*CVPixelBufferReleaseBytesCallback)(void* releaseRefCon, const void* baseAddress);
 typedef void (*CVPixelBufferReleasePlanarBytesCallback)(
     void* releaseRefCon, const void* dataPtr, size_t dataSize, size_t numberOfPlanes, const void* planeAddresses[]);
-typedef struct CVPlanarComponentInfo CVPlanarComponentInfo;
-typedef struct CVPlanarPixelBufferInfo CVPlanarPixelBufferInfo;
-typedef struct CVPlanarPixelBufferInfo_YCbCrPlanar CVPlanarPixelBufferInfo_YCbCrPlanar;
-typedef struct CVPlanarPixelBufferInfo_YCbCrBiPlanar CVPlanarPixelBufferInfo_YCbCrBiPlanar;
 
-enum CVPixelBufferLockFlags {
+typedef CF_ENUM(UInt32, CVPixelBufferLockFlags) {
     kCVPixelBufferLock_ReadOnly = 0x00000001,
 };
 

@@ -17,6 +17,7 @@
 #pragma once
 
 #import <WebKit/WebKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class WKWebView;
 @class WKWebViewConfiguration;

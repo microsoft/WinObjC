@@ -19,6 +19,7 @@
 #import <Foundation/NSCoding.h>
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSRange.h>
 
 @class NSString;
 @class NSError;

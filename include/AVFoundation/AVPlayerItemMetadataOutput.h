@@ -18,6 +18,7 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <dispatch/dispatch.h>
 #import <AVFoundation/AVPlayerItemOutput.h>
 
 @class NSArray;

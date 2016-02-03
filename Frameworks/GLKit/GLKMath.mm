@@ -491,7 +491,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3Make(float m00, float m01, float m02, float m1
 /**
  @Status Interoperable
 */
-GLKIT_EXPORT GLKMatrix4 GLKMatrix3Transpose(GLKMatrix4 mat) {
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Transpose(GLKMatrix3 mat) {
     std::swap(mat.m01, mat.m10);
     std::swap(mat.m02, mat.m20);
     std::swap(mat.m12, mat.m21);
@@ -654,7 +654,7 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4Scale(GLKMatrix4 m, float x, float y, float z)
 }
 
 /**
- @Status Interoperable
+   @Status Interoperable
 */
 GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec) {
     GLKVector3 res;
@@ -664,6 +664,101 @@ GLKIT_EXPORT GLKVector3 GLKMatrix4MultiplyVector3(GLKMatrix4 m, GLKVector3 vec) 
     res.z = m.m02 * vec.x + m.m12 * vec.y + m.m22 * vec.z;
 
     return res;
+}
+
+/**
+   @Status Interoperable
+*/
+GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 m, GLKVector3 vec) {
+    GLKVector3 res;
+
+    res.x = m.m00 * vec.x + m.m10 * vec.y + m.m20 * vec.z;
+    res.y = m.m01 * vec.x + m.m11 * vec.y + m.m21 * vec.z;
+    res.z = m.m02 * vec.x + m.m12 * vec.y + m.m22 * vec.z;
+
+    return res;
+}
+
+/**
+   @Status Interoperable
+*/
+GLKIT_EXPORT GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 m)
+{
+    GLKMatrix2 res;
+
+    res.m00 = m.m00;
+    res.m01 = m.m01;
+    
+    res.m10 = m.m10;
+    res.m11 = m.m11;
+    
+    return res;
+}
+
+/**
+   @Status Interoperable
+*/
+GLKIT_EXPORT GLKMatrix2 GLKMatrix4GetMatrix2(GLKMatrix4 m)
+{
+    GLKMatrix2 res;
+
+    res.m00 = m.m00;
+    res.m01 = m.m01;
+    
+    res.m10 = m.m10;
+    res.m11 = m.m11;
+    
+    return res;
+}
+
+/**
+ @Status Interoperable
+*/
+GLKIT_EXPORT GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 m)
+{
+    GLKMatrix3 res;
+
+    res.m00 = m.m00;
+    res.m01 = m.m01;
+    res.m02 = m.m02;
+    
+    res.m10 = m.m10;
+    res.m11 = m.m11;
+    res.m12 = m.m12;
+    
+    res.m20 = m.m20;
+    res.m21 = m.m21;
+    res.m22 = m.m22;
+    
+    return res;
+}
+
+/**
+   @Status Caveat
+   @Notes Only works on orthonormal transforms.
+*/
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 m, BOOL* isInvertible)
+{
+    UNIMPLEMENTED();
+
+    // This is only going to work in very limited circumstances.
+    // (ie, m is an orthonormal transform).
+    if (isInvertible) {
+        *isInvertible = true;
+    }
+    return GLKMatrix3Transpose(m);
+}
+
+/**
+   @Status Stub
+   @Notes Only works on orthonormal transforms.
+*/
+GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, BOOL* isInvertible)
+{
+    UNIMPLEMENTED();
+
+    m = GLKMatrix3Invert(m, isInvertible);
+    return GLKMatrix3Transpose(m);
 }
 
 /**
@@ -728,7 +823,9 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4Invert(GLKMatrix4 m, BOOL* isInvertible) {
 
     // This is only going to work in very limited circumstances.
     // (ie, m is of the form translate(rotate(m))
-    *isInvertible = true;
+    if (isInvertible) {
+        *isInvertible = true;
+    }
 
     std::swap(rotated.m01, rotated.m10);
     std::swap(rotated.m02, rotated.m20);
@@ -1096,15 +1193,6 @@ GLKMatrix3 GLKMatrix3MakeScale(float sx, float sy, float sz) {
  @Status Stub
  @Notes
 */
-GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 matrix) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column) {
     UNIMPLEMENTED();
     return StubReturn();
@@ -1267,15 +1355,6 @@ GLKMatrix3 GLKMatrix3Subtract(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) {
  @Status Stub
  @Notes
 */
-GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 matrixLeft, GLKVector3 vectorRight) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size_t vectorCount) {
     UNIMPLEMENTED();
 }
@@ -1285,24 +1364,6 @@ void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size
  @Notes
 */
 GLKMatrix4 GLKMatrix4MakeWithQuaternion(GLKQuaternion quaternion) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-GLKMatrix2 GLKMatrix4GetMatrix2(GLKMatrix4 matrix) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-GLKMatrix3 GLKMatrix4GetMatrix3(GLKMatrix4 matrix) {
     UNIMPLEMENTED();
     return StubReturn();
 }

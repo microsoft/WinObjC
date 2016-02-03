@@ -16,6 +16,7 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class MPContentItem;
 @class NSIndexPath;

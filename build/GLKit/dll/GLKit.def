@@ -1,21 +1,52 @@
 LIBRARY GLKit
     EXPORTS
+        GLKMathProject
+        GLKMathUnproject
+        GLKMatrix3Add
         GLKMatrix3FromMatrix4
+        GLKMatrix3GetColumn
+        GLKMatrix3GetMatrix2
+        GLKMatrix3GetRow
         GLKMatrix3Identity DATA
+        GLKMatrix3Invert
+        GLKMatrix3InvertAndTranspose
         GLKMatrix3Make
         GLKMatrix3MakeAndTranspose
         GLKMatrix3MakeIdentity
         GLKMatrix3MakeRotation
+        GLKMatrix3MakeScale
         GLKMatrix3MakeWithArray
         GLKMatrix3MakeWithArrayAndTranspose
         GLKMatrix3MakeWithColumns
+        GLKMatrix3MakeWithQuaternion
         GLKMatrix3MakeWithRows
         GLKMatrix3MakeXRotation
         GLKMatrix3MakeYRotation
         GLKMatrix3MakeZRotation
+        GLKMatrix3Multiply
+        GLKMatrix3MultiplyVector3
+        GLKMatrix3MultiplyVector3Array
+        GLKMatrix3Rotate
+        GLKMatrix3RotateWithVector3
+        GLKMatrix3RotateWithVector4
+        GLKMatrix3RotateX
+        GLKMatrix3RotateY
+        GLKMatrix3RotateZ
+        GLKMatrix3Scale
+        GLKMatrix3ScaleWithVector3
+        GLKMatrix3ScaleWithVector4
+        GLKMatrix3SetColumn
+        GLKMatrix3SetRow
+        GLKMatrix3Subtract
         GLKMatrix3Transpose
+        GLKMatrix4Add
+        GLKMatrix4GetColumn
+        GLKMatrix4GetMatrix2
+        GLKMatrix4GetMatrix3
+        GLKMatrix4GetRow
         GLKMatrix4Identity DATA
         GLKMatrix4Invert
+        GLKMatrix4InvertAndTranspose
         GLKMatrix4Make
         GLKMatrix4MakeAndTranspose
         GLKMatrix4MakeFrustum
@@ -30,11 +61,14 @@ LIBRARY GLKit
         GLKMatrix4MakeWithArray
         GLKMatrix4MakeWithArrayAndTranspose
         GLKMatrix4MakeWithColumns
+        GLKMatrix4MakeWithQuaternion
         GLKMatrix4MakeWithRows
         GLKMatrix4MakeXRotation
         GLKMatrix4MakeYRotation
         GLKMatrix4MakeZRotation
         GLKMatrix4Multiply
+        GLKMatrix4MultiplyAndProjectVector3
+        GLKMatrix4MultiplyAndProjectVector3Array
         GLKMatrix4MultiplyVector3
         GLKMatrix4MultiplyVector3Array
         GLKMatrix4MultiplyVector3ArrayWithTranslation
@@ -42,21 +76,69 @@ LIBRARY GLKit
         GLKMatrix4MultiplyVector4
         GLKMatrix4MultiplyVector4Array
         GLKMatrix4Rotate
+        GLKMatrix4RotateWithVector3
+        GLKMatrix4RotateWithVector4
         GLKMatrix4RotateX
         GLKMatrix4RotateY
         GLKMatrix4RotateZ
         GLKMatrix4Scale
+        GLKMatrix4ScaleWithVector3
+        GLKMatrix4ScaleWithVector4
+        GLKMatrix4SetColumn
+        GLKMatrix4SetRow
+        GLKMatrix4Subtract
         GLKMatrix4Translate
+        GLKMatrix4TranslateWithVector3
+        GLKMatrix4TranslateWithVector4
         GLKMatrix4Transpose
+        GLKMatrixStackCreate
+        GLKMatrixStackGetMatrix2
+        GLKMatrixStackGetMatrix3
+        GLKMatrixStackGetMatrix3Inverse
+        GLKMatrixStackGetMatrix3InverseTranspose
+        GLKMatrixStackGetMatrix4
+        GLKMatrixStackGetMatrix4Inverse
+        GLKMatrixStackGetMatrix4InverseTranspose
+        GLKMatrixStackGetTypeID
+        GLKMatrixStackLoadMatrix4
+        GLKMatrixStackMultiplyMatrix4
+        GLKMatrixStackMultiplyMatrixStack
+        GLKMatrixStackPop
+        GLKMatrixStackPush
+        GLKMatrixStackRotate
+        GLKMatrixStackRotateWithVector3
+        GLKMatrixStackRotateWithVector4
+        GLKMatrixStackRotateX
+        GLKMatrixStackRotateY
+        GLKMatrixStackRotateZ
+        GLKMatrixStackScale
+        GLKMatrixStackScaleWithVector3
+        GLKMatrixStackScaleWithVector4
+        GLKMatrixStackSize
+        GLKMatrixStackTranslate
+        GLKMatrixStackTranslateWithVector3
+        GLKMatrixStackTranslateWithVector4
+        GLKQuaternionIdentity DATA
+        GLKQuaternionMakeIdentity
         GLKQuaternionMakeWithMatrix3
         GLKQuaternionMakeWithMatrix4
         GLKQuaternionRotateVector3Array
         GLKQuaternionRotateVector4Array
         GLKTextureLoaderApplyPremultiplication DATA
+        GLKTextureLoaderErrorDomain DATA
+        GLKTextureLoaderErrorKey DATA
+        GLKTextureLoaderGLErrorKey DATA
         GLKTextureLoaderGenerateMipmaps DATA
         GLKTextureLoaderGrayscaleAsAlpha DATA
         GLKTextureLoaderOriginBottomLeft DATA
         GLKTextureLoaderSRGB DATA
+        NSStringFromGLKMatrix2
+        NSStringFromGLKMatrix3
+        NSStringFromGLKMatrix4
+        NSStringFromGLKQuaternion
+        NSStringFromGLKVector2
+        NSStringFromGLKVector3
+        NSStringFromGLKVector4
         _OBJC_CLASS_GLKBaseEffect DATA
         _OBJC_CLASS_GLKEffectProperty DATA
         _OBJC_CLASS_GLKEffectPropertyFog DATA
@@ -93,85 +175,3 @@ LIBRARY GLKit
         __objc_class_name_GLKTextureLoader CONSTANT
         __objc_class_name_GLKView CONSTANT
         __objc_class_name_GLKViewController CONSTANT
-        GLKQuaternionIdentity DATA
-        GLKQuaternionMakeIdentity
-        GLKTextureLoaderErrorDomain DATA
-        GLKTextureLoaderErrorKey DATA
-        GLKTextureLoaderGLErrorKey DATA
-        GLKMathProject
-        GLKMathUnproject
-        GLKMatrix3Invert
-        GLKMatrix3InvertAndTranspose
-        GLKMatrix3Multiply
-        GLKMatrix3Rotate
-        GLKMatrix3RotateWithVector3
-        GLKMatrix3RotateWithVector4
-        GLKMatrix3RotateX
-        GLKMatrix3RotateY
-        GLKMatrix3RotateZ
-        GLKMatrix3Scale
-        GLKMatrix3ScaleWithVector3
-        GLKMatrix3ScaleWithVector4
-        GLKMatrix3Add
-        GLKMatrix3Subtract
-        GLKMatrix3MultiplyVector3
-        GLKMatrix3MultiplyVector3Array
-        GLKMatrix4InvertAndTranspose
-        GLKMatrix4MakeWithQuaternion
-        GLKMatrix3MakeWithQuaternion
-        GLKMatrix3MakeScale
-        GLKMatrix3GetMatrix2
-        GLKMatrix3GetColumn
-        GLKMatrix3GetRow
-        GLKMatrix3SetColumn
-        GLKMatrix3SetRow
-        GLKMatrix4GetMatrix2
-        GLKMatrix4GetMatrix3
-        GLKMatrix4GetColumn
-        GLKMatrix4GetRow
-        GLKMatrix4SetColumn
-        GLKMatrix4SetRow
-        GLKMatrix4RotateWithVector3
-        GLKMatrix4RotateWithVector4
-        GLKMatrix4TranslateWithVector3
-        GLKMatrix4TranslateWithVector4
-        GLKMatrix4ScaleWithVector3
-        GLKMatrix4ScaleWithVector4
-        GLKMatrix4Add
-        GLKMatrix4Subtract
-        GLKMatrix4MultiplyAndProjectVector3
-        GLKMatrix4MultiplyAndProjectVector3Array
-        NSStringFromGLKMatrix2
-        NSStringFromGLKMatrix3
-        NSStringFromGLKMatrix4
-        NSStringFromGLKVector2
-        NSStringFromGLKVector3
-        NSStringFromGLKVector4
-        NSStringFromGLKQuaternion
-        GLKMatrixStackCreate
-        GLKMatrixStackGetTypeID
-        GLKMatrixStackPop
-        GLKMatrixStackPush
-        GLKMatrixStackSize
-        GLKMatrixStackGetMatrix2
-        GLKMatrixStackGetMatrix3
-        GLKMatrixStackGetMatrix3Inverse
-        GLKMatrixStackGetMatrix3InverseTranspose
-        GLKMatrixStackGetMatrix4
-        GLKMatrixStackGetMatrix4Inverse
-        GLKMatrixStackGetMatrix4InverseTranspose
-        GLKMatrixStackLoadMatrix4
-        GLKMatrixStackMultiplyMatrix4
-        GLKMatrixStackMultiplyMatrixStack
-        GLKMatrixStackRotate
-        GLKMatrixStackRotateWithVector3
-        GLKMatrixStackRotateWithVector4
-        GLKMatrixStackRotateX
-        GLKMatrixStackRotateY
-        GLKMatrixStackRotateZ
-        GLKMatrixStackScale
-        GLKMatrixStackScaleWithVector3
-        GLKMatrixStackScaleWithVector4
-        GLKMatrixStackTranslate
-        GLKMatrixStackTranslateWithVector3
-        GLKMatrixStackTranslateWithVector4

@@ -23,6 +23,8 @@
 
 UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
 
+@class NSDictionary;
+
 UIKIT_EXPORT_CLASS
 @interface UILocalNotification : NSObject {
 }

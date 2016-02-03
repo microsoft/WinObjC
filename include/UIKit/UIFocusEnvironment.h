@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class UIFocusUpdateContext;
 @class UIFocusAnimationCoordinator;

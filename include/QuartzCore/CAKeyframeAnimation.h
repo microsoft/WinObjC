@@ -13,22 +13,29 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAKEYFRAMEANIMATION_H_
-#define _CAKEYFRAMEANIMATION_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAAction.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
+#import <Foundation/NSCopying.h>
 #import <QuartzCore/CAPropertyAnimation.h>
 
+@class NSString;
+@class NSArray;
+
+CA_EXPORT NSString* const kCAAnimationRotateAuto;
+;
+CA_EXPORT NSString* const kCAAnimationRotateAutoReverse;
 CA_EXPORT NSString* const kCAAnimationLinear;
 CA_EXPORT NSString* const kCAAnimationDiscrete;
 CA_EXPORT NSString* const kCAAnimationPaced;
 CA_EXPORT NSString* const kCAAnimationCubic;
 CA_EXPORT NSString* const kCAAnimationCubicPaced;
-CA_EXPORT NSString* const kCAAnimationRotateAuto;
-CA_EXPORT NSString* const kCAAnimationRotateAutoReverse;
 
 CA_EXPORT_CLASS
-@interface CAKeyframeAnimation : CAPropertyAnimation
+@interface CAKeyframeAnimation : CAPropertyAnimation <CAAction, CAMediaTiming, NSCoding, NSCopying>
 
 @property (copy) NSArray* values;
 @property CGPathRef path;
@@ -41,5 +48,3 @@ CA_EXPORT_CLASS
 @property (copy) NSArray* biasValues;
 
 @end
-
-#endif /* _CAKEYFRAMEANIMATION_H_ */

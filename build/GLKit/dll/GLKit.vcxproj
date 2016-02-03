@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -39,6 +39,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\GLKit\lib\GLKitLib.vcxproj">
       <Project>{69003FC3-4890-430D-8527-B81C99781864}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GLKit\lib\GLKitShaderLib\GLKitShaderLib.vcxproj">
+      <Project>{80B52109-9764-40D9-B55E-22CFB804CC17}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

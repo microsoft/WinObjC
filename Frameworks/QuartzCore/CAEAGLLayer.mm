@@ -41,7 +41,7 @@ typedef wchar_t WCHAR;
  @Status Interoperable
 */
 - (void)setDrawableProperties:(NSDictionary*)propertiesDict {
-    if (![propertiesDict isEqualToDictionary: _properties]) {
+    if (![propertiesDict isEqualToDictionary:_properties]) {
         [_properties release];
         _properties = [propertiesDict copy];
 

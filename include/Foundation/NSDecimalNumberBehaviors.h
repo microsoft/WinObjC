@@ -16,6 +16,7 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSDecimalNumber;
 

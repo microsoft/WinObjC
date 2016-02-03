@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 #import <Metal/MetalExport.h>
+#import <Foundation/NSRange.h>
 #import <Metal/MetalDataTypes.h>
 #import <Metal/MetalConstants.h>
 

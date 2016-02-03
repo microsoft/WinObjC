@@ -13,18 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CALAYER_H_
-#define _CALAYER_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
-#import <QuartzCore/CABase.h>
 #import <QuartzCore/CATransform3D.h>
 #import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAMediaTiming.h>
 
 @class CAAnimation, CALayerContext;
+
+typedef enum {
+    kCALayerLeftEdge = 1U << 0,
+    kCALayerRightEdge = 1U << 1,
+    kCALayerBottomEdge = 1U << 2,
+    kCALayerTopEdge = 1U << 3,
+} CAEdgeAntialiasingMask;
 
 enum {
     kCALayerNotSizable = 0x00,
@@ -35,10 +40,6 @@ enum {
     kCALayerHeightSizable = 0x10,
     kCALayerMaxYMargin = 0x20,
 };
-
-CA_EXPORT NSString* const kCAFilterLinear;
-CA_EXPORT NSString* const kCAFilterNearest;
-CA_EXPORT NSString* const kCAFilterTrilinear;
 
 CA_EXPORT NSString* const kCAOnOrderIn;
 CA_EXPORT NSString* const kCAOnOrderOut;
@@ -56,6 +57,10 @@ CA_EXPORT NSString* const kCAGravityBottomRight;
 CA_EXPORT NSString* const kCAGravityResize;
 CA_EXPORT NSString* const kCAGravityResizeAspect;
 CA_EXPORT NSString* const kCAGravityResizeAspectFill;
+// CA_EXPORT const CATransform3D CATransform3DIdentity; -- See CATransform3D.h
+CA_EXPORT NSString* const kCAFilterLinear;
+CA_EXPORT NSString* const kCAFilterNearest;
+CA_EXPORT NSString* const kCAFilterTrilinear;
 
 @class WXFrameworkElement;
 
@@ -73,109 +78,138 @@ CA_EXPORT_CLASS
     CAPrivateInfo* priv;
 }
 
-+ (id)layer;
-+ (BOOL)needsDisplayForKey:(NSString*)key;
++ (instancetype)layer;
+- (instancetype)init;
+- (instancetype)initWithLayer:(id)layer;
 
-@property (readonly) CALayer* superlayer;
-@property (copy) NSArray* sublayers;
+- (id)presentationLayer;
+- (id)modelLayer STUB_METHOD;
+
 @property (assign) id delegate;
-@property CGPoint anchorPoint;
-@property CGPoint position;
-@property CGRect bounds;
-@property CGRect frame;
-@property float opacity;
-@property BOOL opaque;
+
 @property (retain) id contents;
 @property CGRect contentsRect;
-@property CATransform3D transform;
-@property CATransform3D sublayerTransform;
 @property CGRect contentsCenter;
-@property (copy) NSString* contentsGravity;
-@property (copy) NSString* name;
-@property BOOL drawsAsynchronously;
+- (void)display;
+- (void)drawInContext:(CGContextRef)ctx;
 
-@property (copy) NSString* minificationFilter;
-@property (copy) NSString* magnificationFilter;
-@property CGSize shadowOffset;
-@property CGColorRef shadowColor;
+@property (copy) NSString* contentsGravity;
+@property float opacity;
+@property (getter=isHidden) BOOL hidden;
+@property BOOL masksToBounds;
+@property (retain) CALayer* mask;
+@property (getter=isDoubleSided) BOOL doubleSided STUB_PROPERTY;
+@property CGFloat cornerRadius;
+@property CGFloat borderWidth;
+@property CGColorRef borderColor;
+@property CGColorRef backgroundColor;
 @property float shadowOpacity;
 @property CGFloat shadowRadius;
-@property CGFloat rasterizationScale;
-@property BOOL shouldRasterize;
-@property CGFloat cornerRadius;
-@property BOOL masksToBounds;
+@property CGSize shadowOffset;
+@property CGColorRef shadowColor;
 @property CGPathRef shadowPath;
-@property CGColorRef backgroundColor;
-@property (retain) CALayer* mask;
-@property (getter=isHidden) BOOL hidden;
+@property (copy) NSDictionary* style STUB_PROPERTY;
+@property BOOL allowsEdgeAntialiasing STUB_PROPERTY;
+@property BOOL allowsGroupOpacity STUB_PROPERTY;
+
+@property (copy) NSArray* filters STUB_PROPERTY;
+@property (strong) id compositingFilter STUB_PROPERTY;
+@property (copy) NSArray* backgroundFilters STUB_PROPERTY;
+@property (copy) NSString* minificationFilter STUB_PROPERTY;
+@property float minificationFilterBias STUB_PROPERTY;
+@property (copy) NSString* magnificationFilter STUB_PROPERTY;
+
+@property (getter=isOpaque) BOOL opaque;
+@property CAEdgeAntialiasingMask edgeAntialiasingMask STUB_PROPERTY;
+- (BOOL)contentsAreFlipped STUB_METHOD;
+@property (getter=isGeometryFlipped) BOOL geometryFlipped STUB_PROPERTY;
+@property BOOL drawsAsynchronously;
+@property BOOL shouldRasterize;
+@property CGFloat rasterizationScale STUB_PROPERTY;
+- (void)renderInContext:(CGContextRef)ctx;
+
+@property CGRect frame;
+@property CGRect bounds;
+@property CGPoint position;
 @property CGFloat zPosition;
-@property BOOL needsDisplayOnBoundsChange;
-@property CGColorRef borderColor;
-@property CGFloat borderWidth;
-@property (readonly) CGRect visibleRect;
+@property CGFloat anchorPointZ STUB_PROPERTY;
+@property CGPoint anchorPoint;
 @property CGFloat contentsScale;
-@property (getter=isDoubleSided) BOOL doubleSided;
-@property (copy) NSDictionary* actions;
 
-@property WXFrameworkElement* contentsElement;
+@property CATransform3D transform;
+@property CATransform3D sublayerTransform;
+- (CGAffineTransform)affineTransform;
+- (void)setAffineTransform:(CGAffineTransform)m;
 
-- (id)init;
-- (id)initWithLayer:(id)layer;
-
-- (void)addSublayer:(CALayer*)layer;
-- (void)replaceSublayer:(CALayer*)layer with:(CALayer*)other;
-- (void)display;
-- (void)displayIfNeeded;
-- (void)drawInContext:(CGContextRef)context;
-- (BOOL)needsDisplay;
+@property (copy) NSArray* sublayers;
+@property (readonly) CALayer* superlayer;
+- (void)addSublayer:(CALayer*)aLayer;
 - (void)removeFromSuperlayer;
-- (void)setNeedsDisplay;
-- (void)setNeedsDisplayInRect:(CGRect)rect;
+- (void)insertSublayer:(CALayer*)aLayer
+               atIndex:(unsigned int)index;
+- (void)insertSublayer:(CALayer*)aLayer below:(CALayer*)sublayer;
+- (void)insertSublayer:(CALayer*)aLayer above:(CALayer*)sublayer;
+- (void)replaceSublayer:(CALayer*)oldLayer
+                   with:(CALayer*)newLayer;
 
-- (void)addAnimation:(CAAnimation*)animation forKey:(NSString*)key;
+- (void)setNeedsDisplay;
+- (void)setNeedsDisplayInRect:(CGRect)theRect;
+@property BOOL needsDisplayOnBoundsChange;
+- (void)displayIfNeeded;
+- (BOOL)needsDisplay;
++ (BOOL)needsDisplayForKey:(NSString*)key;
+
+- (void)addAnimation:(CAAnimation*)anim
+              forKey:(NSString*)key;
 - (CAAnimation*)animationForKey:(NSString*)key;
 - (void)removeAllAnimations;
 - (void)removeAnimationForKey:(NSString*)key;
 - (NSArray*)animationKeys;
 
-- (id<CAAction>)actionForKey:(NSString*)key;
-- (CGAffineTransform)affineTransform;
-- (void)setAffineTransform:(CGAffineTransform)T;
-- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer;
-- (void)insertSublayer:(CALayer*)aLayer atIndex:(unsigned)index;
-- (void)insertSublayer:(CALayer*)aLayer above:(CALayer*)sublayer;
-
-- (void)renderInContext:(CGContextRef)ctx;
-
-- (CGRect)convertRect:(CGRect)aRect toLayer:(CALayer*)layer;
-- (CGRect)convertRect:(CGRect)aRect fromLayer:(CALayer*)layer;
-- (CGPoint)convertPoint:(CGPoint)point toLayer:(CALayer*)layer;
-- (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer;
-
-- (void)layoutSublayers;
-- (BOOL)needsLayout;
 - (void)setNeedsLayout;
+- (void)layoutSublayers;
 - (void)layoutIfNeeded;
-- (void)insertSublayer:(CALayer*)aLayer below:(CALayer*)sublayer;
-- (id)presentationLayer;
+- (BOOL)needsLayout;
+- (CGSize)preferredFrameSize STUB_METHOD;
 
+- (id<CAAction>)actionForKey:(NSString*)key;
+@property (copy) NSDictionary* actions;
++ (id<CAAction>)defaultActionForKey:(NSString*)key STUB_METHOD;
+
+- (CGPoint)convertPoint:(CGPoint)aPoint
+              fromLayer:(CALayer*)layer;
+- (CGPoint)convertPoint:(CGPoint)aPoint
+                toLayer:(CALayer*)layer;
+- (CGRect)convertRect:(CGRect)aRect fromLayer:(CALayer*)layer;
+- (CGRect)convertRect:(CGRect)aRect toLayer:(CALayer*)layer;
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer;
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval toLayer:(CALayer*)layer STUB_METHOD;
+
+- (CALayer*)hitTest:(CGPoint)thePoint STUB_METHOD;
+- (BOOL)containsPoint:(CGPoint)thePoint STUB_METHOD;
+
+@property (readonly) CGRect visibleRect;
+- (void)scrollPoint:(CGPoint)thePoint STUB_METHOD;
+- (void)scrollRectToVisible:(CGRect)theRect STUB_METHOD;
+
+@property (copy) NSString* name;
+
+- (BOOL)shouldArchiveValueForKey:(NSString*)key STUB_METHOD;
++ (id)defaultValueForKey:(NSString*)key STUB_METHOD;
+
+// CAMediaTiming
+@property BOOL autoreverses STUB_PROPERTY;
+@property CFTimeInterval beginTime STUB_PROPERTY;
+@property CFTimeInterval duration STUB_PROPERTY;
+@property (copy) NSString* fillMode STUB_PROPERTY;
+@property float repeatCount STUB_PROPERTY;
+@property CFTimeInterval repeatDuration STUB_PROPERTY;
+@property float speed STUB_PROPERTY;
+@property CFTimeInterval timeOffset STUB_PROPERTY;
+
+// Adding by MS.
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
-
-- (void)updateAccessibilityInfo:(IWAccessibilityInfo*)info;
-
-- (void)updateAccessibilityInfo:(IWAccessibilityInfo*)info;
-
-- (void)updateAccessibilityInfo:(IWAccessibilityInfo*)info;
+- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info;
+@property WXFrameworkElement* contentsElement;
 
 @end
-
-@interface NSObject (CALayerDelegate)
-
-- (void)displayLayer:(CALayer*)layer;
-- (void)drawLayer:(CALayer*)layer inContext:(CGContextRef)context;
-
-- (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key;
-
-@end
-
-#endif /* _CALAYER_H_ */

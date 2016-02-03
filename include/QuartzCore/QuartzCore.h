@@ -13,8 +13,6 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/CoreAnimation.h>
-#import <QuartzCore/CARenderer.h>
-#import <QuartzCore/CAValueFunction.h>

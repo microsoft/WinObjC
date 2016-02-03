@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,18 +14,27 @@
 //
 //******************************************************************************
 
-#ifndef __CTTELEPHONYNETWORKINFO_H
-#define __CTTELEPHONYNETWORKINFO_H
+#pragma once
 
-#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CoreTelephonyExport.h>
+#import <Foundation/NSObject.h>
 
-FOUNDATION_EXPORT NSString* const CTRadioAccessTechnologyEdge;
-FOUNDATION_EXPORT NSString* const CTRadioAccessTechnologyGPRS;
+@class CTCarrier;
 
-FOUNDATION_EXPORT_CLASS
-@interface CTTelephonyNetworkInfo : NSObject
-@property (nonatomic, readonly) CTCarrier* subscriberCellularProvider;
-@property (nonatomic, copy) void (^subscriberCellularProviderDidUpdateNotifier)(CTCarrier*);
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyGPRS;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyEdge;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyWCDMA;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyHSDPA;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyHSUPA;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyCDMA1x;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyCDMAEVDORev0;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyCDMAEVDORevA;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyCDMAEVDORevB;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyeHRPD;
+CORETELEPHONY_EXPORT NSString* const CTRadioAccessTechnologyLTE;
+
+CORETELEPHONY_EXPORT_CLASS
+@interface CTTelephonyNetworkInfo : NSObject <NSObject>
+@property (readonly, retain) CTCarrier* subscriberCellularProvider STUB_PROPERTY;
+@property (copy, nonatomic, nonnull) void (^subscriberCellularProviderDidUpdateNotifier)(CTCarrier*) STUB_PROPERTY;
 @end
-
-#endif

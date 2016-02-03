@@ -16,7 +16,7 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <UIKit/UIApplication.h>
+#import <UIKit/UIViewController.h>
 
 @class NSURL;
 @class MPMoviePlayerController;

@@ -22,8 +22,9 @@
 #import <Foundation/NSMutableCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
-
 #import <Foundation/NSKeyValueObserving.h>
+#import <Foundation/NSMutableDictionary.h>
+
 @class NSArray;
 @class NSPredicate;
 @class NSEnumerator;

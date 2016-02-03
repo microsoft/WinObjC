@@ -16,13 +16,14 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @protocol MTLTexture;
 @class MTLTextureDescriptor;
 
 @protocol MTLBuffer
 
-@property (readonly)NSUInteger length;
+@property (readonly) NSUInteger length;
 
 - (id<MTLTexture>)newTextureWithDescriptor:(MTLTextureDescriptor*)descriptor offset:(NSUInteger)offset bytesPerRow:(NSUInteger)bytesPerRow;
 - (void*)contents;

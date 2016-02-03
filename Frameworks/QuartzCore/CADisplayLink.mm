@@ -46,7 +46,7 @@ bool CASignalDisplayLink() {
 static IWLazyClassLookup _LazyRunLoopSource("NSRunLoopSource");
 static IWLazyIvarLookup<EbrEvent> _LazySignaledOffset(_LazyRunLoopSource, "_signaledEvent");
 
-@implementation CADisplayLink : NSObject {
+@implementation CADisplayLink {
     idretain _target;
     SEL _selector;
     idretaintype(NSTimer) _timer;

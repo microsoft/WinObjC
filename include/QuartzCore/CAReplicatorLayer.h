@@ -13,21 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAREPLICATORLAYER_H_
-#define _CAREPLICATORLAYER_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSCoding.h>
 #import <QuartzCore/CALayer.h>
-#import <QuartzCore/CATransform3D.h>
 
-@interface CAReplicatorLayer : CALayer
+CA_EXPORT_CLASS
+@interface CAReplicatorLayer : CALayer <CAMediaTiming, NSCoding>
 
-@property CATransform3D instanceTransform;
 @property NSInteger instanceCount;
+@property CFTimeInterval instanceDelay STUB_PROPERTY;
+@property CATransform3D instanceTransform;
+@property BOOL preservesDepth STUB_PROPERTY;
+@property CGColorRef instanceColor STUB_PROPERTY;
 @property float instanceRedOffset;
 @property float instanceGreenOffset;
 @property float instanceBlueOffset;
+@property float instanceAlphaOffset STUB_PROPERTY;
 
 @end
-
-#endif /* _CAREPLICATORLAYER_H_ */

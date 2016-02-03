@@ -248,6 +248,12 @@ FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr) STUB_METHOD;
 #endif
 #endif
 
+#if __has_feature(nullability)
+#ifndef __nullable
+#define __nullable _Nullable
+#endif
+#endif
+
 #define NS_AVAILABLE(x, y)
 #define NS_AVAILABLE_IOS(x)
 #define NS_DEPRECATED_IOS(x, y)

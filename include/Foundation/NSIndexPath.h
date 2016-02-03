@@ -21,6 +21,7 @@
 #import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSSecureCoding.h>
+#import <Foundation/NSRange.h>
 
 FOUNDATION_EXPORT_CLASS
 @interface NSIndexPath : NSObject <NSCopying, NSSecureCoding> {

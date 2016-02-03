@@ -19,6 +19,7 @@
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSCoding.h>
 
 @class NSArray;
 

@@ -27,6 +27,9 @@
 @class NSOperationQueue;
 @class NSRunLoop;
 @class NSString;
+@class NSInputStream;
+@class NSURLProtectionSpace;
+@class NSURL;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLConnection : NSObject <NSURLProtocolClient> {

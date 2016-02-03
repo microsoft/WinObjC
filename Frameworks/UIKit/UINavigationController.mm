@@ -831,8 +831,8 @@ static void rotateViewController(UINavigationController* self) {
                 }
                 id<UIViewControllerAnimatedTransitioning> animator = [_delegate navigationController:self
                                                                      animationControllerForOperation:operation
-                                                                                  fromViewController:oldControllerView
-                                                                                    toViewController:_curControllerView];
+                                                                                  fromViewController:oldController
+                                                                                    toViewController:_curController];
                 // Create the context to be utilized by the developers animation.
                 id<UIViewControllerContextTransitioning> transitionContext =
                     [[_UIViewControllerContextTransitioning alloc] initWithContainerView:_containerView

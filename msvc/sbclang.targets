@@ -28,6 +28,8 @@
     <PropertyGroup>
       <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib')) or '$(IncludeGameKit)' == 'true' ">true</IncludeUIKit>
       <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
+      <IncludeGameController Condition="$(LinkAdditionalDependencies.Contains('GameController.lib'))">true</IncludeGameController>
+      <IncludeGamePlayKit Condition="$(LinkAdditionalDependencies.Contains('GamePlayKit.lib'))">true</IncludeGamePlayKit>
       <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
@@ -38,12 +40,15 @@
       <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
       <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
       <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+      <IncludeCoreTelephony Condition="$(LinkAdditionalDependencies.Contains('CoreTelephony.lib'))">true</IncludeCoreTelephony>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
       <IncludeSecurity Condition="$(LinkAdditionalDependencies.Contains('Security.lib'))">true</IncludeSecurity>
       <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
       <IncludeAccounts Condition="$(LinkAdditionalDependencies.Contains('Accounts.lib'))">true</IncludeAccounts>
+      <IncludeLocalAuthentication Condition="$(LinkAdditionalDependencies.Contains('LocalAuthentication.lib'))">true</IncludeLocalAuthentication>
+      <IncludeCloudKit Condition="$(LinkAdditionalDependencies.Contains('CloudKit.lib'))">true</IncludeCloudKit>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
       <IncludeFreeType Condition="$(LinkAdditionalDependencies.Contains('freetype.lib')) or '$(IncludeAutoLayout)' == 'true' or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true'">true</IncludeFreeType>
       <IncludeICUDT Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icudt.lib'))">true</IncludeICUDT>
@@ -68,6 +73,10 @@
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
       <IncludeHomeKit Condition="$(LinkAdditionalDependencies.Contains('HomeKit.lib'))">true</IncludeHomeKit>
       <IncludeCoreVideo Condition="$(LinkAdditionalDependencies.Contains('CoreVideo.lib'))">true</IncludeCoreVideo>
+      <IncludeAddressBook Condition="$(LinkAdditionalDependencies.Contains('AddressBook.lib'))">true</IncludeAddressBook>
+      <IncludeAddressBookUI Condition="$(LinkAdditionalDependencies.Contains('AddressBookUI.lib'))">true</IncludeAddressBookUI>
+      <IncludeHealthKit Condition="$(LinkAdditionalDependencies.Contains('HealthKit.lib'))">true</IncludeHealthKit>
+      <IncludeAVKit Condition="$(LinkAdditionalDependencies.Contains('AVKit.lib'))">true</IncludeAVKit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -116,6 +125,8 @@
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
       <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
+      <SBResourceCopy Condition="'$(IncludeLocalAuthentication)' == 'true'" Include="$(StarboardLibDirs)\LocalAuthentication.dll" />
+      <SBResourceCopy Condition="'$(IncludeCloudKit)' == 'true'" Include="$(StarboardLibDirs)\CloudKit.dll" />
       <SBResourceCopy Condition="'$(IncludeStoreKit)' == 'true'" Include="$(StarboardLibDirs)\StoreKit.dll" />
       <SBResourceCopy Condition="'$(IncludeEventKitUI)' == 'true'" Include="$(StarboardLibDirs)\EventKitUI.dll" />
       <SBResourceCopy Condition="'$(IncludeQuickLook)' == 'true'" Include="$(StarboardLibDirs)\QuickLook.dll" />
@@ -126,9 +137,19 @@
       <SBResourceCopy Condition="'$(IncludeCoreData)' == 'true'" Include="$(StarboardLibDirs)\CoreData.dll" />
 
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
+
       <SBResourceCopy Condition="'$(IncludeHomeKit)' == 'true'" Include="$(StarboardLibDirs)\HomeKit.dll" />
-      
+
       <SBResourceCopy Condition="'$(IncludeCoreVideo)' == 'true'" Include="$(StarboardLibDirs)\CoreVideo.dll" />
+      <SBResourceCopy Condition="'$(IncludeAddressBook)' == 'true'" Include="$(StarboardLibDirs)\AddressBook.dll" />
+      <SBResourceCopy Condition="'$(IncludeAddressBookUI)' == 'true'" Include="$(StarboardLibDirs)\AddressBookUI.dll" />
+      <SBResourceCopy Condition="'$(IncludeHealthKit)' == 'true'" Include="$(StarboardLibDirs)\HealthKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeGameController)' == 'true'" Include="$(StarboardLibDirs)\GameController.dll" />
+      <SBResourceCopy Condition="'$(IncludeGamePlayKit)' == 'true'" Include="$(StarboardLibDirs)\GamePlayKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeCoreTelephony)' == 'true'" Include="$(StarboardLibDirs)\CoreTelephony.dll" />
+      <SBResourceCopy Condition="'$(IncludeAVKit)' == 'true'" Include="$(StarboardLibDirs)\AVKit.dll" />
     </ItemGroup>
   </Target>
 

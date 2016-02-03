@@ -16,6 +16,7 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @protocol MTLDevice;
 

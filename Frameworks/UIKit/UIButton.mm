@@ -929,6 +929,8 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
             contentColor.g = 0.5f;
             contentColor.b = 0.5f;
         }
+        //  TODO: I think this should always be the case?  Should UIButton always stretch its background?
+        self.layer.contentsGravity = kCAGravityResize;
         [[self layer] _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
         _didSetBackgroundImage = true;
     } else if (_didSetBackgroundImage) {

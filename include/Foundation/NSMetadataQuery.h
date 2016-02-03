@@ -24,6 +24,7 @@
 @protocol NSMetadataQueryDelegate;
 @class NSDictionary;
 @class NSOperationQueue;
+@class NSMetadataItem;
 
 FOUNDATION_EXPORT NSString* const NSMetadataQueryUbiquitousDocumentsScope;
 FOUNDATION_EXPORT NSString* const NSMetadataQueryUbiquitousDataScope;

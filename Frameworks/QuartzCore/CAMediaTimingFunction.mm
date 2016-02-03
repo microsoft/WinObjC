@@ -14,10 +14,17 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 #include "Etc.h"
 #include "QuartzCore/CAMediaTimingFunction.h"
 #include "QuartzCore/CALayer.h"
+
+NSString* const kCAMediaTimingFunctionLinear = @"kCAMediaTimingFunctionLinear";
+NSString* const kCAMediaTimingFunctionEaseIn = @"kCAMediaTimingFunctionEaseIn";
+NSString* const kCAMediaTimingFunctionEaseOut = @"kCAMediaTimingFunctionEaseOut";
+NSString* const kCAMediaTimingFunctionEaseInEaseOut = @"kCAMediaTimingFunctionEaseInEaseOut";
+NSString* const kCAMediaTimingFunctionDefault = @"kCAMediaTimingFunctionDefault";
 
 __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     if (function == nil) {
@@ -68,11 +75,11 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     return nil;
 }
 
-+ (CAMediaTimingFunction*)functionWithControlPoints:(float)c1x:(float)c1y:(float)c2x:(float)c2y {
++ (CAMediaTimingFunction*)functionWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y {
     return [[[self alloc] initWithControlPoints:c1x:c1y:c2x:c2y] autorelease];
 }
 
-- (instancetype)initWithControlPoints:(float)c1x:(float)c1y:(float)c2x:(float)c2y {
+- (instancetype)initWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y {
     _c1x = c1x;
     _c1y = c1y;
     _c2x = c2x;
@@ -91,6 +98,23 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
         ptr[0] = _c2x;
         ptr[1] = _c2y;
     }
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
 }
 
 @end

@@ -119,7 +119,6 @@
 */
 - (unsigned)indexGreaterThanIndex:(unsigned)anIndex {
     UNIMPLEMENTED();
-    assert(!"indexGreaterThanIndex not implemented!");
     return -1;
 }
 
@@ -188,7 +187,6 @@
 */
 - (BOOL)containsIndex:(unsigned)anIndex {
     UNIMPLEMENTED();
-    assert(!"containsIndex not implemented!");
     return YES;
 }
 

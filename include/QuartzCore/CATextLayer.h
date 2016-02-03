@@ -13,20 +13,30 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CATEXTLAYER_H_
-#define _CATEXTLAYER_H_
-
-#import <QuartzCore/CABase.h>
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CALayer.h>
 
+CA_EXPORT NSString* const kCATruncationNone;
+CA_EXPORT NSString* const kCATruncationStart;
+CA_EXPORT NSString* const kCATruncationEnd;
+CA_EXPORT NSString* const kCATruncationMiddle;
+CA_EXPORT NSString* const kCAAlignmentNatural;
+CA_EXPORT NSString* const kCAAlignmentLeft;
+CA_EXPORT NSString* const kCAAlignmentRight;
+CA_EXPORT NSString* const kCAAlignmentCenter;
+CA_EXPORT NSString* const kCAAlignmentJustified;
+
 CA_EXPORT_CLASS
-@interface CATextLayer : CALayer
+@interface CATextLayer : CALayer <CAMediaTiming, NSCoding>
+
+@property (copy) id string;
 @property CFTypeRef font;
 @property CGFloat fontSize;
+@property CGColorRef foregroundColor STUB_PROPERTY;
+@property (getter=isWrapped) BOOL wrapped STUB_PROPERTY;
 @property (copy) NSString* alignmentMode;
-@property (copy) id string;
+@property (copy) NSString* truncationMode STUB_PROPERTY;
 
 @end
-
-#endif // _CATEXTLAYER_H_

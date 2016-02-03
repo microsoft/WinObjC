@@ -25,6 +25,7 @@
 @class NSInputStream;
 @protocol NSXMLParserDelegate;
 @class NSError;
+@class NSDictionary;
 
 typedef NSInteger NSXMLParserError;
 enum {

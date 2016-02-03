@@ -13,9 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <Foundation/NSObject.h>
-#import <QuartzCore/CABase.h>
+#import <Foundation/NSCoding.h>
+
+@class NSString;
 
 CA_EXPORT NSString* const kCAMediaTimingFunctionLinear;
 CA_EXPORT NSString* const kCAMediaTimingFunctionEaseIn;
@@ -24,7 +28,7 @@ CA_EXPORT NSString* const kCAMediaTimingFunctionEaseInEaseOut;
 CA_EXPORT NSString* const kCAMediaTimingFunctionDefault;
 
 CA_EXPORT_CLASS
-@interface CAMediaTimingFunction : NSObject {
+@interface CAMediaTimingFunction : NSObject <NSCoding> {
 @public
     float _c1x;
     float _c1y;
@@ -32,13 +36,9 @@ CA_EXPORT_CLASS
     float _c2y;
 }
 
-- initWithControlPoints:(float)c1x _:(float)c1y _:(float)c2x _:(float)c2y;
-
-+ functionWithControlPoints:(float)c1x _:(float)c1y _:(float)c2x _:(float)c2y;
-+ functionWithControlPoints:(float)c1x:(float)c1y:(float)c2x:(float)c2y;
-
-+ functionWithName:(NSString*)name;
-
++ (instancetype)functionWithName:(NSString*)name;
++ (id)functionWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y;
+- (id)initWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y;
 - (void)getControlPointAtIndex:(size_t)index values:(float[2])ptr;
 
 @end

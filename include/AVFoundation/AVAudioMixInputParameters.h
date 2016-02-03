@@ -21,6 +21,7 @@
 #import <Foundation/NSObject.h>
 #import <CoreMedia/CMTypes.h>
 #import <CoreMedia/CMTime.h>
+#import <CoreMedia/CMTimeRange.h>
 
 @class NSString;
 

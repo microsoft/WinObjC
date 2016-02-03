@@ -17,6 +17,7 @@
 #include "Starboard.h"
 #include "UIAnimationNotification.h"
 #include "QuartzCore/CABasicAnimation.h"
+#include "QuartzCore/CALayer.h"
 #include "UIAppearanceSetter.h"
 
 #import "UIViewInternal.h"
@@ -799,7 +800,9 @@ static float doRound(float f) {
         if ([self respondsToSelector:@selector(willMoveToSuperview:)]) {
             [self willMoveToSuperview:nil];
         }
-        [self _notifyWillMoveToWindow:nil superview:curSuperview];
+        if (curWindow != nil) {
+            [self _notifyWillMoveToWindow:nil superview:curSuperview];
+        }
 
         UIView* superview = priv->superview;
         UIView* pSuper = curSuperview;
@@ -814,8 +817,11 @@ static float doRound(float f) {
         priv->_isChangingParent = false;
         [self didMoveToSuperview];
 
-        [self _notifyDidMoveToWindow:nil superview:curSuperview];
+        if (curWindow != nil) {
+            [self _notifyDidMoveToWindow:nil superview:curSuperview];
+        }
 
+        [self release];
         [self autorelease];
     }
 }
@@ -1613,7 +1619,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (BOOL)isOpaque {
-    return [layer opaque];
+    return [layer isOpaque];
 }
 
 /**

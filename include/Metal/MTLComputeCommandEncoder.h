@@ -17,6 +17,7 @@
 
 #import <Metal/MetalDataTypes.h>
 #import <Metal/MetalExport.h>
+#import <Foundation/NSRange.h>
 
 @protocol MTLComputePipelineState;
 @protocol MTLBuffer;

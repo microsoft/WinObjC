@@ -218,6 +218,10 @@ typedef SInt16 OSErr;
 typedef UInt32 FourCharCode;
 typedef FourCharCode OSType;
 
+typedef UInt64 ByteCount;
+typedef UInt64 ItemCount;
+typedef SInt8 SignedByte;
+
 typedef struct {
     CFIndex location;
     CFIndex length;

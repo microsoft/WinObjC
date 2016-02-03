@@ -16,6 +16,7 @@
 #pragma once
 
 #import <QuickLook/QuickLookExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class QLPreviewController;
 @protocol QLPreviewItem;
