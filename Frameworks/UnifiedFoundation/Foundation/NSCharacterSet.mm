@@ -89,6 +89,16 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 }
 
 /**
+@Status Stub
+@Notes
+*/
++ (instancetype)capitalizedLetterCharacterSet {
+    UNIMPLEMENTED();
+
+    return [[[self alloc] init] autorelease];
+}
+
+/**
  @Status Interoperable
  @Notes English characters only
 */
@@ -131,6 +141,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
  @Status Interoperable
 */
 + (instancetype)whitespaceAndNewlineCharacterSet {
+    // Special-case for immutable NSCharacterSet
     if (self == [NSCharacterSet class]) {
         static id cachedRet;
 
@@ -144,6 +155,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
         return cachedRet;
     }
 
+    // Polymorphic creation
     NSCharacterSet* ret = [self alloc];
     ret->_icuSet = setWithCharacters(" \t\r\n");
 
@@ -175,6 +187,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
  @Status Interoperable
 */
 + (instancetype)whitespaceCharacterSet {
+    // Special-case for immutable NSCharacterSet
     if (self == [NSCharacterSet class]) {
         static id cachedRet;
 
@@ -187,9 +200,10 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 
         return cachedRet;
     }
+
+    // Polymorphic creation
     NSCharacterSet* ret = [self alloc];
     ret->_icuSet = setWithCharacters(" \t");
-
     ret->_icuSet->freeze();
 
     return [ret autorelease];
@@ -291,7 +305,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 + (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
     UNIMPLEMENTED();
 
-    NSCharacterSet* ret = [[NSCharacterSet alloc] init];
+    NSCharacterSet* ret = [[self alloc] init];
     [ret setBitmapRepresentation:data];
     return [ret autorelease];
 }
@@ -302,14 +316,14 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 + (instancetype)characterSetWithContentsOfFile:(NSString*)path {
     UNIMPLEMENTED();
 
-    return [[[NSCharacterSet alloc] init] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)characterSetWithRange:(NSRange)range {
-    NSCharacterSet* ret = [NSCharacterSet alloc];
+    NSCharacterSet* ret = [self alloc];
     ret->_icuSet = new UnicodeSet(range.location, range.location + range.length - 1);
     ret->_icuSet->freeze();
     return [ret autorelease];
@@ -328,7 +342,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 
     decomposeRange.location = 192;
     decomposeRange.length = 64334;
-    NSCharacterSet* ret = [NSCharacterSet characterSetWithRange:decomposeRange];
+    NSCharacterSet* ret = [self characterSetWithRange:decomposeRange];
     return ret;
 }
 
@@ -338,7 +352,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 + (instancetype)illegalCharacterSet {
     UNIMPLEMENTED();
 
-    return [[[NSCharacterSet alloc] init] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
 /**
@@ -347,7 +361,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 + (instancetype)nonBaseCharacterSet {
     UNIMPLEMENTED();
 
-    return [[[NSCharacterSet alloc] init] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
 /**
@@ -436,15 +450,6 @@ static UnicodeSet* setWithCharacters(const char* chars) {
         _invertedSet->_invertedSet = self;
     }
     return _invertedSet;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSCharacterSet*)capitalizedLetterCharacterSet {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 @end
