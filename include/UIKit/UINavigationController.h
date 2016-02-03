@@ -53,12 +53,14 @@ typedef enum {
 - (void)navigationController:(UINavigationController*)navigationController
       willShowViewController:(UIViewController*)viewController
                     animated:(BOOL)animated;
+
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController*)navigationController
                                   animationControllerForOperation:(UINavigationControllerOperation)operation
-                                               fromViewController:(UIViewController*)fromVC;
+                                               fromViewController:(UIViewController*)fromVC
+                                                 toViewController:(UIViewController*)toVC;
+
 - (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController*)navigationController
-                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController
-                                                    toViewController:(UIViewController*)toVC;
+                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController;
 
 - (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController*)navigationController;
 
