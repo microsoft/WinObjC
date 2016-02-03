@@ -500,6 +500,9 @@ static int compareFiles(const void* findParams, const void* bundleFile) {
 }
 
 static BundleFile* findFullFile(NSBundle* self, NSString* filename, NSString* extension, NSString* directory, NSString* localization) {
+    filename = [filename stringByStandardizingPath];
+    directory = [directory stringByStandardizingPath];
+
     char* pFilename = (char*)[filename UTF8String];
     char* pExtension = (char*)[extension UTF8String];
     char* pDirectory = (char*)[directory UTF8String];
