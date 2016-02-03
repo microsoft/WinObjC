@@ -18,7 +18,6 @@
 #import <GamePlayKit/GameplayKitExport.h>
 #import <GamePlayKit/GKComponent.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class GKBehavior;

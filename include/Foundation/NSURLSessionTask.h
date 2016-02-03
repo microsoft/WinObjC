@@ -17,11 +17,10 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSCachedURLResponse.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSHTTPURLResponse.h>
 #import <Foundation/NSInputStream.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSUrlSession.h>
+#import <Foundation/NSURLSession.h>
 #import <Foundation/NSURLAuthenticationChallenge.h>
 #import <Foundation/NSURLCredential.h>
 
@@ -61,33 +60,24 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSError* error;
 @end
 
-@protocol NSURLSessionTaskDelegate
+@protocol NSURLSessionTaskDelegate <NSURLSessionDelegate>
 @optional
 - (void)URLSession:(NSURLSession*)session task:(NSURLSessionTask*)task didCompleteWithError:(NSError*)error;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
                    task:(NSURLSessionTask*)task
     didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge
       completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential* credential))completionHandler;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
                         task:(NSURLSessionTask*)task
              didSendBodyData:(int64_t)bytesSent
               totalBytesSent:(int64_t)totalBytesSent
     totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
               task:(NSURLSessionTask*)task
  needNewBodyStream:(void (^)(NSInputStream* bodyStream))completionHandler;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
                           task:(NSURLSessionTask*)task
     willPerformHTTPRedirection:(NSHTTPURLResponse*)response
                     newRequest:(NSURLRequest*)request
              completionHandler:(void (^)(NSURLRequest*))completionHandler;
-
 @end

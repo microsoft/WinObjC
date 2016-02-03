@@ -20,7 +20,6 @@
 
 #import <CoreFoundation/CFType.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 #import <objc\runtime.h>

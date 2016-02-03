@@ -70,34 +70,17 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSString* hostName STUB_PROPERTY;
 @end
 
-@protocol NSNetServiceDelegate
+@protocol NSNetServiceDelegate <NSObject>
 @optional
 - (void)netServiceWillPublish:(NSNetService*)sender;
-
-@optional
 - (void)netService:(NSNetService*)sender didNotPublish:(NSDictionary*)errorDict;
-
-@optional
 - (void)netServiceDidPublish:(NSNetService*)sender;
-
-@optional
 - (void)netServiceWillResolve:(NSNetService*)sender;
-
-@optional
 - (void)netService:(NSNetService*)sender didNotResolve:(NSDictionary*)errorDict;
-
-@optional
 - (void)netServiceDidResolveAddress:(NSNetService*)sender;
-
-@optional
 - (void)netService:(NSNetService*)sender didUpdateTXTRecordData:(NSData*)data;
-
-@optional
 - (void)netServiceDidStop:(NSNetService*)sender;
-
-@optional
 - (void)netService:(NSNetService*)sender
     didAcceptConnectionWithInputStream:(NSInputStream*)inputStream
                           outputStream:(NSOutputStream*)outputStream;
-
 @end

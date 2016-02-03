@@ -17,7 +17,6 @@
 #pragma once
 
 #import <CoreData/CoreDataExport.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSLock.h>
 

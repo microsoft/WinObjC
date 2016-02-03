@@ -18,7 +18,6 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <AVFoundation/AVAsynchronousKeyValueLoading.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <CoreGraphics/CGAffineTransform.h>
 #import <AVFoundation/AVCompositionTrack.h>

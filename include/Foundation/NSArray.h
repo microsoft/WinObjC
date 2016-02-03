@@ -17,11 +17,8 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSRange.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSFastEnumeration.h>
-#import <Foundation/NSMutableCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSKeyValueObserving.h>
 #import <CoreFoundation/CFArray.h>
 

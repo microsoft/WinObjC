@@ -190,4 +190,21 @@
     return StubReturn();
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
 @end

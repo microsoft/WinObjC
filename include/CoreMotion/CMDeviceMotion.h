@@ -21,9 +21,7 @@
 #import <CoreMotion/CMMagnetometerData.h>
 #import <CoreMotion/CoreMotionExport.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 #import <objc\runtime.h>
 

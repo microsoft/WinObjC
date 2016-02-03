@@ -16,7 +16,6 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
-#import <Foundation/NSCoding.h>
 #import <UIKit/UIAppearance.h>
 #import <MapKit/MKOverlayPathView.h>
 

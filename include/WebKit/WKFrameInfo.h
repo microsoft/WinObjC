@@ -17,7 +17,6 @@
 #pragma once
 
 #import <WebKit/WebKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class NSURLRequest;

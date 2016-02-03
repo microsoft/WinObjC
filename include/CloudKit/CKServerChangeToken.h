@@ -17,9 +17,7 @@
 #pragma once
 
 #import <CloudKit/CloudKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 CLOUDKIT_EXPORT_CLASS
 @interface CKServerChangeToken : NSObject <NSCopying, NSSecureCoding>

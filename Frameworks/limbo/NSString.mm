@@ -3590,6 +3590,15 @@ const int s_oneByte = 16;
     UNIMPLEMENTED();
     return StubReturn();
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
 @end
 
 NSString* NSStringFromICU(const icu_48::UnicodeString& str) {

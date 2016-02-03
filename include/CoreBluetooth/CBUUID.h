@@ -19,7 +19,6 @@
 
 #import <CoreFoundation/CFUUID.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class NSString;

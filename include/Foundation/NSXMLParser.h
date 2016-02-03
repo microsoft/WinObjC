@@ -163,86 +163,47 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSString* systemID STUB_PROPERTY;
 @end
 
-@protocol NSXMLParserDelegate
+@protocol NSXMLParserDelegate <NSObject>
 @optional
 - (void)parserDidStartDocument:(NSXMLParser*)parser;
-
-@optional
 - (void)parserDidEndDocument:(NSXMLParser*)parser;
-
-@optional
 - (void)parser:(NSXMLParser*)parser
     didStartElement:(NSString*)elementName
        namespaceURI:(NSString*)namespaceURI
       qualifiedName:(NSString*)qualifiedName
          attributes:(NSDictionary*)attributeDict;
-
-@optional
 - (void)parser:(NSXMLParser*)parser
  didEndElement:(NSString*)elementName
   namespaceURI:(NSString*)namespaceURI
  qualifiedName:(NSString*)qName;
-
-@optional
 - (void)parser:(NSXMLParser*)parser didStartMappingPrefix:(NSString*)prefix toURI:(NSString*)namespaceURI;
-
-@optional
 - (void)parser:(NSXMLParser*)parser didEndMappingPrefix:(NSString*)prefix;
-
-@optional
 - (NSData*)parser:(NSXMLParser*)parser resolveExternalEntityName:(NSString*)entityName systemID:(NSString*)systemID;
-
-@optional
 - (void)parser:(NSXMLParser*)parser parseErrorOccurred:(NSError*)parseError;
-
-@optional
 - (void)parser:(NSXMLParser*)parser validationErrorOccurred:(NSError*)validError;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundCharacters:(NSString*)string;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundIgnorableWhitespace:(NSString*)whitespaceString;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundProcessingInstructionWithTarget:(NSString*)target data:(NSString*)data;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundComment:(NSString*)comment;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundCDATA:(NSData*)CDATABlock;
-
-@optional
 - (void)parser:(NSXMLParser*)parser
     foundAttributeDeclarationWithName:(NSString*)attributeName
                            forElement:(NSString*)elementName
                                  type:(NSString*)type
                          defaultValue:(NSString*)defaultValue;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundElementDeclarationWithName:(NSString*)elementName model:(NSString*)model;
-
-@optional
 - (void)parser:(NSXMLParser*)parser
     foundExternalEntityDeclarationWithName:(NSString*)entityName
                                   publicID:(NSString*)publicID
                                   systemID:(NSString*)systemID;
-
-@optional
 - (void)parser:(NSXMLParser*)parser foundInternalEntityDeclarationWithName:(NSString*)name value:(NSString*)value;
-
-@optional
 - (void)parser:(NSXMLParser*)parser
     foundUnparsedEntityDeclarationWithName:(NSString*)name
                                   publicID:(NSString*)publicID
                                   systemID:(NSString*)systemID
                               notationName:(NSString*)notationName;
-
-@optional
 - (void)parser:(NSXMLParser*)parser
     foundNotationDeclarationWithName:(NSString*)name
                             publicID:(NSString*)publicID
                             systemID:(NSString*)systemID;
-
 @end

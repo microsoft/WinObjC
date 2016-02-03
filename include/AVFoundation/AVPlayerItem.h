@@ -17,7 +17,6 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <CoreMedia/CMSync.h>
 #import <CoreGraphics/CGGeometry.h>

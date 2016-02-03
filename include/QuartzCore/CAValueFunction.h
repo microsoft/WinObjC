@@ -17,7 +17,6 @@
 
 #import <QuartzCore/CoreAnimationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSCoding.h>
 
 @class NSString;
 

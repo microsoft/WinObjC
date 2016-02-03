@@ -16,9 +16,6 @@
 #pragma once
 
 #import <Contacts/ContactsExport.h>
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSMutableCopying.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Contacts/CNContact.h>
 
 @class NSArray;

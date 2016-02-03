@@ -18,9 +18,7 @@
 #import <GamePlayKit/GameplayKitExport.h>
 #import <GamePlayKit/GKRandom.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSObject.h>
 @class NSArray;
 

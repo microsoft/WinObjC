@@ -17,7 +17,6 @@
 
 #import <EventKit/EventKitExport.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class NSDate;

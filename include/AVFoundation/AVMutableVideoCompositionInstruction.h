@@ -18,9 +18,7 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <AVFoundation/AVVideoCompositionInstruction.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <CoreGraphics/CGColor.h>
 
 @class NSArray;

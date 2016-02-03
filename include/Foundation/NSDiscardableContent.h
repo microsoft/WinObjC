@@ -18,14 +18,9 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObjCRuntime.h>
 
-@protocol NSDiscardableContent
-
+@protocol NSDiscardableContent <NSObject>
 - (BOOL)beginContentAccess;
-
 - (void)endContentAccess;
-
 - (void)discardContentIfPossible;
-
 - (BOOL)isContentDiscarded;
-
 @end

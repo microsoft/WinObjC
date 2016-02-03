@@ -23,7 +23,7 @@
 typedef NSUInteger NSRoundingMode;
 typedef NSUInteger NSCalculationError;
 
-@protocol NSDecimalNumberBehaviors
+@protocol NSDecimalNumberBehaviors <NSObject>
 
 - (NSRoundingMode)roundingMode;
 

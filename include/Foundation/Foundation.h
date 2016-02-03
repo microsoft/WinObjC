@@ -17,6 +17,9 @@
 
 #import <Foundation/FoundationErrors.h>
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
+
 #import <Foundation/NSAffineTransform.h>
 #import <Foundation/NSArchiver.h>
 #import <Foundation/NSArray.h>
@@ -35,12 +38,10 @@
 #import <Foundation/NSCharacterSet.h>
 #import <Foundation/NSClassDescription.h>
 #import <Foundation/NSCoder.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSComparisonPredicate.h>
 #import <Foundation/NSCompoundPredicate.h>
 #import <Foundation/NSCondition.h>
 #import <Foundation/NSConditionLock.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSCountedSet.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSDataDetector.h>
@@ -111,7 +112,6 @@
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSMutableAttributedString.h>
 #import <Foundation/NSMutableCharacterSet.h>
-#import <Foundation/NSMutableCopying.h>
 #import <Foundation/NSMutableData.h>
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSMutableIndexSet.h>
@@ -128,8 +128,6 @@
 #import <Foundation/NSNull.h>
 #import <Foundation/NSNumber.h>
 #import <Foundation/NSNumberFormatter.h>
-#import <Foundation/NSObjCRuntime.h>
-#import <Foundation/NSObject.h>
 #import <Foundation/NSOperation.h>
 #import <Foundation/NSOperationQueue.h>
 #import <Foundation/NSOrderedSet.h>
@@ -156,7 +154,6 @@
 #import <Foundation/NSRunLoop.h>
 #import <Foundation/NSScanner.h>
 #import <Foundation/NSScriptWhoseTests.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSSet.h>
 #import <Foundation/NSSocketPort.h>
 #import <Foundation/NSSortDescriptor.h>
@@ -171,7 +168,6 @@
 #import <Foundation/NSUndoManager.h>
 #import <Foundation/NSURL.h>
 #import <Foundation/NSURLAuthenticationChallenge.h>
-#import <Foundation/NSURLAuthenticationChallengeSender.h>
 #import <Foundation/NSURLCache.h>
 #import <Foundation/NSURLComponents.h>
 #import <Foundation/NSURLConnection.h>

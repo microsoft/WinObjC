@@ -138,7 +138,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)copyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
 - (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError* _Nullable*)error;
 - (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError* _Nullable*)error;
-@property (readonly, copy) id<NSObject, NSCopying, NSCoding> ubiquityIdentityToken;
+@property (readonly, copy) id<NSCopying, NSCoding> ubiquityIdentityToken;
 - (NSURL*)URLForUbiquityContainerIdentifier:(NSString*)containerID;
 - (BOOL)isUbiquitousItemAtURL:(NSURL*)url;
 - (BOOL)setUbiquitous:(BOOL)flag itemAtURL:(NSURL*)url destinationURL:(NSURL*)destinationURL error:(NSError* _Nullable*)errorOut;
@@ -186,68 +186,37 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path;
 @end
 
-@protocol NSFileManagerDelegate
+@protocol NSFileManagerDelegate <NSObject>
 @optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldMoveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldMoveItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldProceedAfterError:(NSError*)error movingItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager
     shouldProceedAfterError:(NSError*)error
            movingItemAtPath:(NSString*)srcPath
                      toPath:(NSString*)dstPath;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldCopyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldCopyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager
     shouldProceedAfterError:(NSError*)error
            copyingItemAtURL:(NSURL*)srcURL
                       toURL:(NSURL*)dstURL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager
     shouldProceedAfterError:(NSError*)error
           copyingItemAtPath:(NSString*)srcPath
                      toPath:(NSString*)dstPath;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldRemoveItemAtURL:(NSURL*)URL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldRemoveItemAtPath:(NSString*)path;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldProceedAfterError:(NSError*)error removingItemAtURL:(NSURL*)URL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldProceedAfterError:(NSError*)error removingItemAtPath:(NSString*)path;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldLinkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager shouldLinkItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager
     shouldProceedAfterError:(NSError*)error
            linkingItemAtURL:(NSURL*)srcURL
                       toURL:(NSURL*)dstURL;
-
-@optional
 - (BOOL)fileManager:(NSFileManager*)fileManager
     shouldProceedAfterError:(NSError*)error
           linkingItemAtPath:(NSString*)srcPath
                      toPath:(NSString*)dstPath;
-
 @end

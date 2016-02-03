@@ -35,7 +35,7 @@ FOUNDATION_EXPORT_CLASS
 @property (assign) id<NSCacheDelegate> delegate STUB_PROPERTY;
 @end
 
-@protocol NSCacheDelegate
+@protocol NSCacheDelegate <NSObject>
 @optional
 - (void)cache:(NSCache*)cache willEvictObject:(id)obj;
 

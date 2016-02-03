@@ -13,8 +13,6 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTH
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import <Foundation/NSGeometry.h>
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSCoding.h>
 
 typedef struct {
     CGFloat m11;

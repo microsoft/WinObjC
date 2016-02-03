@@ -16,7 +16,6 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <MapKit/MapKitDataTypes.h>
 

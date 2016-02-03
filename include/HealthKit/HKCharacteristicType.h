@@ -16,9 +16,7 @@
 #pragma once
 
 #import <HealthKit/HealthKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <HealthKit/HKObjectType.h>
 
 HEALTHKIT_EXPORT_CLASS

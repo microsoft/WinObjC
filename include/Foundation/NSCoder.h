@@ -90,9 +90,15 @@ FOUNDATION_EXPORT_CLASS
 // - (CMTime)decodeCMTimeForKey:(NSString*)key;
 // - (CMTimeRange)decodeCMTimeRangeForKey:(NSString*)key;
 // - (CMTimeMapping)decodeCMTimeMappingForKey:(NSString*)key;
+
+// Value indicating whether this coder requires secure coding.
 @property (readonly) BOOL requiresSecureCoding;
+
+// The set of classes allowable for secure coding. Every class in this set must conform to the NSSecureCoding protocol
 @property (readonly, copy) NSSet* allowedClasses;
+
 @property (readonly) unsigned int systemVersion;
+
 - (NSInteger)versionForClassName:(NSString*)className;
 - (NSZone*)objectZone;
 - (void)setObjectZone:(NSZone*)zone;

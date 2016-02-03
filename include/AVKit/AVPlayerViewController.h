@@ -17,7 +17,6 @@
 #pragma once
 
 #import <AVKit/AVKitExport.h>
-#import <Foundation/NSCoding.h>
 #import <UIKit/UIAppearanceContainer.h>
 #import <UIKit/UIFocusEnvironment.h>
 #import <UIKit/UITraitEnvironment.h>

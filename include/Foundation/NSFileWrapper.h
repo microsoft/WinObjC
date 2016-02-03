@@ -16,7 +16,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 
 @class NSURL;

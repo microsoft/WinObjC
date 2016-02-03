@@ -16,7 +16,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSURLSessionTask.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSURLAuthenticationChallenge.h>
 
@@ -30,6 +29,7 @@
 @class NSData;
 @class NSURLResponse;
 @class NSError;
+@class NSURLCredential;
 @class NSURLRequest;
 @class NSURLSessionDownloadTask;
 @class NSURLSessionUploadTask;
@@ -91,16 +91,16 @@ FOUNDATION_EXPORT_CLASS
 - (void)resetWithCompletionHandler:(void (^)(void))completionHandler;
 @end
 
-@protocol NSURLSessionDelegate
-@optional
+@protocol NSURLSessionDelegate <NSObject>
 - (void)URLSession:(NSURLSession*)session didBecomeInvalidWithError:(NSError*)error;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
     didReceiveChallenge:(NSURLAuthenticationChallenge*)challenge
       completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential* credential))completionHandler;
-
-@optional
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession*)session;
-
 @end
+
+// NSURLSession is an umbrella header for its own tasks.
+#import <Foundation/NSURLSessionTask.h>
+#import <Foundation/NSURLSessionDataTask.h>
+#import <Foundation/NSURLSessionDownloadTask.h>
+#import <Foundation/NSURLSessionUploadTask.h>

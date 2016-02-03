@@ -17,8 +17,6 @@
 #pragma once
 
 #import <CloudKit/CloudKitExport.h>
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSSortDescriptor.h>
 
 @class NSString;

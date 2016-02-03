@@ -18,7 +18,7 @@
 #import <Foundation/FoundationExport.h>
 @class NSProgress;
 
-@protocol NSProgressReporting
+@protocol NSProgressReporting <NSObject>
 
 @property (readonly) NSProgress* progress;
 

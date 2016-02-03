@@ -17,9 +17,7 @@
 
 #import <CoreMotion/CoreMotionExport.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 typedef struct {
     double m11, m12, m13;

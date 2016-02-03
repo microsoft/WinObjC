@@ -17,9 +17,7 @@
 #pragma once
 
 #import <CloudKit/CloudKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 @class NSString;
 @class NSPredicate;

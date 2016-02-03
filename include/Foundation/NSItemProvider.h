@@ -16,7 +16,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @protocol NSSecureCoding;

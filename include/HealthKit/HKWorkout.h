@@ -17,7 +17,6 @@
 
 #import <HealthKit/HealthKitExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <HealthKit/HKSample.h>
 #import <HealthKit/HealthKitConstants.h>
 

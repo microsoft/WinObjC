@@ -54,16 +54,11 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSURL* webpageURL STUB_PROPERTY;
 @end
 
-@protocol NSUserActivityDelegate
+@protocol NSUserActivityDelegate <NSObject>
 @optional
 - (void)userActivity:(NSUserActivity*)userActivity
     didReceiveInputStream:(NSInputStream*)inputStream
              outputStream:(NSOutputStream*)outputStream;
-
-@optional
 - (void)userActivityWasContinued:(NSUserActivity*)userActivity;
-
-@optional
 - (void)userActivityWillSave:(NSUserActivity*)userActivity;
-
 @end

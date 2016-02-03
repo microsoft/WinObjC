@@ -17,7 +17,6 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 @protocol NSURLAuthenticationChallengeSender;
 @class NSURLProtectionSpace;
@@ -50,4 +49,14 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSURLCredential* proposedCredential STUB_PROPERTY;
 @property (readonly, copy) NSURLProtectionSpace* protectionSpace STUB_PROPERTY;
 @property (readonly, retain) id<NSURLAuthenticationChallengeSender> sender STUB_PROPERTY;
+@end
+
+@protocol NSURLAuthenticationChallengeSender <NSObject>
+- (void)cancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)continueWithoutCredentialForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)useCredential:(NSURLCredential*)credential forAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+
+@optional
+- (void)performDefaultHandlingForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)rejectProtectionSpaceAndContinueWithChallenge:(NSURLAuthenticationChallenge*)challenge;
 @end

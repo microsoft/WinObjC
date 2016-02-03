@@ -17,7 +17,6 @@
 
 #import <AudioUnit/AudioUnitExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <AudioUnit/AUParameterGroup.h>
 #import <AudioUnit/AudioUnitTypes.h>
 #import <AudioUnit/AudioUnitComponent.h>

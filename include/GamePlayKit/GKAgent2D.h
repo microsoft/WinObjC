@@ -19,7 +19,6 @@
 #import <GamePlayKit/GKAgent.h>
 #import <GamePlayKit/GKType.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 GAMEPLAYKIT_EXPORT_CLASS

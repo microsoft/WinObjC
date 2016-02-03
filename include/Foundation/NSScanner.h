@@ -17,7 +17,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSLocale.h>
 #import <Foundation/NSDecimal.h>

@@ -17,8 +17,6 @@
 
 #import <GameKit/GameKitExport.h>
 
-#import <Foundation/NSCoding.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSObject.h>
 
 @class UIViewController;

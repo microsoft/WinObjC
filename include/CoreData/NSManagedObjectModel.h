@@ -18,8 +18,6 @@
 
 #import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSCoding.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSEnumerator.h>
 
 @class NSURL;

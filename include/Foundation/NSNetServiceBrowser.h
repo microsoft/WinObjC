@@ -35,30 +35,17 @@ FOUNDATION_EXPORT_CLASS
 - (void)removeFromRunLoop:(NSRunLoop*)runLoop forMode:(NSString*)runLoopMode STUB_METHOD;
 @end
 
-@protocol NSNetServiceBrowserDelegate
+@protocol NSNetServiceBrowserDelegate <NSObject>
 @optional
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser didFindDomain:(NSString*)domainName moreComing:(BOOL)moreDomainsComing;
-
-@optional
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser didRemoveDomain:(NSString*)domainName moreComing:(BOOL)moreDomainsComing;
-
-@optional
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser
            didFindService:(NSNetService*)netService
                moreComing:(BOOL)moreServicesComing;
-
-@optional
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser
          didRemoveService:(NSNetService*)netService
                moreComing:(BOOL)moreServicesComing;
-
-@optional
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser*)netServiceBrowser;
-
-@optional
 - (void)netServiceBrowser:(NSNetServiceBrowser*)netServiceBrowser didNotSearch:(NSDictionary*)errorInfo;
-
-@optional
 - (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser*)netServiceBrowser;
-
 @end

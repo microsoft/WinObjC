@@ -17,7 +17,6 @@
 #pragma once
 
 #import <WebKit/WebKitExport.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <UIKit/UIAppearance.h>
 #import <UIKit/UIAppearanceContainer.h>

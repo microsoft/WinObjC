@@ -17,9 +17,6 @@
 
 #import <Contacts/ContactsExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSMutableCopying.h>
-#import <Foundation/NSSecureCoding.h>
 
 @class NSString;
 @class NSPredicate;

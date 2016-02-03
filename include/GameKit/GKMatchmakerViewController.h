@@ -17,7 +17,6 @@
 
 #import <GameKit/GameKitExport.h>
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 
 #import <UIKit/UIAppearanceContainer.h>

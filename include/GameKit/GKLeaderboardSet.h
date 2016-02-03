@@ -17,9 +17,7 @@
 
 #import <GameKit/GameKitExport.h>
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 @class UIImage;
 @class NSError;

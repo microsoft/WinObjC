@@ -18,7 +18,7 @@
 #import <Foundation/FoundationExport.h>
 @class NSExtensionContext;
 
-@protocol NSExtensionRequestHandling
+@protocol NSExtensionRequestHandling <NSObject>
 
 - (void)beginRequestWithExtensionContext:(NSExtensionContext*)context;
 

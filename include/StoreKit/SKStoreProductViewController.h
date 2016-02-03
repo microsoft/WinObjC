@@ -17,7 +17,6 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <UIKit/UIViewController.h>
 

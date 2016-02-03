@@ -16,7 +16,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 #import <Foundation/NSURLSessionTask.h>
@@ -27,20 +26,17 @@ FOUNDATION_EXPORT_CLASS
 - (void)cancelByProducingResumeData:(void (^)(NSData*))completionHandler;
 @end
 
-@protocol NSURLSessionDownloadDelegate
+@protocol NSURLSessionDownloadDelegate <NSURLSessionTaskDelegate>
+- (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)downloadTask didFinishDownloadingToURL:(NSURL*)location;
+
 @optional
 - (void)URLSession:(NSURLSession*)session
       downloadTask:(NSURLSessionDownloadTask*)downloadTask
  didResumeAtOffset:(int64_t)fileOffset
 expectedTotalBytes:(int64_t)expectedTotalBytes;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
                  downloadTask:(NSURLSessionDownloadTask*)downloadTask
                  didWriteData:(int64_t)bytesWritten
             totalBytesWritten:(int64_t)totalBytesWritten
     totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite;
-
-- (void)URLSession:(NSURLSession*)session downloadTask:(NSURLSessionDownloadTask*)downloadTask didFinishDownloadingToURL:(NSURL*)location;
-
 @end

@@ -18,8 +18,6 @@
 #import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAMediaTiming.h>
-#import <Foundation/NSCoding.h>
-#import <Foundation/NSCopying.h>
 #import <QuartzCore/CAAnimation.h>
 
 @class NSString;

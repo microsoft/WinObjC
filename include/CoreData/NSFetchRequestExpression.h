@@ -17,9 +17,7 @@
 #pragma once
 
 #import <CoreData/CoreDataExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSExpression.h>
 
 enum { NSFetchRequestExpressionType = 50 };

@@ -17,7 +17,6 @@
 
 #import <GameKit/GameKitExport.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class NSData;

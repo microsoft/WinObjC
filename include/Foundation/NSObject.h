@@ -13,9 +13,7 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVE
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObjCRuntime.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSZone.h>
 
 @class NSCoder, NSInvocation, NSMethodSignature, NSString, NSArray, NSThread, NSKeyedArchiver, NSArchiver, NSTimer;
@@ -43,17 +41,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 - (NSUInteger)retainCount;
 - (NSZone*)zone;
 
-@end
-
-@protocol NSMutableCopying
-- (id)mutableCopyWithZone:(NSZone*)zone;
-@end
-
-@protocol NSDiscardableContent
-- (BOOL)beginContentAccess;
-- (void)endContentAccess;
-- (BOOL)isContentDiscarded;
-- (void)discardContentIfPossible;
 @end
 
 FOUNDATION_EXPORT_CLASS
@@ -98,19 +85,19 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 
 @end
 
-    // clang-format off
-@interface NSObject(NSCoding)
+// clang-format off
+@interface NSObject (NSCoding)
 - (Class) classForCoder; // really should be a property but *bad* things happen if an ivar is produced.
 - (id)replacementObjectForCoder:(NSCoder*)coder;
 - (id)awakeAfterUsingCoder:(NSCoder*)coder;
 @end
 
-@interface NSObject(NSArchiver) 
+@interface NSObject (NSArchiver)
 - (Class)classForArchiver;
 - (id)replacementObjectForArchiver:(NSArchiver*)archiver;
 @end
 
-@interface NSObject(NSKeyedArchiver) 
+@interface NSObject (NSKeyedArchiver)
 - (Class)classForKeyedArchiver;
 + (Class)classForKeyedUnarchiver;
 + (NSArray*)classFallbacksForKeyedArchiver;
@@ -133,6 +120,23 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 + (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
 @end
 // clang-format on
+
+@protocol NSCoding <NSObject>
+- (instancetype)initWithCoder:(NSCoder*)decoder;
+- (void)encodeWithCoder:(NSCoder*)encoder;
+@end
+
+@protocol NSSecureCoding <NSCoding>
++ (BOOL)supportsSecureCoding;
+@end
+
+@protocol NSCopying
+- (id)copyWithZone:(NSZone*)zone;
+@end
+
+@protocol NSMutableCopying
+- (id)mutableCopyWithZone:(NSZone*)zone;
+@end
 
 #if __has_feature(objc_arc)
     NS_INLINE NS_RETURNS_RETAINED CFTypeRef

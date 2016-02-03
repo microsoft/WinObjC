@@ -17,7 +17,6 @@
 
 #import <StubIncludes.h>
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class NSString;

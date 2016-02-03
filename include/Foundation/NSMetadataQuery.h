@@ -67,11 +67,8 @@ FOUNDATION_EXPORT_CLASS
 @property (retain) NSOperationQueue* operationQueue STUB_PROPERTY;
 @end
 
-@protocol NSMetadataQueryDelegate
+@protocol NSMetadataQueryDelegate <NSObject>
 @optional
 - (id)metadataQuery:(NSMetadataQuery*)query replacementObjectForResultObject:(NSMetadataItem*)result;
-
-@optional
 - (id)metadataQuery:(NSMetadataQuery*)query replacementValueForAttribute:(NSString*)attribute value:(id)attributeValue;
-
 @end

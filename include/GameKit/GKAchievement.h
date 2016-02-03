@@ -15,9 +15,7 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 #import <GameKit/GameKitExport.h>
 #import <GameKit/GKChallenge.h>

@@ -18,9 +18,7 @@
 #import <CoreMotion/CMLogItem.h>
 #import <CoreMotion/CoreMotionExport.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 typedef struct {
     double x;

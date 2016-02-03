@@ -17,8 +17,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCoding.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @protocol NSPortDelegate;
@@ -59,7 +57,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)scheduleInRunLoop:(NSRunLoop*)runLoop forMode:(NSString*)mode;
 @end
 
-@protocol NSPortDelegate
+@protocol NSPortDelegate <NSObject>
 @optional
 - (void)handlePortMessage:(NSPortMessage*)portMessage;
 

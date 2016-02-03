@@ -25,7 +25,7 @@
 @class NSURLResponse;
 @class NSURLRequest;
 
-@protocol NSURLProtocolClient
+@protocol NSURLProtocolClient <NSObject>
 
 - (void)URLProtocol:(NSURLProtocol*)protocol cachedResponseIsValid:(NSCachedURLResponse*)cachedResponse;
 

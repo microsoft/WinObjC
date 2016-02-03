@@ -17,7 +17,6 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class SKProduct;

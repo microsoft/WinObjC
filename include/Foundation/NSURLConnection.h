@@ -60,68 +60,41 @@ FOUNDATION_EXPORT_CLASS
 - (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
 @end
 
-@protocol NSURLConnectionDataDelegate
+@protocol NSURLConnectionDelegate <NSObject>
+@optional
+- (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (BOOL)connection:(NSURLConnection*)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
+- (void)connection:(NSURLConnection*)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)connection:(NSURLConnection*)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection*)connection;
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error;
+@end
+
+@protocol NSURLConnectionDataDelegate <NSURLConnectionDelegate>
 @optional
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response;
-
-@optional
 - (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data;
-
-@optional
 - (void)connection:(NSURLConnection*)connection
               didSendBodyData:(NSInteger)bytesWritten
             totalBytesWritten:(NSInteger)totalBytesWritten
     totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
-
-@optional
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection;
-
-@optional
 - (NSURLRequest*)connection:(NSURLConnection*)connection
             willSendRequest:(NSURLRequest*)request
            redirectResponse:(NSURLResponse*)redirectResponse;
-
-@optional
 - (NSInputStream*)connection:(NSURLConnection*)connection needNewBodyStream:(NSURLRequest*)request;
-
-@optional
 - (NSCachedURLResponse*)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse*)cachedResponse;
-
 @end
 
-@protocol NSURLConnectionDelegate
-@optional
-- (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
-
-@optional
-- (BOOL)connection:(NSURLConnection*)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
-
-@optional
-- (void)connection:(NSURLConnection*)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
-
-@optional
-- (void)connection:(NSURLConnection*)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
-
-@optional
-- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection*)connection;
-
-@optional
-- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error;
-
-@end
-
-@protocol NSURLConnectionDownloadDelegate
+@protocol NSURLConnectionDownloadDelegate <NSURLConnectionDelegate>
 @optional
 - (void)connection:(NSURLConnection*)connection
       didWriteData:(long long)bytesWritten
  totalBytesWritten:(long long)totalBytesWritten
 expectedTotalBytes:(long long)expectedTotalBytes;
-
-@optional
 - (void)connectionDidResumeDownloading:(NSURLConnection*)connection
                      totalBytesWritten:(long long)totalBytesWritten
                     expectedTotalBytes:(long long)expectedTotalBytes;
 
 - (void)connectionDidFinishDownloading:(NSURLConnection*)connection destinationURL:(NSURL*)destinationURL;
-
 @end

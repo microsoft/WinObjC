@@ -19,8 +19,6 @@
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSMutableCopying.h>
 #import <CoreMedia/CMTypes.h>
 #import <CoreMedia/CMTimeRange.h>
 

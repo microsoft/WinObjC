@@ -16,10 +16,7 @@
 #pragma once
 
 #import <Contacts/ContactsExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
-#import <Foundation/NSCoding.h>
 
 @class NSString;
 

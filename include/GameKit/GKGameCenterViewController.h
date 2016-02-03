@@ -18,7 +18,6 @@
 #import <GameKit/GameKitExport.h>
 #import <GameKit/GKLeaderboard.h>
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 
 #import <UIKit/UIAppearanceContainer.h>

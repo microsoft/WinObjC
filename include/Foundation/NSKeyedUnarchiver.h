@@ -31,7 +31,6 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initForReadingWithData:(NSData*)data;
 + (id)unarchiveObjectWithData:(NSData*)data;
 + (id)unarchiveObjectWithFile:(NSString*)path;
-@property (readwrite) BOOL requiresSecureCoding;
 - (BOOL)containsValueForKey:(NSString*)key;
 - (BOOL)decodeBoolForKey:(NSString*)key;
 - (const uint8_t*)decodeBytesForKey:(NSString*)key returnedLength:(NSUInteger*)lengthp;
@@ -42,27 +41,26 @@ FOUNDATION_EXPORT_CLASS
 - (int64_t)decodeInt64ForKey:(NSString*)key;
 - (id)decodeObjectForKey:(NSString*)key;
 - (void)finishDecoding;
-@property (assign) id<NSKeyedUnarchiverDelegate> delegate;
+
 + (void)setClass:(Class)cls forClassName:(NSString*)codedName;
 + (Class)classForClassName:(NSString*)codedName;
 - (void)setClass:(Class)cls forClassName:(NSString*)codedName;
 - (Class)classForClassName:(NSString*)codedName;
+
+// Value indicating whether this coder requires secure coding. Once set to YES,
+// attempts to set it to NO will result in an exception. This is to avoid classes
+// selectively turning off secure coding.
+@property (readwrite) BOOL requiresSecureCoding;
+
+// TODO: implement delegate
+@property (assign) id<NSKeyedUnarchiverDelegate> delegate;
 @end
 
-@protocol NSKeyedUnarchiverDelegate
+@protocol NSKeyedUnarchiverDelegate <NSObject>
 @optional
 - (Class)unarchiver:(NSKeyedUnarchiver*)unarchiver cannotDecodeObjectOfClassName:(NSString*)name originalClasses:(NSArray*)classNames;
-
-@optional
 - (id)unarchiver:(NSKeyedUnarchiver*)unarchiver didDecodeObject:(id)object;
-
-@optional
 - (void)unarchiver:(NSKeyedUnarchiver*)unarchiver willReplaceObject:(id)object withObject:(id)newObject;
-
-@optional
 - (void)unarchiverDidFinish:(NSKeyedUnarchiver*)unarchiver;
-
-@optional
 - (void)unarchiverWillFinish:(NSKeyedUnarchiver*)unarchiver;
-
 @end

@@ -16,7 +16,6 @@
 #pragma once
 
 #import <QuickLook/QuickLookExport.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <UIKit/UIAppearanceContainer.h>
 #import <UIKit/UIContentContainer.h>

@@ -16,7 +16,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 #import <Foundation/NSURLSession.h>
@@ -35,25 +34,18 @@ typedef NS_ENUM(NSInteger, NSURLSessionResponseDisposition) {
     NSURLSessionResponseBecomeDownload = 2
 };
 
-@protocol NSURLSessionDataDelegate
+@protocol NSURLSessionDataDelegate <NSURLSessionTaskDelegate>
 @optional
 - (void)URLSession:(NSURLSession*)session
           dataTask:(NSURLSessionDataTask*)dataTask
 didReceiveResponse:(NSURLResponse*)response
  completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
                  dataTask:(NSURLSessionDataTask*)dataTask
     didBecomeDownloadTask:(NSURLSessionDownloadTask*)downloadTask;
-
-@optional
 - (void)URLSession:(NSURLSession*)session dataTask:(NSURLSessionDataTask*)dataTask didReceiveData:(NSData*)data;
-
-@optional
 - (void)URLSession:(NSURLSession*)session
           dataTask:(NSURLSessionDataTask*)dataTask
  willCacheResponse:(NSCachedURLResponse*)proposedResponse
  completionHandler:(void (^)(NSCachedURLResponse* cachedResponse))completionHandler;
-
 @end

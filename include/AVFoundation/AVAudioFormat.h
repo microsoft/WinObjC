@@ -18,7 +18,6 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 #import <CoreAudio/CoreAudioTypes.h>
 #import <AVFoundation/AVFoundationTypes.h>
 

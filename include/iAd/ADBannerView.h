@@ -19,7 +19,6 @@
 
 #import <CoreGraphics/CGGeometry.h>
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 
 #import <UIKit/UIAppearance.h>

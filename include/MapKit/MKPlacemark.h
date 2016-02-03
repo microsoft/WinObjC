@@ -17,8 +17,6 @@
 
 #import <MapKit/MapKitExport.h>
 #import <MapKit/MKAnnotation.h>
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSObject.h>
 #import <CoreLocation/CLPlacemark.h>
 

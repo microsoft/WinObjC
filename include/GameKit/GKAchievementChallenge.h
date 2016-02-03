@@ -18,9 +18,7 @@
 #import <GameKit/GameKitExport.h>
 #import <GameKit/GKChallenge.h>
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 @class GKAchievement;
 

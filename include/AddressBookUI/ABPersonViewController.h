@@ -16,7 +16,6 @@
 #pragma once
 
 #import <AddressBookUI/AddressBookUIExport.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABAddressBook.h>

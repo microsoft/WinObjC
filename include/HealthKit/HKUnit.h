@@ -16,12 +16,10 @@
 #pragma once
 
 #import <HealthKit/HealthKitExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSEnergyFormatter.h>
 #import <Foundation/NSLengthFormatter.h>
 #import <Foundation/NSMassFormatter.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 @class NSString;
 

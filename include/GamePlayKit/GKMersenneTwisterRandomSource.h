@@ -19,8 +19,6 @@
 #import <GamePlayKit/GKRandom.h>
 #import <GamePlayKit/GKRandomSource.h>
 
-#import <Foundation/NSCopying.h>
-#import <Foundation/NSSecureCoding.h>
 #import <Foundation/NSObject.h>
 
 GAMEPLAYKIT_EXPORT_CLASS

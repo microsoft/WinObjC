@@ -408,6 +408,23 @@
     return StubReturn();
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
 @end
 
 static bool rangesIntersect(const NSRange& lhs, const NSRange& rhs) {

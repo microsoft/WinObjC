@@ -17,7 +17,6 @@
 
 #import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAMediaTiming.h>
-#import <Foundation/NSCoding.h>
 #import <QuartzCore/CALayer.h>
 
 @class NSString;

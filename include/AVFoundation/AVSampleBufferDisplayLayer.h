@@ -18,7 +18,6 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <QuartzCore/CAMediaTiming.h>
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 #import <QuartzCore/CALayer.h>
 #import <CoreMedia/CMSync.h>

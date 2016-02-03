@@ -17,7 +17,6 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 #import <CoreVideo/CVPixelBuffer.h>
 #import <CoreMedia/CMTypes.h>

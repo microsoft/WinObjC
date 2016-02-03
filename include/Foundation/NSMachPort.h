@@ -16,8 +16,6 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCoding.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 #import <Foundation/NSPort.h>
@@ -43,7 +41,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)setDelegate:(id<NSMachPortDelegate>)anObject STUB_METHOD;
 @end
 
-@protocol NSMachPortDelegate
+@protocol NSMachPortDelegate <NSObject>
 @optional
 - (void)handleMachMessage:(void*)machMessage;
 

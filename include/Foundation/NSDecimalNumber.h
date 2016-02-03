@@ -16,9 +16,7 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 #import <Foundation/NSNumber.h>
 

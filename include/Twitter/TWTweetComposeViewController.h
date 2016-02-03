@@ -17,7 +17,6 @@
 #pragma once
 
 #import <Twitter/TwitterExport.h>
-#import <Foundation/NSCoding.h>
 #import <UIKit/UIViewController.h>
 
 @class NSString;

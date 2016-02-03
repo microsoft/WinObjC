@@ -17,7 +17,6 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSSecureCoding.h>
 
 @class NSString;
 @class NSURL;

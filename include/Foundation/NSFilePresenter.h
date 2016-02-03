@@ -21,58 +21,25 @@
 @class NSError;
 @class NSFileVersion;
 
-@protocol NSFilePresenter
-
+@protocol NSFilePresenter <NSObject>
 @property (readonly, copy) NSURL* presentedItemURL;
-
 @property (readonly, retain) NSOperationQueue* presentedItemOperationQueue;
 
 @optional
 - (void)relinquishPresentedItemToReader:(void (^)(void (^reacquirer)(void)))reader;
-
-@optional
 - (void)relinquishPresentedItemToWriter:(void (^)(void (^reacquirer)(void)))writer;
-
-@optional
 - (void)savePresentedItemChangesWithCompletionHandler:(void (^)(NSError* errorOrNil))completionHandler;
-
-@optional
 - (void)accommodatePresentedItemDeletionWithCompletionHandler:(void (^)(NSError* errorOrNil))completionHandler;
-
-@optional
 - (void)presentedItemDidMoveToURL:(NSURL*)newURL;
-
-@optional
 - (void)presentedItemDidChange;
-
-@optional
 - (void)presentedItemDidGainVersion:(NSFileVersion*)version;
-
-@optional
 - (void)presentedItemDidLoseVersion:(NSFileVersion*)version;
-
-@optional
 - (void)presentedItemDidResolveConflictVersion:(NSFileVersion*)version;
-
-@optional
 - (void)presentedSubitemAtURL:(NSURL*)url didGainVersion:(NSFileVersion*)version;
-
-@optional
 - (void)presentedSubitemAtURL:(NSURL*)url didLoseVersion:(NSFileVersion*)version;
-
-@optional
 - (void)presentedSubitemAtURL:(NSURL*)url didResolveConflictVersion:(NSFileVersion*)version;
-
-@optional
 - (void)accommodatePresentedSubitemDeletionAtURL:(NSURL*)url completionHandler:(void (^)(NSError* errorOrNil))completionHandler;
-
-@optional
 - (void)presentedSubitemDidAppearAtURL:(NSURL*)url;
-
-@optional
 - (void)presentedSubitemAtURL:(NSURL*)oldURL didMoveToURL:(NSURL*)newURL;
-
-@optional
 - (void)presentedSubitemDidChangeAtURL:(NSURL*)url;
-
 @end

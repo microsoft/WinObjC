@@ -18,9 +18,6 @@
 #import <Foundation/FoundationExport.h>
 
 @protocol NSLocking
-
 - (void)lock;
-
 - (void)unlock;
-
 @end

@@ -18,7 +18,6 @@
 #import <EventKit/EKRecurrenceRule.h>
 #import <EventKit/EventKitExport.h>
 
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 #import <objc\runtime.h>

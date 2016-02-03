@@ -53,20 +53,11 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)classNameForClass:(Class)cls;
 @end
 
-@protocol NSKeyedArchiverDelegate
+@protocol NSKeyedArchiverDelegate <NSObject>
 @optional
 - (void)archiver:(NSKeyedArchiver*)archiver didEncodeObject:(id)object;
-
-@optional
 - (void)archiverDidFinish:(NSKeyedArchiver*)archiver;
-
-@optional
 - (id)archiver:(NSKeyedArchiver*)archiver willEncodeObject:(id)object;
-
-@optional
 - (void)archiverWillFinish:(NSKeyedArchiver*)archiver;
-
-@optional
 - (void)archiver:(NSKeyedArchiver*)archiver willReplaceObject:(id)object withObject:(id)newObject;
-
 @end

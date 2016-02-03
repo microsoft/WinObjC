@@ -17,7 +17,6 @@
 #pragma once
 
 #import <CoreData/CoreDataExport.h>
-#import <Foundation/NSCopying.h>
 #import <Foundation/NSObject.h>
 
 @class NSArray;

@@ -23,7 +23,6 @@
 #import <UIKit/UIFocusEnvironment.h>
 #import <UIKit/UITraitEnvironment.h>
 
-#import <Foundation/NSCoding.h>
 #import <Foundation/NSObject.h>
 
 @protocol GKAchievementViewControllerDelegate;

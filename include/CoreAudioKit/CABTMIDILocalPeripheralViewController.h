@@ -17,7 +17,6 @@
 
 #import <CoreAudioKit/CoreAudioKitExport.h>
 
-#import <Foundation/NSCoding.h>
 
 #import <UIKit/UIAppearanceContainer.h>
 #import <UIKit/UIContentContainer.h>

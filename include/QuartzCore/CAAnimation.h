@@ -18,7 +18,6 @@
 #import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAAction.h>
 #import <QuartzCore/CAMediaTiming.h>
-#import <Foundation/NSCopying.h>
 #import <CoreGraphics/CGPath.h>
 
 @class CAAnimation;

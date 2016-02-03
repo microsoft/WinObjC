@@ -91,7 +91,7 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSError* streamError;
 @end
 
-@protocol NSStreamDelegate
+@protocol NSStreamDelegate <NSObject>
 @optional
 - (void)stream:(NSStream*)theStream handleEvent:(NSStreamEvent)streamEvent;
 
