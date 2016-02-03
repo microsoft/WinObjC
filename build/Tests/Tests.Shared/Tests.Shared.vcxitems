@@ -70,4 +70,7 @@
       <FileType>Document</FileType>
     </SBResourceCopy>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
+  </ItemGroup>
 </Project>

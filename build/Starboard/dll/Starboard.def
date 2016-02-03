@@ -1,9 +1,37 @@
 LIBRARY Starboard
     EXPORTS
+        CC_MD2
+        CC_MD2_Final
+        CC_MD2_Init
+        CC_MD2_Update
+        CC_MD4
+        CC_MD4_Final
+        CC_MD4_Init
+        CC_MD4_Update
         CC_MD5
         CC_MD5_Final
         CC_MD5_Init
         CC_MD5_Update
+        CC_SHA1
+        CC_SHA1_Final
+        CC_SHA1_Init
+        CC_SHA1_Update
+        CC_SHA224
+        CC_SHA224_Final
+        CC_SHA224_Init
+        CC_SHA224_Update
+        CC_SHA256
+        CC_SHA256_Final
+        CC_SHA256_Init
+        CC_SHA256_Update
+        CC_SHA384
+        CC_SHA384_Final
+        CC_SHA384_Init
+        CC_SHA384_Update
+        CC_SHA512
+        CC_SHA512_Final
+        CC_SHA512_Init
+        CC_SHA512_Update
         dbg_printf
         host_page_size
         mach_task_self

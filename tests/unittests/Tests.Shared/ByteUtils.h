@@ -14,13 +14,35 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #include <windows.h>
 #include <string>
+#include "gtest-api.h"
 
-std::string stringFromBytes(BYTE* buf, size_t len);
+static inline std::string stringFromBytes(BYTE* buf, size_t len) {
+    static const BYTE lookup[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+    std::string ret;
+    ret.reserve(2 * (len + 1) + len / 2);
+
+    for (int i = 0, count = 0; i < len; i++, count++) {
+        ret.push_back(lookup[buf[i] >> 4]);
+        ret.push_back(lookup[buf[i] & 0xf]);
+        if (count == 1) {
+            count = -1;
+            ret.push_back(' ');
+        }
+    }
+
+    return ret;
+}
 
 inline bool equalsBytes(BYTE* buf1, BYTE* buf2, size_t len) {
     return memcmp(buf1, buf2, len) == 0;
 }
 
-void logBytes(const char* str, BYTE* buf, size_t len);
+inline void logBytes(const char* str, BYTE* buf, size_t len) {
+    std::string strBuf = stringFromBytes(buf, len);
+    LOG_INFO("Bytes value for %s is\n%s", str, strBuf.c_str());
+}
