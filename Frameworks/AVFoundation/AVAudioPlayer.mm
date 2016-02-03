@@ -25,6 +25,7 @@
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
+    *outError = nil;
     return StubReturn();
 }
 
@@ -34,6 +35,7 @@
 */
 - (instancetype)initWithData:(NSData*)data error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
+    *outError = nil;
     return StubReturn();
 }
 
@@ -43,6 +45,7 @@
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url fileTypeHint:(NSString*)utiString error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
+    *outError = nil;
     return StubReturn();
 }
 
@@ -52,6 +55,7 @@
 */
 - (instancetype)initWithData:(NSData*)data fileTypeHint:(NSString*)utiString error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
+    *outError = nil;
     return StubReturn();
 }
 
