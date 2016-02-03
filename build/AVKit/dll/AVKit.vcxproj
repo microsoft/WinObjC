@@ -31,6 +31,9 @@
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
+    </ProjectReference>    
     <ProjectReference Include="..\lib\AVKitLib.vcxproj">
       <Project>{FB843AF7-02DD-4DDF-B50A-808F50422F1E}</Project>
     </ProjectReference>
@@ -130,7 +133,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AVKit.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
@@ -155,7 +158,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AVKit.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -180,7 +183,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AVKit.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
@@ -205,7 +208,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>UIKit.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>AVKit.def</ModuleDefinitionFile>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
