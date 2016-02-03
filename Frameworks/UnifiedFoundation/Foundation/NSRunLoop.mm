@@ -114,20 +114,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return state;
 }
 
-- (NSArray*)statesForMode:(NSString*)mode {
-    NSMutableArray* result = [NSMutableArray new];
-
-    if ([mode isEqualToString:NSRunLoopCommonModes]) {
-        for (NSString* common in _commonModes) {
-            [result addObject:[self _stateForMode:common]];
-        }
-    } else {
-        [result addObject:[self _stateForMode:mode]];
-    }
-
-    return result;
-}
-
 - (BOOL)_orderedPerforms {
     BOOL didPerform = NO;
     NSArray* performs = nil;
@@ -170,10 +156,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [performs release];
 
     return didPerform;
-}
-
-- (void)_wakeUp {
-    [[self _stateForMode:_currentMode] wakeUp];
 }
 
 /**
@@ -303,40 +285,12 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (void)addInputSource:(NSInputSource*)source forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode addInputSource:source];
-    }
-
-    [modeStates release];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)removeInputSource:(NSInputSource*)source forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode removeInputSource:source];
-    }
-
-    [modeStates release];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)addTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode addTimer:timer];
     }
-
-    [modeStates release];
 }
 
 /**
@@ -348,7 +302,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 }
 
 - (BOOL)containsTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         if ([curMode containsTimer:timer]) {
@@ -357,39 +311,31 @@ static void DispatchMainRunLoopWakeup(void* arg) {
         }
     }
 
-    [modeStates release];
-
     return FALSE;
 }
 
 - (void)addObserver:(NSObject*)observer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode addObserver:(NSTimer*)observer];
     }
-
-    [modeStates release];
 }
 
 - (void)removeObserver:(NSObject*)observer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode removeObserver:observer];
     }
-
-    [modeStates release];
 }
 
 - (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode removeTimer:timer];
     }
-
-    [modeStates release];
 }
 
 - (NSArray*)_getModes {
@@ -508,4 +454,41 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 - (void)removePort:(NSPort*)aPort forMode:(NSString*)mode {
     UNIMPLEMENTED();
 }
+@end
+
+@implementation NSRunLoop (Internal)
+- (StrongId<NSArray*>)_statesForMode:(NSString*)mode {
+    StrongId<NSMutableArray*> result = [NSMutableArray new];
+
+    if ([mode isEqualToString:NSRunLoopCommonModes]) {
+        for (NSString* common in _commonModes) {
+            [result addObject:[self _stateForMode:common]];
+        }
+    } else {
+        [result addObject:[self _stateForMode:mode]];
+    }
+
+    return result;
+}
+
+- (void)_addInputSource:(NSInputSource*)source forMode:(NSString*)mode {
+    StrongId<NSArray*> modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in static_cast<id>(modeStates)) {
+        [curMode addInputSource:source];
+    }
+}
+
+- (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode {
+    StrongId<NSArray*> modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in static_cast<id>(modeStates)) {
+        [curMode removeInputSource:source];
+    }
+}
+
+- (void)_wakeUp {
+    [[self _stateForMode:_currentMode] wakeUp];
+}
+
 @end

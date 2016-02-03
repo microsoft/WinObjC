@@ -25,6 +25,7 @@
 #import <condition_variable>
 
 #import "NSRunLoopSource.h"
+#import "NSRunLoop+Internal.h"
 #import "NSURLSession-Internal.h"
 #import "NSURLSessionTask-Internal.h"
 
@@ -216,7 +217,7 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 
 - (void)_taskDispatchThreadBody:(id)sender {
     NSRunLoop* currentRunLoop = [NSRunLoop currentRunLoop];
-    [currentRunLoop addInputSource:_runLoopCancelSource forMode:@"kCFRunLoopDefaultMode"];
+    [currentRunLoop _addInputSource:_runLoopCancelSource forMode:@"kCFRunLoopDefaultMode"];
     while (!_invalidating) {
         [currentRunLoop runUntilDate:[NSDate distantFuture]];
     }

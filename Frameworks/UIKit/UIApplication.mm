@@ -30,6 +30,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSString.h"
 #include "NSRunLoopSource.h"
+#include "NSRunLoop+Internal.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIColor.h"
@@ -241,8 +242,8 @@ static idretaintype(NSMutableArray) _curNotifications;
     [shutdownEvent setSourceDelegate:[UIApplication class] selector:@selector(_shutdownEvent)];
     g_shutdownEvent = (EbrEvent)[shutdownEvent eventHandle];
 
-    [[NSRunLoop mainRunLoop] addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
-    [[NSRunLoop mainRunLoop] addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
     currentlyTrackingGesturesList = [NSMutableArray new];
 
@@ -254,7 +255,7 @@ static idretaintype(NSMutableArray) _curNotifications;
     popupWindow = nil;
     sharedApplication = nil;
 
-    [[NSRunLoop mainRunLoop] removeInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _removeInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
 }
 
