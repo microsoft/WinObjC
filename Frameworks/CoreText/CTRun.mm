@@ -26,13 +26,24 @@ const CFStringRef kCTBackgroundFillColorAttributeName = static_cast<CFStringRef>
 const CFStringRef kCTBackgroundCornerRadiusAttributeName = static_cast<CFStringRef>(@"kCTBackgroundCornerRadiusAttributeName");
 const CFStringRef kCTBackgroundLineWidthAttributeName = static_cast<CFStringRef>(@"kCTBackgroundLineWidthAttributeName");
 
+static IWLazyClassLookup _LazyUIColor("UIColor");
+
 @implementation _CTRun : NSObject
 - (void)dealloc {
-    _font = nil;
     _stringFragment = nil;
-    _textColor = nil;
+    _attributes = nil;
+
     [super dealloc];
 }
+
+- (id)init {
+    if ((self = [super init])) {
+        _attributes.attach([NSMutableDictionary new]);
+    }
+
+    return self;
+}
+
 @end
 
 /**
@@ -51,14 +62,11 @@ CFIndex CTRunGetGlyphCount(CTRunRef run) {
  @Status Stub
 */
 CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
-    UNIMPLEMENTED();
-    id ret = [NSMutableDictionary new];
-    [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"BLACK") forKey:(id)kCTBackgroundStrokeColorAttributeName];
-    [ret setObject:(id)CGColorGetConstantColor((CFStringRef) @"WHITE") forKey:(id)kCTBackgroundFillColorAttributeName];
-    [ret setObject:[NSNumber numberWithFloat:3.0f] forKey:(id)kCTBackgroundCornerRadiusAttributeName];
-    [ret setObject:[NSNumber numberWithFloat:1.0f] forKey:(id)kCTBackgroundLineWidthAttributeName];
+    if (run == nil) {
+        return nil;
+    }
 
-    return (CFDictionaryRef)ret;
+    return static_cast<CFDictionaryRef>((static_cast<_CTRun*>(run))->_attributes);
 }
 
 /**
@@ -188,16 +196,17 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
         return 0;
     }
 
+    UIFont* font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
     if (ascent != nullptr) {
-        *ascent = [curRun->_font ascender];
+        *ascent = [font ascender];
     }
 
     if (descent != nullptr) {
-        *descent = [curRun->_font descender];
+        *descent = [font descender];
     }
 
     if (leading != nullptr) {
-        *leading = [curRun->_font leading];
+        *leading = [font leading];
     }
 
     if (range.length < 0) {
@@ -246,12 +255,16 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
     int numGlyphs = curRun->_characters.size();
     WORD* glyphs = (WORD*)malloc(sizeof(WORD) * numGlyphs);
 
-    id font = curRun->_font;
+    id font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
     CGFontGetGlyphsForUnichars(font, curRun->_characters.data(), glyphs, numGlyphs);
     CGContextSetFont(ctx, font);
     CGContextSetFontSize(ctx, [font pointSize]);
 
-    CGContextSetFillColorWithColor(ctx, (CGColorRef)(id)curRun->_textColor);
+    id fontColor = [curRun->_attributes objectForKey:(id)kCTForegroundColorAttributeName];
+    if (fontColor == nil) {
+        fontColor = [_LazyUIColor blackColor];
+    }
+    CGContextSetFillColorWithColor(ctx, (CGColorRef)fontColor);
     CGContextSetStrokeColorWithColor(ctx, (CGColorRef)(id)CGColorGetConstantColor((CFStringRef) @"WHITE"));
 
     CGPoint curTextPos = CGContextGetTextPosition(ctx);

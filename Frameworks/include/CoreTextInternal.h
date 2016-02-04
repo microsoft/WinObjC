@@ -56,10 +56,9 @@
 
 @interface _CTRun : NSObject {
 @public
+    idretaintype(NSMutableDictionary) _attributes;
     CFRange _range;
     float _xPos;
-    idretaintype(UIFont) _font;
-    idretaintype(UIColor) _textColor;
     idretaintype(NSString) _stringFragment;
     std::vector<CGPoint> _glyphOrigins;
     std::vector<CGSize> _glyphAdvances;

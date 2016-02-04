@@ -39,7 +39,10 @@ extern "C" {
 const CFStringRef kCTTypesetterOptionDisableBidiProcessing = static_cast<CFStringRef>(@"kCTTypesetterOptionDisableBidiProcessing");
 const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = static_cast<CFStringRef>(@"kCTTypesetterOptionForcedEmbeddingLevel");
 
+static IWLazyClassLookup _LazyUIFont("UIFont");
+
 static const float c_spacing = 1.0f;
+static const float default_system_font_size = 15.0f;
 
 @implementation _CTTypesetter
 - (instancetype)initWithAttributedString:(NSAttributedString*)str {
@@ -140,6 +143,9 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             //  Grab and set the new font
             NSDictionary* attribs = [typeSetter->_attributedString attributesAtIndex:curIndex effectiveRange:&curAttributeRange];
             UIFont* font = [attribs objectForKey:(NSString*)kCTFontAttributeName];
+            if (font == nil) {
+                font = [_LazyUIFont systemFontOfSize:default_system_font_size];
+            }
             curFace = (FT_Face)[font _sizingFontHandle];
             CGFontSetFTFontSize(font, curFace, [font pointSize]);
 
@@ -228,20 +234,33 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             if (runRange.location + runRange.length > lineRange.location + lineRange.length) {
                 runRange.length = lineRange.location + lineRange.length - runRange.location;
             }
-            _CTRun* run = [_CTRun new];
-            run->_font = [attribs objectForKey:(id)kCTFontAttributeName];
-            if ([run->_font ascender] > ascender) {
-                ascender = [run->_font ascender];
+
+            _CTRun* run = [[_CTRun alloc] init];
+            UIFont* runFont = [attribs objectForKey:(id)kCTFontAttributeName];
+            if (runFont == nil) {
+                runFont = [_LazyUIFont systemFontOfSize:15];
             }
-            if ([run->_font descender] < descender) {
-                descender = [run->_font descender];
+            [run->_attributes setObject:runFont forKey:(id)kCTFontAttributeName];
+
+            if ([runFont ascender] > ascender) {
+                ascender = [runFont ascender];
             }
-            if ([run->_font leading] > leading) {
-                leading = [run->_font leading];
+            if ([runFont descender] < descender) {
+                descender = [runFont descender];
+            }
+            if ([runFont leading] > leading) {
+                leading = [runFont leading];
             }
 
-            id color = [attribs objectForKey:(id)kCTForegroundColorAttributeName];
-            run->_textColor = color;
+            // adding all the other attributes
+            NSEnumerator* enumerator = [attribs keyEnumerator];
+            id key;
+            while ((key = [enumerator nextObject])) {
+                if ([run->_attributes valueForKey:key] == nil) {
+                    [run->_attributes setObject:[attribs objectForKey:key] forKey:key];
+                }
+            }
+
             run->_range.location = runRange.location;
             run->_range.length = runRange.length;
             run->_stringFragment = [typeSetter->_string substringWithRange:runRange];

@@ -26,6 +26,19 @@ bool isValid(double testValue, double expectedValue, double delta) {
     return ((expectedValue <= upperBound) && (expectedValue >= lowerBound));
 }
 
+NSAttributedString* getString() {
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:40];
+    UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:40];
+
+    NSRange wholeRange = NSMakeRange(0, 5);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello"];
+    [string addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:wholeRange];
+    [string addAttribute:NSFontAttributeName value:font range:wholeRange];
+    [string addAttribute:@"testKey" value:[UIColor blueColor] range:wholeRange];
+
+    return string;
+}
+
 TEST(CoreText, TypographicBounds) {
     const double errorDelta = 0.0005;
     const float ascentExpected = 13.0f;
@@ -127,4 +140,27 @@ TEST(CoreText, TypographicBounds) {
     CFRelease(attributedStringRef);
     CFRelease(frameRef);
     CFRelease(framesetter);
+}
+
+TEST(CoreText, CTRunGetAttributes) {
+    CFAttributedStringRef string = (__bridge CFAttributedStringRef)getString();
+    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(string);
+    CFRange range = { 0, CFAttributedStringGetLength(string) };
+    CTLineRef line = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
+    CFArrayRef runsArray = CTLineGetGlyphRuns(line);
+    CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
+
+    CFDictionaryRef dictionary = CTRunGetAttributes(run);
+    id font = [dictionary objectForKey:(NSString*)NSFontAttributeName];
+    ASSERT_TRUE_MSG([font isKindOfClass:[UIFont class]], "Failed: Wrong object type in dictionary");
+    NSString* fontName = ((UIFont*)font).fontName;
+    ASSERT_OBJCEQ_MSG(fontName, @"Times New Roman", "Failed: Wrong data in dictionary");
+
+    id color = [dictionary objectForKey:NSForegroundColorAttributeName];
+    ASSERT_TRUE_MSG([color isKindOfClass:[UIColor class]], "Failed: Wrong object type in dictionary");
+    ASSERT_TRUE_MSG([color isEqual:[UIColor redColor]], "Failed: Wrong object type in dictionary");
+
+    color = [dictionary objectForKey:@"testKey"];
+    ASSERT_TRUE_MSG([color isKindOfClass:[UIColor class]], "Failed: Wrong object type in dictionary");
+    ASSERT_TRUE_MSG([color isEqual:[UIColor blueColor]], "Failed: Wrong object type in dictionary");
 }
