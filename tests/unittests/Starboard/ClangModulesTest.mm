@@ -26,6 +26,7 @@
 @import CFNetwork;
 @import CloudKit;
 @import CommonCrypto;
+@import Contacts;
 @import CoreAudio;
 @import CoreAudioKit;
 @import CoreBluetooth;

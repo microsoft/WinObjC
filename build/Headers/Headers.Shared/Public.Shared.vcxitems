@@ -23,6 +23,7 @@
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CFNetwork\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CloudKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CommonCrypto\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Contacts\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreAudio\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreAudioKit\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\CoreBluetooth\*.h" />
