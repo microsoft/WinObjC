@@ -17,6 +17,7 @@
 #pragma once
 
 #import <CloudKit/CloudKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class NSString;
 

@@ -20,6 +20,7 @@
 #import <Foundation/NSObject.h>
 #import <AVFoundation/AVAudioNode.h>
 #import <AudioUnit/AudioUnitTypes.h>
+#import <AudioUnit/AudioUnitComponent.h>
 
 AVFOUNDATION_EXPORT_CLASS
 @interface AVAudioIONode : AVAudioNode

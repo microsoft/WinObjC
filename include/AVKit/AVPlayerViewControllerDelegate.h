@@ -17,10 +17,11 @@
 #pragma once
 
 #import <AVKit/AVKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVPlayerViewController;
 
-@protocol AVPlayerViewControllerDelegate
+@protocol AVPlayerViewControllerDelegate <NSObject>
 @optional
 - (BOOL)playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart:(AVPlayerViewController*)playerViewController;
 - (void)playerViewController:(AVPlayerViewController*)playerViewController

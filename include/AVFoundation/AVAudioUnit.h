@@ -20,6 +20,7 @@
 #import <Foundation/NSObject.h>
 #import <AVFoundation/AVAudioNode.h>
 #import <AudioUnit/AudioUnitTypes.h>
+#import <AudioUnit/AudioUnitComponent.h>
 
 @class NSURL;
 @class NSError;

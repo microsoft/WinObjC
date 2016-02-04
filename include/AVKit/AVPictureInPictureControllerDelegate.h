@@ -17,10 +17,11 @@
 #pragma once
 
 #import <AVKit/AVKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVPictureInPictureController;
 
-@protocol AVPictureInPictureControllerDelegate
+@protocol AVPictureInPictureControllerDelegate <NSObject>
 @optional
 - (void)pictureInPictureController:(AVPictureInPictureController*)pictureInPictureController
     restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:(void (^)(BOOL restored))completionHandler;
