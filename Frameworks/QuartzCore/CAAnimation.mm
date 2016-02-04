@@ -92,7 +92,7 @@
 }
 
 /**
- @Status Interopable
+ @Status Interoperable
 */
 - (CAMediaTimingFunction*)timingFunction {
     return _timingProperties._timingFunction;

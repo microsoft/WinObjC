@@ -1897,7 +1897,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Sub
+ @Status Stub
 */
 - (void)setSublayers:(NSArray*)sublayers {
     UNIMPLEMENTED();
