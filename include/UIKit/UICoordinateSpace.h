@@ -16,7 +16,7 @@
 #import <UIKit/UIKitExport.h>
 #import <CoreGraphics/CGGeometry.h>
 
-@protocol UICoordinateSpace
+@protocol UICoordinateSpace <NSObject>
 @required
 @property (readonly, nonatomic) CGRect bounds;
 - (CGPoint)convertPoint:(CGPoint)point toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace;

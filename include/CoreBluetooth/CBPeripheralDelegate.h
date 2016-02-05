@@ -16,6 +16,7 @@
 #pragma once
 
 #import <CoreBluetooth/CoreBluetoothExport.h>
+#import <Foundation/NSObject.h>
 
 @class CBPeripheral;
 @class NSError;
@@ -24,7 +25,7 @@
 @class CBDescriptor;
 @class NSArray;
 
-@protocol CBPeripheralDelegate
+@protocol CBPeripheralDelegate <NSObject>
 @optional
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverServices:(NSError*)error;
 - (void)peripheral:(CBPeripheral*)peripheral didDiscoverIncludedServicesForService:(CBService*)service error:(NSError*)error;

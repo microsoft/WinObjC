@@ -17,7 +17,8 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
-@protocol AVAudioStereoMixing
+@protocol AVAudioStereoMixing <NSObject>
 @property (nonatomic) float pan;
 @end

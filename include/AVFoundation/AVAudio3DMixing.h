@@ -27,7 +27,7 @@ enum {
     AVAudio3DMixingRenderingAlgorithmSoundField = 3,
     AVAudio3DMixingRenderingAlgorithmStereoPassThrough = 5
 };
-@protocol AVAudio3DMixing
+@protocol AVAudio3DMixing <NSObject>
 @property (nonatomic) float obstruction;
 @property (nonatomic) float occlusion;
 @property (nonatomic) AVAudio3DPoint position;

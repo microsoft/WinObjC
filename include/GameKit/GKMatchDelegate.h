@@ -16,7 +16,7 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class GKMatch;
 @class NSData;
@@ -31,7 +31,7 @@ enum {
     GKPlayerStateDisconnected,
 };
 
-@protocol GKMatchDelegate
+@protocol GKMatchDelegate <NSObject>
 @optional
 - (void)match:(GKMatch*)match didReceiveData:(NSData*)data forRecipient:(GKPlayer*)recipient fromRemotePlayer:(GKPlayer*)player;
 - (void)match:(GKMatch*)match didReceiveData:(NSData*)data fromRemotePlayer:(GKPlayer*)player;

@@ -22,7 +22,7 @@
 @class AVSpeechSynthesizer;
 @class AVSpeechUtterance;
 
-@protocol AVSpeechSynthesizerDelegate
+@protocol AVSpeechSynthesizerDelegate <NSObject>
 @optional
 - (void)speechSynthesizer:(AVSpeechSynthesizer*)synthesizer didCancelSpeechUtterance:(AVSpeechUtterance*)utterance;
 - (void)speechSynthesizer:(AVSpeechSynthesizer*)synthesizer didContinueSpeechUtterance:(AVSpeechUtterance*)utterance;

@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, WKNavigationActionPolicy) { WKNavigationActionPolicyC
 
 typedef NS_ENUM(NSInteger, WKNavigationResponsePolicy) { WKNavigationResponsePolicyCancel, WKNavigationResponsePolicyAllow };
 
-@protocol WKNavigationDelegate
+@protocol WKNavigationDelegate <NSObject>
 @optional
 - (void)webView:(WKWebView*)webView didCommitNavigation:(WKNavigation*)navigation;
 - (void)webView:(WKWebView*)webView didFailNavigation:(WKNavigation*)navigation withError:(NSError*)error;

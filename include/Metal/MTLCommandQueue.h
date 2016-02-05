@@ -16,12 +16,13 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
+#import <Foundation/NSObject.h>
 
 @protocol MTLCommandBuffer;
 @protocol MTLDevice;
 @class NSString;
 
-@protocol MTLCommandQueue
+@protocol MTLCommandQueue <NSObject>
 
 @property (readonly)id<MTLDevice> device;
 @property (copy, atomic) NSString* label;

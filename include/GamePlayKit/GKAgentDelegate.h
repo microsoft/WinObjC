@@ -16,10 +16,11 @@
 #pragma once
 
 #import <GamePlayKit/GameplayKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKAgent;
 
-@protocol GKAgentDelegate
+@protocol GKAgentDelegate <NSObject>
 @optional
 - (void)agentWillUpdate:(GKAgent*)agent;
 - (void)agentDidUpdate:(GKAgent*)agent;

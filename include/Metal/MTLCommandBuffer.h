@@ -16,7 +16,7 @@
 #pragma once
 
 #import <CoreFoundation/CFDate.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 #import <Metal/MetalExport.h>
 
 @class NSString;
@@ -55,7 +55,7 @@ typedef NS_ENUM(NSUInteger, MTLCommandBufferError) {
 
 METAL_EXPORT NSString* const MTLCommandBufferErrorDomain;
 
-@protocol MTLCommandBuffer
+@protocol MTLCommandBuffer <NSObject>
 
 @property (readonly)MTLCommandBufferStatus status;
 @property (readonly)NSError* error;

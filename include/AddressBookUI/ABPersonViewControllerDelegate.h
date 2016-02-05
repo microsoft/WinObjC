@@ -15,14 +15,14 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 #import <AddressBookUI/AddressBookUIExport.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABMultiValue.h>
 
 @class ABPersonViewController;
 
-@protocol ABPersonViewControllerDelegate
+@protocol ABPersonViewControllerDelegate <NSObject>
 @required
 - (BOOL)personViewController:(ABPersonViewController*)personViewController
     shouldPerformDefaultActionForPerson:(ABRecordRef)person

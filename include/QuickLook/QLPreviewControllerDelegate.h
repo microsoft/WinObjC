@@ -25,7 +25,7 @@
 
 @protocol QLPreviewItem;
 
-@protocol QLPreviewControllerDelegate
+@protocol QLPreviewControllerDelegate <NSObject>
 @optional
 - (CGRect)previewController:(QLPreviewController*)controller
         frameForPreviewItem:(id<QLPreviewItem>)item

@@ -14,7 +14,8 @@
 //
 //******************************************************************************
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
 
 #define UI_APPEARANCE_SELECTOR
-@protocol UIAppearanceContainer
+@protocol UIAppearanceContainer <NSObject>
 @end

@@ -17,7 +17,7 @@
 #pragma once
 
 #import <WebKit/WebKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class WKWebView;
 @class WKWebViewConfiguration;
@@ -26,7 +26,7 @@
 @class NSString;
 @class WKFrameInfo;
 
-@protocol WKUIDelegate
+@protocol WKUIDelegate <NSObject>
 @optional
 - (WKWebView*)webView:(WKWebView*)webView
     createWebViewWithConfiguration:(WKWebViewConfiguration*)configuration

@@ -22,7 +22,7 @@
 @class AVCaptureOutput;
 @class AVCaptureConnection;
 
-@protocol AVCaptureAudioDataOutputSampleBufferDelegate
+@protocol AVCaptureAudioDataOutputSampleBufferDelegate <NSObject>
 @optional
 - (void)captureOutput:(AVCaptureOutput*)captureOutput
 didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer

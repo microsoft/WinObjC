@@ -16,13 +16,13 @@
 #pragma once
 
 #import <MessageUI/MessageUIExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class MFMessageComposeViewController;
 
 typedef NS_ENUM(NSUInteger, MessageComposeResult) { MessageComposeResultCancelled, MessageComposeResultSent, MessageComposeResultFailed };
 
-@protocol MFMessageComposeViewControllerDelegate
+@protocol MFMessageComposeViewControllerDelegate <NSObject>
 
 - (void)messageComposeViewController:(MFMessageComposeViewController*)controller didFinishWithResult:(MessageComposeResult)result;
 

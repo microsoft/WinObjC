@@ -16,11 +16,12 @@
 #pragma once
 
 #import <QuickLook/QuickLookExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSURL;
 @class NSString;
 
-@protocol QLPreviewItem
+@protocol QLPreviewItem <NSObject>
 @required
 @property (readonly, nonatomic) NSURL* previewItemURL;
 

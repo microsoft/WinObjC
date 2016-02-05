@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, GLKViewDrawableMultisample) { GLKViewDrawableMultisa
 
 @class GLKView;
 
-@protocol GLKViewDelegate
+@protocol GLKViewDelegate <NSObject>
 
 /**
  @Status Interoperable

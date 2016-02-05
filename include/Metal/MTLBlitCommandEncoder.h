@@ -18,6 +18,7 @@
 #import <Metal/MetalExport.h>
 #import <Foundation/NSRange.h>
 #import <Metal/MetalDataTypes.h>
+#import <Metal/MTLCommandEncoder.h>
 
 @protocol MTLBuffer;
 @protocol MTLTexture;
@@ -29,7 +30,7 @@ typedef NS_OPTIONS(NSUInteger, MTLBlitOption) {
     MTLBlitOptionRowLinearPVRTC = 1 << 2
 };
 
-@protocol MTLBlitCommandEncoder
+@protocol MTLBlitCommandEncoder <MTLCommandEncoder>
 
 - (void)copyFromBuffer:(id<MTLBuffer>)sourceBuffer
           sourceOffset:(NSUInteger)sourceOffset

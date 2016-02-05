@@ -16,6 +16,10 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <GameKit/GKChallengeListener.h>
+#import <GameKit/GKInviteEventListener.h>
+#import <GameKit/GKSavedGameListener.h>
+#import <GameKit/GKTurnBasedEventListener.h>
 
-@protocol GKLocalPlayerListener
+@protocol GKLocalPlayerListener <GKChallengeListener, GKInviteEventListener, GKSavedGameListener, GKTurnBasedEventListener>
 @end

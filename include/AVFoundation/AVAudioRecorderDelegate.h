@@ -17,12 +17,12 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class AVAudioRecorder;
 @class NSError;
 
-@protocol AVAudioRecorderDelegate
+@protocol AVAudioRecorderDelegate <NSObject>
 @optional
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder*)recorder successfully:(BOOL)flag;
 - (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder*)recorder error:(NSError*)error;

@@ -16,13 +16,13 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class MPContentItem;
 @class NSIndexPath;
 @class NSError;
 
-@protocol MPPlayableContentDataSource
+@protocol MPPlayableContentDataSource <NSObject>
 
 - (MPContentItem*)contentItemAtIndexPath:(NSIndexPath*)indexPath;
 - (NSInteger)numberOfChildItemsAtIndexPath:(NSIndexPath*)indexPath;

@@ -16,8 +16,8 @@
 #pragma once
 
 #import <GamePlayKit/GameplayKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
-@protocol GKGameModelPlayer
+@protocol GKGameModelPlayer <NSObject>
 @property (nonatomic, readonly) NSInteger playerId;
 @end

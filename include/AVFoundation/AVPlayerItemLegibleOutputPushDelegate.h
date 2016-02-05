@@ -18,11 +18,12 @@
 
 #import <AVFoundation/AVFoundationExport.h>
 #import <CoreMedia/CMTime.h>
+#import <AVFoundation/AVPlayerItemOutputPushDelegate.h>
 
 @class AVPlayerItemLegibleOutput;
 @class NSArray;
 
-@protocol AVPlayerItemLegibleOutputPushDelegate
+@protocol AVPlayerItemLegibleOutputPushDelegate <AVPlayerItemOutputPushDelegate>
 @optional
 - (void)legibleOutput:(AVPlayerItemLegibleOutput*)output
     didOutputAttributedStrings:(NSArray*)strings

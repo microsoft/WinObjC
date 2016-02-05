@@ -23,7 +23,7 @@
 
 @class GLKViewController;
 
-@protocol GLKViewControllerDelegate
+@protocol GLKViewControllerDelegate <NSObject>
 
 /**
  @Status Interoperable

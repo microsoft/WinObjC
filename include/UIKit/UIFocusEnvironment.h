@@ -14,13 +14,13 @@
 //
 //******************************************************************************
 #import <UIKit/UIKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class UIFocusUpdateContext;
 @class UIFocusAnimationCoordinator;
 @class UIView;
 
-@protocol UIFocusEnvironment
+@protocol UIFocusEnvironment <NSObject>
 @required
 - (void)setNeedsFocusUpdate;
 - (void)updateFocusIfNeeded;

@@ -24,7 +24,7 @@
 @class NSLayoutManager;
 @class NSTextContainer;
 
-@protocol NSLayoutManagerDelegate
+@protocol NSLayoutManagerDelegate <NSObject>
 - (void)layoutManagerDidInvalidateLayout:(NSLayoutManager*)sender;
 @end
 

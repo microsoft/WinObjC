@@ -24,7 +24,7 @@
 
 @class NSArray;
 
-@protocol AVVideoCompositionInstruction
+@protocol AVVideoCompositionInstruction <NSObject>
 @property (nonatomic, readonly) CMPersistentTrackID passthroughTrackID;
 @property (nonatomic, readonly) NSArray* requiredSourceTrackIDs;
 @property (nonatomic, readonly) BOOL containsTweening;

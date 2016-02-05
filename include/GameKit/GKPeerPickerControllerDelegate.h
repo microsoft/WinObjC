@@ -22,7 +22,7 @@
 @class GKSession;
 @class NSString;
 
-@protocol GKPeerPickerControllerDelegate
+@protocol GKPeerPickerControllerDelegate <NSObject>
 @optional
 - (void)peerPickerController:(GKPeerPickerController*)picker didSelectConnectionType:(GKPeerPickerConnectionType)type;
 - (GKSession*)peerPickerController:(GKPeerPickerController*)picker sessionForConnectionType:(GKPeerPickerConnectionType)type;

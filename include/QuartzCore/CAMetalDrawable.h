@@ -16,11 +16,12 @@
 #pragma once
 
 #import <QuartzCore/CoreAnimationExport.h>
+#import <Metal/MTLDrawable.h>
 
 @protocol MTLTexture;
 @class CAMetalLayer;
 
-@protocol CAMetalDrawable
+@protocol CAMetalDrawable <MTLDrawable>
 
 @required
 @property (readonly) id<MTLTexture> texture;

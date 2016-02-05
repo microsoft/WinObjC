@@ -16,10 +16,11 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKAchievementViewController;
 
-@protocol GKAchievementViewControllerDelegate
+@protocol GKAchievementViewControllerDelegate <NSObject>
 @required
 - (void)achievementViewControllerDidFinish:(GKAchievementViewController*)viewController;
 @end

@@ -17,7 +17,7 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 #import <CoreMedia/CMTimeRange.h>
 
 @class AVVideoComposition;
@@ -26,7 +26,7 @@
 @class AVVideoCompositionLayerInstruction;
 @class AVAsset;
 
-@protocol AVVideoCompositionValidationHandling
+@protocol AVVideoCompositionValidationHandling <NSObject>
 @optional
 - (BOOL)videoComposition:(AVVideoComposition*)videoComposition shouldContinueValidatingAfterFindingInvalidValueForKey:(NSString*)key;
 - (BOOL)videoComposition:(AVVideoComposition*)videoComposition shouldContinueValidatingAfterFindingEmptyTimeRange:(CMTimeRange)timeRange;

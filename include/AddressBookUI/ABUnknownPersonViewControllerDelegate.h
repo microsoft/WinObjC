@@ -15,14 +15,14 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 #import <AddressBookUI/AddressBookUIExport.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABMultiValue.h>
 
 @class ABUnknownPersonViewController;
 
-@protocol ABUnknownPersonViewControllerDelegate
+@protocol ABUnknownPersonViewControllerDelegate <NSObject>
 @required
 - (void)unknownPersonViewController:(ABUnknownPersonViewController*)unknownPersonView didResolveToPerson:(ABRecordRef)person;
 

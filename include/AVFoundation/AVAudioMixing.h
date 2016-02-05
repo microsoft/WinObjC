@@ -17,7 +17,9 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <AVFoundation/AVAudio3DMixing.h>
+#import <AVFoundation/AVAudioStereoMixing.h>
 
-@protocol AVAudioMixing
+@protocol AVAudioMixing <AVAudio3DMixing, AVAudioStereoMixing>
 @property (nonatomic) float volume;
 @end

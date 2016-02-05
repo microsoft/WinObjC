@@ -16,12 +16,13 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class MKReverseGeocoder;
 @class MKPlacemark;
 @class NSError;
 
-@protocol MKReverseGeocoderDelegate
+@protocol MKReverseGeocoderDelegate <NSObject>
 - (void)reverseGeocoder:(MKReverseGeocoder*)geocoder didFindPlacemark:(MKPlacemark*)placemark;
 - (void)reverseGeocoder:(MKReverseGeocoder*)geocoder didFailWithError:(NSError*)error;
 @end

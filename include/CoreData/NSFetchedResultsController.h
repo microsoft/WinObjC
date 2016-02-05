@@ -65,7 +65,7 @@ COREDATA_EXPORT_CLASS
 @property (nonatomic, readonly) NSString* indexTitle;
 @end
 
-@protocol NSFetchedResultsControllerDelegate
+@protocol NSFetchedResultsControllerDelegate <NSObject>
 @optional
 - (void)controllerWillChangeContent:(NSFetchedResultsController*)controller;
 - (void)controller:(NSFetchedResultsController*)controller

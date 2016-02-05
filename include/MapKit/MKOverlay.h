@@ -18,8 +18,9 @@
 #import <MapKit/MapKitExport.h>
 #import <CoreLocation/CLLocation.h>
 #import <MapKit/MapKitDataTypes.h>
+#import <MapKit/MKAnnotation.h>
 
-@protocol MKOverlay
+@protocol MKOverlay <MKAnnotation>
 @required
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, readonly) MKMapRect boundingMapRect;

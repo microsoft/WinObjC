@@ -16,12 +16,12 @@
 #pragma once
 
 #import <iAd/iAdExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class ADInterstitialAd;
 @class NSError;
 
-@protocol ADInterstitialAdDelegate
+@protocol ADInterstitialAdDelegate <NSObject>
 @optional
 - (void)interstitialAdWillLoad:(ADInterstitialAd*)interstitialAd;
 - (void)interstitialAdDidLoad:(ADInterstitialAd*)interstitialAd;

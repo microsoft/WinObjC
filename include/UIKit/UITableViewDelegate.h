@@ -17,6 +17,7 @@
 
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UITableViewCell.h>
+#import <UIKit/UIScrollView.h>
 
 @class UITableView;
 @class NSIndexPath;
@@ -27,7 +28,7 @@
 @class UITableViewFocusUpdateContext;
 @class UIFocusAnimationCoordinator;
 
-@protocol UITableViewDelegate
+@protocol UITableViewDelegate <UIScrollViewDelegate>
 @optional
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (CGFloat)tableView:(UITableView*)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath*)indexPath;

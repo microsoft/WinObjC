@@ -15,14 +15,14 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 #import <AddressBookUI/AddressBookUIExport.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABMultiValue.h>
 
 @class ABPeoplePickerNavigationController;
 
-@protocol ABPeoplePickerNavigationControllerDelegate
+@protocol ABPeoplePickerNavigationControllerDelegate <NSObject>
 @optional
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController*)peoplePicker
       shouldContinueAfterSelectingPerson:(ABRecordRef)person;

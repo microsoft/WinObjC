@@ -16,6 +16,7 @@
 #pragma once
 
 #import <HomeKit/HomeKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class HMAccessory;
 @class HMActionSet;
@@ -28,7 +29,7 @@
 @class HMUser;
 @class HMZone;
 
-@protocol HMHomeDelegate
+@protocol HMHomeDelegate <NSObject>
 @optional
 - (void)homeDidUpdateName:(HMHome*)home;
 - (void)home:(HMHome*)home didAddAccessory:(HMAccessory*)accessory;

@@ -17,12 +17,12 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class AVAudioPlayer;
 @class NSError;
 
-@protocol AVAudioPlayerDelegate
+@protocol AVAudioPlayerDelegate <NSObject>
 @optional
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer*)player successfully:(BOOL)flag;
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer*)player error:(NSError*)error;

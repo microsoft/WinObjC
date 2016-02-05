@@ -16,7 +16,7 @@
 #pragma once
 
 #import <GamePlayKit/GameplayKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class NSArray;
 @protocol GKGameModelPlayer;
@@ -25,7 +25,7 @@
 #define GKGameModelMaxScore (1 << 24)
 #define GKGameModelMinScore (-(1 << 24))
 
-@protocol GKGameModel
+@protocol GKGameModel <NSCopying, NSObject>
 @property (nonatomic, readonly) NSArray* players;
 @property (nonatomic, readonly) id<GKGameModelPlayer> activePlayer;
 - (NSArray*)gameModelUpdatesForPlayer:(id<GKGameModelPlayer>)player;

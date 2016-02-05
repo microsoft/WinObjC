@@ -17,6 +17,7 @@
 
 #import <Metal/MetalDataTypes.h>
 #import <Metal/MetalExport.h>
+#import <Metal/MTLCommandEncoder.h>
 #import <Foundation/NSRange.h>
 
 @protocol MTLComputePipelineState;
@@ -24,7 +25,7 @@
 @protocol MTLTexture;
 @protocol MTLSamplerState;
 
-@protocol MTLComputeCommandEncoder
+@protocol MTLComputeCommandEncoder <MTLCommandEncoder>
 
 - (void)setComputePipelineState:(id<MTLComputePipelineState>)state;
 - (void)setBuffer:(id<MTLBuffer>)buffer offset:(NSUInteger)offset atIndex:(NSUInteger)index;

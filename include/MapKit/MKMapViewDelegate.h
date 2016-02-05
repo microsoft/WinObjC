@@ -30,7 +30,7 @@
 @protocol MKOverlay;
 @class MKOverlayView;
 
-@protocol MKMapViewDelegate
+@protocol MKMapViewDelegate <NSObject>
 @optional
 - (void)mapView:(MKMapView*)mapView regionWillChangeAnimated:(BOOL)animated;
 - (void)mapView:(MKMapView*)mapView regionDidChangeAnimated:(BOOL)animated;

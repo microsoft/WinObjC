@@ -16,14 +16,14 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class GKVoiceChatService;
 @class NSData;
 @class NSError;
 
-@protocol GKVoiceChatClient
+@protocol GKVoiceChatClient <NSObject>
 @required
 - (NSString*)participantID;
 - (void)voiceChatService:(GKVoiceChatService*)voiceChatService sendData:(NSData*)data toParticipantID:(NSString*)participantID;

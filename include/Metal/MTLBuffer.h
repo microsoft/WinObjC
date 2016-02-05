@@ -17,11 +17,12 @@
 
 #import <Metal/MetalExport.h>
 #import <Foundation/NSObjCRuntime.h>
+#import <Metal/MTLResource.h>
 
 @protocol MTLTexture;
 @class MTLTextureDescriptor;
 
-@protocol MTLBuffer
+@protocol MTLBuffer <MTLResource>
 
 @property (readonly) NSUInteger length;
 

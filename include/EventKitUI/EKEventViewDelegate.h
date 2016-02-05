@@ -16,10 +16,12 @@
 #pragma once
 
 #import <EventKitUI/EventKitUIExport.h>
+#import <Foundation/NSObject.h>
+
 @class EKEventViewController;
 
 typedef enum { EKEventViewActionDone, EKEventViewActionResponded, EKEventViewActionDeleted } EKEventViewAction;
-@protocol EKEventViewDelegate
+@protocol EKEventViewDelegate <NSObject>
 @required
 - (void)eventViewController:(EKEventViewController*)controller didCompleteWithAction:(EKEventViewAction)action;
 @end

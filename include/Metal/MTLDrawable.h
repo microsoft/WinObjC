@@ -17,8 +17,9 @@
 
 #import <CoreFoundation/CFDate.h>
 #import <Metal/MetalExport.h>
+#import <Foundation/NSObject.h>
 
-@protocol MTLDrawable
+@protocol MTLDrawable <NSObject>
 
 - (void)present;
 - (void)presentAtTime:(CFTimeInterval)presentationTime;

@@ -16,9 +16,11 @@
 #pragma once
 
 #import <EventKitUI/EventKitUIExport.h>
+#import <Foundation/NSObject.h>
+
 @class EKCalendarChooser;
 
-@protocol EKCalendarChooserDelegate
+@protocol EKCalendarChooserDelegate <NSObject>
 @optional
 - (void)calendarChooserSelectionDidChange:(EKCalendarChooser*)calendarChooser;
 - (void)calendarChooserDidFinish:(EKCalendarChooser*)calendarChooser;

@@ -16,6 +16,7 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKMatchmakerViewController;
 @class GKMatch;
@@ -24,7 +25,7 @@
 @class GKPlayer;
 @class NSString;
 
-@protocol GKMatchmakerViewControllerDelegate
+@protocol GKMatchmakerViewControllerDelegate <NSObject>
 @optional
 - (void)matchmakerViewController:(GKMatchmakerViewController*)viewController didFindMatch:(GKMatch*)match;
 - (void)matchmakerViewController:(GKMatchmakerViewController*)viewController didFindHostedPlayers:(NSArray*)players;

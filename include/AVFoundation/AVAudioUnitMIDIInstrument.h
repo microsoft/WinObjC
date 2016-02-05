@@ -37,5 +37,13 @@ AVFOUNDATION_EXPORT_CLASS
 - (void)sendProgramChange:(uint8_t)program onChannel:(uint8_t)channel STUB_METHOD;
 - (void)startNote:(uint8_t)note withVelocity:(uint8_t)velocity onChannel:(uint8_t)channel STUB_METHOD;
 - (void)stopNote:(uint8_t)note onChannel:(uint8_t)channel STUB_METHOD;
+
+@property (nonatomic) float obstruction STUB_PROPERTY;
+@property (nonatomic) float occlusion STUB_PROPERTY;
+@property (nonatomic) AVAudio3DPoint position STUB_PROPERTY;
+@property (nonatomic) float rate STUB_PROPERTY;
+@property (nonatomic) AVAudio3DMixingRenderingAlgorithm renderingAlgorithm STUB_PROPERTY;
+@property (nonatomic) float reverbBlend STUB_PROPERTY;
+@property (nonatomic) float pan STUB_PROPERTY;
 @property (nonatomic) float volume STUB_PROPERTY;
 @end

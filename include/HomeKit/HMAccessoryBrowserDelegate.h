@@ -16,11 +16,12 @@
 #pragma once
 
 #import <HomeKit/HomeKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class HMAccessoryBrowser;
 @class HMAccessory;
 
-@protocol HMAccessoryBrowserDelegate
+@protocol HMAccessoryBrowserDelegate <NSObject>
 @optional
 - (void)accessoryBrowser:(HMAccessoryBrowser*)browser didFindNewAccessory:(HMAccessory*)accessory;
 - (void)accessoryBrowser:(HMAccessoryBrowser*)browser didRemoveNewAccessory:(HMAccessory*)accessory;

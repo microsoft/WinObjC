@@ -16,11 +16,12 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @protocol MTLDevice;
 
-@protocol MTLCommandEncoder
+@protocol MTLCommandEncoder <NSObject>
 
 @property (readonly)id<MTLDevice> device;
 @property (copy, atomic) NSString* label;

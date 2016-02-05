@@ -17,12 +17,13 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class SKPaymentQueue;
 @class NSArray;
 @class NSError;
 
-@protocol SKPaymentTransactionObserver
+@protocol SKPaymentTransactionObserver <NSObject>
 @required
 - (void)paymentQueue:(SKPaymentQueue*)queue updatedTransactions:(NSArray*)transactions;
 @optional

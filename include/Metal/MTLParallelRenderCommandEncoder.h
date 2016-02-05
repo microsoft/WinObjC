@@ -16,10 +16,11 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
+#import <Metal/MTLCommandEncoder.h>
 
 @protocol MTLRenderCommandEncoder;
 
-@protocol MTLParallelRenderCommandEncoder
+@protocol MTLParallelRenderCommandEncoder <MTLCommandEncoder>
 
 - (id<MTLRenderCommandEncoder>)renderCommandEncoder;
 

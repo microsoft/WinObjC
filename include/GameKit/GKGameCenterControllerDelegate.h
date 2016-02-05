@@ -16,10 +16,11 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKGameCenterViewController;
 
-@protocol GKGameCenterControllerDelegate
+@protocol GKGameCenterControllerDelegate <NSObject>
 @required
 - (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController*)gameCenterViewController;
 @end

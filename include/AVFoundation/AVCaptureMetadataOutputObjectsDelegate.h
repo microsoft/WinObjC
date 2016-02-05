@@ -17,12 +17,13 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVCaptureOutput;
 @class NSArray;
 @class AVCaptureConnection;
 
-@protocol AVCaptureMetadataOutputObjectsDelegate
+@protocol AVCaptureMetadataOutputObjectsDelegate <NSObject>
 @optional
 - (void)captureOutput:(AVCaptureOutput*)captureOutput
     didOutputMetadataObjects:(NSArray*)metadataObjects

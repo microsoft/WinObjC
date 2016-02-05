@@ -16,12 +16,13 @@
 #pragma once
 
 #import <HomeKit/HomeKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class HMAccessory;
 @class HMService;
 @class HMCharacteristic;
 
-@protocol HMAccessoryDelegate
+@protocol HMAccessoryDelegate <NSObject>
 @optional
 - (void)accessoryDidUpdateName:(HMAccessory*)accessory;
 - (void)accessoryDidUpdateReachability:(HMAccessory*)accessory;

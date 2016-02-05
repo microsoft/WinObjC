@@ -121,7 +121,7 @@ UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotificatio
 
 // ----------------------------------------
 
-@protocol UIAccessibilityIdentification
+@protocol UIAccessibilityIdentification <NSObject>
 
 @property (copy) NSString* accessibilityIdentifier;
 

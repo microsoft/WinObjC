@@ -16,11 +16,12 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKPlayer;
 @class GKChallenge;
 
-@protocol GKChallengeListener
+@protocol GKChallengeListener <NSObject>
 @optional
 - (void)player:(GKPlayer*)player didReceiveChallenge:(GKChallenge*)challenge;
 - (void)player:(GKPlayer*)player wantsToPlayChallenge:(GKChallenge*)challenge;

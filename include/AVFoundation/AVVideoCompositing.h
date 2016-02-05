@@ -17,12 +17,13 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVAsynchronousVideoCompositionRequest;
 @class AVVideoCompositionRenderContext;
 @class NSDictionary;
 
-@protocol AVVideoCompositing
+@protocol AVVideoCompositing <NSObject>
 - (void)startVideoCompositionRequest:(AVAsynchronousVideoCompositionRequest*)asyncVideoCompositionRequest;
 @optional
 - (void)cancelAllPendingVideoCompositionRequests;

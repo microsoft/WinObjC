@@ -22,7 +22,7 @@
 @class AVCaptureOutput;
 @class AVCaptureConnection;
 
-@protocol AVCaptureVideoDataOutputSampleBufferDelegate
+@protocol AVCaptureVideoDataOutputSampleBufferDelegate <NSObject>
 @optional
 - (void)captureOutput:(AVCaptureOutput*)captureOutput
 didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer

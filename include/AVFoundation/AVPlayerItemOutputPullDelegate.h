@@ -17,10 +17,11 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVPlayerItemOutput;
 
-@protocol AVPlayerItemOutputPullDelegate
+@protocol AVPlayerItemOutputPullDelegate <NSObject>
 @optional
 - (void)outputMediaDataWillChange:(AVPlayerItemOutput*)sender;
 - (void)outputSequenceWasFlushed:(AVPlayerItemOutput*)output;

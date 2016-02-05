@@ -16,7 +16,7 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @protocol MTLDevice;
 @class NSString;
@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, MTLPurgeableState) {
     MTLPurgeableStateEmpty = 4
 };
 
-@protocol MTLResource
+@protocol MTLResource <NSObject>
 
 @property (readonly) MTLCPUCacheMode cpuCacheMode;
 @property (readonly) MTLStorageMode storageMode;

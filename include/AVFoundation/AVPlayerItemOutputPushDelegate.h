@@ -17,10 +17,11 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVPlayerItemOutput;
 
-@protocol AVPlayerItemOutputPushDelegate
+@protocol AVPlayerItemOutputPushDelegate <NSObject>
 @optional
 - (void)outputSequenceWasFlushed:(AVPlayerItemOutput*)output;
 @end

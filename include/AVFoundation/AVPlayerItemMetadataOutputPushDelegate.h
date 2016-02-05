@@ -17,12 +17,13 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <AVFoundation/AVPlayerItemOutputPushDelegate.h>
 
 @class AVPlayerItemMetadataOutput;
 @class NSArray;
 @class AVPlayerItemTrack;
 
-@protocol AVPlayerItemMetadataOutputPushDelegate
+@protocol AVPlayerItemMetadataOutputPushDelegate <AVPlayerItemOutputPushDelegate>
 @optional
 - (void)metadataOutput:(AVPlayerItemMetadataOutput*)output
     didOutputTimedMetadataGroups:(NSArray*)groups

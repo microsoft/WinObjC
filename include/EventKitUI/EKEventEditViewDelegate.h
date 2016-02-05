@@ -16,11 +16,13 @@
 #pragma once
 
 #import <EventKitUI/EventKitUIExport.h>
+#import <Foundation/NSObject.h>
+
 @class EKEventEditViewController;
 @class EKCalendar;
 
 typedef enum { EKEventEditViewActionCanceled, EKEventEditViewActionSaved, EKEventEditViewActionDeleted } EKEventEditViewAction;
-@protocol EKEventEditViewDelegate
+@protocol EKEventEditViewDelegate <NSObject>
 @required
 - (void)eventEditViewController:(EKEventEditViewController*)controller didCompleteWithAction:(EKEventEditViewAction)action;
 @optional

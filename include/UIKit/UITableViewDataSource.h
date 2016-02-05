@@ -24,7 +24,7 @@
 @class NSArray;
 @class NSString;
 
-@protocol UITableViewDataSource
+@protocol UITableViewDataSource <NSObject>
 
 @required
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;

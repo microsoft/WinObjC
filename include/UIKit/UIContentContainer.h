@@ -21,7 +21,7 @@
 @protocol UIViewControllerTransitionCoordinator;
 @class UITraitCollection;
 
-@protocol UIContentContainer
+@protocol UIContentContainer <NSObject>
 @required
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 - (void)willTransitionToTraitCollection:(UITraitCollection*)newCollection

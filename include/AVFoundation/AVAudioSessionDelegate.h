@@ -17,9 +17,9 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
-@protocol AVAudioSessionDelegate
+@protocol AVAudioSessionDelegate <NSObject>
 @optional
 - (void)beginInterruption;
 - (void)endInterruption;

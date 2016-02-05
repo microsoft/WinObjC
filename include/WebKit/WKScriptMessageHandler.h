@@ -17,10 +17,11 @@
 #pragma once
 
 #import <WebKit/WebKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class WKUserContentController;
 @class WKScriptMessage;
 
-@protocol WKScriptMessageHandler
+@protocol WKScriptMessageHandler <NSObject>
 - (void)userContentController:(WKUserContentController*)userContentController didReceiveScriptMessage:(WKScriptMessage*)message;
 @end

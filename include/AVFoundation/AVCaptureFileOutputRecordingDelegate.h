@@ -17,13 +17,14 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
 @class AVCaptureFileOutput;
 @class NSURL;
 @class NSArray;
 @class NSError;
 
-@protocol AVCaptureFileOutputRecordingDelegate
+@protocol AVCaptureFileOutputRecordingDelegate <NSObject>
 @optional
 - (void)captureOutput:(AVCaptureFileOutput*)captureOutput
     didStartRecordingToOutputFileAtURL:(NSURL*)fileURL

@@ -16,11 +16,12 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
+#import <Foundation/NSObject.h>
 
 @class MPMediaPickerController;
 @class MPMediaItemCollection;
 
-@protocol MPMediaPickerControllerDelegate
+@protocol MPMediaPickerControllerDelegate <NSObject>
 
 @optional
 - (void)mediaPicker:(MPMediaPickerController*)mediaPicker didPickMediaItems:(MPMediaItemCollection*)mediaItemCollection;

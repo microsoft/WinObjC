@@ -38,8 +38,7 @@
 
 #import "UIView.h"
 
-@protocol UIPickerViewDataSource
-, UIPickerViewDelegate;
+@protocol UIPickerViewDataSource, UIPickerViewDelegate;
 
 @class UIPickerSubView;
 

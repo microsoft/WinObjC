@@ -22,7 +22,7 @@
 
 @class CLVisit;
 
-@protocol CLLocationManagerDelegate
+@protocol CLLocationManagerDelegate <NSObject>
 @optional
 - (void)locationManager:(CLLocationManager*)manager didUpdateLocations:(NSArray*)locations;
 

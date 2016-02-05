@@ -16,10 +16,11 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKLeaderboardViewController;
 
-@protocol GKLeaderboardViewControllerDelegate
+@protocol GKLeaderboardViewControllerDelegate <NSObject>
 @required
 - (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController*)viewController;
 @end

@@ -17,10 +17,11 @@
 
 #import <AudioUnit/AudioUnitExport.h>
 #import <AudioUnit/AudioComponent.h>
+#import <Foundation/NSExtensionRequestHandling.h>
 
 @class AUAudioUnit;
 @class NSError;
 
-@protocol AUAudioUnitFactory
+@protocol AUAudioUnitFactory <NSExtensionRequestHandling>
 - (AUAudioUnit*)createAudioUnitWithComponentDescription:(AudioComponentDescription)desc error:(NSError* _Nullable*)error;
 @end

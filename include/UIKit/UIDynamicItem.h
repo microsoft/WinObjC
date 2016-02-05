@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, UIDynamicItemCollisionBoundsType) {
     UIDynamicItemCollisionBoundsTypePath
 };
 
-@protocol UIDynamicItem
+@protocol UIDynamicItem <NSObject>
 @required
 @property (nonatomic, readonly) CGRect bounds;
 @property (nonatomic, readwrite) CGPoint center;

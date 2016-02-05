@@ -16,11 +16,11 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @protocol MTLDevice;
 
-@protocol MTLComputePipelineState
+@protocol MTLComputePipelineState <NSObject>
 
 @property (readonly) NSUInteger maxTotalThreadsPerThreadgroup;
 @property (readonly) NSUInteger threadExecutionWidth;

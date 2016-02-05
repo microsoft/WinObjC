@@ -17,6 +17,7 @@
 
 #import <Metal/MetalExport.h>
 #import <Metal/MetalDataTypes.h>
+#import <Metal/MTLCommandEncoder.h>
 #import <Foundation/NSRange.h>
 
 @protocol MTLDepthStencilState;
@@ -46,7 +47,7 @@ typedef NS_ENUM(NSUInteger, MTLWinding) { MTLWindingClockwise = 0, MTLWindingCou
 typedef NS_ENUM(NSUInteger, MTLDepthClipMode) { MTLDepthClipModeClip = 0, MTLDepthClipModeClamp = 1 };
 typedef NS_ENUM(NSUInteger, MTLTriangleFillMode) { MTLTriangleFillModeFill = 0, MTLTriangleFillModeLines = 1 };
 
-@protocol MTLRenderCommandEncoder
+@protocol MTLRenderCommandEncoder <MTLCommandEncoder>
 
 - (void)setBlendColorRed:(float)red green:(float)green blue:(float)blue alpha:(float)alpha;
 - (void)setCullMode:(MTLCullMode)cullMode;

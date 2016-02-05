@@ -16,10 +16,11 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class UITraitCollection;
 
-@protocol UITraitEnvironment
+@protocol UITraitEnvironment <NSObject>
 @required
 @property (nonatomic, readonly) UITraitCollection* traitCollection;
 - (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;

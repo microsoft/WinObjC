@@ -17,14 +17,14 @@
 #pragma once
 
 #import <AVFoundation/AVFoundationExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class AVAssetResourceLoader;
 @class AVAssetResourceLoadingRequest;
 @class AVAssetResourceRenewalRequest;
 @class NSURLAuthenticationChallenge;
 
-@protocol AVAssetResourceLoaderDelegate
+@protocol AVAssetResourceLoaderDelegate <NSObject>
 @optional
 - (BOOL)resourceLoader:(AVAssetResourceLoader*)resourceLoader
     shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest*)loadingRequest;

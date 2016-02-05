@@ -15,7 +15,7 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 #import <Metal/MetalDataTypes.h>
 #import <Metal/MetalExport.h>
 #import <Metal/MTLResource.h>
@@ -40,7 +40,7 @@
 @protocol MTLSamplerState;
 @protocol MTLDepthStencilState;
 @protocol MTLFunction;
-@protocol MTLDevice
+@protocol MTLDevice <NSObject>
 
 typedef __autoreleasing MTLRenderPipelineReflection* MTLAutoreleasedRenderPipelineReflection;
 typedef __autoreleasing MTLComputePipelineReflection* MTLAutoreleasedComputePipelineReflection;

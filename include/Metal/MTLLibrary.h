@@ -16,7 +16,7 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class NSArray;
 @class NSString;
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, MTLLanguageVersion) {
 METAL_EXPORT NSString* const MTLLibraryErrorDomain;
 METAL_EXPORT NSString* const MTLRenderPipelineErrorDomain;
 
-@protocol MTLLibrary
+@protocol MTLLibrary <NSObject>
 
 @property (readonly)NSArray* functionNames;
 @property (readonly)id<MTLDevice> device;

@@ -16,6 +16,7 @@
 #pragma once
 
 #import <CoreBluetooth/CoreBluetoothExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class CBCentralManager;
@@ -37,7 +38,7 @@ COREBLUETOOTH_EXPORT NSString* const CBAdvertisementDataTxPowerLevelKey;
 COREBLUETOOTH_EXPORT NSString* const CBAdvertisementDataIsConnectable;
 COREBLUETOOTH_EXPORT NSString* const CBAdvertisementDataSolicitedServiceUUIDsKey;
 
-@protocol CBCentralManagerDelegate
+@protocol CBCentralManagerDelegate <NSObject>
 @required
 - (void)centralManagerDidUpdateState:(CBCentralManager*)central;
 @optional

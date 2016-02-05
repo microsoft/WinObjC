@@ -16,11 +16,12 @@
 #pragma once
 
 #import <HomeKit/HomeKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class HMHomeManager;
 @class HMHome;
 
-@protocol HMHomeManagerDelegate
+@protocol HMHomeManagerDelegate <NSObject>
 @optional
 - (void)homeManager:(HMHomeManager*)manager didAddHome:(HMHome*)home;
 - (void)homeManager:(HMHomeManager*)manager didRemoveHome:(HMHome*)home;

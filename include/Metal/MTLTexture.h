@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, MTLTextureUsage) {
     MTLTextureUsagePixelFormatView = 0x0010,
 };
 
-@protocol MTLTexture
+@protocol MTLTexture <MTLResource>
 
 @property (readonly)MTLTextureType textureType;
 @property (readonly)MTLPixelFormat pixelFormat;

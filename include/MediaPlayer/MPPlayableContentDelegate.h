@@ -16,12 +16,13 @@
 #pragma once
 
 #import <MediaPlayer/MediaPlayerExport.h>
+#import <Foundation/NSObject.h>
 
 @class MPPlayableContentManager;
 @class NSIndexPath;
 @class NSError;
 
-@protocol MPPlayableContentDelegate
+@protocol MPPlayableContentDelegate <NSObject>
 
 @optional
 - (void)playableContentManager:(MPPlayableContentManager*)contentManager

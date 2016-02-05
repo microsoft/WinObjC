@@ -16,7 +16,7 @@
 #pragma once
 
 #import <Metal/MetalExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class NSArray;
@@ -24,7 +24,7 @@
 
 typedef NS_ENUM(NSUInteger, MTLFunctionType) { MTLFunctionTypeVertex = 1, MTLFunctionTypeFragment = 2, MTLFunctionTypeKernel = 3 };
 
-@protocol MTLFunction
+@protocol MTLFunction <NSObject>
 
 @property (readonly) NSString* name;
 @property (readonly) MTLFunctionType functionType;

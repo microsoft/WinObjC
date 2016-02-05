@@ -24,6 +24,14 @@
 AVFOUNDATION_EXPORT_CLASS
 @interface AVAudioUnitGenerator : AVAudioUnit <AVAudioMixing>
 - (instancetype)initWithAudioComponentDescription:(AudioComponentDescription)audioComponentDescription STUB_METHOD;
+
+@property (nonatomic) float obstruction STUB_PROPERTY;
+@property (nonatomic) float occlusion STUB_PROPERTY;
+@property (nonatomic) AVAudio3DPoint position STUB_PROPERTY;
+@property (nonatomic) float rate STUB_PROPERTY;
+@property (nonatomic) AVAudio3DMixingRenderingAlgorithm renderingAlgorithm STUB_PROPERTY;
+@property (nonatomic) float reverbBlend STUB_PROPERTY;
+@property (nonatomic) float pan STUB_PROPERTY;
 @property (nonatomic) float volume STUB_PROPERTY;
 @property (nonatomic) BOOL bypass STUB_PROPERTY;
 @end

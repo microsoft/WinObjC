@@ -28,6 +28,13 @@
 
 AVFOUNDATION_EXPORT_CLASS
 @interface AVAudioEnvironmentNode : AVAudioNode <AVAudioMixing>
+@property (nonatomic) float obstruction STUB_PROPERTY;
+@property (nonatomic) float occlusion STUB_PROPERTY;
+@property (nonatomic) AVAudio3DPoint position STUB_PROPERTY;
+@property (nonatomic) float rate STUB_PROPERTY;
+@property (nonatomic) AVAudio3DMixingRenderingAlgorithm renderingAlgorithm STUB_PROPERTY;
+@property (nonatomic) float reverbBlend STUB_PROPERTY;
+@property (nonatomic) float pan STUB_PROPERTY;
 @property (nonatomic) float volume STUB_PROPERTY;
 @property (readonly, nonatomic) AVAudioEnvironmentDistanceAttenuationParameters* distanceAttenuationParameters STUB_PROPERTY;
 @property (nonatomic) AVAudio3DAngularOrientation listenerAngularOrientation STUB_PROPERTY;

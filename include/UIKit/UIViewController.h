@@ -41,7 +41,7 @@
 @class UITabBarController;
 @class UIStoryboardSegue;
 
-@protocol UILayoutSupport
+@protocol UILayoutSupport <NSObject>
 
 /**
  @Status Stub
@@ -200,7 +200,7 @@ UIKIT_EXPORT NSString* const UITransitionContextToViewControllerKey;
 UIKIT_EXPORT NSString* const UITransitionContextFromViewKey;
 UIKIT_EXPORT NSString* const UITransitionContextToViewKey;
 
-@protocol UIViewControllerContextTransitioning
+@protocol UIViewControllerContextTransitioning <NSObject>
 - (UIView*)containerView;
 - (UIViewController*)viewControllerForKey:(NSString*)key;
 - (void)completeTransition:(BOOL)animated;
@@ -218,7 +218,7 @@ UIKIT_EXPORT NSString* const UITransitionContextToViewKey;
 - (UIModalPresentationStyle)presentationStyle;
 @end
 
-@protocol UIViewControllerAnimatedTransitioning
+@protocol UIViewControllerAnimatedTransitioning <NSObject>
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext;
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
 - (void)animationEnded:(BOOL)transitionCompleted;
@@ -233,13 +233,13 @@ UIKIT_EXPORT NSString* const UITransitionContextToViewKey;
 - (void)finishInteractiveTransition;
 @end
 
-@protocol UIViewControllerInteractiveTransitioning
+@protocol UIViewControllerInteractiveTransitioning <NSObject>
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
 - (UIViewAnimationCurve)completionCurve;
 - completionSpeed;
 @end
 
-@protocol UIViewControllerTransitioningDelegate
+@protocol UIViewControllerTransitioningDelegate <NSObject>
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController*)presented
                                                                   presentingController:(UIViewController*)presenting
                                                                       sourceController:(UIViewController*)source;

@@ -16,12 +16,13 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKTurnBasedMatchmakerViewController;
 @class GKTurnBasedMatch;
 @class NSError;
 
-@protocol GKTurnBasedMatchmakerViewControllerDelegate
+@protocol GKTurnBasedMatchmakerViewControllerDelegate <NSObject>
 @optional
 - (void)turnBasedMatchmakerViewController:(GKTurnBasedMatchmakerViewController*)viewController didFindMatch:(GKTurnBasedMatch*)match;
 - (void)turnBasedMatchmakerViewController:(GKTurnBasedMatchmakerViewController*)viewController playerQuitForMatch:(GKTurnBasedMatch*)match;

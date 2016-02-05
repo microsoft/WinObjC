@@ -16,8 +16,8 @@
 #pragma once
 
 #import <GamePlayKit/GameplayKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
-@protocol GKGameModelUpdate
+@protocol GKGameModelUpdate <NSObject>
 @property (nonatomic, assign) NSInteger value;
 @end

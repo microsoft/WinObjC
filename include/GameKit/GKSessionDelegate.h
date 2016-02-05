@@ -22,7 +22,7 @@
 @class NSString;
 @class NSError;
 
-@protocol GKSessionDelegate
+@protocol GKSessionDelegate <NSObject>
 @optional
 - (void)session:(GKSession*)session peer:(NSString*)peerID didChangeState:(GKPeerConnectionState)state;
 - (void)session:(GKSession*)session didReceiveConnectionRequestFromPeer:(NSString*)peerID;

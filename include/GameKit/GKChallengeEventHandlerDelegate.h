@@ -16,11 +16,11 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class GKChallenge;
 
-@protocol GKChallengeEventHandlerDelegate
+@protocol GKChallengeEventHandlerDelegate <NSObject>
 @optional
 - (void)localPlayerDidSelectChallenge:(GKChallenge*)challenge;
 - (void)localPlayerDidReceiveChallenge:(GKChallenge*)challenge;

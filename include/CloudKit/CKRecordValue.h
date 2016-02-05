@@ -17,5 +17,7 @@
 #pragma once
 
 #import <CloudKit/CloudKitExport.h>
-@protocol CKRecordValue
+#import <Foundation/NSObject.h>
+
+@protocol CKRecordValue <NSObject>
 @end

@@ -16,12 +16,12 @@
 #pragma once
 
 #import <iAd/iAdExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @class ADBannerView;
 @class NSError;
 
-@protocol ADBannerViewDelegate
+@protocol ADBannerViewDelegate <NSObject>
 @optional
 - (void)bannerViewWillLoadAd:(ADBannerView*)banner;
 - (void)bannerViewDidLoadAd:(ADBannerView*)banner;

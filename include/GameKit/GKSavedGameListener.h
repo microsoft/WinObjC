@@ -16,12 +16,13 @@
 #pragma once
 
 #import <GameKit/GameKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class GKPlayer;
 @class NSArray;
 @class GKSavedGame;
 
-@protocol GKSavedGameListener
+@protocol GKSavedGameListener <NSObject>
 @optional
 - (void)player:(GKPlayer*)player hasConflictingSavedGames:(NSArray*)savedGames;
 - (void)player:(GKPlayer*)player didModifySavedGame:(GKSavedGame*)savedGame;

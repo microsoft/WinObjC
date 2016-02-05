@@ -17,11 +17,12 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
+#import <StoreKit/SKRequestDelegate.h>
 
 @class SKProductsRequest;
 @class SKProductsResponse;
 
-@protocol SKProductsRequestDelegate
+@protocol SKProductsRequestDelegate <SKRequestDelegate>
 @required
 - (void)productsRequest:(SKProductsRequest*)request didReceiveResponse:(SKProductsResponse*)response;
 @end

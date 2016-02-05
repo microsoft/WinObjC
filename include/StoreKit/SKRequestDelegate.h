@@ -17,11 +17,12 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class SKRequest;
 @class NSError;
 
-@protocol SKRequestDelegate
+@protocol SKRequestDelegate <NSObject>
 @optional
 - (void)requestDidFinish:(SKRequest*)request;
 - (void)request:(SKRequest*)request didFailWithError:(NSError*)error;

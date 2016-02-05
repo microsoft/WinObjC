@@ -20,7 +20,7 @@
 
 @class NSString;
 
-@protocol MKAnnotation
+@protocol MKAnnotation <NSObject>
 @required
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 

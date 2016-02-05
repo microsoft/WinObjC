@@ -17,10 +17,11 @@
 #pragma once
 
 #import <StoreKit/StoreKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class SKStoreProductViewController;
 
-@protocol SKStoreProductViewControllerDelegate
+@protocol SKStoreProductViewControllerDelegate <NSObject>
 @optional
 - (void)productViewControllerDidFinish:(SKStoreProductViewController*)viewController;
 @end

@@ -16,11 +16,12 @@
 #pragma once
 
 #import <AddressBookUI/AddressBookUIExport.h>
+#import <Foundation/NSObject.h>
 #import <AddressBook/ABRecord.h>
 
 @class ABNewPersonViewController;
 
-@protocol ABNewPersonViewControllerDelegate
+@protocol ABNewPersonViewControllerDelegate <NSObject>
 @required
 - (void)newPersonViewController:(ABNewPersonViewController*)newPersonViewController didCompleteWithNewPerson:(ABRecordRef)person;
 @end
