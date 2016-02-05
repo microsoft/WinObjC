@@ -20,7 +20,6 @@
 
 CFREGISTER_STRING(kCFRunLoopDefaultMode)
 CFREGISTER_STRING(kCFRunLoopCommonModes)
-const CFStringRef kCFBundleNameKey = (const CFStringRef) @"CFBundleName";
 
 CFAllocatorRef const kCFAllocatorDefault = 0;
 

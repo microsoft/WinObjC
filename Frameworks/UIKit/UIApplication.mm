@@ -51,8 +51,8 @@ typedef wchar_t WCHAR;
 
 #include "UWP/WindowsUINotifications.h"
 
-const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = StubConstant();
 const NSTimeInterval UIMinimumKeepAliveTimeout = StubConstant();
+const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax;
 
 NSString* const UIApplicationOpenSettingsURLString = @"UIApplicationOpenSettingsURLString";
 

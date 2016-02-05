@@ -373,8 +373,11 @@ LIBRARY Foundation
         CFStringAppend
         CFStringAppendCharacters
         CFStringCompare
+        CFStringTransform
         CFStringConvertEncodingToIANACharSetName
+        CFStringConvertIANACharSetNameToEncoding
         CFStringConvertNSStringEncodingToEncoding
+        CFStringConvertEncodingToNSStringEncoding
         CFStringGetCStringPtr
         CFStringGetFastestEncoding
         CFStringGetLength
@@ -407,6 +410,11 @@ LIBRARY Foundation
         kCFBooleanTrue DATA
         kCFBundleNameKey DATA
         kCFBundleVersionKey DATA
+        kCFBundleIdentifierKey DATA
+        kCFBundleInfoDictionaryVersionKey DATA
+        kCFBundleLocalizationsKey DATA
+        kCFBundleExecutableKey DATA
+        kCFBundleDevelopmentRegionKey DATA
         kCFCoreFoundationVersionNumber DATA
         kCFRunLoopCommonModes DATA
         kCFRunLoopDefaultMode DATA

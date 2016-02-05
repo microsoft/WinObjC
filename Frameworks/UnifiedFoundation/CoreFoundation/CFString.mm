@@ -106,6 +106,14 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
 }
 
 /**
+ @Status Stub
+*/
+CFStringEncoding CFStringConvertIANACharSetNameToEncoding(CFStringRef self) {
+    UNIMPLEMENTED();
+    return kCFStringEncodingUnicode;
+}
+
+/**
  @Status Interoperable
  @Notes Limited encodings supported
 */
@@ -133,4 +141,12 @@ CFIndex CFStringGetLength(CFStringRef self) {
 */
 CFStringEncoding CFStringGetFastestEncoding(CFStringRef self) {
     return CFStringConvertNSStringEncodingToEncoding([(NSString*)self fastestEncoding]);
+}
+
+/**
+ @Status Stub
+*/
+Boolean CFStringTransform(CFMutableStringRef string, CFRange* range, CFStringRef transform, Boolean reverse) {
+    UNIMPLEMENTED();
+    return false;
 }
