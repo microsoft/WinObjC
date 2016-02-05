@@ -288,6 +288,8 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUserDefaultsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSValueTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTestHelpers.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTests.m" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
@@ -295,6 +297,9 @@
       <DeploymentContent>true</DeploymentContent>
       <FileType>Text</FileType>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTestHelpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
