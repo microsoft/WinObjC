@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-enum {
-    kCGNormalWindowLevel,
-    kCGFloatingWindowLevel,
-    kCGTornOffMenuWindowLevel,
-    kCGMainMenuWindowLevel,
-    kCGStatusWindowLevel,
-    kCGModalPanelWindowLevel,
-    kCGPopUpMenuWindowLevel,
-    kCGScreenSaverWindowLevel,
-};
+#import <CoreGraphics/CoreGraphicsExport.h>
+#import <CoreFoundation/CFDate.h>
+
+COREGRAPHICS_EXPORT CFStringRef CGPDFStringCopyTextString(CGPDFStringRef string) STUB_METHOD;
+COREGRAPHICS_EXPORT CFDateRef CGPDFStringCopyDate(CGPDFStringRef string) STUB_METHOD;
+COREGRAPHICS_EXPORT const unsigned char* CGPDFStringGetBytePtr(CGPDFStringRef string) STUB_METHOD;
+COREGRAPHICS_EXPORT size_t CGPDFStringGetLength(CGPDFStringRef string) STUB_METHOD;

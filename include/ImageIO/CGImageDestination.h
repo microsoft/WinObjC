@@ -16,6 +16,7 @@
 #pragma once
 
 #import <ImageIO/ImageIOExport.h>
+#import <ImageIO/CGImageSource.h>
 
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFDictionary.h>
@@ -26,8 +27,6 @@
 
 #import <CoreGraphics/CGDataConsumer.h>
 #import <CoreGraphics/CGImage.h>
-
-#import <ImageIO/CGImageSource.h>
 
 typedef struct CGImageDestination* CGImageDestinationRef;
 
@@ -53,5 +52,3 @@ IMAGEIO_EXPORT CFArrayRef CGImageDestinationCopyTypeIdentifiers() STUB_METHOD;
 IMAGEIO_EXPORT CFTypeID CGImageDestinationGetTypeID() STUB_METHOD;
 IMAGEIO_EXPORT void CGImageDestinationSetProperties(CGImageDestinationRef idst, CFDictionaryRef properties) STUB_METHOD;
 IMAGEIO_EXPORT bool CGImageDestinationFinalize(CGImageDestinationRef idst) STUB_METHOD;
-
-

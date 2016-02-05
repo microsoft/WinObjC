@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,6 +14,39 @@
 //
 //******************************************************************************
 
-#import <stdint.h>
+#import <StubReturn.h>
+#import <CoreGraphics/CGPDFOperatorTable.h>
 
-typedef int32_t CGError;
+/**
+ @Status Stub
+ @Notes
+*/
+CGPDFOperatorTableRef CGPDFOperatorTableCreate() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGPDFOperatorTableSetCallback(CGPDFOperatorTableRef table, const char* name, CGPDFOperatorCallback callback) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPDFOperatorTableRef CGPDFOperatorTableRetain(CGPDFOperatorTableRef table) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGPDFOperatorTableRelease(CGPDFOperatorTableRef table) {
+    UNIMPLEMENTED();
+}

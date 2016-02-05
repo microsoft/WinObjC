@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,14 +14,14 @@
 //
 //******************************************************************************
 
-#include <math.h>
-#include <stdlib.h>
+#import <math.h>
+#import <stdlib.h>
+#import <Starboard.h>
 
-#include "Starboard.h"
-#include "CGContextImpl.h"
-#include "CGContextCairo.h"
+#import "CGContextImpl.h"
+#import "CGContextCairo.h"
 
-#include <cairoint.h>
+#import <cairoint.h>
 
 #pragma warning(push)
 #pragma warning(disable : 4146)

@@ -29,15 +29,14 @@
 
 typedef struct CGImageSource* CGImageSourceRef;
 
-enum CGImageSourceStatus {
+typedef enum CGImageSourceStatus {
     kCGImageStatusUnexpectedEOF = -5,
     kCGImageStatusInvalidData = -4,
     kCGImageStatusUnknownType = -3,
     kCGImageStatusReadingHeader = -2,
     kCGImageStatusIncomplete = -1,
     kCGImageStatusComplete = 0
-};
-typedef enum CGImageSourceStatus CGImageSourceStatus;
+} CGImageSourceStatus;
 
 IMAGEIO_EXPORT const CFStringRef kCGImageSourceTypeIdentifierHint;
 IMAGEIO_EXPORT const CFStringRef kCGImageSourceShouldAllowFloat;

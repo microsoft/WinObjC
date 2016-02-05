@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "CGColorSpaceInternal.h"
-#include "CGImageInternal.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UIKit/UIImage.h"
-#include "Foundation/NSData.h"
-#include "_CGLifetimeBridgingType.h"
-
-#include <math.h>
-#include <vector>
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <math.h>
+#import <vector>
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <Foundation/NSData.h>
+#import <UIKit/UIImage.h>
+#import "CGColorSpaceInternal.h"
+#import "CGImageInternal.h"
+#import "_CGLifetimeBridgingType.h"
 
 extern "C" {
-#include <png.h>
+#import <png.h>
 };
 
 @interface CGNSImage : _CGLifetimeBridgingType
@@ -56,7 +55,7 @@ __CGImage::__CGImage() {
     EbrDebugLog("Number of CGImages: %d created=%x\n", numCGImages, this);
 #endif
 
-    object_setClass((id)this, [CGNSImage class]);
+    object_setClass((id) this, [CGNSImage class]);
 }
 
 static std::vector<CGImageDestructionListener> _imageDestructionListeners;
@@ -93,18 +92,6 @@ CGImageRef CGImageBacking::CopyOnWrite() {
     CGImageRef ret;
 
     ret = new CGBitmapImage(_parent);
-
-    return ret;
-}
-
-/**
- @Status Stub
-*/
-const CGFloat* CGColorGetComponents(CGColorRef color) {
-    UNIMPLEMENTED();
-    float* ret = (float*)malloc(sizeof(float) * 4);
-
-    [color getColors:ret];
 
     return ret;
 }
@@ -877,4 +864,58 @@ void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL com
     EbrDebugLog("UIImageWriteToSavedPhotosAlbum not supported\n");
 
     [(_UIImageWriterCallback*)completionTarget image:nil didFinishSavingWithError:nil contextInfo:contextInfo];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+const CGFloat* CGImageGetDecode(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorRenderingIntent CGImageGetRenderingIntent(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGImageGetShouldInterpolate(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGImageGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGImageIsMask(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* components) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }

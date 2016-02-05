@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,28 +14,28 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
+#import <CoreGraphics/CGGeometry.h>
 
-#include "CoreGraphics/CGGeometry.h"
-#include "CGContextImpl.h"
-#include "CGImageInternal.h"
-#include "CGGradientInternal.h"
-#include "CGPatternInternal.h"
-#include "CGColorSpaceInternal.h"
-#include "CGContextCairo.h"
-#include "CGFontInternal.h"
+#import "CGContextImpl.h"
+#import "CGImageInternal.h"
+#import "CGGradientInternal.h"
+#import "CGPatternInternal.h"
+#import "CGColorSpaceInternal.h"
+#import "CGContextCairo.h"
+#import "CGFontInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
-#include "cairo-ft.h"
+#import "cairo-ft.h"
 
 extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
+#import <ft2build.h>
+#import FT_FREETYPE_H
+#import <ftglyph.h>
+#import <tttables.h>
+#import <ftadvanc.h>
+#import <ftsizes.h>
 }
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
@@ -43,10 +43,8 @@ static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizon
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
 static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
-CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage) : 
-    CGContextImpl(base, destinationImage), 
-    _drawContext(0), 
-    _filter(CAIRO_FILTER_BILINEAR) {
+CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
+    : CGContextImpl(base, destinationImage), _drawContext(0), _filter(CAIRO_FILTER_BILINEAR) {
 }
 
 CGContextCairo::~CGContextCairo() {

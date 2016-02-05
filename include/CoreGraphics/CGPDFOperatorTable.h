@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,8 +13,16 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
-#import <CoreGraphics/CGError.h>
+#import <CoreGraphics/CGPDFSCanner.h>
 
-COREGRAPHICS_EXPORT CGError CGReleaseAllDisplays(void);
+typedef void (*CGPDFOperatorCallback)(CGPDFScannerRef scanner, void* info);
+
+COREGRAPHICS_EXPORT CGPDFOperatorTableRef CGPDFOperatorTableCreate() STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPDFOperatorTableSetCallback(CGPDFOperatorTableRef table,
+                                                       const char* name,
+                                                       CGPDFOperatorCallback callback) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFOperatorTableRef CGPDFOperatorTableRetain(CGPDFOperatorTableRef table) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPDFOperatorTableRelease(CGPDFOperatorTableRef table) STUB_METHOD;

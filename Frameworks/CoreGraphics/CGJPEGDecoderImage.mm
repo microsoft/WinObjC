@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,16 @@
 //
 //******************************************************************************
 
-#include <math.h>
-#include <stdlib.h>
-#include "Starboard.h"
-#include "CGContextInternal.h"
-#include "UIKit/UIImage.h"
+#import <Starboard.h>
+#import <math.h>
+#import <stdlib.h>
+#import <UIKit/UIImage.h>
+#import "CGContextInternal.h"
 
 #define EXTERN(type) extern type
 
 extern "C" {
-#include <jpeglib.h>
+#import <jpeglib.h>
 };
 
 CGJPEGDecoderImage::CGJPEGDecoderImage(const char* filename) {

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,28 +14,31 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "CGContextInternal.h"
-#include "CGFontInternal.h"
-#include "UIFontInternal.h"
-
-#include "Etc.h"
-
-#include <vector>
-#include <map>
-#include <algorithm>
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <algorithm>
+#import <vector>
+#import <map>
+#import "CGContextInternal.h"
+#import "CGFontInternal.h"
+#import "UIFontInternal.h"
+#import "Etc.h"
 
 extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
-#include <ftsnames.h>
-#include <ttnameid.h>
+#import <ft2build.h>
+#import FT_FREETYPE_H
+#import <ftglyph.h>
+#import <tttables.h>
+#import <ftadvanc.h>
+#import <ftsizes.h>
+#import <ftsnames.h>
+#import <ttnameid.h>
 }
+
+const CFStringRef kCGFontVariationAxisName = static_cast<CFStringRef>(@"kCGFontVariationAxisName");
+const CFStringRef kCGFontVariationAxisMinValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMinValue");
+const CFStringRef kCGFontVariationAxisMaxValue = static_cast<CFStringRef>(@"kCGFontVariationAxisMaxValue");
+const CFStringRef kCGFontVariationAxisDefaultValue = static_cast<CFStringRef>(@"kCGFontVariationAxisDefaultValue");
 
 DWORD CGFontGetFontBBox(CGRect* ret, id font);
 
@@ -624,6 +627,139 @@ int CGFontGetCapHeight(CGFontRef font) {
     }
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGFontCanCreatePostScriptSubset(CGFontRef font, CGFontPostScriptFormat format) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFStringRef CGFontCopyGlyphNameForGlyph(CGFontRef font, CGGlyph glyph) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFStringRef CGFontCopyPostScriptName(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFArrayRef CGFontCopyTableTags(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFArrayRef CGFontCopyVariationAxes(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFDictionaryRef CGFontCopyVariations(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGFontRef CGFontCreateCopyWithVariations(CGFontRef font, CFDictionaryRef variations) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFDataRef CGFontCreatePostScriptEncoding(CGFontRef font, const CGGlyph encoding[256]) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFDataRef CGFontCreatePostScriptSubset(CGFontRef font,
+                                       CFStringRef subsetName,
+                                       CGFontPostScriptFormat format,
+                                       const CGGlyph* glyphs,
+                                       size_t count,
+                                       const CGGlyph encoding[256]) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGGlyph CGFontGetGlyphWithGlyphName(CGFontRef font, CFStringRef name) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGFloat CGFontGetItalicAngle(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+size_t CGFontGetNumberOfGlyphs(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGFloat CGFontGetStemV(CGFontRef font) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGFontGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+// TODO: functions below are not part of offical exports, but they are also exported
+// to be used by other framework components, we should consider moving them to a shared library
 unsigned long CGFontGetGlyphsForUnichars(id font, unsigned short* chars, unsigned short* glyphs, int num) {
     CGFontGetGlyphs(font, chars, num, glyphs);
     return TRUE;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,22 +14,22 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
+#import <CoreGraphics/CGContext.h>
 
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
-#include "CGFontInternal.h"
-#include "CGPatternInternal.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "cairo-ft.h"
+#import "CGContextInternal.h"
+#import "CGFontInternal.h"
+#import "CGPatternInternal.h"
+#import "CoreGraphics/CGGeometry.h"
+#import "cairo-ft.h"
 
 extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
+#import <ft2build.h>
+#import FT_FREETYPE_H
+#import <ftglyph.h>
+#import <tttables.h>
+#import <ftadvanc.h>
+#import <ftsizes.h>
 }
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
