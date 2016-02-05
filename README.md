@@ -1,10 +1,4 @@
-**ANNOUNCEMENT**: In this week's release of the bridge we've officially made the move to the GNUstep Objective-C 2.0 runtime. This provides a number of benefits over our previous runtime, including:
-
-- Access to objc_msgSend
-- Proxy object forwarding
-- Full access to Objective-C runtime functions
-
-Please let us know about any issues you find in the new runtime here on Github.
+**ANNOUNCEMENT**: In this week's release of the bridge we've switched to using [Git LFS](https://git-lfs.github.com). This does not affect using the [prebuilt releases found on our releases page](https://github.com/Microsoft/WinObjC/releases), but if you build the bridge from source, please see the instructions found on our [Building From Source wiki page](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source).
 
 # Welcome to the Windows Bridge for iOS project preview
 The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Apps (UWAs) that will run on any Windows 10 device using iOS APIs and Objective-C code.
