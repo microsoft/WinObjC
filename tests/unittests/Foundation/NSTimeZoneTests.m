@@ -97,4 +97,38 @@ TEST(Foundation, NSTimeZone) {
     NSArray* knownTimeZoneNames = [NSTimeZone knownTimeZoneNames];
     ASSERT_TRUE_MSG([knownTimeZoneNames count] == 168,
                     "FAILED - [NSTimeZone knownTimeZoneNames] != 168. There should be exactly 168 time zones in ICU. Was ICU updated?");
+
+    // Test for method timeZoneDataVersion. The value is based on the ICU version.
+    NSString* timeZoneDataVersion = [NSTimeZone timeZoneDataVersion];
+    ASSERT_OBJCEQ_MSG(@"2011k",
+                      timeZoneDataVersion,
+                      "FAILED - [NSTimeZone timeZoneDataVersion] != 2011k. The version should be 2011k. Was ICU updated?");
+
+    // Verify localizedName
+    NSTimeZone* aDSTTz = [NSTimeZone timeZoneWithName:@"Pacific/Auckland"];
+    NSString* tzNameStandard = [aDSTTz localizedName:NSTimeZoneNameStyleStandard locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
+    ASSERT_OBJCEQ_MSG(@"New Zealand Standard Time",
+                      tzNameStandard,
+                      "FAILED - localizedName of NSTimeZoneNameStyleStandard is not correct.");
+
+    NSString* tzNameShortStandard =
+        [aDSTTz localizedName:NSTimeZoneNameStyleShortStandard locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
+    ASSERT_OBJCEQ_MSG(@"+1200", tzNameShortStandard, "FAILED - localizedName of NSTimeZoneNameStyleShortStandard is not correct.");
+
+    NSString* tzNameGeneric = [aDSTTz localizedName:NSTimeZoneNameStyleGeneric locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
+    ASSERT_OBJCEQ_MSG(@"New Zealand Time", tzNameGeneric, "FAILED - localizedName of NSTimeZoneNameStyleGeneric is not correct.");
+
+    NSString* tzNameShortGeneric =
+        [aDSTTz localizedName:NSTimeZoneNameStyleShortGeneric locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
+    ASSERT_OBJCEQ_MSG(@"New Zealand Time", tzNameShortGeneric, "FAILED - localizedName of NSTimeZoneNameStyleShortGeneric is not correct.");
+
+    NSString* tzNameDaylight =
+        [aDSTTz localizedName:NSTimeZoneNameStyleDaylightSaving locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
+    ASSERT_OBJCEQ_MSG(@"New Zealand Daylight Time",
+                      tzNameDaylight,
+                      "FAILED - localizedName of NSTimeZoneNameStyleDaylightSaving is not correct.");
+
+    NSString* tzNameShortDaylight =
+        [aDSTTz localizedName:NSTimeZoneNameStyleShortDaylightSaving locale:[NSLocale localeWithLocaleIdentifier:@"en-GB"]];
+    ASSERT_OBJCEQ_MSG(@"+1300", tzNameShortDaylight, "FAILED - localizedName of NSTimeZoneNameStyleShortDaylightSaving is not correct.");
 }
