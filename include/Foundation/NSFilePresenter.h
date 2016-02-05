@@ -16,6 +16,8 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
+
 @class NSURL;
 @class NSOperationQueue;
 @class NSError;

@@ -183,10 +183,6 @@
 #import <Foundation/NSURLResponse.h>
 #import <Foundation/NSURLSession.h>
 #import <Foundation/NSURLSessionConfiguration.h>
-#import <Foundation/NSURLSessionDataTask.h>
-#import <Foundation/NSURLSessionDownloadTask.h>
-#import <Foundation/NSURLSessionTask.h>
-#import <Foundation/NSURLSessionUploadTask.h>
 #import <Foundation/NSUserActivity.h>
 #import <Foundation/NSUserDefaults.h>
 #import <Foundation/NSUUID.h>

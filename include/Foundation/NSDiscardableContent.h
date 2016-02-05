@@ -16,7 +16,7 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-#import <Foundation/NSObjCRuntime.h>
+#import <Foundation/NSObject.h>
 
 @protocol NSDiscardableContent <NSObject>
 - (BOOL)beginContentAccess;

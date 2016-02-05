@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#import <Foundation/NSURLSessionUploadTask.h>
+#import <Foundation/NSURLSession.h>
 
 @implementation NSURLSessionUploadTask
 @end

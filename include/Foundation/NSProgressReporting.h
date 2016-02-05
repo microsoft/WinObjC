@@ -16,6 +16,8 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
+
 @class NSProgress;
 
 @protocol NSProgressReporting <NSObject>
