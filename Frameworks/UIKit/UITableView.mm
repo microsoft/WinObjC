@@ -42,6 +42,8 @@ NSString* const UITableViewIndexSearch = @"UITableViewIndexSearch";
 /** @Status Stub */
 const CGFloat UITableViewAutomaticDimension = StubConstant();
 
+UIKIT_EXPORT NSString *const UITableViewSelectionDidChangeNotification = @"UITableViewSelectionDidChangeNotification";
+
 // narsty hack
 extern id _curFirstResponder;
 
@@ -2340,7 +2342,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 /**
  @Status Stub
 */
-- (UITableViewHeaderFooterView*)footerViewForSection:(NSInteger)section STUB_METHOD {
+- (UITableViewHeaderFooterView*)footerViewForSection:(NSInteger)section {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -2348,7 +2350,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 /**
  @Status Stub
 */
-- (UITableViewHeaderFooterView*)headerViewForSection:(NSInteger)section STUB_METHOD {
+- (UITableViewHeaderFooterView*)headerViewForSection:(NSInteger)section {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -2356,21 +2358,21 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 /**
  @Status Stub
 */
-- (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection STUB_METHOD {
+- (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-- (void)registerNib:(UINib*)nib forHeaderFooterViewReuseIdentifier:(NSString*)identifier STUB_METHOD {
+- (void)registerNib:(UINib*)nib forHeaderFooterViewReuseIdentifier:(NSString*)identifier {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-- (void)reloadSectionIndexTitles STUB_METHOD {
+- (void)reloadSectionIndexTitles {
     UNIMPLEMENTED();
 }
 

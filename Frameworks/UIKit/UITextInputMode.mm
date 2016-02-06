@@ -17,6 +17,8 @@
 #import <UIKit/UITextInputMode.h>
 #import <StubReturn.h>
 
+NSString* const UITextInputCurrentInputModeDidChangeNotification = @"UITextInputCurrentInputModeDidChangeNotification";
+
 @implementation UITextInputMode
 /**
  @Status Stub

@@ -83,8 +83,7 @@ typedef enum {
     UIViewAnimationTransitionCurlDown,
 } UIViewAnimationTransition;
 
-typedef NSUInteger UIViewAnimationOptions;
-enum {
+typedef NS_OPTIONS(NSUInteger, UIViewAnimationOptions) {
     UIViewAnimationOptionLayoutSubviews = 1 << 0,
     UIViewAnimationOptionAllowUserInteraction = 1 << 1,
     UIViewAnimationOptionBeginFromCurrentState = 1 << 2,

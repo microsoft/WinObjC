@@ -21,5 +21,5 @@
 #import <UIKit/NSLayoutAnchor.h>
 
 UIKIT_EXPORT_CLASS
-@interface NSLayoutYAxisAnchor : NSLayoutAnchor <NSObject>
+@interface NSLayoutYAxisAnchor : NSLayoutAnchor
 @end

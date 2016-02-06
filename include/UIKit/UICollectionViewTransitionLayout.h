@@ -17,13 +17,13 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
-#import <CoreFoundation/CFBase.h>
+#import <Foundation/NSObject.h>
 
 @class UICollectionViewLayout;
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewTransitionLayout
+@interface UICollectionViewTransitionLayout : NSObject
 - (id)initWithCurrentLayout:(UICollectionViewLayout*)currentLayout nextLayout:(UICollectionViewLayout*)newLayout STUB_METHOD;
 @property (assign, nonatomic) CGFloat transitionProgress STUB_PROPERTY;
 - (void)updateValue:(CGFloat)value forAnimatedKey:(NSString*)key STUB_METHOD;

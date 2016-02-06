@@ -31,7 +31,7 @@ typedef enum {
     UITextGranularityDocument,
 } UITextGranularity;
 
-@protocol UITextInputTokenizer
+@protocol UITextInputTokenizer <NSObject>
 - (BOOL)isPosition:(UITextPosition*)position atBoundary:(UITextGranularity)granularity inDirection:(UITextDirection)direction;
 - (BOOL)isPosition:(UITextPosition*)position withinTextUnit:(UITextGranularity)granularity inDirection:(UITextDirection)direction;
 - (UITextPosition*)positionFromPosition:(UITextPosition*)position

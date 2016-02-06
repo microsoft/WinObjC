@@ -1374,7 +1374,7 @@ static CGImageRef getImage(UIImage* self) {
 /**
  @Status Stub
 */
-- (UIImage*)imageFlippedForRightToLeftLayoutDirection STUB_METHOD {
+- (UIImage*)imageFlippedForRightToLeftLayoutDirection {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1382,7 +1382,7 @@ static CGImageRef getImage(UIImage* self) {
 /**
  @Status Stub
 */
-- (UIImage*)imageWithAlignmentRectInsets:(UIEdgeInsets)alignmentInsets STUB_METHOD {
+- (UIImage*)imageWithAlignmentRectInsets:(UIEdgeInsets)alignmentInsets {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1390,7 +1390,7 @@ static CGImageRef getImage(UIImage* self) {
 /**
  @Status Stub
 */
-+ (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration STUB_METHOD {
++ (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1406,7 +1406,7 @@ static CGImageRef getImage(UIImage* self) {
 /**
  @Status Stub
 */
-+ (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration STUB_METHOD {
++ (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1417,7 +1417,7 @@ static CGImageRef getImage(UIImage* self) {
 + (UIImage*)animatedResizableImageNamed:(NSString*)name
                               capInsets:(UIEdgeInsets)capInsets
                            resizingMode:(UIImageResizingMode)resizingMode
-                               duration:(NSTimeInterval)duration STUB_METHOD {
+                               duration:(NSTimeInterval)duration {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1427,7 +1427,7 @@ static CGImageRef getImage(UIImage* self) {
 */
 + (UIImage*)imageNamed:(NSString*)name
                          inBundle:(NSBundle*)bundle
-    compatibleWithTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD {
+    compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1435,7 +1435,7 @@ static CGImageRef getImage(UIImage* self) {
 /**
  @Status Stub
 */
-+ (UIImage*)imageWithCIImage:(CIImage*)ciImage scale:(CGFloat)scale orientation:(UIImageOrientation)orientation STUB_METHOD {
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage scale:(CGFloat)scale orientation:(UIImageOrientation)orientation {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -1443,7 +1443,7 @@ static CGImageRef getImage(UIImage* self) {
 /**
  @Status Stub
 */
-+ (UIImage*)imageWithCIImage:(CIImage*)ciImage STUB_METHOD {
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage {
     UNIMPLEMENTED();
     return StubReturn();
 }

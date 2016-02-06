@@ -32,7 +32,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UIDynamicAnimator : NSObject <NSObject>
+@interface UIDynamicAnimator : NSObject
 - (instancetype)initWithReferenceView:(UIView*)view STUB_METHOD;
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout*)layout STUB_METHOD;
 - (NSArray*)itemsInRect:(CGRect)rect STUB_METHOD;

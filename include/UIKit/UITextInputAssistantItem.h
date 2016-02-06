@@ -21,7 +21,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UITextInputAssistantItem : NSObject <NSObject>
+@interface UITextInputAssistantItem : NSObject
 @property (readwrite, copy, nonatomic) NSArray* leadingBarButtonGroups STUB_PROPERTY;
 @property (readwrite, copy, nonatomic) NSArray* trailingBarButtonGroups STUB_PROPERTY;
 @property (assign, readwrite, nonatomic) BOOL allowsHidingShortcuts STUB_PROPERTY;

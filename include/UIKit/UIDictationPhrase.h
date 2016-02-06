@@ -23,7 +23,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UIDictationPhrase : NSObject <NSObject>
+@interface UIDictationPhrase : NSObject
 @property (readonly, nonatomic) NSArray* alternativeInterpretations STUB_PROPERTY;
 @property (readonly, nonatomic) NSString* text STUB_PROPERTY;
 @end

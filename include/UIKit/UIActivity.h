@@ -42,7 +42,7 @@ UIKIT_EXPORT NSString* const UIActivityTypeAirDrop;
 @class UIViewController;
 
 UIKIT_EXPORT_CLASS
-@interface UIActivity : NSObject <NSObject>
+@interface UIActivity : NSObject
 + (UIActivityCategory)activityCategory STUB_METHOD;
 - (NSString*)activityType STUB_METHOD;
 - (NSString*)activityTitle STUB_METHOD;

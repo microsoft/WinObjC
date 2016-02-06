@@ -22,7 +22,7 @@
 @class UIViewController;
 @class UIPageViewController;
 
-@protocol UIPageViewControllerDataSource
+@protocol UIPageViewControllerDataSource <NSObject>
 - (UIViewController*)pageViewController:(UIPageViewController*)pageViewController
      viewControllerBeforeViewController:(UIViewController*)viewController;
 - (UIViewController*)pageViewController:(UIPageViewController*)pageViewController

@@ -25,7 +25,7 @@
 #import "UIGridLayoutInfo.h"
 #import "UIGridLayoutRow.h"
 #import "UIGridLayoutSection.h"
-#import "UICollectionViewLayout+Internals.h"
+#import "UICollectionViewLayout+Internal.h"
 
 NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";

@@ -21,7 +21,7 @@
 @class UIAccelerometer;
 @class UIAcceleration;
 
-@protocol UIAccelerometerDelegate
+@protocol UIAccelerometerDelegate <NSObject>
 @optional
 - (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration;
 @end

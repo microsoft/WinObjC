@@ -1,12 +1,6 @@
 //******************************************************************************
 //
-//  UICollectionViewLayout+Internals.h
-//  FMUICollectionView
-//
-// Created by Scott Talbot on 27/02/13.
-// Copyright (c) 2013 Scott Talbot. All rights reserved.
-//
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -22,19 +16,15 @@
 
 #pragma once
 
-#import <UIKit/UICollectionViewLayout.h>
+#import <UIKit/UICollectionViewLayoutAttributes.h>
 
-@interface UICollectionViewLayout (Internals)
+@interface UICollectionViewLayoutAttributes (Internal)
+@property (nonatomic, readonly) NSString* representedElementKind;
+@property (nonatomic, readonly) UICollectionViewItemType representedElementCategory;
 
-@property (nonatomic, copy, readonly) NSDictionary* decorationViewClassDict;
-@property (nonatomic, copy, readonly) NSDictionary* decorationViewNibDict;
-@property (nonatomic, copy, readonly) NSDictionary* decorationViewExternalObjectsTables;
+- (BOOL)isDecorationView;
 
-@end
+- (BOOL)isSupplementaryView;
 
-@interface UICollectionViewLayoutAttributes (Internals)
-
-@property (readonly) BOOL isPinnedSupplementaryView;
-- (void)setPinned:(BOOL)isPinned;
-
+- (BOOL)isCell;
 @end

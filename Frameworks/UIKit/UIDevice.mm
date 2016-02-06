@@ -26,6 +26,11 @@ using WCHAR = wchar_t;
 #include "UWP/WindowsApplicationModel.h"
 #include "MurmurHash3.h"
 
+NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
+NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";
+NSString* const UIDeviceOrientationDidChangeNotification = @"UIDeviceOrientationDidChangeNotification";
+NSString* const UIDeviceProximityStateDidChangeNotification = @"UIDeviceProximityStateDidChangeNotification";
+
 static UIDevice* _currentDevice;
 
 bool g_bLandscape = true;
@@ -163,7 +168,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
     }
 
     if (_isGeneratingEvents) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIDeviceOrientationDidChangeNotification" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:UIDeviceOrientationDidChangeNotification object:self];
     }
 
     return self;

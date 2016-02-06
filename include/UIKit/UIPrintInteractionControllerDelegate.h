@@ -31,7 +31,7 @@ typedef enum UIPrinterCutterBehavior : NSInteger {
     UIPrinterCutterBehaviorCutAfterEachJob,
 } UIPrinterCutterBehavior;
 
-@protocol UIPrintInteractionControllerDelegate
+@protocol UIPrintInteractionControllerDelegate <NSObject>
 @optional
 - (UIViewController*)printInteractionControllerParentViewController:(UIPrintInteractionController*)printInteractionController;
 - (UIPrintPaper*)printInteractionController:(UIPrintInteractionController*)printInteractionController choosePaper:(NSArray*)paperList;

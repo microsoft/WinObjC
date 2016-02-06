@@ -21,7 +21,7 @@
 #import <UIKit/UITextInput.h>
 
 UIKIT_EXPORT_CLASS
-@interface UITextSelectionRect : NSObject <NSObject>
+@interface UITextSelectionRect : NSObject
 @property (readonly, nonatomic) CGRect rect STUB_PROPERTY;
 @property (readonly, nonatomic) UITextWritingDirection writingDirection STUB_PROPERTY;
 @property (readonly, nonatomic) BOOL isVertical STUB_PROPERTY;

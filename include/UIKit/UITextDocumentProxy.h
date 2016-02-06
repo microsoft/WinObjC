@@ -19,7 +19,7 @@
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
-@protocol UITextDocumentProxy
+@protocol UITextDocumentProxy <NSObject>
 @property (nonatomic, readonly) NSString* documentContextAfterInput;
 @property (nonatomic, readonly) NSString* documentContextBeforeInput;
 - (void)adjustTextPositionByCharacterOffset:(NSInteger)offset;

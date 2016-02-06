@@ -20,6 +20,6 @@
 #import <Foundation/NSObject.h>
 
 UIKIT_EXPORT_CLASS
-@interface UIFocusAnimationCoordinator : NSObject <NSObject>
+@interface UIFocusAnimationCoordinator : NSObject
 - (void)addCoordinatedAnimations:(void (^)(void))animations completion:(void (^)(void))completion STUB_METHOD;
 @end

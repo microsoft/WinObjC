@@ -23,7 +23,7 @@
 @class UIView;
 
 UIKIT_EXPORT_CLASS
-@interface UIViewPrintFormatter : UIPrintFormatter <NSCopying, NSObject>
+@interface UIViewPrintFormatter : UIPrintFormatter <NSCopying>
 @property (readonly, nonatomic) UIView* view STUB_PROPERTY;
 @end
 

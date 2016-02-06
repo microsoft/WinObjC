@@ -23,6 +23,6 @@
 @class UIPopoverController;
 
 UIKIT_EXPORT_CLASS
-@interface UIStoryboardPopoverSegue : UIStoryboardSegue <NSObject>
+@interface UIStoryboardPopoverSegue : UIStoryboardSegue
 @property (readonly, nonatomic, strong) UIPopoverController* popoverController STUB_PROPERTY;
 @end

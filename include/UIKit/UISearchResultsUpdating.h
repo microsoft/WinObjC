@@ -20,6 +20,6 @@
 
 @class UISearchController;
 
-@protocol UISearchResultsUpdating
+@protocol UISearchResultsUpdating <NSObject>
 - (void)updateSearchResultsForSearchController:(UISearchController*)searchController;
 @end

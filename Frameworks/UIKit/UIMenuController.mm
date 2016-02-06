@@ -17,6 +17,12 @@
 #import <UIKit/UIMenuController.h>
 #import <StubReturn.h>
 
+NSString* const UIMenuControllerWillShowMenuNotification = @"UIMenuControllerWillShowMenuNotification";
+NSString* const UIMenuControllerDidShowMenuNotification = @"UIMenuControllerDidShowMenuNotification";
+NSString* const UIMenuControllerWillHideMenuNotification = @"UIMenuControllerWillHideMenuNotification";
+NSString* const UIMenuControllerDidHideMenuNotification = @"UIMenuControllerDidHideMenuNotification";
+NSString* const UIMenuControllerMenuFrameDidChangeNotification = @"UIMenuControllerMenuFrameDidChangeNotification";
+
 @implementation UIMenuController
 /**
  @Status Stub

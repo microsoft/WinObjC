@@ -112,6 +112,8 @@ LIBRARY UIKit
         __objc_class_name_NSTextContainer CONSTANT
 
         ; NSTextStorage.mm
+        NSTextStorageDidProcessEditingNotification DATA
+        NSTextStorageWillProcessEditingNotification DATA
         _OBJC_CLASS_NSTextStorage DATA
         __objc_class_name_NSTextStorage CONSTANT
 
@@ -152,6 +154,26 @@ LIBRARY UIKit
         UIAccessibilitySpeechAttributeLanguage DATA
         UIAccessibilitySpeechAttributePitch DATA
         UIAccessibilityNotificationSwitchControlIdentifier DATA
+        UIAccessibilityAnnouncementNotification DATA
+        UIAccessibilityAnnouncementDidFinishNotification DATA
+        UIAccessibilityBoldTextStatusDidChangeNotification DATA
+        UIAccessibilityClosedCaptioningStatusDidChangeNotification DATA
+        UIAccessibilityDarkerSystemColorsStatusDidChangeNotification DATA
+        UIAccessibilityGrayscaleStatusDidChangeNotification DATA
+        UIAccessibilityGuidedAccessStatusDidChangeNotification DATA
+        UIAccessibilityInvertColorsStatusDidChangeNotification DATA
+        UIAccessibilityLayoutChangedNotification DATA
+        UIAccessibilityMonoAudioStatusDidChangeNotification DATA
+        UIAccessibilityPageScrolledNotification DATA
+        UIAccessibilityPauseAssistiveTechnologyNotification DATA
+        UIAccessibilityReduceMotionStatusDidChangeNotification DATA
+        UIAccessibilityReduceTransparencyStatusDidChangeNotification DATA
+        UIAccessibilityResumeAssistiveTechnologyNotification DATA
+        UIAccessibilityScreenChangedNotification DATA
+        UIAccessibilitySpeakScreenStatusDidChangeNotification DATA
+        UIAccessibilitySpeakSelectionStatusDidChangeNotification DATA
+        UIAccessibilitySwitchControlStatusDidChangeNotification DATA
+        UIAccessibilityVoiceOverStatusChanged DATA
 
         ; UIAccessibilityAction.mm
 
@@ -181,7 +203,6 @@ LIBRARY UIKit
         UIActivityTypeCopyToPasteboard DATA
         UIActivityTypeAssignToContact DATA
         UIActivityTypeSaveToCameraRoll DATA
-
         UIActivityTypeAddToReadingList DATA
         UIActivityTypePostToFlickr DATA
         UIActivityTypePostToVimeo DATA
@@ -238,6 +259,23 @@ LIBRARY UIKit
         UIApplicationKeyboardExtensionPointIdentifier DATA
         UITrackingRunLoopMode DATA
         UIApplicationInvalidInterfaceOrientationException DATA
+        UIApplicationBackgroundRefreshStatusDidChangeNotification DATA
+        UIApplicationDidBecomeActiveNotification DATA
+        UIApplicationDidChangeStatusBarFrameNotification DATA
+        UIApplicationDidChangeStatusBarOrientationNotification DATA
+        UIApplicationDidEnterBackgroundNotification DATA
+        UIApplicationDidFinishLaunchingNotification DATA
+        UIApplicationDidReceiveMemoryWarningNotification DATA
+        UIApplicationProtectedDataDidBecomeAvailable DATA
+        UIApplicationProtectedDataWillBecomeUnavailable DATA
+        UIApplicationSignificantTimeChangeNotification DATA
+        UIApplicationUserDidTakeScreenshotNotification DATA
+        UIApplicationWillChangeStatusBarOrientationNotification DATA
+        UIApplicationWillChangeStatusBarFrameNotification DATA
+        UIApplicationWillEnterForegroundNotification DATA
+        UIApplicationWillResignActiveNotification DATA
+        UIApplicationWillTerminateNotification DATA
+        UIContentSizeCategoryDidChangeNotification DATA
         _OBJC_CLASS_UIApplication DATA
         __objc_class_name_UIApplication CONSTANT
 
@@ -363,6 +401,10 @@ LIBRARY UIKit
         __objc_class_name_UIDatePicker CONSTANT
 
         ; UIDevice.mm
+        UIDeviceBatteryLevelDidChangeNotification DATA
+        UIDeviceBatteryStateDidChangeNotification DATA
+        UIDeviceOrientationDidChangeNotification DATA
+        UIDeviceProximityStateDidChangeNotification DATA
         _OBJC_CLASS_UIDevice DATA
         __objc_class_name_UIDevice CONSTANT
 
@@ -586,12 +628,24 @@ LIBRARY UIKit
         NSTextAlignmentToCTTextAlignment
         NSTextAlignmentFromCTTextAlignment
         UIGuidedAccessRestrictionStateForIdentifier
+        CGPointFromString
+        CGSizeFromString
+        CGRectFromString
+
+        ; These are all implemented using statics or macros so have no export:
+        ;UIInterfaceOrientationIsPortrait
+        ;UIInterfaceOrientationIsLandscape
+        ;UIDeviceOrientationIsPortrait
+        ;UIDeviceOrientationIsLandscape
+        ;UI_USER_INTERFACE_IDIOM
+        ;UIEdgeInsetsMake
+        ;UIEdgeInsetsEqualToEdgeInsets
+        ;UIEdgeInsetsInsetRect
+        ;UIOffsetMake
+        ;UIOffsetEqualToOffset
 
         ; These are listed as in UIKit but make more sense being in CG, and are already there:
         ;CGAffineTransformFromString
-        ;CGPointFromString
-        ;CGRectFromString
-        ;CGSizeFromString
         ;CGVectorFromString
         ;NSStringFromCGAffineTransform
         ;NSStringFromCGPoint
@@ -639,6 +693,11 @@ LIBRARY UIKit
         __objc_class_name_UIMarkupTextPrintFormatter CONSTANT
 
         ; UIMenuController.mm
+        UIMenuControllerWillShowMenuNotification DATA
+        UIMenuControllerDidShowMenuNotification DATA
+        UIMenuControllerWillHideMenuNotification DATA
+        UIMenuControllerDidHideMenuNotification DATA
+        UIMenuControllerMenuFrameDidChangeNotification DATA
         _OBJC_CLASS_UIMenuController DATA
         __objc_class_name_UIMenuController CONSTANT
 
@@ -706,6 +765,8 @@ LIBRARY UIKit
         UIPasteboardTypeListColor DATA
         UIPasteboardChangedTypesAddedKey DATA
         UIPasteboardChangedTypesRemovedKey DATA
+        UIPasteboardChangedNotification DATA
+        UIPasteboardRemovedNotification DATA
         _OBJC_CLASS_UIPasteboard DATA
         __objc_class_name_UIPasteboard CONSTANT
 
@@ -813,6 +874,10 @@ LIBRARY UIKit
         __objc_class_name_UIRotationGestureRecognizer CONSTANT
 
         ; UIScreen.mm
+        UIScreenDidConnectNotification DATA
+        UIScreenDidDisconnectNotification DATA
+        UIScreenModeDidChangeNotification DATA
+        UIScreenBrightnessDidChangeNotification DATA
         _OBJC_CLASS_UIScreen DATA
         __objc_class_name_UIScreen CONSTANT
 
@@ -917,6 +982,7 @@ LIBRARY UIKit
         ; UITableView.mm
         UITableViewIndexSearch DATA
         UITableViewAutomaticDimension DATA
+        UITableViewSelectionDidChangeNotification DATA
         _OBJC_CLASS_UITableView DATA
         __objc_class_name_UITableView CONSTANT
 
@@ -949,6 +1015,9 @@ LIBRARY UIKit
         __objc_class_name_UITextChecker CONSTANT
 
         ; UITextField.mm
+        UITextFieldTextDidBeginEditingNotification DATA
+        UITextFieldTextDidChangeNotification DATA
+        UITextFieldTextDidEndEditingNotification DATA
         _OBJC_CLASS_UITextField DATA
         __objc_class_name_UITextField CONSTANT
 
@@ -962,6 +1031,7 @@ LIBRARY UIKit
         __objc_class_name_UITextInputAssistantItem CONSTANT
 
         ; UITextInputMode.mm
+        UITextInputCurrentInputModeDidChangeNotification DATA
         _OBJC_CLASS_UITextInputMode DATA
         __objc_class_name_UITextInputMode CONSTANT
 
@@ -982,6 +1052,9 @@ LIBRARY UIKit
         __objc_class_name_UITextSelectionRect CONSTANT
 
         ; UITextView.mm
+        UITextViewTextDidBeginEditingNotification DATA
+        UITextViewTextDidChangeNotification DATA
+        UITextViewTextDidEndEditingNotification DATA
         _OBJC_CLASS_UITextView DATA
         __objc_class_name_UITextView CONSTANT
 
@@ -1028,6 +1101,7 @@ LIBRARY UIKit
 
         ; UIViewController.mm
         UIViewControllerHierarchyInconsistencyException DATA
+        UIViewControllerShowDetailTargetDidChangeNotification DATA
         _OBJC_CLASS_UIViewController DATA
         __objc_class_name_UIViewController CONSTANT
 
@@ -1065,13 +1139,18 @@ LIBRARY UIKit
         UIKeyboardCenterBeginUserInfoKey DATA
         UIKeyboardCenterEndUserInfoKey DATA
         UIKeyboardBoundsUserInfoKey DATA
+        UIWindowDidBecomeVisibleNotification DATA
+        UIWindowDidBecomeHiddenNotification DATA
+        UIWindowDidBecomeKeyNotification DATA
+        UIWindowDidResignKeyNotification DATA
+        UIKeyboardWillShowNotification DATA
+        UIKeyboardDidShowNotification DATA
+        UIKeyboardWillHideNotification DATA
+        UIKeyboardDidHideNotification DATA
+        UIKeyboardWillChangeFrameNotification DATA
+        UIKeyboardDidChangeFrameNotification DATA
         _OBJC_CLASS_UIWindow DATA
         __objc_class_name_UIWindow CONSTANT
-
-        UIApplicationDidChangeDisplayModeNofication
-
-        ; temp does not belong here
-        CTFontCreateWithName
 
         ; Extra stuff for WinObjC:
         UIApplicationMainLoop
@@ -1081,6 +1160,12 @@ LIBRARY UIKit
         UIRequestTransactionProcessing
         UIApplicationMainInit
         UIOrientationFromString
+        UIApplicationDidChangeDisplayModeNofication
+
+        UIDeviceBatteryLevelDidChangeNotification
+        UIDeviceBatteryStateDidChangeNotification
+        UIDeviceOrientationDidChangeNotification
+        UIDeviceProximityStateDidChangeNotification
 
         ; Stub that should really be elsewhere:
         __inet_ntoa
@@ -1091,3 +1176,9 @@ LIBRARY UIKit
         DNSServiceSetDispatchQueue
         DNSServiceBrowse
         if_indextoname
+        strnstr
+        random
+        gettimeofday
+        srandom
+        mach_host_self
+        host_statistics

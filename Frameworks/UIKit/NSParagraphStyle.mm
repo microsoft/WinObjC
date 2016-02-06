@@ -21,7 +21,4 @@
 
 @implementation NSParagraphStyle
 
-@synthesize hyphenationFactor = _hyphenationFactor;
-@synthesize alignment = _alignment;
-
 @end

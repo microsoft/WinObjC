@@ -22,7 +22,7 @@
 @class UIViewController;
 @protocol UIViewControllerPreviewing;
 
-@protocol UIViewControllerPreviewingDelegate
+@protocol UIViewControllerPreviewingDelegate <NSObject>
 - (UIViewController*)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location;
 - (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController*)viewControllerToCommit;
 @end

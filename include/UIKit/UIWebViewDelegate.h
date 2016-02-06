@@ -23,7 +23,7 @@
 @class NSURLRequest;
 @class NSError;
 
-@protocol UIWebViewDelegate
+@protocol UIWebViewDelegate <NSObject>
 @optional
 - (BOOL)webView:(UIWebView*)webView
     shouldStartLoadWithRequest:(NSURLRequest*)request

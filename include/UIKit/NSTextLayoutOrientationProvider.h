@@ -19,7 +19,7 @@
 #import <UIKit/UIKitExport.h>
 #import <UIKit/NSLayoutManager.h>
 
-@protocol NSTextLayoutOrientationProvider
+@protocol NSTextLayoutOrientationProvider <NSObject>
 @required
 @property (readonly, nonatomic) NSTextLayoutOrientation layoutOrientation;
 @end

@@ -21,7 +21,7 @@
 
 @protocol UIBarPositioning;
 
-@protocol UIBarPositioningDelegate
+@protocol UIBarPositioningDelegate <NSObject>
 @optional
 - (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar;
 @end

@@ -56,7 +56,7 @@ typedef enum UIApplicationShortcutIconType : NSInteger {
 } UIApplicationShortcutIconType;
 
 UIKIT_EXPORT_CLASS
-@interface UIApplicationShortcutIcon : NSObject <NSCopying, NSObject>
+@interface UIApplicationShortcutIcon : NSObject <NSCopying>
 + (instancetype)iconWithType:(UIApplicationShortcutIconType)type STUB_METHOD;
 + (instancetype)iconWithTemplateImageName:(NSString*)templateImageName STUB_METHOD;
 + (instancetype)iconWithContact:(CNContact*)contact STUB_METHOD;

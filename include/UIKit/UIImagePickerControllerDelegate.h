@@ -17,6 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class UIImagePickerController;
 @class NSString;
@@ -32,7 +33,7 @@ UIKIT_EXPORT NSString* const UIImagePickerControllerReferenceURL;
 UIKIT_EXPORT NSString* const UIImagePickerControllerMediaMetadata;
 UIKIT_EXPORT NSString* const UIImagePickerControllerLivePhoto;
 
-@protocol UIImagePickerControllerDelegate
+@protocol UIImagePickerControllerDelegate <NSObject>
 @optional
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info;
 - (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingImage:(UIImage*)image editingInfo:(NSDictionary*)editingInfo;

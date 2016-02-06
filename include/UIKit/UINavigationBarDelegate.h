@@ -21,7 +21,7 @@
 @class UINavigationBar;
 @class UINavigationItem;
 
-@protocol UINavigationBarDelegate
+@protocol UINavigationBarDelegate <NSObject>
 @optional
 - (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPushItem:(UINavigationItem*)item;
 - (void)navigationBar:(UINavigationBar*)navigationBar didPushItem:(UINavigationItem*)item;

@@ -22,8 +22,10 @@
 @class NSArray;
 @class NSString;
 
+UIKIT_EXPORT NSString* const UITextInputCurrentInputModeDidChangeNotification;
+
 UIKIT_EXPORT_CLASS
-@interface UITextInputMode : NSObject <NSObject, NSSecureCoding>
+@interface UITextInputMode : NSObject <NSSecureCoding>
 + (UITextInputMode*)currentInputMode STUB_METHOD;
 + (NSArray*)activeInputModes STUB_METHOD;
 @property (readonly, nonatomic, strong) NSString* primaryLanguage STUB_PROPERTY;

@@ -21,7 +21,7 @@
 
 @protocol UIViewControllerContextTransitioning;
 
-@protocol UIViewControllerInteractiveTransitioning
+@protocol UIViewControllerInteractiveTransitioning <NSObject>
 - (void)startInteractiveTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
 @optional
 - (UIViewAnimationCurve)completionCurve;

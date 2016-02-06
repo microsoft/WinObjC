@@ -24,7 +24,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UIActivityItemProvider : NSOperation <NSObject, UIActivityItemSource>
+@interface UIActivityItemProvider : NSOperation <UIActivityItemSource>
 - (instancetype)initWithPlaceholderItem:(id)placeholderItem STUB_METHOD;
 - (id)item STUB_METHOD;
 @property (readonly, nonatomic, strong) id placeholderItem STUB_PROPERTY;

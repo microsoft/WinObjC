@@ -29,6 +29,11 @@ static UIScreenMode* _curMode;
 static NSArray* _availableModes;
 static UIScreenMode* _preferredMode;
 
+NSString* const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
+NSString* const UIScreenDidDisconnectNotification = @"UIScreenDidDisconnectNotification";
+NSString* const UIScreenModeDidChangeNotification = @"UIScreenModeDidChangeNotification";
+NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDidChangeNotification";
+
 @implementation UIScreen : NSObject
 + (void)initialize {
     if (self == [UIScreen self]) {

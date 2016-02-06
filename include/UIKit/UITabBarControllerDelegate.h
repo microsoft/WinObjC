@@ -25,7 +25,7 @@
 @protocol UIViewControllerAnimatedTransitioning;
 @protocol UIViewControllerInteractiveTransitioning;
 
-@protocol UITabBarControllerDelegate
+@protocol UITabBarControllerDelegate <NSObject>
 @optional
 - (BOOL)tabBarController:(UITabBarController*)tabBarController shouldSelectViewController:(UIViewController*)viewController;
 - (void)tabBarController:(UITabBarController*)tabBarController didSelectViewController:(UIViewController*)viewController;

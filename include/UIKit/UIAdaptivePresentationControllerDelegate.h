@@ -24,7 +24,7 @@
 @class UIViewController;
 @protocol UIViewControllerTransitionCoordinator;
 
-@protocol UIAdaptivePresentationControllerDelegate
+@protocol UIAdaptivePresentationControllerDelegate <NSObject>
 @optional
 - (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController*)controller
                                                                traitCollection:(UITraitCollection*)traitCollection;

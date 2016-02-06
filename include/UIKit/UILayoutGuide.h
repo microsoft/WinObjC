@@ -27,7 +27,7 @@
 @class NSLayoutDimension;
 
 UIKIT_EXPORT_CLASS
-@interface UILayoutGuide : NSObject <NSCoding, NSObject>
+@interface UILayoutGuide : NSObject <NSCoding>
 @property (copy, nonatomic) NSString* identifier STUB_PROPERTY;
 @property (readonly, nonatomic) CGRect layoutFrame STUB_PROPERTY;
 @property (nonatomic) UIView* owningView STUB_PROPERTY;

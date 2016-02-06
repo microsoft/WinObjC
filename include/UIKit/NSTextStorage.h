@@ -21,8 +21,14 @@
 
 @class NSLayoutManager;
 
-typedef enum { NSTextStorageEditedAttributes = 0x01, NSTextStorageEditedCharacters = 0x02 } _NSTextStorageEditActions;
+typedef enum {
+    NSTextStorageEditedAttributes = 0x01,
+    NSTextStorageEditedCharacters = 0x02,
+} _NSTextStorageEditActions;
 typedef int32_t NSTextStorageEditActions;
+
+UIKIT_EXPORT NSString* const NSTextStorageDidProcessEditingNotification;
+UIKIT_EXPORT NSString* const NSTextStorageWillProcessEditingNotification;
 
 UIKIT_EXPORT_CLASS
 @interface NSTextStorage : NSMutableAttributedString

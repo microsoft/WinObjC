@@ -21,7 +21,7 @@
 
 @class UIAlertView;
 
-@protocol UIAlertViewDelegate
+@protocol UIAlertViewDelegate <NSObject>
 @optional
 - (void)alertView:(UIAlertView*)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView*)alertView;

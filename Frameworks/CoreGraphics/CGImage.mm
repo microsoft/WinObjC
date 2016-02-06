@@ -850,7 +850,7 @@ NSData* UIImagePNGRepresentation(UIImage* img) {
     return ret;
 }
 
-NSData* UIImageJPEGRepresentation(UIImage* img) {
+NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat compressionQuality) {
     EbrDebugLog("UIImageJPEGRepresentation not supported - returning PNG\n");
 
     return UIImagePNGRepresentation(img);

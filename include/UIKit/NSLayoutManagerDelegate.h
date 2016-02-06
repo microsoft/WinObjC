@@ -26,7 +26,7 @@
 @class NSTextContainer;
 @class UIFont;
 
-@protocol NSLayoutManagerDelegate
+@protocol NSLayoutManagerDelegate <NSObject>
 @optional
 - (BOOL)layoutManager:(NSLayoutManager*)layoutManager shouldBreakLineByHyphenatingBeforeCharacterAtIndex:(NSUInteger)charIndex;
 - (BOOL)layoutManager:(NSLayoutManager*)layoutManager shouldBreakLineByWordBeforeCharacterAtIndex:(NSUInteger)charIndex;

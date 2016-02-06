@@ -23,7 +23,7 @@
 @class NSTextContainer;
 @class UIImage;
 
-@protocol NSTextAttachmentContainer
+@protocol NSTextAttachmentContainer <NSObject>
 @required
 - (CGRect)attachmentBoundsForTextContainer:(NSTextContainer*)textContainer
                       proposedLineFragment:(CGRect)lineFrag

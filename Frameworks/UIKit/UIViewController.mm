@@ -40,6 +40,7 @@
 #include "UIEmptyController.h"
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
+NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
 
 @interface _TransitionNotifier : NSObject
 @end

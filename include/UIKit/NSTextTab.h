@@ -27,7 +27,7 @@
 UIKIT_EXPORT NSString* const NSTabColumnTerminatorsAttributeName;
 
 UIKIT_EXPORT_CLASS
-@interface NSTextTab : NSObject <NSCoding, NSCopying, NSObject>
+@interface NSTextTab : NSObject <NSCoding, NSCopying>
 - (instancetype)initWithTextAlignment:(NSTextAlignment)alignment location:(CGFloat)loc options:(NSDictionary*)options STUB_METHOD;
 + (NSCharacterSet*)columnTerminatorsForLocale:(NSLocale*)aLocale STUB_METHOD;
 @property (readonly, nonatomic) NSDictionary* options STUB_PROPERTY;

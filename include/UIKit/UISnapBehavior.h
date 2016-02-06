@@ -24,7 +24,7 @@
 @protocol UIDynamicItem;
 
 UIKIT_EXPORT_CLASS
-@interface UISnapBehavior : UIDynamicBehavior <NSObject>
+@interface UISnapBehavior : UIDynamicBehavior
 - (instancetype)initWithItem:(id<UIDynamicItem>)item snapToPoint:(CGPoint)point STUB_METHOD;
 @property (assign, nonatomic) CGPoint snapPoint STUB_PROPERTY;
 @property (assign, nonatomic) CGFloat damping STUB_PROPERTY;

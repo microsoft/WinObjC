@@ -22,7 +22,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UILexiconEntry : NSObject <NSCopying, NSObject>
+@interface UILexiconEntry : NSObject <NSCopying>
 @property (readonly, nonatomic) NSString* documentText STUB_PROPERTY;
 @property (readonly, nonatomic) NSString* userInput STUB_PROPERTY;
 @end

@@ -48,6 +48,11 @@ NSString* const UIFontWeightTrait = @"UIFontWeightTrait";
 NSString* const UIFontWidthTrait = @"UIFontWidthTrait";
 NSString* const UIFontSlantTrait = @"UIFontSlantTrait";
 
+NSString* const UIFontFeatureTypeIdentifierKey = @"UIFontFeatureTypeIdentifierKey";
+NSString* const UIFontFeatureSelectorIdentifierKey = @"UIFontFeatureSelectorIdentifierKey";
+
+NSString* const SystemFontName = @"SegoeUI";
+
 /** @Status Stub */
 const CGFloat UIFontWeightUltraLight = StubConstant();
 /** @Status Stub */
@@ -66,12 +71,6 @@ const CGFloat UIFontWeightBold = StubConstant();
 const CGFloat UIFontWeightHeavy = StubConstant();
 /** @Status Stub */
 const CGFloat UIFontWeightBlack = StubConstant();
-/** @Status Stub */
-NSString* const UIFontFeatureTypeIdentifierKey = @"UIFontFeatureTypeIdentifierKey";
-/** @Status Stub */
-NSString* const UIFontFeatureSelectorIdentifierKey = @"UIFontFeatureSelectorIdentifierKey";
-
-NSString* const SystemFontName = @"SegoeUI";
 
 /**
  All these values are fixed number in IOS no matter on iphone* or ipad*.

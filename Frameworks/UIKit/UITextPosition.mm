@@ -18,4 +18,7 @@
 #import <StubReturn.h>
 
 @implementation UITextPosition
+// This class intentionally left blank.
+// UITextPosition is meant to be subclassed and used by custom UITextRange subclasses.
+// Its definition is defined by its user.
 @end

@@ -21,7 +21,7 @@
 @class UIDocumentMenuViewController;
 @class UIDocumentPickerViewController;
 
-@protocol UIDocumentMenuDelegate
+@protocol UIDocumentMenuDelegate <NSObject>
 - (void)documentMenu:(UIDocumentMenuViewController*)documentMenu didPickDocumentPicker:(UIDocumentPickerViewController*)documentPicker;
 @optional
 - (void)documentMenuWasCancelled:(UIDocumentMenuViewController*)documentMenu;

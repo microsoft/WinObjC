@@ -114,6 +114,12 @@ NSString* const UIApplicationOpenURLOptionsSourceApplicationKey = @"UIApplicatio
 NSString* const UIApplicationOpenURLOptionsAnnotationKey = @"UIApplicationOpenURLOptionsAnnotationKey";
 NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey = @"UIApplicationOpenURLOptionsOpenInPlaceKey";
 
+NSString* const UIApplicationBackgroundRefreshStatusDidChangeNotification = @"UIApplicationBackgroundRefreshStatusDidChangeNotification";
+NSString* const UIApplicationProtectedDataDidBecomeAvailable = @"UIApplicationProtectedDataDidBecomeAvailable";
+NSString* const UIApplicationProtectedDataWillBecomeUnavailable = @"UIApplicationProtectedDataWillBecomeUnavailable";
+NSString* const UIApplicationUserDidTakeScreenshotNotification = @"UIApplicationUserDidTakeScreenshotNotification";
+NSString* const UIContentSizeCategoryDidChangeNotification = @"UIContentSizeCategoryDidChangeNotification";
+
 const NSTimeInterval UIApplicationBackgroundFetchIntervalMinimum = StubConstant();
 const NSTimeInterval UIApplicationBackgroundFetchIntervalNever = StubConstant();
 
@@ -1533,7 +1539,7 @@ static void printViews(id curView, int level) {
  @Status Stub
  This will return UIRemoteNotificationTypeNone until we interop with our Notification system.
 */
-- (unsigned)enabledRemoteNotificationTypes {
+- (UIRemoteNotificationType)enabledRemoteNotificationTypes {
     return UIRemoteNotificationTypeNone;
 }
 

@@ -24,8 +24,8 @@
 #import <UIKit/UICollectionView.h>
 #import <UIKit/UIScrollViewDelegate.h>
 #import "UICollectionViewData.h"
-#import "UICollectionViewLayout+Internals.h"
-#include "UICollectionViewLayoutAttributes-Internal.h"
+#import "UICollectionViewLayout+Internal.h"
+#include "UICollectionViewLayoutAttributes+Internal.h"
 #import "UICollectionViewItemKey.h"
 
 static CGFloat UIAnimationDragCoefficient = 1.f;

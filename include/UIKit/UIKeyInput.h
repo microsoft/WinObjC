@@ -20,7 +20,7 @@
 
 @class NSString;
 
-@protocol UIKeyInput
+@protocol UIKeyInput <NSObject>
 - (void)insertText:(NSString*)text;
 - (void)deleteBackward;
 - (BOOL)hasText;

@@ -23,6 +23,6 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UIMotionEffectGroup : UIMotionEffect <NSCoding, NSCopying, NSObject>
+@interface UIMotionEffectGroup : UIMotionEffect <NSCoding, NSCopying>
 @property (copy, nonatomic) NSArray* motionEffects STUB_PROPERTY;
 @end

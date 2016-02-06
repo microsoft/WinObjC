@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 
 UIKIT_EXPORT_CLASS
-@interface UITextChecker : NSObject <NSObject>
+@interface UITextChecker : NSObject
 - (NSRange)rangeOfMisspelledWordInString:(NSString*)stringToCheck
                                    range:(NSRange)range
                               startingAt:(NSInteger)startingOffset

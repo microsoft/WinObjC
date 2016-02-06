@@ -21,7 +21,7 @@
 @class NSString;
 @class UIScrollView;
 
-@protocol UIScrollViewAccessibilityDelegate
+@protocol UIScrollViewAccessibilityDelegate <NSObject>
 @optional
 - (NSString*)accessibilityScrollStatusForScrollView:(UIScrollView*)scrollView;
 @end

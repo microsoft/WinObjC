@@ -29,7 +29,7 @@ UIKIT_EXPORT NSString* const UITransitionContextToViewControllerKey;
 UIKIT_EXPORT NSString* const UITransitionContextFromViewKey;
 UIKIT_EXPORT NSString* const UITransitionContextToViewKey;
 
-@protocol UIViewControllerContextTransitioning
+@protocol UIViewControllerContextTransitioning <NSObject>
 - (UIView*)containerView;
 - (UIViewController*)viewControllerForKey:(NSString*)key;
 - (UIView*)viewForKey:(NSString*)key;

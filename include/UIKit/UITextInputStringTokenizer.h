@@ -23,6 +23,6 @@
 @class UIResponder;
 
 UIKIT_EXPORT_CLASS
-@interface UITextInputStringTokenizer : NSObject <NSObject, UITextInputTokenizer>
+@interface UITextInputStringTokenizer : NSObject <UITextInputTokenizer>
 - (instancetype)initWithTextInput:(UIResponder*)textInput STUB_METHOD;
 @end

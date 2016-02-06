@@ -32,7 +32,7 @@ typedef enum : NSInteger {
 } UIPrinterJobTypes;
 
 UIKIT_EXPORT_CLASS
-@interface UIPrinter : NSObject <NSObject>
+@interface UIPrinter : NSObject
 + (UIPrinter*)printerWithURL:(NSURL*)url STUB_METHOD;
 @property (readonly, copy) NSURL* URL STUB_PROPERTY;
 @property (readonly, copy) NSString* displayName STUB_PROPERTY;

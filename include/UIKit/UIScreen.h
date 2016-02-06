@@ -38,6 +38,7 @@
 UIKIT_EXPORT NSString* const UIScreenDidConnectNotification;
 UIKIT_EXPORT NSString* const UIScreenDidDisconnectNotification;
 UIKIT_EXPORT NSString* const UIScreenModeDidChangeNotification;
+UIKIT_EXPORT NSString* const UIScreenBrightnessDidChangeNotification;
 
 @class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
 

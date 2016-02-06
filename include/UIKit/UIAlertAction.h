@@ -29,7 +29,7 @@ typedef enum UIAlertActionStyle : NSInteger {
 } UIAlertActionStyle;
 
 UIKIT_EXPORT_CLASS
-@interface UIAlertAction : NSObject <NSCopying, NSObject>
+@interface UIAlertAction : NSObject <NSCopying>
 + (instancetype)actionWithTitle:(NSString*)title style:(UIAlertActionStyle)style handler:(void (^)(UIAlertAction*))handler STUB_METHOD;
 @property (readonly, nonatomic) NSString* title STUB_PROPERTY;
 @property (readonly, nonatomic) UIAlertActionStyle style STUB_PROPERTY;

@@ -22,8 +22,8 @@
 @protocol UIDynamicItem;
 @class UICollisionBehavior;
 @protocol NSCopying;
-@protocol UICollisionBehaviorDelegate
 
+@protocol UICollisionBehaviorDelegate <NSObject>
 @optional
 - (void)collisionBehavior:(UICollisionBehavior*)behavior
       beganContactForItem:(id<UIDynamicItem>)item

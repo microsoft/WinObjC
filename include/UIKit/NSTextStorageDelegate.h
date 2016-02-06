@@ -22,7 +22,7 @@
 
 @class NSTextStorage;
 
-@protocol NSTextStorageDelegate
+@protocol NSTextStorageDelegate <NSObject>
 @optional
 - (void)textStorage:(NSTextStorage*)textStorage
  willProcessEditing:(NSTextStorageEditActions)editedMask

@@ -30,7 +30,7 @@ typedef enum {
     UINavigationControllerOperationPop
 } UINavigationControllerOperation;
 
-@protocol UINavigationControllerDelegate
+@protocol UINavigationControllerDelegate <NSObject>
 @optional
 - (void)navigationController:(UINavigationController*)navigationController
       willShowViewController:(UIViewController*)viewController

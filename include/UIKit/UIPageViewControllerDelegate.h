@@ -23,7 +23,7 @@
 @class UIPageViewController;
 @class NSArray;
 
-@protocol UIPageViewControllerDelegate
+@protocol UIPageViewControllerDelegate <NSObject>
 @optional
 - (void)pageViewController:(UIPageViewController*)pageViewController willTransitionToViewControllers:(NSArray*)pendingViewControllers;
 - (void)pageViewController:(UIPageViewController*)pageViewController

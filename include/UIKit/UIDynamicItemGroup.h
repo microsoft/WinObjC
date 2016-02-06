@@ -23,7 +23,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UIDynamicItemGroup : NSObject <NSObject, UIDynamicItem>
+@interface UIDynamicItemGroup : NSObject <UIDynamicItem>
 - (instancetype)initWithItems:(NSArray*)items STUB_METHOD;
 @property (readonly, copy, nonatomic) NSArray* items STUB_PROPERTY;
 @end

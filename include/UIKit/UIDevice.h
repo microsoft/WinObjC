@@ -34,7 +34,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKitExport.h>
 
+UIKIT_EXPORT NSString* const UIDeviceBatteryLevelDidChangeNotification;
+UIKIT_EXPORT NSString* const UIDeviceBatteryStateDidChangeNotification;
 UIKIT_EXPORT NSString* const UIDeviceOrientationDidChangeNotification;
+UIKIT_EXPORT NSString* const UIDeviceProximityStateDidChangeNotification;
 
 typedef enum {
     UIDeviceOrientationUnknown,

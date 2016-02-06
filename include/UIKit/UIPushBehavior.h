@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, UIPushBehaviorMode) {
 };
 
 UIKIT_EXPORT_CLASS
-@interface UIPushBehavior : UIDynamicBehavior <NSObject>
+@interface UIPushBehavior : UIDynamicBehavior
 @property (readwrite, nonatomic) BOOL active STUB_PROPERTY;
 - (void)addItem:(id<UIDynamicItem>)item STUB_METHOD;
 - (instancetype)initWithItems:(NSArray*)items mode:(UIPushBehaviorMode)mode STUB_METHOD;

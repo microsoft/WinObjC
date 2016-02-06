@@ -21,7 +21,7 @@
 @class UIDocumentPickerViewController;
 @class NSURL;
 
-@protocol UIDocumentPickerDelegate
+@protocol UIDocumentPickerDelegate <NSObject>
 - (void)documentPicker:(UIDocumentPickerViewController*)controller didPickDocumentAtURL:(NSURL*)url;
 @optional
 - (void)documentPickerWasCancelled:(UIDocumentPickerViewController*)controller;

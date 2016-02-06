@@ -17,11 +17,12 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIBarPositioningDelegate.h>
 #import <Foundation/Foundation.h>
 
 @class UISearchBar;
 
-@protocol UISearchBarDelegate
+@protocol UISearchBarDelegate <UIBarPositioningDelegate>
 @optional
 - (void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)searchText;
 - (BOOL)searchBar:(UISearchBar*)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;

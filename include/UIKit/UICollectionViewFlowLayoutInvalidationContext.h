@@ -21,7 +21,7 @@
 #import <UIKit/UICollectionViewLayoutInvalidationContext.h>
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewFlowLayoutInvalidationContext : UICollectionViewLayoutInvalidationContext <NSObject>
+@interface UICollectionViewFlowLayoutInvalidationContext : UICollectionViewLayoutInvalidationContext
 @property (nonatomic) BOOL invalidateFlowLayoutDelegateMetrics STUB_PROPERTY;
 @property (nonatomic) BOOL invalidateFlowLayoutAttributes STUB_PROPERTY;
 @end

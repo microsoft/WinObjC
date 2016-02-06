@@ -61,7 +61,7 @@ typedef int32_t UIImageRenderingMode;
 @class CIImage, UIImageAsset, UITraitCollection;
 
 UIKIT_EXPORT_CLASS
-@interface UIImage : NSObject <NSObject, NSSecureCoding>
+@interface UIImage : NSObject <NSSecureCoding>
 
 // Starboard additions:
 - (CGRect)_imageStretch;

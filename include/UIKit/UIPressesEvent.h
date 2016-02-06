@@ -24,7 +24,7 @@
 @class UIGestureRecognizer;
 
 UIKIT_EXPORT_CLASS
-@interface UIPressesEvent : UIEvent <NSObject>
+@interface UIPressesEvent : UIEvent
 - (NSSet*)allPresses STUB_METHOD;
 - (NSSet*)pressesForGestureRecognizer:(UIGestureRecognizer*)gesture STUB_METHOD;
 @end

@@ -22,7 +22,7 @@
 @class NSArray;
 @class UITabBarItem;
 
-@protocol UITabBarDelegate
+@protocol UITabBarDelegate <NSObject>
 @optional
 - (void)tabBar:(UITabBar*)tabBar willBeginCustomizingItems:(NSArray*)items;
 - (void)tabBar:(UITabBar*)tabBar didBeginCustomizingItems:(NSArray*)items;

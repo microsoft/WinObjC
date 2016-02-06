@@ -25,7 +25,7 @@
 @class UIBarButtonItem;
 @class UIPopoverController;
 
-@protocol UISplitViewControllerDelegate
+@protocol UISplitViewControllerDelegate <NSObject>
 @optional
 - (void)splitViewController:(UISplitViewController*)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode;
 - (UISplitViewControllerDisplayMode)targetDisplayModeForActionInSplitViewController:(UISplitViewController*)svc;

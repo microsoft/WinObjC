@@ -21,7 +21,7 @@
 
 @class UIActionSheet;
 
-@protocol UIActionSheetDelegate
+@protocol UIActionSheetDelegate <NSObject>
 @optional
 - (void)actionSheet:(UIActionSheet*)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 - (void)willPresentActionSheet:(UIActionSheet*)actionSheet;

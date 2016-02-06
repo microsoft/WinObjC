@@ -19,7 +19,7 @@
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UIKit.h>
 
-@protocol UIPopoverBackgroundViewMethods
+@protocol UIPopoverBackgroundViewMethods <NSObject>
 + (UIEdgeInsets)contentViewInsets;
 + (CGFloat)arrowBase;
 + (CGFloat)arrowHeight;

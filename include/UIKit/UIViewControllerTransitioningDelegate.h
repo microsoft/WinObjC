@@ -23,7 +23,7 @@
 @protocol UIViewControllerInteractiveTransitioning;
 @class UIPresentationController;
 
-@protocol UIViewControllerTransitioningDelegate
+@protocol UIViewControllerTransitioningDelegate <NSObject>
 @optional
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController*)presented
                                                                   presentingController:(UIViewController*)presenting

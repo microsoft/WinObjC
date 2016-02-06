@@ -71,7 +71,6 @@ dismissWithClickedButtonIndex:(NSInteger)buttonIndex
                      animated:
                          (BOOL)
                              animated; // not implemented at the moment since I use NSAlert and runModal and this would present problems. :/
-- (void)show STUB_METHOD;
 - (void)show;
 
 @end

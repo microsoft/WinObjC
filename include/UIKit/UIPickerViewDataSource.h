@@ -21,7 +21,7 @@
 
 @class UIPickerView;
 
-@protocol UIPickerViewDataSource
+@protocol UIPickerViewDataSource <NSObject>
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView*)pickerView;
 - (NSInteger)pickerView:(UIPickerView*)pickerView numberOfRowsInComponent:(NSInteger)component;
 @end

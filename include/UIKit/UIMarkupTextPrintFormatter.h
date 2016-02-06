@@ -23,7 +23,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UIMarkupTextPrintFormatter : UIPrintFormatter <NSCopying, NSObject>
+@interface UIMarkupTextPrintFormatter : UIPrintFormatter <NSCopying>
 - (instancetype)initWithMarkupText:(NSString*)markupText STUB_METHOD;
 @property (copy, nonatomic) NSString* markupText STUB_PROPERTY;
 @end

@@ -20,12 +20,20 @@
 
 NSString* const UIPasteboardNameGeneral = @"UIPasteboardNameGeneral";
 NSString* const UIPasteboardNameFind = @"UIPasteboardNameFind";
-NSArray* const UIPasteboardTypeListString = StubConstant();
-NSArray* const UIPasteboardTypeListURL = StubConstant();
-NSArray* const UIPasteboardTypeListImage = StubConstant();
-NSArray* const UIPasteboardTypeListColor = StubConstant();
 NSString* const UIPasteboardChangedTypesAddedKey = @"UIPasteboardChangedTypesAddedKey";
 NSString* const UIPasteboardChangedTypesRemovedKey = @"UIPasteboardChangedTypesRemovedKey";
+
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListString = StubConstant();
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListURL = StubConstant();
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListImage = StubConstant();
+/** @Status Stub */
+NSArray* const UIPasteboardTypeListColor = StubConstant();
+
+NSString* const UIPasteboardChangedNotification = @"UIPasteboardChangedNotification";
+NSString* const UIPasteboardRemovedNotification = @"UIPasteboardRemovedNotification";
 
 @implementation UIPasteboard
 /**

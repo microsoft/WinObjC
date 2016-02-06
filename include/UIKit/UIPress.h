@@ -41,7 +41,7 @@ typedef enum : NSInteger {
 } UIPressType;
 
 UIKIT_EXPORT_CLASS
-@interface UIPress : NSObject <NSObject>
+@interface UIPress : NSObject
 @property (readonly, nonatomic) CGFloat force STUB_PROPERTY;
 @property (readonly, copy, nonatomic) NSArray* gestureRecognizers STUB_PROPERTY;
 @property (readonly, nonatomic, strong) UIResponder* responder STUB_PROPERTY;

@@ -22,7 +22,7 @@
 @class NSIndexPath;
 @class UIView;
 
-@protocol UIDataSourceModelAssociation
+@protocol UIDataSourceModelAssociation <NSObject>
 - (NSString*)modelIdentifierForElementAtIndexPath:(NSIndexPath*)idx inView:(UIView*)view;
 - (NSIndexPath*)indexPathForElementWithModelIdentifier:(NSString*)identifier inView:(UIView*)view;
 @end

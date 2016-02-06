@@ -22,7 +22,7 @@
 @class NSLayoutConstraint;
 
 UIKIT_EXPORT_CLASS
-@interface NSLayoutAnchor : NSObject <NSObject>
+@interface NSLayoutAnchor : NSObject
 - (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor STUB_METHOD;
 - (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c STUB_METHOD;
 - (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor STUB_METHOD;

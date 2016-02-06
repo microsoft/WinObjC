@@ -22,6 +22,6 @@
 #import <UIKit/UIKit.h>
 
 UIKIT_EXPORT_CLASS
-@interface UIScreenEdgePanGestureRecognizer : UIPanGestureRecognizer <NSObject>
+@interface UIScreenEdgePanGestureRecognizer : UIPanGestureRecognizer
 @property (assign, readwrite, nonatomic) UIRectEdge edges STUB_PROPERTY;
 @end

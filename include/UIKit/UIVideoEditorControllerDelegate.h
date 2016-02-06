@@ -22,7 +22,7 @@
 @class NSString;
 @class NSError;
 
-@protocol UIVideoEditorControllerDelegate
+@protocol UIVideoEditorControllerDelegate <NSObject>
 @optional
 - (void)videoEditorController:(UIVideoEditorController*)editor didSaveEditedVideoToPath:(NSString*)editedVideoPath;
 - (void)videoEditorControllerDidCancel:(UIVideoEditorController*)editor;

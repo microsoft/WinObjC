@@ -35,7 +35,7 @@ UIKIT_EXPORT const UIFloatRange UIFloatRangeZero;
 UIKIT_EXPORT const UIFloatRange UIFloatRangeInfinite;
 
 UIKIT_EXPORT_CLASS
-@interface UIAttachmentBehavior : UIDynamicBehavior <NSObject>
+@interface UIAttachmentBehavior : UIDynamicBehavior
 + (instancetype)slidingAttachmentWithItem:(id<UIDynamicItem>)item
                          attachmentAnchor:(CGPoint)point
                         axisOfTranslation:(CGVector)axis STUB_METHOD;

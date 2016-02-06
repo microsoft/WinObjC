@@ -35,7 +35,7 @@ typedef NS_OPTIONS(NSUInteger, UICollisionBehaviorMode) {
 };
 
 UIKIT_EXPORT_CLASS
-@interface UICollisionBehavior : UIDynamicBehavior <NSObject>
+@interface UICollisionBehavior : UIDynamicBehavior
 - (void)addItem:(id<UIDynamicItem>)item STUB_METHOD;
 - (instancetype)initWithItems:(NSArray*)items STUB_METHOD;
 - (void)removeItem:(id<UIDynamicItem>)item STUB_METHOD;

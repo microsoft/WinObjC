@@ -26,7 +26,7 @@ typedef enum : NSInteger {
     UIBarPositionTopAttached = 3,
 } UIBarPosition;
 
-@protocol UIBarPositioning
+@protocol UIBarPositioning <NSObject>
 @optional
 @property (nonatomic, readonly) UIBarPosition barPosition;
 @end

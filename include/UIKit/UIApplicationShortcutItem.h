@@ -24,7 +24,7 @@
 @class NSDictionary;
 
 UIKIT_EXPORT_CLASS
-@interface UIApplicationShortcutItem : NSObject <NSCopying, NSMutableCopying, NSObject>
+@interface UIApplicationShortcutItem : NSObject <NSCopying, NSMutableCopying>
 - (instancetype)initWithType:(NSString*)type localizedTitle:(NSString*)localizedTitle STUB_METHOD;
 - (instancetype)initWithType:(NSString*)type
               localizedTitle:(NSString*)localizedTitle

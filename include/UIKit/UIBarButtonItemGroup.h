@@ -23,7 +23,7 @@
 @class UIBarButtonItem;
 
 UIKIT_EXPORT_CLASS
-@interface UIBarButtonItemGroup : NSObject <NSCoding, NSObject>
+@interface UIBarButtonItemGroup : NSObject <NSCoding>
 - (instancetype)initWithBarButtonItems:(NSArray*)barButtonItems representativeItem:(UIBarButtonItem*)representativeItem STUB_METHOD;
 @property (readwrite, copy, nonatomic) NSArray* barButtonItems STUB_PROPERTY;
 @property (readwrite, nonatomic, strong) UIBarButtonItem* representativeItem STUB_PROPERTY;

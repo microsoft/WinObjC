@@ -23,7 +23,7 @@
 @class NSIndexPath;
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewFocusUpdateContext : UIFocusUpdateContext <NSObject>
+@interface UICollectionViewFocusUpdateContext : UIFocusUpdateContext
 @property (readonly, nonatomic, strong) NSIndexPath* previouslyFocusedIndexPath STUB_PROPERTY;
 @property (readonly, nonatomic, strong) NSIndexPath* nextFocusedIndexPath STUB_PROPERTY;
 @end

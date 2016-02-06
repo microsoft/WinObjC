@@ -24,7 +24,7 @@
 @class UIView;
 @class NSString;
 
-@protocol UIDocumentInteractionControllerDelegate
+@protocol UIDocumentInteractionControllerDelegate <NSObject>
 @optional
 - (UIViewController*)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController*)controller;
 - (UIView*)documentInteractionControllerViewForPreview:(UIDocumentInteractionController*)controller;

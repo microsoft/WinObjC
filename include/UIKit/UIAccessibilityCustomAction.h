@@ -22,7 +22,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface UIAccessibilityCustomAction : NSObject <NSObject>
+@interface UIAccessibilityCustomAction : NSObject
 - (instancetype)initWithName:(NSString*)name target:(id)target selector:(SEL)selector STUB_METHOD;
 @property (copy, nonatomic) NSString* name STUB_PROPERTY;
 

@@ -30,7 +30,7 @@
 typedef void (^UIPrinterPickerCompletionHandler)(UIPrinterPickerController* printerPickerController, BOOL userDidSelect, NSError* error);
 
 UIKIT_EXPORT_CLASS
-@interface UIPrinterPickerController : NSObject <NSObject>
+@interface UIPrinterPickerController : NSObject
 + (UIPrinterPickerController*)printerPickerControllerWithInitiallySelectedPrinter:(UIPrinter*)printer STUB_METHOD;
 @property (nonatomic) id<UIPrinterPickerControllerDelegate> delegate STUB_PROPERTY;
 - (BOOL)presentAnimated:(BOOL)animated completionHandler:(UIPrinterPickerCompletionHandler)completion STUB_METHOD;

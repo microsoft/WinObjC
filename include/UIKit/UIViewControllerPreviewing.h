@@ -23,7 +23,7 @@
 @protocol UIViewControllerPreviewingDelegate;
 @class UIView;
 
-@protocol UIViewControllerPreviewing
+@protocol UIViewControllerPreviewing <NSObject>
 @property (nonatomic) CGRect sourceRect;
 @property (nonatomic, readonly) UIGestureRecognizer* previewingGestureRecognizerForFailureRelationship;
 @property (nonatomic, readonly) id<UIViewControllerPreviewingDelegate> delegate;

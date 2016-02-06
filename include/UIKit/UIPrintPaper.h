@@ -23,7 +23,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UIPrintPaper : NSObject <NSObject>
+@interface UIPrintPaper : NSObject
 @property (readonly) CGSize paperSize STUB_PROPERTY;
 @property (readonly) CGRect printableRect STUB_PROPERTY;
 + (UIPrintPaper*)bestPaperForPageSize:(CGSize)pageSize withPapersFromArray:(NSArray*)paperList STUB_METHOD;

@@ -20,7 +20,7 @@
 
 @class UIDynamicAnimator;
 
-@protocol UIDynamicAnimatorDelegate
+@protocol UIDynamicAnimatorDelegate <NSObject>
 @optional
 - (void)dynamicAnimatorDidPause:(UIDynamicAnimator*)animator;
 - (void)dynamicAnimatorWillResume:(UIDynamicAnimator*)animator;

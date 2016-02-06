@@ -22,6 +22,6 @@
 @class NSArray;
 @class NSCoder;
 
-@protocol UIObjectRestoration
+@protocol UIObjectRestoration <NSObject>
 + (id<UIStateRestoring>)objectWithRestorationIdentifierPath:(NSArray*)identifierComponents coder:(NSCoder*)coder;
 @end

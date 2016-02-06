@@ -22,6 +22,6 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UILexicon : NSObject <NSCopying, NSObject>
+@interface UILexicon : NSObject <NSCopying>
 @property (readonly, nonatomic) NSArray* entries STUB_PROPERTY;
 @end

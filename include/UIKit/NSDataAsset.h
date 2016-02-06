@@ -24,7 +24,7 @@
 @class NSData;
 
 UIKIT_EXPORT_CLASS
-@interface NSDataAsset : NSObject <NSCopying, NSObject>
+@interface NSDataAsset : NSObject <NSCopying>
 - (instancetype)initWithName:(NSString*)name STUB_METHOD;
 - (instancetype)initWithName:(NSString*)name bundle:(NSBundle*)bundle STUB_METHOD;
 @property (readonly, copy, nonatomic) NSData* data STUB_PROPERTY;

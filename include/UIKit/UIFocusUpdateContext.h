@@ -31,7 +31,7 @@ typedef enum {
 } UIFocusHeading;
 
 UIKIT_EXPORT_CLASS
-@interface UIFocusUpdateContext : NSObject <NSObject>
+@interface UIFocusUpdateContext : NSObject
 @property (readonly, nonatomic) UIView* previouslyFocusedView STUB_PROPERTY;
 @property (readonly, nonatomic) UIView* nextFocusedView STUB_PROPERTY;
 @property (readonly, assign, nonatomic) UIFocusHeading focusHeading STUB_PROPERTY;

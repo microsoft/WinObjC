@@ -22,7 +22,7 @@
 #import <UIKit/UIView.h>
 
 UIKIT_EXPORT_CLASS
-@interface UIPercentDrivenInteractiveTransition : NSObject <NSObject, UIViewControllerInteractiveTransitioning>
+@interface UIPercentDrivenInteractiveTransition : NSObject <UIViewControllerInteractiveTransitioning>
 @property (assign, nonatomic) UIViewAnimationCurve completionCurve STUB_PROPERTY;
 @property (readonly) CGFloat duration STUB_PROPERTY;
 @property (readonly) CGFloat percentComplete STUB_PROPERTY;

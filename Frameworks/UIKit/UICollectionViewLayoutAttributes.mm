@@ -1,5 +1,11 @@
 //******************************************************************************
 //
+// UICollectionViewUpdateItem.m
+// PSPDFKit
+//
+// Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
+// Contributed by Sergey Gavrilyuk.
+//
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -17,7 +23,7 @@
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
 
-#include "UICollectionViewLayoutAttributes-Internal.h"
+#include "UICollectionViewLayoutAttributes+Internal.h"
 #include "UICollectionViewItemKey.h"
 
 @interface UICollectionViewLayoutAttributes () {
@@ -224,38 +230,6 @@
     layoutAttributes.hidden = self.isHidden;
     return layoutAttributes;
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - UICollection/UICollection interoperability
-
-#if 0
-
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector {
-    NSMethodSignature* signature = [super methodSignatureForSelector:selector];
-    if (!signature) {
-        NSString* selString = NSStringFromSelector(selector);
-        if ([selString hasPrefix:@"_"]) {
-            SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-            signature = [super methodSignatureForSelector:cleanedSelector];
-        }
-    }
-    return signature;
-}
-
-- (void)forwardInvocation:(NSInvocation*)invocation {
-    NSString* selString = NSStringFromSelector([invocation selector]);
-    if ([selString hasPrefix:@"_"]) {
-        SEL cleanedSelector = NSSelectorFromString([selString substringFromIndex:1]);
-        if ([self respondsToSelector:cleanedSelector]) {
-            invocation.selector = cleanedSelector;
-            [invocation invokeWithTarget:self];
-        }
-    } else {
-        [super forwardInvocation:invocation];
-    }
-}
-
-#endif
 
 /**
  @Status Stub

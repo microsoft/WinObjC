@@ -22,7 +22,7 @@
 @class UIPrinter;
 @class UIViewController;
 
-@protocol UIPrinterPickerControllerDelegate
+@protocol UIPrinterPickerControllerDelegate <NSObject>
 @optional
 - (BOOL)printerPickerController:(UIPrinterPickerController*)printerPickerController shouldShowPrinter:(UIPrinter*)printer;
 - (void)printerPickerControllerDidSelectPrinter:(UIPrinterPickerController*)printerPickerController;

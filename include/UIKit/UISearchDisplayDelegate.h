@@ -22,7 +22,7 @@
 @class UISearchDisplayController;
 @class UITableView;
 
-@protocol UISearchDisplayDelegate
+@protocol UISearchDisplayDelegate <NSObject>
 @optional
 - (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController*)controller;
 - (void)searchDisplayControllerDidBeginSearch:(UISearchDisplayController*)controller;

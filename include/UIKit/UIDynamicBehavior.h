@@ -23,7 +23,7 @@
 @class UIDynamicAnimator;
 
 UIKIT_EXPORT_CLASS
-@interface UIDynamicBehavior : NSObject <NSObject>
+@interface UIDynamicBehavior : NSObject
 @property (copy, nonatomic) void (^action)(void) STUB_PROPERTY;
 - (void)addChildBehavior:(UIDynamicBehavior*)behavior STUB_METHOD;
 @property (readonly, copy, nonatomic) NSArray* childBehaviors STUB_PROPERTY;

@@ -22,7 +22,7 @@
 #import <UIKit/UIKit.h>
 #import "UICollectionViewItemKey.h"
 #import "UICollectionViewData.h"
-#import "UICollectionViewLayoutAttributes-Internal.h"
+#import "UICollectionViewLayoutAttributes+Internal.h"
 
 @interface UICollectionView ()
 - (id)currentUpdate;

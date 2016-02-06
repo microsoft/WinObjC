@@ -35,11 +35,12 @@ UIKIT_EXPORT NSArray* const UIPasteboardTypeListImage;
 UIKIT_EXPORT NSArray* const UIPasteboardTypeListColor;
 UIKIT_EXPORT NSString* const UIPasteboardChangedTypesAddedKey;
 UIKIT_EXPORT NSString* const UIPasteboardChangedTypesRemovedKey;
-// Missing declaration of //apple_ref/c/data/UIPasteboardChangedNotification
-// Missing declaration of //apple_ref/c/data/UIPasteboardRemovedNotification
+
+UIKIT_EXPORT NSString* const UIPasteboardChangedNotification;
+UIKIT_EXPORT NSString* const UIPasteboardRemovedNotification;
 
 UIKIT_EXPORT_CLASS
-@interface UIPasteboard : NSObject <NSObject>
+@interface UIPasteboard : NSObject
 + (UIPasteboard*)generalPasteboard STUB_METHOD;
 + (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create STUB_METHOD;
 + (UIPasteboard*)pasteboardWithUniqueName STUB_METHOD;

@@ -25,7 +25,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UIDynamicItemBehavior : UIDynamicBehavior <NSObject>
+@interface UIDynamicItemBehavior : UIDynamicBehavior
 - (void)addItem:(id<UIDynamicItem>)item STUB_METHOD;
 - (instancetype)initWithItems:(NSArray*)items STUB_METHOD;
 - (void)removeItem:(id<UIDynamicItem>)item STUB_METHOD;

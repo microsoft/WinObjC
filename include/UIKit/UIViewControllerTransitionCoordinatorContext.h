@@ -25,7 +25,7 @@
 @class NSString;
 @class UIView;
 
-@protocol UIViewControllerTransitionCoordinatorContext
+@protocol UIViewControllerTransitionCoordinatorContext <NSObject>
 - (UIViewController*)viewControllerForKey:(NSString*)key;
 - (UIView*)viewForKey:(NSString*)key;
 - (UIView*)containerView;

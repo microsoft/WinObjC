@@ -4,6 +4,19 @@
 //
 //  Created by Sam Soffes on 2/7/11.
 //  Copyright 2011 Sam Soffes. All rights reserved.
+
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 //
 
 // Limitiations:
@@ -32,8 +45,8 @@ enum {
 UIKIT_EXPORT_CLASS
 @interface UISegmentedControl : UIControl
 
-@property (nonatomic) UISegmentedControlStyle segmentedControlStyle; // stub
-@property (nonatomic, retain) UIColor* tintColor; // stub
+@property (nonatomic) UISegmentedControlStyle segmentedControlStyle STUB_PROPERTY;
+@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
 @property (nonatomic, assign, readonly) NSUInteger numberOfSegments;
 @property (nonatomic, assign) NSInteger selectedSegmentIndex;
 @property (nonatomic, getter=isMomentary) BOOL momentary;
@@ -41,22 +54,11 @@ UIKIT_EXPORT_CLASS
 
 - (id)initWithItems:(NSArray*)items;
 
-//- (void)insertSegmentWithTitle:(NSString *)title atIndex:(NSUInteger)segment animated:(BOOL)animated;
-//- (void)insertSegmentWithImage:(UIImage *)image  atIndex:(NSUInteger)segment animated:(BOOL)animated;
-//- (void)removeSegmentAtIndex:(NSUInteger)segment animated:(BOOL)animated;
-//- (void)removeAllSegments;
-
 - (void)setTitle:(NSString*)title forSegmentAtIndex:(NSUInteger)segment;
 - (NSString*)titleForSegmentAtIndex:(NSUInteger)segment;
 
 - (void)setImage:(UIImage*)image forSegmentAtIndex:(NSUInteger)segment;
 - (UIImage*)imageForSegmentAtIndex:(NSUInteger)segment;
-
-//- (void)setWidth:(CGFloat)width forSegmentAtIndex:(NSUInteger)segment;
-//- (CGFloat)widthForSegmentAtIndex:(NSUInteger)segment;
-
-//- (void)setContentOffset:(CGSize)offset forSegmentAtIndex:(NSUInteger)segment;
-//- (CGSize)contentOffsetForSegmentAtIndex:(NSUInteger)segment;
 
 - (void)setEnabled:(BOOL)enabled forSegmentAtIndex:(NSUInteger)segment;
 - (BOOL)isEnabledForSegmentAtIndex:(NSUInteger)segment;

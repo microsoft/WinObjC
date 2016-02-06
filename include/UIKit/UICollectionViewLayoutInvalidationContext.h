@@ -25,7 +25,7 @@
 @class NSDictionary;
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewLayoutInvalidationContext : NSObject <NSObject>
+@interface UICollectionViewLayoutInvalidationContext : NSObject
 @property (readonly, nonatomic) BOOL invalidateEverything STUB_PROPERTY;
 @property (readonly, nonatomic) BOOL invalidateDataSourceCounts STUB_PROPERTY;
 @property (nonatomic) CGPoint contentOffsetAdjustment STUB_PROPERTY;

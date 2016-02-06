@@ -25,7 +25,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface UIGravityBehavior : UIDynamicBehavior <NSObject>
+@interface UIGravityBehavior : UIDynamicBehavior
 - (instancetype)initWithItems:(NSArray*)items STUB_METHOD;
 @property (readonly, copy, nonatomic) NSArray* items STUB_PROPERTY;
 - (void)addItem:(id<UIDynamicItem>)item STUB_METHOD;

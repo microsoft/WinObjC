@@ -20,7 +20,7 @@
 
 @class UISearchController;
 
-@protocol UISearchControllerDelegate
+@protocol UISearchControllerDelegate <NSObject>
 @optional
 - (void)didDismissSearchController:(UISearchController*)searchController;
 - (void)didPresentSearchController:(UISearchController*)searchController;

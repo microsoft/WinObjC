@@ -25,7 +25,7 @@
 @class UICollectionViewLayout;
 @class NSIndexPath;
 
-@protocol UICollectionViewDelegateFlowLayout
+@protocol UICollectionViewDelegateFlowLayout <NSObject>
 @optional
 - (CGSize)collectionView:(UICollectionView*)collectionView
                   layout:(UICollectionViewLayout*)collectionViewLayout

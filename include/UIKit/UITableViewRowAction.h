@@ -29,7 +29,7 @@ typedef enum UITableViewRowActionStyle : NSInteger {
 } UITableViewRowActionStyle;
 
 UIKIT_EXPORT_CLASS
-@interface UITableViewRowAction : NSObject <NSCopying, NSObject>
+@interface UITableViewRowAction : NSObject <NSCopying>
 + (instancetype)rowActionWithStyle:(UITableViewRowActionStyle)style
                              title:(NSString*)title
                            handler:(void (^)(UITableViewRowAction*, NSIndexPath*))handler STUB_METHOD;

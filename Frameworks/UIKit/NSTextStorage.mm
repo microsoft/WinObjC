@@ -18,6 +18,9 @@
 
 #include "UIKit/NSParagraphStyle.h"
 
+NSString* const NSTextStorageDidProcessEditingNotification = @"NSTextStorageDidProcessEditingNotification";
+NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWillProcessEditingNotification";
+
 @implementation NSTextStorage {
     NSMutableArray* _layoutManagers;
     NSMutableDictionary* _defaultAttributes;

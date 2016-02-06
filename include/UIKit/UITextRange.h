@@ -23,7 +23,7 @@
 @class UITextPosition;
 
 UIKIT_EXPORT_CLASS
-@interface UITextRange : NSObject <NSObject>
+@interface UITextRange : NSObject
 @property (readonly, nonatomic) UITextPosition* start STUB_PROPERTY;
 @property (readonly, nonatomic) UITextPosition* end STUB_PROPERTY;
 @property (readonly, getter=isEmpty, nonatomic) BOOL empty STUB_PROPERTY;

@@ -25,7 +25,7 @@
 @class NSDictionary;
 
 UIKIT_EXPORT_CLASS
-@interface UIMutableApplicationShortcutItem : UIApplicationShortcutItem <NSCopying, NSMutableCopying, NSObject>
+@interface UIMutableApplicationShortcutItem : UIApplicationShortcutItem <NSCopying, NSMutableCopying>
 @property (copy, nonatomic) NSString* localizedTitle STUB_PROPERTY;
 @property (copy, nonatomic) NSString* localizedSubtitle STUB_PROPERTY;
 @property (copy, nonatomic) NSString* type STUB_PROPERTY;

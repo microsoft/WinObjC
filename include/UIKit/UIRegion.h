@@ -21,7 +21,7 @@
 #import <CoreGraphics/CGGeometry.h>
 
 UIKIT_EXPORT_CLASS
-@interface UIRegion : NSObject <NSCoding, NSCopying, NSObject>
+@interface UIRegion : NSObject <NSCoding, NSCopying>
 + (instancetype)infiniteRegion STUB_METHOD;
 - (instancetype)initWithSize:(CGSize)size STUB_METHOD;
 - (instancetype)initWithRadius:(CGFloat)radius STUB_METHOD;

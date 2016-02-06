@@ -22,7 +22,7 @@
 @class NSString;
 @class UIPickerView;
 
-@protocol UIPickerViewAccessibilityDelegate
+@protocol UIPickerViewAccessibilityDelegate <NSObject>
 @optional
 - (NSString*)pickerView:(UIPickerView*)pickerView accessibilityLabelForComponent:(NSInteger)component;
 - (NSString*)pickerView:(UIPickerView*)pickerView accessibilityHintForComponent:(NSInteger)component;

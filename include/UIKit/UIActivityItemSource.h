@@ -23,7 +23,7 @@
 @class NSString;
 @class UIImage;
 
-@protocol UIActivityItemSource
+@protocol UIActivityItemSource <NSObject>
 @required
 - (id)activityViewControllerPlaceholderItem:(UIActivityViewController*)activityViewController;
 - (id)activityViewController:(UIActivityViewController*)activityViewController itemForActivityType:(NSString*)activityType;

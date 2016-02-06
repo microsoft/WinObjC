@@ -20,6 +20,6 @@
 
 @class NSString;
 
-@protocol UIAccessibilityIdentification
+@protocol UIAccessibilityIdentification <NSObject>
 @property (nonatomic, copy) NSString* accessibilityIdentifier;
 @end

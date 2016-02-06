@@ -23,7 +23,7 @@
 @class UITraitCollection;
 
 UIKIT_EXPORT_CLASS
-@interface UIImageAsset : NSObject <NSObject, NSSecureCoding>
+@interface UIImageAsset : NSObject <NSSecureCoding>
 - (void)registerImage:(UIImage*)image withTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD;
 - (void)unregisterImageWithTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD;
 - (UIImage*)imageWithTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD;

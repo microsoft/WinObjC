@@ -27,7 +27,7 @@
 @class UIColor;
 
 UIKIT_EXPORT_CLASS
-@interface UISimpleTextPrintFormatter : UIPrintFormatter <NSCopying, NSObject>
+@interface UISimpleTextPrintFormatter : UIPrintFormatter <NSCopying>
 - (instancetype)initWithAttributedText:(NSAttributedString*)attributedText STUB_METHOD;
 - (instancetype)initWithText:(NSString*)text STUB_METHOD;
 @property (copy, nonatomic) NSAttributedString* attributedText STUB_PROPERTY;

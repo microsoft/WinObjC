@@ -22,7 +22,7 @@
 @class UITextField;
 @class NSString;
 
-@protocol UITextFieldDelegate
+@protocol UITextFieldDelegate <NSObject>
 - (BOOL)textFieldShouldBeginEditing:(UITextField*)textField;
 - (void)textFieldDidBeginEditing:(UITextField*)textField;
 - (BOOL)textFieldShouldEndEditing:(UITextField*)textField;

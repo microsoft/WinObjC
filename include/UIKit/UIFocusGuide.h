@@ -23,7 +23,7 @@
 @class UIView;
 
 UIKIT_EXPORT_CLASS
-@interface UIFocusGuide : UILayoutGuide <NSCoding, NSObject>
+@interface UIFocusGuide : UILayoutGuide <NSCoding>
 @property (getter=isEnabled, nonatomic) BOOL enabled STUB_PROPERTY;
 @property (nonatomic) UIView* preferredFocusedView STUB_PROPERTY;
 @end

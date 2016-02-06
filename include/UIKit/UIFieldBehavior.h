@@ -26,7 +26,7 @@
 @class UIRegion;
 
 UIKIT_EXPORT_CLASS
-@interface UIFieldBehavior : UIDynamicBehavior <NSObject>
+@interface UIFieldBehavior : UIDynamicBehavior
 + (instancetype)dragField STUB_METHOD;
 + (instancetype)springField STUB_METHOD;
 + (instancetype)velocityFieldWithVector:(CGVector)direction STUB_METHOD;

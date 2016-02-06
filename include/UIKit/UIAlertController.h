@@ -37,15 +37,17 @@ typedef enum UIAlertControllerStyle : NSInteger {
 UIKIT_EXPORT_CLASS
 @interface UIAlertController
     : UIViewController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
-+ (instancetype)alertControllerWithTitle:(NSString*)title
-                                 message:(NSString*)message
-                          preferredStyle:(UIAlertControllerStyle)preferredStyle STUB_METHOD;
+
 @property (copy, nonatomic) NSString* title STUB_PROPERTY;
 @property (copy, nonatomic) NSString* message STUB_PROPERTY;
 @property (readonly, nonatomic) UIAlertControllerStyle preferredStyle STUB_PROPERTY;
-- (void)addAction:(UIAlertAction*)action STUB_METHOD;
 @property (readonly, nonatomic) NSArray* actions STUB_PROPERTY;
 @property (nonatomic, strong) UIAlertAction* preferredAction STUB_PROPERTY;
-- (void)addTextFieldWithConfigurationHandler:(void (^)(UITextField*))configurationHandler STUB_METHOD;
 @property (readonly, nonatomic) NSArray* textFields STUB_PROPERTY;
+
+- (void)addTextFieldWithConfigurationHandler:(void (^)(UITextField*))configurationHandler STUB_METHOD;
+- (void)addAction:(UIAlertAction*)action STUB_METHOD;
++ (instancetype)alertControllerWithTitle:(NSString*)title
+                                 message:(NSString*)message
+                          preferredStyle:(UIAlertControllerStyle)preferredStyle STUB_METHOD;
 @end

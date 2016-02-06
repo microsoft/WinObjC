@@ -23,7 +23,7 @@
 @class UIPrintFormatter;
 
 UIKIT_EXPORT_CLASS
-@interface UIPrintPageRenderer : NSObject <NSObject>
+@interface UIPrintPageRenderer : NSObject
 - (NSInteger)numberOfPages STUB_METHOD;
 @property (readonly, nonatomic) CGRect paperRect STUB_PROPERTY;
 @property (readonly, nonatomic) CGRect printableRect STUB_PROPERTY;

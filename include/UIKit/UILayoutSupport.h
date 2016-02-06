@@ -21,7 +21,7 @@
 @class NSLayoutYAxisAnchor;
 @class NSLayoutDimension;
 
-@protocol UILayoutSupport
+@protocol UILayoutSupport <NSObject>
 @property (nonatomic, readonly) CGFloat length;
 @property (readonly, strong) NSLayoutYAxisAnchor* bottomAnchor;
 @property (readonly, strong) NSLayoutDimension* heightAnchor;

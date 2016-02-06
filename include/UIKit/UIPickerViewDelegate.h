@@ -24,7 +24,7 @@
 @class NSAttributedString;
 @class UIView;
 
-@protocol UIPickerViewDelegate
+@protocol UIPickerViewDelegate <NSObject>
 @optional
 - (CGFloat)pickerView:(UIPickerView*)pickerView rowHeightForComponent:(NSInteger)component;
 - (CGFloat)pickerView:(UIPickerView*)pickerView widthForComponent:(NSInteger)component;

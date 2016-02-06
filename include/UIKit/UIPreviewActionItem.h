@@ -26,6 +26,6 @@ enum UIPreviewActionStyle : NSInteger {
 };
 typedef enum UIPreviewActionStyle UIPreviewActionStyle;
 
-@protocol UIPreviewActionItem
+@protocol UIPreviewActionItem <NSObject>
 @property (nonatomic, copy, readonly) NSString* title;
 @end

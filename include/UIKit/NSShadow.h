@@ -21,7 +21,7 @@
 #import <CoreGraphics/CGGeometry.h>
 
 UIKIT_EXPORT_CLASS
-@interface NSShadow : NSObject <NSCoding, NSCopying, NSObject>
+@interface NSShadow : NSObject <NSCoding, NSCopying>
 - (instancetype)init STUB_METHOD;
 @property (assign, nonatomic) CGSize shadowOffset STUB_PROPERTY;
 @property (assign, nonatomic) CGFloat shadowBlurRadius STUB_PROPERTY;

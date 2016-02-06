@@ -22,7 +22,7 @@
 #import <Foundation/NSObject.h>
 
 UIKIT_EXPORT_CLASS
-@interface NSStringDrawingContext : NSObject <NSObject>
+@interface NSStringDrawingContext : NSObject
 @property (nonatomic) CGFloat minimumTrackingAdjustment STUB_PROPERTY;
 @property (readonly, nonatomic) CGFloat actualTrackingAdjustment STUB_PROPERTY;
 @property (nonatomic) CGFloat minimumScaleFactor STUB_PROPERTY;

@@ -33,6 +33,12 @@ UIWindow* m_pMainWindow = NULL;
 UIWindow* _curKeyWindow = nil;
 
 static float curWindowLevel = 1.0f;
+
+NSString* const UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotification";
+NSString* const UIWindowDidBecomeHiddenNotification = @"UIWindowDidBecomeHiddenNotification";
+NSString* const UIWindowDidBecomeKeyNotification = @"UIWindowDidBecomeKeyNotification";
+NSString* const UIWindowDidResignKeyNotification = @"UIWindowDidResignKeyNotification";
+
 NSString* const UIKeyboardFrameBeginUserInfoKey = @"UIKeyboardFrameBeginUserInfoKey";
 NSString* const UIKeyboardFrameEndUserInfoKey = @"UIKeyboardFrameEndUserInfoKey";
 NSString* const UIKeyboardAnimationDurationUserInfoKey = @"UIKeyboardAnimationDurationUserInfoKey";
@@ -47,8 +53,14 @@ NSString* const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserIn
 NSString* const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
 NSString* const UIKeyboardIsLocalUserInfoKey = @"UIKeyboardIsLocalUserInfoKey";
 
+NSString* const UIKeyboardWillChangeFrameNotification = @"UIKeyboardWillChangeFrameNotification";
+NSString* const UIKeyboardDidChangeFrameNotification = @"UIKeyboardDidChangeFrameNotification";
+
+/** @Status Stub */
 const UIWindowLevel UIWindowLevelNormal = StubConstant();
+/** @Status Stub */
 const UIWindowLevel UIWindowLevelAlert = StubConstant();
+/** @Status Stub */
 const UIWindowLevel UIWindowLevelStatusBar = StubConstant();
 
 @implementation UIWindow {

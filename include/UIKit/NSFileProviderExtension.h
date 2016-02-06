@@ -25,7 +25,7 @@
 @class NSString;
 
 UIKIT_EXPORT_CLASS
-@interface NSFileProviderExtension : NSObject <NSObject>
+@interface NSFileProviderExtension : NSObject
 + (NSURL*)placeholderURLForURL:(NSURL*)url STUB_METHOD;
 + (BOOL)writePlaceholderAtURL:(NSURL*)placeholderURL withMetadata:(NSDictionary*)metadata error:(NSError* _Nullable*)error STUB_METHOD;
 - (NSURL*)documentStorageURL STUB_METHOD;

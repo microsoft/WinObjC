@@ -42,13 +42,29 @@ UIAccessibilityNotifications UIAccessibilityScreenChangedNotification = 0;
 UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification = 1;
 UIAccessibilityNotifications UIAccessibilityAnnouncementNotification = 2;
 UIAccessibilityNotifications UIAccessibilityPageScrolledNotification = 3;
+UIAccessibilityNotifications UIAccessibilityAnnouncementDidFinishNotification = 4;
+UIAccessibilityNotifications UIAccessibilityBoldTextStatusDidChangeNotification = 5;
+UIAccessibilityNotifications UIAccessibilityClosedCaptioningStatusDidChangeNotification = 6;
+UIAccessibilityNotifications UIAccessibilityDarkerSystemColorsStatusDidChangeNotification = 7;
+UIAccessibilityNotifications UIAccessibilityGrayscaleStatusDidChangeNotification = 8;
+UIAccessibilityNotifications UIAccessibilityGuidedAccessStatusDidChangeNotification = 9;
+UIAccessibilityNotifications UIAccessibilityInvertColorsStatusDidChangeNotification = 10;
+UIAccessibilityNotifications UIAccessibilityPauseAssistiveTechnologyNotification = 11;
+UIAccessibilityNotifications UIAccessibilityReduceMotionStatusDidChangeNotification = 12;
+UIAccessibilityNotifications UIAccessibilityReduceTransparencyStatusDidChangeNotification = 13;
+UIAccessibilityNotifications UIAccessibilityResumeAssistiveTechnologyNotification = 14;
+UIAccessibilityNotifications UIAccessibilitySpeakScreenStatusDidChangeNotification = 15;
+UIAccessibilityNotifications UIAccessibilitySpeakSelectionStatusDidChangeNotification = 16;
+UIAccessibilityNotifications UIAccessibilitySwitchControlStatusDidChangeNotification = 17;
 
 NSString* const UIAccessibilityAnnouncementKeyStringValue = @"UIAccessibilityAnnouncementKeyStringValue";
 NSString* const UIAccessibilityAnnouncementKeyWasSuccessful = @"UIAccessibilityAnnouncementKeyWasSuccessful";
 NSString* const UIAccessibilitySpeechAttributePunctuation = @"UIAccessibilitySpeechAttributePunctuation";
 NSString* const UIAccessibilitySpeechAttributeLanguage = @"UIAccessibilitySpeechAttributeLanguage";
 NSString* const UIAccessibilitySpeechAttributePitch = @"UIAccessibilitySpeechAttributePitch";
+NSString* const UIAccessibilityMonoAudioStatusDidChangeNotification = @"UIAccessibilityMonoAudioStatusDidChangeNotification";
 NSString* const UIAccessibilityNotificationSwitchControlIdentifier = @"UIAccessibilityNotificationSwitchControlIdentifier";
+NSString* const UIAccessibilityVoiceOverStatusChanged = @"UIAccessibilityVoiceOverStatusChanged";
 
 /**
  @Status Stub
@@ -216,9 +232,6 @@ BOOL UIAccessibilityIsVoiceOverRunning() {
     UNIMPLEMENTED();
     return StubReturn();
 }
-
-@implementation UIView (Accessibility)
-@end
 
 void IWUpdateAccessibility(id receiver, NSObject<UIAccessibility>* accessibilityObj) {
     IWAccessibilityInfo info;

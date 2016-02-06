@@ -21,7 +21,7 @@
 
 @protocol UIViewControllerContextTransitioning;
 
-@protocol UIViewControllerAnimatedTransitioning
+@protocol UIViewControllerAnimatedTransitioning <NSObject>
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext;
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext;
 @optional

@@ -17,6 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class NSCoder;
@@ -27,7 +28,7 @@ UIKIT_EXPORT NSString* const UIApplicationStateRestorationUserInterfaceIdiomKey;
 UIKIT_EXPORT NSString* const UIApplicationStateRestorationTimestampKey;
 UIKIT_EXPORT NSString* const UIApplicationStateRestorationSystemVersionKey;
 
-@protocol UIStateRestoring
+@protocol UIStateRestoring <NSObject>
 @optional
 @property (nonatomic, readonly) id<UIStateRestoring> restorationParent;
 @property (nonatomic, readonly) Class objectRestorationClass;

@@ -28,7 +28,7 @@ typedef enum {
 } UIInterpolatingMotionEffectType;
 
 UIKIT_EXPORT_CLASS
-@interface UIInterpolatingMotionEffect : UIMotionEffect <NSCoding, NSCopying, NSObject>
+@interface UIInterpolatingMotionEffect : UIMotionEffect <NSCoding, NSCopying>
 - (instancetype)initWithKeyPath:(NSString*)keyPath type:(UIInterpolatingMotionEffectType)type STUB_METHOD;
 @property (readonly, nonatomic) NSString* keyPath STUB_PROPERTY;
 @property (readonly, nonatomic) UIInterpolatingMotionEffectType type STUB_PROPERTY;

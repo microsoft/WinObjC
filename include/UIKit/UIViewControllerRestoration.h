@@ -22,6 +22,6 @@
 @class NSArray;
 @class NSCoder;
 
-@protocol UIViewControllerRestoration
+@protocol UIViewControllerRestoration <NSObject>
 + (UIViewController*)viewControllerWithRestorationIdentifierPath:(NSArray*)identifierComponents coder:(NSCoder*)coder;
 @end

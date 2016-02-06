@@ -21,7 +21,7 @@
 @protocol UIViewControllerTransitionCoordinatorContext;
 @class UIView;
 
-@protocol UIViewControllerTransitionCoordinator
+@protocol UIViewControllerTransitionCoordinator <NSObject>
 - (BOOL)animateAlongsideTransition:(void (^)(id<UIViewControllerTransitionCoordinatorContext> context))animation
                         completion:(void (^)(id<UIViewControllerTransitionCoordinatorContext> context))completion;
 - (BOOL)animateAlongsideTransitionInView:(UIView*)view

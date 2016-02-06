@@ -48,6 +48,7 @@
     UIViewControllerTransitionCoordinator;
 
 UIKIT_EXPORT NSString* const UIViewControllerHierarchyInconsistencyException;
+UIKIT_EXPORT NSString* const UIViewControllerShowDetailTargetDidChangeNotification;
 
 typedef enum UIModalPresentationStyle : NSInteger {
     UIModalPresentationFullScreen = 0,
@@ -150,7 +151,7 @@ UIKIT_EXPORT_CLASS
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString*)identifier sender:(id)sender STUB_METHOD;
 - (NSArray*)allowedChildViewControllersForUnwindingFromSource:(UIStoryboardUnwindSegueSource*)source STUB_METHOD;
 - (NSArray*)previewActionItems STUB_METHOD;
-- (NSUInteger)supportedInterfaceOrientations;
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations;
 - (UIBarButtonItem*)editButtonItem STUB_METHOD;
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation;
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation STUB_METHOD;

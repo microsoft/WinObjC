@@ -18,5 +18,5 @@
 
 #import <UIKit/UIKitExport.h>
 
-@protocol UIToolbarDelegate
+@protocol UIToolbarDelegate <NSObject>
 @end

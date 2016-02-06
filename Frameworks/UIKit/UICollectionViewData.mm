@@ -21,7 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UICollectionViewData.h"
-#import "UICollectionViewLayoutAttributes-Internal.h"
+#import "UICollectionViewLayoutAttributes+Internal.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;

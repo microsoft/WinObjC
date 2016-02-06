@@ -40,6 +40,8 @@
 UIKIT_EXPORT NSString* const UITableViewIndexSearch;
 UIKIT_EXPORT const CGFloat UITableViewAutomaticDimension;
 
+UIKIT_EXPORT NSString *const UITableViewSelectionDidChangeNotification;
+
 typedef enum {
     UITableViewStylePlain,
     UITableViewStyleGrouped,

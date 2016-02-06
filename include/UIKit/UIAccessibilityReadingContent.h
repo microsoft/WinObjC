@@ -20,7 +20,7 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <Foundation/Foundation.h>
 
-@protocol UIAccessibilityReadingContent
+@protocol UIAccessibilityReadingContent <NSObject>
 - (NSInteger)accessibilityLineNumberForPoint:(CGPoint)point;
 - (NSString*)accessibilityContentForLineNumber:(NSInteger)lineNumber;
 - (CGRect)accessibilityFrameForLineNumber:(NSInteger)lineNumber;

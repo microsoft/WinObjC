@@ -43,16 +43,4 @@
     UNIMPLEMENTED();
 }
 
-- (void)setHyphenationFactor:(float)factor {
-    _hyphenationFactor = factor;
-}
-
-- (void)setAlignment:(NSTextAlignment)alignment {
-    _alignment = alignment;
-}
-
-- (void)setLineBreakMode:(NSLineBreakMode)mode {
-    _lineBreakMode = mode;
-}
-
 @end

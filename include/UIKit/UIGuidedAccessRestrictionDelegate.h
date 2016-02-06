@@ -27,7 +27,7 @@ typedef enum : NSInteger {
     UIGuidedAccessRestrictionStateDeny,
 } UIGuidedAccessRestrictionState;
 
-@protocol UIGuidedAccessRestrictionDelegate
+@protocol UIGuidedAccessRestrictionDelegate <NSObject>
 - (NSArray*)guidedAccessRestrictionIdentifiers;
 - (NSString*)textForGuidedAccessRestrictionWithIdentifier:(NSString*)restrictionIdentifier;
 @optional
