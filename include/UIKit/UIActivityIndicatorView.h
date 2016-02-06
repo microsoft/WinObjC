@@ -27,6 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIView.h"
 
 typedef enum {
@@ -45,6 +47,6 @@ UIKIT_EXPORT_CLASS
 
 @property BOOL hidesWhenStopped;
 @property UIActivityIndicatorViewStyle activityIndicatorViewStyle;
-@property (readwrite, nonatomic, retain) UIColor *color;
+@property (readwrite, nonatomic, retain) UIColor* color;
 
 @end

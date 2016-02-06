@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UINIBLOADING_H_
-#define _UINIBLOADING_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 
@@ -41,5 +40,3 @@ SB_EXPORT NSString* const UINibProxiedObjectsKey;
 @interface NSObject (UINibLoading)
 - (void)awakeFromNib;
 @end
-
-#endif /* _UINIBLOADING_H_ */

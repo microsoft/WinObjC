@@ -13,9 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#pragma once
+
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 #define UI_APPEARANCE_SELECTOR
+
 @protocol UIAppearanceContainer <NSObject>
 @end

@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #import <Foundation/NSObject.h>
 #import <UIKit/UIKitExport.h>
 

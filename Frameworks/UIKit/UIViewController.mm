@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 
 #include "Foundation/NSString.h"
@@ -31,12 +32,14 @@
 #include "UIKit/UIScreen.h"
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGAffineTransform.h"
-#include "UIKit/UIEmptyController.h"
 #include "UIViewInternal.h"
 #include "UIViewControllerInternal.h"
 #include "AutoLayout.h"
 #include "UIViewControllerInternal.h"
 #include "UIKit/UIPopoverPresentationController.h"
+#include "UIEmptyController.h"
+
+NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 
 @interface _TransitionNotifier : NSObject
 @end
@@ -264,6 +267,16 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 @end
 
 @implementation UIViewController : UIResponder
+
+@synthesize preferredFocusedView;
+@synthesize traitCollection;
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
 
 /**
  @Status Interoperable
@@ -517,7 +530,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             if (sendEvent)
                 [self willRotateToInterfaceOrientation:orientation duration:0.25];
 
-            int oldOrientation = priv->_curOrientation;
+            UIInterfaceOrientation oldOrientation = priv->_curOrientation;
             priv->_curOrientation = orientation;
             priv->_didSetRotation = true;
             [self setOrientationInternal:orientation animated:animated];
@@ -1341,11 +1354,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             UIWindow* applicationPopupWindow = [[UIApplication sharedApplication] _popupWindow];
             NSArray* windows = [[UIApplication sharedApplication] windows];
             NSUInteger index = [windows count] - 1;
-            UIWindow *window = nil;
+            UIWindow* window = nil;
             do {
                 window = [windows objectAtIndex:index];
                 index--;
-            } while(window == applicationPopupWindow);
+            } while (window == applicationPopupWindow);
 
             [window addSubview:view];
         }
@@ -1480,8 +1493,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 
     if (priv->_didSetRotation && [self interfaceOrientation] != [[UIApplication sharedApplication] statusBarOrientation]) {
-        int ourOrientation = [self interfaceOrientation];
-        [[UIApplication sharedApplication] setStatusBarOrientation:ourOrientation];
+        [[UIApplication sharedApplication] setStatusBarOrientation:[self interfaceOrientation]];
     }
 }
 
@@ -2008,7 +2020,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
                     toViewController:(UIViewController*)toController
                             duration:(double)duration
                              options:(unsigned)options
-                          animations:(id)animations // TODO(DH): animations
+                          animations:(void (^)(void))animations // TODO(DH): animations
                           completion:(void (^)(BOOL finished))completion {
     UIView* fromView = [fromController view];
     [fromView removeFromSuperview];
@@ -2264,4 +2276,384 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 - (void)updateViewConstraints {
     [((UIView*)(priv->view))_applyConstraints];
 }
+
+/**
+ @Status Stub
+*/
+- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController*)fromViewController withSender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)disablesAutomaticKeyboardDismissal {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isBeingPresented {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isMovingFromParentViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isMovingToParentViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)prefersStatusBarHidden {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldAutomaticallyForwardAppearanceMethods {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldAutomaticallyForwardRotationMethods {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString*)identifier sender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)allowedChildViewControllersForUnwindingFromSource:(UIStoryboardUnwindSegueSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)previewActionItems {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIStoryboardSegue*)segueForUnwindingToViewController:(UIViewController*)toViewController
+                                     fromViewController:(UIViewController*)fromViewController
+                                             identifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UITraitCollection*)overrideTraitCollectionForChildViewController:(UIViewController*)childViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)rotatingFooterView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)rotatingHeaderView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)childViewControllerContainingSegueSource:(UIStoryboardUnwindSegueSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)childViewControllerForStatusBarHidden {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)childViewControllerForStatusBarStyle {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)separateSecondaryViewControllerForSplitViewController:(UISplitViewController*)splitViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)targetViewControllerForAction:(SEL)action sender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)viewControllerForUnwindSegueAction:(SEL)action
+                                     fromViewController:(UIViewController*)fromViewController
+                                             withSender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id<UIViewControllerPreviewing>)registerForPreviewingWithDelegate:(id<UIViewControllerPreviewingDelegate>)delegate
+                                                         sourceView:(UIView*)sourceView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id<UIViewControllerTransitionCoordinator>)transitionCoordinator {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)addKeyCommand:(UIKeyCommand*)keyCommand {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)applicationFinishedRestoringState {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)collapseSecondaryViewController:(UIViewController*)secondaryViewController
+                 forSplitViewController:(UISplitViewController*)splitViewController {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)loadViewIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)removeKeyCommand:(UIKeyCommand*)keyCommand {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setOverrideTraitCollection:(UITraitCollection*)collection forChildViewController:(UIViewController*)childViewController {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)showDetailViewController:(UIViewController*)vc sender:(id)sender {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)showViewController:(UIViewController*)vc sender:(id)sender {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)unregisterForPreviewingWithContext:(id<UIViewControllerPreviewing>)previewing {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)unwindForSegue:(UIStoryboardSegue*)unwindSegue towardsViewController:(UIViewController*)subsequentVC {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+                                                       duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)attemptRotationToDeviceOrientation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)willTransitionToTraitCollection:(UITraitCollection*)newCollection
+              withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)sizeForChildContentContainer:(id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setNeedsFocusUpdate {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)updateFocusIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection {
+    UNIMPLEMENTED();
+}
+
 @end

@@ -13,12 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#pragma once
+
 #import <UIKit/UIKitExport.h>
 #import <CoreGraphics/CGGeometry.h>
 
 @protocol UICoordinateSpace <NSObject>
-@required
 @property (readonly, nonatomic) CGRect bounds;
+
 - (CGPoint)convertPoint:(CGPoint)point toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace;
 - (CGPoint)convertPoint:(CGPoint)point fromCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace;
 - (CGRect)convertRect:(CGRect)rect toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace;

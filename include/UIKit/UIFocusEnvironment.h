@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#pragma once
+
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
@@ -21,10 +24,11 @@
 @class UIView;
 
 @protocol UIFocusEnvironment <NSObject>
-@required
 - (void)setNeedsFocusUpdate;
 - (void)updateFocusIfNeeded;
 - (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context;
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator;
-@property (nonatomic, retain, readonly) UIView* preferredFocusedView;
+
+// The docs say this is a weak reference, but we can't enable that until we have ARC on in UIKit
+@property (nonatomic, readonly) UIView* preferredFocusedView;
 @end

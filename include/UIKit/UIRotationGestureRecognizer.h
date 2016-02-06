@@ -27,6 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
 
 @interface UIRotationGestureRecognizer : UIGestureRecognizer {
@@ -34,6 +36,6 @@
 }
 
 @property (nonatomic) CGFloat rotation;
-@property (nonatomic,readonly) CGFloat velocity;
+@property (nonatomic, readonly) CGFloat velocity;
 
 @end

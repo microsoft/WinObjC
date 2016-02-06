@@ -27,6 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIControl.h"
 
 UIKIT_EXPORT_CLASS
@@ -40,7 +42,7 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic) BOOL hidesForSinglePage;
 
-@property (nonatomic,retain) UIColor* currentPageIndicatorTintColor;
-@property (nonatomic,retain) UIColor* pageIndicatorTintColor;
+@property (nonatomic, retain) UIColor* currentPageIndicatorTintColor;
+@property (nonatomic, retain) UIColor* pageIndicatorTintColor;
 
 @end

@@ -19,7 +19,7 @@
 
 extern CFMutableDictionaryRef g_imageCache;
 
-@implementation UIImageCachedObject : NSObject
+@implementation UIImageCachedObject
 - (void)dealloc {
     [(id)g_imageCache removeObjectForKey:_cacheName];
     [_cacheName release];

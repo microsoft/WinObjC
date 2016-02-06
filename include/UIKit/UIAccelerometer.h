@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,27 +28,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIACCELEROMETER_H_
-#define _UIACCELEROMETER_H_
+#pragma once
 
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 
 @class UIAccelerometer, UIAcceleration;
-
-@protocol UIAccelerometerDelegate <NSObject>
-@optional
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
-@end
+@protocol UIAccelerometerDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UIAccelerometer : NSObject
 
-+ (UIAccelerometer *)sharedAccelerometer;
++ (UIAccelerometer*)sharedAccelerometer;
 
 @property (nonatomic, assign) id<UIAccelerometerDelegate> delegate;
 @property (nonatomic) NSTimeInterval updateInterval;
 
 @end
-
-#endif /* _UIACCELEROMETER_H_ */

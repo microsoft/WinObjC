@@ -29,8 +29,7 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UISCREEN_H_
-#define _UISCREEN_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
@@ -59,5 +58,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) UIScreenMode* preferredMode;
 
 @end
-
-#endif /* _UISCREEN_H_ */

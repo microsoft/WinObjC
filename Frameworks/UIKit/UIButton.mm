@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 
 struct buttonState {
@@ -1038,6 +1039,51 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     return ret;
 }
 
-//
+/**
+ @Status Stub
+*/
+- (CGRect)backgroundRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)contentRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)imageRectForContentRect:(CGRect)contentRect {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)titleRectForContentRect:(CGRect)contentRect {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSAttributedString*)attributedTitleForState:(UIControlState)state {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state {
+    UNIMPLEMENTED();
+}
 
 @end

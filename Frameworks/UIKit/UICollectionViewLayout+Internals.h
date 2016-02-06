@@ -35,6 +35,6 @@
 @interface UICollectionViewLayoutAttributes (Internals)
 
 @property (readonly) BOOL isPinnedSupplementaryView;
--(void)setPinned:(BOOL)isPinned;
+- (void)setPinned:(BOOL)isPinned;
 
 @end

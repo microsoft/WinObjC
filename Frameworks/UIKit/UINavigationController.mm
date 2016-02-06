@@ -620,7 +620,7 @@ static void rotateViewController(UINavigationController* self) {
                 UIViewController* subcontroller = self->_curController;
                 [subcontroller willRotateToInterfaceOrientation:curOrientation duration:1.0f];
 
-                int oldOrientation = subcontroller->priv->_curOrientation;
+                UIInterfaceOrientation oldOrientation = subcontroller->priv->_curOrientation;
                 subcontroller->priv->_curOrientation = curOrientation;
 
                 [subcontroller didRotateFromInterfaceOrientation:oldOrientation];

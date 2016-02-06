@@ -13,11 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UITableViewCell.h>
-#import <UIKit/UIScrollView.h>
+#import <UIKit/UIScrollViewDelegate.h>
 
 @class UITableView;
 @class NSIndexPath;

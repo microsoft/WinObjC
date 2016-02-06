@@ -27,6 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
 
 typedef double UIAccelerationValue;

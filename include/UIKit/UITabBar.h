@@ -33,39 +33,27 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIView.h"
 
-@class UITabBar;
-@class UITabBarItem;
-@class UIImage;
-
-@protocol UITabBarDelegate <NSObject>
-@optional
-
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
-
-// stub
-- (void)tabBar:(UITabBar *)tabBar willBeginCustomizingItems:(NSArray *)items;                     // called before customize sheet is shown. items is current item list
-- (void)tabBar:(UITabBar *)tabBar didBeginCustomizingItems:(NSArray *)items;                      // called after customize sheet is shown. items is current item list
-- (void)tabBar:(UITabBar *)tabBar willEndCustomizingItems:(NSArray *)items changed:(BOOL)changed; // called before customize sheet is hidden. items is new item list
-- (void)tabBar:(UITabBar *)tabBar didEndCustomizingItems:(NSArray *)items changed:(BOOL)changed;  // called after customize sheet is hidden. items is new item list
-
-@end
+@class UITabBar, UITabBarItem, UIImage;
+@protocol UITabBarDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UITabBar : UIView
-@property (nonatomic, assign) id<UITabBarDelegate>  delegate;
-@property (nonatomic, copy) NSArray *items;
-@property (nonatomic, assign) UITabBarItem *selectedItem;
-@property (nonatomic, retain) UIColor *tintColor;
-@property (nonatomic, retain) UIColor *selectedImageTintColor;
-@property (nonatomic, retain) UIImage *selectionIndicatorImage;
-@property (nonatomic, retain) UIImage *backgroundImage;
+@property (nonatomic, assign) id<UITabBarDelegate> delegate;
+@property (nonatomic, copy) NSArray* items;
+@property (nonatomic, assign) UITabBarItem* selectedItem;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* selectedImageTintColor;
+@property (nonatomic, retain) UIImage* selectionIndicatorImage;
+@property (nonatomic, retain) UIImage* backgroundImage;
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
+- (void)setItems:(NSArray*)items animated:(BOOL)animated;
 
 // stub
-- (void)beginCustomizingItems:(NSArray *)items;
+- (void)beginCustomizingItems:(NSArray*)items;
 - (BOOL)endCustomizingAnimated:(BOOL)animated;
 - (BOOL)isCustomizing;
 

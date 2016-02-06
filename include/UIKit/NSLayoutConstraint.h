@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,36 +14,16 @@
 //
 //******************************************************************************
 
-#ifndef _NSLAYOUTCONSTRAINT_H_
-#define _NSLAYOUTCONSTRAINT_H_
+#pragma once
 
-#import "UIKitExport.h"
-#import <Foundation/Foundation.h>
-#import <CoreFoundation/CoreFoundation.h>
+#import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
 
-#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" #__VA_ARGS__, __VA_ARGS__, nil)
-SB_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString* keysString, ...);
+@class NSArray;
+@class NSDictionary;
 
-enum {
-    UILayoutPriorityRequired = 1000,
-    UILayoutPriorityDefaultHigh = 750,
-    UILayoutPriorityDefaultLow = 250,
-    UILayoutPriorityFittingSizeLevel = 50,
-};
-typedef float UILayoutPriority;
-
-enum {
-    NSLayoutPriorityRequired = 1000,
-    NSLayoutPriorityDefaultHigh = 750,
-    NSLayoutPriorityDragThatCanResizeWindow = 510,
-    NSLayoutPriorityWindowSizeStayPut = 500,
-    NSLayoutPriorityDragThatCannotResizeWindow = 490,
-    NSLayoutPriorityDefaultLow = 250,
-    NSLayoutPriorityFittingSizeCompression = 50,
-};
-typedef float NSLayoutPriority;
-
-typedef enum {
+typedef NSInteger NSLayoutRelation;
+typedef enum : NSInteger {
     NSLayoutAttributeLeft = 1,
     NSLayoutAttributeRight,
     NSLayoutAttributeTop,
@@ -57,7 +37,6 @@ typedef enum {
     NSLayoutAttributeBaseline,
     NSLayoutAttributeLastBaseline = NSLayoutAttributeBaseline,
     NSLayoutAttributeFirstBaseline,
-
     NSLayoutAttributeLeftMargin,
     NSLayoutAttributeRightMargin,
     NSLayoutAttributeTopMargin,
@@ -66,14 +45,24 @@ typedef enum {
     NSLayoutAttributeTrailingMargin,
     NSLayoutAttributeCenterXWithinMargins,
     NSLayoutAttributeCenterYWithinMargins,
-
     NSLayoutAttributeNotAnAttribute = 0
 } NSLayoutAttribute;
 
-typedef enum {
-    NSLayoutConstraintOrientationHorizontal = 0,
-    NSLayoutConstraintOrientationVertical = 1,
-} NSLayoutConstraintOrientation;
+typedef NSUInteger NSLayoutFormatOptions;
+typedef float UILayoutPriority;
+
+enum {
+    NSLayoutRelationLessThanOrEqual = -1,
+    NSLayoutRelationEqual = 0,
+    NSLayoutRelationGreaterThanOrEqual = 1,
+};
+
+enum {
+    UILayoutPriorityRequired = 1000,
+    UILayoutPriorityDefaultHigh = 750,
+    UILayoutPriorityDefaultLow = 250,
+    UILayoutPriorityFittingSizeLevel = 50,
+};
 
 enum {
     /* choose only one of these */
@@ -86,25 +75,13 @@ enum {
     NSLayoutFormatAlignAllCenterX = NSLayoutAttributeCenterX,
     NSLayoutFormatAlignAllCenterY = NSLayoutAttributeCenterY,
     NSLayoutFormatAlignAllBaseline = NSLayoutAttributeBaseline,
-
     NSLayoutFormatAlignmentMask = 0xFF,
-
     /* choose only one of these three */
     NSLayoutFormatDirectionLeadingToTrailing = 0 << 8, // default
     NSLayoutFormatDirectionLeftToRight = 1 << 8,
     NSLayoutFormatDirectionRightToLeft = 2 << 8,
-
     NSLayoutFormatDirectionMask = 0x3 << 8,
 };
-typedef uint32_t NSLayoutFormatOptions;
-
-typedef enum {
-    NSLayoutRelationLessThanOrEqual = -1,
-    NSLayoutRelationEqual = 0,
-    NSLayoutRelationGreaterThanOrEqual = 1,
-} NSLayoutRelation;
-
-@class NSDictionary, NSArray;
 
 UIKIT_EXPORT_CLASS
 @interface NSLayoutConstraint : NSObject <NSCoding>
@@ -115,7 +92,7 @@ UIKIT_EXPORT_CLASS
 @property (readonly) NSLayoutAttribute secondAttribute;
 @property (readonly) CGFloat multiplier;
 @property (readonly) NSLayoutRelation relation;
-@property NSLayoutPriority priority;
+@property UILayoutPriority priority;
 @property CGFloat constant;
 
 + (NSArray*)constraintsWithVisualFormat:(NSString*)format
@@ -130,6 +107,12 @@ UIKIT_EXPORT_CLASS
                         multiplier:(CGFloat)multiplier
                           constant:(CGFloat)c;
 
-@end
+@property (getter=isActive) BOOL active STUB_PROPERTY;
 
-#endif /* _NSLAYOUTCONSTRAINT_H_ */
++ (void)activateConstraints:(NSArray*)constraints STUB_METHOD;
++ (void)deactivateConstraints:(NSArray*)constraints STUB_METHOD;
+
+@property (copy) NSString* identifier STUB_PROPERTY;
+@property BOOL shouldBeArchived STUB_PROPERTY;
+
+@end

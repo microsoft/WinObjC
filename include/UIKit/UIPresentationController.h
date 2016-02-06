@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIPRESENTATIONCONTROLLER_H_
-#define _UIPRESENTATIONCONTROLLER_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
@@ -57,5 +56,3 @@
 @property (nonatomic, readonly) UIModalPresentationStyle presentationStyle;
 
 @end
-
-#endif /* _UIPRESENTATIONCONTROLLER_H_ */

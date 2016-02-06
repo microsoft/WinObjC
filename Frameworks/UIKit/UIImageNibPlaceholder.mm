@@ -23,7 +23,7 @@
 }
 @end
 
-@implementation UIImageNibPlaceholder : NSObject
+@implementation UIImageNibPlaceholder
 - (instancetype)initWithCoder:(NSCoder*)coder {
     id result = self;
     NSString* resourcePath = [coder decodeObjectForKey:@"UIResourceName"];

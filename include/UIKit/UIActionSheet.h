@@ -27,34 +27,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIACTIONSHEET_H_
-#define _UIACTIONSHEET_H_
+#pragma once
 
 #import "UIView.h"
 #import "UIInterface.h"
+#import "UIActionSheetDelegate.h"
 #import <UIKit/UITextField.h>
 
 @class UIActionSheet, UITabBar, UIToolbar, UIBarButtonItem;
 
-@protocol UIActionSheetDelegate <NSObject>
-@optional
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
-- (void)willPresentActionSheet:(UIActionSheet *)actionSheet;
-- (void)didPresentActionSheet:(UIActionSheet *)actionSheet;
-- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex;
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex;
-- (void)actionSheetCancel:(UIActionSheet *)actionSheet;
-@end
-
 typedef enum {
-    UIActionSheetStyleAutomatic        = -1,
-    UIActionSheetStyleDefault          = UIBarStyleDefault,
+    UIActionSheetStyleAutomatic = -1,
+    UIActionSheetStyleDefault = UIBarStyleDefault,
     UIActionSheetStyleBlackTranslucent = UIBarStyleBlackTranslucent,
-    UIActionSheetStyleBlackOpaque      = UIBarStyleBlackOpaque,
+    UIActionSheetStyleBlackOpaque = UIBarStyleBlackOpaque,
 } UIActionSheetStyle;
 
-typedef struct
-{
+typedef struct {
     __unsafe_unretained id button;
     CGRect buttonPos;
 } ActionSheetButton;
@@ -62,21 +51,27 @@ typedef struct
 UIKIT_EXPORT_CLASS
 @interface UIActionSheet : UIView
 
-- (id)initWithTitle:(NSString *)title delegate:(id<UIActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle destructiveButtonTitle:(NSString *)destructiveButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...;
-- (id)addButtonWithTitle:(NSString *)title;
+- (id)initWithTitle:(NSString*)title
+                  delegate:(id<UIActionSheetDelegate>)delegate
+         cancelButtonTitle:(NSString*)cancelButtonTitle
+    destructiveButtonTitle:(NSString*)destructiveButtonTitle
+         otherButtonTitles:(NSString*)otherButtonTitles, ...;
+- (id)addButtonWithTitle:(NSString*)title;
 
-- (id)showInView:(UIView *)view;                                                        // menu will appear wherever the mouse cursor is
-- (void)showFromRect:(CGRect)rect inView:(UIView *)view animated:(BOOL)animated;        // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
+- (id)showInView:(UIView*)view; // menu will appear wherever the mouse cursor is
+- (void)showFromRect:(CGRect)rect
+              inView:(UIView*)view
+            animated:(BOOL)animated; // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;
 
 // these are not yet implemented:
-- (void)showFromToolbar:(UIToolbar *)view;
-- (void)showFromTabBar:(UITabBar *)view;
-- (void)showFromBarButtonItem:(UIBarButtonItem *)item animated:(BOOL)animated;
+- (void)showFromToolbar:(UIToolbar*)view;
+- (void)showFromTabBar:(UITabBar*)view;
+- (void)showFromBarButtonItem:(UIBarButtonItem*)item animated:(BOOL)animated;
 
-- (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex;
+- (NSString*)buttonTitleAtIndex:(NSInteger)buttonIndex;
 
-@property (nonatomic, copy) NSString *title;
+@property (nonatomic, copy) NSString* title;
 @property (nonatomic, assign) id<UIActionSheetDelegate> delegate;
 @property (nonatomic, assign) UIActionSheetStyle actionSheetStyle;
 @property (nonatomic, readonly, getter=isVisible) BOOL visible;
@@ -86,5 +81,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) NSInteger numberOfButtons;
 
 @end
-
-#endif /* _UIACTIONSHEET_H_ */

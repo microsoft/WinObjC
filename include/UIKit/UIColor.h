@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,70 +28,62 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UICOLOR_H_
-#define _UICOLOR_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGColor.h>
 #import <UIKit/UIKitExport.h>
 
-@class UIImage;
+@class UIImage, CIColor;
 
-enum BrushType
-{
-    solidBrush,
-    patternBrush,
-    cgPatternBrush
-};
+enum BrushType { solidBrush, patternBrush, cgPatternBrush };
 
 UIKIT_EXPORT_CLASS
-@interface UIColor : NSObject
+@interface UIColor : NSObject <NSCopying, NSObject, NSSecureCoding>
 
-+ (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-+ (UIColor *)colorWithCGColor:(CGColorRef)ref;
-+ (UIColor *)colorWithPatternImage:(UIImage *)patternImage;
+@property (nonatomic, readonly) CGColorRef CGColor;
+@property (readonly, nonatomic) CIColor* CIColor STUB_PROPERTY;
 
-+ (UIColor *)blackColor;
-+ (UIColor *)darkGrayColor;
-+ (UIColor *)lightGrayColor;
-+ (UIColor *)whiteColor;
-+ (UIColor *)grayColor;
-+ (UIColor *)redColor;
-+ (UIColor *)greenColor;
-+ (UIColor *)blueColor;
-+ (UIColor *)cornflowerBlueColor;
-+ (UIColor *)cyanColor;
-+ (UIColor *)yellowColor;
-+ (UIColor *)magentaColor;
-+ (UIColor *)orangeColor;
-+ (UIColor *)purpleColor;
-+ (UIColor *)brownColor;
-+ (UIColor *)clearColor;
-+ (UIColor *)darkTextColor;
-+ (UIColor *)lightTextColor;
-
-- (id)initWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
-- (id)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
-- (id)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
-- (id)initWithCGColor:(CGColorRef)ref;
-- (id)initWithPatternImage:(UIImage *)patternImage;
-
-- (UIColor *)colorWithAlphaComponent:(CGFloat)alpha;
-
++ (UIColor*)blackColor;
++ (UIColor*)blueColor;
++ (UIColor*)brownColor;
++ (UIColor*)clearColor;
++ (UIColor*)colorWithCGColor:(CGColorRef)ref;
++ (UIColor*)colorWithCIColor:(CIColor*)ciColor STUB_METHOD;
++ (UIColor*)colorWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
++ (UIColor*)colorWithPatternImage:(UIImage*)patternImage;
++ (UIColor*)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
++ (UIColor*)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
++ (UIColor*)cornflowerBlueColor;
++ (UIColor*)cyanColor;
++ (UIColor*)darkGrayColor;
++ (UIColor*)darkTextColor;
++ (UIColor*)grayColor;
++ (UIColor*)greenColor;
++ (UIColor*)groupTableViewBackgroundColor STUB_METHOD;
++ (UIColor*)lightGrayColor;
++ (UIColor*)lightTextColor;
++ (UIColor*)magentaColor;
++ (UIColor*)orangeColor;
++ (UIColor*)purpleColor;
++ (UIColor*)redColor;
++ (UIColor*)scrollViewTexturedBackgroundColor STUB_METHOD;
++ (UIColor*)underPageBackgroundColor STUB_METHOD;
++ (UIColor*)viewFlipsideBackgroundColor STUB_METHOD;
++ (UIColor*)whiteColor;
++ (UIColor*)yellowColor;
+- (BOOL)getHue:(CGFloat*)hue saturation:(CGFloat*)saturation brightness:(CGFloat*)brightness alpha:(CGFloat*)alpha;
+- (BOOL)getRed:(CGFloat*)red green:(CGFloat*)green blue:(CGFloat*)blue alpha:(CGFloat*)alpha;
+- (BOOL)getWhite:(CGFloat*)white alpha:(CGFloat*)alpha;
+- (UIColor*)colorWithAlphaComponent:(CGFloat)alpha;
+- (UIColor*)initWithCGColor:(CGColorRef)cgColor;
+- (UIColor*)initWithCIColor:(CIColor*)ciColor STUB_METHOD;
+- (UIColor*)initWithHue:(CGFloat)hue saturation:(CGFloat)saturation brightness:(CGFloat)brightness alpha:(CGFloat)alpha;
+- (UIColor*)initWithPatternImage:(UIImage*)image;
+- (UIColor*)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+- (UIColor*)initWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
 - (void)set;
 - (void)setFill;
 - (void)setStroke;
 
-- (BOOL)getRed:(CGFloat *)red green:(CGFloat *)green blue:(CGFloat *)blue alpha:(CGFloat *)alpha;
-
-- (BOOL)getHue:(CGFloat *)hue saturation:(CGFloat *)saturation brightness:(CGFloat *)brightness alpha:(CGFloat *)alpha;
-
-- (BOOL)getWhite:(CGFloat *)white alpha:(CGFloat *)alpha;
-
-@property (nonatomic, readonly) CGColorRef CGColor;
-
 @end
-
-#endif /* _UICOLOR_H_ */

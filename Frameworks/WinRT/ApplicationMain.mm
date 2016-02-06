@@ -81,7 +81,7 @@ int ApplicationMainStart(
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 
     //  Figure out what our initial default orientation should be from Info.plist
-    int defaultOrientation = UIInterfaceOrientationUnknown;
+    UIInterfaceOrientation defaultOrientation = UIInterfaceOrientationUnknown;
     if (infoDict != nil) {
         defaultOrientation = EbrGetWantedOrientation();
 
@@ -96,7 +96,7 @@ int ApplicationMainStart(
             bool found = false;
 
             for (NSString* curstr in(NSArray*)orientation) {
-                int newOrientation = UIOrientationFromString(defaultOrientation, curstr);
+                UIInterfaceOrientation newOrientation = UIOrientationFromString(defaultOrientation, curstr);
                 if (newOrientation == defaultOrientation) {
                     found = true;
                     break;

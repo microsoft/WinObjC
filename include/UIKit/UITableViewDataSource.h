@@ -13,23 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
 #import <UIKit/UIKitExport.h>
 #import <UIKit/UITableViewCell.h>
 
-@class UITableViewCell;
 @class UITableView;
 @class NSIndexPath;
 @class NSArray;
 @class NSString;
 
 @protocol UITableViewDataSource <NSObject>
-
-@required
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section;
-
 @optional
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView;
 - (NSArray*)sectionIndexTitlesForTableView:(UITableView*)tableView;

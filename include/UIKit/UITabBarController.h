@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UITABBARCONTROLLER_H_
-#define _UITABBARCONTROLLER_H_
+#pragma once
 
 #import "UIViewController.h"
 #import <UIKit/UINavigationController.h>
@@ -44,17 +43,8 @@
 @interface UITabMoreTableView : UITableViewController
 @end
 
-@protocol UITabBarControllerDelegate <NSObject>
-@optional
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed;
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController;
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController;
-- (void)tabBarController:(UITabBarController *)tabBarController willBeginCustomizingViewControllers:(NSArray *)viewControllers;
-- (void)tabBarController:(UITabBarController *)tabBarController willEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed;
-
-@end
-
 @class UITabBar, UITabPane;
+@protocol UITabBarControllerDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UITabBarController : UIViewController {
@@ -65,14 +55,12 @@ UIKIT_EXPORT_CLASS
     bool _layoutForRotation;
 }
 
-- (void)setViewControllers:(NSArray *)viewController animated:(BOOL)animated;
+- (void)setViewControllers:(NSArray*)viewController animated:(BOOL)animated;
 
-@property (nonatomic, assign) UIViewController *selectedViewController;
-@property (nonatomic, copy)   NSArray *viewControllers;
+@property (nonatomic, assign) UIViewController* selectedViewController;
+@property (nonatomic, copy) NSArray* viewControllers;
 @property (nonatomic, assign) NSUInteger selectedIndex;
-@property (nonatomic, readonly) UITabBar *tabBar;
+@property (nonatomic, readonly) UITabBar* tabBar;
 @property (nonatomic, assign) id<UITabBarControllerDelegate> delegate;
 
 @end
-
-#endif /* _UITABBARCONTROLLER_H_ */

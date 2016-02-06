@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "_TableCellAnimationHelper.h"
 
-#include "UIKit/UITableView.h"
-#include "UIKit/UITableViewCell.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UIFont.h"
+#include <UIKit/UIKit.h>
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSRunLoop.h"
 
 #include "LinkedList.h"
+
+#include "UIViewInternal.h"
 
 #include <algorithm>
 
@@ -37,6 +37,10 @@ typedef id idweak;
 #import <Foundation/NSNib.h>
 
 #include "UITableViewInternal.h"
+
+NSString* const UITableViewIndexSearch = @"UITableViewIndexSearch";
+/** @Status Stub */
+const CGFloat UITableViewAutomaticDimension = StubConstant();
 
 // narsty hack
 extern id _curFirstResponder;
@@ -570,6 +574,9 @@ void UITableViewPriv::removeReusableCell(ReusableCell* cell) {
     delete cell;
 }
 
+@interface UITableView () <UIScrollViewDelegate>
+@end
+
 @implementation UITableView
 
 // EMPTY -----------------------------------------------
@@ -579,6 +586,7 @@ void UITableViewPriv::removeReusableCell(ReusableCell* cell) {
 */
 - (CGRect)rectForHeaderInSection:(NSInteger)section {
     UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -586,6 +594,7 @@ void UITableViewPriv::removeReusableCell(ReusableCell* cell) {
 */
 - (CGRect)rectForFooterInSection:(NSInteger)section {
     UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -601,6 +610,7 @@ void UITableViewPriv::removeReusableCell(ReusableCell* cell) {
 - (void)moveRowAtIndexPath:(NSIndexPath*)indexPath toIndexPath:(NSIndexPath*)newIndexPath {
     UNIMPLEMENTED();
 }
+
 // -----------------------------------------------------
 
 static void initInternal(UITableView* self) {
@@ -700,7 +710,7 @@ static void initInternal(UITableView* self) {
 /**
  @Status Interoperable
 */
-- (void)setSeparatorStyle:(unsigned)style {
+- (void)setSeparatorStyle:(UITableViewCellSeparatorStyle)style {
     tablePriv->_separatorStyle = style;
 }
 
@@ -1477,13 +1487,6 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     UNIMPLEMENTED();
 }
 
-/**
- @Status Stub
-*/
-- (void)setSectionIndexMinimumDisplayRowCount:(unsigned)numRows {
-    UNIMPLEMENTED();
-}
-
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath*)indexPath
                         animated:(BOOL)animated
                   scrollPosition:(UITableViewScrollPosition)scrollPosition
@@ -2254,7 +2257,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
-- (void)scrollViewWillEndDragging:(UIScrollView*)scroller withVelocity:(CGPoint)velocity targetContentOffset:(CGPoint*)contentOffsetPtr {
+- (void)scrollViewWillEndDragging:(UIScrollView*)scroller
+                     withVelocity:(CGPoint)velocity
+              targetContentOffset:(inout CGPoint*)contentOffsetPtr {
     if (tablePriv->_delegate != self &&
         [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
         [tablePriv->_delegate scrollViewWillEndDragging:scroller withVelocity:velocity targetContentOffset:contentOffsetPtr];
@@ -2330,6 +2335,43 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         return [tablePriv->_dataSource tableView:self canEditRowAtIndexPath:[cell indexPath]];
     }
     return [tablePriv->_dataSource respondsToSelector:@selector(tableView:commitEditingStyle:forRowAtIndexPath:)];
+}
+
+/**
+ @Status Stub
+*/
+- (UITableViewHeaderFooterView*)footerViewForSection:(NSInteger)section STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UITableViewHeaderFooterView*)headerViewForSection:(NSInteger)section STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection STUB_METHOD {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)registerNib:(UINib*)nib forHeaderFooterViewReuseIdentifier:(NSString*)identifier STUB_METHOD {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)reloadSectionIndexTitles STUB_METHOD {
+    UNIMPLEMENTED();
 }
 
 @end

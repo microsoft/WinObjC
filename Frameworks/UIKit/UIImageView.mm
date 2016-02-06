@@ -32,7 +32,7 @@ public:
     BOOL _isAnimating, _isHighlighted;
 };
 
-@implementation UIImageView : UIView {
+@implementation UIImageView {
     UIImageViewPrivData* imgPriv;
 }
 + (instancetype)allocWithZone:(NSZone*)zone {
@@ -240,14 +240,14 @@ static void updateContents(UIImageView* self) {
 /**
  @Status Interoperable
 */
-- (void)setAnimationRepeatCount:(unsigned)count {
+- (void)setAnimationRepeatCount:(NSInteger)count {
     imgPriv->_repeatCount = count;
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)animationRepeatCount {
+- (NSInteger)animationRepeatCount {
     return imgPriv->_repeatCount;
 }
 

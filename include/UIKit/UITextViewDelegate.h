@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
 #import <UIKit/UIKitExport.h>
@@ -23,7 +24,7 @@
 @class NSTextAttachment;
 @class NSURL;
 
-@protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
+@protocol UITextViewDelegate <UIScrollViewDelegate>
 @optional
 - (BOOL)textViewShouldBeginEditing:(UITextView*)textView;
 - (void)textViewDidBeginEditing:(UITextView*)textView;

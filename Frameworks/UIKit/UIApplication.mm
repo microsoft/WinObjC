@@ -15,10 +15,11 @@
 //******************************************************************************
 
 #include "Starboard.h"
-@interface UIKeyboardRotationView : UIView {
-}
+@interface UIKeyboardRotationView : UIView
 @end
 @class _UISettings;
+
+#import <StubReturn.h>
 
 #include "Platform/EbrPlatform.h"
 #include "EbrRemoteNotifications.h"
@@ -49,6 +50,11 @@ typedef wchar_t WCHAR;
 #include <math.h>
 
 #include "UWP/WindowsUINotifications.h"
+
+const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = StubConstant();
+const NSTimeInterval UIMinimumKeepAliveTimeout = StubConstant();
+
+NSString* const UIApplicationOpenSettingsURLString = @"UIApplicationOpenSettingsURLString";
 
 NSString* const UIApplicationStatusBarOrientationUserInfoKey = @"";
 NSString* const UIApplicationStatusBarFrameUserInfoKey = @"UIApplicationStatusBarFrameUserInfoKey";
@@ -91,6 +97,25 @@ NSString* const UIContentSizeCategoryAccessibilityMedium = @"UIContentSizeCatego
 NSString* const UIContentSizeCategoryMedium = @"UIContentSizeCategoryMedium";
 NSString* const UIContentSizeCategorySmall = @"UIContentSizeCategorySmall";
 NSString* const UIContentSizeCategoryExtraSmall = @"UIContentSizeCategoryExtraSmall";
+
+NSString* const UIContentSizeCategoryNewValueKey = @"UIContentSizeCategoryNewValueKey";
+
+NSString* const UIApplicationInvalidInterfaceOrientationException = @"UIApplicationInvalidInterfaceOrientationException";
+
+NSString* const UIApplicationKeyboardExtensionPointIdentifier = @"UIApplicationKeyboardExtensionPointIdentifier";
+
+NSString* const UIApplicationLaunchOptionsNewsstandDownloadsKey = @"UIApplicationLaunchOptionsNewsstandDownloadsKey";
+NSString* const UIApplicationLaunchOptionsBluetoothCentralsKey = @"UIApplicationLaunchOptionsBluetoothCentralsKey";
+NSString* const UIApplicationLaunchOptionsBluetoothPeripheralsKey = @"UIApplicationLaunchOptionsBluetoothPeripheralsKey";
+NSString* const UIApplicationLaunchOptionsShortcutItemKey = @"UIApplicationLaunchOptionsShortcutItemKey";
+NSString* const UIApplicationLaunchOptionsUserActivityDictionaryKey = @"UIApplicationLaunchOptionsUserActivityDictionaryKey";
+NSString* const UIApplicationLaunchOptionsUserActivityTypeKey = @"UIApplicationLaunchOptionsUserActivityTypeKey";
+NSString* const UIApplicationOpenURLOptionsSourceApplicationKey = @"UIApplicationOpenURLOptionsSourceApplicationKey";
+NSString* const UIApplicationOpenURLOptionsAnnotationKey = @"UIApplicationOpenURLOptionsAnnotationKey";
+NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey = @"UIApplicationOpenURLOptionsOpenInPlaceKey";
+
+const NSTimeInterval UIApplicationBackgroundFetchIntervalMinimum = StubConstant();
+const NSTimeInterval UIApplicationBackgroundFetchIntervalNever = StubConstant();
 
 float windowInsetLeft, windowInsetRight, windowInsetTop, windowInsetBottom;
 float statusBarHeight = 20.0f;
@@ -217,7 +242,6 @@ static idretaintype(NSMutableArray) _curNotifications;
 
 @implementation UIApplication {
     id _delegate;
-    NSUInteger _statusBarStyle;
 }
 
 @synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
@@ -476,22 +500,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 
     [_curNotifications removeObjectAtIndex:(unsigned long)idx];
     [localNotification release];
-}
-
-/**
- @Status Stub
-*/
-- (void)setStatusBarStyle:(unsigned)style animated:(BOOL)animated {
-    UNIMPLEMENTED();
-    _statusBarStyle = style;
-}
-
-/**
- @Status Stub
-*/
-- (unsigned)statusBarStyle {
-    UNIMPLEMENTED();
-    return _statusBarStyle;
 }
 
 /**
@@ -958,11 +966,11 @@ static void printViews(id curView, int level) {
                 if (mouseView != nil) {
                     EbrDebugLog("%s touched\n", object_getClassName(mouseView));
                 }
-                touches[finger]->inView = mouseView;
-                [touches[finger]->inView retain];
+                touches[finger]->_view = mouseView;
+                [touches[finger].view retain];
 
-                touches[finger]->phase = UITouchPhaseBegan;
-                touches[finger]->timeStamp = evt->touchTime;
+                touches[finger]->_phase = UITouchPhaseBegan;
+                touches[finger]->_timestamp = evt->touchTime;
                 touches[finger]->velocityX = evt->velocityX;
                 touches[finger]->velocityY = evt->velocityY;
                 touches[finger]->previousTouchX = touches[finger]->touchX;
@@ -978,8 +986,8 @@ static void printViews(id curView, int level) {
                 }
 
                 newTouchEvent = touches[finger];
-                touches[finger]->phase = UITouchPhaseMoved;
-                touches[finger]->timeStamp = evt->touchTime;
+                touches[finger]->_phase = UITouchPhaseMoved;
+                touches[finger]->_timestamp = evt->touchTime;
                 touches[finger]->velocityX = evt->velocityX;
                 touches[finger]->velocityY = evt->velocityY;
                 touches[finger]->previousTouchX = touches[finger]->touchX;
@@ -1004,8 +1012,8 @@ static void printViews(id curView, int level) {
 
                 assert(touches[finger] != nil);
                 newTouchEvent = touches[finger];
-                touches[finger]->phase = UITouchPhaseEnded;
-                touches[finger]->timeStamp = evt->touchTime;
+                touches[finger]->_phase = UITouchPhaseEnded;
+                touches[finger]->_timestamp = evt->touchTime;
                 touches[finger]->velocityX = evt->velocityX;
                 touches[finger]->velocityY = evt->velocityY;
                 touches[finger]->previousTouchX = touches[finger]->touchX;
@@ -1059,7 +1067,7 @@ static void printViews(id curView, int level) {
     UITouch* touch = [event _touchEvent];
     SEL eventName;
 
-    switch (touch->phase) {
+    switch (touch.phase) {
         case UITouchPhaseBegan:
             eventName = @selector(touchesBegan:withEvent:);
             break;
@@ -1081,7 +1089,7 @@ static void printViews(id curView, int level) {
             break;
     }
 
-    UIView* view = touch->inView;
+    UIView* view = touch.view;
     if (view == nil) {
         return;
     }
@@ -1137,7 +1145,7 @@ static void printViews(id curView, int level) {
             // EbrDebugLog("Checking gesture %s\n", object_getClassName(curgesture));
             id delegate = [curgesture delegate];
             BOOL send = TRUE;
-            if (touch->phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
+            if (touch.phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
                 send = [delegate gestureRecognizer:curgesture shouldReceiveTouch:touch];
             }
 
@@ -1181,21 +1189,21 @@ static void printViews(id curView, int level) {
     curGesturesDict = nil;
 
     if (process == false) {
-        touch->phase = UITouchPhaseCancelled;
+        touch->_phase = UITouchPhaseCancelled;
         eventName = @selector(touchesCancelled:withEvent:);
     }
 
-    if (touch->phase != UITouchPhaseBegan && ![view->priv->currentTouches containsObject:touch]) {
+    if (touch.phase != UITouchPhaseBegan && ![view->priv->currentTouches containsObject:touch]) {
         // EbrDebugLog("View not aware of touch, ignoring\n");
         return;
     }
 
-    if (touch->phase == UITouchPhaseBegan && ignoringInteractionEvents > 0) {
+    if (touch.phase == UITouchPhaseBegan && ignoringInteractionEvents > 0) {
         EbrDebugLog("Global interaction disabled, ignoring\n");
         return;
     }
 
-    if (touch->phase == UITouchPhaseBegan && !view->priv->multipleTouchEnabled) {
+    if (touch.phase == UITouchPhaseBegan && !view->priv->multipleTouchEnabled) {
         if ([view->priv->currentTouches count] > 0) {
             EbrDebugLog("View already has a touch, ignoring\n");
             return;
@@ -1203,10 +1211,10 @@ static void printViews(id curView, int level) {
     }
 
     NSMutableSet* touches;
-    if (touch->phase == UITouchPhaseBegan) {
+    if (touch.phase == UITouchPhaseBegan) {
         [view->priv->currentTouches addObject:touch];
         touches = [NSMutableSet setWithObject:touch];
-    } else if (touch->phase == UITouchPhaseEnded || touch->phase == UITouchPhaseCancelled) {
+    } else if (touch.phase == UITouchPhaseEnded || touch.phase == UITouchPhaseCancelled) {
         touches = [NSMutableSet setWithObject:touch];
         [view->priv->currentTouches removeObject:touch];
     } else {
@@ -1247,7 +1255,7 @@ static void printViews(id curView, int level) {
 /**
  @Status Stub
 */
-- (void)registerForRemoteNotificationTypes:(unsigned)types {
+- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types {
     UNIMPLEMENTED();
     [self registerForRemoteNotificationTypes:types withId:@"309806373466"];
 }
@@ -1255,7 +1263,7 @@ static void printViews(id curView, int level) {
 /**
  @Status Stub
 */
-- (void)registerForRemoteNotificationTypes:(unsigned)types withId:(id)identifier {
+- (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(id)identifier {
     UNIMPLEMENTED();
 #ifdef SUPPORT_REMOTE_NOTIFICATIONS
     EbrRegisterForRemoteNotifications(identifier);
@@ -2026,6 +2034,117 @@ static void evaluateKeyboard(id self) {
 
     return ret;
 }
+
+/**
+ @Status Stub
+*/
+- (BOOL)isRegisteredForRemoteNotifications {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)registerForRemoteNotifications {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)setKeepAliveTimeout:(NSTimeInterval)timeout handler:(void (^)(void))keepAliveHandler {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIBackgroundTaskIdentifier)beginBackgroundTaskWithName:(NSString*)taskName expirationHandler:(void (^)(void))handler {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIInterfaceOrientationMask)supportedInterfaceOrientationsForWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIUserNotificationSettings*)currentUserNotificationSettings {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)clearKeepAliveTimeout {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)completeStateRestoration {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)extendStateRestoration {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)ignoreSnapshotOnNextApplicationLaunch {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setNewsstandIconImage:(UIImage*)image {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)unregisterForRemoteNotifications {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)registerObjectForStateRestoration:(id<UIStateRestoring>)object restorationIdentifier:(NSString*)restorationIdentifier {
+    UNIMPLEMENTED();
+}
+
 @end
 
 struct Record {
@@ -2623,4 +2742,5 @@ void UIShutdown() {
             break;
     }
 }
+
 @end

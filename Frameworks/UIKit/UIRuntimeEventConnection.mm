@@ -17,7 +17,7 @@
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 
-@implementation UIRuntimeEventConnection : NSObject
+@implementation UIRuntimeEventConnection
 - (id)initWithCoder:(NSCoder*)coder {
     targetControl = [coder decodeObjectForKey:@"UISource"];
     obj = [coder decodeObjectForKey:@"UIDestination"];

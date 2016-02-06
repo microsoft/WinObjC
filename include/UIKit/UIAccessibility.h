@@ -29,9 +29,12 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#pragma once
+
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSString.h>
+#import <UIKit/UIAccessibilityIdentification.h>
 
 @class UIView;
 @class UIBezierPath;
@@ -42,6 +45,10 @@ enum _UIAccessibilityNavigationStyle {
     UIAccessibilityNavigationStyleCombined,
 };
 typedef NSUInteger UIAccessibilityNavigationStyle;
+
+typedef enum {
+    UIAccessibilityZoomTypeInsertionPoint,
+} UIAccessibilityZoomType;
 
 typedef uint64_t UIAccessibilityTraits;
 
@@ -68,6 +75,13 @@ UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityScreenChangedNotificati
 UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification;
 UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityAnnouncementNotification;
 UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotification;
+
+UIKIT_EXPORT NSString* const UIAccessibilityAnnouncementKeyStringValue;
+UIKIT_EXPORT NSString* const UIAccessibilityAnnouncementKeyWasSuccessful;
+UIKIT_EXPORT NSString* const UIAccessibilitySpeechAttributePunctuation;
+UIKIT_EXPORT NSString* const UIAccessibilitySpeechAttributeLanguage;
+UIKIT_EXPORT NSString* const UIAccessibilitySpeechAttributePitch;
+UIKIT_EXPORT NSString* const UIAccessibilityNotificationSwitchControlIdentifier;
 
 // ----------------------------------------
 
@@ -116,14 +130,6 @@ UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotificatio
 - (void)accessibilityElementDidBecomeFocused;
 - (void)accessibilityElementDidLoseFocus;
 - (BOOL)accessibilityElementIsFocused;
-
-@end
-
-// ----------------------------------------
-
-@protocol UIAccessibilityIdentification <NSObject>
-
-@property (copy) NSString* accessibilityIdentifier;
 
 @end
 

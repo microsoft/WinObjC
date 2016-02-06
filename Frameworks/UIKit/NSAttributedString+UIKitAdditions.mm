@@ -14,58 +14,56 @@
 //
 //******************************************************************************
 
-#import "UIKit/NSAttributedString+UIKitAdditions.h"
-#import "UIKit/UIFont.h"
-#import "UIKit/UIFontDescriptor.h"
 #import "Starboard.h"
+#include <UIKit/UIKit.h>
 #import <libxml/HTMLparser.h>
 #import <map>
 
-NSString* const NSFontAttributeName = (NSString * const) @"NSFont";
-NSString* const NSParagraphStyleAttributeName = (NSString * const) @"NSParagraphStyle";
-NSString* const NSForegroundColorAttributeName = (NSString * const) @"NSForegroundColor";
-NSString* const NSBackgroundColorAttributeName = (NSString * const) @"NSBackgroundColor";
-NSString* const NSLigatureAttributeName = (NSString * const) @"NSLigature";
-NSString* const NSKernAttributeName = (NSString * const) @"NSKern";
-NSString* const NSStrikethroughStyleAttributeName = (NSString * const) @"NSStrikethroughStyle";
-NSString* const NSUnderlineStyleAttributeName = (NSString * const) @"NSUnderline";
-NSString* const NSStrokeColorAttributeName = (NSString * const) @"NSStrokeColor";
-NSString* const NSStrokeWidthAttributeName = (NSString * const) @"NSStrokeWidth";
-NSString* const NSShadowAttributeName = (NSString * const) @"NSShadow";
-NSString* const NSTextEffectAttributeName = (NSString * const) @"NSTextEffect";
-NSString* const NSAttachmentAttributeName = (NSString * const) @"NSAttachment";
-NSString* const NSLinkAttributeName = (NSString * const) @"NSLink";
-NSString* const NSBaselineOffsetAttributeName = (NSString * const) @"NSBaselineOffset";
-NSString* const NSUnderlineColorAttributeName = (NSString * const) @"NSUnderlineColor";
-NSString* const NSStrikethroughColorAttributeName = (NSString * const) @"NSStrikethroughColor";
-NSString* const NSObliquenessAttributeName = (NSString * const) @"NSObliqueness";
-NSString* const NSExpansionAttributeName = (NSString * const) @"NSExpansion";
-NSString* const NSWritingDirectionAttributeName = (NSString * const) @"NSWritingDirection";
-NSString* const NSVerticalGlyphFormAttributeName = (NSString * const) @"NSVerticalGlyphForm";
+NSString* const NSFontAttributeName = @"NSFont";
+NSString* const NSParagraphStyleAttributeName = @"NSParagraphStyle";
+NSString* const NSForegroundColorAttributeName = @"NSForegroundColor";
+NSString* const NSBackgroundColorAttributeName = @"NSBackgroundColor";
+NSString* const NSLigatureAttributeName = @"NSLigature";
+NSString* const NSKernAttributeName = @"NSKern";
+NSString* const NSStrikethroughStyleAttributeName = @"NSStrikethroughStyle";
+NSString* const NSUnderlineStyleAttributeName = @"NSUnderline";
+NSString* const NSStrokeColorAttributeName = @"NSStrokeColor";
+NSString* const NSStrokeWidthAttributeName = @"NSStrokeWidth";
+NSString* const NSShadowAttributeName = @"NSShadow";
+NSString* const NSTextEffectAttributeName = @"NSTextEffect";
+NSString* const NSAttachmentAttributeName = @"NSAttachment";
+NSString* const NSLinkAttributeName = @"NSLink";
+NSString* const NSBaselineOffsetAttributeName = @"NSBaselineOffset";
+NSString* const NSUnderlineColorAttributeName = @"NSUnderlineColor";
+NSString* const NSStrikethroughColorAttributeName = @"NSStrikethroughColor";
+NSString* const NSObliquenessAttributeName = @"NSObliqueness";
+NSString* const NSExpansionAttributeName = @"NSExpansion";
+NSString* const NSWritingDirectionAttributeName = @"NSWritingDirection";
+NSString* const NSVerticalGlyphFormAttributeName = @"NSVerticalGlyphForm";
 
-NSString* const NSPlainTextDocumentType = (NSString * const) @"NSPlainTextDocumentType";
-NSString* const NSRTFTextDocumentType = (NSString * const) @"NSRTFTextDocumentType";
-NSString* const NSRTFDTextDocumentType = (NSString * const) @"NSRTFDTextDocumentType";
-NSString* const NSHTMLTextDocumentType = (NSString * const) @"NSHTMLTextDocumentType";
+NSString* const NSPlainTextDocumentType = @"NSPlainTextDocumentType";
+NSString* const NSRTFTextDocumentType = @"NSRTFTextDocumentType";
+NSString* const NSRTFDTextDocumentType = @"NSRTFDTextDocumentType";
+NSString* const NSHTMLTextDocumentType = @"NSHTMLTextDocumentType";
 
-NSString* const NSDocumentTypeDocumentAttribute = (NSString * const) @"DocumentType";
-NSString* const NSCharacterEncodingDocumentAttribute = (NSString * const) @"CharacterEncoding";
-NSString* const NSDefaultAttributesDocumentAttribute = (NSString * const) @"DefaultAttributes";
-NSString* const NSPaperSizeDocumentAttribute = (NSString * const) @"PaperSize";
-NSString* const NSPaperMarginDocumentAttribute = (NSString * const) @"PaperMargin";
-NSString* const NSViewSizeDocumentAttribute = (NSString * const) @"ViewSize";
-NSString* const NSViewZoomDocumentAttribute = (NSString * const) @"ViewZoom";
-NSString* const NSViewModeDocumentAttribute = (NSString * const) @"ViewMode";
-NSString* const NSReadOnlyDocumentAttribute = (NSString * const) @"ReadOnly";
-NSString* const NSBackgroundColorDocumentAttribute = (NSString * const) @"BackgroundColor";
-NSString* const NSHyphenationFactorDocumentAttribute = (NSString * const) @"HypernationFactor";
-NSString* const NSDefaultTabIntervalDocumentAttribute = (NSString * const) @"DefaultTabInterval";
-NSString* const NSTextLayoutSectionsAttribute = (NSString * const) @"NSTextLayoutSectionsAttribute";
+NSString* const NSDocumentTypeDocumentAttribute = @"DocumentType";
+NSString* const NSCharacterEncodingDocumentAttribute = @"CharacterEncoding";
+NSString* const NSDefaultAttributesDocumentAttribute = @"DefaultAttributes";
+NSString* const NSPaperSizeDocumentAttribute = @"PaperSize";
+NSString* const NSPaperMarginDocumentAttribute = @"PaperMargin";
+NSString* const NSViewSizeDocumentAttribute = @"ViewSize";
+NSString* const NSViewZoomDocumentAttribute = @"ViewZoom";
+NSString* const NSViewModeDocumentAttribute = @"ViewMode";
+NSString* const NSReadOnlyDocumentAttribute = @"ReadOnly";
+NSString* const NSBackgroundColorDocumentAttribute = @"BackgroundColor";
+NSString* const NSHyphenationFactorDocumentAttribute = @"HypernationFactor";
+NSString* const NSDefaultTabIntervalDocumentAttribute = @"DefaultTabInterval";
+NSString* const NSTextLayoutSectionsAttribute = @"NSTextLayoutSectionsAttribute";
 
-NSString* const NSTextLayoutSectionOrientation = (NSString * const) @"NSTextLayoutSectionOrientation";
-NSString* const NSTextLayoutSectionRange = (NSString * const) @"NSTextLayoutSectionRange";
+NSString* const NSTextLayoutSectionOrientation = @"NSTextLayoutSectionOrientation";
+NSString* const NSTextLayoutSectionRange = @"NSTextLayoutSectionRange";
 
-NSString* const NSTextEffectLetterpressStyle = (NSString * const) @"NSTextEffectLetterpressStyle";
+NSString* const NSTextEffectLetterpressStyle = @"NSTextEffectLetterpressStyle";
 
 static NSDictionary* _defaultAttributes() {
     // TODO 5237845: need to add paragraph style, etc, once there is support

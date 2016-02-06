@@ -27,16 +27,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UISCREENMODE_H_
-#define _UISCREENMODE_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 
 @interface UIScreenMode : NSObject
 
-@property (readonly,nonatomic) CGFloat pixelAspectRatio;
-@property (readonly,nonatomic) CGSize size;
+@property (readonly, nonatomic) CGFloat pixelAspectRatio;
+@property (readonly, nonatomic) CGSize size;
 
 @end
-
-#endif /* _UISCREENMODE_H_ */

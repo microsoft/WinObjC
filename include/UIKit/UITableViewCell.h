@@ -27,11 +27,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UITABLEVIEWCELL_H_
-#define _UITABLEVIEWCELL_H_
+#pragma once
 
-#import "UIView.h"
-#import <UIKit/UIStringDrawing.h>
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UIView.h>
 
 #define UITableViewCellSeparatorStyleDoubleLineEtched UITableViewCellSeparatorStyleSingleLineEtched
 #define UITableViewCellStateEditingMask UITableViewCellStateShowingEditControlMask
@@ -85,45 +84,43 @@ typedef enum : NSUInteger {
 UIKIT_EXPORT_CLASS
 @interface UITableViewCell : UIView
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier;
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier;
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 - (void)prepareForReuse;
-- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier;
+- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString*)reuseIdentifier;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
 
 - (void)willTransitionToState:(UITableViewCellStateMask)state;
 - (void)didTransitionToState:(UITableViewCellStateMask)state;
 
 // -- internal --
--(void)_setEditingMode:(BOOL)editingMode animated : (BOOL)animated;
+- (void)_setEditingMode:(BOOL)editingMode animated:(BOOL)animated;
 // --------------
 
-@property (nonatomic, readonly, retain) UIView *contentView;
-@property (nonatomic, readonly, retain) UILabel *textLabel;
-@property (nonatomic, readonly, retain) UILabel *detailTextLabel;
-@property (nonatomic, readonly, retain) UIImageView *imageView;
-@property (nonatomic, retain) UIView *backgroundView;
-@property (nonatomic, retain) UIView *selectedBackgroundView;
+@property (nonatomic, readonly, retain) UIView* contentView;
+@property (nonatomic, readonly, retain) UILabel* textLabel;
+@property (nonatomic, readonly, retain) UILabel* detailTextLabel;
+@property (nonatomic, readonly, retain) UIImageView* imageView;
+@property (nonatomic, retain) UIView* backgroundView;
+@property (nonatomic, retain) UIView* selectedBackgroundView;
 @property (nonatomic) UITableViewCellSelectionStyle selectionStyle;
 @property (nonatomic) NSInteger indentationLevel;
 @property (nonatomic) UITableViewCellAccessoryType accessoryType;
-@property (nonatomic, retain) UIView *accessoryView;
+@property (nonatomic, retain) UIView* accessoryView;
 @property (nonatomic) UITableViewCellAccessoryType editingAccessoryType;
 @property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
 @property (nonatomic, getter=isEditing) BOOL editing; // not yet implemented
-@property (nonatomic, readonly) BOOL showingDeleteConfirmation;  // not yet implemented
-@property (nonatomic, readonly, copy) NSString *reuseIdentifier;
+@property (nonatomic, readonly) BOOL showingDeleteConfirmation; // not yet implemented
+@property (nonatomic, readonly, copy) NSString* reuseIdentifier;
 @property (nonatomic, assign) CGFloat indentationWidth; // 10 per default
-@property (nonatomic, retain) UIView *editingAccessoryView;
+@property (nonatomic, retain) UIView* editingAccessoryView;
 @property (nonatomic) BOOL showsReorderControl;
-@property (nonatomic, retain) UIImage *image; // depr
-@property (nonatomic, copy) NSString *text; // depr
-@property (nonatomic, retain) UIFont *font; // depr
+@property (nonatomic, retain) UIImage* image; // depr
+@property (nonatomic, copy) NSString* text; // depr
+@property (nonatomic, retain) UIFont* font; // depr
 @property (nonatomic) UITextAlignment textAlignment; // depr
-@property (nonatomic, retain) UIColor *textColor; // depr
+@property (nonatomic, retain) UIColor* textColor; // depr
 
 @end
-
-#endif /* _UITABLEVIEWCELL_H_ */

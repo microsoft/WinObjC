@@ -27,13 +27,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
 
 typedef enum {
     UISwipeGestureRecognizerDirectionRight = 1 << 0,
-    UISwipeGestureRecognizerDirectionLeft  = 1 << 1,
-    UISwipeGestureRecognizerDirectionUp    = 1 << 2,
-    UISwipeGestureRecognizerDirectionDown  = 1 << 3
+    UISwipeGestureRecognizerDirectionLeft = 1 << 1,
+    UISwipeGestureRecognizerDirectionUp = 1 << 2,
+    UISwipeGestureRecognizerDirectionDown = 1 << 3
 } UISwipeGestureRecognizerDirection;
 
 UIKIT_EXPORT_CLASS

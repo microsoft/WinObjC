@@ -98,4 +98,5 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
 @end
 
-FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...);
+#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
+FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...);

@@ -28,6 +28,9 @@
 @class UICollectionViewLayout;
 @class UICollectionViewController;
 
+@protocol UICollectionViewDataSource
+, UICollectionViewDelegate;
+
 // Simple controller-wrapper around UICollectionView.
 UIKIT_EXPORT_CLASS
 @interface UICollectionViewController : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource>

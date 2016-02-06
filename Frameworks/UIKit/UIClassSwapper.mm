@@ -34,7 +34,7 @@
     if (classNameId != nil) {
         id ret = [classNameId alloc];
         [coder _swapActiveObject:ret];
-        if ( [ret respondsToSelector: @selector(initWithCoder:)] ) {
+        if ([ret respondsToSelector:@selector(initWithCoder:)]) {
             return [ret initWithCoder:coder];
         } else {
             return [ret init];

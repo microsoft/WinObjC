@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include <math.h>
 #include "Starboard.h"
 
@@ -35,7 +36,7 @@
 
 #include "BMPDecode.h"
 
-typedef struct insetInfo {
+struct insetInfo {
     UIImage* img;
     CGRect size;
 };
@@ -50,14 +51,14 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     if (cgImage != curImage) {
         [layer setContents:(id)cgImage];
     }
-    if ( [layer contentsScale] != [image scale] ) {
+    if ([layer contentsScale] != [image scale]) {
         [layer setContentsScale:[image scale]];
     }
-    if ( [layer contentsOrientation] != [image imageOrientation] ) {
+    if ([layer contentsOrientation] != [image imageOrientation]) {
         [layer setContentsOrientation:[image imageOrientation]];
     }
     CGRect stretch = [image _imageStretch];
-    if ( !CGRectEqualToRect([layer contentsCenter], stretch ) ) {
+    if (!CGRectEqualToRect([layer contentsCenter], stretch)) {
         [layer setContentsCenter:stretch];
     }
 }
@@ -135,6 +136,30 @@ imageCacheInfo imageInfo;
     uint8_t** row_pointers;
     idretaintype(NSData) _deferredImageData;
 }
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
 + (UIImageCachedObject*)cacheImage:(UIImage*)image withName:(NSString*)name {
     //  Cache the image
     UIImageCachedObject* obj = [UIImageCachedObject new];
@@ -1344,6 +1369,83 @@ static CGImageRef getImage(UIImage* self) {
     }
 
     return self->m_pImage;
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageFlippedForRightToLeftLayoutDirection STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageWithAlignmentRectInsets:(UIEdgeInsets)alignmentInsets STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedResizableImageNamed:(NSString*)name
+                              capInsets:(UIEdgeInsets)capInsets
+                           resizingMode:(UIImageResizingMode)resizingMode
+                               duration:(NSTimeInterval)duration STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageNamed:(NSString*)name
+                         inBundle:(NSBundle*)bundle
+    compatibleWithTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage scale:(CGFloat)scale orientation:(UIImageOrientation)orientation STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage STUB_METHOD {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

@@ -27,11 +27,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIBARBUTTONITEM_H_
-#define _UIBARBUTTONITEM_H_
+#pragma once
 
-#import "UIBarItem.h"
+#import <UIKit/UIBarItem.h>
 #import <UIKit/UIControl.h>
+#import <UIKit/UIKitTypes.h>
 
 typedef enum {
     UIBarButtonSystemItemDone,
@@ -65,12 +65,6 @@ typedef enum {
     UIBarButtonItemStyleDone,
 } UIBarButtonItemStyle;
 
-enum {
-    UIBarMetricsDefault,
-    UIBarMetricsLandscapePhone,
-};
-typedef uint32_t UIBarMetrics;
-
 @class UIView;
 @class UIImage;
 @class UIColor;
@@ -97,5 +91,3 @@ UIKIT_EXPORT_CLASS
 
 // ----------------------------------------------------------------------------------------------------------
 @end
-
-#endif /* _UIBARBUTTONITEM_H_ */

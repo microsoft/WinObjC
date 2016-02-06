@@ -35,7 +35,7 @@
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
 
-@implementation NSAutoreleasePoolWarn : NSAutoreleasePool
+@implementation NSAutoreleasePoolWarn
 - (void)addObject:(id)obj {
     EbrDebugLog("Autoreleasing a %s in the toplevel pool that will never be freed\n", object_getClassName(obj));
     [super addObject:obj];
@@ -56,7 +56,7 @@ void UIBecomeInactive() {
                   });
 }
 
-int UIOrientationFromString(int curOrientation, NSString* str) {
+UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrientation, NSString* str) {
     char* pOrientation = (char*)[str UTF8String];
 
     if (strcmp(pOrientation, "UIInterfaceOrientationLandscapeRight") == 0) {
@@ -101,7 +101,8 @@ int newDeviceOrientation;
 volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
-int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, int defaultOrientation) {
+int UIApplicationMainInit(
+    int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, UIInterfaceOrientation defaultOrientation) {
     // Make sure we reference classes we need:
     void ForceInclusion();
     ForceInclusion();
@@ -183,7 +184,8 @@ int UIApplicationMainInit(int argc, char* argv[], NSString* principalClassName, 
         if (mainNibFile != nil) {
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
             if (nibPath != nil) {
-                NSArray* obj = [[[NSNib nibWithNibName: nibPath bundle: [NSBundle mainBundle]] instantiateWithOwner: uiApplication options: nil] retain];
+                NSArray* obj =
+                    [[[NSNib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
                 int count = [obj count];
 
                 for (int i = 0; i < count; i++) {

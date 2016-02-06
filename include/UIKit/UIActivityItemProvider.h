@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,12 +14,19 @@
 //
 //******************************************************************************
 
-#ifndef _UIACTIVITYITEMPROVIDER_H_
-#define _UIACTIVITYITEMPROVIDER_H_
+#pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+#import <UIKit/UIActivityItemSource.h>
+#import <Foundation/NSOperation.h>
 
-@protocol UIActivityItemSource <NSObject>
+@class NSString;
+
+UIKIT_EXPORT_CLASS
+@interface UIActivityItemProvider : NSOperation <NSObject, UIActivityItemSource>
+- (instancetype)initWithPlaceholderItem:(id)placeholderItem STUB_METHOD;
+- (id)item STUB_METHOD;
+@property (readonly, nonatomic, strong) id placeholderItem STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* activityType STUB_PROPERTY;
 @end
-
-#endif /* _UIACTIVITYITEMPROVIDER_H_ */

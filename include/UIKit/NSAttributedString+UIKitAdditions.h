@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,21 +16,40 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKitExport.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <Foundation/NSAttributedString.h>
+#import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, NSUnderlineStyle) {
-    NSUnderlineStyleNone = 0x00,
-    NSUnderlineStyleSingle = 0x01,
-    NSUnderlineStyleThick = 0x02,
-    NSUnderlineStyleDouble = 0x09,
-    NSUnderlinePatternSolid = 0x0000,
-    NSUnderlinePatternDot = 0x0100,
-    NSUnderlinePatternDash = 0x0200,
-    NSUnderlinePatternDashDot = 0x0300,
-    NSUnderlinePatternDashDotDot = 0x0400,
-    NSUnderlineByWord = 0x8000
-};
+@class NSTextAttachment;
+@class NSData;
+@class NSDictionary;
+@class NSError;
+@class NSURL;
+@class NSStringDrawingContext;
+@class NSFileWrapper;
+@class NSString;
+
+typedef NSInteger NSStringDrawingOptions;
+
+@interface NSAttributedString (UIKit)
++ (NSAttributedString*)attributedStringWithAttachment:(NSTextAttachment*)attachment;
+- (instancetype)initWithData:(NSData*)data
+                     options:(NSDictionary*)options
+          documentAttributes:(NSDictionary* _Nullable*)dict
+                       error:(NSError* _Nullable*)error;
+- (instancetype)initWithFileURL:(NSURL*)url
+                        options:(NSDictionary*)options
+             documentAttributes:(NSDictionary* _Nullable*)dict
+                          error:(NSError* _Nullable*)error;
+- (void)drawAtPoint:(CGPoint)point;
+- (void)drawInRect:(CGRect)rect;
+- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
+- (CGSize)size;
+- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
+- (NSData*)dataFromRange:(NSRange)range documentAttributes:(NSDictionary*)dict error:(NSError* _Nullable*)error;
+- (NSFileWrapper*)fileWrapperFromRange:(NSRange)range documentAttributes:(NSDictionary*)dict error:(NSError* _Nullable*)error;
+@end
 
 UIKIT_EXPORT NSString* const NSFontAttributeName;
 UIKIT_EXPORT NSString* const NSParagraphStyleAttributeName;
@@ -53,14 +72,10 @@ UIKIT_EXPORT NSString* const NSObliquenessAttributeName;
 UIKIT_EXPORT NSString* const NSExpansionAttributeName;
 UIKIT_EXPORT NSString* const NSWritingDirectionAttributeName;
 UIKIT_EXPORT NSString* const NSVerticalGlyphFormAttributeName;
-
-typedef enum : NSInteger { NSTextWritingDirectionEmbedding = (0 << 1), NSTextWritingDirectionOverride = (1 << 1) } NSTextWritingDirection;
-
 UIKIT_EXPORT NSString* const NSPlainTextDocumentType;
 UIKIT_EXPORT NSString* const NSRTFTextDocumentType;
 UIKIT_EXPORT NSString* const NSRTFDTextDocumentType;
 UIKIT_EXPORT NSString* const NSHTMLTextDocumentType;
-
 UIKIT_EXPORT NSString* const NSDocumentTypeDocumentAttribute;
 UIKIT_EXPORT NSString* const NSCharacterEncodingDocumentAttribute;
 UIKIT_EXPORT NSString* const NSDefaultAttributesDocumentAttribute;
@@ -74,25 +89,6 @@ UIKIT_EXPORT NSString* const NSBackgroundColorDocumentAttribute;
 UIKIT_EXPORT NSString* const NSHyphenationFactorDocumentAttribute;
 UIKIT_EXPORT NSString* const NSDefaultTabIntervalDocumentAttribute;
 UIKIT_EXPORT NSString* const NSTextLayoutSectionsAttribute;
-
 UIKIT_EXPORT NSString* const NSTextLayoutSectionOrientation;
 UIKIT_EXPORT NSString* const NSTextLayoutSectionRange;
-
 UIKIT_EXPORT NSString* const NSTextEffectLetterpressStyle;
-
-@interface NSAttributedString (NSAttributedStringUIKitAdditions)
-
-- (NSAttributedString*)initWithData:(NSData*)data
-                            options:(NSDictionary*)options
-                 documentAttributes:(NSDictionary*)docAttrs
-                              error:(NSError**)error;
-
-// TODO 5827705, 5244811:
-// + (NSAttributedString*)attributedStringWithAttachment:(NSTextAttachment*)attachment;
-// - (NSFileWrapper*)fileWrapperFromRange:(NSRange)range
-//                     documentAttributes:(NSDictionary*)dict
-//                                  error:(NSError**)error;
-
-- (NSData*)dataFromRange:(NSRange)range documentAttributes:(NSDictionary*)dict error:(NSError**)error;
-
-@end

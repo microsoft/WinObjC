@@ -26,7 +26,7 @@
 #include "UIBarButtonItem+Internals.h"
 
 @implementation UIActionSheet {
-    id _delegate;
+    id<UIActionSheetDelegate, NSObject> _delegate;
     NSString* _title;
     UILabel* _titleLabel;
     UIView* _darkView;

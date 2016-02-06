@@ -28,8 +28,8 @@
 // Represents a single grid item; only created for non-uniform-sized grids.
 @interface UIGridLayoutItem : NSObject
 
-@property (nonatomic, unsafe_unretained) UIGridLayoutSection *section;
-@property (nonatomic, unsafe_unretained) UIGridLayoutRow *rowObject;
+@property (nonatomic, unsafe_unretained) UIGridLayoutSection* section;
+@property (nonatomic, unsafe_unretained) UIGridLayoutRow* rowObject;
 @property (nonatomic, assign) CGRect itemFrame;
 
 @end

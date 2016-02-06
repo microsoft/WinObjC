@@ -27,16 +27,24 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIControl.h"
-#import "UIStringDrawing.h"
-#import "UITextInputTraits.h"
-#import "UITextInput.h"
+#pragma once
+
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UITextInputTraits.h>
+#import <UIKit/UITextInput.h>
+#import <UIKit/UIControl.h>
+#import <UIKit/UITextFieldDelegate.h>
 
 UIKIT_EXPORT NSString* const UITextFieldTextDidBeginEditingNotification;
 UIKIT_EXPORT NSString* const UITextFieldTextDidChangeNotification;
 UIKIT_EXPORT NSString* const UITextFieldTextDidEndEditingNotification;
 
-typedef enum { UITextBorderStyleNone, UITextBorderStyleLine, UITextBorderStyleBezel, UITextBorderStyleRoundedRect } UITextBorderStyle;
+typedef enum {
+    UITextBorderStyleNone,
+    UITextBorderStyleLine,
+    UITextBorderStyleBezel,
+    UITextBorderStyleRoundedRect,
+} UITextBorderStyle;
 
 typedef enum {
     UITextFieldViewModeNever,
@@ -45,19 +53,7 @@ typedef enum {
     UITextFieldViewModeAlways
 } UITextFieldViewMode;
 
-@class UIFont, UIColor, UITextField, UIImage, UITextLayer;
-
-@protocol UITextFieldDelegate <NSObject>
-@optional
-- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField;
-- (void)textFieldDidBeginEditing:(UITextField*)textField;
-- (BOOL)textFieldShouldEndEditing:(UITextField*)textField;
-- (void)textFieldDidEndEditing:(UITextField*)textField;
-
-- (BOOL)textField:(UITextField*)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString*)string;
-- (BOOL)textFieldShouldClear:(UITextField*)textField;
-- (BOOL)textFieldShouldReturn:(UITextField*)textField;
-@end
+@class UIFont, UIColor, UIImage;
 
 UIKIT_EXPORT_CLASS
 @interface UITextField : UIControl <UITextInputTraits, UITextInput>

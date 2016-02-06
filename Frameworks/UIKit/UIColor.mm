@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIColor.h"
@@ -178,6 +179,12 @@ static id _cachedColorsDict;
     id _pattern;
     float _r, _g, _b, _a;
 }
+
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 - (id)initWithCoder:(NSCoder*)coder {
     _type = solidBrush;
 
@@ -664,6 +671,62 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 
 + (void)initialize {
     _cachedColorsDict = [NSMutableDictionary new];
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)getWhite:(CGFloat*)white alpha:(CGFloat*)alpha {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIColor*)initWithCGColor:(CGColorRef)cgColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIColor*)initWithCIColor:(CIColor*)ciColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIColor*)colorWithCIColor:(CIColor*)ciColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIColor*)scrollViewTexturedBackgroundColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIColor*)underPageBackgroundColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

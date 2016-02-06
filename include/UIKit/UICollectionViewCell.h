@@ -5,7 +5,7 @@
 //
 // Copyright (c) 2012-2013 Peter Steinberger. All rights reserved.
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -21,12 +21,25 @@
 
 #pragma once
 
-#import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
+#import <UIKit/UIAppearance.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UICoordinateSpace.h>
+#import <UIKit/UIDynamicItem.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 #import <UIKit/UICollectionReusableView.h>
 
 UIKIT_EXPORT_CLASS
-@interface UICollectionViewCell : UICollectionReusableView
+@interface UICollectionViewCell : UICollectionReusableView <NSCoding,
+                                                            NSObject,
+                                                            UIAppearance,
+                                                            UIAppearanceContainer,
+                                                            UICoordinateSpace,
+                                                            UIDynamicItem,
+                                                            UIFocusEnvironment,
+                                                            UITraitEnvironment>
 
 @property (nonatomic, readonly) UIView* contentView; // add custom subviews to the cell's contentView
 
@@ -42,4 +55,10 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, strong) UIView* backgroundView;
 @property (nonatomic, strong) UIView* selectedBackgroundView;
 
+@end
+
+@interface UICollectionReusableView (Internal)
+@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
+@property (nonatomic, copy) NSString* reuseIdentifier;
+@property (nonatomic, strong) UICollectionViewLayoutAttributes* layoutAttributes;
 @end

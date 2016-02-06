@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _NSTEXTSTORAGE_H
-#define _NSTEXTSTORAGE_H
+#pragma once
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSMutableAttributedString.h>
@@ -31,5 +30,3 @@ UIKIT_EXPORT_CLASS
 
 - (void)addLayoutManager:(NSLayoutManager*)manager;
 @end
-
-#endif /* _NSTEXTSTORAGE_H */

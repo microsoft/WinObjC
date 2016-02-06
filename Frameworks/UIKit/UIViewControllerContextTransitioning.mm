@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,8 +16,14 @@
 
 #include "Starboard.h"
 
-#include "UIKit/UIViewController.h"
+#include <UIKit/UIViewControllerContextTransitioning.h>
+#include <UIKit/UIViewController.h>
 #include "UIViewControllerInternal.h"
+
+NSString* const UITransitionContextFromViewControllerKey = @"UITransitionContextFromViewControllerKey";
+NSString* const UITransitionContextToViewControllerKey = @"UITransitionContextToViewControllerKey";
+NSString* const UITransitionContextFromViewKey = @"UITransitionContextFromViewKey";
+NSString* const UITransitionContextToViewKey = @"UITransitionContextToViewKey";
 
 @implementation _UIViewControllerContextTransitioning {
     idretaintype(NSMutableDictionary) _viewControllers;
@@ -30,11 +36,6 @@
     BOOL isFinished;
     UIView* _superView;
 }
-
-NSString* const UITransitionContextFromViewControllerKey = @"ToControllerKey";
-NSString* const UITransitionContextToViewControllerKey = @"FromControllerKey";
-NSString* const UITransitionContextFromViewKey = @"ToViewKey";
-NSString* const UITransitionContextToViewKey = @"FromViewKey";
 
 - (instancetype)initWithContainerView:(UIView*)containerView
                          withFromView:(UIView*)fromView

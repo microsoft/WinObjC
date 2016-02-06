@@ -27,18 +27,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIScrollView.h"
 
 @class NSView, UINSClipView;
 
 @interface UIViewAdapter : UIScrollView {
 @private
-    UINSClipView *_clipView;
-    NSView *_view;
+    UINSClipView* _clipView;
+    NSView* _view;
 }
 
-- (id)initWithNSView:(NSView *)aNSView;
+- (id)initWithNSView:(NSView*)aNSView;
 
-@property (nonatomic, retain) NSView *NSView;
+@property (nonatomic, retain) NSView* NSView;
 
 @end

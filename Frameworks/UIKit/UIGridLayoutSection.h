@@ -27,8 +27,8 @@
 
 @interface UIGridLayoutSection : NSObject
 
-@property (nonatomic, strong, readonly) NSArray *items;
-@property (nonatomic, strong, readonly) NSArray *rows;
+@property (nonatomic, strong, readonly) NSArray* items;
+@property (nonatomic, strong, readonly) NSArray* rows;
 
 // fast path for equal-size items
 @property (nonatomic, assign) BOOL fixedItemSize;
@@ -45,8 +45,8 @@
 @property (nonatomic, assign) CGRect footerFrame;
 @property (nonatomic, assign) CGFloat headerDimension;
 @property (nonatomic, assign) CGFloat footerDimension;
-@property (nonatomic, unsafe_unretained) UIGridLayoutInfo *layoutInfo;
-@property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
+@property (nonatomic, unsafe_unretained) UIGridLayoutInfo* layoutInfo;
+@property (nonatomic, strong) NSDictionary* rowAlignmentOptions;
 
 @property (nonatomic, assign, readonly) CGFloat otherMargin;
 @property (nonatomic, assign, readonly) CGFloat beginMargin;
@@ -70,11 +70,11 @@
 // Compute layout. Creates rows.
 - (void)computeLayout;
 
-- (UIGridLayoutItem *)addItem;
+- (UIGridLayoutItem*)addItem;
 
-- (UIGridLayoutRow *)addRow;
+- (UIGridLayoutRow*)addRow;
 
 // Copy snapshot of current object
-- (UIGridLayoutSection *)snapshot;
+- (UIGridLayoutSection*)snapshot;
 
 @end

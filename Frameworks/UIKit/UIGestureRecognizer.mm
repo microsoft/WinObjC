@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSValue.h"
@@ -26,7 +27,7 @@
 
 extern NSMutableDictionary* curGesturesDict;
 
-@implementation UIGestureRecognizer : NSObject
+@implementation UIGestureRecognizer
 
 static void commonInit(UIGestureRecognizer* self) {
     self->_disabled = NO;
@@ -277,6 +278,69 @@ static void commonInit(UIGestureRecognizer* self) {
             }
         }
     }
+}
+
+- (CGPoint)locationInView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (NSUInteger)numberOfTouches {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (void)ignorePress:(UIPress*)button forEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesCancelled:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesChanged:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesEnded:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)removeTarget:(id)target action:(SEL)action {
+    UNIMPLEMENTED();
 }
 
 @end

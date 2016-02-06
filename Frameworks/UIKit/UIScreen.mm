@@ -16,28 +16,13 @@
 
 #include "Starboard.h"
 
-#include "UIKit/UIView.h"
-#include "UIKit/UIDevice.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSArray.h"
-#include "UIKit/UIScreen.h"
+#include <UIKit/UIView.h>
+#include <UIKit/UIDevice.h>
+#include <UIKit/UIApplication.h>
+#include <Foundation/NSArray.h>
+#include <UIKit/UIScreen.h>
 
 extern float statusBarHeight;
-
-@implementation UIScreenMode : NSObject
-
-/**
- @Status Interoperable
-*/
-- (CGSize)size {
-    CGSize ret;
-    ret.width = GetCACompositor()->screenWidth() * GetCACompositor()->screenScale();
-    ret.height = GetCACompositor()->screenHeight() * GetCACompositor()->screenScale();
-
-    return ret;
-}
-
-@end
 
 static UIScreen* mainScreen;
 static UIScreenMode* _curMode;

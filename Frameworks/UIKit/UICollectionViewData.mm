@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UICollectionViewData.h"
+#import "UICollectionViewLayoutAttributes-Internal.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;
@@ -166,7 +167,7 @@
         // All checks via assertions are done on CollectionView animation methods, specially 'endAnimations'.
         return 0;
         //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range:
-        //0...%d", section, _numSections] userInfo:nil];
+        // 0...%d", section, _numSections] userInfo:nil];
     }
 
     NSInteger numberOfItemsInSection = 0;

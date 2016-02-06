@@ -13,20 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#pragma once
+
 #import <UIKit/UIKitExport.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGAffineTransform.h>
+#import <Foundation/Foundation.h>
 
 @class UIBezierPath;
 
-typedef NS_ENUM(NSUInteger, UIDynamicItemCollisionBoundsType) {
+typedef enum UIDynamicItemCollisionBoundsType : NSUInteger {
     UIDynamicItemCollisionBoundsTypeRectangle,
-    UIDynamicItemCollisionBoundsTypeEllipse, // radii will be determined from the items bounds width, height
+    UIDynamicItemCollisionBoundsTypeEllipse,
     UIDynamicItemCollisionBoundsTypePath
-};
+} UIDynamicItemCollisionBoundsType;
 
 @protocol UIDynamicItem <NSObject>
-@required
 @property (nonatomic, readonly) CGRect bounds;
 @property (nonatomic, readwrite) CGPoint center;
 @property (nonatomic, readwrite) CGAffineTransform transform;

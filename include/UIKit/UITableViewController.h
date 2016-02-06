@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UITABLEVIEWCONTROLLER_H_
-#define _UITABLEVIEWCONTROLLER_H_
+#pragma once
 
 #import "UIViewController.h"
 #import "UITableView.h"
@@ -36,14 +35,12 @@
 @class UIRefreshControl, UITableViewDataSource;
 
 UIKIT_EXPORT_CLASS
-@interface UITableViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, NSCoding>
+@interface UITableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, NSCoding>
 
 - (id)initWithStyle:(UITableViewStyle)style;
 
-@property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) UITableView* tableView;
 @property (nonatomic) BOOL clearsSelectionOnViewWillAppear;
-@property (nonatomic,retain) UIRefreshControl *refreshControl;
+@property (nonatomic, retain) UIRefreshControl* refreshControl;
 
 @end
-
-#endif /* _UITABLEVIEWCONTROLLER_H_ */

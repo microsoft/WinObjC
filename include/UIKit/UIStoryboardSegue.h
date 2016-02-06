@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UISTORYBOARDSEGUE_H_
-#define _UISTORYBOARDSEGUE_H_
+#pragma once
 
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
@@ -28,5 +27,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) id sourceViewController;
 
 @end
-
-#endif /* _UISTORYBOARDSEGUE_H_ */

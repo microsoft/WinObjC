@@ -21,7 +21,7 @@
 
 id proxyObjects;
 
-@implementation UIProxyObject : NSObject
+@implementation UIProxyObject
 + (void)addProxyObject:(id)proxyObject withName:(id)objectName forCoder:(id)coder {
     if (proxyObjects == 0) {
         proxyObjects = [[NSMutableArray alloc] initWithCapacity:64];

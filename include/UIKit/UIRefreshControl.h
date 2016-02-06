@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIREFRESHCONTROL_H_
-#define _UIREFRESHCONTROL_H_
+#pragma once
 
 #import <UIKit/UIControl.h>
 
@@ -28,5 +27,3 @@
 @property (nonatomic, retain) NSAttributedString* attributedTitle;
 
 @end
-
-#endif /* _UIREFRESHCONTROL_H_ */

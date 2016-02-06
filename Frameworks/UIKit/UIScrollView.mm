@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "CoreGraphics/CGAffineTransform.h"
 #include "Foundation/NSRunLoop.h"
@@ -34,6 +35,11 @@
 
 #include <cmath>
 
+/** @Status Stub */
+const float UIScrollViewDecelerationRateNormal = StubConstant();
+/** @Status Stub */
+const float UIScrollViewDecelerationRateFast = StubConstant();
+
 @interface __UIScrollerPosition : CALayer {
 @public
     idretaintype(CAAnimation) _fadeAnimation;
@@ -42,7 +48,7 @@
 
 #include "UIKit/UIScrollView.h"
 
-@implementation __UIScrollerPosition : CALayer
+@implementation __UIScrollerPosition
 
 - (instancetype)init {
     [super init];
@@ -86,7 +92,7 @@
 
 #include "Etc.h"
 
-@implementation UIScrollView : UIView {
+@implementation UIScrollView {
     id _delegate;
     id _pressTimer;
     idretain _savedTouch, _savedEvent;

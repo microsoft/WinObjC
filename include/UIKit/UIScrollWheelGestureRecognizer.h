@@ -27,6 +27,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
 
 // This will only trigger on old-school scroll wheels and momentum scroll events.
@@ -37,7 +39,7 @@
     CGPoint _translation;
 }
 
-- (CGPoint)translationInView:(UIView *)view;
-- (void)setTranslation:(CGPoint)translation inView:(UIView *)view;
+- (CGPoint)translationInView:(UIView*)view;
+- (void)setTranslation:(CGPoint)translation inView:(UIView*)view;
 
 @end

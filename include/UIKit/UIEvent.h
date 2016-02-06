@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIEVENT_H_
-#define _UIEVENT_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 
@@ -39,34 +38,32 @@ typedef enum {
 } UIEventType;
 
 typedef enum {
-    UIEventSubtypeNone                              = 0,
-    UIEventSubtypeMotionShake                       = 1,
-    UIEventSubtypeRemoteControlPlay                 = 100,
-    UIEventSubtypeRemoteControlPause                = 101,
-    UIEventSubtypeRemoteControlStop                 = 102,
-    UIEventSubtypeRemoteControlTogglePlayPause      = 103,
-    UIEventSubtypeRemoteControlNextTrack            = 104,
-    UIEventSubtypeRemoteControlPreviousTrack        = 105,
+    UIEventSubtypeNone = 0,
+    UIEventSubtypeMotionShake = 1,
+    UIEventSubtypeRemoteControlPlay = 100,
+    UIEventSubtypeRemoteControlPause = 101,
+    UIEventSubtypeRemoteControlStop = 102,
+    UIEventSubtypeRemoteControlTogglePlayPause = 103,
+    UIEventSubtypeRemoteControlNextTrack = 104,
+    UIEventSubtypeRemoteControlPreviousTrack = 105,
     UIEventSubtypeRemoteControlBeginSeekingBackward = 106,
-    UIEventSubtypeRemoteControlEndSeekingBackward   = 107,
-    UIEventSubtypeRemoteControlBeginSeekingForward  = 108,
-    UIEventSubtypeRemoteControlEndSeekingForward    = 109,
+    UIEventSubtypeRemoteControlEndSeekingBackward = 107,
+    UIEventSubtypeRemoteControlBeginSeekingForward = 108,
+    UIEventSubtypeRemoteControlEndSeekingForward = 109,
 } UIEventSubtype;
 
 @class UITouch, UIWindow, UIView, UIGestureRecognizer;
 
-@interface UIEvent : NSObject 
+@interface UIEvent : NSObject
 
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 
-- (NSSet *)allTouches;
-- (NSSet *)touchesForView:(UIView *)view;
-- (NSSet *)touchesForWindow:(UIWindow *)window;
-- (NSSet *)touchesForGestureRecognizer:(UIGestureRecognizer *)gesture;
+- (NSSet*)allTouches;
+- (NSSet*)touchesForView:(UIView*)view;
+- (NSSet*)touchesForWindow:(UIWindow*)window;
+- (NSSet*)touchesForGestureRecognizer:(UIGestureRecognizer*)gesture;
 
 @property (nonatomic, readonly) UIEventType type;
 @property (nonatomic, readonly) UIEventSubtype subtype;
 
 @end
-
-#endif /* _UIEVENT_H_ */

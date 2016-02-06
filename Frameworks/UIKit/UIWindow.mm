@@ -16,6 +16,8 @@
 
 #include "Starboard.h"
 
+#import <StubReturn.h>
+
 #include "CoreGraphics/CGGeometry.h"
 #include "CoreGraphics/CGAffineTransform.h"
 
@@ -40,6 +42,14 @@ NSString* const UIKeyboardWillShowNotification = @"UIKeyboardWillShowNotificatio
 NSString* const UIKeyboardDidShowNotification = @"UIKeyboardDidShowNotification";
 NSString* const UIKeyboardWillHideNotification = @"UIKeyboardWillHideNotification";
 NSString* const UIKeyboardDidHideNotification = @"UIKeyboardDidHideNotification";
+NSString* const UIKeyboardBoundsUserInfoKey = @"UIKeyboardBoundsUserInfoKey";
+NSString* const UIKeyboardCenterBeginUserInfoKey = @"UIKeyboardCenterBeginUserInfoKey";
+NSString* const UIKeyboardCenterEndUserInfoKey = @"UIKeyboardCenterEndUserInfoKey";
+NSString* const UIKeyboardIsLocalUserInfoKey = @"UIKeyboardIsLocalUserInfoKey";
+
+const UIWindowLevel UIWindowLevelNormal = StubConstant();
+const UIWindowLevel UIWindowLevelAlert = StubConstant();
+const UIWindowLevel UIWindowLevelStatusBar = StubConstant();
 
 @implementation UIWindow {
 @private

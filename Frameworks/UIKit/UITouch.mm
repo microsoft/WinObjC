@@ -14,12 +14,19 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 
 #include "UIKit/UITouch.h"
 #include "UIKit/UIView.h"
 
-@implementation UITouch : NSObject
+@implementation UITouch
+
+@synthesize timestamp = _timestamp;
+@synthesize tapCount = _tapCount;
+@synthesize view = _view;
+@synthesize phase = _phase;
+
 + (UITouch*)createWithPoint:(CGPoint)point tapCount:(int)tapCount {
     UITouch* newObj = [self new];
     UITouch* us = (UITouch*)newObj;
@@ -27,8 +34,8 @@
     us->touchY = point.y;
     us->previousTouchX = point.x;
     us->previousTouchY = point.y;
-    us->timeStamp = 0.0f;
-    us->tapCount = tapCount;
+    us->_timestamp = 0.0f;
+    us->_tapCount = tapCount;
 
     return newObj;
 }
@@ -92,27 +99,6 @@
     return ret;
 }
 
-/**
- @Status Interoperable
-*/
-- (NSUInteger)tapCount {
-    return tapCount;
-}
-
-/**
- @Status Interoperable
-*/
-- (UITouchPhase)phase {
-    return phase;
-}
-
-/**
- @Status Interoperable
-*/
-- (UIView*)view {
-    return inView;
-}
-
 - (void)_redirectTouch:(UIView*)view {
     /*
     //  Remove the touch from the view
@@ -121,22 +107,13 @@
     [curView->priv->currentTouches removeObject:self];
     */
 
-    [inView autorelease];
-    inView = view;
-    [inView retain];
+    [_view autorelease];
+    _view = view;
+    [_view retain];
 }
 
 - (void)_redirectPhase:(UITouchPhase)newPhase {
-    phase = newPhase;
-}
-
-/**
- @Status Interoperable
-*/
-- (double)timestamp {
-    assert(timeStamp != 0.0f);
-    double ret = timeStamp;
-    return ret;
+    _phase = newPhase;
 }
 
 /**
@@ -152,21 +129,73 @@
 - (id)copyWithZone:(NSZone*)zone {
     UITouch* ret = [[self class] allocWithZone:zone];
 
+    _timestamp = self.timestamp;
+    _view = [self.view retain];
+    _tapCount = self.tapCount;
+    _phase = self.phase;
+
     ret->touchX = touchX;
     ret->touchY = touchY;
     ret->previousTouchX = previousTouchX;
     ret->previousTouchY = previousTouchY;
-    ret->timeStamp = timeStamp;
-    ret->inView = [inView retain];
-    ret->tapCount = tapCount;
-    ret->phase = phase;
 
     return ret;
 }
 
+/**
+ @Status Stub
+*/
 - (void)dealloc {
-    [inView autorelease];
+    [_view autorelease];
     [super dealloc];
+}
+
+/**
+ @Status Stub
+*/
+- (CGFloat)azimuthAngleInView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)locationInNode:(SKNode*)node {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)preciseLocationInView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)precisePreviousLocationInView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)previousLocationInNode:(SKNode*)node {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGVector)azimuthUnitVectorInView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

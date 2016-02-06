@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "AccessibilityInternal.h"
 
@@ -42,44 +43,182 @@ UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification = 1;
 UIAccessibilityNotifications UIAccessibilityAnnouncementNotification = 2;
 UIAccessibilityNotifications UIAccessibilityPageScrolledNotification = 3;
 
-@implementation UIAccessibilityElement
+NSString* const UIAccessibilityAnnouncementKeyStringValue = @"UIAccessibilityAnnouncementKeyStringValue";
+NSString* const UIAccessibilityAnnouncementKeyWasSuccessful = @"UIAccessibilityAnnouncementKeyWasSuccessful";
+NSString* const UIAccessibilitySpeechAttributePunctuation = @"UIAccessibilitySpeechAttributePunctuation";
+NSString* const UIAccessibilitySpeechAttributeLanguage = @"UIAccessibilitySpeechAttributeLanguage";
+NSString* const UIAccessibilitySpeechAttributePitch = @"UIAccessibilitySpeechAttributePitch";
+NSString* const UIAccessibilityNotificationSwitchControlIdentifier = @"UIAccessibilityNotificationSwitchControlIdentifier";
 
-- (id)initWithAccessibilityContainer:(UIView*)container {
-    _accessibilityContainer = container;
-    [self initAccessibility];
-    return self;
+/**
+ @Status Stub
+ @Notes
+*/
+void UIAccessibilityPostNotification(UIAccessibilityNotifications notification, id argument) {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (void)initAccessibility {
+CGRect UIAccessibilityConvertFrameToScreenCoordinates(CGRect rect, UIView* view) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (void)updateAccessibility {
-    IWUpdateAccessibility(self.accessibilityContainer.layer, self);
+UIBezierPath* UIAccessibilityConvertPathToScreenCoordinates(UIBezierPath* path, UIView* view) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
-@end
+/**
+ @Status Stub
+ @Notes
+*/
+void UIAccessibilityRegisterGestureConflictWithZoom() {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void UIAccessibilityRequestGuidedAccessSession(BOOL enable, void (^completionHandler)(BOOL)) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void UIAccessibilityZoomFocusChanged(UIAccessibilityZoomType type, CGRect frame, UIView* view) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsBoldTextEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsClosedCaptioningEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityDarkerSystemColorsEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsGrayscaleEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsGuidedAccessEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsInvertColorsEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsMonoAudioEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsReduceMotionEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsReduceTransparencyEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsSpeakScreenEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsSpeakSelectionEnabled() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsSwitchControlRunning() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIAccessibilityIsVoiceOverRunning() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 @implementation UIView (Accessibility)
 @end
-
-/**
- @Status Stub
-*/
-void UIAccessibilityPostNotification(UIAccessibilityNotifications notification, id argument) {
-}
-
-/**
- @Status Stub
-*/
-BOOL UIAccessibilityIsVoiceOverRunning(void) {
-    return FALSE;
-}
 
 void IWUpdateAccessibility(id receiver, NSObject<UIAccessibility>* accessibilityObj) {
     IWAccessibilityInfo info;

@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIPROGRESSVIEW_H_
-#define _UIPROGRESSVIEW_H_
+#pragma once
 
 #import "UIView.h"
 
@@ -47,11 +46,9 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic) UIProgressViewStyle progressViewStyle;
 @property (nonatomic) float progress;
-@property (nonatomic, retain) UIImage *progressImage;
-@property (nonatomic, retain) UIImage *trackImage;
-@property (nonatomic, retain) UIColor *progressTintColor;
-@property (nonatomic, retain) UIColor *trackTintColor;
+@property (nonatomic, retain) UIImage* progressImage;
+@property (nonatomic, retain) UIImage* trackImage;
+@property (nonatomic, retain) UIColor* progressTintColor;
+@property (nonatomic, retain) UIColor* trackTintColor;
 
 @end
-
-#endif /* _UIPROGRESSVIEW_H_ */

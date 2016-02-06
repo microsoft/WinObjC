@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
+
 #include "Starboard.h"
 #include "UIAnimationNotification.h"
 #include "QuartzCore/CABasicAnimation.h"
@@ -36,6 +38,12 @@
 
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 const wchar_t* TAG = L"UIView";
+
+/** @Status Stub */
+const CGSize UILayoutFittingCompressedSize = StubConstant();
+/** @Status Stub */
+const CGSize UILayoutFittingExpandedSize = StubConstant();
+
 BOOL g_alwaysSendViewEvents = TRUE;
 int g_animationsDisabled = 0, g_nestedAnimationsDisabled = 0;
 BOOL g_presentingAnimated = FALSE;
@@ -72,6 +80,12 @@ int viewCount = 0;
     idretaintype(CALayer) layer;
     bool _deallocating;
 }
+
+@synthesize preferredFocusedView;
+@synthesize traitCollection;
+@synthesize collisionBoundsType;
+@synthesize collisionBoundingPath;
+
 - (UIViewPrivateState*)_privateState {
     return priv;
 }
@@ -307,6 +321,13 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 
 - (void)encodeWithCoder:(NSCoder*)coder {
     TraceWarning(TAG, L"Unsupported attempt to encode a UIView\n");
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
+    return YES;
 }
 
 /**
@@ -1665,6 +1686,13 @@ static float doRound(float f) {
 }
 
 /**
+ @Status Stub
+*/
+- (void)setConstraints:(NSArray*)constraints {
+    UNIMPLEMENTED();
+}
+
+/**
  @Status Interoperable
 */
 - (void)addConstraint:(NSLayoutConstraint*)constraint {
@@ -2634,4 +2662,260 @@ static float doRound(float f) {
 - (void)setNativeElement:(WXFrameworkElement*)nativeElement {
     [self layer].contentsElement = nativeElement;
 }
+
+/**
+ @Status Stub
+*/
+- (BOOL)canBecomeFocused {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)hasAmbiguousLayout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)alignmentRectForFrame:(CGRect)frame {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)frameForAlignmentRect:(CGRect)alignmentRect {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize
+        withHorizontalFittingPriority:(UILayoutPriority)horizontalFittingPriority
+              verticalFittingPriority:(UILayoutPriority)verticalFittingPriority {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIEdgeInsets)alignmentRectInsets {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewPrintFormatter*)viewPrintFormatter {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)addLayoutGuide:(UILayoutGuide*)layoutGuide {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)drawViewHierarchyInRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)decodeRestorableStateWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeRestorableStateWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)exerciseAmbiguityInLayout {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)layoutMarginsDidChange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)removeLayoutGuide:(UILayoutGuide*)layoutGuide {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)tintColorDidChange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)requiresConstraintBasedLayout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (NSTimeInterval)inheritedAnimationDuration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirectionForSemanticContentAttribute:(UISemanticContentAttribute)attribute {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (void)performSystemAnimation:(UISystemAnimation)animation
+                       onViews:(NSArray*)views
+                       options:(UIViewAnimationOptions)options
+                    animations:(void (^)(void))parallelAnimations
+                    completion:(void (^)(BOOL))completion {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)setAnimationStartDate:(NSDate*)startTime {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point fromCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)rect toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)rect fromCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setNeedsFocusUpdate {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)updateFocusIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection {
+    UNIMPLEMENTED();
+}
+
 @end

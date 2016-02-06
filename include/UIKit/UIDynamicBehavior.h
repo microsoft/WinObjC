@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,13 +14,20 @@
 //
 //******************************************************************************
 
-#ifndef _UIDYNAMICBEHAVIOR_H_
-#define _UIDYNAMICBEHAVIOR_H_
+#pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
-@interface UIDynamicBehavior : NSObject
+@class NSArray;
+@class UIDynamicAnimator;
 
+UIKIT_EXPORT_CLASS
+@interface UIDynamicBehavior : NSObject <NSObject>
+@property (copy, nonatomic) void (^action)(void) STUB_PROPERTY;
+- (void)addChildBehavior:(UIDynamicBehavior*)behavior STUB_METHOD;
+@property (readonly, copy, nonatomic) NSArray* childBehaviors STUB_PROPERTY;
+- (void)removeChildBehavior:(UIDynamicBehavior*)behavior STUB_METHOD;
+@property (readonly, nonatomic) UIDynamicAnimator* dynamicAnimator STUB_PROPERTY;
+- (void)willMoveToAnimator:(UIDynamicAnimator*)dynamicAnimator STUB_METHOD;
 @end
-
-#endif /* _UIDYNAMICBEHAVIOR_H_ */

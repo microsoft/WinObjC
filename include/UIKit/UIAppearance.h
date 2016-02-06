@@ -27,14 +27,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
 
 #define UI_APPEARANCE_SELECTOR
 
-@protocol UIAppearanceContainer <NSObject>
-@end
+@protocol UIAppearanceContainer;
 
 @protocol UIAppearance <NSObject>
 + (id)appearance;
-+ (id)appearanceWhenContainedIn:(Class <UIAppearanceContainer>)ContainerClass, ... NS_REQUIRES_NIL_TERMINATION;
++ (id)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)ContainerClass, ... NS_REQUIRES_NIL_TERMINATION;
 @end

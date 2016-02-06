@@ -22,7 +22,7 @@
 }
 @end
 
-@implementation UIButtonContent : NSObject
+@implementation UIButtonContent
 - (instancetype)initWithCoder:(id)coder {
     image = [coder decodeObjectForKey:@"UIImage"];
     backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];

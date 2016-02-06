@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
 #import <UIKit/UIKitExport.h>
@@ -22,12 +23,12 @@
 @class UITraitCollection;
 
 @protocol UIContentContainer <NSObject>
-@required
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 - (void)willTransitionToTraitCollection:(UITraitCollection*)newCollection
               withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 - (CGSize)sizeForChildContentContainer:(id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize;
 - (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container;
 - (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container;
+
 @property (nonatomic, readonly) CGSize preferredContentSize;
 @end

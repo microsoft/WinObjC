@@ -15,11 +15,15 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#import <StubReturn.h>
 #include <UIKit/UIKit.h>
 #include <UIViewInternal.h>
-#include "CGFontInternal.h"
+
+#include <Foundation/NSMutableDictionary.h>
 #include "CoreGraphics/CGContext.h"
-#include "Foundation/NSMutableDictionary.h"
+
+#include "CGFontInternal.h"
+
 #include <assert.h>
 
 void NSStringForceinclude() {
@@ -519,7 +523,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
              withFont:(UIFont*)font
           minFontSize:(float)minFontSize
        actualFontSize:(float*)actualFontSize
-        lineBreakMode:(DWORD)lineBreak
+        lineBreakMode:(UILineBreakMode)lineBreak
    baselineAdjustment:(DWORD)baseline {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -546,7 +550,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
              forWidth:(float)forWidth
              withFont:(UIFont*)font
              fontSize:(float)fontSize
-        lineBreakMode:(DWORD)lineBreak
+        lineBreakMode:(UILineBreakMode)lineBreak
    baselineAdjustment:(DWORD)baseline {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -661,7 +665,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)sizeWithFont:(UIFont*)font {
     if (font == nil) {
-        font = [objc_getClass("UIFont") defaultFont];
+        font = [UIFont defaultFont];
     }
 
     CGSize ret;
@@ -768,6 +772,26 @@ static NSDictionary* _getDefaultUITextAttributes() {
     CGRect rect = CGRectMake(0, 0, mySize.width, mySize.height);
     [context _setInternalTotalBounds:rect];
     return rect;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGSize)drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)drawWithRect:(CGRect)rect
+             options:(NSStringDrawingOptions)options
+          attributes:(NSDictionary*)attributes
+             context:(NSStringDrawingContext*)context {
+    UNIMPLEMENTED();
 }
 
 @end

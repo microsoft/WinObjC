@@ -29,44 +29,12 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UINAVIGATIONCONTROLLER_H_
-#define _UINAVIGATIONCONTROLLER_H_
+#pragma once
 
 #import "UIViewController.h"
 
 @class UINavigationBar, UIToolbar, UIViewController;
-
-typedef enum {
-    UINavigationControllerOperationNone,
-    UINavigationControllerOperationPush,
-    UINavigationControllerOperationPop
-} UINavigationControllerOperation;
-
-@protocol UINavigationControllerDelegate <NSObject>
-
-@optional
-
-- (void)navigationController:(UINavigationController*)navigationController
-       didShowViewController:(UIViewController*)viewController
-                    animated:(BOOL)animated;
-
-- (void)navigationController:(UINavigationController*)navigationController
-      willShowViewController:(UIViewController*)viewController
-                    animated:(BOOL)animated;
-
-- (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController*)navigationController
-                                  animationControllerForOperation:(UINavigationControllerOperation)operation
-                                               fromViewController:(UIViewController*)fromVC
-                                                 toViewController:(UIViewController*)toVC;
-
-- (id<UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController*)navigationController
-                         interactionControllerForAnimationController:(id<UIViewControllerAnimatedTransitioning>)animationController;
-
-- (UIInterfaceOrientation)navigationControllerPreferredInterfaceOrientationForPresentation:(UINavigationController*)navigationController;
-
-- (UIInterfaceOrientationMask)navigationControllerSupportedInterfaceOrientations:(UINavigationController*)navigationController;
-
-@end
+@protocol UINavigationControllerDelegate;
 
 typedef enum {
     _UINavigationControllerVisibleControllerTransitionNone = 0,
@@ -118,5 +86,3 @@ UIKIT_EXPORT_CLASS
 @end
 
 UIKIT_EXPORT const CGFloat UINavigationControllerHideShowBarDuration;
-
-#endif /* _UINAVIGATIONCONTROLLER_H_ */

@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UITEXTINPUTTRAITS_H_
-#define _UITEXTINPUTTRAITS_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 
@@ -95,5 +94,3 @@ typedef enum {
 @property (nonatomic, getter=isSecureTextEntry) BOOL secureTextEntry;
 @property (nonatomic) UITextSpellCheckingType spellCheckingType;
 @end
-
-#endif /* _UITEXTINPUTTRAITS_H_ */

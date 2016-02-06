@@ -22,7 +22,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableSet.h"
 
-@implementation UIControl : UIView
+@implementation UIControl
 - (instancetype)initWithFrame:(CGRect)pos {
     _registeredActions = [NSMutableArray new];
     _activeTouches = [NSMutableArray new];
@@ -67,21 +67,19 @@
     [_registeredActions addObject:connection];
 }
 
-- (void)sendAction:(SEL)sel
-                to:(id)target
-          forEvent:(UIEvent *)event
-{
-    if ( target == nil ) {
+- (void)sendAction:(SEL)sel to:(id)target forEvent:(UIEvent*)event {
+    if (target == nil) {
         target = self;
 
         //  Cascade the action down the responder chain
-        while ( target != nil ) {
-            if ( [target respondsToSelector: sel] ) break;
+        while (target != nil) {
+            if ([target respondsToSelector:sel])
+                break;
             target = [target nextResponder];
         }
     }
 
-    if ( target != nil ) {
+    if (target != nil) {
         [target performSelector:sel withObject:self withObject:event];
     }
 }
@@ -119,7 +117,7 @@
                 }
             }
 
-            [self sendAction: sel to: curTarget forEvent: nil];
+            [self sendAction:sel to:curTarget forEvent:nil];
         }
     }
 }
@@ -193,7 +191,7 @@
 
     [self setNeedsDisplay];
     [self setNeedsLayout];
-    
+
     if (enabled) {
         self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
     } else {

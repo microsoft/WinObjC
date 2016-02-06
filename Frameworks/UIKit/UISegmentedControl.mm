@@ -25,7 +25,7 @@
 #include "UISegment.h"
 #include <math.h>
 
-@implementation UISegmentedControl : UIControl {
+@implementation UISegmentedControl {
     idretain _segments;
     id _tintColor;
     idretain _backgroundImages[16];

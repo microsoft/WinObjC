@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIDOCUMENTINTERACTIONCONTROLLER_H_
-#define _UIDOCUMENTINTERACTIONCONTROLLER_H_
+#pragma once
 
 #import <UIKit/UIActionSheet.h>
 
@@ -30,8 +29,3 @@
 - (BOOL)presentPreviewAnimated:(BOOL)animated;
 
 @end
-
-@protocol UIDocumentInteractionControllerDelegate <NSObject>
-@end
-
-#endif /* _UIDOCUMENTINTERACTIONCONTROLLER_H_ */

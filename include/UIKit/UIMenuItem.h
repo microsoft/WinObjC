@@ -27,17 +27,19 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
 
 @interface UIMenuItem : NSObject {
 @private
     SEL _action;
-    NSString *_title;
+    NSString* _title;
 }
 
-- (id)initWithTitle:(NSString *)title action:(SEL)action;
+- (id)initWithTitle:(NSString*)title action:(SEL)action;
 
 @property SEL action;
-@property (copy) NSString *title;
+@property (copy) NSString* title;
 
 @end

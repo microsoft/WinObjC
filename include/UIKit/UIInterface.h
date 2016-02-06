@@ -27,8 +27,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIINTERFACE_H_
-#define _UIINTERFACE_H_
+#pragma once
 
 #import "UIColor.h"
 #import "UIFont.h"
@@ -41,12 +40,12 @@ typedef enum {
 } UIBarStyle;
 
 @interface UIColor (UIColorSystemColors)
-+ (UIColor *)groupTableViewBackgroundColor;
-+ (UIColor *)underPageBackgroundColor;
-+ (UIColor *)scrollViewTexturedBackgroundColor;
-+ (UIColor *)windowsControlFocusedColor;
-+ (UIColor *)windowsControlDefaultBackgroundColor;
-+ (UIColor *)windowsTableViewSelectionBackgroundColor;
++ (UIColor*)groupTableViewBackgroundColor;
++ (UIColor*)underPageBackgroundColor;
++ (UIColor*)scrollViewTexturedBackgroundColor;
++ (UIColor*)windowsControlFocusedColor;
++ (UIColor*)windowsControlDefaultBackgroundColor;
++ (UIColor*)windowsTableViewSelectionBackgroundColor;
 @end
 
 @interface UIFont (UIFontSystemFonts)
@@ -55,5 +54,3 @@ typedef enum {
 + (CGFloat)labelFontSize;
 + (CGFloat)buttonFontSize;
 @end
-
-#endif /* _UIINTERFACE_H_ */

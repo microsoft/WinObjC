@@ -27,12 +27,30 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIAPPLICATIONDELEGATE_H_
-#define _UIAPPLICATIONDELEGATE_H_
+#pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
+#import <UIKit/UIApplication.h>
 
-@class UIApplication, UIWindow;
+@class NSString, UIApplication, NSDictionary, NSCoder, UIViewController, NSArray, UIUserNotificationSettings, UILocalNotification, NSData,
+    NSError, NSUserActivity, UIApplicationShortcutItem, NSURL, UIWindow;
+
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsURLKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsSourceApplicationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsRemoteNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocalNotificationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsAnnotationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsLocationKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsNewsstandDownloadsKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsBluetoothCentralsKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsBluetoothPeripheralsKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsShortcutItemKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsUserActivityDictionaryKey;
+UIKIT_EXPORT NSString* const UIApplicationLaunchOptionsUserActivityTypeKey;
+UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsSourceApplicationKey;
+UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsAnnotationKey;
+UIKIT_EXPORT NSString* const UIApplicationOpenURLOptionsOpenInPlaceKey;
 
 @protocol UIApplicationDelegate <NSObject>
 @optional
@@ -40,32 +58,101 @@
 /**
  @Status Interoperable
 */
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions;
 
 /**
  @Status Interoperable
 */
-- (void)applicationDidFinishLaunching:(UIApplication *)application;
+- (void)applicationDidFinishLaunching:(UIApplication*)application;
 
 /**
  @Status Interoperable
 */
-- (void)applicationDidBecomeActive:(UIApplication *)application;
+- (void)applicationDidBecomeActive:(UIApplication*)application;
 
 /**
  @Status Interoperable
 */
-- (void)applicationWillResignActive:(UIApplication *)application;
-- (void)applicationWillTerminate:(UIApplication *)application;
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation;
-- (void)applicationDidEnterBackground:(UIApplication *)application;
-- (void)applicationWillEnterForeground:(UIApplication *)application;
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application;
-- (void)applicationSignificantTimeChange:(UIApplication *)application;
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url;
+- (void)applicationWillResignActive:(UIApplication*)application;
 
-@property(nonatomic, retain) UIWindow *window;
+- (BOOL)application:(UIApplication*)application willFinishLaunchingWithOptions:(NSDictionary*)launchOptions;
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions;
+- (void)applicationDidFinishLaunching:(UIApplication*)application;
+- (void)applicationDidBecomeActive:(UIApplication*)application;
+- (void)applicationWillResignActive:(UIApplication*)application;
+- (void)applicationDidEnterBackground:(UIApplication*)application;
+- (void)applicationWillEnterForeground:(UIApplication*)application;
+- (void)applicationWillTerminate:(UIApplication*)application;
+- (void)applicationProtectedDataWillBecomeUnavailable:(UIApplication*)application;
+- (void)applicationProtectedDataDidBecomeAvailable:(UIApplication*)application;
+- (void)applicationDidReceiveMemoryWarning:(UIApplication*)application;
+- (void)applicationSignificantTimeChange:(UIApplication*)application;
+- (BOOL)application:(UIApplication*)application shouldSaveApplicationState:(NSCoder*)coder;
+- (BOOL)application:(UIApplication*)application shouldRestoreApplicationState:(NSCoder*)coder;
+- (UIViewController*)application:(UIApplication*)application
+    viewControllerWithRestorationIdentifierPath:(NSArray*)identifierComponents
+                                          coder:(NSCoder*)coder;
+- (void)application:(UIApplication*)application willEncodeRestorableStateWithCoder:(NSCoder*)coder;
+- (void)application:(UIApplication*)application didDecodeRestorableStateWithCoder:(NSCoder*)coder;
+- (void)application:(UIApplication*)application
+    performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler;
+- (void)application:(UIApplication*)application
+    handleEventsForBackgroundURLSession:(NSString*)identifier
+                      completionHandler:(void (^)(void))completionHandler;
+- (void)application:(UIApplication*)application didRegisterUserNotificationSettings:(UIUserNotificationSettings*)notificationSettings;
+- (void)application:(UIApplication*)application didReceiveLocalNotification:(UILocalNotification*)notification;
+- (void)application:(UIApplication*)application
+    handleActionWithIdentifier:(NSString*)identifier
+          forLocalNotification:(UILocalNotification*)notification
+             completionHandler:(void (^)(void))completionHandler;
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken;
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error;
+- (void)application:(UIApplication*)application
+    didReceiveRemoteNotification:(NSDictionary*)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler;
+- (void)application:(UIApplication*)application
+    handleActionWithIdentifier:(NSString*)identifier
+         forRemoteNotification:(NSDictionary*)userInfo
+             completionHandler:(void (^)(void))completionHandler;
+- (void)application:(UIApplication*)application didReceiveRemoteNotification:(NSDictionary*)userInfo;
+- (void)application:(UIApplication*)application
+    handleActionWithIdentifier:(NSString*)identifier
+          forLocalNotification:(UILocalNotification*)notification
+              withResponseInfo:(NSDictionary*)responseInfo
+             completionHandler:(void (^)(void))completionHandler;
+- (void)application:(UIApplication*)application
+    handleActionWithIdentifier:(NSString*)identifier
+         forRemoteNotification:(NSDictionary*)userInfo
+              withResponseInfo:(NSDictionary*)responseInfo
+             completionHandler:(void (^)(void))completionHandler;
+- (BOOL)application:(UIApplication*)application willContinueUserActivityWithType:(NSString*)userActivityType;
+- (BOOL)application:(UIApplication*)application
+    continueUserActivity:(NSUserActivity*)userActivity
+      restorationHandler:(void (^)(NSArray* restorableObjects))restorationHandler;
+- (void)application:(UIApplication*)application didUpdateUserActivity:(NSUserActivity*)userActivity;
+- (void)application:(UIApplication*)application didFailToContinueUserActivityWithType:(NSString*)userActivityType error:(NSError*)error;
+- (void)application:(UIApplication*)application
+    performActionForShortcutItem:(UIApplicationShortcutItem*)shortcutItem
+               completionHandler:(void (^)(BOOL succeeded))completionHandler;
+- (void)application:(UIApplication*)application
+    handleWatchKitExtensionRequest:(NSDictionary*)userInfo
+                             reply:(void (^)(NSDictionary* replyInfo))reply;
+- (void)applicationShouldRequestHealthAuthorization:(UIApplication*)application;
+- (BOOL)application:(UIApplication*)app openURL:(NSURL*)url options:(NSDictionary*)options;
+- (BOOL)application:(UIApplication*)application shouldAllowExtensionPointIdentifier:(NSString*)extensionPointIdentifier;
+- (UIInterfaceOrientationMask)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window;
+- (void)application:(UIApplication*)application
+    willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation
+                          duration:(NSTimeInterval)duration;
+- (void)application:(UIApplication*)application didChangeStatusBarOrientation:(UIInterfaceOrientation)oldStatusBarOrientation;
+- (void)application:(UIApplication*)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame;
+- (void)application:(UIApplication*)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame;
+- (BOOL)application:(UIApplication*)application handleOpenURL:(NSURL*)url;
+- (BOOL)application:(UIApplication*)application
+            openURL:(NSURL*)url
+  sourceApplication:(NSString*)sourceApplication
+         annotation:(id)annotation;
+
+@property (nonatomic, strong) UIWindow* window;
 
 @end
-
-#endif /* _UIAPPLICATIONDELEGATE_H_ */
