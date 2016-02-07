@@ -35,8 +35,6 @@ TEST(Mach, MachTaskInfoThreadTimes) {
 
     ASSERT_EQ_MSG(retVal, KERN_SUCCESS, "FAILED: task_info call for TASK_BASIC_INFO failed");
     ASSERT_EQ_MSG(size, sizeof(time_info) / sizeof(integer_t), "FAILED: size is invalid");
-    ASSERT_GT_MSG(time_info.user_time.microseconds, 0, "FAILED: user time is invalid");
-    ASSERT_GT_MSG(time_info.system_time.microseconds, 0, "FAILED: system time is invalid");
 
     // check that the user time indeed advances
     time_value_t user_time_before = time_info.user_time;
@@ -52,6 +50,5 @@ TEST(Mach, MachTaskInfoThreadTimes) {
 
     ASSERT_EQ_MSG(retVal, KERN_SUCCESS, "FAILED: task_info call for TASK_BASIC_INFO failed");
     ASSERT_EQ_MSG(size, sizeof(time_info) / sizeof(integer_t), "FAILED: size is invalid");
-    ASSERT_GT_MSG(time_info.user_time.microseconds, 0, "FAILED: user time is invalid");
     ASSERT_GT_MSG(time_info.user_time.seconds - user_time_before.seconds, 1, "FAILED: user time must have increased by 2 seconds");
 }
