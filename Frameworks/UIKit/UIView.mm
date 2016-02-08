@@ -2000,6 +2000,16 @@ static float doRound(float f) {
 /**
  @Status Interoperable
 */
++ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation {
+    BOOL areAnimationsEnabled = [self areAnimationsEnabled];
+    [self setAnimationsEnabled:NO];
+    CALLBLOCK(actionsWithoutAnimation);
+    [self setAnimationsEnabled:areAnimationsEnabled];
+}
+
+/**
+ @Status Interoperable
+*/
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock {
     [self beginAnimations:nil context:0];
     [self setAnimationDuration:duration];
@@ -2253,7 +2263,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 + (BOOL)areAnimationsEnabled {
-    return [self areAnimationsEnabled];
+    return [self animationsEnabled];
 }
 
 /**
@@ -2840,13 +2850,6 @@ static float doRound(float f) {
                        options:(UIViewAnimationOptions)options
                     animations:(void (^)(void))parallelAnimations
                     completion:(void (^)(BOOL))completion {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-+ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation {
     UNIMPLEMENTED();
 }
 
