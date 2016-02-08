@@ -102,6 +102,6 @@ add_library(WBITelemetry
 include_directories(${CMAKE_SOURCE_DIR} include include/utils include/vswriter include/PBX third-party third-party/PlistCpp/src third-party/PlistCpp/third-party third-party/PlistCpp/third-party/pugixml/src)
 target_link_libraries(vsimporter PlistCpp pugixml NSPlist)
 target_link_libraries(sb-expandvars PlistCpp pugixml NSPlist)
-target_link_libraries(Xib2Nib PlistCpp pugixml NSPlist WinHttp WBITelemetry ..\\..\\..\\deps\\3rdparty\\AppInsights\\Projects\\AppInsights_Win32\\Debug\\AppInsights_Win32.lib)
+target_link_libraries(Xib2Nib PlistCpp pugixml NSPlist WinHttp WBITelemetry ..\\..\\..\\deps\\3rdparty\\AppInsights\\Projects\\AppInsights_Win32\\$(Configuration)\\AppInsights_Win32.lib)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS} -std=c++11")

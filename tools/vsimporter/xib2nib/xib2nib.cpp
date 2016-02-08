@@ -237,7 +237,7 @@ int main(int argc, char* argv[]) {
     argc = 3;
 #endif
 
-    TELEMETRY_INIT(L"AIF-66d56db8-2223-42bb-bf14-16ea3667ff90");
+    TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
     std::tr2::sys::path fName(argv[1]);
 
