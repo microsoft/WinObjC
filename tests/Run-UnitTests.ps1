@@ -110,7 +110,7 @@ else
 
 if ($TargetingDevice)
 {
-    $TestDstDirectory = "\test\bin\islandwood"
+    $TestDstDirectory = "\data\test\bin\islandwood"
 }
 else
 {

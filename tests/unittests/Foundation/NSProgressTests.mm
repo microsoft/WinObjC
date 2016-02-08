@@ -258,6 +258,7 @@ TEST(Foundation, NSProgress_CurrentProgress_ThreadLocal) {
     [root resignCurrent];
 }
 
+#ifndef WINOBJC_DISABLE_EH_TESTS
 TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
     StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
     StrongId<ProgressThreadHelper> progressThreadHelper = [ProgressThreadHelper new];
@@ -275,6 +276,7 @@ TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
 
     ASSERT_EQ(YES, [progressThreadHelper exceptionWasCaught]);
 }
+#endif
 
 TEST(Foundation, NSProgress_ResignCurrentAutomaticBehavior) {
     // Become current and resign current without a child in-between should automatically increment by adding the pending units

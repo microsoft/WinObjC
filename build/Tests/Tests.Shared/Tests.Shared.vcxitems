@@ -9,6 +9,10 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClangCompile Condition="'$(Platform)'=='ARM'">
+      <!-- Remove this once exception handling works on ARM -->
+      <PreprocessorDefinitions>WINOBJC_DISABLE_EH_TESTS</PreprocessorDefinitions>
+    </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
@@ -57,6 +61,12 @@
       <FileType>Document</FileType>
     </SBResourceCopy>
     <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140d.dll" Condition="'$(Platform)'=='ARM'">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140.dll" Condition="'$(Platform)'=='ARM'">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140.dll" Condition="'$(Platform)'=='ARM'">
       <FileType>Document</FileType>
     </SBResourceCopy>
   </ItemGroup>
