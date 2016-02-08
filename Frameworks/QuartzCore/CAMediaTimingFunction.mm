@@ -75,10 +75,16 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 + (CAMediaTimingFunction*)functionWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y {
     return [[[self alloc] initWithControlPoints:c1x:c1y:c2x:c2y] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y {
     _c1x = c1x;
     _c1y = c1y;

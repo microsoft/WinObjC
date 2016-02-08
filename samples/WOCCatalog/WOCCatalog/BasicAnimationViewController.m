@@ -123,6 +123,7 @@
     animation.toValue = nil;
     animation.duration = 5;
     animation.removedOnCompletion = YES;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
     animation.repeatCount = HUGE_VALF;
     [imageViewLeftBottom.layer addAnimation:animation forKey:@"transformAnimation"];
 
@@ -133,6 +134,7 @@
     animation.byValue = [NSValue valueWithCATransform3D:byTransform];
     animation.duration = 5;
     animation.removedOnCompletion = YES;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     animation.repeatCount = HUGE_VALF;
     [imageViewMidBottom.layer addAnimation:animation forKey:@"transformAnimation"];
 
@@ -143,6 +145,7 @@
     animation.byValue = [NSValue valueWithCATransform3D:byTransform];
     animation.duration = 5;
     animation.removedOnCompletion = YES;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     animation.repeatCount = HUGE_VALF;
     [imageViewRightBottom.layer addAnimation:animation forKey:@"transformAnimation"];
 }
