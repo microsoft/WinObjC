@@ -16,6 +16,7 @@
 #pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
+#import <CoreFoundation/CFBase.h>
 
 typedef enum {
     kCGPDFObjectTypeNull = 1,
