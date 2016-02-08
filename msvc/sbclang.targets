@@ -30,6 +30,7 @@
       <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
       <IncludeGameController Condition="$(LinkAdditionalDependencies.Contains('GameController.lib'))">true</IncludeGameController>
       <IncludeGamePlayKit Condition="$(LinkAdditionalDependencies.Contains('GamePlayKit.lib'))">true</IncludeGamePlayKit>
+      <IncludeSocial Condition="$(LinkAdditionalDependencies.Contains('Social.lib'))">true</IncludeSocial>
       <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
@@ -159,6 +160,7 @@
       <SBResourceCopy Condition="'$(IncludeCoreTelephony)' == 'true'" Include="$(StarboardLibDirs)\CoreTelephony.dll" />
       <SBResourceCopy Condition="'$(IncludeAVKit)' == 'true'" Include="$(StarboardLibDirs)\AVKit.dll" />
       <SBResourceCopy Condition="'$(IncludeMediaAccessibilitya)' == 'true'" Include="$(StarboardLibDirs)\MediaAccessibility.dll" />
+      <SBResourceCopy Condition="'$(IncludeSocial)' == 'true'" Include="$(StarboardLibDirs)\Social.dll" />
     </ItemGroup>
   </Target>
 

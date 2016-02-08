@@ -203,7 +203,6 @@ LIBRARY UIKit
         _OBJC_CLASS_NSParagraphStyle DATA
         _OBJC_CLASS_NSTextContainer DATA
         _OBJC_CLASS_NSTextStorage DATA
-        _OBJC_CLASS_SLComposeViewController DATA
         _OBJC_CLASS_UIAccelerometer DATA
         _OBJC_CLASS_UIAccessibilityElement DATA
         _OBJC_CLASS_UIActionSheet DATA
@@ -286,7 +285,6 @@ LIBRARY UIKit
         __objc_class_name_NSParagraphStyle CONSTANT
         __objc_class_name_NSTextContainer CONSTANT
         __objc_class_name_NSTextStorage CONSTANT
-        __objc_class_name_SLComposeViewController CONSTANT
         __objc_class_name_UIAccelerometer CONSTANT
         __objc_class_name_UIAccessibilityElement CONSTANT
         __objc_class_name_UIActionSheet CONSTANT

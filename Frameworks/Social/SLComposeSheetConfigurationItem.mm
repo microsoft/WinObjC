@@ -13,28 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#ifndef SOCIAL_IMPEXP
-#define SOCIAL_IMPEXP __declspec(dllimport)
-#endif
+#import <StubReturn.h>
+#import <Social/SLComposeSheetConfigurationItem.h>
 
-#ifndef SOCIAL_EXPORT
-#ifdef __cplusplus
-#define SOCIAL_EXPORT SOCIAL_IMPEXP extern "C"
-#define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
-#else
-#define SOCIAL_EXPORT SOCIAL_IMPEXP extern
-#define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
-#endif
-#endif
+@implementation SLComposeSheetConfigurationItem
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)init {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
-#ifndef SOCIAL_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define SOCIAL_EXTERNC_BEGIN extern "C" {
-#define SOCIAL_EXTERNC_END }
-#else
-#define SOCIAL_EXTERNC_BEGIN
-#define SOCIAL_EXTERNC_END
-#endif
-#endif
+@end

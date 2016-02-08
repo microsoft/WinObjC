@@ -15,26 +15,17 @@
 //******************************************************************************
 #pragma once
 
-#ifndef SOCIAL_IMPEXP
-#define SOCIAL_IMPEXP __declspec(dllimport)
-#endif
+#import <Social/SocialExport.h>
 
-#ifndef SOCIAL_EXPORT
-#ifdef __cplusplus
-#define SOCIAL_EXPORT SOCIAL_IMPEXP extern "C"
-#define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
-#else
-#define SOCIAL_EXPORT SOCIAL_IMPEXP extern
-#define SOCIAL_EXPORT_CLASS SOCIAL_IMPEXP
-#endif
-#endif
+@class NSString;
 
-#ifndef SOCIAL_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define SOCIAL_EXTERNC_BEGIN extern "C" {
-#define SOCIAL_EXTERNC_END }
-#else
-#define SOCIAL_EXTERNC_BEGIN
-#define SOCIAL_EXTERNC_END
-#endif
-#endif
+typedef void (^SLComposeSheetConfigurationItemTapHandler)(void);
+
+SOCIAL_EXPORT_CLASS
+@interface SLComposeSheetConfigurationItem : NSObject
+@property (copy, nonatomic) SLComposeSheetConfigurationItemTapHandler tapHandler STUB_PROPERTY;
+@property (copy, nonatomic) NSString* title STUB_PROPERTY;
+@property (copy, nonatomic) NSString* value STUB_PROPERTY;
+@property (assign, nonatomic) BOOL valuePending STUB_PROPERTY;
+- (instancetype)init STUB_METHOD;
+@end

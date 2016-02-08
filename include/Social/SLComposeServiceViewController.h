@@ -17,31 +17,41 @@
 
 #import <Social/SocialExport.h>
 
+#import <Foundation/NSObject.h>
+
 #import <UIKit/UIAppearanceContainer.h>
 #import <UIKit/UIContentContainer.h>
 #import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITextViewDelegate.h>
 #import <UIKit/UITraitEnvironment.h>
 #import <UIKit/UIViewController.h>
 
+@class NSNumber;
+@class UIView;
+@class NSArray;
 @class NSString;
-@class UIImage;
-@class NSURL;
-
-typedef NS_ENUM(NSInteger, SLComposeViewControllerResult) { SLComposeViewControllerResultCancelled, SLComposeViewControllerResultDone };
-typedef void (^SLComposeViewControllerCompletionHandler)(SLComposeViewControllerResult result);
+@class UITextView;
 
 SOCIAL_EXPORT_CLASS
-@interface SLComposeViewController
-    : UIViewController <NSCoding, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
-+ (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType STUB_METHOD;
-+ (BOOL)isAvailableForServiceType:(NSString*)serviceType STUB_METHOD;
-- (BOOL)setInitialText:(NSString*)text STUB_METHOD;
-- (BOOL)addImage:(UIImage*)image STUB_METHOD;
-- (BOOL)removeAllImages STUB_METHOD;
-- (BOOL)addURL:(NSURL*)url STUB_METHOD;
-- (BOOL)removeAllURLs STUB_METHOD;
-@property (readonly, nonatomic) NSString* serviceType STUB_PROPERTY;
-@property (copy, nonatomic) SLComposeViewControllerCompletionHandler completionHandler STUB_PROPERTY;
+@interface SLComposeServiceViewController
+    : UIViewController <NSCoding, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITextViewDelegate, UITraitEnvironment>
+- (void)presentationAnimationDidFinish STUB_METHOD;
+- (void)cancel STUB_METHOD;
+- (void)didSelectCancel STUB_METHOD;
+- (void)didSelectPost STUB_METHOD;
+- (BOOL)isContentValid STUB_METHOD;
+- (void)validateContent STUB_METHOD;
+- (UIView*)loadPreviewView STUB_METHOD;
+- (NSArray*)configurationItems STUB_METHOD;
+- (void)popConfigurationViewController STUB_METHOD;
+- (void)pushConfigurationViewController:(UIViewController*)viewController STUB_METHOD;
+- (void)reloadConfigurationItems STUB_METHOD;
+
+@property (nonatomic, strong) NSNumber* charactersRemaining STUB_PROPERTY;
+@property (nonatomic, strong) UIViewController* autoCompletionViewController STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* contentText STUB_PROPERTY;
+@property (copy, nonatomic) NSString* placeholder STUB_PROPERTY;
+@property (readonly, nonatomic) UITextView* textView STUB_PROPERTY;
 @property (nonatomic, retain, readonly) UIView* preferredFocusedView STUB_PROPERTY;
 @property (nonatomic, readonly) UITraitCollection* traitCollection;
 @end

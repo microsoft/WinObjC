@@ -24,5 +24,4 @@
 @required
 @property (nonatomic, readonly) UITraitCollection* traitCollection;
 - (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection;
-
 @end
