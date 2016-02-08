@@ -205,9 +205,9 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
 
         // See NSProgress class reference:
         // If you don’t create any child progress objects between the calls to becomeCurrentWithPendingUnitCount: and resignCurrent,
-        // the “parent” progress automatically updates its completedUnitCount by adding the pending units.
+        // the "parent" progress automatically updates its completedUnitCount by adding the pending units.
         if (!currentProgressStack->top().childCreated) {
-            [self setCompletedUnitCount:_completedUnitCount + currentProgressStack->top().pendingUnitCountToAssign];
+            [self _incrementCompletedUnitCount:currentProgressStack->top().pendingUnitCountToAssign];
         }
 
         currentProgressStack->pop();
@@ -225,10 +225,16 @@ static decltype(s_currentProgressStack)& _getProgressStackForCurrentThread() {
     // Override synthesized setter so that parent can be updated with pendingUnitCount if necessary
     @synchronized(self) { // Property is atomic
         if ((_parent) && (inUnitCount >= _totalUnitCount) && (inUnitCount != _completedUnitCount)) {
-            [_parent setCompletedUnitCount:([_parent completedUnitCount] + _parentPendingUnitCount)];
+            [_parent _incrementCompletedUnitCount:_parentPendingUnitCount];
         }
 
         _completedUnitCount = inUnitCount;
+    }
+}
+
+- (void)_incrementCompletedUnitCount:(int64_t)inUnitCount {
+    @synchronized(self) {
+        [self setCompletedUnitCount:(_completedUnitCount + inUnitCount)];
     }
 }
 
