@@ -25,7 +25,7 @@ using namespace ApplicationInsights::core;
 namespace WBITelemetry
 {
     int     WBITelemetryManager::nTestVal   = 0;
-    wstring WBITelemetryManager::m_iKey     = L"AIF-66d56db8-2223-42bb-bf14-16ea3667ff90"; // "AIF-" Vortex will reject if "AIF-" prefix is missing.
+    wstring WBITelemetryManager::m_iKey     = L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca"; // "AIF-" Vortex will reject if "AIF-" prefix is missing.
 
     ApplicationInsights::core::TelemetryClient WBITelemetryManager::m_tc = ApplicationInsights::core::TelemetryClient(m_iKey);
 
