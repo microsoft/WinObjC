@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|All">
+      <Configuration>Debug</Configuration>
+      <Platform>All</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|All">
+      <Configuration>Release</Configuration>
+      <Platform>All</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3389E85F-0DB7-43FF-BFA5-496338534224}</ProjectGuid>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <DISABLEFASTUPTODATECHECK>true</DISABLEFASTUPTODATECHECK>
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\msvc\zip.tasks" />
+  </ImportGroup>
+  <PropertyGroup Label="PackageSDKDefaults">
+    <SBSDKDir>$(SolutionDir)SDKPackage\$(Configuration)\</SBSDKDir>
+    <SBSDKZipFile>$(SBSDKDir)winobjc.zip</SBSDKZipFile>
+    <SBPackageDir>$(OutDir)package\</SBPackageDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Label="DefaultDirectories">
+    <SBLibsWin10Win32>
+      <OutputDirectory>x86</OutputDirectory>
+    </SBLibsWin10Win32>
+    <SBLibsWin10ARM>
+      <OutputDirectory>ARM</OutputDirectory>
+    </SBLibsWin10ARM>
+  </ItemDefinitionGroup>
+  <Target Name="ComputeBuildTarget">
+    <ItemGroup Label="Package Files">
+      <LLVMFiles Include="..\..\msvc\LLVM-3.6.0\**\*" />
+      <StarboardTemplates Include="..\..\msvc\vsimporter-templates\**\*" />
+      <MSVCFiles Include="..\..\msvc\*.props" />
+      <MSVCFiles Include="..\..\msvc\*.targets" />
+      <MSVCFiles Include="..\..\msvc\*.tasks" />
+      <MSVCFiles Include="..\..\msvc\*.xml" />
+      <MSVCFiles Include="..\..\msvc\*.dll" />
+      <MSVCFiles Include="..\..\msvc\*.cpp" />
+      <SBIncludes Include="..\..\include\**\*" />
+      <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
+      <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
+      <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
+      <SBDispatchIncludes Include="..\..\deps\prebuilt\include\dispatch\**" />
+      <SBSamples Include="..\..\samples\**\*" />
+      <SBBinaries Include="..\..\bin\*.exe" />
+      <SBBinaries Include="..\..\bin\*.dll" />
+      <SBBinaries Include="..\..\bin\*.vsix" />
+      <SBLegal Include="..\..\license.txt;..\..\ThirdPartyNotices.txt;..\..\README.md" />
+
+      <!-- X86 -->
+      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.lib" />
+      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.dll" />
+      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
+      
+      <!-- These should go away; we should have debug/release for each -->
+      <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\*.lib" />
+      <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\*.dll" />
+      
+      <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\Debug\*.lib">
+        <OutputDirectory>x86\Debug</OutputDirectory>
+      </SBLibsWin10Win32>
+      <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\Debug\*.dll">
+        <OutputDirectory>x86\Debug</OutputDirectory>
+      </SBLibsWin10Win32>
+      <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\Release\*.lib">
+        <OutputDirectory>x86\Release</OutputDirectory>
+      </SBLibsWin10Win32>
+      <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\Release\*.dll">
+        <OutputDirectory>x86\Release</OutputDirectory>
+      </SBLibsWin10Win32>
+      
+      <!-- ARM -->
+      <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.lib" />
+      <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.dll" />
+      <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.winmd" />
+      
+      <!-- These should go away; we should have debug/release for each -->
+      <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\*.lib" />
+      <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\*.dll" />
+      
+      <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\Debug\*.lib">
+        <OutputDirectory>ARM\Debug</OutputDirectory>
+      </SBLibsWin10ARM>
+      <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\Debug\*.dll">
+        <OutputDirectory>ARM\Debug</OutputDirectory>
+      </SBLibsWin10ARM>
+      <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\Release\*.lib">
+        <OutputDirectory>ARM\Release</OutputDirectory>
+      </SBLibsWin10ARM>
+      <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\Release\*.dll">
+        <OutputDirectory>ARM\Release</OutputDirectory>
+      </SBLibsWin10ARM>
+    </ItemGroup>  
+  </Target>
+  <Target Name="CompileSDKs">
+    <Message Importance="high" Text="Building x86 SDK" />
+    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot; /m /p:Platform=x86 /p:Configuration=$(Configuration)" />
+    <Message Importance="high" Text="Building ARM SDK" />
+    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot; /m /p:Platform=ARM /p:Configuration=$(Configuration)" />
+  </Target>
+  <Target Name="CleanSDKs">
+    <Message Importance="high" Text="Cleaning x86 SDK" />
+    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot; /m /p:Platform=x86 /p:Configuration=$(Configuration) /t:Clean" />
+    <Message Importance="high" Text="Cleaning ARM SDK" />
+    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot; /m /p:Platform=ARM /p:Configuration=$(Configuration) /t:Clean" />
+  </Target>
+  <Target Name="Build" DependsOnTargets="CompileSDKs;ComputeBuildTarget">
+    <!-- We want to start from scratch each time, in case we remove a dependency we don't want in the package -->
+    <Message Importance="high" Text="Removing old package" />
+    <RemoveDir Directories="$(SBPackageDir)" />
+    <ItemGroup>
+      <!-- We're replacing the starboard files included while building the SDK with the ones that will be released externally. -->
+      <MSVCFiles Remove="@(MSVCFiles)" Condition="'%(MSVCFiles.Filename)' == 'starboard'" />
+    </ItemGroup>
+    <ItemGroup>
+      <MSVCFiles>
+        <OutputFileName Condition="'%(MSVCFiles.Filename)' == 'starboard-sdk'">starboard</OutputFileName>
+        <OutputFileName Condition="'%(MSVCFiles.Filename)' != 'starboard-sdk'">%(MSVCFiles.Filename)</OutputFileName>
+      </MSVCFiles>
+    </ItemGroup>
+    <Message Importance="high" Text="Copying LLVM to destination" />
+    <Copy SourceFiles="@(LLVMFiles)" DestinationFiles="@(LLVMFiles->'$(SBPackageDir)msvc\LLVM-3.6.0\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying VS Project Importer templates to destination" />
+    <Copy SourceFiles="@(StarboardTemplates)" DestinationFiles="@(StarboardTemplates->'$(SBPackageDir)msvc\vsimporter-templates\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying MSBuild files to destination" />
+    <Copy SourceFiles="@(MSVCFiles)" DestinationFiles="@(MSVCFiles->'$(SBPackageDir)msvc\%(OutputFileName)%(Extension)')" />
+    <Message Importance="high" Text="Copying x86 lib files to destination" />
+    <Copy SourceFiles="@(SBLibsWin10Win32)" DestinationFiles="@(SBLibsWin10Win32->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying ARM lib files to destination" />
+    <Copy SourceFiles="@(SBLibsWin10ARM)" DestinationFiles="@(SBLibsWin10ARM->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying includes to destination" />
+    <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBDispatchIncludes)" DestinationFiles="@(SBDispatchIncludes->'$(SBPackageDir)include\dispatch\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying binaries to destination" />
+    <Copy SourceFiles="@(SBBinaries)" DestinationFolder="$(SBPackageDir)bin\" />
+    <Message Importance="high" Text="Copying samples to destination" />
+    <Copy SourceFiles="@(SBSamples)" DestinationFiles="@(SBSamples->'$(SBPackageDir)samples\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Message Importance="high" Text="Copying legal notices" />
+    <Copy SourceFiles="@(SBLegal)" DestinationFolder="$(SBPackageDir)" />
+    <Message Importance="high" Text="Adding version information (last commit, date and time)" />
+    <Exec Command="echo $([System.DateTime]::Now.ToString()) &gt; &quot;$(SBPackageDir)VERSION.TXT&quot;" />
+    <Exec IgnoreExitCode="true" Command="git rev-parse HEAD &gt;&gt; &quot;$(SBPackageDir)VERSION.TXT&quot;" />
+    <Message Importance="high" Text="Zipping final package" />
+    <MakeDir Directories="$(SBSDKDir)" />
+    <ZipDirectory InputDirectory="$(SBPackageDir)" ZipFileName="$(SBSDKZipFile)" OverwriteExistingFile="true" />
+    <Message Importance="high" Text="Cleaning up package remnants. Remove this step if you wish to more closely examine package generation." />
+    <RemoveDir Directories="$(SBPackageDir)" />
+  </Target>
+  <Target Name="Clean" DependsOnTargets="CleanSDKs">
+    <Message Importance="high" Text="Removing old package" />
+    <RemoveDir Directories="$(SBPackageDir)" />
+    <Delete Files="$(SBSDKZipFile)" />
+  </Target>
+  <Target Name="Rebuild">
+    <CallTarget Targets="Clean" />
+    <CallTarget Targets="Build" />
+  </Target>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
