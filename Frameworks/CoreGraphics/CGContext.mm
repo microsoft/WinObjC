@@ -572,10 +572,9 @@ void CGContextSetLineDash(CGContextRef ctx, float phase, const float* lengths, u
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetMiterLimit(CGContextRef ctx, float limit) {
-    UNIMPLEMENTED();
     ctx->Backing()->CGContextSetMiterLimit(limit);
 }
 
