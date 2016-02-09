@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    photo = [UIImage imageWithContentsOfFile:@"photo10.jpg"];
+    photo = [UIImage imageNamed:@"photo10.jpg"];
     imageViewLeftTop = [[UIImageView alloc] initWithImage: photo];
     imageViewLeftTop.layer.frame = CGRectMake(self.view.frame.origin.x,
                                               self.view.frame.origin.y,

@@ -40,7 +40,7 @@
     self.view.backgroundColor = [UIColor blackColor];
     CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     UIImageView* imagesView = [[UIImageView alloc] initWithFrame: rect];
-    UIImage* photo = [UIImage imageWithContentsOfFile:@"photo9.jpg"];
+    UIImage* photo = [UIImage imageNamed:@"photo9.jpg"];
     UIImage* scaledPhotoHighInterpolation = [ImagesViewController scaleImage:
                                                 photo.CGImage
                                                 scaledRect:rect
