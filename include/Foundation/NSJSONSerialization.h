@@ -37,5 +37,5 @@ FOUNDATION_EXPORT_CLASS
                     toStream:(NSOutputStream*)stream
                      options:(NSJSONWritingOptions)opt
                        error:(NSError* _Nullable*)error STUB_METHOD;
-+ (BOOL)isValidJSONObject:(id)obj STUB_METHOD;
++ (BOOL)isValidJSONObject:(id)obj;
 @end
