@@ -16,10 +16,13 @@
 
 #include "Starboard.h"
 #include "Foundation/NSInvocation.h"
+#include "Logging.h"
 #include <ctype.h>
 #include <objc/encoding.h>
 
-@implementation NSInvocation : NSObject
+static const wchar_t* TAG = L"NSInvocation";
+
+@implementation NSInvocation
 static void* copyArgument(NSInvocation* self, void* buf, int index) {
     char* type = (char*)[self->_methodSignature getArgumentTypeAtIndex:index];
 
@@ -219,12 +222,95 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     [self invoke];
 }
 
+// uniformTypeFromStructSpecifier attempts to determine the common type for an aggregate.
+// For aggregates of disparate types or unknowable types, this function returns \0.
+// struct type encodings are generally of the form {name=mmm}, where m is a member encoding.
+// This function requires a char** so that it may advance the type encoding in the recursive case.
+//
+// Base case:
+// {CGSize=ff}
+//  ====f====  <- homogenous type is f
+//
+// {Struct=il}
+// --- no homogenous type ---
+//
+// Recursive case:
+// {CGRect={CGSize=ff}{CGPoint=ff}}
+//          ====f====  =====f==== <- recursively resolve homogenous type of sub-structures
+//              |           |
+//              v           v
+//  ==============f============== <- resolve homogenous type for CGRect to f
+static char uniformTypeFromStructSpecifier(const char** type) {
+    char uniformType = '\0';
+    do {
+        ++(*type);
+        if (_C_STRUCT_E == **type) {
+            // premature end: forward-declared struct with unknown members.
+            return '\0';
+        }
+    } while ('=' != **type);
+
+    ++(*type); // skip the =
+
+    while (**type != _C_STRUCT_E) {
+        if (**type == '"') {
+            // Occasionally, struct encodings store field names as in {name="x"f"y"f}. Skip those.
+            do {
+                ++(*type);
+            } while ('"' != **type);
+            ++(*type);
+        }
+        char v = **type;
+        switch (v) {
+            case _C_STRUCT_B:
+                v = uniformTypeFromStructSpecifier(type);
+                if (!v) {
+                    return '\0';
+                }
+                break;
+            default:
+                *type = objc_skip_typespec(*type);
+                break;
+        }
+        if (!uniformType) {
+            uniformType = v;
+        } else if (uniformType != v) {
+            return '\0';
+        }
+    }
+
+    ++(*type);
+    return uniformType;
+}
+
+
+#if _M_IX86
+#define ARCH_SMALL_STRUCT_SIZE 8
+typedef uint64_t arch_small_struct_type;
+#elif _M_ARM
+#define ARCH_SMALL_STRUCT_SIZE 4
+typedef uint32_t arch_small_struct_type;
+#else
+#warning unsupported platform for struct returns
+#endif
+
+#if _M_ARM
+template <typename UniformType>
+struct uniformAggregate {
+    UniformType val[4];
+};
+template <typename UniformType, typename... Args>
+static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target, SEL selector, Args... args) {
+    return ((uniformAggregate<UniformType> (*)(id, SEL, Args...))imp)(target, selector, args...);
+}
+#endif
+
 /**
  @Status Caveat
  @Notes For variadics, only works with 6 stack args max.
 */
 - (void)invoke {
-    char* type = (char*)[_methodSignature methodReturnType];
+    const char* type = [_methodSignature methodReturnType];
     int returnSize = objc_sizeof_type(type);
     char* pMsgFunc = "_objc_msgSend";
 
@@ -355,23 +441,42 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
         id target = (id)stackParams[0];
         SEL sel = (SEL)stackParams[1];
 
-        // This is x86-only. When structs are <= 8 bytes they're returned through registers instead.
-        unsigned (*imp)(void*, id, SEL, ...) = (unsigned (*)(void*, id, SEL, ...))[target methodForSelector:sel];
-        unsigned __int64 (*imp64ret)(id, SEL, ...) = (unsigned __int64 (*)(id, SEL, ...))imp;
-
+        id (*imp)(id, SEL, ...) = [target methodForSelector:sel];
+        void (*stretImp)(void*, id, SEL, ...) = (void (*)(void*, id, SEL, ...))imp;
+        // structs below a certain size may be returned in registers. on x86, that limit is 8 bytes. on ARM it is 4.
         switch (stackParamsLen) {
             case 2: {
-                if (returnSize <= 8) {
-                    unsigned __int64 retVal = imp64ret(target, sel);
+#if _M_ARM
+                // As in the _Procedure Call Standard for the ARM Architecture_, section 6.1,
+                // aggregates containing 1-4 floats or doubles and no other types are returned in floating-point
+                // registers. Here, we use a struct containing four floats/doubles to capture the full surface
+                // area of the floating point register set in use for returns.
+                const char* ptype = type;
+                char uniformType = uniformTypeFromStructSpecifier(&ptype);
+                if (returnSize <= sizeof(float) * 4 && uniformType == _C_FLT) {
+                    auto retVal = callUniformAggregateImp<float>(imp, target, sel);
                     memcpy(pReturnVal, &retVal, returnSize);
-                } else {
-                    imp(pReturnVal, target, sel);
+                } else if (returnSize <= sizeof(double) * 4 && uniformType == _C_DBL) {
+                    auto retVal = callUniformAggregateImp<double>(imp, target, sel);
+                    memcpy(pReturnVal, &retVal, returnSize);
+                } else
+#endif
+#ifdef ARCH_SMALL_STRUCT_SIZE
+                if (returnSize <= ARCH_SMALL_STRUCT_SIZE) {
+                    arch_small_struct_type (*smallStructImp)(id, SEL, ...) = (arch_small_struct_type (*)(id, SEL, ...))stretImp;
+                    auto retVal = smallStructImp(target, sel);
+                    memcpy(pReturnVal, &retVal, returnSize);
+                } else
+#endif
+                {
+                    stretImp(pReturnVal, target, sel);
                 }
                 returnValue = pReturnVal;
             } break;
 
             default:
-                assert(0);
+                TraceError(TAG, L"Unable to realize stret imp call to -[%hs %hs] for >= 3 arguments.", class_getName(object_getClass(target)), sel_getName(sel));
+                FAIL_FAST();
                 break;
         }
     }
