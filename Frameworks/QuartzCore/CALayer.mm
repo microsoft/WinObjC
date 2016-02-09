@@ -2097,6 +2097,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (id)valueForUndefinedKey:(NSString*)keyPath {
+    return [priv->_undefinedKeys valueForKey:keyPath];
+}
+
+- (id)valueForKeyPath:(NSString*)keyPath {
     char* pPath = (char*)[keyPath UTF8String];
     if (strcmp(pPath, "position.x") == 0) {
         return [NSNumber numberWithFloat:priv->position.x];
@@ -2169,16 +2173,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     } else if (strcmp(pPath, "bounds.origin.y") == 0) {
         CGRect bounds = [self bounds];
         return [NSNumber numberWithFloat:bounds.origin.y];
-    } else {
-        id ret = [priv->_undefinedKeys valueForKey:keyPath];
-        if (ret == nil) {
-            assert(0);
-        }
+    } 
 
-        return ret;
-    }
-
-    return nil;
+    return [super valueForKeyPath:keyPath];
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
