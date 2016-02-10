@@ -7,3 +7,7 @@ LIBRARY CoreImage
         ; CIImage.mm
         _OBJC_CLASS_CIImage DATA
         __objc_class_name_CIImage CONSTANT
+
+        ; CIContext.mm
+        _OBJC_CLASS_CIContext DATA
+        __objc_class_name_CIContext CONSTANT

@@ -20,12 +20,9 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <CoreImage/CIImage.h>
 #import <CoreImage/CIColor.h>
+#import "CIImageInternal.h"
 
-@implementation CIImage {
-    idretain _cgImage;
-    idretain _color;
-    CIFilter* _filter;
-}
+@implementation CIImage
 
 - (CIImage*)init {
     if (self = [super init]) {
@@ -141,6 +138,11 @@
     _color = nil;
     _cgImage = nil;
     [super dealloc];
+}
+
+- (CGImageRef)_CGImageFromRect:(CGRect)rect {
+    CIImage* croppedImage = [self imageByCroppingToRect:rect];
+    return static_cast<CGImageRef>(croppedImage->_cgImage);
 }
 
 @end

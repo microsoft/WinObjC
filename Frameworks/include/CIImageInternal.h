@@ -16,20 +16,14 @@
 
 #pragma once
 
-#import <stubincludes.h>
-#import <Foundation/NSObject.h>
-#import <CoreImage/CoreImageExport.h>
+#import <CoreImage/CIImage.h>
 
-@class CIImage, NSDictionary;
+@interface CIImage () {
+    idretain _cgImage;
+    idretain _color;
+    CIFilter* _filter;
+}
 
-COREIMAGE_EXPORT_CLASS
-@interface CIContext : NSObject
-
-+ (CIContext*)contextWithCGContext:(CGContextRef)cgContext options:(NSDictionary*)options STUB_METHOD;
-+ (CIContext*)contextWithOptions:(NSDictionary*)dict;
-
-- (CGImageRef)createCGImage:(CIImage*)image fromRect:(CGRect)rect;
-- (void)drawImage:(CIImage*)image atPoint:(CGPoint)atPoint fromRect:(CGRect)fromRect STUB_METHOD;
-- (void)drawImage:(CIImage*)image inRect:(CGRect)inRect fromRect:(CGRect)fromRect STUB_METHOD;
+-(CGImageRef)_CGImageFromRect:(CGRect)rect;
 
 @end

@@ -695,7 +695,7 @@ static void PNGWriteFunc(png_structp png_ptr, png_bytep data, png_size_t length)
     [dataOut appendBytes:data length:length];
 }
 
-NSData* UIImagePNGRepresentation(UIImage* img) {
+NSData* _CGImagePNGRepresentation(UIImage* img) {
     if (img == nil) {
         EbrDebugLog("UIImagePNGRepresentation: img = nil!\n");
         return nil;
@@ -850,21 +850,9 @@ NSData* UIImagePNGRepresentation(UIImage* img) {
     return ret;
 }
 
-NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat compressionQuality) {
-    EbrDebugLog("UIImageJPEGRepresentation not supported - returning PNG\n");
-
-    return UIImagePNGRepresentation(img);
-}
-
 @interface _UIImageWriterCallback : NSObject
 - (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)err contextInfo:(void*)contextInfo;
 @end
-
-void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
-    EbrDebugLog("UIImageWriteToSavedPhotosAlbum not supported\n");
-
-    [(_UIImageWriterCallback*)completionTarget image:nil didFinishSavingWithError:nil contextInfo:contextInfo];
-}
 
 /**
  @Status Stub

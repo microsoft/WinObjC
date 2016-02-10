@@ -652,8 +652,9 @@ LIBRARY UIKit
         ;NSStringFromCGRect
         ;NSStringFromCGSize
         ;NSStringFromCGVector
-        ;UIImageJPEGRepresentation
-        ;UIImagePNGRepresentation
+        
+        UIImageJPEGRepresentation
+        UIImagePNGRepresentation
 
         ; UILabel.mm
         _OBJC_CLASS_UILabel DATA

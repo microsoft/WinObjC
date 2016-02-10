@@ -16,8 +16,10 @@
 
 #include <StubReturn.h>
 #include <math.h>
+#import <StubReturn.h>
 #include "Starboard.h"
 
+#include "CGImageInternal.h"
 #include "CGContextInternal.h"
 #include "CoreGraphics/CGGeometry.h"
 
@@ -1412,12 +1414,27 @@ static CGImageRef getImage(UIImage* self) {
 }
 
 /**
+ @Status Interoperable
+*/
+NSData* UIImagePNGRepresentation(UIImage* img) {
+   return _CGImagePNGRepresentation(img);
+}
+
+/**
  @Status Stub
 */
 + (UIImage*)animatedResizableImageNamed:(NSString*)name
                               capInsets:(UIEdgeInsets)capInsets
                            resizingMode:(UIImageResizingMode)resizingMode
                                duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
     UNIMPLEMENTED();
     return StubReturn();
 }

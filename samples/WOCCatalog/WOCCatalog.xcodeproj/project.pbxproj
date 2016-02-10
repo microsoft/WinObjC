@@ -50,6 +50,7 @@
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
+		D27357F21C6AD0E200CA31C4 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27357F11C6AD0E200CA31C4 /* CoreImage.framework */; };
 		D2AC20301C6972A600D54717 /* BasicAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */; };
 		D2AC20341C69733600D54717 /* photo9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20331C69733600D54717 /* photo9.jpg */; };
 		D2AC20361C69734F00D54717 /* photo10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20351C69734F00D54717 /* photo10.jpg */; };
@@ -143,6 +144,7 @@
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		D27357F11C6AD0E200CA31C4 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		D2AC202E1C69729C00D54717 /* BasicAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicAnimationViewController.h; sourceTree = "<group>"; };
 		D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicAnimationViewController.m; sourceTree = "<group>"; };
 		D2AC20331C69733600D54717 /* photo9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo9.jpg; path = WOCCatalog/Images/photo9.jpg; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D27357F21C6AD0E200CA31C4 /* CoreImage.framework in Frameworks */,
 				8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */,
 				7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */,
 			);
@@ -181,6 +184,7 @@
 		4EE8614C1B5996BF00682BDB = {
 			isa = PBXGroup;
 			children = (
+				D27357F11C6AD0E200CA31C4 /* CoreImage.framework */,
 				8430AAC81BE7F2E500927545 /* GLKit.framework */,
 				7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */,
 				4EE8617E1B5996DA00682BDB /* Images */,
