@@ -18,9 +18,6 @@
 
 #include <StarboardExport.h>
 
-#ifndef __COMMON_DIGEST_H
-#define __COMMON_DIGEST_H
-
 struct CC_Digest_State;
 typedef struct CC_Digest_State* CC_MD2_CTX;
 typedef struct CC_Digest_State* CC_MD4_CTX;
@@ -42,7 +39,7 @@ typedef struct CC_Digest_State* CC_SHA512_CTX;
 
 typedef unsigned long CC_LONG;
 
-SB_EXPORT {
+SB_EXTERNC_BEGIN
 
 int CC_MD2_Init(CC_MD2_CTX* c);
 int CC_MD2_Update(CC_MD2_CTX* c, const void* data, CC_LONG len);
@@ -84,5 +81,4 @@ int CC_SHA512_Update(CC_SHA512_CTX* ctx, const void* data, CC_LONG len);
 int CC_SHA512_Final(unsigned char* digest, CC_SHA512_CTX* ctx);
 unsigned char* CC_SHA512(const void* data, CC_LONG len, unsigned char* md);
 
-} // end SB_EXPORT
-#endif
+SB_EXTERNC_END
