@@ -478,13 +478,4 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     [super dealloc];
 }
 
-/**
- @Status Stub
- @Notes
-*/
-+ (NSString*)timeZoneDataVersion {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
 @end
