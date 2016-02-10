@@ -33,6 +33,8 @@
       <IncludeSocial Condition="$(LinkAdditionalDependencies.Contains('Social.lib'))">true</IncludeSocial>
       <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
+      <IncludeAccelerate Condition="$(LinkAdditionalDependencies.Contains('Accelerate.lib'))">true</IncludeAccelerate>
+      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
       <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
       <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
@@ -118,6 +120,7 @@
       <SBResourceCopy Condition="'$(IncludeLibZ)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
 
       <SBResourceCopy Condition="'$(IncludeGLKit)' == 'true'" Include="$(StarboardLibDirs)\GLKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeAccelerate)' == 'true'" Include="$(StarboardLibDirs)\Accelerate.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
       <SBResourceCopy Condition="'$(IncludeCoreImage)' == 'true'" Include="$(StarboardLibDirs)\CoreImage.dll" />

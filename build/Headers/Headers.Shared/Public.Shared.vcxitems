@@ -12,6 +12,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\*.h" />
+    <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\Accelerate\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AddressBook\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AddressBookUI\*.h" />
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\include\AdSupport\*.h" />

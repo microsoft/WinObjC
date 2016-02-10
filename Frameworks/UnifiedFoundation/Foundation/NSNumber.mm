@@ -556,7 +556,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
         case 'C':
             ret = [NSString stringWithFormat:@"%i", val.i];
             break;
-
+        case 's':
+        case 'S':
+            ret = [NSString stringWithFormat:@"%hi", val.i];
+            break;
         default:
             assert(0);
             break;
@@ -613,7 +616,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
         case 'c':
             *((char*)dest) = (char)val.i;
             break;
-
+        case 's':
+        case 'S':
+            *((short*)dest) = (short)val.i;
+            break;
         default:
             assert(0);
             break;

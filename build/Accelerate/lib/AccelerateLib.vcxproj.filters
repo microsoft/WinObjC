@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\blasCDouble.cpp" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\blasCFloat.cpp" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\blasDouble.cpp" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\blasFloat.cpp" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\cblas_globals.c" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\cblas_xerbla.c" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\vDSP.cpp" />
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_caxpy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ccopy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cdotc_sub.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cdotu_sub.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cgbmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cgemm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cgemv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cgerc.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cgeru.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_chemm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_chemv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cher.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cher2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cher2k.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cherk.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_chpr.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_chpr2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cscal.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_csscal.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_cswap.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_csymm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_csyr2k.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_csyrk.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctbsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctpmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctpsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctrmm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctrmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctrsm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ctrsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dasum.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_daxpy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dcopy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ddot.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dgbmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dgemm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dgemv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dger.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dnrm2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_drot.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_drotg.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dscal.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dspr.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dspr2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dswap.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dsymm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dsymv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dsyr.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dsyr2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dsyr2k.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dsyrk.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtbsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtpmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtpsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtrmm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtrmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtrsm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dtrsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dzasum.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_dznrm2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_icamax.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_idamax.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_isamax.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_izamax.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sasum.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_saxpy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_scasum.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_scnrm2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_scopy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sdot.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sgbmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sgemm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sgemv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sger.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_snrm2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_srot.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_srotg.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sscal.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sspr.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sspr2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_sswap.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ssymm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ssymv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ssyr.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ssyr2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ssyr2k.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ssyrk.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_stbsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_stpmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_stpsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_strmm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_strmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_strsm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_strsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zaxpy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zcopy.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zdotc_sub.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zdotu_sub.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zdscal.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zgbmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zgemm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zgemv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zgerc.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zgeru.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zhemm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zhemv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zher.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zher2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zher2k.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zherk.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zhpr.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zhpr2.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zscal.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zswap.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zsymm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zsyr2k.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_zsyrk.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztbsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztpmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztpsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztrmm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztrmv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztrsm.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\cblas_ztrsv.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\deps\3rdparty\CBLAS\xerbla.c">
+      <Filter>CBLAS</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Accelerate\ErrorHandler.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CBLAS">
+      <UniqueIdentifier>{92b03d5d-c60f-4384-bbff-06200d6408c0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

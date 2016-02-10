@@ -92,8 +92,20 @@ TEST(Foundation, NSDateFormatter) {
         testSpecificFormat(i, formattedDateString, testCase);
     }
 
-    // Try some simple formatting
     NSDateFormatter* dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+
+    // Test setting properties individually.
+    for (int i = 0; i < 5; i++) {
+        [dateFormatter setLocale:localeToTest];
+        [dateFormatter setDateStyle:(NSDateFormatterStyle)i];
+        [dateFormatter setTimeStyle:(NSDateFormatterStyle)i];
+        [dateFormatter setTimeZone:timeZoneToTest];
+        formattedDateString = [dateFormatter stringFromDate:someConstantDate];
+        testSpecificFormat(i, formattedDateString, testCase);
+    }
+
+    // Try some simple formatting
+    // (ensure setDateFormat: overrides individual properties set above).
 
     // Create an NSDate from string with dateFormatter
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];

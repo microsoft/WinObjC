@@ -3,6 +3,13 @@
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 // Copyright (c) 2006-2007 Christopher J. W. Lloyd
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
 // This code is licensed under the MIT License (MIT).
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -14,6 +21,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
 #import <Foundation/FoundationExport.h>
@@ -26,7 +34,7 @@
 @class NSDate;
 @class NSLocale;
 
-typedef enum : NSInteger {
+typedef NS_ENUM(NSInteger, NSTimeZoneNameStyle) {
     NSTimeZoneNameStyleStandard,
     NSTimeZoneNameStyleShortStandard,
     NSTimeZoneNameStyleDaylightSaving,
@@ -45,9 +53,10 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)timeZoneForSecondsFromGMT:(NSInteger)seconds;
 - (instancetype)initWithName:(NSString*)tzName;
 - (instancetype)initWithName:(NSString*)tzName data:(NSData*)data;
-+ (NSString*)timeZoneDataVersion STUB_METHOD;
++ (NSString*)timeZoneDataVersion;
 + (NSTimeZone*)localTimeZone;
 + (NSTimeZone*)defaultTimeZone;
+
 + (void)setDefaultTimeZone:(NSTimeZone*)aTimeZone;
 + (void)resetSystemTimeZone;
 + (NSTimeZone*)systemTimeZone;
