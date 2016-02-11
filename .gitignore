@@ -28,3 +28,4 @@ files.eld
 *.bitremoved
 Documents/
 Library/
+build/package/package.log

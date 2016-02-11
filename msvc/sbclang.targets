@@ -41,12 +41,9 @@
       <IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib')) or '$(IncludeGLKit)' == 'true'">true</IncludeOpenGLES>
       <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
       <IncludeContacts Condition="$(LinkAdditionalDependencies.Contains('Contacts.lib'))">true</IncludeContacts>
-      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
-      <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
-      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
       <IncludeCoreTelephony Condition="$(LinkAdditionalDependencies.Contains('CoreTelephony.lib'))">true</IncludeCoreTelephony>
-      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeCoreGraphics>
       <IncludeCoreImage Condition="$(LinkAdditionalDependencies.Contains('CoreImage.lib'))">true</IncludeCoreImage>
+      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeCoreGraphics>
       <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
       <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeFoundation>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
