@@ -2506,6 +2506,7 @@ static float doRound(float f) {
 */
 - (void)addGestureRecognizer:(UIGestureRecognizer*)gesture {
     [priv->gestures addObject:gesture];
+    [gesture.view removeGestureRecognizer:gesture];
     [gesture _setView:self];
 }
 
@@ -2524,6 +2525,12 @@ static float doRound(float f) {
     for (UIGestureRecognizer* curgesture in priv->gestures) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:nil];
+        }
+    }
+
+    for (UIGestureRecognizer* curgesture in gestures) {
+        if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
+            [curgesture.view removeGestureRecognizer:curgesture];
         }
     }
 
