@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinRTSample", "WinRTSample", "{56BDB4C8-67A6-419C-A329-AB9F682186EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinRTSample-Headers", "WinRTSample.vsimporter\WinRTSample-Headers-WinStore10\WinRTSample-Headers.vcxitems", "{05A8DC7F-9E04-45F9-8350-88A1D844B409}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinRTSample", "WinRTSample.vsimporter\WinRTSample-WinStore10\WinRTSample.vcxproj", "{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		WinRTSample.vsimporter\WinRTSample-Headers-WinStore10\WinRTSample-Headers.vcxitems*{05A8DC7F-9E04-45F9-8350-88A1D844B409}*SharedItemsImports = 9
+		WinRTSample.vsimporter\WinRTSample-Headers-WinStore10\WinRTSample-Headers.vcxitems*{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Debug|ARM.ActiveCfg = Debug|ARM
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Debug|ARM.Build.0 = Debug|ARM
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Debug|ARM.Deploy.0 = Debug|ARM
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Debug|Win32.Build.0 = Debug|Win32
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Debug|Win32.Deploy.0 = Debug|Win32
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Release|ARM.ActiveCfg = Release|ARM
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Release|ARM.Build.0 = Release|ARM
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Release|ARM.Deploy.0 = Release|ARM
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Release|Win32.ActiveCfg = Release|Win32
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Release|Win32.Build.0 = Release|Win32
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{05A8DC7F-9E04-45F9-8350-88A1D844B409} = {56BDB4C8-67A6-419C-A329-AB9F682186EE}
+		{B3B89DBF-D703-4CC2-8ED2-D71FCADED820} = {56BDB4C8-67A6-419C-A329-AB9F682186EE}
+	EndGlobalSection
+EndGlobal

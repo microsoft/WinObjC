@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="WinRTSample">
+      <UniqueIdentifier>{D6F90DF3-7405-4718-8FEF-44798C713998}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\AppDelegate.h">
+      <Filter>WinRTSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\ButtonsViewController.h">
+      <Filter>WinRTSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\MainViewController.h">
+      <Filter>WinRTSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\MenuTableViewController.h">
+      <Filter>WinRTSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\TilesViewController.h">
+      <Filter>WinRTSample</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\ToastsViewController.h">
+      <Filter>WinRTSample</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
