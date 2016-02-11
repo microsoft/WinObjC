@@ -22,7 +22,6 @@
 #include <wrl\client.h>
 #include <windows.system.diagnostics.h>
 #include <COMIncludes_End.h>
-#include <wil\result.h>
 #include <ErrorHandling.h>
 
 using namespace Microsoft::WRL;

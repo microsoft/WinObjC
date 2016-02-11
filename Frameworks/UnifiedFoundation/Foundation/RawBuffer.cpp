@@ -15,7 +15,7 @@
 //******************************************************************************
 #pragma once
 #include <windows.h>
-#include "wil/result.h"
+#include "ErrorHandling.h"
 #include "RawBuffer.h"
 #include <wrl/client.h>
 #include <wrl/implements.h>

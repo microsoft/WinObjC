@@ -17,7 +17,7 @@
 #include <Windows.h>
 #include <bcrypt.h>
 #include <CommonCrypto\CommonDigest.h>
-#include <wil\Result.h>
+#include <ErrorHandling.h>
 #include <assert.h>
 #include <StubReturn.h>
 

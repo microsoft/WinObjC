@@ -230,13 +230,22 @@ __END_DECLS
 
 // Ignore some warnings in result.h
 #if defined __clang__
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winvalid-noreturn"
 #pragma clang diagnostic ignored "-Wunused-value"
-#endif
+
+#ifdef _M_ARM
+// Disable 'invalid calling convention' warnings for __stdcall usage in ARM builds
+#pragma clang diagnostic ignored "-Wignored-attributes"
+#endif // _M_ARM
+
+#endif // __clang__
+
 // Always log debug info even on release builds
 #define RESULT_DEBUG_INFO
 #include "wil/result.h"
+
 #if defined __clang__
 #pragma clang diagnostic pop
 #endif

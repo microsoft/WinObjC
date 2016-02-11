@@ -19,6 +19,10 @@
 
 #pragma once
 
+#ifndef __ERRORHANDLING_H
+#error "Please include ErrorHandling.h rather than directly including Result.h"
+#endif
+
 #include <WinError.h>
 #include <strsafe.h>
 #include <malloc.h> // malloc / free used for internal buffer management
