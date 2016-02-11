@@ -42,7 +42,6 @@ namespace WBITelemetry
     {
         //Need to validate m_tc
         WBITelemetryManager::m_tc.TrackEvent(eventMessage);
-        WBITelemetryManager::m_tc.Flush();
     }
 
     // Logging function in the form of EventName, eventData.  This version accomodates incoming wstring type.
@@ -51,7 +50,6 @@ namespace WBITelemetry
         ApplicationInsights::core::wstring_wstring_map props; //typedef std::map<std::wstring, std::wstring> wstring_wstring_map;
         props.insert({ std::wstring(L"Data"), std::wstring(eventData) });
         WBITelemetryManager::m_tc.TrackEvent(eventName, props);
-        WBITelemetryManager::m_tc.Flush();
     }
 
     // Logging function in the form of EventName, eventData.  This version accomodates incoming char* type.
@@ -73,7 +71,6 @@ namespace WBITelemetry
         nSize = _vsnwprintf_s(buff, sizeof(buff)-1, eventMessage.c_str(), args);
 
         WBITelemetryManager::m_tc.TrackEvent(buff);
-        WBITelemetryManager::m_tc.Flush();
 
         va_end(args);
     }
@@ -82,13 +79,11 @@ namespace WBITelemetry
     {
         //Need to validate m_tc
         WBITelemetryManager::m_tc.TrackTrace(traceMessage);
-        WBITelemetryManager::m_tc.Flush();
     }
 
     void WBITelemetryManager::AITrackMetric(wstring eventMessage, double value)
     {
         //Need to validate m_tc
         WBITelemetryManager::m_tc.TrackMetric(eventMessage, value);
-        WBITelemetryManager::m_tc.Flush();
     }
 }
