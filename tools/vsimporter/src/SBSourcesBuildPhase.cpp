@@ -152,5 +152,11 @@ void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
     if (!otherCPlusPlusFlags.empty()) {
       config->setItemDefinition("ClangCompile", "OtherCPlusPlusFlags", otherCPlusPlusFlags);
     }
+
+    // CRT
+    String configNameUpper = strToUpper(bs.first);
+    if (configNameUpper.find("DEBUG") != String::npos) {
+      config->setItemDefinition("ClangCompile", "RuntimeLibrary", "MultiThreadedDebugDLL");
+    }
   }
 }

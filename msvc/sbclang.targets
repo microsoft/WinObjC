@@ -225,7 +225,7 @@
       <StarboardCRT Condition="$(ClangCompileCRTs.Contains('MultiThreadedDebugDLL'))">MultiThreadedDebugDLL</StarboardCRT>
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
-      <StarboardCRTConfig Condition="$(ClangCompilePreprocessorDefinitions.Contains('DEBUG=1'))">Debug</StarboardCRTConfig>
+      <StarboardCRTConfig Condition="'$(StarboardCRT)' == 'MultiThreadedDebugDLL'">Debug</StarboardCRTConfig>
     </PropertyGroup>
 
     <!-- UseStarboardSourceSdk gates whether a project links against the WinObjC source tree (as an SDK) or a packaged SDK. -->
@@ -235,7 +235,7 @@
       <!-- Prebuilts for all configurations -->
       <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
       <!-- Configuration-specific prebuilts (libraries that need to use the same allocator as the client -->
-      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardPrebuiltLibsDir)\$(Configuration)</StarboardConfigSpecificPrebuiltLibsDir>
+      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardPrebuiltLibsDir)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
     <PropertyGroup Condition="'$(UseStarboardSourceSdk)' != 'true'">
       <!-- Library directories for projects preferring to link against the packaged SDK. -->
@@ -243,8 +243,14 @@
       <StarboardLibDirs>$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
       <StarboardPrebuiltLibsDir>$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
       <!-- Configuration-specific prebuilts retain their configuration specificity, as both Debug and Release are shipped as part of the archive. -->
-      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(Configuration)</StarboardConfigSpecificPrebuiltLibsDir>
+      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
+
+    <!-- Print which WinObjC libraries will be used, when building an Application -->
+    <Message
+      Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(ConfigurationType)' == 'Application'"
+      Importance="High"
+      Text="Using $(StarboardCRTConfig) WinObjC libraries due to $(StarboardCRT) CRT." />
 
     <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
       <ClCompile Include="$(MSBuildThisFileDirectory)ConsumeRuntimeComponent.cpp">
