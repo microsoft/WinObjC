@@ -228,13 +228,7 @@ public:
 }
 
 - (void)autoLayoutConstraintRemovedFromView {
-    if ([self _privateState]->_constraints->_constraint) {
-        if ([self _privateState]->_constraints->_constraint->FIsInSolver()) {
-            gSolver.RemoveConstraint([self _privateState]->_constraints->_constraint);
-        }
-        delete[self _privateState]->_constraints->_constraint;
-        [self _privateState]->_constraints->_constraint = NULL;
-    }
+    [self _removeFromSolver];
 
     if (self.firstItem != nil && [self.firstItem respondsToSelector:@selector(_privateState)]) {
         [[self.firstItem _privateState]->associatedConstraints removeObject:self];
@@ -251,8 +245,18 @@ public:
 }
 
 - (void)autoLayoutDealloc {
-    [self autoLayoutConstraintRemovedFromView];
+    [self _removeFromSolver];
     delete[self _privateState]->_constraints;
+}
+
+- (void)_removeFromSolver {
+    if ([self _privateState]->_constraints->_constraint) {
+        if ([self _privateState]->_constraints->_constraint->FIsInSolver()) {
+            gSolver.RemoveConstraint([self _privateState]->_constraints->_constraint);
+        }
+        delete[self _privateState]->_constraints->_constraint;
+        [self _privateState]->_constraints->_constraint = NULL;
+    }
 }
 @end
 
