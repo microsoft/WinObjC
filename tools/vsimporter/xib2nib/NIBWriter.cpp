@@ -362,7 +362,8 @@ void NIBWriter::WriteData()
         XIBObject *pObject = _outputObjects[i];
         if (pObject->_outputClassName == NULL) {
             printf("Unable to find class mapping for required object <%s>\n", pObject->_node.name());
-            TELEMETRY_EVENT_DATA(L"MissingClassMapping", pObject->_node.name());
+            // TODO: telemetry
+            // TELEMETRY_EVENT_DATA(L"MissingClassMapping", pObject->_node.name());
             exit(-1);
         }
         pObject->_outputClassNameIdx = classNames.AddString(pObject->_outputClassName);

@@ -187,7 +187,8 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
 #ifdef _DEBUG
 // printf("Unrecognized tag <%s>\n", className);
 #endif
-        TELEMETRY_EVENT_DATA(L"UnRecognizedTag", className);
+        // TODO: telemetry
+        // TELEMETRY_EVENT_DATA(L"UnRecognizedTag", className);
         ret = new XIBObject();
     }
 
