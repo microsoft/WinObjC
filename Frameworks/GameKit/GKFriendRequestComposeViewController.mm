@@ -83,6 +83,7 @@
  @Notes
 */ -(CGSize)sizeForChildContentContainer : (id<UIContentContainer>)container withParentContainerSize : (CGSize)parentSize {
     UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

@@ -24,10 +24,6 @@ static const int MAX_DATEPICKER_COMPONENTS = 4;
 
 #define YEAR_START (2010 - (MAX_YEAR_RANGE / 2))
 
-void fatalMsg(const char* err) {
-    assert(0);
-}
-
 @implementation UIDatePicker {
     idretaintype(NSDate) _date;
     idretaintype(NSDate) _dayStartDate;
@@ -488,7 +484,7 @@ static int numRowsDate(int component) {
         case 2: // Year
             return MAX_YEAR_RANGE;
     }
-    fatalMsg("Component out of range");
+    FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
 }
 
 static NSDateComponents* finishTime(UIDatePicker* self) {
@@ -539,7 +535,7 @@ int numRowsTime(int component) {
         case 2: // AM/PM
             return 2;
     }
-    fatalMsg("Component out of range");
+    FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
 }
 
 int numRowsTimer(int component) {
@@ -549,7 +545,7 @@ int numRowsTimer(int component) {
         case 1: // Minutes
             return 60;
     }
-    fatalMsg("Component out of range");
+    FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
 }
 
 int numRowsDay() {
@@ -583,7 +579,7 @@ static float rowWidthDate(int component) {
         case 2:
             return 100.0f;
         default:
-            fatalMsg("Component out of range");
+            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
     }
 }
 
@@ -626,7 +622,7 @@ static NSString* titleForDateRow(UIDatePicker* self, unsigned row, int component
             ret = [NSString stringWithFormat:@"%d", YEAR_START + row];
             break;
         default:
-            fatalMsg("Component out of range");
+            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
     }
 
     bool isValid = true;
@@ -700,7 +696,7 @@ static id titleForTimeRow(UIDatePicker* self, int row, int component, UIColor** 
             ret = row == 0 ? @"AM" : @"PM";
             break;
         default:
-            fatalMsg("Component out of range");
+            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
     }
 
     if (color) {
@@ -721,7 +717,7 @@ static NSString* titleForTimerRow(int row, int component) {
         case 1:
             return [NSString stringWithFormat:@"%d", row];
         default:
-            fatalMsg("Component out of range");
+            FAIL_FAST_MSG(E_INVALIDARG, "Component out of range");
     }
 }
 
@@ -769,7 +765,7 @@ static NSString* titleForDayRow(UIDatePicker* self, int row) {
             }
             return titleForDayRow(self, row);
     }
-    fatalMsg("Invalid mode");
+    FAIL_FAST_MSG(E_INVALIDARG, "Invalid mode");
 }
 
 static void resetPickerPositions(UIDatePicker* self) {

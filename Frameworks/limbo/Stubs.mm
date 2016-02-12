@@ -271,7 +271,7 @@ extern "C" void DNSServiceRefDeallocate(DNSServiceRef sdRef) {
 
 UIKIT_EXPORT
 extern "C" DNSServiceErrorType DNSServiceSetDispatchQueue(DNSServiceRef service, dispatch_queue_t queue) {
-    assert(!"DNSServiceSetDispatchQueue");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceSetDispatchQueue");
     return 0;
 }
 
@@ -283,7 +283,7 @@ extern "C" DNSServiceErrorType DNSServiceBrowse(DNSServiceRef* sdRef,
                                                 const char* domain,
                                                 /* may be NULL */ DNSServiceBrowseReply callBack,
                                                 void* context /* may be NULL */) {
-    assert(!"DNSServiceBrowse");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceBrowse");
     return 0;
 }
 
@@ -295,7 +295,7 @@ extern "C" DNSServiceErrorType DNSServiceGetAddrInfo(DNSServiceRef* sdRef,
                                                      const char* hostname,
                                                      DNSServiceGetAddrInfoReply callBack,
                                                      void* context /* may be NULL */) {
-    assert(!"DNSServiceGetAddrInfo");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceGetAddrInfo");
     return 0;
 }
 
@@ -308,7 +308,8 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
                                                  const char* domain,
                                                  DNSServiceResolveReply callBack,
                                                  void* context /* may be NULL */) {
-    assert(!"DNSServiceResolve");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceResolve");
+    return 0;
 }
 
 @interface NSFont : NSObject
@@ -321,12 +322,12 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
 #include <inaddr.h>
 
 UIKIT_EXPORT extern "C" char* __inet_ntoa(struct in_addr addr) {
-    assert(!"__inet_ntoa");
+    UNIMPLEMENTED_WITH_MSG("__inet_ntoa");
     return 0;
 }
 
 UIKIT_EXPORT extern "C" char* if_indextoname(unsigned int ifindex, char* ifname) {
-    assert(!"if_indextoname");
+    UNIMPLEMENTED_WITH_MSG("if_indextoname");
     return 0;
 }
 
@@ -342,6 +343,6 @@ UIKIT_EXPORT extern "C" DNSServiceErrorType DNSServiceRegister(DNSServiceRef* sd
                                                                const void* txtRecord,
                                                                /* may be NULL */ DNSServiceRegisterReply callBack,
                                                                /* may be NULL */ void* context /* may be NULL */) {
-    assert(!"DNSServiceRegister");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceRegister");
     return 0;
 }
