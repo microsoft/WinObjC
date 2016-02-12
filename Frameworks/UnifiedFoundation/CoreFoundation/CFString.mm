@@ -17,6 +17,9 @@
 #import <Starboard.h>
 #import <Foundation/Foundation.h>
 #import "NSMutableString+Internal.h"
+
+const CFStringRef charSetNameANSIX341968 = static_cast<CFStringRef>(@"ANSI_X3.4-1968");
+
 /**
  @Status Interoperable
 */
@@ -43,13 +46,28 @@ void CFStringReplace(CFMutableStringRef str, CFRange range, CFStringRef replacem
  @Notes Limited encodings supported
 */
 CFStringRef CFStringConvertEncodingToIANACharSetName(CFStringEncoding encoding) {
+    // IMPORTANT: Make sure this matches with the converse function CFStringConvertIANACharSetNameToEncoding below
     switch (encoding) {
         case kCFStringEncodingASCII:
-            return (CFStringRef) @"ANSI_X3.4-1968";
+            return charSetNameANSIX341968;
 
         default:
             UNIMPLEMENTED_WITH_MSG("%x is not a supported encoding, defaulting to ANSI_X3.4-1968", encoding);
-            return (CFStringRef) @"ANSI_X3.4-1968";
+            return charSetNameANSIX341968;
+    }
+}
+
+/**
+ @Status Caveat
+ @Notes Limited encodings supported
+*/
+CFStringEncoding CFStringConvertIANACharSetNameToEncoding(CFStringRef self) {
+    // IMPORTANT: Make sure this matches with the converse function CFStringConvertEncodingToIANACharSetName above
+    if (CFStringCompare(self, charSetNameANSIX341968, 0) == kCFCompareEqualTo) {
+        return kCFStringEncodingASCII;
+    } else {
+        UNIMPLEMENTED_WITH_MSG("Not a supported IANA character set name, defaulting to kCFStringEncodingASCII");
+        return kCFStringEncodingASCII;
     }
 }
 
@@ -103,14 +121,6 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
             UNIMPLEMENTED_WITH_MSG("%x is not a supported encoding, defaulting to kCFStringEncodingUnicode", encoding);
             return kCFStringEncodingUnicode;
     }
-}
-
-/**
- @Status Stub
-*/
-CFStringEncoding CFStringConvertIANACharSetNameToEncoding(CFStringRef self) {
-    UNIMPLEMENTED();
-    return kCFStringEncodingUnicode;
 }
 
 /**

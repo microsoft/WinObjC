@@ -79,6 +79,14 @@ void CFShow(CFTypeRef obj) {
 }
 
 /**
+ @Status Stub
+ @Notes Returns the CFString "Desc"
+*/
+CFStringRef CFCopyDescription(CFTypeRef ref) {
+    return (CFStringRef)[[(id)ref description] copy];
+}
+
+/**
  @Status Interoperable
  @Notes No-op; garbage collection is not supported in WinObjC
 */

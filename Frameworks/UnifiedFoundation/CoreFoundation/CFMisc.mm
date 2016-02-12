@@ -82,15 +82,6 @@ extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const 
     return -1;
 }
 
-/**
- @Status Stub
- @Notes Returns the CFString "Desc"
-*/
-CFStringRef CFCopyDescription(CFTypeRef ref) {
-    UNIMPLEMENTED();
-    return (CFStringRef) @"Desc";
-}
-
 static int64_t _mach_get_timebase() {
     LARGE_INTEGER performanceFrequency;
     FAIL_FAST_IF(0 == QueryPerformanceFrequency(&performanceFrequency));

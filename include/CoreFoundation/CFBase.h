@@ -29,6 +29,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Block.h>
 #import <CoreFoundation/CoreFoundationExport.h>
 #import <StarboardExport.h>
+#include <StubIncludes.h>
 
 /* Apple's Foundation imports CoreGraphics in order to get some of the basic CG* types, unfortunately
    this is a hassle on platforms where you just want to use Foundation, so we put them in CoreFoundation and see what happens
@@ -406,7 +407,6 @@ COREFOUNDATION_EXPORT CFTypeID CFGetTypeID(CFTypeRef self);
 COREFOUNDATION_EXPORT CFHashCode CFHash(CFTypeRef self);
 COREFOUNDATION_EXPORT Boolean CFEqual(CFTypeRef self, CFTypeRef other);
 COREFOUNDATION_EXPORT CFStringRef CFCopyTypeIDDescription(CFTypeID typeID);
-COREFOUNDATION_EXPORT CFStringRef CFCopyDescription(CFTypeRef self);
 COREFOUNDATION_EXPORT CFTypeRef CFRetain(CFTypeRef self);
 COREFOUNDATION_EXPORT void CFRelease(CFTypeRef self);
 COREFOUNDATION_EXPORT void CFAutorelease(CFTypeRef self);

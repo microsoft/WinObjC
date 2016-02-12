@@ -31,6 +31,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #ifndef _CFSTRING_H_
 #define _CFSTRING_H_
 
+#import <StubIncludes.h>
 #import <CoreFoundation/CFBase.h>
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFDictionary.h>
@@ -159,7 +160,6 @@ COREFOUNDATION_EXPORT CFStringRef CFStringCreateFromExternalRepresentation(CFAll
 
 COREFOUNDATION_EXPORT CFStringRef CFStringCreateWithSubstring(CFAllocatorRef allocator, CFStringRef self, CFRange range);
 
-COREFOUNDATION_EXPORT void CFShow(CFTypeRef self);
 COREFOUNDATION_EXPORT void CFShowStr(CFStringRef self);
 
 COREFOUNDATION_EXPORT CFComparisonResult CFStringCompare(CFStringRef self, CFStringRef other, CFOptionFlags options);
@@ -254,7 +254,8 @@ COREFOUNDATION_EXPORT void CFStringNormalize(CFMutableStringRef theString, CFStr
 
 COREFOUNDATION_EXPORT void CFStringReplace(CFMutableStringRef theString, CFRange range, CFStringRef replacement);
 
-COREFOUNDATION_EXPORT Boolean CFStringTransform(CFMutableStringRef string, CFRange* range, CFStringRef transform, Boolean reverse);
+COREFOUNDATION_EXPORT Boolean CFStringTransform(CFMutableStringRef string, CFRange* range, CFStringRef transform, Boolean reverse)
+    STUB_METHOD;
 
 #ifdef CFSTR
 #undef CFSTR

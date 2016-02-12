@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubIncludes.h>
 #import <CoreFoundation/CFBase.h>
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFDictionary.h>
@@ -61,7 +62,7 @@ COREFOUNDATION_EXPORT CFMutableAttributedStringRef CFAttributedStringCreateMutab
                                                                                        CFIndex maxLength,
                                                                                        CFAttributedStringRef self);
 
-COREFOUNDATION_EXPORT CFMutableStringRef CFAttributedStringGetMutableString(CFMutableAttributedStringRef self);
+COREFOUNDATION_EXPORT CFMutableStringRef CFAttributedStringGetMutableString(CFMutableAttributedStringRef self); // STUB_METHOD
 
 COREFOUNDATION_EXPORT void CFAttributedStringRemoveAttribute(CFMutableAttributedStringRef self, CFRange range, CFStringRef name);
 COREFOUNDATION_EXPORT void CFAttributedStringReplaceAttributedString(CFMutableAttributedStringRef self,
