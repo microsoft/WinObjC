@@ -42,10 +42,8 @@ enum {
 
 FOUNDATION_EXPORT_CLASS
 @interface NSFormatter : NSObject <NSCoding, NSCopying>
-- (NSString*)stringForObjectValue:(id)anObject STUB_METHOD;
 - (NSAttributedString*)attributedStringForObjectValue:(id)anObject withDefaultAttributes:(NSDictionary*)attributes STUB_METHOD;
 - (NSString*)editingStringForObjectValue:(id)anObject STUB_METHOD;
-- (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)string errorDescription:(NSString* _Nullable*)error STUB_METHOD;
 - (BOOL)isPartialStringValid:(NSString*)partialString
             newEditingString:(NSString* _Nullable*)newString
             errorDescription:(NSString* _Nullable*)error STUB_METHOD;
@@ -55,4 +53,8 @@ FOUNDATION_EXPORT_CLASS
               originalString:(NSString*)origString
        originalSelectedRange:(NSRange)origSelRange
             errorDescription:(NSString* _Nullable*)error STUB_METHOD;
+
+/* Abstract Methods */
+- (NSString*)stringForObjectValue:(id)anObject;
+- (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)string errorDescription:(NSString* _Nullable*)error;
 @end

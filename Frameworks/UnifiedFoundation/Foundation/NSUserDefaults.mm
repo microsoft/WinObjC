@@ -368,7 +368,7 @@ static id deepCopyValue(id obj) {
 
     value = deepCopyValue(value);
 
-    [[self persistantDomain] setObject:value forKey:key];
+    [(NSMutableDictionary*)[self persistantDomain] setObject:value forKey:key];
     [value release];
     [_dictionaryRep autorelease];
     _dictionaryRep = nil;
@@ -482,7 +482,7 @@ static id deepCopyValue(id obj) {
  @Status Interoperable
 */
 - (void)removeObjectForKey:(NSString*)key {
-    [[self persistantDomain] removeObjectForKey:key];
+    [(NSMutableDictionary*)[self persistantDomain] removeObjectForKey:key];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
 }

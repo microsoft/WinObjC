@@ -18,7 +18,9 @@
 #import <Windows.h>
 #import <Foundation/NSURLCredentialStorage.h>
 
-@interface NSURLCredentialStorage ()
+@interface NSURLCredentialStorage () {
+    NSMutableDictionary *_allCredentials;
+}
 @property (readwrite, copy) NSDictionary* allCredentials;
 @end
 
@@ -65,7 +67,7 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
 /**
  @Status Interoperable
 */
-- (NSDictionary*)_obtainValidCredentialForProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+- (NSMutableDictionary*)_obtainValidCredentialForProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
     NSDictionary* protectionSpaceValue = [_allCredentials objectForKey:protectionSpace];
 
     if (protectionSpaceValue == nil) {
@@ -100,7 +102,7 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
  @Status Interoperable
 */
 - (void)setCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
-    NSDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
+    NSMutableDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
     [protectionSpaceValue setObject:credential forKey:[credential user]];
 }
 
@@ -108,7 +110,7 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
  @Status Interoperable
 */
 - (void)setDefaultCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
-    NSDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
+    NSMutableDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
     [protectionSpaceValue setObject:credential forKey:DEFAULT_CREDENTIALS];
 }
 

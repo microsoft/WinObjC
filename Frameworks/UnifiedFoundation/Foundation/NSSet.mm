@@ -20,6 +20,7 @@
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSCountedSet.h"
 #include "Foundation/NSEnumerator.h"
+#include "../Foundation/NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
 
 void NSSetTableInit(NSSet* set, NSUInteger capacity) {
@@ -517,7 +518,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator forObject:self nextFunction:NSSetEnumeratorGetNextObject];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)NSSetGetEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)NSSetEnumeratorGetNextObject];
 }
 
 /**

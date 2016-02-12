@@ -73,7 +73,7 @@ FOUNDATION_EXPORT_CLASS
 + (NSLocale*)currentLocale;
 + (NSLocale*)systemLocale;
 - (NSString*)displayNameForKey:(id)key value:(id)value;
-@property (readonly, copy) NSString* localeIdentifier STUB_PROPERTY;
+@property (readonly, copy) NSString* localeIdentifier;
 - (id)objectForKey:(id)key;
 + (NSArray*)availableLocaleIdentifiers;
 + (NSArray*)ISOCountryCodes;

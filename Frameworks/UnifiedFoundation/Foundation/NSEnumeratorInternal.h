@@ -14,15 +14,14 @@
 //
 //******************************************************************************
 
-#include "Foundation/NSPropertyList.h"
+#pragma once
 
-@interface NSPropertyListSerialization : NSObject {
-@public
+#include <Foundation/NSEnumerator.h>
+
+@interface NSEnumerator (Internal) {
 }
-+ (id)propertyListFromData:(NSData*)data
-          mutabilityOption:(unsigned)mutability
-                    format:(NSPropertyListFormat*)formatOut
-          errorDescription:(NSString**)error;
-+ (id)propertyListWithData:(NSData*)data options:(unsigned)options format:(NSPropertyListFormat*)formatOut error:(NSError**)error;
-+ (NSData*)dataFromPropertyList:(id)plist format:(NSPropertyListFormat)format errorDescription:(NSString**)error;
+
++ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction;
++ (NSEnumerator*)enumeratorWithArrayReverse:(NSArray*)array;
+
 @end

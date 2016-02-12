@@ -143,7 +143,7 @@ FOUNDATION_EXPORT_CLASS
 + (id)stringWithCString:(const char*)bytes;
 - (id)initWithCString:(const char*)bytes;
 + (id)stringWithCString:(const char*)bytes length:(NSUInteger)length;
-- (id)initWithCString:(const char*)bytes length:(NSUInteger)length STUB_METHOD;
+- (id)initWithCString:(const char*)bytes length:(NSUInteger)length;
 - (id)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer STUB_METHOD;
 + (instancetype)stringWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;

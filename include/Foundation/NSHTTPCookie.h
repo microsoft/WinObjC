@@ -40,10 +40,7 @@ FOUNDATION_EXPORT NSString* const NSHTTPCookieValue;
 FOUNDATION_EXPORT NSString* const NSHTTPCookieVersion;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSHTTPCookie : NSObject {
-    NSDictionary* _properties;
-    BOOL _external;
-}
+@interface NSHTTPCookie : NSObject
 
 + (NSArray*)cookiesWithResponseHeaderFields:(NSDictionary*)headerFields forURL:(NSURL*)theURL;
 + (NSHTTPCookie*)cookieWithProperties:(NSDictionary*)properties;

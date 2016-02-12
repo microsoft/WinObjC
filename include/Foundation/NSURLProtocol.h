@@ -31,14 +31,14 @@ FOUNDATION_EXPORT_CLASS
                          client:(id<NSURLProtocolClient>)client;
 + (BOOL)registerClass:(Class)protocolClass STUB_METHOD;
 + (void)unregisterClass:(Class)protocolClass STUB_METHOD;
-+ (BOOL)canInitWithRequest:(NSURLRequest*)request STUB_METHOD;
++ (BOOL)canInitWithRequest:(NSURLRequest*)request;
 + (id)propertyForKey:(NSString*)key inRequest:(NSURLRequest*)request STUB_METHOD;
 + (void)setProperty:(id)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request STUB_METHOD;
 + (void)removePropertyForKey:(NSString*)key inRequest:(NSMutableURLRequest*)request STUB_METHOD;
 + (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request STUB_METHOD;
 + (BOOL)requestIsCacheEquivalent:(NSURLRequest*)aRequest toRequest:(NSURLRequest*)bRequest STUB_METHOD;
-- (void)startLoading STUB_METHOD;
-- (void)stopLoading STUB_METHOD;
+- (void)startLoading;
+- (void)stopLoading;
 @property (readonly, copy) NSCachedURLResponse* cachedResponse;
 @property (readonly, retain) id<NSURLProtocolClient> client;
 @property (readonly, copy) NSURLRequest* request;

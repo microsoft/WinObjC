@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSKeyValueCoding.h>
+#import "NSArrayInternal.h"
 #import <Starboard/String.h>
 #import "NSValueTransformers.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"

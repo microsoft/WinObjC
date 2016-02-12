@@ -62,11 +62,9 @@ FOUNDATION_EXPORT_CLASS
                       format:(NSPropertyListFormat*)format
                        error:(NSError* _Nullable*)error STUB_METHOD;
 + (BOOL)propertyList:(id)plist isValidForFormat:(NSPropertyListFormat)format STUB_METHOD;
-+ (NSData*)dataFromPropertyList:(id)plist
-                         format:(NSPropertyListFormat)format
-               errorDescription:(NSString* _Nullable*)errorString STUB_METHOD;
++ (NSData*)dataFromPropertyList:(id)plist format:(NSPropertyListFormat)format errorDescription:(NSString* _Nullable*)errorString;
 + (id)propertyListFromData:(NSData*)data
           mutabilityOption:(NSPropertyListMutabilityOptions)opt
                     format:(NSPropertyListFormat*)format
-          errorDescription:(NSString* _Nullable*)errorString STUB_METHOD;
+          errorDescription:(NSString* _Nullable*)errorString;
 @end

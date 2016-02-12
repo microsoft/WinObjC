@@ -76,6 +76,12 @@ FOUNDATION_EXPORT_CLASS
 - (NSSet*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, id, BOOL*))predicate STUB_METHOD;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag STUB_METHOD;
+@property (readonly, copy) NSString* description;
+@property (readonly, copy) NSString* descriptionInStringsFileFormat;
+- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
+
+/* NSFileManager Extensions */
 - (NSDate*)fileCreationDate;
 - (BOOL)fileExtensionHidden STUB_METHOD;
 - (NSNumber*)fileGroupOwnerAccountID STUB_METHOD;
@@ -88,14 +94,10 @@ FOUNDATION_EXPORT_CLASS
 - (NSNumber*)fileOwnerAccountID STUB_METHOD;
 - (NSString*)fileOwnerAccountName STUB_METHOD;
 - (NSUInteger)filePosixPermissions STUB_METHOD;
-- (unsigned long long)fileSize STUB_METHOD;
+- (unsigned long long)fileSize;
 - (NSUInteger)fileSystemFileNumber STUB_METHOD;
 - (NSInteger)fileSystemNumber STUB_METHOD;
 - (NSString*)fileType;
-@property (readonly, copy) NSString* description;
-@property (readonly, copy) NSString* descriptionInStringsFileFormat;
-- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
-- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
 @end
 
 #define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)

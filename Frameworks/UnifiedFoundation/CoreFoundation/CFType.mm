@@ -90,14 +90,14 @@ CFTypeRef CFMakeCollectable(CFTypeRef obj) {
  @Status Interoperable
  @Notes As on the reference platform, NSZone is ignored.
 */
-__declspec(dllexport) id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
+id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
     return class_createInstance(classRef, extraBytes);
 }
 
 /**
  @Status Interoperable
 */
-__declspec(dllexport) void NSDeallocateObject(id obj) {
+void NSDeallocateObject(id obj) {
     objc_delete_weak_refs(obj);
     object_dispose(obj);
 }

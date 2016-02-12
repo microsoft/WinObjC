@@ -18,7 +18,9 @@
 
 #include "CoreFoundation/CFArray.h"
 #include "CFArrayInternal.h"
-#include "Foundation/NSMutableArray.h"
+
+#include <Foundation/NSMutableArray.h>
+#include "../Foundation/NSMutableArrayInternal.h"
 
 #include <sys/stat.h>
 
@@ -365,8 +367,10 @@ CFIndex CFArrayGetCount(CFArrayRef array) {
 /**
  @Status Interoperable
 */
-void CFArraySortValues(CFMutableArrayRef array, CFRange range, id comparator, id context) {
-    [(NSArray*)array sortUsingFunction:comparator context:context range:range];
+void CFArraySortValues(CFMutableArrayRef array, CFRange range, CFComparatorFunction comparator, void* context) {
+    [(NSMutableArray*)array sortUsingFunction:(NSInteger (*)(id, id, void*))comparator
+                                      context:context
+                                        range:NSRange{ range.location, range.length }];
 }
 
 /**

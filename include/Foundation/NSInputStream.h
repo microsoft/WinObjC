@@ -34,6 +34,7 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)inputStreamWithData:(NSData*)data;
 + (instancetype)inputStreamWithFileAtPath:(NSString*)path;
 + (instancetype)inputStreamWithURL:(NSURL*)url STUB_METHOD;
+- (void)open;
 - (instancetype)initWithData:(NSData*)data;
 - (instancetype)initWithFileAtPath:(NSString*)path;
 - (instancetype)initWithURL:(NSURL*)url STUB_METHOD;

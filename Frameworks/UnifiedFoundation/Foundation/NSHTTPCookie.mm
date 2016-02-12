@@ -173,6 +173,12 @@ void parseCookies(const char* lineptr, id dict) {
     } while (nextptr);
 }
 
+@interface NSHTTPCookie () {
+    NSMutableDictionary* _properties;
+    BOOL _external;
+}
+@end
+
 @implementation NSHTTPCookie : NSObject
 + (id)_parseField:(id)field forHeader:(id)header andURL:(id)url {
     // The default path settings:
@@ -326,15 +332,16 @@ void parseCookies(const char* lineptr, id dict) {
 /**
  @Status Interoperable
 */
-- (id)isSessionOnly {
+- (BOOL)isSessionOnly {
     return NO;
 }
 
 /**
  @Status Interoperable
 */
-- (id)properties {
-    return _properties;
+- (NSDictionary*)properties {
+    // We do not want external consumers modifying this dictionary.
+    return [[_properties copy] autorelease];
 }
 
 /**
@@ -357,10 +364,10 @@ void parseCookies(const char* lineptr, id dict) {
     [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
     if (![_properties objectForKey:NSHTTPCookieDiscard])
         [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 &&
-                                ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
-                                   @"TRUE" :
-                                   @"FALSE"
-                        forKey:NSHTTPCookieDiscard];
+                                                      ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
+                                                         @"TRUE" :
+                                                         @"FALSE"
+                                              forKey:NSHTTPCookieDiscard];
     if (![_properties objectForKey:NSHTTPCookieDomain])
         [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];
 

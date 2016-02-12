@@ -96,10 +96,10 @@ UIKIT_EXPORT NSString* const UIFontFeatureSelectorIdentifierKey;
 
 UIKIT_EXPORT_CLASS
 @interface UIFontDescriptor : NSObject <NSCopying, NSObject, NSSecureCoding>
-+ (UIFontDescriptor*)preferredFontDescriptorWithTextStyle:(NSString*)style STUB_METHOD;
++ (UIFontDescriptor*)preferredFontDescriptorWithTextStyle:(NSString*)style;
 + (UIFontDescriptor*)fontDescriptorWithFontAttributes:(NSDictionary*)attributes STUB_METHOD;
 + (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName matrix:(CGAffineTransform)matrix STUB_METHOD;
-+ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size STUB_METHOD;
++ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size;
 - (UIFontDescriptor*)fontDescriptorByAddingAttributes:(NSDictionary*)attributes STUB_METHOD;
 - (UIFontDescriptor*)fontDescriptorWithFace:(NSString*)newFace STUB_METHOD;
 - (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily STUB_METHOD;
@@ -113,5 +113,5 @@ UIKIT_EXPORT_CLASS
 - (id)objectForKey:(NSString*)anAttribute STUB_METHOD;
 @property (readonly, nonatomic) CGFloat pointSize STUB_PROPERTY;
 @property (readonly, nonatomic) NSString* postscriptName STUB_PROPERTY;
-@property (readonly, nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits STUB_PROPERTY;
+@property (readonly, nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits;
 @end

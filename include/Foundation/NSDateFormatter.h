@@ -48,6 +48,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)stringFromDate:(NSDate*)date;
 + (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle;
 - (BOOL)getObjectValue:(id _Nullable*)obj forString:(NSString*)string range:(NSRange*)rangep error:(NSError* _Nullable*)error STUB_METHOD;
+- (NSString*)stringForObjectValue:(id)obj;
 
 @property BOOL generatesCalendarDates;
 @property (copy) NSString* dateFormat;

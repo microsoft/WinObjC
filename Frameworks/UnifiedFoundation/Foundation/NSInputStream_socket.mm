@@ -21,7 +21,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSStreamInternal.h"
 #include "NSRunLoop+Internal.h"
 
-@implementation NSInputStream_socket : NSStream
+@implementation NSInputStream_socket
 - (id)initWithSocket:(id)socket streamStatus:(DWORD)status {
     _delegate = self;
     _error = nil;

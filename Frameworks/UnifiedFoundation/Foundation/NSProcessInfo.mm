@@ -74,8 +74,8 @@ static inline OSVERSIONINFO winOsVersion() {
 - (instancetype)init {
     // set up environment, currently only HOME and TMPDIR
     _environment = [NSMutableDictionary new];
-    [_environment setObject:[[NSBundle mainBundle] bundlePath] forKey:@"HOME"];
-    [_environment setObject:@"/tmp" forKey:@"TMPDIR"];
+    [(NSMutableDictionary*)_environment setObject:[[NSBundle mainBundle] bundlePath] forKey:@"HOME"];
+    [(NSMutableDictionary*)_environment setObject:@"/tmp" forKey:@"TMPDIR"];
 
     // get process id
     _processIdentifier = static_cast<int>(GetCurrentProcessId());

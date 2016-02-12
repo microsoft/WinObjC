@@ -17,6 +17,7 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "../CoreFoundation/CFDictionaryInternal.h"
+#include "../Foundation/NSEnumeratorInternal.h"
 #include "CoreFoundation/CFDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSString.h"
@@ -596,14 +597,18 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetValueEnumerator forObject:self nextFunction:CFDictionaryGetNextValue];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFDictionaryGetValueEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)CFDictionaryGetNextValue];
 }
 
 /**
  @Status Interoperable
 */
 - (NSEnumerator*)keyEnumerator {
-    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetKeyEnumerator forObject:self nextFunction:CFDictionaryGetNextKey];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFDictionaryGetKeyEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)CFDictionaryGetNextKey];
 }
 
 /* NSFileManager category helpers */

@@ -134,7 +134,7 @@
  @Notes Does not support encoding/decoding of SecTrustRef and SecIdentityRef.
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _user = [[coder decodeObjectForKey:@"user"] retain];
         _password = [[coder decodeObjectForKey:@"password"] retain];
         _persistence = (NSURLCredentialPersistence)[coder decodeInt64ForKey:@"persistence"];

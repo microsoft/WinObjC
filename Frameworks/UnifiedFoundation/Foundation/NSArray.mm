@@ -24,6 +24,9 @@
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSKeyedArchiver.h"
 #include "Foundation/NSArray.h"
+#include "../Foundation/NSXMLPropertyList.h"
+#include "../Foundation/NSEnumeratorInternal.h"
+#include "../Foundation/NSPropertyListWriter_binary.h"
 #include "CoreFoundation/CFArray.h"
 #include "Foundation/NSMutableString.h"
 #include "CoreFoundation/CFType.h"
@@ -153,7 +156,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 
     char* pData = (char*)[data bytes];
 
-    NSArray* ar;
+    id ar;
 
     if (memcmp(pData, "<?xml", 4) == 0) {
         ar = [NSXMLPropertyList propertyListFromData:data];
@@ -510,7 +513,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingFunction:(compFuncType)compFunc context:(void*)context {
-    NSArray* ret = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
     [ret sortUsingFunction:compFunc context:context];
 
     return ret;
@@ -520,7 +523,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingComparator:(NSComparator)comparator {
-    NSArray* ret = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
 
     [ret sortUsingFunction:CFNSBlockCompare context:comparator];
 
@@ -531,7 +534,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)filteredArrayUsingPredicate:(NSPredicate*)predicate {
-    NSArray* ret = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
     [ret filterUsingPredicate:predicate];
 
     return ret;
@@ -553,7 +556,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    id ret = [NSEnumerator enumeratorWithIterator:CFArrayGetValueEnumerator forObject:self nextFunction:CFArrayGetNextValue];
+    id ret = [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFArrayGetValueEnumerator
+                                        forObject:self
+                                     nextFunction:(nextValueFunc)CFArrayGetNextValue];
 
     return ret;
 }
@@ -569,7 +574,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingSelector:(SEL)selector {
-    NSArray* newArray = [NSMutableArray alloc];
+    NSMutableArray* newArray = [NSMutableArray alloc];
     [newArray initWithArray:self];
 
     [newArray sortUsingSelector:selector];
@@ -581,7 +586,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)descriptors {
-    NSArray* newArray = [NSMutableArray alloc];
+    NSMutableArray* newArray = [NSMutableArray alloc];
     [newArray initWithArray:self];
 
     [newArray sortUsingDescriptors:descriptors];

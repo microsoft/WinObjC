@@ -49,10 +49,6 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     return false;
 }
 
-// LINKER STUB
-@implementation NSURLSessionUploadTask
-@end
-
 @interface _NSURLSessionInflightTaskInfo : NSObject {
     NSURLSessionTask* _task;
     NSURLSessionTaskCompletionHandler _taskCompletionHandler;

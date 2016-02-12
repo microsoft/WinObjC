@@ -172,7 +172,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3ScaleWithVector3(GLKMatrix3 matrix, GLKVector3
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3ScaleWithVector4(GLKMatrix3 matrix, GLKVector4 scaleVector) STUB_METHOD;
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3Add(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) STUB_METHOD;
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3Subtract(GLKMatrix3 matrixLeft, GLKMatrix3 matrixRight) STUB_METHOD;
-GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 matrixLeft, GLKVector3 vectorRight) STUB_METHOD;
+GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 matrixLeft, GLKVector3 vectorRight);
 GLKIT_EXPORT void GLKMatrix3MultiplyVector3Array(GLKMatrix3 matrix, GLKVector3* vectors, size_t vectorCount) STUB_METHOD;
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4Transpose(GLKMatrix4 mat);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4InvertAndTranspose(GLKMatrix4 matrix, bool* isInvertible) STUB_METHOD;
@@ -209,7 +209,7 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeWithQuaternion(GLKQuaternion quaternion) S
 
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeScale(float sx, float sy, float sz) STUB_METHOD;
 
-GLKIT_EXPORT GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 matrix) STUB_METHOD;
+GLKIT_EXPORT GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 matrix);
 GLKIT_EXPORT GLKVector3 GLKMatrix3GetColumn(GLKMatrix3 matrix, int column) STUB_METHOD;
 GLKIT_EXPORT GLKVector3 GLKMatrix3GetRow(GLKMatrix3 matrix, int row) STUB_METHOD;
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3SetColumn(GLKMatrix3 matrix, int column, GLKVector3 vector) STUB_METHOD;
@@ -220,7 +220,6 @@ GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeXRotation(float rad);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeYRotation(float rad);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3MakeZRotation(float rad);
 
-GLKIT_EXPORT GLKMatrix2 GLKMatrix3GetMatrix2(GLKMatrix3 m);
 GLKIT_EXPORT GLKMatrix2 GLKMatrix4GetMatrix2(GLKMatrix4 m);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3Invert(GLKMatrix3 m, BOOL* isInvertible);
 GLKIT_EXPORT GLKMatrix3 GLKMatrix3InvertAndTranspose(GLKMatrix3 m, BOOL* isInvertible);
@@ -229,8 +228,6 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetColumn(GLKMatrix4 matrix, int column, GLKVe
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4SetRow(GLKMatrix4 matrix, int row, GLKVector4 vector) STUB_METHOD;
 GLKIT_EXPORT GLKVector4 GLKMatrix4GetColumn(GLKMatrix4 matrix, int column) STUB_METHOD;
 GLKIT_EXPORT GLKVector4 GLKMatrix4GetRow(GLKMatrix4 matrix, int row) STUB_METHOD;
-
-GLKIT_EXPORT GLKVector3 GLKMatrix3MultiplyVector3(GLKMatrix3 m, GLKVector3 vec);
 
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeRotation(float rad, float x, float y, float z);
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeXRotation(float rad);

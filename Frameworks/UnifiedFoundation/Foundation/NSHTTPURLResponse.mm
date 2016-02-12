@@ -30,7 +30,7 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
 
 @implementation NSHTTPURLResponse {
     NSInteger _statusCode;
-    NSDictionary* _allHeaderFields;
+    NSMutableDictionary* _allHeaderFields;
 
     idretain _statusLine, _statusVersion;
 }
@@ -54,7 +54,7 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
             caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
             caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
 
-            _allHeaderFields = (NSDictionary*)
+            _allHeaderFields = (NSMutableDictionary*)
                 CFDictionaryCreateMutable(NULL, [headerFields count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
 
             //  Case insensitive dictionary
@@ -119,8 +119,9 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
 /**
  @Status Interoperable
 */
-- (id)allHeaderFields {
-    return _allHeaderFields;
+- (NSDictionary*)allHeaderFields {
+    // consumers are not allowed to modify our internal state.
+    return [[_allHeaderFields copy] autorelease];
 }
 
 - (id)setStatusLine:(id)status {
