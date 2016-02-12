@@ -22,7 +22,7 @@
  @Status Caveat
  @Notes TODO: 5815703, 5237845 - need more UIKit support before fixing attributes for fonts or paragraphs
 */
-- fixAttributesInRange:(NSRange)range {
+- (void)fixAttributesInRange:(NSRange)range {
     // Ought to be a bit more selective, but for now this will do
     [self endEditing];
 }

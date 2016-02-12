@@ -137,6 +137,8 @@ private:
             delete state;
             return false;
         }
+
+        return true;
     }
 
     int _hashData(const BYTE* data, CC_LONG length) {

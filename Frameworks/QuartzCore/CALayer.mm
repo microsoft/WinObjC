@@ -1551,7 +1551,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         key = @"";
     }
 
-    [priv->_animations objectForKey:key];
+    return [priv->_animations objectForKey:key];
 }
 
 /**
