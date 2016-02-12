@@ -55,11 +55,36 @@ NSString* NSStringFromRange(NSRange range) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 NSRange NSRangeFromString(NSString* s) {
-    UNIMPLEMENTED();
-    return { 0, 0 };
+    static NSCharacterSet* trimChars = [NSCharacterSet characterSetWithCharactersInString:@"{}- "];
+
+    // Valid string begins with '{' and ends with '}'
+    if ([s characterAtIndex:0] == '{' && [s characterAtIndex:([s length] - 1)] == '}') {
+        NSArray* components = [s componentsSeparatedByString:@","];
+
+        // The two components are position and length - any other number of components is invalid.
+        if ([components count] != 2) {
+            return NSMakeRange(0, 0);
+        }
+
+        unsigned long long position;
+        NSScanner* scanner = [NSScanner scannerWithString:[components[0] stringByTrimmingCharactersInSet:trimChars]];
+        if (![scanner scanUnsignedLongLong:&position]) {
+            return NSMakeRange(0, 0);
+        }
+
+        unsigned long long length;
+        scanner = [NSScanner scannerWithString:[components[1] stringByTrimmingCharactersInSet:trimChars]];
+        if (![scanner scanUnsignedLongLong:&length]) {
+            return NSMakeRange(0, 0);
+        }
+
+        return NSMakeRange(position, length);
+    }
+
+    return NSMakeRange(0, 0);
 }
 
 /**

@@ -26,8 +26,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "unicode/uniset.h"
 
 typedef unsigned short unichar;
-#define YES 1
-#define NO 0
 
 @implementation NSScanner
 
@@ -273,51 +271,6 @@ typedef unsigned short unichar;
  @Status Interoperable
 */
 - (BOOL)scanDouble:(double*)valuep {
-    /*
-    // "...returns HUGE_VAL or -HUGE_VAL on overflow, 0.0 on underflow." hmm...
-    double value;
-    id seperatorString;
-    unichar decimalSeperator;
-    if( _locale )
-    seperatorString = _locale("objectForKey:", @"NSLocaleDecimalSeparator");
-    else
-    seperatorString = nil;
-
-    decimalSeperator = (seperatorString("length") > 0 ) ? seperatorString("characterAtIndex:", 0) : '.';
-
-    int i;
-    int len = _string("length") - _location;
-    char *p = (char *) EbrMalloc(len + 1), *q;
-    unichar c;
-
-    for (i = 0; i < len; i++)
-    {
-    c  = _string("characterAtIndex:", i + _location);
-
-    switch ( c ) {
-    case '\r':
-    break;
-
-    case '\n':
-    break;
-
-
-    if (c == decimalSeperator) c = '.';
-    p[i] = (char)c;
-    }
-
-    p[i] = '\0';
-
-    value = strtod(p, &q);
-    if (NULL != valuep)
-    *valuep = value;
-    _location += (q - p);
-    int ret = (q > p);
-    free(p);
-
-    return ret;
-    */
-
     char* pScanStart = (char*)[_string UTF8String];
     char* pScanEnd = NULL;
 
@@ -731,12 +684,31 @@ typedef unsigned short unichar;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-- (BOOL)scanUnsignedLongLong:(unsigned long long*)unsignedLongLongValue {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (BOOL)scanUnsignedLongLong:(unsigned long long*)pValue {
+    const char* pScanStart = (char*)[_string UTF8String];
+    char* pScanEnd = nullptr;
+
+    // Scan the string for a base ten positive integer starting at the internally stored position
+    pScanStart += _location;
+    unsigned long long val = strtoull(pScanStart, &pScanEnd, 10);
+    FAIL_FAST_IF(!pScanEnd);
+
+    // Increment internal position state by the length of the number
+    _location += pScanEnd - pScanStart;
+
+    if (pValue) {
+        *pValue = val;
+    }
+
+    // No digits were read in this case
+    if (pScanEnd == pScanStart) {
+        return NO;
+    }
+
+    return YES;
 }
 
 /**

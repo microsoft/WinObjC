@@ -55,7 +55,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)scanInt:(int*)intValue;
 - (BOOL)scanLongLong:(long long*)longLongValue;
 - (BOOL)scanString:(NSString*)string intoString:(NSString* _Nullable*)stringValue;
-- (BOOL)scanUnsignedLongLong:(unsigned long long*)unsignedLongLongValue STUB_METHOD;
+- (BOOL)scanUnsignedLongLong:(unsigned long long*)unsignedLongLongValue;
 - (BOOL)scanUpToString:(NSString*)stopString intoString:(NSString* _Nullable*)stringValue;
 @property (readonly, getter=isAtEnd) BOOL atEnd;
 @end
