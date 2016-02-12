@@ -21,7 +21,7 @@
 #define CACHE_NSNUMBERS_BELOW 16
 static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
 
-@implementation NSNumber : NSValue
+@implementation NSNumber
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder containsValueForKey:@"NS.intval"]) {
         val.i = (int)[coder decodeIntForKey:@"NS.intval"];
@@ -741,7 +741,7 @@ NSString* NSDecimalString(NSDecimal* num, id locale) {
 }
 @end
 
-@implementation NSCFBoolean : NSNumber
+@implementation NSCFBoolean
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 - (void)dealloc {

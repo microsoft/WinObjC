@@ -85,7 +85,7 @@ void printContents(int level, id obj) {
     }
 }
 
-@implementation NSPersistentDomain : NSObject
+@implementation NSPersistentDomain
 - (instancetype)initWithName:(NSString*)name {
     NSKeyedArchiver* serializedDictionary = nil;
 

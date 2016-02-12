@@ -35,7 +35,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 void printContents(int level, id obj);
 
-@implementation NSPropertyListSerialization : NSObject
+@implementation NSPropertyListSerialization
 
 /**
  @Status Caveat

@@ -185,7 +185,7 @@ static CURLcode sslsetcertfunc(CURL* curl, void* sslctx, void* parm) {
     return CURLE_OK;
 }
 
-@implementation NSURLProtocolTimerThread : NSObject
+@implementation NSURLProtocolTimerThread
 + (void)initialize {
     /*
     char *zCert;

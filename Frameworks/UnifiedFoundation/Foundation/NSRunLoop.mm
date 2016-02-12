@@ -53,7 +53,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [[NSRunLoop mainRunLoop] _wakeUp];
 }
 
-@implementation NSRunLoop : NSObject
+@implementation NSRunLoop
 + (void)initialize {
     dispatch_set_wakeup_callback(DispatchMainRunLoopWakeup, NULL);
 }

@@ -50,7 +50,7 @@ typedef int socklen_t;
 #include "Foundation/NSString.h"
 #include "NSSSLHandler.h"
 
-@implementation NSSocket : NSObject
+@implementation NSSocket
 static inline void byteZero(void* vsrc, size_t size) {
     uint8_t* src = (uint8_t*)vsrc;
     size_t i;

@@ -31,7 +31,7 @@ double TimeIntervalSinceReferenceDate() {
     return result;
 }
 
-@implementation NSDate : NSObject
+@implementation NSDate
 
 // Number of seconds between Jan 1, 1601 UTC (Windows FILETIME) and Jan 1, 1970 UTC (POSIX/Epoch time)
 static const int64_t c_windowsToUnixNumSecondsOffset = 11644473600LL;

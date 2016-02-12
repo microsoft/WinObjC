@@ -20,7 +20,7 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "CoreFoundation/CFDictionary.h"
 
-@implementation NSMutableDictionary : NSDictionary
+@implementation NSMutableDictionary
 + (instancetype)dictionary {
     return [[self new] autorelease];
 }

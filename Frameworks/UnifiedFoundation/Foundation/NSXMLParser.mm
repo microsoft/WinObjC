@@ -27,7 +27,7 @@
 
 //#define LOG_PARSED
 
-@implementation NSXMLParser : NSObject
+@implementation NSXMLParser
 
 /**
  @Status Interoperable

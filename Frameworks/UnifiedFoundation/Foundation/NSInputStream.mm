@@ -28,7 +28,7 @@
 //#include <unistd.h>
 #endif
 
-@implementation NSInputStream : NSStream
+@implementation NSInputStream
 
 /**
  @Status Interoperable

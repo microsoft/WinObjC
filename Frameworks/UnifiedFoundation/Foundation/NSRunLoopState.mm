@@ -116,7 +116,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
     }
 }
 
-@implementation NSRunLoopState : NSObject
+@implementation NSRunLoopState
 - (NSObject*)init {
     _timers = [NSMutableArray new];
     _observers = [NSMutableArray new];

@@ -179,7 +179,7 @@ void parseCookies(const char* lineptr, id dict) {
 }
 @end
 
-@implementation NSHTTPCookie : NSObject
+@implementation NSHTTPCookie
 + (id)_parseField:(id)field forHeader:(id)header andURL:(id)url {
     // The default path settings:
     id defaultPath = [url path];

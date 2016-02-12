@@ -86,7 +86,7 @@ public:
     }
 };
 
-@implementation NSNibUnarchiver : NSObject
+@implementation NSNibUnarchiver
 static void pushObject(NSNibUnarchiver* self, Object* pCur) {
     assert(self->_curObjectLevel < 16);
     self->_curObjectLevel++;

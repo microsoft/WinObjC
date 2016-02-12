@@ -149,7 +149,7 @@ NSCalculationError NSDecimalSubtract(NSDecimal* result,
     return StubReturn();
 }
 
-@implementation NSDecimalNumber : NSNumber
+@implementation NSDecimalNumber
 
 /**
  @Status Stub

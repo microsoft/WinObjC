@@ -20,7 +20,7 @@
 
 static NSNull* nullSingleton;
 
-@implementation NSNull : NSObject
+@implementation NSNull
 + (void)initialize {
     if (self == [NSNull class]) {
         nullSingleton = [super allocWithZone:nil];

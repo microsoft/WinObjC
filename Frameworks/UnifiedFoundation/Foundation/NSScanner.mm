@@ -29,7 +29,7 @@ typedef unsigned short unichar;
 #define YES 1
 #define NO 0
 
-@implementation NSScanner : NSObject
+@implementation NSScanner
 
 /**
  @Status Interoperable

@@ -26,7 +26,7 @@
 }
 @end
 
-@implementation NSURLAuthenticationChallenge : NSObject
+@implementation NSURLAuthenticationChallenge
 
 /**
  @Status Stub

@@ -18,7 +18,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSEnumerator.h"
 
-@implementation NSEnumerator : NSObject
+@implementation NSEnumerator
 + (NSEnumerator*)enumeratorWithArray:(NSArray*)array {
     NSEnumerator* ret = [self alloc];
 

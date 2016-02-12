@@ -28,7 +28,7 @@ id EbrGetExternalCookies(id url) {
     return nil;
 }
 
-@implementation NSHTTPCookieStorage : NSObject
+@implementation NSHTTPCookieStorage
 
 /**
  @Status Caveat

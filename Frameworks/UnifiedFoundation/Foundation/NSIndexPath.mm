@@ -18,7 +18,7 @@
 #include "StubReturn.h"
 #include "Foundation/NSIndexPath.h"
 
-@implementation NSIndexPath : NSObject
+@implementation NSIndexPath
 
 /**
  @Status Interoperable

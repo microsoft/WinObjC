@@ -43,7 +43,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 }
 #endif
 
-@implementation NSSSLHandler : NSObject
+@implementation NSSSLHandler
 #if defined(WIN32) || defined(ANDROID)
 + (id)initialize {
     if (self == [NSSSLHandler class]) {

@@ -30,7 +30,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSMutableSet.h"
 #include "NSSocket.h"
 
-@implementation NSSelectSet : NSObject
+@implementation NSSelectSet
 typedef struct {
     int max;
     fd_set* fdset;

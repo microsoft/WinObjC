@@ -29,7 +29,7 @@
 #include "NSIndexSetInternal.h"
 #include "Etc.h"
 
-@implementation NSIndexSet : NSObject
+@implementation NSIndexSet
 
 /**
  @Status Interoperable

@@ -28,7 +28,7 @@
 #include "NSIndexSetInternal.h"
 #include "Etc.h"
 
-@implementation NSMutableIndexSet : NSIndexSet
+@implementation NSMutableIndexSet
 
 /**
  @Status Stub

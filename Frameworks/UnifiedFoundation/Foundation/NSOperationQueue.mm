@@ -132,7 +132,7 @@ static id _mainQueue;
 }
 @end
 
-@implementation NSOperationQueue : NSObject
+@implementation NSOperationQueue
 static void ClearList(NSAtomicListRef* listPtr) {
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {
         while (NSAtomicListPop(&listPtr[i])) {

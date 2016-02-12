@@ -35,7 +35,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
     return NO;
 }
 
-@implementation NSOutputStream_socket : NSStream
+@implementation NSOutputStream_socket
 - (id)initWithSocket:(id)socket streamStatus:(DWORD)status {
     _delegate = self;
     _error = nil;

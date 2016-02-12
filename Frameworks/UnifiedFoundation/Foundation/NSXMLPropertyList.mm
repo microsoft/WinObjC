@@ -35,7 +35,7 @@ void parse_error_handler(const char* what, void* where) {
 }
 }
 
-@implementation NSXMLPropertyList : NSObject
+@implementation NSXMLPropertyList
 static id arrayFromElement(xml_node<>* arrayNode) {
     id result = [NSMutableArray array];
 
