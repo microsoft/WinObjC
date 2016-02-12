@@ -207,6 +207,14 @@
     <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
+    <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm"
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="default.rd.xml" />
