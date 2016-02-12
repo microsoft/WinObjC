@@ -273,7 +273,7 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
     String projectDir = sb_dirname(projTemplate->getPath());
     sdkDir = getRelativePath(projectDir, sdkDir);
   }
-  proj->setGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir));
+  proj->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
 
   // Set configuration properties
   for (auto configBS : m_buildSettings) {
