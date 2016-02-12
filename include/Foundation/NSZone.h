@@ -45,8 +45,8 @@ FOUNDATION_EXPORT void NSZoneFree(NSZone* zone, void* pointer) STUB_METHOD;
 FOUNDATION_EXPORT void* NSZoneMalloc(NSZone* zone, NSUInteger size) STUB_METHOD;
 FOUNDATION_EXPORT void* NSZoneRealloc(NSZone* zone, void* pointer, NSUInteger size) STUB_METHOD;
 
-FOUNDATION_EXPORT id NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone* zone) STUB_METHOD;
-FOUNDATION_EXPORT void NSDeallocateObject(id object) STUB_METHOD;
+FOUNDATION_EXPORT id NSAllocateObject(Class aClass, NSUInteger extraBytes, NSZone* zone);
+FOUNDATION_EXPORT void NSDeallocateObject(id object);
 FOUNDATION_EXPORT id NSCopyObject(id object, NSUInteger extraBytes, NSZone* zone) STUB_METHOD;
 FOUNDATION_EXPORT BOOL NSShouldRetainWithZone(id object, NSZone* zone) STUB_METHOD;
 
