@@ -277,14 +277,6 @@ public:
             releaseObj(obj);
     }
 
-    void moveObjectAtIndexToEnd(uint32_t idx) {
-        assert(idx < objCount);
-
-        id obj = objsPtr()[idx];
-        memmove(&objsPtr()[idx], &objsPtr()[idx + 1], (objCount - idx - 1) * sizeof(id));
-        objsPtr()[objCount - 1] = obj;
-    }
-
     BOOL doesContainValue(uint32_t start, uint32_t length, id value) {
         assert(start + length <= objCount);
         uint32_t cur = 0;
@@ -361,6 +353,10 @@ CFArrayRef CFArrayCreate(CFAllocatorRef allocator, const void** values, CFIndex 
  @Status Interoperable
 */
 CFIndex CFArrayGetCount(CFArrayRef array) {
+    if (!([(id)array isKindOfClass:[NSArrayConcrete class]] ||
+            [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
+        return [(NSArray*)array count];
+    }
     return ((NSArray*)(array))->arr->getCount();
 }
 
@@ -377,15 +373,19 @@ void CFArraySortValues(CFMutableArrayRef array, CFRange range, CFComparatorFunct
  @Status Interoperable
 */
 const void* CFArrayGetValueAtIndex(CFArrayRef array, CFIndex index) {
+    if (!([(id)array isKindOfClass:[NSArrayConcrete class]] ||
+            [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
+        return [(NSArray*)array objectAtIndex:index];
+    }
     return (const void*)((NSArray*)(array))->arr->objectFromIndex(index);
 }
 
 /**
  @Status Interoperable
 */
-void CFArrayGetValues(CFArrayRef array, CFRange range, void** values) {
+void CFArrayGetValues(CFArrayRef array, CFRange range, const void** values) {
     for (unsigned i = range.location; i < range.location + range.length; i++) {
-        values[i] = (void*)((NSArray*)(array))->arr->objectFromIndex(i);
+        values[i] = CFArrayGetValueAtIndex(array, i);
     }
 }
 
@@ -393,7 +393,7 @@ void CFArrayGetValues(CFArrayRef array, CFRange range, void** values) {
  @Status Interoperable
 */
 void CFArrayAppendValue(CFMutableArrayRef array, const void* value) {
-    ((NSArray*)(array))->arr->addObject((id)value, true);
+    CFArrayInsertValueAtIndex(array, CFArrayGetCount(array), value);
 }
 
 void CFArrayAppendValueUnretained(CFMutableArrayRef array, const void* value) {
@@ -421,22 +421,27 @@ Boolean CFArrayContainsValue(CFArrayRef array, CFRange range, const void* value)
     return ((NSArray*)(array))->arr->doesContainValue(range.location, range.length, (id)value) != FALSE;
 }
 
-Boolean CFArrayDoesContainValue(CFArrayRef array, const void* value) {
-    return ((NSArray*)(array))->arr->doesContainValue(0, CFArrayGetCount(array), (id)value) != FALSE;
-}
-
 /**
  @Status Interoperable
 */
 void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const void* value) {
-    ((NSArray*)(array))->arr->addObjectAtIndex((id)value, index);
+    if (!([(id)array isKindOfClass:[NSArrayConcrete class]] ||
+            [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
+        [(NSMutableArray*)array insertObject:(id)value atIndex:index];
+    } else {
+        ((NSArray*)(array))->arr->addObjectAtIndex((id)value, index);
+    }
 }
 
 /**
  @Status Interoperable
 */
 void CFArraySetValueAtIndex(CFMutableArrayRef self, CFIndex index, const void* value) {
-    ((NSArray*)(self))->arr->replaceObject((id)value, index);
+    if (![(id)self isKindOfClass:[NSMutableArrayConcrete class]]) {
+        [(NSMutableArray*)self replaceObjectAtIndex:index withObject:(id)value];
+    } else {
+        ((NSArray*)(self))->arr->replaceObject((id)value, index);
+    }
 }
 
 /**
@@ -449,19 +454,23 @@ void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** v
     //  Replace/remove items
     for (unsigned i = 0; i < range.length; i++) {
         if (newCount > 0) {
-            ((NSArray*)(array))->arr->replaceObject(*newValues, curPos);
+            if (![(id)array isKindOfClass:[NSMutableArrayConcrete class]]) {
+                [(NSMutableArray*)array replaceObjectAtIndex:curPos withObject:*newValues];
+            } else {
+                ((NSArray*)(array))->arr->replaceObject(*newValues, curPos);
+            }
 
             curPos++;
             newValues++;
             newCount--;
         } else {
-            ((NSArray*)(array))->arr->removeObject(curPos);
+            CFArrayRemoveValueAtIndex(array, curPos);
         }
     }
 
     //  Insert any leftover
     while (newCount > 0) {
-        ((NSArray*)(array))->arr->addObjectAtIndex(*newValues, curPos);
+        CFArrayInsertValueAtIndex(array, curPos, *newValues);
 
         curPos++;
         newValues++;
@@ -473,21 +482,30 @@ void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** v
  @Status Interoperable
 */
 void CFArrayRemoveAllValues(CFMutableArrayRef array) {
-    if (((NSArray*)(array))->arr == nil)
+    if (((NSArray*)(array))->arr == nil) {
         return;
+    }
 
-    ((NSArray*)(array))->arr->removeAllObjects();
+    if (!([(id)array isKindOfClass:[NSArrayConcrete class]] ||
+            [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
+        CFIndex count;
+        while ((count = CFArrayGetCount(array)) > 0) {
+            CFArrayRemoveValueAtIndex(array, count);
+        }
+    } else {
+        ((NSArray*)(array))->arr->removeAllObjects();
+    }
 }
 
 /**
  @Status Interoperable
 */
 void CFArrayRemoveValueAtIndex(CFMutableArrayRef array, CFIndex idx) {
-    ((NSArray*)(array))->arr->removeObject(idx);
-}
-
-void CFArrayMoveValueAtIndexToEnd(CFMutableArrayRef array, CFIndex idx) {
-    ((NSArray*)(array))->arr->moveObjectAtIndexToEnd(idx);
+    if (![(id)array isKindOfClass:[NSMutableArrayConcrete class]]) {
+        [(NSMutableArray*)array removeObjectAtIndex:idx];
+    } else {
+        ((NSArray*)(array))->arr->removeObject(idx);
+    }
 }
 
 void CFArrayGetValueEnumerator(CFArrayRef arr, void* enumeratorHolder) {
@@ -495,14 +513,13 @@ void CFArrayGetValueEnumerator(CFArrayRef arr, void* enumeratorHolder) {
 }
 
 int CFArrayGetNextValue(CFArrayRef arr, void* enumeratorHolder, id* ret, int count) {
-    unsigned size = ((NSArray*)(arr))->arr->getCount();
+    unsigned size = CFArrayGetCount(arr);
     int i;
 
     for (i = 0; i < count; i++) {
         if (*((uint32_t*)enumeratorHolder) >= size)
             break;
-        ret[i] = ((NSArray*)(arr))->arr->objectFromIndex(*((uint32_t*)enumeratorHolder));
-
+        ret[i] = (id)CFArrayGetValueAtIndex(arr, *((uint32_t*)enumeratorHolder));
         (*((uint32_t*)enumeratorHolder))++;
     }
 

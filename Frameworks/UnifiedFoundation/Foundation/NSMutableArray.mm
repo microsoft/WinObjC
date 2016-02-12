@@ -217,10 +217,6 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     [index _removeFromArray:self];
 }
 
-- (void)_moveObjectAtIndexToEnd:(NSUInteger)index {
-    CFArrayMoveValueAtIndexToEnd((CFMutableArrayRef)self, index);
-}
-
 /**
  @Status Interoperable
 */

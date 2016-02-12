@@ -40,7 +40,6 @@
 - (void)removeObjectIdenticalTo:(NSObject*)objAddr;
 - (void)removeObjectAtIndex:(NSUInteger)index;
 - (void)removeObjectsAtIndexes:(NSIndexSet*)index;
-- (void)_moveObjectAtIndexToEnd:(NSUInteger)index;
 - (void)removeLastObject;
 - (void)sortUsingComparator:(NSComparator*)comparator;
 - (void)sortUsingFunction:(uint32_t)compFunc context:(uint32_t)context;

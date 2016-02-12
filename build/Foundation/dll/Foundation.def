@@ -308,7 +308,6 @@ LIBRARY Foundation
         CFArrayGetValueAtIndex
         CFArrayGetValueEnumerator
         CFArrayInsertValueAtIndex
-        CFArrayMoveValueAtIndexToEnd
         CFArrayRemoveAllValues
         CFArrayRemoveValueAtIndex
         CFArrayReplaceValues

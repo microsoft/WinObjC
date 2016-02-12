@@ -211,7 +211,10 @@ bool GetMainDispatchTimerTimeout(double* val) {
         NSTimer* check = [_timers objectAtIndex:i];
 
         if ([check isValid] && [now compare:[check fireDate]] != -1) {
-            [_timers _moveObjectAtIndexToEnd:i];
+            id object = [[_timers objectAtIndex:i] retain];
+            [_timers removeObjectAtIndex:i];
+            [_timers insertObject:object atIndex:[_timers count]];
+            [object release];
             fireTimer = check;
             break;
         }

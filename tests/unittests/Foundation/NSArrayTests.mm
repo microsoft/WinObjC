@@ -55,3 +55,26 @@ TEST(Foundation, NSArray_InitWithObjects) {
     // Multiple elements
     assertArrayContents([[NSArray alloc] initWithObjects:@1, @2, @3, nil], @1, @2, @3, nil);
 }
+
+@interface NSTestArray : NSArray
+@end 
+
+@implementation NSTestArray
+- (NSUInteger)count {
+    return 5;
+}
+
+- (id)objectAtIndex:(NSUInteger)index {
+    return @2;
+}
+@end
+
+TEST(Foundation, NSArray_Subclassable) {
+    NSArray* testArray = [NSTestArray new];
+    ASSERT_EQ(@2, testArray[0]);
+    int sum = 0;
+    for (id val in testArray) {
+        sum += [(NSNumber*)val integerValue];
+    }
+    ASSERT_EQ(10, sum);
+}
