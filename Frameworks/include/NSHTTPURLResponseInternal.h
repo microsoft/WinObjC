@@ -16,12 +16,8 @@
 
 #pragma once
 
-#import "Starboard/SmartTypes.h"
+#include <Foundation/NSHTTPURLResponse.h>
 
-@interface NSURLProtocol () {
-@public
-    StrongId<NSURLRequest> _request;
-    StrongId<NSCachedURLResponse> _cachedResponse;
-    StrongId<id<NSURLProtocolClient>> _client;
-}
+@interface NSHTTPURLResponse ()
+- (id)initWithURL:(NSURL*)url statusCode:(NSInteger)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength;
 @end

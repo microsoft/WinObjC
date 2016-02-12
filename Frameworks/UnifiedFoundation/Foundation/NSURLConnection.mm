@@ -167,14 +167,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 */
 - (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
     _scheduled = YES;
-    [_protocol scheduleInRunLoop:runLoop forMode:mode];
 }
 
 /**
  @Status Interoperable
 */
 - (void)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
-    [_protocol unscheduleFromRunLoop:runLoop forMode:mode];
     _scheduled = NO;
 }
 
@@ -282,9 +280,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
     [self _setRequest:newRequest]; // regenerates _protocol
 
-    if (_scheduled) {
-        [_protocol scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:@"NSURLConnectionRequestMode"];
-    }
     [_protocol startLoading];
 }
 
