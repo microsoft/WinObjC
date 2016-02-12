@@ -18,7 +18,7 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSURLProtocolClient.h>
+#import <Foundation/NSURLProtocol.h>
 
 @class NSURLRequest;
 @class NSData;

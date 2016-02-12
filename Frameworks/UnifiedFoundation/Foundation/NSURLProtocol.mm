@@ -19,23 +19,17 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSString.h"
 #include "Foundation/NSURLProtocol.h"
 #include "NSURLProtocol_file.h"
-#include "NSURLProtocol_http.h"
 #include "Foundation/NSMutableArray.h"
 #include "NSURLProtocolInternal.h"
+#include "Logging.h"
+#include "NSRaise.h"
 
-static id _registeredClasses = nil;
+static const wchar_t TAG[] = L"NSURLProtocol";
 
 @implementation NSURLProtocol
 
-+ (void)initialize {
-    if (self == [NSURLProtocol class]) {
-        _registeredClasses = [NSMutableArray new];
-        [_registeredClasses addObject:[NSURLProtocol_http class]];
-        [_registeredClasses addObject:[NSURLProtocol_file class]];
-    }
-}
-
-+ (id)_registeredClasses {
++ (NSMutableArray*)_registeredClasses {
+    static StrongId<NSMutableArray> _registeredClasses([NSMutableArray array]);
     return _registeredClasses;
 }
 
@@ -43,69 +37,66 @@ static id _registeredClasses = nil;
  @Status Interoperable
 */
 + (BOOL)registerClass:(id)cls {
-    [_registeredClasses addObject:cls];
-    return YES;
+    @synchronized (self) {
+        if ([[self _registeredClasses] containsObject:cls]) {
+            return NO;
+        }
+        [[self _registeredClasses] addObject:cls];
+        return YES;
+    }
 }
 
 + (id)_URLProtocolClassForRequest:(id)request {
-    id classes = [NSURLProtocol _registeredClasses];
-    NSInteger count = [classes count];
+    @synchronized (self) {
+        NSArray* classes = [self _registeredClasses];
+        NSInteger count = [classes count];
 
-    while (--count >= 0) {
-        id check = [classes objectAtIndex:count];
+        while (--count >= 0) {
+            id check = [classes objectAtIndex:count];
 
-        if ([check canInitWithRequest:request])
-            return check;
-    }
-
-    id url = [request URL];
-    id absStr = [url absoluteString];
-    const char* urlStr = [absStr UTF8String];
-    EbrDebugLog("Couldn't find protocol handler for %s\n", urlStr ? urlStr : "(nil)");
-    // EbrDebugLog("Couldn't find protocol handler\n");
-    return nil;
-}
-
-+ (BOOL)_isCustomHandlerForRequest:(id)request {
-    id classes = [NSURLProtocol _registeredClasses];
-    NSInteger count = [classes count];
-
-    while (--count >= 0) {
-        id check = [classes objectAtIndex:count];
-
-        if ([check canInitWithRequest:request]) {
-            if ([check class] == [NSURLProtocol_http class]) {
-                return FALSE;
-            }
-            return TRUE;
+            if ([check canInitWithRequest:request])
+                return check;
         }
-    }
 
-    return FALSE;
+        id url = [request URL];
+        id absStr = [url absoluteString];
+        const char* urlStr = [absStr UTF8String];
+        TraceWarning(TAG, L"Couldn't find protocol handler for %hs", urlStr ? urlStr : "(null)");
+        return nil;
+    }
 }
 
 /**
  @Status Interoperable
 */
-- (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client {
-    _request.attach([request mutableCopy]);
-    _cachedResponse = [response retain];
-    _client = client;
+- (instancetype)initWithRequest:(NSURLRequest*)request cachedResponse:(NSCachedURLResponse*)cachedResponse client:(id<NSURLProtocolClient>)client {
+    if (self = [super init]) {
+        _request.attach([request mutableCopy]);
+        _cachedResponse = cachedResponse;
+        _client = client;
+    }
     return self;
 }
 
 /**
  @Status Interoperable
 */
-- (id)client {
-    return _client;
+- (id<NSURLProtocolClient>)client {
+    return [[_client retain] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (id)request {
-    return _request;
+- (NSURLRequest*)request {
+    return [[_request retain] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSCachedURLResponse*)cachedResponse {
+    return [[_cachedResponse retain] autorelease];
 }
 
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
@@ -116,26 +107,18 @@ static id _registeredClasses = nil;
     return self;
 }
 
-- (void)dealloc {
-    _request = nil;
-    [_cachedResponse release];
-    [super dealloc];
-}
-
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)startLoading {
-    UNIMPLEMENTED();
+    NSInvalidAbstractInvocation();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)stopLoading {
-    UNIMPLEMENTED();
+    NSInvalidAbstractInvocation();
 }
 
 /**

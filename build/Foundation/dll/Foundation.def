@@ -671,6 +671,8 @@ LIBRARY Foundation
         _OBJC_CLASS_NSCompoundPredicate DATA
         _OBJC_CLASS_NSNib DATA
         _OBJC_CLASS_NSRunLoopSource DATA
+        _OBJC_CLASS_NSURLProtocol_file DATA
+        _OBJC_CLASS_NSURLProtocol_WinHTTP DATA
         _OBJC_CLASS_NSValue DATA
         __objc_class_name_NSCFBridgeBase CONSTANT
         __objc_class_name_NSColor CONSTANT
@@ -678,6 +680,8 @@ LIBRARY Foundation
         __objc_class_name_NSCompoundPredicate CONSTANT
         __objc_class_name_NSNib CONSTANT
         __objc_class_name_NSRunLoopSource CONSTANT
+        __objc_class_name_NSURLProtocol_file CONSTANT
+        __objc_class_name_NSURLProtocol_WinHTTP CONSTANT
         __objc_class_name_NSValue CONSTANT
 
         ; Foundation Stubs
