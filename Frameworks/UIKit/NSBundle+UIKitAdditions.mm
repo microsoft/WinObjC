@@ -13,21 +13,32 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#import <UIKit/NSBundle.h>
+#import <Foundation/NSNib.h>
+#import <UIKit/NSBundle+UIKitAdditions.h>
 #import <StubReturn.h>
+#include "Starboard.h"
 
 NSString* const UINibProxiedObjectsKey = @"UINibProxiedObjectsKey";
 NSString* const UINibExternalObjects = @"UINibExternalObjects";
 
 @implementation NSBundle (UIKit)
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes The 'options' argument is not yet supported.
 */
 - (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
+    if (options) {
+        UNIMPLEMENTED_WITH_MSG("The 'options' argument is not yet supported.");
+    }
 
+    NSString* nibFile = [self pathForResource:name ofType:@"nib"];
+    if (!nibFile) {
+        EbrDebugLog("NIB [%hs] not found!", [name UTF8String]);
+        return nil;
+    } else {
+        NSNib* nib = [NSNib nibWithNibName:nibFile bundle:self];
+        NSArray* topLevelObjects = [nib instantiateWithOwner:owner options:options];
+        return topLevelObjects;
+    }
+}
 @end

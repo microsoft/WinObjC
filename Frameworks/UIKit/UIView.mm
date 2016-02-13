@@ -37,7 +37,7 @@
 #include <Windows.h>
 
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
-const wchar_t* TAG = L"UIView";
+static const wchar_t* TAG = L"UIView";
 
 /** @Status Stub */
 const CGSize UILayoutFittingCompressedSize = StubConstant();
@@ -240,7 +240,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         if ([self respondsToSelector:@selector(setDelegate:)]) {
             [self performSelector:@selector(setDelegate:) withObject:uiDelegate];
         } else {
-            TraceWarning(TAG, L"UIDelegate decoded but %s doens't support setDelegate!\n", object_getClassName(self));
+            TraceWarning(TAG, L"UIDelegate decoded but %hs doens't support setDelegate!\n", object_getClassName(self));
         }
     }
 
@@ -274,7 +274,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        TraceWarning(TAG, L"Removing constraint (%s): \n", [[wayward description] UTF8String]);
+                        TraceWarning(TAG, L"Removing constraint (%hs): \n", [[wayward description] UTF8String]);
                         [wayward printConstraint];
                         remove = true;
                         break;
@@ -288,7 +288,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     }
                 }
             } else {
-                TraceWarning(TAG, L"Skipping unsupported constraint type: %s\n", [[constraint description] UTF8String]);
+                TraceWarning(TAG, L"Skipping unsupported constraint type: %hs\n", [[constraint description] UTF8String]);
             }
         }
     }
@@ -603,8 +603,8 @@ static float doRound(float f) {
     frame.size.width = doRound(frame.size.width);
     frame.size.height = doRound(frame.size.height);
 
-    TraceWarning(TAG,
-                 L"SetFrame(%s): %f, %f, %f, %f\n",
+    TraceVerbose(TAG,
+                 L"SetFrame(%hs): %f, %f, %f, %f\n",
                  object_getClassName(self),
                  frame.origin.x,
                  frame.origin.y,
@@ -1055,7 +1055,7 @@ static float doRound(float f) {
     }
     if (view1 == nil || view2 == nil) {
         TraceWarning(TAG,
-                     L"Cannot exchange subviews %d and %d count=%d on view %s (view1=%s view2=%s)\n",
+                     L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)\n",
                      index1,
                      index2,
                      priv->childCount,
@@ -1928,7 +1928,7 @@ static float doRound(float f) {
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    TraceWarning(TAG, L"Clicked: %s\n", object_getClassName(self));
+    TraceWarning(TAG, L"Clicked: %hs\n", object_getClassName(self));
     UIResponder* nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -2440,7 +2440,7 @@ static float doRound(float f) {
         return;
     _deallocating = true;
     viewCount--;
-    TraceWarning(TAG, L"%d: dealloc %s %x\n", viewCount, object_getClassName(self), self);
+    TraceWarning(TAG, L"%d: dealloc %hs %x\n", viewCount, object_getClassName(self), self);
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -2535,7 +2535,7 @@ static float doRound(float f) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:self];
         } else {
-            TraceWarning(TAG, L"UIView: object %s is not a gesture!\n", object_getClassName(curgesture));
+            TraceWarning(TAG, L"UIView: object %hs is not a gesture!\n", object_getClassName(curgesture));
         }
     }
 }
@@ -2548,12 +2548,12 @@ static float doRound(float f) {
 }
 
 + (id)appearance {
-    TraceWarning(TAG, L"Unimplemented method %s on UIView called\n", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called\n", __func__);
     return nil;
 }
 
 + (id)appearanceWhenContainedIn:(id)containedClass, ... {
-    TraceWarning(TAG, L"Unimplemented method %s on UIView called\n", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called\n", __func__);
     return nil;
 }
 

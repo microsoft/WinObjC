@@ -15,13 +15,9 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "UIImageNibPlaceholder.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIImage.h"
-
-@interface UIImageNibPlaceholder : NSObject {
-@public
-}
-@end
 
 @implementation UIImageNibPlaceholder
 - (instancetype)initWithCoder:(NSCoder*)coder {

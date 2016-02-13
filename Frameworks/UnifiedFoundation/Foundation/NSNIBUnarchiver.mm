@@ -309,10 +309,10 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
         _classNames[i] = (char*)malloc(len + 1);
         memcpy(_classNames[i], _curOffset, len);
 
-        _classNames[i][len] = 0;
+        _classNames[i][len] = '\0';
         _classTypes[i] = objc_getClass(_classNames[i]);
         if (_classTypes[i] == nil) {
-            EbrDebugLog("Couldn't find class\n");
+            EbrDebugLog("Couldn't find class: %hs\n", _classNames[i]);
         }
         _curOffset += len;
     }

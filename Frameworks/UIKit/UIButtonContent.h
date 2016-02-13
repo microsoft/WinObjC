@@ -13,10 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#include "UITableViewCellContentView.h"
+#pragma once
 
-@implementation UITableViewCellContentView
-- (id)initWithCoder:(NSCoder*)coder {
-    return [super initWithCoder:coder];
+@interface UIButtonContent : NSObject {
+@public
+    id image, backgroundImage, title, titleColor, shadowColor;
 }
 @end
