@@ -31,6 +31,12 @@ FOUNDATION_EXPORT_CLASS
     union {
         uint64_t i;
         double f;
+        // TODO: add more types in the value union to make sure consumer 
+        // can consume the value with right type instead of doing their own
+        // casting, for example. 
+        // 
+        // char c;
+        // unsigned char uc;
     } val;
     enum NSNumberType type;
     const char* objCType;
