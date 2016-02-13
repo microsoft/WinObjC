@@ -13,10 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#include "UITableViewCellContentView.h"
+#pragma once
 
-@implementation UITableViewCellContentView
-- (id)initWithCoder:(NSCoder*)coder {
-    return [super initWithCoder:coder];
+@interface UIImageNibPlaceholder : NSObject {
+@public
 }
 @end

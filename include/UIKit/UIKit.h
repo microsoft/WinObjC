@@ -21,7 +21,7 @@
 #import <UIKit/UIScrollViewDelegate.h>
 #import <UIKit/UIView.h>
 #import <UIKit/NSAttributedString+UIKitAdditions.h>
-#import <UIKit/NSBundle.h>
+#import <UIKit/NSBundle+UIKitAdditions.h>
 #import <UIKit/NSDataAsset.h>
 #import <UIKit/NSFileProviderExtension.h>
 #import <UIKit/NSIndexPath+UITableView.h>
@@ -34,6 +34,7 @@
 #import <UIKit/NSLayoutYAxisAnchor.h>
 #import <UIKit/NSMutableAttributedString+UIKitAdditions.h>
 #import <UIKit/NSMutableParagraphStyle.h>
+#import <UIKit/NSObject+UIKitAdditions.h>
 #import <UIKit/NSParagraphStyle.h>
 #import <UIKit/NSShadow.h>
 #import <UIKit/NSStringDrawing.h>
@@ -176,7 +177,6 @@
 #import <UIKit/UINavigationControllerDelegate.h>
 #import <UIKit/UINavigationItem.h>
 #import <UIKit/UINib.h>
-#import <UIKit/UINibLoading.h>
 #import <UIKit/UIObjectRestoration.h>
 #import <UIKit/UIPageControl.h>
 #import <UIKit/UIPageViewController.h>

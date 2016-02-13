@@ -15,12 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
-
-@interface UIButtonContent : NSObject {
-@public
-    id image, backgroundImage, title, titleColor, shadowColor;
-}
-@end
+#include "UIButtonContent.h"
 
 @implementation UIButtonContent
 - (instancetype)initWithCoder:(id)coder {

@@ -20,17 +20,15 @@
 
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
-#include "UIKit/UIRuntimeOutletConnection.h"
-#include "UIKit/UIRuntimeOutletCollectionConnection.h"
+#include "UIButtonContent.h"
+#include "UIImageNibPlaceholder.h"
+#include "UIProxyObject.h"
+#include "UIRuntimeOutletConnection.h"
+#include "UIRuntimeOutletCollectionConnection.h"
+#include "UITableViewCellContentView.h"
 #include "UIClassSwapper.h"
-#include "QuartzCore/CATransaction.h"
-#include "UnifiedFoundation/Foundation/NSColor.h"
-
-@class UIImageNibPlaceholder;
-@class UIButtonContent;
-@class UIPickerView;
-@class UIActionSheet;
-@class UIProxyObject;
+#include "../QuartzCore/CATransaction.h"
+#include "../UnifiedFoundation/Foundation/NSColor.h"
 
 extern "C" void NSObjForceinclude();
 void NSStringForceinclude();
@@ -41,6 +39,7 @@ void ForceInclusion() {
     [UIRuntimeEventConnection class];
     [UIRuntimeOutletConnection class];
     [UIRuntimeOutletCollectionConnection class];
+    [UITableViewCellContentView class];
     [UIClassSwapper class];
     [UIImageNibPlaceholder class];
     [UIButtonContent class];

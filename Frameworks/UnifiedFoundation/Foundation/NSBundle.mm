@@ -1287,25 +1287,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 /**
  @Status Interoperable
 */
-- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options {
-    assert(options == nil);
-
-    NSString* nibFile = [self pathForResource:name ofType:@"nib"];
-
-    if (nibFile == nil) {
-        EbrDebugLog("*** NIB not found ***\n");
-        return nil;
-    } else {
-        NSNib* nib = [NSNib nibWithNibName:nibFile bundle:self];
-        NSArray* topLevelObjects = [nib instantiateWithOwner:owner options:options];
-
-        return topLevelObjects;
-    }
-}
-
-/**
- @Status Interoperable
-*/
 - (NSArray*)pathsForResourcesOfType:(NSString*)type inDirectory:(NSString*)directory {
     return findFilesDirectory(self, _bundlePath, type, directory);
 }

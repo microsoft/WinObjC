@@ -13,10 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#include "UITableViewCellContentView.h"
+#pragma once
 
-@implementation UITableViewCellContentView
-- (id)initWithCoder:(NSCoder*)coder {
-    return [super initWithCoder:coder];
-}
+#include "UIKit/UIKit.h"
+
+@interface UITableViewCellContentView : UIView
 @end
