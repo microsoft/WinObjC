@@ -16,6 +16,7 @@
 #pragma once
 
 #import <Social/SocialExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 
