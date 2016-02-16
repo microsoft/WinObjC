@@ -128,7 +128,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
@@ -150,7 +150,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
@@ -174,7 +174,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
@@ -196,7 +196,7 @@
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
     </Link>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCOREMEDIA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>

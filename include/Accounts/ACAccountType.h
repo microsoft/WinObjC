@@ -26,7 +26,7 @@ ACCOUNTS_EXPORT NSString* const ACAccountTypeIdentifierTencentWeibo;
 
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountType : NSObject
-@property (readonly, nonatomic) BOOL accessGranted;
-@property (readonly, nonatomic) NSString* accountTypeDescription;
-@property (readonly, nonatomic) NSString* identifier;
+@property (readonly, nonatomic) BOOL accessGranted STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* accountTypeDescription STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* identifier STUB_PROPERTY;
 @end

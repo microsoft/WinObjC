@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <!--
-	Put your project source files here.
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\EventKitUI\SampleFile.mm" />
-	-->
     <ClangCompile Include="..\..\..\Frameworks\EventKitUI\EKCalendarChooser.mm" />
     <ClangCompile Include="..\..\..\Frameworks\EventKitUI\EKEventEditViewController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\EventKitUI\EKEventViewController.mm" />
@@ -126,7 +122,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -146,7 +142,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>
@@ -168,7 +164,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
     </ClangCompile>
@@ -188,7 +184,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
       <OptimizationLevel>Full</OptimizationLevel>

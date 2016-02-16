@@ -63,7 +63,7 @@ NSString* const ACAccountStoreDidChangeNotification = @"ACAccountStoreDidChangeN
 /**
  @Status Stub
 */
-- (void)requestAccewssToAccountsWithType:(ACAccountType*)accountType
+- (void)requestAccessToAccountsWithType:(ACAccountType*)accountType
         options:(NSDictionary*)options
         completion:(ACAccountStoreRequestAccessCompletionHandler)completion {
     UNIMPLEMENTED();

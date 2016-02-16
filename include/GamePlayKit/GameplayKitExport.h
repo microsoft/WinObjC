@@ -15,7 +15,9 @@
 //******************************************************************************
 #pragma once
 
+#ifndef GAMEPLAYKIT_IMPEXP
 #define GAMEPLAYKIT_IMPEXP __declspec(dllimport)
+#endif
 
 #ifndef GAMEPLAYKIT_EXPORT
 #ifdef __cplusplus
