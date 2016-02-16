@@ -77,4 +77,8 @@ TEST(Foundation, NSArray_Subclassable) {
         sum += [(NSNumber*)val integerValue];
     }
     ASSERT_EQ(10, sum);
+
+    NSArray* testArray2 = @[@2, @2, @2, @2, @2];
+
+    ASSERT_OBJCEQ(testArray, testArray2);
 }

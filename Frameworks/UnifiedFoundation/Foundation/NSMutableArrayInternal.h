@@ -42,8 +42,6 @@
 - (void)removeObjectsAtIndexes:(NSIndexSet*)index;
 - (void)removeLastObject;
 - (void)sortUsingComparator:(NSComparator*)comparator;
-- (void)sortUsingFunction:(uint32_t)compFunc context:(uint32_t)context;
-- (void)sortUsingFunction:(uint32_t)compFunc context:(uint32_t)context range:(NSRange)range;
 - (void)sortUsingSelector:(SEL)selector;
 - (void)sortUsingDescriptors:(NSArray*)descriptors;
 - (NSObject*)copyWithZone:(NSZone*)zone;
