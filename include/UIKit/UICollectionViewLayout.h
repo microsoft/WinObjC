@@ -27,6 +27,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 @class UICollectionViewLayoutAttributes;
+@class UICollectionView;
+@class UICollectionReusableView;
+@class UINib;
 
 enum _UICollectionViewItemType {
     UICollectionViewItemTypeCell,

@@ -40,6 +40,7 @@ UIKIT_EXPORT NSString* const UIActivityTypePostToTencentWeibo;
 UIKIT_EXPORT NSString* const UIActivityTypeAirDrop;
 
 @class UIViewController;
+@class UIImage;
 
 UIKIT_EXPORT_CLASS
 @interface UIActivity : NSObject

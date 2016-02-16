@@ -22,6 +22,7 @@
 
 #pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
 enum _UICollectionUpdateAction {

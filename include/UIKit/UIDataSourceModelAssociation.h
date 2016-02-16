@@ -17,6 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSString;
 @class NSIndexPath;

@@ -30,6 +30,7 @@
 
 #pragma once
 
+#import <UIKit/UIKitTypes.h>
 #import "UIControl.h"
 
 typedef enum {
