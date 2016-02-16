@@ -174,6 +174,13 @@ NSCalculationError NSDecimalSubtract(NSDecimal* result,
 }
 
 /**
+ @Status Interoperable
+*/
+- (const char*)objCType {
+    return "d";
+}
+
+/**
  @Status Stub
  @Notes
 */

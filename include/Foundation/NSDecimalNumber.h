@@ -60,7 +60,7 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly) NSDecimal decimalValue STUB_PROPERTY;
 @property (readonly) double doubleValue STUB_PROPERTY;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
-@property (readonly) const char* objCType STUB_PROPERTY;
+@property (readonly) const char* objCType;
 + (id<NSDecimalNumberBehaviors>)defaultBehavior STUB_METHOD;
 + (void)setDefaultBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
 - (NSComparisonResult)compare:(NSNumber*)decimalNumber STUB_METHOD;
