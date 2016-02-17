@@ -23,6 +23,7 @@
 + (void)setStartupDisplayMode:(WOCDisplayMode*)mode {
     mode.autoMagnification = TRUE;
     mode.sizeUIWindowToFit = TRUE;
+    mode.clampScaleToClosestExpected = FALSE;
     mode.fixedWidth = 0;
     mode.fixedHeight = 0;
     mode.magnification = 1.0;

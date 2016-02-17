@@ -2445,6 +2445,8 @@ void UIShutdown() {
     double _fixedAspectRatio;
     BOOL _autoMagnification;
     BOOL _sizeUIWindowToFit;
+    BOOL _useHostScaleFactor;
+    BOOL _clampScaleToClosestExpected;
     WOCOperationMode _operationMode;
     CGSize _windowSize;
     CGSize _hostScreenSize;
@@ -2460,6 +2462,8 @@ void UIShutdown() {
 @synthesize sizeUIWindowToFit = _sizeUIWindowToFit;
 @synthesize operationMode = _operationMode;
 @synthesize presentationTransform = _presentationTransform;
+@synthesize useHostScaleFactor = _useHostScaleFactor;
+@synthesize clampScaleToClosestExpected = _clampScaleToClosestExpected;
 
 - (instancetype)init {
     _fixedWidth = 320.0f;
@@ -2467,6 +2471,8 @@ void UIShutdown() {
     _fixedAspectRatio = 0.0f;
     _magnification = 1.0f;
     _sizeUIWindowToFit = TRUE;
+    _useHostScaleFactor = TRUE;
+    _clampScaleToClosestExpected = TRUE;
     _operationMode = WOCOperationModePhone;
     _presentationTransform = UIInterfaceOrientationPortrait;
     return self;

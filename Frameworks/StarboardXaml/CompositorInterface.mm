@@ -1564,7 +1564,28 @@ public:
         return ::screenHeight;
     }
     virtual float screenScale() {
-        return ::screenMagnification * [[UIApplication displayMode] hostScreenScale];
+        float scale = ::screenMagnification;
+
+        if ([[UIApplication displayMode] useHostScaleFactor]) {
+            scale *= [[UIApplication displayMode] hostScreenScale];
+        }
+
+        // On an iOS device, the only expected values for UIScreen.scale is 1, or 2 for retina displays.
+        // Some code paths rely on this.
+        if ([[UIApplication displayMode] clampScaleToClosestExpected]) {
+            // Round to nearest int
+            scale = static_cast<float>(static_cast<int>(scale + 0.5f));
+
+            // Clamp
+            if (scale > 2.0f) {
+                scale = 2.0f;
+            }
+            if (scale < 1.0f) {
+                scale = 1.0f;
+            }
+         }
+
+         return scale;
     }
     virtual int deviceWidth() {
         return ::deviceWidth;

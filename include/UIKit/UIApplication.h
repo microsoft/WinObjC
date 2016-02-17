@@ -321,6 +321,8 @@ typedef uint32_t WOCDeviceType;
 @property (nonatomic) double fixedAspectRatio;
 @property (nonatomic) BOOL autoMagnification;
 @property (nonatomic) BOOL sizeUIWindowToFit;
+@property (nonatomic) BOOL useHostScaleFactor;
+@property (nonatomic) BOOL clampScaleToClosestExpected;
 @property (nonatomic) WOCOperationMode operationMode;
 @property (nonatomic) UIInterfaceOrientation presentationTransform;
 
