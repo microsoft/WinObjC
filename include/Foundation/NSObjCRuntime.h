@@ -254,9 +254,21 @@ FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr) STUB_METHOD;
 #endif
 #endif
 
+#ifndef NS_AVAILABLE
 #define NS_AVAILABLE(x, y)
+#endif
+
+#ifndef NS_AVAILABLE_IOS
 #define NS_AVAILABLE_IOS(x)
+#endif
+
+#ifndef NS_DEPRECATED_IOS
 #define NS_DEPRECATED_IOS(x, y)
+#endif
+
+#ifndef NS_EXTENSION_UNAVAILABLE_IOS
+#define NS_EXTENSION_UNAVAILABLE_IOS(x)
+#endif
 
 #ifdef __cplusplus
 #define NS_OPTIONS(_t, _n) \
