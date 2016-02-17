@@ -47,6 +47,8 @@ using namespace ABI::Windows::Security::Cryptography;
 using namespace ABI::Windows::Storage::Streams;
 using namespace Windows::Foundation;
 
+// TODO: BUG 192601: Enable ARC on this file once the code gen error is fixed
+
 @implementation NSData
 
 /**
@@ -96,15 +98,15 @@ using namespace Windows::Foundation;
                 newLineChar = @"\r\n";
             }
 
-            NSMutableString* ret = [NSMutableString stringWithString:nsEncodedString];
+            NSMutableString* mutableEncodedString = [NSMutableString stringWithString:nsEncodedString];
 
             // Add new line every (lineLength) chars
             // Iterate backwards to avoid compensating for changes in length
             for (size_t i = newLineCount; i > 0; i--) {
-                [ret insertString:newLineChar atIndex:(i * lineLength)];
+                [mutableEncodedString insertString:newLineChar atIndex:(i * lineLength)];
             }
 
-            return [ret autorelease];
+            return [NSString stringWithString:mutableEncodedString];
         }
     }
 
@@ -449,7 +451,7 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (instancetype)initWithBase64EncodedData:(NSData*)base64Data options:(NSDataBase64DecodingOptions)options {
-    StrongId<NSString> base64String = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+    StrongId<NSString> base64String = [[[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding] autorelease];
     auto ret = [self initWithBase64EncodedString:base64String options:options];
     return ret;
 }

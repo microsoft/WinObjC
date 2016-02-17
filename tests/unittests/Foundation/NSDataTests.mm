@@ -22,14 +22,16 @@
 #import <Foundation/NSMutableData.h>
 #import <Foundation/NSURL.h>
 
+// TODO: BUG 5403859: Enable ARC on this test file once load order issue is fixed
+
 // Helper function for testing decoding of base64 encoded strings
 void testDecode(NSString* base64String, NSString* expectedDecode, BOOL ignoreUnknownChars) {
     StrongId<NSData> decodedData =
-        [[NSData alloc] initWithBase64EncodedString:base64String
-                                            options:(ignoreUnknownChars ? NSDataBase64DecodingIgnoreUnknownCharacters : 0)];
+        [[[NSData alloc] initWithBase64EncodedString:base64String
+                                             options:(ignoreUnknownChars ? NSDataBase64DecodingIgnoreUnknownCharacters : 0)] autorelease];
     ASSERT_OBJCNE(nil, decodedData);
 
-    StrongId<NSString> decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+    StrongId<NSString> decodedString = [[[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding] autorelease];
     ASSERT_OBJCEQ(expectedDecode, decodedString);
 }
 
@@ -99,7 +101,7 @@ TEST(NSData, Base64EncodeWithOptions) {
 
 TEST(NSData, Base64DecodeWithOptions) {
     // Invalid input should return nil
-    StrongId<NSData> invalidDecoded = [[NSData alloc] initWithBase64Encoding:@"%"];
+    StrongId<NSData> invalidDecoded = [[[NSData alloc] initWithBase64Encoding:@"%"] autorelease];
     ASSERT_OBJCEQ(nil, invalidDecoded);
 
     // Basic testing
@@ -152,15 +154,15 @@ TEST(NSData, Base64EncodeDecodeWrappers) {
     StrongId<NSData> encodedDataUTF8 = [@"Wlpa" dataUsingEncoding:NSUTF8StringEncoding];
     StrongId<NSData> encodedDataASCII = [@"Wlpa" dataUsingEncoding:NSASCIIStringEncoding];
 
-    StrongId<NSData> decodedDataUTF8 = [[NSData alloc] initWithBase64EncodedData:encodedDataUTF8 options:0];
-    StrongId<NSData> decodedDataASCII = [[NSData alloc] initWithBase64EncodedData:encodedDataASCII options:0];
+    StrongId<NSData> decodedDataUTF8 = [[[NSData alloc] initWithBase64EncodedData:encodedDataUTF8 options:0] autorelease];
+    StrongId<NSData> decodedDataASCII = [[[NSData alloc] initWithBase64EncodedData:encodedDataASCII options:0] autorelease];
 
     StrongId<NSData> expectedDecodedData = [@"ZZZ" dataUsingEncoding:NSUTF8StringEncoding];
     ASSERT_OBJCEQ(expectedDecodedData, decodedDataUTF8);
     ASSERT_OBJCEQ(expectedDecodedData, decodedDataASCII);
 
     // initWithBase64Encoding
-    StrongId<NSData> encodedDataInitWithString = [[NSData alloc] initWithBase64Encoding:@"Wlpa"];
+    StrongId<NSData> encodedDataInitWithString = [[[NSData alloc] initWithBase64Encoding:@"Wlpa"] autorelease];
     ASSERT_OBJCEQ([@"ZZZ" dataUsingEncoding:NSUTF8StringEncoding], encodedDataInitWithString);
 
     // base64Encoding
