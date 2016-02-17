@@ -111,7 +111,7 @@
       <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
       <SBResourceCopy Condition="'$(IncludeAVFoundation)' == 'true'" Include="$(StarboardLibDirs)\AVFoundation.dll" />
       <SBResourceCopy Condition="'$(IncludeAudioToolbox)' == 'true'" Include="$(StarboardLibDirs)\AudioToolbox.dll" />
-      <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
+      <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\OpenAL.dll" />
       <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
 
       <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardConfigSpecificPrebuiltLibsDir)\libdispatch.dll" />

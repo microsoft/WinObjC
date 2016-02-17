@@ -1,8 +1,0 @@
-module OpenAL [extern_c] {
-    umbrella "."
-    export *
-    
-    module * {
-        export *
-    }
-}
