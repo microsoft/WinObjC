@@ -357,7 +357,7 @@ CFIndex CFArrayGetCount(CFArrayRef array) {
             [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
         return [(NSArray*)array count];
     }
-    return ((NSArray*)(array))->arr->getCount();
+    return ((NSArray*)array)->arr->getCount();
 }
 
 /**
@@ -377,7 +377,7 @@ const void* CFArrayGetValueAtIndex(CFArrayRef array, CFIndex index) {
             [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
         return [(NSArray*)array objectAtIndex:index];
     }
-    return (const void*)((NSArray*)(array))->arr->objectFromIndex(index);
+    return (const void*)((NSArray*)array)->arr->objectFromIndex(index);
 }
 
 /**
@@ -393,11 +393,16 @@ void CFArrayGetValues(CFArrayRef array, CFRange range, const void** values) {
  @Status Interoperable
 */
 void CFArrayAppendValue(CFMutableArrayRef array, const void* value) {
-    CFArrayInsertValueAtIndex(array, CFArrayGetCount(array), value);
+    if (!([(id)array isKindOfClass:[NSArrayConcrete class]] ||
+            [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
+        [(NSMutableArray*)array addObject:(id)value];
+    } else {
+        ((NSArray*)array)->arr->addObjectAtIndex((id)value, CFArrayGetCount(array));
+    }
 }
 
 void CFArrayAppendValueUnretained(CFMutableArrayRef array, const void* value) {
-    ((NSArray*)(array))->arr->addObject((id)value, false);
+    ((NSArray*)array)->arr->addObject((id)value, false);
 }
 
 void CFArrayAppendValueExport(CFMutableArrayRef array, const void* value) {
@@ -418,7 +423,7 @@ void CFArrayAppendArray(CFMutableArrayRef array, CFArrayRef arrayToAppend, CFRan
  @Status Interoperable
 */
 Boolean CFArrayContainsValue(CFArrayRef array, CFRange range, const void* value) {
-    return ((NSArray*)(array))->arr->doesContainValue(range.location, range.length, (id)value) != FALSE;
+    return ((NSArray*)array)->arr->doesContainValue(range.location, range.length, (id)value) != FALSE;
 }
 
 /**
@@ -429,7 +434,7 @@ void CFArrayInsertValueAtIndex(CFMutableArrayRef array, CFIndex index, const voi
             [(id)array isKindOfClass:[NSMutableArrayConcrete class]])) {
         [(NSMutableArray*)array insertObject:(id)value atIndex:index];
     } else {
-        ((NSArray*)(array))->arr->addObjectAtIndex((id)value, index);
+        ((NSArray*)array)->arr->addObjectAtIndex((id)value, index);
     }
 }
 
@@ -440,7 +445,7 @@ void CFArraySetValueAtIndex(CFMutableArrayRef self, CFIndex index, const void* v
     if (![(id)self isKindOfClass:[NSMutableArrayConcrete class]]) {
         [(NSMutableArray*)self replaceObjectAtIndex:index withObject:(id)value];
     } else {
-        ((NSArray*)(self))->arr->replaceObject((id)value, index);
+        ((NSArray*)self)->arr->replaceObject((id)value, index);
     }
 }
 
@@ -457,7 +462,7 @@ void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** v
             if (![(id)array isKindOfClass:[NSMutableArrayConcrete class]]) {
                 [(NSMutableArray*)array replaceObjectAtIndex:curPos withObject:*newValues];
             } else {
-                ((NSArray*)(array))->arr->replaceObject(*newValues, curPos);
+                ((NSArray*)array)->arr->replaceObject(*newValues, curPos);
             }
 
             curPos++;
@@ -482,7 +487,7 @@ void CFArrayReplaceValues(CFMutableArrayRef array, CFRange range, const void** v
  @Status Interoperable
 */
 void CFArrayRemoveAllValues(CFMutableArrayRef array) {
-    if (((NSArray*)(array))->arr == nil) {
+    if (((NSArray*)array)->arr == nil) {
         return;
     }
 
@@ -493,7 +498,7 @@ void CFArrayRemoveAllValues(CFMutableArrayRef array) {
             CFArrayRemoveValueAtIndex(array, count);
         }
     } else {
-        ((NSArray*)(array))->arr->removeAllObjects();
+        ((NSArray*)array)->arr->removeAllObjects();
     }
 }
 
@@ -504,7 +509,7 @@ void CFArrayRemoveValueAtIndex(CFMutableArrayRef array, CFIndex idx) {
     if (![(id)array isKindOfClass:[NSMutableArrayConcrete class]]) {
         [(NSMutableArray*)array removeObjectAtIndex:idx];
     } else {
-        ((NSArray*)(array))->arr->removeObject(idx);
+        ((NSArray*)array)->arr->removeObject(idx);
     }
 }
 
@@ -538,10 +543,10 @@ void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void** objects, int c
 }
 
 void _CFArrayDestroyInternal(CFArrayRef arr) {
-    ((NSArray*)(arr))->arr->~__CFArray();
-    ((NSArray*)(arr))->arr = NULL;
+    ((NSArray*)arr)->arr->~__CFArray();
+    ((NSArray*)arr)->arr = NULL;
 }
 
 void** _CFArrayGetPtr(CFArrayRef array) {
-    return (void**)((NSArray*)(array))->arr->objsPtr();
+    return (void**)((NSArray*)array)->arr->objsPtr();
 }

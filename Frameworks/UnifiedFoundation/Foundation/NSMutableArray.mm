@@ -117,7 +117,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)obj {
     if (object_getClass(self) == [NSMutableArrayConcrete class]) {
         //  Fastpath
         CFRange range;

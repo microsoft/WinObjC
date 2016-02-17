@@ -82,3 +82,80 @@ TEST(Foundation, NSArray_Subclassable) {
 
     ASSERT_OBJCEQ(testArray, testArray2);
 }
+
+NS_OPTIONS(NSUInteger, NSMutableTestArrayCalls) {
+    countCalled,
+    objectAtIndexCalled,
+    insertObjectCalled,
+    addObjectCalled,
+    removeObjectAtIndexCalled,
+    replaceObjectAtIndexCalled
+};
+
+@interface NSMutableTestArray : NSMutableArray
+@property unsigned int calledMethods;
+@end 
+
+@implementation NSMutableTestArray
+- (NSUInteger)count {
+    _calledMethods |= countCalled;
+    return 5;
+}
+
+- (id)objectAtIndex:(NSUInteger)index {
+    _calledMethods |= objectAtIndexCalled;
+    return @2;
+}
+
+- (void)insertObject:(id)object atIndex:(NSUInteger)index {
+    _calledMethods |= insertObjectCalled;
+}
+
+- (void)addObject:(id)anObject {
+    _calledMethods |= addObjectCalled;
+}
+
+- (void)removeLastObject {
+    // No test/flags for removeLastObject because it isn't called from any CF methods.
+}
+
+- (void)removeObjectAtIndex:(NSUInteger)index {
+    _calledMethods |= removeObjectAtIndexCalled;
+}
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject {
+    _calledMethods |= replaceObjectAtIndexCalled;
+}
+
+- (void)verifyAndResetFlags:(unsigned int)expectedCalls {
+    ASSERT_EQ(expectedCalls & countCalled, _calledMethods & countCalled);
+    ASSERT_EQ(expectedCalls & objectAtIndexCalled, _calledMethods & objectAtIndexCalled);
+    ASSERT_EQ(expectedCalls & insertObjectCalled, _calledMethods & insertObjectCalled);
+    ASSERT_EQ(expectedCalls & addObjectCalled, _calledMethods & addObjectCalled);
+    ASSERT_EQ(expectedCalls & removeObjectAtIndexCalled, _calledMethods & removeObjectAtIndexCalled);
+    ASSERT_EQ(expectedCalls & replaceObjectAtIndexCalled, _calledMethods & replaceObjectAtIndexCalled);
+    _calledMethods = 0;
+}
+@end 
+
+TEST(Foundation, NSMutableArray_Subclassable) {
+    NSMutableTestArray* testArray = [NSMutableTestArray new];
+    CFMutableArrayRef test = (CFMutableArrayRef)testArray;
+    
+    CFArrayGetCount(test);
+    [testArray verifyAndResetFlags:countCalled];
+
+    CFArrayGetValueAtIndex(test, 2);
+    [testArray verifyAndResetFlags:objectAtIndexCalled];
+
+    CFArrayInsertValueAtIndex(test, 2, @2);
+    [testArray verifyAndResetFlags:insertObjectCalled];
+
+    CFArrayAppendValue(test, @2);
+    [testArray verifyAndResetFlags:addObjectCalled];
+
+    CFArrayRemoveValueAtIndex(test, 5);
+    [testArray verifyAndResetFlags:removeObjectAtIndexCalled];
+
+    CFArraySetValueAtIndex(test, 4, @3);
+    [testArray verifyAndResetFlags:replaceObjectAtIndexCalled];
+}
