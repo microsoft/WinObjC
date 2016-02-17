@@ -104,8 +104,17 @@
   </Target>
 
   <Target
-    Name="_SBResourceCopy"
+    Name="ComputeResourceTLog"
     DependsOnTargets="ComputeResourceCopyOptions"
+    Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
+    <!-- Ensure out of date resources causes a rebuild in VS -->
+    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).read.res.tlog" Overwrite="true" Lines="^$(ProjectPath);@(SBResourceCopy->'%(FullPath)')" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>
+    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).write.res.tlog" Overwrite="true" Lines="^$(ProjectPath);@(SBResourceCopy->'%(OutputFile)')" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>   
+  </Target>
+
+  <Target
+    Name="_SBResourceCopy"
+    DependsOnTargets="ComputeResourceCopyOptions;ComputeResourceTLog"
     Inputs="@(SBResourceCopy)"
     Outputs="@(SBResourceCopy->'%(OutputFile)')"
     Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
@@ -121,10 +130,6 @@
       Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
       SourceFiles="@(SBResourceCopy)"
       DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
-    
-    <!-- Ensure out of date resources causes a rebuild in VS -->
-    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).read.res.tlog" Lines="^$(ProjectPath);@(SBResourceCopy)" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>
-    
   </Target>
 
   <Target
