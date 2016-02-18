@@ -78,9 +78,18 @@
     NSRange range;
 
     range.location = index;
-    range.length = 0;
+    range.length = 1;
 
     raAddItem(self, range);
+    return self;
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithIndexesInRange:(NSRange)indexRange {
+    raAddItem(self, indexRange);
     return self;
 }
 
@@ -115,11 +124,20 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (unsigned)indexGreaterThanIndex:(unsigned)anIndex {
-    UNIMPLEMENTED();
-    return -1;
+    unsigned rangePos = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, anIndex + 1);
+
+    if (rangePos == NSNotFound) {
+        return NSNotFound;
+    }
+
+    if (_ranges[rangePos].location > anIndex) {
+        return _ranges[rangePos].location;
+    }
+
+    return anIndex + 1;
 }
 
 /**
@@ -152,10 +170,10 @@
 */
 - (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL* stop))block {
     BOOL stop = FALSE;
-    for (unsigned int i = 0; i < raCount(self) && !stop; i++) {
+    for (unsigned long i = 0; i < raCount(self) && !stop; i++) {
         NSRange cur = raItemAtIndex(self, i);
 
-        for (unsigned int j = cur.location; j < cur.location + cur.length && !stop; j++) {
+        for (unsigned long j = cur.location; j < cur.location + cur.length && !stop; j++) {
             block(j, &stop);
         }
     }
@@ -183,11 +201,16 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)containsIndex:(unsigned)anIndex {
-    UNIMPLEMENTED();
-    return YES;
+    unsigned rangePos = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, anIndex);
+
+    if (rangePos == NSNotFound) {
+        return NO;
+    }
+
+    return _ranges[rangePos].location <= anIndex;
 }
 
 /**
@@ -240,15 +263,6 @@
         }
     }
     return YES;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithIndexesInRange:(NSRange)indexRange {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**

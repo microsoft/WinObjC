@@ -47,11 +47,10 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 NSString* NSStringFromRange(NSRange range) {
-    UNIMPLEMENTED();
-    return nil;
+    return [NSString stringWithFormat:@"{%lu, %lu}", (unsigned long)range.location, (unsigned long)range.length];
 }
 
 /**
@@ -108,9 +107,13 @@ NSRange NSIntersectionRange(NSRange first, NSRange second) {
 }
 
 /**
-@Status Stub
+@Status Interoperable
 */
 NSRange NSUnionRange(NSRange range1, NSRange range2) {
-    UNIMPLEMENTED();
-    return { 0, 0 };
+    NSRange result;
+    result.location = MIN(range1.location, range2.location);
+    NSUInteger maximum = MAX(NSMaxRange(range1), NSMaxRange(range2));
+    result.length = maximum - result.location;
+
+    return result;
 }

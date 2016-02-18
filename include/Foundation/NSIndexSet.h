@@ -32,7 +32,7 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)indexSetWithIndexesInRange:(NSRange)indexRange;
 - (instancetype)init;
 - (instancetype)initWithIndex:(NSUInteger)index;
-- (instancetype)initWithIndexesInRange:(NSRange)indexRange STUB_METHOD;
+- (instancetype)initWithIndexesInRange:(NSRange)indexRange;
 - (instancetype)initWithIndexSet:(NSIndexSet*)indexSet;
 - (BOOL)containsIndex:(NSUInteger)index;
 - (BOOL)containsIndexes:(NSIndexSet*)indexSet STUB_METHOD;
