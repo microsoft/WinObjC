@@ -30,7 +30,6 @@
 
 #include "pevents.h"
 #include "PathMapper.h"
-#include <direct.h>
 
 void EbrBlockIfBackground() {
 }
@@ -805,6 +804,10 @@ char g_WritableFolder[2048] = ".";
 
 void EbrSetWritableFolder(const char* folder) {
     strcpy_s(g_WritableFolder, folder);
+}
+
+const char* EbrGetWritableFolder() {
+    return g_WritableFolder;
 }
 
 bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {

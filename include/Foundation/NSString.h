@@ -157,10 +157,7 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
 + (id)stringWithContentsOfURL:(NSURL*)url STUB_METHOD;
 - (id)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
-- (BOOL)writeToFile:(NSString*)path
-         atomically:(BOOL)useAuxiliaryFile
-           encoding:(NSStringEncoding)enc
-              error:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile STUB_METHOD;
 - (BOOL)writeToURL:(NSURL*)url
         atomically:(BOOL)useAuxiliaryFile

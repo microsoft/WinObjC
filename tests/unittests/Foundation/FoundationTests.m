@@ -910,3 +910,22 @@ TEST(Foundation, NonFatalSelectors) {
     WinObjC_SetMissingSelectorFatal(YES);
     EXPECT_ANY_THROW([NSObject nonexistentSelector]);
 }
+
+TEST(Foundation, NSSearchPathForDirectoriesInDomains) {
+    NSArray* documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray* cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSAllDomainsMask, YES);
+    NSArray* libraryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSAllDomainsMask, YES);
+    ASSERT_NE(0, [documentPaths count]);
+    ASSERT_NE(0, [cachesPaths count]);
+    ASSERT_NE(0, [libraryPaths count]);
+
+    NSArray* paths = @[ documentPaths[0], cachesPaths[0], libraryPaths[0] ];
+
+    for (NSString* path in paths) {
+        NSString* filePath = [NSString stringWithFormat:@"%@/%@", path, @"NSSearchPathTestFile.txt"];
+        NSError* error = nil;
+        NSString* testOutput = @"Testing 1 2 3";
+        EXPECT_NO_THROW([@"Testing 1 2 3" writeToFile:filePath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
+        ASSERT_OBJCEQ(nil, error);
+    }
+}

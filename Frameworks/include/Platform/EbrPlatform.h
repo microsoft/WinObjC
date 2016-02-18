@@ -175,6 +175,7 @@ inline void EbrOnHideKeyboardInternal() {
 
 //  maxLen should be MAX_PATH.  Sorry Jordan.
 IWPLATFORM_EXPORT bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen);
+IWPLATFORM_EXPORT const char* EbrGetWritableFolder();
 IWPLATFORM_EXPORT void EbrSetWritableFolder(const char* folder);
 
 IWPLATFORM_EXPORT void EbrPlatformCommonInit();
