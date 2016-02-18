@@ -512,7 +512,7 @@ void alc_sndio_probe(enum DevProbe type);
 
 ALCboolean alc_xaudio2_init(BackendFuncs *func_list);
 void alc_xaudio2_deinit(void);
-void alc_xaudio2_probe(int type);
+void alc_xaudio2_probe(enum DevProbe type);
 
 ALCboolean alcWASAPIDevApiInit(BackendFuncs *func_list);
 void alcWASAPIDevApiDeinit(void);

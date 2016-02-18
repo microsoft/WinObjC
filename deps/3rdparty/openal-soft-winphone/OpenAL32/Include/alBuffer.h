@@ -68,7 +68,8 @@ static __inline ALuint FrameSizeFromFmt(enum FmtChannels chans, enum FmtType typ
 
 typedef struct ALbuffer
 {
-    ALvoid  *data;
+    ALboolean   staticBuffer; // Whether we own the buffer
+    ALvoid      *data;
 
     ALsizei  Frequency;
     ALenum   Format;

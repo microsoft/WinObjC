@@ -725,7 +725,7 @@ extern "C" {
 		}
 	}
 
-	void alc_xaudio2_probe(int type)
+	void alc_xaudio2_probe(enum DevProbe type)
 	{
 		if (type == DEVICE_PROBE)
 		{

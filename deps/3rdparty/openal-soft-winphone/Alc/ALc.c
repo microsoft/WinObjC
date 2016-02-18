@@ -205,6 +205,7 @@ static const ALCfunction alcFunctions[] = {
     { "alDeleteBuffers",            (ALCvoid *) alDeleteBuffers          },
     { "alIsBuffer",                 (ALCvoid *) alIsBuffer               },
     { "alBufferData",               (ALCvoid *) alBufferData             },
+    { "alBufferDataStatic",         (ALCvoid *) alBufferDataStatic       },
     { "alBufferf",                  (ALCvoid *) alBufferf                },
     { "alBuffer3f",                 (ALCvoid *) alBuffer3f               },
     { "alBufferfv",                 (ALCvoid *) alBufferfv               },

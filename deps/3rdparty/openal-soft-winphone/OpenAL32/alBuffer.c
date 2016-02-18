@@ -34,6 +34,7 @@
 
 
 static ALenum LoadData(ALbuffer *ALBuf, ALuint freq, ALenum NewFormat, ALsizei frames, enum UserFmtChannels chans, enum UserFmtType type, const ALvoid *data, ALboolean storesrc);
+static ALenum LoadDataStatic(ALbuffer *ALBuf, ALuint freq, ALenum Format, ALsizei frames, enum FmtChannels Channels, enum FmtType Type, ALvoid *data, ALuint len);
 static void ConvertData(ALvoid *dst, enum UserFmtType dstType, const ALvoid *src, enum UserFmtType srcType, ALsizei numchans, ALsizei len);
 static ALboolean IsValidType(ALenum type);
 static ALboolean IsValidChannels(ALenum channels);
@@ -286,7 +287,9 @@ AL_API ALvoid AL_APIENTRY alDeleteBuffers(ALsizei n, const ALuint *buffers)
             FreeThunkEntry(ALBuf->buffer);
 
             /* Release the memory used to store audio data */
-            free(ALBuf->data);
+            if (!ALBuf->staticBuffer) {
+                free(ALBuf->data);
+            }
 
             /* Release buffer structure */
             memset(ALBuf, 0, sizeof(ALbuffer));
@@ -316,6 +319,72 @@ AL_API ALboolean AL_APIENTRY alIsBuffer(ALuint buffer)
     ALCcontext_DecRef(Context);
 
     return result;
+}
+
+/*
+*    alBufferDataStatic(ALuint buffer, ALenum format, const ALvoid *data,
+*                 ALsizei size, ALsizei freq)
+*
+*    OAL extension: Same as alBufferData, but with caller-owned buffer. Data must only be a format described by FmtType.
+*/
+AL_API ALvoid AL_APIENTRY alBufferDataStatic(const ALint buffer, ALenum format, ALvoid *data, ALsizei size, ALsizei freq)
+{
+    enum UserFmtChannels SrcChannels;
+    enum UserFmtType SrcType;
+    ALCcontext *Context;
+    ALCdevice *device;
+    ALuint FrameSize;
+    ALbuffer *ALBuf;
+    ALenum err;
+
+    Context = GetContextRef();
+    if(!Context) return;
+
+    device = Context->Device;
+    if((ALBuf=LookupBuffer(device, buffer)) == NULL)
+        alSetError(Context, AL_INVALID_NAME);
+    else if(size < 0 || freq < 0)
+        alSetError(Context, AL_INVALID_VALUE);
+    else if(DecomposeUserFormat(format, &SrcChannels, &SrcType) == AL_FALSE)
+        alSetError(Context, AL_INVALID_ENUM);
+    else switch(SrcType)
+    {
+        case UserFmtByte:
+        case UserFmtUByte:
+            SrcType = FmtByte;
+            break;
+        case UserFmtShort:
+        case UserFmtUShort:
+            SrcType = FmtShort;
+            break;
+        case UserFmtFloat:
+            SrcType = FmtFloat;
+            break;
+
+        case UserFmtInt:
+        case UserFmtUInt:
+        case UserFmtByte3:
+        case UserFmtUByte3:
+        case UserFmtDouble:
+        case UserFmtMulaw:
+        case UserFmtAlaw:
+        case UserFmtIMA4: 
+            // If they're supplying the buffer, it has to be in a format we can read directly.
+            alSetError(Context, AL_INVALID_ENUM);
+            ALCcontext_DecRef(Context);
+            return;
+    }
+
+    FrameSize = FrameSizeFromUserFmt(SrcChannels, SrcType);
+    if ((size%FrameSize) != 0)
+        err = AL_INVALID_VALUE;
+    else
+        err = LoadDataStatic(ALBuf, freq, format, size / FrameSize,
+            SrcChannels, SrcType, data, AL_TRUE);
+    if (err != AL_NO_ERROR)
+        alSetError(Context, err);
+
+    ALCcontext_DecRef(Context);
 }
 
 /*
@@ -2037,10 +2106,47 @@ static ALenum LoadData(ALbuffer *ALBuf, ALuint freq, ALenum NewFormat, ALsizei f
         ALBuf->OriginalSize     = frames * NewBytes * NewChannels;
     }
 
+    ALBuf->staticBuffer = AL_FALSE;
+
     ALBuf->Frequency = freq;
     ALBuf->FmtChannels = DstChannels;
     ALBuf->FmtType = DstType;
     ALBuf->Format = NewFormat;
+
+    ALBuf->SampleLen = frames;
+    ALBuf->LoopStart = 0;
+    ALBuf->LoopEnd = ALBuf->SampleLen;
+
+    WriteUnlock(&ALBuf->lock);
+    return AL_NO_ERROR;
+}
+
+
+/*
+* LoadDataStatic
+*
+* Sets the specified data as the buffer, using the specified formats.
+*/
+static ALenum LoadDataStatic(ALbuffer *ALBuf, ALuint freq, ALenum Format, ALsizei frames, enum FmtChannels Channels, enum FmtType Type, ALvoid *data, ALuint len)
+{
+    WriteLock(&ALBuf->lock);
+    if (ALBuf->ref != 0)
+    {
+        WriteUnlock(&ALBuf->lock);
+        return AL_INVALID_OPERATION;
+    }
+
+    ALBuf->data = data;
+    ALBuf->staticBuffer = AL_TRUE;
+
+    ALBuf->OriginalChannels = (enum UserFmtChannels)Channels;
+    ALBuf->OriginalType = (enum UserFmtChannels)Type;
+    ALBuf->OriginalSize = len;
+
+    ALBuf->Frequency = freq;
+    ALBuf->FmtChannels = Channels;
+    ALBuf->FmtType = Type;
+    ALBuf->Format = Format;
 
     ALBuf->SampleLen = frames;
     ALBuf->LoopStart = 0;
