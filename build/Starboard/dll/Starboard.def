@@ -66,8 +66,10 @@ LIBRARY Starboard
         pthread_rwlock_wrlock
         pthread_self
         pthread_setspecific
+        sleep
         task_info
         uname
+        usleep
 
         ; Error Handling Internal
         failFastOnUnimplemented

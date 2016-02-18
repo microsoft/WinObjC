@@ -423,9 +423,7 @@ LIBRARY Foundation
         kCFTypeDictionaryValueCallBacks DATA
         mach_absolute_time
         mach_timebase_info
-        sleep
         sysctlbyname
-        usleep
         NSClassFromString
         NSEqualRanges
         NSHomeDirectory

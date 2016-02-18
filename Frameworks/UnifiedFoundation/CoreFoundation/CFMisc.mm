@@ -24,7 +24,6 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#include <unistd.h>
 #include <mach/mach_time.h>
 
 #include <algorithm>
@@ -48,16 +47,6 @@ extern "C" uint32_t arc4random() {
         EbrDebugLog("Unable to get random number!\n");
     }
     return randResult;
-}
-
-extern "C" int usleep(useconds_t secs) {
-    Sleep(secs * 1000);
-    return 0;
-}
-
-extern "C" unsigned int sleep(useconds_t secs) {
-    Sleep(secs * 1000);
-    return 0;
 }
 
 extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
