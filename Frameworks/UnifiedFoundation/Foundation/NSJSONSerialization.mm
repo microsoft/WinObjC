@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/FoundationErrors.h>
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #include <COMIncludes.h>
 #include <wrl\client.h>
@@ -269,4 +270,75 @@ id _WDJJsonValueToNSJSON(const ComPtr<IJsonValue>& value, NSError** error, BOOL 
     return ret;
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)JSONObjectWithStream:(NSInputStream*)stream options:(NSJSONReadingOptions)opt error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSInteger)writeJSONObject:(id)obj toStream:(NSOutputStream*)stream options:(NSJSONWritingOptions)opt error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+// Returns true if the dictionary or array value is a valid JSON leaf
+static BOOL _isValidLeaf(id value) {
+    if ([value isKindOfClass:[NSString class]]) {
+        return YES;
+    } else if ([value isKindOfClass:[NSNumber class]]) {
+        if ([value isEqualToNumber:((NSNumber*)kCFNumberNaN)] || [value isEqualToNumber:((NSNumber*)kCFNumberPositiveInfinity)] ||
+            [value isEqualToNumber:((NSNumber*)kCFNumberNegativeInfinity)]) {
+            return NO;
+        }
+
+        return YES;
+    } else if ([value isKindOfClass:[NSNull class]]) {
+        return YES;
+    }
+
+    return NO;
+}
+
+/**
+ @Status Interoperable
+ @Notes An object that may be converted to JSON must have the following properties:
+    -The top level object is an NSArray or NSDictionary.
+    -All objects are instances of NSString, NSNumber, NSArray, NSDictionary, or NSNull.
+    -All dictionary keys are instances of NSString.
+    -Numbers are not NaN or infinity.
+*/
++ (BOOL)isValidJSONObject:(id)object {
+    if ([object isKindOfClass:[NSDictionary class]]) {
+        for (id key in(NSDictionary*)object) {
+            if (![key isKindOfClass:[NSString class]]) {
+                return NO;
+            }
+            id value = [(NSDictionary*)object objectForKey:key];
+            if (_isValidLeaf(value)) {
+                continue;
+            } else if (![NSJSONSerialization isValidJSONObject:value]) {
+                return NO;
+            }
+        }
+    } else if ([object isKindOfClass:[NSArray class]]) {
+        for (id value in(NSArray*)object) {
+            if (_isValidLeaf(value)) {
+                continue;
+            } else if (![NSJSONSerialization isValidJSONObject:value]) {
+                return NO;
+            }
+        }
+    } else {
+        return NO;
+    }
+
+    return YES;
+}
 @end

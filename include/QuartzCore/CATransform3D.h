@@ -13,12 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CATRANSFORM3D_H_
-#define _CATRANSFORM3D_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
 #import <Foundation/NSValue.h>
-#import <QuartzCore/CABase.h>
 #import <CoreGraphics/CGAffineTransform.h>
 
 typedef struct CATransform3D {
@@ -60,27 +58,28 @@ typedef struct CATransform3D {
 
 struct CAPoint3D;
 
-CA_EXPORT const CATransform3D CATransform3DIdentity;
-CA_EXPORT CATransform3D CATransform3DMakeScale(CGFloat sx, CGFloat sy, CGFloat sz);
-CA_EXPORT CATransform3D CATransform3DRotate(CATransform3D t, CGFloat angle, CGFloat x, CGFloat y, CGFloat z);
-CA_EXPORT CATransform3D CATransform3DScale(CATransform3D t, CGFloat sx, CGFloat sy, CGFloat sz);
-CA_EXPORT CATransform3D CATransform3DTranslate(CATransform3D t, CGFloat tx, CGFloat ty, CGFloat tz);
-CA_EXPORT CATransform3D CATransform3DInvert(CATransform3D t);
-CA_EXPORT CATransform3D CATransform3DMakeRotation(CGFloat angle, CGFloat x, CGFloat y, CGFloat z);
-CA_EXPORT CATransform3D CATransform3DMakeOrtho(CGFloat left, CGFloat right, CGFloat bottom, CGFloat top, CGFloat near, CGFloat far);
-CA_EXPORT CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b);
 CA_EXPORT bool CATransform3DIsIdentity(CATransform3D t);
+CA_EXPORT bool CATransform3DEqualToTransform(CATransform3D a, CATransform3D b) STUB_METHOD;
 CA_EXPORT CATransform3D CATransform3DMakeTranslation(CGFloat tx, CGFloat ty, CGFloat tz);
-CA_EXPORT bool CATransform3DIsAffine(CATransform3D t);
-CA_EXPORT CGAffineTransform CATransform3DGetAffineTransform(CATransform3D t);
-CA_EXPORT CATransform3D CATransform3DMakeAffineTransform(CGAffineTransform m);
+CA_EXPORT CATransform3D CATransform3DMakeScale(CGFloat sx, CGFloat sy, CGFloat sz);
+CA_EXPORT CATransform3D CATransform3DMakeRotation(CGFloat angle, CGFloat x, CGFloat y, CGFloat z);
+CA_EXPORT CATransform3D CATransform3DTranslate(CATransform3D t, CGFloat tx, CGFloat ty, CGFloat tz);
+CA_EXPORT CATransform3D CATransform3DScale(CATransform3D t, CGFloat sx, CGFloat sy, CGFloat sz);
+CA_EXPORT CATransform3D CATransform3DRotate(CATransform3D t, CGFloat angle, CGFloat x, CGFloat y, CGFloat z);
+CA_EXPORT CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b);
+CA_EXPORT CATransform3D CATransform3DInvert(CATransform3D t) STUB_METHOD;
+CA_EXPORT CATransform3D CATransform3DMakeAffineTransform(CGAffineTransform m) STUB_METHOD;
+CA_EXPORT bool CATransform3DIsAffine(CATransform3D t) STUB_METHOD;
+CA_EXPORT CGAffineTransform CATransform3DGetAffineTransform(CATransform3D t) STUB_METHOD;
+
+// Added by MS
+CA_EXPORT const CATransform3D CATransform3DIdentity;
+CA_EXPORT CATransform3D CATransform3DMakeOrtho(CGFloat left, CGFloat right, CGFloat bottom, CGFloat top, CGFloat near, CGFloat far);
 CA_EXPORT void CATransform3DTransformPoints(CATransform3D a, struct CAPoint3D* points, int count);
 CA_EXPORT void CATransform3DGetScale(CATransform3D a, float* scale);
 CA_EXPORT void CATransform3DGetPosition(CATransform3D a, float* position);
 
 @interface NSValue (CATransform3DAdditions)
-+ (NSValue*)valueWithCATransform3D:(CATransform3D)t;
-- (CATransform3D)CATransform3DValue;
++ (NSValue*)valueWithCATransform3D:(CATransform3D)aTransform;
+@property CATransform3D CATransform3DValue; // Remove readonly tag because it was causing errors
 @end
-
-#endif /* _CATRANSFORM3D_H_ */

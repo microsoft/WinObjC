@@ -19,7 +19,7 @@
 id _curFirstResponder;
 static int _changingResponder = 0;
 
-@implementation UIResponder : NSObject
+@implementation UIResponder
 
 /**
  @Status Interoperable

@@ -32,6 +32,7 @@ typedef uint32_t EAGLRenderingAPI;
 EAGL_EXPORT_CLASS
 @interface EAGLContext : NSObject
 @property (readonly) EAGLSharegroup *sharegroup;
+@property (getter=isMultiThreaded, nonatomic) BOOL multiThreaded;
 
 - (id)initWithAPI:(EAGLRenderingAPI)api;
 - (id)initWithAPI:(EAGLRenderingAPI)api sharegroup:(EAGLSharegroup *)sharegroup;

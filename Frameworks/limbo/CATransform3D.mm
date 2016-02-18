@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 
 #include <math.h>
@@ -332,3 +333,49 @@ void CATransform3DGetScale(CATransform3D a, float* scale) {
 void CATransform3DGetPosition(CATransform3D a, float* position) {
     (*((CATransform3D*)&a)).GetPosition(position);
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CATransform3DEqualToTransform(CATransform3D a, CATransform3D b) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CATransform3D CATransform3DInvert(CATransform3D t) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CATransform3D CATransform3DMakeAffineTransform(CGAffineTransform m) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CATransform3DIsAffine(CATransform3D t) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGAffineTransform CATransform3DGetAffineTransform(CATransform3D t) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+

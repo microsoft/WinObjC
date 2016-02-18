@@ -17,6 +17,7 @@
 #include <winsock2.h>
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableString.h"
 #include "Foundation/NSURLProtocol.h"
 #include "NSURLProtocol_http.h"
@@ -31,6 +32,7 @@
 #include "Foundation/NSHTTPURLResponse.h"
 #include "Foundation/NSDate.h"
 #include "NSRunLoopSource.h"
+#include "NSRunLoop+Internal.h"
 #include "Foundation/NSThread.h"
 #include "Foundation/NSURL.h"
 #include "Foundation/NSHTTPCookie.h"
@@ -444,7 +446,7 @@ static int socket_callback(CURL* easy, curl_socket_t s, int what, NSURLProtocolT
         if (session->_monitoringSockets->get((int)s, val)) {
             id selectInputSource = *val;
             session->_monitoringSockets->remove((int)s);
-            [runLoop removeInputSource:(id)selectInputSource forMode:@"kCFRunLoopDefaultMode"];
+            [runLoop _removeInputSource:(id)selectInputSource forMode:@"kCFRunLoopDefaultMode"];
         } else {
             assert(0);
         }
@@ -480,7 +482,7 @@ static int socket_callback(CURL* easy, curl_socket_t s, int what, NSURLProtocolT
         mask |= NSSelectExceptEvent;
         [selectInputSource setSelectEventMask:mask];
         if (isNew) {
-            [runLoop addInputSource:(id)selectInputSource forMode:@"kCFRunLoopDefaultMode"];
+            [runLoop _addInputSource:(id)selectInputSource forMode:@"kCFRunLoopDefaultMode"];
             [selectInputSource release];
         }
     }
@@ -721,7 +723,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
 
     for (id curRunLoop in _runLoops) {
         for (id curMode in _modes) {
-            [curRunLoop addInputSource:(id)_newEventSignal forMode:curMode];
+            [curRunLoop _addInputSource:(id)_newEventSignal forMode:curMode];
         }
     }
 
@@ -763,7 +765,7 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
 - (void)dealloc {
     for (id curRunLoop in _runLoops) {
         for (id curMode in _modes) {
-            [curRunLoop removeInputSource:(id)_newEventSignal forMode:curMode];
+            [curRunLoop _removeInputSource:(id)_newEventSignal forMode:curMode];
         }
     }
 
@@ -802,6 +804,55 @@ void AddEvent(NSURLProtocol_http* self, URLEventType type, id obj1, id obj2, int
 
 - (id)continueWithoutCredentialForAuthenticationChallenge:(id)challenge {
     return self;
+}
+
+- (void)selectInputSource:(NSSelectInputSource*)source selectEvent:(DWORD)event {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)_socketTimeout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)run {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)init {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)addHTTPRequest:(NSURLProtocol_http*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)cancelHTTPRequest:(NSURLProtocol_http*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

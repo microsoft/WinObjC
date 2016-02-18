@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,39 +13,35 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _CTLINE_H_
-#define _CTLINE_H_
+#pragma once
 
 #import <CoreText/CoreTextExport.h>
+
+#import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFAttributedString.h>
+#import <CoreFoundation/CFType.h>
+
 #import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGGeometry.h>
 
-ENABLE_IMPLICIT_BRIDGING
-
-typedef struct __CTLine* CTLineRef;
-
-enum {
-    kCTLineTruncationStart = 0,
-    kCTLineTruncationEnd = 1,
-    kCTLineTruncationMiddle = 2,
-};
+typedef const struct __CTLine* CTLineRef;
 typedef uint32_t CTLineTruncationType;
+enum { kCTLineTruncationStart = 0, kCTLineTruncationEnd = 1, kCTLineTruncationMiddle = 2 };
 
-CORETEXT_EXPORT CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position);
-CORETEXT_EXPORT double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
-CORETEXT_EXPORT CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset);
-CORETEXT_EXPORT CFRange CTLineGetStringRange(CTLineRef line);
-CORETEXT_EXPORT CFArrayRef CTLineGetGlyphRuns(CTLineRef line);
-CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string);
+CORETEXT_EXPORT CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef attrString);
 CORETEXT_EXPORT CTLineRef CTLineCreateTruncatedLine(CTLineRef line,
                                                     double width,
                                                     CTLineTruncationType truncationType,
                                                     CTLineRef truncationToken);
-CORETEXT_EXPORT double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth);
+CORETEXT_EXPORT CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor, double justificationWidth) STUB_METHOD;
 CORETEXT_EXPORT void CTLineDraw(CTLineRef line, CGContextRef context);
 CORETEXT_EXPORT CFIndex CTLineGetGlyphCount(CTLineRef line);
-
-DISABLE_IMPLICIT_BRIDGING
-
-#endif /* _CTLINE_H_ */
+CORETEXT_EXPORT CFArrayRef CTLineGetGlyphRuns(CTLineRef line);
+CORETEXT_EXPORT CFRange CTLineGetStringRange(CTLineRef line);
+CORETEXT_EXPORT double CTLineGetPenOffsetForFlush(CTLineRef line, CGFloat flushFactor, double flushWidth) STUB_METHOD;
+CORETEXT_EXPORT CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) STUB_METHOD;
+CORETEXT_EXPORT double CTLineGetTypographicBounds(CTLineRef line, CGFloat* ascent, CGFloat* descent, CGFloat* leading);
+CORETEXT_EXPORT double CTLineGetTrailingWhitespaceWidth(CTLineRef line) STUB_METHOD;
+CORETEXT_EXPORT CFIndex CTLineGetStringIndexForPosition(CTLineRef line, CGPoint position);
+CORETEXT_EXPORT CGFloat CTLineGetOffsetForStringIndex(CTLineRef line, CFIndex charIndex, CGFloat* secondaryOffset);
+CORETEXT_EXPORT CFTypeID CTLineGetTypeID() STUB_METHOD;

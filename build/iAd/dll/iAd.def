@@ -1,0 +1,18 @@
+LIBRARY iAd
+    EXPORTS
+        ; ADBannerView.mm
+        ADBannerContentSizeIdentifier320x50 DATA
+        ADBannerContentSizeIdentifier480x32 DATA
+        ADBannerContentSizeIdentifierPortrait DATA
+        ADBannerContentSizeIdentifierLandscape DATA
+        ADErrorDomain DATA
+        _OBJC_CLASS_ADBannerView DATA
+        __objc_class_name_ADBannerView CONSTANT
+
+        ; ADClient.mm
+        _OBJC_CLASS_ADClient DATA
+        __objc_class_name_ADClient CONSTANT
+
+        ; ADInterstitialAd.mm
+        _OBJC_CLASS_ADInterstitialAd DATA
+        __objc_class_name_ADInterstitialAd CONSTANT

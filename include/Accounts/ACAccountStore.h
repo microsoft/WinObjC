@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
 
 ACCOUNTS_EXPORT NSString* const ACFacebookAppIdKey;
 ACCOUNTS_EXPORT NSString* const ACFacebookPermissionsKey;
@@ -31,13 +32,16 @@ ACCOUNTS_EXPORT NSString* const ACAccountStoreDidChangeNotification;
 typedef NS_ENUM(NSUInteger, ACAccountCredentialRenewResult) {
     ACAccountCredentialRenewResultRenewed,
     ACAccountCredentialRenewResultRejected,
-    ACAccountDCredentialRenewResultFailed,
+    ACAccountCredentialRenewResultFailed,
 };
 
 typedef void(^ACAccountStoreSaveCompletionHandler)(BOOL success, NSError* error);
 typedef void(^ACAccountStoreRemoveCompletionHandler)(BOOL success, NSError* error);
 typedef void(^ACAccountStoreRequestAccessCompletionHandler)(BOOL granted, NSError* error);
 typedef void(^ACAccountStoreCredentialRenewalHandler)(ACAccountCredentialRenewResult renewResult, NSError* error);
+
+@class ACAccount;
+@class ACAccountType;
 
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountStore : NSObject
@@ -47,7 +51,7 @@ ACCOUNTS_EXPORT_CLASS
 - (NSArray*)accountsWithAccountType:(ACAccountType*)accountType;
 - (ACAccountType*)accountTypeWithAccountTypeIdentifier:(NSString*)typeIdentifier;
 - (void)saveAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreSaveCompletionHandler)completionHandler;
-- (void)requestAccewssToAccountsWithType:(ACAccountType*)accountType
+- (void)requestAccessToAccountsWithType:(ACAccountType*)accountType
         options:(NSDictionary*)options
         completion:(ACAccountStoreRequestAccessCompletionHandler)completion;
 - (void)renewCredentialsForAccount:(ACAccount*)account completion:(ACAccountStoreCredentialRenewalHandler)completionHandler;

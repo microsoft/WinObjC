@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "CFArrayInternal.h"
 #include "../CoreFoundation/CFDictionaryInternal.h"
 #include "NSPropertyListReader.h"
@@ -908,6 +909,156 @@ typedef NSInteger (*compFuncType)(id, id, void*);
         idx = [indexes indexGreaterThanIndex:idx];
     }
     return ret;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)addObserver:(NSObject*)anObserver
+ toObjectsAtIndexes:(NSIndexSet*)indexes
+         forKeyPath:(NSString*)keyPath
+            options:(NSKeyValueObservingOptions)options
+            context:(void*)context {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSArray*)arrayWithContentsOfURL:(NSURL*)aURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateObjectsAtIndexes:(NSIndexSet*)indexSet
+                          options:(NSEnumerationOptions)opts
+                       usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
+                                 options:(NSEnumerationOptions)opts
+                             passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)initWithContentsOfURL:(NSURL*)aURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context hint:(NSData*)hint {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
+                             options:(NSEnumerationOptions)opts
+                         passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

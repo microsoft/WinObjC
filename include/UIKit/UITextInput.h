@@ -14,7 +14,12 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <UIKit/UIKitExport.h>
 #import <UIKit/UITextInputTraits.h>
+#import <UIKit/UITextInputTokenizer.h>
+#import <UIKit/UIKeyInput.h>
 
 typedef enum {
     UITextLayoutDirectionRight = 2,
@@ -34,24 +39,9 @@ typedef enum {
     UITextWritingDirectionRightToLeft,
 } UITextWritingDirection;
 
-@protocol UIKeyInput <UITextInputTraits>
-
-/**
- @Status Interoperable
-*/
-- (void)deleteBackward;
-
-/**
- @Status Stub
-*/
-- (void)insertText:(NSString*)text;
-
-/**
- @Status Stub
-*/
-- (BOOL)hasText;
-
-@end
+UIKIT_EXPORT NSString* const UITextInputTextBackgroundColorKey;
+UIKIT_EXPORT NSString* const UITextInputTextColorKey;
+UIKIT_EXPORT NSString* const UITextInputTextFontKey;
 
 @class UITextPosition, UITextRange;
 
@@ -68,16 +58,9 @@ typedef enum {
 
 @end
 
-@interface UITextRange : NSObject
-
-@property (nonatomic, readonly, getter=isEmpty) BOOL empty;
-@property (nonatomic, readonly) UITextPosition* end;
-@property (nonatomic, readonly) UITextPosition* start;
-
-@end
-
 @protocol UITextInputDelegate <NSObject>
-@end
-
-@protocol UITextInputTokenizer <NSObject>
+- (void)textWillChange:(id<UITextInput>)textInput;
+- (void)textDidChange:(id<UITextInput>)textInput;
+- (void)selectionWillChange:(id<UITextInput>)textInput;
+- (void)selectionDidChange:(id<UITextInput>)textInput;
 @end

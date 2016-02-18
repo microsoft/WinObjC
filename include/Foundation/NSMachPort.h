@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,8 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
 
 #import <Foundation/NSPort.h>
 
-@interface NSMachPort : NSPort
+@class NSRunLoop;
+@class NSString;
+@protocol NSMachPortDelegate;
+
+enum { NSMachPortDeallocateNone = 0, NSMachPortDeallocateSendRight = (1 << 0), NSMachPortDeallocateReceiveRight = (1 << 1) };
+
+typedef NSUInteger NSMachPortOptions;
+
+FOUNDATION_EXPORT_CLASS
+@interface NSMachPort : NSPort <NSCoding, NSCopying>
++ (NSPort*)portWithMachPort:(uint32_t)machPort STUB_METHOD;
++ (NSPort*)portWithMachPort:(uint32_t)machPort options:(NSMachPortOptions)options STUB_METHOD;
+- (instancetype)initWithMachPort:(uint32_t)machPort STUB_METHOD;
+- (instancetype)initWithMachPort:(uint32_t)machPort options:(NSMachPortOptions)options STUB_METHOD;
+@property (readonly) uint32_t machPort STUB_PROPERTY;
+- (void)removeFromRunLoop:(NSRunLoop*)runLoop forMode:(NSString*)mode STUB_METHOD;
+- (void)scheduleInRunLoop:(NSRunLoop*)runLoop forMode:(NSString*)mode STUB_METHOD;
+- (id<NSMachPortDelegate>)delegate STUB_METHOD;
+- (void)setDelegate:(id<NSMachPortDelegate>)anObject STUB_METHOD;
+@end
+
+@protocol NSMachPortDelegate <NSObject>
+@optional
+- (void)handleMachMessage:(void*)machMessage;
+
 @end

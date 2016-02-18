@@ -45,11 +45,12 @@ FOUNDATION_EXPORT_CLASS
 // at compile time, so cannot account for the size in the C version's structure.
 //
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations" // We are accessing ->isa directly.
+
 // Type-erased base for holding isa and the destructor, so when destructing we don't need to know
 // the bridge derived type.
-struct CFBridgeBaseState {
-    void* isa;
-
+struct CFBridgeBaseState: protected objc_object {
     // This is a cached function that calls the destructor to the derived class.
     void (*destruct)(CFBridgeBaseState* self);
 };
@@ -76,14 +77,14 @@ struct CFBridgeBase : CFBridgeBaseState {
         // This is the real allocation for the object, being careful to allocate through the ObjC runtime,
         // making sure to keep extra bytes at the end for the bridge structure.
         id newObject = NSAllocateObject(cls, sizeof(Bridge) - nsObjectSize, nullptr);
-        auto originalIsa = reinterpret_cast<CFBridgeBase*>(newObject)->isa;
+        auto originalIsa = reinterpret_cast<Bridge*>(newObject)->isa;
 
         // Call the constructor on the C-struct that is our private state:
         auto returnValue = new (reinterpret_cast<void*>(newObject)) Bridge(std::forward<Args>(args)...);
 
         // After the placement-new, our constructor leaves the original values in an unspecified state.
-        // Re-asign the isa so we're not leaving it in an unspecified state:
-        returnValue->isa = originalIsa;
+        // Re-assign the isa so we're not leaving it in an unspecified state:
+        reinterpret_cast<Bridge*>(newObject)->isa = originalIsa;
 
         returnValue->destruct = &_doDestruct;
         return returnValue;
@@ -102,3 +103,5 @@ static inline void bridgeDealloc(Derived self) {
     auto bridgeBase = reinterpret_cast<CFBridgeBaseState*>(self);
     bridgeBase->destruct(bridgeBase);
 }
+
+#pragma clang diagnostic pop

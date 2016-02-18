@@ -1,7 +1,7 @@
 /*
 * Copyright (c) 2011, The Iconfactory. All rights reserved.
 *
-* Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+* Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are met:
@@ -29,31 +29,25 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UIVIEW_H_
-#define _UIVIEW_H_
+#pragma once
 
-#import "UIResponder.h"
-#import "UIGeometry.h"
-#import "UIAppearance.h"
-#import "NSLayoutConstraint.h"
-#import "UIAccessibility.h"
+#import <UIKit/UIResponder.h>
+#import <UIKit/UIGeometry.h>
+#import <UIKit/UIAppearance.h>
+#import <UIKit/NSLayoutConstraint.h>
+#import <UIKit/UIAccessibility.h>
+#import <UIKit/UICoordinateSpace.h>
+#import <UIKit/UIDynamicItem.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
+#import <UIKit/UIApplication.h>
 
-enum {
-    UIViewAutoresizingNone = 0,
-    UIViewAutoresizingFlexibleLeftMargin = 1 << 0,
-    UIViewAutoresizingFlexibleWidth = 1 << 1,
-    UIViewAutoresizingFlexibleRightMargin = 1 << 2,
-    UIViewAutoresizingFlexibleTopMargin = 1 << 3,
-    UIViewAutoresizingFlexibleHeight = 1 << 4,
-    UIViewAutoresizingFlexibleBottomMargin = 1 << 5
-};
-typedef NSUInteger UIViewAutoresizing;
-
-enum {
-    UILayoutConstraintAxisHorizontal = 0,
-    UILayoutConstraintAxisVertical = 1,
-};
-typedef NSInteger UILayoutConstraintAxis;
+typedef enum {
+    UIViewAnimationCurveEaseInOut,
+    UIViewAnimationCurveEaseIn,
+    UIViewAnimationCurveEaseOut,
+    UIViewAnimationCurveLinear,
+} UIViewAnimationCurve;
 
 typedef enum {
     UIViewContentModeScaleToFill,
@@ -72,11 +66,14 @@ typedef enum {
 } UIViewContentMode;
 
 typedef enum {
-    UIViewAnimationCurveEaseInOut,
-    UIViewAnimationCurveEaseIn,
-    UIViewAnimationCurveEaseOut,
-    UIViewAnimationCurveLinear
-} UIViewAnimationCurve;
+    UIViewTintAdjustmentModeAutomatic,
+    UIViewTintAdjustmentModeNormal,
+    UIViewTintAdjustmentModeDimmed,
+} UIViewTintAdjustmentMode;
+
+typedef enum {
+    UISystemAnimationDelete,
+} UISystemAnimation;
 
 typedef enum {
     UIViewAnimationTransitionNone,
@@ -86,7 +83,7 @@ typedef enum {
     UIViewAnimationTransitionCurlDown,
 } UIViewAnimationTransition;
 
-typedef NS_ENUM(NSUInteger, UIViewAnimationOptions) {
+typedef NS_OPTIONS(NSUInteger, UIViewAnimationOptions) {
     UIViewAnimationOptionLayoutSubviews = 1 << 0,
     UIViewAnimationOptionAllowUserInteraction = 1 << 1,
     UIViewAnimationOptionBeginFromCurrentState = 1 << 2,
@@ -97,12 +94,10 @@ typedef NS_ENUM(NSUInteger, UIViewAnimationOptions) {
     UIViewAnimationOptionAllowAnimatedContent = 1 << 7,
     UIViewAnimationOptionShowHideTransitionViews = 1 << 8,
     UIViewAnimationOptionOverrideInheritedOptions = 1 << 9,
-
     UIViewAnimationOptionCurveEaseInOut = 0 << 16,
     UIViewAnimationOptionCurveEaseIn = 1 << 16,
     UIViewAnimationOptionCurveEaseOut = 2 << 16,
     UIViewAnimationOptionCurveLinear = 3 << 16,
-
     UIViewAnimationOptionTransitionNone = 0 << 20,
     UIViewAnimationOptionTransitionFlipFromLeft = 1 << 20,
     UIViewAnimationOptionTransitionFlipFromRight = 2 << 20,
@@ -113,7 +108,7 @@ typedef NS_ENUM(NSUInteger, UIViewAnimationOptions) {
     UIViewAnimationOptionTransitionFlipFromBottom = 7 << 20,
 };
 
-typedef NS_ENUM(int, UIViewKeyframeAnimationOptions) {
+typedef enum {
     UIViewKeyframeAnimationOptionLayoutSubviews = UIViewAnimationOptionLayoutSubviews,
     UIViewKeyframeAnimationOptionAllowUserInteraction = UIViewAnimationOptionAllowUserInteraction,
     UIViewKeyframeAnimationOptionBeginFromCurrentState = UIViewAnimationOptionBeginFromCurrentState,
@@ -121,20 +116,56 @@ typedef NS_ENUM(int, UIViewKeyframeAnimationOptions) {
     UIViewKeyframeAnimationOptionAutoreverse = UIViewAnimationOptionAutoreverse,
     UIViewKeyframeAnimationOptionOverrideInheritedDuration = UIViewAnimationOptionOverrideInheritedDuration,
     UIViewKeyframeAnimationOptionOverrideInheritedOptions = UIViewAnimationOptionOverrideInheritedOptions,
-
     UIViewKeyframeAnimationOptionCalculationModeLinear = 0 << 9,
     UIViewKeyframeAnimationOptionCalculationModeDiscrete = 1 << 9,
     UIViewKeyframeAnimationOptionCalculationModePaced = 2 << 9,
     UIViewKeyframeAnimationOptionCalculationModeCubic = 3 << 9,
-    UIViewKeyframeAnimationOptionCalculationModeCubicPaced = 4 << 9
+    UIViewKeyframeAnimationOptionCalculationModeCubicPaced = 4 << 9,
+} UIViewKeyframeAnimationOptions;
+
+typedef enum : NSInteger {
+    UISemanticContentAttributeUnspecified = 0,
+    UISemanticContentAttributePlayback,
+    UISemanticContentAttributeSpatial,
+    UISemanticContentAttributeForceLeftToRight,
+    UISemanticContentAttributeForceRightToLeft,
+} UISemanticContentAttribute;
+
+typedef NSUInteger UIViewAutoresizing;
+enum {
+    UIViewAutoresizingNone = 0,
+    UIViewAutoresizingFlexibleLeftMargin = 1 << 0,
+    UIViewAutoresizingFlexibleWidth = 1 << 1,
+    UIViewAutoresizingFlexibleRightMargin = 1 << 2,
+    UIViewAutoresizingFlexibleTopMargin = 1 << 3,
+    UIViewAutoresizingFlexibleHeight = 1 << 4,
+    UIViewAutoresizingFlexibleBottomMargin = 1 << 5,
 };
 
+typedef NSInteger UILayoutConstraintAxis;
+enum {
+    UILayoutConstraintAxisHorizontal = 0,
+    UILayoutConstraintAxisVertical = 1,
+};
+
+UIKIT_EXPORT const CGSize UILayoutFittingCompressedSize;
+UIKIT_EXPORT const CGSize UILayoutFittingExpandedSize;
 UIKIT_EXPORT const CGFloat UIViewNoIntrinsicMetric;
 
-@class UIColor, CALayer, UIViewController, UIGestureRecognizer, NSLayoutConstraint, UIMotionEffect, WXFrameworkElement;
+@class UIColor, CALayer, NSArray, UIWindow, NSLayoutYAxisAnchor, NSLayoutXAxisAnchor, NSLayoutDimension, UILayoutGuide,
+    UIViewPrintFormatter, UIGestureRecognizer, NSString, NSDate, UIMotionEffect, NSCoder, UIEvent;
+@class WXFrameworkElement;
 
 UIKIT_EXPORT_CLASS
-@interface UIView : UIResponder <NSCoding, UIAppearance, UIAppearanceContainer, UIAccessibility, UIAccessibilityIdentification> {
+@interface UIView : UIResponder <UIAccessibility,
+                                 NSCoding,
+                                 NSObject,
+                                 UIAppearance,
+                                 UIAppearanceContainer,
+                                 UICoordinateSpace,
+                                 UIDynamicItem,
+                                 UIFocusEnvironment,
+                                 UITraitEnvironment> {
 @public
     id _backButtonDelegate;
     SEL _backButtonSelector;
@@ -143,70 +174,27 @@ UIKIT_EXPORT_CLASS
     int _backButtonPriority;
 }
 
++ (BOOL)areAnimationsEnabled;
++ (BOOL)requiresConstraintBasedLayout STUB_METHOD;
 + (Class)layerClass;
 
-- (id)initWithFrame:(CGRect)frame;
-- (void)addSubview:(UIView*)subview;
-- (void)insertSubview:(UIView*)subview atIndex:(NSInteger)index;
-- (void)insertSubview:(UIView*)subview belowSubview:(UIView*)below;
-- (void)insertSubview:(UIView*)subview aboveSubview:(UIView*)above;
-- (void)removeFromSuperview;
-- (void)bringSubviewToFront:(UIView*)subview;
-- (void)sendSubviewToBack:(UIView*)subview;
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView;
-- (CGRect)convertRect:(CGRect)toConvert toView:(UIView*)toView;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView;
-- (CGPoint)convertPoint:(CGPoint)toConvert toView:(UIView*)toView;
-- (void)setNeedsDisplay;
-- (void)setNeedsDisplayInRect:(CGRect)invalidRect;
-- (void)drawRect:(CGRect)rect;
-- (void)sizeToFit;
-- (CGSize)sizeThatFits:(CGSize)size;
-- (void)setNeedsLayout;
-- (void)layoutIfNeeded;
-- (void)layoutSubviews;
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event;
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event;
-- (UIView*)viewWithTag:(NSInteger)tag;
-- (BOOL)isDescendantOfView:(UIView*)view;
-
-- (void)addGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer; // not implemented
-- (void)removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer; // not implemented
-
-- (void)didAddSubview:(UIView*)subview;
-- (void)didMoveToSuperview;
-- (void)didMoveToWindow;
-- (void)willMoveToSuperview:(UIView*)newSuperview;
-- (void)willMoveToWindow:(UIWindow*)newWindow;
-- (void)willRemoveSubview:(UIView*)subview;
-- (void)exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2;
-
-- (BOOL)endEditing:(BOOL)force;
-
-- (BOOL)translatesAutoresizingMaskIntoConstraints;
-- (void)setTranslatesAutoresizingMaskIntoConstraints:(BOOL)flag;
-- (UIView*)viewForBaselineLayout;
-
-- (NSArray*)constraints;
-- (void)updateConstraints;
-- (void)updateConstraintsIfNeeded;
-- (void)addConstraint:(NSLayoutConstraint*)constraint;
-- (void)addConstraints:(NSArray*)constraints;
-- (void)removeConstraint:(NSLayoutConstraint*)constraint;
-- (void)removeConstraints:(NSArray*)constraints;
-- (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis;
-- (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
-- (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
-- (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
-- (BOOL)needsUpdateConstraints;
-- (void)setNeedsUpdateConstraints;
-
-- (void)removeMotionEffect:(UIMotionEffect*)effect;
-- (void)addMotionEffect:(UIMotionEffect*)effect;
-
-- (CGSize)intrinsicContentSize;
-- (void)invalidateIntrinsicContentSize;
-
++ (NSTimeInterval)inheritedAnimationDuration STUB_METHOD;
++ (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirectionForSemanticContentAttribute:(UISemanticContentAttribute)attribute STUB_METHOD;
++ (void)addKeyframeWithRelativeStartTime:(double)frameStartTime
+                        relativeDuration:(double)frameDuration
+                              animations:(void (^)(void))animations STUB_METHOD;
++ (void)animateKeyframesWithDuration:(NSTimeInterval)duration
+                               delay:(NSTimeInterval)delay
+                             options:(UIViewKeyframeAnimationOptions)options
+                          animations:(void (^)(void))animations
+                          completion:(void (^)(BOOL))completion STUB_METHOD;
++ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
++ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
++ (void)animateWithDuration:(NSTimeInterval)duration
+                      delay:(NSTimeInterval)delay
+                    options:(UIViewAnimationOptions)options
+                 animations:(void (^)(void))animations
+                 completion:(void (^)(BOOL finished))completion;
 + (void)animateWithDuration:(NSTimeInterval)duration
                       delay:(NSTimeInterval)delay
      usingSpringWithDamping:(CGFloat)dampingRatio
@@ -214,28 +202,14 @@ UIKIT_EXPORT_CLASS
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
                  completion:(void (^)(BOOL finished))completion;
-+ (void)animateWithDuration:(NSTimeInterval)duration
-                      delay:(NSTimeInterval)delay
-                    options:(UIViewAnimationOptions)options
-                 animations:(void (^)(void))animations
-                 completion:(void (^)(BOOL finished))completion;
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
-+ (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
-
-// the block-based transition methods are not currently implemented
-+ (void)transitionWithView:(UIView*)view
-                  duration:(NSTimeInterval)duration
-                   options:(UIViewAnimationOptions)options
-                animations:(void (^)(void))animations
-                completion:(void (^)(BOOL finished))completion;
-+ (void)transitionFromView:(UIView*)fromView
-                    toView:(UIView*)toView
-                  duration:(NSTimeInterval)duration
-                   options:(UIViewAnimationOptions)options
-                completion:(void (^)(BOOL finished))completion;
-
 + (void)beginAnimations:(NSString*)animationID context:(void*)context;
 + (void)commitAnimations;
++ (void)performSystemAnimation:(UISystemAnimation)animation
+                       onViews:(NSArray*)views
+                       options:(UIViewAnimationOptions)options
+                    animations:(void (^)(void))parallelAnimations
+                    completion:(void (^)(BOOL))completion STUB_METHOD;
++ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation STUB_METHOD;
 + (void)setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState;
 + (void)setAnimationCurve:(UIViewAnimationCurve)curve;
 + (void)setAnimationDelay:(NSTimeInterval)delay;
@@ -244,39 +218,150 @@ UIKIT_EXPORT_CLASS
 + (void)setAnimationDuration:(NSTimeInterval)duration;
 + (void)setAnimationRepeatAutoreverses:(BOOL)repeatAutoreverses;
 + (void)setAnimationRepeatCount:(float)repeatCount;
++ (void)setAnimationStartDate:(NSDate*)startTime STUB_METHOD;
 + (void)setAnimationTransition:(UIViewAnimationTransition)transition forView:(UIView*)view cache:(BOOL)cache;
 + (void)setAnimationWillStartSelector:(SEL)selector;
-+ (BOOL)areAnimationsEnabled;
 + (void)setAnimationsEnabled:(BOOL)enabled;
++ (void)transitionFromView:(UIView*)fromView
+                    toView:(UIView*)toView
+                  duration:(NSTimeInterval)duration
+                   options:(UIViewAnimationOptions)options
+                completion:(void (^)(BOOL finished))completion;
++ (void)transitionWithView:(UIView*)view
+                  duration:(NSTimeInterval)duration
+                   options:(UIViewAnimationOptions)options
+                animations:(void (^)(void))animations
+                completion:(void (^)(BOOL finished))completion;
+- (BOOL)canBecomeFocused STUB_METHOD;
+- (BOOL)drawViewHierarchyInRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates STUB_METHOD;
+- (BOOL)endEditing:(BOOL)force;
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer;
+- (BOOL)hasAmbiguousLayout STUB_METHOD;
+- (BOOL)isDescendantOfView:(UIView*)view;
+- (BOOL)needsUpdateConstraints;
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView;
+- (CGPoint)convertPoint:(CGPoint)toConvert toView:(UIView*)toView;
+- (CGRect)alignmentRectForFrame:(CGRect)frame STUB_METHOD;
+- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView;
+- (CGRect)convertRect:(CGRect)toConvert toView:(UIView*)toView;
+- (CGRect)frameForAlignmentRect:(CGRect)alignmentRect STUB_METHOD;
+- (CGSize)intrinsicContentSize;
+- (CGSize)sizeThatFits:(CGSize)size;
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize STUB_METHOD;
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize
+        withHorizontalFittingPriority:(UILayoutPriority)horizontalFittingPriority
+              verticalFittingPriority:(UILayoutPriority)verticalFittingPriority STUB_METHOD;
+- (NSArray*)constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis STUB_METHOD;
+- (UIEdgeInsets)alignmentRectInsets STUB_METHOD;
+- (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis;
+- (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event;
+- (UIView*)resizableSnapshotViewFromRect:(CGRect)rect
+                      afterScreenUpdates:(BOOL)afterUpdates
+                           withCapInsets:(UIEdgeInsets)capInsets STUB_METHOD;
+- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates STUB_METHOD;
+- (UIView*)viewForBaselineLayout;
+- (UIView*)viewWithTag:(NSInteger)tag;
+- (UIViewPrintFormatter*)viewPrintFormatter STUB_METHOD;
+- (instancetype)initWithFrame:(CGRect)aRect;
+- (void)addConstraint:(NSLayoutConstraint*)constraint;
+- (void)addConstraints:(NSArray*)constraints;
+- (void)addGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer;
+- (void)addLayoutGuide:(UILayoutGuide*)layoutGuide STUB_METHOD;
+- (void)addMotionEffect:(UIMotionEffect*)effect;
+- (void)addSubview:(UIView*)subview;
+- (void)bringSubviewToFront:(UIView*)subview;
+- (void)decodeRestorableStateWithCoder:(NSCoder*)coder STUB_METHOD;
+- (void)didAddSubview:(UIView*)subview;
+- (void)didMoveToSuperview;
+- (void)didMoveToWindow;
+- (void)drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter STUB_METHOD;
+- (void)drawRect:(CGRect)rect;
+- (void)encodeRestorableStateWithCoder:(NSCoder*)coder STUB_METHOD;
+- (void)exchangeSubviewAtIndex:(NSInteger)index1 withSubviewAtIndex:(NSInteger)index2;
+- (void)exerciseAmbiguityInLayout STUB_METHOD;
+- (void)insertSubview:(UIView*)subview aboveSubview:(UIView*)above;
+- (void)insertSubview:(UIView*)subview atIndex:(NSInteger)index;
+- (void)insertSubview:(UIView*)subview belowSubview:(UIView*)below;
+- (void)invalidateIntrinsicContentSize;
+- (void)layoutIfNeeded;
+- (void)layoutMarginsDidChange STUB_METHOD;
+- (void)layoutSubviews;
+- (void)removeConstraint:(NSLayoutConstraint*)constraint;
+- (void)removeConstraints:(NSArray*)constraints;
+- (void)removeFromSuperview;
+- (void)removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer STUB_METHOD;
+- (void)removeLayoutGuide:(UILayoutGuide*)layoutGuide STUB_METHOD;
+- (void)removeMotionEffect:(UIMotionEffect*)effect;
+- (void)sendSubviewToBack:(UIView*)subview;
+- (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
+- (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
+- (void)setNeedsDisplay;
+- (void)setNeedsDisplayInRect:(CGRect)invalidRect;
+- (void)setNeedsLayout;
+- (void)setNeedsUpdateConstraints;
+- (void)sizeToFit;
+- (void)tintColorDidChange STUB_METHOD;
+- (void)updateConstraints;
+- (void)updateConstraintsIfNeeded;
+- (void)willMoveToSuperview:(UIView*)newSuperview;
+- (void)willMoveToWindow:(UIWindow*)newWindow;
+- (void)willRemoveSubview:(UIView*)subview;
 
-@property (nonatomic) CGRect frame;
-@property (nonatomic) CGRect bounds;
-@property (nonatomic) CGPoint center;
+// the block-based transition methods are not currently implemented
+@property (copy, nonatomic) NSArray* motionEffects;
+@property (copy, nonatomic) NSString* restorationIdentifier STUB_PROPERTY;
+@property (nonatomic) BOOL autoresizesSubviews;
+@property (nonatomic) BOOL clearsContextBeforeDrawing;
+@property (nonatomic) BOOL clipsToBounds;
+@property (nonatomic) BOOL preservesSuperviewLayoutMargins STUB_PROPERTY;
+@property (nonatomic) BOOL translatesAutoresizingMaskIntoConstraints;
 @property (nonatomic) CGAffineTransform transform;
+@property (nonatomic) CGFloat alpha;
+@property (nonatomic) CGFloat contentScaleFactor;
+@property (nonatomic) CGPoint center;
+@property (nonatomic) CGRect bounds;
+@property (nonatomic) CGRect contentStretch;
+@property (nonatomic) CGRect frame;
+@property (nonatomic) NSInteger tag;
+@property (nonatomic) UIEdgeInsets layoutMargins STUB_PROPERTY;
+@property (nonatomic) UISemanticContentAttribute semanticContentAttribute STUB_PROPERTY;
+@property (nonatomic) UIViewAutoresizing autoresizingMask;
+@property (nonatomic) UIViewContentMode contentMode;
+@property (nonatomic) UIViewTintAdjustmentMode tintAdjustmentMode STUB_PROPERTY;
+@property (nonatomic, copy) NSArray* gestureRecognizers;
+@property (nonatomic, copy) UIColor* backgroundColor;
+@property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch; // state is maintained, but it has no effect
+@property (nonatomic, getter=isHidden) BOOL hidden;
+@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled; // state is maintained, but it has no effect
+@property (nonatomic, getter=isOpaque) BOOL opaque;
+@property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (nonatomic, readonly) CALayer* layer;
+@property (nonatomic, readonly) NSArray* subviews;
 @property (nonatomic, readonly) UIView* superview;
 @property (nonatomic, readonly) UIWindow* window;
-@property (nonatomic, readonly) NSArray* subviews;
-@property (nonatomic) CGFloat alpha;
-@property (nonatomic, getter=isOpaque) BOOL opaque;
-@property (nonatomic) BOOL clearsContextBeforeDrawing;
-@property (nonatomic, copy) UIColor* backgroundColor;
-@property (nonatomic, readonly) CALayer* layer;
-@property (nonatomic) BOOL clipsToBounds;
-@property (nonatomic) BOOL autoresizesSubviews;
-@property (nonatomic) UIViewAutoresizing autoresizingMask;
-@property (nonatomic) CGRect contentStretch;
-@property (nonatomic) NSInteger tag;
-@property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
-@property (nonatomic) UIViewContentMode contentMode;
-@property (nonatomic) CGFloat contentScaleFactor;
-@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled; // state is maintained, but it has no effect
-@property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch; // state is maintained, but it has no effect
-@property (nonatomic, copy) NSArray* gestureRecognizers;
 @property (nonatomic, retain) UIColor* tintColor;
-@property (copy, nonatomic) NSArray* motionEffects;
-
-- (void)setNativeElement:(WXFrameworkElement*)nativeElement;
+@property (nonatomic, strong) UIView* maskView STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSArray* layoutGuides STUB_PROPERTY;
+@property (readonly, getter=isFocused, nonatomic) BOOL focused STUB_PROPERTY;
+@property (readonly, nonatomic) NSArray* constraints;
+@property (readonly, nonatomic, strong) UILayoutGuide* readableContentGuide STUB_PROPERTY;
+@property (readonly, strong) NSLayoutDimension* heightAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutDimension* widthAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutXAxisAnchor* centerXAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutXAxisAnchor* leadingAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutXAxisAnchor* leftAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutXAxisAnchor* rightAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutXAxisAnchor* trailingAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutYAxisAnchor* bottomAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutYAxisAnchor* centerYAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutYAxisAnchor* firstBaselineAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutYAxisAnchor* lastBaselineAnchor STUB_PROPERTY;
+@property (readonly, strong) NSLayoutYAxisAnchor* topAnchor STUB_PROPERTY;
+@property (readonly, strong) UILayoutGuide* layoutMarginsGuide STUB_PROPERTY;
+@property (readonly, strong) UIView* viewForFirstBaselineLayout STUB_PROPERTY;
+@property (readonly, strong) UIView* viewForLastBaselineLayout STUB_PROPERTY;
 
 // UIAccessibility properties.
 @property BOOL isAccessibilityElement;
@@ -294,6 +379,7 @@ UIKIT_EXPORT_CLASS
 @property BOOL accessibilityViewIsModal;
 @property (copy) NSString* accessibilityIdentifier;
 
+- (void)setNativeElement:(WXFrameworkElement*)nativeElement;
 @end
 
 @interface UIView (StarboardActions)
@@ -301,5 +387,3 @@ UIKIT_EXPORT_CLASS
 - (void)setBackButtonReturnsSuccess:(BOOL)returnsSuccess;
 - (void)setBackButtonPriority:(int)priority;
 @end
-
-#endif /* _UIVIEW_H_ */

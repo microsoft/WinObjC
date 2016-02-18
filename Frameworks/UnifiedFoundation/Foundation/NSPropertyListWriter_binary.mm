@@ -34,54 +34,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #define AUTORELEASE(object) [object autorelease]
 #define ASSIGN(a, b) (a) = RETAIN(b)
 
-/**
- @Status Interoperable
-*/
-WORD NSSwapHostShortToBig(WORD val) {
-    return ((val & 0xFF) << 8) | (val >> 8);
-}
-
-/**
- @Status Interoperable
-*/
-unsigned __int64 NSSwapHostLongLongToBig(unsigned __int64 val) {
-    union {
-        unsigned long long word;
-        uint8_t bytes[8];
-    } value, result;
-
-    value.word = val;
-
-    result.bytes[0] = value.bytes[7];
-    result.bytes[1] = value.bytes[6];
-    result.bytes[2] = value.bytes[5];
-    result.bytes[3] = value.bytes[4];
-    result.bytes[4] = value.bytes[3];
-    result.bytes[5] = value.bytes[2];
-    result.bytes[6] = value.bytes[1];
-    result.bytes[7] = value.bytes[0];
-
-    return result.word;
-}
-
-/**
- @Status Interoperable
-*/
-NSSwappedFloat NSSwapHostFloatToBig(float val) {
-    DWORD ret = NSSwapHostIntToBig(*((DWORD*)&val));
-
-    return *((NSSwappedFloat*)&ret);
-}
-
-/**
- @Status Interoperable
-*/
-NSSwappedDouble NSSwapHostDoubleToBig(double val) {
-    unsigned __int64 ret = NSSwapHostLongLongToBig(*((unsigned __int64*)&val));
-
-    return *((NSSwappedDouble*)&ret);
-}
-
 void storeReversed(void* pos, unsigned value, unsigned width) {
     for (unsigned i = 0; i < width; ++i) {
         char* curr = ((char*)pos) + i;

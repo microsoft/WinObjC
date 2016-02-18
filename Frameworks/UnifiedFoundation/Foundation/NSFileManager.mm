@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSFileManager.h"
 #include "Foundation/NSError.h"
 #include "Foundation/NSString.h"
@@ -1289,3 +1290,21 @@ static NSDictionary* fileAttributesForFilePath(const char* path) {
 }
 
 @end
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSHomeDirectoryForUser(NSString* userName) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSString* NSOpenStepRootDirectory() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}

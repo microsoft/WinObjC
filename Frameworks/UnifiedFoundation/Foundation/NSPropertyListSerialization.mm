@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -16,6 +17,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // Original - Christopher Lloyd <cjwl@objc.net>
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableData.h"
@@ -24,7 +26,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSDate.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSNull.h"
-#include "Foundation/NSPropertyList.h"
+#include "Foundation/NSPropertyListSerialization.h"
 #include "Foundation/NSKeyedArchiver.h"
 #include "NSPropertyListReader.h"
 #include "NSPropertyListWriter_binary.h"
@@ -149,6 +151,52 @@ return [NSPropertyListWriter_xml dataWithPropertyList:plist];
     }
 
     return nil;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSData*)dataWithPropertyList:(id)plist
+                         format:(NSPropertyListFormat)format
+                        options:(NSPropertyListWriteOptions)opt
+                          error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSInteger)writePropertyList:(id)plist
+                      toStream:(NSOutputStream*)stream
+                        format:(NSPropertyListFormat)format
+                       options:(NSPropertyListWriteOptions)opt
+                         error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)propertyListWithStream:(NSInputStream*)stream
+                     options:(NSPropertyListReadOptions)opt
+                      format:(NSPropertyListFormat*)format
+                       error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)propertyList:(id)plist isValidForFormat:(NSPropertyListFormat)format {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

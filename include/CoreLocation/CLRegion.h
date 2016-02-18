@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,29 +16,21 @@
 
 #pragma once
 
-#import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocationExport.h>
-#import <CoreLocation/CLLocation.h>
+#import <Foundation/NSObject.h>
+#import <CoreLocation/CoreLocationDataTypes.h>
 
-enum _CLRegionState {
-    kCLRegionStateUnknown = 0,
-    kCLRegionStateInside = 1,
-    kCLRegionStateOutside = 2,
-};
-typedef uint32_t CLRegionState;
+typedef NS_ENUM(NSUInteger, CLRegionState) { CLRegionStateUnknown, CLRegionStateInside, CLRegionStateOutside };
 
 CORELOCATION_EXPORT_CLASS
-@interface CLRegion : NSObject <NSCopying, NSCoding>
-
-// TODO::
-// todo-nithishm-11022015 - Incomplete file.
-
-@property (readonly, nonatomic) NSString* identifier;
-@property (readonly, nonatomic) CLLocationCoordinate2D center;
-@property (readonly, nonatomic) CLLocationDistance radius;
-@property (nonatomic, assign) BOOL notifyOnEntry;
-@property (nonatomic, assign) BOOL notifyOnExit;
-
-- (id)initCircularRegionWithCenter:(CLLocationCoordinate2D)center radius:(CLLocationDistance)radius identifier:(NSString*)identifier;
-
+@interface CLRegion : NSObject <NSCopying, NSSecureCoding>
+- (instancetype)initCircularRegionWithCenter:(CLLocationCoordinate2D)center
+                                      radius:(CLLocationDistance)radius
+                                  identifier:(NSString*)identifier STUB_METHOD;
+@property (readonly, copy, nonatomic) NSString* identifier STUB_PROPERTY;
+@property (readonly, nonatomic) CLLocationCoordinate2D center STUB_PROPERTY;
+@property (readonly, nonatomic) CLLocationDistance radius STUB_PROPERTY;
+@property (assign, nonatomic) BOOL notifyOnEntry STUB_PROPERTY;
+@property (assign, nonatomic) BOOL notifyOnExit STUB_PROPERTY;
+- (BOOL)containsCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
 @end

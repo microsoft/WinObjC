@@ -13,7 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <StubIncludes.h>
+#import <CoreVideo/CoreVideoConstants.h>
+#import <CoreVideo/CoreVideoExport.h>
 #import <CoreVideo/CVBuffer.h>
 #import <CoreVideo/CVImageBuffer.h>
+#import <CoreVideo/CVMetalTexture.h>
+#import <CoreVideo/CVMetalTextureCache.h>
+#import <CoreVideo/CVOpenGLESTexture.h>
+#import <CoreVideo/CVOpenGLESTextureCache.h>
 #import <CoreVideo/CVPixelBuffer.h>
+#import <CoreVideo/CVPixelBufferPool.h>
+#import <CoreVideo/CVPixelFormatDescription.h>
+#import <CoreVideo/CVTime.h>

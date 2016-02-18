@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,44 +14,40 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSObject.h>
 #import <CoreData/NSPersistentStore.h>
 
-@class NSMutableSet, NSSet, NSAtomicStoreCacheNode, NSManagedObjectID, NSManagedObject, NSEntityDescription, NSMutableDictionary,
-    NSDictionary;
+@class NSPersistentStoreCoordinator;
+@class NSString;
+@class NSURL;
+@class NSDictionary;
+@class NSError;
+@class NSManagedObjectID;
+@class NSEntityDescription;
+@class NSSet;
+@class NSAtomicStoreCacheNode;
+@class NSManagedObject;
 
-@interface NSAtomicStore : NSPersistentStore {
-    NSDictionary* _metadata;
-    NSMutableSet* _cacheNodes;
-    NSMutableDictionary* _objectIDToCacheNode;
-    NSMutableDictionary* _objectIDTable;
-}
-
-- initWithPersistentStoreCoordinator:(NSPersistentStoreCoordinator*)coordinator
-                   configurationName:(NSString*)configurationName
-                                 URL:(NSURL*)url
-                             options:(NSDictionary*)options;
-
-- (NSSet*)cacheNodes;
-
-- (NSDictionary*)metadata;
-- (void)setMetadata:(NSDictionary*)value;
-
-- (void)addCacheNodes:(NSSet*)value;
-
-- (NSAtomicStoreCacheNode*)cacheNodeForObjectID:(NSManagedObjectID*)objectID;
-- (NSAtomicStoreCacheNode*)newCacheNodeForManagedObject:(NSManagedObject*)managedObject;
-
-- newReferenceObjectForManagedObject:(NSManagedObject*)managedObject;
-
-- (NSManagedObjectID*)objectIDForEntity:(NSEntityDescription*)entity referenceObject:data;
-
-- referenceObjectForObjectID:(NSManagedObjectID*)objectID;
-
-- (void)updateCacheNode:(NSAtomicStoreCacheNode*)node fromManagedObject:(NSManagedObject*)managedObject;
-
-- (void)willRemoveCacheNodes:(NSSet*)cacheNodes;
-
-- (BOOL)load:(NSError**)error;
-- (BOOL)save:(NSError**)error;
-
+COREDATA_EXPORT_CLASS
+@interface NSAtomicStore : NSPersistentStore
+- (instancetype)initWithPersistentStoreCoordinator:(NSPersistentStoreCoordinator*)coordinator
+                                 configurationName:(NSString*)configurationName
+                                               URL:(NSURL*)url
+                                           options:(NSDictionary*)options STUB_METHOD;
+- (BOOL)load:(NSError* _Nullable*)error STUB_METHOD;
+- (NSManagedObjectID*)objectIDForEntity:(NSEntityDescription*)entity referenceObject:(id)data STUB_METHOD;
+- (void)addCacheNodes:(NSSet*)cacheNodes STUB_METHOD;
+- (NSAtomicStoreCacheNode*)newCacheNodeForManagedObject:(NSManagedObject*)managedObject STUB_METHOD;
+- (id)newReferenceObjectForManagedObject:(NSManagedObject*)managedObject STUB_METHOD;
+- (void)updateCacheNode:(NSAtomicStoreCacheNode*)node fromManagedObject:(NSManagedObject*)managedObject STUB_METHOD;
+- (void)willRemoveCacheNodes:(NSSet*)cacheNodes STUB_METHOD;
+- (BOOL)save:(NSError* _Nullable*)error STUB_METHOD;
+- (NSSet*)cacheNodes STUB_METHOD;
+- (NSAtomicStoreCacheNode*)cacheNodeForObjectID:(NSManagedObjectID*)objectID STUB_METHOD;
+- (id)referenceObjectForObjectID:(NSManagedObjectID*)objectID STUB_METHOD;
+- (NSDictionary*)metadata STUB_METHOD;
+- (void)setMetadata:(NSDictionary*)storeMetadata STUB_METHOD;
 @end

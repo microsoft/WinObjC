@@ -32,7 +32,7 @@ public:
     BOOL _isAnimating, _isHighlighted;
 };
 
-@implementation UIImageView : UIView {
+@implementation UIImageView {
     UIImageViewPrivData* imgPriv;
 }
 + (instancetype)allocWithZone:(NSZone*)zone {
@@ -240,14 +240,14 @@ static void updateContents(UIImageView* self) {
 /**
  @Status Interoperable
 */
-- (void)setAnimationRepeatCount:(unsigned)count {
+- (void)setAnimationRepeatCount:(NSInteger)count {
     imgPriv->_repeatCount = count;
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)animationRepeatCount {
+- (NSInteger)animationRepeatCount {
     return imgPriv->_repeatCount;
 }
 
@@ -343,17 +343,14 @@ static void updateContents(UIImageView* self) {
     }
 }
 
-- (void)sizeToFit {
-    CGRect curBounds;
+- (CGSize)sizeThatFits:(CGSize)curSize {
+    if (imgPriv->_image != nil) {
+        curSize = [imgPriv->_image size];
+    } else {
+        curSize = CGSizeMake(0, 0);
+    }
 
-    curBounds = [self frame];
-
-    CGSize imgSize = { 0, 0 };
-    imgSize = [imgPriv->_image size];
-
-    curBounds.size = imgSize;
-
-    [self setFrame:curBounds];
+    return curSize;
 }
 
 - (void)willMoveToWindow:(UIWindow*)newWindow {

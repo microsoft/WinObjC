@@ -21,6 +21,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSSelectInputSource.h"
 #include "NSSelectSet.h"
 #include "NSStreamInternal.h"
+#include "NSRunLoop+Internal.h"
 
 static BOOL socketHasSpaceAvailable(id socket) {
     NSSelectSet* selectSet = [[[NSSelectSet alloc] init] autorelease];
@@ -60,7 +61,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
         [_inputSource setSelectEventMask:NSSelectWriteEvent];
     }
 
-    [runLoop addInputSource:_inputSource forMode:mode];
+    [runLoop _addInputSource:_inputSource forMode:mode];
 
     return self;
 }
@@ -130,7 +131,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
 
 - (id)removeFromRunLoop:(id)runLoop forMode:(id)mode {
     if (_inputSource != nil) {
-        [runLoop removeInputSource:_inputSource forMode:mode];
+        [runLoop _removeInputSource:_inputSource forMode:mode];
     }
 
     return self;

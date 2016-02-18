@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,26 +13,27 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CTFRAMESETTER_H_
-#define _CTFRAMESETTER_H_
-
-#import <CoreText/CTFrame.h>
 #import <CoreText/CoreTextExport.h>
-#import <CoreFoundation/CFAttributedString.h>
+#import <CoreText/CTFrame.h>
+#import <CoreText/CTTypesetter.h>
 
-ENABLE_IMPLICIT_BRIDGING
+#import <CoreFoundation/CFAttributedString.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <CoreFoundation/CFType.h>
+
+#import <CoreGraphics/CGGeometry.h>
+#import <CoreGraphics/CGPath.h>
 
 typedef const struct __CTFramesetter* CTFramesetterRef;
 
+CORETEXT_EXPORT CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string);
 CORETEXT_EXPORT CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter,
                                                     CFRange stringRange,
                                                     CGPathRef path,
                                                     CFDictionaryRef frameAttributes);
-CORETEXT_EXPORT CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef string);
+CORETEXT_EXPORT CTTypesetterRef CTFramesetterGetTypesetter(CTFramesetterRef framesetter) STUB_METHOD;
 CORETEXT_EXPORT CGSize CTFramesetterSuggestFrameSizeWithConstraints(
     CTFramesetterRef framesetter, CFRange stringRange, CFDictionaryRef frameAttributes, CGSize constraints, CFRange* fitRange);
-
-DISABLE_IMPLICIT_BRIDGING
-
-#endif // _CTFRAMESETTER_H_
+CORETEXT_EXPORT CFTypeID CTFramesetterGetTypeID() STUB_METHOD;

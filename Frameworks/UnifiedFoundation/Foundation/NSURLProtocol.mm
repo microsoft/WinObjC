@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -14,6 +15,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSURLProtocol.h"
 #include "NSURLProtocol_file.h"
@@ -118,6 +120,82 @@ static id _registeredClasses = nil;
     _request = nil;
     [_cachedResponse release];
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)startLoading {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)stopLoading {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)unregisterClass:(Class)protocolClass {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)canInitWithRequest:(NSURLRequest*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)propertyForKey:(NSString*)key inRequest:(NSURLRequest*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)setProperty:(id)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)removePropertyForKey:(NSString*)key inRequest:(NSMutableURLRequest*)request {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)requestIsCacheEquivalent:(NSURLRequest*)aRequest toRequest:(NSURLRequest*)bRequest {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

@@ -19,7 +19,7 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
-#import <GLKit/GLKitExport.h>
+#import <StubIncludes.h>
 
 #import <GLKit/GLKView.h>
 #import <GLKit/GLKViewController.h>
@@ -29,3 +29,4 @@
 #import <GLKit/GLKTexture.h>
 
 #import <GLKit/GLKMath.h>
+#import <GLKit/GLKMatrixStack.h>

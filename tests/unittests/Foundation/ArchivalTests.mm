@@ -271,3 +271,109 @@ TEST(Foundation, NSKeyedUnarchiver_Secure) {
         [secureUnarchiver release];
     }
 }
+
+@interface NSKAInstanceOriginalClass: NSObject <NSCoding>
+@end
+@implementation NSKAInstanceOriginalClass
+- (id)initWithCoder:(NSCoder*)coder {
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)coder {
+    // does nothing
+}
+@end
+
+@interface NSKADifferentClass: NSObject <NSCoding>
+@end
+@implementation NSKADifferentClass
+- (id)initWithCoder:(NSCoder*)coder {
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)coder {
+    // does nothing
+}
+@end
+
+@interface NSKAClassOriginalClass: NSObject <NSCoding>
+@end
+@implementation NSKAClassOriginalClass
+- (id)initWithCoder:(NSCoder*)coder {
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)coder {
+    // does nothing
+}
+@end
+
+TEST(Foundation, NSKeyedArchiver_Instance_ClassName) {
+    // Instance-specific classname override test.
+    // NSKAInstanceOriginalClass will become NSKADifferentClass on write.
+    NSMutableData* data = [[[NSMutableData alloc] init] autorelease];
+    NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+
+    [archiver setClassName:@"NSKADifferentClass" forClass:[NSKAInstanceOriginalClass class]];
+    EXPECT_OBJCEQ(@"NSKADifferentClass", [archiver classNameForClass:[NSKAInstanceOriginalClass class]]);
+    EXPECT_OBJCEQ(nil, [NSKeyedArchiver classNameForClass:[NSKAInstanceOriginalClass class]]);
+
+    [archiver encodeObject:[[[NSKAInstanceOriginalClass alloc] init] autorelease] forKey:@"unexpected"];
+
+    [archiver finishEncoding];
+    [archiver release];
+
+    NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    id object = [unarchiver decodeObjectForKey:@"unexpected"];
+    EXPECT_TRUE([object isKindOfClass:[NSKADifferentClass class]]);
+    [unarchiver finishDecoding];
+    [unarchiver release];
+}
+
+TEST(Foundation, NSKeyedArchiver_Static_ClassName) {
+    // Global classname override test.
+    // NSKAClassOriginalClass will become NSKADifferentClass on write.
+    [NSKeyedArchiver setClassName:@"NSKADifferentClass" forClass:[NSKAClassOriginalClass class]];
+    EXPECT_OBJCEQ(@"NSKADifferentClass", [NSKeyedArchiver classNameForClass:[NSKAClassOriginalClass class]]);
+
+    NSMutableData* data = [[[NSMutableData alloc] init] autorelease];
+    NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+
+    EXPECT_OBJCEQ_MSG(nil, [archiver classNameForClass:[NSKAClassOriginalClass class]], "NSKeyedArchiver instances should not inherit the global class list.");
+
+    [archiver encodeObject:[[[NSKAClassOriginalClass alloc] init] autorelease] forKey:@"unexpected"];
+
+    [archiver finishEncoding];
+    [archiver release];
+
+    NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    id object = [unarchiver decodeObjectForKey:@"unexpected"];
+    EXPECT_TRUE([object isKindOfClass:[NSKADifferentClass class]]);
+    [unarchiver finishDecoding];
+    [unarchiver release];
+
+    [NSKeyedArchiver setClassName:nil forClass:[NSKAClassOriginalClass class]];
+}
+
+TEST(Foundation, NSKeyedArchiver_Static_ClassName_Inheritance) {
+    // Instance specific classname override should override global one.
+    // NSKAClassOriginalClass will become NSKADifferentClass on write.
+    [NSKeyedArchiver setClassName:@"NSKADifferentClass" forClass:[NSKAClassOriginalClass class]];
+
+    NSMutableData* data = [[[NSMutableData alloc] init] autorelease];
+    NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+
+    // [OVERRIDE] NSKAClassOriginalClass will become NSKAInstanceOriginalClass on write.
+    [archiver setClassName:@"NSKAInstanceOriginalClass" forClass:[NSKAClassOriginalClass class]];
+
+    [archiver encodeObject:[[[NSKAClassOriginalClass alloc] init] autorelease] forKey:@"unexpected"];
+
+    [archiver finishEncoding];
+    [archiver release];
+
+    NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    id object = [unarchiver decodeObjectForKey:@"unexpected"];
+    EXPECT_TRUE([object isKindOfClass:[NSKAInstanceOriginalClass class]]);
+    [unarchiver finishDecoding];
+    [unarchiver release];
+}

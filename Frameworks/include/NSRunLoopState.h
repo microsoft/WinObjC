@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import "NSInputSource.h"
 
 #define MAX_WAITSIGNALS 128
 #define MAX_WAITSOCKETS 128
@@ -52,7 +55,7 @@
 - (NSDate*)limitDateForMode:(NSString*)mode;
 - (void)addInputSource:(NSInputSource*)source;
 - (void)removeInputSource:(NSInputSource*)source;
-- (void)invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayed;
+- (void)invalidateTimerWithDelayedPerform:(id)delayed;
 - (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date;
 - (NSString*)description;
 @end

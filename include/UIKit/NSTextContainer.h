@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _NSTEXTCONTAINER_H_
-#define _NSTEXTCONTAINER_H_
+#pragma once
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSRange.h>
@@ -41,5 +40,3 @@ UIKIT_EXPORT_CLASS
                          writingDirection:(NSWritingDirection)direction
                             remainingRect:(CGRect*)remainingRect;
 @end
-
-#endif /* _NSTEXTCONTAINER_H_ */

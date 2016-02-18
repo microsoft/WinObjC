@@ -1,0 +1,267 @@
+LIBRARY CoreText
+    EXPORTS
+        ; Core Text Font Manager Reference.mm
+        kCTFontManagerRegisteredFontsChangedNotification DATA
+        kCTFontManagerErrorDomain DATA
+        kCTFontManagerErrorFontURLsKey DATA
+        CTFontManagerCreateFontDescriptorsFromURL
+        CTFontManagerRegisterFontsForURL
+        CTFontManagerUnregisterFontsForURL
+        CTFontManagerRegisterFontsForURLs
+        CTFontManagerUnregisterFontsForURLs
+        CTFontManagerRegisterGraphicsFont
+        CTFontManagerUnregisterGraphicsFont
+        CTFontManagerIsSupportedFont
+
+        ; Core Text String Attributes Reference.mm
+        kCTCharacterShapeAttributeName DATA
+        kCTFontAttributeName DATA
+        kCTKernAttributeName DATA
+        kCTLigatureAttributeName DATA
+        kCTForegroundColorAttributeName DATA
+        kCTForegroundColorFromContextAttributeName DATA
+        kCTParagraphStyleAttributeName DATA
+        kCTStrokeWidthAttributeName DATA
+        kCTStrokeColorAttributeName DATA
+        kCTSuperscriptAttributeName DATA
+        kCTUnderlineColorAttributeName DATA
+        kCTUnderlineStyleAttributeName DATA
+        kCTVerticalFormsAttributeName DATA
+        kCTGlyphInfoAttributeName DATA
+        kCTRunDelegateAttributeName DATA
+
+        ; Core Text Utilities Reference.mm
+        CTGetCoreTextVersion
+
+        ; CTFont Reference.mm
+        kCTFontCopyrightNameKey DATA
+        kCTFontFamilyNameKey DATA
+        kCTFontSubFamilyNameKey DATA
+        kCTFontStyleNameKey DATA
+        kCTFontUniqueNameKey DATA
+        kCTFontFullNameKey DATA
+        kCTFontVersionNameKey DATA
+        kCTFontPostScriptNameKey DATA
+        kCTFontTrademarkNameKey DATA
+        kCTFontManufacturerNameKey DATA
+        kCTFontDesignerNameKey DATA
+        kCTFontDescriptionNameKey DATA
+        kCTFontVendorURLNameKey DATA
+        kCTFontDesignerURLNameKey DATA
+        kCTFontLicenseNameKey DATA
+        kCTFontLicenseURLNameKey DATA
+        kCTFontSampleTextNameKey DATA
+        kCTFontPostScriptCIDNameKey DATA
+        kCTFontVariationAxisIdentifierKey DATA
+        kCTFontVariationAxisMinimumValueKey DATA
+        kCTFontVariationAxisMaximumValueKey DATA
+        kCTFontVariationAxisDefaultValueKey DATA
+        kCTFontVariationAxisNameKey DATA
+        kCTFontFeatureTypeIdentifierKey DATA
+        kCTFontFeatureTypeNameKey DATA
+        kCTFontFeatureTypeExclusiveKey DATA
+        kCTFontFeatureTypeSelectorsKey DATA
+        kCTFontFeatureSelectorIdentifierKey DATA
+        kCTFontFeatureSelectorNameKey DATA
+        kCTFontFeatureSelectorDefaultKey DATA
+        kCTFontFeatureSelectorSettingKey DATA
+        CTFontCreateWithName
+        CTFontCreateWithNameAndOptions
+        CTFontCreateWithFontDescriptor
+        CTFontCreateWithFontDescriptorAndOptions
+        CTFontCreateUIFontForLanguage
+        CTFontCreateCopyWithAttributes
+        CTFontCreateCopyWithSymbolicTraits
+        CTFontCreateCopyWithFamily
+        CTFontCreateForString
+        CTFontCopyFontDescriptor
+        CTFontCopyAttribute
+        CTFontGetSize
+        CTFontGetMatrix
+        CTFontGetSymbolicTraits
+        CTFontCopyTraits
+        CTFontCopyPostScriptName
+        CTFontCopyFamilyName
+        CTFontCopyFullName
+        CTFontCopyDisplayName
+        CTFontCopyName
+        CTFontCopyLocalizedName
+        CTFontCopyCharacterSet
+        CTFontGetStringEncoding
+        CTFontCopySupportedLanguages
+        CTFontGetAscent
+        CTFontGetDescent
+        CTFontGetLeading
+        CTFontGetUnitsPerEm
+        CTFontGetGlyphCount
+        CTFontGetBoundingBox
+        CTFontGetUnderlinePosition
+        CTFontGetUnderlineThickness
+        CTFontGetSlantAngle
+        CTFontGetCapHeight
+        CTFontGetXHeight
+        CTFontCreatePathForGlyph
+        CTFontGetGlyphWithName
+        CTFontGetBoundingRectsForGlyphs
+        CTFontGetAdvancesForGlyphs
+        CTFontGetVerticalTranslationsForGlyphs
+        CTFontCopyVariationAxes
+        CTFontCopyVariation
+        CTFontCopyFeatures
+        CTFontCopyFeatureSettings
+        CTFontGetGlyphsForCharacters
+        CTFontDrawGlyphs
+        CTFontGetLigatureCaretPositions
+        CTFontCopyGraphicsFont
+        CTFontCreateWithGraphicsFont
+        CTFontCopyAvailableTables
+        CTFontCopyTable
+        CTFontGetTypeID
+
+        ; CTFontCollection Reference.mm
+        kCTFontCollectionRemoveDuplicatesOption DATA
+        CTFontCollectionCreateFromAvailableFonts
+        CTFontCollectionCreateWithFontDescriptors
+        CTFontCollectionCreateCopyWithFontDescriptors
+        CTFontCollectionCreateMatchingFontDescriptors
+        CTFontCollectionCreateMatchingFontDescriptorsSortedWithCallback
+        CTFontCollectionGetTypeID
+
+        ; CTFontDescriptor Reference.mm
+        kCTFontURLAttribute DATA
+        kCTFontNameAttribute DATA
+        kCTFontDisplayNameAttribute DATA
+        kCTFontFamilyNameAttribute DATA
+        kCTFontStyleNameAttribute DATA
+        kCTFontTraitsAttribute DATA
+        kCTFontVariationAttribute DATA
+        kCTFontSizeAttribute DATA
+        kCTFontMatrixAttribute DATA
+        kCTFontCascadeListAttribute DATA
+        kCTFontCharacterSetAttribute DATA
+        kCTFontLanguagesAttribute DATA
+        kCTFontBaselineAdjustAttribute DATA
+        kCTFontMacintoshEncodingsAttribute DATA
+        kCTFontFeaturesAttribute DATA
+        kCTFontFeatureSettingsAttribute DATA
+        kCTFontFixedAdvanceAttribute DATA
+        kCTFontOrientationAttribute DATA
+        kCTFontFormatAttribute DATA
+        kCTFontRegistrationScopeAttribute DATA
+        kCTFontPriorityAttribute DATA
+        kCTFontEnabledAttribute DATA
+        kCTFontSymbolicTrait DATA
+        kCTFontWeightTrait DATA
+        kCTFontWidthTrait DATA
+        kCTFontSlantTrait DATA
+        CTFontDescriptorCreateWithNameAndSize
+        CTFontDescriptorCreateWithAttributes
+        CTFontDescriptorCreateCopyWithAttributes
+        CTFontDescriptorCreateCopyWithVariation
+        CTFontDescriptorCreateCopyWithFeature
+        CTFontDescriptorCreateMatchingFontDescriptors
+        CTFontDescriptorCreateMatchingFontDescriptor
+        CTFontDescriptorCopyAttributes
+        CTFontDescriptorCopyAttribute
+        CTFontDescriptorCopyLocalizedAttribute
+        CTFontDescriptorGetTypeID
+
+        ; CTFrame Reference.mm
+        kCTFrameProgressionAttributeName DATA
+        kCTFramePathFillRuleAttributeName DATA
+        kCTFramePathWidthAttributeName DATA
+        kCTFrameClippingPathsAttributeName DATA
+        kCTFramePathClippingPathAttributeName DATA
+        CTFrameGetStringRange
+        CTFrameGetVisibleStringRange
+        CTFrameGetPath
+        CTFrameGetFrameAttributes
+        CTFrameGetLines
+        CTFrameGetLineOrigins
+        CTFrameDraw
+        CTFrameGetTypeID
+
+        ; CTFramesetter Reference.mm
+        CTFramesetterCreateWithAttributedString
+        CTFramesetterCreateFrame
+        CTFramesetterGetTypesetter
+        CTFramesetterSuggestFrameSizeWithConstraints
+        CTFramesetterGetTypeID
+
+        ; CTGlyphInfo Reference.mm
+        CTGlyphInfoGetTypeID
+        CTGlyphInfoCreateWithGlyphName
+        CTGlyphInfoCreateWithGlyph
+        CTGlyphInfoCreateWithCharacterIdentifier
+        CTGlyphInfoGetGlyphName
+        CTGlyphInfoGetCharacterIdentifier
+        CTGlyphInfoGetCharacterCollection
+
+        ; CTLine Reference.mm
+        CTLineCreateWithAttributedString
+        CTLineCreateTruncatedLine
+        CTLineCreateJustifiedLine
+        CTLineDraw
+        CTLineGetGlyphCount
+        CTLineGetGlyphRuns
+        CTLineGetStringRange
+        CTLineGetPenOffsetForFlush
+        CTLineGetImageBounds
+        CTLineGetTypographicBounds
+        CTLineGetTrailingWhitespaceWidth
+        CTLineGetStringIndexForPosition
+        CTLineGetOffsetForStringIndex
+        CTLineGetTypeID
+
+        ; CTParagraphStyle Reference.mm
+        CTParagraphStyleCreate
+        CTParagraphStyleCreateCopy
+        CTParagraphStyleGetValueForSpecifier
+        CTParagraphStyleGetTypeID
+
+        ; CTRun Reference.mm
+        CTRunGetGlyphCount
+        CTRunGetAttributes
+        CTRunGetStatus
+        CTRunGetGlyphsPtr
+        CTRunGetGlyphs
+        CTRunGetPositionsPtr
+        CTRunGetPositions
+        CTRunGetAdvancesPtr
+        CTRunGetAdvances
+        CTRunGetStringIndicesPtr
+        CTRunGetStringIndices
+        CTRunGetStringRange
+        CTRunGetTypographicBounds
+        CTRunGetImageBounds
+        CTRunDraw
+        CTRunGetTextMatrix
+        CTRunGetTypeID
+
+        ; CTRunDelegate Reference.mm
+        CTRunDelegateCreate
+        CTRunDelegateGetRefCon
+        CTRunDelegateGetTypeID
+
+        ; CTTextTab Reference.mm
+        kCTTabColumnTerminatorsAttributeName DATA
+        CTTextTabCreate
+        CTTextTabGetAlignment
+        CTTextTabGetLocation
+        CTTextTabGetOptions
+        CTTextTabGetTypeID
+
+        ; CTTypesetter Reference.mm
+        kCTTypesetterOptionDisableBidiProcessing DATA
+        kCTTypesetterOptionForcedEmbeddingLevel DATA
+        CTTypesetterCreateWithAttributedString
+        CTTypesetterCreateWithAttributedStringAndOptions
+        CTTypesetterCreateLine
+        CTTypesetterCreateLineWithOffset
+        CTTypesetterSuggestLineBreak
+        CTTypesetterSuggestLineBreakWithOffset
+        CTTypesetterSuggestClusterBreak
+        CTTypesetterSuggestClusterBreakWithOffset
+        CTTypesetterGetTypeID
+        _CTTypesetterSuggestLineBreakWithOffsetAndCallback
+

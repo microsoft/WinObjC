@@ -14,24 +14,26 @@
 //
 //******************************************************************************
 
-#ifndef _CIIMAGE_H_
-#define _CIIMAGE_H_
+#pragma once
 
+#import <stubincludes.h>
 #import <Foundation/NSObject.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <CoreImage/CoreImageExport.h>
 
+@class CIColor;
 @class CIFilter;
 
-@interface CIImage : NSObject {
-    CGImageRef _cgImage;
-    CIFilter* _filter;
-}
+COREIMAGE_EXPORT_CLASS
+@interface CIImage : NSObject <NSCopying, NSSecureCoding>
 
-+ (CIImage*)emptyImage;
+@property(readonly, nonatomic) CGRect extent;
 
-- initWithCGImage:(CGImageRef)cgImage;
-- (CGRect)extent;
++ (CIImage*)emptyImage STUB_METHOD;
++ (CIImage*)imageWithColor:(CIColor*)color;
++ (CIImage*)imageWithCGImage:(CGImageRef)image;
+
+- (CIImage*)imageByCroppingToRect:(CGRect)rect;
+- (instancetype)initWithCGImage:(CGImageRef)cgImage;
 
 @end
-
-#endif /* _CIIMAGE_H_ */

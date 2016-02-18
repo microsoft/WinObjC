@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,33 +28,43 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIViewController.h"
+#pragma once
 
+#import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
+#import <UIKit/UIViewController.h>
+
+@class NSArray;
+@class UIBarButtonItem;
 @protocol UISplitViewControllerDelegate;
 
-@interface UISplitViewController : UIViewController {
-@private
-    __unsafe_unretained id <UISplitViewControllerDelegate> _delegate;
-    NSArray *_viewControllers;
-    
-    struct {
-        unsigned willPresentViewController : 1;
-        unsigned willHideViewController : 1;
-        unsigned willShowViewController : 1;
-    } _delegateHas;
-}
+typedef enum UISplitViewControllerDisplayMode : NSInteger {
+    UISplitViewControllerDisplayModeAutomatic,
+    UISplitViewControllerDisplayModePrimaryHidden,
+    UISplitViewControllerDisplayModeAllVisible,
+    UISplitViewControllerDisplayModePrimaryOverlay,
+} UISplitViewControllerDisplayMode;
 
-@property (nonatomic, assign) id <UISplitViewControllerDelegate> delegate;
-@property (nonatomic, copy) NSArray *viewControllers;
-@property (nonatomic) BOOL presentsWithGesture;
+UIKIT_EXPORT const CGFloat UISplitViewControllerAutomaticDimension;
 
-@end
-
-@class UIPopoverController;
-
-@protocol UISplitViewControllerDelegate <NSObject>
-@optional
-- (void)splitViewController:(UISplitViewController*)svc popoverController:(UIPopoverController*)pc willPresentViewController:(UIViewController *)aViewController;
-- (void)splitViewController:(UISplitViewController*)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem*)barButtonItem forPopoverController:(UIPopoverController*)pc;
-- (void)splitViewController:(UISplitViewController*)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)button;
+UIKIT_EXPORT_CLASS
+@interface UISplitViewController
+    : UIViewController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
+@property (copy, nonatomic) NSArray* viewControllers STUB_PROPERTY;
+@property (nonatomic) BOOL presentsWithGesture STUB_PROPERTY;
+@property (nonatomic) UISplitViewControllerDisplayMode preferredDisplayMode STUB_PROPERTY;
+@property (readonly, nonatomic) UISplitViewControllerDisplayMode displayMode STUB_PROPERTY;
+- (UIBarButtonItem*)displayModeButtonItem STUB_METHOD;
+@property (readonly, getter=isCollapsed, nonatomic) BOOL collapsed STUB_PROPERTY;
+@property (assign, nonatomic) CGFloat preferredPrimaryColumnWidthFraction STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat primaryColumnWidth STUB_PROPERTY;
+@property (assign, nonatomic) CGFloat minimumPrimaryColumnWidth STUB_PROPERTY;
+@property (assign, nonatomic) CGFloat maximumPrimaryColumnWidth STUB_PROPERTY;
+@property (nonatomic) id<UISplitViewControllerDelegate> delegate STUB_PROPERTY;
+- (void)showDetailViewController:(UIViewController*)vc sender:(id)sender STUB_METHOD;
+- (void)showViewController:(UIViewController*)vc sender:(id)sender STUB_METHOD;
 @end

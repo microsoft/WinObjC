@@ -1,0 +1,90 @@
+LIBRARY MobileCoreServices
+    EXPORTS
+        ; UTType Reference.mm
+        kUTExportedTypeDeclarationsKey DATA
+        kUTImportedTypeDeclarationsKey DATA
+        kUTTypeIdentifierKey DATA
+        kUTTypeTagSpecificationKey DATA
+        kUTTypeConformsToKey DATA
+        kUTTypeDescriptionKey DATA
+        kUTTypeIconFileKey DATA
+        kUTTypeReferenceURLKey DATA
+        kUTTypeVersionKey DATA
+        kUTTagClassFilenameExtension DATA
+        kUTTagClassMIMEType DATA
+        kUTTypeItem DATA
+        kUTTypeContent DATA
+        kUTTypeCompositeContent DATA
+        kUTTypeApplication DATA
+        kUTTypeMessage DATA
+        kUTTypeContact DATA
+        kUTTypeArchive DATA
+        kUTTypeDiskImage DATA
+        kUTTypeData DATA
+        kUTTypeDirectory DATA
+        kUTTypeResolvable DATA
+        kUTTypeSymLink DATA
+        kUTTypeMountPoint DATA
+        kUTTypeAliasFile DATA
+        kUTTypeAliasRecord DATA
+        kUTTypeURL DATA
+        kUTTypeFileURL DATA
+        kUTTypeText DATA
+        kUTTypePlainText DATA
+        kUTTypeUTF8PlainText DATA
+        kUTTypeUTF16ExternalPlainText DATA
+        kUTTypeUTF16PlainText DATA
+        kUTTypeRTF DATA
+        kUTTypeHTML DATA
+        kUTTypeXML DATA
+        kUTTypeSourceCode DATA
+        kUTTypeCSource DATA
+        kUTTypeObjectiveCSource DATA
+        kUTTypeCPlusPlusSource DATA
+        kUTTypeObjectiveCPlusPlusSource DATA
+        kUTTypeCHeader DATA
+        kUTTypeCPlusPlusHeader DATA
+        kUTTypeJavaSource DATA
+        kUTTypePDF DATA
+        kUTTypeRTFD DATA
+        kUTTypeFlatRTFD DATA
+        kUTTypeTXNTextAndMultimediaData DATA
+        kUTTypeWebArchive DATA
+        kUTTypeImage DATA
+        kUTTypeJPEG DATA
+        kUTTypeJPEG2000 DATA
+        kUTTypeTIFF DATA
+        kUTTypePICT DATA
+        kUTTypeGIF DATA
+        kUTTypePNG DATA
+        kUTTypeQuickTimeImage DATA
+        kUTTypeAppleICNS DATA
+        kUTTypeBMP DATA
+        kUTTypeICO DATA
+        kUTTypeAudiovisualContent DATA
+        kUTTypeMovie DATA
+        kUTTypeVideo DATA
+        kUTTypeAudio DATA
+        kUTTypeQuickTimeMovie DATA
+        kUTTypeMPEG DATA
+        kUTTypeMPEG4 DATA
+        kUTTypeMP3 DATA
+        kUTTypeMPEG4Audio DATA
+        kUTTypeAppleProtectedMPEG4Audio DATA
+        kUTTypeFolder DATA
+        kUTTypeVolume DATA
+        kUTTypePackage DATA
+        kUTTypeBundle DATA
+        kUTTypeFramework DATA
+        kUTTypeApplicationBundle DATA
+        kUTTypeApplicationFile DATA
+        kUTTypeVCard DATA
+        kUTTypeInkText DATA
+        UTTypeCreatePreferredIdentifierForTag
+        UTTypeCreateAllIdentifiersForTag
+        UTTypeCopyPreferredTagWithClass
+        UTTypeEqual
+        UTTypeConformsTo
+        UTTypeCopyDescription
+        UTTypeCopyDeclaration
+        UTTypeCopyDeclaringBundleURL

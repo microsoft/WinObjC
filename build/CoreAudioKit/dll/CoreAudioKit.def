@@ -1,0 +1,10 @@
+LIBRARY CoreAudioKit
+    EXPORTS
+        ; CABTMIDICentralViewController.mm
+        _OBJC_CLASS_CABTMIDICentralViewController DATA
+        __objc_class_name_CABTMIDICentralViewController CONSTANT
+
+        ; CABTMIDILocalPeripheralViewController.mm
+        _OBJC_CLASS_CABTMIDILocalPeripheralViewController DATA
+        __objc_class_name_CABTMIDILocalPeripheralViewController CONSTANT
+

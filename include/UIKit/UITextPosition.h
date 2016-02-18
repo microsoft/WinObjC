@@ -14,8 +14,12 @@
 //
 //******************************************************************************
 
-#import <Foundation/NSObject.h>
+#pragma once
 
+#import <Foundation/NSObject.h>
+#import <UIKit/UIKitExport.h>
+
+UIKIT_EXPORT_CLASS
 @interface UITextPosition : NSObject
 
 @end

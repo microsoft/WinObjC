@@ -16,6 +16,7 @@
 
 #include <Foundation/Foundation.h>
 #include <Starboard.h>
+#include <StubReturn.h>
 #include <Windows.h>
 
 #include <COMIncludes.h>
@@ -169,6 +170,16 @@
 - (NSString*)description {
     return [[[super description] stringByAppendingString:@" "] stringByAppendingString:[self UUIDString]];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end
 
 // _NSConstantUUID is used in the CFUUID implementation to support UUIDs that exist for the lifetime of the app. See

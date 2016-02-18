@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#pragma once
+
 #ifndef UIKIT_IMPEXP
 #define UIKIT_IMPEXP __declspec(dllimport)
 #endif

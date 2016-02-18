@@ -22,8 +22,7 @@ static PropertyMapper propertyMappings[] = {
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 
-static void AddSize(NIBWriter *writer, XIBObject *obj, char *keyName, float width, float height)
-{
+static void AddSize(NIBWriter* writer, XIBObject* obj, char* keyName, float width, float height) {
     struct {
         float width, height;
     } size;
@@ -31,16 +30,14 @@ static void AddSize(NIBWriter *writer, XIBObject *obj, char *keyName, float widt
     size.width = width;
     size.height = height;
 
-    char *output = (char *) malloc(sizeof(size) + 1);
+    char* output = (char*)malloc(sizeof(size) + 1);
     output[0] = 6;
     memcpy(&output[1], &size, sizeof(size));
 
     obj->AddOutputMember(writer, keyName, new XIBObjectDataWriter(output, sizeof(size) + 1));
-
 }
 
-UITableView::UITableView()
-{
+UITableView::UITableView() {
     _headerView = NULL;
     _footerView = NULL;
     _allowsSelectionDuringEditing = false;
@@ -48,14 +45,13 @@ UITableView::UITableView()
     _style = 0;
 }
 
-void UITableView::InitFromXIB(XIBObject *obj)
-{
+void UITableView::InitFromXIB(XIBObject* obj) {
     UIScrollView::InitFromXIB(obj);
     _allowsSelectionDuringEditing = obj->GetBool("IBUIAllowsSelectionDuringEditing", false);
     _style = obj->GetInt("IBUIStyle", 0);
-    if ( _style == 1 ) {
+    if (_style == 1) {
         _separatorStyle = 1;
-        if ( !_backgroundColor ) {
+        if (!_backgroundColor) {
             _backgroundColor = new UIColor("groupTableViewBackgroundColor");
         }
     }
@@ -64,34 +60,36 @@ void UITableView::InitFromXIB(XIBObject *obj)
     obj->_outputClassName = "UITableView";
 }
 
-void UITableView::InitFromStory(XIBObject *obj)
-{
+void UITableView::InitFromStory(XIBObject* obj) {
     UIScrollView::InitFromStory(obj);
 
-    _headerView = FindMember("tableHeaderView");
-    if ( _headerView ) {
+    _headerView = FindMemberAndHandle("tableHeaderView");
+    if (_headerView) {
         _subviews->AddMember(NULL, _headerView);
     }
-    _footerView = FindMember("tableFooterView");
-    if ( _footerView ) {
+    _footerView = FindMemberAndHandle("tableFooterView");
+    if (_footerView) {
         _subviews->AddMember(NULL, _footerView);
     }
     obj->_outputClassName = "UITableView";
 }
 
-void UITableView::Awaken()
-{
+void UITableView::Awaken() {
     UIView::Awaken();
 }
 
-void UITableView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UITableView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIScrollView::ConvertStaticMappings(writer, obj);
     Map(writer, obj, propertyMappings, numPropertyMappings);
-    if ( _allowsSelectionDuringEditing ) AddBool(writer, "UIAllowsSelectionDuringEditing", _allowsSelectionDuringEditing);
-    if ( _separatorStyle ) AddInt(writer, "UISeparatorStyle", _separatorStyle);
-    if ( _style ) AddInt(writer, "UIStyle", _style);
+    if (_allowsSelectionDuringEditing)
+        AddBool(writer, "UIAllowsSelectionDuringEditing", _allowsSelectionDuringEditing);
+    if (_separatorStyle)
+        AddInt(writer, "UISeparatorStyle", _separatorStyle);
+    if (_style)
+        AddInt(writer, "UIStyle", _style);
     ::AddSize(writer, obj, "UIContentSize", 320, 40);
-    if ( _headerView ) AddOutputMember(writer, "UITableHeaderView", _headerView);
-    if ( _footerView ) AddOutputMember(writer, "UITableFooterView", _footerView);
+    if (_headerView)
+        AddOutputMember(writer, "UITableHeaderView", _headerView);
+    if (_footerView)
+        AddOutputMember(writer, "UITableFooterView", _footerView);
 }

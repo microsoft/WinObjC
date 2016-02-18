@@ -20,6 +20,7 @@
 
 #include <OpenGLES/EAGL.h>
 
+#import <StubReturn.h>
 #import <Starboard.h>
 
 #import <CoreGraphics/CGGeometry.h>
@@ -50,49 +51,49 @@
 /**
  @Status Interoperable
 */
-- (GLuint)drawableWidth {
-    return (GLuint)self.frame.size.width;
+- (NSInteger)drawableWidth {
+    return self.frame.size.width;
 }
 
 /**
  @Status Interoperable
 */
-- (GLuint)drawableHeight {
-    return (GLuint)self.frame.size.height;
+- (NSInteger)drawableHeight {
+    return self.frame.size.height;
 }
 
 /**
    @Status Interoperable
 */
--(GLKViewDrawableColorFormat) drawableColorFormat {
+- (GLKViewDrawableColorFormat)drawableColorFormat {
     return _drawableColorFormat;
 }
 
 /**
    @Status Interoperable
 */
--(GLKViewDrawableDepthFormat) drawableDepthFormat {
+- (GLKViewDrawableDepthFormat)drawableDepthFormat {
     return _drawableDepthFormat;
 }
 
 /**
    @Status Interoperable
 */
--(GLKViewDrawableStencilFormat) drawableStencilFormat {
+- (GLKViewDrawableStencilFormat)drawableStencilFormat {
     return _drawableStencilFormat;
 }
 
 /**
    @Status Interoperable
 */
--(GLKViewDrawableMultisample)drawableMultisample {
+- (GLKViewDrawableMultisample)drawableMultisample {
     return _drawableMultisample;
 }
 
 /**
    @Status Interoperable
 */
--(void)setDrawableColorFormat:(GLKViewDrawableColorFormat)colorFormat {
+- (void)setDrawableColorFormat:(GLKViewDrawableColorFormat)colorFormat {
     if (_drawableColorFormat != colorFormat) {
         _drawableColorFormat = colorFormat;
         _drawableFormatsUpdated = TRUE;
@@ -103,7 +104,7 @@
 /**
    @Status Interoperable
 */
--(void)setDrawableDepthFormat:(GLKViewDrawableDepthFormat)depthFormat {
+- (void)setDrawableDepthFormat:(GLKViewDrawableDepthFormat)depthFormat {
     if (_drawableDepthFormat != depthFormat) {
         _drawableDepthFormat = depthFormat;
         _drawableFormatsUpdated = TRUE;
@@ -114,7 +115,7 @@
 /**
    @Status Interoperable
 */
--(void)setDrawableStencilFormat:(GLKViewDrawableStencilFormat)stencilFormat {
+- (void)setDrawableStencilFormat:(GLKViewDrawableStencilFormat)stencilFormat {
     if (_drawableStencilFormat != stencilFormat) {
         _drawableStencilFormat = stencilFormat;
         _drawableFormatsUpdated = TRUE;
@@ -125,7 +126,7 @@
 /**
    @Status Interoperable
 */
--(void)setDrawableMultisample:(GLKViewDrawableMultisample)multisample {
+- (void)setDrawableMultisample:(GLKViewDrawableMultisample)multisample {
     if (_drawableMultisample != multisample) {
         _drawableMultisample = multisample;
         _drawableFormatsUpdated = TRUE;
@@ -148,7 +149,7 @@
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
     _drawableFormatsUpdated = FALSE;
-        
+
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
     [_link retain];
 }
@@ -167,6 +168,15 @@
         [self commonInit];
     }
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithFrame:(CGRect)frame context:(EAGLContext*)context {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -260,7 +270,7 @@
     CAEAGLLayer* glLayer = (CAEAGLLayer*)self.layer;
     NSMutableDictionary* drawProps = [[NSMutableDictionary alloc] init];
 
-    if (self.drawableColorFormat != GLKViewDrawableColorFormatWindow) {        
+    if (self.drawableColorFormat != GLKViewDrawableColorFormatWindow) {
         if (self.drawableColorFormat == GLKViewDrawableColorFormatRGBA8888) {
             [drawProps setObject:kEAGLColorFormatRGBA8 forKey:kEAGLDrawablePropertyColorFormat];
         } else if (GLKViewDrawableColorFormatRGB565) {
@@ -309,8 +319,32 @@
     if (self.drawableStencilFormat != GLKViewDrawableStencilFormatNone) {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthbuffer);
     }
-    
+
     glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)bindDrawable {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)display {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)deleteDrawable {
+    UNIMPLEMENTED();
 }
 
 @end

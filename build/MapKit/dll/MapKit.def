@@ -1,0 +1,221 @@
+LIBRARY MapKit
+    EXPORTS
+        ; MapKit Constants Reference.mm
+        MKMapRectNull DATA
+        MKMapSizeWorld DATA
+        MKMapRectWorld DATA
+        MKErrorDomain DATA
+
+        ; MapKit Functions Reference.mm
+        MKCoordinateSpanMake
+        MKCoordinateRegionMake
+        MKCoordinateRegionMakeWithDistance
+        MKMapPointMake
+        MKMapSizeMake
+        MKMapRectMake
+        MKMapPointForCoordinate
+        MKCoordinateForMapPoint
+        MKCoordinateRegionForMapRect
+        MKMetersPerMapPointAtLatitude
+        MKMapPointsPerMeterAtLatitude
+        MKMetersBetweenMapPoints
+        MKRoadWidthAtZoomScale
+        MKMapRectGetMinX
+        MKMapRectGetMinY
+        MKMapRectGetMidX
+        MKMapRectGetMidY
+        MKMapRectGetMaxX
+        MKMapRectGetMaxY
+        MKMapRectGetWidth
+        MKMapRectGetHeight
+        MKMapPointEqualToPoint
+        MKMapSizeEqualToSize
+        MKMapRectEqualToRect
+        MKMapRectContainsPoint
+        MKMapRectContainsRect
+        MKMapRectIntersectsRect
+        MKMapRectIsNull
+        MKMapRectIsEmpty
+        MKMapRectUnion
+        MKMapRectIntersection
+        MKMapRectInset
+        MKMapRectOffset
+        MKMapRectDivide
+        MKStringFromMapPoint
+        MKStringFromMapSize
+        MKStringFromMapRect
+        MKMapRectSpans180thMeridian
+        MKMapRectRemainder
+
+        ; MKAnnotationView.mm
+        _OBJC_CLASS_MKAnnotationView DATA
+        __objc_class_name_MKAnnotationView CONSTANT
+
+        ; MKCircle.mm
+        _OBJC_CLASS_MKCircle DATA
+        __objc_class_name_MKCircle CONSTANT
+
+        ; MKCircleRenderer.mm
+        _OBJC_CLASS_MKCircleRenderer DATA
+        __objc_class_name_MKCircleRenderer CONSTANT
+
+        ; MKCircleView.mm
+        _OBJC_CLASS_MKCircleView DATA
+        __objc_class_name_MKCircleView CONSTANT
+
+        ; MKDirections.mm
+        _OBJC_CLASS_MKDirections DATA
+        __objc_class_name_MKDirections CONSTANT
+
+        ; MKDirectionsRequest.mm
+        _OBJC_CLASS_MKDirectionsRequest DATA
+        __objc_class_name_MKDirectionsRequest CONSTANT
+
+        ; MKDirectionsResponse.mm
+        _OBJC_CLASS_MKDirectionsResponse DATA
+        __objc_class_name_MKDirectionsResponse CONSTANT
+
+        ; MKDistanceFormatter.mm
+        _OBJC_CLASS_MKDistanceFormatter DATA
+        __objc_class_name_MKDistanceFormatter CONSTANT
+
+        ; MKETAResponse.mm
+        _OBJC_CLASS_MKETAResponse DATA
+        __objc_class_name_MKETAResponse CONSTANT
+
+        ; MKGeodesicPolyline.mm
+        _OBJC_CLASS_MKGeodesicPolyline DATA
+        __objc_class_name_MKGeodesicPolyline CONSTANT
+
+        ; MKLocalSearch.mm
+        _OBJC_CLASS_MKLocalSearch DATA
+        __objc_class_name_MKLocalSearch CONSTANT
+
+        ; MKLocalSearchRequest.mm
+        _OBJC_CLASS_MKLocalSearchRequest DATA
+        __objc_class_name_MKLocalSearchRequest CONSTANT
+
+        ; MKLocalSearchResponse.mm
+        _OBJC_CLASS_MKLocalSearchResponse DATA
+        __objc_class_name_MKLocalSearchResponse CONSTANT
+
+        ; MKMapCamera.mm
+        _OBJC_CLASS_MKMapCamera DATA
+        __objc_class_name_MKMapCamera CONSTANT
+
+        ; MKMapItem.mm
+        MKLaunchOptionsDirectionsModeKey DATA
+        MKLaunchOptionsMapTypeKey DATA
+        MKLaunchOptionsMapCenterKey DATA
+        MKLaunchOptionsMapSpanKey DATA
+        MKLaunchOptionsShowsTrafficKey DATA
+        MKLaunchOptionsCameraKey DATA
+        MKLaunchOptionsDirectionsModeDriving DATA
+        MKLaunchOptionsDirectionsModeWalking DATA
+        MKLaunchOptionsDirectionsModeTransit DATA
+        _OBJC_CLASS_MKMapItem DATA
+        __objc_class_name_MKMapItem CONSTANT
+
+        ; MKMapSnapshot.mm
+        _OBJC_CLASS_MKMapSnapshot DATA
+        __objc_class_name_MKMapSnapshot CONSTANT
+
+        ; MKMapSnapshotOptions.mm
+        _OBJC_CLASS_MKMapSnapshotOptions DATA
+        __objc_class_name_MKMapSnapshotOptions CONSTANT
+
+        ; MKMapSnapshotter.mm
+        _OBJC_CLASS_MKMapSnapshotter DATA
+        __objc_class_name_MKMapSnapshotter CONSTANT
+
+        ; MKMapView.mm
+        _OBJC_CLASS_MKMapView DATA
+        __objc_class_name_MKMapView CONSTANT
+
+        ; MKMultiPoint.mm
+        _OBJC_CLASS_MKMultiPoint DATA
+        __objc_class_name_MKMultiPoint CONSTANT
+
+        ; MKOverlayPathRenderer.mm
+        _OBJC_CLASS_MKOverlayPathRenderer DATA
+        __objc_class_name_MKOverlayPathRenderer CONSTANT
+
+        ; MKOverlayPathView.mm
+        _OBJC_CLASS_MKOverlayPathView DATA
+        __objc_class_name_MKOverlayPathView CONSTANT
+
+        ; MKOverlayRenderer.mm
+        _OBJC_CLASS_MKOverlayRenderer DATA
+        __objc_class_name_MKOverlayRenderer CONSTANT
+
+        ; MKOverlayView.mm
+        _OBJC_CLASS_MKOverlayView DATA
+        __objc_class_name_MKOverlayView CONSTANT
+
+        ; MKPinAnnotationView.mm
+        _OBJC_CLASS_MKPinAnnotationView DATA
+        __objc_class_name_MKPinAnnotationView CONSTANT
+
+        ; MKPlacemark.mm
+        _OBJC_CLASS_MKPlacemark DATA
+        __objc_class_name_MKPlacemark CONSTANT
+
+        ; MKPointAnnotation.mm
+        _OBJC_CLASS_MKPointAnnotation DATA
+        __objc_class_name_MKPointAnnotation CONSTANT
+
+        ; MKPolygon.mm
+        _OBJC_CLASS_MKPolygon DATA
+        __objc_class_name_MKPolygon CONSTANT
+
+        ; MKPolygonRenderer.mm
+        _OBJC_CLASS_MKPolygonRenderer DATA
+        __objc_class_name_MKPolygonRenderer CONSTANT
+
+        ; MKPolygonView.mm
+        _OBJC_CLASS_MKPolygonView DATA
+        __objc_class_name_MKPolygonView CONSTANT
+
+        ; MKPolyline.mm
+        _OBJC_CLASS_MKPolyline DATA
+        __objc_class_name_MKPolyline CONSTANT
+
+        ; MKPolylineRenderer.mm
+        _OBJC_CLASS_MKPolylineRenderer DATA
+        __objc_class_name_MKPolylineRenderer CONSTANT
+
+        ; MKPolylineView.mm
+        _OBJC_CLASS_MKPolylineView DATA
+        __objc_class_name_MKPolylineView CONSTANT
+
+        ; MKReverseGeocoder.mm
+        _OBJC_CLASS_MKReverseGeocoder DATA
+        __objc_class_name_MKReverseGeocoder CONSTANT
+
+        ; MKRoute.mm
+        _OBJC_CLASS_MKRoute DATA
+        __objc_class_name_MKRoute CONSTANT
+
+        ; MKRouteStep.mm
+        _OBJC_CLASS_MKRouteStep DATA
+        __objc_class_name_MKRouteStep CONSTANT
+
+        ; MKShape.mm
+        _OBJC_CLASS_MKShape DATA
+        __objc_class_name_MKShape CONSTANT
+
+        ; MKTileOverlay.mm
+        _OBJC_CLASS_MKTileOverlay DATA
+        __objc_class_name_MKTileOverlay CONSTANT
+
+        ; MKTileOverlayRenderer.mm
+        _OBJC_CLASS_MKTileOverlayRenderer DATA
+        __objc_class_name_MKTileOverlayRenderer CONSTANT
+
+        ; MKUserLocation.mm
+        _OBJC_CLASS_MKUserLocation DATA
+        __objc_class_name_MKUserLocation CONSTANT
+
+        ; MKUserTrackingBarButtonItem.mm
+        _OBJC_CLASS_MKUserTrackingBarButtonItem DATA
+        __objc_class_name_MKUserTrackingBarButtonItem CONSTANT

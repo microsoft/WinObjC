@@ -6,6 +6,8 @@
 #include "Frameworks/GLKit/ShaderGen.h"
 #include "Frameworks/GLKit/ShaderInfo.h"
 
+#include <windows.h>
+
 using namespace GLKitShader;
 
 NSString* stripSource(NSString* s, NSString* searchStr) {
@@ -91,10 +93,14 @@ TEST(GLKit, DeadCodeElimination) {
     m3.addMaterialVar("input3", clr);
 
     // Generate
-    GLKShaderPair* p = ctx.generate(m);
-    GLKShaderPair* p2 = ctx.generate(m2);
-    GLKShaderPair* p3 = ctx.generate(m3);
-    GLKShaderPair* p4 = ctx.generate(m4);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
+    GLKShaderPair* p2 = [[GLKShaderPair alloc] init];
+    ctx.generate(m2, p2);
+    GLKShaderPair* p3 = [[GLKShaderPair alloc] init];
+    ctx.generate(m3, p3);
+    GLKShaderPair* p4 = [[GLKShaderPair alloc] init];
+    ctx.generate(m4, p4);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -140,10 +146,14 @@ TEST(GLKit, DeadCodeElimination2) {
     // add nothing to m4.
 
     // Generate
-    GLKShaderPair* p = ctx.generate(m);
-    GLKShaderPair* p2 = ctx.generate(m2);
-    GLKShaderPair* p3 = ctx.generate(m3);
-    GLKShaderPair* p4 = ctx.generate(m4);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
+    GLKShaderPair* p2 = [[GLKShaderPair alloc] init];
+    ctx.generate(m2, p2);
+    GLKShaderPair* p3 = [[GLKShaderPair alloc] init];
+    ctx.generate(m3, p3);
+    GLKShaderPair* p4 = [[GLKShaderPair alloc] init];
+    ctx.generate(m4, p4);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -178,7 +188,8 @@ TEST(GLKit, TextureCheck) {
     m.addTexture("tex1", 1);
     m.addTexture("tex2", 2);
 
-    GLKShaderPair* p = ctx.generate(m);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -211,7 +222,8 @@ TEST(GLKit, TextureCheckCube) {
     m.addTexCube("tex1", 1);
     m.addTexCube("tex2", 2);
 
-    GLKShaderPair* p = ctx.generate(m);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -232,7 +244,8 @@ TEST(GLKit, TextureCheckSpecular) {
     m.addTexture("tex1", 1);
     m.addTexture("tex2", 2);
 
-    GLKShaderPair* p = ctx.generate(m);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -255,7 +268,8 @@ TEST(GLKit, DeadCodeBackPropagation) {
     ShaderContext ctx(vsh, psh);
 
     ShaderMaterial m;
-    GLKShaderPair* p = ctx.generate(m);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -287,8 +301,10 @@ TEST(GLKit, ConditionalShaderNodes) {
     ShaderMaterial m, m2;
     m.addInputVar("generateThis", 1);
 
-    GLKShaderPair* p = ctx.generate(m);
-    GLKShaderPair* p2 = ctx.generate(m2);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
+    GLKShaderPair* p2 = [[GLKShaderPair alloc] init];
+    ctx.generate(m2, p2);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -315,7 +331,8 @@ static bool fallbackContextTest(ShaderContext& ctx) {
     for (int i = 0; i < numVars; i++) {
         ShaderMaterial m;
         m.addMaterialVar(varNames[i], clr);
-        GLKShaderPair* p = ctx.generate(m);
+        GLKShaderPair* p = [[GLKShaderPair alloc] init];
+        ctx.generate(m, p);
 
         if (ctx.numVSTempFuncs() != 0 || ctx.numPSTempFuncs() != 0) {
             return false;
@@ -361,7 +378,8 @@ TEST(GLKit, TemporaryShaderNodes) {
     ShaderContext ctx(vsh, psh);
 
     ShaderMaterial m;
-    GLKShaderPair* p = ctx.generate(m);
+    GLKShaderPair* p = [[GLKShaderPair alloc] init];
+    ctx.generate(m, p);
 
     EXPECT_EQ_MSG(ctx.numVSTempFuncs(), 0, "No vertex shader temporary functions should be present.");
     EXPECT_EQ_MSG(ctx.numPSTempFuncs(), 0, "No pixel shader temporary functions should be present.");
@@ -441,6 +459,22 @@ TEST(GLKit, BasicMath) {
     EXPECT_TRUE_MSG(m3.m[0] == values[0] && m3.m[1] == values[3] && m3.m[2] == values[6] && m3.m[3] == values[1] && m3.m[4] == values[4] &&
                         m3.m[5] == values[7] && m3.m[6] == values[2] && m3.m[7] == values[5] && m3.m[8] == values[8],
                     "GLKMatrix3MakeWithArrayAndTranspose yielded unexpected result.");
+
+    m = GLKMatrix4MakeWithArray(values);
+    m3 = GLKMatrix4GetMatrix3(m);
+    GLKMatrix2 m2 = GLKMatrix4GetMatrix2(m);
+    GLKMatrix2 m2_2 = GLKMatrix3GetMatrix2(m3);
+
+    EXPECT_TRUE_MSG(m3.m00 == m.m00 && m3.m01 == m.m01 && m3.m02 == m.m02 &&
+                    m3.m10 == m.m10 && m3.m11 == m.m11 && m3.m12 == m.m12 &&
+                    m3.m20 == m.m20 && m3.m21 == m.m21 && m3.m22 == m.m22,
+                    "GLKMatrix4GetMatrix3 yielded unexpected result.");
+
+    EXPECT_TRUE_MSG(m2.m00 == m.m00 && m2.m01 == m.m01 && m2.m10 == m.m10 && m2.m11 == m.m11,
+                    "GLKMatrix4GetMatrix2 yielded unexpected result.");
+    
+    EXPECT_TRUE_MSG(m2_2.m00 == m3.m00 && m2_2.m01 == m3.m01 && m2_2.m10 == m3.m10 && m2_2.m11 == m3.m11,
+                    "GLKMatrix3GetMatrix2 yielded unexpected result.");
 }
 
 TEST(GLKit, Quaternions) {
@@ -529,6 +563,13 @@ TEST(GLKit, Rotations) {
     GLKVector4 dv =
         GLKVector4Make(GLKVector4Distance(v, v2), GLKVector4Distance(v2, v3), GLKVector4Distance(v3, v4), GLKVector4Distance(v4, v));
     EXPECT_TRUE_MSG(GLKVector4AllEqualToScalar(dv, dv.x), "Unexpected vector distance result.");
+
+    GLKMatrix3 m3x = GLKMatrix3MakeXRotation(M_PI / 2.f);
+    GLKMatrix3 m3xInv = GLKMatrix3Invert(m3x, NULL);
+
+    GLKVector3 v31 = GLKVector3Make(1.f, 1.f, 1.f);
+    GLKVector3 v3rot = GLKMatrix3MultiplyVector3(m3xInv, GLKMatrix3MultiplyVector3(m3x, v31));
+    EXPECT_TRUE_MSG(GLKVector3AllEqualToVector3(v31, v3rot), "Incorrect inversion of 3x3 matrix.");
 }
 
 TEST(GLKit, Interpolation) {

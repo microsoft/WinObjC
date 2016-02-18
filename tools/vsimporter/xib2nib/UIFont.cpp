@@ -17,29 +17,27 @@
 #include "UIFont.h"
 #include <assert.h>
 
-UIFont::UIFont()
-{
+UIFont::UIFont() {
     _fontName = NULL;
     _fontSize = 0.0f;
 }
 
-void UIFont::InitFromXIB(XIBObject *obj)
-{
+void UIFont::InitFromXIB(XIBObject* obj) {
     ObjectConverter::InitFromXIB(obj);
     _fontName = obj->GetString("name", NULL);
-    if ( obj->FindMember("pointSize") ) {
+    if (obj->FindMember("pointSize")) {
         _fontSize = obj->FindMember("pointSize")->floatValue();
     }
-    if ( _fontName == NULL ) {
-        XIBObject *nsFont = obj->_parent->FindMember("IBUIFont");
-        if ( nsFont ) {
+    if (_fontName == NULL) {
+        XIBObject* nsFont = obj->_parent->FindMember("IBUIFont");
+        if (nsFont) {
             _fontName = nsFont->GetString("NSName", NULL);
         }
     }
-    if ( _fontSize == 0.0f ) {
-        XIBObject *nsFont = obj->_parent->FindMember("IBUIFont");
-        if ( nsFont ) {
-            if ( nsFont->FindMember("NSSize") ) {
+    if (_fontSize == 0.0f) {
+        XIBObject* nsFont = obj->_parent->FindMember("IBUIFont");
+        if (nsFont) {
+            if (nsFont->FindMember("NSSize")) {
                 _fontSize = nsFont->FindMember("NSSize")->floatValue();
             }
         }
@@ -48,38 +46,39 @@ void UIFont::InitFromXIB(XIBObject *obj)
     obj->_outputClassName = "UIFont";
 }
 
-void UIFont::InitFromStory(XIBObject *obj)
-{
+void UIFont::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
 
     _fontSize = 12.0;
-    auto attribute = getAttrib("pointSize");
+    auto attribute = getAttrAndHandle("pointSize");
     if (attribute) {
         _fontSize = strtod(attribute, NULL);
     }
 
-    const char *fontType = getAttrib("type");
+    const char* fontType = getAttrib("type");
 
     if (fontType) {
+        bool isHandled = true;
+
         if (strcmp(fontType, "system") == 0) {
             _fontName = "Helvetica";
-        }
-        else if (strcmp(fontType, "boldSystem") == 0) {
+        } else if (strcmp(fontType, "boldSystem") == 0) {
             _fontName = "Helvetica-Bold";
+        } else {
+            isHandled = false;
         }
-        else {
-            assert(0);
+
+        if (isHandled) {
+            getAttrAndHandle("type");
         }
-    }
-    else {
-        _fontName = getAttrib("name");
+    } else {
+        _fontName = getAttrAndHandle("name");
     }
 
     obj->_outputClassName = "UIFont";
 }
 
-void UIFont::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIFont::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
 
     AddString(writer, "UIFontName", _fontName);

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,6 +28,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
 
 // This will only trigger on old-school scroll wheels and momentum scroll events.
@@ -37,7 +40,7 @@
     CGPoint _translation;
 }
 
-- (CGPoint)translationInView:(UIView *)view;
-- (void)setTranslation:(CGPoint)translation inView:(UIView *)view;
+- (CGPoint)translationInView:(UIView*)view;
+- (void)setTranslation:(CGPoint)translation inView:(UIView*)view;
 
 @end

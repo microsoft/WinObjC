@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 #include "QuartzCore/CAEmitterCell.h"
 
@@ -46,4 +47,22 @@
     UNIMPLEMENTED();
     return NO;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
 @end

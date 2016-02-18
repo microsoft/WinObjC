@@ -1,63 +1,65 @@
-/* Copyright (c) 2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSINDEXSET_H_
-#define _NSINDEXSET_H_
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSRange.h>
 
 FOUNDATION_EXPORT_CLASS
-@interface NSIndexSet : NSObject <NSCoding, NSCopying, NSMutableCopying> {
+@interface NSIndexSet : NSObject <NSCopying, NSMutableCopying, NSSecureCoding> {
 @public
-    NSRange *_ranges;
+    NSRange* _ranges;
     unsigned _length, _maxLength;
 }
 
-+ indexSetWithIndexesInRange:(NSRange)range;
-+ indexSetWithIndex:(NSUInteger)index;
-+ indexSet;
-
-- initWithIndexSet:(NSIndexSet *)other;
-- initWithIndexesInRange:(NSRange)range;
-- initWithIndex:(NSUInteger)index;
-- init;
-
-- (BOOL)isEqualToIndexSet:(NSIndexSet *)other;  
-
-- (NSUInteger)count;
-- (NSUInteger)firstIndex;
-- (NSUInteger)lastIndex;
-- (NSUInteger)getIndexes:(NSUInteger *)buffer maxCount:(NSUInteger)capacity inIndexRange:(NSRange *)range;
-
-- (BOOL)containsIndexesInRange:(NSRange)range;
-- (BOOL)containsIndexes:(NSIndexSet *)other;
++ (instancetype)indexSet;
++ (instancetype)indexSetWithIndex:(NSUInteger)index;
++ (instancetype)indexSetWithIndexesInRange:(NSRange)indexRange;
+- (instancetype)init;
+- (instancetype)initWithIndex:(NSUInteger)index;
+- (instancetype)initWithIndexesInRange:(NSRange)indexRange STUB_METHOD;
+- (instancetype)initWithIndexSet:(NSIndexSet*)indexSet;
 - (BOOL)containsIndex:(NSUInteger)index;
-
-- (NSUInteger)indexGreaterThanIndex:(NSUInteger)index;
-- (NSUInteger)indexGreaterThanOrEqualToIndex:(NSUInteger)index;
-- (NSUInteger)indexLessThanIndex:(NSUInteger)index;
-- (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index;
-
-- (BOOL)intersectsIndexesInRange:(NSRange)range;
-
-- (void)encodeWithCoder:(NSCoder *)encoder;
-- (id)initWithCoder:(NSCoder *)decoder;
-
+- (BOOL)containsIndexes:(NSIndexSet*)indexSet STUB_METHOD;
+- (BOOL)containsIndexesInRange:(NSRange)indexRange STUB_METHOD;
+- (BOOL)intersectsIndexesInRange:(NSRange)indexRange;
+@property (readonly) NSUInteger count;
 - (NSUInteger)countOfIndexesInRange:(NSRange)indexRange;
-
-- (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL *stop))block;
-- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger idx, BOOL *stop))block;
-- (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger idx, BOOL *stop))predicate;
-- (NSIndexSet *)indexesPassingTest:(BOOL (^)(NSUInteger idx, BOOL *stop))predicate;
-
+- (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSUInteger)indexWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSIndexSet*)indexesInRange:(NSRange)range
+                      options:(NSEnumerationOptions)opts
+                  passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate STUB_METHOD;
+- (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block STUB_METHOD;
+- (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block STUB_METHOD;
+- (void)enumerateRangesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block STUB_METHOD;
+- (BOOL)isEqualToIndexSet:(NSIndexSet*)indexSet;
+@property (readonly) NSUInteger firstIndex;
+@property (readonly) NSUInteger lastIndex;
+- (NSUInteger)indexLessThanIndex:(NSUInteger)index STUB_METHOD;
+- (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index STUB_METHOD;
+- (NSUInteger)indexGreaterThanOrEqualToIndex:(NSUInteger)index;
+- (NSUInteger)indexGreaterThanIndex:(NSUInteger)index;
+- (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange STUB_METHOD;
+- (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger, BOOL*))block;
+- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block STUB_METHOD;
+- (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block STUB_METHOD;
 @end
-
-#import <Foundation/NSMutableIndexSet.h>
-
-#endif /* _NSINDEXSET_H_ */

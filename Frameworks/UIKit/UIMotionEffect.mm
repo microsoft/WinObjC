@@ -19,9 +19,3 @@
 
 @implementation UIMotionEffect
 @end
-
-@implementation UIInterpolatingMotionEffect
-@end
-
-@implementation UIMotionEffectGroup
-@end

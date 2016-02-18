@@ -107,7 +107,7 @@
 */
 - (void)setSelectedItem:(id)item {
     _selectedItem = item;
-    for (UITabBarButton* button in (id) _buttons) {
+    for (UITabBarButton* button in(id) _buttons) {
         [button setNeedsDisplay];
     }
 }
@@ -132,7 +132,7 @@
     }
 
     if (_buttons) {
-        for (UITabBarButton* button in (id) _buttons) {
+        for (UITabBarButton* button in(id) _buttons) {
             [button removeFromSuperview];
         }
         [_buttons removeAllObjects];
@@ -155,7 +155,7 @@
 
             curX = bounds.size.width / 2.0f - (itemCount * itemWidth + spacing * (itemCount - 1)) / 2.0f;
         }
-        for (UITabBarItem* item in (id) _items) {
+        for (UITabBarItem* item in(id) _items) {
             [UIAppearanceSetter _applyAppearance:item withAppearanceClass:[UITabBarItem class] withBaseView:self];
 
             CGRect frame = bounds;

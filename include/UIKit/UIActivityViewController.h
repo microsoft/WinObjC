@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIACTIVITYVIEWCONTROLLER_H_
-#define _UIACTIVITYVIEWCONTROLLER_H_
+#pragma once
 
 #import <UIKit/UIViewController.h>
 
@@ -35,5 +34,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UIPopoverPresentationController* popoverPresentationController;
 
 @end
-
-#endif /* _UIACTIVITYVIEWCONTROLLER_H_ */

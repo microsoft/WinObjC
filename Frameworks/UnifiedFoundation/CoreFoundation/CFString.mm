@@ -96,7 +96,7 @@ CFStringEncoding CFStringConvertNSStringEncodingToEncoding(UInt32 encoding) {
         case NSUnicodeStringEncoding: // Also NSUTF16StringEncoding = NSUnicodeStringEncoding
             return kCFStringEncodingUnicode;
 
-        case NSUTF16LittleEndianStringEncoding:
+        case static_cast<UInt32>(NSUTF16LittleEndianStringEncoding):
             return kCFStringEncodingUTF16LE;
 
         default:
@@ -118,7 +118,7 @@ const char* CFStringGetCStringPtr(CFStringRef self, CFStringEncoding encoding) {
  @Status Interoperable
 */
 CFComparisonResult CFStringCompare(CFStringRef self, CFStringRef other, CFOptionFlags options) {
-    return (CFComparisonResult)[(NSString*)self compare:(NSString*)other options:options];
+    return (CFComparisonResult)[(NSString*)self compare:(NSString*)other options:static_cast<NSStringCompareOptions>(options)];
 }
 
 /**

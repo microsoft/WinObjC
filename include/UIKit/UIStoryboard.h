@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UISTORYBOARD_H_
-#define _UISTORYBOARD_H_
+#pragma once
 
 #import "UIKitExport.h"
 #import <Foundation/NSObject.h>
@@ -30,5 +29,3 @@ UIKIT_EXPORT_CLASS
 - (id)instantiateInitialViewController;
 
 @end
-
-#endif /* _UISTORYBOARD_H_ */

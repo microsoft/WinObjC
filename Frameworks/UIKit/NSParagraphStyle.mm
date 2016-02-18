@@ -16,30 +16,9 @@
 
 #include "Starboard.h"
 
-#include "UIKit/NSParagraphStyle.h"
+#import <UIKit/NSParagraphStyle.h>
+#import "NSParagraphStyleInternal.h"
 
-@implementation NSParagraphStyle {
-@protected
+@implementation NSParagraphStyle
 
-    float _hyphenationFactor;
-    NSTextAlignment _alignment;
-    NSLineBreakMode _lineBreakMode;
-}
-@synthesize hyphenationFactor = _hyphenationFactor;
-@synthesize alignment = _alignment;
-
-@end
-
-@implementation NSMutableParagraphStyle
-- (void)setHyphenationFactor:(float)factor {
-    _hyphenationFactor = factor;
-}
-
-- (void)setAlignment:(NSTextAlignment)alignment {
-    _alignment = alignment;
-}
-
-- (void)setLineBreakMode:(NSLineBreakMode)mode {
-    _lineBreakMode = mode;
-}
 @end

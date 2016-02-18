@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,21 +13,22 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _GKACHIEVEMENTVIEWCONTROLLER_H_
-#define _GKACHIEVEMENTVIEWCONTROLLER_H_
+#pragma once
 
 #import <GameKit/GameKitExport.h>
-#import <UIKit/UINavigationController.h>
+#import <GameKit/GKGameCenterViewController.h>
 
-@protocol GKAchievementViewControllerDelegate
-@end
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
+
+#import <Foundation/NSObject.h>
+
+@protocol GKAchievementViewControllerDelegate;
 
 GAMEKIT_EXPORT_CLASS
-@interface GKAchievementViewController : UINavigationController
-
-@property (nonatomic, assign) id<GKAchievementViewControllerDelegate> achievementDelegate;
-
+@interface GKAchievementViewController
+    : GKGameCenterViewController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
+@property (assign, nonatomic) id<GKAchievementViewControllerDelegate> achievementDelegate STUB_PROPERTY;
 @end
-
-#endif // _GKACHIEVEMENTVIEWCONTROLLER_H_

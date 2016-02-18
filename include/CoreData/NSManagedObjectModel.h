@@ -1,45 +1,50 @@
-/* Copyright (c) 2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSEnumerator.h>
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSMANAGEDOBJECTMODEL_H_
-#define _NSMANAGEDOBJECTMODEL_H_
-
-#import <Foundation/Foundation.h>
-
+@class NSURL;
+@class NSArray;
+@class NSDictionary;
+@class NSString;
 @class NSFetchRequest;
+@class NSSet;
 
-FOUNDATION_EXPORT_CLASS
-@interface NSManagedObjectModel : NSObject
-
-+ (NSManagedObjectModel *)modelByMergingModels:(NSArray *)models;
-
-+ (NSManagedObjectModel *)mergedModelFromBundles:(NSArray *)bundles;
-
-- initWithContentsOfURL:(NSURL *)url;
-
-- (NSArray *)entities;
-- (NSDictionary *)entitiesByName;
-- (NSDictionary *)localizationDictionary;
-
-- (void)setEntities:(NSArray *)entities;
-- (void)setLocalizationDictionary:(NSDictionary *)dictionary;
-
-- (NSArray *)configurations;
-- (NSArray *)entitiesForConfiguration:(NSString *)configuration;
-- (void)setEntities:(NSArray *)entities forConfiguration:(NSString *)configuration;
-
-- (NSFetchRequest *)fetchRequestTemplateForName:(NSString *)name;
-- (NSFetchRequest *)fetchRequestFromTemplateWithName:(NSString *)name substitutionVariables:(NSDictionary *)variables;
-
-- (void)setFetchRequestTemplate:(NSFetchRequest *)fetchRequest forName:(NSString *)name;
-
-- (BOOL)isConfiguration:(NSString *)configuration compatibleWithStoreMetadata:(NSDictionary *)metadata;
-
+COREDATA_EXPORT_CLASS
+@interface NSManagedObjectModel : NSObject <NSCoding, NSCopying, NSFastEnumeration>
+- (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
++ (NSManagedObjectModel*)mergedModelFromBundles:(NSArray*)bundles STUB_METHOD;
++ (NSManagedObjectModel*)mergedModelFromBundles:(NSArray*)bundles forStoreMetadata:(NSDictionary*)metadata STUB_METHOD;
++ (NSManagedObjectModel*)modelByMergingModels:(NSArray*)models STUB_METHOD;
++ (NSManagedObjectModel*)modelByMergingModels:(NSArray*)models forStoreMetadata:(NSDictionary*)metadata STUB_METHOD;
+@property (strong) NSArray* entities STUB_PROPERTY;
+@property (readonly, copy) NSDictionary* entitiesByName STUB_PROPERTY;
+@property (readonly, strong) NSArray* configurations STUB_PROPERTY;
+- (NSArray*)entitiesForConfiguration:(NSString*)configuration STUB_METHOD;
+- (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration STUB_METHOD;
+@property (readonly, copy) NSDictionary* fetchRequestTemplatesByName STUB_PROPERTY;
+- (NSFetchRequest*)fetchRequestTemplateForName:(NSString*)name STUB_METHOD;
+- (NSFetchRequest*)fetchRequestFromTemplateWithName:(NSString*)name substitutionVariables:(NSDictionary*)variables STUB_METHOD;
+- (void)setFetchRequestTemplate:(NSFetchRequest*)fetchRequest forName:(NSString*)name STUB_METHOD;
+@property (strong) NSDictionary* localizationDictionary STUB_PROPERTY;
+- (BOOL)isConfiguration:(NSString*)configuration compatibleWithStoreMetadata:(NSDictionary*)metadata STUB_METHOD;
+@property (readonly, copy) NSDictionary* entityVersionHashesByName STUB_PROPERTY;
+@property (copy) NSSet* versionIdentifiers STUB_PROPERTY;
 @end
-
-#endif /* _NSMANAGEDOBJECTMODEL_H_ */

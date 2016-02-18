@@ -16,6 +16,8 @@
 
 #import "TextDisplayViewController.h"
 
+#import <CoreText/CoreText.h>
+
 int const NumberOfDrawWithAttrTestCases = 4;
 int const NumberOfSizeWithAttrTestCases = 5;
 int const DefaultHeightOfCell = 70;
@@ -210,6 +212,9 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     title = @"boundingRectWithSize of testParagraph";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:11]]];
 
+    title = @"CTFontCreateCopyWithSymbolicTraits (With and without bold trait)";
+    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:12]]];
+
     return self;
 }
 
@@ -359,9 +364,61 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         case 11:
             [self boundingRectWithSize:rect];
             break;
+        case 12:
+            [self testCTFontCreateCopyWithSymbolicTraits:rect];
+            break;
     }
 }
 
+- (void)testCTFontCreateCopyWithSymbolicTraits:(CGRect)rect {
+    // Right now we do not have support for symbolicTraits, so both the strings will appear visually the same.
+    // In future when we support symbolic traits for eg: italic,etc they  will appear correctly.
+    CFAttributedStringRef string1 = (__bridge CFAttributedStringRef)[self getAttributedString];
+    CFAttributedStringRef string2 = (__bridge CFAttributedStringRef)[self getAttributedStringWithTraits];
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // Flip the context coordinates, in iOS only.
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    CTTypesetterRef ts1 = CTTypesetterCreateWithAttributedString(string1);
+    CTTypesetterRef ts2 = CTTypesetterCreateWithAttributedString(string2);
+
+    CFRange range = { 0, 11 };
+    CTLineRef line1 = CTTypesetterCreateLineWithOffset(ts1, range, 0.0f);
+    CTLineRef line2 = CTTypesetterCreateLineWithOffset(ts2, range, 0.0f);
+
+    CTLineDraw(line1, context);
+    CGContextSetTextPosition(context, 0.0, 25.0);
+    CTLineDraw(line2, context);
+}
+
+- (NSAttributedString*)getAttributedString {
+    CGFloat fontsize = 20;
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:fontsize];
+    UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:fontsize];
+
+    NSRange wholeRange = NSMakeRange(0, 11);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
+
+    return string;
+}
+
+- (NSAttributedString*)getAttributedStringWithTraits {
+    CGFloat fontsize = 20;
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:fontsize];
+    UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:fontsize];
+
+    CTFontRef fontref = CTFontCreateCopyWithSymbolicTraits((__bridge CTFontRef)font, fontsize, NULL, kCTFontTraitBold, kCTFontTraitBold);
+    NSRange wholeRange = NSMakeRange(0, 11);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:kCTFontAttributeName value:(__bridge UIFont*)fontref range:wholeRange];
+
+    return string;
+}
 - (void)boundingRectWithSize:(CGRect)rect {
     UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
     UIColor* color = [UIColor blackColor];

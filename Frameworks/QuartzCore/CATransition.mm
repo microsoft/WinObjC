@@ -21,6 +21,15 @@
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
 
+NSString* const kCATransitionFade = @"kCATransitionFade";
+NSString* const kCATransitionMoveIn = @"kCATransitionMoveIn";
+NSString* const kCATransitionPush = @"kCATransitionPush";
+NSString* const kCATransitionReveal = @"kCATransitionReveal";
+NSString* const kCATransitionFromRight = @"kCATransitionFromRight";
+NSString* const kCATransitionFromLeft = @"kCATransitionFromLeft";
+NSString* const kCATransitionFromTop = @"kCATransitionFromTop";
+NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
+
 @implementation CATransition : CAAnimation
 + (instancetype)animation {
     CATransition* ret = [self alloc];
@@ -42,8 +51,22 @@
 /**
  @Status Interoperable
 */
+- (NSString*)type {
+    return _type;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setSubtype:(id)subtype {
     _subtype = subtype;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)subtype {
+    return _subtype;
 }
 
 - (void)runActionForKey:(NSString*)key object:(NSObject*)object arguments:(NSDictionary*)dict {

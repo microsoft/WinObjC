@@ -40,11 +40,11 @@
     ret->_path = [name stringByAppendingString:@".storyboardc"];
 
     //  If no storyboard bundle is specified, search the main bundle
-    NSBundle *storyboardBundle = bundle;
+    NSBundle* storyboardBundle = bundle;
     if (storyboardBundle == nil) {
         storyboardBundle = [NSBundle mainBundle];
     }
-    NSString *storyInfoPath = [storyboardBundle pathForResource:@"Info" ofType:@"plist" inDirectory: ret->_path];
+    NSString* storyInfoPath = [storyboardBundle pathForResource:@"Info" ofType:@"plist" inDirectory:ret->_path];
 
     if (storyInfoPath != nil) {
         NSDictionary* storyInfo = [NSDictionary dictionaryWithContentsOfFile:storyInfoPath];
@@ -64,11 +64,11 @@
  @Status Interoperable
 */
 - (UIViewController*)instantiateInitialViewController {
-    NSString *fileName = [_fileMap objectForKey:_entryPoint];
+    NSString* fileName = [_fileMap objectForKey:_entryPoint];
 
-    UIApplication *uiApplication = [UIApplication sharedApplication];
+    UIApplication* uiApplication = [UIApplication sharedApplication];
 
-    NSString *pathToNib = nil;
+    NSString* pathToNib = nil;
 
     NSString* runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:@".nib"];
@@ -89,8 +89,8 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib* nib = [NSNib nibWithNibName: pathToNib bundle: _bundle];
-    id obj = [nib instantiateWithOwner:uiApplication options: @{UINibExternalObjects : proxyObjectsDict} ];
+    NSNib* nib = [NSNib nibWithNibName:pathToNib bundle:_bundle];
+    id obj = [nib instantiateWithOwner:uiApplication options:@{ UINibExternalObjects : proxyObjectsDict }];
     int count = [obj count];
 
     for (int i = 0; i < count; i++) {
@@ -109,11 +109,11 @@
 */
 - (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
     EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
-    NSString *fileName = [_fileMap objectForKey:(id)identifier];
+    NSString* fileName = [_fileMap objectForKey:(id)identifier];
 
-    UIApplication *uiApplication = [UIApplication sharedApplication];
+    UIApplication* uiApplication = [UIApplication sharedApplication];
 
-    NSString *pathToNib = nil;
+    NSString* pathToNib = nil;
 
     id runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:(id) @".nib"];
@@ -133,8 +133,8 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib* nib = [NSNib nibWithNibName: pathToNib bundle: _bundle];
-    id obj = [nib instantiateWithOwner:uiApplication options: @{UINibExternalObjects : proxyObjectsDict} ];
+    NSNib* nib = [NSNib nibWithNibName:pathToNib bundle:_bundle];
+    id obj = [nib instantiateWithOwner:uiApplication options:@{ UINibExternalObjects : proxyObjectsDict }];
     int count = [obj count];
 
     for (int i = 0; i < count; i++) {

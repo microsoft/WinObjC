@@ -21,7 +21,6 @@
 //******************************************************************************
 
 #import <UIKit/UIKit.h>
-#import "UICollectionViewUpdateItem.h"
 
 @interface UICollectionViewUpdateItem () {
     NSIndexPath* _initialIndexPath;

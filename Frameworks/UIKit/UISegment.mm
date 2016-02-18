@@ -27,7 +27,7 @@ static idretain _buttonLeft[2];
 static idretain _buttonRight[2];
 static idretain _buttonFill[2];
 
-@implementation UISegment : UIView
+@implementation UISegment
 + (id)initialize {
     _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
     _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];

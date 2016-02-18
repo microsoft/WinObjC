@@ -78,6 +78,9 @@ typedef struct {
     NSUInteger _count;
     NSUInteger _max;
 }
+
+- (void)_getBoundingBox:(CGRect*)rectOut;
+
 @end
 
 COREGRAPHICS_EXPORT CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding);

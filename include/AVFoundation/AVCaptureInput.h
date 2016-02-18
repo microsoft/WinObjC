@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,14 @@
 //
 //******************************************************************************
 
-#ifndef _AVCAPTUREINPUT_H_
-#define _AVCAPTUREINPUT_H_
+#pragma once
 
-#import <AVFoundation/AVCaptureDevice.h>
+#import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
 
+@class NSArray;
+
+AVFOUNDATION_EXPORT_CLASS
 @interface AVCaptureInput : NSObject
+@property (readonly, nonatomic) NSArray* ports STUB_PROPERTY;
 @end
-
-@interface AVCaptureDeviceInput : NSObject
-
-@property (nonatomic, readonly) AVCaptureDevice* device;
-
-+ (id)deviceInputWithDevice:(AVCaptureDevice*)device error:(NSError**)outError;
-
-@end
-
-#endif /* _AVCAPTUREINPUT_H_ */

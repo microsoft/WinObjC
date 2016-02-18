@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSError.h"
 #include "Foundation/NSString.h"
 
@@ -38,6 +39,12 @@ NSString* const NSStringEncodingErrorKey = @"NSStringEncodingErrorKey";
 NSString* const NSErrorFailingURLStringKey = @"NSErrorFailingURLStringKey";
 NSString* const NSURLErrorKey = @"NSURLErrorKey";
 NSString* const NSDebugDescriptionKey = @"NSDebugDescription";
+
+NSString* const NSFilePathErrorKey = @"NSFilePathErrorKey";
+NSString* const NSHelpAnchorErrorKey = @"NSHelpAnchorErrorKey";
+NSString* const NSURLErrorFailingURLErrorKey = @"NSURLErrorFailingURLErrorKey";
+NSString* const NSURLErrorFailingURLStringErrorKey = @"NSURLErrorFailingURLStringErrorKey";
+NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPeerTrustErrorKey";
 
 @implementation NSError {
     idretaintype(NSString) _domain;
@@ -152,4 +159,31 @@ NSString* const NSDebugDescriptionKey = @"NSDebugDescription";
     _description = nil;
     [super dealloc];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
 @end

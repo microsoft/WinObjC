@@ -13,17 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CATILEDLAYER_H_
-#define _CATILEDLAYER_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CALayer.h>
 
-@interface CATiledLayer : CALayer
+CA_EXPORT_CLASS
+@interface CATiledLayer : CALayer <CAMediaTiming, NSCoding>
 
-@property CGSize tileSize;
++ (CFTimeInterval)fadeDuration STUB_METHOD;
+
 @property size_t levelsOfDetail;
+@property size_t levelsOfDetailBias STUB_PROPERTY;
+@property CGSize tileSize;
 
 @end
-
-#endif /* _CATILEDLAYER_H_ */

@@ -14,9 +14,12 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
+
 #include "Starboard.h"
 #include "UIAnimationNotification.h"
 #include "QuartzCore/CABasicAnimation.h"
+#include "QuartzCore/CALayer.h"
 #include "UIAppearanceSetter.h"
 
 #import "UIViewInternal.h"
@@ -34,6 +37,12 @@
 #include <Windows.h>
 
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
+static const wchar_t* TAG = L"UIView";
+
+/** @Status Stub */
+const CGSize UILayoutFittingCompressedSize = StubConstant();
+/** @Status Stub */
+const CGSize UILayoutFittingExpandedSize = StubConstant();
 
 BOOL g_alwaysSendViewEvents = TRUE;
 int g_animationsDisabled = 0, g_nestedAnimationsDisabled = 0;
@@ -71,6 +80,12 @@ int viewCount = 0;
     idretaintype(CALayer) layer;
     bool _deallocating;
 }
+
+@synthesize preferredFocusedView;
+@synthesize traitCollection;
+@synthesize collisionBoundsType;
+@synthesize collisionBoundingPath;
+
 - (UIViewPrivateState*)_privateState {
     return priv;
 }
@@ -104,7 +119,7 @@ int viewCount = 0;
     self->layer.attach([[[self class] layerClass] new]);
     [self->layer setDelegate:self];
 
-    // EbrDebugLog("%d: Allocing %s (%x)\n", viewCount, object_getClassName(self), (id) self);
+    // TraceWarning(TAG,L"%d: Allocing %s (%x)\n", viewCount, object_getClassName(self), (id) self);
 }
 
 - (void)initAccessibility {
@@ -125,7 +140,7 @@ int viewCount = 0;
 }
 
 static UIView* initInternal(UIView* self, CGRect pos) {
-    EbrDebugLog("[%f,%f] @ %fx%f\n", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
+    TraceWarning(TAG, L"[%f,%f] @ %fx%f\n", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
 
     [self initPriv];
     [self setOpaque:TRUE];
@@ -225,7 +240,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         if ([self respondsToSelector:@selector(setDelegate:)]) {
             [self performSelector:@selector(setDelegate:) withObject:uiDelegate];
         } else {
-            EbrDebugLog("UIDelegate decoded but %s doens't support setDelegate!\n", object_getClassName(self));
+            TraceWarning(TAG, L"UIDelegate decoded but %hs doens't support setDelegate!\n", object_getClassName(self));
         }
     }
 
@@ -259,7 +274,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        EbrDebugLog("Removing constraint (%s): \n", [[wayward description] UTF8String]);
+                        TraceWarning(TAG, L"Removing constraint (%hs): \n", [[wayward description] UTF8String]);
                         [wayward printConstraint];
                         remove = true;
                         break;
@@ -273,7 +288,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     }
                 }
             } else {
-                EbrDebugLog("Skipping unsupported constraint type: %s\n", [[constraint description] UTF8String]);
+                TraceWarning(TAG, L"Skipping unsupported constraint type: %hs\n", [[constraint description] UTF8String]);
             }
         }
     }
@@ -297,7 +312,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 
     NSArray* gestures = [coder decodeObjectForKey:@"gestureRecognizers"];
     if (gestures != nil) {
-        EbrDebugLog("UIView initWithCoder adding gesture recognizers\n");
+        TraceWarning(TAG, L"UIView initWithCoder adding gesture recognizers\n");
         [self setGestureRecognizers:gestures];
     }
 
@@ -305,7 +320,14 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 }
 
 - (void)encodeWithCoder:(NSCoder*)coder {
-    EbrDebugLog("Unsupported attempt to encode a UIView\n");
+    TraceWarning(TAG, L"Unsupported attempt to encode a UIView\n");
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer {
+    return YES;
 }
 
 /**
@@ -538,7 +560,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
                 subview->priv->_resizeRoundingError.size.height = beforeRound.size.height - curFrame.size.height;
 
                 /*
-                EbrDebugLog("Resizing %s (%f, %f, %f, %f) -> (%f, %f, %f, %f)\n", object_getClassName(subview),
+                TraceWarning(TAG,L"Resizing %s (%f, %f, %f, %f) -> (%f, %f, %f, %f)\n", object_getClassName(subview),
                 origFrame.origin.x, origFrame.origin.y, origFrame.size.width, origFrame.size.height,
                 curFrame.origin.x, curFrame.origin.y, curFrame.size.width, curFrame.size.height);
                 */
@@ -564,7 +586,7 @@ static float doRound(float f) {
 */
 - (void)setFrame:(CGRect)frame {
     if (memcmp(&frame, &CGRectNull, sizeof(CGRect)) == 0) {
-        EbrDebugLog("setFrame: CGRectNull!\n");
+        TraceWarning(TAG, L"setFrame: CGRectNull!\n");
         return;
     }
 
@@ -581,12 +603,13 @@ static float doRound(float f) {
     frame.size.width = doRound(frame.size.width);
     frame.size.height = doRound(frame.size.height);
 
-    EbrDebugLog("SetFrame(%s): %f, %f, %f, %f\n",
-                object_getClassName(self),
-                frame.origin.x,
-                frame.origin.y,
-                frame.size.width,
-                frame.size.height);
+    TraceVerbose(TAG,
+                 L"SetFrame(%hs): %f, %f, %f, %f\n",
+                 object_getClassName(self),
+                 frame.origin.x,
+                 frame.origin.y,
+                 frame.size.width,
+                 frame.size.height);
 
     CGRect startFrame = frame;
 
@@ -663,7 +686,7 @@ static float doRound(float f) {
     CGRect curBounds;
     curBounds = [self bounds];
 
-    // EbrDebugLog("Resizing %s (%f, %f, %f, %f)\n", object_getClassName(self), curBounds.origin.x, curBounds.origin.y,
+    // TraceWarning(TAG,L"Resizing %s (%f, %f, %f, %f)\n", object_getClassName(self), curBounds.origin.x, curBounds.origin.y,
     // curBounds.size.width, curBounds.size.height);
 
     CGSize delta;
@@ -798,12 +821,14 @@ static float doRound(float f) {
         if ([self respondsToSelector:@selector(willMoveToSuperview:)]) {
             [self willMoveToSuperview:nil];
         }
-        [self _notifyWillMoveToWindow:nil superview:curSuperview];
+        if (curWindow != nil) {
+            [self _notifyWillMoveToWindow:nil superview:curSuperview];
+        }
 
         UIView* superview = priv->superview;
         UIView* pSuper = curSuperview;
         if (superview != curSuperview) {
-            EbrDebugLog("Warning: superview changed!\n");
+            TraceWarning(TAG, L"Warning: superview changed!\n");
         }
 
         pSuper->priv->removeChild(priv);
@@ -813,8 +838,11 @@ static float doRound(float f) {
         priv->_isChangingParent = false;
         [self didMoveToSuperview];
 
-        [self _notifyDidMoveToWindow:nil superview:curSuperview];
+        if (curWindow != nil) {
+            [self _notifyDidMoveToWindow:nil superview:curSuperview];
+        }
 
+        [self release];
         [self autorelease];
     }
 }
@@ -843,18 +871,18 @@ static float doRound(float f) {
 */
 - (void)addSubview:(UIView*)subview {
     if (subview == nil) {
-        EbrDebugLog("subview = nil!\n");
+        TraceWarning(TAG, L"subview = nil!\n");
         return;
     }
     if (subview == self) {
-        EbrDebugLog("subview = self?!\n");
+        TraceWarning(TAG, L"subview = self?!\n");
         return;
     }
     if (((UIView*)subview)->priv->_isChangingParent) {
         assert(0);
     }
 
-    // EbrDebugLog("Adding subview %s to %s\n", subview.object_getClassName(), self.object_getClassName());
+    // TraceWarning(TAG,L"Adding subview %s to %s\n", subview.object_getClassName(), self.object_getClassName());
 
     UIWindow* subviewWindow = [subview _getWindowInternal];
     UIWindow* curWindow = [self _getWindowInternal];
@@ -923,7 +951,7 @@ static float doRound(float f) {
         //  Add it to our views
         if (priv->childCount < index) {
             index = priv->childCount;
-            EbrDebugLog("Warning: Tried to insert subview at bad index\n");
+            TraceWarning(TAG, L"Warning: Tried to insert subview at bad index\n");
         }
         priv->insertChildAtIndex(subview, index);
         [subview retain];
@@ -956,7 +984,7 @@ static float doRound(float f) {
 */
 - (void)insertSubview:(UIView*)subview belowSubview:(UIView*)belowSubview {
     if (subview == nil) {
-        EbrDebugLog("Subview = nil!\n");
+        TraceWarning(TAG, L"Subview = nil!\n");
         return;
     }
 
@@ -964,7 +992,7 @@ static float doRound(float f) {
     if (index == 0x7fffffff) {
         index = 0;
 
-        EbrDebugLog("Sketchy ...\n");
+        TraceWarning(TAG, L"Sketchy ...\n");
         // assert(0);
     }
 
@@ -1026,13 +1054,14 @@ static float doRound(float f) {
         view2 = priv->childAtIndex(index2)->self;
     }
     if (view1 == nil || view2 == nil) {
-        EbrDebugLog("Cannot exchange subviews %d and %d count=%d on view %s (view1=%s view2=%s)\n",
-                    index1,
-                    index2,
-                    priv->childCount,
-                    object_getClassName(self),
-                    view1 ? object_getClassName(view1) : "nil",
-                    view2 ? object_getClassName(view2) : "nil");
+        TraceWarning(TAG,
+                     L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)\n",
+                     index1,
+                     index2,
+                     priv->childCount,
+                     object_getClassName(self),
+                     view1 ? object_getClassName(view1) : "nil",
+                     view2 ? object_getClassName(view2) : "nil");
         return;
     }
 
@@ -1050,7 +1079,7 @@ static float doRound(float f) {
 */
 - (void)insertSubview:(UIView*)subview aboveSubview:(UIView*)aboveSubview {
     if (subview == nil) {
-        EbrDebugLog("insertSubview: subview = nil!\n");
+        TraceWarning(TAG, L"insertSubview: subview = nil!\n");
         return;
     }
 
@@ -1061,7 +1090,7 @@ static float doRound(float f) {
     if (index == 0x7fffffff) {
         index = -1;
 
-        EbrDebugLog("Sketchy ...\n");
+        TraceWarning(TAG, L"Sketchy ...\n");
         // assert(0);
     }
 
@@ -1157,7 +1186,7 @@ static float doRound(float f) {
 }
 
 - (void)makeKey:(UIView*)view {
-    EbrDebugLog("UIVIew::makeKey\n");
+    TraceWarning(TAG, L"UIVIew::makeKey\n");
 }
 
 /**
@@ -1215,7 +1244,7 @@ static float doRound(float f) {
     if (![self pointInside:point withEvent:event])
         return nil;
 
-    // EbrDebugLog("HitTest inside %s (0x%08x)\n", object_getClassName(self), self);
+    // TraceWarning(TAG,L"HitTest inside %s (0x%08x)\n", object_getClassName(self), self);
 
     //  Go through subviews backwards until we find the furthest descendant
     int subviewCount = 0;
@@ -1240,7 +1269,7 @@ static float doRound(float f) {
         CGPoint newPoint;
 
         newPoint = [window convertPoint:point fromView:self toView:view];
-        // EbrDebugLog("Point inside %s %d, %d?\n", object_getClassName(view), (int) newPoint.x, (int) newPoint.y);
+        // TraceWarning(TAG,L"Point inside %s %d, %d?\n", object_getClassName(view), (int) newPoint.x, (int) newPoint.y);
         if ([view pointInside:newPoint withEvent:event]) {
             UIView* ret = [view hitTest:newPoint withEvent:event];
             if (ret != nil)
@@ -1409,7 +1438,7 @@ static float doRound(float f) {
 
 - (UIWindow*)_getWindowInternal {
     if (!priv) {
-        EbrDebugLog("priv = NULL!\n");
+        TraceWarning(TAG, L"priv = NULL!\n");
         return nil;
     }
 
@@ -1424,7 +1453,7 @@ static float doRound(float f) {
 */
 - (void)setMultipleTouchEnabled:(BOOL)enabled {
     if (!priv) {
-        EbrDebugLog("Priv is null, should alloc priv in alloc\n");
+        TraceWarning(TAG, L"Priv is null, should alloc priv in alloc\n");
         return;
     }
 
@@ -1611,7 +1640,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (BOOL)isOpaque {
-    return [layer opaque];
+    return [layer isOpaque];
 }
 
 /**
@@ -1657,15 +1686,22 @@ static float doRound(float f) {
 }
 
 /**
+ @Status Stub
+*/
+- (void)setConstraints:(NSArray*)constraints {
+    UNIMPLEMENTED();
+}
+
+/**
  @Status Interoperable
 */
 - (void)addConstraint:(NSLayoutConstraint*)constraint {
     // Constraints can only be added if they are self or a child of this view.
     if (((constraint.firstItem != self) && ([constraint.firstItem superview] != self)) ||
         (constraint.secondItem && ((constraint.secondItem != self) && ([constraint.secondItem superview] != self)))) {
-        EbrDebugLog(
-            "Only constraints with relations to this view and its children may be added. "
-            "This error may occur if your view hierarchy has not yet been initialized.\n");
+        TraceWarning(TAG,
+                     L"Only constraints with relations to this view and its children may be added. "
+                     "This error may occur if your view hierarchy has not yet been initialized.\n");
         return;
     }
 
@@ -1770,7 +1806,7 @@ static float doRound(float f) {
 */
 - (void)removeMotionEffect:(UIMotionEffect*)effect {
     UNIMPLEMENTED();
-    EbrDebugLog("Unsupported use of motion effects in removeMotionEffect:\n");
+    TraceWarning(TAG, L"Unsupported use of motion effects in removeMotionEffect:\n");
 }
 
 /**
@@ -1778,7 +1814,7 @@ static float doRound(float f) {
 */
 - (void)addMotionEffect:(UIMotionEffect*)effect {
     UNIMPLEMENTED();
-    EbrDebugLog("Unsupported use of motion effects in addMotionEffect:\n");
+    TraceWarning(TAG, L"Unsupported use of motion effects in addMotionEffect:\n");
 }
 
 /**
@@ -1794,7 +1830,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            EbrDebugLog("Content compression resistance for unknown axis\n");
+            TraceWarning(TAG, L"Content compression resistance for unknown axis\n");
             return 0.0f;
     }
 }
@@ -1812,7 +1848,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            EbrDebugLog("Content compression resistance set on unknown axis\n");
+            TraceWarning(TAG, L"Content compression resistance set on unknown axis\n");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1831,7 +1867,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            EbrDebugLog("Content hugging for unknown axis\n");
+            TraceWarning(TAG, L"Content hugging for unknown axis\n");
             return 0.0f;
     }
 }
@@ -1849,7 +1885,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            EbrDebugLog("Content hugging set on unknown axis\n");
+            TraceWarning(TAG, L"Content hugging set on unknown axis\n");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1892,7 +1928,7 @@ static float doRound(float f) {
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("Clicked: %s\n", object_getClassName(self));
+    TraceWarning(TAG, L"Clicked: %hs\n", object_getClassName(self));
     UIResponder* nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -1928,7 +1964,7 @@ static float doRound(float f) {
 */
 - (void)setExclusiveTouch:(BOOL)isExclusive {
     UNIMPLEMENTED();
-    EbrDebugLog("setExclusiveTouch not supported\n");
+    TraceWarning(TAG, L"setExclusiveTouch not supported\n");
     // assert(0);
 }
 
@@ -1950,7 +1986,7 @@ static float doRound(float f) {
             [ret setDuration:_animationProperties[stackLevel]._animationDuration];
             [ret setAutoreverses:_animationProperties[stackLevel]._autoReverses];
             [ret setRepeatCount:_animationProperties[stackLevel]._repeatCount];
-            [ret setDelay:_animationProperties[stackLevel]._animationDelay];
+            [ret setBeginTime:_animationProperties[stackLevel]._animationDelay + CACurrentMediaTime()];
             [ret setDelegate:_animationProperties[stackLevel]._animationNotifier];
             _animationProperties[stackLevel]._numAnimations++;
 
@@ -2015,7 +2051,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock completion:(completionBlockFunc)completion {
-    EbrDebugLog("animationWithDurationCompletion not supported\n");
+    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported\n");
     [self beginAnimations:nil context:0];
     _animationProperties[stackLevel]._completionBlock = COPYBLOCK(completion);
     [self setAnimationDuration:duration];
@@ -2033,7 +2069,6 @@ static float doRound(float f) {
                     options:(unsigned)options
                  animations:(animationBlockFunc)animationBlock
                  completion:(completionBlockFunc)completion {
-    EbrDebugLog("animateWithDurationDelayCompletion not supported\n");
     [self beginAnimations:nil context:0];
     _animationProperties[stackLevel]._completionBlock = COPYBLOCK(completion);
     [self setAnimationDuration:duration];
@@ -2067,6 +2102,37 @@ static float doRound(float f) {
                  completion:(void (^)(BOOL finished))completion {
     UNIMPLEMENTED();
     completion(YES);
+}
+
+/**
+ @Status Caveat
+ @Notes UIViewKeyframeAnimationOptions are ignored that do not map to UIViewAnimationOptions.
+*/
++ (void)animateKeyframesWithDuration:(NSTimeInterval)duration
+                               delay:(NSTimeInterval)delay
+                             options:(UIViewKeyframeAnimationOptions)options
+                          animations:(void (^)(void))animations
+                          completion:(void (^)(BOOL finished))completion {
+    TraceWarning(TAG,
+                 L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
+                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported\n");
+    // remove all unsupported options.
+    UIViewAnimationOptions uiViewAnimationOptions = (UIViewAnimationOptions)(0x23F & options);
+
+    [self animateWithDuration:duration delay:(double)delay options:uiViewAnimationOptions animations:animations completion:completion];
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)addKeyframeWithRelativeStartTime:(double)frameStartTime
+                        relativeDuration:(double)frameDuration
+                              animations:(void (^)(void))animations {
+    [self beginAnimations:nil context:0];
+    [self setAnimationDelay:frameStartTime];
+    [self setAnimationDuration:frameDuration];
+
+    CALLBLOCK(animations);
 }
 
 /**
@@ -2266,7 +2332,7 @@ static float doRound(float f) {
 */
 + (void)commitAnimations {
     if (stackLevel <= 0) {
-        EbrDebugLog("UIView: No animations stacked!\n");
+        TraceWarning(TAG, L"UIView: No animations stacked!\n");
         return;
     }
 
@@ -2289,7 +2355,7 @@ static float doRound(float f) {
                     TRUE,
                     _animationProperties[stackLevel]._context);
         if (_animationProperties[stackLevel]._completionBlock) {
-            // EbrDebugLog("Calling completion block %x\n", E2H(_animationProperties[stackLevel]._completionBlock)[3]);
+            // TraceWarning(TAG,L"Calling completion block %x\n", E2H(_animationProperties[stackLevel]._completionBlock)[3]);
             CALLCOMPLETIONBLOCK(_animationProperties[stackLevel]._completionBlock, TRUE);
             [_animationProperties[stackLevel]._completionBlock release];
         }
@@ -2374,7 +2440,7 @@ static float doRound(float f) {
         return;
     _deallocating = true;
     viewCount--;
-    EbrDebugLog("%d: dealloc %s %x\n", viewCount, object_getClassName(self), self);
+    TraceWarning(TAG, L"%d: dealloc %hs %x\n", viewCount, object_getClassName(self), self);
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -2469,7 +2535,7 @@ static float doRound(float f) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:self];
         } else {
-            EbrDebugLog("UIView: object %s is not a gesture!\n", object_getClassName(curgesture));
+            TraceWarning(TAG, L"UIView: object %hs is not a gesture!\n", object_getClassName(curgesture));
         }
     }
 }
@@ -2482,12 +2548,12 @@ static float doRound(float f) {
 }
 
 + (id)appearance {
-    EbrDebugLog("Unimplemented method %s on UIView called\n", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called\n", __func__);
     return nil;
 }
 
 + (id)appearanceWhenContainedIn:(id)containedClass, ... {
-    EbrDebugLog("Unimplemented method %s on UIView called\n", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called\n", __func__);
     return nil;
 }
 
@@ -2553,9 +2619,303 @@ static float doRound(float f) {
 }
 
 /**
+ @Status Caveat
+ @Notes afterUpdates is ignored.
+*/
+- (UIView*)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets {
+    // TODO Support afterUpdates.
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0.0);
+    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(cgcontext);
+    CGContextTranslateCTM(cgcontext, -rect.origin.x, -rect.origin.y);
+
+    [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage* screenshot = [UIGraphicsGetImageFromCurrentImageContext() resizableImageWithCapInsets:capInsets];
+    CGContextRestoreGState(UIGraphicsGetCurrentContext());
+    UIGraphicsEndImageContext();
+
+    UIImageView* viewScreenShot = [[UIImageView alloc] initWithImage:screenshot];
+
+    [viewScreenShot setFrame:rect];
+    return [viewScreenShot autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes afterUpdates is ignored.
+*/
+- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates {
+    // TODO Support afterUpdates.
+    UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, 0.0);
+    [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage* screenshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    UIImageView* viewScreenShot = [[UIImageView alloc] initWithImage:screenshot];
+
+    return [viewScreenShot autorelease];
+}
+
+/**
  @Status Interoperable
 */
 - (void)setNativeElement:(WXFrameworkElement*)nativeElement {
     [self layer].contentsElement = nativeElement;
 }
+
+/**
+ @Status Stub
+*/
+- (BOOL)canBecomeFocused {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)hasAmbiguousLayout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)alignmentRectForFrame:(CGRect)frame {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)frameForAlignmentRect:(CGRect)alignmentRect {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize
+        withHorizontalFittingPriority:(UILayoutPriority)horizontalFittingPriority
+              verticalFittingPriority:(UILayoutPriority)verticalFittingPriority {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)constraintsAffectingLayoutForAxis:(UILayoutConstraintAxis)axis {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIEdgeInsets)alignmentRectInsets {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewPrintFormatter*)viewPrintFormatter {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)addLayoutGuide:(UILayoutGuide*)layoutGuide {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)drawViewHierarchyInRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)decodeRestorableStateWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawRect:(CGRect)area forViewPrintFormatter:(UIViewPrintFormatter*)formatter {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeRestorableStateWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)exerciseAmbiguityInLayout {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)layoutMarginsDidChange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)removeLayoutGuide:(UILayoutGuide*)layoutGuide {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)tintColorDidChange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)requiresConstraintBasedLayout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (NSTimeInterval)inheritedAnimationDuration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirectionForSemanticContentAttribute:(UISemanticContentAttribute)attribute {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (void)performSystemAnimation:(UISystemAnimation)animation
+                       onViews:(NSArray*)views
+                       options:(UIViewAnimationOptions)options
+                    animations:(void (^)(void))parallelAnimations
+                    completion:(void (^)(BOOL))completion {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)setAnimationStartDate:(NSDate*)startTime {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point fromCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)rect toCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)rect fromCoordinateSpace:(id<UICoordinateSpace>)coordinateSpace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setNeedsFocusUpdate {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)updateFocusIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection {
+    UNIMPLEMENTED();
+}
+
 @end

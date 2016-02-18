@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -17,7 +18,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <CoreFoundation/CFRunLoop.h>
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSMutableArray.h>
-#import <Foundation/NSLock.h>
+#import <Foundation/NSRecursiveLock.h>
 #import <Foundation/NSString.h>
 #import <Foundation/NSThread.h>
 #import <Foundation/NSDate.h>
@@ -25,7 +26,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSOperationQueue.h>
 #import <Windows.h>
+#import "NSInputSource.h"
 #import "NSRunLoopState.h"
+#import "NSDelayedPerform.h"
 #import "NSOrderedPerform.h"
 #import "NSRunLoop+Internal.h"
 #import "dispatch/dispatch.h"
@@ -33,7 +36,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 extern "C" NSString* const NSDefaultRunLoopMode = @"kCFRunLoopDefaultMode";
 extern "C" NSString* const NSRunLoopCommonModes = @"kCFRunLoopCommonModes";
 
-@interface NSRunLoop ()
+@interface NSRunLoop () {
+    NSMutableDictionary* _modes;
+    NSMutableArray* _commonModes;
+    NSString* _currentMode;
+    NSMutableArray* _continue;
+    NSMutableArray* _orderedPerforms;
+    NSRecursiveLock* _orderedLock;
+    bool _stop;
+    pthread_mutex_t _modeLock;
+}
 @property (readwrite, copy) NSString* currentMode;
 @end
 
@@ -67,7 +79,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     _currentMode = [NSDefaultRunLoopMode retain];
     _continue = [NSMutableArray new];
     _orderedPerforms = [NSMutableArray new];
-    _orderedLock = [NSLock new];
+    _orderedLock = [NSRecursiveLock new];
     pthread_mutex_init(&_modeLock, 0);
 
     NSRunLoopState* state = [NSRunLoopState new];
@@ -100,20 +112,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
     pthread_mutex_unlock(&_modeLock);
     return state;
-}
-
-- (NSArray*)statesForMode:(NSString*)mode {
-    NSMutableArray* result = [NSMutableArray new];
-
-    if ([mode isEqualToString:NSRunLoopCommonModes]) {
-        for (NSString* common in _commonModes) {
-            [result addObject:[self _stateForMode:common]];
-        }
-    } else {
-        [result addObject:[self _stateForMode:mode]];
-    }
-
-    return result;
 }
 
 - (BOOL)_orderedPerforms {
@@ -158,10 +156,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     [performs release];
 
     return didPerform;
-}
-
-- (void)_wakeUp {
-    [[self _stateForMode:_currentMode] wakeUp];
 }
 
 /**
@@ -291,40 +285,12 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (void)addInputSource:(NSInputSource*)source forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode addInputSource:source];
-    }
-
-    [modeStates release];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)removeInputSource:(NSInputSource*)source forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode removeInputSource:source];
-    }
-
-    [modeStates release];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)addTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode addTimer:timer];
     }
-
-    [modeStates release];
 }
 
 /**
@@ -336,7 +302,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 }
 
 - (BOOL)containsTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         if ([curMode containsTimer:timer]) {
@@ -345,39 +311,31 @@ static void DispatchMainRunLoopWakeup(void* arg) {
         }
     }
 
-    [modeStates release];
-
     return FALSE;
 }
 
 - (void)addObserver:(NSObject*)observer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode addObserver:(NSTimer*)observer];
     }
-
-    [modeStates release];
 }
 
 - (void)removeObserver:(NSObject*)observer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode removeObserver:observer];
     }
-
-    [modeStates release];
 }
 
 - (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self statesForMode:mode];
+    NSArray* modeStates = [self _statesForMode:mode];
 
     for (NSRunLoopState* curMode in modeStates) {
         [curMode removeTimer:timer];
     }
-
-    [modeStates release];
 }
 
 - (NSArray*)_getModes {
@@ -488,4 +446,49 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 + (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
     [NSRunLoopState setUIThreadWaitFunction:callback];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removePort:(NSPort*)aPort forMode:(NSString*)mode {
+    UNIMPLEMENTED();
+}
+@end
+
+@implementation NSRunLoop (Internal)
+- (StrongId<NSArray*>)_statesForMode:(NSString*)mode {
+    StrongId<NSMutableArray*> result = [NSMutableArray new];
+
+    if ([mode isEqualToString:NSRunLoopCommonModes]) {
+        for (NSString* common in _commonModes) {
+            [result addObject:[self _stateForMode:common]];
+        }
+    } else {
+        [result addObject:[self _stateForMode:mode]];
+    }
+
+    return result;
+}
+
+- (void)_addInputSource:(NSInputSource*)source forMode:(NSString*)mode {
+    StrongId<NSArray*> modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in static_cast<id>(modeStates)) {
+        [curMode addInputSource:source];
+    }
+}
+
+- (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode {
+    StrongId<NSArray*> modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in static_cast<id>(modeStates)) {
+        [curMode removeInputSource:source];
+    }
+}
+
+- (void)_wakeUp {
+    [[self _stateForMode:_currentMode] wakeUp];
+}
+
 @end

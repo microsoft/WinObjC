@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -27,71 +29,73 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIIMAGEPICKERCONTROLLER_H_
-#define _UIIMAGEPICKERCONTROLLER_H_
+#pragma once
 
 #import "UINavigationController.h"
 #import <StarboardExport.h>
 
-enum {
-    UIImagePickerControllerCameraDeviceRear,
-    UIImagePickerControllerCameraDeviceFront
-};
-typedef uint32_t UIImagePickerControllerCameraDevice;
-
+typedef NSUInteger UIImagePickerControllerSourceType;
 enum {
     UIImagePickerControllerSourceTypePhotoLibrary,
     UIImagePickerControllerSourceTypeCamera,
-    UIImagePickerControllerSourceTypeSavedPhotosAlbum
+    UIImagePickerControllerSourceTypeSavedPhotosAlbum,
 };
-typedef uint32_t UIImagePickerControllerSourceType;
 
+typedef NSUInteger UIImagePickerControllerQualityType;
 enum {
-    UIImagePickerControllerCameraFlashModeOff  = -1,
-    UIImagePickerControllerCameraFlashModeAuto = 0,
-    UIImagePickerControllerCameraFlashModeOn   = 1
+    UIImagePickerControllerQualityTypeHigh = 0,
+    UIImagePickerControllerQualityTypeMedium = 1, // default value
+    UIImagePickerControllerQualityTypeLow = 2,
+    UIImagePickerControllerQualityType640x480 = 3,
+    UIImagePickerControllerQualityTypeIFrame1280x720 = 4,
+    UIImagePickerControllerQualityTypeIFrame960x540 = 5,
 };
-typedef int32_t UIImagePickerControllerCameraFlashMode;
 
+typedef NSUInteger UIImagePickerControllerCameraDevice;
 enum {
-    UIImagePickerControllerQualityTypeHigh            = 0,
-    UIImagePickerControllerQualityTypeMedium          = 1,  // default value
-    UIImagePickerControllerQualityTypeLow             = 2,
-    UIImagePickerControllerQualityType640x480         = 3,
-    UIImagePickerControllerQualityTypeIFrame1280x720  = 4,
-    UIImagePickerControllerQualityTypeIFrame960x540   = 5
+    UIImagePickerControllerCameraDeviceRear,
+    UIImagePickerControllerCameraDeviceFront,
 };
-typedef uint32_t UIImagePickerControllerQualityType;
 
+typedef NSUInteger UIImagePickerControllerCameraCaptureMode;
 enum {
     UIImagePickerControllerCameraCaptureModePhoto,
-    UIImagePickerControllerCameraCaptureModeVideo
+    UIImagePickerControllerCameraCaptureModeVideo,
 };
-typedef uint32_t UIImagePickerControllerCameraCaptureMode;
 
-SB_EXPORT NSString *const UIImagePickerControllerMediaType;
-SB_EXPORT NSString *const UIImagePickerControllerOriginalImage;
-SB_EXPORT NSString *const UIImagePickerControllerEditedImage;
-SB_EXPORT NSString *const UIImagePickerControllerCropRect;
-SB_EXPORT NSString *const UIImagePickerControllerMediaURL;
+typedef NSInteger UIImagePickerControllerCameraFlashMode;
+enum {
+    UIImagePickerControllerCameraFlashModeOff = -1,
+    UIImagePickerControllerCameraFlashModeAuto = 0,
+    UIImagePickerControllerCameraFlashModeOn = 1,
+};
 
-@protocol UIImagePickerControllerDelegate <NSObject>
-@end
+@protocol UIImagePickerControllerDelegate;
 
-@interface UIImagePickerController : UINavigationController
+@interface UIImagePickerController
+    : UINavigationController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
-+ (NSArray *)availableMediaTypesForSourceType:(UIImagePickerControllerSourceType)sourceType;
-+ (BOOL)isSourceTypeAvailable:(UIImagePickerControllerSourceType)sourceType;
-+ (BOOL)isCameraDeviceAvailable:(UIImagePickerControllerCameraDevice)cameraDevice;
-
-@property (nonatomic) UIImagePickerControllerSourceType sourceType;
-@property (nonatomic,assign) id <UINavigationControllerDelegate, UIImagePickerControllerDelegate> delegate;
-@property (nonatomic,copy) NSArray *mediaTypes;
 @property (nonatomic) BOOL allowsEditing;
-@property (nonatomic, retain) UIView *cameraOverlayView;
-@property (nonatomic) UIImagePickerControllerCameraDevice cameraDevice;
+@property (nonatomic) BOOL allowsImageEditing STUB_PROPERTY;
 @property (nonatomic) BOOL showsCameraControls;
+@property (nonatomic) CGAffineTransform cameraViewTransform STUB_PROPERTY;
+@property (nonatomic) NSTimeInterval videoMaximumDuration STUB_PROPERTY;
+@property (nonatomic) UIImagePickerControllerCameraCaptureMode cameraCaptureMode STUB_PROPERTY;
+@property (nonatomic) UIImagePickerControllerCameraDevice cameraDevice;
+@property (nonatomic) UIImagePickerControllerCameraFlashMode cameraFlashMode STUB_PROPERTY;
+@property (nonatomic) UIImagePickerControllerQualityType videoQuality STUB_PROPERTY;
+@property (nonatomic) UIImagePickerControllerSourceType sourceType;
+@property (nonatomic, assign) id<UINavigationControllerDelegate, UIImagePickerControllerDelegate> delegate;
+@property (nonatomic, copy) NSArray* mediaTypes;
+@property (nonatomic, retain) UIView* cameraOverlayView;
+
++ (BOOL)isCameraDeviceAvailable:(UIImagePickerControllerCameraDevice)cameraDevice;
++ (BOOL)isFlashAvailableForCameraDevice:(UIImagePickerControllerCameraDevice)cameraDevice STUB_METHOD;
++ (BOOL)isSourceTypeAvailable:(UIImagePickerControllerSourceType)sourceType;
++ (NSArray*)availableCaptureModesForCameraDevice:(UIImagePickerControllerCameraDevice)cameraDevice STUB_METHOD;
++ (NSArray*)availableMediaTypesForSourceType:(UIImagePickerControllerSourceType)sourceType;
+- (BOOL)startVideoCapture STUB_METHOD;
+- (void)stopVideoCapture STUB_METHOD;
+- (void)takePicture STUB_METHOD;
 
 @end
-
-#endif /* _UIIMAGEPICKERCONTROLLER_H_ */

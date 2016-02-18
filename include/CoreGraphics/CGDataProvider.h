@@ -1,13 +1,19 @@
-/* Copyright (c) 2007 Christopher J. W. Lloyd
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _CGDATAPROVIDER_H_
-#define _CGDATAPROVIDER_H_
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreFoundation/CFData.h>
@@ -15,49 +21,58 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef void *CGDataProviderRef;
+typedef size_t (*CGDataProviderGetBytesCallback)(void* info, void* buffer, size_t count);
+typedef void (*CGDataProviderReleaseInfoCallback)(void* info);
+typedef void (*CGDataProviderRewindCallback)(void* info);
+typedef void (*CGDataProviderSkipBytesCallback)(void* info, size_t count);
+typedef off_t (*CGDataProviderSkipForwardCallback)(void* info, off_t count);
+typedef const void* (*CGDataProviderGetBytePointerCallback)(void* info);
+typedef size_t (*CGDataProviderGetBytesAtOffsetCallback)(void* info, void* buffer, size_t offset, size_t count);
+typedef void (*CGDataProviderReleaseBytePointerCallback)(void* info, const void* pointer);
+typedef size_t (*CGDataProviderGetBytesAtPositionCallback)(void* info, void* buffer, off_t position, size_t count);
 
-typedef void (*CGDataProviderReleaseDataCallback)(void *info,const void *data,size_t size);
-typedef const void * (*CGDataProviderGetBytePointerCallback)(void *info);
-typedef void (*CGDataProviderReleaseBytePointerCallback)(void *info, const void *pointer);
-typedef size_t (*CGDataProviderGetBytesAtPositionCallback)(void *info, void *buffer, off_t position, size_t count);
-typedef void (*CGDataProviderReleaseInfoCallback)(void *info);
-typedef size_t (*CGDataProviderGetBytesCallback)(void *info, void *buffer, size_t count);
-typedef off_t (*CGDataProviderSkipForwardCallback)(void *info, off_t count);
-typedef void (*CGDataProviderRewindCallback)(void *info);
-
-struct CGDataProviderSequentialCallbacks {
-    unsigned int version;
+typedef struct {
     CGDataProviderGetBytesCallback getBytes;
-    CGDataProviderSkipForwardCallback skipForward;
+    CGDataProviderSkipBytesCallback skipBytes;
     CGDataProviderRewindCallback rewind;
-    CGDataProviderReleaseInfoCallback releaseInfo;
-};
-typedef struct CGDataProviderSequentialCallbacks CGDataProviderSequentialCallbacks;
-
-struct CGDataProviderDirectCallbacks {
+    CGDataProviderReleaseInfoCallback releaseProvider;
+} CGDataProviderCallbacks;
+typedef struct {
+    CGDataProviderGetBytePointerCallback getBytePointer;
+    CGDataProviderReleaseBytePointerCallback releaseBytePointer;
+    CGDataProviderGetBytesAtOffsetCallback getBytes;
+    CGDataProviderReleaseInfoCallback releaseProvider;
+} CGDataProviderDirectAccessCallbacks;
+typedef struct {
     unsigned int version;
     CGDataProviderGetBytePointerCallback getBytePointer;
     CGDataProviderReleaseBytePointerCallback releaseBytePointer;
     CGDataProviderGetBytesAtPositionCallback getBytesAtPosition;
     CGDataProviderReleaseInfoCallback releaseInfo;
-};
-typedef struct CGDataProviderDirectCallbacks CGDataProviderDirectCallbacks;
+} CGDataProviderDirectCallbacks;
+typedef struct {
+    unsigned int version;
+    CGDataProviderGetBytesCallback getBytes;
+    CGDataProviderSkipForwardCallback skipForward;
+    CGDataProviderRewindCallback rewind;
+    CGDataProviderReleaseInfoCallback releaseInfo;
+} CGDataProviderSequentialCallbacks;
+typedef void (*CGDataProviderReleaseDataCallback)(void* info, const void* data, size_t size);
 
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderRetain(CGDataProviderRef provider);
-COREGRAPHICS_EXPORT void CGDataProviderRelease(CGDataProviderRef provider);
-
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data);
-
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithData(void *info,const void *data,size_t size,CGDataProviderReleaseDataCallback releaseCallback);
-
-COREGRAPHICS_EXPORT CFDataRef CGDataProviderCopyData(CGDataProviderRef self);
-
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithFilename(const char *fname);
-
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithData(void* info,
+                                                                   const void* data,
+                                                                   size_t size,
+                                                                   CGDataProviderReleaseDataCallback releaseData);
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url);
-COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateDirect (void *info, off_t size, const CGDataProviderDirectCallbacks *callbacks);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data);
+COREGRAPHICS_EXPORT CFDataRef CGDataProviderCopyData(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT void CGDataProviderRelease(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderRetain(CGDataProviderRef provider);
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateDirect(void* info, off_t size, const CGDataProviderDirectCallbacks* callbacks);
+
+COREGRAPHICS_EXPORT CFTypeID CGDataProviderGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateSequential(void* info,
+                                                                     const CGDataProviderSequentialCallbacks* callbacks) STUB_METHOD;
 
 DISABLE_IMPLICIT_BRIDGING
-
-#endif /* _CGDATAPROVIDER_H_ */

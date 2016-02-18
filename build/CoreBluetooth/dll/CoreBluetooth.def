@@ -1,0 +1,102 @@
+LIBRARY CoreBluetooth
+    EXPORTS
+        ; CBATTRequest.mm
+        _OBJC_CLASS_CBATTRequest DATA
+        __objc_class_name_CBATTRequest CONSTANT
+
+        ; CBAttribute.mm
+        _OBJC_CLASS_CBAttribute DATA
+        __objc_class_name_CBAttribute CONSTANT
+
+        ; CBCentral.mm
+        _OBJC_CLASS_CBCentral DATA
+        __objc_class_name_CBCentral CONSTANT
+
+        ; CBCentralManager.mm
+        CBCentralManagerOptionShowPowerAlertKey DATA
+        CBCentralManagerOptionRestoreIdentifierKey DATA
+        CBCentralManagerScanOptionAllowDuplicatesKey DATA
+        CBCentralManagerScanOptionSolicitedServiceUUIDsKey DATA
+        CBConnectPeripheralOptionNotifyOnConnectionKey DATA
+        CBConnectPeripheralOptionNotifyOnDisconnectionKey DATA
+        CBConnectPeripheralOptionNotifyOnNotificationKey DATA
+        _OBJC_CLASS_CBCentralManager DATA
+        __objc_class_name_CBCentralManager CONSTANT
+
+        ; CBCentralManagerDelegate.mm
+        CBCentralManagerRestoredStatePeripheralsKey DATA
+        CBCentralManagerRestoredStateScanServicesKey DATA
+        CBCentralManagerRestoredStateScanOptionsKey DATA
+        CBAdvertisementDataLocalNameKey DATA
+        CBAdvertisementDataManufacturerDataKey DATA
+        CBAdvertisementDataServiceDataKey DATA
+        CBAdvertisementDataServiceUUIDsKey DATA
+        CBAdvertisementDataOverflowServiceUUIDsKey DATA
+        CBAdvertisementDataTxPowerLevelKey DATA
+        CBAdvertisementDataIsConnectable DATA
+        CBAdvertisementDataSolicitedServiceUUIDsKey DATA
+
+        ; CBCharacteristic.mm
+        _OBJC_CLASS_CBCharacteristic DATA
+        __objc_class_name_CBCharacteristic CONSTANT
+
+        ; CBDescriptor.mm
+        _OBJC_CLASS_CBDescriptor DATA
+        __objc_class_name_CBDescriptor CONSTANT
+
+        ; CBMutableCharacteristic.mm
+        _OBJC_CLASS_CBMutableCharacteristic DATA
+        __objc_class_name_CBMutableCharacteristic CONSTANT
+
+        ; CBMutableDescriptor.mm
+        _OBJC_CLASS_CBMutableDescriptor DATA
+        __objc_class_name_CBMutableDescriptor CONSTANT
+
+        ; CBMutableService.mm
+        _OBJC_CLASS_CBMutableService DATA
+        __objc_class_name_CBMutableService CONSTANT
+
+        ; CBPeer.mm
+        _OBJC_CLASS_CBPeer DATA
+        __objc_class_name_CBPeer CONSTANT
+
+        ; CBPeripheral.mm
+        _OBJC_CLASS_CBPeripheral DATA
+        __objc_class_name_CBPeripheral CONSTANT
+
+        ; CBPeripheralManager.mm
+        CBPeripheralManagerOptionShowPowerAlertKey DATA
+        CBPeripheralManagerOptionRestoreIdentifierKey DATA
+        _OBJC_CLASS_CBPeripheralManager DATA
+        __objc_class_name_CBPeripheralManager CONSTANT
+
+        ; CBPeripheralManagerDelegate.mm
+        CBPeripheralManagerRestoredStateServicesKey DATA
+        CBPeripheralManagerRestoredStateAdvertisementDataKey DATA
+
+        ; CBService.mm
+        _OBJC_CLASS_CBService DATA
+        __objc_class_name_CBService CONSTANT
+
+        ; CBUUID.mm
+        CBUUIDCharacteristicExtendedPropertiesString DATA
+        CBUUIDCharacteristicUserDescriptionString DATA
+        CBUUIDClientCharacteristicConfigurationString DATA
+        CBUUIDServerCharacteristicConfigurationString DATA
+        CBUUIDCharacteristicFormatString DATA
+        CBUUIDCharacteristicAggregateFormatString DATA
+        CBUUIDGenericAccessProfileString DATA
+        CBUUIDGenericAttributeProfileString DATA
+        CBUUIDDeviceNameString DATA
+        CBUUIDAppearanceString DATA
+        CBUUIDPeripheralPrivacyFlagString DATA
+        CBUUIDReconnectionAddressString DATA
+        CBUUIDPeripheralPreferredConnectionParametersString DATA
+        CBUUIDServiceChangedString DATA
+        _OBJC_CLASS_CBUUID DATA
+        __objc_class_name_CBUUID CONSTANT
+
+        ; CBConstants.mm
+        CBErrorDomain DATA
+        CBATTErrorDomain DATA
+

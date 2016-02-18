@@ -34,19 +34,19 @@
 }
 @end
 
-NSString* NSURLAuthenticationMethodDefault = @"NSURLAuthenticationMethodDefault";
-NSString* NSURLAuthenticationMethodHTTPBasic = @"NSURLAuthenticationMethodHTTPBasic";
-NSString* NSURLAuthenticationMethodHTTPDigest = @"NSURLAuthenticationMethodHTTPDigest";
-NSString* NSURLAuthenticationMethodHTMLForm = @"NSURLAuthenticationMethodHTMLForm";
-NSString* NSURLAuthenticationMethodNegotiate = @"NSURLAuthenticationMethodNegotiate";
-NSString* NSURLAuthenticationMethodNTLM = @"NSURLAuthenticationMethodNTLM";
-NSString* NSURLAuthenticationMethodClientCertificate = @"NSURLAuthenticationMethodClientCertificate";
-NSString* NSURLAuthenticationMethodServerTrust = @"NSURLAuthenticationMethodServerTrust";
+NSString* const NSURLAuthenticationMethodDefault = @"NSURLAuthenticationMethodDefault";
+NSString* const NSURLAuthenticationMethodHTTPBasic = @"NSURLAuthenticationMethodHTTPBasic";
+NSString* const NSURLAuthenticationMethodHTTPDigest = @"NSURLAuthenticationMethodHTTPDigest";
+NSString* const NSURLAuthenticationMethodHTMLForm = @"NSURLAuthenticationMethodHTMLForm";
+NSString* const NSURLAuthenticationMethodNegotiate = @"NSURLAuthenticationMethodNegotiate";
+NSString* const NSURLAuthenticationMethodNTLM = @"NSURLAuthenticationMethodNTLM";
+NSString* const NSURLAuthenticationMethodClientCertificate = @"NSURLAuthenticationMethodClientCertificate";
+NSString* const NSURLAuthenticationMethodServerTrust = @"NSURLAuthenticationMethodServerTrust";
 
-NSString* NSURLProtectionSpaceHTTPProxy = @"NSURLProtectionSpaceHTTPProxy";
-NSString* NSURLProtectionSpaceHTTPSProxy = @"NSURLProtectionSpaceHTTPSProxy";
-NSString* NSURLProtectionSpaceFTPProxy = @"NSURLProtectionSpaceFTPProxy";
-NSString* NSURLProtectionSpaceSOCKSProxy = @"NSURLProtectionSpaceSOCKSProxy";
+NSString* const NSURLProtectionSpaceHTTPProxy = @"NSURLProtectionSpaceHTTPProxy";
+NSString* const NSURLProtectionSpaceHTTPSProxy = @"NSURLProtectionSpaceHTTPSProxy";
+NSString* const NSURLProtectionSpaceFTPProxy = @"NSURLProtectionSpaceFTPProxy";
+NSString* const NSURLProtectionSpaceSOCKSProxy = @"NSURLProtectionSpaceSOCKSProxy";
 
 NSString* const NSURLProtectionSpaceHTTP = @"NSURLProtectionSpaceHTTP";
 NSString* const NSURLProtectionSpaceHTTPS = @"NSURLProtectionSpaceHTTPS";

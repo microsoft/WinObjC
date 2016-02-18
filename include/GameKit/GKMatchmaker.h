@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,32 +13,41 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _GKMATCHMAKER_H_
-#define _GKMATCHMAKER_H_
+#import <GameKit/GameKitExport.h>
 
+#import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSObject.h>
 
+@class GKInvite;
+@class GKMatch;
+@class NSError;
 @class NSArray;
+@class GKMatchRequest;
+@class GKPlayer;
+@class NSString;
 
-@interface GKInvite : NSObject
+GAMEKIT_EXPORT_CLASS
+@interface GKMatchmaker : NSObject <NSObject>
++ (GKMatchmaker*)sharedMatchmaker STUB_METHOD;
+- (void)matchForInvite:(GKInvite*)invite completionHandler:(void (^)(GKMatch*, NSError*))completionHandler STUB_METHOD;
+- (void)addPlayersToMatch:(GKMatch*)match
+             matchRequest:(GKMatchRequest*)matchRequest
+        completionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+- (void)cancel STUB_METHOD;
+- (void)cancelPendingInviteToPlayer:(GKPlayer*)player STUB_METHOD;
+- (void)findMatchForRequest:(GKMatchRequest*)request withCompletionHandler:(void (^)(GKMatch*, NSError*))completionHandler STUB_METHOD;
+- (void)findPlayersForHostedRequest:(GKMatchRequest*)request
+              withCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
+- (void)finishMatchmakingForMatch:(GKMatch*)match STUB_METHOD;
+- (void)queryActivityWithCompletionHandler:(void (^)(NSInteger, NSError*))completionHandler STUB_METHOD;
+- (void)queryPlayerGroupActivity:(NSUInteger)playerGroup withCompletionHandler:(void (^)(NSInteger, NSError*))completionHandler STUB_METHOD;
+- (void)cancelInviteToPlayer:(NSString*)playerID STUB_METHOD;
+- (void)findPlayersForHostedMatchRequest:(GKMatchRequest*)request
+                   withCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
+- (void)startBrowsingForNearbyPlayersWithHandler:(void (^)(GKPlayer*, BOOL))reachableHandler STUB_METHOD;
+- (void)stopBrowsingForNearbyPlayers STUB_METHOD;
+- (void)startBrowsingForNearbyPlayersWithReachableHandler:(void (^)(NSString*, BOOL))reachableHandler STUB_METHOD;
+@property (copy, nonatomic, nonnull) void (^inviteHandler)(GKInvite*, NSArray*) STUB_PROPERTY;
 @end
-
-@interface GKMatchRequest : NSObject
-
-@property (nonatomic, assign) NSUInteger maxPlayers;
-@property (nonatomic, assign) NSUInteger minPlayers;
-@property (nonatomic, assign) NSUInteger playerGroup;
-@property (nonatomic, retain) NSArray* playersToInvite;
-
-@end
-
-@interface GKMatchmaker : NSObject
-
-@property (nonatomic, copy) void (^inviteHandler)(GKInvite* acceptedInvite, NSArray* playerIDsToInvite);
-
-+ (GKMatchmaker*)sharedMatchmaker;
-
-@end
-
-#endif /* _GKMATCHMAKER_H_ */

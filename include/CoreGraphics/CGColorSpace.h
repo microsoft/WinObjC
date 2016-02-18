@@ -1,42 +1,87 @@
-/* Copyright (c) 2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#import <CoreGraphics/CGGeometry.h>
-
-struct __CGColorSpace;
-typedef struct __CGColorSpace *CGColorSpaceRef;
+#import <CoreGraphics/CoreGraphicsExport.h>
+#import <CoreGraphics/CGDataProvider.h>
 
 typedef enum {
-   kCGRenderingIntentDefault,
-   kCGRenderingIntentAbsoluteColorimetric,
-   kCGRenderingIntentRelativeColorimetric,
-   kCGRenderingIntentSaturation,
-   kCGRenderingIntentPerceptual,
+    kCGRenderingIntentDefault,
+    kCGRenderingIntentAbsoluteColorimetric,
+    kCGRenderingIntentRelativeColorimetric,
+    kCGRenderingIntentSaturation,
+    kCGRenderingIntentPerceptual,
 } CGColorRenderingIntent;
 
-typedef enum {
-   kCGColorSpaceModelUnknown = -1,
-   kCGColorSpaceModelMonochrome,
-   kCGColorSpaceModelRGB,
-   kCGColorSpaceModelCMYK,
-   kCGColorSpaceModelLab,
-   kCGColorSpaceModelDeviceN,
-   kCGColorSpaceModelIndexed,
-   kCGColorSpaceModelPattern,
-} CGColorSpaceModel;
+typedef CF_ENUM(int32_t, CGColorSpaceModel) {
+    kCGColorSpaceModelUnknown = -1,
+    kCGColorSpaceModelMonochrome,
+    kCGColorSpaceModelRGB,
+    kCGColorSpaceModelCMYK,
+    kCGColorSpaceModelLab,
+    kCGColorSpaceModelDeviceN,
+    kCGColorSpaceModelIndexed,
+    kCGColorSpaceModelPattern,
+};
 
-COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace);
-COREGRAPHICS_EXPORT void CGColorSpaceRelease(CGColorSpaceRef colorSpace);
-
-COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateDeviceRGB();
-COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateDeviceGray();
+COREGRAPHICS_EXPORT void CGColorSpaceRelease(CGColorSpaceRef space);
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef space);
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericGray;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericRGB;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericCMYK;
+;COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericRGBLinear;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceAdobeRGB1998;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceSRGB;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericGrayGamma2_2;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceGenericXYZ;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceACESCGLinear;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceITUR_709;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceITUR_2020;
+COREGRAPHICS_EXPORT const CFStringRef kCGColorSpaceROMMRGB;
+COREGRAPHICS_EXPORT CGColorRef CGColorGetConstantColor(CFStringRef name);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateDeviceCMYK();
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateDeviceGray();
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateDeviceRGB();
+COREGRAPHICS_EXPORT size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef space);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef baseSpace);
 
-COREGRAPHICS_EXPORT CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef self);
-COREGRAPHICS_EXPORT size_t CGColorSpaceGetNumberOfComponents(CGColorSpaceRef self);
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateCalibratedGray(const CGFloat whitePoint[3],
+                                                                     const CGFloat blackPoint[3],
+                                                                     CGFloat gamma) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateCalibratedRGB(const CGFloat whitePoint[3],
+                                                                    const CGFloat blackPoint[3],
+                                                                    const CGFloat gamma[3],
+                                                                    const CGFloat matrix[9]) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateICCBased(size_t nComponents,
+                                                               const CGFloat* range,
+                                                               CGDataProviderRef profile,
+                                                               CGColorSpaceRef alternate) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithICCProfile(CFDataRef data) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateLab(const CGFloat whitePoint[3],
+                                                          const CGFloat blackPoint[3],
+                                                          const CGFloat range[4]) STUB_METHOD;
+
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithPlatformColorSpace(const void* ref) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateIndexed(CGColorSpaceRef baseSpace,
+                                                              size_t lastIndex,
+                                                              const unsigned char* colorTable) STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceCreateWithName(CFStringRef name) STUB_METHOD;
+COREGRAPHICS_EXPORT CFDataRef CGColorSpaceCopyICCProfile(CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGColorSpaceGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef space);
+COREGRAPHICS_EXPORT CGColorSpaceRef CGColorSpaceGetBaseColorSpace(CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT size_t CGColorSpaceGetColorTableCount(CGColorSpaceRef space) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGColorSpaceGetColorTable(CGColorSpaceRef space, uint8_t* table) STUB_METHOD;

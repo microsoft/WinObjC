@@ -21,10 +21,8 @@
 #include "UIFont.h"
 #include <assert.h>
 
-void ConvertInsets(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *propObj, XIBObject *obj)
-{
-    struct 
-    {
+void ConvertInsets(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
+    struct {
         float top, left, bottom, right;
     } EdgeInsets;
 
@@ -39,57 +37,56 @@ void ConvertInsets(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *p
     sprintf(szName, "IBUI%sEdgeInsets.right", prop->nibName);
     EdgeInsets.right = obj->FindMember(szName)->floatValue();
 
-    char *dataOut = (char *) malloc(sizeof(EdgeInsets) + 1);
+    char* dataOut = (char*)malloc(sizeof(EdgeInsets) + 1);
     dataOut[0] = 6;
     memcpy(&dataOut[1], &EdgeInsets, sizeof(EdgeInsets));
     sprintf(szName, "UI%sEdgeInsets", prop->nibName);
     obj->AddOutputMember(writer, strdup(szName), new XIBObjectDataWriter(dataOut, sizeof(EdgeInsets) + 1));
 }
 
-static XIBObject *GetButtonContent(NIBWriter *writer, XIBObject *obj, char *mode)
-{
-    XIBObject *buttonContent = new XIBObject();
+static XIBObject* GetButtonContent(NIBWriter* writer, XIBObject* obj, char* mode) {
+    XIBObject* buttonContent = new XIBObject();
     buttonContent->_className = "UIButtonContent";
     buttonContent->_outputClassName = "UIButtonContent";
     buttonContent->_needsConversion = false;
 
     char szName[255];
-    XIBObject *findObj;
+    XIBObject* findObj;
 
     sprintf(szName, "IBUI%sTitle", mode);
     findObj = obj->FindMember(szName);
-    if ( findObj ) {
+    if (findObj) {
         buttonContent->AddOutputMember(writer, "UITitle", findObj);
     }
 
     sprintf(szName, "IBUI%sImage", mode);
     findObj = obj->FindMember(szName);
-    if ( findObj ) {
+    if (findObj) {
         buttonContent->AddOutputMember(writer, "UIImage", findObj);
     }
 
     sprintf(szName, "IBUI%sBackgroundImage", mode);
     findObj = obj->FindMember(szName);
-    if ( findObj ) {
+    if (findObj) {
         buttonContent->AddOutputMember(writer, "UIBackgroundImage", findObj);
     }
 
     sprintf(szName, "IBUI%sTitleShadowColor", mode);
     findObj = obj->FindMember(szName);
-    if ( findObj ) {
+    if (findObj) {
         buttonContent->AddOutputMember(writer, "UIShadowColor", findObj);
     }
 
     sprintf(szName, "IBUI%sTitleColor", mode);
     findObj = obj->FindMember(szName);
-    if ( findObj ) {
+    if (findObj) {
         buttonContent->AddOutputMember(writer, "UITitleColor", findObj);
     } else {
-        if ( strcmp(mode, "Normal") != 0 && buttonContent->_outputMembers.size() > 0 ) {
-            //findObj = obj->FindMember("IBUINormalTitleColor");
-            //buttonContent->AddOutputMember(writer, "UITitleColor", findObj);
-        } else if ( strcmp(mode, "Normal") == 0 ) {
-            UIColor *color = new UIColor(4, 4, 0.0f, 0.0f, 0.0f, 0.0f, "whiteColor");
+        if (strcmp(mode, "Normal") != 0 && buttonContent->_outputMembers.size() > 0) {
+            // findObj = obj->FindMember("IBUINormalTitleColor");
+            // buttonContent->AddOutputMember(writer, "UITitleColor", findObj);
+        } else if (strcmp(mode, "Normal") == 0) {
+            UIColor* color = new UIColor(4, 4, 0.0f, 0.0f, 0.0f, 0.0f, "whiteColor");
             buttonContent->AddOutputMember(writer, "UITitleColor", color->CreateObject(writer));
         }
     }
@@ -97,30 +94,29 @@ static XIBObject *GetButtonContent(NIBWriter *writer, XIBObject *obj, char *mode
     return buttonContent;
 }
 
-static XIBObject *GetButtonContentStoryboard(NIBWriter *writer, XIBObject *obj, char *mode)
-{
-    XIBObject *buttonContent = new XIBObject();
+static XIBObject* GetButtonContentStoryboard(NIBWriter* writer, XIBObject* obj, char* mode) {
+    XIBObject* buttonContent = new XIBObject();
     buttonContent->_className = "UIButtonContent";
     buttonContent->_outputClassName = "UIButtonContent";
     buttonContent->_needsConversion = false;
 
-    obj = obj->FindMember(mode);
+    obj = obj->FindMemberAndHandle(mode);
     if (!obj) {
         return buttonContent;
     }
 
-    if (obj->getAttrib("title") != NULL ) {
-        buttonContent->AddOutputMember(writer, "UITitle", new XIBObjectString(obj->getAttrib("title")));
+    if (obj->getAttrib("title") != NULL) {
+        buttonContent->AddOutputMember(writer, "UITitle", new XIBObjectString(obj->getAttrAndHandle("title")));
     }
 
-    if ( obj->FindMember("titleShadowColor") != NULL ) {
-        buttonContent->AddOutputMember(writer, "UIShadowColor", obj->FindMember("titleShadowColor"));
+    if (obj->FindMember("titleShadowColor") != NULL) {
+        buttonContent->AddOutputMember(writer, "UIShadowColor", obj->FindMemberAndHandle("titleShadowColor"));
     }
 
     if (obj->FindMember("titleColor") != NULL) {
-        buttonContent->AddOutputMember(writer, "UITitleColor", obj->FindMember("titleColor"));
+        buttonContent->AddOutputMember(writer, "UITitleColor", obj->FindMemberAndHandle("titleColor"));
     } else if (strcmp(mode, "normal") == 0) {
-        UIColor *color = new UIColor(0, 4, 0.0f, 0.47f, 0.84f, 1.0f, NULL);
+        UIColor* color = new UIColor(0, 4, 0.0f, 0.47f, 0.84f, 1.0f, NULL);
         color->_isStory = true;
         buttonContent->AddOutputMember(writer, "UITitleColor", color);
     }
@@ -128,21 +124,20 @@ static XIBObject *GetButtonContentStoryboard(NIBWriter *writer, XIBObject *obj, 
     return buttonContent;
 }
 
-void UIButton::WriteStatefulContent(NIBWriter *writer, XIBObject *obj)
-{
-    XIBDictionary *contentDict = new XIBDictionary();
+void UIButton::WriteStatefulContent(NIBWriter* writer, XIBObject* obj) {
+    XIBDictionary* contentDict = new XIBDictionary();
     contentDict->_className = "NSMutableDictionary";
 
-    XIBObjectNumber *normalState = new XIBObjectNumber(0);
-    XIBObject *normalContent = NULL;
-    XIBObjectNumber *highlightedState = new XIBObjectNumber(1);
-    XIBObject *highlightedContent = NULL;
-    XIBObjectNumber *disabledState = new XIBObjectNumber(2);
-    XIBObject *disabledContent = NULL;
-    XIBObjectNumber *selectedState = new XIBObjectNumber(4);
-    XIBObject *selectedContent = NULL;
+    XIBObjectNumber* normalState = new XIBObjectNumber(0);
+    XIBObject* normalContent = NULL;
+    XIBObjectNumber* highlightedState = new XIBObjectNumber(1);
+    XIBObject* highlightedContent = NULL;
+    XIBObjectNumber* disabledState = new XIBObjectNumber(2);
+    XIBObject* disabledContent = NULL;
+    XIBObjectNumber* selectedState = new XIBObjectNumber(4);
+    XIBObject* selectedContent = NULL;
 
-    if ( !_isStory) {
+    if (!_isStory) {
         normalContent = GetButtonContent(writer, obj, "Normal");
         highlightedContent = GetButtonContent(writer, obj, "Highlighted");
         disabledContent = GetButtonContent(writer, obj, "Disabled");
@@ -154,20 +149,21 @@ void UIButton::WriteStatefulContent(NIBWriter *writer, XIBObject *obj)
         selectedContent = GetButtonContentStoryboard(writer, obj, "selected");
     }
 
-    if ( normalContent->_outputMembers.size() > 0 ) contentDict->AddObjectForKey(normalState, normalContent);
-    if ( highlightedContent->_outputMembers.size() > 0 ) {
+    if (normalContent->_outputMembers.size() > 0)
+        contentDict->AddObjectForKey(normalState, normalContent);
+    if (highlightedContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(highlightedState, highlightedContent);
         obj->AddOutputMember(writer, "UIAdjustsImageWhenHighlighted", new XIBObjectBool(true));
     } else {
         obj->AddOutputMember(writer, "UIAdjustsImageWhenHighlighted", new XIBObjectBool(true));
     }
-    if ( disabledContent->_outputMembers.size() > 0 ) {
+    if (disabledContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(disabledState, disabledContent);
         obj->AddOutputMember(writer, "UIAdjustsImageWhenDisabled", new XIBObjectBool(true));
     } else {
         obj->AddOutputMember(writer, "UIAdjustsImageWhenDisabled", new XIBObjectBool(true));
     }
-    if ( selectedContent->_outputMembers.size() > 0 ) {
+    if (selectedContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(selectedState, selectedContent);
     }
 
@@ -175,34 +171,51 @@ void UIButton::WriteStatefulContent(NIBWriter *writer, XIBObject *obj)
 }
 
 static PropertyMapper propertyMappings[] = {
-    "IBUIText", "UIText", NULL,
-    "IBUITextColor", "UITextColor", NULL,
-    "IBUIHighlightedColor", "UIHighlightedColor", NULL,
-    "IBUILineBreakMode", "UILineBreakMode", NULL,
-    "IBUIContentEdgeInsets.top", "Content", ConvertInsets,
-    "IBUITitleEdgeInsets.top", "Title", ConvertInsets,
-    "IBUIImageEdgeInsets.top", "Image", ConvertInsets,
-    "IBUITitleShadowOffset", "TitleShadow", ConvertOffset,
-    "IBUIShowsTouchWhenHighlighted", "UIShowsTouchWhenHighlighted", NULL,
+    "IBUIText",
+    "UIText",
+    NULL,
+    "IBUITextColor",
+    "UITextColor",
+    NULL,
+    "IBUIHighlightedColor",
+    "UIHighlightedColor",
+    NULL,
+    "IBUILineBreakMode",
+    "UILineBreakMode",
+    NULL,
+    "IBUIContentEdgeInsets.top",
+    "Content",
+    ConvertInsets,
+    "IBUITitleEdgeInsets.top",
+    "Title",
+    ConvertInsets,
+    "IBUIImageEdgeInsets.top",
+    "Image",
+    ConvertInsets,
+    "IBUITitleShadowOffset",
+    "TitleShadow",
+    ConvertOffset,
+    "IBUIShowsTouchWhenHighlighted",
+    "UIShowsTouchWhenHighlighted",
+    NULL,
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 
-UIButton::UIButton()
-{
+UIButton::UIButton() {
     _buttonType = 0;
     _statefulContent = NULL;
     _font = NULL;
 }
 
-void UIButton::InitFromXIB(XIBObject *obj)
-{
+void UIButton::InitFromXIB(XIBObject* obj) {
     UIControl::InitFromXIB(obj);
 
     _buttonType = GetInt("IBUIButtonType", 0);
-    _font = (UIFont *) obj->FindMember("IBUIFontDescription");
-    if ( !_font ) _font = (UIFont *) obj->FindMember("IBUIFont");
+    _font = (UIFont*)obj->FindMember("IBUIFontDescription");
+    if (!_font)
+        _font = (UIFont*)obj->FindMember("IBUIFont");
 
-    switch ( _buttonType ) {
+    switch (_buttonType) {
         case 1:
             obj->_outputClassName = "UIRoundedRectButton";
             break;
@@ -213,13 +226,13 @@ void UIButton::InitFromXIB(XIBObject *obj)
     }
 }
 
-void UIButton::InitFromStory(XIBObject *obj)
-{
+void UIButton::InitFromStory(XIBObject* obj) {
     UIControl::InitFromStory(obj);
 
-    const char *type = getAttrib("buttonType");
-    if ( type ) {
-        if ( strcmp(type, "roundedRect") == 0 ) {
+    const char* type = getAttrib("buttonType");
+    if (type) {
+        if (strcmp(type, "roundedRect") == 0) {
+            getAttrAndHandle("buttonType");
             _buttonType = 1;
         } else {
             printf("Unknown button type <%s>\n", type);
@@ -227,7 +240,7 @@ void UIButton::InitFromStory(XIBObject *obj)
         }
     }
 
-    switch ( _buttonType ) {
+    switch (_buttonType) {
         case 1:
             obj->_outputClassName = "UIRoundedRectButton";
             break;
@@ -238,21 +251,21 @@ void UIButton::InitFromStory(XIBObject *obj)
     }
 }
 
-void UIButton::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIButton::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     Map(writer, obj, propertyMappings, numPropertyMappings);
-    if ( _buttonType != 0 ) AddInt(writer, "UIButtonType", _buttonType);
-    if ( _font ) obj->AddOutputMember(writer, "UIFont", _font);
+    if (_buttonType != 0)
+        AddInt(writer, "UIButtonType", _buttonType);
+    if (_font)
+        obj->AddOutputMember(writer, "UIFont", _font);
 
-    if ( _connections ) 
-    {
-        for ( int i = 0; i < _connections->count(); i ++ ) {
-            XIBObject *curObj = _connections->objectAtIndex(i);
+    if (_connections) {
+        for (int i = 0; i < _connections->count(); i++) {
+            XIBObject* curObj = _connections->objectAtIndex(i);
 
-            if ( strcmp(curObj->_className, "segue") == 0 ) {
-                UIStoryboardSegue *segue = (UIStoryboardSegue *) curObj;
+            if (strcmp(curObj->_className, "segue") == 0) {
+                UIStoryboardSegue* segue = (UIStoryboardSegue*)curObj;
 
-                UIRuntimeEventConnection *newEvent = new UIRuntimeEventConnection();
+                UIRuntimeEventConnection* newEvent = new UIRuntimeEventConnection();
                 newEvent->_label = "perform:";
                 newEvent->_source = this;
                 newEvent->_destination = segue;

@@ -16,147 +16,113 @@
 
 #include <ctype.h>
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMethodSignature.h"
+#include <objc/encoding.h>
 
-bool getTypeSize(char type, int* size);
-int getArgumentSize(const char* type);
+#include <vector>
 
-@implementation NSMethodSignature : NSObject
+@interface NSMethodSignature () {
+    std::string _returnType;
+    uintptr_t _frameLength;
+    std::vector<std::string> _arguments;
+    std::vector<uintptr_t> _argumentOffsets;
+}
+@end
+
+@implementation NSMethodSignature
 
 /**
  @Status Interoperable
 */
-+ (NSMethodSignature*)signatureWithObjCTypes:(char*)funcTypes {
-    NSMethodSignature* ret = [self alloc];
++ (NSMethodSignature*)signatureWithObjCTypes:(const char*)funcTypes {
+    // funcTypes here is a full method type encoding. Method encodings are
+    // concatenations of individual type encodings and layout information.
+    // For example, v12@0:4 represents a method that:
+    //  - Returns void (v)
+    //  - Has a stack frame length of 12 bytes
+    //  - Takes an `id` argument (@) at stack frame offset 0
+    //  - Takes a `SEL` argument (:) at stack frame offset 4
+    return [[[self alloc] _initWithObjCTypes:funcTypes] autorelease];
+}
 
-    //  Count args
-    char* curArg = funcTypes;
+- (instancetype)_initWithObjCTypes:(const char*)objcTypes {
+    if (self = [super init]) {
+        std::vector<std::string> types;
+        std::vector<uintptr_t> offsets;
 
-    while (*curArg) {
-        char* typeStart = curArg;
+        const char* ptr = objcTypes;
+        while (*ptr) {
+            const char* typeBegin = ptr;
 
-        switch (*typeStart) {
-            case '{': {
-                int curCount = 0;
-                while (*curArg) {
-                    if (*curArg == '{') {
-                        curCount++;
-                    }
-                    if (*curArg == '}') {
-                        curCount--;
-                        if (curCount == 0) {
-                            break;
-                        }
-                    }
-                    curArg++;
-                }
-                while (*curArg && !isdigit(*curArg)) {
-                    curArg++;
-                }
-            } break;
+            ptr = objc_skip_typespec(ptr);
 
-            default: {
-                int curCount = 0;
-                while (*curArg) {
-                    if (*curArg == '{') {
-                        curCount++;
-                    }
-                    if (*curArg == '}') {
-                        curCount--;
-                        assert(curCount >= 0);
-                    }
-                    if (isdigit(*curArg) && curCount == 0) {
-                        break;
-                    }
-                    curArg++;
-                }
-            } break;
+            types.emplace_back(typeBegin, ptr);
+
+            uintptr_t offset = atoi(ptr);
+
+            offsets.emplace_back(offset);
+
+            while (*ptr && isdigit(*ptr)) {
+                ptr++;
+            }
         }
 
-        char* typeEnd = curArg;
+        _returnType = types.front();
+        _frameLength = offsets.front();
 
-        int typeLength = typeEnd - typeStart;
-
-        while (*curArg && isdigit(*curArg)) {
-            curArg++;
-        }
-
-        char* argOffsetEnd = curArg;
-
-        int offsetLength = argOffsetEnd - typeEnd;
-
-        assert(typeLength > 0);
-        assert(offsetLength > 0);
-
-        if (ret->returnType == NULL) {
-            int returnTypeSize = typeLength + 1;
-            ret->returnType = (char*)calloc(returnTypeSize, 1);
-            strncpy_s(ret->returnType, returnTypeSize, typeStart, typeLength);
-            ret->returnOffset = atoi(typeEnd);
-        } else {
-            int argumentsSize = typeLength + 1;
-            ret->arguments[ret->numArguments] = (char*)calloc(argumentsSize, 1);
-            strncpy_s(ret->arguments[ret->numArguments], argumentsSize, typeStart, typeLength);
-            ret->argumentOffsets[ret->numArguments] = atoi(typeEnd);
-
-            ret->numArguments++;
-        }
+        _arguments.assign(types.begin() + 1, types.end());
+        _argumentOffsets.assign(offsets.begin() + 1, offsets.end());
     }
+    return self;
+}
 
-    return [ret autorelease];
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)frameLength {
+    return _frameLength;
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)numberOfArguments {
-    return numArguments;
+    return _arguments.size();
 }
 
 /**
  @Status Interoperable
 */
 - (const char*)methodReturnType {
-    return returnType;
+    return _returnType.c_str();
 }
 
 /**
  @Status Interoperable
 */
-- (const char*)getArgumentTypeAtIndex:(int)index {
-    assert(index < numArguments);
-
-    return arguments[index];
+- (const char*)getArgumentTypeAtIndex:(NSUInteger)index {
+    return _arguments[index].c_str();
 }
 
-- (NSInteger)getArgumentSizeAtIndex:(int)index {
-    assert(index < numArguments);
-
-    return getArgumentSize(arguments[index]);
-}
-
-- (NSInteger)methodReturnSize {
-    return getArgumentSize(returnType);
+- (NSInteger)getArgumentSizeAtIndex:(NSUInteger)index {
+    return objc_sizeof_type(_arguments[index].c_str());
 }
 
 /**
  @Status Interoperable
 */
-- (NSInteger)methodReturnLength {
-    return getArgumentSize(returnType);
+- (NSUInteger)methodReturnLength {
+    return objc_sizeof_type(_returnType.c_str());
 }
 
-- (void)dealloc {
-    if (returnType) {
-        free(returnType);
-    }
-
-    for (int i = 0; i < numArguments; i++) {
-        if (arguments[i]) {
-            free(arguments[i]);
-        }
-    }
-    [super dealloc];
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isOneway {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

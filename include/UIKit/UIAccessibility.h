@@ -29,9 +29,12 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#pragma once
+
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSString.h>
+#import <UIKit/UIAccessibilityIdentification.h>
 
 @class UIView;
 @class UIBezierPath;
@@ -42,6 +45,10 @@ enum _UIAccessibilityNavigationStyle {
     UIAccessibilityNavigationStyleCombined,
 };
 typedef NSUInteger UIAccessibilityNavigationStyle;
+
+typedef enum {
+    UIAccessibilityZoomTypeInsertionPoint,
+} UIAccessibilityZoomType;
 
 typedef uint64_t UIAccessibilityTraits;
 
@@ -68,10 +75,33 @@ UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityScreenChangedNotificati
 UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityLayoutChangedNotification;
 UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityAnnouncementNotification;
 UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityAnnouncementDidFinishNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityBoldTextStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityClosedCaptioningStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityDarkerSystemColorsStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityGrayscaleStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityGuidedAccessStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityInvertColorsStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPauseAssistiveTechnologyNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityReduceMotionStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityReduceTransparencyStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityResumeAssistiveTechnologyNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilitySpeakScreenStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilitySpeakSelectionStatusDidChangeNotification;
+UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilitySwitchControlStatusDidChangeNotification;
+
+UIKIT_EXPORT NSString* const UIAccessibilityAnnouncementKeyStringValue;
+UIKIT_EXPORT NSString* const UIAccessibilityAnnouncementKeyWasSuccessful;
+UIKIT_EXPORT NSString* const UIAccessibilitySpeechAttributePunctuation;
+UIKIT_EXPORT NSString* const UIAccessibilitySpeechAttributeLanguage;
+UIKIT_EXPORT NSString* const UIAccessibilitySpeechAttributePitch;
+UIKIT_EXPORT NSString* const UIAccessibilityNotificationSwitchControlIdentifier;
+UIKIT_EXPORT NSString* const UIAccessibilityMonoAudioStatusDidChangeNotification;
+UIKIT_EXPORT NSString* const UIAccessibilityVoiceOverStatusChanged;
 
 // ----------------------------------------
 
-@protocol UIAccessibility
+@protocol UIAccessibility <NSObject>
 
 - (void)initAccessibility;
 - (void)updateAccessibility;
@@ -100,7 +130,7 @@ UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotificatio
 
 // ----------------------------------------
 
-@protocol UIAccessibilityContainer
+@protocol UIAccessibilityContainer <NSObject>
 - (id)accessibilityElementAtIndex:(NSInteger)index;
 - (NSInteger)indexOfAccessibilityElement:(id)element;
 
@@ -111,19 +141,11 @@ UIKIT_EXPORT UIAccessibilityNotifications UIAccessibilityPageScrolledNotificatio
 
 // ----------------------------------------
 
-@protocol UIAccessibilityFocus
+@protocol UIAccessibilityFocus <NSObject>
 
 - (void)accessibilityElementDidBecomeFocused;
 - (void)accessibilityElementDidLoseFocus;
 - (BOOL)accessibilityElementIsFocused;
-
-@end
-
-// ----------------------------------------
-
-@protocol UIAccessibilityIdentification
-
-@property (copy) NSString* accessibilityIdentifier;
 
 @end
 

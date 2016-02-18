@@ -27,8 +27,8 @@
 
 @interface UIGridLayoutRow : NSObject
 
-@property (nonatomic, unsafe_unretained) UIGridLayoutSection *section;
-@property (nonatomic, strong, readonly) NSArray *items;
+@property (nonatomic, unsafe_unretained) UIGridLayoutSection* section;
+@property (nonatomic, strong, readonly) NSArray* items;
 @property (nonatomic, assign) CGSize rowSize;
 @property (nonatomic, assign) CGRect rowFrame;
 @property (nonatomic, assign) NSInteger index;
@@ -41,19 +41,19 @@
 //- (UIGridLayoutRow *)copyFromSection:(UIGridLayoutSection *)section; // ???
 
 // Add new item to items array.
-- (void)addItem:(UIGridLayoutItem *)item;
+- (void)addItem:(UIGridLayoutItem*)item;
 
 // Layout current row (if invalid)
 - (void)layoutRow;
 
 // @steipete: Helper to save code in UICollectionViewFlowLayout.
 // Returns the item rects when fixedItemSize is enabled.
-- (NSArray *)itemRects;
+- (NSArray*)itemRects;
 
 //  Set current row frame invalid.
 - (void)invalidate;
 
 // Copy a snapshot of the current row data
-- (UIGridLayoutRow *)snapshot;
+- (UIGridLayoutRow*)snapshot;
 
 @end

@@ -29,8 +29,7 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UINAVIGATIONITEM_H_
-#define _UINAVIGATIONITEM_H_
+#pragma once
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
@@ -58,5 +57,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) NSArray* leftBarButtonItems;
 
 @end
-
-#endif /* _UINAVIGATIONITEM_H_ */

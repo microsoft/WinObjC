@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSNotificationQueue.h"
 
 @implementation NSNotificationQueue
@@ -25,4 +26,41 @@
 + (instancetype)defaultQueue {
     return nil;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithNotificationCenter:(NSNotificationCenter*)notificationCenter {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enqueueNotification:(NSNotification*)notification postingStyle:(NSPostingStyle)postingStyle {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enqueueNotification:(NSNotification*)notification
+               postingStyle:(NSPostingStyle)postingStyle
+               coalesceMask:(NSNotificationCoalescing)coalesceMask
+                   forModes:(NSArray*)modes {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask {
+    UNIMPLEMENTED();
+}
+
 @end

@@ -22,7 +22,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableSet.h"
 
-@implementation UIControl : UIView
+@implementation UIControl
 - (instancetype)initWithFrame:(CGRect)pos {
     _registeredActions = [NSMutableArray new];
     _activeTouches = [NSMutableArray new];
@@ -67,10 +67,27 @@
     [_registeredActions addObject:connection];
 }
 
-/**
+- (void)sendAction:(SEL)sel to:(id)target forEvent:(UIEvent*)event {
+    if (target == nil) {
+        target = self;
+
+        //  Cascade the action down the responder chain
+        while (target != nil) {
+            if ([target respondsToSelector:sel])
+                break;
+            target = [target nextResponder];
+        }
+    }
+
+    if (target != nil) {
+        [target performSelector:sel withObject:self withObject:event];
+    }
+}
+
+/*
  @Status Interoperable
 */
-- (void)sendEvent:(id)event mask:(unsigned)mask {
+- (void)sendActionsForControlEvents:(UIControlEvents)mask {
     unsigned count = [_registeredActions count];
 
     for (unsigned i = 0; i < count; i++) {
@@ -100,7 +117,7 @@
                 }
             }
 
-            [curTarget performSelector:sel withObject:self withObject:event];
+            [self sendAction:sel to:curTarget forEvent:nil];
         }
     }
 }
@@ -174,7 +191,7 @@
 
     [self setNeedsDisplay];
     [self setNeedsLayout];
-    
+
     if (enabled) {
         self.accessibilityTraits &= ~UIAccessibilityTraitNotEnabled;
     } else {
@@ -327,7 +344,7 @@
     }
 
     _touchInside = TRUE;
-    [self sendEvent:event mask:UIControlEventTouchDown];
+    [self sendActionsForControlEvents:UIControlEventTouchDown];
 
     if ([self respondsToSelector:@selector(beginTrackingWithTouch:withEvent:)]) {
         NSEnumerator* objEnum = [touchSet objectEnumerator];
@@ -350,7 +367,7 @@
         return;
     }
 
-    [self sendEvent:event mask:UIControlEventTouchDragInside];
+    [self sendActionsForControlEvents:UIControlEventTouchDragInside];
 
     if ([self respondsToSelector:@selector(continueTrackingWithTouch:withEvent:)]) {
         NSEnumerator* objEnum = [touchSet objectEnumerator];
@@ -378,7 +395,7 @@
         return;
     }
 
-    [self sendEvent:event mask:UIControlEventTouchUpInside];
+    [self sendActionsForControlEvents:UIControlEventTouchUpInside];
 
     NSEnumerator* objEnum = [touchSet objectEnumerator];
     UITouch* curTouch;
@@ -401,7 +418,7 @@
         return;
     }
 
-    [self sendEvent:event mask:UIControlEventTouchCancel];
+    [self sendActionsForControlEvents:UIControlEventTouchCancel];
 }
 
 /**
@@ -416,13 +433,6 @@
 */
 - (BOOL)isTracking {
     return [_activeTouches count] > 0;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)sendActionsForControlEvents:(UIControlEvents)eventMask {
-    [self sendEvent:self mask:eventMask];
 }
 
 /**

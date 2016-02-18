@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UILOCALIZEDINDEXEDCOLLATION_H_
-#define _UILOCALIZEDINDEXEDCOLLATION_H_
+#pragma once
 
 #import <Foundation/NSObject.h>
 
@@ -33,5 +32,3 @@
 - (NSInteger)sectionForObject:(id)object collationStringSelector:(SEL)selector;
 
 @end
-
-#endif /* UILocalizedIndexedCollation */

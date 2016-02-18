@@ -1,24 +1,40 @@
-/* Copyright(c) 2008 Christopher J. W. Lloyd
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
-
-typedef struct O2PDFDocument *CGPDFDocumentRef;
-
-#import <CoreGraphics/CGPDFPage.h>
 #import <CoreGraphics/CGDataProvider.h>
+#import <CoreGraphics/CGPDFArray.h>
+#import <CoreGraphics/CGPDFDictionary.h>
+#import <CoreFoundation/CFURL.h>
+#import <CoreGraphics/CGPDFPage.h>
 
-COREGRAPHICS_EXPORT CGPDFDocumentRef CGPDFDocumentRetain(CGPDFDocumentRef self);
-COREGRAPHICS_EXPORT void             CGPDFDocumentRelease(CGPDFDocumentRef self);
-
-COREGRAPHICS_EXPORT CGPDFDocumentRef CGPDFDocumentCreateWithProvider(CGDataProviderRef provider);
-
-COREGRAPHICS_EXPORT size_t           CGPDFDocumentGetNumberOfPages(CGPDFDocumentRef self);
-COREGRAPHICS_EXPORT CGPDFPageRef     CGPDFDocumentGetPage(CGPDFDocumentRef self,size_t pageNumber);
-
-COREGRAPHICS_EXPORT CGPDFDocumentRef CGPDFDocumentCreateWithURL(CFURLRef url);
+COREGRAPHICS_EXPORT CGPDFDocumentRef CGPDFDocumentCreateWithProvider(CGDataProviderRef provider) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFDocumentRef CGPDFDocumentCreateWithURL(CFURLRef url) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPDFDocumentRelease(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFDocumentRef CGPDFDocumentRetain(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGPDFDocumentGetTypeID() STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFDictionaryRef CGPDFDocumentGetCatalog(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT size_t CGPDFDocumentGetNumberOfPages(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFPageRef CGPDFDocumentGetPage(CGPDFDocumentRef document, size_t pageNumber) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPDFDocumentGetVersion(CGPDFDocumentRef document, int* majorVersion, int* minorVersion) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFDictionaryRef CGPDFDocumentGetInfo(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPDFArrayRef CGPDFDocumentGetID(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPDFDocumentAllowsCopying(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPDFDocumentAllowsPrinting(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPDFDocumentIsEncrypted(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPDFDocumentIsUnlocked(CGPDFDocumentRef document) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPDFDocumentUnlockWithPassword(CGPDFDocumentRef document, const char* password) STUB_METHOD;

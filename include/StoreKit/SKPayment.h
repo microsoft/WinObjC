@@ -1,58 +1,34 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-#ifndef _SKPAYMENT_H_
-#define _SKPAYMENT_H_
+#pragma once
 
-#import <Foundation/Foundation.h>
 #import <StoreKit/StoreKitExport.h>
+#import <Foundation/NSObject.h>
 
 @class SKProduct;
+@class NSString;
+@class NSData;
 
 STOREKIT_EXPORT_CLASS
-@interface SKPayment : NSObject
-
-+ (id)paymentWithProductIdentifier:(NSString*)identifier;
-+ (id)paymentWithProduct:(SKProduct*)product;
-
-@property (nonatomic, copy, readonly) NSString* productIdentifier;
-@property (nonatomic, readonly) NSInteger quantity;
-@property (nonatomic, copy, readonly) NSData* requestData;
-@property (nonatomic, copy, readonly) NSString* applicationUsername;
-
+@interface SKPayment : NSObject <NSCopying, NSMutableCopying, NSObject>
++ (instancetype)paymentWithProduct:(SKProduct*)product STUB_METHOD;
++ (id)paymentWithProductIdentifier:(NSString*)identifier STUB_METHOD;
+@property (readonly, copy, nonatomic) NSString* productIdentifier STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger quantity STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSData* requestData STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* applicationUsername STUB_PROPERTY;
 @end
-
-STOREKIT_EXPORT_CLASS
-@interface SKMutablePayment : SKPayment
-
-@property (nonatomic, copy, readwrite) NSString* applicationUsername;
-
-@end
-
-#endif /* _SKPAYMENT_H_ */

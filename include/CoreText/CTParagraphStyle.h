@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,38 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CTPARAGRAPHSTYLE_H_
-#define _CTPARAGRAPHSTYLE_H_
+#import <CoreText/CoreTextExport.h>
+#import <CoreFoundation/CoreFoundation.h>
 
-#import "CoreTextExport.h"
-#import <CoreFoundation/CFBase.h>
+typedef const struct __CTParagraphStyle* CTParagraphStyleRef;
+typedef uint32_t CTParagraphStyleSpecifier;
+typedef struct CTParagraphStyleSetting {
+    CTParagraphStyleSpecifier spec;
+    size_t valueSize;
+    const void* value;
+} CTParagraphStyleSetting;
+typedef uint8_t CTTextAlignment;
+typedef uint8_t CTLineBreakMode;
+typedef int8_t CTWritingDirection;
 
-typedef struct __CTParagraphStyle* CTParagraphStyleRef;
-
+enum {
+    kCTLeftTextAlignment = 0,
+    kCTRightTextAlignment = 1,
+    kCTCenterTextAlignment = 2,
+    kCTJustifiedTextAlignment = 3,
+    kCTNaturalTextAlignment = 4
+};
+enum {
+    kCTLineBreakByWordWrapping = 0,
+    kCTLineBreakByCharWrapping = 1,
+    kCTLineBreakByClipping = 2,
+    kCTLineBreakByTruncatingHead = 3,
+    kCTLineBreakByTruncatingTail = 4,
+    kCTLineBreakByTruncatingMiddle = 5
+};
+enum { kCTWritingDirectionNatural = -1, kCTWritingDirectionLeftToRight = 0, kCTWritingDirectionRightToLeft = 1 };
 enum {
     kCTParagraphStyleSpecifierAlignment = 0,
     kCTParagraphStyleSpecifierFirstLineHeadIndent = 1,
@@ -34,7 +57,7 @@ enum {
     kCTParagraphStyleSpecifierMaximumLineHeight = 8,
     kCTParagraphStyleSpecifierMinimumLineHeight = 9,
     kCTParagraphStyleSpecifierLineSpacing = 10,
-    kCTParagraphStyleSpecifierParagraphSpacing = 11,
+    /* deprecated */ kCTParagraphStyleSpecifierParagraphSpacing = 11,
     kCTParagraphStyleSpecifierParagraphSpacingBefore = 12,
     kCTParagraphStyleSpecifierBaseWritingDirection = 13,
     kCTParagraphStyleSpecifierMaximumLineSpacing = 14,
@@ -42,44 +65,11 @@ enum {
     kCTParagraphStyleSpecifierLineSpacingAdjustment = 16,
     kCTParagraphStyleSpecifierCount = 17
 };
-typedef uint32_t CTParagraphStyleSpecifier;
 
-typedef struct CTParagraphStyleSetting {
-    CTParagraphStyleSpecifier spec;
-    size_t valueSize;
-    const void* value;
-} CTParagraphStyleSetting;
-
-enum {
-    kCTLeftTextAlignment = 0,
-    kCTRightTextAlignment = 1,
-    kCTCenterTextAlignment = 2,
-    kCTJustifiedTextAlignment = 3,
-    kCTNaturalTextAlignment = 4
-};
-typedef uint32_t CTTextAlignment;
-
-enum {
-    kCTLineBreakByWordWrapping = 0,
-    kCTLineBreakByCharWrapping = 1,
-    kCTLineBreakByClipping = 2,
-    kCTLineBreakByTruncatingHead = 3,
-    kCTLineBreakByTruncatingTail = 4,
-    kCTLineBreakByTruncatingMiddle = 5
-};
-typedef uint32_t CTLineBreakMode;
-
-enum {
-    kCTWritingDirectionNatural = -1,
-    kCTWritingDirectionLeftToRight = 0,
-    kCTWritingDirectionRightToLeft = 1,
-};
-typedef int8_t CTWritingDirection;
-
-CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, CFIndex settingCount);
+CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, size_t settingCount) STUB_METHOD;
+CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreateCopy(CTParagraphStyleRef paragraphStyle) STUB_METHOD;
 CORETEXT_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
                                                           CTParagraphStyleSpecifier spec,
                                                           size_t valueBufferSize,
-                                                          void* valueBuffer);
-
-#endif /* _CTPARAGRAPHSTYLE_H_ */
+                                                          void* valueBuffer) STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTParagraphStyleGetTypeID() STUB_METHOD;

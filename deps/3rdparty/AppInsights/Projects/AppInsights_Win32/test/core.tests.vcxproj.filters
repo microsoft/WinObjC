@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="contracts">
+      <UniqueIdentifier>{7e2a60f6-a7e0-449f-b1d2-0382a91b7967}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Channel">
+      <UniqueIdentifier>{d571282f-4649-4a36-b1c9-a438448c005b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\core\specializations.h" />
+    <ClInclude Include="..\..\..\test\core\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestBase.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataBinary.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataHeaders.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataThread.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataThreadFrame.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestDataPoint.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestDevice.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestDomain.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestEnvelope.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestEventData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestExceptionData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestExceptionDetails.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestInternal.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestLocation.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestMessageData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestMetricData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestOperation.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestPageViewData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestPageViewPerfData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestRemoteDependencyData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestRequestData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestSession.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestSessionStateData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestStackFrame.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestUser.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\Channel\TestTelemetryChannel.cpp">
+      <Filter>Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\TestBasicEndToEnd.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryClient.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryClientConfig.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
+  </ItemGroup>
+</Project>
