@@ -55,7 +55,7 @@ private:
 
   SBWorkspace();
   
-  void findProjectSchemes(const String& projectAbsPath, const PBXProject* proj);
+  void findSchemes(const String& containerAbsPath);
   
   SBProject* findOpenProject(const String& absProjPath) const;
   const XCScheme* getScheme(const String& schemeName) const;

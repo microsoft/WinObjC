@@ -22,8 +22,8 @@
 #include "PBXProject.h"
 #include "XCScheme.h"
 
-XCScheme::XCScheme(const String& absSchemePath, const PBXProject* owner)
-: m_absPath(absSchemePath), m_parentProject(owner)
+XCScheme::XCScheme(const String& absSchemePath, const String& containerAbsPath)
+: m_absPath(absSchemePath), m_containerAbsPath(containerAbsPath)
 {
   // Record the scheme name
   m_name = sb_fname(sb_basename(m_absPath));
@@ -36,10 +36,10 @@ XCScheme::XCScheme(const String& absSchemePath, const PBXProject* owner)
 #endif
 }
 
-XCScheme* XCScheme::createFromFile(const String& schemePath, const PBXProject* owner)
+XCScheme* XCScheme::createFromFile(const String& schemePath, const String& containerAbsPath)
 {
-  // Check that the owner is valid
-  if (!owner) {
+  // Check that the container path is valid
+  if (containerAbsPath.empty()) {
     return NULL;
   }
 
@@ -59,7 +59,7 @@ XCScheme* XCScheme::createFromFile(const String& schemePath, const PBXProject* o
   }
 
   // Create a XCScheme and initialize it
-  XCScheme* ret = new XCScheme(absSchemePath, owner);
+  XCScheme* ret = new XCScheme(absSchemePath, containerAbsPath);
   if (!ret->initFromXML(doc)) {
     delete ret;
     ret = NULL;
@@ -70,17 +70,18 @@ XCScheme* XCScheme::createFromFile(const String& schemePath, const PBXProject* o
 bool XCScheme::initFromXML(const pugi::xml_document& doc)
 {
   // Create an error reporter for parsing
-  ErrorReporter reporter(SB_INFO, "Error parsing \"" + m_name + "\" scheme for \"" + m_parentProject->getName() + "\" project. ");
+  ErrorReporter reporter(SB_INFO, "Error parsing \"" + m_name + "\" scheme for \"" + m_containerAbsPath);
   
   // Find and process all BuildActionEntry nodes
   pugi::xpath_node_set baSet = doc.select_nodes("/Scheme/BuildAction/BuildActionEntries/BuildActionEntry");
   for (pugi::xpath_node_set::const_iterator it = baSet.begin(); it != baSet.end(); ++it)
     parseBuildAction(it->node(), reporter);
     
-  // Find and process all ArchiveAction nodes
-  pugi::xpath_node_set aaSet = doc.select_nodes("/Scheme/ArchiveAction");
-  for (pugi::xpath_node_set::const_iterator it = aaSet.begin(); it != aaSet.end(); ++it)
-    parseArchiveAction(it->node(), reporter);
+  // Find and process all LaunchAction nodes
+  pugi::xpath_node_set laSet = doc.select_nodes("/Scheme/LaunchAction");
+  for (pugi::xpath_node_set::const_iterator it = laSet.begin(); it != laSet.end(); ++it) {
+      parseLaunchAction(it->node(), reporter);
+  }
   
   // Make sure we got enough information
   if (m_targets.empty()) {
@@ -94,10 +95,12 @@ bool XCScheme::initFromXML(const pugi::xml_document& doc)
   }
 }
 
-void XCScheme::parseArchiveAction(const pugi::xml_node& node, const ErrorReporter& reporter)
+void XCScheme::parseLaunchAction(const pugi::xml_node& node, const ErrorReporter& reporter)
 {
-  // Get the buildConfiguration
-  getXMLProperty(node, "buildConfiguration", m_configName, VALUE_REQUIRED, reporter);
+    // Get the buildConfiguration
+    String configName;
+    getXMLProperty(node, "buildConfiguration", configName, VALUE_REQUIRED, reporter);
+    m_configName.insert(configName);
 }
 
 void XCScheme::parseBuildAction(const pugi::xml_node& node, const ErrorReporter& reporter)
