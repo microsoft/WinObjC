@@ -915,9 +915,12 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
  @Status Interoperable
 */
 - (void)setView:(UIView*)newView {
-    if (newView == priv->view)
+    // No work necessary if it's the same view we already have
+    if (newView == priv->view) {
         return;
+    }
 
+    // Remove the existing view if it exists
     UIView* oldSuper = nil;
     UIView* oldView = nil;
     if (priv->view != nil) {
@@ -926,32 +929,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         removeViewMapping(priv->view);
     }
 
+    // Store the new view
     priv->view = newView;
-
     if (priv->view != nil) {
-        CGRect curRect = [priv->view bounds];
-        CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-
-        if ((curRect.size.width == 0.0f && curRect.size.height == 0.0f) || curRect.size.width > appFrame.size.width ||
-            curRect.size.height > appFrame.size.height) {
-            appFrame.origin.x = 0.0f;
-            appFrame.origin.y = 0.0f;
-            [priv->view setFrame:appFrame];
-        }
-
-        /*
-        if ( curSize.size.width == 320.0f &&
-        (curSize.size.height == 460.0f || curSize.size.height == 480.0f) ) {
-        CGRect frame;
-
-        frame = [[UIScreen mainScreen] bounds];
-        frame.size.height -= 480.0f - curSize.size.height;
-        frame.origin.y += 480.0f - curSize.size.height;
-
-        [priv->view setFrame:frame];
-        }
-        */
-
         addViewMapping(priv->view, self);
         if (oldSuper != nil && oldSuper != priv->view) {
             [oldSuper insertSubview:priv->view aboveSubview:oldView];
