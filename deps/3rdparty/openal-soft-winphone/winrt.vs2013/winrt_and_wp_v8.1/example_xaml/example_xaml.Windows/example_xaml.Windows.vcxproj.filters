@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>aba53199-8474-467d-8340-71a338eb87cb</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>15d42203-4061-474b-a380-481eef42caaf</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>60f9b1c2-e649-4bae-a7aa-141c0a15ab9b</UniqueIdentifier>
+    </Filter>
+    <Image Include="Assets\Logo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Filter Include="prebuilt_Win32">
+      <UniqueIdentifier>{0048e214-3bec-4e97-8949-f041453ae117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_Win32\Debug">
+      <UniqueIdentifier>{f2870dc1-b847-4956-b5c7-82314e10cff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_Win32\Release">
+      <UniqueIdentifier>{fbfa2458-b50c-4b10-a34d-c7d994e6627d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_ARM">
+      <UniqueIdentifier>{f15a9f5a-54e9-4c89-ac06-98e7ea7602c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_x64">
+      <UniqueIdentifier>{5c1e6731-0d56-4215-81f1-45c4174363b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_x64\Debug">
+      <UniqueIdentifier>{b021a1b9-0b3e-4760-a0fe-35c38ab9da69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_x64\Release">
+      <UniqueIdentifier>{8ff0f9f1-65a1-4f10-868e-bd08fb3f094e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_ARM\Debug">
+      <UniqueIdentifier>{33fa956c-2703-4b3d-b7a2-493668883f51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_ARM\Release">
+      <UniqueIdentifier>{4f2c8a46-5510-4a86-8d45-39fd980947ab}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="DirectXPage.xaml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="DirectXPage.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="example_xaml.Windows_TemporaryKey.pfx" />
+    <None Include="..\..\bin\Win32\Debug\OpenAL.winrt.dll">
+      <Filter>prebuilt_Win32\Debug</Filter>
+    </None>
+    <None Include="..\..\bin\Win32\Release\OpenAL.winrt.dll">
+      <Filter>prebuilt_Win32\Release</Filter>
+    </None>
+    <None Include="..\..\bin\ARM\Debug\OpenAL.winrt.dll">
+      <Filter>prebuilt_ARM\Debug</Filter>
+    </None>
+    <None Include="..\..\bin\ARM\Release\OpenAL.winrt.dll">
+      <Filter>prebuilt_ARM\Release</Filter>
+    </None>
+    <None Include="..\..\bin\x64\Debug\OpenAL.winrt.dll">
+      <Filter>prebuilt_x64\Debug</Filter>
+    </None>
+    <None Include="..\..\bin\x64\Release\OpenAL.winrt.dll">
+      <Filter>prebuilt_x64\Release</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DirectXPage.xaml" />
+  </ItemGroup>
+</Project>
