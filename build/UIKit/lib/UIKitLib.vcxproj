@@ -176,10 +176,14 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAttachmentBehavior.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBarButtonItemGroup.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBlurEffect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionReusableView.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionReusableView.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewFlowLayoutInvalidationContext.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewFocusUpdateContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewLayoutAttributes.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewLayoutAttributes.mm">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewLayoutInvalidationContext.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewTransitionLayout.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollisionBehavior.mm" />
