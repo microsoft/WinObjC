@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +28,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UITOOLBAR_H_
-#define _UITOOLBAR_H_
+#pragma once
 
 #import "UIView.h"
 #import "UIInterface.h"
@@ -43,15 +43,13 @@ typedef enum {
 UIKIT_EXPORT_CLASS
 @interface UIToolbar : UIView
 
-- (void)setItems:(NSArray *)items animated:(BOOL)animated;
-- (void)setBackgroundImage:(UIImage *)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics;
+- (void)setItems:(NSArray*)items animated:(BOOL)animated;
+- (void)setBackgroundImage:(UIImage*)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics;
 
 @property (nonatomic) UIBarStyle barStyle;
-@property (nonatomic, retain) UIColor *tintColor;
-@property (nonatomic, retain) UIColor *barTintColor;
-@property (nonatomic, copy) NSArray *items;
-@property (nonatomic,assign,getter=isTranslucent) BOOL translucent;
+@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* barTintColor;
+@property (nonatomic, copy) NSArray* items;
+@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
 
 @end
-
-#endif /* _UITOOLBAR_H_ */

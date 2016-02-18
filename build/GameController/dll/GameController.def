@@ -1,0 +1,48 @@
+LIBRARY GameController
+    EXPORTS
+        ; GCSnapshotp.mm
+        GCGamepadSnapShotDataV100FromNSData
+        GCExtendedGamepadSnapShotDataV100FromNSData
+        NSDataFromGCGamepadSnapShotDataV100
+        NSDataFromGCExtendedGamepadSnapShotDataV100
+
+        ; GCController.mm
+        _OBJC_CLASS_GCController DATA
+        __objc_class_name_GCController CONSTANT
+
+        ; GCControllerAxisInput.mm
+        _OBJC_CLASS_GCControllerAxisInput DATA
+        __objc_class_name_GCControllerAxisInput CONSTANT
+
+        ; GCControllerButtonInput.mm
+        _OBJC_CLASS_GCControllerButtonInput DATA
+        __objc_class_name_GCControllerButtonInput CONSTANT
+
+        ; GCControllerDirectionPad.mm
+        _OBJC_CLASS_GCControllerDirectionPad DATA
+        __objc_class_name_GCControllerDirectionPad CONSTANT
+
+        ; GCControllerElement.mm
+        _OBJC_CLASS_GCControllerElement DATA
+        __objc_class_name_GCControllerElement CONSTANT
+
+        ; GCExtendedGamepad.mm
+        _OBJC_CLASS_GCExtendedGamepad DATA
+        __objc_class_name_GCExtendedGamepad CONSTANT
+
+        ; GCExtendedGamepadSnapshot.mm
+        _OBJC_CLASS_GCExtendedGamepadSnapshot DATA
+        __objc_class_name_GCExtendedGamepadSnapshot CONSTANT
+
+        ; GCGamepad.mm
+        _OBJC_CLASS_GCGamepad DATA
+        __objc_class_name_GCGamepad CONSTANT
+
+        ; GCGamepadSnapshot.mm
+        _OBJC_CLASS_GCGamepadSnapshot DATA
+        __objc_class_name_GCGamepadSnapshot CONSTANT
+
+        ; GCMotion.mm
+        _OBJC_CLASS_GCMotion DATA
+        __objc_class_name_GCMotion CONSTANT
+

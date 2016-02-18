@@ -14,11 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
+#import <Foundation/NSPredicate.h>
 
-#include "Foundation/NSPredicate.h"
-
-@implementation NSPredicate
+@implementation NSPredicate {
+    BOOL (^_evaluationBlock)(id evaluatedObject, NSDictionary* bindings);
+}
 
 /**
  @Status Stub
@@ -53,27 +54,36 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSPredicate*)predicateWithBlock:(BOOL (^)(id evaluatedObject, NSDictionary* bindings))block {
-    UNIMPLEMENTED();
-    return nil;
+    return [[[NSPredicate alloc] _initWithBlock:block] autorelease];
+}
+
+- (instancetype)_initWithBlock:(BOOL (^)(id evaluatedObject, NSDictionary* bindings))block {
+    if (self = [super init]) {
+        _evaluationBlock = [block copy];
+    }
+    return self;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes: Only block evaluation is supported.
 */
-- (BOOL)evaluateWithObject:(id)objecc {
-    UNIMPLEMENTED();
-    return nil;
+- (BOOL)evaluateWithObject:(id)object {
+    return [self evaluateWithObject:object substitutionVariables:nil];
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes: Only block evaluation is supported.
 */
 - (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary*)variables {
-    UNIMPLEMENTED();
-    return nil;
+    if (_evaluationBlock) {
+        return _evaluationBlock(object, variables);
+    }
+    return NO;
 }
 
 /**
@@ -87,16 +97,54 @@
 /**
  @Status Stub
 */
-- (NSString*)predicateFormat {
+- (void)allowEvaluation {
     UNIMPLEMENTED();
-    return nil;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)allowEvaluation {
-    UNIMPLEMENTED();
+- (id)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
+
+/**
+ @Status Interoperable
+*/
++ (BOOL)supportsSecureCoding {
+    return YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    if (self = [super init]) {
+        _predicateFormat = [[decoder decodeObjectOfClass:[NSString class] forKey:@"predicateFormat"] retain];
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    if (_evaluationBlock) {
+        THROW_NS_HR_MSG(E_FAIL, "NSPredicate with a block cannot be encoded.");
+    }
+    if (_predicateFormat) {
+        [encoder encodeObject:_predicateFormat forKey:@"predicateFormat"];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)dealloc {
+    [_predicateFormat release];
+    [_evaluationBlock release];
+    [super dealloc];
 }
 
 @end

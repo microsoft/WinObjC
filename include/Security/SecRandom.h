@@ -17,8 +17,9 @@
 #pragma once
 
 #import <Security/SecBase.h>
+#import <stdint.h>
 
 typedef const struct __SecRandom* SecRandomRef;
 
-SECURITY_EXPORT int SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t* bytes);
+SECURITY_EXPORT int SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t* bytes) STUB_METHOD;
 SECURITY_EXPORT const SecRandomRef kSecRandomDefault;

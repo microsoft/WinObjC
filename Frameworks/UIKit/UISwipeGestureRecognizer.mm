@@ -29,33 +29,42 @@
     double _startTime;
 }
 
+static void commonInit(UISwipeGestureRecognizer* self) {
+    self->_direction = UISwipeGestureRecognizerDirectionRight;
+    self->_numberOfTouchesRequired = 1;
+}
+
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    [super initWithCoder:coder];
-    if ([coder containsValueForKey:@"UISwipeGestureRecognizer.direction"]) {
-        _direction = (UISwipeGestureRecognizerDirection)[coder decodeIntForKey:@"UISwipeGestureRecognizer.direction"];
-    } else {
-        // Use this as a default:
-        _direction = UISwipeGestureRecognizerDirectionRight;
+    if (self = [super initWithCoder:coder]) {
+        commonInit(self);
+
+        NSString* directionKey = @"UISwipeGestureRecognizer.direction";
+        NSString* numberOfTouchesRequiredKey = @"UISwipeGestureRecognizer.numberOfTouchesRequired";
+
+        if ([coder containsValueForKey:directionKey]) {
+            _direction = (UISwipeGestureRecognizerDirection)[coder decodeIntForKey:directionKey];
+        }
+
+        if ([coder containsValueForKey:numberOfTouchesRequiredKey]) {
+            _numberOfTouchesRequired = [coder decodeIntForKey:numberOfTouchesRequiredKey];
+        }
     }
-    _numberOfTouchesRequired = 1;
 
     return self;
 }
 
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
-    [super initWithTarget:target action:selector];
+    if (self = [super initWithTarget:target action:selector]) {
+        commonInit(self);
+    }
 
-    // Use this as a default:
-    _direction = UISwipeGestureRecognizerDirectionRight;
-    _numberOfTouchesRequired = 1;
     return self;
 }
 
 - (instancetype)init {
-    [super init];
-
-    _direction = UISwipeGestureRecognizerDirectionRight;
-    _numberOfTouchesRequired = 1;
+    if (self = [super init]) {
+        commonInit(self);
+    }
 
     return self;
 }

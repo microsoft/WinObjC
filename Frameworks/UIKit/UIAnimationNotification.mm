@@ -75,7 +75,7 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
     }
 }
 
-@implementation UIAnimationNotification : NSObject
+@implementation UIAnimationNotification
 - (void)_animationHasStarted:(id)animation {
     if (_numAnimations == 0) {
         return;

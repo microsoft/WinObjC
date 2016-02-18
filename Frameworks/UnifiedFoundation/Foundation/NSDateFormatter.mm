@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #import <Foundation/Foundation.h>
 #import <NSLocaleInternal.h>
@@ -747,4 +748,14 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 - (NSArray*)monthSymbols {
     return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::monthSymbols]._objValue;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getObjectValue:(id _Nullable*)obj forString:(NSString*)string range:(NSRange*)rangep error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

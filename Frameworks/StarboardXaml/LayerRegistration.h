@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#include <collection.h>
+
 namespace XamlTypeInfo {
 namespace InfoProvider {
 ref class XamlTypeInfoProvider sealed {

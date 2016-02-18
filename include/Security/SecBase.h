@@ -29,6 +29,7 @@
 #define SECURITY_EXPORT_CLASS SECURITY_IMPEXP
 #endif
 #endif
+
 enum {
     errSecSuccess = 0, /* No error. */
     errSecUnimplemented = -4,

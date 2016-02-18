@@ -75,8 +75,12 @@ public:
                                              bool centerVertically) = 0;
     virtual DisplayTexture* CreateDisplayTextureForElement(id xamlElement) = 0;
 
-    virtual DisplayAnimation* GetBasicDisplayAnimation(
-        id caanim, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) = 0;
+    virtual DisplayAnimation* GetBasicDisplayAnimation(id caanim,
+                                                       NSString* propertyName,
+                                                       NSObject* fromValue,
+                                                       NSObject* toValue,
+                                                       NSObject* byValue,
+                                                       CAMediaTimingProperties* timingProperties) = 0;
     virtual DisplayAnimation* GetMoveDisplayAnimation(DisplayAnimation** secondAnimRet,
                                                       id caanim,
                                                       DisplayNode* animNode,
@@ -121,6 +125,8 @@ public:
     virtual void DecrementCounter(const char* name) = 0;
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) = 0;
+
+    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) = 0;
 };
 
 extern CACompositorInterface* _globalCompositor;

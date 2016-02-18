@@ -43,7 +43,7 @@ EAGL_EXPORT void EXPORT_glFramebufferTexture2DOES(GLenum target, GLenum attachme
 }
 
 EAGL_EXPORT void EXPORT_glDiscardFramebufferEXT(GLenum target, GLsizei numAttachments, const GLenum* attachments) {
-    EbrDebugLog("glDiscardFramebufferEXT not supported\n");
+    // TODO: 6175619 _glDiscardFramebufferEXT is not supported yet.
 }
 
 EAGL_EXPORT void EXPORT_glGenFramebuffers(GLsizei n, GLuint* framebuffers) {
@@ -952,3 +952,9 @@ EAGL_EXPORT void EXPORT_glGenVertexArraysOES(GLsizei n, GLuint* arrays) {
 EAGL_EXPORT GLboolean EXPORT_glIsVertexArrayOES(GLuint array) {
     return glIsVertexArrayOES(array);
 }
+
+EAGL_EXPORT void EXPORT_glRenderbufferStorageMultisampleANGLE (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    glRenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
+}
+

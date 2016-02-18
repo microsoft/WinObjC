@@ -1,4 +1,6 @@
-module CoreData [extern_c] {
+module CoreData [system] [extern_c] {
+    use CoreFoundation
+    use Foundation
     umbrella header "CoreData.h"
     export *
     

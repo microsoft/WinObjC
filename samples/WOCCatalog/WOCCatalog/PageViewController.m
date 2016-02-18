@@ -120,11 +120,8 @@ static const int c_numControllers = 3;
                     animated:NO
                   completion:nil];
 
-// TODO: Re-enable when feature complete    
-#ifndef WINOBJC
     [self setDelegate:self];
     [self setDataSource:self];
-#endif
     
 // TODO: Bar button items.
 #ifndef WINOBJC

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,35 +13,56 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _MPMOVIEPLAYERCONTROLLER_H_
-#define _MPMOVIEPLAYERCONTROLLER_H_
+#import <MediaPlayer/MediaPlayerExport.h>
+#import <Foundation/NSObject.h>
+#import <MediaPlayer/MPMediaPlayback.h>
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIImage.h>
-#import <UIKit/UIColor.h>
+@class NSString;
+@class NSURL;
+@class UIView;
+@class NSArray;
+@class NSError;
+@class UIImage;
+@class MPMovieAccessLog;
+@class MPMovieErrorLog;
+@class UIColor;
 
-typedef NS_ENUM(NSInteger, MPMovieLoadState) {
+typedef NS_ENUM(NSUInteger, MPMovieScalingMode) {
+    MPMovieScalingModeNone,
+    MPMovieScalingModeAspectFit,
+    MPMovieScalingModeAspectFill,
+    MPMovieScalingModeFill
+} ;
+
+typedef NS_ENUM(NSUInteger, MPMovieControlMode) { 
+    MPMovieControlModeDefault, 
+    MPMovieControlModeVolumeOnly, 
+    MPMovieControlModeHidden 
+};
+
+typedef NS_ENUM(NSUInteger, MPMovieLoadState) {
     MPMovieLoadStateUnknown = 0,
     MPMovieLoadStatePlayable = 1 << 0,
     MPMovieLoadStatePlaythroughOK = 1 << 1,
     MPMovieLoadStateStalled = 1 << 2,
 };
 
-typedef NS_ENUM(NSInteger, MPMovieControlStyle) {
+typedef NS_ENUM(NSUInteger, MPMovieControlStyle) {
     MPMovieControlStyleNone,
     MPMovieControlStyleEmbedded,
     MPMovieControlStyleFullscreen,
     MPMovieControlStyleDefault = MPMovieControlStyleFullscreen
 };
 
-typedef NS_ENUM(NSInteger, MPMovieFinishReason) {
+typedef NS_ENUM(NSUInteger, MPMovieFinishReason) {
     MPMovieFinishReasonPlaybackEnded,
     MPMovieFinishReasonPlaybackError,
-    MPMovieFinishReasonUserExited
+    MPMovieFinishReasonUserExited 
 };
 
-typedef NS_ENUM(NSInteger, MPMoviePlaybackState) {
+typedef NS_ENUM(NSUInteger, MPMoviePlaybackState) {
     MPMoviePlaybackStateStopped,
     MPMoviePlaybackStatePlaying,
     MPMoviePlaybackStatePaused,
@@ -50,126 +71,67 @@ typedef NS_ENUM(NSInteger, MPMoviePlaybackState) {
     MPMoviePlaybackStateSeekingBackward
 };
 
-typedef NS_ENUM(NSInteger, MPMovieRepeatMode) { MPMovieRepeatModeNone, MPMovieRepeatModeOne };
+typedef NS_ENUM(NSUInteger, MPMovieRepeatMode) { MPMovieRepeatModeNone, MPMovieRepeatModeOne };
 
-typedef NS_ENUM(int, MPMovieScalingMode) {
-    MPMovieScalingModeNone,
-    MPMovieScalingModeAspectFit,
-    MPMovieScalingModeAspectFill,
-    MPMovieScalingModeFill
-};
+typedef NS_OPTIONS(NSUInteger, MPMovieTimeOption) { MPMovieTimeOptionNearestKeyFrame, MPMovieTimeOptionExact };
 
-typedef NS_ENUM(NSInteger, MPMovieTimeOption) { MPMovieTimeOptionNearestKeyFrame, MPMovieTimeOptionExact };
+typedef NS_ENUM(NSUInteger, MPMovieMediaTypeMask) { MPMovieMediaTypeMaskNone = 0, MPMovieMediaTypeMaskVideo = 1 << 0, MPMovieMediaTypeMaskAudio = 1 << 1 };
 
-typedef NS_ENUM(NSInteger, MPMovieMediaTypeMask) {
-    MPMovieMediaTypeMaskNone = 0,
-    MPMovieMediaTypeMaskVideo = 1 << 0,
-    MPMovieMediaTypeMaskAudio = 1 << 1
-};
+typedef NS_ENUM(NSUInteger, MPMovieSourceType) { MPMovieSourceTypeUnknown, MPMovieSourceTypeFile, MPMovieSourceTypeStreaming };
 
-typedef NS_ENUM(NSInteger, MPMovieSourceType) { MPMovieSourceTypeUnknown, MPMovieSourceTypeFile, MPMovieSourceTypeStreaming };
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerThumbnailImageKey;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerThumbnailTimeKey;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerThumbnailErrorKey;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerFullscreenAnimationDurationUserInfoKey;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerFullscreenAnimationCurveUserInfoKey;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishReasonUserInfoKey;
 
-typedef NS_ENUM(int, MPMovieControlMode) { MPMovieControlModeDefault, MPMovieControlModeVolumeOnly, MPMovieControlModeHidden };
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerWillExitFullscreenNotification;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerDidExitFullscreenNotification;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerWillEnterFullscreenNotification;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerDidEnterFullscreenNotification;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishNotification;
+MEDIAPLAYER_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
 
-UIKIT_EXPORT NSString* const MPMoviePlayerThumbnailImageKey;
-UIKIT_EXPORT NSString* const MPMoviePlayerThumbnailTimeKey;
-UIKIT_EXPORT NSString* const MPMoviePlayerThumbnailErrorKey;
-UIKIT_EXPORT NSString* const MPMoviePlayerFullscreenAnimationDurationUserInfoKey;
-UIKIT_EXPORT NSString* const MPMoviePlayerFullscreenAnimationCurveUserInfoKey;
-UIKIT_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishReasonUserInfoKey;
+MEDIAPLAYER_EXPORT_CLASS
 
-UIKIT_EXPORT NSString* const MPMoviePlayerWillExitFullscreenNotification;
-UIKIT_EXPORT NSString* const MPMoviePlayerDidExitFullscreenNotification;
-UIKIT_EXPORT NSString* const MPMoviePlayerWillEnterFullscreenNotification;
-UIKIT_EXPORT NSString* const MPMoviePlayerDidEnterFullscreenNotification;
-UIKIT_EXPORT NSString* const MPMoviePlayerPlaybackDidFinishNotification;
-UIKIT_EXPORT NSString* const MPMoviePlayerLoadStateDidChangeNotification;
+@interface MPMoviePlayerController : NSObject <MPMediaPlayback>
+@property (copy, nonatomic) NSURL* contentURL STUB_PROPERTY;
+@property (nonatomic) MPMovieSourceType movieSourceType STUB_PROPERTY;
+@property (readonly, nonatomic) MPMovieMediaTypeMask movieMediaTypes STUB_PROPERTY;
+@property (nonatomic) BOOL allowsAirPlay STUB_PROPERTY;
+@property (readonly, getter=isAirPlayVideoActive, nonatomic) BOOL airPlayVideoActive STUB_PROPERTY;
+@property (readonly, nonatomic) CGSize naturalSize STUB_PROPERTY;
+@property (getter=isFullscreen, nonatomic) BOOL fullscreen STUB_PROPERTY;
+@property (nonatomic) MPMovieScalingMode scalingMode STUB_PROPERTY;
+@property (nonatomic) MPMovieControlStyle controlStyle STUB_PROPERTY;
+@property (nonatomic) BOOL useApplicationAudioSession STUB_PROPERTY;
+@property (readonly, nonatomic) NSTimeInterval duration STUB_PROPERTY;
+@property (readonly, nonatomic) NSTimeInterval playableDuration STUB_PROPERTY;
+@property (readonly, nonatomic) UIView* view STUB_PROPERTY;
+@property (readonly, nonatomic) UIView* backgroundView STUB_PROPERTY;
+@property (readonly, nonatomic) MPMovieLoadState loadState STUB_PROPERTY;
+@property (readonly, nonatomic) MPMoviePlaybackState playbackState STUB_PROPERTY;
+@property (nonatomic) NSTimeInterval initialPlaybackTime STUB_PROPERTY;
+@property (nonatomic) NSTimeInterval endPlaybackTime STUB_PROPERTY;
+@property (nonatomic) BOOL shouldAutoplay STUB_PROPERTY;
+@property (readonly, nonatomic) BOOL readyForDisplay STUB_PROPERTY;
+@property (nonatomic) MPMovieRepeatMode repeatMode STUB_PROPERTY;
+@property (readonly, nonatomic) NSArray* timedMetadata STUB_PROPERTY;
+@property (readonly, nonatomic) MPMovieAccessLog* accessLog STUB_PROPERTY;
+@property (readonly, nonatomic) MPMovieErrorLog* errorLog STUB_PROPERTY;
 
-@interface MPMovieErrorLogEvent : NSObject
+@property (nonatomic, readonly) BOOL isPreparedToPlay STUB_PROPERTY;
+@property (nonatomic) float currentPlaybackRate STUB_PROPERTY;
+@property (nonatomic) NSTimeInterval currentPlaybackTime STUB_PROPERTY;
 
-@property (nonatomic, readonly) NSString* errorDomain;
-@property (nonatomic, readonly) NSUInteger errorStatusCode;
-
-@end
-
-@interface MPMovieErrorLog : NSObject
-
-@property (nonatomic, readonly) NSArray* events;
-
-@end
-
-@protocol MPMediaPlayback
-@required
-- (void)play;
-
-@required
-- (void)pause;
-
-@required
-- (void)stop;
-
-@required
-- (void)prepareToPlay;
-
-@required
-- (void)beginSeekingBackward;
-
-@required
-- (void)beginSeekingForward;
-
-@required
-- (void)endSeeking;
-
-@required
-@property (nonatomic, readonly) BOOL isPreparedToPlay;
-
-@required
-@property (nonatomic) float currentPlaybackRate;
-
-@required
-@property (nonatomic) NSTimeInterval currentPlaybackTime;
-@end
-
-@class MPMovieAccessLog;
-@class MPMovieErrorLog;
-
-UIKIT_EXPORT_CLASS
-@interface MPMoviePlayerController : NSObject <MPMediaPlayback, NSObject>
-
-- (instancetype)initWithContentURL:(NSURL*)url;
-- (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated;
-- (void)playPrerollAdWithCompletionHandler:(void (^)(NSError* error))completionHandler;
-- (UIImage*)thumbnailImageAtTime:(NSTimeInterval)playbackTime timeOption:(MPMovieTimeOption)option;
-- (void)requestThumbnailImagesAtTimes:(NSArray*)playbackTimes timeOption:(MPMovieTimeOption)option;
-- (void)cancelAllThumbnailImageRequests;
-- (UIColor*)backgroundColor;
-- (MPMovieControlMode)movieControlMode;
-
-@property (nonatomic, copy) NSURL* contentURL;
-@property (nonatomic) MPMovieSourceType movieSourceType;
-@property (nonatomic, readonly) MPMovieMediaTypeMask movieMediaTypes;
-@property (nonatomic) BOOL allowsAirPlay;
-@property (nonatomic, readonly, getter=isAirPlayVideoActive) BOOL airPlayVideoActive;
-@property (nonatomic, readonly) CGSize naturalSize;
-@property (nonatomic, getter=isFullscreen) BOOL fullscreen;
-@property (nonatomic) MPMovieScalingMode scalingMode;
-@property (nonatomic) MPMovieControlStyle controlStyle;
-@property (nonatomic) BOOL useApplicationAudioSession;
-@property (nonatomic, readonly) NSTimeInterval duration;
-@property (nonatomic, readonly) NSTimeInterval playableDuration;
-@property (nonatomic, readonly) UIView* view;
-@property (nonatomic, readonly) UIView* backgroundView;
-@property (nonatomic, readonly) MPMovieLoadState loadState;
-@property (nonatomic, readonly) MPMoviePlaybackState playbackState;
-@property (nonatomic) NSTimeInterval initialPlaybackTime;
-@property (nonatomic) NSTimeInterval endPlaybackTime;
-@property (nonatomic) BOOL shouldAutoplay;
-@property (nonatomic, readonly) BOOL readyForDisplay;
-@property (nonatomic) MPMovieRepeatMode repeatMode;
-@property (nonatomic, readonly) NSArray* timedMetadata;
-@property (nonatomic, readonly) MPMovieAccessLog* accessLog;
-@property (nonatomic, readonly) MPMovieErrorLog* errorLog;
+- (instancetype)initWithContentURL:(NSURL*)url STUB_METHOD;
+- (void)setFullscreen:(BOOL)fullscreen animated:(BOOL)animated STUB_METHOD;
+- (void)playPrerollAdWithCompletionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+- (UIImage*)thumbnailImageAtTime:(NSTimeInterval)playbackTime timeOption:(MPMovieTimeOption)option STUB_METHOD;
+- (void)requestThumbnailImagesAtTimes:(NSArray*)playbackTimes timeOption:(MPMovieTimeOption)option STUB_METHOD;
+- (void)cancelAllThumbnailImageRequests STUB_METHOD;
+- (UIColor*)backgroundColor STUB_METHOD;
+- (MPMovieControlMode)movieControlMode STUB_METHOD;
 
 @end
-
-#endif /* _MPMOVIEPLAYERCONTROLLER_H_ */

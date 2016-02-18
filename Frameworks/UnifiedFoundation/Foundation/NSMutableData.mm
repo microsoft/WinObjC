@@ -17,6 +17,11 @@
 #import "Starboard.h"
 #import <Foundation/NSMutableData.h>
 
+@interface NSMutableData () {
+    NSUInteger _capacity;
+}
+@end
+
 @implementation NSMutableData
 void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     if (exact) {
@@ -170,9 +175,11 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 */
 - (void)replaceBytesInRange:(NSRange)range withBytes:(const void*)bytes {
     if (range.location > _length) {
-        [NSException
-             raise:NSRangeException
-            format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d", range.location, range.length, _length];
+        [NSException raise:NSRangeException
+                    format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d",
+                           range.location,
+                           range.length,
+                           _length];
     }
 
     if (range.location + range.length > _length) {
@@ -187,11 +194,12 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
  @Status Interoperable
 */
 - (void)resetBytesInRange:(NSRange)range {
-
     if (range.location > _length) {
-        [NSException
-             raise:NSRangeException
-            format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d", range.location, range.length, _length];
+        [NSException raise:NSRangeException
+                    format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d",
+                           range.location,
+                           range.length,
+                           _length];
     }
 
     if (range.location + range.length > _length) {
@@ -207,13 +215,16 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 - (void)replaceBytesInRange:(NSRange)range withBytes:(const void*)bytes length:(unsigned)length {
     // location starts beyond current length, throws
     if (range.location > _length) {
-        [NSException
-             raise:NSRangeException
-            format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d", range.location, range.length, _length];
+        [NSException raise:NSRangeException
+                    format:@"location is out of bounds - range.location = %d, range.length = %d, Data length = %d",
+                           range.location,
+                           range.length,
+                           _length];
     }
 
-    // calcuate tailLength - e.g., for "1234567890", if replacement happens with the range of "234" with "xxxx", final result is "1xxxx567890"
-    // we need shift 567890 to the right - 567890 is the tail, its length - taillength is 6 
+    // calcuate tailLength - e.g., for "1234567890", if replacement happens with the range of "234" with "xxxx", final result is
+    // "1xxxx567890"
+    // we need shift 567890 to the right - 567890 is the tail, its length - taillength is 6
     // if, however, we replace range "890" or the tail with anything, there is no need to shift the tail because tail is replaced
     unsigned tailLength = 0;
     if (range.location + range.length < _length) {

@@ -18,6 +18,7 @@
 
 #include <Foundation/Foundation.h>
 #include <inttypes.h>
+#include <wchar.h>
 
 #ifndef WINRT_EXPORT
 #define WINRT_EXPORT __declspec(dllimport)
@@ -25,26 +26,17 @@
 
 #define ACTIVATOR __attribute((ns_returns_retained))
 
-#ifndef __cplusplus
-#ifndef WCHAR
-#define WCHAR wchar_t
-#endif
+#ifdef __cplusplus
+class IInspectable;
+#else
+struct IInspectable;
+typedef struct IInspectable IInspectable;
 #endif
 
 WINRT_EXPORT
-@interface RTObject : NSObject {
-#ifdef _WRL_CLIENT_H_
-@public
-    Microsoft::WRL::ComPtr<IInspectable> comObj;
-
-    // For composable objects, this is the original interface.
-    Microsoft::WRL::ComPtr<IInspectable> innerInterface;
-#endif
-}
+@interface RTObject : NSObject
 - (id)internalObject;
-#ifdef _WRL_CLIENT_H_
-- (void)setComObj:(Microsoft::WRL::ComPtr<IInspectable>)obj;
-#endif
+- (void)setComObj:(IInspectable*)obj;
 @end
 
 #ifndef GUID_DEFINED
@@ -113,12 +105,7 @@ enum _WFAsyncStatus {
 };
 typedef unsigned WFAsyncStatus;
 
-enum _RTCollectionOperation {
-    COItemChanged,
-    COItemInserted,
-    COItemRemoved,
-    COReset,
-};
+enum _RTCollectionOperation { COItemChanged, COItemInserted, COItemRemoved, COReset };
 typedef unsigned RTCollectionOperation;
 
 typedef void (^RTCollectionListener)(NSObject* srcCollection, RTCollectionOperation op, id loc);

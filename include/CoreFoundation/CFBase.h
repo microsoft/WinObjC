@@ -218,6 +218,10 @@ typedef SInt16 OSErr;
 typedef UInt32 FourCharCode;
 typedef FourCharCode OSType;
 
+typedef UInt64 ByteCount;
+typedef UInt64 ItemCount;
+typedef SInt8 SignedByte;
+
 typedef struct {
     CFIndex location;
     CFIndex length;
@@ -262,6 +266,28 @@ typedef struct {
     CFAllocatorDeallocateCallBack deallocate;
     CFAllocatorPreferredSizeCallBack preferredSize;
 } CFAllocatorContext;
+
+// FIXME: do we really need all of these conditions
+#if (__cplusplus && __cplusplus >= 201103L && (__has_extension(cxx_strong_enums) || __has_feature(objc_fixed_enum))) || \
+    (!__cplusplus && __has_feature(objc_fixed_enum))
+#define CF_ENUM(_type, _name) \
+    enum _name : _type _name; \
+    enum _name : _type
+#else
+#define CF_ENUM(_type, _name) \
+    _type _name;              \
+    enum
+#endif
+
+#ifdef __cplusplus
+#define CF_OPTIONS(_t, _n) \
+    _t _n;                 \
+    enum : _t
+#else
+#define CF_OPTIONS(_t, _n) \
+    enum _n : _t _n;       \
+    enum _n : _t
+#endif
 
 COREFOUNDATION_EXPORT const CFAllocatorRef kCFAllocatorDefault;
 COREFOUNDATION_EXPORT const CFAllocatorRef kCFAllocatorSystemDefault;

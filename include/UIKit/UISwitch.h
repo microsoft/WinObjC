@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,20 +28,17 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UISWITCH_H_
-#define _UISWITCH_H_
+#pragma once
 
 #import "UIControl.h"
 
 UIKIT_EXPORT_CLASS
-@interface UISwitch : UIControl 
+@interface UISwitch : UIControl
 - (id)initWithFrame:(CGRect)frame;
 - (void)setOn:(BOOL)on animated:(BOOL)animated;
 
 @property (nonatomic, getter=isOn) BOOL on;
-@property (nonatomic, retain) UIColor *onTintColor;
-@property (nonatomic, retain) UIColor *thumbTintColor;
+@property (nonatomic, retain) UIColor* onTintColor;
+@property (nonatomic, retain) UIColor* thumbTintColor;
 
 @end
-
-#endif /* _UISWITCH_H_ */

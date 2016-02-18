@@ -29,8 +29,7 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UIFONT_H_
-#define _UIFONT_H_
+#pragma once
 
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
@@ -63,5 +62,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) UIFontDescriptor* fontDescriptor;
 
 @end
-
-#endif // _UIFONT_H_

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Foundation/Foundation.h>
+#import <Foundation/NSOutputStream.h>
 #import <Starboard.h>
 #import "NSURLSessionTask-Internal.h"
 
@@ -22,15 +23,16 @@
 
 NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskResumeData";
 @interface NSURLSessionDownloadTask () {
-    NSURL *_temporaryFileURL;
-    NSOutputStream *_outputStream;
+    NSURL* _temporaryFileURL;
+    NSOutputStream* _outputStream;
     bool _resumed;
 }
 @end
 
 @implementation NSURLSessionDownloadTask
 /*
-- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate configuration:(NSURLSessionConfiguration*)configuration dataTask:(NSURLSessionDataTask*)dataTask {
+- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate configuration:(NSURLSessionConfiguration*)configuration
+dataTask:(NSURLSessionDataTask*)dataTask {
     if (self = [super _initWithTaskDelegate:taskDelegate configuration:configuration request:dataTask.currentRequest]) {
         _originalTask = [dataTask retain];
         //_configuration = configuration; // steal a strong ref.
@@ -52,7 +54,9 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
 }
 */
 
-- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate configuration:(NSURLSessionConfiguration*)configuration resumeData:(NSData*)resumeData {
+- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate
+              configuration:(NSURLSessionConfiguration*)configuration
+                 resumeData:(NSData*)resumeData {
     _NSURLSessionDownloadResumeInfo* resumeInfo = [NSKeyedUnarchiver unarchiveObjectWithData:resumeData];
     if (!resumeInfo) {
         [self release];
@@ -69,10 +73,10 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
             [newRequest setValue:resumeInfo.etag forHTTPHeaderField:@"If-Range"];
         }
         // TODO does not exist etc.
-        NSDictionary *fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:[resumeInfo.fileURL path] traverseLink:NO];
+        NSDictionary* fileAttributes = [[NSFileManager defaultManager] fileAttributesAtPath:[resumeInfo.fileURL path] traverseLink:NO];
         self.countOfBytesReceived = [fileAttributes fileSize];
         [newRequest setValue:[NSString stringWithFormat:@"bytes=%lld-", self.countOfBytesReceived] forHTTPHeaderField:@"Range"];
-        
+
         self.currentRequest = newRequest;
 
         _temporaryFileURL = [resumeInfo.fileURL copy];
@@ -104,7 +108,8 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
 }
 
 - (void)_finalizeOutputStream {
-    NSOutputStream* outputStream = reinterpret_cast<NSOutputStream*>(InterlockedExchangePointer(reinterpret_cast<void*volatile*>(&_outputStream), nil));
+    NSOutputStream* outputStream =
+        reinterpret_cast<NSOutputStream*>(InterlockedExchangePointer(reinterpret_cast<void* volatile*>(&_outputStream), nil));
     [outputStream close];
     [outputStream release];
 }
@@ -116,7 +121,7 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
 /*
 @Status Interoperable
 */
-- (void)cancelByProducingResumeData:(void(^)(NSData* resumeData))completionHandler {
+- (void)cancelByProducingResumeData:(void (^)(NSData* resumeData))completionHandler {
     [self cancel];
     [self _finalizeOutputStream];
     completionHandler([self _generateResumeData]);
@@ -125,7 +130,9 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
 - (NSData*)_generateResumeData {
     NSData* resumeData = nil;
     if ([self.response isKindOfClass:[NSHTTPURLResponse class]]) {
-        _NSURLSessionDownloadResumeInfo* resumeInfo = [[_NSURLSessionDownloadResumeInfo alloc] initWithURLResponse:(NSHTTPURLResponse*)self.response temporaryFileURL:_temporaryFileURL];
+        _NSURLSessionDownloadResumeInfo* resumeInfo =
+            [[_NSURLSessionDownloadResumeInfo alloc] initWithURLResponse:(NSHTTPURLResponse*)self.response
+                                                        temporaryFileURL:_temporaryFileURL];
         if (resumeInfo) {
             resumeData = [NSKeyedArchiver archivedDataWithRootObject:resumeInfo];
         }
@@ -142,11 +149,15 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
     }
 }
 
-- (void)URLProtocol:(NSURLProtocol*)connection didReceiveResponse:(NSURLResponse*)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
+- (void)URLProtocol:(NSURLProtocol*)connection
+ didReceiveResponse:(NSURLResponse*)response
+ cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     [super URLProtocol:connection didReceiveResponse:response cacheStoragePolicy:policy];
 
     if (_resumed) {
-        [self._taskDelegate downloadTask:self didResumeAtOffset:self.countOfBytesReceived expectedTotalBytes:self.countOfBytesExpectedToReceive];
+        [self._taskDelegate downloadTask:self
+                       didResumeAtOffset:self.countOfBytesReceived
+                      expectedTotalBytes:self.countOfBytesExpectedToReceive];
     }
 }
 
@@ -179,19 +190,18 @@ NSString* const NSURLSessionDownloadTaskResumeData = @"NSURLSessionDownloadTaskR
         [_outputStream open];
     }
 
-    auto remaining = data.length;
-    auto bytes = reinterpret_cast<const uint8_t*>(data.bytes);
+    NSUInteger remaining = data.length;
+    const uint8_t* bytes = reinterpret_cast<const uint8_t*>(data.bytes);
     while (remaining > 0) {
-        auto written = [_outputStream write:bytes maxLength:remaining];
+        NSInteger written = [_outputStream write:bytes maxLength:remaining];
         remaining -= written;
         bytes += written;
     }
 
-    [self._taskDelegate
-                     downloadTask:self
-                     didWriteData:data.length
-                totalBytesWritten:self.countOfBytesReceived
-        totalBytesExpectedToWrite:self.countOfBytesExpectedToReceive];
+    [self._taskDelegate downloadTask:self
+                        didWriteData:data.length
+                   totalBytesWritten:self.countOfBytesReceived
+           totalBytesExpectedToWrite:self.countOfBytesExpectedToReceive];
 }
 
 - (void)URLProtocolDidFinishLoading:(NSURLProtocol*)connection {

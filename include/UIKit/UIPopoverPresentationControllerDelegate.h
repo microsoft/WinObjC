@@ -29,8 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIPOPOVERPRESENTATIONCONTROLLERDELEGATE_H_
-#define _UIPOPOVERPRESENTATIONCONTROLLERDELEGATE_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 
@@ -46,5 +45,3 @@
           willRepositionPopoverToRect:(CGRect*)rect
                                inView:(UIView*)view;
 @end
-
-#endif /* _UIPOPOVERPRESENTATIONCONTROLLERDELEGATE_H_ */

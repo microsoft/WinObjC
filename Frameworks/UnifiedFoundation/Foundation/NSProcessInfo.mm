@@ -119,7 +119,8 @@ static inline OSVERSIONINFO winOsVersion() {
         _processName = [[NSString alloc] initWithBytes:(const void*)&moduleFullPath[slash + 1]
                                                 length:(dot - slash - 1) * sizeof(wchar_t)
                                               encoding:NSUnicodeStringEncoding];
-    } CATCH_THROW_NSEXCEPTION();
+    }
+    CATCH_THROW_NSEXCEPTION();
 }
 
 /**
@@ -234,7 +235,15 @@ static inline OSVERSIONINFO winOsVersion() {
  @Status Interoperable
 */
 - (uint64_t)physicalMemory {
-    return [_LazyUIDevice _deviceTotalMemory];
+    @try {
+        return [_LazyUIDevice _deviceTotalMemory];
+    } @catch (NSException* exception) {
+        if (![[exception name] isEqualToString:NSObjectNotAvailableException]) {
+            @throw exception;
+        }
+
+        return 0;
+    }
 }
 
 - (void)dealloc {

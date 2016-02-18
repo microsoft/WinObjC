@@ -31,8 +31,8 @@
  */
 @interface UIGridLayoutInfo : NSObject
 
-@property (nonatomic, strong, readonly) NSArray *sections;
-@property (nonatomic, strong) NSDictionary *rowAlignmentOptions;
+@property (nonatomic, strong, readonly) NSArray* sections;
+@property (nonatomic, strong) NSDictionary* rowAlignmentOptions;
 @property (nonatomic, assign) BOOL usesFloatingHeaderFooter;
 
 // Vertical/horizontal dimension (depending on horizontal)
@@ -44,16 +44,16 @@
 @property (nonatomic, assign) CGSize contentSize;
 
 // Frame for specific UIGridLayoutItem.
-- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (CGRect)frameForItemAtIndexPath:(NSIndexPath*)indexPath;
 
 // Add new section. Invalidates layout.
-- (UIGridLayoutSection *)addSection;
+- (UIGridLayoutSection*)addSection;
 
 // forces the layout to recompute on next access
 // TODO; what's the parameter for?
 - (void)invalidate:(BOOL)arg;
 
 // Make a copy of the current state.
-- (UIGridLayoutInfo *)snapshot;
+- (UIGridLayoutInfo*)snapshot;
 
 @end

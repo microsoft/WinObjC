@@ -17,10 +17,10 @@
 #ifndef __CGCOLORSPACE_H
 #define __CGCOLORSPACE_H
 
-class __CGColorSpace {
-public:
-    id isa;
+#include <objc/runtime.h>
 
+class __CGColorSpace: private objc_object {
+public:
     surfaceFormat colorSpace;
     char* palette;
     int lastColor;

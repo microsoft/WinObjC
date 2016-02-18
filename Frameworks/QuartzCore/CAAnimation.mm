@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 
 #include "QuartzCore/CAAnimation.h"
@@ -23,14 +24,9 @@
 #include "CACompositor.h"
 
 #include "CAAnimationInternal.h"
+#include "UIAnimationNotification.h"
 
-NSString* const kCAFillModeRemoved = @"kCAFillModeRemoved";
-NSString* const kCAFillModeForwards = @"kCAFillModeForwards";
-NSString* const kCAFillModeBackwards = @"kCAFillModeBackwards";
-NSString* const kCAFillModeBoth = @"kCAFillModeBoth";
-NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
-
-@implementation CAAnimation : NSObject {
+@implementation CAAnimation {
     idretain _delegate;
     SEL _finishedSelector;
     id _name;
@@ -69,6 +65,13 @@ NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
 /**
  @Status Interoperable
 */
+- (BOOL)isRemovedOnCompletion {
+    return _timingProperties._removedOnCompletion;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
@@ -88,42 +91,121 @@ NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
     _timingProperties._timingFunction = [timingFunction retain];
 }
 
+/**
+ @Status Interoperable
+*/
+- (CAMediaTimingFunction*)timingFunction {
+    return _timingProperties._timingFunction;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setDuration:(double)duration {
     _timingProperties._duration = duration;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)duration {
     return _timingProperties._duration;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBeginTime:(double)time {
     _timingProperties._beginTime = time;
 }
 
+/**
+ @Status Interoperable
+*/
+- (double)beginTime {
+    return _timingProperties._beginTime;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setSpeed:(float)speed {
     _timingProperties._speed = speed;
 }
 
+/**
+ @Status Interoperable
+*/
+- (float)speed {
+    return _timingProperties._speed;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setTimeOffset:(double)time {
     _timingProperties._timeOffset = time;
 }
 
+/**
+ @Status Interoperable
+*/
+- (double)timeOffset {
+    return _timingProperties._timeOffset;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setRepeatCount:(float)repCount {
     _timingProperties._repeatCount = repCount;
 }
 
+/**
+ @Status Interoperable
+*/
+- (float)repeatCount {
+    return _timingProperties._repeatCount;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setDelay:(double)delay {
     _timingProperties._delay = delay;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setRepeatDuration:(double)duration {
     _timingProperties._repeatDuration = duration;
 }
 
+/**
+ @Status Interoperable
+*/
+- (double)repeatDuration {
+    return _timingProperties._repeatDuration;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setAutoreverses:(BOOL)autoreverses {
     _timingProperties._autoReverses = autoreverses;
 }
 
+/**
+ @Status Interoperable
+*/
+- (BOOL)autoreverses {
+    return _timingProperties._autoReverses;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setFillMode:(NSString*)mode {
     if ([mode isEqualToString:kCAFillModeRemoved]) {
         _timingProperties._fillMode = fillModeRemoved;
@@ -134,6 +216,22 @@ NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
     } else {
         assert(0);
     }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)fillMode {
+    if (_timingProperties._fillMode == fillModeRemoved) {
+        return kCAFillModeRemoved;
+    } else if (_timingProperties._fillMode == fillModeForwards) {
+        return kCAFillModeForwards;
+    } else if (_timingProperties._fillMode == fillModeBoth) {
+        return kCAFillModeBoth;
+    } else {
+        assert(0);
+    }
+    return nil;
 }
 
 // I can't figure out where these are supposed to be from but it makes sense that
@@ -275,11 +373,47 @@ NSString* const kCAFillModeFrozen = @"kCAFillModeFrozen";
     return _wasAborted;
 }
 
-@end
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)runActionForKey:(NSString*)key object:(id)anObject arguments:(NSDictionary*)dict {
+    UNIMPLEMENTED();
+}
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
-double CACurrentMediaTime() {
-    return EbrGetMediaTime();
+- (BOOL)shouldArchiveValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)defaultValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+@end

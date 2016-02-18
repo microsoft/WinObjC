@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "CoreGraphics/CGAffineTransform.h"
 #include "Foundation/NSRunLoop.h"
@@ -34,6 +35,11 @@
 
 #include <cmath>
 
+/** @Status Stub */
+const float UIScrollViewDecelerationRateNormal = StubConstant();
+/** @Status Stub */
+const float UIScrollViewDecelerationRateFast = StubConstant();
+
 @interface __UIScrollerPosition : CALayer {
 @public
     idretaintype(CAAnimation) _fadeAnimation;
@@ -42,7 +48,7 @@
 
 #include "UIKit/UIScrollView.h"
 
-@implementation __UIScrollerPosition : CALayer
+@implementation __UIScrollerPosition
 
 - (instancetype)init {
     [super init];
@@ -86,7 +92,7 @@
 
 #include "Etc.h"
 
-@implementation UIScrollView : UIView {
+@implementation UIScrollView {
     id _delegate;
     id _pressTimer;
     idretain _savedTouch, _savedEvent;
@@ -361,7 +367,7 @@ static void positionScrollers(UIScrollView* self) {
     if (_contentSize.width != size.width || _contentSize.height != size.height) {
         _contentSize = size;
         if (_displayLink == nil || _animationReason != ANIMATION_USER) {
-            [self setContentOffset:_contentOffset];
+            [self setContentOffset:_contentOffset animated:NO];
         }
         [self setNeedsLayout];
     }
@@ -385,7 +391,8 @@ static void positionScrollers(UIScrollView* self) {
  @Status Interoperable
 */
 - (void)setContentOffset:(CGPoint)offset {
-    [self setContentOffset:offset animated:NO];
+    // Changing the offset without specifying animated should not cancel gestures.
+    changeContentOffset(self, offset, NO, false);
 }
 
 static bool bounceClamp(float& val, float min, float max) {
@@ -519,14 +526,14 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
         // Stop scrolling:
         if (_displayLink != nil) {
             hideScrollersAction(self);
+            [_displayLink invalidate];
+            _displayLink = nil;
             if (_animationReason == ANIMATION_USER) {
                 if ([self.delegate respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
                     [self.delegate scrollViewDidEndScrollingAnimation:self];
                 }
             }
         }
-        [_displayLink invalidate];
-        _displayLink = nil;
 
         changeContentOffset(self, offset, animated, false);
     }
@@ -843,7 +850,7 @@ static void animMoveTo(UIScrollView* self, CGPoint target, bool clampTarget) {
 
     float t = (float)((EbrGetMediaTime() - _scrollAnimStartTime) * _scrollAnimDecaySpeed);
     CGPoint target = {
-        _scrollAnimDest.x + expf(-t) - dist.x * expf(-t / 2.f), _scrollAnimDest.y + expf(-t) - dist.y * expf(-t / 2.f),
+        _scrollAnimDest.x - dist.x * expf(-t / 2.f), _scrollAnimDest.y - dist.y * expf(-t / 2.f),
     };
 
     if (fabs(dist.x) < 0.1) {
@@ -1171,7 +1178,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
     clipPoint(self, curOffset, false);
 
     if (curOffset != _contentOffset) {
-        [self setContentOffset:curOffset];
+        [self setContentOffset:curOffset animated:NO];
     }
 }
 
@@ -1651,6 +1658,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
         // If we get a touch down, cancel any scrolling we were doing:
         cancelScrolling(self);
     }
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)layoutSubviews {

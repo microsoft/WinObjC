@@ -27,9 +27,12 @@
 #include "SystemConfiguration/SCNetworkReachability.h"
 
 #include "NSRunLoopSource.h"
+#include "NSRunLoop+Internal.h"
 
 #include "UWP/WindowsNetworkingSockets.h"
 #include "UWP/WindowsNetworking.h"
+
+#include <objc/objc-arc.h>
 
 static __declspec(thread) int SCLastError = 0;
 
@@ -275,7 +278,7 @@ static NSLock* _allReachabilityOperationsLock;
 
     if (![runLoops containsObject:(NSRunLoop*)runLoop]) {
         [runLoops addObject:(NSRunLoop*)runLoop];
-        [(NSRunLoop*)runLoop addInputSource:_availabilityChangedSource forMode:(NSString*)mode];
+        [(NSRunLoop*)runLoop _addInputSource:_availabilityChangedSource forMode:(NSString*)mode];
     }
 
     //  If we have a valid reachability status, signal it to all listeners
@@ -294,7 +297,7 @@ static NSLock* _allReachabilityOperationsLock;
         if (runLoops != nil) {
             if ([runLoops containsObject:(NSRunLoop*)runLoop]) {
                 [runLoops removeObject:(NSRunLoop*)runLoop];
-                [(NSRunLoop*)runLoop removeInputSource:_availabilityChangedSource forMode:(NSString*)mode];
+                [(NSRunLoop*)runLoop _removeInputSource:_availabilityChangedSource forMode:(NSString*)mode];
 
                 ret = TRUE;
             }
@@ -316,7 +319,7 @@ static NSLock* _allReachabilityOperationsLock;
         for (NSString* curMode in _runLoopsScheduled) {
             NSArray* runLoops = [_runLoopsScheduled objectForKey:curMode];
             for (NSRunLoop* curRunLoop in runLoops) {
-                [curRunLoop removeInputSource:_availabilityChangedSource forMode:curMode];
+                [curRunLoop _removeInputSource:_availabilityChangedSource forMode:curMode];
             }
         }
     }

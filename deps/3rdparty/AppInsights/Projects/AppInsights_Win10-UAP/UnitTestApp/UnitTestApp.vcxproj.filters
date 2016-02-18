@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>840d8c80-ef88-4a42-bbc5-786ffa3424d5</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>a38f014e-e5b1-4eee-8752-81593b9dc4ff</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Image Include="Assets\Logo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Filter Include="contracts">
+      <UniqueIdentifier>{a80120cb-7d6d-44df-acbd-b1a24fa10e09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Channel">
+      <UniqueIdentifier>{e3e5b584-5760-4a68-bd98-607b330cf601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApplicationInsights">
+      <UniqueIdentifier>{54abe46f-3bc9-4d8e-98b7-25674ffa3d4f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="UnitTest.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryClientConfig.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestBase.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataBinary.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataHeaders.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataThread.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataThreadFrame.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestDataPoint.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestDevice.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestDomain.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestEnvelope.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestEventData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestExceptionData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestExceptionDetails.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestInternal.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestLocation.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestMessageData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestMetricData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestOperation.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\Channel\TestTelemetryChannel.cpp">
+      <Filter>Channel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestPageViewData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestPageViewPerfData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestRemoteDependencyData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestRequestData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestSession.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestSessionStateData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestStackFrame.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\contracts\TestUser.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\TestBasicEndToEnd.cpp" />
+    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestSessionTracking.cpp">
+      <Filter>ApplicationInsights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\TestTelemetryClient.cpp" />
+    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestPageTracking.cpp">
+      <Filter>ApplicationInsights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\core\ApplicationInsights\TestContext.cpp">
+      <Filter>ApplicationInsights</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\..\..\test\core\specializations.h" />
+    <ClInclude Include="..\..\..\test\core\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\WideLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UnitTestApp_TemporaryKey.pfx" />
+  </ItemGroup>
+</Project>

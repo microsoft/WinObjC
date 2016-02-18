@@ -14,6 +14,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import "Starboard.h"
+#import "StubReturn.h"
 #import "Foundation/NSNumberFormatter.h"
 #import "Foundation/NSMutableString.h"
 #import "Foundation/NSNumber.h"
@@ -38,43 +39,6 @@ id kCFNumberNegativeInfinity;
 const CFNumberRef kCFNumberNaN = nullptr; // = (CFNumberRef)&_kCFNumberNaN;
 const CFNumberRef kCFNumberNegativeInfinity = nullptr; // = (CFNumberRef)&_kCFNumberNegInf;
 const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNumberPosInf;
-
-enum {
-    _C_ID = '@',
-    _C_CHR = 'c',
-    _C_UCHR = 'C',
-    _C_INT = 'i',
-    _C_UINT = 'I',
-    _C_FLT = 'f',
-    _C_DBL = 'd',
-    _C_VOID = 'v',
-    _C_UNDEF = '?',
-    _C_CLASS = '#',
-    _C_SEL = ':',
-    _C_CHARPTR = '*',
-    _C_SHT = 's',
-    _C_USHT = 'S',
-    _C_LNG = 'l',
-    _C_ULNG = 'L',
-    _C_LNGLNG = 'q',
-    _C_LNG_LNG = _C_LNGLNG,
-    _C_ULNGLNG = 'Q',
-    _C_ULNG_LNG = _C_ULNGLNG,
-    _C_BFLD = 'b',
-    _C_ARY_B = '[',
-    _C_STRUCT_B = '{',
-    _C_UNION_B = '(',
-    _C_ARY_E = ']',
-    _C_STRUCT_E = '}',
-    _C_UNION_E = ')',
-    _C_PTR = '^',
-    _C_CONST = 'r',
-    _C_IN = 'n',
-    _C_INOUT = 'N',
-    _C_OUT = 'o',
-    _C_BYCOPY = 'R',
-    _C_ONEWAY = 'V',
-};
 
 @implementation NSNumberFormatter {
     icu::DecimalFormat* _formatter;
@@ -451,10 +415,9 @@ enum {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setUsesGroupingSeparator:(BOOL)value {
-    UNIMPLEMENTED();
     _formatter->setGroupingUsed(value);
     _usesGroupingSeparator = value;
 }
@@ -695,7 +658,7 @@ enum {
             break;
         }
 
-        case _C_LNGLNG: {
+        case _C_LNG_LNG: {
             int64_t val = [number longLongValue];
             _formatter->format(val, formatted, status);
             break;
@@ -704,7 +667,7 @@ enum {
         // This isn't really any good because icu cannot format 128-bit integers, nor can it format unsigned numbers. We
         // could send it as a double
         // but that would likely be a bad idea.
-        case _C_ULNGLNG: {
+        case _C_ULNG_LNG: {
             int64_t val = [number unsignedLongLongValue];
             _formatter->format(val, formatted, status);
             break;
@@ -827,4 +790,22 @@ static BOOL numberIsNegative(id number) {
 
     return ret;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)setDefaultFormatterBehavior:(NSNumberFormatterBehavior)behavior {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)aString range:(NSRange*)rangep error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

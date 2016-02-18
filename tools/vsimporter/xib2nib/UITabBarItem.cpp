@@ -17,16 +17,14 @@
 #include "UITabBarItem.h"
 #include "UICustomResource.h"
 
-UITabBarItem::UITabBarItem()
-{
+UITabBarItem::UITabBarItem() {
     _title = NULL;
     _enabled = true;
     _image = NULL;
     _tag = -1;
 }
 
-void UITabBarItem::InitFromXIB(XIBObject *obj)
-{
+void UITabBarItem::InitFromXIB(XIBObject* obj) {
     ObjectConverterSwapper::InitFromXIB(obj);
 
     _enabled = true;
@@ -37,31 +35,30 @@ void UITabBarItem::InitFromXIB(XIBObject *obj)
     obj->_outputClassName = "UITabBarItem";
 }
 
-void UITabBarItem::InitFromStory(XIBObject *obj)
-{
+void UITabBarItem::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
-    _title = getAttrib("title");
+    _title = getAttrAndHandle("title");
     _enabled = true;
 
-    const char *imageName = getAttrib("image");
-    if ( imageName ) {
-        UICustomResource *image = new UICustomResource();
+    const char* imageName = getAttrAndHandle("image");
+    if (imageName) {
+        UICustomResource* image = new UICustomResource();
         image->_imageName = imageName;
         _image = image;
     }
 
     obj->_outputClassName = "UITabBarItem";
-
 }
 
-void UITabBarItem::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UITabBarItem::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
 
     AddBool(writer, "UIEnabled", _enabled);
-    if ( _title ) AddString(writer, "UITitle", _title);
-    if ( _image ) AddOutputMember(writer, "UIImage", _image);
-    if ( _tag != -1 ) AddInt(writer, "UITag", _tag);
+    if (_title)
+        AddString(writer, "UITitle", _title);
+    if (_image)
+        AddOutputMember(writer, "UIImage", _image);
+    if (_tag != -1)
+        AddInt(writer, "UITag", _tag);
 }
-

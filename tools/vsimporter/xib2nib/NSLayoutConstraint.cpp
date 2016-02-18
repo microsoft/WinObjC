@@ -20,46 +20,42 @@
 #include <assert.h>
 #include <map>
 
-std::map<std::string, NSLayoutAttribute> storyToLayout = {
-    { "left", NSLayoutAttributeLeft },
-    { "right", NSLayoutAttributeRight },
-    { "top", NSLayoutAttributeTop },
-    { "bottom", NSLayoutAttributeBottom },
-    { "leading", NSLayoutAttributeLeading },
-    { "trailing", NSLayoutAttributeTrailing },
-    { "width", NSLayoutAttributeWidth },
-    { "height", NSLayoutAttributeHeight },
-    { "centerX", NSLayoutAttributeCenterX },
-    { "centerY", NSLayoutAttributeCenterY },
-    { "baseline", NSLayoutAttributeBaseline },
-    { "firstBaseline", NSLayoutAttributeFirstBaseline },
-    { "leftMargin", NSLayoutAttributeLeftMargin },
-    { "rightMargin", NSLayoutAttributeRightMargin },
-    { "topMargin", NSLayoutAttributeTopMargin },
-    { "bottomMargin", NSLayoutAttributeBottomMargin },
-    { "leadingMargin", NSLayoutAttributeLeadingMargin },
-    { "trailingMargin", NSLayoutAttributeTrailingMargin },
-    { "centerXWithinMargins", NSLayoutAttributeCenterXWithinMargins },
-    { "centerYWithinMargins", NSLayoutAttributeCenterYWithinMargins }
-};
+std::map<std::string, NSLayoutAttribute> storyToLayout = { { "left", NSLayoutAttributeLeft },
+                                                           { "right", NSLayoutAttributeRight },
+                                                           { "top", NSLayoutAttributeTop },
+                                                           { "bottom", NSLayoutAttributeBottom },
+                                                           { "leading", NSLayoutAttributeLeading },
+                                                           { "trailing", NSLayoutAttributeTrailing },
+                                                           { "width", NSLayoutAttributeWidth },
+                                                           { "height", NSLayoutAttributeHeight },
+                                                           { "centerX", NSLayoutAttributeCenterX },
+                                                           { "centerY", NSLayoutAttributeCenterY },
+                                                           { "baseline", NSLayoutAttributeBaseline },
+                                                           { "firstBaseline", NSLayoutAttributeFirstBaseline },
+                                                           { "leftMargin", NSLayoutAttributeLeftMargin },
+                                                           { "rightMargin", NSLayoutAttributeRightMargin },
+                                                           { "topMargin", NSLayoutAttributeTopMargin },
+                                                           { "bottomMargin", NSLayoutAttributeBottomMargin },
+                                                           { "leadingMargin", NSLayoutAttributeLeadingMargin },
+                                                           { "trailingMargin", NSLayoutAttributeTrailingMargin },
+                                                           { "centerXWithinMargins", NSLayoutAttributeCenterXWithinMargins },
+                                                           { "centerYWithinMargins", NSLayoutAttributeCenterYWithinMargins } };
 
-NSLayoutConstraint::NSLayoutConstraint()
-{
-	_firstItem = NULL;
-	_secondItem = NULL;
-	_firstAttribute = NSLayoutAttributeNotAnAttribute;
-	_secondAttribute = NSLayoutAttributeNotAnAttribute;
-	_relation = NSLayoutRelationEqual;
-	_multiplier = 1.0f;
-	_priority = NSLayoutPriorityRequired;
-	_constant = 0.0f;
-	_symbolicConstant = 0.0f;
+NSLayoutConstraint::NSLayoutConstraint() {
+    _firstItem = NULL;
+    _secondItem = NULL;
+    _firstAttribute = NSLayoutAttributeNotAnAttribute;
+    _secondAttribute = NSLayoutAttributeNotAnAttribute;
+    _relation = NSLayoutRelationEqual;
+    _multiplier = 1.0f;
+    _priority = NSLayoutPriorityRequired;
+    _constant = 0.0f;
+    _symbolicConstant = 0.0f;
     _hasSymbolicConstant = false;
 }
 
-void NSLayoutConstraint::InitFromXIB(XIBObject *obj)
-{
-	ObjectConverterSwapper::InitFromXIB(obj);
+void NSLayoutConstraint::InitFromXIB(XIBObject* obj) {
+    ObjectConverterSwapper::InitFromXIB(obj);
 
     _firstAttribute = (NSLayoutAttribute)obj->GetInt("firstAttribute", NSLayoutAttributeNotAnAttribute);
     _secondAttribute = (NSLayoutAttribute)obj->GetInt("secondAttribute", NSLayoutAttributeNotAnAttribute);
@@ -92,43 +88,42 @@ void NSLayoutConstraint::InitFromXIB(XIBObject *obj)
     _outputClassName = "NSLayoutConstraint";
 }
 
-void NSLayoutConstraint::InitFromStory(XIBObject *obj)
-{
+void NSLayoutConstraint::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
     const char* attr;
-    if (attr = obj->getAttrib("firstAttribute")) {
+    if (attr = obj->getAttrAndHandle("firstAttribute")) {
         if (storyToLayout.find(attr) != storyToLayout.end()) {
             _firstAttribute = storyToLayout[attr];
         }
     }
-    if (attr = obj->getAttrib("secondAttribute")) {
+    if (attr = obj->getAttrAndHandle("secondAttribute")) {
         if (storyToLayout.find(attr) != storyToLayout.end()) {
             _secondAttribute = storyToLayout[attr];
         }
     }
 
-    if (attr = obj->getAttrib("constant")) {
-        if (obj->getAttrib("symbolic") && strcmp(obj->getAttrib("symbolic"), "YES") == 0) {
+    if (attr = obj->getAttrAndHandle("constant")) {
+        if (obj->getAttrAndHandle("symbolic") && strcmp(obj->getAttrAndHandle("symbolic"), "YES") == 0) {
             _hasSymbolicConstant = true;
             _symbolicConstant = strtod(attr, NULL);
         } else {
             _constant = strtod(attr, NULL);
         }
     }
-    if (attr = obj->getAttrib("priority")) {
+    if (attr = obj->getAttrAndHandle("priority")) {
         _priority = strtod(attr, NULL);
     }
 
-    if (attr = obj->getAttrib("multiplier")) {
+    if (attr = obj->getAttrAndHandle("multiplier")) {
         _priority = strtod(attr, NULL);
     }
 
-    if (attr = getAttrib("secondItem")) {
+    if (attr = getAttrAndHandle("secondItem")) {
         _secondItem = findReference(attr);
         assert(_secondItem);
     }
-    if (attr = getAttrib("firstItem")) {
+    if (attr = getAttrAndHandle("firstItem")) {
         _firstItem = findReference(attr);
         assert(_firstItem);
     }
@@ -149,19 +144,20 @@ void NSLayoutConstraint::Awaken() {
     }
 }
 
-void NSLayoutConstraint::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void NSLayoutConstraint::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     AddInt(writer, "NSFirstAttribute", _firstAttribute);
     AddInt(writer, "NSSecondAttribute", _secondAttribute);
 
     AddInt(writer, "NSRelation", _relation);
 
-    if (_firstItem) AddOutputMember(writer, "NSFirstItem", _firstItem);
-    if (_secondItem) AddOutputMember(writer, "NSSecondItem", _secondItem);
+    if (_firstItem)
+        AddOutputMember(writer, "NSFirstItem", _firstItem);
+    if (_secondItem)
+        AddOutputMember(writer, "NSSecondItem", _secondItem);
 
     AddOutputMember(writer, "NSMultiplier", new XIBObjectFloat(_multiplier));
     AddInt(writer, "NSPriority", _priority);
-    
+
     if (_hasSymbolicConstant) {
         AddOutputMember(writer, "NSSymbolicConstant", new XIBObjectFloat(_symbolicConstant));
     } else {

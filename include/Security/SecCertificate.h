@@ -13,5 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFData.h>
+#import <Security/SecBase.h>
+
+// This header file is not yet fully implemented
+
+typedef struct __SecCertificate* SecCertificateRef;
+
+SECURITY_EXPORT CFTypeID SecCertificateGetTypeID(void) STUB_METHOD;
+SECURITY_EXPORT SecCertificateRef SecCertificateCreateWithData(CFAllocatorRef allocator, CFDataRef data) STUB_METHOD;
+SECURITY_EXPORT CFDataRef SecCertificateCopyData(SecCertificateRef certificate) STUB_METHOD;
+SECURITY_EXPORT CFStringRef SecCertificateCopySubjectSummary(SecCertificateRef certificate) STUB_METHOD;

@@ -26,6 +26,7 @@
 #include <assert.h>
 
 #include <windows.ui.xaml.automation.peers.h>
+#include <windows.ui.xaml.media.h>
 
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
@@ -337,6 +338,19 @@ void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info) {
     */
 }
 
+void DisplayNode::SetShouldRasterize(bool rasterize)
+{
+    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+    if (rasterize) {
+        xamlNode->CacheMode = ref new Windows::UI::Xaml::Media::BitmapCache();
+    } else {
+        if (xamlNode->CacheMode) {
+            delete xamlNode->CacheMode;
+            xamlNode->CacheMode = nullptr;
+        }
+    }
+}
+
 void UpdateRootNode() {
 }
 
@@ -555,7 +569,7 @@ DisplayTextureXamlGlyphs::~DisplayTextureXamlGlyphs() {
     XamlCompositorCS::Controls::CATextLayerXaml ^ textControl =
         (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
     XamlCompositorCS::Controls::CATextLayerXaml::DestroyTextLayer(textControl);
-    _xamlTextbox.Set(NULL);
+    _xamlTextbox = nullptr;
 }
 
 Platform::String ^ charToPlatformString(const char* str);

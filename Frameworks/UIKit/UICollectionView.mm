@@ -18,14 +18,15 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #import <Foundation/Foundation.h>
 
 #import <UIKit/UICollectionView.h>
-#import <UIKit/UICollectionViewLayout.h>
+#import <UIKit/UIScrollViewDelegate.h>
 #import "UICollectionViewData.h"
-#import "UICollectionViewLayout+Internals.h"
+#import "UICollectionViewLayout+Internal.h"
+#include "UICollectionViewLayoutAttributes+Internal.h"
 #import "UICollectionViewItemKey.h"
-#import "UICollectionViewUpdateItem.h"
 
 static CGFloat UIAnimationDragCoefficient = 1.f;
 static CGFloat UISimulatorAnimationDragCoefficient(void) {
@@ -70,6 +71,9 @@ CGFloat UISimulatorAnimationDragCoefficient(void);
 @end
 
 static char kUIColletionViewExt;
+
+@interface UICollectionView (Internal) <UICollectionViewDelegate, UIScrollViewDelegate>
+@end
 
 @implementation UICollectionView {
     UICollectionViewLayout* _layout;
@@ -623,7 +627,8 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Caveat -- this appears to be an extension.
+   @Status Caveat
+   @Notes This appears to be an extension.
 */
 - (id)dequeueReusableOrCreateDecorationViewOfKind:(NSString*)elementKind forIndexPath:(NSIndexPath*)indexPath {
     NSMutableArray* reusableViews = _decorationViewReuseQueues[elementKind];
@@ -848,7 +853,6 @@ static char kUIColletionViewExt;
 - (NSArray*)indexPathsForSelectedItems {
     return [_indexPathsForSelectedItems allObjects];
 }
-
 
 /**
    @Status Interoperable
@@ -1809,8 +1813,7 @@ static char kUIColletionViewExt;
     for (UIView* uiView in self.subviews) {
         if ([uiView isKindOfClass:UICollectionReusableView.class]) {
             UICollectionReusableView* reusableView = (UICollectionReusableView*)uiView;
-            if (([[reusableView layoutAttributes] zIndex] > 0) ||
-                ([[reusableView layoutAttributes] isPinnedSupplementaryView])) {
+            if (([[reusableView layoutAttributes] zIndex] > 0) || ([[reusableView layoutAttributes] isPinnedSupplementaryView])) {
                 [floatingViews addObject:uiView];
             }
         }
@@ -2473,6 +2476,90 @@ static char kUIColletionViewExt;
 
     if (!updating)
         [self endItemAnimations];
+}
+
+/**
+   @Status Stub
+*/
+- (BOOL)beginInteractiveMovementForItemAtIndexPath:(NSIndexPath*)indexPath {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+   @Status Stub
+*/
+- (NSArray*)indexPathsForVisibleSupplementaryElementsOfKind:(NSString*)elementKind {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+   @Status Stub
+*/
+- (NSArray*)visibleSupplementaryViewsOfKind:(NSString*)elementKind {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+   @Status Stub
+*/
+- (UICollectionReusableView*)supplementaryViewForElementKind:(NSString*)elementKind atIndexPath:(NSIndexPath*)indexPath {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+   @Status Stub
+*/
+- (UICollectionViewTransitionLayout*)
+startInteractiveTransitionToCollectionViewLayout:(UICollectionViewLayout*)layout
+                                      completion:(UICollectionViewLayoutInteractiveTransitionCompletion)completion {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+   @Status Stub
+*/
+- (void)cancelInteractiveMovement {
+    UNIMPLEMENTED();
+}
+
+/**
+   @Status Stub
+*/
+- (void)cancelInteractiveTransition {
+    UNIMPLEMENTED();
+}
+
+/**
+   @Status Stub
+*/
+- (void)endInteractiveMovement {
+    UNIMPLEMENTED();
+}
+
+/**
+   @Status Stub
+*/
+- (void)finishInteractiveTransition {
+    UNIMPLEMENTED();
+}
+
+/**
+   @Status Stub
+*/
+- (void)setCollectionViewLayout:(UICollectionViewLayout*)layout animated:(BOOL)animated completion:(void (^)(BOOL))completion {
+    UNIMPLEMENTED();
+}
+
+/**
+   @Status Stub
+*/
+- (void)updateInteractiveMovementTargetPosition:(CGPoint)targetPosition {
+    UNIMPLEMENTED();
 }
 
 @end

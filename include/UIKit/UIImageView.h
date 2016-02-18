@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -27,37 +29,39 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIIMAGEVIEW_H_
-#define _UIIMAGEVIEW_H_
+#pragma once
 
 #import "UIView.h"
 
 @class UIImage, CAKeyframeAnimation;
 
-#ifdef __cplusplus
-class UIImageViewPrivData;
-#else
-typedef void *UIImageViewPrivData;
-#endif
-
 UIKIT_EXPORT_CLASS
-@interface UIImageView : UIView
+@interface UIImageView : UIView <NSCoding,
+                                 NSObject,
+                                 UIAppearance,
+                                 UIAppearanceContainer,
+                                 UICoordinateSpace,
+                                 UIDynamicItem,
+                                 UIFocusEnvironment,
+                                 UITraitEnvironment>
 
-- (id)initWithImage:(UIImage *)theImage;
+- (instancetype)initWithImage:(UIImage*)image;
+- (instancetype)initWithImage:(UIImage*)image highlightedImage:(UIImage*)highlightedImage;
+
 - (void)startAnimating;
 - (void)stopAnimating;
 - (BOOL)isAnimating;
-- (id)initWithImage:(UIImage *)image highlightedImage:(UIImage *)highlightedImage;
 
-@property (nonatomic, retain) UIImage *highlightedImage;
+@property (getter=isUserInteractionEnabled, nonatomic) BOOL userInteractionEnabled;
+@property (nonatomic, strong) UIColor* tintColor STUB_PROPERTY;
+
+@property (nonatomic, retain) UIImage* highlightedImage;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
 
-@property (nonatomic, retain) UIImage *image;
-@property (nonatomic, copy) NSArray *animationImages;
-@property (nonatomic, copy) NSArray *highlightedAnimationImages;
+@property (nonatomic, retain) UIImage* image;
+@property (nonatomic, copy) NSArray* animationImages;
+@property (nonatomic, copy) NSArray* highlightedAnimationImages;
 @property (nonatomic) NSTimeInterval animationDuration;
 @property (nonatomic) NSInteger animationRepeatCount;
 
 @end
-
-#endif /* _UIIMAGEVIEW_H_ */

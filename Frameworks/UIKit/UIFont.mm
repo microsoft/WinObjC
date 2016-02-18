@@ -24,6 +24,7 @@
 #include "UIKit/UIFont.h"
 #include "UIKit/UIFontDescriptor.h"
 #include "UIFontDescriptorInternal.h"
+#include "CoreText/CTFont.h"
 
 extern "C" {
 #include <ft2build.h>
@@ -52,6 +53,7 @@ NSMutableDictionary* _fontDataCache;
     bool _cachedCapHeight, _cachedXHeight;
     float _capHeight, _xHeight;
 }
+
 static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     FT_Error err;
 
@@ -280,7 +282,7 @@ ret->height += ascenderDelta;
 + (UIFont*)systemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:12.0] size:0];
+    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:size] size:size];
 
     return ret;
 }
@@ -303,8 +305,8 @@ ret->height += ascenderDelta;
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
     UIFontDescriptor* fontDes =
-        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:12.0] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
-    UIFont* ret = [self fontWithDescriptor:fontDes size:0];
+        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:size] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+    UIFont* ret = [self fontWithDescriptor:fontDes size:size];
 
     return ret;
 }
@@ -312,9 +314,9 @@ ret->height += ascenderDelta;
 + (UIFont*)italicSystemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:12.0]
+    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:size]
         fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
-    UIFont* ret = [self fontWithDescriptor:fontDes size:0];
+    UIFont* ret = [self fontWithDescriptor:fontDes size:size];
 
     return ret;
 }
@@ -374,6 +376,14 @@ void loadFont(UIFont* self) {
     return _name;
 }
 
+/**
+ @Status Caveat
+ @Notes Supports only English language and limited encodings.
+*/
+- (NSString*)familyName {
+    CFStringRef name = CTFontCopyName(static_cast<CTFontRef>(self), kCTFontFamilyNameKey);
+    return static_cast<NSString*>(name);
+}
 /**
  @Status Interoperable
 */
@@ -617,19 +627,19 @@ void loadFont(UIFont* self) {
     return (uint32_t)_sizingFont;
 }
 
-@end
+// Internal methods
 
-/**
-@Status Interoperable
-*/
-bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
-    if (error)
+// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterGraphicsFont
+- (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error {
+    if (error) {
         *error = nullptr;
+    }
 
     UIFont* fnt = font;
-
-    if (((FT_Face)fnt->_font)->family_name == NULL)
+    if (((FT_Face)fnt->_font)->family_name == NULL) {
         return FALSE;
+    }
+
     FT_Face fntFace = (FT_Face)fnt->_font;
     id faceName = [NSString stringWithCString:((FT_Face)fnt->_font)->family_name];
 
@@ -644,20 +654,4 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     return true;
 }
 
-/**
-@Status Caveat
-@Notes matrix parameter not supported
-*/
-CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix) {
-    id ret = [[UIFont fontWithName:(NSString*)name size:size] retain];
-
-    return (CTFontRef)ret;
-}
-
-/**
-@Status Stub
-*/
-bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return false;
-}
+@end

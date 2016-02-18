@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,6 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once 
+
 #ifndef COREBLUETOOTH_IMPEXP
 #define COREBLUETOOTH_IMPEXP __declspec(dllimport)
 #endif
@@ -24,5 +26,15 @@
 #else
 #define COREBLUETOOTH_EXPORT COREBLUETOOTH_IMPEXP extern
 #define COREBLUETOOTH_EXPORT_CLASS COREBLUETOOTH_IMPEXP
+#endif
+#endif
+
+#ifndef COREBLUETOOTH_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define COREBLUETOOTH_EXTERNC_BEGIN extern "C" {
+#define COREBLUETOOTH_EXTERNC_END }
+#else
+#define COREBLUETOOTH_EXTERNC_BEGIN
+#define COREBLUETOOTH_EXTERNC_END
 #endif
 #endif

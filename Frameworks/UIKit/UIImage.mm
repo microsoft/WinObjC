@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include <math.h>
 #include "Starboard.h"
 
@@ -26,6 +27,7 @@
 
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
+#include "CALayerInternal.h"
 
 #include "Windows.h"
 #include "COMIncludes.h"
@@ -34,7 +36,7 @@
 
 #include "BMPDecode.h"
 
-typedef struct insetInfo {
+struct insetInfo {
     UIImage* img;
     CGRect size;
 };
@@ -48,14 +50,16 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
 
     if (cgImage != curImage) {
         [layer setContents:(id)cgImage];
+    }
+    if ([layer contentsScale] != [image scale]) {
         [layer setContentsScale:[image scale]];
+    }
+    if ([layer contentsOrientation] != [image imageOrientation]) {
         [layer setContentsOrientation:[image imageOrientation]];
-
-        CGRect stretch;
-        stretch = [image _imageStretch];
-        if (stretch.origin.x != 0.0f || stretch.size.width != 1.0f || stretch.origin.y != 0.0f || stretch.size.height != 1.0f) {
-            [layer setContentsCenter:stretch];
-        }
+    }
+    CGRect stretch = [image _imageStretch];
+    if (!CGRectEqualToRect([layer contentsCenter], stretch)) {
+        [layer setContentsCenter:stretch];
     }
 }
 
@@ -132,6 +136,30 @@ imageCacheInfo imageInfo;
     uint8_t** row_pointers;
     idretaintype(NSData) _deferredImageData;
 }
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
 + (UIImageCachedObject*)cacheImage:(UIImage*)image withName:(NSString*)name {
     //  Cache the image
     UIImageCachedObject* obj = [UIImageCachedObject new];
@@ -1341,6 +1369,83 @@ static CGImageRef getImage(UIImage* self) {
     }
 
     return self->m_pImage;
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageFlippedForRightToLeftLayoutDirection {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageWithAlignmentRectInsets:(UIEdgeInsets)alignmentInsets {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedResizableImageNamed:(NSString*)name
+                              capInsets:(UIEdgeInsets)capInsets
+                           resizingMode:(UIImageResizingMode)resizingMode
+                               duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageNamed:(NSString*)name
+                         inBundle:(NSBundle*)bundle
+    compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage scale:(CGFloat)scale orientation:(UIImageOrientation)orientation {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

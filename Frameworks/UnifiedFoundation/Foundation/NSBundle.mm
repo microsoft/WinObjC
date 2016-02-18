@@ -14,20 +14,24 @@
 //
 //******************************************************************************
 
+#include "StubReturn.h"
 #include <string.h>
 #include <ctype.h>
 #include "Starboard.h"
 #include "NSStringInternal.h"
 #include "Foundation/NSBundle.h"
 #include "Foundation/NSString.h"
-#include "Foundation/NSPropertyList.h"
+#include "Foundation/NSPropertyListSerialization.h"
 #include "Foundation/NSData.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSFileManager.h"
 #include "Foundation/NSNib.h"
+#include "Foundation/NSException.h"
 
 #include <sys/stat.h>
+
+NSString* const NSLoadedClasses = @"NSLoadedClasses";
 
 @class NSNib;
 
@@ -39,7 +43,15 @@ static const int c_maxPath = 4096;
 static IWLazyClassLookup _LazyCALayer("UIDevice");
 
 bool isTabletDevice() {
-    return [[_LazyCALayer currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    @try {
+        return [[_LazyCALayer currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    } @catch (NSException* exception) {
+        if (![[exception name] isEqualToString:NSObjectNotAvailableException]) {
+            @throw exception;
+        }
+
+        return false;
+    }
 }
 
 class StringPool {
@@ -488,6 +500,9 @@ static int compareFiles(const void* findParams, const void* bundleFile) {
 }
 
 static BundleFile* findFullFile(NSBundle* self, NSString* filename, NSString* extension, NSString* directory, NSString* localization) {
+    filename = [filename stringByStandardizingPath];
+    directory = [directory stringByStandardizingPath];
+
     char* pFilename = (char*)[filename UTF8String];
     char* pExtension = (char*)[extension UTF8String];
     char* pDirectory = (char*)[directory UTF8String];
@@ -761,6 +776,15 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 - (void)dealloc {
@@ -1258,25 +1282,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 
 + (void)setMainBundlePath:(NSString*)path {
     mainBundlePath = [path copy];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options {
-    assert(options == nil);
-
-    NSString* nibFile = [self pathForResource:name ofType:@"nib"];
-
-    if (nibFile == nil) {
-        EbrDebugLog("*** NIB not found ***\n");
-        return nil;
-    } else {
-        NSNib* nib = [NSNib nibWithNibName:nibFile bundle:self];
-        NSArray* topLevelObjects = [nib instantiateWithOwner:owner options:options];
-
-        return topLevelObjects;
-    }
 }
 
 /**

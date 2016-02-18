@@ -13,5 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <Security/SecBase.h>
+#import <Security/SecKey.h>
+#import <Security/SecCertificate.h>
+
+// This header file is not yet fully implemented
+
+typedef struct __SecIdentity* SecIdentityRef;
+
+SECURITY_EXPORT CFTypeID SecIdentityGetTypeID(void) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecIdentityCopyCertificate(SecIdentityRef identityRef, SecCertificateRef* certificateRef) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecIdentityCopyPrivateKey(SecIdentityRef identityRef, SecKeyRef* privateKeyRef) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecPKCS12Import(CFDataRef pkcs12_data, CFDictionaryRef options, CFArrayRef _Nullable* items) STUB_METHOD;

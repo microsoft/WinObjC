@@ -73,7 +73,7 @@
     [self setHidesWhenStopped:TRUE];
     [self setUserInteractionEnabled:TRUE];
     _color = [UIColor whiteColor];
-    id image = [UIImage imageNamed:@"/img/activity@2x.png"];
+    UIImage* image = [UIImage imageNamed:@"/img/activity@2x.png"];
     [[self layer] setContents:(id)[image CGImage]];
     [[self layer] setContentsScale:[image scale]];
     [[self layer] setContentsGravity:kCAGravityCenter];
@@ -200,7 +200,7 @@ static void removeAnimation(UIActivityIndicatorView* self) {
 }
 
 - (BOOL)isUserInteractionEnabled {
-    return 0;
+    return NO;
 }
 
 - (void)dealloc {

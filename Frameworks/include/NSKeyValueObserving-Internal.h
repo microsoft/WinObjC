@@ -17,7 +17,6 @@
 #import <Foundation/Foundation.h>
 #include <Starboard.h>
 #include <Starboard/String.h>
-#include "../objcrt/runtime.h"
 
 #include <new>
 #include <tuple>

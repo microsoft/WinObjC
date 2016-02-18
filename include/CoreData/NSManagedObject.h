@@ -1,59 +1,87 @@
-/* Copyright (c) 2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+#import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSKeyValueObserving.h>
 
-@class NSManagedObjectID,NSEntityDescription,NSManagedObjectContext,NSPropertyDescription,NSMutableDictionary,NSDictionary,NSError,NSArray,NSMutableSet;
+@class NSEntityDescription;
+@class NSManagedObjectContext;
+@class NSManagedObjectID;
+@class NSString;
+@class NSDictionary;
+@class NSArray;
+@class NSMutableSet;
+@class NSError;
+@class NSSet;
 
-@interface NSManagedObject : NSObject {
-   NSManagedObjectID      *_objectID;
-   NSManagedObjectContext *_context;
-   BOOL                    _isInserted,_isUpdated,_isDeleted,_isFault;
-   NSDictionary           *_committedValues;
-   NSMutableDictionary    *_changedValues;
-   void                   *_observationInfo;
-}
+typedef NS_ENUM(NSUInteger, NSSnapshotEventType) {
+    NSSnapshotEventUndoInsertion = 1 << 1,
+    NSSnapshotEventUndoDeletion = 1 << 2,
+    NSSnapshotEventUndoUpdate = 1 << 3,
+    NSSnapshotEventRollback = 1 << 4,
+    NSSnapshotEventRefresh = 1 << 5,
+    NSSnapshotEventMergePolicy = 1 << 6
+};
 
--initWithEntity:(NSEntityDescription *)entity insertIntoManagedObjectContext:(NSManagedObjectContext *)context;
-
--(NSEntityDescription *)entity;
--(NSManagedObjectID *)objectID;
--self;
-
--(NSManagedObjectContext *)managedObjectContext;
--(BOOL)isInserted;
--(BOOL)isUpdated;
--(BOOL)isDeleted;
--(BOOL)isFault;
--(BOOL)hasFaultForRelationshipNamed:(NSString *)key;
-
--(void)awakeFromFetch;
--(void)awakeFromInsert;
--(NSDictionary *)changedValues;
--(NSDictionary *)committedValuesForKeys:(NSArray *)keys;
--(void)dealloc;
--(void)didSave;
--(void)willTurnIntoFault;
--(void)didTurnIntoFault;
--(void)willSave;
-
--valueForKey:(NSString *)key;
--(void)setValue:value forKey:(NSString *)key;
--(NSMutableSet *)mutableSetValueForKey:(NSString *)key;
--primitiveValueForKey: (NSString *) key;
--(void)setPrimitiveValue: (id) value forKey: (NSString *) key;
-
--(BOOL)validateValue: (id *) value forKey: (NSString *) key error: (NSError **) error;
--(BOOL)validateForDelete: (NSError **) error;
--(BOOL)validateForInsert: (NSError **) error;
--(BOOL)validateForUpdate: (NSError **) error;
-
-+(BOOL) automaticallyNotifiesObserversForKey: (NSString *) key;
--(void) didAccessValueForKey: (NSString *) key;
--(void) willAccessValueForKey: (NSString *) key;
-
+COREDATA_EXPORT_CLASS
+@interface NSManagedObject : NSObject
+- (NSManagedObject*)initWithEntity:(NSEntityDescription*)entity insertIntoManagedObjectContext:(NSManagedObjectContext*)context STUB_METHOD;
+@property (readonly, nonatomic, strong) NSEntityDescription* entity STUB_PROPERTY;
+@property (readonly, nonatomic, strong) NSManagedObjectID* objectID STUB_PROPERTY;
+@property (readonly, assign, nonatomic) NSManagedObjectContext* managedObjectContext STUB_PROPERTY;
+@property (readonly, nonatomic) BOOL hasChanges STUB_PROPERTY;
+@property (readonly, getter=isInserted, nonatomic) BOOL inserted STUB_PROPERTY;
+@property (readonly, getter=isUpdated, nonatomic) BOOL updated STUB_PROPERTY;
+@property (readonly, getter=isDeleted, nonatomic) BOOL deleted STUB_PROPERTY;
+@property (readonly, getter=isFault, nonatomic) BOOL fault STUB_PROPERTY;
+@property (readonly, nonatomic) NSUInteger faultingState STUB_PROPERTY;
+- (BOOL)hasFaultForRelationshipNamed:(NSString*)key STUB_METHOD;
++ (BOOL)contextShouldIgnoreUnmodeledPropertyChanges STUB_METHOD;
+- (void)awakeFromFetch STUB_METHOD;
+- (void)awakeFromInsert STUB_METHOD;
+- (void)awakeFromSnapshotEvents:(NSSnapshotEventType)flags STUB_METHOD;
+- (NSDictionary*)changedValues STUB_METHOD;
+- (NSDictionary*)changedValuesForCurrentEvent STUB_METHOD;
+- (NSDictionary*)committedValuesForKeys:(NSArray*)keys STUB_METHOD;
+- (void)prepareForDeletion STUB_METHOD;
+- (void)willSave STUB_METHOD;
+- (void)didSave STUB_METHOD;
+- (void)willTurnIntoFault STUB_METHOD;
+- (void)didTurnIntoFault STUB_METHOD;
+- (id)valueForKey:(NSString*)key STUB_METHOD;
+- (void)setValue:(id)value forKey:(NSString*)key STUB_METHOD;
+- (NSMutableSet*)mutableSetValueForKey:(NSString*)key STUB_METHOD;
+- (id)primitiveValueForKey:(NSString*)key STUB_METHOD;
+- (void)setPrimitiveValue:(id)value forKey:(NSString*)key STUB_METHOD;
+- (BOOL)validateValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)validateForDelete:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)validateForInsert:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)validateForUpdate:(NSError* _Nullable*)error STUB_METHOD;
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key STUB_METHOD;
+- (void)didAccessValueForKey:(NSString*)key STUB_METHOD;
+- (void)willAccessValueForKey:(NSString*)key STUB_METHOD;
+- (void)didChangeValueForKey:(NSString*)key STUB_METHOD;
+- (void)didChangeValueForKey:(NSString*)inKey
+             withSetMutation:(NSKeyValueSetMutationKind)inMutationKind
+                usingObjects:(NSSet*)inObjects STUB_METHOD;
+- (void)willChangeValueForKey:(NSString*)key STUB_METHOD;
+- (void)willChangeValueForKey:(NSString*)inKey
+              withSetMutation:(NSKeyValueSetMutationKind)inMutationKind
+                 usingObjects:(NSSet*)inObjects STUB_METHOD;
 @end

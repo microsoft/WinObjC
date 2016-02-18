@@ -14,27 +14,33 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <stubincludes.h>
 #import <Foundation/NSObject.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <CoreImage/CoreImageExport.h>
 
-@interface CIColor : NSObject {
+COREIMAGE_EXPORT_CLASS
+@interface CIColor : NSObject <NSCopying, NSSecureCoding> {
     CGColorRef _cgColor;
 }
 
-+ (CIColor*)colorWithCGColor:(CGColorRef)cgColor;
++ (CIColor*)colorWithCGColor:(CGColorRef)cgColor STUB_METHOD;
 
-+ (CIColor*)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
-+ (CIColor*)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
+@property(readonly) CGFloat red;
+@property(readonly) CGFloat green;
+@property(readonly) CGFloat blue;
+@property(readonly) CGFloat alpha;
 
-- initWithCGColor:(CGColorRef)cgColor;
++ (instancetype)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
++ (instancetype)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
 
-- (size_t)numberOfComponents;
-- (CGColorSpaceRef)colorSpace;
-- (const CGFloat*)components;
-
-- (CGFloat)red;
-- (CGFloat)green;
-- (CGFloat)blue;
-- (CGFloat)alpha;
+- (CGColorSpaceRef)colorSpace STUB_METHOD;
+- (const CGFloat*)components STUB_METHOD;
+- (instancetype)initWithCGColor:(CGColorRef)cgColor STUB_METHOD;
+- (instancetype)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
+- (instancetype)initWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b alpha:(CGFloat)alpha;
+- (size_t)numberOfComponents STUB_METHOD;
 
 @end

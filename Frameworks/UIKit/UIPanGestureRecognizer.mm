@@ -73,20 +73,37 @@ static void commonInit(UIPanGestureRecognizer* self) {
 }
 
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
-    [super initWithTarget:target action:selector];
-    commonInit(self);
+    if (self = [super initWithTarget:target action:selector]) {
+        commonInit(self);
+    }
+
     return self;
 }
 
 - (instancetype)init {
-    [super init];
-    commonInit(self);
+    if (self = [super init]) {
+        commonInit(self);
+    }
+
     return self;
 }
 
 - (id)initWithCoder:(NSCoder*)coder {
-    [super initWithCoder:coder];
-    commonInit(self);
+    if (self = [super initWithCoder:coder]) {
+        commonInit(self);
+
+        NSString* minimumNumberOfTouchesKey = @"UIPanGestureRecognizer.minimumNumberOfTouches";
+        NSString* maximumNumberOfTouchesKey = @"UIPanGestureRecognizer.maximumNumberOfTouches";
+
+        if ([coder containsValueForKey:minimumNumberOfTouchesKey]) {
+            _minimumNumberOfTouches = [coder decodeIntForKey:minimumNumberOfTouchesKey];
+        }
+
+        if ([coder containsValueForKey:maximumNumberOfTouchesKey]) {
+            _maximumNumberOfTouches = [coder decodeIntForKey:maximumNumberOfTouchesKey];
+        }
+    }
+
     return self;
 }
 

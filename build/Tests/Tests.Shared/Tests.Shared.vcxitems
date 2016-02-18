@@ -9,46 +9,68 @@
     <ClCompile>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClangCompile Condition="'$(Platform)'=='ARM'">
+      <!-- Remove this once exception handling works on ARM -->
+      <PreprocessorDefinitions>WINOBJC_DISABLE_EH_TESTS</PreprocessorDefinitions>
+    </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\msvcp140d_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\msvcp140_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vccorlib140d_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vccorlib140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vccorlib140_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vccorlib140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcruntime140d_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcruntime140_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\concrt140d_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\concrt140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\concrt140_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\concrt140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcamp140d_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcamp140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcamp140_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcamp140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcomp140d_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcomp140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="..\..\..\tests\ContainerCRTDeps\vcomp140_app.dll">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcomp140_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\ucrtbased.dll">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140d.dll" Condition="'$(Platform)'=='ARM'">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140d.dll" Condition="'$(Platform)'=='ARM'">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140.dll" Condition="'$(Platform)'=='ARM'">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140.dll" Condition="'$(Platform)'=='ARM'">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\tests\unittests\Tests.Shared\ByteUtils.h" />
   </ItemGroup>
 </Project>

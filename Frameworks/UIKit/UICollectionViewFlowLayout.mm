@@ -19,12 +19,13 @@
 //
 //******************************************************************************
 
+#import <Foundation/NSObject.h>
 #import <UIKit/UIKit.h>
 #import "UIGridLayoutItem.h"
 #import "UIGridLayoutInfo.h"
 #import "UIGridLayoutRow.h"
 #import "UIGridLayoutSection.h"
-#import "UICollectionViewLayout+Internals.h"
+#import "UICollectionViewLayout+Internal.h"
 
 NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
@@ -196,7 +197,7 @@ static char kUICachedItemRectsKey;
                     layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader
                                                  withIndexPath:[NSIndexPath indexPathForItem:0 inSection:(NSInteger)sectionIndex]];
                 layoutAttributes.frame = normalizedHeaderFrame;
-                [layoutAttributes setPinned: isPinned];
+                [layoutAttributes setPinned:isPinned];
                 [layoutAttributesArray addObject:layoutAttributes];
             }
 
@@ -271,7 +272,7 @@ static char kUICachedItemRectsKey;
                     layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter
                                                  withIndexPath:[NSIndexPath indexPathForItem:0 inSection:(NSInteger)sectionIndex]];
                 layoutAttributes.frame = normalizedFooterFrame;
-                [layoutAttributes setPinned: isPinned];
+                [layoutAttributes setPinned:isPinned];
                 [layoutAttributesArray addObject:layoutAttributes];
             }
         }
@@ -438,7 +439,7 @@ static char kUICachedItemRectsKey;
 - (void)getSizingInfos {
     NSAssert(_data.sections.count == 0, @"Grid layout is already populated?");
 
-    id<UICollectionViewDelegateFlowLayout> flowDataSource = (id<UICollectionViewDelegateFlowLayout>)self.collectionView.delegate;
+    auto flowDataSource = static_cast<NSObject<UICollectionViewDelegateFlowLayout>*>(self.collectionView.delegate);
 
     BOOL implementsSizeDelegate = [flowDataSource respondsToSelector:@selector(collectionView:layout:sizeForItemAtIndexPath:)];
     BOOL implementsHeaderReferenceDelegate =

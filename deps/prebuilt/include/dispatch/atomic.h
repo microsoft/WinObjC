@@ -50,12 +50,8 @@ __DISPATCH_BEGIN_DECLS
 #pragma intrinsic(_InterlockedExchangeAdd)
 #define dispatch_atomic_add(p, v)	(_InterlockedExchangeAdd((volatile long*)(p), +(signed long)(v)), *(p))
 #define dispatch_atomic_sub(p, v)	(_InterlockedExchangeAdd((volatile long*)(p), -(signed long)(v)), *(p))
-#ifdef WINOBJC
-#define dispatch_atomic_or(p, v)	__sync_fetch_and_or((p), (v))
-#else
 #pragma intrinsic(_InterlockedOr)
 #define dispatch_atomic_or(p, v)	_InterlockedOr((volatile long*)(p), (long)(v))
-#endif
 #pragma intrinsic(_InterlockedAnd)
 #define dispatch_atomic_and(p, v)	_InterlockedAnd((volatile long*)(p), (long)(v))
 #elif defined(_M_X64)

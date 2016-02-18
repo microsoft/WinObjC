@@ -2860,7 +2860,7 @@ _Always_(_Post_satisfies_(return < 0)) __declspec(noinline) inline HRESULT Resul
 #ifdef __OBJC__
     catch (NSException* e) {
         // If we have an hresult in our user dict, use that, otherwise this was unexpected:
-        NSNumber* hresultValue = [e.userInfo objectForKey:_hresultErrorDictKey()];
+        NSNumber* hresultValue = [e.userInfo objectForKey:_NSHResultErrorDictKey];
         if (hresultValue) {
             return [hresultValue unsignedIntValue];
         }
@@ -3009,7 +3009,7 @@ __declspec(noreturn) inline void RethrowNormalizedCaughtException_Helper(__R_FN_
 #ifdef __OBJC__
     catch (NSException* e) {
         // Log this exception before rethrowing it.
-        HRESULT hr = [[e.userInfo objectForKey:_hresultErrorDictKey()] unsignedIntValue];
+        HRESULT hr = [[e.userInfo objectForKey:_NSHResultErrorDictKey] unsignedIntValue];
         ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, hr, message);
 
         throw;
@@ -3203,7 +3203,7 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
 }
 
 #ifdef __cplusplus_winrt
-inline void __stdcall ThrowPlatformException(FailureInfo const& failure, LPCWSTR debugString) {
+inline void __stdcall ThrowPlatformException(FailureInfo const& failure, const wchar_t* debugString) {
     throw Platform::Exception::CreateException(failure.hr,
                                                ref new Platform::String(reinterpret_cast<_Null_terminated_ const __wchar_t*>(debugString)));
 }
@@ -3251,7 +3251,7 @@ inline __declspec(noinline) void ReportFailure(
         }
 #ifdef __OBJC__
         else if (type == FailureType::ObjCException) {
-            @throw _exceptionFromFailureInfo(failure);
+            @throw _NSExceptionFromFailureInfo(failure);
         }
 #endif
     }

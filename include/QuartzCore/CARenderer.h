@@ -13,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma cone
 
-#import <QuartzCore/CABase.h>
+#import <QuartzCore/CoreAnimationExport.h>
 #import <ApplicationServices/ApplicationServices.h>
 
 @class CALayer;
@@ -26,15 +27,16 @@
     CALayer* _rootLayer;
 }
 
-@property (assign) CGRect bounds;
 @property (retain) CALayer* layer;
+@property (assign) CGRect bounds;
 
 + (CARenderer*)rendererWithCGLContext:(void*)cglContext options:(NSDictionary*)options;
 
 - (void)beginFrameAtTime:(CFTimeInterval)currentTime timeStamp:(CVTimeStamp*)timeStamp;
-
+- (CGRect)updateBounds STUB_METHOD;
+- (void)addUpdateRect:(CGRect)aRect STUB_METHOD;
 - (void)render;
-
+- (CFTimeInterval)nextFrameTime STUB_METHOD;
 - (void)endFrame;
 
 @end

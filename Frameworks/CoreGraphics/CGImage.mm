@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,55 +14,35 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "CGColorSpaceInternal.h"
-#include "CGImageInternal.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "UIKit/UIImage.h"
-#include "Foundation/NSData.h"
-
-#include <math.h>
-#include <vector>
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <math.h>
+#import <vector>
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <Foundation/NSData.h>
+#import <UIKit/UIImage.h>
+#import "CGColorSpaceInternal.h"
+#import "CGImageInternal.h"
+#import "_CGLifetimeBridgingType.h"
 
 extern "C" {
-#include <png.h>
+#import <png.h>
 };
 
-@interface CGNSImage : NSObject {
-@public
-}
+@interface CGNSImage : _CGLifetimeBridgingType
 @end
-
-static IWLazyClassLookup _LazyUIImage("UIImage");
-
-//#define DEBUG_IMG_COUNT
-
-@implementation CGNSImage : NSObject
+@implementation CGNSImage
 - (instancetype)copyWithZone:(NSZone*)zone {
-    CFRetain(self);
-
-    return self;
-}
-
-- (instancetype)retain {
-    CFRetain(self);
-
-    return self;
-}
-
-- (instancetype)release {
-    CFRelease(self);
-
-    return self;
+    return [self retain];
 }
 
 - (void)dealloc {
     delete (__CGImage*)self;
 }
-
 @end
+
+static IWLazyClassLookup _LazyUIImage("UIImage");
 
 int numCGImages = 0;
 
@@ -75,7 +55,6 @@ __CGImage::__CGImage() {
     EbrDebugLog("Number of CGImages: %d created=%x\n", numCGImages, this);
 #endif
 
-    isa = NULL;
     object_setClass((id) this, [CGNSImage class]);
 }
 
@@ -113,18 +92,6 @@ CGImageRef CGImageBacking::CopyOnWrite() {
     CGImageRef ret;
 
     ret = new CGBitmapImage(_parent);
-
-    return ret;
-}
-
-/**
- @Status Stub
-*/
-const CGFloat* CGColorGetComponents(CGColorRef color) {
-    UNIMPLEMENTED();
-    float* ret = (float*)malloc(sizeof(float) * 4);
-
-    [color getColors:ret];
 
     return ret;
 }
@@ -883,7 +850,7 @@ NSData* UIImagePNGRepresentation(UIImage* img) {
     return ret;
 }
 
-NSData* UIImageJPEGRepresentation(UIImage* img) {
+NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat compressionQuality) {
     EbrDebugLog("UIImageJPEGRepresentation not supported - returning PNG\n");
 
     return UIImagePNGRepresentation(img);
@@ -897,4 +864,58 @@ void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL com
     EbrDebugLog("UIImageWriteToSavedPhotosAlbum not supported\n");
 
     [(_UIImageWriterCallback*)completionTarget image:nil didFinishSavingWithError:nil contextInfo:contextInfo];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+const CGFloat* CGImageGetDecode(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorRenderingIntent CGImageGetRenderingIntent(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGImageGetShouldInterpolate(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGImageGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGImageIsMask(CGImageRef image) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGImageRef CGImageCreateWithMaskingColors(CGImageRef image, const CGFloat* components) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }

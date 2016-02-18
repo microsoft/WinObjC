@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Starboard\dll\Starboard.vcxproj">
+      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Foundation\lib\FoundationLib.vcxproj">
+      <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
+    <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_local_windows.xml" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <ProjectGuid>{C8276B21-7830-482C-94FB-784F2478CBF1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Foundation.UnitTests</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <ApplicationType>Windows Store</ApplicationType>
+    <AppContainerApplication>false</AppContainerApplication>
+    <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
+    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <WindowsAppContainer>false</WindowsAppContainer>
+    <TargetOsAndVersion>Universal Windows</TargetOsAndVersion>
+    <StarboardBasePath>..\..\..\..</StarboardBasePath>
+    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
+    <IslandwoodDRT>false</IslandwoodDRT>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(RootNamespace)\</OutDir>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+    <Import Project="..\..\Tests.Shared\Tests.Shared.vcxitems" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AppContainer>false</AppContainer>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <CompileAs>CompileAsObjCpp</CompileAs>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AppContainer>false</AppContainer>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <CompileAs>CompileAsObjCpp</CompileAs>
+      <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AppContainer>false</AppContainer>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
+    </ClangCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(MSBuildThisFileDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AppContainer>false</AppContainer>
+      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
+      <CompileAs>CompileAsObjCpp</CompileAs>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DFOUNDATION_IMPEXP= " "-DCOREFOUNDATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
+    </ClangCompile>
+    <PostBuildEvent>
+      <Command>xcopy /y "$(ProjectDir)..\..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" "$(TargetDir)\data\"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
+    <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSObject_NSCoding.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSKeyValueCoding.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\BlockClassTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRegularExpressionTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSSortDescriptorTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLockTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRecursiveLockTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBinaryHeapTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBridgeBaseTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFUUIDTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFURLTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CoreFoundationTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSArrayTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSAttributedStringTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSBundleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCachedURLResponseTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCharacterSetTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSComparisonPredicateTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCompoundPredicateTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSConditionTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCountedSetTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDataTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDateComponentsTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDateFormatterTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSHttpCookieTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSJSONSerializationTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLocaleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSMutableURLRequestTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSNumberTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObjectTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_NSKeyValueArrayAdaptersTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSOperationTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSPredicateTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProcessInfoTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSProgressTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSTimeZoneTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCacheTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCredentialStorageTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLCredentialTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLProtectionSpaceTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLRequestTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLSessionConfigurationTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSUserDefaultsTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSValueTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTestHelpers.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTests.m" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Text</FileType>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTestHelpers.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
+  </ImportGroup>
+</Project>

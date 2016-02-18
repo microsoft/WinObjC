@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,9 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <Foundation/NSObject.h>
+#import <QuartzCore/CoreAnimationExport.h>
+
+@class NSString;
+@class NSDictionary;
 
 @protocol CAAction
-
+@required
+- (void)runActionForKey:(NSString*)key object:(id)anObject arguments:(NSDictionary*)dict;
 @end

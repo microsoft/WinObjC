@@ -13,5 +13,44 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <CoreFoundation/CFDate.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <Security/SecBase.h>
+
+// This header file is not yet fully implemented
+
+typedef struct __SecKey* SecKeyRef;
+
+typedef enum SecPadding : uint32_t SecPadding;
+enum SecPadding : uint32_t {
+    kSecPaddingNone = 0,
+    kSecPaddingPKCS1 = 1,
+    kSecPaddingPKCS1MD2 = 0x8000,
+    kSecPaddingPKCS1MD5 = 0x8001,
+    kSecPaddingPKCS1SHA1 = 0x8002,
+};
+
+SECURITY_EXPORT const CFTypeRef kSecPrivateKeyAttrs;
+SECURITY_EXPORT const CFTypeRef kSecPublicKeyAttrs;
+
+SECURITY_EXPORT CFTypeID SecKeyGetTypeID(void) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecKeyGeneratePair(CFDictionaryRef parameters, SecKeyRef* publicKey, SecKeyRef* privateKey) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecKeyEncrypt(SecKeyRef key,
+                                       SecPadding padding,
+                                       const uint8_t* plainText,
+                                       size_t plainTextLen,
+                                       uint8_t* cipherText,
+                                       size_t* cipherTextLen) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecKeyDecrypt(SecKeyRef key,
+                                       SecPadding padding,
+                                       const uint8_t* cipherText,
+                                       size_t cipherTextLen,
+                                       uint8_t* plainText,
+                                       size_t* plainTextLen) STUB_METHOD;
+SECURITY_EXPORT OSStatus
+SecKeyRawSign(SecKeyRef key, SecPadding padding, const uint8_t* dataToSign, size_t dataToSignLen, uint8_t* sig, size_t* sigLen) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecKeyRawVerify(
+    SecKeyRef key, SecPadding padding, const uint8_t* signedData, size_t signedDataLen, const uint8_t* sig, size_t sigLen) STUB_METHOD;
+SECURITY_EXPORT size_t SecKeyGetBlockSize(SecKeyRef key) STUB_METHOD;

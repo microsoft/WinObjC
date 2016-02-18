@@ -17,6 +17,6 @@
 #include "Starboard.h"
 #include "UIProxyObjectPair.h"
 
-@implementation UIProxyObjectPair : NSObject
+@implementation UIProxyObjectPair
 
 @end

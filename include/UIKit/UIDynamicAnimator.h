@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,31 +14,40 @@
 //
 //******************************************************************************
 
-#ifndef _UIDYNAMICANIMATOR_H_
-#define _UIDYNAMICANIMATOR_H_
+#pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <Foundation/Foundation.h>
 
-@class UIDynamicBehavior;
+@protocol UIDynamicItem;
+@class UIView;
 @class UICollectionViewLayout;
-@class UICollectionViewLayoutAttributes;
 @class NSArray;
+@class UIDynamicBehavior;
+@protocol UIDynamicAnimatorDelegate;
+@class UICollectionViewLayoutAttributes;
 @class NSIndexPath;
+@class NSString;
 
-@protocol UIDynamicItem <NSObject>
-@end
-
+UIKIT_EXPORT_CLASS
 @interface UIDynamicAnimator : NSObject
-
-@property (nonatomic, readonly, copy) NSArray* behaviors;
-
-- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout*)layout;
-- (void)addBehavior:(UIDynamicBehavior*)behavior;
-- (void)removeBehavior:(UIDynamicBehavior*)behavior;
-- (NSArray*)itemsInRect:(CGRect)rect;
-- (UICollectionViewLayoutAttributes*)layoutAttributesForCellAtIndexPath:(NSIndexPath*)indexPath;
-- (void)updateItemUsingCurrentState:(id<UIDynamicItem>)item;
-
+- (instancetype)initWithReferenceView:(UIView*)view STUB_METHOD;
+- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout*)layout STUB_METHOD;
+- (NSArray*)itemsInRect:(CGRect)rect STUB_METHOD;
+- (void)addBehavior:(UIDynamicBehavior*)behavior STUB_METHOD;
+- (void)removeBehavior:(UIDynamicBehavior*)behavior STUB_METHOD;
+- (void)removeAllBehaviors STUB_METHOD;
+- (NSTimeInterval)elapsedTime STUB_METHOD;
+@property (readonly, getter=isRunning, nonatomic) BOOL running STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSArray* behaviors STUB_PROPERTY;
+@property (readonly, nonatomic) UIView* referenceView STUB_PROPERTY;
+@property (nonatomic) id<UIDynamicAnimatorDelegate> delegate STUB_PROPERTY;
+- (void)updateItemUsingCurrentState:(id<UIDynamicItem>)item STUB_METHOD;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForCellAtIndexPath:(NSIndexPath*)indexPath STUB_METHOD;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForDecorationViewOfKind:(NSString*)decorationViewKind
+                                                                 atIndexPath:(NSIndexPath*)indexPath STUB_METHOD;
+- (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryViewOfKind:(NSString*)kind
+                                                                    atIndexPath:(NSIndexPath*)indexPath STUB_METHOD;
 @end
-
-#endif /* _UIDYNAMICANIMATOR_H_ */

@@ -281,7 +281,7 @@ static void initInternal(UISlider* self) {
 
     _trackVal += (amt.x / bounds.size.width) * (_max - _min);
     [self setValue:_trackVal];
-    [self sendEvent:self mask:UIControlEventValueChanged];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 - (void)dealloc {

@@ -14,6 +14,9 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <Foundation/NSObject.h>
 #include "UIKitExport.h"
 
 #ifndef _UIUSERNOTIFICATIONSETTINGS_H_
@@ -26,8 +29,10 @@ typedef enum UIUserNotificationType : NSUInteger {
     UIUserNotificationTypeAlert = 1 << 2,
 } UIUserNotificationType;
 
+@class NSSet;
+
 UIKIT_EXPORT_CLASS
-@interface UIUserNotificationSettings : NSObject <NSObject>
+@interface UIUserNotificationSettings : NSObject
 
 @property (nonatomic, readonly) UIUserNotificationType types;
 @property (nonatomic, copy, readonly) NSSet* categories;

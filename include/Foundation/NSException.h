@@ -1,26 +1,28 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+#import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSEXCEPTION_H_
-#define _NSEXCEPTION_H_
-
-#import "Foundation/NSObject.h"
-#import <setjmp.h>
-
-@class NSDictionary, NSArray, NSString;
+@class NSString;
+@class NSDictionary;
+@class NSArray;
 
 FOUNDATION_EXPORT NSString* const NSGenericException;
 FOUNDATION_EXPORT NSString* const NSRangeException;
@@ -41,14 +43,12 @@ FOUNDATION_EXPORT NSString* const NSOldStyleException;
 FOUNDATION_EXPORT NSString* const NSOverflowException;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSException : NSObject <NSSecureCoding, NSCopying>
-
-+ (void)raise:(NSString*)name format:(NSString*)format, ...;
-+ (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)arguments;
-- (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
+@interface NSException : NSObject <NSCoding, NSCopying>
 + (NSException*)exceptionWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
++ (void)raise:(NSString*)name format:(NSString*)format, ...;
++ (void)raise:(NSString*)name format:(NSString*)format arguments:(va_list)argList;
+- (instancetype)initWithName:(NSString*)name reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
 - (void)raise;
-
 @property (readonly, copy) NSString* name;
 @property (readonly, copy) NSString* reason;
 @property (readonly, copy) NSDictionary* userInfo;
@@ -62,8 +62,8 @@ FOUNDATION_EXPORT_CLASS
 
 typedef void NSUncaughtExceptionHandler(NSException* exception);
 
-FOUNDATION_EXPORT NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler(void);
-FOUNDATION_EXPORT void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*);
+FOUNDATION_EXPORT NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler(void) STUB_METHOD;
+FOUNDATION_EXPORT void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*) STUB_METHOD;
 
 typedef struct NSExceptionFrame {
     jmp_buf state;
@@ -100,7 +100,3 @@ FOUNDATION_EXPORT void __NSPopExceptionFrame(NSExceptionFrame* frame);
         __NSPopExceptionFrame(&__exceptionFrame); \
         return;                                   \
     }
-
-#import <Foundation/NSAssertionHandler.h>
-
-#endif /* _NSEXCEPTION_H_ */

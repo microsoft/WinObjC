@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,25 +14,20 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSManagedObjectID, NSMutableDictionary;
+@class NSManagedObjectID;
+@class NSMutableDictionary;
+@class NSString;
 
-@interface NSAtomicStoreCacheNode : NSObject {
-    NSManagedObjectID* _objectID;
-    NSMutableDictionary* _propertyCache;
-}
-
-- initWithObjectID:(NSManagedObjectID*)objectID;
-
-- (NSManagedObjectID*)objectID;
-
-- (NSMutableDictionary*)propertyCache;
-
-- (void)setPropertyCache:(NSMutableDictionary*)value;
-
-- (void)setValue:value forKey:(NSString*)key;
-
-- valueForKey:(NSString*)key;
-
+COREDATA_EXPORT_CLASS
+@interface NSAtomicStoreCacheNode : NSObject
+- (instancetype)initWithObjectID:(NSManagedObjectID*)moid STUB_METHOD;
+@property (readonly, nonatomic, strong) NSManagedObjectID* objectID STUB_PROPERTY;
+@property (nonatomic, strong) NSMutableDictionary* propertyCache STUB_PROPERTY;
+- (id)valueForKey:(NSString*)key STUB_METHOD;
+- (void)setValue:(id)value forKey:(NSString*)key STUB_METHOD;
 @end

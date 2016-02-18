@@ -2,6 +2,8 @@
  * Copyright (c) 1991, 1993
  *  The Regents of the University of California.  All rights reserved.
  *
+ * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+ *
  * This code is derived from software contributed to Berkeley by
  * Berkeley Software Design, Inc.
  *
@@ -158,7 +160,11 @@
 
 #define __const     const       /* define reserved names to standard */
 #define __signed    signed
+
+#ifndef __volatile
 #define __volatile  volatile
+#endif
+
 #if defined(__cplusplus)
 #define __inline    inline      /* convert to C++ keyword */
 #else

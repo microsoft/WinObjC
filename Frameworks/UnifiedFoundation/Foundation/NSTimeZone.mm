@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSData.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSArray.h"
@@ -46,6 +47,34 @@ static NSArray* s_KnownTimeZoneNames;
 // This value is negative as TIME_ZONE_INFORMATION has an opposite sign for bias than icu.
 
 const static int c_minutesToMilliseconds = -60000;
+
+// Convert NSTimeZoneNameStyle to ICU EDisplayType.
+icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZoneNameStyle* style, UBool& isDaylight) {
+    switch (*style) {
+        case NSTimeZoneNameStyleStandard:
+            isDaylight = FALSE;
+            return icu::TimeZone::EDisplayType::LONG;
+        case NSTimeZoneNameStyleShortStandard:
+            isDaylight = FALSE;
+            return icu::TimeZone::EDisplayType::SHORT_GMT;
+        case NSTimeZoneNameStyleDaylightSaving:
+            isDaylight = TRUE;
+            return icu::TimeZone::EDisplayType::LONG;
+        case NSTimeZoneNameStyleShortDaylightSaving:
+            isDaylight = TRUE;
+            return icu::TimeZone::EDisplayType::SHORT_GMT;
+        case NSTimeZoneNameStyleGeneric:
+            isDaylight = FALSE;
+            return icu::TimeZone::EDisplayType::LONG_GENERIC;
+        case NSTimeZoneNameStyleShortGeneric:
+            isDaylight = FALSE;
+            // Use LONG_GENERIC instead of SHORT_GENERIC here to get consistent result with IOS
+            return icu::TimeZone::EDisplayType::LONG_GENERIC;
+        default:
+            isDaylight = FALSE;
+            return icu::TimeZone::EDisplayType::SHORT_COMMONLY_USED;
+    }
+}
 
 @implementation NSTimeZone {
     icu::TimeZone* _icuTZ;
@@ -158,6 +187,17 @@ const static int c_minutesToMilliseconds = -60000;
 
 /**
  @Status Interoperable
+ @Get the time zone data version from ICU. The return value is NSString and based on ICU version.
+*/
++ (NSString*)timeZoneDataVersion {
+    UErrorCode errorCode = U_ZERO_ERROR;
+    const char* tzDataVersion = icu::TimeZone::getTZDataVersion(errorCode);
+    NSString* ret = [NSString stringWithUTF8String:tzDataVersion];
+    return ret;
+}
+
+/**
+ @Status Interoperable
 */
 + (instancetype)timeZoneForSecondsFromGMT:(NSInteger)seconds {
     NSTimeZone* ret = [self alloc];
@@ -208,7 +248,6 @@ const static int c_minutesToMilliseconds = -60000;
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         // Can't encode/decode ICU object. Potentially recreate system TZ?
-        _description = [[coder decodeObjectForKey:@"description"] retain];
         _nextDaylightSavingTimeTransition = [[coder decodeObjectOfClass:[NSDate class] forKey:@"nextDaylightSavingTimeTransition"] retain];
         _abbreviation = [[coder decodeObjectForKey:@"abbreviation"] retain];
         _name = [[coder decodeObjectForKey:@"name"] retain];
@@ -225,7 +264,7 @@ const static int c_minutesToMilliseconds = -60000;
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     // Can't encode/decode ICU object. Potentially recreate system TZ?
-    [coder encodeObject:_description forKey:@"description"];
+    [coder encodeObject:[self description] forKey:@"description"];
     [coder encodeObject:_nextDaylightSavingTimeTransition forKey:@"nextDaylightSavingTimeTransition"];
     [coder encodeObject:_abbreviation forKey:@"abbreviation"];
     [coder encodeObject:_name forKey:@"name"];
@@ -343,7 +382,7 @@ const static int c_minutesToMilliseconds = -60000;
 */
 - (NSTimeInterval)daylightSavingTimeOffsetForDate:(NSDate*)date {
     UNIMPLEMENTED();
-    return nil;
+    return 0;
 }
 
 /**
@@ -384,9 +423,18 @@ const static int c_minutesToMilliseconds = -60000;
 /**
  @Status Stub
 */
-- (NSString*)localizedName:(NSTimeZoneNameStyle)name locale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return [self description];
+- (NSString*)localizedName:(NSTimeZoneNameStyle)style locale:(NSLocale*)locale {
+    UBool daylight = TRUE;
+    icu::TimeZone::EDisplayType type = _convertNSTimeZoneNameStyleToICUEDisplayType(&style, daylight);
+
+    NSString* identifier = [locale localeIdentifier];
+    icu::Locale icuLocale = icu::Locale::createFromName([identifier UTF8String]);
+
+    icu_48::UnicodeString ret;
+
+    _icuTZ->getDisplayName(daylight, type, icuLocale, ret);
+
+    return NSStringFromICU(ret);
 }
 
 /**

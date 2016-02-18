@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "UIKit/UIFontDescriptor.h"
 
@@ -33,7 +34,43 @@ NSString* const UIFontDescriptorTraitsAttribute = @"UIFontDescriptorTraitsAttrib
 
 NSString* const UIFontSymbolicTrait = @"UIFontSymbolicTrait";
 
+NSString* const UIFontDescriptorNameAttribute = @"UIFontDescriptorNameAttribute";
+NSString* const UIFontDescriptorFaceAttribute = @"UIFontDescriptorFaceAttribute";
+NSString* const UIFontDescriptorSizeAttribute = @"UIFontDescriptorSizeAttribute";
+NSString* const UIFontDescriptorVisibleNameAttribute = @"UIFontDescriptorVisibleNameAttribute";
+NSString* const UIFontDescriptorMatrixAttribute = @"UIFontDescriptorMatrixAttribute";
+NSString* const UIFontDescriptorCharacterSetAttribute = @"UIFontDescriptorCharacterSetAttribute";
+NSString* const UIFontDescriptorCascadeListAttribute = @"UIFontDescriptorCascadeListAttribute";
+NSString* const UIFontDescriptorFixedAdvanceAttribute = @"UIFontDescriptorFixedAdvanceAttribute";
+NSString* const UIFontDescriptorFeatureSettingsAttribute = @"UIFontDescriptorFeatureSettingsAttribute";
+NSString* const UIFontDescriptorTextStyleAttribute = @"UIFontDescriptorTextStyleAttribute";
+NSString* const UIFontWeightTrait = @"UIFontWeightTrait";
+NSString* const UIFontWidthTrait = @"UIFontWidthTrait";
+NSString* const UIFontSlantTrait = @"UIFontSlantTrait";
+
+NSString* const UIFontFeatureTypeIdentifierKey = @"UIFontFeatureTypeIdentifierKey";
+NSString* const UIFontFeatureSelectorIdentifierKey = @"UIFontFeatureSelectorIdentifierKey";
+
 NSString* const SystemFontName = @"SegoeUI";
+
+/** @Status Stub */
+const CGFloat UIFontWeightUltraLight = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightThin = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightLight = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightRegular = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightMedium = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightSemibold = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightBold = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightHeavy = StubConstant();
+/** @Status Stub */
+const CGFloat UIFontWeightBlack = StubConstant();
 
 /**
  All these values are fixed number in IOS no matter on iphone* or ipad*.

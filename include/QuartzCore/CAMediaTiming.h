@@ -13,13 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAMEDIATIMING_H_
-#define _CAMEDIATIMING_H_
-
-#import <Foundation/NSString.h>
-#import <QuartzCore/CABase.h>
 #import <QuartzCore/CoreAnimationExport.h>
+#import <Foundation/NSObject.h>
+#import <CoreFoundation/CFDate.h>
+
+@class NSString;
 
 CA_EXPORT NSString* const kCAFillModeRemoved;
 CA_EXPORT NSString* const kCAFillModeForwards;
@@ -29,15 +29,14 @@ CA_EXPORT NSString* const kCAFillModeFrozen;
 
 @protocol CAMediaTiming
 
-@property BOOL autoreverses;
+@required
 @property CFTimeInterval beginTime;
-@property CFTimeInterval duration;
-@property (copy) NSString* fillMode;
+@property CFTimeInterval timeOffset;
 @property float repeatCount;
 @property CFTimeInterval repeatDuration;
+@property CFTimeInterval duration;
 @property float speed;
-@property CFTimeInterval timeOffset;
+@property BOOL autoreverses;
+@property (copy) NSString* fillMode;
 
 @end
-
-#endif // _CAMEDIATIMING_H_

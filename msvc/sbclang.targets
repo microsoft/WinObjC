@@ -26,29 +26,82 @@
     </PropertyGroup>
 
     <PropertyGroup>
+      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreImage)' == 'true'">true</IncludeUIKit>
+      <IncludeAssetsLibrary Condition="$(LinkAdditionalDependencies.Contains('AssetsLibrary.lib'))">true</IncludeAssetsLibrary>
+      <IncludeGameController Condition="$(LinkAdditionalDependencies.Contains('GameController.lib'))">true</IncludeGameController>
+      <IncludeGamePlayKit Condition="$(LinkAdditionalDependencies.Contains('GamePlayKit.lib'))">true</IncludeGamePlayKit>
+      <IncludeSocial Condition="$(LinkAdditionalDependencies.Contains('Social.lib'))">true</IncludeSocial>
+      <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
+      <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
+      <IncludeAccelerate Condition="$(LinkAdditionalDependencies.Contains('Accelerate.lib'))">true</IncludeAccelerate>
       <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
       <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
       <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
       <IncludeOpenGLES Condition="$(LinkAdditionalDependencies.Contains('OpenGLES.lib')) or '$(IncludeGLKit)' == 'true'">true</IncludeOpenGLES>
       <IncludeQuartzCore Condition="$(LinkAdditionalDependencies.Contains('QuartzCore.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeQuartzCore>
-      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreGraphics>
-      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true'">true</IncludeFoundation>
+      <IncludeContacts Condition="$(LinkAdditionalDependencies.Contains('Contacts.lib'))">true</IncludeContacts>
+      <IncludeCoreTelephony Condition="$(LinkAdditionalDependencies.Contains('CoreTelephony.lib'))">true</IncludeCoreTelephony>
+      <IncludeCoreImage Condition="$(LinkAdditionalDependencies.Contains('CoreImage.lib'))">true</IncludeCoreImage>
+      <IncludeCoreGraphics Condition="$(LinkAdditionalDependencies.Contains('CoreGraphics.lib')) or '$(IncludeQuartzCore)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeCoreGraphics>
+      <IncludeCoreText Condition="$(LinkAdditionalDependencies.Contains('CoreText.lib')) or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IncludeQuartzCore)' == 'true'">true</IncludeCoreText>
+      <IncludeFoundation Condition="$(LinkAdditionalDependencies.Contains('Foundation.lib')) or '$(IncludeGameKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true' or '$(IslandwoodDRT)' == 'true' or '$(IncludeCoreImage)' == 'true' ">true</IncludeFoundation>
       <IncludeDispatch Condition="$(LinkAdditionalDependencies.Contains('libdispatch.lib')) or '$(IncludeFoundation)' == 'true'">true</IncludeDispatch>
       <IncludeAudioToolbox Condition="$(LinkAdditionalDependencies.Contains('AudioToolbox.lib'))">true</IncludeAudioToolbox>
       <IncludeOpenAL Condition="$(LinkAdditionalDependencies.Contains('OpenAL.lib'))">true</IncludeOpenAL>
       <IncludeSecurity Condition="$(LinkAdditionalDependencies.Contains('Security.lib'))">true</IncludeSecurity>
       <IncludeCoreLocation Condition="$(LinkAdditionalDependencies.Contains('CoreLocation.lib'))">true</IncludeCoreLocation>
       <IncludeAccounts Condition="$(LinkAdditionalDependencies.Contains('Accounts.lib'))">true</IncludeAccounts>
+      <IncludeLocalAuthentication Condition="$(LinkAdditionalDependencies.Contains('LocalAuthentication.lib'))">true</IncludeLocalAuthentication>
+      <IncludeCloudKit Condition="$(LinkAdditionalDependencies.Contains('CloudKit.lib'))">true</IncludeCloudKit>
       <IncludeSystemConfiguration Condition="$(LinkAdditionalDependencies.Contains('SystemConfiguration.lib'))">true</IncludeSystemConfiguration>
+      <IncludeFreeType Condition="$(LinkAdditionalDependencies.Contains('freetype.lib')) or '$(IncludeAutoLayout)' == 'true' or '$(IncludeUIKit)' == 'true' or '$(IncludeCoreGraphics)' == 'true'">true</IncludeFreeType>
+      <IncludeICUDT Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icudt.lib'))">true</IncludeICUDT>
+      <IncludeICUIn Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icuin.lib'))">true</IncludeICUIn>
+      <IncludeICUUC Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icuuc.lib'))">true</IncludeICUUC>
+      <IncludeLibCurl Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('libcurl_imp.lib'))">true</IncludeLibCurl>
+      <IncludeLibEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('libeay32.lib'))">true</IncludeLibEAY32>
+      <IncludeLibXML2 Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or '$(IncludeUIKit)' == 'true' or $(LinkAdditionalDependencies.Contains('libxml2.lib'))">true</IncludeLibXML2>
+      <IncludeSSLEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
+      <IncludeStoreKit Condition="$(LinkAdditionalDependencies.Contains('StoreKit.lib'))">true</IncludeStoreKit>
+      <IncludeMediaPlayer Condition="$(LinkAdditionalDependencies.Contains('MediaPlayer.lib'))">true</IncludeMediaPlayer>
+      <IncludeMapKit Condition="$(LinkAdditionalDependencies.Contains('MapKit.lib'))">true</IncludeMapKit>
       <IncludeObjcrt>true</IncludeObjcrt>
       <IncludeLogging>true</IncludeLogging>
       <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
+      <IncludeCairo Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeCairo>
+      <IncludeLibPNG Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeLibPNG>
+      <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibCurl)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
+      <IncludeEventKitUI Condition="$(LinkAdditionalDependencies.Contains('EventKitUI.lib'))">true</IncludeEventKitUI>
+      <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
+      <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
+      <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
+      <IncludeHomeKit Condition="$(LinkAdditionalDependencies.Contains('HomeKit.lib'))">true</IncludeHomeKit>
+      <IncludeCoreVideo Condition="$(LinkAdditionalDependencies.Contains('CoreVideo.lib'))">true</IncludeCoreVideo>
+      <IncludeAddressBook Condition="$(LinkAdditionalDependencies.Contains('AddressBook.lib'))">true</IncludeAddressBook>
+      <IncludeAddressBookUI Condition="$(LinkAdditionalDependencies.Contains('AddressBookUI.lib'))">true</IncludeAddressBookUI>
+      <IncludeHealthKit Condition="$(LinkAdditionalDependencies.Contains('HealthKit.lib'))">true</IncludeHealthKit>
+      <IncludeAVKit Condition="$(LinkAdditionalDependencies.Contains('AVKit.lib'))">true</IncludeAVKit>
+      <IncludeMediaAccessibility Condition="$(LinkAdditionalDependencies.Contains('MediaAccessibility.lib'))">true</IncludeMediaAccessibility>
+      <IncludeCoreAudio Condition="$(LinkAdditionalDependencies.Contains('CoreAudio.lib'))">true</IncludeCoreAudio>
+      <IncludeCoreAudioKit Condition="$(LinkAdditionalDependencies.Contains('CoreAudioKit.lib'))">true</IncludeCoreAudioKit>
+      <IncludeCoreBluetooth Condition="$(LinkAdditionalDependencies.Contains('CoreBluetooth.lib'))">true</IncludeCoreBluetooth>
+      <IncludeCoreImage Condition="$(LinkAdditionalDependencies.Contains('CoreImage.lib'))">true</IncludeCoreImage>
+      <IncludeCoreMotion Condition="$(LinkAdditionalDependencies.Contains('CoreMotion.lib'))">true</IncludeCoreMotion>
+      <IncludeEventKit Condition="$(LinkAdditionalDependencies.Contains('EventKit.lib'))">true</IncludeEventKit>
+      <IncludeiAd Condition="$(LinkAdditionalDependencies.Contains('iAd.lib'))">true</IncludeiAd>
+      <IncludeImageIO Condition="$(LinkAdditionalDependencies.Contains('ImageIO.lib'))">true</IncludeImageIO>
+      <IncludeMessageUI Condition="$(LinkAdditionalDependencies.Contains('MessageUI.lib'))">true</IncludeMessageUI>
+      <IncludeMetal Condition="$(LinkAdditionalDependencies.Contains('Metal.lib'))">true</IncludeMetal>
+      <IncludeMobileCoreServices Condition="$(LinkAdditionalDependencies.Contains('MobileCoreServices.lib'))">true</IncludeMobileCoreServices>
+      <IncludeTwitter Condition="$(LinkAdditionalDependencies.Contains('Twitter.lib'))">true</IncludeTwitter>
+      <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
       <SBResourceCopy Condition="'$(IncludeLogging)' == 'true'" Include="$(StarboardLibDirs)\Logging.dll" />
-      <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\objcrt.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardConfigSpecificPrebuiltLibsDir)\libobjc2.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
 
       <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
@@ -58,26 +111,30 @@
       <SBResourceCopy Condition="'$(IncludeOpenAL)' == 'true'" Include="$(StarboardLibDirs)\OpenAL.dll" />
       <SBResourceCopy Condition="'$(IncludeSystemConfiguration)' == 'true'" Include="$(StarboardLibDirs)\SystemConfiguration.dll" />
 
-      <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libdispatch.dll" />
+      <SBResourceCopy Condition="'$(IncludeDispatch)' == 'true'" Include="$(StarboardConfigSpecificPrebuiltLibsDir)\libdispatch.dll" />
       <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardLibDirs)\Foundation.dll" />
       <SBResourceCopy Condition="'$(IncludeUWP)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ObjCUWP.dll" />
 
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\cairo.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\freetype.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libxml2.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ssleay32.dll" />
-      <SBResourceCopy Condition="'$(IncludeFoundation)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
+      <SBResourceCopy Condition="'$(IncludeCairo)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\cairo.dll" />
+      <SBResourceCopy Condition="'$(IncludeContacts)' == 'true'" Include="$(StarboardLibDirs)\Contacts.dll" />
+      <SBResourceCopy Condition="'$(IncludeFreeType)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\freetype.dll" />
+      <SBResourceCopy Condition="'$(IncludeICUDT)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
+      <SBResourceCopy Condition="'$(IncludeICUIn)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
+      <SBResourceCopy Condition="'$(IncludeICUUC)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
+      <SBResourceCopy Condition="'$(IncludeLibCurl)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
+      <SBResourceCopy Condition="'$(IncludeLibEAY32)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
+      <SBResourceCopy Condition="'$(IncludeLibPNG)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
+      <SBResourceCopy Condition="'$(IncludeLibXML2)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libxml2.dll" />
+      <SBResourceCopy Condition="'$(IncludeSSLEAY32)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\ssleay32.dll" />
+      <SBResourceCopy Condition="'$(IncludeLibZ)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libz.dll" />
 
       <SBResourceCopy Condition="'$(IncludeGLKit)' == 'true'" Include="$(StarboardLibDirs)\GLKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeAccelerate)' == 'true'" Include="$(StarboardLibDirs)\Accelerate.dll" />
 
       <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardLibDirs)\CoreGraphics.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreImage)' == 'true'" Include="$(StarboardLibDirs)\CoreImage.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreText)' == 'true'" Include="$(StarboardLibDirs)\CoreText.dll" />
       <SBResourceCopy Condition="'$(IncludeQuartzCore)' == 'true'" Include="$(StarboardLibDirs)\QuartzCore.dll" />
       <SBResourceCopy Condition="'$(IncludeUIKit)' == 'true'" Include="$(StarboardLibDirs)\UIKit.dll" />
       <SBResourceCopy Condition="'$(IncludeAutoLayout)' == 'true'" Include="$(StarboardLibDirs)\AutoLayout.dll" />
@@ -89,6 +146,48 @@
 
       <SBResourceCopy Condition="'$(IncludeCoreLocation)' == 'true'" Include="$(StarboardLibDirs)\CoreLocation.dll" />
       <SBResourceCopy Condition="'$(IncludeAccounts)' == 'true'" Include="$(StarboardLibDirs)\Accounts.dll" />
+      <SBResourceCopy Condition="'$(IncludeAdSupport)' == 'true'" Include="$(StarboardLibDirs)\AdSupport.dll" />
+      <SBResourceCopy Condition="'$(IncludeLocalAuthentication)' == 'true'" Include="$(StarboardLibDirs)\LocalAuthentication.dll" />
+      <SBResourceCopy Condition="'$(IncludeCloudKit)' == 'true'" Include="$(StarboardLibDirs)\CloudKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeStoreKit)' == 'true'" Include="$(StarboardLibDirs)\StoreKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeEventKitUI)' == 'true'" Include="$(StarboardLibDirs)\EventKitUI.dll" />
+      <SBResourceCopy Condition="'$(IncludeQuickLook)' == 'true'" Include="$(StarboardLibDirs)\QuickLook.dll" />
+      <SBResourceCopy Condition="'$(IncludeMediaPlayer)' == 'true'" Include="$(StarboardLibDirs)\MediaPlayer.dll" />
+      <SBResourceCopy Condition="'$(IncludeMapKit)' == 'true'" Include="$(StarboardLibDirs)\MapKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeGameKit)' == 'true'" Include="$(StarboardLibDirs)\GameKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeCoreData)' == 'true'" Include="$(StarboardLibDirs)\CoreData.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeHomeKit)' == 'true'" Include="$(StarboardLibDirs)\HomeKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeCoreVideo)' == 'true'" Include="$(StarboardLibDirs)\CoreVideo.dll" />
+      <SBResourceCopy Condition="'$(IncludeAddressBook)' == 'true'" Include="$(StarboardLibDirs)\AddressBook.dll" />
+      <SBResourceCopy Condition="'$(IncludeAddressBookUI)' == 'true'" Include="$(StarboardLibDirs)\AddressBookUI.dll" />
+      <SBResourceCopy Condition="'$(IncludeHealthKit)' == 'true'" Include="$(StarboardLibDirs)\HealthKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeGameController)' == 'true'" Include="$(StarboardLibDirs)\GameController.dll" />
+      <SBResourceCopy Condition="'$(IncludeGamePlayKit)' == 'true'" Include="$(StarboardLibDirs)\GamePlayKit.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeCoreTelephony)' == 'true'" Include="$(StarboardLibDirs)\CoreTelephony.dll" />
+      <SBResourceCopy Condition="'$(IncludeAVKit)' == 'true'" Include="$(StarboardLibDirs)\AVKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeMediaAccessibilitya)' == 'true'" Include="$(StarboardLibDirs)\MediaAccessibility.dll" />
+      <SBResourceCopy Condition="'$(IncludeSocial)' == 'true'" Include="$(StarboardLibDirs)\Social.dll" />
+  
+      <SBResourceCopy Condition="'$(IncludeCoreAudio)' == 'true'" Include="$(StarboardLibDirs)\CoreAudio.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreAudioKit)' == 'true'" Include="$(StarboardLibDirs)\CoreAudioKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreBluetooth)' == 'true'" Include="$(StarboardLibDirs)\CoreBluetooth.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreImage)' == 'true'" Include="$(StarboardLibDirs)\CoreImage.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreMotion)' == 'true'" Include="$(StarboardLibDirs)\CoreMotion.dll" />
+      <SBResourceCopy Condition="'$(IncludeEventKit)' == 'true'" Include="$(StarboardLibDirs)\EventKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeiAd)' == 'true'" Include="$(StarboardLibDirs)\iAd.dll" />
+      <SBResourceCopy Condition="'$(IncludeImageIO)' == 'true'" Include="$(StarboardLibDirs)\ImageIO.dll" />
+      <SBResourceCopy Condition="'$(IncludeMessageUI)' == 'true'" Include="$(StarboardLibDirs)\MessageUI.dll" />
+      <SBResourceCopy Condition="'$(IncludeMetal)' == 'true'" Include="$(StarboardLibDirs)\Metal.dll" />
+      <SBResourceCopy Condition="'$(IncludeMobileCoreServices)' == 'true'" Include="$(StarboardLibDirs)\MobileCoreServices.dll" />
+      <SBResourceCopy Condition="'$(IncludeTwitter)' == 'true'" Include="$(StarboardLibDirs)\Twitter.dll" />
+      <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
     </ItemGroup>
   </Target>
 
@@ -124,12 +223,24 @@
       <!-- Choose configuration that corresponds to the CRT -->
       <StarboardCRTConfig>Release</StarboardCRTConfig>
       <StarboardCRTConfig Condition="$(ClangCompilePreprocessorDefinitions.Contains('DEBUG=1'))">Debug</StarboardCRTConfig>
-      <!-- Library directories for SDK built from source -->
-      <StarboardLibDirs Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
-      <StarboardPrebuiltLibsDir Condition="'$(UseStarboardSourceSdk)' == 'true'">$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
-      <!-- Library directories for pre-packaged SDK -->
-      <StarboardLibDirs Condition="'$(UseStarboardSourceSdk)' != 'true'">$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
-      <StarboardPrebuiltLibsDir Condition="'$(UseStarboardSourceSdk)' != 'true'">$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
+    </PropertyGroup>
+
+    <!-- UseStarboardSourceSdk gates whether a project links against the WinObjC source tree (as an SDK) or a packaged SDK. -->
+    <PropertyGroup Condition="'$(UseStarboardSourceSdk)' == 'true'">
+      <!-- Library directories for in-tree builds and builds linking against the source tree. -->
+      <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
+      <!-- Prebuilts for all configurations -->
+      <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
+      <!-- Configuration-specific prebuilts (libraries that need to use the same allocator as the client -->
+      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardPrebuiltLibsDir)\$(Configuration)</StarboardConfigSpecificPrebuiltLibsDir>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(UseStarboardSourceSdk)' != 'true'">
+      <!-- Library directories for projects preferring to link against the packaged SDK. -->
+      <!-- Prebuilts and WinObjC libraries live in the same directory once packaged -->
+      <StarboardLibDirs>$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
+      <StarboardPrebuiltLibsDir>$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
+      <!-- Configuration-specific prebuilts retain their configuration specificity, as both Debug and Release are shipped as part of the archive. -->
+      <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(Configuration)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
@@ -310,6 +421,7 @@
         <WOCStdlibOptions Condition="'%(ClangCompile.WOCStdlib)' == 'true'">-cc1 -internal-isystem "$(StarboardSdkRoot)\include\WOCStdLib" -include WOCStdlib.h</WOCStdlibOptions>
       </ClangCompile>
     </ItemGroup>
+
   </Target>
 
   <!-- Ensure Link/Lib/ImpLib pick up the object files -->
@@ -334,7 +446,7 @@
 
     <ItemGroup>
       <Link>
-        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir)</AdditionalLibraryDirectories>
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</AdditionalLibraryDirectories>
       </Link>
     </ItemGroup>
 
@@ -346,6 +458,7 @@
       <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
     </PropertyGroup>
     <ItemGroup>
+      <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
       <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>
       <Link Condition="'$(StarboardDefaultLibs)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardDefaultLibs)"/>
     </ItemGroup>

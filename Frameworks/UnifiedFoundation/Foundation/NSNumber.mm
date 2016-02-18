@@ -531,12 +531,12 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     switch (objCType[0]) {
         case 'i':
         case 'l':
-            ret = [NSString stringWithFormat:@"%d", (int)val.i];
+            ret = [NSString stringWithFormat:@"%d", static_cast<int>(val.i)];
             break;
 
         case 'I':
         case 'L':
-            ret = [NSString stringWithFormat:@"%u", (unsigned int)val.i];
+            ret = [NSString stringWithFormat:@"%u", static_cast<unsigned int>(val.i)];
             break;
 
         case 'q':
@@ -553,8 +553,25 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
             break;
 
         case 'c':
+            // TODO: 6546983 ideally using "%hhd", so we can get rid of (short) cast
+            // but it was not supported, so we cast the value to char and then short
+            // and then format the value using short
+            ret = [NSString stringWithFormat:@"%hd", static_cast<short>(static_cast<char>(val.i))];
+            break;
+
         case 'C':
-            ret = [NSString stringWithFormat:@"%i", val.i];
+            // TODO: 6546983 ideally using "%hhu", so we can get rid of (unsigned short) cast
+            // but it was not supported, so we cast the value to char and then usinged short
+            // and then format the value using unsigned short
+            ret = [NSString stringWithFormat:@"%hu", static_cast<unsigned short>(static_cast<char>(val.i))];
+            break;
+
+        case 's':
+            ret = [NSString stringWithFormat:@"%hd", static_cast<short>(val.i)];
+            break;
+
+        case 'S':
+            ret = [NSString stringWithFormat:@"%hu", static_cast<unsigned short>(val.i)];
             break;
 
         default:
@@ -569,7 +586,7 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return objCType;
 }
 
-- (id)classForCoder {
+- (Class)classForCoder {
     return [NSNumber class];
 }
 
@@ -613,7 +630,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
         case 'c':
             *((char*)dest) = (char)val.i;
             break;
-
+        case 's':
+        case 'S':
+            *((short*)dest) = (short)val.i;
+            break;
         default:
             assert(0);
             break;

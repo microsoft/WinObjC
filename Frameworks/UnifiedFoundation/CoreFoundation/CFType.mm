@@ -20,7 +20,7 @@
 
 #include "objc/runtime.h"
 #include "objc/objc.h"
-#include "../objcrt/runtime.h"
+#include "objc/objc-arc.h"
 
 #include "Platform/EbrPlatform.h"
 
@@ -28,39 +28,39 @@
  @Status Interoperable
 */
 void CFRelease(CFTypeRef obj) {
-    objc_release_ref((id)obj);
+    objc_release(static_cast<id>(obj));
 }
 
 /**
  @Status Interoperable
 */
 void CFAutorelease(CFTypeRef obj) {
-    [obj autorelease];
+    objc_autorelease(static_cast<id>(obj));
 }
 
 /**
  @Status Interoperable
 */
 CFTypeRef CFRetain(CFTypeRef obj) {
-    return objc_retain_ref((id)obj);
+    return objc_retain(static_cast<id>(obj));
 }
 
 /**
  @Status Interoperable
 */
 CFIndex CFGetRetainCount(CFTypeRef obj) {
-    return (CFIndex)objc_getRetainCount((id)obj);
+    return [reinterpret_cast<id>(const_cast<void*>(obj)) retainCount];
 }
 
 BOOL CFIsRetained(CFTypeRef obj) {
-    return objc_isRetained((id)obj);
+    return CFGetRetainCount(obj) >= 1;
 }
 
 /**
  @Status Interoperable
 */
 Boolean CFEqual(CFTypeRef obj1, CFTypeRef obj2) {
-    return (BOOL)[(id)obj1 isEqual:(id)obj2];
+    return (BOOL)[static_cast<id>(obj1) isEqual:static_cast<id>(obj2)];
 }
 
 /**
@@ -68,7 +68,7 @@ Boolean CFEqual(CFTypeRef obj1, CFTypeRef obj2) {
  @Notes May not return an identically compatible value
 */
 uint32_t CFHash(CFTypeRef obj) {
-    return (uint32_t)[(id)obj hash];
+    return (uint32_t)[static_cast<id>(obj) hash];
 }
 
 /**
@@ -76,7 +76,6 @@ uint32_t CFHash(CFTypeRef obj) {
 */
 void CFShow(CFTypeRef obj) {
     UNIMPLEMENTED();
-    EbrDebugLog("CFShow: %s\n", object_getClassName((id)obj));
 }
 
 /**
@@ -88,20 +87,19 @@ CFTypeRef CFMakeCollectable(CFTypeRef obj) {
 }
 
 /**
- @Status Caveat
- @Notes NSZone not supported
+ @Status Interoperable
+ @Notes As on the reference platform, NSZone is ignored.
 */
 __declspec(dllexport) id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
-    assert(zone == nil);
-
-    return objc_allocateObject(classRef, extraBytes);
+    return class_createInstance(classRef, extraBytes);
 }
 
 /**
  @Status Interoperable
 */
 __declspec(dllexport) void NSDeallocateObject(id obj) {
-    return objc_deallocateObject(obj);
+    objc_delete_weak_refs(obj);
+    object_dispose(obj);
 }
 
 DWORD _NSSetLogCStringFunction(DWORD func) {

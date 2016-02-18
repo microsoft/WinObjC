@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSValue.h"
@@ -26,9 +27,49 @@
 
 extern NSMutableDictionary* curGesturesDict;
 
-@implementation UIGestureRecognizer : NSObject
+@implementation UIGestureRecognizer
+
+static void commonInit(UIGestureRecognizer* self) {
+    self->_disabled = NO;
+    self->_cancelsTouchesInView = YES;
+    self->_delaysTouchesBegan = NO;
+    self->_delaysTouchesEnded = YES;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        commonInit(self);
+    }
+
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder*)coder {
-    EbrDebugLog("UIGestureRecognizer: Should init with coder\n");
+    if (self = [super init]) {
+        commonInit(self);
+
+        NSString* disabledKey = @"UIGestureRecognizer.disabled";
+        NSString* cancelsTouchesInViewKey = @"UIGestureRecognizer.cancelsTouchesInView";
+        NSString* delaysTouchesBeganKey = @"UIGestureRecognizer.delaysTouchesBegan";
+        NSString* delaysTouchesEndedKey = @"UIGestureRecognizer.delaysTouchesEnded";
+
+        if ([coder containsValueForKey:disabledKey]) {
+            _disabled = [coder decodeBoolForKey:disabledKey];
+        }
+
+        if ([coder containsValueForKey:cancelsTouchesInViewKey]) {
+            _cancelsTouchesInView = [coder decodeBoolForKey:cancelsTouchesInViewKey];
+        }
+
+        if ([coder containsValueForKey:delaysTouchesBeganKey]) {
+            _delaysTouchesBegan = [coder decodeBoolForKey:delaysTouchesBeganKey];
+        }
+
+        if ([coder containsValueForKey:delaysTouchesEndedKey]) {
+            _delaysTouchesEnded = [coder decodeBoolForKey:delaysTouchesEndedKey];
+        }
+    }
+
     return self;
 }
 
@@ -90,6 +131,8 @@ extern NSMutableDictionary* curGesturesDict;
 */
 - (void)setCancelsTouchesInView:(BOOL)cancels {
     UNIMPLEMENTED();
+
+    _cancelsTouchesInView = cancels;
 }
 
 /**
@@ -97,6 +140,8 @@ extern NSMutableDictionary* curGesturesDict;
 */
 - (void)setDelaysTouchesBegan:(BOOL)delays {
     UNIMPLEMENTED();
+
+    _delaysTouchesBegan = delays;
 }
 
 /**
@@ -104,6 +149,8 @@ extern NSMutableDictionary* curGesturesDict;
 */
 - (void)setDelaysTouchesEnded:(BOOL)delays {
     UNIMPLEMENTED();
+
+    _delaysTouchesEnded = delays;
 }
 
 /**
@@ -231,6 +278,69 @@ extern NSMutableDictionary* curGesturesDict;
             }
         }
     }
+}
+
+- (CGPoint)locationInView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (NSUInteger)numberOfTouches {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (void)ignorePress:(UIPress*)button forEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesCancelled:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesChanged:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)pressesEnded:(NSSet*)presses withEvent:(UIPressesEvent*)event {
+    UNIMPLEMENTED();
+}
+
+- (void)removeTarget:(id)target action:(SEL)action {
+    UNIMPLEMENTED();
 }
 
 @end

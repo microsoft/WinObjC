@@ -19,8 +19,7 @@
 #include "UIRuntimeEventConnection.h"
 #include <assert.h>
 
-UIBarButtonItem::UIBarButtonItem()
-{
+UIBarButtonItem::UIBarButtonItem() {
     _systemItem = -1;
     _style = 0;
     _customView = NULL;
@@ -28,8 +27,7 @@ UIBarButtonItem::UIBarButtonItem()
     _title = NULL;
 }
 
-void UIBarButtonItem::InitFromXIB(XIBObject *obj)
-{
+void UIBarButtonItem::InitFromXIB(XIBObject* obj) {
     ObjectConverterSwapper::InitFromXIB(obj);
 
     _systemItem = obj->GetInt("IBUISystemItemIdentifier", -1);
@@ -38,82 +36,87 @@ void UIBarButtonItem::InitFromXIB(XIBObject *obj)
     obj->_outputClassName = "UIBarButtonItem";
 }
 
-void UIBarButtonItem::InitFromStory(XIBObject *obj)
-{
+void UIBarButtonItem::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
 
-    _title = obj->getAttrib("title");
-    _customView = (UIView *) obj->FindMember("customView");
-    const char *pStyle = obj->getAttrib("style");
-    if ( pStyle ) {
-        if ( strcmp(pStyle, "plain") == 0 ) {
+    _title = obj->getAttrAndHandle("title");
+    _customView = (UIView*)obj->FindMemberAndHandle("customView");
+    const char* pStyle = obj->getAttrAndHandle("style");
+    if (pStyle) {
+        if (strcmp(pStyle, "plain") == 0) {
             _style = 0;
         } else {
             assert(0);
         }
-    } else _style = 1;
-    if ( getAttrib("width") ) {
-        _width = strtod(getAttrib("width"), NULL);
+    } else
+        _style = 1;
+    if (getAttrib("width")) {
+        _width = strtod(getAttrAndHandle("width"), NULL);
     }
-    if ( getAttrib("systemItem") ) {
-        const char *sysItem = getAttrib("systemItem");
+    if (getAttrib("systemItem")) {
+        const char* sysItem = getAttrib("systemItem");
+        bool isHandled = true;
 
-        if ( strcmp(sysItem, "flexibleSpace") == 0 ) {
-            _systemItem = (int) UIBarButtonSystemItemFlexibleSpace;
-        } else if ( strcmp(sysItem, "fixedSpace") == 0 ) {
-            _systemItem = (int) UIBarButtonSystemItemFixedSpace;
-        } else if ( strcmp(sysItem, "compose") == 0 ) {
-            _systemItem = (int) UIBarButtonSystemItemCompose;
-        } else if ( strcmp(sysItem, "camera") == 0 ) {
-            _systemItem = (int) UIBarButtonSystemItemCamera;
+        if (strcmp(sysItem, "flexibleSpace") == 0) {
+            _systemItem = (int)UIBarButtonSystemItemFlexibleSpace;
+        } else if (strcmp(sysItem, "fixedSpace") == 0) {
+            _systemItem = (int)UIBarButtonSystemItemFixedSpace;
+        } else if (strcmp(sysItem, "compose") == 0) {
+            _systemItem = (int)UIBarButtonSystemItemCompose;
+        } else if (strcmp(sysItem, "camera") == 0) {
+            _systemItem = (int)UIBarButtonSystemItemCamera;
         } else if (strcmp(sysItem, "add") == 0) {
             _systemItem = (int)UIBarButtonSystemItemAdd;
         } else if (strcmp(sysItem, "done") == 0) {
             _systemItem = (int)UIBarButtonSystemItemDone;
         } else {
+            isHandled = false;
             printf("Unknown UIBarButton item type %s\n", sysItem);
+        }
+
+        if (isHandled) {
+            getAttrAndHandle("systemItem");
         }
     }
 
     obj->_outputClassName = "UIBarButtonItem";
 }
 
-void UIBarButtonItem::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIBarButtonItem::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     AddOutputMember(writer, "UIEnabled", new XIBObjectBool(true));
-    if ( _systemItem != -1 ) {
+    if (_systemItem != -1) {
         AddInt(writer, "UISystemItem", _systemItem);
         AddBool(writer, "UIIsSystemItem", true);
     }
-    if ( _title ) AddString(writer, "UITitle", _title);
-    if ( !_customView ) {
-        if ( _style ) AddInt(writer, "UIStyle", _style);
-        if ( _width != -1.0f ) {
+    if (_title)
+        AddString(writer, "UITitle", _title);
+    if (!_customView) {
+        if (_style)
+            AddInt(writer, "UIStyle", _style);
+        if (_width != -1.0f) {
             AddOutputMember(writer, "UIWidth", new XIBObjectFloat(_width));
         }
     }
-    if ( _customView ) {
+    if (_customView) {
         AddOutputMember(writer, "UICustomView", _customView);
     }
-    if ( _connections ) 
-    {
-        for ( int i = 0; i < _connections->count(); i ++ ) {
-            XIBObject *curObj = _connections->objectAtIndex(i);
+    if (_connections) {
+        for (int i = 0; i < _connections->count(); i++) {
+            XIBObject* curObj = _connections->objectAtIndex(i);
 
-            if ( strcmp(curObj->_className, "segue") == 0 ) {
-                UIStoryboardSegue *segue = (UIStoryboardSegue *) curObj;
+            if (strcmp(curObj->_className, "segue") == 0) {
+                UIStoryboardSegue* segue = (UIStoryboardSegue*)curObj;
 
-                UIRuntimeEventConnection *newEvent = new UIRuntimeEventConnection();
+                UIRuntimeEventConnection* newEvent = new UIRuntimeEventConnection();
                 newEvent->_label = "perform:";
                 newEvent->_source = this;
                 newEvent->_destination = segue;
                 writer->_connections->AddMember(NULL, newEvent);
                 writer->AddOutputObject(newEvent);
 
-                //AddOutputMember(writer, "UIOutlet", refObj);
+                // AddOutputMember(writer, "UIOutlet", refObj);
             }
         }
     }
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
 }
-

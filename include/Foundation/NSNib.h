@@ -17,16 +17,18 @@
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-FOUNDATION_EXPORT NSString * const UINibExternalObjects;
+FOUNDATION_EXPORT NSString* const UINibExternalObjects;
 
 @class NSArray;
 @class NSDictionary;
+@class NSBundle;
+@class NSData;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSNib : NSObject
-@property(nonatomic, readonly) NSBundle *bundle;
+@property (nonatomic, readonly) NSBundle* bundle;
 
-+(NSNib *)nibWithNibName:(NSString *)name bundle:(NSBundle *)bundle;
-+(NSNib *)nibWithData:(NSData *)data bundle:(NSBundle *)bundle;
--(NSArray*)instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options;
++ (NSNib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundle;
++ (NSNib*)nibWithData:(NSData*)data bundle:(NSBundle*)bundle;
+- (NSArray*)instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options;
 @end

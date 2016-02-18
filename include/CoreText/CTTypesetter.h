@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,24 +13,31 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _CTTYPESETTER_H_
-#define _CTTYPESETTER_H_
+#pragma once
 
 #import <CoreText/CoreTextExport.h>
-#import <CoreFoundation/CFAttributedString.h>
+#import <CoreText/CTLine.h>
 
-ENABLE_IMPLICIT_BRIDGING
+#import <CoreFoundation/CFAttributedString.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFType.h>
 
 typedef const struct __CTTypesetter* CTTypesetterRef;
-typedef float (*WidthCalculationCallback)(void* opaque, CFIndex idx, float offset, float height);
+
+CORETEXT_EXPORT const CFStringRef kCTTypesetterOptionDisableBidiProcessing;
+CORETEXT_EXPORT const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel;
 
 CORETEXT_EXPORT CTTypesetterRef CTTypesetterCreateWithAttributedString(CFAttributedStringRef string);
-CORETEXT_EXPORT CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef ts, CFIndex index, double width, double offset);
-CORETEXT_EXPORT CFIndex CTTypesetterSuggestLineBreakWithOffsetAndCallback(
-    CTTypesetterRef ts, CFIndex index, double offset, WidthCalculationCallback callback, void* opaque);
-CORETEXT_EXPORT CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef ts, CFRange range, double offset);
-
-DISABLE_IMPLICIT_BRIDGING
-
-#endif // _CTTYPESETTER_H_
+CORETEXT_EXPORT CTTypesetterRef CTTypesetterCreateWithAttributedStringAndOptions(CFAttributedStringRef string,
+                                                                                 CFDictionaryRef options) STUB_METHOD;
+CORETEXT_EXPORT CTLineRef CTTypesetterCreateLine(CTTypesetterRef typesetter, CFRange stringRange) STUB_METHOD;
+CORETEXT_EXPORT CTLineRef CTTypesetterCreateLineWithOffset(CTTypesetterRef typesetter, CFRange stringRange, double offset);
+CORETEXT_EXPORT CFIndex CTTypesetterSuggestLineBreak(CTTypesetterRef typesetter, CFIndex startIndex, double width) STUB_METHOD;
+CORETEXT_EXPORT CFIndex CTTypesetterSuggestLineBreakWithOffset(CTTypesetterRef typesetter, CFIndex startIndex, double width, double offset);
+CORETEXT_EXPORT CFIndex CTTypesetterSuggestClusterBreak(CTTypesetterRef typesetter, CFIndex startIndex, double width) STUB_METHOD;
+CORETEXT_EXPORT CFIndex CTTypesetterSuggestClusterBreakWithOffset(CTTypesetterRef typesetter,
+                                                                  CFIndex startIndex,
+                                                                  double width,
+                                                                  double offset) STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTTypesetterGetTypeID() STUB_METHOD;

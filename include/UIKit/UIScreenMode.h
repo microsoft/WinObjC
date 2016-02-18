@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,16 +28,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UISCREENMODE_H_
-#define _UISCREENMODE_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 
 @interface UIScreenMode : NSObject
 
-@property (readonly,nonatomic) CGFloat pixelAspectRatio;
-@property (readonly,nonatomic) CGSize size;
+@property (readonly, nonatomic) CGFloat pixelAspectRatio;
+@property (readonly, nonatomic) CGSize size;
 
 @end
-
-#endif /* _UISCREENMODE_H_ */

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSNull.h"
 
 static NSNull* nullSingleton;
@@ -64,5 +65,14 @@ static NSNull* nullSingleton;
 */
 + (NSNull*)null {
     return nullSingleton;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 @end

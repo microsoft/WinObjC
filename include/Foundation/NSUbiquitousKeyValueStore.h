@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,12 +13,19 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _NSUBIQUITOUSKEYVALUESTORE_H_
-#define _NSUBIQUITOUSKEYVALUESTORE_H_
-
-#import <StarboardExport.h>
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
+
+@class NSString;
+@class NSArray;
+@class NSData;
+@class NSDictionary;
+
+FOUNDATION_EXPORT NSString* const NSUbiquitousKeyValueStoreChangeReasonKey;
+FOUNDATION_EXPORT NSString* const NSUbiquitousKeyValueStoreChangedKeysKey;
+FOUNDATION_EXPORT NSString* const NSUbiquitousKeyValueStoreDidChangeExternallyNotification;
 
 enum {
     NSUbiquitousKeyValueStoreServerChange,
@@ -27,28 +34,26 @@ enum {
     NSUbiquitousKeyValueStoreAccountChange
 };
 
-@class NSDictionary;
-
+FOUNDATION_EXPORT_CLASS
 @interface NSUbiquitousKeyValueStore : NSObject
-
-- (long long)longLongForKey:(NSString*)key;
-- (id)objectForKey:(NSString*)aKey;
-- (void)setObject:(id)anObject forKey:(NSString*)aKey;
-- (void)removeObjectForKey:(NSString*)aKey;
-- (BOOL)synchronize;
-- (NSDictionary*)dictionaryRepresentation;
-- (void)setLongLong:(long long)value forKey:(NSString*)aKey;
-- (NSString*)stringForKey:(NSString*)aKey;
-- (void)setString:(NSString*)aString forKey:(NSString*)aKey;
-- (BOOL)boolForKey:(NSString*)aKey;
-- (void)setBool:(BOOL)value forKey:(NSString*)aKey;
-
 + (NSUbiquitousKeyValueStore*)defaultStore;
-
+- (NSArray*)arrayForKey:(NSString*)aKey;
+- (BOOL)boolForKey:(NSString*)aKey;
+- (NSData*)dataForKey:(NSString*)aKey;
+- (NSDictionary*)dictionaryForKey:(NSString*)aKey;
+- (double)doubleForKey:(NSString*)aKey;
+- (long long)longLongForKey:(NSString*)aKey;
+- (id)objectForKey:(NSString*)aKey;
+- (NSString*)stringForKey:(NSString*)aKey;
+- (void)setArray:(NSArray*)anArray forKey:(NSString*)aKey;
+- (void)setBool:(BOOL)value forKey:(NSString*)aKey;
+- (void)setData:(NSData*)aData forKey:(NSString*)aKey;
+- (void)setDictionary:(NSDictionary*)aDictionary forKey:(NSString*)aKey;
+- (void)setDouble:(double)value forKey:(NSString*)aKey;
+- (void)setLongLong:(long long)value forKey:(NSString*)aKey;
+- (void)setObject:(id)anObject forKey:(NSString*)aKey;
+- (void)setString:(NSString*)aString forKey:(NSString*)aKey;
+- (BOOL)synchronize;
+- (void)removeObjectForKey:(NSString*)aKey;
+@property (readonly, copy) NSDictionary* dictionaryRepresentation;
 @end
-
-SB_EXPORT NSString* const NSUbiquitousKeyValueStoreChangedKeysKey;
-SB_EXPORT NSString* const NSUbiquitousKeyValueStoreDidChangeExternallyNotification;
-SB_EXPORT NSString* const NSUbiquitousKeyValueStoreChangeReasonKey;
-
-#endif /* _NSUBIQUITOUSKEYVALUESTORE_H_ */

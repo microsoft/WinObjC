@@ -43,7 +43,7 @@
 - (void)invalidate {
     if (_valid) {
         _valid = FALSE;
-        [_timerTarget autorelease];
+        [_timerTarget release];
         _timerTargetReleased = TRUE;
     }
 }

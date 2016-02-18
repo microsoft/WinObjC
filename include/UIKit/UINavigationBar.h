@@ -29,41 +29,13 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UINAVIGATIONBAR_H_
-#define _UINAVIGATIONBAR_H_
+#pragma once
 
-#import "UIToolbar.h"
-#import "UIView.h"
+#import <UIKit/UIToolbar.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UINavigationBarDelegate.h>
 
 @class UIColor, UINavigationItem, UINavigationBar;
-
-@protocol UINavigationBarDelegate <NSObject>
-@optional
-
-/**
- @Status Stub
-*/
-- (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPushItem:(UINavigationItem*)item;
-
-/**
- @Status Stub
-*/
-- (void)navigationBar:(UINavigationBar*)navigationBar didPushItem:(UINavigationItem*)item;
-
-/**
- @Status Interoperable
-*/
-- (BOOL)navigationBar:(UINavigationBar*)navigationBar shouldPopItem:(UINavigationItem*)item;
-
-/**
- @Status Interoperable
-*/
-- (void)navigationBar:(UINavigationBar*)navigationBar didPopItem:(UINavigationItem*)item;
-@end
-
-enum {
-    UIBarPositionAny = -1,
-};
 
 UIKIT_EXPORT_CLASS
 @interface UINavigationBar : UIView
@@ -90,5 +62,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UIImage* backIndicatorTransitionMaskImage;
 
 @end
-
-#endif /* _UINAVIGATIONBAR_H_ */

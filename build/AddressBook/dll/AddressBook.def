@@ -1,0 +1,177 @@
+LIBRARY AddressBook
+    EXPORTS
+        ; ABAddressBook.mm
+        ABAddressBookErrorDomain DATA
+        ABAddressBookCreate
+        ABAddressBookCreateWithOptions
+        ABAddressBookGetAuthorizationStatus
+        ABAddressBookRequestAccessWithCompletion
+        ABAddressBookHasUnsavedChanges
+        ABAddressBookSave
+        ABAddressBookRevert
+        ABAddressBookAddRecord
+        ABAddressBookRemoveRecord
+        ABAddressBookRegisterExternalChangeCallback
+        ABAddressBookUnregisterExternalChangeCallback
+        ABAddressBookCopyLocalizedLabel
+
+        ; ABGroup.mm
+        kABGroupNameProperty DATA
+        ABGroupCreate
+        ABGroupCreateInSource
+        ABGroupCopyArrayOfAllMembers
+        ABGroupCopyArrayOfAllMembersWithSortOrdering
+        ABGroupAddMember
+        ABGroupRemoveMember
+        ABAddressBookGetGroupWithRecordID
+        ABAddressBookGetGroupCount
+        ABAddressBookCopyArrayOfAllGroups
+        ABAddressBookCopyArrayOfAllGroupsInSource
+        ABGroupCopySource
+
+        ; ABMultiValue.mm
+        ABMultiValueCopyValueAtIndex
+        ABMultiValueCopyArrayOfAllValues
+        ABMultiValueGetCount
+        ABMultiValueGetFirstIndexOfValue
+        ABMultiValueCopyLabelAtIndex
+        ABMultiValueGetIdentifierAtIndex
+        ABMultiValueGetIndexForIdentifier
+        ABMultiValueGetPropertyType
+
+        ; ABMutableMultiValue.mm
+        ABMultiValueCreateMutable
+        ABMultiValueCreateMutableCopy
+        ABMultiValueAddValueAndLabel
+        ABMultiValueReplaceValueAtIndex
+        ABMultiValueReplaceLabelAtIndex
+        ABMultiValueInsertValueAndLabelAtIndex
+        ABMultiValueRemoveValueAndLabelAtIndex
+
+        ; ABPerson.mm
+        kABPersonFirstNameProperty DATA
+        kABPersonLastNameProperty DATA
+        kABPersonMiddleNameProperty DATA
+        kABPersonPrefixProperty DATA
+        kABPersonSuffixProperty DATA
+        kABPersonNicknameProperty DATA
+        kABPersonFirstNamePhoneticProperty DATA
+        kABPersonLastNamePhoneticProperty DATA
+        kABPersonMiddleNamePhoneticProperty DATA
+        kABPersonOrganizationProperty DATA
+        kABPersonJobTitleProperty DATA
+        kABPersonDepartmentProperty DATA
+        kABPersonEmailProperty DATA
+        kABPersonBirthdayProperty DATA
+        kABPersonNoteProperty DATA
+        kABPersonCreationDateProperty DATA
+        kABPersonModificationDateProperty DATA
+        kABPersonAddressProperty DATA
+        kABPersonAddressStreetKey DATA
+        kABPersonAddressCityKey DATA
+        kABPersonAddressStateKey DATA
+        kABPersonAddressZIPKey DATA
+        kABPersonAddressCountryKey DATA
+        kABPersonAddressCountryCodeKey DATA
+        kABPersonDateProperty DATA
+        kABPersonAnniversaryLabel DATA
+        kABPersonKindProperty DATA
+        kABPersonKindPerson DATA
+        kABPersonKindOrganization DATA
+        kABPersonPhoneProperty DATA
+        kABPersonPhoneMobileLabel DATA
+        kABPersonPhoneIPhoneLabel DATA
+        kABPersonPhoneMainLabel DATA
+        kABPersonPhoneHomeFAXLabel DATA
+        kABPersonPhoneWorkFAXLabel DATA
+        kABPersonPhoneOtherFAXLabel DATA
+        kABPersonPhonePagerLabel DATA
+        kABPersonInstantMessageProperty DATA
+        kABPersonInstantMessageServiceKey DATA
+        kABPersonInstantMessageUsernameKey DATA
+        kABPersonInstantMessageServiceYahoo DATA
+        kABPersonInstantMessageServiceJabber DATA
+        kABPersonInstantMessageServiceMSN DATA
+        kABPersonInstantMessageServiceICQ DATA
+        kABPersonInstantMessageServiceAIM DATA
+        kABPersonInstantMessageServiceQQ DATA
+        kABPersonInstantMessageServiceGoogleTalk DATA
+        kABPersonInstantMessageServiceSkype DATA
+        kABPersonInstantMessageServiceFacebook DATA
+        kABPersonInstantMessageServiceGaduGadu DATA
+        kABPersonSocialProfileProperty DATA
+        kABPersonSocialProfileURLKey DATA
+        kABPersonSocialProfileServiceKey DATA
+        kABPersonSocialProfileUsernameKey DATA
+        kABPersonSocialProfileUserIdentifierKey DATA
+        kABPersonSocialProfileServiceTwitter DATA
+        kABPersonSocialProfileServiceSinaWeibo DATA
+        kABPersonSocialProfileServiceGameCenter DATA
+        kABPersonSocialProfileServiceFacebook DATA
+        kABPersonSocialProfileServiceMyspace DATA
+        kABPersonSocialProfileServiceLinkedIn DATA
+        kABPersonSocialProfileServiceFlickr DATA
+        kABPersonURLProperty DATA
+        kABPersonHomePageLabel DATA
+        kABPersonRelatedNamesProperty DATA
+        kABPersonMotherLabel DATA
+        kABPersonFatherLabel DATA
+        kABPersonParentLabel DATA
+        kABPersonSisterLabel DATA
+        kABPersonBrotherLabel DATA
+        kABPersonChildLabel DATA
+        kABPersonFriendLabel DATA
+        kABPersonSpouseLabel DATA
+        kABPersonPartnerLabel DATA
+        kABPersonManagerLabel DATA
+        kABPersonAssistantLabel DATA
+        kABWorkLabel DATA
+        kABHomeLabel DATA
+        kABOtherLabel DATA
+        kABPersonAlternateBirthdayProperty DATA
+        kABPersonAlternateBirthdayCalendarIdentifierKey DATA
+        kABPersonAlternateBirthdayEraKey DATA
+        kABPersonAlternateBirthdayYearKey DATA
+        kABPersonAlternateBirthdayMonthKey DATA
+        kABPersonAlternateBirthdayIsLeapMonthKey DATA
+        kABPersonAlternateBirthdayDayKey DATA
+        ABPersonCreate
+        ABPersonCreateInSource
+        ABPersonComparePeopleByName
+        ABPersonGetTypeOfProperty
+        ABPersonCopyLocalizedPropertyName
+        ABPersonSetImageData
+        ABPersonCopyImageData
+        ABPersonCopyImageDataWithFormat
+        ABPersonHasImageData
+        ABPersonRemoveImageData
+        ABAddressBookGetPersonCount
+        ABAddressBookGetPersonWithRecordID
+        ABAddressBookCopyArrayOfAllPeople
+        ABAddressBookCopyArrayOfAllPeopleInSource
+        ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering
+        ABAddressBookCopyPeopleWithName
+        ABPersonCopyArrayOfAllLinkedPeople
+        ABPersonCopySource
+        ABPersonCopyCompositeNameDelimiterForRecord
+        ABPersonGetSortOrdering
+        ABPersonGetCompositeNameFormat
+        ABPersonGetCompositeNameFormatForRecord
+        ABPersonCreatePeopleInSourceWithVCardRepresentation
+        ABPersonCreateVCardRepresentationWithPeople
+
+        ; ABRecord.mm
+        ABRecordGetRecordID
+        ABRecordGetRecordType
+        ABRecordSetValue
+        ABRecordCopyValue
+        ABRecordRemoveValue
+        ABRecordCopyCompositeName
+
+        ; ABSource.mm
+        kABSourceNameProperty DATA
+        kABSourceTypeProperty DATA
+        ABAddressBookCopyDefaultSource
+        ABAddressBookGetSourceWithRecordID
+        ABAddressBookCopyArrayOfAllSources
+

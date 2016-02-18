@@ -29,30 +29,12 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UINAVIGATIONCONTROLLER_H_
-#define _UINAVIGATIONCONTROLLER_H_
+#pragma once
 
 #import "UIViewController.h"
 
 @class UINavigationBar, UIToolbar, UIViewController;
-
-@protocol UINavigationControllerDelegate <NSObject>
-@optional
-
-/**
- @Status Interoperable
-*/
-- (void)navigationController:(UINavigationController*)navigationController
-       didShowViewController:(UIViewController*)viewController
-                    animated:(BOOL)animated;
-
-/**
- @Status Interoperable
-*/
-- (void)navigationController:(UINavigationController*)navigationController
-      willShowViewController:(UIViewController*)viewController
-                    animated:(BOOL)animated;
-@end
+@protocol UINavigationControllerDelegate;
 
 typedef enum {
     _UINavigationControllerVisibleControllerTransitionNone = 0,
@@ -104,16 +86,3 @@ UIKIT_EXPORT_CLASS
 @end
 
 UIKIT_EXPORT const CGFloat UINavigationControllerHideShowBarDuration;
-
-enum {
-    UINavigationControllerOperationPush,
-    UINavigationControllerOperationPop,
-};
-
-typedef NSUInteger UINavigationControllerOperation;
-
-@protocol UIViewControllerTransitioningDelegate
-
-@end
-
-#endif /* _UINAVIGATIONCONTROLLER_H_ */

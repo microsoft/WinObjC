@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +28,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIIMAGE_H_
-#define _UIIMAGE_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -58,49 +58,65 @@ typedef uint32_t UIImageResizingMode;
 enum { UIImageRenderingModeAutomatic, UIImageRenderingModeAlwaysOriginal, UIImageRenderingModeAlwaysTemplate };
 typedef int32_t UIImageRenderingMode;
 
-UIKIT_EXPORT_CLASS
-@interface UIImage : NSObject
+@class CIImage, UIImageAsset, UITraitCollection;
 
-+ (UIImage*)imageNamed:(NSString*)name; // Note, this caches the images somewhat like iPhone OS 2ish in that it never releases them. :)
-+ (UIImage*)imageWithData:(NSData*)data;
-+ (UIImage*)imageWithContentsOfFile:(NSString*)path;
-+ (UIImage*)imageWithCGImage:(CGImageRef)imageRef;
-+ (UIImage*)imageWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
-+ (UIImage*)imageWithData:(NSData*)data scale:(CGFloat)scale;
-+ (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration;
+UIKIT_EXPORT_CLASS
+@interface UIImage : NSObject <NSSecureCoding>
 
 // Starboard additions:
 - (CGRect)_imageStretch;
 
-- (id)initWithData:(NSData*)data;
-- (id)initWithContentsOfFile:(NSString*)path;
-- (id)initWithCGImage:(CGImageRef)imageRef;
-- (id)initWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
-
-- (UIImage*)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
-- (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)capInsets;
-
-// the draw methods will all check the scale of the current context and attempt to use the best representation it can
-- (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
-- (void)drawInRect:(CGRect)rect blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
-- (void)drawAtPoint:(CGPoint)point;
-- (void)drawInRect:(CGRect)rect;
-
-- (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode;
-- (id)initWithData:(NSData*)data scale:(CGFloat)scale;
-- (UIImage*)imageWithRenderingMode:(UIImageRenderingMode)renderingMode;
-
+@property (nonatomic, readonly) CGFloat scale;
+@property (nonatomic, readonly) CGImageRef CGImage;
 @property (nonatomic, readonly) CGSize size;
-@property (nonatomic, readonly) NSTimeInterval duration;
+@property (nonatomic, readonly) NSArray* images;
 @property (nonatomic, readonly) NSInteger leftCapWidth;
 @property (nonatomic, readonly) NSInteger topCapHeight;
+@property (nonatomic, readonly) NSTimeInterval duration;
 @property (nonatomic, readonly) UIImageRenderingMode renderingMode;
-@property (nonatomic, readonly) UIImageOrientation imageOrientation; // not implemented
+@property (readonly, copy, nonatomic) UITraitCollection* traitCollection STUB_PROPERTY;
+@property (readonly, nonatomic) BOOL flipsForRightToLeftLayoutDirection STUB_PROPERTY;
+@property (readonly, nonatomic) CIImage* CIImage STUB_PROPERTY;
+@property (readonly, nonatomic) UIEdgeInsets alignmentRectInsets STUB_PROPERTY;
+@property (readonly, nonatomic) UIEdgeInsets capInsets STUB_PROPERTY;
+@property (readonly, nonatomic) UIImageAsset* imageAsset STUB_PROPERTY;
+@property (readonly, nonatomic) UIImageOrientation imageOrientation;
+@property (readonly, nonatomic) UIImageResizingMode resizingMode STUB_PROPERTY;
 
-// note that these properties return always the 2x represention if it exists!
-@property (nonatomic, readonly) CGImageRef CGImage;
-@property (nonatomic, readonly) CGFloat scale;
-@property (nonatomic, readonly) NSArray* images;
++ (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration STUB_METHOD;
++ (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration;
++ (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration STUB_METHOD;
++ (UIImage*)animatedResizableImageNamed:(NSString*)name
+                              capInsets:(UIEdgeInsets)capInsets
+                           resizingMode:(UIImageResizingMode)resizingMode
+                               duration:(NSTimeInterval)duration STUB_METHOD;
++ (UIImage*)imageNamed:(NSString*)name
+                         inBundle:(NSBundle*)bundle
+    compatibleWithTraitCollection:(UITraitCollection*)traitCollection STUB_METHOD;
++ (UIImage*)imageNamed:(NSString*)name; // Note, this caches the images somewhat like iPhone OS 2ish in that it never releases them. :)
++ (UIImage*)imageWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
++ (UIImage*)imageWithCGImage:(CGImageRef)imageRef;
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage STUB_METHOD;
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage scale:(CGFloat)scale orientation:(UIImageOrientation)orientation STUB_METHOD;
++ (UIImage*)imageWithContentsOfFile:(NSString*)path;
++ (UIImage*)imageWithData:(NSData*)data scale:(CGFloat)scale;
++ (UIImage*)imageWithData:(NSData*)data;
+- (UIImage*)imageFlippedForRightToLeftLayoutDirection STUB_METHOD;
+- (UIImage*)imageWithAlignmentRectInsets:(UIEdgeInsets)alignmentInsets STUB_METHOD;
+- (UIImage*)imageWithRenderingMode:(UIImageRenderingMode)renderingMode;
+- (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)capInsets resizingMode:(UIImageResizingMode)resizingMode;
+- (UIImage*)resizableImageWithCapInsets:(UIEdgeInsets)capInsets;
+- (UIImage*)stretchableImageWithLeftCapWidth:(NSInteger)leftCapWidth topCapHeight:(NSInteger)topCapHeight;
+- (instancetype)initWithCGImage:(CGImageRef)imageRef scale:(CGFloat)scale orientation:(UIImageOrientation)orientation;
+- (instancetype)initWithCGImage:(CGImageRef)imageRef;
+- (instancetype)initWithContentsOfFile:(NSString*)path;
+- (instancetype)initWithData:(NSData*)data scale:(CGFloat)scale;
+- (instancetype)initWithData:(NSData*)data;
+- (void)drawAsPatternInRect:(CGRect)rect;
+- (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)drawAtPoint:(CGPoint)point;
+- (void)drawInRect:(CGRect)rect blendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)drawInRect:(CGRect)rect;
 
 @end
 
@@ -113,5 +129,3 @@ UIKIT_EXPORT NSData* UIImageJPEGRepresentation(UIImage* image, CGFloat compressi
 UIKIT_EXPORT NSData* UIImagePNGRepresentation(UIImage* image);
 
 void UIImageSetLayerContents(CALayer* layer, UIImage* image);
-
-#endif /* _UIIMAGE_H_ */

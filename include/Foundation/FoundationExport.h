@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -25,5 +25,15 @@
 #else
 #define FOUNDATION_EXPORT FOUNDATION_IMPEXP extern
 #define FOUNDATION_EXPORT_CLASS FOUNDATION_IMPEXP
+#endif
+#endif
+
+#ifndef FOUNDATION_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define FOUNDATION_EXTERNC_BEGIN extern "C" {
+#define FOUNDATION_EXTERNC_END }
+#else
+#define FOUNDATION_EXTERNC_BEGIN
+#define FOUNDATION_EXTERNC_END
 #endif
 #endif

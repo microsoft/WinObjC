@@ -1,0 +1,8 @@
+module HealthKit [extern_c] {
+    umbrella header "HealthKit.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

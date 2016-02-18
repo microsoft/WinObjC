@@ -123,10 +123,15 @@ int ShaderContext::getInputVar(const string& name, int defaultVal) {
 
 // Main shader program generation.  Returns a full vertex/pixel shader pair corresponding
 // to the shader definition for the given material.
-GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs) {
+void ShaderContext::generate(ShaderMaterial& inputs, GLKShaderPair* shaderOutput) {
     ShaderLayout intermediates;
     ShaderLayout outputs;
 
+    // Make sure the output variable is there, and don't allow reuse.
+    assert(shaderOutput != nil);
+    assert(shaderOutput.vertexShader == nil);
+    assert(shaderOutput.pixelShader == nil);
+    
     inputMaterial = &inputs;
 
     vertexStage = true;
@@ -221,13 +226,10 @@ GLKShaderPair* ShaderContext::generate(ShaderMaterial& inputs) {
     outvert = vertinvars + vertoutvars + vsTempFuncsOut + "void main() {\n" + vsTempValsOut + outvert + "}\n";
     outpix = "precision lowp float;\n\n" + pixvars + psTempFuncsOut + "void main() {\n" + psTempValsOut + outpix + "}\n";
 
-    GLKShaderPair* res = [[GLKShaderPair alloc] init];
-    res.vertexShader = [NSString stringWithCString:outvert.c_str()];
-    res.pixelShader = [NSString stringWithCString:outpix.c_str()];
+    shaderOutput.vertexShader = [NSString stringWithCString:outvert.c_str()];
+    shaderOutput.pixelShader = [NSString stringWithCString:outpix.c_str()];
 
     inputMaterial = nullptr;
-
-    return res;
 }
 
 bool ShaderInputVarCheck::generate(string& out, ShaderContext& c, ShaderLayout& v) {

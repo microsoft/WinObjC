@@ -23,59 +23,14 @@
 
 #import <UIKit/UIKit.h>
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UICollectionViewLayout.h>
+#import <UIKit/UICollectionViewDelegateFlowLayout.h>
 
 UIKIT_EXPORT extern NSString* const UICollectionElementKindSectionHeader;
 UIKIT_EXPORT extern NSString* const UICollectionElementKindSectionFooter;
 
 enum _UICollectionViewScrollDirection { UICollectionViewScrollDirectionVertical, UICollectionViewScrollDirectionHorizontal };
 typedef NSInteger UICollectionViewScrollDirection;
-
-@protocol UICollectionViewDelegateFlowLayout <UICollectionViewDelegate>
-@optional
-
-/**
-   @Status Interoperable
-*/
-- (CGSize)collectionView:(UICollectionView*)collectionView
-                  layout:(UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath*)indexPath;
-
-/**
-   @Status Interoperable
-*/
-- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView
-                        layout:(UICollectionViewLayout*)collectionViewLayout
-        insetForSectionAtIndex:(NSInteger)section;
-
-/**
-   @Status Interoperable
-*/
-- (CGFloat)collectionView:(UICollectionView*)collectionView
-                                 layout:(UICollectionViewLayout*)collectionViewLayout
-    minimumLineSpacingForSectionAtIndex:(NSInteger)section;
-
-/**
-   @Status Interoperable
-*/
-- (CGFloat)collectionView:(UICollectionView*)collectionView
-                                      layout:(UICollectionViewLayout*)collectionViewLayout
-    minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
-
-/**
-   @Status Interoperable
-*/
-- (CGSize)collectionView:(UICollectionView*)collectionView
-                             layout:(UICollectionViewLayout*)collectionViewLayout
-    referenceSizeForHeaderInSection:(NSInteger)section;
-
-/**
-   @Status Interoperable
-*/
-- (CGSize)collectionView:(UICollectionView*)collectionView
-                             layout:(UICollectionViewLayout*)collectionViewLayout
-    referenceSizeForFooterInSection:(NSInteger)section;
-
-@end
 
 @class UIGridLayoutInfo;
 

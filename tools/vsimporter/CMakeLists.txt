@@ -17,6 +17,7 @@ file(GLOB utils_SRC "src/utils/*.cpp")
 file(GLOB vswriter_SRC "src/vswriter/*.cpp")
 file(GLOB pbx_SRC "src/PBX/*.cpp")
 file(GLOB Xib2Nib_SRC "xib2nib/*.cpp")
+file(GLOB WBITelemetry_SRC "WBITelemetry/*.cpp")
 
 FIND_PROGRAM(GIT_EXEC "git")
 if(GIT_EXEC)
@@ -93,9 +94,14 @@ add_executable(Xib2Nib
   ${Xib2Nib_SRC}
 )
 
+add_library(WBITelemetry
+  ${WBITelemetry_SRC}
+)
+
+
 include_directories(${CMAKE_SOURCE_DIR} include include/utils include/vswriter include/PBX third-party third-party/PlistCpp/src third-party/PlistCpp/third-party third-party/PlistCpp/third-party/pugixml/src)
 target_link_libraries(vsimporter PlistCpp pugixml NSPlist)
 target_link_libraries(sb-expandvars PlistCpp pugixml NSPlist)
-target_link_libraries(Xib2Nib PlistCpp pugixml NSPlist)
+target_link_libraries(Xib2Nib PlistCpp pugixml NSPlist WinHttp WBITelemetry ..\\..\\..\\deps\\3rdparty\\AppInsights\\Projects\\AppInsights_Win32\\$(Configuration)\\AppInsights_Win32.lib)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS} -std=c++11")

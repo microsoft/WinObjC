@@ -25,6 +25,7 @@
 #include "CoreGraphics/CGAffineTransform.h"
 #include "CoreFoundation/CFType.h"
 #include "UIKit/UIImage.h"
+#include <objc/objc-arc.h>
 
 typedef struct {
     idretain _buttonText;

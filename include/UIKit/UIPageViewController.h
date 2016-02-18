@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIPAGEVIEWCONTROLLER_H_
-#define _UIPAGEVIEWCONTROLLER_H_
+#pragma once
 
 #import "UIKitExport.h"
 
@@ -48,36 +47,8 @@ UIKIT_EXPORT extern NSString* const UIPageViewControllerOptionSpineLocationKey;
 UIKIT_EXPORT extern NSString* const UIPageViewControllerOptionInterPageSpacingKey;
 
 @class UIPageViewController;
-
-UIKIT_EXPORT_CLASS
-@protocol UIPageViewControllerDataSource <NSObject>
-
-- (UIViewController*)pageViewController:(UIPageViewController*)pageViewController 
-     viewControllerBeforeViewController:(UIViewController*)viewController;
-- (UIViewController*)pageViewController:(UIPageViewController*)pageViewController 
-      viewControllerAfterViewController:(UIViewController*)viewController;
-
-@optional
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController*)pageViewController;
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController*)pageViewController;
-
-@end
-
-UIKIT_EXPORT_CLASS
-@protocol UIPageViewControllerDelegate <NSObject>
-
-@optional
-- (void)pageViewController:(UIPageViewController*)pageViewController willTransitionToViewControllers:(NSArray*)pendingViewControllers;
-- (void)pageViewController:(UIPageViewController*)pageViewController 
-        didFinishAnimating:(BOOL)finished 
-   previousViewControllers:(NSArray*)previousViewControllers 
-       transitionCompleted:(BOOL)completed;
-- (UIPageViewControllerSpineLocation)pageViewController:(UIPageViewController*)pageViewController 
-                   spineLocationForInterfaceOrientation:(UIInterfaceOrientation)orientation;
-- (UIInterfaceOrientationMask)pageViewControllerSupportedInterfaceOrientations:(UIPageViewController*)pageViewController;
-- (UIInterfaceOrientation)pageViewControllerPreferredInterfaceOrientationForPresentation:(UIPageViewController*)pageViewController;
-
-@end
+@protocol UIPageViewControllerDelegate
+, UIPageViewControllerDataSource;
 
 UIKIT_EXPORT_CLASS
 @interface UIPageViewController : UIViewController
@@ -98,7 +69,5 @@ UIKIT_EXPORT_CLASS
 - (instancetype)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style
                   navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation
                                 options:(NSDictionary*)options;
-                      
-@end
 
-#endif /* _UIPAGEVIEWCONTROLLER_H_ */
+@end

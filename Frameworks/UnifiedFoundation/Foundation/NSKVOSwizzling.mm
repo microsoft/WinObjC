@@ -16,11 +16,30 @@
 
 #import "NSKeyValueObserving-Internal.h"
 
+#import <objc/encoding.h>
+
 static Class NSKVO$class(id self, SEL);
 static Class NSKVO$meta$superclass(Class self, SEL);
 static void NSKVO$setObject$forKey$(id self, SEL _cmd, id object, NSString* key);
 static void NSKVO$removeObjectForKey$(id self, SEL _cmd, NSString* key);
 static void NSKVO$dealloc(id self, SEL);
+
+namespace std {
+// These specializations allow for the use of SEL in STL collections.
+template <>
+struct equal_to<SEL> {
+    bool operator()(const SEL& lhs, const SEL& rhs) const {
+        return sel_isEqual(lhs, rhs) == YES;
+    }
+};
+
+template <>
+struct hash<SEL> {
+    std::size_t operator()(const SEL& s) const {
+        return std::hash<decltype(sel_getName(s))>()(sel_getName(s));
+    }
+};
+}
 
 namespace {
 
@@ -32,7 +51,7 @@ struct NSKVOSwizzledMethod {
     NSKVOSwizzledMethod(const std::string& key) : key(key), valueSize(0), origImp(nullptr) {
     }
     NSKVOSwizzledMethod(const std::string& key, const char* objcType, IMP origImp)
-        : key(key), valueSize(getArgumentSize(objcType)), origImp(origImp) {
+        : key(key), valueSize(objc_sizeof_type(objcType)), origImp(origImp) {
     }
     NSKVOSwizzledMethod(IMP origImp) : origImp(origImp) {
     }
@@ -161,13 +180,18 @@ void NSKVOSwizzledClass::swizzleMethod(SEL sel, IMP newImp) {
         return;
     }
 
-    auto origImp = class_getMethodImplementation(originalClass, sel);
+    auto method = class_getInstanceMethod(originalClass, sel);
+    if (!method) {
+        return;
+    }
+    auto origImp = method_getImplementation(method);
     _swizzleMethodWithMethodInfo(sel, newImp, NSKVOSwizzledMethod{ origImp });
 }
 
 void NSKVOSwizzledClass::_swizzleMethodWithMethodInfo(SEL sel, IMP newImp, NSKVOSwizzledMethod&& methodInfo) {
     _selectorMethodInfo.emplace(std::piecewise_construct, std::forward_as_tuple(sel), std::forward_as_tuple(std::move(methodInfo)));
-    class_addMethod(notifyingClass, sel, newImp, objc_get_type_encoding(originalClass, sel));
+    auto method = class_getInstanceMethod(originalClass, sel);
+    class_addMethod(notifyingClass, sel, newImp, method_getTypeEncoding(method));
 }
 
 void NSKVOSwizzledClass::ensureKeyWillNotify(const std::string& key) {

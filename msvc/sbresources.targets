@@ -33,7 +33,7 @@
     <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
     <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
     <SBResourceCompileAfterTargets Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">BuildLink</SBResourceCompileAfterTargets>
-    <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions;CopyStarboardDependencies</SBResourceComputeTargets>
+    <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions</SBResourceComputeTargets>
   </PropertyGroup>
 
   <Target
@@ -363,23 +363,17 @@
   <PropertyGroup>
     <CleanDependsOn>$(CleanDependsOn);CleanSBResources;</CleanDependsOn>
   </PropertyGroup>
-
+  <ItemDefinitionGroup>
+      <SBResourceClean></SBResourceClean>
+  </ItemDefinitionGroup>
   <Target
     Name="ComputeCleanSBResources" >
     <!-- Since we're not linking while we're cleaning, there's no easy way to compute the required libraries,
          so for the sake of Clean, we link to them all. -->
-    <PropertyGroup>
-      <IncludeUIKit>true</IncludeUIKit>
-      <IncludeOpenGLES>true</IncludeOpenGLES>
-      <IncludeGLKit>true</IncludeGLKit>
-      <IncludeQuartzCore>true</IncludeQuartzCore>
-      <IncludeCoreGraphics>true</IncludeCoreGraphics>
-      <IncludeFoundation>true</IncludeFoundation>
-      <IncludeObjcrt>true</IncludeObjcrt>
-      <IncludeSecurity>true</IncludeSecurity>
-      <IncludeCoreLocation>true</IncludeCoreLocation>
-      <IncludeAccounts>true</IncludeAccounts>
-    </PropertyGroup>
+    <ItemGroup>
+      <SBResourceClean Include ="$(StarboardPrebuiltLibsDir)\*.dll"/>
+      <SBResourceClean Include ="$(StarboardLibDirs)\*.dll"/>
+    </ItemGroup>
   </Target>
 
   <Target
@@ -411,10 +405,15 @@
     <Delete Files="@(SBInfoPlistCopy->Metadata('IntermediateFile')->ClearMetadata())" />
 
     <ItemGroup>
-      <RemoveDirIfEmpty Condition="'$(AppContainerApplication)' != 'true'" Include="@(SBResourceCopy->Metadata('OutputFile')->DirectoryName()->Distinct())" />
+      <RemoveDirIfEmpty Condition="'$(AppContainerApplication)' != 'true'" Include="@(SBResourceClean->Metadata('OutputFile')->DirectoryName()->Distinct())" />
     </ItemGroup>
 
     <!-- Delete assets -->
-    <Delete Condition="'$(AppContainerApplication)' != 'true'" Files="@(SBResourceCopy->Metadata('OutputFile')->ClearMetadata())" />
+    <Delete Condition="'$(AppContainerApplication)' != 'true'" Files="@(SBResourceClean->Metadata('OutputFile')->ClearMetadata())" />
+  </Target>
+
+  <Target
+    Name="AfterCleanSBResources" 
+    AfterTargets="CleanSBResources" >
   </Target>
 </Project>

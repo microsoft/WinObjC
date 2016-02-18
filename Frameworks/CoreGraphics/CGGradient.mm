@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,45 +14,33 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "CoreGraphics/CGContext.h"
-#include "CGColorSpaceInternal.h"
-#include "CGGradientInternal.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <CoreGraphics/CGContext.h>
+#import "CGColorSpaceInternal.h"
+#import "CGGradientInternal.h"
+#import "_CGLifetimeBridgingType.h"
 
-@interface CGNSGradient : NSObject {
-}
+@interface CGNSGradient : _CGLifetimeBridgingType
 @end
 
 @implementation CGNSGradient
 - (void)dealloc {
     delete (__CGGradient*)self;
 }
-
-- (id)retain {
-    CGGradientRetain((CGGradientRef)self);
-
-    return self;
-}
-
-- (void)release {
-    CGGradientRelease((CGGradientRef)self);
-}
 @end
 
-__CGGradient::__CGGradient() :
-    _components(NULL), 
-    _locations(NULL) {
-    isa = NULL;
+__CGGradient::__CGGradient() : _components(NULL), _locations(NULL) {
     object_setClass((id) this, [CGNSGradient class]);
 }
 
 __CGGradient::~__CGGradient() {
     if (_components) {
-        delete [] _components;
+        delete[] _components;
         _components = NULL;
     }
     if (_locations) {
-        delete [] _locations;
+        delete[] _locations;
         _locations = NULL;
     }
 }
@@ -182,4 +170,13 @@ void CGGradientRelease(CGGradientRef gradient) {
 CGGradientRef CGGradientRetain(CGGradientRef gradient) {
     CFRetain((id)gradient);
     return gradient;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGGradientGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
 }

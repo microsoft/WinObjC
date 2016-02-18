@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,16 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _GKNOTIFICATIONBANNER_H_
-#define _GKNOTIFICATIONBANNER_H_
-
+#import <GameKit/GameKitExport.h>
 #import <Foundation/NSObject.h>
 
-@interface GKNotificationBanner : NSObject
+@class NSString;
 
-+ (void)showBannerWithTitle:(NSString*)title message:(NSString*)message completionHandler:(void (^)(void))completionHandler;
-
+GAMEKIT_EXPORT_CLASS
+@interface GKNotificationBanner : NSObject <NSObject>
++ (void)showBannerWithTitle:(NSString*)title message:(NSString*)message completionHandler:(void (^)(void))completionHandler STUB_METHOD;
++ (void)showBannerWithTitle:(NSString*)title
+                    message:(NSString*)message
+                   duration:(NSTimeInterval)duration
+          completionHandler:(void (^)(void))completionHandler STUB_METHOD;
 @end
-
-#endif /* _GKNOTIFICATIONBANNER_H_ */

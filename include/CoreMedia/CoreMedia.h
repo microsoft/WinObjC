@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,4 +14,18 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <StubIncludes.h>
+#import <CoreMedia/CoreMediaExport.h>
+#import <CoreMedia/CoreMediaConstants.h>
+#import <CoreMedia/CMTypes.h>
+#import <CoreMedia/CMAttachment.h>
+#import <CoreMedia/CMBlockBuffer.h>
+#import <CoreMedia/CMBufferQueue.h>
+#import <CoreMedia/CMFormatDescription.h>
 #import <CoreMedia/CMSampleBuffer.h>
+#import <CoreMedia/CMSync.h>
+#import <CoreMedia/CMTextMarkup.h>
+#import <CoreMedia/CMTime.h>
+#import <CoreMedia/CMTimeRange.h>

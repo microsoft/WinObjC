@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,30 +28,30 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIGEOMETRY_H_
-#define _UIGEOMETRY_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import <ApplicationServices/ApplicationServices.h>
 #import <UIKit/UIKitExport.h>
 
 typedef struct UIEdgeInsets {
-    CGFloat top, left, bottom, right;  // specify amount to inset (positive) for each of the edges. values can be negative to 'outset'
+    CGFloat top, left, bottom, right; // specify amount to inset (positive) for each of the edges. values can be negative to 'outset'
 } UIEdgeInsets;
 
-typedef struct UIOffset {
-    CGFloat horizontal, vertical;
-} UIOffset;
+typedef struct UIOffset { CGFloat horizontal, vertical; } UIOffset;
+
+// [todo] What is this? I can't find it in the docs
+typedef struct UIFloatRange { CGFloat minimum, maximum; } UIFloatRange;
 
 static inline UIEdgeInsets UIEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right) {
-    return (UIEdgeInsets){top, left, bottom, right};
+    return (UIEdgeInsets){ top, left, bottom, right };
 }
 
 static inline CGRect UIEdgeInsetsInsetRect(CGRect rect, UIEdgeInsets insets) {
-    rect.origin.x    += insets.left;
-    rect.origin.y    += insets.top;
-    rect.size.width  -= (insets.left + insets.right);
-    rect.size.height -= (insets.top  + insets.bottom);
+    rect.origin.x += insets.left;
+    rect.origin.y += insets.top;
+    rect.size.width -= (insets.left + insets.right);
+    rect.size.height -= (insets.top + insets.bottom);
     return rect;
 }
 
@@ -62,7 +63,7 @@ static inline BOOL UIEdgeInsetsEqualToEdgeInsets(UIEdgeInsets insets1, UIEdgeIns
 UIKIT_EXPORT const UIEdgeInsets UIEdgeInsetsZero;
 
 static inline UIOffset UIOffsetMake(CGFloat horizontal, CGFloat vertical) {
-    return (UIOffset){horizontal, vertical};
+    return (UIOffset){ horizontal, vertical };
 }
 
 static inline BOOL UIOffsetEqualToOffset(UIOffset offset1, UIOffset offset2) {
@@ -71,22 +72,22 @@ static inline BOOL UIOffsetEqualToOffset(UIOffset offset1, UIOffset offset2) {
 
 UIKIT_EXPORT const UIOffset UIOffsetZero;
 
-UIKIT_EXPORT NSString *NSStringFromCGPoint(CGPoint p);
-UIKIT_EXPORT NSString *NSStringFromCGRect(CGRect r);
-UIKIT_EXPORT NSString *NSStringFromCGSize(CGSize s);
+UIKIT_EXPORT NSString* NSStringFromCGPoint(CGPoint p);
+UIKIT_EXPORT NSString* NSStringFromCGRect(CGRect r);
+UIKIT_EXPORT NSString* NSStringFromCGSize(CGSize s);
 
-UIKIT_EXPORT NSString *NSStringFromCGAffineTransform(CGAffineTransform transform);
+UIKIT_EXPORT NSString* NSStringFromCGAffineTransform(CGAffineTransform transform);
 
-UIKIT_EXPORT NSString *NSStringFromUIEdgeInsets(UIEdgeInsets insets);
+UIKIT_EXPORT NSString* NSStringFromUIEdgeInsets(UIEdgeInsets insets);
 
-UIKIT_EXPORT NSString *NSStringFromUIOffset(UIOffset offset);
+UIKIT_EXPORT NSString* NSStringFromUIOffset(UIOffset offset);
 
 @interface NSValue (NSValueUIGeometryExtensions)
-+ (NSValue *)valueWithCGPoint:(CGPoint)point;
-+ (NSValue *)valueWithCGRect:(CGRect)rect;
-+ (NSValue *)valueWithCGSize:(CGSize)size;
-+ (NSValue *)valueWithUIEdgeInsets:(UIEdgeInsets)insets;
-+ (NSValue *)valueWithUIOffset:(UIOffset)offset;
++ (NSValue*)valueWithCGPoint:(CGPoint)point;
++ (NSValue*)valueWithCGRect:(CGRect)rect;
++ (NSValue*)valueWithCGSize:(CGSize)size;
++ (NSValue*)valueWithUIEdgeInsets:(UIEdgeInsets)insets;
++ (NSValue*)valueWithUIOffset:(UIOffset)offset;
 - (CGPoint)CGPointValue;
 - (CGRect)CGRectValue;
 - (CGSize)CGSizeValue;
@@ -95,38 +96,36 @@ UIKIT_EXPORT NSString *NSStringFromUIOffset(UIOffset offset);
 @end
 
 @interface NSCoder (NSCoderUIGeometryExtensions)
-- (void)encodeCGPoint:(CGPoint)point forKey:(NSString *)key;
-- (CGPoint)decodeCGPointForKey:(NSString *)key;
+- (void)encodeCGPoint:(CGPoint)point forKey:(NSString*)key;
+- (CGPoint)decodeCGPointForKey:(NSString*)key;
 @end
 
-UIKIT_EXPORT CGRect CGRectFromString(NSString *string);
-UIKIT_EXPORT CGPoint CGPointFromString(NSString *string);
-UIKIT_EXPORT CGSize CGSizeFromString(NSString *string);
+UIKIT_EXPORT CGRect CGRectFromString(NSString* string);
+UIKIT_EXPORT CGPoint CGPointFromString(NSString* string);
+UIKIT_EXPORT CGSize CGSizeFromString(NSString* string);
 
 @interface NSCoder (UIGeometryKeyedCoding)
 
-- (void)encodeCGSize:(CGSize)size forKey:(NSString *)key;
-- (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString *)key;
-- (void)encodeCGRect:(CGRect)rect forKey:(NSString *)key;
-- (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString *)key;
-- (void)encodeCGPoint:(CGPoint)point forKey:(NSString *)key;
-- (void)encodeUIOffset:(UIOffset)offset forKey:(NSString *)key;
-- (CGSize)decodeCGSizeForKey:(NSString *)key;
-- (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString *)key;
-- (CGRect)decodeCGRectForKey:(NSString *)key;
-- (UIOffset)decodeUIOffsetForKey:(NSString *)key;
-- (CGPoint)decodeCGPointForKey:(NSString *)key;
-- (CGAffineTransform)decodeCGAffineTransformForKey:(NSString *)key;
+- (void)encodeCGSize:(CGSize)size forKey:(NSString*)key;
+- (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key;
+- (void)encodeCGRect:(CGRect)rect forKey:(NSString*)key;
+- (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key;
+- (void)encodeCGPoint:(CGPoint)point forKey:(NSString*)key;
+- (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key;
+- (CGSize)decodeCGSizeForKey:(NSString*)key;
+- (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString*)key;
+- (CGRect)decodeCGRectForKey:(NSString*)key;
+- (UIOffset)decodeUIOffsetForKey:(NSString*)key;
+- (CGPoint)decodeCGPointForKey:(NSString*)key;
+- (CGAffineTransform)decodeCGAffineTransformForKey:(NSString*)key;
 
 @end
 
 typedef enum : NSUInteger {
-    UIRectEdgeNone   = 0,
-    UIRectEdgeTop    = 0x01,
-    UIRectEdgeLeft   = 0x02,
+    UIRectEdgeNone = 0,
+    UIRectEdgeTop = 0x01,
+    UIRectEdgeLeft = 0x02,
     UIRectEdgeBottom = 0x04,
-    UIRectEdgeRight  = 0x08,
-    UIRectEdgeAll    = UIRectEdgeTop | UIRectEdgeLeft | UIRectEdgeBottom | UIRectEdgeRight
+    UIRectEdgeRight = 0x08,
+    UIRectEdgeAll = UIRectEdgeTop | UIRectEdgeLeft | UIRectEdgeBottom | UIRectEdgeRight
 } UIRectEdge;
-
-#endif /* _UIGEOMETRY_H_ */

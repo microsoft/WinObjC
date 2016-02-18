@@ -16,9 +16,8 @@
 
 #include "UIScrollView.h"
 
-static void InvertBool(struct _PropertyMapper *prop, NIBWriter *writer, XIBObject *propObj, XIBObject *obj)
-{
-    XIBObjectBool *value = (XIBObjectBool *) propObj;
+static void InvertBool(struct _PropertyMapper* prop, NIBWriter* writer, XIBObject* propObj, XIBObject* obj) {
+    XIBObjectBool* value = (XIBObjectBool*)propObj;
 
     bool newVal = value->intValue() == 0;
 
@@ -26,24 +25,34 @@ static void InvertBool(struct _PropertyMapper *prop, NIBWriter *writer, XIBObjec
 }
 
 static PropertyMapper propertyMappings[] = {
-    "IBUIScrollEnabled", "UIScrollDisabled", InvertBool,
-    "IBUIDelaysContentTouches", "UIDelaysContentTouches", NULL,
-    "IBUIDelaysContentTouches", "UIDelaysContentTouches", NULL,
-    "IBUIPagingEnabled", "UIPagingEnabled", NULL,
-    "IBUIShowsHorizontalScrollIndicator", "UIShowsHorizontalScrollIndicator", NULL,
-    "IBUIShowsVerticalScrollIndicator", "UIShowsVerticalScrollIndicator", NULL,
+    "IBUIScrollEnabled",
+    "UIScrollDisabled",
+    InvertBool,
+    "IBUIDelaysContentTouches",
+    "UIDelaysContentTouches",
+    NULL,
+    "IBUIDelaysContentTouches",
+    "UIDelaysContentTouches",
+    NULL,
+    "IBUIPagingEnabled",
+    "UIPagingEnabled",
+    NULL,
+    "IBUIShowsHorizontalScrollIndicator",
+    "UIShowsHorizontalScrollIndicator",
+    NULL,
+    "IBUIShowsVerticalScrollIndicator",
+    "UIShowsVerticalScrollIndicator",
+    NULL,
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 
-UIScrollView::UIScrollView()
-{
+UIScrollView::UIScrollView() {
     _bouncesZoom = true;
     _bounceEnabled = true;
     _canCancelContentTouches = true;
 }
 
-void UIScrollView::InitFromXIB(XIBObject *obj)
-{
+void UIScrollView::InitFromXIB(XIBObject* obj) {
     UIView::InitFromXIB(obj);
 
     obj->_outputClassName = "UIScrollView";
@@ -52,12 +61,11 @@ void UIScrollView::InitFromXIB(XIBObject *obj)
     _canCancelContentTouches = obj->GetBool("IBUICanCancelContentTouches", true);
 }
 
-void UIScrollView::InitFromStory(XIBObject *obj)
-{
+void UIScrollView::InitFromStory(XIBObject* obj) {
     UIView::InitFromStory(obj);
-    
-    if ( obj->getAttrib("bouncesZoom") ) {
-        if ( strcmp(obj->getAttrib("bouncesZoom"), "NO") == 0 ) {
+
+    if (obj->getAttrib("bouncesZoom")) {
+        if (strcmp(obj->getAttrAndHandle("bouncesZoom"), "NO") == 0) {
             _bouncesZoom = false;
         }
     }
@@ -65,16 +73,17 @@ void UIScrollView::InitFromStory(XIBObject *obj)
     obj->_outputClassName = "UIScrollView";
 }
 
-void UIScrollView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIScrollView::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     Map(writer, obj, propertyMappings, numPropertyMappings);
     UIView::ConvertStaticMappings(writer, obj);
-    if ( _bouncesZoom ) obj->AddBool(writer, "UIBouncesZoom", _bouncesZoom);
-    if ( !_bounceEnabled ) obj->AddBool(writer, "UIBounceEnabled", _bounceEnabled);
-    if ( !_canCancelContentTouches ) obj->AddBool(writer, "UICanCancelContentTouches", _canCancelContentTouches);
+    if (_bouncesZoom)
+        obj->AddBool(writer, "UIBouncesZoom", _bouncesZoom);
+    if (!_bounceEnabled)
+        obj->AddBool(writer, "UIBounceEnabled", _bounceEnabled);
+    if (!_canCancelContentTouches)
+        obj->AddBool(writer, "UICanCancelContentTouches", _canCancelContentTouches);
 }
 
-ObjectConverter *UIScrollView::Clone()
-{
+ObjectConverter* UIScrollView::Clone() {
     return new UIScrollView();
 }

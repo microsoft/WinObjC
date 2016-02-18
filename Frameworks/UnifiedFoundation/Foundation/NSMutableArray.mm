@@ -15,15 +15,18 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #include "../CoreFoundation/CFDictionaryInternal.h"
 #include "CoreFoundation/CFArray.h"
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSMutableArray.h"
-#include "../objcrt/runtime.h"
 #include "NSArrayInternal.h"
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
+
+@interface NSMutableArrayConcrete : NSMutableArray
+@end
 
 @implementation NSMutableArray
 
@@ -482,7 +485,6 @@ recurse:
 */
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
     if (predicate == nil) {
-        UNIMPLEMENTED();
         return;
     }
 
@@ -494,6 +496,54 @@ recurse:
         if (![predicate evaluateWithObject:check])
             [self removeObjectAtIndex:count];
     }
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObjectIdenticalTo:(id)anObject inRange:(NSRange)aRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObjectsFromIndices:(NSUInteger*)indices numIndices:(NSUInteger)count {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)replaceObjectsAtIndexes:(NSIndexSet*)indexes withObjects:(NSArray*)objects {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray range:(NSRange)otherRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
+    UNIMPLEMENTED();
 }
 
 @end

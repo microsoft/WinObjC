@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,28 +14,23 @@
 //
 //******************************************************************************
 
-#ifndef _AVCAPTUREOUTPUT_H_
-#define _AVCAPTUREOUTPUT_H_
+#pragma once
 
-#include <dispatch/dispatch.h>
-#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundationExport.h>
+#import <Foundation/NSObject.h>
+#import <CoreGraphics/CGGeometry.h>
 
-@class NSDictionary;
+@class NSArray;
+@class AVCaptureConnection;
+@class NSString;
+@class AVMetadataObject;
 
-@protocol AVCaptureVideoDataOutputSampleBufferDelegate <NSObject>
-@end
-
+AVFOUNDATION_EXPORT_CLASS
 @interface AVCaptureOutput : NSObject
+@property (readonly, nonatomic) NSArray* connections STUB_PROPERTY;
+- (AVCaptureConnection*)connectionWithMediaType:(NSString*)mediaType STUB_METHOD;
+- (AVMetadataObject*)transformedMetadataObjectForMetadataObject:(AVMetadataObject*)metadataObject
+                                                     connection:(AVCaptureConnection*)connection STUB_METHOD;
+- (CGRect)metadataOutputRectOfInterestForRect:(CGRect)rectInOutputCoordinates STUB_METHOD;
+- (CGRect)rectForMetadataOutputRectOfInterest:(CGRect)rectInMetadataOutputCoordinates STUB_METHOD;
 @end
-
-@interface AVCaptureVideoDataOutput : AVCaptureOutput
-
-@property (nonatomic) BOOL alwaysDiscardsLateVideoFrames;
-@property (nonatomic, copy) NSDictionary* videoSettings;
-
-- (void)setSampleBufferDelegate:(id<AVCaptureVideoDataOutputSampleBufferDelegate>)sampleBufferDelegate
-                          queue:(dispatch_queue_t)sampleBufferCallbackQueue;
-
-@end
-
-#endif /* _AVCAPTUREOUTPUT_H_ */

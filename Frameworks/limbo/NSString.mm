@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #import "CFConstantString.h"
 #define U_STATIC_IMPLEMENTATION 1
 #include "unicode/coll.h"
@@ -28,6 +29,9 @@
 #include "IcuHelper.h"
 
 #include <Starboard/String.h>
+
+NSString* const NSParseErrorException = @"NSParseErrorException";
+NSString* const NSCharacterConversionException = @"NSCharacterConversionException";
 
 enum NSStringType {
     NSUninitializedString = 0,
@@ -574,7 +578,7 @@ typedef NSUInteger NSStringCompareOptions;
             break;
         }
 
-        case NSUTF32LittleEndianStringEncoding: {
+        case static_cast<DWORD>(NSUTF32LittleEndianStringEncoding): {
             uniStr = UnicodeString::fromUTF32((const UChar32*)bytes, length / 4);
             break;
         }
@@ -1081,7 +1085,7 @@ typedef NSUInteger NSStringCompareOptions;
             return (const char*)pData;
         }
 
-        case NSUTF32LittleEndianStringEncoding: {
+        case static_cast<DWORD>(NSUTF32LittleEndianStringEncoding): {
             UStringHolder s1(self);
 
             DWORD* strRet = (DWORD*)_conversionTempStr((s1.string().length() + 1) * 4);
@@ -1430,10 +1434,7 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (const unichar*)rawCharacters {
     UStringHolder s1(self);
-    DWORD len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
-
-    return (const unichar*)chars;
+    return (const unichar*)s1.string().getBuffer();
 }
 
 /**
@@ -2484,7 +2485,7 @@ typedef NSUInteger NSStringCompareOptions;
     return [NSString pathWithComponents:components];
 }
 
-- (id)classForCoder {
+- (Class)classForCoder {
     return [NSString class];
 }
 
@@ -2920,77 +2921,14 @@ const int s_oneByte = 16;
 
 /**
  @Status Caveat
- @Notes encoding parameter not supported
+ @Notes Only UTF-8 is supported
 */
 - (NSString*)stringByReplacingPercentEscapesUsingEncoding:(DWORD)encoding {
-    NSUInteger i, length = [self length], resultLength = 0;
-    unichar* buffer = (unichar*)EbrMalloc(length * 2);
-    unichar *result = (unichar *)EbrMalloc(length * 2), firstCharacter = 0, firstNibble = 0;
-    enum {
-        STATE_NORMAL,
-        STATE_PERCENT,
-        STATE_HEX1,
-    } state = STATE_NORMAL;
-
-    [self getCharacters:buffer];
-
-    for (i = 0; i < length; i++) {
-        unichar check = buffer[i];
-
-        switch (state) {
-            case STATE_NORMAL:
-                if (check == '%')
-                    state = STATE_PERCENT;
-                else
-                    result[resultLength++] = check;
-                break;
-
-            case STATE_PERCENT:
-                state = STATE_HEX1;
-                if (check >= '0' && check <= '9') {
-                    firstCharacter = check;
-                    firstNibble = (firstCharacter - '0');
-                } else if (check >= 'a' && check <= 'f') {
-                    firstCharacter = check;
-                    firstNibble = (firstCharacter - 'a') + 10;
-                } else if (check >= 'A' && check <= 'F') {
-                    firstCharacter = check;
-                    firstNibble = (firstCharacter - 'A') + 10;
-                } else {
-                    result[resultLength++] = '%';
-                    result[resultLength++] = check;
-                    state = STATE_NORMAL;
-                }
-                break;
-
-            case STATE_HEX1:
-                if (check >= '0' && check <= '9')
-                    result[resultLength++] = firstNibble * 16 + check - '0';
-                else if (check >= 'a' && check <= 'f')
-                    result[resultLength++] = firstNibble * 16 + (check - 'a') + 10;
-                else if (check >= 'A' && check <= 'F')
-                    result[resultLength++] = firstNibble * 16 + (check - 'A') + 10;
-                else {
-                    result[resultLength++] = '%';
-                    result[resultLength++] = firstCharacter;
-                    result[resultLength++] = check;
-                }
-                state = STATE_NORMAL;
-                break;
-        }
-    }
-
-    if (resultLength == length) {
-        EbrFree(buffer);
-        EbrFree(result);
-        return self;
-    }
-
-    NSString* ret = [NSString stringWithCharacters:result length:resultLength];
-    EbrFree(buffer);
-    EbrFree(result);
-
-    return ret;
+    return (NSString*)[CFURLCreateStringByReplacingPercentEscapesUsingEncoding(nullptr,
+                                                                               reinterpret_cast<CFStringRef>(self),
+                                                                               nullptr,
+                                                                               CFStringConvertNSStringEncodingToEncoding(encoding))
+        autorelease];
 }
 
 /**
@@ -3300,6 +3238,366 @@ const int s_oneByte = 16;
 }
 
 //  Note: locale ignored
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithContentsOfURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)maximumLengthOfBytesUsingEncoding:(NSStringEncoding)enc {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (const char*)cString {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (const char*)lossyCString {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)cStringLength {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getCString:(char*)bytes maxLength:(NSUInteger)maxLength range:(NSRange)aRange remainingRange:(NSRangePointer)leftoverRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange locale:(NSLocale*)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateLinesUsingBlock:(void (^)(NSString*, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getLineStart:(NSUInteger*)startIndex
+                 end:(NSUInteger*)lineEndIndex
+         contentsEnd:(NSUInteger*)contentsEndIndex
+            forRange:(NSRange)aRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)paragraphRangeForRange:(NSRange)aRange {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)rangeOfComposedCharacterSequencesForRange:(NSRange)range {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)propertyList {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSComparisonResult)localizedStandardCompare:(NSString*)string {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)stringByFoldingWithOptions:(NSStringCompareOptions)options locale:(NSLocale*)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)commonPrefixWithString:(NSString*)aString options:(NSStringCompareOptions)mask {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)capitalizedStringWithLocale:(NSLocale*)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)lowercaseStringWithLocale:(NSLocale*)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)uppercaseStringWithLocale:(NSLocale*)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)completePathIntoString:(NSString* _Nonnull*)outputName
+                       caseSensitive:(BOOL)flag
+                    matchesIntoArray:(NSArray* _Nonnull*)outputArray
+                         filterTypes:(NSArray*)filterTypes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)stringsByAppendingPaths:(NSArray*)paths {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateLinguisticTagsInRange:(NSRange)range
+                                scheme:(NSString*)tagScheme
+                               options:(NSLinguisticTaggerOptions)opts
+                           orthography:(NSOrthography*)orthography
+                            usingBlock:(void (^)(NSString*, NSRange, NSRange, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)linguisticTagsInRange:(NSRange)range
+                           scheme:(NSString*)tagScheme
+                          options:(NSLinguisticTaggerOptions)opts
+                      orthography:(NSOrthography*)orthography
+                      tokenRanges:(NSArray* _Nullable*)tokenRanges {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)localizedStringWithFormat:(NSString*)format {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (const NSStringEncoding*)availableStringEncodings {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSString*)localizedNameOfStringEncoding:(NSStringEncoding)encoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)mutableCopyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
 
 @end
 

@@ -1,50 +1,75 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSEXPRESSION_H_
-#define _NSEXPRESSION_H_
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSArray,NSMutableDictionary,NSDictionary;
+@class NSString;
+@class NSArray;
+@class NSMutableDictionary;
+@class NSPredicate;
 
-typedef enum {
-    NSConstantValueExpressionType,
+typedef NSUInteger NSExpressionType;
+enum {
+    NSConstantValueExpressionType = 0,
     NSEvaluatedObjectExpressionType,
     NSVariableExpressionType,
     NSKeyPathExpressionType,
-    NSFunctionExpressionType
-} NSExpressionType;
+    NSFunctionExpressionType,
+    NSUnionSetExpressionType,
+    NSIntersectSetExpressionType,
+    NSMinusSetExpressionType,
+    NSSubqueryExpressionType = 13,
+    NSAggregateExpressionType = 14,
+    NSAnyKeyExpressionType = 15,
+    NSBlockExpressionType = 19
+};
 
-@interface NSExpression : NSObject <NSCoding,NSCopying>
-
-- initWithExpressionType:(NSExpressionType)type;
-
-+ (NSExpression *)expressionForConstantValue:value;
-+ (NSExpression *)expressionForEvaluatedObject;
-+ (NSExpression *)expressionForVariable:(NSString *)string;
-+ (NSExpression *)expressionForKeyPath:(NSString *)keyPath;
-+ (NSExpression *)expressionForFunction:(NSString *)name arguments:(NSArray *)arguments;
-
-- (NSExpressionType)expressionType;
-
-- constantValue;
-- (NSString *)variable;
-- (NSString *)keyPath;
-- (NSString *)function;
-- (NSArray *)arguments;
-- (NSExpression *)operand;
-
-- expressionValueWithObject:object context:(NSMutableDictionary *)context;
-
-// private
-- (NSExpression *)_expressionWithSubstitutionVariables:(NSDictionary *)variables;
-
+FOUNDATION_EXPORT_CLASS
+@interface NSExpression : NSObject <NSCopying, NSSecureCoding>
+- (instancetype)initWithExpressionType:(NSExpressionType)type;
++ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat, ...;
++ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat argumentArray:(NSArray*)arguments;
++ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat arguments:(va_list)argList;
++ (NSExpression*)expressionForConstantValue:(id)obj;
++ (NSExpression*)expressionForEvaluatedObject;
++ (NSExpression*)expressionForKeyPath:(NSString*)keyPath;
++ (NSExpression*)expressionForVariable:(NSString*)string;
++ (NSExpression*)expressionForAnyKey;
++ (NSExpression*)expressionForAggregate:(NSArray*)collection;
++ (NSExpression*)expressionForUnionSet:(NSExpression*)left with:(NSExpression*)right;
++ (NSExpression*)expressionForIntersectSet:(NSExpression*)left with:(NSExpression*)right;
++ (NSExpression*)expressionForMinusSet:(NSExpression*)left with:(NSExpression*)right;
++ (NSExpression*)expressionForSubquery:(NSExpression*)expression usingIteratorVariable:(NSString*)variable predicate:(id)predicate;
++ (NSExpression*)expressionForBlock:(id _Nonnull (^)(id, NSArray*, NSMutableDictionary*))block arguments:(NSArray*)arguments;
++ (NSExpression*)expressionForFunction:(NSString*)name arguments:(NSArray*)parameters;
++ (NSExpression*)expressionForFunction:(NSExpression*)target selectorName:(NSString*)name arguments:(NSArray*)parameters;
+@property (readonly, copy) NSArray* arguments;
+@property (readonly, retain) id collection;
+@property (readonly, retain) id constantValue;
+@property (readonly) NSExpressionType expressionType;
+@property (readonly, copy) NSString* function;
+@property (readonly, copy) NSString* keyPath;
+@property (readonly, copy) NSExpression* operand;
+@property (readonly, copy) NSPredicate* predicate;
+@property (readonly, copy) NSExpression* leftExpression;
+@property (readonly, copy) NSExpression* rightExpression;
+@property (readonly, copy) NSString* variable;
+- (id)expressionValueWithObject:(id)object context:(NSMutableDictionary*)context;
+- (void)allowEvaluation;
+@property (readonly, copy, nonnull) id (^expressionBlock)(id, NSArray*, NSMutableDictionary*);
 @end
-
-#endif /* _NSEXPRESSION_H_ */

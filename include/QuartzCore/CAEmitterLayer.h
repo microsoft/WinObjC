@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CALayer.h>
 #import <QuartzCore/CAMediaTiming.h>
 
@@ -39,7 +40,7 @@ CA_EXPORT NSString* const kCAEmitterLayerAdditive;
 @class NSString;
 
 CA_EXPORT_CLASS
-@interface CAEmitterLayer : CALayer <CAMediaTiming, NSCoding, NSObject>
+@interface CAEmitterLayer : CALayer <CAMediaTiming, NSCoding>
 
 @property (copy) NSArray* emitterCells;
 @property (copy) NSString* renderMode;

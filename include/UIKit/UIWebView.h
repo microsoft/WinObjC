@@ -29,8 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIWEBVIEW_H_
-#define _UIWEBVIEW_H_
+#pragma once
 
 #import "UIView.h"
 #import "UIDataDetectors.h"
@@ -45,20 +44,8 @@ enum {
 };
 typedef NSUInteger UIWebViewNavigationType;
 
-@class UIWebView;
-@class UIViewAdapter;
-@class WebView;
-@class UIScrollView;
-
-@protocol UIWebViewDelegate <NSObject>
-@optional
-- (BOOL)webView:(UIWebView*)webView
-    shouldStartLoadWithRequest:(NSURLRequest*)request
-                navigationType:(UIWebViewNavigationType)navigationType;
-- (void)webView:(UIWebView*)aWebView didFailLoadWithError:(NSError*)error;
-- (void)webViewDidFinishLoad:(UIWebView*)webView;
-- (void)webViewDidStartLoad:(UIWebView*)webView;
-@end
+@class UIWebView, UIViewAdapter, WebView, UIScrollView;
+@protocol UIWebViewDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UIWebView : UIView
@@ -86,5 +73,3 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL keyboardDisplayRequiresUserAction;
 
 @end
-
-#endif /* _UIWEBVIEW_H_ */

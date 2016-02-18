@@ -18,12 +18,17 @@
 
 #include "Starboard.h"
 
+#ifdef __OBJC__
 #import <Foundation/NSString.h>
-
 #include <COMIncludes.h>
+#endif
+
 #include <wrl\client.h>
 #include <wrl\wrappers\corewrappers.h>
+
+#ifdef __OBJC__
 #include <COMIncludes_End.h>
+#endif
 
 #include <string>
 #include <sstream>
@@ -88,6 +93,8 @@ struct StringTraits<std::wstring> {
     }
 };
 
+#ifdef __OBJC__
+
 // Dispatcher class template for generically working with NSStrings
 template <>
 struct StringTraits<NSString*> {
@@ -130,6 +137,8 @@ struct StringTraits<NSString*> {
     }
 };
 
+#endif // __OBJC__
+
 // Dispatcher class template for generically working with HSTRINGS
 template <>
 struct StringTraits<HSTRING> {
@@ -170,11 +179,15 @@ struct StringTraits<HSTRING> {
         return NarrowToWide(value.c_str(), value.length(), codePage);
     }
 
+#ifdef __OBJC__
+
     // Performs a conversion from NSString to HSTRING using the specified code page
     static CreationType NarrowToWide(NSString* objcString, unsigned int codePage) {
         const char* rawNSString = [objcString UTF8String];
         return NarrowToWide(rawNSString, codePage);
     }
+
+#endif // __OBJC__
 
     // Returns a const pointer to the start of the buffer
     static const wchar_t* Data(HSTRING string) {
@@ -188,7 +201,7 @@ struct StringTraits<HSTRING> {
 
     // Returns whether or not the string is empty
     static bool IsEmpty(HSTRING string) {
-        return ::WindowsIsStringEmpty(string);
+        return !!::WindowsIsStringEmpty(string);
     }
 };
 
@@ -299,11 +312,15 @@ std::string WideToNarrow(const TString& value) {
     return WideToNarrow(Private::StringTraits<DecayedType>::Data(value), Private::StringTraits<DecayedType>::Size(value), TCodePage);
 }
 
+#ifdef __OBJC__
+
 // Helper function which converts a wide string to an NSString.
 template <typename TString, unsigned int TCodePage = CP_UTF8>
 static NSString* WideToNSString(const TString& value) {
     return Private::StringTraits<NSString*>::NarrowToWide(WideToNarrow(value), TCodePage);
 }
+
+#endif
 
 template <typename TString, typename... TArgs>
 std::wstring Format(const TString& formatString, TArgs... args) {

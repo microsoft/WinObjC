@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <math.h>
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <math.h>
 
 const CGAffineTransform CGAffineTransformIdentity = { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -185,4 +186,13 @@ bool CGAffineTransformEqualToTransform(CGAffineTransform t2, CGAffineTransform t
     }
 
     return 0;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGSize CGSizeApplyAffineTransform(CGSize size, CGAffineTransform t) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }

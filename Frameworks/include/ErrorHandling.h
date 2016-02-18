@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,17 +17,14 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
+#include <sys/cdefs.h>
 #include <winerror.h>
 
 #ifdef __OBJC__
-#import <Foundation/NSException.h>
-#import <Foundation/NSDictionary.h>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSString.h>
-#import <Foundation/NSError.h>
 namespace wil {
 struct FailureInfo;
 }
+#import "FoundationErrorHandling.h"
 
 // These are internal helper functions for our error-handling facilities. They are only intended to be called
 // internally through WIL.
@@ -199,17 +196,37 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 #pragma push_macro("InterlockedDecrementRelease")
 #pragma push_macro("InterlockedCompareExchangePointer")
 
-#define GetCurrentThreadId objc_getCurrentThreadId
-#define InterlockedIncrementNoFence objc_interlockedIncrementNoFence
-#define GetLastError objc_getLastError
-#define CopyMemory objc_copyMemory
-#define ZeroMemory objc_zeroMemory
-#define FormatMessageW objc_formatMessageW
-#define OutputDebugStringW objc_outputDebugStringW
-#define InterlockedDecrementRelease objc_interlockedDecrementRelease
-#define InterlockedCompareExchangePointer objc_interlockedCompareExchangePointer
+__BEGIN_DECLS
 
-#include "../objcrt/error-handling.h"
+#ifndef IWPLATFORM_EXPORT
+#define IWPLATFORM_EXPORT
+#endif
+
+// Should hitting the UNIMPLEMENTED macro cause a fast fail? If this returns false, we still log unimplemented calls but they are not fatal.
+IWPLATFORM_EXPORT bool failFastOnUnimplemented();
+
+// Error-handling exports
+IWPLATFORM_EXPORT unsigned long starboardGetCurrentThreadId();
+IWPLATFORM_EXPORT long starboardInterlockedIncrementNoFence(long volatile* addend);
+IWPLATFORM_EXPORT unsigned long starboardGetLastError();
+IWPLATFORM_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
+IWPLATFORM_EXPORT void starboardZeroMemory(void* destination, size_t length);
+IWPLATFORM_EXPORT unsigned long starboardFormatMessageW(unsigned long flags, const void* source, unsigned long messageId, unsigned long languageId, wchar_t* buffer, unsigned long size, va_list* arguments);
+IWPLATFORM_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
+IWPLATFORM_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
+IWPLATFORM_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
+
+__END_DECLS
+
+#define GetCurrentThreadId starboardGetCurrentThreadId
+#define InterlockedIncrementNoFence starboardInterlockedIncrementNoFence
+#define GetLastError starboardGetLastError
+#define CopyMemory starboardCopyMemory
+#define ZeroMemory starboardZeroMemory
+#define FormatMessageW starboardFormatMessageW
+#define OutputDebugStringW starboardOutputDebugStringW
+#define InterlockedDecrementRelease starboardInterlockedDecrementRelease
+#define InterlockedCompareExchangePointer starboardInterlockedCompareExchangePointer
 
 // Ignore some warnings in result.h
 #if defined __clang__
@@ -278,22 +295,17 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 
 // None of this should be used directly and is just support code for WIL's Objective-C helpers:
 
-// This would ideally be in objcrt's error-handling.mm but we can't rethrow exceptions in DLLs outside of where they were caught.
+// This would ideally be in Starboard's ErrorHandling but we can't rethrow exceptions in DLLs outside of where they were caught.
 // Pending a fix for that (issue #5483680), we inline the functions that do exception rethrowing so they're not inside a DLL:
 #ifdef __OBJC__
 
-// We need to lazy-load these because we may use them from CoreFoundation and it does not have access to Foundation directly.
-static IWLazyClassLookup _LazyNSString("NSString");
-static IWLazyClassLookup _LazyNSError("NSError");
-static IWLazyClassLookup _LazyNSException("NSException");
-
 static NSString* _winobjcDomain() {
-    static NSString* s_winobjcDomain = [[_LazyNSString alloc] initWithCString:"WinObjCErrorDomain"];
+    static NSString* s_winobjcDomain = [[NSString alloc] initWithCString:"WinObjCErrorDomain"];
     return s_winobjcDomain;
 }
 
 static NSString* _hresultDomain() {
-    static NSString* s_hresultDomain = [[_LazyNSString alloc] initWithCString:"HRESULTErrorDomain"];
+    static NSString* s_hresultDomain = [[NSString alloc] initWithCString:"HRESULTErrorDomain"];
     return s_hresultDomain;
 }
 
@@ -304,10 +316,10 @@ static void _rethrowAsNSException() {
         // Already an NSException and we need to catch it so the catch (...) doesn't:
         throw;
     } catch (wil::ResultException re) {
-        @throw _exceptionFromFailureInfo(re.GetFailureInfo());
+        @throw _NSExceptionFromFailureInfo(re.GetFailureInfo());
     } catch (...) {
-        @throw [_LazyNSException _exceptionWithHRESULT:wil::ResultFromCaughtException()
-                                    reason:_stringFromHresult(wil::ResultFromCaughtException())
+        @throw [NSException _exceptionWithHRESULT:wil::ResultFromCaughtException()
+                                    reason:_NSStringFromHResult(wil::ResultFromCaughtException())
                                     userInfo:nil];
     }
 }
@@ -321,16 +333,16 @@ static void _catchAndPopulateNSError(NSError** outError) {
         unsigned errorCode = E_UNEXPECTED;
 
         // If we have an hresult in our user dict, use that, otherwise this was unexpected:
-        NSNumber* hresultValue = [e.userInfo objectForKey:[_LazyNSString stringWithCString:"hresult"]];
+        NSNumber* hresultValue = [e.userInfo objectForKey:[NSString stringWithCString:"hresult"]];
         if (hresultValue) {
             errorCode = [hresultValue unsignedIntValue];
         }
 
-        error = [_LazyNSError errorWithDomain:_winobjcDomain() code:errorCode userInfo:e.userInfo];
+        error = [NSError errorWithDomain:_winobjcDomain() code:errorCode userInfo:e.userInfo];
     } catch (wil::ResultException re) {
-        error = _errorFromFailureInfo(re.GetFailureInfo());
+        error = _NSErrorFromFailureInfo(re.GetFailureInfo());
     } catch (...) {
-        error = [_LazyNSError errorWithDomain:_hresultDomain() code:wil::ResultFromCaughtException() userInfo:nil];
+        error = [NSError errorWithDomain:_hresultDomain() code:wil::ResultFromCaughtException() userInfo:nil];
     }
 
     if (outError) {

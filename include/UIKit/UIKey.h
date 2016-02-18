@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,6 +28,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
 
 // NOTE: This does not come from Apple's UIKit and only exist to solve some current problems.
@@ -34,7 +37,7 @@
 // then all of this should change to reflect the official API.
 
 typedef enum {
-    UIKeyTypeCharacter,     // the catch-all/default... I wouldn't depend much on this at this point
+    UIKeyTypeCharacter, // the catch-all/default... I wouldn't depend much on this at this point
     UIKeyTypeUpArrow,
     UIKeyTypeDownArrow,
     UIKeyTypeLeftArrow,
@@ -52,16 +55,16 @@ typedef enum {
 @interface UIKey : NSObject {
 @private
     unsigned short _keyCode;
-    NSString *_characters;
-    NSString *_charactersWithModifiers;
+    NSString* _characters;
+    NSString* _charactersWithModifiers;
     NSUInteger _modifierFlags;
     BOOL _repeat;
 }
 
 @property (nonatomic, readonly) UIKeyType type;
 @property (nonatomic, readonly) unsigned short keyCode;
-@property (nonatomic, readonly) NSString *characters;
-@property (nonatomic, readonly) NSString *charactersWithModifiers;
+@property (nonatomic, readonly) NSString* characters;
+@property (nonatomic, readonly) NSString* charactersWithModifiers;
 @property (nonatomic, readonly, getter=isRepeat) BOOL repeat;
 @property (nonatomic, readonly, getter=isCapslockEnabled) BOOL capslockEnabled;
 @property (nonatomic, readonly, getter=isShiftKeyPressed) BOOL shiftKeyPressed;

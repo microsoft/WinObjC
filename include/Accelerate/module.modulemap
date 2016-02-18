@@ -1,0 +1,8 @@
+module Accelerate [extern_c] {
+    umbrella header "Accelerate.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

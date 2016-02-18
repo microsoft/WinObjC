@@ -68,12 +68,6 @@ public:
     AutoId() : _val(nil) {
     }
 
-#ifdef nil // apparently necessary for the decltype, but not the other uses in this file...
-    explicit AutoId(const decltype(nil)& val): _val(nil) {
-        FAIL_FAST_IF(val != nil);
-    }
-#endif
-
     explicit AutoId(const TObjPointer& val) : _val(nil) {
         TLifetimeTraits::store(&_val, val);
     }

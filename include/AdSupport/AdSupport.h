@@ -17,17 +17,7 @@
 #ifndef __ADSUPPORT_H
 #define __ADSUPPORT_H
 
-#import <Foundation/Foundation.h>
-#import <AdSupport/AdSupportExport.h>
-
-ADSUPPORT_EXPORT
-@interface ASIdentifierManager : NSObject
-
-@property (nonatomic, readonly) NSUUID* advertisingIdentifier;
-@property (nonatomic, readonly, getter=isAdvertisingTrackingEnabled) BOOL advertisingTrackingEnabled;
-
-+ (ASIdentifierManager*)sharedManager;
-
-@end
+#import <StubIncludes.h>
+#import <AdSupport/ASIdentifierManager.h>
 
 #endif

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSSet.h"
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSCountedSet.h"
@@ -517,6 +518,94 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (NSEnumerator*)objectEnumerator {
     return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator forObject:self nextFunction:NSSetEnumeratorGetNextObject];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)setByAddingObjectsFromArray:(NSArray*)other {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)filteredSetUsingPredicate:(NSPredicate*)predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)valueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setValue:(id)value forKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

@@ -27,7 +27,7 @@
 static IWLazyClassLookup _LazyUIProxyObject("UIProxyObject");
 static IWLazyClassLookup _LazyUIWindow("UIWindow");
 
-NSString * const UINibExternalObjects = @"UINibExternalObjects";
+NSString* const UINibExternalObjects = @"UINibExternalObjects";
 
 @implementation NSNib {
     idretaintype(NSData) _data;
@@ -37,8 +37,7 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
  @Status Interoperable
 */
 
-+(NSNib *) nibWithNibName:(NSString *)name bundle:(NSBundle *) bundle
-{
++ (NSNib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
     NSData* data = [NSData dataWithContentsOfFile:name];
     if (data == nil) {
         data = [NSData dataWithContentsOfFile:[name stringByAppendingPathComponent:@"/runtime.nib"]];
@@ -61,13 +60,12 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
  @Status Interoperable
 */
 
-+(NSNib *) nibWithData:(NSData *)data bundle:(NSBundle *) bundle
-{
-    if ( data == nil ) {
++ (NSNib*)nibWithData:(NSData*)data bundle:(NSBundle*)bundle {
+    if (data == nil) {
         return nil;
     }
 
-    NSNib *ret = [self alloc];
+    NSNib* ret = [self alloc];
     ret->_data = data;
     ret->_bundle = bundle;
 
@@ -78,8 +76,8 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
  @Status Interoperable
 */
 
-- (NSArray*)instantiateWithOwner:(id)ownerObject options: (NSDictionary*)options {
-    const char* bytes = (const char *) [_data bytes];
+- (NSArray*)instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options {
+    const char* bytes = (const char*)[_data bytes];
     if (!bytes) {
         return nil;
     }
@@ -95,7 +93,7 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
     [_LazyUIProxyObject addProxyObject:nil withName:@"IBFirstResponder" forCoder:prop];
     [_LazyUIProxyObject addProxyObject:ownerObject withName:@"IBFilesOwner" forCoder:prop];
 
-    NSDictionary *proxies = options[UINibExternalObjects];
+    NSDictionary* proxies = options[UINibExternalObjects];
 
     for (id key in proxies) {
         id curObj = [proxies objectForKey:key];
@@ -111,8 +109,11 @@ NSString * const UINibExternalObjects = @"UINibExternalObjects";
     NSArray* visibleObjects = [prop decodeObjectForKey:@"UINibVisibleWindowsKey"];
     NSArray* allObjects = [prop decodeObjectForKey:@"UINibObjectsKey"];
 
-    for (UIRuntimeEventConnection* curconnection in connections) {
-        [curconnection _makeConnection];
+    // Can be UIRuntimeEventConnection, UIRuntimeOutletCollectionConnection, or UIRuntimeOutletConnection
+    for (id curconnection in connections) {
+        if ([curconnection respondsToSelector:@selector(_makeConnection)]) {
+            [curconnection _makeConnection];
+        }
     }
 
     for (UIView* curobject in visibleObjects) {

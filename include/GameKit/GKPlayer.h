@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,22 +13,32 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _GKPLAYER_H_
-#define _GKPLAYER_H_
+#import <GameKit/GameKitExport.h>
 
+#import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSObject.h>
 
 @class NSArray;
 @class NSError;
+@class NSString;
+@class UIImage;
 
-@interface GKPlayer : NSObject
+typedef NSInteger GKPhotoSize;
+enum {
+    GKPhotoSizeSmall = 0,
+    GKPhotoSizeNormal,
+};
 
-@property (nonatomic, readonly, retain) NSString* playerID;
-@property (nonatomic, readonly, copy) NSString* alias;
-
-+ (void)loadPlayersForIdentifiers:(NSArray*)identifiers withCompletionHandler:(void (^)(NSArray* players, NSError* error))completionHandler;
-
+GAMEKIT_EXPORT_CLASS
+@interface GKPlayer : NSObject <NSObject>
++ (void)loadPlayersForIdentifiers:(NSArray*)identifiers withCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
+- (void)loadPhotoForSize:(GKPhotoSize)size withCompletionHandler:(void (^)(UIImage*, NSError*))completionHandler STUB_METHOD;
++ (instancetype)anonymousGuestPlayerWithIdentifier:(NSString*)guestIdentifier STUB_METHOD;
+@property (readonly, retain, nonatomic) NSString* playerID STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* alias STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* displayName STUB_PROPERTY;
+@property (readonly, nonatomic) BOOL isFriend STUB_PROPERTY;
+@property (readonly, nonatomic) NSString* guestIdentifier STUB_PROPERTY;
 @end
-
-#endif /* _GKPLAYER_H_ */

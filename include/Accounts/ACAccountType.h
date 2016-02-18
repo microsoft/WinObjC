@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
 
 ACCOUNTS_EXPORT NSString* const ACAccountTypeIdentifierFacebook;
 ACCOUNTS_EXPORT NSString* const ACAccountTypeIdentifierSinaWeibo;

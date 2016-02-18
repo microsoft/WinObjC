@@ -13,21 +13,25 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAPROPERTYANIMATION_H_
-#define _CAPROPERTYANIMATION_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
+#import <QuartzCore/CAAction.h>
+#import <QuartzCore/CAMediaTiming.h>
 #import <QuartzCore/CAAnimation.h>
 
-@interface CAPropertyAnimation : CAAnimation {
+@class NSString;
+@class CAValueFunction;
+
+CA_EXPORT_CLASS
+@interface CAPropertyAnimation : CAAnimation <CAAction, CAMediaTiming, NSCoding, NSCopying> {
     id _keyPath;
 }
 
-+ animationWithKeyPath:(NSString*)keyPath;
 @property (copy) NSString* keyPath;
-@property (getter=isAdditive) BOOL additive;
 @property (getter=isCumulative) BOOL cumulative;
+@property (getter=isAdditive) BOOL additive;
+@property (strong) CAValueFunction* valueFunction STUB_PROPERTY;
++ (instancetype)animationWithKeyPath:(NSString*)keyPath;
 
 @end
-
-#endif /* _CAPROPERTYANIMATION_H_ */

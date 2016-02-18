@@ -30,9 +30,6 @@
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\objcrt\objcrt.Universal\objcrt.Universal.vcxproj">
-      <Project>{C6F2FB00-05DB-47C6-B1A0-F73060B89C1B}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
@@ -55,6 +52,7 @@
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <StarboardBasePath>..\..\..</StarboardBasePath>
+    <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
     <IslandwoodDRT>false</IslandwoodDRT>
     <OutputName>Security</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
@@ -170,8 +168,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -194,8 +191,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -218,8 +214,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -242,8 +237,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -266,8 +260,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -290,8 +283,7 @@
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;bcrypt.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Security.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

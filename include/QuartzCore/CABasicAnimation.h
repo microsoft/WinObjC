@@ -13,11 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAPropertyAnimation.h>
 
 CA_EXPORT_CLASS
-@interface CABasicAnimation : CAPropertyAnimation
+@interface CABasicAnimation : CAPropertyAnimation <CAAction, CAMediaTiming, NSCoding, NSCopying>
 
 @property (retain) id fromValue;
 @property (retain) id toValue;

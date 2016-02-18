@@ -1,0 +1,9 @@
+module QuickLook [extern_c] {
+    use UIKit
+    umbrella header "QuickLook.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

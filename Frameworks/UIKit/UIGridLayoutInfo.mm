@@ -25,12 +25,12 @@
 #import "UIGridLayoutItem.h"
 
 @interface UIGridLayoutInfo () {
-    NSMutableArray *_sections;
+    NSMutableArray* _sections;
     CGRect _visibleBounds;
     CGSize _layoutSize;
     BOOL _isValid;
 }
-@property (nonatomic, strong) NSMutableArray *sections;
+@property (nonatomic, strong) NSMutableArray* sections;
 @end
 
 @implementation UIGridLayoutInfo
@@ -45,15 +45,21 @@
     return self;
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>", NSStringFromClass(self.class), self, self.dimension, self.horizontal, NSStringFromCGSize(self.contentSize), self.sections];
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@: %p dimension:%.1f horizontal:%d contentSize:%@ sections:%@>",
+                                      NSStringFromClass(self.class),
+                                      self,
+                                      self.dimension,
+                                      self.horizontal,
+                                      NSStringFromCGSize(self.contentSize),
+                                      self.sections];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Public
 
-- (UIGridLayoutInfo *)snapshot {
-    UIGridLayoutInfo *layoutInfo = [self.class new];
+- (UIGridLayoutInfo*)snapshot {
+    UIGridLayoutInfo* layoutInfo = [self.class new];
     layoutInfo.sections = self.sections;
     layoutInfo.rowAlignmentOptions = self.rowAlignmentOptions;
     layoutInfo.usesFloatingHeaderFooter = self.usesFloatingHeaderFooter;
@@ -64,19 +70,19 @@
     return layoutInfo;
 }
 
-- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UIGridLayoutSection *section = self.sections[(NSUInteger)indexPath.section];
+- (CGRect)frameForItemAtIndexPath:(NSIndexPath*)indexPath {
+    UIGridLayoutSection* section = self.sections[(NSUInteger)indexPath.section];
     CGRect itemFrame;
     if (section.fixedItemSize) {
-        itemFrame = (CGRect){.size=section.itemSize};
-    }else {
+        itemFrame = (CGRect){.size = section.itemSize };
+    } else {
         itemFrame = [section.items[(NSUInteger)indexPath.item] itemFrame];
     }
     return itemFrame;
 }
 
 - (id)addSection {
-    UIGridLayoutSection *section = [UIGridLayoutSection new];
+    UIGridLayoutSection* section = [UIGridLayoutSection new];
     section.rowAlignmentOptions = self.rowAlignmentOptions;
     section.layoutInfo = self;
     [_sections addObject:section];

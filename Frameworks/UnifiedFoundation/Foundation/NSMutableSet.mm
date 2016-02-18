@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSMutableArray.h"
 
@@ -132,6 +133,14 @@ NSUInteger NSSetTableCount(NSSet* set);
 */
 - (void)removeObject:(id)object {
     NSSetTableRemoveObject(self, object);
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)filterUsingPredicate:(NSPredicate*)predicate {
+    UNIMPLEMENTED();
 }
 
 @end

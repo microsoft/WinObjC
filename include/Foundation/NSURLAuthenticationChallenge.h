@@ -1,36 +1,62 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSError, NSURLResponse, NSURLProtectionSpace, NSURLCredential, NSURLAuthenticationChallenge;
+@protocol NSURLAuthenticationChallengeSender;
+@class NSURLProtectionSpace;
+@class NSURLCredential;
+@class NSURLResponse;
+@class NSError;
 
-@protocol NSURLAuthenticationChallengeSender<NSObject>
--(void)continueWithoutCredentialForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)useCredential:(NSURLCredential *)credential forAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)cancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)rejectProtectionSpaceAndContinueWithChallenge:(NSURLAuthenticationChallenge*)challenge;
+enum {
+    NSURLSessionAuthChallengeUseCredential = 0,
+    NSURLSessionAuthChallengePerformDefaultHandling = 1,
+    NSURLSessionAuthChallengeCancelAuthenticationChallenge = 2,
+    NSURLSessionAuthChallengeRejectProtectionSpace = 3,
+};
+
+typedef NSInteger NSURLSessionAuthChallengeDisposition;
+
+FOUNDATION_EXPORT_CLASS
+@interface NSURLAuthenticationChallenge : NSObject <NSSecureCoding>
+- (instancetype)initWithAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge
+                                         sender:(id<NSURLAuthenticationChallengeSender>)sender STUB_METHOD;
+- (instancetype)initWithProtectionSpace:(NSURLProtectionSpace*)space
+                     proposedCredential:(NSURLCredential*)credential
+                   previousFailureCount:(NSInteger)count
+                        failureResponse:(NSURLResponse*)response
+                                  error:(NSError*)error
+                                 sender:(id<NSURLAuthenticationChallengeSender>)sender STUB_METHOD;
+@property (readonly, copy) NSError* error STUB_PROPERTY;
+@property (readonly, copy) NSURLResponse* failureResponse STUB_PROPERTY;
+@property (readonly) NSInteger previousFailureCount STUB_PROPERTY;
+@property (readonly, copy) NSURLCredential* proposedCredential STUB_PROPERTY;
+@property (readonly, copy) NSURLProtectionSpace* protectionSpace STUB_PROPERTY;
+@property (readonly, retain) id<NSURLAuthenticationChallengeSender> sender STUB_PROPERTY;
 @end
 
-@interface NSURLAuthenticationChallenge : NSObject {
-    id _protectionSpace;
-    id _sender;
-}
+@protocol NSURLAuthenticationChallengeSender <NSObject>
+- (void)cancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)continueWithoutCredentialForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)useCredential:(NSURLCredential*)credential forAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
 
--initWithProtectionSpace:(NSURLProtectionSpace *)space proposedCredential:(NSURLCredential *)credential previousFailureCount:(int)failureCount failureResponse:(NSURLResponse *)failureResponse error:(NSError *)error sender:(id <NSURLAuthenticationChallengeSender>)sender;
-
--initWithAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge sender:(id <NSURLAuthenticationChallengeSender>)sender;
-
--(NSURLProtectionSpace *)protectionSpace;
--(NSURLCredential *)proposedCredential;
--(NSUInteger)previousFailureCount;
--(NSURLResponse *)failureResponse;
--(NSError *)error;
--(id<NSURLAuthenticationChallengeSender>)sender;
-
+@optional
+- (void)performDefaultHandlingForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)rejectProtectionSpaceAndContinueWithChallenge:(NSURLAuthenticationChallenge*)challenge;
 @end

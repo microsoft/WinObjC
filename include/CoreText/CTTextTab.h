@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,16 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CTTEXTTAB_H_
-#define _CTTEXTTAB_H_
-
-#import <StarboardExport.h>
+#import <CoreText/CoreTextExport.h>
 #import <CoreText/CTParagraphStyle.h>
+
 #import <CoreFoundation/CFDictionary.h>
+#import <CoreFoundation/CFType.h>
+#import <CoreFoundation/CFString.h>
 
 typedef const struct __CTTextTab* CTTextTabRef;
 
-SB_EXPORT CTTextTabRef CTTextTabCreate(CTTextAlignment alignment, double location, CFDictionaryRef options);
+CORETEXT_EXPORT const CFStringRef kCTTabColumnTerminatorsAttributeName;
 
-#endif /* _CTTEXTTAB_H_ */
+CORETEXT_EXPORT CTTextTabRef CTTextTabCreate(CTTextAlignment alignment, double location, CFDictionaryRef options) STUB_METHOD;
+CORETEXT_EXPORT CTTextAlignment CTTextTabGetAlignment(CTTextTabRef tab) STUB_METHOD;
+CORETEXT_EXPORT double CTTextTabGetLocation(CTTextTabRef tab) STUB_METHOD;
+CORETEXT_EXPORT CFDictionaryRef CTTextTabGetOptions(CTTextTabRef tab) STUB_METHOD;
+CORETEXT_EXPORT CFTypeID CTTextTabGetTypeID() STUB_METHOD;

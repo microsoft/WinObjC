@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,8 +28,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIINTERFACE_H_
-#define _UIINTERFACE_H_
+#pragma once
 
 #import "UIColor.h"
 #import "UIFont.h"
@@ -41,12 +41,12 @@ typedef enum {
 } UIBarStyle;
 
 @interface UIColor (UIColorSystemColors)
-+ (UIColor *)groupTableViewBackgroundColor;
-+ (UIColor *)underPageBackgroundColor;
-+ (UIColor *)scrollViewTexturedBackgroundColor;
-+ (UIColor *)windowsControlFocusedColor;
-+ (UIColor *)windowsControlDefaultBackgroundColor;
-+ (UIColor *)windowsTableViewSelectionBackgroundColor;
++ (UIColor*)groupTableViewBackgroundColor;
++ (UIColor*)underPageBackgroundColor;
++ (UIColor*)scrollViewTexturedBackgroundColor;
++ (UIColor*)windowsControlFocusedColor;
++ (UIColor*)windowsControlDefaultBackgroundColor;
++ (UIColor*)windowsTableViewSelectionBackgroundColor;
 @end
 
 @interface UIFont (UIFontSystemFonts)
@@ -55,5 +55,3 @@ typedef enum {
 + (CGFloat)labelFontSize;
 + (CGFloat)buttonFontSize;
 @end
-
-#endif /* _UIINTERFACE_H_ */
