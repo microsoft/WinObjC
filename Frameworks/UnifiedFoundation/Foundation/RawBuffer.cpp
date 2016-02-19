@@ -13,7 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
+
 #include <windows.h>
 #include "ErrorHandling.h"
 #include "RawBuffer.h"
