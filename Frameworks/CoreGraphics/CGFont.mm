@@ -391,11 +391,11 @@ CFDataRef CGFontCopyTableForTag(CGFontRef font, uint32_t tag) {
     DWORD numBytes = 0;
     err = FT_Load_Sfnt_Table(face, tag, 0, NULL, &numBytes);
 
-    char* pData = (char*)EbrMalloc(numBytes);
+    char* pData = (char*)IwMalloc(numBytes);
     err = FT_Load_Sfnt_Table(face, tag, 0, (FT_Byte*)pData, &numBytes);
 
     id ret = [[NSData alloc] initWithBytes:pData length:numBytes];
-    EbrFree(pData);
+    IwFree(pData);
 
     _CGFontUnlock();
 

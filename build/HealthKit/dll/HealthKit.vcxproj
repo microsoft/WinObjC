@@ -25,6 +25,9 @@
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\HealthKit\lib\HealthKitLib.vcxproj">
       <Project>{AFD46DD2-1CE7-4572-B931-E39334846AD6}</Project>
     </ProjectReference>

@@ -305,7 +305,7 @@ static id deepCopyValue(id obj) {
     if ([obj isKindOfClass:[NSArray class]]) {
         int count = [obj count];
         int i = 0;
-        id* objs = (id*)EbrMalloc(count * sizeof(id));
+        id* objs = (id*)IwMalloc(count * sizeof(id));
         for (id curObj in obj) {
             objs[i] = deepCopyValue(curObj);
             i++;
@@ -323,14 +323,14 @@ static id deepCopyValue(id obj) {
             [objs[i] release];
         }
 
-        EbrFree(objs);
+        IwFree(objs);
 
         return ret;
     } else if ([obj isKindOfClass:[NSDictionary class]]) {
         int count = [obj count];
         int i = 0;
-        id* objs = (id*)EbrMalloc(count * sizeof(id));
-        id* keys = (id*)EbrMalloc(count * sizeof(id));
+        id* objs = (id*)IwMalloc(count * sizeof(id));
+        id* keys = (id*)IwMalloc(count * sizeof(id));
 
         for (id curObj in obj) {
             keys[i] = curObj;
@@ -349,8 +349,8 @@ static id deepCopyValue(id obj) {
             [objs[i] release];
         }
 
-        EbrFree(objs);
-        EbrFree(keys);
+        IwFree(objs);
+        IwFree(keys);
 
         return ret;
     }

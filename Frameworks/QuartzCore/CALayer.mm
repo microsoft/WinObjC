@@ -98,14 +98,14 @@ public:
 
     ~NodeList() {
         if (items) {
-            EbrFree(items);
+            IwFree(items);
         }
     }
 
     inline void AddNode(T* item) {
         if (count + 1 > max) {
             max += 64;
-            items = (T**)EbrRealloc(items, max * sizeof(T*));
+            items = (T**)IwRealloc(items, max * sizeof(T*));
         }
         items[count++] = item;
     }
@@ -1571,12 +1571,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)removeAllAnimations {
     if (priv->_animations) {
         int count = CFDictionaryGetCount((CFDictionaryRef)priv->_animations);
-        id* vals = (id*)malloc(sizeof(id) * count);
+        id* vals = (id*)IwMalloc(sizeof(id) * count);
         CFDictionaryGetKeysAndValues((CFDictionaryRef)priv->_animations, NULL, (const void**)vals);
         for (int i = 0; i < count; i++) {
             [vals[i] _removeAnimationsFromLayer];
         }
-        free(vals);
+        IwFree(vals);
 
         [priv->_animations removeAllObjects];
     }

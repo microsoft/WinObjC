@@ -253,7 +253,7 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
     }
 
     int numGlyphs = curRun->_characters.size();
-    WORD* glyphs = (WORD*)malloc(sizeof(WORD) * numGlyphs);
+    WORD* glyphs = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
 
     id font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
     CGFontGetGlyphsForUnichars(font, curRun->_characters.data(), glyphs, numGlyphs);
@@ -269,7 +269,7 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 
     CGPoint curTextPos = CGContextGetTextPosition(ctx);
     CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, numGlyphs);
-    free(glyphs);
+    IwFree(glyphs);
 }
 
 /**

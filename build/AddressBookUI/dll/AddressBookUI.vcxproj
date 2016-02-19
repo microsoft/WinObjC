@@ -28,6 +28,9 @@
     <ProjectReference Include="..\..\AddressBook\dll\AddressBook.vcxproj">
       <Project>{9E8B1145-A308-4091-A1C5-D1FF01367893}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\AddressBookUI\lib\AddressBookUILib.vcxproj">
       <Project>{A4875499-9854-42AA-8B61-35BAD1084B6E}</Project>
     </ProjectReference>

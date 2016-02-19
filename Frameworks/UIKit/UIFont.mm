@@ -161,7 +161,7 @@ ret->height += ascenderDelta;
 
     FT_Error err;
 
-    char* pCopy = (char*)EbrMalloc(fontLen);
+    char* pCopy = (char*)IwMalloc(fontLen);
     memcpy(pCopy, pFont, fontLen);
 
     _CGFontLock();

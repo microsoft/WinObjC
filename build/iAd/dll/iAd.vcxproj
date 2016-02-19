@@ -34,6 +34,9 @@
     <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\iAdLib.vcxproj">
       <Project>{8a77599c-fddc-4688-8b8c-58289044dd13}</Project>
     </ProjectReference>

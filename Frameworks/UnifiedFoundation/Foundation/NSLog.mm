@@ -26,7 +26,7 @@
 void NSLogv(NSString* fmt, va_list list) {
     auto str = [[NSString alloc] initWithFormat:fmt arguments:list];
     INT len = [str length];
-    LPWSTR terminatedBuf = (LPWSTR)calloc(len + 1, sizeof(WCHAR));
+    LPWSTR terminatedBuf = (LPWSTR)IwCalloc(len + 1, sizeof(WCHAR));
     memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
 
     // This traces to ETW in debug and release modes.
@@ -39,7 +39,7 @@ void NSLogv(NSString* fmt, va_list list) {
     OutputDebugStringW(L"\n");
 #endif
 
-    free(terminatedBuf);
+    IwFree(terminatedBuf);
     printf("%s\n", [str UTF8String]);
     [str release];
 }

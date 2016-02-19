@@ -251,7 +251,7 @@ CGBlendMode CGContextCairo::CGContextGetBlendMode() {
 }
 
 void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)EbrMalloc(length * sizeof(WORD));
+    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
     DWORD i;
 
     _isDirty = true;
@@ -263,7 +263,7 @@ void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str,
     CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
     CGContextShowGlyphsAtPoint(x, y, glyphs, length);
 
-    EbrFree(glyphs);
+    IwFree(glyphs);
 }
 
 void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
@@ -1368,7 +1368,7 @@ void CGContextCairo::CGContextSetInterpolationQuality(CGInterpolationQuality qua
 void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
     ObtainLock();
 
-    double* dLengths = (double*)EbrMalloc(count * sizeof(double));
+    double* dLengths = (double*)IwMalloc(count * sizeof(double));
     for (unsigned i = 0; i < count; i++)
         dLengths[i] = lengths[i];
 
@@ -1376,7 +1376,7 @@ void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD cou
     cairo_set_dash(_drawContext, dLengths, count, phase);
     UNLOCK_CAIRO();
 
-    EbrFree(dLengths);
+    IwFree(dLengths);
 }
 
 void CGContextCairo::CGContextSetMiterLimit(float limit) {
@@ -1541,7 +1541,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
 
     CGSize ret = { 0.0f, 0.0f };
 
-    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)EbrMalloc(sizeof(cairo_glyph_t) * length);
+    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)IwMalloc(sizeof(cairo_glyph_t) * length);
 
     _CGFontLock();
 
@@ -1682,7 +1682,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
     cairo_append_path(_drawContext, curPath);
     cairo_path_destroy(curPath);
 
-    EbrFree(cairoGlyphs);
+    IwFree(cairoGlyphs);
     _CGFontUnlock();
     UNLOCK_CAIRO();
 

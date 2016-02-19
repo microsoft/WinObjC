@@ -58,12 +58,12 @@ public:
 
     ~Item() {
         if (data) {
-            free(data);
+            IwFree(data);
         }
     }
 
     void setItemData(void* pData, int len) {
-        data = (void*)malloc(len);
+        data = (void*)IwMalloc(len);
         memcpy(data, pData, len);
         dataLen = len;
     }
@@ -123,7 +123,7 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
         id* arrayItems;
         int numArrayItems = 0;
 
-        arrayItems = (id*)malloc(pObj->itemCount * sizeof(id));
+        arrayItems = (id*)IwMalloc(pObj->itemCount * sizeof(id));
 
         pObj->cachedId = (id)(void*)0xBAADF00D;
 
@@ -147,14 +147,14 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
         } else {
             pObj->cachedId = [NSMutableArray arrayWithObjects:arrayItems count:numArrayItems];
         }
-        free(arrayItems);
+        IwFree(arrayItems);
     } else if (strcmp(pObj->className, "NSDictionary") == 0 || strcmp(pObj->className, "NSMutableDictionary") == 0) {
         id* keys;
         id* values;
         int numKeys = 0, numValues = 0;
 
-        keys = (id*)malloc(pObj->itemCount * sizeof(id));
-        values = (id*)malloc(pObj->itemCount * sizeof(id));
+        keys = (id*)IwMalloc(pObj->itemCount * sizeof(id));
+        values = (id*)IwMalloc(pObj->itemCount * sizeof(id));
 
         pObj->cachedId = (id)(void*)0xBAADF00D;
 
@@ -175,8 +175,8 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
         } else {
             pObj->cachedId = [NSMutableDictionary dictionaryWithObjects:values forKeys:keys count:numKeys];
         }
-        free(values);
-        free(keys);
+        IwFree(values);
+        IwFree(keys);
     } else if (strcmp(pObj->className, "NSString") == 0 || strcmp(pObj->className, "NSMutableString") == 0 ||
                strcmp(pObj->className, "NSLocalizableString") == 0) {
         pushObject(self, pObj);
@@ -286,8 +286,8 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
     char* _curOffset;
 
     //  Read classes
-    _classNames = (char**)EbrCalloc(_fixed[8], sizeof(char*));
-    _classTypes = (id*)EbrCalloc(_fixed[8], sizeof(id));
+    _classNames = (char**)IwCalloc(_fixed[8], sizeof(char*));
+    _classTypes = (id*)IwCalloc(_fixed[8], sizeof(id));
     _curOffset = &_nibData[_fixed[9]];
 
     for (unsigned int i = 0; i < _fixed[8]; i++) {
@@ -306,7 +306,7 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
             _curOffset += 4; //  ????
         }
 
-        _classNames[i] = (char*)malloc(len + 1);
+        _classNames[i] = (char*)IwMalloc(len + 1);
         memcpy(_classNames[i], _curOffset, len);
 
         _classNames[i][len] = '\0';
@@ -318,7 +318,7 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
     }
 
     //  Read keys
-    _keyNames = (char**)malloc(_fixed[4] * sizeof(char*));
+    _keyNames = (char**)IwMalloc(_fixed[4] * sizeof(char*));
     _curOffset = &_nibData[_fixed[5]];
 
     for (unsigned int i = 0; i < _fixed[4]; i++) {
@@ -329,14 +329,14 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 
         len -= 0x80;
 
-        _keyNames[i] = (char*)malloc(len + 1);
+        _keyNames[i] = (char*)IwMalloc(len + 1);
         memcpy(_keyNames[i], _curOffset, len);
         _keyNames[i][len] = 0;
         _curOffset += len;
     }
 
     //  Read items
-    _objectItems = (Item**)malloc(_fixed[6] * sizeof(Item*));
+    _objectItems = (Item**)IwMalloc(_fixed[6] * sizeof(Item*));
     _curOffset = &_nibData[_fixed[7]];
 
     for (unsigned int i = 0; i < _fixed[6]; i++) {
@@ -440,7 +440,7 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
     }
 
     //  Read objects
-    _objects = (Object**)malloc(_fixed[2] * sizeof(Object*));
+    _objects = (Object**)IwMalloc(_fixed[2] * sizeof(Object*));
     _curOffset = &_nibData[_fixed[3]];
 
     for (unsigned int i = 0; i < _fixed[2]; i++) {
@@ -663,30 +663,30 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
 - (void)dealloc {
     if (_classNames) {
         for (unsigned int i = 0; i < _fixed[8]; i++) {
-            free(_classNames[i]);
+            IwFree(_classNames[i]);
         }
-        free(_classNames);
+        IwFree(_classNames);
     }
 
     if (_keyNames) {
         for (unsigned int i = 0; i < _fixed[4]; i++) {
-            free(_keyNames[i]);
+            IwFree(_keyNames[i]);
         }
-        free(_keyNames);
+        IwFree(_keyNames);
     }
 
     if (_objectItems) {
         for (unsigned int i = 0; i < _fixed[6]; i++) {
             delete _objectItems[i];
         }
-        free(_objectItems);
+        IwFree(_objectItems);
     }
 
     if (_objects) {
         for (unsigned int i = 0; i < _fixed[2]; i++) {
             delete _objects[i];
         }
-        free(_objects);
+        IwFree(_objects);
     }
 
     _bundle = nil;

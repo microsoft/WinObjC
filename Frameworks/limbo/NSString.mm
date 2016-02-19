@@ -56,7 +56,7 @@ _ConstructedStringData::_ConstructedStringData() {
 
 _ConstructedStringData::~_ConstructedStringData() {
     if (utf8String) {
-        EbrFree(utf8String);
+        IwFree(utf8String);
     }
 }
 
@@ -263,11 +263,11 @@ UnicodeString EbrUnicodePrintf(NSString* format, va_list list) {
 
     int len = formatPrintfU(tempBuf, ((sizeof(tempBuf) / sizeof(WORD)) - 1) | 0x40000000, (WORD*)fmt, list);
     if (len >= (sizeof(tempBuf) / sizeof(WORD)) - 1) {
-        strBuf = (WORD*)EbrMalloc((len + 1) * 2);
+        strBuf = (WORD*)IwMalloc((len + 1) * 2);
         formatPrintfU(strBuf, len, (WORD*)fmt, pReaderCopy);
 
         UnicodeString str((UChar*)strBuf, len);
-        EbrFree(strBuf);
+        IwFree(strBuf);
 
         return str;
     } else {
@@ -546,7 +546,7 @@ typedef NSUInteger NSStringCompareOptions;
         }
 
         case NSUTF16BigEndianStringEncoding: {
-            WORD* tmp = (WORD*)EbrMalloc(length);
+            WORD* tmp = (WORD*)IwMalloc(length);
             WORD* curChar = tmp;
             memcpy(curChar, bytes, length);
             int left = length / 2;
@@ -557,12 +557,12 @@ typedef NSUInteger NSStringCompareOptions;
                 left--;
             }
             uniStr = UnicodeString((const UChar*)tmp, length / 2);
-            EbrFree(tmp);
+            IwFree(tmp);
             break;
         }
 
         case NSUTF32BigEndianStringEncoding: {
-            DWORD* tmp = (DWORD*)EbrMalloc(length);
+            DWORD* tmp = (DWORD*)IwMalloc(length);
             DWORD* curChar = tmp;
             memcpy(curChar, bytes, length);
             int left = length / 4;
@@ -574,7 +574,7 @@ typedef NSUInteger NSStringCompareOptions;
                 left--;
             }
             uniStr = UnicodeString::fromUTF32((const UChar32*)tmp, length / 4);
-            EbrFree(tmp);
+            IwFree(tmp);
             break;
         }
 
@@ -636,7 +636,7 @@ typedef NSUInteger NSStringCompareOptions;
         }
 
         case NSUTF16BigEndianStringEncoding: {
-            WORD* pCopy = (WORD*)EbrMalloc(length);
+            WORD* pCopy = (WORD*)IwMalloc(length);
             memcpy(pCopy, bytes, length);
 
             for (DWORD i = 0; i < length / 2; i++) {
@@ -645,7 +645,7 @@ typedef NSUInteger NSStringCompareOptions;
 
             UnicodeString str((UChar*)pCopy, length / 2);
             setToUnicode(self, str);
-            EbrFree(pCopy);
+            IwFree(pCopy);
             break;
         }
 
@@ -784,7 +784,7 @@ typedef NSUInteger NSStringCompareOptions;
     EbrFseek(fpIn, 0, SEEK_END);
     int len = EbrFtell(fpIn);
     EbrFseek(fpIn, cur, SEEK_SET);
-    char* bytes = (char*)EbrMalloc(len);
+    char* bytes = (char*)IwMalloc(len);
 
     len = EbrFread(bytes, 1, len, fpIn);
     EbrFclose(fpIn);
@@ -792,7 +792,7 @@ typedef NSUInteger NSStringCompareOptions;
     NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:len freeWhenDone:FALSE];
     NSString* ret = [self initWithData:data encoding:encoding];
     [data release];
-    EbrFree(bytes);
+    IwFree(bytes);
 
     return ret;
 }
@@ -896,7 +896,7 @@ typedef NSUInteger NSStringCompareOptions;
     EbrFseek(fpIn, 0, SEEK_END);
     int len = EbrFtell(fpIn);
     EbrFseek(fpIn, cur, SEEK_SET);
-    char* bytes = (char*)EbrMalloc(len);
+    char* bytes = (char*)IwMalloc(len);
 
     len = EbrFread(bytes, 1, len, fpIn);
     EbrFclose(fpIn);
@@ -904,7 +904,7 @@ typedef NSUInteger NSStringCompareOptions;
     NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:len freeWhenDone:FALSE];
     NSString* ret = [self initWithData:data encoding:encoding];
     [data release];
-    EbrFree(bytes);
+    IwFree(bytes);
 
     return ret;
 }
@@ -1045,7 +1045,7 @@ typedef NSUInteger NSStringCompareOptions;
             if ((object_getClass(self) == [NSString class] || object_getClass(self) == [CFConstantString class]) &&
                 strType == NSConstructedString_Unicode) {
                 if (u->ConstructedString.constructedStr->utf8String == NULL) {
-                    char* pData = (char*)EbrMalloc(numBytes + 1);
+                    char* pData = (char*)IwMalloc(numBytes + 1);
                     [self getBytes:pData
                              maxLength:numBytes
                             usedLength:NULL
@@ -2048,7 +2048,7 @@ typedef NSUInteger NSStringCompareOptions;
     }
 
     curPos = 0;
-    id* objects = (id*)malloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
     int objOut = 0;
 
     for (;;) {
@@ -2087,7 +2087,7 @@ typedef NSUInteger NSStringCompareOptions;
     NSArray* ret = [NSArray alloc];
     [ret initWithObjectsTakeOwnership:objects count:objOut];
 
-    free(objects);
+    IwFree(objects);
 
     return [ret autorelease];
 }
@@ -2416,7 +2416,7 @@ typedef NSUInteger NSStringCompareOptions;
 
     [self getBytes:NULL maxLength:0x7FFFFFF usedLength:&numBytes encoding:encoding options:0 range:NSMakeRange(0, len) remainingRange:NULL];
 
-    char* pData = (char*)EbrMalloc(numBytes);
+    char* pData = (char*)IwMalloc(numBytes);
     [self getBytes:pData maxLength:numBytes usedLength:NULL encoding:encoding options:0 range:NSMakeRange(0, len) remainingRange:NULL];
 
     NSData* ret = [NSData dataWithBytesNoCopy:pData length:numBytes freeWhenDone:TRUE];
@@ -2522,7 +2522,7 @@ static unichar PickWord(unichar c) {
 
     UStringHolder s1(self);
     unsigned int index, c, strSize = 0, strMax = 2048;
-    char* strBuf = (char*)EbrMalloc(strMax);
+    char* strBuf = (char*)IwMalloc(strMax);
 
     enum {
         STATE_WHITESPACE,
@@ -2659,7 +2659,7 @@ static unichar PickWord(unichar c) {
                 } else {
                     if (strSize >= strMax) {
                         strMax *= 2;
-                        strBuf = (char*)EbrRealloc(strBuf, strMax);
+                        strBuf = (char*)IwRealloc(strBuf, strMax);
                     }
                     if (c == '\\') {
                         state = STATE_STRING_SLASH;
@@ -2743,7 +2743,7 @@ static unichar PickWord(unichar c) {
         }
     }
 
-    EbrFree(strBuf);
+    IwFree(strBuf);
 
     if (state != STATE_WHITESPACE) {
         return error(ret, NULL, "unexpected EOF\n");
@@ -2831,8 +2831,8 @@ return ret;
 */
 - (NSString*)stringByAddingPercentEscapesUsingEncoding:(DWORD)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
-    unichar* unicode = (unichar*)EbrMalloc(length * 2);
-    unichar* result = (unichar*)EbrMalloc(length * 3 * 2);
+    unichar* unicode = (unichar*)IwMalloc(length * 2);
+    unichar* result = (unichar*)IwMalloc(length * 3 * 2);
     const char* hex = "0123456789ABCDEF";
 
     [self getCharacters:unicode];
@@ -2851,14 +2851,14 @@ return ret;
     }
 
     if (length == resultLength) {
-        EbrFree(unicode);
-        EbrFree(result);
+        IwFree(unicode);
+        IwFree(result);
         return self;
     }
 
     NSString* ret = [NSString stringWithCharacters:result length:resultLength];
-    EbrFree(unicode);
-    EbrFree(result);
+    IwFree(unicode);
+    IwFree(result);
 
     return ret;
 }
@@ -3180,7 +3180,7 @@ const int s_oneByte = 16;
     switch (strType) {
         case NSConstructedString_NoOwn:
             if (u->NoOwnString._freeWhenDone) {
-                EbrFree(u->NoOwnString._address);
+                IwFree(u->NoOwnString._address);
             }
             break;
 

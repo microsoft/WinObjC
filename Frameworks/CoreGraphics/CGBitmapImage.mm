@@ -48,7 +48,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
     switch (fmt) {
         case _Color565:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 2);
+                _imageData = (void*)IwCalloc(_width * height, 2);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 2;
@@ -81,7 +81,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
         case _ColorRGB32:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 4);
+                _imageData = (void*)IwCalloc(_width * height, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -112,7 +112,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
         case _ColorRGB32HE:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 4);
+                _imageData = (void*)IwCalloc(_width * height, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -146,7 +146,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 //_internalWidth = 1 << log2Ceil(width);
                 //_internalHeight = 1 << log2Ceil(height);
 
-                _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 4);
+                _imageData = (void*)IwCalloc(_internalWidth * _internalHeight, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -180,7 +180,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 //_internalWidth = 1 << log2Ceil(width);
                 //_internalHeight = 1 << log2Ceil(height);
 
-                _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 4);
+                _imageData = (void*)IwCalloc(_internalWidth * _internalHeight, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -218,7 +218,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 _bytesPerPixel = 3;
                 _bytesPerRow = _internalWidth * _bytesPerPixel;
 
-                _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 3);
+                _imageData = (void*)IwCalloc(_internalWidth * _internalHeight, 3);
                 _freeWhenDone = TRUE;
 
                 //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
@@ -252,7 +252,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
         case _ColorGrayscale:
             EbrDebugLog("*** Warning: Grayscale not properly implemented ***\n");
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 1);
+                _imageData = (void*)IwCalloc(_width * height, 1);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 1;
@@ -283,7 +283,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
         case _ColorA8:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 1);
+                _imageData = (void*)IwCalloc(_width * height, 1);
                 _freeWhenDone = TRUE;
             }
             _bytesPerPixel = 1;
@@ -316,7 +316,7 @@ CGImageData::~CGImageData() {
     assert(_refCount == 0);
     if (_imageData) {
         if (_freeWhenDone)
-            EbrFree(_imageData);
+            IwFree(_imageData);
         cairo_surface_destroy(_surface);
     }
 }

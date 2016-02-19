@@ -109,7 +109,7 @@
 
 - (void)dealloc {
     if (_ranges) {
-        EbrFree(_ranges);
+        IwFree(_ranges);
     }
     [super dealloc];
 }

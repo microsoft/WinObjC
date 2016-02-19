@@ -433,7 +433,7 @@ void CGJPEGImageBacking::Decode(void* imgDest, int stride) {
         BYTE* imageData = (BYTE*)imgDest;
 
 #ifndef ANDROID
-        BYTE* scanline = (BYTE*)EbrCalloc(row_stride, 1);
+        BYTE* scanline = (BYTE*)IwCalloc(row_stride, 1);
 #endif
 
         /* Step 6: while (scan lines remain to be read) */
@@ -498,7 +498,7 @@ void CGJPEGImageBacking::Decode(void* imgDest, int stride) {
         }
 
 #ifndef ANDROID
-        EbrFree(scanline);
+        IwFree(scanline);
 #endif
 
         /* Step 7: Finish decompression */
@@ -550,7 +550,7 @@ bool CGJPEGImageBacking::DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, C
 }
 
 CGJPEGImageBacking::CGJPEGImageBacking(const char* filename) {
-    _fileName = _strdup(filename);
+    _fileName = IwStrDup(filename);
     Decode(NULL, 0);
 }
 
@@ -563,5 +563,5 @@ CGJPEGImageBacking::CGJPEGImageBacking(id data) {
 CGJPEGImageBacking::~CGJPEGImageBacking() {
     _data = nil;
     if (_fileName)
-        free(_fileName);
+        IwFree(_fileName);
 }

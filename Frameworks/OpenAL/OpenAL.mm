@@ -100,7 +100,7 @@ public:
 
     ~ALBuffer() {
         if (_data) {
-            free(_data);
+            IwFree(_data);
             _data = NULL;
         }
     }
@@ -169,7 +169,7 @@ public:
 
     void BufferData(ALenum format, const ALvoid* data, ALsizei size, ALsizei freq) {
         if (_data)
-            free(_data);
+            IwFree(_data);
         if (!data) {
             _bits = 16;
             _channels = 1;
@@ -205,7 +205,7 @@ public:
                 assert(0);
                 break;
         }
-        _data = (void*)malloc(size);
+        _data = (void*)IwMalloc(size);
         memcpy(_data, data, size);
         _dataLen = size;
         _freq = freq;
@@ -737,7 +737,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
 
         UINT32 len = 0;
         PCWSTR deviceNameRaw = WindowsGetStringRawBuffer(defaultRenderDevice, &len);
-        PWSTR deviceName = (PWSTR)calloc(len + 1, 2);
+        PWSTR deviceName = (PWSTR)IwCalloc(len + 1, 2);
         memcpy(deviceName, deviceNameRaw, len * 2);
 
         activateResult = ActivateAudioInterfaceAsync(deviceName,
@@ -745,7 +745,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
                                                      NULL,
                                                      (IActivateAudioInterfaceCompletionHandler*)&openCallback,
                                                      &complete);
-        free(deviceName);
+        IwFree(deviceName);
         WindowsDeleteString(defaultRenderDevice);
     };
     NSArray* modes = [[NSArray alloc] initWithObject:static_cast<id>(kCFRunLoopDefaultMode)];
@@ -852,7 +852,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
             // Fallback when we don't have an audio device lock
             framesToFill = 2048;
             if (!sampleBacking)
-                sampleBacking = (BYTE*)realloc(sampleBacking, framesToFill * outputFmt.nBlockAlign);
+                sampleBacking = (BYTE*)IwRealloc(sampleBacking, framesToFill * outputFmt.nBlockAlign);
             sampleBuf = sampleBacking;
         }
 

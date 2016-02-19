@@ -130,7 +130,7 @@ CGBlendMode CGContextImpl::CGContextGetBlendMode() {
 }
 
 void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)EbrMalloc(length * sizeof(WORD));
+    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
     DWORD i;
 
     for (i = 0; i < length; i++) {
@@ -140,7 +140,7 @@ void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, 
     CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
     CGContextShowGlyphsAtPoint(x, y, glyphs, length);
 
-    EbrFree(glyphs);
+    IwFree(glyphs);
 }
 
 void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {

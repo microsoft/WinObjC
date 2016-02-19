@@ -108,11 +108,11 @@ public:
 
 static NSString* NSStringFromSymbol(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
     uint32_t len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, NULL, 0, &error);
-    UChar* strValue = (UChar*)calloc(len + 1, sizeof(UChar));
+    UChar* strValue = (UChar*)IwCalloc(len + 1, sizeof(UChar));
     error = U_ZERO_ERROR;
     len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, strValue, len + 1, &error);
     NSString* ret = [NSString stringWithCharacters:(unichar*)strValue length:len];
-    free(strValue);
+    IwFree(strValue);
 
     return ret;
 }

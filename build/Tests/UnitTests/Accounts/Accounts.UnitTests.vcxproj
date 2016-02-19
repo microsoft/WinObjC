@@ -31,6 +31,9 @@
     <ProjectReference Include="..\..\..\Accounts\lib\AccountsLib.vcxproj">
       <Project>{722B449C-3656-4EF6-B3A7-D151FA54EB2E}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />

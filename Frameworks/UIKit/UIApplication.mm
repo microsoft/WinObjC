@@ -1944,13 +1944,13 @@ static void evaluateKeyboard(id self) {
 
 - (void)_newEditText:(NSString*)text {
     int len = [text length];
-    WORD* chars = (WORD*)EbrCalloc(2, len);
+    WORD* chars = (WORD*)IwCalloc(2, len);
     [text getCharacters:chars range:NSMakeRange(0, len)];
 
     for (int i = 0; i < len; i++) {
         [UIResponder keyPressed:chars[i]];
     }
-    EbrFree(chars);
+    IwFree(chars);
 }
 
 - (void)_editTextDelete:(NSNumber*)numBefore {

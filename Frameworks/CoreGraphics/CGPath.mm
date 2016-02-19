@@ -57,7 +57,7 @@ public:
 @implementation CGPath : NSObject
 - (void)dealloc {
     if (_components) {
-        EbrFree(_components);
+        IwFree(_components);
     }
 
     [super dealloc];
@@ -231,7 +231,7 @@ public:
     CGPath* ret = [CGPath alloc];
     ret->_max = _max;
     ret->_count = _count;
-    ret->_components = (pathComponent*)EbrRealloc(ret->_components, ret->_max * sizeof(pathComponent));
+    ret->_components = (pathComponent*)IwRealloc(ret->_components, ret->_max * sizeof(pathComponent));
     memcpy(ret->_components, _components, _count * sizeof(pathComponent));
 
     return ret;
@@ -281,7 +281,7 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, flo
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentLineTo;
@@ -304,7 +304,7 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, floa
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentArcToPoint;
@@ -335,7 +335,7 @@ void CGPathAddArc(CGMutablePathRef path,
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentArcAngle;
@@ -369,7 +369,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentMove;
@@ -406,7 +406,7 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rec
 
     if ( pathObj->_count + 1 >= pathObj->_max ) {
     pathObj->_max += 32;
-    pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+    pathObj->_components = (pathComponent *) IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentRectangle;
@@ -432,7 +432,7 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
 
     if (pathObj->_count + copyObj->_count >= pathObj->_max) {
         pathObj->_max += copyObj->_count;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     for (unsigned i = 0; i < copyObj->_count; i++) {
@@ -467,7 +467,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentEllipseInRect;
@@ -487,7 +487,7 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentClose;
@@ -546,7 +546,7 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     int count = pathObj->_count;
@@ -572,7 +572,7 @@ void CGPathAddCurveToPoint(
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     int count = pathObj->_count;

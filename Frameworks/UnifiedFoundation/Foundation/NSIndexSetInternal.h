@@ -58,7 +58,7 @@ static inline NSRange raItemAtIndex(NSIndexSet* set, unsigned i) {
 static inline void raAddItem(NSIndexSet* set, NSRange r) {
     if (set->_length + 1 >= set->_maxLength) {
         set->_maxLength += 64;
-        set->_ranges = (NSRange*)EbrRealloc(set->_ranges, set->_maxLength * sizeof(NSRange));
+        set->_ranges = (NSRange*)IwRealloc(set->_ranges, set->_maxLength * sizeof(NSRange));
     }
 
     set->_ranges[set->_length++] = r;
@@ -71,7 +71,7 @@ static inline void raInsertItem(NSIndexSet* set, NSRange r, NSUInteger idx) {
 
     if (idx + 1 >= set->_maxLength) {
         set->_maxLength += 64;
-        set->_ranges = (NSRange*)EbrRealloc(set->_ranges, set->_maxLength * sizeof(NSRange));
+        set->_ranges = (NSRange*)IwRealloc(set->_ranges, set->_maxLength * sizeof(NSRange));
     }
 
     //  Shift ranges up

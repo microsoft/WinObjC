@@ -31,6 +31,9 @@
     <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\QuartzCore\lib\QuartzCoreLib.vcxproj">
       <Project>{A7C90816-B6F1-4E80-B1CC-C485DA18D770}</Project>
     </ProjectReference>

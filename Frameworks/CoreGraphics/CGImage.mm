@@ -249,7 +249,7 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
 
     {
         TimingFunction f("CGImageCreateWithMask");
-        DWORD* newImageData = (DWORD*)EbrMalloc(image->Backing()->Width() * image->Backing()->Height() * 4);
+        DWORD* newImageData = (DWORD*)IwMalloc(image->Backing()->Width() * image->Backing()->Height() * 4);
         DWORD* src = (DWORD*)image->Backing()->LockImageData();
         BYTE* maskData = (BYTE*)mask->Backing()->LockImageData();
         DWORD incX = ((mask->Backing()->Width()) << 16) / image->Backing()->Width();
@@ -824,7 +824,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
         }
     } else {
         int bytesperpixel = pImage->Backing()->BytesPerPixel();
-        BYTE* pRow = (BYTE*)malloc(width * bytesperpixel);
+        BYTE* pRow = (BYTE*)IwMalloc(width * bytesperpixel);
         for (y = 0; y < height; y++) {
             BYTE* rowStart = pImgData;
             BYTE* rowOut = pRow;
@@ -840,7 +840,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
             pImgData += ystride;
             png_write_row(png_ptr, pRow);
         }
-        free(pRow);
+        IwFree(pRow);
     }
     pImage->Backing()->ReleaseImageData();
 

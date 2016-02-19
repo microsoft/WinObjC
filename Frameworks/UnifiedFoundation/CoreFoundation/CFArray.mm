@@ -92,7 +92,7 @@ public:
 
     ~__CFArray() {
         if (heapAlloced) {
-            free(contents.heap.objsArray);
+            IwFree(contents.heap.objsArray);
         }
         heapAlloced = false;
         objCount = 0;
@@ -115,7 +115,7 @@ public:
 
             if (newCapacity != contents.heap.objsCapacity) {
                 contents.heap.objsCapacity = newCapacity;
-                contents.heap.objsArray = (id*)realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
+                contents.heap.objsArray = (id*)IwRealloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
             }
             return;
         }
@@ -124,7 +124,7 @@ public:
             if (capacity < 8) {
                 capacity = 8;
             }
-            id* heapArr = (id*)malloc(sizeof(id) * capacity);
+            id* heapArr = (id*)IwMalloc(sizeof(id) * capacity);
             for (unsigned i = 0; i < objCount; i++) {
                 heapArr[i] = contents.objs[i];
             }
@@ -136,7 +136,7 @@ public:
             while (contents.heap.objsCapacity < capacity) {
                 contents.heap.objsCapacity *= 2;
             }
-            contents.heap.objsArray = (id*)realloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
+            contents.heap.objsArray = (id*)IwRealloc(contents.heap.objsArray, sizeof(id) * contents.heap.objsCapacity);
         }
     }
 
@@ -180,7 +180,7 @@ public:
         }
 
         if (freeValues)
-            free(values);
+            IwFree(values);
     }
 
     id retainObj(id object) {

@@ -51,7 +51,7 @@ static const float default_system_font_size = 15.0f;
 
     //  Measure the string
     _charactersLen = [_string length];
-    _characters = (WORD*)malloc(sizeof(WORD) * _charactersLen);
+    _characters = (WORD*)IwMalloc(sizeof(WORD) * _charactersLen);
     [_string getCharacters:_characters];
 
     return self;
@@ -59,7 +59,7 @@ static const float default_system_font_size = 15.0f;
 
 - (void)dealloc {
     if (_characters) {
-        free(_characters);
+        IwFree(_characters);
     }
     [_string release];
     [_attributedString release];

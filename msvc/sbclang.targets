@@ -67,6 +67,7 @@
       <IncludeMediaPlayer Condition="$(LinkAdditionalDependencies.Contains('MediaPlayer.lib'))">true</IncludeMediaPlayer>
       <IncludeMapKit Condition="$(LinkAdditionalDependencies.Contains('MapKit.lib'))">true</IncludeMapKit>
       <IncludeObjcrt>true</IncludeObjcrt>
+      <IncludeWinObjCRT>true</IncludeWinObjCRT>
       <IncludeLogging>true</IncludeLogging>
       <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
       <IncludeCairo Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeCairo>
@@ -103,6 +104,8 @@
 
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardConfigSpecificPrebuiltLibsDir)\libobjc2.dll" />
       <SBResourceCopy Condition="'$(IncludeObjcrt)' == 'true'" Include="$(StarboardLibDirs)\Starboard.dll" />
+
+      <SBResourceCopy Condition="'$(IncludeWinObjCRT)' == 'true'" Include="$(StarboardConfigSpecificLibsDir)\WinObjCRT.dll" />
 
       <SBResourceCopy Condition="'$(AppContainerApplication)' == 'true'" Include="$(StarboardLibDirs)\StarboardWS.dll" />
       <SBResourceCopy Condition="'$(IncludeXamlCompositor)' == 'true'" Include="$(StarboardLibDirs)\StarboardXaml.dll" />
@@ -230,6 +233,8 @@
     <PropertyGroup Condition="'$(UseStarboardSourceSdk)' == 'true'">
       <!-- Library directories for in-tree builds and builds linking against the source tree. -->
       <StarboardLibDirs>$(MSBuildThisFileDirectory)..\build\$(Platform)\$(StarboardCRTConfig)\$(TargetOsAndVersion)</StarboardLibDirs>
+      <!-- Directory for built libraries whose configuration must match the client's -->
+      <StarboardConfigSpecificLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificLibsDir>
       <!-- Prebuilts for all configurations -->
       <StarboardPrebuiltLibsDir>$(MSBuildThisFileDirectory)..\deps\prebuilt\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardPrebuiltLibsDir>
       <!-- Configuration-specific prebuilts (libraries that need to use the same allocator as the client -->
@@ -239,6 +244,7 @@
       <!-- Library directories for projects preferring to link against the packaged SDK. -->
       <!-- Prebuilts and WinObjC libraries live in the same directory once packaged -->
       <StarboardLibDirs>$(StarboardSdkRoot)\lib\$(TargetOsAndVersion)\$(PlatformTarget)</StarboardLibDirs>
+      <StarboardConfigSpecificLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificLibsDir>
       <StarboardPrebuiltLibsDir>$(StarboardLibDirs)</StarboardPrebuiltLibsDir>
       <!-- Configuration-specific prebuilts retain their configuration specificity, as both Debug and Release are shipped as part of the archive. -->
       <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
@@ -455,7 +461,7 @@
 
     <ItemGroup>
       <Link>
-        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</AdditionalLibraryDirectories>
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</AdditionalLibraryDirectories>
       </Link>
     </ItemGroup>
 

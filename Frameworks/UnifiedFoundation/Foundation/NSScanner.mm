@@ -589,7 +589,7 @@ typedef unsigned short unichar;
 */
 - (BOOL)scanCharactersFromSet:(id)charset intoString:(NSString**)stringp {
     unsigned int length = (unsigned int)[_string length];
-    unichar* result = (unichar*)malloc(length * sizeof(unichar));
+    unichar* result = (unichar*)IwMalloc(length * sizeof(unichar));
     int resultLength = 0;
     BOOL scanStarted = NO;
 
@@ -614,7 +614,7 @@ typedef unsigned short unichar;
         }
     }
 
-    free(result);
+    IwFree(result);
 
     return scanStarted;
 }
@@ -624,7 +624,7 @@ typedef unsigned short unichar;
 */
 - (BOOL)scanUpToCharactersFromSet:(id)charset intoString:(NSString**)stringp {
     unsigned int length = (unsigned int)[_string length];
-    unichar* result = (unichar*)malloc(length * sizeof(unichar));
+    unichar* result = (unichar*)IwMalloc(length * sizeof(unichar));
     int resultLength = 0;
     BOOL scanStarted = NO;
     int oldLocation = _location;
@@ -646,12 +646,12 @@ typedef unsigned short unichar;
         if (stringp != NULL)
             *stringp = [NSString stringWithCharacters:result length:resultLength];
 
-        free(result);
+        IwFree(result);
         return YES;
     } else {
         _location = oldLocation;
 
-        free(result);
+        IwFree(result);
         return NO;
     }
 }

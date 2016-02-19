@@ -25,7 +25,7 @@
 
 #include <WinError.h>
 #include <strsafe.h>
-#include <malloc.h> // malloc / free used for internal buffer management
+#include <IwMalloc.h> // IwMalloc / IwFree used for internal buffer management
 #include <intrin.h> // provides the _ReturnAddress() intrinsic
 #include "Common.h"
 #if defined(WIL_ENABLE_EXCEPTIONS) && !defined(WIL_SUPPRESS_NEW)
@@ -1750,7 +1750,7 @@ public:
     void reset() WI_NOEXCEPT {
         if (m_pCopy != nullptr) {
             if (0 == ::InterlockedDecrementRelease(m_pCopy)) {
-                free(m_pCopy);
+                ::IwFree(m_pCopy);
             }
             m_pCopy = nullptr;
             m_size = 0;
@@ -1763,7 +1763,7 @@ public:
             return true;
         }
 
-        long* pCopyRefCount = reinterpret_cast<long*>(malloc(sizeof(long) + cbData));
+        long* pCopyRefCount = reinterpret_cast<long*>(::IwMalloc(sizeof(long) + cbData));
         if (pCopyRefCount == nullptr) {
             return false;
         }
@@ -2185,7 +2185,7 @@ public:
                 auto pCurrent = pNode;
                 pNode = pNode->pNext;
                 pCurrent->~Node();
-                free(pCurrent);
+                ::IwFree(pCurrent);
             }
             entry = nullptr;
         }
@@ -2201,7 +2201,7 @@ public:
             }
         }
         if (shouldAllocate) {
-            Node* pNew = reinterpret_cast<Node*>(malloc(sizeof(Node)));
+            Node* pNew = reinterpret_cast<Node*>(::IwMalloc(sizeof(Node)));
             if (pNew != nullptr) {
                 // placement new would be preferred, but components include this file that do not enable it
                 pNew->Construct(threadId);

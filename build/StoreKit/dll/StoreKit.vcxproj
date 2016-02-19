@@ -34,6 +34,9 @@
     <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\StoreKitLib.vcxproj">
       <Project>{CC5BF26B-322D-4E39-9555-39C77C1E70A4}</Project>
     </ProjectReference>

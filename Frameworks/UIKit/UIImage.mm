@@ -83,7 +83,7 @@ public:
     void addImage(UIImage* image) {
         if (_numImages + 1 >= _maxImages) {
             _maxImages += 64;
-            _images = (UIImage**)EbrRealloc(_images, sizeof(id) * _maxImages);
+            _images = (UIImage**)IwRealloc(_images, sizeof(id) * _maxImages);
         }
 
         _images[_numImages] = image;
@@ -426,14 +426,14 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 
     if (strrchr(path, '.') != NULL && GetCACompositor()->screenScale() > 1.5f) {
         size_t newStrSize = strlen(path) + 10;
-        char* newStr = (char*)malloc(newStrSize);
+        char* newStr = (char*)IwMalloc(newStrSize);
         const char* pathEnd = strrchr(path, '.');
         memcpy(newStr, path, pathEnd - path);
         newStr[pathEnd - path] = 0;
         strcat_s(newStr, newStrSize, "@2x");
         strcat_s(newStr, newStrSize, pathEnd);
 
-        pathStr = _strdup(newStr);
+        pathStr = IwStrDup(newStr);
 
         if (EbrAccess(pathStr, 0) == -1) {
             id pathFind =
@@ -442,20 +442,20 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             if (pathFind != nil) {
                 path = (char*)[pathFind UTF8String];
                 if (pathStr)
-                    free(pathStr);
-                pathStr = _strdup(path);
+                    IwFree(pathStr);
+                pathStr = IwStrDup(path);
                 found = true;
             }
         } else {
             found = true;
         }
-        free(newStr);
+        IwFree(newStr);
     }
 
     if (!found) {
         if (pathStr)
-            free(pathStr);
-        pathStr = _strdup(path);
+            IwFree(pathStr);
+        pathStr = IwStrDup(path);
 
         if (EbrAccess(pathStr, 0) == -1) {
             NSString* pathFind = [bundle pathForResource:pathAddr ofType:nil inDirectory:nil forLocalization:@"English"];
@@ -463,8 +463,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
                 if (pathStr)
-                    free(pathStr);
-                pathStr = _strdup(path);
+                    IwFree(pathStr);
+                pathStr = IwStrDup(path);
             }
         }
     }
@@ -476,8 +476,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         if (pathFind != nil) {
             path = [pathFind UTF8String];
             if (pathStr)
-                free(pathStr);
-            pathStr = _strdup(path);
+                IwFree(pathStr);
+            pathStr = IwStrDup(path);
             found = true;
         } else {
             pathFind = [bundle pathForResource:pathAddr ofType:@"png" inDirectory:nil forLocalization:@"English"];
@@ -485,8 +485,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
                 if (pathStr)
-                    free(pathStr);
-                pathStr = _strdup(path);
+                    IwFree(pathStr);
+                pathStr = IwStrDup(path);
                 found = true;
             }
         }
@@ -501,7 +501,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     UIImageCachedObject* cachedImage = [g_imageCache objectForKey:[NSString stringWithCString:pathStr]];
     if (cachedImage != nil) {
         if (pathStr)
-            free(pathStr);
+            IwFree(pathStr);
         m_pImage = cachedImage->m_pImage;
         _cacheImage = cachedImage;
         CFRetain((id)m_pImage);
@@ -553,7 +553,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         }
         EbrFseek(fpIn, 0, SEEK_SET);
 
-        in = (char*)malloc(len);
+        in = (char*)IwMalloc(len);
         len = EbrFread(in, 1, len, fpIn);
 
         EbrFclose(fpIn);
@@ -574,7 +574,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             }
         }
 
-        free(in);
+        IwFree(in);
     }
 
     if (strstr(pathStr, "@2x") != NULL) {
@@ -590,7 +590,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     _cacheImage.attach([UIImage cacheImage:self withName:[NSString stringWithCString:pathStr]]);
 
     if (pathStr)
-        free(pathStr);
+        IwFree(pathStr);
 
 #ifdef UIIMAGE_CACHE_MANAGEMENT
     imageInfo.addImage(self);

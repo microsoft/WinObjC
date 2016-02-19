@@ -198,7 +198,7 @@ static CURLcode sslsetcertfunc(CURL* curl, void* sslctx, void* parm) {
     }
     EbrFseek(fp, 0, SEEK_END);
     int len = EbrFtell(fp);
-    zCert = (char *) malloc(len);
+    zCert = (char *) IwMalloc(len);
     EbrFseek(fp, 0, SEEK_SET);
     len = EbrFread(zCert, 1, len, fp);
     EbrFclose(fp);
@@ -255,13 +255,13 @@ static void queueEasyHandle(NSURLProtocolTimerThread* self, CURL* curl, NSURLPro
             [bodyStream open];
 
             //  Read the input data
-            uint8_t* pData = (uint8_t*)EbrMalloc(16384);
+            uint8_t* pData = (uint8_t*)IwMalloc(16384);
             DWORD iDataLen = 0, iMaxLen = 16384;
 
             while ([bodyStream hasBytesAvailable]) {
                 if (iDataLen + 16384 > iMaxLen) {
                     iMaxLen += 16384;
-                    pData = (uint8_t*)EbrRealloc(pData, iMaxLen);
+                    pData = (uint8_t*)IwRealloc(pData, iMaxLen);
                 }
                 DWORD amtRead = [bodyStream read:pData + iDataLen maxLength:iMaxLen - iDataLen];
                 iDataLen += amtRead;
@@ -269,7 +269,7 @@ static void queueEasyHandle(NSURLProtocolTimerThread* self, CURL* curl, NSURLPro
 
             [bodyStream close];
             id data = [NSData dataWithBytes:pData length:iDataLen];
-            EbrFree(pData);
+            IwFree(pData);
 
             curl_easy_setopt(curl, CURLOPT_POSTFIELDS, [data bytes]);
             curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, [data length]);
@@ -292,13 +292,13 @@ static void queueEasyHandle(NSURLProtocolTimerThread* self, CURL* curl, NSURLPro
             [bodyStream open];
 
             //  Read the input data
-            uint8_t* pData = (uint8_t*)EbrMalloc(16384);
+            uint8_t* pData = (uint8_t*)IwMalloc(16384);
             DWORD iDataLen = 0, iMaxLen = 16384;
 
             while ([bodyStream hasBytesAvailable]) {
                 if (iDataLen + 16384 >= iMaxLen) {
                     iMaxLen += 16384;
-                    pData = (uint8_t*)EbrRealloc(pData, iMaxLen);
+                    pData = (uint8_t*)IwRealloc(pData, iMaxLen);
                 }
                 DWORD amtRead = [bodyStream read:pData + iDataLen maxLength:iMaxLen - iDataLen];
                 iDataLen += amtRead;
@@ -308,7 +308,7 @@ static void queueEasyHandle(NSURLProtocolTimerThread* self, CURL* curl, NSURLPro
 
             [bodyStream close];
             id data = [NSData dataWithBytes:pData length:iDataLen];
-            EbrFree(pData);
+            IwFree(pData);
 
             protocol->_putData = (char*)[data bytes];
             protocol->_putDataLeft = [data length];

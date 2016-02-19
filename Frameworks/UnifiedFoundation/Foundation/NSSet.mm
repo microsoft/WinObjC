@@ -174,7 +174,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
     if (count >= max) {
         max += 64;
-        objs = (id*)EbrRealloc(objs, max * sizeof(id));
+        objs = (id*)IwRealloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -184,7 +184,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)EbrRealloc(objs, max * sizeof(id));
+            objs = (id*)IwRealloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -195,7 +195,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     va_end(pReader);
 
     NSSet* ret = [[self alloc] initWithObjects:objs count:count];
-    EbrFree(objs);
+    IwFree(objs);
 
     return [ret autorelease];
 }
@@ -261,13 +261,13 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (instancetype)initWithArray:(NSArray*)array {
     NSUInteger count = [array count];
-    id* objects = (id*)EbrMalloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
 
     [array getObjects:objects];
 
     NSSet* ret = [self initWithObjects:objects count:count];
 
-    EbrFree(objects);
+    IwFree(objects);
     return ret;
 }
 
@@ -276,7 +276,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (instancetype)initWithSet:(NSSet*)set {
     NSUInteger count = [set count];
-    id* objects = (id*)EbrMalloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
     NSUInteger i = 0;
 
     for (id curObj in set) {
@@ -285,7 +285,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 
     NSSet* ret = [self initWithObjects:objects count:count];
-    EbrFree(objects);
+    IwFree(objects);
 
     return ret;
 }
@@ -303,7 +303,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
     if (count >= max) {
         max += 64;
-        objs = (id*)EbrRealloc(objs, max * sizeof(id));
+        objs = (id*)IwRealloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -313,7 +313,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)EbrRealloc(objs, max * sizeof(id));
+            objs = (id*)IwRealloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -324,7 +324,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     va_end(pReader);
 
     NSSet* ret = [self initWithObjects:objs count:count];
-    EbrFree(objs);
+    IwFree(objs);
 
     return ret;
 }

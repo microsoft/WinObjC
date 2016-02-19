@@ -55,7 +55,7 @@ __CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
 
 __CGColorSpace::~__CGColorSpace() {
     if (palette) {
-        delete palette;
+        IwFree(palette);
         palette = NULL;
     }
 }
@@ -68,7 +68,7 @@ CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
 CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* colorTable) {
     __CGColorSpace* ret = new __CGColorSpace(_ColorIndexed);
 
-    ret->palette = (char*)malloc(3 * (lastIndex + 1));
+    ret->palette = (char*)IwMalloc(3 * (lastIndex + 1));
     memcpy(ret->palette, colorTable, 3 * (lastIndex + 1));
     ret->lastColor = lastIndex;
     return (CGColorSpaceRef)ret;

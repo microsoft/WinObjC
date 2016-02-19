@@ -259,15 +259,15 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         } else {
             unsigned numPairs = [dictionary count];
 
-            id* keys = (id*)EbrCalloc(numPairs, sizeof(id));
-            id* vals = (id*)EbrCalloc(numPairs, sizeof(id));
+            id* keys = (id*)IwCalloc(numPairs, sizeof(id));
+            id* vals = (id*)IwCalloc(numPairs, sizeof(id));
 
             CFDictionaryGetKeysAndValues((CFDictionaryRef)dictionary, (const void**)keys, (const void**)vals);
 
             [self initWithObjects:vals forKeys:keys count:numPairs];
 
-            EbrFree(keys);
-            EbrFree(vals);
+            IwFree(keys);
+            IwFree(vals);
         }
     } else {
         [self init];
@@ -282,8 +282,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 - (NSDictionary*)initWithDictionary:(NSDictionary*)dict copyItems:(BOOL)copyItems {
     unsigned count = [dict count];
 
-    id* keys = (id*)EbrCalloc(count, sizeof(id));
-    id* vals = (id*)EbrCalloc(count, sizeof(id));
+    id* keys = (id*)IwCalloc(count, sizeof(id));
+    id* vals = (id*)IwCalloc(count, sizeof(id));
     unsigned numPairs = 0;
 
     NSEnumerator* enumerator = [dict keyEnumerator];
@@ -313,8 +313,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         [vals[i] release];
     }
 
-    EbrFree(keys);
-    EbrFree(vals);
+    IwFree(keys);
+    IwFree(vals);
 
     return self;
 }
@@ -427,11 +427,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* values = (id*)EbrCalloc(count, sizeof(id));
+        id* values = (id*)IwCalloc(count, sizeof(id));
         CFDictionaryGetKeysAndValues((CFDictionaryRef)self, NULL, (const void**)values);
 
         NSArray* ret = [NSArray arrayWithObjects:values count:count];
-        EbrFree(values);
+        IwFree(values);
 
         return ret;
     } else {
@@ -441,7 +441,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* values = (id*)EbrCalloc(count, sizeof(id));
+        id* values = (id*)IwCalloc(count, sizeof(id));
         id state = [self keyEnumerator];
         id key;
         unsigned i;
@@ -454,7 +454,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         assert(i == count);
 
         NSArray* ret = [NSArray arrayWithObjects:values count:count];
-        EbrFree(values);
+        IwFree(values);
 
         return ret;
     }
@@ -471,11 +471,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* keys = (id*)EbrCalloc(count, sizeof(id));
+        id* keys = (id*)IwCalloc(count, sizeof(id));
         CFDictionaryGetKeysAndValues((CFDictionaryRef)self, (const void**)keys, NULL);
 
         NSArray* ret = [NSArray arrayWithObjects:keys count:count];
-        EbrFree(keys);
+        IwFree(keys);
 
         return ret;
     } else {
@@ -485,7 +485,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* keys = (id*)EbrCalloc(count, sizeof(id));
+        id* keys = (id*)IwCalloc(count, sizeof(id));
         id state = [self keyEnumerator];
         id key;
         int i;
@@ -497,7 +497,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         assert(i == count);
 
         NSArray* ret = [NSArray arrayWithObjects:keys count:count];
-        EbrFree(keys);
+        IwFree(keys);
 
         return ret;
     }
@@ -512,7 +512,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     //  Grab all keys and toss 'em into an array if isEqual returns true
     unsigned numKeys = [self count];
-    id* values = (id*)EbrCalloc(numKeys, sizeof(id));
+    id* values = (id*)IwCalloc(numKeys, sizeof(id));
     unsigned numValues = 0;
 
     id curKey = [keyEnum nextObject];
@@ -529,7 +529,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 
     NSArray* ret = [NSArray arrayWithObjects:values count:numValues];
-    EbrFree(values);
+    IwFree(values);
 
     return ret;
 }

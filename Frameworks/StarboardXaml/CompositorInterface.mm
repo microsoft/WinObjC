@@ -173,7 +173,7 @@ public:
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
                         EbrFseek(fpIn, 0, SEEK_SET);
-                        void* pngData = (void*)malloc(fileLen);
+                        void* pngData = (void*)IwMalloc(fileLen);
                         len = EbrFread(pngData, 1, fileLen, fpIn);
                         EbrFclose(fpIn);
 
@@ -197,7 +197,7 @@ public:
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
                         EbrFseek(fpIn, 0, SEEK_SET);
-                        void* imgData = (void*)malloc(fileLen);
+                        void* imgData = (void*)IwMalloc(fileLen);
                         len = EbrFread(imgData, 1, fileLen, fpIn);
                         EbrFclose(fpIn);
 
@@ -210,8 +210,9 @@ public:
                 } break;
             }
             _xamlImage = CreateBitmapFromImageData(data, len);
-            if (freeData)
-                free((void*)data);
+            if (freeData) {
+                IwFree((void*)data);
+            }
             return;
         }
         lockPtr = NULL;
@@ -1151,7 +1152,7 @@ public:
     QueuedProperty(DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = _strdup("contents");
+        _propertyName = IwStrDup("contents");
         _propertyValue = NULL;
         _newTexture = newTexture;
         _contentsScale = contentsScale;
@@ -1162,7 +1163,7 @@ public:
     QueuedProperty(DisplayNode* node, const char* propertyName, NSObject* propertyValue) {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = _strdup(propertyName);
+        _propertyName = IwStrDup(propertyName);
         _propertyValue = [propertyValue retain];
         _newTexture = NULL;
         _applyingTexture = false;
@@ -1170,8 +1171,9 @@ public:
 
     ~QueuedProperty() {
         DecrementCounter("QueuedProperty");
-        if (_propertyName)
-            free(_propertyName);
+        if (_propertyName) {
+            IwFree(_propertyName);
+        }
         [_propertyValue release];
 
         _propertyName = nullptr;

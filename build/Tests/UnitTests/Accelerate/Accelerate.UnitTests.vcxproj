@@ -23,6 +23,9 @@
     <ProjectReference Include="..\..\..\Accelerate\lib\AccelerateLib.vcxproj">
       <Project>{05EB0ADE-A598-42BA-BA3D-960AEEAA3C95}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PropertyPageSchema Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />

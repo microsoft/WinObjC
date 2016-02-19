@@ -28,7 +28,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 
     int size = objc_sizeof_type(type);
 
-    void* ret = (void*)EbrMalloc(size);
+    void* ret = (void*)IwMalloc(size);
     memcpy(ret, buf, size);
 
     return ret;
@@ -49,7 +49,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 */
 - (void)setTarget:(id)targetObj {
     if (args[0]) {
-        EbrFree(args[0]);
+        IwFree(args[0]);
     }
     args[0] = copyArgument(self, &targetObj, 0);
 }
@@ -68,7 +68,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     uint32_t argSelectorEmu = (uint32_t)targSelector;
 
     if (args[1]) {
-        free(args[1]);
+        IwFree(args[1]);
     }
     args[1] = copyArgument(self, &argSelectorEmu, 1);
 }
@@ -111,7 +111,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     }
 
     if (args[index]) {
-        free(args[index]);
+        IwFree(args[index]);
     }
 
     args[index] = copyArgument(self, buf, index);
@@ -173,10 +173,10 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     int length = objc_sizeof_type(type);
 
     if (returnValue) {
-        free(returnValue);
+        IwFree(returnValue);
     }
 
-    returnValue = (char*)malloc(length);
+    returnValue = (char*)IwMalloc(length);
 
     memcpy(returnValue, buf, length);
 }
@@ -199,12 +199,12 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     }
     for (unsigned int i = 0; i < numArgs; i++) {
         if (args[i] != NULL) {
-            free(args[i]);
+            IwFree(args[i]);
         }
     }
 
     if (returnValue) {
-        free(returnValue);
+        IwFree(returnValue);
     }
 
     [_methodSignature release];
@@ -320,7 +320,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
 
     //  structure return type?
     if (type[0] == '{') {
-        pReturnVal = (char*)malloc(returnSize);
+        pReturnVal = (char*)IwMalloc(returnSize);
         totalLength += 4;
         pMsgFunc = "_objc_msgSend_stret";
     }
@@ -363,12 +363,12 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
 
         if (strcmp(type, "f") == 0) {
             float (*impFloat)(id, SEL, ...) = (float (*)(id, SEL, ...))[target methodForSelector:sel];
-            returnValue = malloc(sizeof(float));
+            returnValue = IwMalloc(sizeof(float));
             assert(stackParamsLen == 2);
             *(float*)returnValue = impFloat(target, sel);
         } else if (strcmp(type, "d") == 0) {
             double (*impDouble)(id, SEL, ...) = (double (*)(id, SEL, ...))[target methodForSelector:sel];
-            returnValue = malloc(sizeof(double));
+            returnValue = IwMalloc(sizeof(double));
             assert(stackParamsLen == 2);
             *(double*)returnValue = impDouble(target, sel);
         } else {
@@ -377,7 +377,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     unsigned retVal;
 
                     retVal = imp(target, (SEL)sel);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
@@ -385,7 +385,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     unsigned retVal;
 
                     retVal = imp(target, (SEL)sel, stackParams[2]);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
@@ -393,7 +393,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     unsigned retVal;
 
                     retVal = imp(target, (SEL)sel, stackParams[2], stackParams[3]);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
@@ -401,7 +401,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     unsigned retVal;
 
                     retVal = imp(target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4]);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
@@ -409,7 +409,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     unsigned retVal;
 
                     retVal = imp(target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5]);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
@@ -417,7 +417,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     unsigned retVal;
 
                     retVal = imp(target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5], stackParams[6]);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
@@ -426,7 +426,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
 
                     retVal = imp(
                         target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5], stackParams[6], stackParams[7]);
-                    returnValue = malloc(returnSize + 4);
+                    returnValue = IwMalloc(returnSize + 4);
                     *((unsigned*)returnValue) = retVal;
                 } break;
 

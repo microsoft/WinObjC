@@ -75,7 +75,7 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
     // Walk up the class hierarchy looking for matching ivars.
     for (; cls; cls = class_getSuperclass(cls)) {
         unsigned int ivarCount = 0;
-        std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), free);
+        std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), IwFree);
         auto foundIvar = std::find_if(ivars.get(),
                                       ivars.get() + ivarCount,
                                       [&searchIvars](const Ivar ivar) {

@@ -45,7 +45,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     while (self->outBufLen + len > self->outBufMaxLen) {
         self->outBufMaxLen += 64000;
 
-        self->outBuf = (char*)EbrRealloc(self->outBuf, self->outBufMaxLen);
+        self->outBuf = (char*)IwRealloc(self->outBuf, self->outBufMaxLen);
     }
 
     memcpy(&self->outBuf[self->outBufLen], data, len);
@@ -73,7 +73,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     [self cleanup];
     DESTROY(_dest);
     if (outBuf)
-        EbrFree(outBuf);
+        IwFree(outBuf);
     [super dealloc];
 }
 
@@ -93,7 +93,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         table_size = std::numeric_limits<unsigned int>::max();
     }
 
-    table = (unsigned int*)EbrMalloc(table_size * sizeof(int));
+    table = (unsigned int*)IwMalloc(table_size * sizeof(int));
 
     objectsToDoList = [[NSMutableArray alloc] init];
     _objList = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, NULL);
@@ -106,7 +106,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     DESTROY(objectsToDoList);
     [(id)_objList release];
     if (table != NULL) {
-        EbrFree(table);
+        IwFree(table);
         table = NULL;
     }
 }
@@ -157,7 +157,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     unsigned len = CFDictionaryGetCount(_objList);
     unsigned size = offset_size * len;
 
-    unsigned char* buffer = (unsigned char*)EbrMalloc(size);
+    unsigned char* buffer = (unsigned char*)IwMalloc(size);
     int bufpos = 0;
 
     for (unsigned i = 0; i < len; i++) {
@@ -181,7 +181,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     }
 
     appendBytes(self, buffer, size);
-    EbrFree(buffer);
+    IwFree(buffer);
 }
 
 - (void)writeMetaData {
@@ -306,7 +306,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         }
     } else {
         if (len < 0x0F) {
-            WORD* buffer = (WORD*)EbrMalloc((len + 1) * 2);
+            WORD* buffer = (WORD*)IwMalloc((len + 1) * 2);
 
             code = 0x60 + len;
             appendBytes(self, &code, 1);
@@ -315,20 +315,20 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
                 buffer[i] = NSSwapHostShortToBig(buffer[i]);
             }
             appendBytes(self, buffer, len * sizeof(WORD));
-            EbrFree(buffer);
+            IwFree(buffer);
         } else {
             WORD* buffer;
 
             code = 0x6F;
             appendBytes(self, &code, 1);
-            buffer = (WORD*)EbrMalloc(sizeof(WORD) * (len + 1));
+            buffer = (WORD*)IwMalloc(sizeof(WORD) * (len + 1));
             [self storeCount:len];
             [string getCharacters:buffer];
             for (i = 0; i < len; i++) {
                 buffer[i] = NSSwapHostShortToBig(buffer[i]);
             }
             appendBytes(self, buffer, sizeof(WORD) * len);
-            EbrFree(buffer);
+            IwFree(buffer);
         }
     }
 }

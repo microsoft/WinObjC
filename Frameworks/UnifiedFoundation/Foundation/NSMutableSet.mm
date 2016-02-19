@@ -101,7 +101,7 @@ NSUInteger NSSetTableCount(NSSet* set);
         if ([other member:curObj] == nil) {
             if (removeObjectsCount >= removeObjectsCapacity) {
                 removeObjectsCapacity += 128;
-                removeObjects = (id*)EbrRealloc(removeObjects, sizeof(id*) * removeObjectsCapacity);
+                removeObjects = (id*)IwRealloc(removeObjects, sizeof(id*) * removeObjectsCapacity);
             }
             removeObjects[removeObjectsCount++] = curObj;
         }
@@ -110,7 +110,7 @@ NSUInteger NSSetTableCount(NSSet* set);
     for (int i = 0; i < removeObjectsCount; i++) {
         [self removeObject:removeObjects[i]];
     }
-    EbrFree(removeObjects);
+    IwFree(removeObjects);
 }
 
 /**

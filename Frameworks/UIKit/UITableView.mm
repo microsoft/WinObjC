@@ -31,9 +31,6 @@
 #include <algorithm>
 
 typedef id idweak;
-#define EbrFree free
-#define EbrMalloc malloc
-#define EbrCalloc calloc
 #import <Foundation/NSNib.h>
 
 #include "UITableViewInternal.h"
@@ -1111,7 +1108,7 @@ static void calcCellPositions(UITableView* self) {
 
     _TableCellAnimationHelper* cleanupHelper = [_TableCellAnimationHelper new];
     cleanupHelper->_numCellsToBeRemoved = 0;
-    cleanupHelper->_cellsToBeRemoved = (id*)EbrMalloc(sizeof(id) * count);
+    cleanupHelper->_cellsToBeRemoved = (id*)IwMalloc(sizeof(id) * count);
 
     if (animationType != UITableViewRowAnimationNone) {
         [UIView setAnimationDidStopSelector:@selector(animationFinished)];
@@ -1869,7 +1866,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         maxCells += curNode->childCount;
     }
     cleanupHelper->_numCellsToBeRemoved = 0;
-    cleanupHelper->_cellsToBeRemoved = (id*)EbrMalloc(sizeof(id) * maxCells);
+    cleanupHelper->_cellsToBeRemoved = (id*)IwMalloc(sizeof(id) * maxCells);
 
     if (animationType != UITableViewRowAnimationNone) {
         [UIView setAnimationDidStopSelector:@selector(animationFinished)];
@@ -1958,7 +1955,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 - (void)deleteRowsAtIndexPaths:(NSArray*)paths withRowAnimation:(UITableViewRowAnimation)animate {
     int count = [paths count];
 
-    TableViewRow** rows = (TableViewRow**)malloc(sizeof(TableViewRow*) * count);
+    TableViewRow** rows = (TableViewRow**)IwMalloc(sizeof(TableViewRow*) * count);
     int numRows = 0;
 
     for (int i = 0; i < count; i++) {

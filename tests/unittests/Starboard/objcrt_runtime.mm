@@ -18,6 +18,7 @@
 #import <Foundation/Foundation.h>
 #include <objc/runtime.h>
 #include <exception>
+#include "IwMalloc.h"
 
 //#pragma comment(linker, "/INCLUDE:Foundation.dll!_OBJC_CLASS_NSArray")
 
@@ -89,15 +90,15 @@ bool globalFailure = false;
 
 void perform(const char* what, bool (^block)(), bool flipbit = false) {
     bool b = false;
-    const char* xcp = NULL;
+    char* xcp = NULL;
     char msgStr[BUFSIZ];
     try {
         b = block();
     } catch (std::exception& e) {
-        xcp = _strdup(e.what());
+        xcp = IwStrDup(e.what());
         b = false;
     } catch (...) {
-        xcp = "unknown?";
+        xcp = IwStrDup("unknown?");
         b = false;
     }
     snprintf(msgStr, sizeof(msgStr), "%s", " - ");
@@ -112,6 +113,7 @@ void perform(const char* what, bool (^block)(), bool flipbit = false) {
     }
     snprintf(msgStr, sizeof(msgStr), "%s: %s", msgStr, what);
     LOG_INFO(msgStr);
+    IwFree(xcp);
 }
 
 TEST(ObjcrtRunTime, RunTimeTest) {

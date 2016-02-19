@@ -371,7 +371,7 @@ void EbrSleep(__int64 nanoseconds) {
 }
 
 void EbrLockInit(EbrLock* pLock) {
-    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)malloc(sizeof(CRITICAL_SECTION));
+    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)IwMalloc(sizeof(CRITICAL_SECTION));
 
     InitializeCriticalSectionEx(pCrit, 0, 0);
 
@@ -418,7 +418,7 @@ void EbrLockDestroy(EbrLock pLock) {
     CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)pLock;
 
     DeleteCriticalSection(pCrit);
-    free(pCrit);
+    IwFree(pCrit);
 }
 
 #define PTW32_TIMESPEC_TO_FILETIME_OFFSET (((LONGLONG)27111902 << 32) + (LONGLONG)3577643008)

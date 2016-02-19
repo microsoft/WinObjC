@@ -297,13 +297,13 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         _isPlaceholder = true;
     } else {
         if (_secureTextMode) {
-            WORD* chars = (WORD*)malloc(([text length] + 1) * sizeof(WORD));
+            WORD* chars = (WORD*)IwMalloc(([text length] + 1) * sizeof(WORD));
             [text getCharacters:chars];
             for (unsigned i = 0; i < [text length] - _showLastCharLen; i++) {
                 chars[i] = '*';
             }
             text = [NSString stringWithCharacters:chars length:[text length]];
-            free(chars);
+            IwFree(chars);
         }
     }
 

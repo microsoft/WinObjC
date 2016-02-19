@@ -31,6 +31,9 @@
     <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\CoreBluetoothLib.vcxproj">
       <Project>{25269720-4cdc-407f-b54c-d1b87732ffc5}</Project>
     </ProjectReference>

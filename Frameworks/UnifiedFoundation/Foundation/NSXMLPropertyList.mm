@@ -58,7 +58,7 @@ static id dataFromElement(xml_node<>* element) {
 
 static id dataFromBase64(char* buffer, size_t length) {
     size_t resultLength = 0;
-    unsigned char* result = (unsigned char*)EbrMalloc(length);
+    unsigned char* result = (unsigned char*)IwMalloc(length);
     unsigned char partial = 0;
 
     enum { load6High, load2Low, load4Low, load6Low } state = load6High;
@@ -112,7 +112,7 @@ static id dataFromBase64(char* buffer, size_t length) {
     }
 
     id ret = [NSData dataWithBytes:result length:resultLength];
-    EbrFree(result);
+    IwFree(result);
 
     return ret;
 }

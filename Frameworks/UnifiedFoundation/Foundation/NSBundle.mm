@@ -71,7 +71,7 @@ public:
         if (_curLen + len + 1 >= _maxLen) {
             _maxLen = 8192;
             _curLen = 0;
-            _base = (char*)malloc(_maxLen);
+            _base = (char*)IwMalloc(_maxLen);
         }
 
         char* ret = &_base[_curLen];
@@ -316,7 +316,7 @@ static void ScanDir(NSBundle* self, char* curDirectory, const char* path) {
                 //  The directory itself is also a file
                 if (self->_numFiles + 1 > self->_maxFiles) {
                     self->_maxFiles += 1024;
-                    self->_files = (BundleFile*)realloc(self->_files, sizeof(BundleFile) * self->_maxFiles);
+                    self->_files = (BundleFile*)IwRealloc(self->_files, sizeof(BundleFile) * self->_maxFiles);
                 }
 
                 if (ScanFilename(&self->_files[self->_numFiles], curDirectory, ent.fileName)) {
@@ -336,7 +336,7 @@ static void ScanDir(NSBundle* self, char* curDirectory, const char* path) {
             } else {
                 if (self->_numFiles + 1 > self->_maxFiles) {
                     self->_maxFiles += 1024;
-                    self->_files = (BundleFile*)realloc(self->_files, sizeof(BundleFile) * self->_maxFiles);
+                    self->_files = (BundleFile*)IwRealloc(self->_files, sizeof(BundleFile) * self->_maxFiles);
                 }
 
                 if (ScanFilename(&self->_files[self->_numFiles], curDirectory, ent.fileName)) {

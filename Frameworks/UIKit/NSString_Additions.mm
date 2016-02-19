@@ -77,7 +77,7 @@ static void drawCharsAtPoint(UIFont* font,
 
         CGContextSetFont(context, font);
 
-        WORD* glyphs = (WORD*)EbrMalloc(strLength * sizeof(WORD));
+        WORD* glyphs = (WORD*)IwMalloc(strLength * sizeof(WORD));
         DWORD numGlyphs = CGFontGetGlyphs(font, str, strLength, glyphs);
 
         t = CGAffineTransformMakeScale(1.0, -1.0);
@@ -87,7 +87,7 @@ static void drawCharsAtPoint(UIFont* font,
         CGContextShowGlyphsAtPoint(context, outX, outY, glyphs, numGlyphs);
         CGContextTranslateCTM(context, 0, -[font ascender]);
 
-        EbrFree(glyphs);
+        IwFree(glyphs);
     }
 }
 
@@ -242,7 +242,7 @@ static void drawString(UIFont* font,
                         }
 
                         // Allocate enough room for the entire string, a null terminator and the ...s
-                        WORD* tempStr = (WORD*)EbrMalloc(sizeof(WORD) * (strLength + 4));
+                        WORD* tempStr = (WORD*)IwMalloc(sizeof(WORD) * (strLength + 4));
 
                         size_t lastGood = 0;
                         for (size_t i = 1; i <= strLength; ++i) {
@@ -275,7 +275,7 @@ static void drawString(UIFont* font,
                             sizeOut->height = y + extent.height - rct.origin.y;
                         }
 
-                        EbrFree(tempStr);
+                        IwFree(tempStr);
                     }
                     break;
                 } else {
@@ -320,7 +320,7 @@ static void drawString(UIFont* font,
                 }
 
                 // Allocate enough room for the entire string, a null terminator and the ...s
-                WORD* tempStr = (WORD*)EbrMalloc(sizeof(WORD) * (strLength + 4));
+                WORD* tempStr = (WORD*)IwMalloc(sizeof(WORD) * (strLength + 4));
 
                 size_t lastGood = 0;
                 for (size_t i = 1; i <= strLength; ++i) {
@@ -349,7 +349,7 @@ static void drawString(UIFont* font,
                 extent.width = ceilf(extent.width);
                 *sizeOut = extent;
 
-                EbrFree(tempStr);
+                IwFree(tempStr);
             }
             break;
         }

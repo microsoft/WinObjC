@@ -122,7 +122,7 @@ CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
 const CGFloat* CGColorGetComponents(CGColorRef color) {
     UNIMPLEMENTED();
     UNIMPLEMENTED();
-    float* ret = (float*)malloc(sizeof(float) * 4);
+    float* ret = (float*)IwMalloc(sizeof(float) * 4);
     [color getColors:ret];
     return ret;
 }

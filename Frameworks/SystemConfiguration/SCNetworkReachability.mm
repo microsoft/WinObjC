@@ -397,13 +397,13 @@ static NSLock* _allReachabilityOperationsLock;
 @implementation SCNetworkReachabilityHostName
 - (instancetype)initWithHostName:(const char*)hostname {
     [super init];
-    _hostname = _strdup(hostname);
+    _hostname = IwStrDup(hostname);
 
     return self;
 }
 
 - (void)dealloc {
-    free(_hostname);
+    IwFree(_hostname);
     [super dealloc];
 }
 

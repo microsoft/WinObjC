@@ -220,7 +220,7 @@ using namespace Windows::Foundation;
     _length = length;
 
     if (_length) {
-        _bytes = (uint8_t*)EbrMalloc(_length);
+        _bytes = (uint8_t*)IwMalloc(_length);
         if (!_bytes) {
             [self release];
             return nil;
@@ -421,7 +421,7 @@ using namespace Windows::Foundation;
         EbrFseek(fpIn, 0, SEEK_SET);
 
         if (length) {
-            _bytes = (uint8_t*)EbrMalloc(length);
+            _bytes = (uint8_t*)IwMalloc(length);
             if (!_bytes) {
                 if (error) {
                     *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
@@ -645,7 +645,7 @@ using namespace Windows::Foundation;
 
 - (void)dealloc {
     if (_freeWhenDone && _bytes) {
-        free(_bytes);
+        IwFree(_bytes);
         _bytes = nullptr;
     }
 

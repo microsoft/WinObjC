@@ -317,7 +317,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIViewController* ret = [super allocWithZone:zone];
 
-    ret->priv = (UIViewControllerPriv*)EbrCalloc(1, sizeof(UIViewControllerPriv));
+    ret->priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
     ret->priv->_curOrientation = UIInterfaceOrientationPortrait;
     ret->priv->_edgesForExtendedLayout = 0xF;
     ret->priv->_contentSizeForViewInPopover.width = 320.0f;
@@ -597,7 +597,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         NSString* ret = nil;
         NSString* nibPath;
 
-        char* ourClass = _strdup(object_getClassName(self));
+        char* ourClass = IwStrDup(object_getClassName(self));
         char tryClass[255];
 
         assert(strlen(ourClass) < 255);
@@ -621,7 +621,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             }
         }
 
-        free(ourClass);
+        IwFree(ourClass);
 
         return ret;
     }
@@ -641,7 +641,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 */
 - (instancetype)initWithNibName:(NSString*)strNib bundle:(NSBundle*)bundle {
     if (!priv) {
-        priv = (UIViewControllerPriv*)EbrCalloc(1, sizeof(UIViewControllerPriv));
+        priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
         priv->_curOrientation = UIInterfaceOrientationPortrait;
         priv->_contentSizeForViewInPopover.width = 320.0f;
         priv->_contentSizeForViewInPopover.height = 1100.0f;
@@ -711,7 +711,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             assert(0);
         }
     } else {
-        char* ourClass = _strdup(object_getClassName(self));
+        char* ourClass = IwStrDup(object_getClassName(self));
         char tryClass[255];
 
         assert(strlen(ourClass) < 255);
@@ -729,7 +729,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             nibPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:ourClass] ofType:@"nib"];
         }
 
-        free(ourClass);
+        IwFree(ourClass);
         // if ( nibPath == nil ) assert(0);
     }
 
@@ -2119,7 +2119,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     priv->_storyboard = nil;
     priv->_modalTemplates = nil;
     priv->_dismissController = nil;
-    EbrFree(priv);
+    IwFree(priv);
 
     //  For safety since most people seem to forget
     [[NSNotificationCenter defaultCenter] removeObserver:self];

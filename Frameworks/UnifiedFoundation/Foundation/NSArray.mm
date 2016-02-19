@@ -356,14 +356,14 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
         int objCount = 0;
 
         int count = [arrayToCopy count];
-        objs = (id*)malloc(count * sizeof(id));
+        objs = (id*)IwMalloc(count * sizeof(id));
 
         for (int i = 0; i < count; i++) {
             objs[objCount++] = [arrayToCopy objectAtIndex:i];
         }
 
         _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, objCount, true);
-        free(objs);
+        IwFree(objs);
     }
 
     return self;

@@ -37,6 +37,9 @@
     <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\lib\WebKitLib.vcxproj">
       <Project>{cb45df6d-66ef-42cc-9bf9-f2a96c954eba}</Project>
     </ProjectReference>

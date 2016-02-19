@@ -148,7 +148,7 @@ static void createLabel(UIButton* self) {
     _backgroundColor.b = 1.f;
     _backgroundColor.a = 1.f;
 
-    _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
+    _states = (buttonState*)IwCalloc(16, sizeof(buttonState));
     _font = [coder decodeObjectForKey:@"UIFont"];
 
     if (isOSTarget(@"7.0")) {
@@ -302,7 +302,7 @@ static void createLabel(UIButton* self) {
         _defaultColor = [UIColor blackColor];
     }
 
-    _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
+    _states = (buttonState*)IwCalloc(16, sizeof(buttonState));
     _font = [UIFont buttonFont];
     [self setOpaque:FALSE];
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -988,7 +988,7 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     _label = nil;
     [_imageView removeFromSuperview];
     _imageView = nil;
-    EbrFree(_states);
+    IwFree(_states);
     [super dealloc];
 }
 
