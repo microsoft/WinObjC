@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,22 +14,21 @@
 //
 //******************************************************************************
 
-#include <math.h>
-
-#include "Starboard.h"
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
-#include "CGColorSpaceInternal.h"
-#include "_CGLifetimeBridgingType.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIColor.h"
-
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGPath.h"
-#include "CoreGraphics/CGLayer.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "CoreGraphics/CGGradient.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <math.h>
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGPath.h>
+#import <CoreGraphics/CGLayer.h>
+#import <CoreGraphics/CGAffineTransform.h>
+#import <CoreGraphics/CGGradient.h>
+#import <Foundation/NSString.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIColor.h>
+#import "CGContextInternal.h"
+#import "CGColorSpaceInternal.h"
+#import "_CGLifetimeBridgingType.h"
 
 #define DEBUG_CONTEXT_COUNT
 
@@ -53,7 +52,6 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     EbrDebugLog("contextCount: %d\n", contextCount);
 #endif
-    isa = NULL;
     object_setClass((id) this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
@@ -658,10 +656,10 @@ void CGContextSetShouldSubpixelQuantizeFonts(CGContextRef context, bool subpixel
 }
 
 /**
- @Status Stub
+ @Status interoperable
 */
 void CGContextSetInterpolationQuality(CGContextRef context, CGInterpolationQuality quality) {
-    UNIMPLEMENTED();
+    context->Backing()->CGContextSetInterpolationQuality(quality);
 }
 
 /**
@@ -875,11 +873,10 @@ void CGContextStrokeLineSegments(CGContextRef ctx, const CGPoint* segments, unsi
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef ctx) {
-    UNIMPLEMENTED();
-    return (CGInterpolationQuality)0;
+CGInterpolationQuality CGContextGetInterpolationQuality(CGContextRef context) {
+    return context->Backing()->CGContextGetInterpolationQuality();
 }
 
 void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font) {
@@ -944,6 +941,22 @@ CGPoint CGContextConvertPointToUserSpace(CGContextRef ctx, CGPoint pt) {
 /**
  @Status Stub
 */
+CGSize CGContextConvertSizeToUserSpace(CGContextRef c, CGSize size) {
+    UNIMPLEMENTED();
+    return size;
+}
+
+/**
+ @Status Stub
+*/
+CGPoint CGContextConvertSizeToDeviceSpace(CGContextRef ctx, CGPoint pt) {
+    UNIMPLEMENTED();
+    return pt;
+}
+
+/**
+ @Status Stub
+*/
 CGPoint CGContextConvertPointToDeviceSpace(CGContextRef ctx, CGPoint pt) {
     UNIMPLEMENTED();
     return pt;
@@ -969,9 +982,10 @@ void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, flo
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 void CGContextShowText(CGContextRef ctx, const char* str, unsigned count) {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1092,6 +1106,157 @@ CGContextRef CGBitmapContextCreate24(int width, int height) {
     return context;
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextAddArc(CGContextRef c, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat endAngle, int clockwise) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextBeginPage(CGContextRef c, const CGRect* mediaBox) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPathRef CGContextCopyPath(CGContextRef c) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextDrawPDFPage(CGContextRef c, CGPDFPageRef page) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextEndPage(CGContextRef c) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextFillRects(CGContextRef c, const CGRect* rects, size_t count) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPoint CGContextGetPathCurrentPoint(CGContextRef c) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGContextGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGAffineTransform CGContextGetUserSpaceToDeviceSpaceTransform(CGContextRef c) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGContextPathContainsPoint(CGContextRef c, CGPoint point, CGPathDrawingMode mode) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextSetCMYKFillColor(CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextSetCMYKStrokeColor(CGContextRef c, CGFloat cyan, CGFloat magenta, CGFloat yellow, CGFloat black, CGFloat alpha) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextSetFlatness(CGContextRef c, CGFloat flatness) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextSetStrokePattern(CGContextRef c, CGPatternRef pattern, const CGFloat* components) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextShowGlyphsAtPositions(CGContextRef c, const CGGlyph* glyphs, const CGPoint* Lpositions, size_t count) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextShowGlyphsWithAdvances(CGContextRef c, const CGGlyph* glyphs, const CGSize* advances, size_t count) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGContextSynchronize(CGContextRef c) {
+    UNIMPLEMENTED();
+}
+
+// TODO: functions below are not part of offical exports, but they are also exported
+// to be used by other framework components, we should consider moving them to a shared library
 void CGContextClearToColor(CGContextRef ctx, float r, float g, float b, float a) {
     ctx->Backing()->Clear(r, g, b, a);
 }

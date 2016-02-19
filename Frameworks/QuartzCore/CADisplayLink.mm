@@ -24,6 +24,7 @@
 #import <Quartzcore/CADisplayLink.h>
 #import "NSRunLoopState.h"
 #import "NSRunLoopSource.h"
+#import "NSRunLoop+Internal.h"
 
 EbrLock _displaySyncSocketLock = EBRLOCK_INITIALIZE;
 EbrEvent _displaySyncEvents[32];
@@ -46,7 +47,7 @@ bool CASignalDisplayLink() {
 static IWLazyClassLookup _LazyRunLoopSource("NSRunLoopSource");
 static IWLazyIvarLookup<EbrEvent> _LazySignaledOffset(_LazyRunLoopSource, "_signaledEvent");
 
-@implementation CADisplayLink : NSObject {
+@implementation CADisplayLink {
     idretain _target;
     SEL _selector;
     idretaintype(NSTimer) _timer;
@@ -106,7 +107,7 @@ static void removeFromRunloops(CADisplayLink* self, NSRunLoop* runLoop = nil, NS
                     continue;
                 }
 
-                [currunloop removeInputSource:self->_displaySyncEvent forMode:curmode];
+                [currunloop _removeInputSource:self->_displaySyncEvent forMode:curmode];
                 [arr removeObjectAtIndex:i];
                 [self autorelease];
             }
@@ -139,7 +140,7 @@ static void addToRunloops(CADisplayLink* self) {
         for (NSString* curmode in self->_addedRunLoops) {
             id arr = [self->_addedRunLoops objectForKey:curmode];
             for (NSRunLoop* currunloop in arr) {
-                [currunloop addInputSource:self->_displaySyncEvent forMode:curmode];
+                [currunloop _addInputSource:self->_displaySyncEvent forMode:curmode];
                 [self retain];
             }
         }
@@ -274,7 +275,7 @@ static void createTimerIfNeeded(CADisplayLink* self) {
     }
     [modesArray addObject:runLoop];
     if (_runMode == CADisplayLinkSyncMode) {
-        [runLoop addInputSource:_displaySyncEvent forMode:mode];
+        [runLoop _addInputSource:_displaySyncEvent forMode:mode];
         [self retain];
         addToUpdateList(self);
         [_displaySyncEvent _trigger];

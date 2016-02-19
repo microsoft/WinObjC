@@ -1,0 +1,10 @@
+LIBRARY AVKit
+    EXPORTS
+        ; AVPictureInPictureController.mm
+        _OBJC_CLASS_AVPictureInPictureController DATA
+        __objc_class_name_AVPictureInPictureController CONSTANT
+
+        ; AVPlayerViewController.mm
+        _OBJC_CLASS_AVPlayerViewController DATA
+        __objc_class_name_AVPlayerViewController CONSTANT
+

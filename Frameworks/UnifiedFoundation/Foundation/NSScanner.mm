@@ -1,4 +1,5 @@
 /* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+   Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -16,6 +17,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // Original - Christopher Lloyd <cjwl@objc.net>
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSCharacterSet.h"
 #include "Foundation/NSScanner.h"
@@ -699,6 +701,60 @@ typedef unsigned short unichar;
         free(result);
         return NO;
     }
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)scanDecimal:(NSDecimal*)decimalValue {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)scanHexDouble:(double*)result {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)scanHexFloat:(float*)result {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)scanUnsignedLongLong:(unsigned long long*)unsignedLongLongValue {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)localizedScannerWithString:(NSString*)aString {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

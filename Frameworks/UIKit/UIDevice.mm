@@ -26,6 +26,11 @@ using WCHAR = wchar_t;
 #include "UWP/WindowsApplicationModel.h"
 #include "MurmurHash3.h"
 
+NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
+NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";
+NSString* const UIDeviceOrientationDidChangeNotification = @"UIDeviceOrientationDidChangeNotification";
+NSString* const UIDeviceProximityStateDidChangeNotification = @"UIDeviceProximityStateDidChangeNotification";
+
 static UIDevice* _currentDevice;
 
 bool g_bLandscape = true;
@@ -34,7 +39,7 @@ extern UIDeviceOrientation newDeviceOrientation;
 DWORD uuid_unparse(BYTE* uuid, char* out);
 DWORD uuid_generate(BYTE* uuid);
 
-@implementation UIDevice : NSObject
+@implementation UIDevice
 @synthesize systemVersion = _systemVersion;
 @synthesize identifierForVendor = _identifierForVendor;
 
@@ -104,10 +109,6 @@ DWORD uuid_generate(BYTE* uuid);
     return _batteryMonitoringEnabled;
 }
 
-- (id)setProximityMonitoringEnabled:(DWORD)enable {
-    return self;
-}
-
 - (id)setOrientation:(UIDeviceOrientation)orientation {
     return [self setOrientation:orientation animated:TRUE];
 }
@@ -167,7 +168,7 @@ if ( [curView isKindOfClass:popoverClass] ) {
     }
 
     if (_isGeneratingEvents) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIDeviceOrientationDidChangeNotification" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:UIDeviceOrientationDidChangeNotification object:self];
     }
 
     return self;
@@ -317,8 +318,7 @@ return ret;
     return EbrGetDeviceInfo()->devicePhysHeight;
 }
 
-- (id)playInputClick {
-    return self;
+- (void)playInputClick {
 }
 
 /**
@@ -366,75 +366,5 @@ def = (UIDeviceOrientation) EbrGetWantedOrientation();
 - (id) /* use typed version */ submitRotation {
     return [self setOrientation:newDeviceOrientation];
 }
-
-#if 0
-static id LocalUIDForName(id name)
-{
-id userDefaults = [NSUserDefaults standardUserDefaults];
-id obj = [userDefaults objectForKey:name];
-if ( obj == nil ) {
-BYTE uuid[32];
-char szUUID[64];
-uuid_generate(uuid);
-uuid_unparse(uuid, szUUID);
-
-obj = EbrBuildCFConstantString(szUUID);
-[userDefaults setObject:obj forKey:name];
-}
-
-return obj;
-}
-
--(id) nativePlatformName {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->platformName);
-return ret;
-}
-
--(id) nativeManufacturer {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->manufacturer);
-return ret;
-}
-
--(id) nativeModel {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->model);
-return ret;
-}
-
--(id) nativeProductName {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->deviceProductName);
-return ret;
-}
-
--(id) nativeSerialNo {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->serialNo);
-return ret;
-}
-
--(id) nativeCarrier {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->carrier);
-return ret;
-}
-
--(id) nativeOSVersion {
-static id ret;
-if ( ret == nil ) ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->osVersion);
-return ret;
-}
-
--(id) nativeResolutionWidth {
-return EbrGetDeviceInfo()->deviceResX;
-}
-
--(id) nativeResolutionHeight {
-return EbrGetDeviceInfo()->deviceResY;
-}
-
-#endif
 
 @end

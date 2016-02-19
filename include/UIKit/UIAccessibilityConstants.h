@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIACCESSIBILITYCONSTANTS_H_
-#define _UIACCESSIBILITYCONSTANTS_H_
+#pragma once
 
 #import <StarboardExport.h>
 #import <Foundation/NSObject.h>
@@ -39,5 +38,3 @@ SB_EXPORT UIAccessibilityTraits UIAccessibilityTraitAdjustable;
 SB_EXPORT UIAccessibilityTraits UIAccessibilityTraitAllowsDirectInteraction;
 SB_EXPORT UIAccessibilityTraits UIAccessibilityTraitCausesPageTurn;
 SB_EXPORT UIAccessibilityTraits UIAccessibilityTraitHeader;
-
-#endif /* _UIACCESSIBILITYCONSTANTS_H_ */

@@ -19,7 +19,5 @@
 #import <Foundation/Foundation.h>
 
 @interface NSMutableAttributedString (NSMutableAttributedStringUIKitAdditions)
-
-- fixAttributesInRange:(NSRange)range;
-
+- (void)fixAttributesInRange:(NSRange)range;
 @end

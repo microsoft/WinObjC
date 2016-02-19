@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import "NSSelectInputSource.h"
 
 #include "zlib.h"
 //#define CURL_STATICLIB
@@ -20,6 +23,7 @@
 #include "Hash.h"
 
 #include <deque>
+
 typedef void CURL;
 
 #undef interface
@@ -61,15 +65,15 @@ typedef struct {
     std::deque<URLEvent>* _events;
     EbrLock _eventsLock;
 }
-- (void)selectInputSource:(NSSelectInputSource*)source selectEvent:(DWORD)event;
+- (void)selectInputSource:(NSSelectInputSource*)source selectEvent:(DWORD)event STUB_METHOD;
 - (void)dealloc;
 - (id)retain;
 - (void)release;
-- (id)_socketTimeout;
-- (id)run;
-- (id)init;
-- (id)addHTTPRequest:(NSURLProtocol_http*)request;
-- (id)cancelHTTPRequest:(NSURLProtocol_http*)request;
+- (id)_socketTimeout STUB_METHOD;
+- (id)run STUB_METHOD;
+- (id)init STUB_METHOD;
+- (id)addHTTPRequest:(NSURLProtocol_http*)request STUB_METHOD;
+- (id)cancelHTTPRequest:(NSURLProtocol_http*)request STUB_METHOD;
 - (id)_processEvents;
 - (id)initWithRequest:(id)request cachedResponse:(id)response client:(id)client;
 - (id)startLoading;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,10 +13,37 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CVBUFFER_H_
-#define _CVBUFFER_H_
+#import <CoreVideo/CoreVideoExport.h>
+#import <CoreFoundation/CFType.h>
+#import <CoreFoundation/CFString.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <CoreFoundation/CFBase.h>
 
 typedef struct __CVBuffer* CVBufferRef;
+typedef uint32_t CVAttachmentMode;
 
-#endif /* _CVBUFFER_H_ */
+enum {
+    kCVAttachmentMode_ShouldNotPropagate = 0,
+    kCVAttachmentMode_ShouldPropagate = 1,
+};
+
+COREVIDEO_EXPORT CFTypeRef CVBufferGetAttachment(CVBufferRef buffer, CFStringRef key, CVAttachmentMode* attachmentMode) STUB_METHOD;
+COREVIDEO_EXPORT CFDictionaryRef CVBufferGetAttachments(CVBufferRef buffer, CVAttachmentMode attachmentMode) STUB_METHOD;
+COREVIDEO_EXPORT void CVBufferPropagateAttachments(CVBufferRef sourceBuffer, CVBufferRef destinationBuffer) STUB_METHOD;
+COREVIDEO_EXPORT void CVBufferRelease(CVBufferRef buffer) STUB_METHOD;
+COREVIDEO_EXPORT void CVBufferRemoveAllAttachments(CVBufferRef buffer) STUB_METHOD;
+COREVIDEO_EXPORT void CVBufferRemoveAttachment(CVBufferRef buffer, CFStringRef key) STUB_METHOD;
+COREVIDEO_EXPORT CVBufferRef CVBufferRetain(CVBufferRef buffer) STUB_METHOD;
+COREVIDEO_EXPORT void CVBufferSetAttachment(CVBufferRef buffer, CFStringRef key, CFTypeRef value, CVAttachmentMode attachmentMode)
+    STUB_METHOD;
+COREVIDEO_EXPORT void CVBufferSetAttachments(CVBufferRef buffer,
+                                             CFDictionaryRef theAttachments,
+                                             CVAttachmentMode attachmentMode) STUB_METHOD;
+
+COREVIDEO_EXPORT const CFStringRef kCVBufferMovieTimeKey;
+COREVIDEO_EXPORT const CFStringRef kCVBufferTimeValueKey;
+COREVIDEO_EXPORT const CFStringRef kCVBufferTimeScaleKey;
+COREVIDEO_EXPORT const CFStringRef kCVBufferPropagatedAttachmentsKey;
+COREVIDEO_EXPORT const CFStringRef kCVBufferNonPropagatedAttachmentsKey;

@@ -13,30 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAANIMATION_H_
-#define _CAANIMATION_H_
-
-#import <Foundation/NSObject.h>
-#import <QuartzCore/CABase.h>
-#import <QuartzCore/CAMediaTiming.h>
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAAction.h>
-#import <QuartzCore/CALayer.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <CoreGraphics/CGPath.h>
 
+@class CAAnimation;
+@class NSString;
 @class CAMediaTimingFunction;
-
-CA_EXPORT NSString* const kCATransitionFade;
-CA_EXPORT NSString* const kCATransitionMoveIn;
-CA_EXPORT NSString* const kCATransitionPush;
-CA_EXPORT NSString* const kCATransitionReveal;
-
-CA_EXPORT NSString* const kCATransitionFromLeft;
-CA_EXPORT NSString* const kCATransitionFromRight;
-CA_EXPORT NSString* const kCATransitionFromTop;
-CA_EXPORT NSString* const kCATransitionFromBottom;
-
-CA_EXPORT NSString* const kCAAnimationRotateAuto;
-CA_EXPORT NSString* const kCAAnimationRotateAutoReverse;
+@class NSArray;
 
 enum CAMediaFillMode {
     fillModeRemoved,
@@ -52,13 +39,31 @@ typedef void* DisplayAnimation;
 #endif
 
 CA_EXPORT_CLASS
-@interface CAAnimation : NSObject <NSCopying, CAMediaTiming, CAAction>
+@interface CAAnimation : NSObject <CAAction, CAMediaTiming, NSCoding, NSCopying>
 
-+ animation;
+- (BOOL)shouldArchiveValueForKey:(NSString*)key STUB_METHOD;
++ (id)defaultValueForKey:(NSString*)key STUB_METHOD;
++ (instancetype)animation;
 
-@property (retain) id delegate;
 @property (getter=isRemovedOnCompletion) BOOL removedOnCompletion;
 @property (retain) CAMediaTimingFunction* timingFunction;
+@property (retain) id delegate;
+@property BOOL usesSceneTimeBase STUB_PROPERTY;
+@property CGFloat fadeInDuration STUB_PROPERTY;
+@property CGFloat fadeOutDuration STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* animationEvents STUB_PROPERTY;
+
+// CAMediaTiming
+@property BOOL autoreverses;
+@property CFTimeInterval beginTime;
+@property CFTimeInterval duration;
+@property (copy) NSString* fillMode;
+@property float repeatCount;
+@property CFTimeInterval repeatDuration;
+@property float speed;
+@property CFTimeInterval timeOffset;
+
+// Added by MS
 @property CGPathRef path;
 
 @end
@@ -67,8 +72,3 @@ CA_EXPORT_CLASS
 - (void)animationDidStart:(CAAnimation*)animation;
 - (void)animationDidStop:(CAAnimation*)animation finished:(BOOL)finished;
 @end
-
-#import <QuartzCore/CATransition.h>
-#import <QuartzCore/CAAnimationGroup.h>
-
-#endif /* _CAANIMATION_H_ */

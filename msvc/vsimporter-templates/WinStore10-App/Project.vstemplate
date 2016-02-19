@@ -1,6 +1,6 @@
 <VSTemplate Version="0.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateContent>
-    <Project OutputDirectory="$projectname$-WinStore10" File="App.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32" ReplaceParameters="true" Deployable="true">
+    <Project OutputDirectory="$projectname$-WinStore10" File="App.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32;ARM" ReplaceParameters="true" Deployable="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">App.vcxproj.filters</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Package.appxmanifest">Package-native.appxmanifest</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="default.rd.xml">default.rd.xml</ProjectItem>

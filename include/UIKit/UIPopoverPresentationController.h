@@ -29,8 +29,7 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UIPOPOVERPRESENTATIONCONTROLLER_H_
-#define _UIPOPOVERPRESENTATIONCONTROLLER_H_
+#pragma once
 
 #include <UIKit/UIPresentationController.h>
 #include <UIKit/UIPopoverPresentationControllerDelegate.h>
@@ -50,5 +49,3 @@
 @property (nonatomic, readonly) UIPopoverArrowDirection arrowDirection;
 
 @end
-
-#endif /* _UIPOPOVERPRESENTATIONCONTROLLER_H_ */

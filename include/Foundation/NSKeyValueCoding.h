@@ -1,52 +1,63 @@
-/* Copyright (c) 2006-2007 Johannes Fortmann
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-#ifndef _NSKEYVALUECODING_H_
-#define _NSKEYVALUECODING_H_
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
+@class NSString;
 @class NSDictionary;
 @class NSArray;
-@class NSError;
+@class NSMutableArray;
 @class NSMutableSet;
 @class NSMutableOrderedSet;
 
-SB_EXPORT NSString * const NSUndefinedKeyException;
+#import <Foundation/NSError.h>
+FOUNDATION_EXPORT NSString* const NSUndefinedKeyException;
+FOUNDATION_EXPORT NSString* const NSTargetObjectUserInfoKey;
+FOUNDATION_EXPORT NSString* const NSUnknownUserInfoKey;
+FOUNDATION_EXPORT NSString* const NSAverageKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSCountKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSDistinctUnionOfArraysKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSDistinctUnionOfObjectsKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSDistinctUnionOfSetsKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSMaximumKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSMinimumKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSSumKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSUnionOfArraysKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSUnionOfObjectsKeyValueOperator;
+FOUNDATION_EXPORT NSString* const NSUnionOfSetsKeyValueOperator;
 
-@interface NSObject (KeyValueCoding)
-
-+(BOOL)accessInstanceVariablesDirectly;
-
-// primitive methods
--(id)valueForKey:(NSString*)key;
--(void)setValue:(id)value forKey:(NSString *)key;
--(BOOL)validateValue:(id *)ioValue forKey:(NSString *)key error:(NSError **)outError;
-
-// key path methods
--(id)valueForKeyPath:(NSString*)keyPath;
--(void)setValue:(id)value forKeyPath:(NSString *)keyPath;
--(BOOL)validateValue:(id *)ioValue forKeyPath:(NSString *)keyPath error:(NSError **)outError;
-
-// dictionary methods
--(NSDictionary *)dictionaryWithValuesForKeys:(NSArray *)keys;
--(void)setValuesForKeysWithDictionary:(NSDictionary *)keyedValues;
-
-// undefined keys etc.
--(id)valueForUndefinedKey:(NSString *)key;
--(void)setValue:(id)value forUndefinedKey:(NSString *)key;
--(void)setNilValueForKey:(id)key;
-
--(id)mutableArrayValueForKey:(id)key;
--(id)mutableArrayValueForKeyPath:(id)keyPath;
-
-- (NSMutableSet *)mutableSetValueForKeyPath:(NSString *)keyPath;
-- (NSMutableOrderedSet *)mutableOrderedSetValueForKeyPath:(NSString *)keyPath;
-
+@interface NSObject (NSKeyValueCoding)
+- (id)valueForKey:(NSString*)key;
+- (id)valueForKeyPath:(NSString*)keyPath;
+- (NSDictionary*)dictionaryWithValuesForKeys:(NSArray*)keys STUB_METHOD;
+- (id)valueForUndefinedKey:(NSString*)key;
+- (NSMutableArray*)mutableArrayValueForKey:(NSString*)key;
+- (NSMutableArray*)mutableArrayValueForKeyPath:(NSString*)keyPath;
+- (NSMutableSet*)mutableSetValueForKey:(NSString*)key STUB_METHOD;
+- (NSMutableSet*)mutableSetValueForKeyPath:(NSString*)keyPath STUB_METHOD;
+- (NSMutableOrderedSet*)mutableOrderedSetValueForKey:(NSString*)key STUB_METHOD;
+- (NSMutableOrderedSet*)mutableOrderedSetValueForKeyPath:(NSString*)keyPath STUB_METHOD;
+- (void)setValue:(id)value forKeyPath:(NSString*)keyPath;
+- (void)setValuesForKeysWithDictionary:(NSDictionary*)keyedValues STUB_METHOD;
+- (void)setNilValueForKey:(NSString*)key STUB_METHOD;
+- (void)setValue:(id)value forKey:(NSString*)key;
+- (void)setValue:(id)value forUndefinedKey:(NSString*)key;
++ (BOOL)accessInstanceVariablesDirectly;
+- (BOOL)validateValue:(inout id _Nullable*)ioValue forKey:(NSString*)key error:(out NSError* _Nullable*)outError STUB_METHOD;
+- (BOOL)validateValue:(inout id _Nullable*)ioValue forKeyPath:(NSString*)key error:(out NSError* _Nullable*)outError STUB_METHOD;
 @end
-
-#endif /* _NSKEYVALUECODING_H_ */

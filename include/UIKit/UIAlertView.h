@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,11 +28,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIALERTVIEW_H_
-#define _UIALERTVIEW_H_
+#pragma once
 
 #import <Foundation/NSObject.h>
-#import "UIView.h"
+#import <UIKit/UIView.h>
 
 typedef enum {
     UIAlertViewStyleDefault = 0,
@@ -49,38 +49,28 @@ struct UIAlertViewPriv;
 UIKIT_EXPORT_CLASS
 @interface UIAlertView : UIView
 
-- (id)initWithTitle:(NSString *)title message:(NSString *)message delegate:(id)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitles, ...;
-
-- (NSInteger)addButtonWithTitle:(NSString *)title;
-- (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex;
-- (void)show;
-- (void)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;       // not implemented at the moment since I use NSAlert and runModal and this would present problems. :/
-- (UITextField *)textFieldAtIndex:(NSInteger)textFieldIndex;
-
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *message;
-@property (nonatomic, assign) id<UIAlertViewDelegate> delegate;
 @property (nonatomic) NSInteger cancelButtonIndex;
-@property (nonatomic,readonly) NSInteger numberOfButtons;
-@property (nonatomic, readonly, getter=isVisible) BOOL visible;
 @property (nonatomic, assign) UIAlertViewStyle alertViewStyle;
+@property (nonatomic, assign) id<UIAlertViewDelegate> delegate;
+@property (nonatomic, copy) NSString* message;
+@property (nonatomic, copy) NSString* title;
 @property (nonatomic, readonly) NSInteger firstOtherButtonIndex;
+@property (nonatomic, readonly, getter=isVisible) BOOL visible;
+@property (nonatomic, readonly) NSInteger numberOfButtons;
+
+- (NSInteger)addButtonWithTitle:(NSString*)title;
+- (NSString*)buttonTitleAtIndex:(NSInteger)buttonIndex;
+- (UITextField*)textFieldAtIndex:(NSInteger)textFieldIndex;
+- (instancetype)initWithTitle:(NSString*)title
+                      message:(NSString*)message
+                     delegate:(id)delegate
+            cancelButtonTitle:(NSString*)cancelButtonTitle
+            otherButtonTitles:(NSString*)otherButtonTitles, ...;
+- (void)
+dismissWithClickedButtonIndex:(NSInteger)buttonIndex
+                     animated:
+                         (BOOL)
+                             animated; // not implemented at the moment since I use NSAlert and runModal and this would present problems. :/
+- (void)show;
 
 @end
-
-@protocol UIAlertViewDelegate <NSObject>
-@optional
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex;
-
-- (void)alertViewCancel:(UIAlertView *)alertView; // never called
-
-- (void)willPresentAlertView:(UIAlertView *)alertView;  // before animation and showing view
-- (void)didPresentAlertView:(UIAlertView *)alertView;  // after animation
-
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex; // before animation and hiding view
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex;  // after animation
-
-@end
-
-#endif /* _UIALERTVIEW_H_ */

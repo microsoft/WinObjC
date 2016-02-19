@@ -13,17 +13,16 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CAANIMATIONGROUP_H_
-#define _CAANIMATIONGROUP_H_
-
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CAAnimation.h>
 
+@class NSArray;
+
 CA_EXPORT_CLASS
-@interface CAAnimationGroup : CAAnimation
+@interface CAAnimationGroup : CAAnimation <CAAction, CAMediaTiming, NSCoding, NSCopying>
 
 @property (copy) NSArray* animations;
 
 @end
-
-#endif /* _CAANIMATIONGROUP_H_ */

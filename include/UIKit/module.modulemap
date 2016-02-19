@@ -1,19 +1,4 @@
 module UIKit [extern_c] {
     umbrella header "UIKit.h"
     export *
-    
-    explicit module UIEmptyController {
-        header "UIEmptyController.h"
-        export *
-    }
-    
-    explicit module UIGestureRecognizerSubclass {
-        header "UIGestureRecognizerSubclass.h"
-        export *
-    }
-    
-    explicit module UIRuntimeEventConnection {
-        header "UIRuntimeEventConnection.h"
-        export *
-    }
 }

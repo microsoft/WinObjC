@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "CoreFoundation/CFDictionary.h"
@@ -133,6 +134,15 @@
 
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSDictionary alloc] initWithDictionary:self];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

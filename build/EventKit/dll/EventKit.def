@@ -1,0 +1,57 @@
+LIBRARY EventKit
+    EXPORTS
+        ; EKAlarm.mm
+        _OBJC_CLASS_EKAlarm DATA
+        __objc_class_name_EKAlarm CONSTANT
+
+        ; EKCalendar.mm
+        _OBJC_CLASS_EKCalendar DATA
+        __objc_class_name_EKCalendar CONSTANT
+
+        ; EKCalendarItem.mm
+        _OBJC_CLASS_EKCalendarItem DATA
+        __objc_class_name_EKCalendarItem CONSTANT
+
+        ; EKEvent.mm
+        _OBJC_CLASS_EKEvent DATA
+        __objc_class_name_EKEvent CONSTANT
+
+        ; EKEventStore.mm
+        _OBJC_CLASS_EKEventStore DATA
+        __objc_class_name_EKEventStore CONSTANT
+
+        ; EKObject.mm
+        _OBJC_CLASS_EKObject DATA
+        __objc_class_name_EKObject CONSTANT
+
+        ; EKParticipant.mm
+        _OBJC_CLASS_EKParticipant DATA
+        __objc_class_name_EKParticipant CONSTANT
+
+        ; EKRecurrenceDayOfWeek.mm
+        _OBJC_CLASS_EKRecurrenceDayOfWeek DATA
+        __objc_class_name_EKRecurrenceDayOfWeek CONSTANT
+
+        ; EKRecurrenceEnd.mm
+        _OBJC_CLASS_EKRecurrenceEnd DATA
+        __objc_class_name_EKRecurrenceEnd CONSTANT
+
+        ; EKRecurrenceRule.mm
+        _OBJC_CLASS_EKRecurrenceRule DATA
+        __objc_class_name_EKRecurrenceRule CONSTANT
+
+        ; EKReminder.mm
+        _OBJC_CLASS_EKReminder DATA
+        __objc_class_name_EKReminder CONSTANT
+
+        ; EKSource.mm
+        _OBJC_CLASS_EKSource DATA
+        __objc_class_name_EKSource CONSTANT
+
+        ; EKStructuredLocation.mm
+        _OBJC_CLASS_EKStructuredLocation DATA
+        __objc_class_name_EKStructuredLocation CONSTANT
+
+        ; EventKit Constants.mm
+        EKErrorDomain DATA
+

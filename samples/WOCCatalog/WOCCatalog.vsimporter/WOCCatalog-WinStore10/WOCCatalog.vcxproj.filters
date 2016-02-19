@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -162,6 +162,12 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg">
       <Filter>Images</Filter>
     </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg">
+      <Filter>Images</Filter>
+    </SBResourceCopy>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
@@ -178,6 +184,9 @@
     <Text Include="WOCCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+    <Image Include="..\..\WOCCatalog\Images\tf_bgimage.jpg">
+      <Filter>Images</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -193,6 +202,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
   </ItemGroup>

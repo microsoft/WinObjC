@@ -25,7 +25,7 @@
 #include "UISegment.h"
 #include <math.h>
 
-@implementation UISegmentedControl : UIControl {
+@implementation UISegmentedControl {
     idretain _segments;
     id _tintColor;
     idretain _backgroundImages[16];
@@ -402,7 +402,7 @@ static void positionSegments(UISegmentedControl* self) {
             [[_segments objectAtIndex:_curSelected] _setSelected:1];
         }
 
-        [self sendEvent:self mask:UIControlEventValueChanged];
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
 
     return self;
@@ -428,7 +428,7 @@ static void positionSegments(UISegmentedControl* self) {
             fireEvent = true;
         }
         if (fireEvent) {
-            [self sendEvent:self mask:UIControlEventValueChanged];
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
         }
     }
 
@@ -468,7 +468,7 @@ static void positionSegments(UISegmentedControl* self) {
         [[_segments objectAtIndex:_curSelected] _setSelected:1];
     }
 
-    [self sendEvent:self mask:UIControlEventValueChanged];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
 
     return self;
 }

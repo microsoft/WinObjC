@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,26 @@
 //
 //******************************************************************************
 
-#ifndef _NSMIGRATIONMANAGER_H_
-#define _NSMIGRATIONMANAGER_H_
+#pragma once
 
+#import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSMappingModel;
 @class NSManagedObjectModel;
 @class NSURL;
+@class NSString;
 @class NSDictionary;
+@class NSMappingModel;
 @class NSError;
+@class NSEntityMapping;
+@class NSManagedObject;
+@class NSArray;
+@class NSEntityDescription;
+@class NSManagedObjectContext;
 
+COREDATA_EXPORT_CLASS
 @interface NSMigrationManager : NSObject
-
-- (id)initWithSourceModel:(NSManagedObjectModel*)sourceModel destinationModel:(NSManagedObjectModel*)destinationModel;
+- (instancetype)initWithSourceModel:(NSManagedObjectModel*)sourceModel destinationModel:(NSManagedObjectModel*)destinationModel STUB_METHOD;
 - (BOOL)migrateStoreFromURL:(NSURL*)sourceURL
                        type:(NSString*)sStoreType
                     options:(NSDictionary*)sOptions
@@ -35,8 +41,23 @@
            toDestinationURL:(NSURL*)dURL
             destinationType:(NSString*)dStoreType
          destinationOptions:(NSDictionary*)dOptions
-                      error:(NSError**)error;
-
+                      error:(NSError* _Nullable*)error STUB_METHOD;
+- (void)reset STUB_METHOD;
+- (void)cancelMigrationWithError:(NSError*)error STUB_METHOD;
+@property (readonly) float migrationProgress STUB_PROPERTY;
+@property (readonly, strong) NSEntityMapping* currentEntityMapping STUB_PROPERTY;
+- (void)associateSourceInstance:(NSManagedObject*)sourceInstance
+        withDestinationInstance:(NSManagedObject*)destinationInstance
+               forEntityMapping:(NSEntityMapping*)entityMapping STUB_METHOD;
+- (NSArray*)destinationInstancesForEntityMappingNamed:(NSString*)mappingName sourceInstances:(NSArray*)sourceInstances STUB_METHOD;
+- (NSArray*)sourceInstancesForEntityMappingNamed:(NSString*)mappingName destinationInstances:(NSArray*)destinationInstances STUB_METHOD;
+@property (readonly, strong) NSMappingModel* mappingModel STUB_PROPERTY;
+@property (readonly, strong) NSManagedObjectModel* sourceModel STUB_PROPERTY;
+@property (readonly, strong) NSManagedObjectModel* destinationModel STUB_PROPERTY;
+- (NSEntityDescription*)sourceEntityForEntityMapping:(NSEntityMapping*)mEntity STUB_METHOD;
+- (NSEntityDescription*)destinationEntityForEntityMapping:(NSEntityMapping*)mEntity STUB_METHOD;
+@property (readonly, strong) NSManagedObjectContext* sourceContext STUB_PROPERTY;
+@property (readonly, strong) NSManagedObjectContext* destinationContext STUB_PROPERTY;
+@property (nonatomic, strong) NSDictionary* userInfo STUB_PROPERTY;
+@property BOOL usesStoreSpecificMigrationManager STUB_PROPERTY;
 @end
-
-#endif /* _NSMIGRATIONMANAGER_H_ */

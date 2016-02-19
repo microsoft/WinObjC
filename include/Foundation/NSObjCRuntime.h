@@ -25,6 +25,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <Foundation/FoundationExport.h>
 #import <Availability.h>
 #import <StarboardExport.h>
+#import <StubIncludes.h>
 
 #define NS_INLINE static inline
 
@@ -180,7 +181,9 @@ FOUNDATION_EXPORT NSString* NSStringFromSelector(SEL selector);
 
 FOUNDATION_EXPORT Class NSClassFromString(NSString* className);
 FOUNDATION_EXPORT NSString* NSStringFromClass(Class aClass);
-FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
+
+FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto) STUB_METHOD;
+FOUNDATION_EXPORT Protocol* NSProtocolFromString(NSString* namestr) STUB_METHOD;
 
 #ifndef NS_FORMAT_FUNCTION
 #define NS_FORMAT_FUNCTION(F, A)
@@ -198,7 +201,39 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 #define NS_UNAVAILABLE UNAVAILABLE_ATTRIBUTE
 #endif
 
+#ifndef NS_DESIGNATED_INITIALIZER
+#if __has_attribute(objc_designated_initializer)
+#define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))
+#else
 #define NS_DESIGNATED_INITIALIZER
+#endif
+#endif
+
+#ifndef NS_SWIFT_NOTHROW
+#define NS_SWIFT_NOTHROW
+#endif
+
+#ifndef NS_REFINED_FOR_SWIFT
+#define NS_REFINED_FOR_SWIFT
+#endif
+
+#ifndef NS_SWIFT_NAME
+#define NS_SWIFT_NAME
+#endif
+
+#ifdef NS_SWIFT_UNAVAILABLE
+#define NS_SWIFT_UNAVAILABLE
+#endif
+
+#ifndef NS_ASSUME_NONNULL_BEGIN
+#if __has_feature(assume_nonnull)
+#define NS_ASSUME_NONNULL_BEGIN _Pragma("clang assume_nonnull begin")
+#define NS_ASSUME_NONNULL_END _Pragma("clang assume_nonnull end")
+#else
+#define NS_ASSUME_NONNULL_BEGIN
+#define NS_ASSUME_NONNULL_END
+#endif
+#endif
 
 #if (!__has_feature(objc_arc))
 #define __autoreleasing
@@ -210,6 +245,12 @@ FOUNDATION_EXPORT NSString* NSStringFromProtocol(Protocol* proto);
 #endif
 #ifndef __unsafe_unretained
 #define __unsafe_unretained
+#endif
+#endif
+
+#if __has_feature(nullability)
+#ifndef __nullable
+#define __nullable _Nullable
 #endif
 #endif
 
@@ -231,15 +272,17 @@ enum {
     NSSortConcurrent = 1UL,
     NSSortStable = 16UL,
 };
+
 typedef uint32_t NSSortOptions;
 
 enum {
     NSEnumerationConcurrent = 1,
     NSEnumerationReverse = 2,
 };
+
 typedef uint32_t NSEnumerationOptions;
 
-FOUNDATION_EXPORT double NSFoundationVersionNumber;
+FOUNDATION_EXPORT const double NSFoundationVersionNumber;
 
 #define NSFoundationVersionNumber_iPhoneOS_2_0 678.24
 #define NSFoundationVersionNumber_iPhoneOS_2_1 678.26

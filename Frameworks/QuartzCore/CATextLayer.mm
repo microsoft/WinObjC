@@ -24,6 +24,16 @@
 #include "CALayerInternal.h"
 #include "CACompositor.h"
 
+NSString* const kCATruncationNone = @"kCATruncationNone";
+NSString* const kCATruncationStart = @"kCATruncationStart";
+NSString* const kCATruncationEnd = @"kCATruncationEnd";
+NSString* const kCATruncationMiddle = @"kCATruncationMiddle";
+NSString* const kCAAlignmentNatural = @"kCAAlignmentNatural";
+NSString* const kCAAlignmentLeft = @"kCAAlignmentLeft";
+NSString* const kCAAlignmentRight = @"kCAAlignmentRight";
+NSString* const kCAAlignmentCenter = @"kCAAlignmentCenter";
+NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
+
 @implementation CATextLayer {
     BOOL _shouldRasterize;
     idretain __font;
@@ -83,14 +93,14 @@
     return textLayer;
 }
 
-- (void)_setDisplayParams:(UIFont*)
-                     font:(NSString*)
-                     text:(UIColor*)
-                    color:(UITextAlignment)
-                alignment:(UILineBreakMode)
-                lineBreak:(UIColor*)
-              shadowColor:(CGSize)
-             shadowOffset:(int)numLines {
+- (void)_setDisplayParams:(UIFont*)font
+                         :(NSString*)text
+                         :(UIColor*)color
+                         :(UITextAlignment)alignment
+                         :(UILineBreakMode)lineBreak
+                         :(UIColor*)shadowColor
+                         :(CGSize)shadowOffset
+                         :(int)numLines {
     __font = font;
     _text = text;
     _alignment = alignment;

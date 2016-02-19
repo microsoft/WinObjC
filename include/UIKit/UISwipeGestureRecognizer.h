@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,13 +28,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
 
 typedef enum {
     UISwipeGestureRecognizerDirectionRight = 1 << 0,
-    UISwipeGestureRecognizerDirectionLeft  = 1 << 1,
-    UISwipeGestureRecognizerDirectionUp    = 1 << 2,
-    UISwipeGestureRecognizerDirectionDown  = 1 << 3
+    UISwipeGestureRecognizerDirectionLeft = 1 << 1,
+    UISwipeGestureRecognizerDirectionUp = 1 << 2,
+    UISwipeGestureRecognizerDirectionDown = 1 << 3
 } UISwipeGestureRecognizerDirection;
 
 UIKIT_EXPORT_CLASS

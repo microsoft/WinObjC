@@ -17,51 +17,52 @@
 #include <assert.h>
 #include "UIStoryboardSegue.h"
 
-UIStoryboardSegue::UIStoryboardSegue()
-{
+UIStoryboardSegue::UIStoryboardSegue() {
     _destination = NULL;
     _type = segueRelationship;
     _identifier = NULL;
 }
 
-void UIStoryboardSegue::InitFromXIB(XIBObject *obj)
-{
+void UIStoryboardSegue::InitFromXIB(XIBObject* obj) {
     ObjectConverter::InitFromXIB(obj);
 }
 
-void UIStoryboardSegue::InitFromStory(XIBObject *obj)
-{
+void UIStoryboardSegue::InitFromStory(XIBObject* obj) {
     ObjectConverter::InitFromStory(obj);
-    _destination = getAttrib("destination");
-    if ( _destination ) {
+    _destination = getAttrAndHandle("destination");
+    if (_destination) {
         char szDestination[255];
         sprintf(szDestination, "UIViewController-%s", _destination);
         _destination = strdup(szDestination);
     }
-    _identifier = getAttrib("identifier");
+    _identifier = getAttrAndHandle("identifier");
 
-    const char *pKind = getAttrib("kind");
-    if ( pKind ) {
-        if ( strcmp(pKind, "modal") == 0 ) {
+    const char* pKind = getAttrib("kind");
+    if (pKind) {
+        bool isHandled = true;
+        if (strcmp(pKind, "modal") == 0) {
             _type = segueModal;
-        } else if ( strcmp(pKind, "push") == 0 ) {
+        } else if (strcmp(pKind, "push") == 0) {
             _type = seguePush;
-        } else if ( strcmp(pKind, "relationship") == 0 ) {
+        } else if (strcmp(pKind, "relationship") == 0) {
             _type = segueRelationship;
         } else {
-            assert(0);
+            isHandled = false;
+        }
+
+        if (isHandled) {
+            getAttrAndHandle("kind");
         }
     }
 
-    if ( _type == segueModal ) {
+    if (_type == segueModal) {
         _outputClassName = "UIStoryboardModalSegueTemplate";
-    } else if ( _type == seguePush ) {
+    } else if (_type == seguePush) {
         _outputClassName = "UIStoryboardPushSegueTemplate";
     }
 }
 
-void UIStoryboardSegue::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
-{
+void UIStoryboardSegue::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
     AddString(writer, "UIIdentifier", _identifier);
     AddString(writer, "UIDestinationViewControllerIdentifier", _destination);

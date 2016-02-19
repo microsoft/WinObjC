@@ -14,46 +14,51 @@
 //
 //******************************************************************************
 
-#include <process.h>
-
-#include "Starboard.h"
-#include "Foundation/NSLock.h"
-#include "Foundation/NSRecursiveLock.h"
+#import <Starboard.h>
+#import <mutex>
+#import <chrono>
+#import "NSLock+Internal.h"
 
 @implementation NSLock {
-    uint32_t _lock;
+    std::timed_mutex _mtx;
     idretaintype(NSString) _name;
-}
-- (instancetype)init {
-    EbrLockInit(&_lock);
-
-    return self;
+    // internal counter used for test purpose.
+    volatile long _count;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)lock {
-    EbrLockEnter(_lock);
+    _mtx.lock();
+    _InterlockedIncrement(&_count);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)tryLock {
-    BOOL ret = EbrLockTryEnter(_lock);
+    BOOL status = _mtx.try_lock();
+    if (status) {
+        _InterlockedIncrement(&_count);
+    }
 
-    return ret;
+    return status;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unlock {
-    EbrLockLeave(_lock);
+    _InterlockedDecrement(&_count);
+    _mtx.unlock();
 }
 
 /**
  @Status Interoperable
 */
 - (void)setName:(NSString*)name {
-    [name retain];
-    [_name release];
-    _name = name;
+    _name.attach([name copy]);
 }
 
 /**
@@ -62,49 +67,22 @@
 - (NSString*)name {
     return _name;
 }
-@end
-
-@implementation NSRecursiveLock {
-    uint32_t _lock;
-    idretaintype(NSString) _name;
-}
-
-- (instancetype)init {
-    EbrLockInit(&_lock);
-
-    return self;
-}
-
-- (void)lock {
-    EbrLockEnter(_lock);
-}
 
 /**
  @Status Interoperable
 */
-- (BOOL)tryLock {
-    BOOL ret = EbrLockTryEnter(_lock);
+- (BOOL)lockBeforeDate:(NSDate*)value {
+    NSDate* now = [NSDate date];
+    long timeInMs = [value timeIntervalSinceDate:now] * 1000;
+    BOOL status = _mtx.try_lock_for(std::chrono::milliseconds(timeInMs));
+    if (status) {
+        _InterlockedIncrement(&_count);
+    }
 
-    return ret;
+    return status;
 }
 
-- (void)unlock {
-    EbrLockLeave(_lock);
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setName:(NSString*)name {
-    [name retain];
-    [_name release];
-    _name = name;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return _name;
+- (long)_lockCount {
+    return _count;
 }
 @end

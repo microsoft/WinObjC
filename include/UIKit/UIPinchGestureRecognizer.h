@@ -29,6 +29,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
 
 UIKIT_EXPORT_CLASS

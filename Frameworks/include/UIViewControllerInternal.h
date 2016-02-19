@@ -67,6 +67,10 @@ struct UIViewControllerPriv {
     idretaintype(NSMutableArray) _childViewControllers;
 };
 
+@interface _UIViewControllerContextTransitioning : NSObject <UIViewControllerContextTransitioning> {
+}
+@end
+
 @interface UIViewController () {
 @public
     struct UIViewControllerPriv* priv;

@@ -1,0 +1,11 @@
+module EventKitUI [extern_c] {
+    use Foundation
+    use UIKit
+    use EventKit
+    umbrella header "EventKitUI.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

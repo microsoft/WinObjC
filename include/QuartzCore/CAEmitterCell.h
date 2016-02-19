@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CALayer.h>
 #import <QuartzCore/CAMediaTiming.h>
 
@@ -23,7 +24,7 @@
 @class NSDictionary;
 
 CA_EXPORT_CLASS
-@interface CAEmitterCell : NSObject <CAMediaTiming, NSCoding, NSObject>
+@interface CAEmitterCell : NSObject <CAMediaTiming, NSCoding>
 
 + (instancetype)emitterCell;
 @property (strong) id contents;
@@ -62,5 +63,15 @@ CA_EXPORT_CLASS
 @property CGFloat zAcceleration;
 + (id)defaultValueForKey:(NSString*)key;
 - (BOOL)shouldArchiveValueForKey:(NSString*)key;
+
+// CAMediaTiming
+@property BOOL autoreverses STUB_PROPERTY;
+@property CFTimeInterval beginTime STUB_PROPERTY;
+@property CFTimeInterval duration STUB_PROPERTY;
+@property (copy) NSString* fillMode STUB_PROPERTY;
+@property float repeatCount STUB_PROPERTY;
+@property CFTimeInterval repeatDuration STUB_PROPERTY;
+@property float speed STUB_PROPERTY;
+@property CFTimeInterval timeOffset STUB_PROPERTY;
 
 @end

@@ -17,20 +17,6 @@
 #include "Starboard.h"
 #include "UIEmptyController.h"
 
-@implementation UIEmptyController : UIView
-// Commented out because this is commented out in the message map below so we don't want it in
-// the objc code for now..
-#if 0
-
--(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent*)event {
-id ret = [super hitTest:point withEvent:event];
-
-if ( ret == self ) return nil;
-
-return ret;
-}
-#endif
-
-//
+@implementation UIEmptyController
 
 @end

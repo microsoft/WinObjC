@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,100 +13,122 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CVPIXELBUFFER_H_
-#define _CVPIXELBUFFER_H_
-
+#import <CoreVideo/CoreVideoExport.h>
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <CoreFoundation/CFType.h>
 #import <CoreVideo/CVImageBuffer.h>
-#import <StarboardExport.h>
+#import <CoreFoundation/CFString.h>
 
-typedef CVImageBufferRef CVPixelBufferRef;
 typedef UInt64 CVOptionFlags;
 typedef SInt32 CVReturn;
 
-enum {
-    kCVPixelFormatType_1Monochrome = 0x00000001,
-    kCVPixelFormatType_2Indexed = 0x00000002,
-    kCVPixelFormatType_4Indexed = 0x00000004,
-    kCVPixelFormatType_8Indexed = 0x00000008,
-    kCVPixelFormatType_1IndexedGray_WhiteIsZero = 0x00000021,
-    kCVPixelFormatType_2IndexedGray_WhiteIsZero = 0x00000022,
-    kCVPixelFormatType_4IndexedGray_WhiteIsZero = 0x00000024,
-    kCVPixelFormatType_8IndexedGray_WhiteIsZero = 0x00000028,
-    kCVPixelFormatType_16BE555 = 0x00000010,
-    kCVPixelFormatType_16LE555 = 'L555',
-    kCVPixelFormatType_16LE5551 = '5551',
-    kCVPixelFormatType_16BE565 = 'B565',
-    kCVPixelFormatType_16LE565 = 'L565',
-    kCVPixelFormatType_24RGB = 0x00000018,
-    kCVPixelFormatType_24BGR = '24BG',
-    kCVPixelFormatType_32ARGB = 0x00000020,
-    kCVPixelFormatType_32BGRA = 'BGRA',
-    kCVPixelFormatType_32ABGR = 'ABGR',
-    kCVPixelFormatType_32RGBA = 'RGBA',
-    kCVPixelFormatType_64ARGB = 'b64a',
-    kCVPixelFormatType_48RGB = 'b48r',
-    kCVPixelFormatType_32AlphaGray = 'b32a',
-    kCVPixelFormatType_16Gray = 'b16g',
-    kCVPixelFormatType_30RGB = 'R10k',
-    kCVPixelFormatType_422YpCbCr8 = '2vuy',
-    kCVPixelFormatType_4444YpCbCrA8 = 'v408',
-    kCVPixelFormatType_4444YpCbCrA8R = 'r408',
-    kCVPixelFormatType_4444AYpCbCr8 = 'y408',
-    kCVPixelFormatType_4444AYpCbCr16 = 'y416',
-    kCVPixelFormatType_444YpCbCr8 = 'v308',
-    kCVPixelFormatType_422YpCbCr16 = 'v216',
-    kCVPixelFormatType_422YpCbCr10 = 'v210',
-    kCVPixelFormatType_444YpCbCr10 = 'v410',
-    kCVPixelFormatType_420YpCbCr8Planar = 'y420',
-    kCVPixelFormatType_420YpCbCr8PlanarFullRange = 'f420',
-    kCVPixelFormatType_422YpCbCr_4A_8BiPlanar = 'a2vy',
-    kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange = '420v',
-    kCVPixelFormatType_420YpCbCr8BiPlanarFullRange = '420f',
-    kCVPixelFormatType_422YpCbCr8_yuvs = 'yuvs',
-    kCVPixelFormatType_422YpCbCr8FullRange = 'yuvf',
-    kCVPixelFormatType_OneComponent8 = 'L008',
-    kCVPixelFormatType_TwoComponent8 = '2C08',
-    kCVPixelFormatType_OneComponent16Half = 'L00h',
-    kCVPixelFormatType_OneComponent32Float = 'L00f',
-    kCVPixelFormatType_TwoComponent16Half = '2C0h',
-    kCVPixelFormatType_TwoComponent32Float = '2C0f',
-    kCVPixelFormatType_64RGBAHalf = 'RGhA',
-    kCVPixelFormatType_128RGBAFloat = 'RGfA',
+struct CVPlanarComponentInfo{
+    int32_t offset;
+    uint32_t rowBytes;
 };
+typedef struct CVPlanarComponentInfo CVPlanarComponentInfo;
 
-enum CVPixelBufferLockFlags {
+struct CVPlanarPixelBufferInfo {
+    CVPlanarComponentInfo componentInfo[1];
+};
+typedef struct CVPlanarPixelBufferInfo CVPlanarPixelBufferInfo;
+
+struct CVPlanarPixelBufferInfo_YCbCrPlanar {
+    CVPlanarComponentInfo componentInfoY;
+    CVPlanarComponentInfo componentInfoCb;
+    CVPlanarComponentInfo componentInfoCr;
+};
+typedef struct CVPlanarPixelBufferInfo_YCbCrPlanar CVPlanarPixelBufferInfo_YCbCrPlanar;
+
+struct CVPlanarPixelBufferInfo_YCbCrBiPlanar {
+    CVPlanarComponentInfo componentInfoY;
+    CVPlanarComponentInfo componentInfoCbCr;
+};
+typedef struct CVPlanarPixelBufferInfo_YCbCrBiPlanar CVPlanarPixelBufferInfo_YCbCrBiPlanar;
+
+typedef CVImageBufferRef CVPixelBufferRef;
+typedef void (*CVPixelBufferReleaseBytesCallback)(void* releaseRefCon, const void* baseAddress);
+typedef void (*CVPixelBufferReleasePlanarBytesCallback)(
+    void* releaseRefCon, const void* dataPtr, size_t dataSize, size_t numberOfPlanes, const void* planeAddresses[]);
+
+typedef CF_ENUM(UInt32, CVPixelBufferLockFlags) {
     kCVPixelBufferLock_ReadOnly = 0x00000001,
 };
 
-SB_EXPORT const CFStringRef kCVPixelBufferPixelFormatTypeKey;
-SB_EXPORT const CFStringRef kCVPixelBufferMemoryAllocatorKey;
-SB_EXPORT const CFStringRef kCVPixelBufferWidthKey;
-SB_EXPORT const CFStringRef kCVPixelBufferHeightKey;
-SB_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsLeftKey;
-SB_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsTopKey;
-SB_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsRightKey;
-SB_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsBottomKey;
-SB_EXPORT const CFStringRef kCVPixelBufferBytesPerRowAlignmentKey;
-SB_EXPORT const CFStringRef kCVPixelBufferCGBitmapContextCompatibilityKey;
-SB_EXPORT const CFStringRef kCVPixelBufferCGImageCompatibilityKey;
-SB_EXPORT const CFStringRef kCVPixelBufferOpenGLCompatibilityKey;
-SB_EXPORT const CFStringRef kCVPixelBufferPlaneAlignmentKey;
-SB_EXPORT const CFStringRef kCVPixelBufferIOSurfacePropertiesKey;
-SB_EXPORT const CFStringRef kCVPixelBufferOpenGLESCompatibilityKey;
+COREVIDEO_EXPORT CVReturn CVPixelBufferCreate(CFAllocatorRef allocator,
+                                              size_t width,
+                                              size_t height,
+                                              OSType pixelFormatType,
+                                              CFDictionaryRef pixelBufferAttributes,
+                                              CVPixelBufferRef _Nullable* pixelBufferOut) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferCreateResolvedAttributesDictionary(CFAllocatorRef allocator,
+                                                                          CFArrayRef attributes,
+                                                                          CFDictionaryRef _Nullable* resolvedDictionaryOut) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferCreateWithBytes(CFAllocatorRef allocator,
+                                                       size_t width,
+                                                       size_t height,
+                                                       OSType pixelFormatType,
+                                                       void* baseAddress,
+                                                       size_t bytesPerRow,
+                                                       CVPixelBufferReleaseBytesCallback releaseCallback,
+                                                       void* releaseRefCon,
+                                                       CFDictionaryRef pixelBufferAttributes,
+                                                       CVPixelBufferRef _Nullable* pixelBufferOut) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferCreateWithPlanarBytes(CFAllocatorRef allocator,
+                                                             size_t width,
+                                                             size_t height,
+                                                             OSType pixelFormatType,
+                                                             void* dataPtr,
+                                                             size_t dataSize,
+                                                             size_t numberOfPlanes,
+                                                             void* _Nullable planeBaseAddress[],
+                                                             size_t planeWidth[],
+                                                             size_t planeHeight[],
+                                                             size_t planeBytesPerRow[],
+                                                             CVPixelBufferReleasePlanarBytesCallback releaseCallback,
+                                                             void* releaseRefCon,
+                                                             CFDictionaryRef pixelBufferAttributes,
+                                                             CVPixelBufferRef _Nullable* pixelBufferOut) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferFillExtendedPixels(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT void* CVPixelBufferGetBaseAddress(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT void* CVPixelBufferGetBaseAddressOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetBytesPerRow(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetBytesPerRowOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetDataSize(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT void CVPixelBufferGetExtendedPixels(CVPixelBufferRef pixelBuffer,
+                                                     size_t* extraColumnsOnLeft,
+                                                     size_t* extraColumnsOnRight,
+                                                     size_t* extraRowsOnTop,
+                                                     size_t* extraRowsOnBottom) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetHeight(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetHeightOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex) STUB_METHOD;
+COREVIDEO_EXPORT OSType CVPixelBufferGetPixelFormatType(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetPlaneCount(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT CFTypeID CVPixelBufferGetTypeID() STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetWidth(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT size_t CVPixelBufferGetWidthOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex) STUB_METHOD;
+COREVIDEO_EXPORT Boolean CVPixelBufferIsPlanar(CVPixelBufferRef pixelBuffer) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferLockBaseAddress(CVPixelBufferRef pixelBuffer, CVPixelBufferLockFlags lockFlags) STUB_METHOD;
+COREVIDEO_EXPORT void CVPixelBufferRelease(CVPixelBufferRef texture) STUB_METHOD;
+COREVIDEO_EXPORT CVPixelBufferRef CVPixelBufferRetain(CVPixelBufferRef texture) STUB_METHOD;
+COREVIDEO_EXPORT CVReturn CVPixelBufferUnlockBaseAddress(CVPixelBufferRef pixelBuffer, CVPixelBufferLockFlags unlockFlags) STUB_METHOD;
 
-SB_EXPORT CVReturn CVPixelBufferLockBaseAddress(CVPixelBufferRef pixelBuffer, CVOptionFlags lockFlags);
-SB_EXPORT CVReturn CVPixelBufferUnlockBaseAddress(CVPixelBufferRef pixelBuffer, CVOptionFlags unlockFlags);
-SB_EXPORT size_t CVPixelBufferGetBytesPerRow(CVPixelBufferRef pixelBuffer);
-SB_EXPORT size_t CVPixelBufferGetWidth(CVPixelBufferRef pixelBuffer);
-SB_EXPORT size_t CVPixelBufferGetHeight(CVPixelBufferRef pixelBuffer);
-SB_EXPORT void* CVPixelBufferGetBaseAddress(CVPixelBufferRef pixelBuffer);
-SB_EXPORT OSType CVPixelBufferGetPixelFormatType(CVPixelBufferRef pixelBuffer);
-SB_EXPORT size_t CVPixelBufferGetPlaneCount(CVPixelBufferRef pixelBuffer);
-SB_EXPORT size_t CVPixelBufferGetBytesPerRowOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex);
-SB_EXPORT size_t CVPixelBufferGetHeightOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex);
-SB_EXPORT void* CVPixelBufferGetBaseAddressOfPlane(CVPixelBufferRef pixelBuffer, size_t planeIndex);
-SB_EXPORT CVPixelBufferRef CVPixelBufferRetain(CVPixelBufferRef buffer);
-SB_EXPORT void CVPixelBufferRelease(CVPixelBufferRef buffer);
-
-#endif /* _CVPIXELBUFFER_H_ */
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferPixelFormatTypeKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferMemoryAllocatorKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferWidthKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferHeightKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsLeftKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsTopKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsRightKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferExtendedPixelsBottomKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferBytesPerRowAlignmentKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferCGBitmapContextCompatibilityKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferCGImageCompatibilityKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferOpenGLCompatibilityKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferPlaneAlignmentKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferIOSurfacePropertiesKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferOpenGLESCompatibilityKey;
+COREVIDEO_EXPORT const CFStringRef kCVPixelBufferMetalCompatibilityKey;

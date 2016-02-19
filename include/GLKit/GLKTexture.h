@@ -27,17 +27,46 @@
 @class NSData;
 @class NSDictionary;
 @class NSArray;
+@class GLKTextureInfo;
 
-extern GLKIT_EXPORT NSString* const GLKTextureLoaderApplyPremultiplication;
-extern GLKIT_EXPORT NSString* const GLKTextureLoaderGenerateMipmaps;
-extern GLKIT_EXPORT NSString* const GLKTextureLoaderOriginBottomLeft;
-extern GLKIT_EXPORT NSString* const GLKTextureLoaderGrayscaleAsAlpha;
-extern GLKIT_EXPORT NSString* const GLKTextureLoaderSRGB;
+typedef void (^GLKTextureLoaderCallback)(GLKTextureInfo* textureInfo, NSError* outError);
+
+enum {
+    GLKTextureLoaderErrorFileOrURLNotFound = 0,
+    GLKTextureLoaderErrorInvalidNSData = 1,
+    GLKTextureLoaderErrorInvalidCGImage = 2,
+    GLKTextureLoaderErrorUnknownPathType = 3,
+    GLKTextureLoaderErrorUnknownFileType = 4,
+    GLKTextureLoaderErrorPVRAtlasUnsupported = 5,
+    GLKTextureLoaderErrorCubeMapInvalidNumFiles = 6,
+    GLKTextureLoaderErrorCompressedTextureUpload = 7,
+    GLKTextureLoaderErrorUncompressedTextureUpload = 8,
+    GLKTextureLoaderErrorUnsupportedCubeMapDimensions = 9,
+    GLKTextureLoaderErrorUnsupportedBitDepth = 10,
+    GLKTextureLoaderErrorUnsupportedPVRFormat = 11,
+    GLKTextureLoaderErrorDataPreprocessingFailure = 12,
+    GLKTextureLoaderErrorMipmapUnsupported = 13,
+    GLKTextureLoaderErrorUnsupportedOrientation = 14,
+    GLKTextureLoaderErrorReorientationFailure = 15,
+    GLKTextureLoaderErrorAlphaPremultiplicationFailure = 16,
+    GLKTextureLoaderErrorInvalidEAGLContext = 17,
+    GLKTextureLoaderErrorIncompatibleFormatSRGB = 18
+};
+typedef NSUInteger GLKTextureLoaderError;
+
+GLKIT_EXPORT NSString* const GLKTextureLoaderApplyPremultiplication;
+GLKIT_EXPORT NSString* const GLKTextureLoaderGenerateMipmaps;
+GLKIT_EXPORT NSString* const GLKTextureLoaderOriginBottomLeft;
+GLKIT_EXPORT NSString* const GLKTextureLoaderGrayscaleAsAlpha;
+GLKIT_EXPORT NSString* const GLKTextureLoaderSRGB;
+GLKIT_EXPORT NSString* const GLKTextureLoaderErrorDomain;
+GLKIT_EXPORT NSString* const GLKTextureLoaderErrorKey;
+GLKIT_EXPORT NSString* const GLKTextureLoaderGLErrorKey;
 
 // --------------------------------------------------------------------------------
 
 GLKIT_EXPORT_CLASS
-@interface GLKTextureInfo : NSObject
+@interface GLKTextureInfo : NSObject <NSCopying, NSObject>
 
 @property (readonly) GLuint name;
 @property (readonly) GLuint target;

@@ -14,37 +14,14 @@
 //
 //******************************************************************************
 
-#ifndef _UIMOTIONEFFECT_H_
-#define _UIMOTIONEFFECT_H_
+#pragma once
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 @class NSArray;
 
-typedef enum {
-    UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis,
-    UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis
-} UIInterpolatingMotionEffectType;
-
 UIKIT_EXPORT_CLASS
 @interface UIMotionEffect : NSObject <NSCopying, NSCoding>
 
 @end
-
-UIKIT_EXPORT_CLASS
-@interface UIInterpolatingMotionEffect : UIMotionEffect
-
-@property (retain, nonatomic) id maximumRelativeValue;
-@property (retain, nonatomic) id minimumRelativeValue;
-
-- (instancetype)initWithKeyPath:(NSString*)keyPath type:(UIInterpolatingMotionEffectType)type;
-
-@end
-
-UIKIT_EXPORT_CLASS
-@interface UIMotionEffectGroup : UIMotionEffect
-@property (copy, nonatomic) NSArray* motionEffects;
-@end
-
-#endif /* _UIMOTIONEFFECT_H_ */

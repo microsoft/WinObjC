@@ -13,11 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#include "UIKit/UIKit.h"
-
-@interface UITableViewCellContentView : UIView
-@end
+#include "UITableViewCellContentView.h"
 
 @implementation UITableViewCellContentView
 - (id)initWithCoder:(NSCoder*)coder {

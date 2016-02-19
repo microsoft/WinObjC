@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIScrollView.h"
@@ -49,7 +50,7 @@ struct RowData {
 }
 @end
 
-@implementation UIPickerSubView : UIScrollView
+@implementation UIPickerSubView
 - (id)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
     [super setDelegate:(id<UIScrollViewDelegate>)self];
@@ -90,7 +91,7 @@ struct RowData {
     return self;
 }
 
-- (id) /* use typed version */ layoutSubviews {
+- (void)layoutSubviews {
     CGRect bounds;
     bounds = [self bounds];
 
@@ -120,8 +121,6 @@ struct RowData {
             [self setContentOffset:CGPointMake(0, _rowData[row]._yPos - bounds.size.height / 2.0f + _rowHeight / 2.0f) animated:NO];
         }
     }
-
-    return self;
 }
 
 static void showVisibleCells(UIPickerSubView* self) {
@@ -334,7 +333,7 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
 
 @end
 
-@implementation UIPickerView : UIView {
+@implementation UIPickerView {
     id _delegate;
     id _dataSource;
     idretain _selectionBar;
@@ -396,44 +395,39 @@ static void setupImages(UIPickerView* self) {
 /**
  @Status Stub
 */
-- (id)setShowsSelectionIndicator:(DWORD)show {
+- (void)setShowsSelectionIndicator:(BOOL)show {
     UNIMPLEMENTED();
-    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (id)setDelegate:(id)delegate {
+- (void)setDelegate:(id)delegate {
     _delegate = delegate;
     _needsReload = TRUE;
     [self _setShouldLayout];
-
-    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (id)setDataSource:(id)source {
+- (void)setDataSource:(id<UIPickerViewDataSource>)source {
     _dataSource = source;
     _needsReload = TRUE;
     [self _setShouldLayout];
-
-    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (int)selectedRowInComponent:(DWORD)component {
+- (int)selectedRowInComponent:(NSInteger)component {
     if ((int)component < _numSections) {
         return [_subSections[component] _selectedRow];
     }
     return _selectedRowInComponents[component];
 }
 
-- (id) /* use typed version */ layoutSubviews {
+- (void)layoutSubviews {
     [super layoutSubviews];
 
     if (_needsReload) {
@@ -441,8 +435,6 @@ static void setupImages(UIPickerView* self) {
     } else {
         layoutSubSections(self);
     }
-
-    return self;
 }
 
 static void DestroySections(UIPickerView* self) {
@@ -511,7 +503,7 @@ static void layoutSubSections(UIPickerView* self) {
 /**
  @Status Interoperable
 */
-- (id) /* use typed version */ reloadAllComponents {
+- (void)reloadAllComponents {
     _needsReload = FALSE;
 
     DestroySections(self);
@@ -541,7 +533,7 @@ static void layoutSubSections(UIPickerView* self) {
             if ([_delegate respondsToSelector:@selector(pickerView:widthForComponent:)]) {
                 width = [_delegate pickerView:self widthForComponent:i];
             } else {
-                width = (318.0f / (float)_numSections);  // Using 318px For 1px border on left & right
+                width = (318.0f / (float)_numSections); // Using 318px For 1px border on left & right
             }
 
             _subSections[i] = [UIPickerSubView alloc];
@@ -563,25 +555,19 @@ static void layoutSubSections(UIPickerView* self) {
     }
 
     layoutSubSections(self);
-
-    return self;
 }
 
-- (id) /* use typed version */ invalidateAllComponents {
+- (void)invalidateAllComponents {
     for (int i = 0; i < _numSections; i++) {
         [_subSections[i] invalidateComponents];
     }
-
-    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (id)reloadComponent:(int)component {
+- (void)reloadComponent:(int)component {
     [self reloadAllComponents];
-
-    return 0;
 }
 
 - (id)_subCellSelected:(int)row fromPicker:(id)fromPicker {
@@ -598,23 +584,21 @@ static void layoutSubSections(UIPickerView* self) {
 /**
  @Status Interoperable
 */
-- (id)selectRow:(int)row inComponent:(int)component animated:(BOOL)animated {
+- (void)selectRow:(int)row inComponent:(int)component animated:(BOOL)animated {
     // assert( component == 0 );
     _selectedRowInComponents[component] = row;
 
     if (component >= _numSections) {
-        return self;
+        return;
     }
 
     if (_subSections != NULL) {
         if (row >= _subSections[component]->_numRows) {
-            return self;
+            return;
         }
 
         [_subSections[component] _selectRow:row animated:animated];
     }
-
-    return self;
 }
 
 - (void)dealloc {
@@ -656,6 +640,22 @@ static void layoutSubSections(UIPickerView* self) {
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 320.f, 215.f };
     return ret;
+}
+
+/**
+ @Status Stub
+*/
+- (NSInteger)numberOfRowsInComponent:(NSInteger)component {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)viewForRow:(NSInteger)row inComponent:(NSInteger)component {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

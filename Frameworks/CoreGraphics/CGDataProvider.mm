@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGDataProvider.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSString.h>
+#import <CoreGraphics/CGDataProvider.h>
 
 @interface CGDataProvider : NSData {
 @public
@@ -129,4 +130,23 @@ CGDataProviderRef CGDataProviderCreateWithFilename(const char* filename) {
 */
 void CGDataProviderRelease(CGDataProviderRef data) {
     CFRelease(data);
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+CGDataProviderRef CGDataProviderRetain(CGDataProviderRef provider) {
+    CFRetain((id)provider);
+
+    return provider;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGDataProviderGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
 }

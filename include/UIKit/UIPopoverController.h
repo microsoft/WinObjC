@@ -29,8 +29,7 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UIPOPOVERCONTROLLER_H_
-#define _UIPOPOVERCONTROLLER_H_
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
@@ -46,16 +45,8 @@ enum : NSUInteger {
 };
 typedef NSUInteger UIPopoverArrowDirection;
 
-@class UIView;
-@class UIPopoverController;
-@class UIBarButtonItem;
-@class UIPopoverView;
-
-@protocol UIPopoverControllerDelegate <NSObject>
-@optional
-- (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController;
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController*)popoverController;
-@end
+@class UIView, UIPopoverController, UIBarButtonItem, UIPopoverView;
+@protocol UIPopoverControllerDelegate;
 
 @interface UIPopoverController : NSObject
 
@@ -80,5 +71,3 @@ typedef NSUInteger UIPopoverArrowDirection;
 @property (nonatomic, readonly) UIPopoverArrowDirection popoverArrowDirection;
 
 @end
-
-#endif /* _UIPOPOVERCONTROLLER_H_ */

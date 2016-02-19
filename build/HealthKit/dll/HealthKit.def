@@ -1,0 +1,273 @@
+LIBRARY HealthKit
+    EXPORTS
+        ; HealthKitConstants.mm
+        HKMetadataKeyDeviceSerialNumber DATA
+        HKMetadataKeyBodyTemperatureSensorLocation DATA
+        HKMetadataKeyHeartRateSensorLocation DATA
+        HKMetadataKeyFoodType DATA
+        HKMetadataKeyUDIDeviceIdentifier DATA
+        HKMetadataKeyUDIProductionIdentifier DATA
+        HKMetadataKeyDigitalSignature DATA
+        HKMetadataKeyExternalUUID DATA
+        HKMetadataKeyTimeZone DATA
+        HKMetadataKeyDeviceName DATA
+        HKMetadataKeyDeviceManufacturerName DATA
+        HKMetadataKeyWasTakenInLab DATA
+        HKMetadataKeyReferenceRangeLowerLimit DATA
+        HKMetadataKeyReferenceRangeUpperLimit DATA
+        HKMetadataKeyWasUserEntered DATA
+        HKMetadataKeyWorkoutBrandName DATA
+        HKMetadataKeyGroupFitness DATA
+        HKMetadataKeyIndoorWorkout DATA
+        HKMetadataKeyCoachedWorkout DATA
+        HKMetadataKeySexualActivityProtectionUsed DATA
+        HKMetadataKeyMenstrualCycleStart DATA
+        HKQuantityTypeIdentifierBodyMassIndex DATA
+        HKQuantityTypeIdentifierBodyFatPercentage DATA
+        HKQuantityTypeIdentifierHeight DATA
+        HKQuantityTypeIdentifierBodyMass DATA
+        HKQuantityTypeIdentifierLeanBodyMass DATA
+        HKQuantityTypeIdentifierStepCount DATA
+        HKQuantityTypeIdentifierDistanceWalkingRunning DATA
+        HKQuantityTypeIdentifierDistanceCycling DATA
+        HKQuantityTypeIdentifierBasalEnergyBurned DATA
+        HKQuantityTypeIdentifierActiveEnergyBurned DATA
+        HKQuantityTypeIdentifierFlightsClimbed DATA
+        HKQuantityTypeIdentifierNikeFuel DATA
+        HKQuantityTypeIdentifierHeartRate DATA
+        HKQuantityTypeIdentifierBodyTemperature DATA
+        HKQuantityTypeIdentifierBasalBodyTemperature DATA
+        HKQuantityTypeIdentifierBloodPressureSystolic DATA
+        HKQuantityTypeIdentifierBloodPressureDiastolic DATA
+        HKQuantityTypeIdentifierRespiratoryRate DATA
+        HKQuantityTypeIdentifierOxygenSaturation DATA
+        HKQuantityTypeIdentifierPeripheralPerfusionIndex DATA
+        HKQuantityTypeIdentifierBloodGlucose DATA
+        HKQuantityTypeIdentifierNumberOfTimesFallen DATA
+        HKQuantityTypeIdentifierElectrodermalActivity DATA
+        HKQuantityTypeIdentifierInhalerUsage DATA
+        HKQuantityTypeIdentifierBloodAlcoholContent DATA
+        HKQuantityTypeIdentifierForcedVitalCapacity DATA
+        HKQuantityTypeIdentifierForcedExpiratoryVolume1 DATA
+        HKQuantityTypeIdentifierPeakExpiratoryFlowRate DATA
+        HKQuantityTypeIdentifierDietaryBiotin DATA
+        HKQuantityTypeIdentifierDietaryCaffeine DATA
+        HKQuantityTypeIdentifierDietaryCalcium DATA
+        HKQuantityTypeIdentifierDietaryCarbohydrates DATA
+        HKQuantityTypeIdentifierDietaryChloride DATA
+        HKQuantityTypeIdentifierDietaryCholesterol DATA
+        HKQuantityTypeIdentifierDietaryChromium DATA
+        HKQuantityTypeIdentifierDietaryCopper DATA
+        HKQuantityTypeIdentifierDietaryEnergyConsumed DATA
+        HKQuantityTypeIdentifierDietaryFatMonounsaturated DATA
+        HKQuantityTypeIdentifierDietaryFatPolyunsaturated DATA
+        HKQuantityTypeIdentifierDietaryFatSaturated DATA
+        HKQuantityTypeIdentifierDietaryFatTotal DATA
+        HKQuantityTypeIdentifierDietaryFiber DATA
+        HKQuantityTypeIdentifierDietaryFolate DATA
+        HKQuantityTypeIdentifierDietaryIodine DATA
+        HKQuantityTypeIdentifierDietaryIron DATA
+        HKQuantityTypeIdentifierDietaryMagnesium DATA
+        HKQuantityTypeIdentifierDietaryManganese DATA
+        HKQuantityTypeIdentifierDietaryMolybdenum DATA
+        HKQuantityTypeIdentifierDietaryNiacin DATA
+        HKQuantityTypeIdentifierDietaryPantothenicAcid DATA
+        HKQuantityTypeIdentifierDietaryPhosphorus DATA
+        HKQuantityTypeIdentifierDietaryPotassium DATA
+        HKQuantityTypeIdentifierDietaryProtein DATA
+        HKQuantityTypeIdentifierDietaryRiboflavin DATA
+        HKQuantityTypeIdentifierDietarySelenium DATA
+        HKQuantityTypeIdentifierDietarySodium DATA
+        HKQuantityTypeIdentifierDietarySugar DATA
+        HKQuantityTypeIdentifierDietaryThiamin DATA
+        HKQuantityTypeIdentifierDietaryVitaminA DATA
+        HKQuantityTypeIdentifierDietaryVitaminB12 DATA
+        HKQuantityTypeIdentifierDietaryVitaminB6 DATA
+        HKQuantityTypeIdentifierDietaryVitaminC DATA
+        HKQuantityTypeIdentifierDietaryVitaminD DATA
+        HKQuantityTypeIdentifierDietaryVitaminE DATA
+        HKQuantityTypeIdentifierDietaryVitaminK DATA
+        HKQuantityTypeIdentifierDietaryWater DATA
+        HKQuantityTypeIdentifierDietaryZinc DATA
+        HKQuantityTypeIdentifierUVExposure DATA
+        HKCategoryTypeIdentifierSleepAnalysis DATA
+        HKCategoryTypeIdentifierAppleStandHour DATA
+        HKCategoryTypeIdentifierCervicalMucusQuality DATA
+        HKCategoryTypeIdentifierOvulationTestResult DATA
+        HKCategoryTypeIdentifierMenstrualFlow DATA
+        HKCategoryTypeIdentifierIntermenstrualBleeding DATA
+        HKCategoryTypeIdentifierSexualActivity DATA
+        HKCharacteristicTypeIdentifierBiologicalSex DATA
+        HKCharacteristicTypeIdentifierBloodType DATA
+        HKCharacteristicTypeIdentifierDateOfBirth DATA
+        HKCharacteristicTypeIdentifierFitzpatrickSkinType DATA
+        HKCorrelationTypeIdentifierBloodPressure DATA
+        HKCorrelationTypeIdentifierFood DATA
+        HKWorkoutTypeIdentifier DATA
+        HKErrorDomain DATA
+
+        ; HKAnchoredObjectQuery.mm
+        _OBJC_CLASS_HKAnchoredObjectQuery DATA
+        __objc_class_name_HKAnchoredObjectQuery CONSTANT
+
+        ; HKBiologicalSexObject.mm
+        _OBJC_CLASS_HKBiologicalSexObject DATA
+        __objc_class_name_HKBiologicalSexObject CONSTANT
+
+        ; HKBloodTypeObject.mm
+        _OBJC_CLASS_HKBloodTypeObject DATA
+        __objc_class_name_HKBloodTypeObject CONSTANT
+
+        ; HKCategorySample.mm
+        HKPredicateKeyPathCategoryValue DATA
+        _OBJC_CLASS_HKCategorySample DATA
+        __objc_class_name_HKCategorySample CONSTANT
+
+        ; HKCategoryType.mm
+        _OBJC_CLASS_HKCategoryType DATA
+        __objc_class_name_HKCategoryType CONSTANT
+
+        ; HKCharacteristicType.mm
+        _OBJC_CLASS_HKCharacteristicType DATA
+        __objc_class_name_HKCharacteristicType CONSTANT
+
+        ; HKCorrelation.mm
+        _OBJC_CLASS_HKCorrelation DATA
+        __objc_class_name_HKCorrelation CONSTANT
+
+        ; HKCorrelationQuery.mm
+        _OBJC_CLASS_HKCorrelationQuery DATA
+        __objc_class_name_HKCorrelationQuery CONSTANT
+
+        ; HKCorrelationType.mm
+        _OBJC_CLASS_HKCorrelationType DATA
+        __objc_class_name_HKCorrelationType CONSTANT
+
+        ; HKDeletedObject.mm
+        _OBJC_CLASS_HKDeletedObject DATA
+        __objc_class_name_HKDeletedObject CONSTANT
+
+        ; HKDevice.mm
+        _OBJC_CLASS_HKDevice DATA
+        __objc_class_name_HKDevice CONSTANT
+
+        ; HKFitzpatrickSkinTypeObject.mm
+        _OBJC_CLASS_HKFitzpatrickSkinTypeObject DATA
+        __objc_class_name_HKFitzpatrickSkinTypeObject CONSTANT
+
+        ; HKHealthStore.mm
+        HKUserPreferencesDidChangeNotification DATA
+        _OBJC_CLASS_HKHealthStore DATA
+        __objc_class_name_HKHealthStore CONSTANT
+
+        ; HKObject.mm
+        HKPredicateKeyPathUUID DATA
+        HKPredicateKeyPathSource DATA
+        HKPredicateKeyPathMetadata DATA
+        HKPredicateKeyPathCorrelation DATA
+        HKPredicateKeyPathWorkout DATA
+        HKPredicateKeyPathDevice DATA
+        HKPredicateKeyPathSourceRevision DATA
+        _OBJC_CLASS_HKObject DATA
+        __objc_class_name_HKObject CONSTANT
+
+        ; HKObjectType.mm
+        _OBJC_CLASS_HKObjectType DATA
+        __objc_class_name_HKObjectType CONSTANT
+
+        ; HKObserverQuery.mm
+        _OBJC_CLASS_HKObserverQuery DATA
+        __objc_class_name_HKObserverQuery CONSTANT
+
+        ; HKQuantity.mm
+        _OBJC_CLASS_HKQuantity DATA
+        __objc_class_name_HKQuantity CONSTANT
+
+        ; HKQuantitySample.mm
+        HKPredicateKeyPathQuantity DATA
+        _OBJC_CLASS_HKQuantitySample DATA
+        __objc_class_name_HKQuantitySample CONSTANT
+
+        ; HKQuantityType.mm
+        _OBJC_CLASS_HKQuantityType DATA
+        __objc_class_name_HKQuantityType CONSTANT
+
+        ; HKQuery.mm
+        HKDevicePropertyKeyName DATA
+        HKDevicePropertyKeyManufacturer DATA
+        HKDevicePropertyKeyModel DATA
+        HKDevicePropertyKeyHardwareVersion DATA
+        HKDevicePropertyKeyFirmwareVersion DATA
+        HKDevicePropertyKeySoftwareVersion DATA
+        HKDevicePropertyKeyLocalIdentifier DATA
+        HKDevicePropertyKeyUDIDeviceIdentifier DATA
+        _OBJC_CLASS_HKQuery DATA
+        __objc_class_name_HKQuery CONSTANT
+
+        ; HKSample.mm
+        HKSampleSortIdentifierStartDate DATA
+        HKSampleSortIdentifierEndDate DATA
+        HKPredicateKeyPathStartDate DATA
+        HKPredicateKeyPathEndDate DATA
+        _OBJC_CLASS_HKSample DATA
+        __objc_class_name_HKSample CONSTANT
+
+        ; HKSampleQuery.mm
+        _OBJC_CLASS_HKSampleQuery DATA
+        __objc_class_name_HKSampleQuery CONSTANT
+
+        ; HKSampleType.mm
+        _OBJC_CLASS_HKSampleType DATA
+        __objc_class_name_HKSampleType CONSTANT
+
+        ; HKSource.mm
+        _OBJC_CLASS_HKSource DATA
+        __objc_class_name_HKSource CONSTANT
+
+        ; HKSourceQuery.mm
+        _OBJC_CLASS_HKSourceQuery DATA
+        __objc_class_name_HKSourceQuery CONSTANT
+
+        ; HKSourceRevision.mm
+        _OBJC_CLASS_HKSourceRevision DATA
+        __objc_class_name_HKSourceRevision CONSTANT
+
+        ; HKStatistics.mm
+        _OBJC_CLASS_HKStatistics DATA
+        __objc_class_name_HKStatistics CONSTANT
+
+        ; HKStatisticsCollection.mm
+        _OBJC_CLASS_HKStatisticsCollection DATA
+        __objc_class_name_HKStatisticsCollection CONSTANT
+
+        ; HKStatisticsCollectionQuery.mm
+        _OBJC_CLASS_HKStatisticsCollectionQuery DATA
+        __objc_class_name_HKStatisticsCollectionQuery CONSTANT
+
+        ; HKStatisticsQuery.mm
+        _OBJC_CLASS_HKStatisticsQuery DATA
+        __objc_class_name_HKStatisticsQuery CONSTANT
+
+        ; HKUnit.mm
+        _OBJC_CLASS_HKUnit DATA
+        __objc_class_name_HKUnit CONSTANT
+
+        ; HKWorkout.mm
+        HKWorkoutSortIdentifierDuration DATA
+        HKWorkoutSortIdentifierTotalDistance DATA
+        HKWorkoutSortIdentifierTotalEnergyBurned DATA
+        HKPredicateKeyPathWorkoutDuration DATA
+        HKPredicateKeyPathWorkoutTotalDistance DATA
+        HKPredicateKeyPathWorkoutTotalEnergyBurned DATA
+        HKPredicateKeyPathWorkoutType DATA
+        _OBJC_CLASS_HKWorkout DATA
+        __objc_class_name_HKWorkout CONSTANT
+
+        ; HKWorkoutEvent.mm
+        _OBJC_CLASS_HKWorkoutEvent DATA
+        __objc_class_name_HKWorkoutEvent CONSTANT
+
+        ; HKWorkoutType.mm
+        _OBJC_CLASS_HKWorkoutType DATA
+        __objc_class_name_HKWorkoutType CONSTANT
+

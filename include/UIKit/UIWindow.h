@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,59 +28,72 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIView.h"
+#pragma once
+
+#import <UIKit/UIView.h>
+#import <UIKit/UICoordinateSpace.h>
+#import <UIKit/UIDynamicItem.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 
 typedef CGFloat UIWindowLevel;
 UIKIT_EXPORT const UIWindowLevel UIWindowLevelNormal;
 UIKIT_EXPORT const UIWindowLevel UIWindowLevelStatusBar;
 UIKIT_EXPORT const UIWindowLevel UIWindowLevelAlert;
 
-UIKIT_EXPORT NSString *const UIWindowDidBecomeVisibleNotification;
-UIKIT_EXPORT NSString *const UIWindowDidBecomeHiddenNotification;
-UIKIT_EXPORT NSString *const UIWindowDidBecomeKeyNotification;
-UIKIT_EXPORT NSString *const UIWindowDidResignKeyNotification;
+UIKIT_EXPORT NSString* const UIWindowDidBecomeVisibleNotification;
+UIKIT_EXPORT NSString* const UIWindowDidBecomeHiddenNotification;
+UIKIT_EXPORT NSString* const UIWindowDidBecomeKeyNotification;
+UIKIT_EXPORT NSString* const UIWindowDidResignKeyNotification;
 
-UIKIT_EXPORT NSString *const UIKeyboardWillShowNotification;
-UIKIT_EXPORT NSString *const UIKeyboardDidShowNotification;
-UIKIT_EXPORT NSString *const UIKeyboardWillHideNotification;
-UIKIT_EXPORT NSString *const UIKeyboardDidHideNotification;
+UIKIT_EXPORT NSString* const UIKeyboardWillShowNotification;
+UIKIT_EXPORT NSString* const UIKeyboardDidShowNotification;
+UIKIT_EXPORT NSString* const UIKeyboardWillHideNotification;
+UIKIT_EXPORT NSString* const UIKeyboardDidHideNotification;
 
-UIKIT_EXPORT NSString *const UIKeyboardFrameBeginUserInfoKey;
-UIKIT_EXPORT NSString *const UIKeyboardFrameEndUserInfoKey;
-UIKIT_EXPORT NSString *const UIKeyboardAnimationDurationUserInfoKey;
-UIKIT_EXPORT NSString *const UIKeyboardAnimationCurveUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardFrameBeginUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardFrameEndUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardAnimationDurationUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardAnimationCurveUserInfoKey;
 
-UIKIT_EXPORT NSString *const UIKeyboardWillChangeFrameNotification;
-UIKIT_EXPORT NSString *const UIKeyboardDidChangeFrameNotification;
+UIKIT_EXPORT NSString* const UIKeyboardWillChangeFrameNotification;
+UIKIT_EXPORT NSString* const UIKeyboardDidChangeFrameNotification;
 
 // deprecated
-UIKIT_EXPORT NSString *const UIKeyboardCenterBeginUserInfoKey;
-UIKIT_EXPORT NSString *const UIKeyboardCenterEndUserInfoKey;
-UIKIT_EXPORT NSString *const UIKeyboardBoundsUserInfoKey;
-
+UIKIT_EXPORT NSString* const UIKeyboardCenterBeginUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardCenterEndUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardBoundsUserInfoKey;
+UIKIT_EXPORT NSString* const UIKeyboardIsLocalUserInfoKey;
 
 @class UIScreen, UIViewController;
 
 UIKIT_EXPORT_CLASS
-@interface UIWindow : UIView
+@interface UIWindow : UIView <NSCoding,
+                              NSObject,
+                              UIAppearance,
+                              UIAppearanceContainer,
+                              UICoordinateSpace,
+                              UIDynamicItem,
+                              UIFocusEnvironment,
+                              UITraitEnvironment>
 
-- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow *)toWindow;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow *)fromWindow;
-- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow *)fromWindow;
-- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow *)toWindow;
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView *)fromView toView:(UIView *)toView;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView *)fromView toView:(UIView *)toView;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer *)fromView toLayer:(CALayer *)toView;
+- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow;
+- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow;
+- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow;
+- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView toView:(UIView*)toView;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView;
 
 - (void)makeKeyWindow;
 - (void)makeKeyAndVisible;
 - (void)resignKeyWindow;
 - (void)becomeKeyWindow;
-- (void)sendEvent:(UIEvent *)event;
+- (void)sendEvent:(UIEvent*)event;
 
 @property (nonatomic, readonly, getter=isKeyWindow) BOOL keyWindow;
-@property (nonatomic, retain) UIScreen *screen;
+@property (nonatomic, retain) UIScreen* screen;
 @property (nonatomic, assign) UIWindowLevel windowLevel;
-@property (nonatomic,retain) UIViewController *rootViewController;
+@property (nonatomic, retain) UIViewController* rootViewController;
 
 @end

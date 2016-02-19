@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,33 +13,35 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _SLCOMPOSEVIEWCONTROLLER_H_
-#define _SLCOMPOSEVIEWCONTROLLER_H_
+#pragma once
 
 #import <Social/SocialExport.h>
+
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UIContentContainer.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 #import <UIKit/UIViewController.h>
 
-enum {
-    SLComposeViewControllerResultCancelled,
-    SLComposeViewControllerResultDone,
-};
-typedef uint32_t SLComposeViewControllerResult;
+@class NSString;
+@class UIImage;
+@class NSURL;
 
+typedef NS_ENUM(NSInteger, SLComposeViewControllerResult) { SLComposeViewControllerResultCancelled, SLComposeViewControllerResultDone };
 typedef void (^SLComposeViewControllerCompletionHandler)(SLComposeViewControllerResult result);
 
 SOCIAL_EXPORT_CLASS
-@interface SLComposeViewController : UIViewController
-
-+ (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType;
-+ (BOOL)isAvailableForServiceType:(NSString*)serviceType;
-
-- (BOOL)setInitialText:(NSString*)text;
-- (BOOL)addURL:(NSURL*)url;
-- (BOOL)addImage:(UIImage*)image;
-
-@property (nonatomic, copy) SLComposeViewControllerCompletionHandler completionHandler;
-
+@interface SLComposeViewController
+    : UIViewController <NSCoding, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
++ (SLComposeViewController*)composeViewControllerForServiceType:(NSString*)serviceType STUB_METHOD;
++ (BOOL)isAvailableForServiceType:(NSString*)serviceType STUB_METHOD;
+- (BOOL)setInitialText:(NSString*)text STUB_METHOD;
+- (BOOL)addImage:(UIImage*)image STUB_METHOD;
+- (BOOL)removeAllImages STUB_METHOD;
+- (BOOL)addURL:(NSURL*)url STUB_METHOD;
+- (BOOL)removeAllURLs STUB_METHOD;
+@property (readonly, nonatomic) NSString* serviceType STUB_PROPERTY;
+@property (copy, nonatomic) SLComposeViewControllerCompletionHandler completionHandler STUB_PROPERTY;
+@property (nonatomic, retain, readonly) UIView* preferredFocusedView STUB_PROPERTY;
+@property (nonatomic, readonly) UITraitCollection* traitCollection;
 @end
-
-#endif /* _SLCOMPOSEVIEWCONTROLLER_H_ */

@@ -700,6 +700,10 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return ret;
 }
 
+/**
+ @Status Stub
+ @Notes Returns an inoperable UITextRange with stub UITextPositions, referring to the caret position only.
+*/
 - (UITextRange*)selectedTextRange {
     return [UITextRange textRangeWithPositon:[[self _text] length] length:0];
 }

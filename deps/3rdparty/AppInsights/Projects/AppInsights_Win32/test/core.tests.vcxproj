@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D9D00C85-E6BA-496E-AC7E-C3744AD38194}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>coretests</RootNamespace>
+    <ProjectName>AppInsights_Win32.tests</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)\..\..\..\src\core;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(ProjectDir)\..\..\lib\win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\..\..\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\src\core;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;Wldap32.lib;Winhttp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+    </Link>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\src\core;$(ProjectDir)..\..\src\core\Contracts;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;Wldap32.lib;Winhttp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\core\specializations.h" />
+    <ClInclude Include="..\..\..\test\core\targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(ProjectDir)\..\core\core.vcxproj">
+      <Project>{f2377726-d69d-4a26-a3af-969fd0399427}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\test\core\Channel\TestTelemetryChannel.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestApplication.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestBase.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataBinary.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataHeaders.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataThread.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestCrashDataThreadFrame.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestDataPoint.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestDevice.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestDomain.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestEnvelope.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestEventData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestExceptionData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestExceptionDetails.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestInternal.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestLocation.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestMessageData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestMetricData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestOperation.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestPageViewData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestPageViewPerfData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestRemoteDependencyData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestRequestData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestSession.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestSessionStateData.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestStackFrame.cpp" />
+    <ClCompile Include="..\..\..\test\core\contracts\TestUser.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestBasicEndToEnd.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryClient.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryClientConfig.cpp" />
+    <ClCompile Include="..\..\..\test\core\TestTelemetryContext.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

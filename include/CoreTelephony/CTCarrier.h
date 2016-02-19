@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,18 @@
 //
 //******************************************************************************
 
-#ifndef __CTCARRIER_H
-#define __CTCARRIER_H
+#pragma once
 
-#import <Foundation/Foundation.h>
+#import <CoreTelephony/CoreTelephonyExport.h>
+#import <Foundation/NSObject.h>
 
-@interface CTCarrier : NSObject
-@property (nonatomic, readonly, assign) BOOL allowsVOIP;
-@property (nonatomic, readonly, retain) NSString* carrierName;
-@property (nonatomic, readonly, retain) NSString* isoCountryCode;
-@property (nonatomic, readonly, retain) NSString* mobileCountryCode;
-@property (nonatomic, readonly, retain) NSString* mobileNetworkCode;
+@class NSString;
+
+CORETELEPHONY_EXPORT_CLASS
+@interface CTCarrier : NSObject <NSObject>
+@property (readonly, assign, nonatomic) BOOL allowsVOIP STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSString* carrierName STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSString* isoCountryCode STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSString* mobileCountryCode STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSString* mobileNetworkCode STUB_PROPERTY;
 @end
-
-#endif

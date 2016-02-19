@@ -1,94 +1,69 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSUNDOMANAGER_H_
-#define _NSUNDOMANAGER_H_
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSArray,NSMutableArray,NSInvocation;
+@class NSString;
+@class NSArray;
 
-enum {
- NSUndoCloseGroupingRunLoopOrdering=350000,
-};
+enum { NSUndoCloseGroupingRunLoopOrdering = 350000 };
 
-FOUNDATION_EXPORT NSString * const NSUndoManagerCheckpointNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerGroupIsDiscardableKey;
+FOUNDATION_EXPORT NSString* const NSUndoManagerCheckpointNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerDidOpenUndoGroupNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerWillCloseUndoGroupNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerWillUndoChangeNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerDidUndoChangeNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerWillRedoChangeNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerDidRedoChangeNotification;
+FOUNDATION_EXPORT NSString* const NSUndoManagerDidCloseUndoGroupNotification;
 
-FOUNDATION_EXPORT NSString * const NSUndoManagerDidOpenUndoGroupNotification;
-FOUNDATION_EXPORT NSString * const NSUndoManagerWillCloseUndoGroupNotification;
-
-FOUNDATION_EXPORT NSString * const NSUndoManagerWillUndoChangeNotification;
-FOUNDATION_EXPORT NSString * const NSUndoManagerDidUndoChangeNotification;
-
-FOUNDATION_EXPORT NSString * const NSUndoManagerWillRedoChangeNotification;
-FOUNDATION_EXPORT NSString * const NSUndoManagerDidRedoChangeNotification;
-
-FOUNDATION_EXPORT NSString * const NSUndoManagerDidCloseUndoGroupNotification;
-
-
-@interface NSUndoManager : NSObject {
-    NSMutableArray *_undoStack;
-    NSMutableArray *_redoStack;
-    BOOL _groupsByEvent;
-    NSArray *_modes;
-    int _disableCount;
-    NSInteger _levelsOfUndo;
-    id _currentGroup;
-    int _state;
-    NSString *_actionName;
-    id _preparedTarget;
-    BOOL _performRegistered;
-}
-
--(NSArray *)runLoopModes;
--(NSUInteger)levelsOfUndo;
--(BOOL)groupsByEvent;
-
--(void)setRunLoopModes:(NSArray *)modes;
--(void)setLevelsOfUndo:(NSUInteger)levels;
--(void)setGroupsByEvent:(BOOL)flag;
-
--(BOOL)isUndoRegistrationEnabled;
--(void)disableUndoRegistration;
--(void)enableUndoRegistration;
-
--(void)beginUndoGrouping;
--(void)endUndoGrouping;
-
--(NSInteger)groupingLevel;
-
--(BOOL)canUndo;
--(void)undo;
--(void)undoNestedGroup;
--(BOOL)isUndoing;
-
--(BOOL)canRedo;
--(void)redo;
--(BOOL)isRedoing;
-
--(void)registerUndoWithTarget:(id)target selector:(SEL)selector object:(id)object;
-
--(void)removeAllActions;
--(void)removeAllActionsWithTarget:(id)target;
-
--(id)prepareWithInvocationTarget:(id)target;
--(void)forwardInvocation:(NSInvocation *)invocation;
-
--(NSString *)undoActionName;
--(NSString *)undoMenuItemTitle;
--(NSString *)undoMenuTitleForUndoActionName:(NSString *)name;
--(void)setActionName:(NSString *)name;
-
--(NSString *)redoActionName;
--(NSString *)redoMenuItemTitle;
--(NSString *)redoMenuTitleForUndoActionName:(NSString *)name;
-
-- (void)clearRedoStackIfStateIsNormal;
+FOUNDATION_EXPORT_CLASS
+@interface NSUndoManager : NSObject
+- (void)registerUndoWithTarget:(id)target selector:(SEL)aSelector object:(id)anObject STUB_METHOD;
+- (id)prepareWithInvocationTarget:(id)target STUB_METHOD;
+@property (readonly) BOOL canUndo STUB_METHOD;
+@property (readonly) BOOL canRedo STUB_METHOD;
+- (void)undo STUB_METHOD;
+- (void)undoNestedGroup STUB_METHOD;
+- (void)redo STUB_METHOD;
+@property NSUInteger levelsOfUndo STUB_METHOD;
+- (void)beginUndoGrouping STUB_METHOD;
+- (void)endUndoGrouping STUB_METHOD;
+@property BOOL groupsByEvent STUB_METHOD;
+@property (readonly) NSInteger groupingLevel STUB_METHOD;
+- (void)disableUndoRegistration STUB_METHOD;
+- (void)enableUndoRegistration STUB_METHOD;
+@property (readonly, getter=isUndoRegistrationEnabled) BOOL undoRegistrationEnabled STUB_METHOD;
+@property (readonly, getter=isUndoing) BOOL undoing STUB_METHOD;
+@property (readonly, getter=isRedoing) BOOL redoing STUB_METHOD;
+- (void)removeAllActions STUB_METHOD;
+- (void)removeAllActionsWithTarget:(id)target STUB_METHOD;
+@property (readonly, copy) NSString* undoActionName STUB_METHOD;
+@property (readonly, copy) NSString* redoActionName STUB_METHOD;
+- (void)setActionName:(NSString*)actionName STUB_METHOD;
+@property (readonly, copy) NSString* undoMenuItemTitle STUB_METHOD;
+@property (readonly, copy) NSString* redoMenuItemTitle STUB_METHOD;
+- (NSString*)undoMenuTitleForUndoActionName:(NSString*)actionName STUB_METHOD;
+- (NSString*)redoMenuTitleForUndoActionName:(NSString*)actionName STUB_METHOD;
+@property (copy) NSArray* runLoopModes STUB_METHOD;
+- (void)setActionIsDiscardable:(BOOL)discardable STUB_METHOD;
+@property (readonly) BOOL undoActionIsDiscardable STUB_METHOD;
+@property (readonly) BOOL redoActionIsDiscardable STUB_METHOD;
 @end
-
-#endif /* _NSUNDOMANAGER_H_ */

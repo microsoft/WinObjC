@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #import "Foundation/NSException.h"
 
 NSString* const NSRangeException = @"NSRangeExcepton";
@@ -34,6 +35,15 @@ NSString* const WinObjCException = @"WinObjC Exception"; // not exported
 */
 void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*) {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @implementation NSException

@@ -66,7 +66,9 @@ TEST(Foundation, NSFileManagerGetAttributes) {
     ASSERT_OBJCEQ_MSG(expectedModificationDate, modificationDate, "failed to check modification date for %@", testFileFullPath);
 
     // now check file size
-    ASSERT_TRUE_MSG(fileStatus.st_size == [attributes fileSize], "failed to check file size for %@", testFileFullPath);
+    ASSERT_TRUE_MSG(fileStatus.st_size == reinterpret_cast<long>([attributes fileSize]),
+                    "failed to check file size for %@",
+                    testFileFullPath);
 }
 
 TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {

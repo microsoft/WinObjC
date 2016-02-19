@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 using WCHAR = wchar_t;
 
@@ -35,6 +36,8 @@ using WCHAR = wchar_t;
 #include <windows.storage.streams.h>
 #include <COMIncludes_End.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "StringHelpers.h"
 
@@ -532,19 +535,40 @@ using namespace Windows::Foundation;
 - (NSString*)description {
     const char* bytes = (const char*)[self bytes];
     NSUInteger length = [self length];
-    NSMutableString* ret = [NSMutableString stringWithCapacity:1 + length * 2 + (length / 4)];
 
-    [ret appendString:@"<"];
+    const int tmpBufSize = 16 + length * 2 + (length / 4);
+    std::vector<char> tmpBuf(tmpBufSize);
+    int tmpBufLen = 0;
+
+    tmpBuf[tmpBufLen++] = '<';
 
     for (auto i = 0; i < length;) {
-        [ret appendFormat:@"%02X", bytes[i++]];
+        int outDigit = ((bytes[i] & 0xF0) >> 4);
+        if (outDigit < 10) {
+            tmpBuf[tmpBufLen++] = '0' + outDigit;
+        } else {
+            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
+        }
+        assert(tmpBufLen < tmpBufSize);
+        outDigit = bytes[i] & 0xF;
+        if (outDigit < 10) {
+            tmpBuf[tmpBufLen++] = '0' + outDigit;
+        } else {
+            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
+        }
+        assert(tmpBufLen < tmpBufSize);
+        i++;
+
         if ((i % 4) == 0 && i < length) {
-            [ret appendString:@" "];
+            tmpBuf[tmpBufLen++] = ' ';
+            assert(tmpBufLen < tmpBufSize);
         }
     }
-    [ret appendString:@">"];
+    tmpBuf[tmpBufLen++] = '>';
 
-    return ret;
+    NSString* ret = [[NSString alloc] initWithCString:tmpBuf.data() length:tmpBufLen];
+
+    return [ret autorelease];
 }
 
 /**
@@ -568,6 +592,15 @@ using namespace Windows::Foundation;
     }
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

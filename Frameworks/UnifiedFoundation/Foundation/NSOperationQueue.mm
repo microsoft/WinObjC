@@ -127,6 +127,11 @@ void NSAtomicListInsert(NSAtomicListRef* listPtr, NSObject* elt) {
 
 static id _mainQueue;
 
+@interface NSOperationQueue () {
+    struct NSOperationQueuePriv* priv;
+}
+@end
+
 @implementation NSOperationQueue : NSObject
 static void ClearList(NSAtomicListRef* listPtr) {
     for (int i = 0; i < NSOperationQueuePriority_Count; i++) {

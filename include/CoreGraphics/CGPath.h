@@ -1,22 +1,25 @@
-/* Copyright(c) 2007 Christopher J. W. Lloyd
-
-Copyright (c) 2015 Microsoft Corporation. All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
 #import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGAffineTransform.h>
+
+typedef enum { kCGPathFill, kCGPathEOFill, kCGPathStroke, kCGPathFillStroke, kCGPathEOFillStroke } CGPathDrawingMode;
 
 typedef enum {
     kCGPathElementMoveToPoint,
@@ -45,53 +48,81 @@ typedef enum {
 
 typedef void (*CGPathApplierFunction)(void* info, const CGPathElement* element);
 
-typedef id CGPathRef;
-typedef id CGMutablePathRef;
+COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutable();
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform* transform);
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTransform* transform);
 
-COREGRAPHICS_EXPORT void CGPathRelease(CGPathRef self);
-COREGRAPHICS_EXPORT CGPathRef CGPathRetain(CGPathRef self);
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRoundedRect(CGRect rect,
+                                                          CGFloat cornerWidth,
+                                                          CGFloat cornerHeight,
+                                                          const CGAffineTransform* transform) STUB_METHOD;
 
-COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef self, CGPathRef other);
-COREGRAPHICS_EXPORT CGRect CGPathGetBoundingBox(CGPathRef self);
-COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef self);
-COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef self);
-COREGRAPHICS_EXPORT bool CGPathIsEmpty(CGPathRef self);
-COREGRAPHICS_EXPORT bool CGPathIsRect(CGPathRef self, CGRect* rect);
-COREGRAPHICS_EXPORT void CGPathApply(CGPathRef self, void* info, CGPathApplierFunction function);
-COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef self);
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopy(CGPathRef self);
-COREGRAPHICS_EXPORT bool CGPathContainsPoint(CGPathRef self, const CGAffineTransform* xform, CGPoint point, bool evenOdd);
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopy(CGPathRef path);
 
-COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutable(void);
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) STUB_METHOD;
 
-COREGRAPHICS_EXPORT void CGPathMoveToPoint(CGMutablePathRef self, const CGAffineTransform* xform, CGFloat x, CGFloat y);
-COREGRAPHICS_EXPORT void CGPathAddLineToPoint(CGMutablePathRef self, const CGAffineTransform* xform, CGFloat x, CGFloat y);
-COREGRAPHICS_EXPORT void CGPathAddCurveToPoint(
-    CGMutablePathRef self, const CGAffineTransform* xform, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y);
-COREGRAPHICS_EXPORT void CGPathAddQuadCurveToPoint(
-    CGMutablePathRef self, const CGAffineTransform* xform, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y);
-COREGRAPHICS_EXPORT void CGPathCloseSubpath(CGMutablePathRef self);
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByDashingPath(
+    CGPathRef path, const CGAffineTransform* transform, CGFloat phase, const CGFloat* lengths, size_t count) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(CGPathRef path,
+                                                             const CGAffineTransform* transform,
+                                                             CGFloat lineWidth,
+                                                             CGLineCap lineCap,
+                                                             CGLineJoin lineJoin,
+                                                             CGFloat miterLimit) STUB_METHOD;
 
-COREGRAPHICS_EXPORT void CGPathAddLines(CGMutablePathRef self, const CGAffineTransform* xform, const CGPoint* points, size_t count);
-COREGRAPHICS_EXPORT void CGPathAddRect(CGMutablePathRef self, const CGAffineTransform* xform, CGRect rect);
-COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef self, const CGAffineTransform* xform, const CGRect* rects, size_t count);
+COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) STUB_METHOD;
 
-COREGRAPHICS_EXPORT void CGPathAddArc(CGMutablePathRef self,
-                                      const CGAffineTransform* xform,
+COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path,
+                                                                               const CGAffineTransform* transform) STUB_METHOD;
+
+COREGRAPHICS_EXPORT void CGPathRelease(CGPathRef path);
+COREGRAPHICS_EXPORT CGPathRef CGPathRetain(CGPathRef path);
+
+COREGRAPHICS_EXPORT void CGPathAddArc(CGMutablePathRef path,
+                                      const CGAffineTransform* m,
                                       CGFloat x,
                                       CGFloat y,
                                       CGFloat radius,
-                                      CGFloat startRadian,
-                                      CGFloat endRadian,
+                                      CGFloat startAngle,
+                                      CGFloat endAngle,
                                       bool clockwise);
+
+COREGRAPHICS_EXPORT void CGPathAddRelativeArc(CGMutablePathRef path,
+                                              const CGAffineTransform* matrix,
+                                              CGFloat x,
+                                              CGFloat y,
+                                              CGFloat radius,
+                                              CGFloat startAngle,
+                                              CGFloat delta) STUB_METHOD;
+
 COREGRAPHICS_EXPORT void CGPathAddArcToPoint(
-    CGMutablePathRef self, const CGAffineTransform* xform, CGFloat tx1, CGFloat ty1, CGFloat tx2, CGFloat ty2, CGFloat radius);
+    CGMutablePathRef path, const CGAffineTransform* m, CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2, CGFloat radius);
+COREGRAPHICS_EXPORT void CGPathAddCurveToPoint(
+    CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y);
+COREGRAPHICS_EXPORT void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, const CGPoint* points, size_t count);
+COREGRAPHICS_EXPORT void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat x, CGFloat y);
+COREGRAPHICS_EXPORT void CGPathAddPath(CGMutablePathRef path1, const CGAffineTransform* m, CGPathRef path2);
+COREGRAPHICS_EXPORT void CGPathAddQuadCurveToPoint(
+    CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y);
+COREGRAPHICS_EXPORT void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect);
 
-COREGRAPHICS_EXPORT void CGPathAddEllipseInRect(CGMutablePathRef self, const CGAffineTransform* xform, CGRect rect);
+COREGRAPHICS_EXPORT void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPathAddRoundedRect(
+    CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) STUB_METHOD;
 
-COREGRAPHICS_EXPORT void CGPathAddPath(CGMutablePathRef self, const CGAffineTransform* xform, CGPathRef other);
+COREGRAPHICS_EXPORT void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat x, CGFloat y);
+COREGRAPHICS_EXPORT void CGPathCloseSubpath(CGMutablePathRef path);
+COREGRAPHICS_EXPORT void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect);
 
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTransform* transform);
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(
-    CGPathRef path, const CGAffineTransform* transform, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit);
-COREGRAPHICS_EXPORT CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform* transform);
+COREGRAPHICS_EXPORT bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) STUB_METHOD;
+
+COREGRAPHICS_EXPORT CGRect CGPathGetBoundingBox(CGPathRef path);
+
+COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGPathGetTypeID() STUB_METHOD;
+
+COREGRAPHICS_EXPORT bool CGPathIsEmpty(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPathIsRect(CGPathRef path, CGRect* rect) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) STUB_METHOD;

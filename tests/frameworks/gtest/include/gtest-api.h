@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 // Ignore SCL warnings in gtest
 #if defined __clang__
 #pragma clang diagnostic push

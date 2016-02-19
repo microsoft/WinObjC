@@ -104,7 +104,7 @@ static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color) {
     }
 }
 
-@implementation _UIGroupEdgeView : UIView
+@implementation _UIGroupEdgeView
 - (void)_setStyle:(int)style {
     if (_style != style) {
         _style = style;

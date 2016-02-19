@@ -32,7 +32,6 @@ typedef unsigned int mach_port_t;
 EbrEvent _applicationStateChanged;
 int g_browsersVisible = 0;
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
-const float UIScrollViewDecelerationRateFast = 1.0f;
 
 // Strings:
 #define REGISTER_STRING(name) UIKIT_EXPORT NSString* const name = @ #name;
@@ -58,7 +57,10 @@ void EbrPauseSound(void) {
 void EbrResumeSound(void) {
 }
 
-@implementation UIKeyboardRotationView : UIView
+@interface UIKeyboardRotationView : UIView
+@end
+
+@implementation UIKeyboardRotationView
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     UIView* ret = [super hitTest:point withEvent:event];
 
@@ -73,9 +75,6 @@ void EbrResumeSound(void) {
 @end
 
 @implementation _UISettings
-@end
-
-@implementation NSUndoManager
 @end
 
 @implementation NSAppearanceSetter
@@ -97,30 +96,10 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
     return false;
 }
 
-@implementation UIPageControl
-@end
-
-@implementation UIStepper
-@end
-
-@implementation UIAccelerometer : NSObject
-
-/**
- @Status Stub
-*/
-+ (id)sharedAccelerometer {
-    UNIMPLEMENTED();
-    return nil;
-}
-@end
-
 @implementation GKAchievement
 + (id)alloc {
     return nil;
 }
-@end
-
-@implementation UITextRange
 @end
 
 @implementation GKAchievementViewController
@@ -152,8 +131,6 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 }
 @end
 
-extern "C" NSString* const UIDeviceOrientationDidChangeNotification = (NSString * const) @"UIDeviceOrientationDidChangeNotification";
-
 __declspec(dllexport) extern "C" unsigned random() {
     return rand();
 }
@@ -168,66 +145,6 @@ __declspec(dllexport) extern "C" int gettimeofday(struct timeval* tv, void* rest
 
 __declspec(dllexport) extern "C" void srandom(unsigned val) {
     return srand(val);
-}
-
-/**
- @Status Interoperable
-*/
-NSData* UIImagePNGRepresentation(UIImage* img) {
-    return [NSData data];
-}
-
-/**
- @Status Stub
-*/
-NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
-    UNIMPLEMENTED();
-    return [NSData data];
-}
-
-/**
- @Status Interoperable
-*/
-CGPoint CGPointFromString(NSString* strPt) {
-    if (!strPt) {
-        return { 0, 0 };
-    }
-
-    CGPoint ret;
-
-    char* str = (char*)[strPt UTF8String];
-    sscanf_s(str, "{%f, %f}", &ret.x, &ret.y);
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-CGSize CGSizeFromString(NSString* strSize) {
-    if (!strSize) {
-        return { 0, 0 };
-    }
-
-    CGSize ret;
-
-    char* str = (char*)[strSize UTF8String];
-    sscanf_s(str, "{%f, %f}", &ret.width, &ret.height);
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-CGRect CGRectFromString(NSString* strRect) {
-    if (!strRect) {
-        return { { 0, 0 }, 0, 0 };
-    }
-
-    CGRect ret;
-
-    char* str = (char*)[strRect UTF8String];
-    sscanf_s(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
-    return ret;
 }
 
 void EbrRefreshKeyboard(void) {
@@ -303,13 +220,6 @@ EbrPlatformInfo* EbrGetDeviceInfo() {
     return &info;
 }
 
-/**
- @Status Stub
-*/
-extern "C" void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
-    UNIMPLEMENTED();
-}
-
 @implementation CBCentralManager
 @end
 
@@ -361,7 +271,7 @@ extern "C" void DNSServiceRefDeallocate(DNSServiceRef sdRef) {
 
 UIKIT_EXPORT
 extern "C" DNSServiceErrorType DNSServiceSetDispatchQueue(DNSServiceRef service, dispatch_queue_t queue) {
-    assert(!"DNSServiceSetDispatchQueue");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceSetDispatchQueue");
     return 0;
 }
 
@@ -373,7 +283,7 @@ extern "C" DNSServiceErrorType DNSServiceBrowse(DNSServiceRef* sdRef,
                                                 const char* domain,
                                                 /* may be NULL */ DNSServiceBrowseReply callBack,
                                                 void* context /* may be NULL */) {
-    assert(!"DNSServiceBrowse");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceBrowse");
     return 0;
 }
 
@@ -385,7 +295,7 @@ extern "C" DNSServiceErrorType DNSServiceGetAddrInfo(DNSServiceRef* sdRef,
                                                      const char* hostname,
                                                      DNSServiceGetAddrInfoReply callBack,
                                                      void* context /* may be NULL */) {
-    assert(!"DNSServiceGetAddrInfo");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceGetAddrInfo");
     return 0;
 }
 
@@ -398,7 +308,8 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
                                                  const char* domain,
                                                  DNSServiceResolveReply callBack,
                                                  void* context /* may be NULL */) {
-    assert(!"DNSServiceResolve");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceResolve");
+    return 0;
 }
 
 @interface NSFont : NSObject
@@ -411,12 +322,12 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
 #include <inaddr.h>
 
 UIKIT_EXPORT extern "C" char* __inet_ntoa(struct in_addr addr) {
-    assert(!"__inet_ntoa");
+    UNIMPLEMENTED_WITH_MSG("__inet_ntoa");
     return 0;
 }
 
 UIKIT_EXPORT extern "C" char* if_indextoname(unsigned int ifindex, char* ifname) {
-    assert(!"if_indextoname");
+    UNIMPLEMENTED_WITH_MSG("if_indextoname");
     return 0;
 }
 
@@ -432,9 +343,6 @@ UIKIT_EXPORT extern "C" DNSServiceErrorType DNSServiceRegister(DNSServiceRef* sd
                                                                const void* txtRecord,
                                                                /* may be NULL */ DNSServiceRegisterReply callBack,
                                                                /* may be NULL */ void* context /* may be NULL */) {
-    assert(!"DNSServiceRegister");
+    UNIMPLEMENTED_WITH_MSG("DNSServiceRegister");
     return 0;
 }
-
-@implementation NSPredicate
-@end

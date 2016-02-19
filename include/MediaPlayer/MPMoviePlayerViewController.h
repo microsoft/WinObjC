@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,21 +13,20 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _MPMOVIEPLAYERVIEWCONTROLLER_H_
-#define _MPMOVIEPLAYERVIEWCONTROLLER_H_
-
+#import <MediaPlayer/MediaPlayerExport.h>
 #import <UIKit/UIViewController.h>
 
+@class NSURL;
 @class MPMoviePlayerController;
 
-UIKIT_EXPORT_CLASS
-@interface MPMoviePlayerViewController : UIViewController <NSCoding, NSObject, UIAppearanceContainer>
+MEDIAPLAYER_EXPORT_CLASS
+@interface MPMoviePlayerViewController : UIViewController <NSCoding, UIAppearanceContainer>
 
-- (instancetype)initWithContentURL:(NSURL *)contentURL;
-@property(nonatomic, readonly) MPMoviePlayerController *moviePlayer;
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation;
+@property (readonly, nonatomic) MPMoviePlayerController* moviePlayer STUB_PROPERTY;
+
+- (instancetype)initWithContentURL:(NSURL*)contentURL STUB_METHOD;
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation STUB_METHOD;
 
 @end
-
-#endif /* _MPMOVIEPLAYERVIEWCONTROLLER_H_ */

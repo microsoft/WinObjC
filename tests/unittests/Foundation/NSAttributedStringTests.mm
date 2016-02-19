@@ -15,13 +15,13 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import "Starboard.h"
-#import <windows.h>
+#import <Starboard.h>
 #import <CoreFoundation\CFAttributedString.h>
 #import <Foundation\NSAttributedString.h>
 #import <Foundation\NSDictionary.h>
 #import <Foundation\NSMutableAttributedString.h>
-#import <UIKit\UIKit.h>
+
+#import <windows.h>
 #import <vector>
 
 static NSString* c_defaultAttributeName = @"defaultAttributeName";
@@ -508,6 +508,7 @@ TEST(Foundation, AttributedString_SetAttributedString) {
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
 }
 
+#ifndef WINOBJC_DISABLE_EH_TESTS
 // This test is known to fail on Release builds
 // TODO: 5902592 THROW_NS_HR does not throw on Release when called through Foundation from unit tests
 TEST(Foundation, AttributedString_ThrowsBounds) {
@@ -520,6 +521,7 @@ TEST(Foundation, AttributedString_ThrowsBounds) {
     CATCH_POPULATE_NSERROR(&error);
     ASSERT_EQ(E_BOUNDS, error.code);
 }
+#endif
 
 TEST(Foundation, AttributedString_AttributedSubstringFromRange) {
     NSMutableAttributedString* aStr = SixCharacterTestString();

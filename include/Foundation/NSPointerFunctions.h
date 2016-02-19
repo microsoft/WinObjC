@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-typedef int NSPointerFunctionsOptions;
+#import <StubIncludes.h>
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
 
+@class NSString;
+
+typedef NSUInteger NSPointerFunctionsOptions;
 enum {
     NSPointerFunctionsStrongMemory = (0 << 0),
-    NSPointerFunctionsZeroingWeakMemory = (1 << 0),
     NSPointerFunctionsOpaqueMemory = (2 << 0),
     NSPointerFunctionsMallocMemory = (3 << 0),
     NSPointerFunctionsMachVirtualMemory = (4 << 0),
@@ -33,3 +36,17 @@ enum {
     NSPointerFunctionsIntegerPersonality = (5 << 8),
     NSPointerFunctionsCopyIn = (1 << 16),
 };
+
+FOUNDATION_EXPORT_CLASS
+@interface NSPointerFunctions : NSObject <NSCopying>
+- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options STUB_METHOD;
++ (NSPointerFunctions*)pointerFunctionsWithOptions:(NSPointerFunctionsOptions)options STUB_METHOD;
+@property (nonnull) NSUInteger (*hashFunction)(const void*, NSUInteger (*)(const void*)) STUB_PROPERTY;
+@property (nonnull) BOOL (*isEqualFunction)(const void*, const void*, NSUInteger (*)(const void*)) STUB_PROPERTY;
+@property (nonnull) NSUInteger (*sizeFunction)(const void*) STUB_PROPERTY;
+@property (nullable) NSString* (*descriptionFunction)(const void*)STUB_PROPERTY;
+@property (nonnull) void* (*acquireFunction)(const void*, NSUInteger (*)(const void*), BOOL)STUB_PROPERTY;
+@property (nonnull) void (*relinquishFunction)(const void*, NSUInteger (*)(const void*)) STUB_PROPERTY;
+@property BOOL usesStrongWriteBarrier STUB_PROPERTY;
+@property BOOL usesWeakReadAndWriteBarriers STUB_PROPERTY;
+@end

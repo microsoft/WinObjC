@@ -1,0 +1,65 @@
+LIBRARY CoreLocation
+    EXPORTS
+        ; CLBeacon.mm
+        _OBJC_CLASS_CLBeacon DATA
+        __objc_class_name_CLBeacon CONSTANT
+
+        ; CLBeaconRegion.mm
+        _OBJC_CLASS_CLBeaconRegion DATA
+        __objc_class_name_CLBeaconRegion CONSTANT
+
+        ; CLCircularRegion.mm
+        _OBJC_CLASS_CLCircularRegion DATA
+        __objc_class_name_CLCircularRegion CONSTANT
+
+        ; CLFloor.mm
+        _OBJC_CLASS_CLFloor DATA
+        __objc_class_name_CLFloor CONSTANT
+
+        ; CLGeocoder.mm
+        _OBJC_CLASS_CLGeocoder DATA
+        __objc_class_name_CLGeocoder CONSTANT
+
+        ; CLHeading.mm
+        _OBJC_CLASS_CLHeading DATA
+        __objc_class_name_CLHeading CONSTANT
+
+        ; CLLocation.mm
+        _OBJC_CLASS_CLLocation DATA
+        __objc_class_name_CLLocation CONSTANT
+
+        ; CLLocationManager.mm
+        CLLocationDistanceMax DATA
+        CLTimeIntervalMax DATA
+        _OBJC_CLASS_CLLocationManager DATA
+        __objc_class_name_CLLocationManager CONSTANT
+
+        ; CLPlacemark.mm
+        _OBJC_CLASS_CLPlacemark DATA
+        __objc_class_name_CLPlacemark CONSTANT
+
+        ; CLRegion.mm
+        _OBJC_CLASS_CLRegion DATA
+        __objc_class_name_CLRegion CONSTANT
+
+        ; CLVisit.mm
+        _OBJC_CLASS_CLVisit DATA
+        __objc_class_name_CLVisit CONSTANT
+
+        ; Core Location Constants Reference.mm
+        kCLErrorDomain DATA
+        kCLErrorUserInfoAlternateRegionKey DATA
+        kCLLocationAccuracyBestForNavigation DATA
+        kCLLocationAccuracyBest DATA
+        kCLLocationAccuracyNearestTenMeters DATA
+        kCLLocationAccuracyHundredMeters DATA
+        kCLLocationAccuracyKilometer DATA
+        kCLLocationAccuracyThreeKilometers DATA
+        kCLLocationCoordinate2DInvalid DATA
+        kCLDistanceFilterNone DATA
+        kCLHeadingFilterNone DATA
+
+        ; Core Location Functions Reference.mm
+        CLLocationCoordinate2DIsValid
+        CLLocationCoordinate2DMake
+

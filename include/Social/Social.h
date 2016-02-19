@@ -13,8 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <StubIncludes.h>
 #import <Social/SocialExport.h>
+#import <Social/SLRequest.h>
 #import <Social/SLComposeViewController.h>
 #import <Social/SLServiceTypes.h>
-#import <Social/SLRequest.h>
+#import <Social/SLComposeSheetConfigurationItem.h>
+#import <Social/SLComposeServiceViewController.h>

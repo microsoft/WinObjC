@@ -472,7 +472,8 @@ namespace ClangCompile
 
                     string versionString = clangVersionProc.StandardError.ReadToEnd();
                     LogMessage(MessageImportance.Low, "Clang version: {0}", versionString);
-                    string version = versionString.Split(' ')[2];
+                    // clang's version output: clang with Microsoft CodeGen version <version number>
+                    string version = versionString.Split(' ')[5];
                     LLVMClangVersion = version;
                 }
                 return LLVMClangVersionValue;
@@ -622,9 +623,7 @@ namespace ClangCompile
         [EnumeratedValue(Enumeration = typeof(OptimizationLevelEnum))]
         public string OptimizationLevel
         {
-            //get { return OptimizationLevelValue.ToString(); }
-            /* Override until clang/c2 supports optimization */
-            get { return "Disabled"; }
+            get { return OptimizationLevelValue.ToString(); }
             set { OptimizationLevelValue = (OptimizationLevelEnum)Enum.Parse(typeof(OptimizationLevelEnum), value, true); }
         }
 

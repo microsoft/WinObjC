@@ -897,3 +897,16 @@ TEST(Foundation, KeyValueObservation_CascadeWithDiverseTypesInitializedToNil) {
 
     EXPECT_EQ([observer numberOfObservedChanges], 2);
 }
+
+@interface NSObject (Nonexistent)
++ (void)nonexistentSelector;
++ (id)tryToReturnANonexistentThing;
+@end
+
+TEST(Foundation, NonFatalSelectors) {
+    WinObjC_SetMissingSelectorFatal(NO);
+    EXPECT_NO_THROW([NSObject nonexistentSelector]);
+    EXPECT_OBJCEQ(nil, [NSObject tryToReturnANonexistentThing]);
+    WinObjC_SetMissingSelectorFatal(YES);
+    EXPECT_ANY_THROW([NSObject nonexistentSelector]);
+}

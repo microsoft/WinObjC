@@ -91,8 +91,12 @@ public:
         return nullptr;
     }
 
-    DisplayAnimation* GetBasicDisplayAnimation(
-        id caanim, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) override {
+    DisplayAnimation* GetBasicDisplayAnimation(id caanim,
+                                               NSString* propertyName,
+                                               NSObject* fromValue,
+                                               NSObject* toValue,
+                                               NSObject* byValue,
+                                               CAMediaTimingProperties* timingProperties) override {
         return nullptr;
     }
     DisplayAnimation* GetMoveDisplayAnimation(DisplayAnimation** secondAnimRet,
@@ -175,5 +179,8 @@ public:
     }
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
+    }
+
+    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
     }
 };

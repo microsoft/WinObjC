@@ -25,12 +25,12 @@
 #import "UIGridLayoutInfo.h"
 
 @interface UIGridLayoutSection () {
-    NSMutableArray *_items;
-    NSMutableArray *_rows;
+    NSMutableArray* _items;
+    NSMutableArray* _rows;
     BOOL _isValid;
 }
-@property (nonatomic, strong) NSArray *items;
-@property (nonatomic, strong) NSArray *rows;
+@property (nonatomic, strong) NSArray* items;
+@property (nonatomic, strong) NSArray* rows;
 @property (nonatomic, assign) CGFloat otherMargin;
 @property (nonatomic, assign) CGFloat beginMargin;
 @property (nonatomic, assign) CGFloat endMargin;
@@ -56,8 +56,13 @@
     return self;
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"<%@: %p itemCount:%ld frame:%@ rows:%@>", NSStringFromClass(self.class), self, (long)self.itemsCount, NSStringFromCGRect(self.frame), self.rows];
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@: %p itemCount:%ld frame:%@ rows:%@>",
+                                      NSStringFromClass(self.class),
+                                      self,
+                                      (long)self.itemsCount,
+                                      NSStringFromCGRect(self.frame),
+                                      self.rows];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +83,7 @@
         NSInteger itemIndex = 0;
         NSInteger itemsByRowCount = 0;
         CGFloat dimensionLeft = 0;
-        UIGridLayoutRow *row = nil;
+        UIGridLayoutRow* row = nil;
         // get dimension and compensate for section margin
         CGFloat headerFooterDimension = self.layoutInfo.dimension;
         CGFloat dimension = headerFooterDimension;
@@ -87,7 +92,7 @@
             dimension -= self.sectionMargins.top + self.sectionMargins.bottom;
             self.headerFrame = CGRectMake(sectionSize.width, 0, self.headerDimension, headerFooterDimension);
             sectionSize.width += self.headerDimension + self.sectionMargins.left;
-        }else {
+        } else {
             dimension -= self.sectionMargins.left + self.sectionMargins.right;
             self.headerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.headerDimension);
             sectionSize.height += self.headerDimension + self.sectionMargins.top;
@@ -98,13 +103,15 @@
         do {
             BOOL finishCycle = itemIndex >= self.itemsCount;
             // TODO: fast path could even remove row creation and just calculate on the fly
-            UIGridLayoutItem *item = nil;
-            if (!finishCycle) item = self.fixedItemSize ? nil : self.items[(NSUInteger)itemIndex];
+            UIGridLayoutItem* item = nil;
+            if (!finishCycle)
+                item = self.fixedItemSize ? nil : self.items[(NSUInteger)itemIndex];
 
             CGSize itemSize = self.fixedItemSize ? self.itemSize : item.itemFrame.size;
             CGFloat itemDimension = self.layoutInfo.horizontal ? itemSize.height : itemSize.width;
             // first item of each row does not add spacing
-            if (itemsByRowCount > 0) itemDimension += spacing;
+            if (itemsByRowCount > 0)
+                itemDimension += spacing;
             if (dimensionLeft < itemDimension || finishCycle) {
                 // finish current row
                 if (row) {
@@ -115,7 +122,8 @@
                     row.itemCount = itemsByRowCount;
 
                     // if current row is done but there are still items left, increase the incomplete row counter
-                    if (!finishCycle) self.indexOfImcompleteRow = rowIndex;
+                    if (!finishCycle)
+                        self.indexOfImcompleteRow = rowIndex;
 
                     [row layoutRow];
 
@@ -123,7 +131,7 @@
                         row.rowFrame = CGRectMake(sectionSize.width, self.sectionMargins.top, row.rowSize.width, row.rowSize.height);
                         sectionSize.height = MAX(row.rowSize.height, sectionSize.height);
                         sectionSize.width += row.rowSize.width + (finishCycle ? 0 : self.horizontalInterstice);
-                    }else {
+                    } else {
                         row.rowFrame = CGRectMake(self.sectionMargins.left, sectionSize.height, row.rowSize.width, row.rowSize.height);
                         sectionSize.height += row.rowSize.height + (finishCycle ? 0 : self.verticalInterstice);
                         sectionSize.width = MAX(row.rowSize.width, sectionSize.width);
@@ -139,16 +147,18 @@
                     self.indexOfImcompleteRow = rowIndex;
                     rowIndex++;
                     // convert an item from previous row to current, remove spacing for first item
-                    if (itemsByRowCount > 0) itemDimension -= spacing;
+                    if (itemsByRowCount > 0)
+                        itemDimension -= spacing;
                     dimensionLeft = dimension - itemDimension;
                     itemsByRowCount = 0;
                 }
-            }else {
+            } else {
                 dimensionLeft -= itemDimension;
             }
 
             // add item on slow path
-            if (item) [row addItem:item];
+            if (item)
+                [row addItem:item];
 
             itemIndex++;
             itemsByRowCount++;
@@ -158,7 +168,7 @@
             sectionSize.width += self.sectionMargins.right;
             self.footerFrame = CGRectMake(sectionSize.width, 0, self.footerDimension, headerFooterDimension);
             sectionSize.width += self.footerDimension;
-        }else {
+        } else {
             sectionSize.height += self.sectionMargins.bottom;
             self.footerFrame = CGRectMake(0, sectionSize.height, headerFooterDimension, self.footerDimension);
             sectionSize.height += self.footerDimension;
@@ -175,22 +185,22 @@
     [self computeLayout];
 }
 
-- (UIGridLayoutItem *)addItem {
-    UIGridLayoutItem *item = [UIGridLayoutItem new];
+- (UIGridLayoutItem*)addItem {
+    UIGridLayoutItem* item = [UIGridLayoutItem new];
     item.section = self;
     [_items addObject:item];
     return item;
 }
 
-- (UIGridLayoutRow *)addRow {
-    UIGridLayoutRow *row = [UIGridLayoutRow new];
+- (UIGridLayoutRow*)addRow {
+    UIGridLayoutRow* row = [UIGridLayoutRow new];
     row.section = self;
     [_rows addObject:row];
     return row;
 }
 
-- (UIGridLayoutSection *)snapshot {
-    UIGridLayoutSection *snapshotSection = [UIGridLayoutSection new];
+- (UIGridLayoutSection*)snapshot {
+    UIGridLayoutSection* snapshotSection = [UIGridLayoutSection new];
     snapshotSection.items = [self.items copy];
     snapshotSection.rows = [self.items copy];
     snapshotSection.verticalInterstice = self.verticalInterstice;

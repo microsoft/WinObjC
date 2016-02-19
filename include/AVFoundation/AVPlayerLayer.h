@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,16 +14,21 @@
 //
 //******************************************************************************
 
-#ifndef _AVPLAYERLAYER_H_
-#define _AVPLAYERLAYER_H_
+#pragma once
 
+#import <AVFoundation/AVFoundationExport.h>
+#import <QuartzCore/CAMediaTiming.h>
+#import <Foundation/NSObject.h>
 #import <QuartzCore/CALayer.h>
-#import <AVFoundation/AVPlayer.h>
 
-@interface AVPlayerLayer : CALayer
+@class AVPlayer;
+@class NSString;
 
-+ (AVPlayerLayer*)playerLayerWithPlayer:(AVPlayer*)player;
-
+AVFOUNDATION_EXPORT_CLASS
+@interface AVPlayerLayer : CALayer <CAMediaTiming, NSCoding>
++ (AVPlayerLayer*)playerLayerWithPlayer:(AVPlayer*)player STUB_METHOD;
+@property (retain, nonatomic) AVPlayer* player STUB_PROPERTY;
+@property (readonly, getter=isReadyForDisplay, nonatomic) BOOL readyForDisplay STUB_PROPERTY;
+@property (copy) NSString* videoGravity STUB_PROPERTY;
+@property (readonly, nonatomic) CGRect videoRect STUB_PROPERTY;
 @end
-
-#endif /* _AVPLAYERLAYER_H_ */

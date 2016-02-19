@@ -219,7 +219,7 @@
     }
     if (newStr == nil || ![_text isEqual:newStr]) {
         _text.attach([newStr copy]);
-        
+
         if (_adjustFontSize) {
             [self adjustFontSizeToFit];
         } else {

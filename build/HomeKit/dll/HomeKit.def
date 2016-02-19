@@ -1,0 +1,132 @@
+LIBRARY HomeKit
+    EXPORTS
+        ; HMAccessory.mm
+        _OBJC_CLASS_HMAccessory DATA
+        __objc_class_name_HMAccessory CONSTANT
+
+        ; HMAccessoryBrowser.mm
+        _OBJC_CLASS_HMAccessoryBrowser DATA
+        __objc_class_name_HMAccessoryBrowser CONSTANT
+
+        ; HMAction.mm
+        _OBJC_CLASS_HMAction DATA
+        __objc_class_name_HMAction CONSTANT
+
+        ; HMActionSet.mm
+        _OBJC_CLASS_HMActionSet DATA
+        __objc_class_name_HMActionSet CONSTANT
+
+        ; HMCharacteristic.mm
+        HMCharacteristicPropertySupportsEventNotification DATA
+        HMCharacteristicPropertyReadable DATA
+        HMCharacteristicPropertyWritable DATA
+        HMCharacteristicTypePowerState DATA
+        HMCharacteristicTypeHue DATA
+        HMCharacteristicTypeSaturation DATA
+        HMCharacteristicTypeBrightness DATA
+        HMCharacteristicTypeTemperatureUnits DATA
+        HMCharacteristicTypeCurrentTemperature DATA
+        HMCharacteristicTypeTargetTemperature DATA
+        HMCharacteristicTypeCurrentHeatingCooling DATA
+        HMCharacteristicTypeTargetHeatingCooling DATA
+        HMCharacteristicTypeCoolingThreshold DATA
+        HMCharacteristicTypeHeatingThreshold DATA
+        HMCharacteristicTypeCurrentRelativeHumidity DATA
+        HMCharacteristicTypeTargetRelativeHumidity DATA
+        HMCharacteristicTypeCurrentDoorState DATA
+        HMCharacteristicTypeTargetDoorState DATA
+        HMCharacteristicTypeObstructionDetected DATA
+        HMCharacteristicTypeName DATA
+        HMCharacteristicTypeManufacturer DATA
+        HMCharacteristicTypeModel DATA
+        HMCharacteristicTypeSerialNumber DATA
+        HMCharacteristicTypeIdentify DATA
+        HMCharacteristicTypeRotationDirection DATA
+        HMCharacteristicTypeRotationSpeed DATA
+        HMCharacteristicTypeOutletInUse DATA
+        HMCharacteristicTypeVersion DATA
+        HMCharacteristicTypeLogs DATA
+        HMCharacteristicTypeAudioFeedback DATA
+        HMCharacteristicTypeAdminOnlyAccess DATA
+        HMCharacteristicTypeMotionDetected DATA
+        HMCharacteristicTypeCurrentLockMechanismState DATA
+        HMCharacteristicTypeTargetLockMechanismState DATA
+        HMCharacteristicTypeLockMechanismLastKnownAction DATA
+        HMCharacteristicTypeLockManagementControlPoint DATA
+        HMCharacteristicTypeLockManagementAutoSecureTimeout DATA
+        _OBJC_CLASS_HMCharacteristic DATA
+        __objc_class_name_HMCharacteristic CONSTANT
+
+        ; HMCharacteristicMetadata.mm
+        HMCharacteristicMetadataUnitsCelsius DATA
+        HMCharacteristicMetadataUnitsFahrenheit DATA
+        HMCharacteristicMetadataUnitsPercentage DATA
+        HMCharacteristicMetadataUnitsArcDegree DATA
+        HMCharacteristicMetadataFormatBool DATA
+        HMCharacteristicMetadataFormatInt DATA
+        HMCharacteristicMetadataFormatFloat DATA
+        HMCharacteristicMetadataFormatString DATA
+        HMCharacteristicMetadataFormatArray DATA
+        HMCharacteristicMetadataFormatDictionary DATA
+        HMCharacteristicMetadataFormatUInt8 DATA
+        HMCharacteristicMetadataFormatUInt16 DATA
+        HMCharacteristicMetadataFormatUInt32 DATA
+        HMCharacteristicMetadataFormatUInt64 DATA
+        HMCharacteristicMetadataFormatData DATA
+        HMCharacteristicMetadataFormatTLV8 DATA
+        _OBJC_CLASS_HMCharacteristicMetadata DATA
+        __objc_class_name_HMCharacteristicMetadata CONSTANT
+
+        ; HMCharacteristicWriteAction.mm
+        _OBJC_CLASS_HMCharacteristicWriteAction DATA
+        __objc_class_name_HMCharacteristicWriteAction CONSTANT
+
+        ; HMHome.mm
+        HMUserFailedAccessoriesKey DATA
+        _OBJC_CLASS_HMHome DATA
+        __objc_class_name_HMHome CONSTANT
+
+        ; HMHomeManager.mm
+        _OBJC_CLASS_HMHomeManager DATA
+        __objc_class_name_HMHomeManager CONSTANT
+
+        ; HMRoom.mm
+        _OBJC_CLASS_HMRoom DATA
+        __objc_class_name_HMRoom CONSTANT
+
+        ; HMService.mm
+        HMServiceTypeLightbulb DATA
+        HMServiceTypeSwitch DATA
+        HMServiceTypeThermostat DATA
+        HMServiceTypeGarageDoorOpener DATA
+        HMServiceTypeAccessoryInformation DATA
+        HMServiceTypeFan DATA
+        HMServiceTypeOutlet DATA
+        HMServiceTypeLockMechanism DATA
+        HMServiceTypeLockManagement DATA
+        _OBJC_CLASS_HMService DATA
+        __objc_class_name_HMService CONSTANT
+
+        ; HMServiceGroup.mm
+        _OBJC_CLASS_HMServiceGroup DATA
+        __objc_class_name_HMServiceGroup CONSTANT
+
+        ; HMTimerTrigger.mm
+        _OBJC_CLASS_HMTimerTrigger DATA
+        __objc_class_name_HMTimerTrigger CONSTANT
+
+        ; HMTrigger.mm
+        _OBJC_CLASS_HMTrigger DATA
+        __objc_class_name_HMTrigger CONSTANT
+
+        ; HMUser.mm
+        _OBJC_CLASS_HMUser DATA
+        __objc_class_name_HMUser CONSTANT
+
+        ; HMZone.mm
+        _OBJC_CLASS_HMZone DATA
+        __objc_class_name_HMZone CONSTANT
+
+        ; HomeKitConstants.mm
+        HMErrorDomain DATA
+

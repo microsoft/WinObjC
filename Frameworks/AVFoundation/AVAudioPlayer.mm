@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,45 +14,118 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
-@implementation AVAudioPlayer : NSObject
-@synthesize delegate;
-@synthesize numberOfLoops;
-@synthesize volume;
+#import <StubReturn.h>
 
+@implementation AVAudioPlayer
 /**
- @Status Stub
+@Status Stub
+@Notes
 */
-- (id)initWithContentsOfURL:(NSURL*)url error:(NSError**)outError {
+- (instancetype)initWithContentsOfURL:(NSURL*)url error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
-    if (outError) {
-        *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
-    }
-    return nil;
+    *outError = nil;
+    return StubReturn();
 }
 
 /**
- @Status Stub
+@Status Stub
+@Notes
 */
-- (id)initWithData:(NSData*)data error:(NSError**)outError {
+- (instancetype)initWithData:(NSData*)data error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
-    if (outError) {
-        *outError = [NSError errorWithDomain:@"AVAudioPlayer" code:100 userInfo:nil];
-    }
-    return nil;
+    *outError = nil;
+    return StubReturn();
 }
-@end
-
-@implementation AVAudioSession
 
 /**
- @Status Stub
+@Status Stub
+@Notes
 */
-+ (AVAudioSession*)sharedInstance {
+- (instancetype)initWithContentsOfURL:(NSURL*)url fileTypeHint:(NSString*)utiString error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
-    return nil;
+    *outError = nil;
+    return StubReturn();
 }
+
+/**
+@Status Stub
+@Notes
+*/
+- (instancetype)initWithData:(NSData*)data fileTypeHint:(NSString*)utiString error:(NSError* _Nullable*)outError {
+    UNIMPLEMENTED();
+    *outError = nil;
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (BOOL)play {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (BOOL)playAtTime:(NSTimeInterval)time {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)pause {
+    UNIMPLEMENTED();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)stop {
+    UNIMPLEMENTED();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (BOOL)prepareToPlay {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (float)averagePowerForChannel:(NSUInteger)channelNumber {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (float)peakPowerForChannel:(NSUInteger)channelNumber {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)updateMeters {
+    UNIMPLEMENTED();
+}
+
 @end

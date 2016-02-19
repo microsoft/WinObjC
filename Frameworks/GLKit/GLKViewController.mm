@@ -119,9 +119,17 @@ typedef wchar_t WCHAR;
 /**
  @Status Stub
 */
-- (unsigned int)framesPerSecond {
+- (NSInteger)framesPerSecond {
     UNIMPLEMENTED();
     return 30;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)glkView:(GLKView*)view drawInRect:(CGRect)rect {
+    UNIMPLEMENTED();
 }
 
 @end

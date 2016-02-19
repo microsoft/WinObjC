@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UICollectionViewItemKey.h"
+#import "UICollectionViewLayoutAttributes+Internal.h"
 
 NSString* const UICollectionElementKindCell = @"UICollectionElementKindCell";
 NSString* const UICollectionElementKindDecorationView = @"UICollectionElementKindDecorationView";

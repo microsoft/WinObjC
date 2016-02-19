@@ -44,6 +44,10 @@ typedef uint32_t AudioSessionInterruptionType;
 typedef uint32_t AudioSessionPropertyID;
 typedef void (*AudioSessionPropertyListener)(void* inClientData, AudioSessionPropertyID inID, UInt32 inDataSize, const void* inData);
 
+#define kAudioSession_AudioRouteChangeKey_Reason "OutputDeviceDidChange_Reason"
+
+#define kAudioSession_AudioRouteChangeKey_OldRoute "OutputDeviceDidChange_OldRoute"
+
 enum {
     kAudioSessionProperty_PreferredHardwareSampleRate = 'hwsr',
     kAudioSessionProperty_PreferredHardwareIOBufferDuration = 'iobd',
@@ -74,10 +78,6 @@ enum {
     kAudioSessionProperty_InputGainScalar = 'igsc',
     kAudioSessionProperty_AudioRouteDescription = 'crar',
     kAudioSessionProperty_AudioRoute = 'rout'
-};
-
-enum {
-    AVAudioSessionInterruptionFlags_ShouldResume = 1,
 };
 
 typedef uint32_t AudioSessionPropertyID;

@@ -36,12 +36,12 @@
 *   Chris Wilson <chris@chris-wilson.co.uk>
 */
 
-#include <math.h>
-#include <stdlib.h>
-#include "CGContextInternal.h"
+#import <math.h>
+#import <stdlib.h>
+#import "CGContextInternal.h"
 
 extern "C" {
-#include <png.h>
+#import <png.h>
 };
 
 CGPNGDecoderImage::CGPNGDecoderImage(const char* filename) {

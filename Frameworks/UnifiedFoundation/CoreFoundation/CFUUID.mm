@@ -38,7 +38,7 @@ CFUUIDRef CFUUIDCreateFromString(CFAllocatorRef allocator, CFStringRef string) {
 }
 
 CFUUIDRef CFUUIDCreateFromUUIDBytes(CFAllocatorRef allocator, CFUUIDBytes bytes) {
-    return (CFUUIDRef)[[NSUUID alloc] initWithUUIDBytes:&bytes];
+    return (CFUUIDRef)[[NSUUID alloc] initWithUUIDBytes:reinterpret_cast<unsigned char*>(&bytes)];
 }
 
 CFUUIDRef CFUUIDCreateWithBytes(CFAllocatorRef allocator,
@@ -84,7 +84,7 @@ CFUUIDRef CFUUIDGetConstantUUIDWithBytes(CFAllocatorRef allocator,
                           byte8, byte9, byte10, byte11, byte12, byte13, byte14, byte15 };
     auto findResult = constantUUIDs.find(bytes);
     if (findResult == constantUUIDs.end()) {
-        id uuid = [[_NSConstantUUID alloc] initWithUUIDBytes:&bytes];
+        id uuid = [[_NSConstantUUID alloc] initWithUUIDBytes:reinterpret_cast<unsigned char*>(&bytes)];
         constantUUIDs[bytes] = uuid;
     }
     return (CFUUIDRef)constantUUIDs[bytes];
@@ -92,7 +92,7 @@ CFUUIDRef CFUUIDGetConstantUUIDWithBytes(CFAllocatorRef allocator,
 
 CFUUIDBytes CFUUIDGetUUIDBytes(CFUUIDRef self) {
     CFUUIDBytes bytes;
-    [(NSUUID*)self getUUIDBytes:&bytes];
+    [(NSUUID*)self getUUIDBytes:reinterpret_cast<unsigned char*>(&bytes)];
     return bytes;
 }
 

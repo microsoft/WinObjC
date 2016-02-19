@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSIndexPath.h"
 
 @implementation NSIndexPath : NSObject
@@ -64,7 +65,7 @@
     _length = length;
     _indexes = (unsigned*)EbrMalloc(length * sizeof(unsigned));
     if (_indexes == nil) {
-		[self release];
+        [self release];
         return nil;
     }
 
@@ -207,6 +208,49 @@
 - (NSIndexPath*)indexPathByRemovingLastIndex {
     UNIMPLEMENTED();
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)init {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getIndexes:(NSUInteger*)indexes range:(NSRange)positionRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 @end

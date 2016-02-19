@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,42 +13,42 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _GKMATCH_H_
-#define _GKMATCH_H_
+#import <GameKit/GameKitExport.h>
 
+#import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSObject.h>
 
-enum {
-    GKPlayerStateUnknown,
-    GKPlayerStateConnected,
-    GKPlayerStateDisconnected,
-};
-typedef uint32_t GKPlayerConnectionState;
+@protocol GKMatchDelegate;
+@class NSArray;
+@class GKPlayer;
+@class NSData;
+@class NSError;
+@class NSString;
+@class GKVoiceChat;
 
+typedef NSInteger GKMatchSendDataMode;
 enum {
     GKMatchSendDataReliable,
     GKMatchSendDataUnreliable,
 };
-typedef int32_t GKMatchSendDataMode;
 
-@class NSArray;
-@class NSData;
-@class NSError;
-
-@protocol GKMatchDelegate <NSObject>
+GAMEKIT_EXPORT_CLASS
+@interface GKMatch : NSObject <NSObject>
+- (void)chooseBestHostingPlayerWithCompletionHandler:(void (^)(GKPlayer*))completionHandler STUB_METHOD;
+- (BOOL)sendData:(NSData*)data toPlayers:(NSArray*)players dataMode:(GKMatchSendDataMode)mode error:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)sendDataToAllPlayers:(NSData*)data withDataMode:(GKMatchSendDataMode)mode error:(NSError* _Nullable*)error STUB_METHOD;
+- (void)chooseBestHostPlayerWithCompletionHandler:(void (^)(NSString*))completionHandler STUB_METHOD;
+- (BOOL)sendData:(NSData*)data
+       toPlayers:(NSArray*)playerIDs
+    withDataMode:(GKMatchSendDataMode)mode
+           error:(NSError* _Nullable*)error STUB_METHOD;
+- (GKVoiceChat*)voiceChatWithName:(NSString*)name STUB_METHOD;
+- (void)disconnect STUB_METHOD;
+- (void)rematchWithCompletionHandler:(void (^)(GKMatch*, NSError*))completionHandler STUB_METHOD;
+@property (assign, nonatomic) id<GKMatchDelegate> delegate STUB_PROPERTY;
+@property (readonly, nonatomic) NSUInteger expectedPlayerCount STUB_PROPERTY;
+@property (readonly, nonatomic) NSArray* players STUB_PROPERTY;
+@property (readonly, nonatomic) NSArray* playerIDs STUB_PROPERTY;
 @end
-
-@interface GKMatch : NSObject
-
-@property (nonatomic, assign) id<GKMatchDelegate> delegate;
-@property (nonatomic, readonly) NSArray* playerIDs;
-@property (nonatomic, readonly) NSUInteger expectedPlayerCount;
-
-- (void)disconnect;
-- (BOOL)sendDataToAllPlayers:(NSData*)data withDataMode:(GKMatchSendDataMode)mode error:(NSError**)error;
-- (BOOL)sendData:(NSData*)data toPlayers:(NSArray*)playerIDs withDataMode:(GKMatchSendDataMode)mode error:(NSError**)error;
-
-@end
-
-#endif /* _GKMATCH_H_ */

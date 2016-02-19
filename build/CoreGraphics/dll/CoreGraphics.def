@@ -1,124 +1,103 @@
 LIBRARY CoreGraphics
     EXPORTS
-        CGAffineTransformConcat
-        CGAffineTransformEqualToTransform
+        ; CGAffineTransform.mm
         CGAffineTransformIdentity DATA
-        CGAffineTransformInvert
-        CGAffineTransformIsIdentity
         CGAffineTransformMake
         CGAffineTransformMakeRotation
         CGAffineTransformMakeScale
         CGAffineTransformMakeTranslation
-        CGAffineTransformRotate
-        CGAffineTransformScale
         CGAffineTransformTranslate
+        CGAffineTransformScale
+        CGAffineTransformRotate
+        CGAffineTransformInvert
+        CGAffineTransformConcat
+        CGPointApplyAffineTransform
+        CGSizeApplyAffineTransform
+        CGRectApplyAffineTransform
+        CGAffineTransformIsIdentity
+        CGAffineTransformEqualToTransform
+
+        ; CGBitmapContext.mm
         CGBitmapContextCreate
-        CGBitmapContextCreate24
-        CGBitmapContextCreate32
+        CGBitmapContextCreateWithData
         CGBitmapContextCreateImage
+        CGBitmapContextGetBitmapInfo
         CGBitmapContextGetAlphaInfo
+        CGBitmapContextGetBitsPerComponent
+        CGBitmapContextGetBitsPerPixel
         CGBitmapContextGetBytesPerRow
         CGBitmapContextGetColorSpace
         CGBitmapContextGetData
         CGBitmapContextGetHeight
-        CGBitmapContextGetImage
         CGBitmapContextGetWidth
+        ; private export below
+        CGBitmapContextCreate24
+        CGBitmapContextCreate32
+        CGBitmapContextGetImage
+
+        ; CGColor.mm
+        CGColorRelease
+        CGColorRetain
         CGColorCreate
         CGColorCreateCopy
         CGColorCreateCopyWithAlpha
-        CGColorCreateGenericRGB
+        CGColorCreateWithPattern
         CGColorEqualToColor
         CGColorGetAlpha
         CGColorGetColorSpace
         CGColorGetComponents
-        CGColorGetConstantColor
         CGColorGetNumberOfComponents
-        CGColorRelease
-        CGColorRetain
+        CGColorGetPattern
+        CGColorGetTypeID
+
+        ; private export below
+        CGColorGetConstantColor
+
+        ; CGColorSpace Reference.mm
+        kCGColorSpaceGenericGray DATA
+        kCGColorSpaceGenericRGB DATA
+        kCGColorSpaceGenericCMYK DATA
+        kCGColorSpaceGenericRGBLinear DATA
+        kCGColorSpaceAdobeRGB1998 DATA
+        kCGColorSpaceSRGB DATA
+        kCGColorSpaceGenericGrayGamma2_2 DATA
+        kCGColorSpaceGenericXYZ DATA
+        kCGColorSpaceACESCGLinear DATA
+        kCGColorSpaceITUR_709 DATA
+        kCGColorSpaceITUR_2020 DATA
+        kCGColorSpaceROMMRGB DATA
+        CGColorSpaceCreateCalibratedGray
+        CGColorSpaceCreateCalibratedRGB
+        CGColorSpaceCreateICCBased
+        CGColorSpaceCreateWithICCProfile
+        CGColorSpaceCreateLab
+        CGColorSpaceCreateDeviceCMYK
         CGColorSpaceCreateDeviceGray
         CGColorSpaceCreateDeviceRGB
+        CGColorSpaceCreateWithPlatformColorSpace
+        CGColorSpaceCreateIndexed
         CGColorSpaceCreatePattern
-        CGColorSpaceGetModel
+        CGColorSpaceCreateWithName
+        CGColorSpaceCopyICCProfile
         CGColorSpaceGetNumberOfComponents
+        CGColorSpaceGetTypeID
+        CGColorSpaceGetModel
+        CGColorSpaceGetBaseColorSpace
+        CGColorSpaceGetColorTableCount
+        CGColorSpaceGetColorTable
         CGColorSpaceRelease
         CGColorSpaceRetain
-        CGContextAddArc
-        CGContextAddArcToPoint
-        CGContextAddCurveToPoint
-        CGContextAddEllipseInRect
-        CGContextAddLineToPoint
-        CGContextAddLines
-        CGContextAddPath
-        CGContextAddQuadCurveToPoint
-        CGContextAddRect
-        CGContextAddRects
-        CGContextBeginPath
-        CGContextBeginTransparencyLayer
-        CGContextClearRect
-        CGContextClearToColor
-        CGContextClip
-        CGContextClipToMask
-        CGContextClipToRect
-        CGContextClipToRects
-        CGContextClosePath
-        CGContextConcatCTM
-        CGContextConvertPointToDeviceSpace
-        CGContextConvertPointToUserSpace
-        CGContextConvertRectToDeviceSpace
-        CGContextConvertRectToUserSpace
-        CGContextDrawImage
-        CGContextDrawImageRect
-        CGContextDrawLayerAtPoint
-        CGContextDrawLayerInRect
-        CGContextDrawLinearGradient
-        CGContextDrawPath
-        CGContextDrawRadialGradient
-        CGContextDrawShading
-        CGContextDrawTiledImage
-        CGContextEOClip
-        CGContextEOFillPath
-        CGContextEndTransparencyLayer
-        CGContextFillEllipseInRect
-        CGContextFillPath
-        CGContextFillRect
+
+        ; CGContext.mm
         CGContextFlush
-        CGContextGetBacking
-        CGContextGetBlendMode
-        CGContextGetCTM
-        CGContextGetClipBoundingBox
-        CGContextGetInterpolationQuality
-        CGContextGetPathBoundingBox
-        CGContextGetTextMatrix
-        CGContextGetTextPosition
-        CGContextIsDirty
-        CGContextIsPathEmpty
-        CGContextMoveToPoint
+        CGContextGetTypeID
         CGContextRelease
-        CGContextReleaseLock
-        CGContextReplacePathWithStrokedPath
-        CGContextRestoreGState
         CGContextRetain
-        CGContextRotateCTM
+        CGContextSynchronize
         CGContextSaveGState
-        CGContextScaleCTM
-        CGContextSelectFont
-        CGContextSetAllowsAntialiasing
-        CGContextSetAllowsFontSmoothing
-        CGContextSetAllowsFontSubpixelPositioning
-        CGContextSetAllowsFontSubpixelQuantization
-        CGContextSetAlpha
-        CGContextSetBlendMode
-        CGContextSetCTM
-        CGContextSetCharacterSpacing
-        CGContextSetDirty
-        CGContextSetFillColor
-        CGContextSetFillColorSpace
-        CGContextSetFillColorWithColor
-        CGContextSetFillPattern
-        CGContextSetFont
-        CGContextSetFontSize
-        CGContextSetGrayFillColor
-        CGContextSetGrayStrokeColor
+        CGContextRestoreGState
+        CGContextGetInterpolationQuality
+        CGContextSetFlatness
         CGContextSetInterpolationQuality
         CGContextSetLineCap
         CGContextSetLineDash
@@ -126,70 +105,227 @@ LIBRARY CoreGraphics
         CGContextSetLineWidth
         CGContextSetMiterLimit
         CGContextSetPatternPhase
-        CGContextSetRGBFillColor
-        CGContextSetRGBStrokeColor
+        CGContextSetFillPattern
         CGContextSetRenderingIntent
-        CGContextSetShadow
-        CGContextSetShadowWithColor
         CGContextSetShouldAntialias
+        CGContextSetStrokePattern
+        CGContextSetBlendMode
+        CGContextSetAllowsAntialiasing
+        CGContextSetAllowsFontSmoothing
         CGContextSetShouldSmoothFonts
+        CGContextSetAllowsFontSubpixelPositioning
         CGContextSetShouldSubpixelPositionFonts
+        CGContextSetAllowsFontSubpixelQuantization
         CGContextSetShouldSubpixelQuantizeFonts
-        CGContextSetStrokeColor
-        CGContextSetStrokeColorSpace
-        CGContextSetStrokeColorWithColor
-        CGContextSetTextDrawingMode
-        CGContextSetTextMatrix
-        CGContextSetTextPosition
-        CGContextShowGlyphs
-        CGContextShowGlyphsAtPoint
-        CGContextShowText
-        CGContextShowTextAtPoint
-        CGContextStrokeEllipseInRect
-        CGContextStrokeLineSegments
+        CGContextAddArc
+        CGContextAddArcToPoint
+        CGContextAddCurveToPoint
+        CGContextAddLines
+        CGContextAddLineToPoint
+        CGContextAddPath
+        CGContextCopyPath
+        CGContextAddQuadCurveToPoint
+        CGContextAddRect
+        CGContextAddRects
+        CGContextBeginPath
+        CGContextClosePath
+        CGContextMoveToPoint
+        CGContextAddEllipseInRect
+        CGContextClearRect
+        CGContextDrawPath
+        CGContextEOFillPath
+        CGContextFillPath
+        CGContextFillRect
+        CGContextFillRects
+        CGContextFillEllipseInRect
         CGContextStrokePath
         CGContextStrokeRect
         CGContextStrokeRectWithWidth
+        CGContextReplacePathWithStrokedPath
+        CGContextStrokeEllipseInRect
+        CGContextStrokeLineSegments
+        CGContextIsPathEmpty
+        CGContextGetPathCurrentPoint
+        CGContextGetPathBoundingBox
+        CGContextPathContainsPoint
+        CGContextClip
+        CGContextEOClip
+        CGContextClipToRect
+        CGContextClipToRects
+        CGContextGetClipBoundingBox
+        CGContextClipToMask
+        CGContextSetAlpha
+        CGContextSetCMYKFillColor
+        CGContextSetFillColor
+        CGContextSetCMYKStrokeColor
+        CGContextSetFillColorSpace
+        CGContextSetFillColorWithColor
+        CGContextSetGrayFillColor
+        CGContextSetGrayStrokeColor
+        CGContextSetRGBFillColor
+        CGContextSetRGBStrokeColor
+        CGContextSetShadow
+        CGContextSetShadowWithColor
+        CGContextSetStrokeColor
+        CGContextSetStrokeColorSpace
+        CGContextSetStrokeColorWithColor
+        CGContextConcatCTM
+        CGContextGetCTM
+        CGContextRotateCTM
+        CGContextScaleCTM
         CGContextTranslateCTM
-        CGDataProviderCopyData
-        CGDataProviderCreateWithCFData
+        CGContextBeginTransparencyLayer
+        CGContextBeginTransparencyLayerWithRect
+        CGContextEndTransparencyLayer
+        CGContextDrawTiledImage
+        CGContextDrawImage
+        CGContextDrawPDFPage
+        CGContextDrawLinearGradient
+        CGContextDrawRadialGradient
+        CGContextDrawShading
+        CGContextBeginPage
+        CGContextEndPage
+        CGContextShowGlyphs
+        CGContextShowGlyphsAtPoint
+        CGContextShowGlyphsWithAdvances
+        CGContextShowGlyphsAtPositions
+        CGContextGetTextMatrix
+        CGContextGetTextPosition
+        CGContextSelectFont
+        CGContextSetCharacterSpacing
+        CGContextSetFont
+        CGContextSetFontSize
+        CGContextSetTextDrawingMode
+        CGContextSetTextMatrix
+        CGContextSetTextPosition
+        CGContextShowText
+        CGContextShowTextAtPoint
+        CGContextGetUserSpaceToDeviceSpaceTransform
+        CGContextConvertPointToDeviceSpace
+        CGContextConvertPointToUserSpace
+        CGContextConvertSizeToDeviceSpace
+        CGContextConvertSizeToUserSpace
+        CGContextConvertRectToDeviceSpace
+        CGContextConvertRectToUserSpace
+
+        ; private export below
+        CGContextClearToColor
+        CGContextDrawImageRect
+        CGContextGetBlendMode
+        CGContextIsDirty
+        CGContextReleaseLock
+        CGContextSetDirty
+        EbrCenterTextInRectVertically
+
+        ; CGDataConsumer.mm
+        CGDataConsumerCreate
+        CGDataConsumerCreateWithURL
+        CGDataConsumerCreateWithCFData
+        CGDataConsumerGetTypeID
+        CGDataConsumerRelease
+        CGDataConsumerRetain
+
+        ; CGDataProvider.mm
         CGDataProviderCreateWithData
-        CGDataProviderCreateWithFilename
         CGDataProviderCreateWithURL
+        CGDataProviderCreateWithFilename
+        CGDataProviderCreateWithCFData
+        CGDataProviderGetTypeID
+        CGDataProviderCopyData
         CGDataProviderRelease
-        CGFontCopyFullName
-        CGFontCopyTableForTag
-        CGFontCreateWithDataProvider
-        CGFontCreateWithFontName
-        CGFontFitChars
-        CGFontGetAscent
-        CGFontGetCapHeight
-        CGFontGetDescent
-        CGFontGetFontBBox
-        CGFontGetGlyphAdvances
-        CGFontGetGlyphBBoxes
-        CGFontGetGlyphs
-        CGFontGetLeading
-        CGFontGetUnitsPerEm
-        CGFontGetXHeight
-        CGFontMeasureGlyphs
+        CGDataProviderRetain
+        CGDataProviderCreateSequential
+        CGDataProviderCreateDirect
+
+        ; CGFont.mm
+        kCGFontVariationAxisName DATA
+        kCGFontVariationAxisMinValue DATA
+        kCGFontVariationAxisMaxValue DATA
+        kCGFontVariationAxisDefaultValue DATA
         CGFontRelease
         CGFontRetain
+        CGFontCreateWithDataProvider
+        CGFontCreateWithFontName
+        CGFontCreateCopyWithVariations
+        CGFontCopyPostScriptName
+        CGFontCanCreatePostScriptSubset
+        CGFontCreatePostScriptSubset
+        CGFontCreatePostScriptEncoding
+        CGFontCopyTableTags
+        CGFontCopyTableForTag
+        CGFontGetTypeID
+        CGFontCopyVariationAxes
+        CGFontCopyVariations
+        CGFontCopyFullName
+        CGFontGetAscent
+        CGFontGetDescent
+        CGFontGetLeading
+        CGFontGetCapHeight
+        CGFontGetXHeight
+        CGFontGetFontBBox
+        CGFontGetItalicAngle
+        CGFontGetStemV
+        CGFontGetGlyphBBoxes
+        CGFontGetGlyphWithGlyphName
+        CGFontCopyGlyphNameForGlyph
+        CGFontGetNumberOfGlyphs
+        CGFontGetGlyphAdvances
+        CGFontGetUnitsPerEm
+
+        ; private export below
+        CGFontFitChars
+        CGFontGetGlyphs
+        CGFontGetGlyphsForUnichars
         CGFontSetFTFontSize
         CGFontWrap
-        CGFontWrapFunc
+        _CGFontLock
+        _CGFontUnlock
+
+        ; CGFunction.mm
+        CGFunctionCreate
+        CGFunctionRelease
+        CGFunctionRetain
+        CGFunctionGetTypeID
+
+        ; CGGeometry.mm
+        CGRectInfinite DATA
+        CGPointZero DATA
+        CGRectZero DATA
+        CGSizeZero DATA
+        CGRectNull DATA
+        CGPointCreateDictionaryRepresentation
+        CGSizeCreateDictionaryRepresentation
+        CGRectCreateDictionaryRepresentation
+        CGPointMakeWithDictionaryRepresentation
+        CGSizeMakeWithDictionaryRepresentation
+        CGRectMakeWithDictionaryRepresentation
+        CGVectorMake
+        CGRectDivide
+        CGRectIntegral
+        CGRectIntersection
+        CGRectStandardize
+        CGRectUnion
+
+        ; CGGradient.mm
         CGGradientCreateWithColorComponents
         CGGradientCreateWithColors
         CGGradientRelease
         CGGradientRetain
-        CGImageAddDestructionListener
+        CGGradientGetTypeID
+
+        ; CGImage.mm
         CGImageCreate
         CGImageCreateCopy
         CGImageCreateCopyWithColorSpace
-        CGImageCreateWithImageInRect
         CGImageCreateWithJPEGDataProvider
-        CGImageCreateWithMask
         CGImageCreateWithPNGDataProvider
+        CGImageCreateWithImageInRect
+        CGImageCreateWithMask
+        CGImageCreateWithMaskingColors
+        CGImageMaskCreate
+        CGImageRetain
+        CGImageRelease
+        CGImageGetTypeID
         CGImageGetAlphaInfo
         CGImageGetBitmapInfo
         CGImageGetBitsPerComponent
@@ -197,102 +333,212 @@ LIBRARY CoreGraphics
         CGImageGetBytesPerRow
         CGImageGetColorSpace
         CGImageGetDataProvider
+        CGImageGetDecode
         CGImageGetHeight
+        CGImageGetShouldInterpolate
+        CGImageGetRenderingIntent
         CGImageGetWidth
-        CGImageMaskCreate
-        CGImageRelease
-        CGImageRetain
+        CGImageIsMask
+
+        ;private export below
+        CGImageAddDestructionListener
         CGJPEGImageCreateFromData
-        CGJPEGImageCreateFromFile
         CGPNGImageCreateFromData
+        CGJPEGImageCreateFromFile
         CGPNGImageCreateFromFile
+
+        ; CGLayer.mm
+        CGLayerCreateWithContext
+        CGContextDrawLayerInRect
+        CGContextDrawLayerAtPoint
+        CGLayerRelease
+        CGLayerRetain
+        CGLayerGetTypeID
+        CGLayerGetSize
+        CGLayerGetContext
+
+        ; CGPath.mm
+        CGPathCreateMutable
+        CGPathCreateWithEllipseInRect
+        CGPathCreateWithRect
+        CGPathCreateWithRoundedRect
+        CGPathCreateCopy
+        CGPathCreateCopyByTransformingPath
+        CGPathCreateCopyByDashingPath
+        CGPathCreateCopyByStrokingPath
+        CGPathCreateMutableCopy
+        CGPathCreateMutableCopyByTransformingPath
+        CGPathRelease
+        CGPathRetain
         CGPathAddArc
+        CGPathAddRelativeArc
         CGPathAddArcToPoint
         CGPathAddCurveToPoint
-        CGPathAddEllipseInRect
+        CGPathAddLines
         CGPathAddLineToPoint
         CGPathAddPath
         CGPathAddQuadCurveToPoint
         CGPathAddRect
+        CGPathAddRects
+        CGPathAddRoundedRect
+        CGPathApply
+        CGPathMoveToPoint
         CGPathCloseSubpath
-        CGPathCreateCopy
-        CGPathCreateMutable
-        CGPathCreateMutableCopy
-        CGPathCreateWithEllipseInRect
-        CGPathCreateWithRect
+        CGPathAddEllipseInRect
+        CGPathEqualToPath
         CGPathGetBoundingBox
         CGPathGetPathBoundingBox
-        _CGPathFitRect
+        CGPathGetCurrentPoint
+        CGPathGetTypeID
         CGPathIsEmpty
-        CGPathMoveToPoint
-        CGPathRelease
-        CGPathRetain
+        CGPathIsRect
+        CGPathContainsPoint
+
+        ;private export below
+        _CGPathFitRect
+
+        ; CGPattern.mm
         CGPatternCreate
-        CGPatternCreateFromImage
+        CGPatternGetTypeID
+        CGPatternRetain
         CGPatternRelease
-        CGPointApplyAffineTransform
-        CGPointZero DATA
-        CGRectApplyAffineTransform
-        CGRectIntegral
-        CGRectIntersection
-        CGRectNull DATA
-        CGRectStandardize
-        CGRectUnion
-        CGRectZero DATA
-        CGSizeZero DATA
-        CTFontCopyFamilyName
-        CTFontCopyName
-        CTFontCopyPostScriptName
-        CTFontCreateCopyWithSymbolicTraits
-        CTFontCreateWithFontDescriptor
-        CTFontCreateWithGraphicsFont
-        CTFontGetAdvancesForGlyphs
-        CTFontGetAscent
-        CTFontGetDescent
-        CTFontGetSize
-        CTFontGetUnderlineThickness
-        CTFrameDraw
-        CTFrameGetLineOrigins
-        CTFrameGetLines
-        CTFramesetterCreateFrame
-        CTFramesetterCreateWithAttributedString
-        CTFramesetterSuggestFrameSizeWithConstraints
-        CTLineCreateTruncatedLine
-        CTLineCreateWithAttributedString
-        CTLineDraw
-        CTLineGetGlyphRuns
-        CTLineGetOffsetForStringIndex
-        CTLineGetPenOffsetForFlush
-        CTLineGetStringIndexForPosition
-        CTLineGetStringRange
-        CTLineGetTypographicBounds
-        CTLineGetGlyphCount
-        CTParagraphStyleCreate
-        CTRunGetAttributes
-        CTRunGetStringRange
-        CTRunGetGlyphCount
-        CTRunGetTypographicBounds
-        CTRunGetPositions
-        CTRunGetAdvances
-        CTTypesetterCreateLineWithOffset
-        CTTypesetterCreateWithAttributedString
-        CTTypesetterSuggestLineBreakWithOffsetAndCallback
-        EbrCenterTextInRectVertically
-        _CGFontLock
-        _CGFontUnlock
-        kCTCharacterShapeAttributeName DATA
-        kCTFontAttributeName DATA
-        kCTFontPostScriptNameKey DATA
-        kCTForegroundColorAttributeName DATA
-        kCTForegroundColorFromContextAttributeName DATA
-        kCTGlyphInfoAttributeName DATA
-        kCTKernAttributeName DATA
-        kCTLigatureAttributeName DATA
-        kCTParagraphStyleAttributeName DATA
-        kCTRunDelegateAttributeName DATA
-        kCTStrokeColorAttributeName DATA
-        kCTStrokeWidthAttributeName DATA
-        kCTSuperscriptAttributeName DATA
-        kCTUnderlineColorAttributeName DATA
-        kCTUnderlineStyleAttributeName DATA
-        kCTVerticalFormsAttributeName DATA
+
+        ;private export
+        CGPatternCreateFromImage
+
+        ; CGPDFArray.mm
+        CGPDFArrayGetArray
+        CGPDFArrayGetBoolean
+        CGPDFArrayGetCount
+        CGPDFArrayGetDictionary
+        CGPDFArrayGetInteger
+        CGPDFArrayGetName
+        CGPDFArrayGetNull
+        CGPDFArrayGetNumber
+        CGPDFArrayGetObject
+        CGPDFArrayGetStream
+        CGPDFArrayGetString
+
+        ; CGPDFContentStream.mm
+        CGPDFContentStreamCreateWithPage
+        CGPDFContentStreamCreateWithStream
+        CGPDFContentStreamGetStreams
+        CGPDFContentStreamGetResource
+        CGPDFContentStreamRetain
+        CGPDFContentStreamRelease
+
+        ; CGPDFContext.mm
+        kCGPDFContextAuthor DATA
+        kCGPDFContextCreator DATA
+        kCGPDFContextTitle DATA
+        kCGPDFContextOwnerPassword DATA
+        kCGPDFContextUserPassword DATA
+        kCGPDFContextAllowsPrinting DATA
+        kCGPDFContextAllowsCopying DATA
+        kCGPDFContextSubject DATA
+        kCGPDFContextKeywords DATA
+        kCGPDFContextEncryptionKeyLength DATA
+        kCGPDFContextMediaBox DATA
+        kCGPDFContextCropBox DATA
+        kCGPDFContextBleedBox DATA
+        kCGPDFContextTrimBox DATA
+        kCGPDFContextArtBox DATA
+        CGPDFContextCreate
+        CGPDFContextCreateWithURL
+        CGPDFContextBeginPage
+        CGPDFContextEndPage
+        CGPDFContextAddDestinationAtPoint
+        CGPDFContextSetDestinationForRect
+        CGPDFContextSetURLForRect
+        CGPDFContextAddDocumentMetadata
+        CGPDFContextClose
+
+        ; CGPDFDictionary.mm
+        CGPDFDictionaryApplyFunction
+        CGPDFDictionaryGetArray
+        CGPDFDictionaryGetBoolean
+        CGPDFDictionaryGetCount
+        CGPDFDictionaryGetDictionary
+        CGPDFDictionaryGetInteger
+        CGPDFDictionaryGetName
+        CGPDFDictionaryGetNumber
+        CGPDFDictionaryGetObject
+        CGPDFDictionaryGetStream
+        CGPDFDictionaryGetString
+
+        ; CGPDFDocument.mm
+        CGPDFDocumentCreateWithProvider
+        CGPDFDocumentCreateWithURL
+        CGPDFDocumentRelease
+        CGPDFDocumentRetain
+        CGPDFDocumentGetTypeID
+        CGPDFDocumentGetCatalog
+        CGPDFDocumentGetNumberOfPages
+        CGPDFDocumentGetPage
+        CGPDFDocumentGetVersion
+        CGPDFDocumentGetInfo
+        CGPDFDocumentGetID
+        CGPDFDocumentAllowsCopying
+        CGPDFDocumentAllowsPrinting
+        CGPDFDocumentIsEncrypted
+        CGPDFDocumentIsUnlocked
+        CGPDFDocumentUnlockWithPassword
+
+        ; CGPDFObject.mm
+        CGPDFObjectGetType
+        CGPDFObjectGetValue
+
+        ; CGPDFOperatorTable.mm
+        CGPDFOperatorTableCreate
+        CGPDFOperatorTableSetCallback
+        CGPDFOperatorTableRetain
+        CGPDFOperatorTableRelease
+
+        ; CGPDFPage.mm
+        CGPDFPageRetain
+        CGPDFPageRelease
+        CGPDFPageGetTypeID
+        CGPDFPageGetBoxRect
+        CGPDFPageGetDictionary
+        CGPDFPageGetDocument
+        CGPDFPageGetDrawingTransform
+        CGPDFPageGetPageNumber
+        CGPDFPageGetRotationAngle
+
+        ; CGPDFScanner.mm
+        CGPDFScannerCreate
+        CGPDFScannerRetain
+        CGPDFScannerRelease
+        CGPDFScannerScan
+        CGPDFScannerGetContentStream
+        CGPDFScannerPopObject
+        CGPDFScannerPopBoolean
+        CGPDFScannerPopInteger
+        CGPDFScannerPopNumber
+        CGPDFScannerPopName
+        CGPDFScannerPopString
+        CGPDFScannerPopArray
+        CGPDFScannerPopDictionary
+        CGPDFScannerPopStream
+
+        ; CGPDFStream.mm
+        CGPDFStreamCopyData
+        CGPDFStreamGetDictionary
+
+        ; CGPDFString.mm
+        CGPDFStringCopyTextString
+        CGPDFStringCopyDate
+        CGPDFStringGetBytePtr
+        CGPDFStringGetLength
+
+        ; CGShading.mm
+        CGShadingCreateAxial
+        CGShadingCreateRadial
+        CGShadingRetain
+        CGShadingRelease
+        CGShadingGetTypeID
+
+        ; These should be in UIKit but we don't link against libjpeg and libpng inside of UIKit
+        ; so they'll stay here for now
+        UIImagePNGRepresentation
+        UIImageJPEGRepresentation

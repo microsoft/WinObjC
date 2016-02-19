@@ -16,6 +16,7 @@
 
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
+#import <Foundation/NSURLCache.h>
 
 static NSCachedURLResponse* _fakeCachedResponse(const std::string& url, size_t length) {
     std::string data(length, '0');

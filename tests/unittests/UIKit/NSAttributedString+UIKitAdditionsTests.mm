@@ -15,14 +15,16 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import "Starboard.h"
-#import <windows.h>
+#import <Starboard.h>
+
 #import <CoreFoundation\CFAttributedString.h>
 #import <Foundation\NSAttributedString.h>
 #import <Foundation\NSDictionary.h>
 #import <Foundation\NSMutableAttributedString.h>
 #import <UIKit\UIKit.h>
+
 #import <vector>
+#import <windows.h>
 
 // UI Kit extensions
 
@@ -144,4 +146,20 @@ TEST(Foundation, AttributedString_InitWithData_NilInput) {
                               documentAttributes:nil
                                            error:&error];
     ASSERT_OBJCEQ(nil, aStr);
+}
+
+TEST(Foundation, AttributedString_ReplaceUsingSubclass) {
+    NSMutableAttributedString* aStr = SixCharacterTestString();
+    [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
+
+    NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
+    NSTextStorage* aStr2 = [[NSTextStorage alloc] initWithString:@"OBJ" attributes:attrs];
+    [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
+
+    [aStr replaceCharactersInRange:NSMakeRange(2, 2) withAttributedString:aStr2];
+
+    assertAttributeAt(aStr, @"key1", @"value1", 2, 2);
+    assertAttributeAt(aStr, @"key1", @"value1", 5, 2);
+    assertAttributeAt(aStr, @"key2", @"value2", 2, 3);
+    ASSERT_OBJCEQ(@"AAOBJAA", [aStr string]);
 }

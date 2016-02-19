@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,31 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _GKPEERPICKERCONTROLLER_H_
-#define _GKPEERPICKERCONTROLLER_H_
-
-#include <stdint.h>
+#import <GameKit/GameKitExport.h>
 #import <Foundation/NSObject.h>
 
+@protocol GKPeerPickerControllerDelegate;
+
+typedef NSUInteger GKPeerPickerConnectionType;
 enum {
-    GKPeerPickerConnectionTypeOnline = 1,
-    GKPeerPickerConnectionTypeNearby = 2,
+    GKPeerPickerConnectionTypeOnline = 1 << 0,
+    GKPeerPickerConnectionTypeNearby = 1 << 1,
 };
-typedef uint32_t GKPeerPickerConnectionType;
 
-@protocol GKPeerPickerControllerDelegate <NSObject>
+GAMEKIT_EXPORT_CLASS
+@interface GKPeerPickerController : NSObject <NSObject>
+- (void)show STUB_METHOD;
+- (void)dismiss STUB_METHOD;
+@property (readonly, getter=isVisible, nonatomic) BOOL visible STUB_PROPERTY;
+@property (assign, nonatomic) id<GKPeerPickerControllerDelegate> delegate STUB_PROPERTY;
+@property (assign, nonatomic) GKPeerPickerConnectionType connectionTypesMask STUB_PROPERTY;
 @end
-
-@interface GKPeerPickerController : NSObject
-
-@property (nonatomic, assign) id<GKPeerPickerControllerDelegate> delegate;
-
-- (void)dismiss;
-- (void)show;
-
-@property (nonatomic, assign) GKPeerPickerConnectionType connectionTypesMask;
-
-@end
-
-#endif // _GKPEERPICKERCONTROLLER_H_

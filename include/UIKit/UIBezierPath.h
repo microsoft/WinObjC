@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,38 +28,48 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CGPath.h>
 #import <CoreGraphics/CGContext.h>
 
 enum {
-    UIRectCornerTopLeft     = 1 << 0,
-    UIRectCornerTopRight    = 1 << 1,
-    UIRectCornerBottomLeft  = 1 << 2,
+    UIRectCornerTopLeft = 1 << 0,
+    UIRectCornerTopRight = 1 << 1,
+    UIRectCornerBottomLeft = 1 << 2,
     UIRectCornerBottomRight = 1 << 3,
-    UIRectCornerAllCorners  = ~0
+    UIRectCornerAllCorners = ~0
 };
 typedef NSUInteger UIRectCorner;
 
 UIKIT_EXPORT_CLASS
 @interface UIBezierPath : NSObject
-+ (UIBezierPath *)bezierPath;
-+ (UIBezierPath *)bezierPathWithRect:(CGRect)rect;
-+ (UIBezierPath *)bezierPathWithOvalInRect:(CGRect)rect;
-+ (UIBezierPath *)bezierPathWithRoundedRect:(CGRect)rect cornerRadius:(CGFloat)cornerRadius;
-+ (UIBezierPath *)bezierPathWithRoundedRect:(CGRect)rect byRoundingCorners:(UIRectCorner)corners cornerRadii:(CGSize)cornerRadii;
-+ (UIBezierPath *)bezierPathWithArcCenter:(CGPoint)center radius:(CGFloat)radius startAngle:(CGFloat)startAngle endAngle:(CGFloat)endAngle clockwise:(BOOL)clockwise;
-+ (UIBezierPath *)bezierPathWithCGPath:(CGPathRef)CGPath;
++ (UIBezierPath*)bezierPath;
++ (UIBezierPath*)bezierPathWithRect:(CGRect)rect;
++ (UIBezierPath*)bezierPathWithOvalInRect:(CGRect)rect;
++ (UIBezierPath*)bezierPathWithRoundedRect:(CGRect)rect cornerRadius:(CGFloat)cornerRadius;
++ (UIBezierPath*)bezierPathWithRoundedRect:(CGRect)rect byRoundingCorners:(UIRectCorner)corners cornerRadii:(CGSize)cornerRadii;
++ (UIBezierPath*)bezierPathWithArcCenter:(CGPoint)center
+                                  radius:(CGFloat)radius
+                              startAngle:(CGFloat)startAngle
+                                endAngle:(CGFloat)endAngle
+                               clockwise:(BOOL)clockwise;
++ (UIBezierPath*)bezierPathWithCGPath:(CGPathRef)CGPath;
 
 - (void)moveToPoint:(CGPoint)point;
 - (void)addLineToPoint:(CGPoint)point;
-- (void)addArcWithCenter:(CGPoint)center radius:(CGFloat)radius startAngle:(CGFloat)startAngle endAngle:(CGFloat)endAngle clockwise:(BOOL)clockwise;
+- (void)addArcWithCenter:(CGPoint)center
+                  radius:(CGFloat)radius
+              startAngle:(CGFloat)startAngle
+                endAngle:(CGFloat)endAngle
+               clockwise:(BOOL)clockwise;
 - (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2;
 - (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint;
 - (void)closePath;
 - (void)removeAllPoints;
-- (void)appendPath:(UIBezierPath *)bezierPath;
+- (void)appendPath:(UIBezierPath*)bezierPath;
 
 @property (nonatomic) CGPathRef CGPath;
 @property (nonatomic, readonly) CGPoint currentPoint;
@@ -70,8 +81,8 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) CGFloat flatness;
 @property (nonatomic) BOOL usesEvenOddFillRule;
 
-- (void)setLineDash:(const CGFloat *)pattern count:(NSInteger)count phase:(CGFloat)phase;
-- (void)getLineDash:(CGFloat *)pattern count:(NSInteger *)count phase:(CGFloat *)phase;
+- (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase;
+- (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase;
 
 - (void)fill;
 - (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;

@@ -18,9 +18,51 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 */
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSOperation.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
+
+#if __cplusplus
+#include <pthread.h>
+#include <string.h>
+struct NSOperationPriv {
+    NSOperationQueuePriority priority;
+    id dependencies;
+    void (^completionBlock)(void);
+
+    pthread_cond_t finishCondition;
+    pthread_mutex_t finishLock;
+
+    int executing : 1;
+    int cancelled : 1;
+    int finished : 1;
+
+    NSOperationPriv() {
+        memset(this, 0, sizeof(NSOperationPriv));
+        pthread_cond_init(&finishCondition, 0);
+
+        pthread_mutexattr_t attr;
+
+        pthread_mutexattr_init(&attr);
+        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&finishLock, &attr);
+        pthread_mutexattr_destroy(&attr);
+    }
+
+    ~NSOperationPriv() {
+        pthread_cond_destroy(&finishCondition);
+        pthread_mutex_destroy(&finishLock);
+    }
+};
+#else
+struct NSOperationPriv;
+#endif
+
+@interface NSOperation () {
+    struct NSOperationPriv* priv;
+}
+@end
 
 @implementation NSOperation
 
@@ -143,12 +185,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
             [self willChangeValueForKey:@"isExecuting"];
         }
 
-        [self _setFinished:YES andPerformUnderLock:^{
-            if (execute) {
-                priv->executing = 0;
-                [self didChangeValueForKey:@"isExecuting"];
-            }
-        }];
+        [self _setFinished:YES
+            andPerformUnderLock:^{
+                if (execute) {
+                    priv->executing = 0;
+                    [self didChangeValueForKey:@"isExecuting"];
+                }
+            }];
     }
 }
 
@@ -159,7 +202,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [self _setFinished:finished andPerformUnderLock:nil];
 }
 
-- (void)_setFinished:(BOOL)finished andPerformUnderLock:(void(^)())block {
+- (void)_setFinished:(BOOL)finished andPerformUnderLock:(void (^)())block {
     // yes, this is ugly: priv->finished is an int though.
     int newValue = finished ? 1 : 0;
     pthread_mutex_lock(&priv->finishLock);
@@ -233,6 +276,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     assert(!priv->completionBlock);
     delete priv;
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeDependency:(NSOperation*)operation {
+    UNIMPLEMENTED();
 }
 
 @end

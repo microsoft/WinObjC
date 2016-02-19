@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
  *
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -27,25 +29,16 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIGestureRecognizer.h"
-
-// NOTE: This will only match the scroll gestures on touch input devices. If you also
-// need classic wheel mice, you have to use UIScrollWheelGestureRecognizer as well.
-// Additional note: This will not register the system's automatically generated
-// momentum scroll events - those will come through by way of the classic wheel
-// recognizer as well. They are handled differently because OSX sends them outside
-// of the gestureBegin/gestureEnded sequence. This turned out to be somewhat handy
-// for UIScrollView but it certainly might make using the gesture recognizer in
-// a standalone setting somewhat more annoying. We'll have to see how it plays out.
-
-struct Private;
 
 UIKIT_EXPORT_CLASS
 @interface UIPanGestureRecognizer : UIGestureRecognizer
 
-- (CGPoint)translationInView:(UIView *)view;
-- (void)setTranslation:(CGPoint)translation inView:(UIView *)view;
-- (CGPoint)velocityInView:(UIView *)view;
+- (CGPoint)translationInView:(UIView*)view;
+- (void)setTranslation:(CGPoint)translation inView:(UIView*)view;
+- (CGPoint)velocityInView:(UIView*)view;
 
 // [jms] Ebr internal
 - (int)stage;
@@ -54,7 +47,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) NSUInteger minimumNumberOfTouches;
 
 // Internal ---------------
--(void) _setDragSlack:(float)slack;
+- (void)_setDragSlack:(float)slack;
 // -----------------------
 
 @end

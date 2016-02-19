@@ -17,7 +17,7 @@
 #include "Starboard.h"
 #include "UIRuntimeOutletConnection.h"
 
-@implementation UIRuntimeOutletConnection : NSObject
+@implementation UIRuntimeOutletConnection
 - (instancetype)initWithCoder:(NSCoder*)coder {
     source = [coder decodeObjectForKey:@"UISource"];
     dest = [coder decodeObjectForKey:@"UIDestination"];

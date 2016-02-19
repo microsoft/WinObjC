@@ -38,12 +38,15 @@ typedef wchar_t WCHAR;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setDrawableProperties:(NSDictionary*)propertiesDict {
-    UNIMPLEMENTED();
-    [_properties release];
-    _properties = [propertiesDict copy];
+    if (![propertiesDict isEqualToDictionary:_properties]) {
+        [_properties release];
+        _properties = [propertiesDict copy];
+
+        [self setNeedsLayout];
+    }
 }
 
 - (void)setContentsScale:(float)factor {
@@ -78,10 +81,10 @@ typedef wchar_t WCHAR;
 }
 
 /**
- @Status Stub
+   @Status Caveat
+   @Notes kEAGLDrawablePropertyRetainedBacking, while implemented here, depends on ANGLE code that is not implemented.
 */
 - (NSDictionary*)drawableProperties {
-    UNIMPLEMENTED();
     return _properties;
 }
 

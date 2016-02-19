@@ -97,13 +97,13 @@ TEST(Foundation, JSONObjectWithDataTests) {
     NSString* testString8 = nil;
 
     // success cases
-    VerifyJSONObjectWithDataSucceeds(testString1, 4, (id)[NSNumber numberWithInteger:1]);
-    VerifyJSONObjectWithDataSucceeds(testString2, 4, (id)[NSNumber numberWithBool:NO]);
-    VerifyJSONObjectWithDataSucceeds(testString4, 4, (id) @"foo");
-    VerifyJSONObjectWithDataSucceeds(testString5, 0, (id) @[ @1, @2, @3, @4, @5 ]);
-    VerifyJSONObjectWithDataSucceeds(testString6, 0, (id) @{ @"foo" : @"1", @"bar" : @"2" });
-    VerifyJSONObjectWithDataSucceeds(testString5, 1, (id) @[ @1, @2, @3, @4, @5 ]);
-    VerifyJSONObjectWithDataSucceeds(testString6, 1, (id) @{ @"foo" : @"1", @"bar" : @"2" });
+    VerifyJSONObjectWithDataSucceeds(testString1, 4, [NSNumber numberWithInteger:1]);
+    VerifyJSONObjectWithDataSucceeds(testString2, 4, [NSNumber numberWithBool:NO]);
+    VerifyJSONObjectWithDataSucceeds(testString4, 4, @"foo");
+    VerifyJSONObjectWithDataSucceeds(testString5, 0, @[ @1, @2, @3, @4, @5 ]);
+    VerifyJSONObjectWithDataSucceeds(testString6, 0, @{ @"foo" : @"1", @"bar" : @"2" });
+    VerifyJSONObjectWithDataSucceeds(testString5, 1, @[ @1, @2, @3, @4, @5 ]);
+    VerifyJSONObjectWithDataSucceeds(testString6, 1, @{ @"foo" : @"1", @"bar" : @"2" });
 
     // error cases
     NSString* fragmentDescription = @"JSON text did not start with array or object and option to allow fragments not set.";
@@ -120,13 +120,13 @@ TEST(Foundation, JSONObjectWithDataTests) {
 
 TEST(Foundation, DataWithJSONObjectTests) {
     id testObject1 = nil;
-    id testObject2 = (id)[NSNumber numberWithBool:NO];
-    id testObject3 = (id)[NSNumber numberWithInteger:1];
-    id testObject4 = (id) @"foo";
-    id testObject5 = (id) @[ @1, @2, @3, @4, @5 ];
-    id testObject6 = (id) @{ @"foo" : @"1", @"bar" : @"2" };
-    id testObject7 = (id) @{ @"foo" : @{ @"bar" : @"1" }, @"foo2" : @{ @"bar2" : @"2" } };
-    id testObject8 = (id)[NSUUID UUID];
+    id testObject2 = [NSNumber numberWithBool:NO];
+    id testObject3 = [NSNumber numberWithInteger:1];
+    id testObject4 = @"foo";
+    id testObject5 = @[ @1, @2, @3, @4, @5 ];
+    id testObject6 = @{ @"foo" : @"1", @"bar" : @"2" };
+    id testObject7 = @{ @"foo" : @{ @"bar" : @"1" }, @"foo2" : @{ @"bar2" : @"2" } };
+    id testObject8 = [NSUUID UUID];
 
     // success cases
     VerifyDataWithJSONObjectSucceeds(testObject5, @"[1,2,3,4,5]");
@@ -142,4 +142,26 @@ TEST(Foundation, DataWithJSONObjectTests) {
 
     // Ensure nil error argument does not throw
     ASSERT_NO_THROW([NSJSONSerialization dataWithJSONObject:testObject5 options:0 error:nullptr]);
+}
+
+TEST(Foundation, ValidJSONObjectTests) {
+    id testObject1 = nil;
+    id testObject2 = [NSNumber numberWithBool:NO];
+    id testObject3 = @[ @1, @2, @3, @4, (NSNumber*)kCFNumberNaN ];
+    id testObject4 = @"foo";
+    id testObject5 = @[ @1, @2, @3, @4, @5 ];
+    id testObject6 = @{ @"foo" : @"1", @"bar" : [NSNull null] };
+    id testObject7 =
+        @{ @"foo" : @{ @"bar" : @{ @"foo" : @"1", @"bar" : [NSNull null] } },
+           @"foo2" : @{ @"bar2" : @[ @1, @2, @3, @4, @5 ] } };
+    id testObject8 = [NSUUID UUID];
+
+    ASSERT_EQ(NO, [NSJSONSerialization isValidJSONObject:testObject1]);
+    ASSERT_EQ(NO, [NSJSONSerialization isValidJSONObject:testObject2]);
+    ASSERT_EQ(NO, [NSJSONSerialization isValidJSONObject:testObject3]);
+    ASSERT_EQ(NO, [NSJSONSerialization isValidJSONObject:testObject4]);
+    ASSERT_EQ(YES, [NSJSONSerialization isValidJSONObject:testObject5]);
+    ASSERT_EQ(YES, [NSJSONSerialization isValidJSONObject:testObject6]);
+    ASSERT_EQ(YES, [NSJSONSerialization isValidJSONObject:testObject7]);
+    ASSERT_EQ(NO, [NSJSONSerialization isValidJSONObject:testObject8]);
 }

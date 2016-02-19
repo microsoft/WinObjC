@@ -1,24 +1,27 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Copyright (c) 2015 Microsoft Corporation. All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
-following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#import <Foundation/NSString.h>
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSData;
+#import <Foundation/NSString.h>
 @class NSString;
+@class NSData;
 
 #ifdef __cplusplus
 namespace icu_48 {
@@ -32,17 +35,13 @@ typedef void* CharacterSet;
 enum { NSOpenStepUnicodeReservedBase = 0xF400 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSCharacterSet : NSObject <NSSecureCoding, NSCopying, NSMutableCopying, NSObject> {
+@interface NSCharacterSet : NSObject <NSCoding, NSCopying, NSMutableCopying> {
 @public
     CharacterSet* _icuSet;
 }
 
-+ characterSetWithBitmapRepresentation:(NSData*)data;
-+ characterSetWithCharactersInString:(NSString*)string;
-+ characterSetWithContentsOfFile:(NSString*)path;
-+ characterSetWithRange:(NSRange)range;
-
 + (instancetype)alphanumericCharacterSet;
++ (instancetype)capitalizedLetterCharacterSet STUB_METHOD;
 + (instancetype)controlCharacterSet;
 + (instancetype)decimalDigitCharacterSet;
 + (instancetype)decomposableCharacterSet;
@@ -52,25 +51,24 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)newlineCharacterSet;
 + (instancetype)nonBaseCharacterSet;
 + (instancetype)punctuationCharacterSet;
++ (instancetype)symbolCharacterSet;
 + (instancetype)uppercaseLetterCharacterSet;
 + (instancetype)whitespaceAndNewlineCharacterSet;
 + (instancetype)whitespaceCharacterSet;
-
 + (instancetype)URLFragmentAllowedCharacterSet;
 + (instancetype)URLHostAllowedCharacterSet;
 + (instancetype)URLPasswordAllowedCharacterSet;
 + (instancetype)URLPathAllowedCharacterSet;
 + (instancetype)URLQueryAllowedCharacterSet;
 + (instancetype)URLUserAllowedCharacterSet;
-
-- (BOOL)characterIsMember:(unichar)character;
-- (BOOL)isSupersetOfSet:(NSCharacterSet*)other;
-- (NSUInteger)count;
-- (unichar)characterAtIndex:(NSUInteger)idx;
-
-@property (readonly, copy) NSCharacterSet* invertedSet;
-@property (readonly, copy) NSData* bitmapRepresentation;
-
++ (instancetype)characterSetWithCharactersInString:(NSString*)aString;
++ (instancetype)characterSetWithRange:(NSRange)aRange;
++ (instancetype)characterSetWithBitmapRepresentation:(NSData*)data;
++ (instancetype)characterSetWithContentsOfFile:(NSString*)path;
+- (BOOL)characterIsMember:(unichar)aCharacter;
+- (BOOL)hasMemberInPlane:(uint8_t)thePlane;
+- (BOOL)isSupersetOfSet:(NSCharacterSet*)theOtherSet;
+- (BOOL)longCharacterIsMember:(UTF32Char)theLongChar;
+@property (readonly, copy) NSCharacterSet* invertedSet STUB_PROPERTY;
+@property (readonly, copy) NSData* bitmapRepresentation STUB_PROPERTY;
 @end
-
-#import <Foundation/NSMutableCharacterSet.h>

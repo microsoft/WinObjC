@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,38 +28,39 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UILABEL_H_
-#define _UILABEL_H_
+#pragma once
 
-#import "UIView.h"
-#import "UIStringDrawing.h"
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UIView.h>
 
 @class UIFont, UIColor;
 
 UIKIT_EXPORT_CLASS
 @interface UILabel : UIView
 
-@property (nonatomic, copy) NSString *text;
-@property (nonatomic, retain) UIFont *font;
-@property (nonatomic, retain) UIColor *textColor;
-@property (nonatomic, retain) UIColor *highlightedTextColor;
-@property (nonatomic, retain) UIColor *shadowColor;
-@property (nonatomic) CGSize shadowOffset;
-@property (nonatomic) UITextAlignment textAlignment;
-@property (nonatomic) UILineBreakMode lineBreakMode;
-@property (nonatomic, getter=isEnabled) BOOL enabled;
-@property (nonatomic) NSInteger numberOfLines;                  // currently only supports 0 or 1
-@property (nonatomic) UIBaselineAdjustment baselineAdjustment;  // not implemented
-@property (nonatomic) BOOL adjustsFontSizeToFitWidth;           // not implemented
-@property (nonatomic) CGFloat minimumFontSize;                  // not implemented
-@property (nonatomic, getter=isHighlighted) BOOL highlighted;
-@property (nonatomic,copy) NSAttributedString *attributedText;
-@property (nonatomic) CGFloat minimumScaleFactor;
-@property (nonatomic) CGFloat preferredMaxLayoutWidth;
-
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
 - (void)drawTextInRect:(CGRect)rect;
 
-@end
+@property (getter=isUserInteractionEnabled, nonatomic) BOOL userInteractionEnabled;
+@property (nonatomic) BOOL adjustsFontSizeToFitWidth STUB_PROPERTY;
+@property (nonatomic) BOOL adjustsLetterSpacingToFitWidth STUB_PROPERTY;
+@property (nonatomic) BOOL allowsDefaultTighteningForTruncation STUB_PROPERTY;
+@property (nonatomic) BOOL clipsToBounds STUB_PROPERTY;
+@property (nonatomic) CGFloat minimumFontSize STUB_PROPERTY;
+@property (nonatomic) CGFloat minimumScaleFactor;
+@property (nonatomic) CGFloat preferredMaxLayoutWidth;
+@property (nonatomic) CGSize shadowOffset;
+@property (nonatomic) NSInteger numberOfLines; // currently only supports 0 or 1
+@property (nonatomic) UIBaselineAdjustment baselineAdjustment STUB_PROPERTY;
+@property (nonatomic) UILineBreakMode lineBreakMode;
+@property (nonatomic) UITextAlignment textAlignment;
+@property (nonatomic, copy) NSAttributedString* attributedText;
+@property (nonatomic, copy) NSString* text;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
+@property (nonatomic, getter=isHighlighted) BOOL highlighted;
+@property (nonatomic, retain) UIColor* highlightedTextColor;
+@property (nonatomic, retain) UIColor* shadowColor;
+@property (nonatomic, retain) UIColor* textColor;
+@property (nonatomic, retain) UIFont* font;
 
-#endif /* _UILABEL_H_ */
+@end
