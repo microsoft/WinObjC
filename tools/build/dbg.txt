@@ -1,0 +1,9 @@
+ContactPeople=pradipd;
+Project=islandwood
+Recursive=yes
+StatusMail=pradipd;
+UserName=ilwsvc
+SubmitToArchive=All
+SubmitToInternet=Yes
+ProductGroup=islandwood
+ProductName=islandwood
