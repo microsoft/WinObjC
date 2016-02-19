@@ -31,7 +31,7 @@
 }
 
 /**
- @ Status Stub
+ @Status Stub
 */
 + (CIColor*)colorWithCGColor:(CGColorRef)cgColor {
     UNIMPLEMENTED();
@@ -39,7 +39,7 @@
 }
 
 /**
- @ Status Stub
+ @Status Stub
 */
 - (CGColorSpaceRef)colorSpace {
     UNIMPLEMENTED();
@@ -47,7 +47,7 @@
 }
 
 /**
- @ Status Stub
+ @Status Stub
 */
 - (const CGFloat*)components {
     UNIMPLEMENTED();
@@ -55,7 +55,7 @@
 }
 
 /**
- @ Status Stub
+ @Status Stub
 */
 - (instancetype)initWithCGColor:(CGColorRef)cgColor {
     UNIMPLEMENTED();
@@ -63,14 +63,14 @@
 }
 
 /**
- @ Status Interoperable
+ @Status Interoperable
 */
 - (instancetype)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue {
     return [self initWithRed:red green:green blue:blue alpha:1.0f];
 }
 
 /**
- @ Status Interoperable
+ @Status Interoperable
 */
 - (instancetype)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha {
     self->_red = red;
@@ -81,14 +81,14 @@
 }
 
 /**
- @ Status Interoperable
+ @Status Interoperable
 */
 + (instancetype)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue {
     return [CIColor colorWithRed:red green:green blue:blue alpha:1.0f];
 }
 
 /**
- @ Status Interoperable
+ @Status Interoperable
 */
 + (instancetype)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha {
     CIColor* ret = [[self alloc] initWithRed:red green:green blue:blue alpha:alpha];
@@ -105,7 +105,7 @@
 }
 
 /**
- @ Status Caveat
+ @Status Caveat
  @ Notes Currently does not have complete implementation for CIColor class.
          We simply copy what is currently implemented.
 */

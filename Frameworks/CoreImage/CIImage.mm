@@ -127,7 +127,7 @@
 }
 
 /**
- @ Status Stub
+ @Status Stub
 */
 - (id)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
