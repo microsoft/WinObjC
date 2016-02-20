@@ -17,7 +17,7 @@
 #ifndef _OAL_STATIC_BUFFER_EXTENSION_H_
 #define _OAL_STATIC_BUFFER_EXTENSION_H_
 
-#include <OpenAL/al.h>
+#include "al.h"
 
 typedef ALvoid AL_APIENTRY (*alBufferDataStaticProcPtr) (ALint bid, ALenum format, ALvoid* data, ALsizei size, ALsizei freq);
 

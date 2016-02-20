@@ -21,6 +21,9 @@
 #ifndef AL_ALEXT_H
 #define AL_ALEXT_H
 
+#include "al.h"
+#include "alc.h"
+
 #include <stddef.h>
 
 #ifdef __cplusplus

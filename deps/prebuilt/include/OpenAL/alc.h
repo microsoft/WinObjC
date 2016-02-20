@@ -18,7 +18,9 @@ extern "C" {
 #if defined(_WIN32)
  #define ALC_APIENTRY __cdecl
  #if _MSC_VER >= 1700 && defined __cplusplus
+/* This causes modules to fail to build
 #	define __ALC_HAS_CPP11__
+*/
  #endif
 #else
  #define ALC_APIENTRY
