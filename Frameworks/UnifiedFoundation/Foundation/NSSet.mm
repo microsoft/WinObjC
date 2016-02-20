@@ -20,7 +20,7 @@
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSCountedSet.h"
 #include "Foundation/NSEnumerator.h"
-#include "../Foundation/NSEnumeratorInternal.h"
+#include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
 
 void NSSetTableInit(NSSet* set, NSUInteger capacity) {

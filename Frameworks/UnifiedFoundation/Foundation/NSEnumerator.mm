@@ -14,40 +14,13 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSEnumerator.h"
+#import "Starboard.h"
+#import "Foundation/NSEnumerator.h"
+#import "Foundation/NSMutableArray.h"
+#import "NSEnumeratorInternal.h"
 
+// Abstract NSEnumerator superclass
 @implementation NSEnumerator
-+ (NSEnumerator*)enumeratorWithArray:(NSArray*)array {
-    NSEnumerator* ret = [self alloc];
-
-    ret->objArray = array;
-    ret->curIndex = 0;
-    ret->dir = 1;
-
-    return [ret autorelease];
-}
-
-+ (NSEnumerator*)enumeratorWithArrayReverse:(NSArray*)array {
-    NSEnumerator* ret = [self alloc];
-
-    ret->objArray = array;
-    ret->curIndex = [array count] - 1;
-    ret->dir = -1;
-
-    return [ret autorelease];
-}
-
-+ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction {
-    NSEnumerator* ret = [self alloc];
-
-    ret->getNextValueFunction = nextValueFunction;
-    ret->iteratorObj = obj;
-    initIterator(obj, ret->iteratorState);
-
-    return [ret autorelease];
-}
 
 /**
  @Status Interoperable
@@ -68,54 +41,21 @@
  @Status Interoperable
 */
 - (NSObject*)nextObject {
-    if (iteratorObj != nil) {
-        id ret;
-        int count = getNextValueFunction(iteratorObj, iteratorState, &ret, 1);
-        if (count == 1) {
-            return ret;
-        }
-        return nil;
-    }
-
-    if (dir == 1) {
-        int count = [objArray count];
-
-        if (curIndex >= count) {
-            return nil;
-        }
-
-        NSObject* ret = [objArray objectAtIndex:curIndex];
-        curIndex++;
-
-        return ret;
-    } else {
-        if (curIndex < 0) {
-            return nil;
-        }
-
-        NSObject* ret = [objArray objectAtIndex:curIndex];
-        curIndex--;
-
-        return ret;
-    }
+    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+    return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
-    if (iteratorObj != nil) {
-        if (state->state == 0) {
-            state->state = 1;
-            state->mutationsPtr = (unsigned long*)&state->state;
-        }
-        assert(maxCount > 0);
-
-        state->itemsPtr = (id*)stackBuf;
-        int ret = getNextValueFunction(iteratorObj, iteratorState, stackBuf, maxCount);
-
-        return ret;
-    }
-
     if (state->state == 0) {
+        // legacy code best guess:
+        // NSEnumerator has a general assumption that the underlying collection should not mutate during enumeration
+        // mutationPtr, which is intended to signal mutations, should then point to a stable value
+        // choose extra[1], which is not touched
         state->mutationsPtr = (unsigned long*)&state->extra[1];
+
         state->extra[0] = (unsigned long)self;
         state->state = 1;
     }
@@ -137,6 +77,119 @@
     }
 
     return numRet;
+}
+
+@end
+
+// Subclass of NSEnumerator for classes that can provide its contents as an array
+@interface _NSArrayEnumerator : NSEnumerator
+- (instancetype)initWithArray:(NSArray*)array currentIndex:(int)curIndex iterateForwards:(BOOL)iterateForwards;
+@end
+
+@implementation _NSArrayEnumerator {
+@private
+    NSArray* _objArray; // unsafe unretained
+    int _curIndex;
+    BOOL _iterateForwards;
+}
+
+- (instancetype)initWithArray:(NSArray*)array currentIndex:(int)curIndex iterateForwards:(BOOL)iterateForwards {
+    if (self = [super init]) {
+        _objArray = array;
+        _curIndex = curIndex;
+        _iterateForwards = iterateForwards;
+    }
+
+    return self;
+}
+
+- (NSObject*)nextObject {
+    if (_iterateForwards) {
+        int count = [_objArray count];
+
+        if (_curIndex >= count) {
+            return nil;
+        }
+
+        NSObject* ret = [_objArray objectAtIndex:_curIndex];
+        _curIndex++;
+
+        return ret;
+
+    } else {
+        if (_curIndex < 0) {
+            return nil;
+        }
+
+        NSObject* ret = [_objArray objectAtIndex:_curIndex];
+        _curIndex--;
+
+        return ret;
+    }
+}
+
+@end
+
+// Subclass of NSEnumerator for use with iterator functions
+@interface _NSIteratorEnumerator : NSEnumerator
+- (instancetype)initWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction;
+@end
+
+@implementation _NSIteratorEnumerator {
+@private
+    NSUInteger _iteratorState[5];
+    nextValueFunc _getNextValueFunction;
+    id _iteratorObj; // unsafe unretained
+}
+
+- (instancetype)initWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction {
+    if (self = [super init]) {
+        _getNextValueFunction = nextValueFunction;
+        _iteratorObj = obj;
+        initIterator(obj, _iteratorState);
+    }
+
+    return self;
+}
+
+- (NSObject*)nextObject {
+    id ret;
+    int count = _getNextValueFunction(_iteratorObj, _iteratorState, &ret, 1);
+    if (count == 1) {
+        return ret;
+    }
+
+    return nil;
+}
+
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
+    if (state->state == 0) {
+        state->state = 1;
+        state->mutationsPtr = (unsigned long*)(&state->state);
+    }
+
+    assert(maxCount > 0);
+
+    state->itemsPtr = (id*)stackBuf;
+    int ret = _getNextValueFunction(_iteratorObj, _iteratorState, stackBuf, maxCount);
+
+    return ret;
+}
+@end
+
+// Utilities category
+@implementation NSEnumerator (Utilities)
+
++ (NSEnumerator*)enumeratorWithArray:(NSArray*)array {
+    return [[[_NSArrayEnumerator alloc] initWithArray:array currentIndex:0 iterateForwards:YES] autorelease];
+}
+
++ (NSEnumerator*)enumeratorWithArrayReverse:(NSArray*)array {
+    return [[[_NSArrayEnumerator alloc] initWithArray:array currentIndex:([array count] - 1) iterateForwards:NO] autorelease];
+}
+
++ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction {
+    return [[[_NSIteratorEnumerator alloc] initWithIterator:initIterator forObject:obj nextFunction:nextValueFunction] autorelease];
 }
 
 @end

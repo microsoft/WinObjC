@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#include <Foundation/NSEnumerator.h>
+#import <Foundation/NSPointerFunctions.h>
 
-@interface NSEnumerator (Internal) {
-}
-
-+ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction;
-+ (NSEnumerator*)enumeratorWithArrayReverse:(NSArray*)array;
-
+// Concrete subclass for NSPointerFunctions with extra data
+@interface _NSConcretePointerFunctions : NSPointerFunctions <NSCopying>
+@property BOOL copyIn;
+@property BOOL weakMemory;
+@property (readonly) NSPointerFunctionsOptions options;
 @end

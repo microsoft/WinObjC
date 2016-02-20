@@ -25,7 +25,7 @@
 #include "Foundation/NSKeyedArchiver.h"
 #include "Foundation/NSArray.h"
 #include "../Foundation/NSXMLPropertyList.h"
-#include "../Foundation/NSEnumeratorInternal.h"
+#include "NSEnumeratorInternal.h"
 #include "../Foundation/NSPropertyListWriter_binary.h"
 #include "CoreFoundation/CFArray.h"
 #include "Foundation/NSMutableString.h"

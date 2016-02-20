@@ -1,7 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
-// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +13,21 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
-#import <Foundation/FoundationExport.h>
-#import <Foundation/NSFastEnumeration.h>
-#import <Foundation/NSObject.h>
+#include <Foundation/NSEnumerator.h>
 
 @class NSArray;
 
-FOUNDATION_EXPORT_CLASS
-@interface NSEnumerator : NSObject <NSFastEnumeration>
+typedef void (*initIteratorFunc)(id obj, void* enumeratorHolder);
+typedef int (*nextValueFunc)(id obj, void* enumeratorHolder, id* ret, int count);
 
-@property (readonly, copy) NSArray* allObjects;
-- (id)nextObject;
+@interface NSEnumerator (Internal) {
+}
+
++ (NSEnumerator*)enumeratorWithArray:(NSArray*)array;
++ (NSEnumerator*)enumeratorWithArrayReverse:(NSArray*)array;
++ (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction;
+
 @end

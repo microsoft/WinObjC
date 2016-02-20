@@ -17,7 +17,7 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "../CoreFoundation/CFDictionaryInternal.h"
-#include "../Foundation/NSEnumeratorInternal.h"
+#include "NSEnumeratorInternal.h"
 #include "CoreFoundation/CFDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSString.h"

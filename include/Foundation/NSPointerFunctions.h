@@ -15,14 +15,12 @@
 //******************************************************************************
 #pragma once
 
-#import <StubIncludes.h>
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
 @class NSString;
 
-typedef NSUInteger NSPointerFunctionsOptions;
-enum {
+typedef NS_OPTIONS(NSUInteger, NSPointerFunctionsOptions) {
     NSPointerFunctionsStrongMemory = (0 << 0),
     NSPointerFunctionsOpaqueMemory = (2 << 0),
     NSPointerFunctionsMallocMemory = (3 << 0),
@@ -39,14 +37,17 @@ enum {
 
 FOUNDATION_EXPORT_CLASS
 @interface NSPointerFunctions : NSObject <NSCopying>
-- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options STUB_METHOD;
-+ (NSPointerFunctions*)pointerFunctionsWithOptions:(NSPointerFunctionsOptions)options STUB_METHOD;
-@property (nonnull) NSUInteger (*hashFunction)(const void*, NSUInteger (*)(const void*)) STUB_PROPERTY;
-@property (nonnull) BOOL (*isEqualFunction)(const void*, const void*, NSUInteger (*)(const void*)) STUB_PROPERTY;
-@property (nonnull) NSUInteger (*sizeFunction)(const void*) STUB_PROPERTY;
-@property (nullable) NSString* (*descriptionFunction)(const void*)STUB_PROPERTY;
-@property (nonnull) void* (*acquireFunction)(const void*, NSUInteger (*)(const void*), BOOL)STUB_PROPERTY;
-@property (nonnull) void (*relinquishFunction)(const void*, NSUInteger (*)(const void*)) STUB_PROPERTY;
-@property BOOL usesStrongWriteBarrier STUB_PROPERTY;
-@property BOOL usesWeakReadAndWriteBarriers STUB_PROPERTY;
+
+- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options;
++ (NSPointerFunctions*)pointerFunctionsWithOptions:(NSPointerFunctionsOptions)options;
+
+@property (nonnull) NSUInteger (*hashFunction)(const void*, NSUInteger (*)(const void*));
+@property (nonnull) BOOL (*isEqualFunction)(const void*, const void*, NSUInteger (*)(const void*));
+@property (nonnull) NSUInteger (*sizeFunction)(const void*);
+@property (nullable) NSString* (*descriptionFunction)(const void*);
+@property (nonnull) void* (*acquireFunction)(const void*, NSUInteger (*)(const void*), BOOL);
+@property (nonnull) void (*relinquishFunction)(const void*, NSUInteger (*)(const void*));
+@property BOOL usesStrongWriteBarrier;
+@property BOOL usesWeakReadAndWriteBarriers;
+
 @end
