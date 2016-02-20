@@ -18,6 +18,7 @@
 
 #import <stubincludes.h>
 #import <Foundation/NSObject.h>
+#import <CoreGraphics/CoreGraphics.h>
 #import <CoreImage/CoreImageExport.h>
 
 @class CIImage, NSDictionary;
