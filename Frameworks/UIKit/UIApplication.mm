@@ -175,7 +175,7 @@ UIApplicationState _applicationState;
 extern EbrEvent _applicationStateChanged;
 bool _drawingAllowed = true;
 
-NSMutableDictionary* curGesturesDict;
+NSMutableDictionary* g_curGesturesDict;
 
 // Used to query for Url scheme handlers or launch an app with a Url
 UrlLauncher* _launcher;
@@ -1127,7 +1127,7 @@ static void printViews(id curView, int level) {
 
     viewDepth = 0;
 
-    curGesturesDict = [NSMutableDictionary new];
+    g_curGesturesDict = [NSMutableDictionary new];
 
     UIGestureRecognizer* recognizers[128];
 
@@ -1135,10 +1135,10 @@ static void printViews(id curView, int level) {
         recognizers[viewDepth++] = curgesture;
 
         id gestureClass = [curgesture class];
-        NSMutableArray* arr = [curGesturesDict objectForKey:gestureClass];
+        NSMutableArray* arr = [g_curGesturesDict objectForKey:gestureClass];
         if (arr == nil) {
             arr = [NSMutableArray new];
-            [curGesturesDict setObject:arr forKey:gestureClass];
+            [g_curGesturesDict setObject:arr forKey:gestureClass];
             [arr release];
         }
         [arr addObject:curgesture];
@@ -1161,16 +1161,19 @@ static void printViews(id curView, int level) {
         }
     }
 
-    //  Process all gestures
-    id gesturesPriority[] = {[UIPinchGestureRecognizer class],
-                             [UISwipeGestureRecognizer class],
-                             [UIPanGestureRecognizer class],
-                             [UITapGestureRecognizer class] };
-    int numGestureTypes = 4;
+    // gesture priority list
+    const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class],
+                                [UISwipeGestureRecognizer class],
+                                [UIPanGestureRecognizer class],
+                                [UILongPressGestureRecognizer class],
+                                [UITapGestureRecognizer class] };
 
-    for (int i = 0; i < numGestureTypes; i++) {
-        id curgestureClass = gesturesPriority[i];
-        id gestures = [curGesturesDict objectForKey:curgestureClass];
+    const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof (s_gesturesPriority[0]);
+
+    //  Process all gestures
+    for (int i = 0; i < s_numGestureTypes; i++) {
+        id curgestureClass = s_gesturesPriority[i];
+        id gestures = [g_curGesturesDict objectForKey:curgestureClass];
         if ([curgestureClass _fireGestures:gestures]) {
             process = false;
         }
@@ -1186,13 +1189,13 @@ static void printViews(id curView, int level) {
             [curgesture reset];
             EbrDebugLog("Removing gesture %s %x state=%d\n", object_getClassName(curgesture), curgesture, state);
             [currentlyTrackingGesturesList removeObject:curgesture];
-            id gesturesArr = [curGesturesDict objectForKey:[curgesture class]];
+            id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
             [gesturesArr removeObject:curgesture];
         }
     }
 
-    [curGesturesDict release];
-    curGesturesDict = nil;
+    [g_curGesturesDict release];
+    g_curGesturesDict = nil;
 
     if (process == false) {
         touch->_phase = UITouchPhaseCancelled;

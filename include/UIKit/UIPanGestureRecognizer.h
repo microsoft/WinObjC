@@ -31,7 +31,7 @@
 
 #pragma once
 
-#import "UIGestureRecognizer.h"
+#import <UIKit/UIGestureRecognizer.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIPanGestureRecognizer : UIGestureRecognizer

@@ -14,11 +14,13 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#include "UIKit/UIKit.h"
-#include <math.h>
+#import <Starboard.h>
+#import <math.h>
 
-#include "UIGestureRecognizerInternal.h"
+#import <UIKit/UISwipeGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+
+#import "UIGestureRecognizerInternal.h"
 
 @implementation UISwipeGestureRecognizer {
 @public

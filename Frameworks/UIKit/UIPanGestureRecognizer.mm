@@ -14,18 +14,18 @@
 //
 //******************************************************************************
 
-#include <vector>
+#import <vector>
 
-#include "Starboard.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSValue.h"
-#include "Foundation/NSString.h"
-#include "RingBuffer.h"
-#include "UIKit/UIGestureRecognizer.h"
-#include "UIKit/UIPanGestureRecognizer.h"
-#include "UIKit/UITouch.h"
+#import "Starboard.h"
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSValue.h>
+#import <Foundation/NSString.h>
+#import "RingBuffer.h"
+#import <UIKit/UIPanGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
+#import <UIKit/UITouch.h>
 
-#include "UIGestureRecognizerInternal.h"
+#import "UIGestureRecognizerInternal.h"
 
 // So we can allocate explicitly because otherwise constructors aren't called:
 struct TouchInfo {
@@ -57,7 +57,6 @@ NSArray* curPanList = nil;
 
     // Configurable properties of the gesture:
     float _dragSlack;
-    double _lastTouchUp;
     double _disableVelocity;
 
     int _stage;

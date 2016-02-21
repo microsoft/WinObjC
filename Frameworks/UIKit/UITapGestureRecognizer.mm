@@ -14,22 +14,22 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
+#import <math.h>
 
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSValue.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSTimer.h"
-#include "UIKit/UITapGestureRecognizer.h"
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSValue.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSTimer.h>
+#import <UIKit/UITapGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
-#include "CACompositor.h"
-#include "UIGestureRecognizerInternal.h"
-
-#include <math.h>
+#import "CACompositor.h"
+#import "UIGestureRecognizerInternal.h"
 
 static id _pendingTaps;
-extern NSMutableDictionary* curGesturesDict;
+extern NSMutableDictionary* g_curGesturesDict;
 
 #define TAP_SLACK_AREA \
     (((GetCACompositor()->screenWidth() / GetCACompositor()->deviceWidth()) * GetCACompositor()->screenXDpi()) / 3.0f) //  1/3 inch
@@ -161,7 +161,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         //  Delay the tap gesture recognition if there's more than one tap gesture recognizer
         bool shouldDelay = false;
 
-        id curList = [curGesturesDict objectForKey:[UITapGestureRecognizer class]];
+        id curList = [g_curGesturesDict objectForKey:[UITapGestureRecognizer class]];
         for (id curGesture in curList) {
             if ([curGesture numberOfTapsRequired] > 1) {
                 shouldDelay = true;
