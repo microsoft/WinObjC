@@ -22,6 +22,7 @@ limitations under the License.
 #include "Attribute.h"
 #include "OpenGLESState.h"
 #include <string>
+#include <memory>
 
 using namespace OpenGLES::OpenGLES2;
 using namespace OpenGLES;
@@ -84,7 +85,7 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
 
         if (infoLength > 1) {
-            char* infoLog = (char*)malloc(sizeof(char) * infoLength);
+            char* infoLog = (char*)IwMalloc(sizeof(char) * infoLength);
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
@@ -94,7 +95,7 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
             } else {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Linking program ") + name + " failed:\n" + infoLog);
             }
-            free(infoLog);
+            IwFree(infoLog);
         }
 
         if (linked != 0) {
@@ -119,7 +120,8 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
 
     LOG_DEBUG_MESSAGE("Attributes");
     for (int i = 0; i < activeAttributes; i++) {
-        char* attributeName = (char*)malloc(sizeof(char) * activeAttributesMaxLength);
+        auto attributeNameBuffer = std::make_unique<char[]>(activeAttributesMaxLength);
+        char* attributeName = attributeNameBuffer.get();
         GLint size;
         GLenum type;
 
@@ -183,7 +185,8 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
 
     LOG_DEBUG_MESSAGE("Uniforms");
     for (int i = 0; i < activeUniforms; i++) {
-        char* uniformName = (char*)malloc(sizeof(char) * activeUniformsMaxLength);
+        auto uniformNameBuffer = std::make_unique<char[]>(activeUniformsMaxLength);
+        char* uniformName = uniformNameBuffer.get();
         GLint size;
         GLenum uniformType;
         glGetActiveUniform(program, i, activeUniformsMaxLength, NULL, &size, &uniformType, uniformName);
@@ -518,13 +521,13 @@ void ShaderProgram::validate() {
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
 
         if (infoLength > 1) {
-            char* infoLog = (char*)malloc(sizeof(char) * infoLength);
+            char* infoLog = (char*)IwMalloc(sizeof(char) * infoLength);
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
             LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Validation error in program ") + name + ":\n" + infoLog);
 
-            free(infoLog);
+            IwFree(infoLog);
         }
     }
 }

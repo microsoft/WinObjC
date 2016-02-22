@@ -29,6 +29,7 @@
 #include "UIViewInternal.h"
 
 #include <algorithm>
+#include <memory>
 
 typedef id idweak;
 #import <Foundation/NSNib.h>
@@ -1955,7 +1956,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 - (void)deleteRowsAtIndexPaths:(NSArray*)paths withRowAnimation:(UITableViewRowAnimation)animate {
     int count = [paths count];
 
-    TableViewRow** rows = (TableViewRow**)IwMalloc(sizeof(TableViewRow*) * count);
+    auto rows = std::make_unique<TableViewRow*[]>(count);
     int numRows = 0;
 
     for (int i = 0; i < count; i++) {
