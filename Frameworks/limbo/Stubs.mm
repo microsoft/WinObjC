@@ -26,12 +26,17 @@
 #include <inttypes.h>
 #include <mach/mach.h>
 #include <dispatch/dispatch.h>
+#include <mutex>
+#include <random>
 
 typedef unsigned int mach_port_t;
 
 EbrEvent _applicationStateChanged;
 int g_browsersVisible = 0;
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
+
+static std::mutex s_rngGuard;
+static std::mt19937 s_rng;
 
 // Strings:
 #define REGISTER_STRING(name) UIKIT_EXPORT NSString* const name = @ #name;
@@ -132,7 +137,10 @@ bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orie
 @end
 
 __declspec(dllexport) extern "C" unsigned random() {
-    return rand();
+    std::lock_guard<std::mutex> lock(s_rngGuard);
+
+    //  The expected range for random() is a value 0->0x7fffffff
+    return (s_rng() >> 1);
 }
 
 __declspec(dllexport) extern "C" int gettimeofday(struct timeval* tv, void* restrict) {
@@ -144,7 +152,8 @@ __declspec(dllexport) extern "C" int gettimeofday(struct timeval* tv, void* rest
 }
 
 __declspec(dllexport) extern "C" void srandom(unsigned val) {
-    return srand(val);
+    std::lock_guard<std::mutex> lock(s_rngGuard);
+    s_rng.seed(val);
 }
 
 void EbrRefreshKeyboard(void) {
