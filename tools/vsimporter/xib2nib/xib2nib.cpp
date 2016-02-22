@@ -237,13 +237,11 @@ int main(int argc, char* argv[]) {
     argc = 3;
 #endif
 
-    // TODO: telemetry
-    // TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
+    TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
     std::tr2::sys::path fName(argv[1]);
 
-    // TODO: telemetry
-    // TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
+    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);
@@ -301,8 +299,9 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    // TODO: telemetry
-    //TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
+    TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
+
+    TELEMETRY_FLUSH();
 
     exit(0);
 }

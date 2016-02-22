@@ -37,6 +37,12 @@ namespace WBITelemetry
         conf->SetIKey(m_iKey);
     }
 
+    // Flush the queued events.
+    void WBITelemetryManager::Flush()
+    {
+        WBITelemetryManager::m_tc.Flush();
+    }
+
     // Simple logging function.
     void WBITelemetryManager::AITrackEvent(wstring eventMessage)
     {
