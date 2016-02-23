@@ -17,11 +17,11 @@
 #import <StubReturn.h>
 #import <Foundation/NSValueTransformer.h>
 
-NSString* const NSNegateBooleanTransformerName = @"NSNegateBooleanTransformerName";
-NSString* const NSIsNilTransformerName = @"NSIsNilTransformerName";
-NSString* const NSIsNotNilTransformerName = @"NSIsNotNilTransformerName";
-NSString* const NSUnarchiveFromDataTransformerName = @"NSUnarchiveFromDataTransformerName";
-NSString* const NSKeyedUnarchiveFromDataTransformerName = @"NSKeyedUnarchiveFromDataTransformerName";
+NSString* const NSNegateBooleanTransformerName = @"NSNegateBoolean";
+NSString* const NSIsNilTransformerName = @"NSIsNil";
+NSString* const NSIsNotNilTransformerName = @"NSIsNotNil";
+NSString* const NSUnarchiveFromDataTransformerName = @"NSUnarchiveFromData";
+NSString* const NSKeyedUnarchiveFromDataTransformerName = @"NSKeyedUnarchiveFromData";
 
 @implementation NSValueTransformer
 /**
