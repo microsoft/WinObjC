@@ -39,6 +39,7 @@
 #include "UIApplicationInternal.h"
 typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
+#include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
 
 #include "UIEmptyController.h"
@@ -248,6 +249,8 @@ int GetMouseEvents(EbrInputEvent* pDest, int max);
 static UIView *_curKeyboardAccessory, *_curKeyboardInputView;
 
 static idretaintype(NSMutableArray) _curNotifications;
+
+static idretaintype(WSDDisplayRequest) _screenActive;
 
 @implementation UIApplication {
     id _delegate;
@@ -749,18 +752,23 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setIdleTimerDisabled:(BOOL)disable {
-    UNIMPLEMENTED();
     idleDisabled = disable;
+    // New WSDDisplayRequest are required to gurantee the screenActive request is honored.
+    if (disable) {
+        _screenActive = [WSDDisplayRequest make];
+        [_screenActive requestActive];
+    } else if (_screenActive != nil) {
+        [_screenActive requestRelease];
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)isIdleTimerDisabled {
-    UNIMPLEMENTED();
     return idleDisabled;
 }
 
