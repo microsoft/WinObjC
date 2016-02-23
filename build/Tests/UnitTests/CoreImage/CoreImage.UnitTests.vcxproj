@@ -40,6 +40,9 @@
     <ProjectReference Include="..\..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\CoreImage\lib\CoreImageLib.vcxproj">
       <Project>{90A8C3CC-1430-41C8-B9B8-3994C5C118ED}</Project>
     </ProjectReference>
