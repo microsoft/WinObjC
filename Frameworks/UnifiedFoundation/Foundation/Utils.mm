@@ -26,7 +26,7 @@ const double NSFoundationVersionNumber = NSFoundationVersionNumber_iOS_6_0;
  @Status Interoperable
 */
 Class NSClassFromString(NSString* name) {
-    return objc_lookup_class((const char*)[name UTF8String]);
+    return objc_getClass([name UTF8String]);
 }
 
 /**

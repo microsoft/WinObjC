@@ -17,22 +17,14 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
+#include <Foundation/FoundationExport.h>
 #include <sys/cdefs.h>
 #include <winerror.h>
+#include <stdarg.h>
 
-#ifdef __OBJC__
 namespace wil {
 struct FailureInfo;
 }
-#import "FoundationErrorHandling.h"
-
-// These are internal helper functions for our error-handling facilities. They are only intended to be called
-// internally through WIL.
-
-static void _rethrowAsNSException();
-static void _catchAndPopulateNSError(NSError** outError);
-
-#endif
 
 // We need to do a bit of work to be able to pull in the result.h file and all of its error handling helpers
 
@@ -301,66 +293,5 @@ __END_DECLS
     } else {                                           \
         LOG_HR_MSG(E_NOTIMPL, msg, __VA_ARGS__);       \
     }
-
-// None of this should be used directly and is just support code for WIL's Objective-C helpers:
-
-// This would ideally be in Starboard's ErrorHandling but we can't rethrow exceptions in DLLs outside of where they were caught.
-// Pending a fix for that (issue #5483680), we inline the functions that do exception rethrowing so they're not inside a DLL:
-#ifdef __OBJC__
-
-static NSString* _winobjcDomain() {
-    static NSString* s_winobjcDomain = [[NSString alloc] initWithCString:"WinObjCErrorDomain"];
-    return s_winobjcDomain;
-}
-
-static NSString* _hresultDomain() {
-    static NSString* s_hresultDomain = [[NSString alloc] initWithCString:"HRESULTErrorDomain"];
-    return s_hresultDomain;
-}
-
-static void _rethrowAsNSException() {
-    try {
-        throw;
-    } catch (NSException*) {
-        // Already an NSException and we need to catch it so the catch (...) doesn't:
-        throw;
-    } catch (wil::ResultException re) {
-        @throw _NSExceptionFromFailureInfo(re.GetFailureInfo());
-    } catch (...) {
-        @throw [NSException _exceptionWithHRESULT:wil::ResultFromCaughtException()
-                                    reason:_NSStringFromHResult(wil::ResultFromCaughtException())
-                                    userInfo:nil];
-    }
-}
-
-static void _catchAndPopulateNSError(NSError** outError) {
-    NSError* error;
-
-    try {
-        throw;
-    } catch (NSException* e) {
-        unsigned errorCode = E_UNEXPECTED;
-
-        // If we have an hresult in our user dict, use that, otherwise this was unexpected:
-        NSNumber* hresultValue = [e.userInfo objectForKey:[NSString stringWithCString:"hresult"]];
-        if (hresultValue) {
-            errorCode = [hresultValue unsignedIntValue];
-        }
-
-        error = [NSError errorWithDomain:_winobjcDomain() code:errorCode userInfo:e.userInfo];
-    } catch (wil::ResultException re) {
-        error = _NSErrorFromFailureInfo(re.GetFailureInfo());
-    } catch (...) {
-        error = [NSError errorWithDomain:_hresultDomain() code:wil::ResultFromCaughtException() userInfo:nil];
-    }
-
-    if (outError) {
-        *outError = error;
-    } else {
-        HRESULT code = error.code;
-        LOG_HR_MSG(code, "NSError occurred where caller is ignoring value: %hs", [[error description] UTF8String]);
-    }
-}
-#endif // __OBJC__
 
 #endif // __ERRORHANDLING_H

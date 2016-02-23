@@ -202,4 +202,15 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
 
     return [ret autorelease];
 }
+
+- (HRESULT)_hresult {
+    // If we have an hresult in our user dict, use that, otherwise this was unexpected:
+    NSNumber* hresultValue = [self.userInfo objectForKey:g_NSHResultErrorDictKey];
+    if (hresultValue) {
+        return [hresultValue unsignedIntValue];
+    }
+
+    TraceWarning(L"NSException", L"Called -hresult on an NSException without an HRESULT!");
+    return E_UNEXPECTED;
+}
 @end

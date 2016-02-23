@@ -942,5 +942,5 @@ __declspec(dllexport) void EbrThreadMakeBackgroundExecutable(void) {
 
 void EbrThrowFatal(int code, const char* msg, ...) {
     printf("FATAL: %s\n", msg);
-    *((char*)0) = 0;
+    __fastfail(code);
 }
