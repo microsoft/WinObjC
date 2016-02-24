@@ -171,6 +171,8 @@ void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     }
 
     [self didChangeValueForKey:key];
+
+    IwFree(raw);
 }
 
 void NSKVOSwizzledClass::swizzleMethod(SEL sel, IMP newImp) {
