@@ -249,51 +249,28 @@ static id _NSWeakLoad(id obj) {
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector {
-    id (*imp)(id, SEL) = (id (*)(id, SEL))[self methodForSelector:selector];
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector);
+    return ((id (*)(id, SEL))objc_msgSend)(self, selector);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 {
-    id (*imp)(id, SEL, id) = (id (*)(id, SEL, id))[self methodForSelector:selector];
-
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector, obj1);
+    return ((id (*)(id, SEL, id))objc_msgSend)(self, selector, obj1);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 {
-    id (*imp)(id, SEL, id, id) = (id (*)(id, SEL, id, id))[self methodForSelector:selector];
-
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector, obj1, obj2);
+    return ((id (*)(id, SEL, id, id))objc_msgSend)(self, selector, obj1, obj2);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 withObject:(id)obj3 {
-    id (*imp)(id, SEL, id, id, id) = (id (*)(id, SEL, id, id, id))[self methodForSelector:selector];
-
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector, obj1, obj2, obj3);
+    return ((id (*)(id, SEL, id, id, id))objc_msgSend)(self, selector, obj1, obj2, obj3);
 }
 
 /**
@@ -479,7 +456,7 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     /**
      @Status Interoperable
     */
-+ (Class)superclass {
+    + (Class)superclass {
     return class_getSuperclass(self);
 }
 

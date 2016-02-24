@@ -58,8 +58,7 @@ NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIView
 }
 
 - (void)animationDidStop:(CAAnimation*)animation finished:(BOOL)finished {
-    void (*imp)(id, SEL, CAAnimation*, BOOL) = (void (*)(id, SEL, CAAnimation*, BOOL))[_animDelegate methodForSelector:_selector];
-    imp(_animDelegate, _selector, animation, finished);
+    ((void (*)(id, SEL, CAAnimation*, BOOL))objc_msgSend)(_animDelegate, _selector, animation, finished);
     _animDelegate = nil;
 }
 @end
