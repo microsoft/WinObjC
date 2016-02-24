@@ -50,6 +50,8 @@
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
+		C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14942D01C77E1A700C2B67E /* Accelerate.framework */; };
+		C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */; };
 		D2AC20301C6972A600D54717 /* BasicAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */; };
 		D2AC20341C69733600D54717 /* photo9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20331C69733600D54717 /* photo9.jpg */; };
 		D2AC20361C69734F00D54717 /* photo10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20351C69734F00D54717 /* photo10.jpg */; };
@@ -143,6 +145,9 @@
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		C14942D01C77E1A700C2B67E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerateViewController.h; sourceTree = "<group>"; };
+		C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerateViewController.m; sourceTree = "<group>"; };
 		D2AC202E1C69729C00D54717 /* BasicAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BasicAnimationViewController.h; sourceTree = "<group>"; };
 		D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BasicAnimationViewController.m; sourceTree = "<group>"; };
 		D2AC20331C69733600D54717 /* photo9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = photo9.jpg; path = WOCCatalog/Images/photo9.jpg; sourceTree = "<group>"; };
@@ -163,6 +168,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */,
 				8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */,
 				7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */,
 			);
@@ -181,6 +187,7 @@
 		4EE8614C1B5996BF00682BDB = {
 			isa = PBXGroup;
 			children = (
+				C14942D01C77E1A700C2B67E /* Accelerate.framework */,
 				8430AAC81BE7F2E500927545 /* GLKit.framework */,
 				7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */,
 				4EE8617E1B5996DA00682BDB /* Images */,
@@ -202,6 +209,8 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */,
+				C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */,
 				D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */,
 				D2AC202E1C69729C00D54717 /* BasicAnimationViewController.h */,
 				49FF82D01C18BFF700798804 /* ApplicationViewController.h */,
@@ -460,6 +469,7 @@
 				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
 				F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
+				C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */,
 				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,
 				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,
 			);

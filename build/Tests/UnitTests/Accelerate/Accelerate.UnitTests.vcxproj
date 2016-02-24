@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Accelerate\BLASTest.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Accelerate\vDSPTest.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Accelerate\vImageTest.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
