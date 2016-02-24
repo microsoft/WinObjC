@@ -33,14 +33,28 @@ extern "C" {
 #include <tttables.h>
 #include <ftadvanc.h>
 #include <ftsizes.h>
+#include <ftmodapi.h>
 }
 
 static const wchar_t* g_logTag = L"UIFont";
 FT_Library _fontLib;
+FT_MemoryRec_ _fontMemory;
 NSMutableDictionary* _fontList;
 CFMutableDictionaryRef _fontInstance, _fontSizingInstance;
 NSMutableDictionary* g_fontCache;
 NSMutableDictionary* _fontDataCache;
+
+void* FTAllocFunc(FT_Memory memory, long size) {
+    return IwMalloc(size);
+}
+
+void FTFreeFunc(FT_Memory memory, void* ptr) {
+    IwFree(ptr);
+}
+
+void* FTReallocFunc(FT_Memory memory, long curSize, long newSize, void* ptr) {
+    return IwRealloc(ptr, newSize);
+}
 
 @implementation UIFont {
 @public
@@ -103,8 +117,9 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
         filename = @"/fonts/Helvetica.ttf";
     }
     if (strstr(_faceName, "Condensed") != NULL) {
-        if (fontInfo != nil)
+        if (fontInfo != nil) {
             fontInfo->_horizontalScale = 0.85f;
+        }
     }
 #endif
 
@@ -289,17 +304,26 @@ ret->height += ascenderDelta;
 }
 
 + (void)initialize {
-    g_fontCache = [NSMutableDictionary new];
-    _fontDataCache = [NSMutableDictionary new];
-    FT_Error err = FT_Init_FreeType(&_fontLib);
-    _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
-    if (!_fontList) {
-        _fontList = [NSMutableDictionary new];
+    if (self == [UIFont class]) {
+        g_fontCache = [NSMutableDictionary new];
+        _fontDataCache = [NSMutableDictionary new];
+        _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
+        if (!_fontList) {
+            _fontList = [NSMutableDictionary new];
+        }
+        _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
+        _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
+        _fontMemory.user = nullptr;
+        _fontMemory.alloc = FTAllocFunc;
+        _fontMemory.free = FTFreeFunc;
+        _fontMemory.realloc = FTReallocFunc;
+        FT_Error error = FT_New_Library(&_fontMemory, &(_fontLib));
+        if (!error) {
+            FT_Add_Default_Modules(_fontLib);
+        } else {
+            EbrDebugLog("Failed to instantiate FreeType library");
+        }
     }
-    _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
-    _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
-
-    assert(err == 0);
 }
 
 /**

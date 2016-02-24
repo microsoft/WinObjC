@@ -341,18 +341,22 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
         return nullptr;
     }
 
-    FT_SfntName fontNameInfo = {};
-    NSStringEncoding stringEncoding = NSUTF16BigEndianStringEncoding;
+    CFStringRef fontName = nullptr;
     FT_UInt nameCount = FT_Get_Sfnt_Name_Count(face);
     for (FT_UInt i = 0; i < nameCount; i++) {
         // Get entry at index i from name table.
+        FT_SfntName fontNameInfo = {};
         FT_Error error = FT_Get_Sfnt_Name(face, i, &fontNameInfo);
         if (error) {
             continue;
         }
 
-        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id && charMap->encoding_id == fontNameInfo.encoding_id &&
-            nameId == fontNameInfo.name_id && languageId == fontNameInfo.language_id) {
+        NSStringEncoding stringEncoding = 0;
+        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id &&
+            charMap->encoding_id == fontNameInfo.encoding_id &&
+            languageId == fontNameInfo.language_id &&
+            nameId == fontNameInfo.name_id) {
+
             // FreeType thinks we are running on Mac and returns the bytes in big endian format even when
             // we are on Microsoft platform so we adjust the encoding id accordingly.
             switch (charMap->encoding_id) {
@@ -366,16 +370,19 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
 
                 default:
                     TraceInfo(g_logTag, L"Unsupported encoding %u\n", charMap->encoding_id);
-                    return nullptr;
+                    break;
             }
 
-            // The string array returned in the FT_SfntName structure is not null-terminated. The
-            // application should deallocate it if it is no longer in use, dataWithBytesNoCopy helps to do that.
-            NSData* data = [NSData dataWithBytesNoCopy:fontNameInfo.string length:fontNameInfo.string_len];
-            return static_cast<CFStringRef>([[[NSString alloc] initWithData:data encoding:stringEncoding] retain]);
+            if (stringEncoding) {
+                NSData* data = [NSData dataWithBytesNoCopy:fontNameInfo.string length:fontNameInfo.string_len freeWhenDone:NO];
+                fontName = static_cast<CFStringRef>([[NSString alloc] initWithData:data encoding:stringEncoding]);
+            }
+
+            break;
         }
     }
-    return nullptr;
+
+    return fontName;
 }
 
 /**
