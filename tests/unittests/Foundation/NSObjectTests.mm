@@ -108,3 +108,13 @@ TEST(NSObject, InstanceMethodSignature) {
     EXPECT_EQ(sizeof(int), [derived_changingRet methodReturnLength]);
     EXPECT_EQ(2, [derived_changingRet numberOfArguments]);
 }
+
+TEST(NSObject, NSZombie) { // This test will fail with an AV if zombies do not work.
+    WinObjC_SetZombiesEnabled(YES);
+
+    NSObject* object = [[NSObject alloc] init];
+    [object release];
+    EXPECT_ANY_THROW([object self]);
+
+    WinObjC_SetZombiesEnabled(NO);
+}

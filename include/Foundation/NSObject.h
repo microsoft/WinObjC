@@ -187,3 +187,11 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 // an application. Nonexistent methods called with this disengaged will return nil / 0 / 0L.
 // Defaults to YES: missing selectors will cause an exception to be thrown.
 FOUNDATION_EXPORT void WinObjC_SetMissingSelectorFatal(BOOL);
+
+// [WinObjC Extension]
+// WinObjC_SetZombiesEnabled allows a developer to toggle the runtime behaviour of object deallocation.
+// When "Zombies" are enabled, instances that are deallocated remain alive and throw exceptions when
+// they are the targets of messages. This allows for the detection of use-after-free issues, at the
+// cost of increased memory usage.
+// Zombies are only recommended for consumption during application development and debugging.
+FOUNDATION_EXPORT void WinObjC_SetZombiesEnabled(BOOL);

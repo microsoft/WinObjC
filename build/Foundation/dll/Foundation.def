@@ -449,6 +449,7 @@ LIBRARY Foundation
         NSTemporaryDirectory
         NSUnionRange
         WinObjC_SetMissingSelectorFatal
+        WinObjC_SetZombiesEnabled
         NSAMPMDesignation DATA
         NSArgumentDomain DATA
         NSAssertionHandlerKey DATA
