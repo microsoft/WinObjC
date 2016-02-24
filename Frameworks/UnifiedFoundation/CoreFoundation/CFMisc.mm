@@ -17,6 +17,7 @@
 #include <Starboard.h>
 
 #include <COMIncludes.h>
+#include <wrl\client.h>
 #include <Windows.Foundation.h>
 #include <Windows.Security.Cryptography.h>
 #include <wrl\wrappers\corewrappers.h>
@@ -32,15 +33,17 @@ using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
-static ABI::Windows::Security::Cryptography::ICryptographicBufferStatics* bufferStatics = nullptr;
+ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> GetBufferStatics()
+{
+    ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                             &bufferStatics));
+    return bufferStatics;
+}
 
 extern "C" uint32_t arc4random() {
-    if (bufferStatics == nullptr) {
-        if (!SUCCEEDED(
-                GetActivationFactory(HStringReference(L"Windows.Security.Cryptography.CryptographicBuffer").Get(), &bufferStatics))) {
-            EbrDebugLog("Unable to get CryptographicBuffer interface!\n");
-        }
-    }
+    static ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics(GetBufferStatics());
 
     UINT32 randResult = 0;
     if (!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult))) {
