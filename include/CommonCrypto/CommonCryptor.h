@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,7 @@
 
 // This header file is not yet implemented
 #include <stdint.h>
+#include <StubIncludes.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,7 +32,7 @@ enum {
 
 #define CC_SHA256_DIGEST_LENGTH 32
 
-void CCHmac(uint32_t alg, uint8_t* key, uint32_t keylength, uint8_t* msg, int msglength, void* out);
+void CCHmac(uint32_t alg, uint8_t* key, uint32_t keylength, uint8_t* msg, int msglength, void* out) STUB_METHOD;
 
 enum {
     kCCAlgorithmAES128 = 0,
@@ -75,7 +76,7 @@ int32_t CCCrypt(uint32_t op, /* kCCEncrypt, etc. */
                 size_t dataInLength,
                 void* dataOut, /* data RETURNED here */
                 size_t dataOutAvailable,
-                size_t* dataOutMoved);
+                size_t* dataOutMoved) STUB_METHOD;
 
 #ifdef __cplusplus
 }
