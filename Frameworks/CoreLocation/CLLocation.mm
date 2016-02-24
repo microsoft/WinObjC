@@ -116,6 +116,9 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_timestamp != nil) {
         [_timestamp release];

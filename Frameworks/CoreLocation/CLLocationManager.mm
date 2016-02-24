@@ -94,6 +94,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 }
 
 /**
+ * @Status Interoperable
  * @return {BOOL} indicates whether location services are enabled on the device.
  */
 + (BOOL)locationServicesEnabled {
@@ -209,8 +210,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
         accessFailure = ^void(NSError* error) {
             VLog(@"Location authorization error: %@", error);
-            // TODO: switch to failfast call.
-            assert(!"Unexpected failure while authorizing location.");
+            FAIL_FAST_MSG(E_UNEXPECTED, "Unexpected failure while authorizing location.");
         };
 
         [WDGGeolocator requestAccessAsyncWithSuccess:accessSucess failure:accessFailure];
