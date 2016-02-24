@@ -1,4 +1,4 @@
-﻿//******************************************************************************
+//******************************************************************************
 //
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
@@ -15,9 +15,9 @@
 //******************************************************************************
 #pragma once
 
-// Including SDKDDKVer.h defines the highest available Windows platform.
+#include <functional>
 
-// If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
-// set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
+namespace FrameworkHelper {
 
-#include <SDKDDKVer.h>
+HRESULT RunOnUIThread(const std::function<void()>& fn);
+}

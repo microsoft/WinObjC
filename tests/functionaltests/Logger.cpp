@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,47 +15,80 @@
 //******************************************************************************
 #include "pch.h"
 #include "Logger.h"
-
+#include <gtest-api.h>
 #include <WexTestClass.h>
+#include <StringHelpers.h>
 
 namespace FunctionalTestLogPrivate {
 
 // TODO::
 // Move this is a common place that the project can share.
-wchar_t* charToWChar(const char* text) {
+wchar_t* CharToWChar(const char* text) {
     size_t size = strlen(text) + 1;
     wchar_t* wideText = new wchar_t[size];
     mbstowcs_s(nullptr, wideText, size, text, size);
     return wideText;
 }
 
+std::vector<char> Concat(const std::vector<char>& string1, const char* string2) {
+    std::vector<char> buffer(2048);
+    snprintf(buffer.data(), 2048, "%s \n %s", string1.data(), string2);
+    return buffer;
+}
+
 } /* namespace FunctionalTestLogPrivate */
 
-namespace FunctionalTestLog {
+thread_local std::vector<char> FunctionalTestLog::_userComment;
 
-void LogComment(const char* comment) {
-    WEX::Logging::Log::Comment(FunctionalTestLogPrivate::charToWChar(comment));
+void FunctionalTestLog::LogComment(const char* comment) {
+    WEX::Logging::Log::Comment(FunctionalTestLogPrivate::CharToWChar(comment));
 }
 
-void LogWarning(const char* comment, const char* file, const char* function, const int line) {
-    WEX::Logging::Log::Warning(FunctionalTestLogPrivate::charToWChar(comment),
-                               FunctionalTestLogPrivate::charToWChar(file),
-                               FunctionalTestLogPrivate::charToWChar(function),
-                               line);
+void FunctionalTestLog::LogWarning(const char* comment, const char* file, const char* function, const int line) {
+    if (!FunctionalTestLog::_userComment.empty()) {
+        std::vector<char> newComment;
+        newComment = FunctionalTestLogPrivate::Concat(FunctionalTestLog::_userComment, comment);
+        FunctionalTestLog::_userComment.clear();
+        WEX::Logging::Log::Warning(FunctionalTestLogPrivate::CharToWChar(newComment.data()),
+                                   FunctionalTestLogPrivate::CharToWChar(file),
+                                   FunctionalTestLogPrivate::CharToWChar(function),
+                                   line);
+    } else {
+        WEX::Logging::Log::Warning(FunctionalTestLogPrivate::CharToWChar(comment),
+                                   FunctionalTestLogPrivate::CharToWChar(file),
+                                   FunctionalTestLogPrivate::CharToWChar(function),
+                                   line);
+    }
 }
 
-void LogError(const char* comment, const char* file, const char* function, const int line) {
-    WEX::Logging::Log::Error(FunctionalTestLogPrivate::charToWChar(comment),
-                             FunctionalTestLogPrivate::charToWChar(file),
-                             FunctionalTestLogPrivate::charToWChar(function),
-                             line);
+void FunctionalTestLog::LogError(const char* comment, const char* file, const char* function, const int line) {
+    if (!FunctionalTestLog::_userComment.empty()) {
+        std::vector<char> newComment;
+        newComment = FunctionalTestLogPrivate::Concat(FunctionalTestLog::_userComment, comment);
+        FunctionalTestLog::_userComment.clear();
+        WEX::Logging::Log::Error(FunctionalTestLogPrivate::CharToWChar(newComment.data()),
+                                 FunctionalTestLogPrivate::CharToWChar(file),
+                                 FunctionalTestLogPrivate::CharToWChar(function),
+                                 line);
+    } else {
+        WEX::Logging::Log::Error(FunctionalTestLogPrivate::CharToWChar(comment),
+                                 FunctionalTestLogPrivate::CharToWChar(file),
+                                 FunctionalTestLogPrivate::CharToWChar(function),
+                                 line);
+    }
 }
 
-void LogErrorAndAbort(const char* comment, const char* file, const char* function, const int line) {
-    LogError(comment, file, function, line);
+void FunctionalTestLog::LogErrorAndAbort(const char* comment, const char* file, const char* function, const int line) {
+    if (!FunctionalTestLog::_userComment.empty()) {
+        std::vector<char> newComment;
+        newComment = FunctionalTestLogPrivate::Concat(FunctionalTestLog::_userComment, comment);
+        FunctionalTestLog::_userComment.clear();
+        LogError(newComment.data(), file, function, line);
+    } else {
+        LogError(comment, file, function, line);
+    }
+
     // This will stop the current test from executing further.
     WEX::TestExecution::Verify::Fail(
-        WEX::TestExecution::ErrorInfo(FunctionalTestLogPrivate::charToWChar(file), FunctionalTestLogPrivate::charToWChar(function), line));
+        WEX::TestExecution::ErrorInfo(FunctionalTestLogPrivate::CharToWChar(file), FunctionalTestLogPrivate::CharToWChar(function), line));
 }
-
-} /* namespace FunctionalTestLog */
