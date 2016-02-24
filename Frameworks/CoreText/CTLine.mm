@@ -17,13 +17,32 @@
 #import <CoreText/CTLine.h>
 #import <StubReturn.h>
 
+#include "NSStringInternal.h"
 #include "CoreTextInternal.h"
 #include "CGContextInternal.h"
+
+#import <CoreText/CTTypesetter.h>
+
+static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
+                                                                    CTLineTruncationType truncationType,
+                                                                    double widthToExtract);
 
 @implementation _CTLine : NSObject
 - (void)dealloc {
     _runs = nil;
     [super dealloc];
+}
+
+- (instancetype)copyWithZone:(NSZone*)zone {
+    _CTLine* ret = [_CTLine new];
+    ret->_strRange = _strRange;
+    ret->_width = _width;
+    ret->_ascent = _ascent;
+    ret->_descent = _descent;
+    ret->_leading = _leading;
+    ret->_runs = [_runs copy];
+
+    return ret;
 }
 @end
 
@@ -43,17 +62,152 @@ CTLineRef CTLineCreateWithAttributedString(CFAttributedStringRef string) {
 }
 
 /**
- @Status Stub
- @Notes Line is not truncated
+ @Status Interoperable
 */
-CTLineRef CTLineCreateTruncatedLine(CTLineRef line, double width, CTLineTruncationType truncationType, CTLineRef truncationToken) {
-    UNIMPLEMENTED();
-    NSRange lineRange = ((_CTLine*)line)->_strRange;
+CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTruncationType truncationType, CTLineRef truncationToken) {
+    if (sourceLine == nil) {
+        return nil;
+    }
 
-    _CTLine* ret = [_CTLine new];
-    ret->_strRange = lineRange;
+    // get the truncationToken width, use it to calculate the exact width that should be extracted from the sourceLine.
+    CGFloat truncationTokenWidth;
+    if (truncationToken == nil) {
+        truncationTokenWidth = 0.0f;
+    } else {
+        truncationTokenWidth = (static_cast<_CTLine*>(truncationToken))->_width;
+    }
 
-    return (CTLineRef)ret;
+    if (width <= 0 || truncationTokenWidth > width) {
+        return nil;
+    }
+
+    CGFloat sourceLineWidth = static_cast<_CTLine*>(sourceLine)->_width;
+    if (width >= sourceLineWidth || sourceLineWidth == truncationTokenWidth) {
+        // return a copy of sourceLine
+        return static_cast<CTLineRef>([sourceLine copy]);
+    }
+
+    // widthToExtract is the width that will be extracted from the sourceLine and merged with truncationToken finally
+    double widthToExtract;
+    if (truncationToken == nil) {
+        widthToExtract = width;
+    } else {
+        widthToExtract = width - truncationTokenWidth;
+    }
+
+    // get an NSAttributed string from truncationToken by looping across its runs and extracting the run attribuets.
+    NSMutableAttributedString* stringFromToken = [NSMutableAttributedString new];
+    CFArrayRef tokenRuns = CTLineGetGlyphRuns(truncationToken);
+    if (tokenRuns != nil) {
+        CFIndex numberOfRuns = CFArrayGetCount(tokenRuns);
+        for (int i = 0; i < numberOfRuns; ++i) {
+            CTRunRef run = static_cast<CTRunRef>(CFArrayGetValueAtIndex(tokenRuns, i));
+            CFDictionaryRef attribs = CTRunGetAttributes(run);
+            NSAttributedString* string =
+                [[NSAttributedString alloc] initWithString:(static_cast<_CTRun*>(run))->_stringFragment attributes:(NSDictionary*)attribs];
+            [stringFromToken appendAttributedString:string];
+            [string release];
+        }
+    }
+
+    NSMutableAttributedString* finalString = nil;
+    NSMutableAttributedString* truncatedStringFromLeft = nil;
+    NSMutableAttributedString* truncatedStringFromRight = nil;
+
+    switch (truncationType) {
+        case kCTLineTruncationStart:
+            truncatedStringFromRight = _getTruncatedStringFromSourceLine(sourceLine, kCTLineTruncationStart, widthToExtract);
+            [stringFromToken appendAttributedString:truncatedStringFromRight];
+            finalString = stringFromToken;
+
+            break;
+        case kCTLineTruncationMiddle:
+            widthToExtract = widthToExtract / 2;
+            truncatedStringFromLeft = _getTruncatedStringFromSourceLine(sourceLine, kCTLineTruncationEnd, widthToExtract);
+            truncatedStringFromRight = _getTruncatedStringFromSourceLine(sourceLine, kCTLineTruncationStart, widthToExtract);
+            [truncatedStringFromLeft appendAttributedString:stringFromToken];
+            [truncatedStringFromLeft appendAttributedString:truncatedStringFromRight];
+            finalString = truncatedStringFromLeft;
+
+            break;
+        case kCTLineTruncationEnd:
+            truncatedStringFromLeft = _getTruncatedStringFromSourceLine(sourceLine, kCTLineTruncationEnd, widthToExtract);
+            [truncatedStringFromLeft appendAttributedString:stringFromToken];
+            finalString = truncatedStringFromLeft;
+
+            break;
+        default:
+            return nil;
+    }
+
+    CTTypesetterRef typeSetter = CTTypesetterCreateWithAttributedString((CFAttributedStringRef)finalString);
+    CFRange range = { 0, finalString.length };
+    CTLineRef ret = (CTLineRef)CTTypesetterCreateLineWithOffset(typeSetter, range, 0);
+    CFRelease(typeSetter);
+    [stringFromToken release];
+
+    return ret;
+}
+
+static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef sourceLine,
+                                                                    CTLineTruncationType truncationType,
+                                                                    double widthToExtract) {
+    NSMutableAttributedString* ret = [NSMutableAttributedString new];
+    CFArrayRef glyphRuns = CTLineGetGlyphRuns(sourceLine);
+    CFIndex numberOfRuns = CFArrayGetCount(glyphRuns);
+    double extractedWidth = 0;
+    bool done = 0;
+
+    for (int i = 0; i < numberOfRuns; ++i) {
+        int runIndex;
+        if (truncationType == kCTLineTruncationStart) {
+            runIndex = numberOfRuns - i - 1;
+        } else if (truncationType == kCTLineTruncationEnd) {
+            runIndex = i;
+        }
+
+        CTRunRef currentRun = static_cast<CTRunRef>(CFArrayGetValueAtIndex(glyphRuns, runIndex));
+        _CTRun* run = static_cast<_CTRun*>(currentRun);
+        NSMutableString* runString = [NSMutableString new];
+
+        int numberOfGlyphs = run->_glyphAdvances.size();
+        for (int j = 0; j < numberOfGlyphs; ++j) {
+            int glyphIndex;
+            if (truncationType == kCTLineTruncationStart) {
+                glyphIndex = numberOfGlyphs - j - 1;
+            } else if (truncationType == kCTLineTruncationEnd) {
+                glyphIndex = j;
+            }
+
+            if (extractedWidth + run->_glyphAdvances[glyphIndex].width > widthToExtract) {
+                done = 1;
+                break;
+            }
+
+            extractedWidth += run->_glyphAdvances[glyphIndex].width;
+            char glyph = [run->_stringFragment characterAtIndex:glyphIndex];
+            [runString appendString:[NSString stringWithFormat:@"%c", glyph]];
+        }
+
+        CFDictionaryRef attribs = CTRunGetAttributes(currentRun);
+
+        if (truncationType == kCTLineTruncationStart) {
+            NSString* reverse = [runString _reverseString];
+            NSAttributedString* string = [[NSAttributedString alloc] initWithString:reverse attributes:(NSDictionary*)attribs];
+            [ret insertAttributedString:string atIndex:0];
+            [string release];
+        } else if (truncationType == kCTLineTruncationEnd) {
+            NSAttributedString* string = [[NSAttributedString alloc] initWithString:runString attributes:(NSDictionary*)attribs];
+            [ret appendAttributedString:string];
+            [string release];
+        }
+        [runString release];
+        if (done) {
+            break;
+        }
+    }
+
+    return [ret autorelease];
 }
 
 /**
@@ -69,6 +223,10 @@ CTLineRef CTLineCreateJustifiedLine(CTLineRef line, CGFloat justificationFactor,
  @Status Interoperable
 */
 void CTLineDraw(CTLineRef lineRef, CGContextRef ctx) {
+    if (!lineRef) {
+        return;
+    }
+
     _CTLine* line = (_CTLine*)lineRef;
 
     CGPoint start = CGContextGetTextPosition(ctx);
@@ -103,6 +261,9 @@ CFIndex CTLineGetGlyphCount(CTLineRef lineRef) {
  @Status Interoperable
 */
 CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
+    if (!line) {
+        return nil;
+    }
     return (CFArrayRef)[((_CTLine*)line)->_runs retain];
 }
 
@@ -110,6 +271,10 @@ CFArrayRef CTLineGetGlyphRuns(CTLineRef line) {
  @Status Interoperable
 */
 CFRange CTLineGetStringRange(CTLineRef line) {
+    if (!line) {
+        return { 0, 0 };
+    }
+
     CFRange ret;
     NSRange range = ((_CTLine*)line)->_strRange;
     ret.length = range.length;
@@ -142,6 +307,10 @@ CGRect CTLineGetImageBounds(CTLineRef line, CGContextRef context) {
         for width
 */
 double CTLineGetTypographicBounds(CTLineRef lineRef, CGFloat* ascent, CGFloat* descent, CGFloat* leading) {
+    if (!lineRef) {
+        return 0;
+    }
+
     _CTLine* line = (_CTLine*)lineRef;
     if (ascent) {
         *ascent = line->_ascent;

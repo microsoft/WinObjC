@@ -18,4 +18,5 @@
 
 @interface NSString (Internal)
 - (int)_versionStringCompare:(NSString*)compStrAddr;
+- (NSString*)_reverseString;
 @end

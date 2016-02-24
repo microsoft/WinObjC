@@ -40,4 +40,30 @@
     return result;
 }
 
+- (NSString*)_reverseString {
+    NSUInteger length = [self length];
+    if (length < 2) {
+        return self;
+    }
+
+    char* characters = (char*)malloc(sizeof(char) * (length + 1));
+    [self getCString:characters maxLength:length];
+    for (int i = 0; i < length / 2; ++i) {
+        char character = characters[length - i - 1];
+        characters[length - i - 1] = characters[i];
+        characters[i] = character;
+    }
+    characters[length] = '\0';
+
+    NSString* ret = [[[NSString alloc] initWithCString:characters] autorelease];
+
+    free(characters);
+    characters = nullptr;
+
+    return ret;
+}
+
 @end
+
+__attribute__((constructor)) static void _ForceTUInclusion() {
+}

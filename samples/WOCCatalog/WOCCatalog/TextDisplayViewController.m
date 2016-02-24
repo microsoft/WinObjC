@@ -215,6 +215,13 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     title = @"CTFontCreateCopyWithSymbolicTraits (With and without bold trait)";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:12]]];
 
+    title = @"CTLineCreateTruncatedLine:\nLine 1: Original line, \nLine2:(from left to right) truncationType:Start, middle and end with "
+            @"truncationToken as string with two dots \"..\", \nLine3:(from left to right) truncationType:Start, middle and end with no "
+            @"truncationToken";
+    [rows
+        addObject:[self makeTestCellWithTitle:title
+                          WithAccessoryUIView:[self makeTextDrawer:13 WithCustomHeight:130 WithCustomBackgroundColor:[UIColor grayColor]]]];
+
     return self;
 }
 
@@ -304,6 +311,8 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     if (indexPath.row == 8 || indexPath.row == 9) {
         //  Circular letter view and UITextView row need more height
         return 350.0f;
+    } else if (indexPath.row == 13) {
+        return 200.0f;
     }
     return DefaultHeightOfCell;
 }
@@ -367,7 +376,69 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         case 12:
             [self testCTFontCreateCopyWithSymbolicTraits:rect];
             break;
+
+        case 13:
+            [self testCTLineCreateTruncatedLine:rect];
+            break;
     }
+}
+
+- (void)testCTLineCreateTruncatedLine:(CGRect)rect {
+    // creating an attributed string
+    UIFontDescriptor* descriptor = [UIFontDescriptor fontDescriptorWithName:@"Arial" size:24];
+    UIFont* font = [UIFont fontWithDescriptor:descriptor size:24];
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    NSRange range = NSMakeRange(0, 11);
+    [string addAttribute:kCTFontAttributeName value:font range:range];
+    range = NSMakeRange(5, 6);
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor redColor] range:range];
+    CFAttributedStringRef str = (__bridge CFAttributedStringRef)string;
+    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(str);
+    CFRange range2 = { 0, 11 };
+    CTLineRef line = CTTypesetterCreateLineWithOffset(ts, range2, 0.0f);
+
+    // context setting
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // Flip the context coordinates, in iOS only.
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    // case 0: draw the whole line
+    CGContextSetTextPosition(context, 0.0, 100.0);
+    CTLineDraw(line, context);
+
+    CTLineRef truncatedline;
+    // case 1: without truncation token, truncationType = kCTLineTruncationStart
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationStart, NULL);
+    CGContextSetTextPosition(context, 0.0, 10.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 2: without truncation token, truncationType = kCTLineTruncationMiddle
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationMiddle, NULL);
+    CGContextSetTextPosition(context, 100.0, 10.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 3: without truncation token, truncationType = kCTLineTruncationEnd
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationEnd, NULL);
+    CGContextSetTextPosition(context, 200.0, 10.0);
+    CTLineDraw(truncatedline, context);
+
+    CTLineRef trunToken = getTruncationToken();
+
+    // case 4 : with the truncation token, truncationType = kCTLineTruncationStart
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationStart, trunToken);
+    CGContextSetTextPosition(context, 0.0, 50.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 5 : with the truncation token, truncationType = kCTLineTruncationMiddle
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationMiddle, trunToken);
+    CGContextSetTextPosition(context, 100.0, 50.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 6 : with the truncation token, truncationType = kCTLineTruncationEnd
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationEnd, trunToken);
+    CGContextSetTextPosition(context, 200.0, 50.0);
+    CTLineDraw(truncatedline, context);
 }
 
 - (void)testCTFontCreateCopyWithSymbolicTraits:(CGRect)rect {
@@ -404,6 +475,19 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
 
     return string;
+}
+
+CTLineRef getTruncationToken() {
+    UIFont* font = [UIFont systemFontOfSize:16];
+    NSRange wholeRange = NSMakeRange(0, 2);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@".."];
+    [string addAttribute:NSFontAttributeName value:font range:wholeRange];
+
+    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)string);
+    CFRange range = { 0, 2 };
+    CTLineRef token = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
+
+    return token;
 }
 
 - (NSAttributedString*)getAttributedStringWithTraits {
