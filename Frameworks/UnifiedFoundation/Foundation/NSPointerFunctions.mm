@@ -18,6 +18,7 @@
 #import <Foundation/NSPointerFunctions.h>
 #import <Foundation/NSString.h>
 #import <NSPointerFunctionsConcrete.h>
+#import <NSRaise.h>
 
 #import <objc/objc-arc.h>
 #import <string>
@@ -104,8 +105,7 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
  @Notes Designated Initializer
 */
 - (instancetype)initWithOptions:(NSPointerFunctionsOptions)options {
-    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
-    return nil;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -121,8 +121,7 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
  @Notes
 */
 - (id)copyWithZone:(NSZone*)zone {
-    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
-    return nil;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 @end
