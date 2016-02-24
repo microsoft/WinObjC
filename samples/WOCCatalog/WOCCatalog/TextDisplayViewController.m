@@ -222,6 +222,11 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         addObject:[self makeTestCellWithTitle:title
                           WithAccessoryUIView:[self makeTextDrawer:13 WithCustomHeight:130 WithCustomBackgroundColor:[UIColor grayColor]]]];
 
+    title =
+        @"CTFontManagerRegisterFontsForURL: (Register different fonts familys)\nfont 1: Harlow Solid Italic\nfont 2: Goudy Stout\nfont 3: "
+        @"Kunstler Script";
+    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:14]]];
+
     return self;
 }
 
@@ -314,6 +319,9 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     } else if (indexPath.row == 13) {
         return 200.0f;
     }
+    if (indexPath.row == 13) {
+        return 150.0f;
+    }
     return DefaultHeightOfCell;
 }
 
@@ -333,7 +341,6 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 }
 - (id)initWithFrame:(CGRect)rect WithUICase:(int)testChoice {
     testNumber = testChoice;
-
     return [super initWithFrame:rect];
 }
 
@@ -376,9 +383,11 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         case 12:
             [self testCTFontCreateCopyWithSymbolicTraits:rect];
             break;
-
         case 13:
             [self testCTLineCreateTruncatedLine:rect];
+            break;
+        case 14:
+            [self testCTFontManagerRegisterFontsForURL:rect];
             break;
     }
 }
@@ -439,6 +448,58 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationEnd, trunToken);
     CGContextSetTextPosition(context, 200.0, 50.0);
     CTLineDraw(truncatedline, context);
+}
+
+- (void)testCTFontManagerRegisterFontsForURL:(CGRect)rect {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // Flip the context coordinates, in iOS only.
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    // font 1
+    NSURL* url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/KUNSTLER.TTF"];
+    bool result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Kunstler Script" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CTLineDraw(line, context);
+    }
+    // font 2
+    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/GOUDYSTO.TTF"];
+    result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Goudy Stout" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CGContextSetTextPosition(context, 0.0, 25.0);
+        CTLineDraw(line, context);
+    }
+    // font 3
+    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/HARLOWSI.TTF"];
+    result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Harlow Solid Italic" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CGContextSetTextPosition(context, 0.0, 50.0);
+        CTLineDraw(line, context);
+    }
+}
+
+- (NSAttributedString*)getAttributedStringForFont:(UIFont*)font {
+    NSRange wholeRange = NSMakeRange(0, 11);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
+
+    return string;
 }
 
 - (void)testCTFontCreateCopyWithSymbolicTraits:(CGRect)rect {

@@ -35,6 +35,7 @@ extern "C" {
 #include <ftsizes.h>
 }
 
+static const wchar_t* g_logTag = L"UIFont";
 FT_Library _fontLib;
 NSMutableDictionary* _fontList;
 CFMutableDictionaryRef _fontInstance, _fontSizingInstance;
@@ -292,6 +293,9 @@ ret->height += ascenderDelta;
     _fontDataCache = [NSMutableDictionary new];
     FT_Error err = FT_Init_FreeType(&_fontLib);
     _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
+    if (!_fontList) {
+        _fontList = [NSMutableDictionary new];
+    }
     _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
     _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
 
@@ -641,6 +645,7 @@ void loadFont(UIFont* self) {
     }
 
     FT_Face fntFace = (FT_Face)fnt->_font;
+
     id faceName = [NSString stringWithCString:((FT_Face)fnt->_font)->family_name];
 
     [font retain];
@@ -650,6 +655,48 @@ void loadFont(UIFont* self) {
         CFDictionarySetValue(_fontInstance, (const void*)(id)fnt->_fileName, (void*)fnt->_font);
         CFDictionarySetValue(_fontSizingInstance, (const void*)(id)fnt->_fileName, (void*)fnt->_sizingFont);
     }
+
+    return true;
+}
+
+// Internal methods
+// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterFontsForURL in CTFontManager
++ (bool)_CTFontManagerRegisterFontsForURL:(CFURLRef)fontURL withScope:(CTFontManagerScope)scope withError:(CFErrorRef*)error {
+    NSURL* url = static_cast<NSURL*>(fontURL);
+    if (![url isFileURL]) {
+        TraceInfo(g_logTag, L"Only file urls supported");
+        if (error) {
+            *error = nil;
+        }
+        return false;
+    }
+
+    NSString* fileName = [url path];
+    if ([[_fontList allValues] containsObject:fileName]) {
+        // this font is already registered
+        return true;
+    }
+
+    NSData* data = [NSData dataWithContentsOfURL:url];
+    FT_Face face;
+    char* pFont = (char*)[data bytes];
+    DWORD fontLen = [data length];
+
+    _CGFontLock();
+    FT_Error err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &face);
+    _CGFontUnlock();
+
+    if (err) {
+        if (!error) {
+            error = nil;
+        }
+        return false;
+    }
+
+    NSString* faceName = [NSString stringWithCString:face->family_name];
+    [_fontList setObject:fileName forKey:faceName];
+    [_fontDataCache setObject:data forKey:fileName];
+    CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)face);
 
     return true;
 }
