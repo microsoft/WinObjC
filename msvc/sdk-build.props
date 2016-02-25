@@ -12,6 +12,12 @@
     </ProjectReference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(ConfigurationType)'=='StaticLibrary'">
+    <ProjectReference Condition="'$(LinkWithIwNew)' != 'false'" Include="$(StarboardBasePath)\build\IwNew\lib\IwNewLib.vcxproj">
+      <Project>{b16c8766-1d05-46c0-b231-10c3aa43c19b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
   <PropertyGroup Label="Globals">
     <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">14.0</MinimumVisualStudioVersion>
@@ -66,6 +72,9 @@
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+
+      <!-- Ensure we pick up operator new from our project rather than the C runtime -->
+      <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
