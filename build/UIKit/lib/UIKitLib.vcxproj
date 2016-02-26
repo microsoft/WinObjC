@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\limbo\art.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\limbo\Stubs.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\art.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\Stubs.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSMutableAttributedString+UIKitAdditions.mm" />

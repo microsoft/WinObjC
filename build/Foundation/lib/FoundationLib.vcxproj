@@ -150,11 +150,11 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSXMLPropertyList.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\Utils.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\_NSURLSessionDownloadResumeInfo.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\CFConstantString.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\FormatPrintf.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\IcuHelper.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\NSMutableString.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\NSString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\CFConstantString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\FormatPrintf.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\IcuHelper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSMutableString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSLocale.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSUUID.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSKVOSupport.mm" />

@@ -54,9 +54,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -68,9 +66,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -82,9 +78,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -96,9 +90,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -110,9 +102,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -124,9 +114,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

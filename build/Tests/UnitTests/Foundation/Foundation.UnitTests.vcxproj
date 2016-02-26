@@ -133,7 +133,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
@@ -160,7 +160,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
@@ -191,7 +191,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
@@ -222,7 +222,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AppContainer>false</AppContainer>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>

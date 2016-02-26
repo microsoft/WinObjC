@@ -23,7 +23,7 @@ const CGFloat UINavigationControllerHideShowBarDuration = .25f;
 const CGFloat UINavigationBarHeight = 45.0f;
 
 extern float statusBarHeight;
-bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation);
+bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceOrientation orientation);
 
 class AnimationNotificationParams {
 public:

@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\CATransform3D.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CATransform3D.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAAnimation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAAnimationGroup.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CABasicAnimation.mm" />

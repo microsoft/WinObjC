@@ -32,8 +32,6 @@
 #import <UIKit/UITableViewCell.h>
 #import "NSMutableString+Internal.h"
 
-void EbrSetKeyboardAccessory(id view);
-
 NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
 NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
 NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
@@ -669,8 +667,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 
     if ([self isFirstResponder]) {
-        EbrRefreshKeyboard();
-
         return TRUE;
     }
 
@@ -693,7 +689,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
     [_cursorBlink setHidden:FALSE];
 
-    EbrShowKeyboard();
     _isEditing = TRUE;
 
     [self sendActionsForControlEvents:UIControlEventEditingDidBegin];
@@ -726,8 +721,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if (_isEditing) {
         _showLastCharLen = 0;
         [self setNeedsDisplay];
-
-        EbrHideKeyboard();
 
         _isEditing = FALSE;
         [self sendActionsForControlEvents:UIControlEventEditingDidEnd];

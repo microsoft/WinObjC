@@ -77,8 +77,6 @@ static int addButton(UIActionSheet* self, id text) {
 
     _totalHeight += 20.0f;
 
-    EbrOnShowKeyboardInternal();
-
     return self;
 }
 
@@ -356,8 +354,6 @@ static void dismissView(UIActionSheet* self, int index) {
     CGRect frame = self->_hidePosition;
     [self setFrame:frame];
     [UIView commitAnimations];
-
-    EbrOnHideKeyboardInternal();
 }
 
 - (void)buttonClicked:(id)button {

@@ -524,7 +524,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         return FALSE;
     }
     if ([self isFirstResponder]) {
-        EbrRefreshKeyboard();
         return TRUE;
     }
 
@@ -537,7 +536,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if ([super becomeFirstResponder] == FALSE) {
         return FALSE;
     }
-    EbrShowKeyboard();
+
     _isEditing = TRUE;
     _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
     [_cursorBlink setHidden:FALSE];
@@ -562,7 +561,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if (_isEditing) {
         [self _adjustTextLayerSize:FALSE];
 
-        EbrHideKeyboard();
         _isEditing = FALSE;
         if ([_delegate respondsToSelector:@selector(textViewDidEndEditing:)]) {
             [_delegate textViewDidEndEditing:self];

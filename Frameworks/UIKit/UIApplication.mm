@@ -308,14 +308,11 @@ static idretaintype(NSMutableArray) _curNotifications;
 
             if (curKeyboardType != showKeyboardType) {
                 curKeyboardType = showKeyboardType;
-                EbrSetKeyboardType(curKeyboardType);
             }
             if (forceHideKeyboard == 0 && showKeyboard > 0 && keyboardVisible == false) {
                 keyboardVisible = true;
-                EbrPlatformShowKeyboard();
             } else if ((forceHideKeyboard > 0 || showKeyboard == 0) && keyboardVisible == true) {
                 keyboardVisible = false;
-                EbrPlatformHideKeyboard();
             }
 
             if ([windows count] > 0) {
@@ -1147,12 +1144,12 @@ static void printViews(id curView, int level) {
 
     // gesture priority list
     const static id s_gesturesPriority[] = {[UIPinchGestureRecognizer class],
-                                [UISwipeGestureRecognizer class],
-                                [UIPanGestureRecognizer class],
-                                [UILongPressGestureRecognizer class],
-                                [UITapGestureRecognizer class] };
+                                            [UISwipeGestureRecognizer class],
+                                            [UIPanGestureRecognizer class],
+                                            [UILongPressGestureRecognizer class],
+                                            [UITapGestureRecognizer class] };
 
-    const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof (s_gesturesPriority[0]);
+    const static int s_numGestureTypes = sizeof(s_gesturesPriority) / sizeof(s_gesturesPriority[0]);
 
     //  Process all gestures
     for (int i = 0; i < s_numGestureTypes; i++) {
@@ -1606,7 +1603,6 @@ static void WarnViewControllers(UIView* subview) {
         [delegate applicationWillResignActive:self];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification" object:self];
-    EbrPauseSound();
 
     if ([windows count] > 0) {
         int windowCount = [windows count];
@@ -1629,7 +1625,6 @@ static void WarnViewControllers(UIView* subview) {
 }
 
 - (void)_bringToForeground:(NSURL*)url {
-    EbrResumeSound();
     id delegate = [self delegate];
     if ([delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
         [delegate applicationWillEnterForeground:self];
@@ -1800,7 +1795,6 @@ static void animateKeyboardResize(id self, float newHeight, bool forceKeyboardAp
             [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidShowNotification" object:nil userInfo:dict];
         }
         if (!blankViewUp) {
-            EbrOnShowKeyboardInternal();
         } else {
             if (oldHeight != newHeight) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillChangeFrameNotification"
@@ -1815,7 +1809,6 @@ static void animateKeyboardResize(id self, float newHeight, bool forceKeyboardAp
         //  Keyboard is being hidden
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardWillHideNotification" object:nil userInfo:dict];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UIKeyboardDidHideNotification" object:nil userInfo:dict];
-        EbrOnHideKeyboardInternal();
     }
     oldHeight = newHeight;
 
