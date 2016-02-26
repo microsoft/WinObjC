@@ -333,7 +333,7 @@ typedef unsigned WACContactFieldCategory;
 
 WINRT_EXPORT
 @interface WACContact : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (copy) NSString* name;
 @property (readonly) NSMutableArray* fields;
@@ -455,7 +455,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactCardOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACContactCardTabKind initialTabKind;
 @property WACContactCardHeaderKind headerKind;
 @end
@@ -468,7 +468,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACFullContactCardOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
@@ -480,7 +480,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactAnnotation : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACContactAnnotationOperations supportedOperations;
 @property (copy) NSString* remoteId;
 @property (copy) NSString* contactId;
@@ -606,7 +606,7 @@ WINRT_EXPORT
 @interface WACContactQueryOptions : RTObject
 + (WACContactQueryOptions*)createWithText:(NSString*)text ACTIVATOR;
 + (WACContactQueryOptions*)createWithTextAndFields:(NSString*)text fields:(WACContactQuerySearchFields)fields ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL includeContactsFromHiddenLists;
 @property WACContactAnnotationOperations desiredOperations;
 @property WACContactQueryDesiredFields desiredFields;
@@ -639,7 +639,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactPhone : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* number;
 @property WACContactPhoneKind kind;
 @property (copy) NSString* description;
@@ -653,7 +653,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactEmail : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACContactEmailKind kind;
 @property (copy) NSString* description;
 @property (copy) NSString* address;
@@ -667,7 +667,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactAddress : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* streetAddress;
 @property (copy) NSString* region;
 @property (copy) NSString* postalCode;
@@ -685,7 +685,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactConnectedServiceAccount : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* serviceName;
 @property (copy) NSString* id;
 @end
@@ -698,7 +698,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactDate : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id year;
 @property (copy) id month;
 @property WACContactDateKind kind;
@@ -714,7 +714,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactJobInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* title;
 @property (copy) NSString* office;
 @property (copy) NSString* manager;
@@ -733,7 +733,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactSignificantOther : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* name;
 @property (copy) NSString* description;
 @property WACContactRelationship relationship;
@@ -747,7 +747,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactWebsite : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFUri* uri;
 @property (copy) NSString* description;
 @property (copy) NSString* rawValue;
@@ -1030,7 +1030,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactFieldFactory
     : RTObject <WACIContactFieldFactory, WACIContactLocationFieldFactory, WACIContactInstantMessageFieldFactory>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (WACContactField*)createField_Default:(NSString*)value type:(WACContactFieldType)type;
 - (WACContactField*)createField_Category:(NSString*)value type:(WACContactFieldType)type category:(WACContactFieldCategory)category;
 - (WACContactField*)createField_Custom:(NSString*)name
@@ -1063,7 +1063,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactPicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACContactSelectionMode selectionMode;
 @property (copy) NSString* commitButtonText;
 @property (readonly) NSMutableArray* desiredFields;

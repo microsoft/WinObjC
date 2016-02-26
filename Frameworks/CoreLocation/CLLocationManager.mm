@@ -430,7 +430,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         _location = nullptr;
         // Cache the caller's thread object to use it to call delegates on.
         _callerThread = [NSThread currentThread];
-        _uwpGeolocator = [WDGGeolocator create];
+        _uwpGeolocator = [WDGGeolocator make];
     }
 
     return self;

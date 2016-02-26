@@ -282,7 +282,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDRuntimeBrokerErrorSettings : RTObject <WFDIErrorReportingSettings>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)setErrorOptions:(WFDErrorOptions)value;
 - (WFDErrorOptions)getErrorOptions;
 @end
@@ -309,7 +309,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WFDLoggingOptions*)createWithKeywords:(int64_t)keywords ACTIVATOR;
 @property int16_t task;
 @property int tags;
@@ -328,7 +328,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDLoggingChannelOptions : RTObject
 + (WFDLoggingChannelOptions*)create:(WFGUID*)group ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WFGUID* group;
 @end
 
@@ -340,7 +340,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingFields : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)clear;
 - (void)beginStruct:(NSString*)name;
 - (void)beginStructWithTags:(NSString*)name tags:(int)tags;
@@ -431,13 +431,13 @@ WINRT_EXPORT
                                   value:(id<NSFastEnumeration> /* double */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
-- (void)addChar16:(NSString*)name value:(WCHAR)value;
-- (void)addChar16WithFormat:(NSString*)name value:(WCHAR)value format:(WFDLoggingFieldFormat)format;
-- (void)addChar16WithFormatAndTags:(NSString*)name value:(WCHAR)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addChar16Array:(NSString*)name value:(id<NSFastEnumeration> /* WCHAR */)value;
-- (void)addChar16ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* WCHAR */)value format:(WFDLoggingFieldFormat)format;
+- (void)addChar16:(NSString*)name value:(wchar_t)value;
+- (void)addChar16WithFormat:(NSString*)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format;
+- (void)addChar16WithFormatAndTags:(NSString*)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
+- (void)addChar16Array:(NSString*)name value:(id<NSFastEnumeration> /* wchar_t */)value;
+- (void)addChar16ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* wchar_t */)value format:(WFDLoggingFieldFormat)format;
 - (void)addChar16ArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* WCHAR */)value
+                                  value:(id<NSFastEnumeration> /* wchar_t */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addBoolean:(NSString*)name value:(BOOL)value;

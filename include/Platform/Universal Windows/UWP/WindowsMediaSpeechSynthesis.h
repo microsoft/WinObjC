@@ -202,7 +202,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WMSVoiceInformation* voice;
 + (NSArray*)allVoices;
 + (WMSVoiceInformation*)defaultVoice;

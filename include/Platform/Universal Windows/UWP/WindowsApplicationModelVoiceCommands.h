@@ -93,7 +93,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandContentTile : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* title;
 @property (copy) NSString* textLine3;
 @property (copy) NSString* textLine2;
@@ -112,7 +112,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandUserMessage : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* spokenMessage;
 @property (copy) NSString* displayMessage;
 @end

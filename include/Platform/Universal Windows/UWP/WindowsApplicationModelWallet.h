@@ -113,7 +113,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAWWalletTransaction : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id transactionDate;
 @property BOOL isLaunchable;
 @property BOOL ignoreTimeOfDay;
@@ -130,7 +130,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAWWalletRelevantLocation : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WDGBasicGeoposition* position;
 @property (copy) NSString* displayMessage;
 @end

@@ -43,7 +43,7 @@ typedef unsigned WAUSDeviceAccountServerType;
 
 WINRT_EXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* incomingServerAddress;
 @property (copy) NSString* incomingServerUsername;
 @property (copy) NSString* emailAddress;

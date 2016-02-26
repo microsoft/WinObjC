@@ -278,7 +278,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
 + (WMSSpeechRecognizer*)create:(WGLanguage*)language ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray* constraints;
 @property (readonly) WGLanguage* currentLanguage;
 @property (readonly) WMSSpeechRecognizerTimeouts* timeouts;

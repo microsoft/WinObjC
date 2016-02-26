@@ -137,7 +137,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWAAtomPubClient : RTObject <WWSISyndicationClient>
 + (WWAAtomPubClient*)createAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int timeout;
 @property (copy) WSCPasswordCredential* serverCredential;
 @property (copy) WSCPasswordCredential* proxyCredential;

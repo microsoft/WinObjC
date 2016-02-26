@@ -384,7 +384,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
 }
 
 - (instancetype)init {
-    return [self initWithVault:[[WSCPasswordVault create] autorelease]];
+    return [self initWithVault:[[WSCPasswordVault make] autorelease]];
 }
 
 - (instancetype)initWithVault:(WSCPasswordVault*)vault {
@@ -401,7 +401,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
 }
 
 - (OSStatus)add:(NSDictionary*)attributes withResult:(id*)result {
-    WSCPasswordCredential* credential = [WSCPasswordCredential create];
+    WSCPasswordCredential* credential = [WSCPasswordCredential make];
 
     for (const auto& entry : GetPropertyHandlers()) {
         id value = [attributes objectForKey:entry.first];

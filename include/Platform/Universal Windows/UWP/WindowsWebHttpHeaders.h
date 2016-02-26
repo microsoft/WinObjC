@@ -81,7 +81,7 @@
 
 WINRT_EXPORT
 @interface WWHHHttpContentHeaderCollection : RTObject <WFIStringable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 @property (copy) id contentLength;
 @property (copy) RTObject<WSSIBuffer>* contentMD5;

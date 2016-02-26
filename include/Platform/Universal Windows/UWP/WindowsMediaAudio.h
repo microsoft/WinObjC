@@ -601,7 +601,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMALimiterEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMALimiterEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
-@property unsigned int release;
+@property unsigned int Release;
 @property unsigned int loudness;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;

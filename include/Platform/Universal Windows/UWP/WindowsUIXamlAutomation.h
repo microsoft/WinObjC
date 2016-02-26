@@ -676,7 +676,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -697,7 +697,7 @@ WINRT_EXPORT
 @interface WUXAAutomationAnnotation : WXDependencyObject
 + (WUXAAutomationAnnotation*)createInstance:(WUXAAnnotationType)type ACTIVATOR;
 + (WUXAAutomationAnnotation*)createWithElementParameter:(WUXAAnnotationType)type element:(WXUIElement*)element ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXAAnnotationType type;
 @property (copy) WXUIElement* element;
 + (WXDependencyProperty*)elementProperty;

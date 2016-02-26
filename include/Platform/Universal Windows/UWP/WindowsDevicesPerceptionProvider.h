@@ -105,7 +105,7 @@ typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAu
 
 WINRT_EXPORT
 @interface WDPPPerceptionFrameProviderInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* id;
 @property BOOL hidden;
 @property (copy) NSString* frameKind;

@@ -191,7 +191,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsTextMessage2 : RTObject <WDSISmsMessageBase>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDSSmsMessageType messageType;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSCellularClass cellularClass;
@@ -239,7 +239,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsAppMessage : RTObject <WDSISmsMessageBase>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property int protocolId;
 @property int portNumber;
 @property BOOL isDeliveryNotificationEnabled;

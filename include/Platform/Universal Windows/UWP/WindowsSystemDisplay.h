@@ -31,7 +31,7 @@
 
 WINRT_EXPORT
 @interface WSDDisplayRequest : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)requestActive;
 - (void)requestRelease;
 @end

@@ -77,7 +77,7 @@ typedef unsigned WSCUUserConsentVerificationResult;
 
 WINRT_EXPORT
 @interface WSCUCredentialPickerOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 @property (copy) RTObject<WSSIBuffer>* previousCredential;
 @property (copy) NSString* message;

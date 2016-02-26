@@ -64,7 +64,7 @@ using namespace Microsoft::WRL;
 
 - (instancetype)init {
     if (self = [super init]) {
-        _mediaElement = [WXCMediaElement create];
+        _mediaElement = [WXCMediaElement make];
         _mediaElement.autoPlay = NO;
         _mediaElement.volume = 1.0f;
         _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{0,0,0,0}];
@@ -163,7 +163,7 @@ using namespace Microsoft::WRL;
 
         _data = data;
 
-        WSSInMemoryRandomAccessStream* stream = [WSSInMemoryRandomAccessStream create];
+        WSSInMemoryRandomAccessStream* stream = [WSSInMemoryRandomAccessStream make];
         WSSDataWriter* rw = [WSSDataWriter createDataWriter:[stream getOutputStreamAt:0]];
         ComPtr<IBuffer> buffer;
         IBuffer* rawBuffer = nullptr;

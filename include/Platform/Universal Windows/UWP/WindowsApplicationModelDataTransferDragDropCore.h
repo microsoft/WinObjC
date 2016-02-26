@@ -120,7 +120,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDCCoreDragOperation : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WADDCCoreDragUIContentMode dragUIContentMode;
 @property (readonly) WADDataPackage* data;
 - (void)setPointerId:(unsigned int)pointerId;

@@ -234,7 +234,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameController : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id photoConfirmationEnabled;
 @property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;
 @property (readonly) WMDCFrameExposureControl* exposureControl;

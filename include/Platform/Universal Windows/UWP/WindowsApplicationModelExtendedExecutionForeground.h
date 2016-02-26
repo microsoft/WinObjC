@@ -78,7 +78,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEFExtendedExecutionForegroundSession : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WAEFExtendedExecutionForegroundReason reason;
 @property (copy) NSString* description;
 - (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEFExtendedExecutionForegroundRevokedEventArgs*))del;

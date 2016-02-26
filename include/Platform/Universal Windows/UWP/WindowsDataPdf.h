@@ -46,7 +46,7 @@ typedef unsigned WDPPdfPageRotation;
 
 WINRT_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
 @property unsigned int destinationWidth;

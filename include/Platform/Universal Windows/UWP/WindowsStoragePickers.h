@@ -123,7 +123,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPFileOpenPicker : RTObject
 + (void)resumePickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
 @property (copy) NSString* settingsIdentifier;
@@ -145,7 +145,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFileSavePicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSPPickerLocationId suggestedStartLocation;
 @property (copy) WSStorageFile* suggestedSaveFile;
 @property (copy) NSString* suggestedFileName;
@@ -167,7 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPFolderPicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
 @property (copy) NSString* settingsIdentifier;

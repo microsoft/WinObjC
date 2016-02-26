@@ -198,7 +198,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionImageOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property int decodeWidth;
 @property int decodeHeight;
 @end
@@ -237,7 +237,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositor : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCompositionGraphicsDevice* defaultGraphicsDevice;
 - (WUCContainerVisual*)createContainerVisual;
 - (WUCCubicBezierEasingFunction*)createCubicBezierEasingFunction:(WFNVector2*)controlPoint1 controlPoint2:(WFNVector2*)controlPoint2;

@@ -109,7 +109,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIXamlRenderingBackgroundTask : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
@@ -121,7 +121,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -150,7 +150,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIBitmapSource : WUXMImageSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
 + (WXDependencyProperty*)pixelHeightProperty;
@@ -167,7 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIRenderTargetBitmap : WUXMImageSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
 + (WXDependencyProperty*)pixelHeightProperty;
@@ -196,7 +196,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
 + (WUXMIBitmapImage*)createInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFUri* uriSource;
 @property int decodePixelWidth;
 @property int decodePixelHeight;
@@ -260,7 +260,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMISoftwareBitmapSource : WUXMImageSource <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)setBitmapAsync:(WGISoftwareBitmap*)softwareBitmap;
 - (void)close;
 @end

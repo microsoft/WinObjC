@@ -202,7 +202,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIGestureRecognizer : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property float inertiaRotationDeceleration;
 @property float inertiaRotationAngle;
 @property float inertiaExpansionDeceleration;

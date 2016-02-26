@@ -182,7 +182,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMATransitionCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -204,7 +204,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAColorKeyFrameCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -226,7 +226,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADoubleKeyFrameCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -248,7 +248,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAObjectKeyFrameCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -270,7 +270,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointKeyFrameCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -292,7 +292,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMATimelineCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -314,7 +314,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -333,7 +333,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAColorKeyFrame : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUColor* value;
 @property (copy) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -348,7 +348,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADoubleKeyFrame : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double value;
 @property (copy) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -376,7 +376,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAKeySpline : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFPoint* controlPoint2;
 @property (copy) WFPoint* controlPoint1;
 @end
@@ -389,7 +389,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMANavigationTransitionInfo : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (NSString*)getNavigationStateCore;
 - (void)setNavigationStateCore:(NSString*)navigationState;
 @end
@@ -402,7 +402,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAObjectKeyFrame : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* value;
 @property (copy) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -417,7 +417,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointKeyFrame : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFPoint* value;
 @property (copy) WUXMAKeyTime* keyTime;
 + (WXDependencyProperty*)keyTimeProperty;
@@ -432,7 +432,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMATimeline : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double speedRatio;
 @property (copy) WUXMARepeatBehavior* repeatBehavior;
 @property WUXMAFillBehavior fillBehavior;
@@ -469,7 +469,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAAddDeleteThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMAAddDeleteThemeTransition_DEFINED__
@@ -480,7 +480,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMABackEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double amplitude;
 + (WXDependencyProperty*)amplitudeProperty;
 @end
@@ -503,7 +503,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMABeginStoryboard : WXTriggerAction
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAStoryboard* storyboard;
 + (WXDependencyProperty*)storyboardProperty;
 @end
@@ -516,7 +516,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMABounceEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double bounciness;
 @property int bounces;
 + (WXDependencyProperty*)bouncesProperty;
@@ -531,7 +531,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMACircleEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMACircleEase_DEFINED__
@@ -542,7 +542,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAColorAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id to;
 @property (copy) id from;
 @property BOOL enableDependentAnimation;
@@ -563,7 +563,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAColorAnimationUsingKeyFrames : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL enableDependentAnimation;
 @property (readonly) WUXMAColorKeyFrameCollection* keyFrames;
 + (WXDependencyProperty*)enableDependentAnimationProperty;
@@ -577,7 +577,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAContentThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double verticalOffset;
 @property double horizontalOffset;
 + (WXDependencyProperty*)horizontalOffsetProperty;
@@ -592,7 +592,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMACubicEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMACubicEase_DEFINED__
@@ -603,7 +603,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADiscreteColorKeyFrame : WUXMAColorKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMADiscreteColorKeyFrame_DEFINED__
@@ -614,7 +614,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADiscreteDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMADiscreteDoubleKeyFrame_DEFINED__
@@ -625,7 +625,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADiscreteObjectKeyFrame : WUXMAObjectKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMADiscreteObjectKeyFrame_DEFINED__
@@ -636,7 +636,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADiscretePointKeyFrame : WUXMAPointKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMADiscretePointKeyFrame_DEFINED__
@@ -647,7 +647,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADoubleAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id to;
 @property (copy) id from;
 @property BOOL enableDependentAnimation;
@@ -668,7 +668,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADoubleAnimationUsingKeyFrames : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL enableDependentAnimation;
 @property (readonly) WUXMADoubleKeyFrameCollection* keyFrames;
 + (WXDependencyProperty*)enableDependentAnimationProperty;
@@ -682,7 +682,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADragItemThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -695,7 +695,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADragOverThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double toOffset;
 @property (copy) NSString* targetName;
 @property WUXCPAnimationDirection direction;
@@ -712,7 +712,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADrillInThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* exitTargetName;
 @property (copy) WXDependencyObject* exitTarget;
 @property (copy) NSString* entranceTargetName;
@@ -731,7 +731,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADrillOutThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* exitTargetName;
 @property (copy) WXDependencyObject* exitTarget;
 @property (copy) NSString* entranceTargetName;
@@ -750,7 +750,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADropTargetItemThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -763,7 +763,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAEasingColorKeyFrame : WUXMAColorKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAEasingFunctionBase* easingFunction;
 + (WXDependencyProperty*)easingFunctionProperty;
 @end
@@ -776,7 +776,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAEasingDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAEasingFunctionBase* easingFunction;
 + (WXDependencyProperty*)easingFunctionProperty;
 @end
@@ -789,7 +789,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAEasingPointKeyFrame : WUXMAPointKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAEasingFunctionBase* easingFunction;
 + (WXDependencyProperty*)easingFunctionProperty;
 @end
@@ -802,7 +802,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAEdgeUIThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXCPEdgeTransitionLocation edge;
 + (WXDependencyProperty*)edgeProperty;
 @end
@@ -815,7 +815,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAElasticEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double springiness;
 @property int oscillations;
 + (WXDependencyProperty*)oscillationsProperty;
@@ -830,7 +830,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAEntranceThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isStaggeringEnabled;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
@@ -847,7 +847,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAExponentialEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double exponent;
 + (WXDependencyProperty*)exponentProperty;
 @end
@@ -860,7 +860,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAFadeInThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -873,7 +873,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAFadeOutThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -886,7 +886,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMALinearColorKeyFrame : WUXMAColorKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMALinearColorKeyFrame_DEFINED__
@@ -897,7 +897,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMALinearDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMALinearDoubleKeyFrame_DEFINED__
@@ -908,7 +908,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMALinearPointKeyFrame : WUXMAPointKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMALinearPointKeyFrame_DEFINED__
@@ -919,7 +919,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAObjectAnimationUsingKeyFrames : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL enableDependentAnimation;
 @property (readonly) WUXMAObjectKeyFrameCollection* keyFrames;
 + (WXDependencyProperty*)enableDependentAnimationProperty;
@@ -933,7 +933,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPaneThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXCPEdgeTransitionLocation edge;
 + (WXDependencyProperty*)edgeProperty;
 @end
@@ -946,7 +946,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id to;
 @property (copy) id from;
 @property BOOL enableDependentAnimation;
@@ -967,7 +967,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointAnimationUsingKeyFrames : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL enableDependentAnimation;
 @property (readonly) WUXMAPointKeyFrameCollection* keyFrames;
 + (WXDependencyProperty*)enableDependentAnimationProperty;
@@ -981,7 +981,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointerDownThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -994,7 +994,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPointerUpThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -1007,7 +1007,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPopInThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
@@ -1024,7 +1024,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPopOutThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 + (WXDependencyProperty*)targetNameProperty;
 @end
@@ -1037,7 +1037,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPopupThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
 + (WXDependencyProperty*)fromHorizontalOffsetProperty;
@@ -1052,7 +1052,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAPowerEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double power;
 + (WXDependencyProperty*)powerProperty;
 @end
@@ -1065,7 +1065,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAQuadraticEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMAQuadraticEase_DEFINED__
@@ -1076,7 +1076,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAQuarticEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMAQuarticEase_DEFINED__
@@ -1087,7 +1087,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAQuinticEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMAQuinticEase_DEFINED__
@@ -1098,7 +1098,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMAReorderThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMAReorderThemeTransition_DEFINED__
@@ -1109,7 +1109,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMARepositionThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
@@ -1126,7 +1126,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMARepositionThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMARepositionThemeTransition_DEFINED__
@@ -1137,7 +1137,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASineEase : WUXMAEasingFunctionBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMASineEase_DEFINED__
@@ -1148,7 +1148,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASplineColorKeyFrame : WUXMAColorKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAKeySpline* keySpline;
 + (WXDependencyProperty*)keySplineProperty;
 @end
@@ -1161,7 +1161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASplineDoubleKeyFrame : WUXMADoubleKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAKeySpline* keySpline;
 + (WXDependencyProperty*)keySplineProperty;
 @end
@@ -1174,7 +1174,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASplinePointKeyFrame : WUXMAPointKeyFrame
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAKeySpline* keySpline;
 + (WXDependencyProperty*)keySplineProperty;
 @end
@@ -1187,7 +1187,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASplitCloseThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXCPAnimationDirection contentTranslationDirection;
 @property (copy) NSString* contentTargetName;
 @property (copy) WXDependencyObject* contentTarget;
@@ -1220,7 +1220,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASplitOpenThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXCPAnimationDirection contentTranslationDirection;
 @property (copy) NSString* contentTargetName;
 @property (copy) WXDependencyObject* contentTarget;
@@ -1258,7 +1258,7 @@ WINRT_EXPORT
 + (NSString*)getTargetName:(WUXMATimeline*)element;
 + (void)setTargetName:(WUXMATimeline*)element name:(NSString*)name;
 + (void)setTarget:(WUXMATimeline*)timeline target:(WXDependencyObject*)target;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXMATimelineCollection* children;
 + (WXDependencyProperty*)targetNameProperty;
 + (WXDependencyProperty*)targetPropertyProperty;
@@ -1281,7 +1281,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASwipeBackThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* targetName;
 @property double fromVerticalOffset;
 @property double fromHorizontalOffset;
@@ -1298,7 +1298,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASwipeHintThemeAnimation : WUXMATimeline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double toVerticalOffset;
 @property double toHorizontalOffset;
 @property (copy) NSString* targetName;
@@ -1317,7 +1317,7 @@ WINRT_EXPORT
 @interface WUXMACommonNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsStaggerElement:(WXUIElement*)element;
 + (void)setIsStaggerElement:(WXUIElement*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isStaggeringEnabled;
 + (WXDependencyProperty*)isStaggerElementProperty;
 + (WXDependencyProperty*)isStaggeringEnabledProperty;
@@ -1337,7 +1337,7 @@ WINRT_EXPORT
 + (void)setIsExitElement:(WXUIElement*)element value:(BOOL)value;
 + (BOOL)getExitElementContainer:(WXCListViewBase*)element;
 + (void)setExitElementContainer:(WXCListViewBase*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXUIElement* exitElement;
 + (WXDependencyProperty*)exitElementContainerProperty;
 + (WXDependencyProperty*)exitElementProperty;
@@ -1353,7 +1353,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMADrillInNavigationTransitionInfo : WUXMANavigationTransitionInfo
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMADrillInNavigationTransitionInfo_DEFINED__
@@ -1366,7 +1366,7 @@ WINRT_EXPORT
 @interface WUXMAEntranceNavigationTransitionInfo : WUXMANavigationTransitionInfo
 + (BOOL)getIsTargetElement:(WXUIElement*)element;
 + (void)setIsTargetElement:(WXUIElement*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WXDependencyProperty*)isTargetElementProperty;
 @end
 
@@ -1378,7 +1378,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMANavigationThemeTransition : WUXMATransition
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMANavigationTransitionInfo* defaultNavigationTransitionInfo;
 + (WXDependencyProperty*)defaultNavigationTransitionInfoProperty;
 @end
@@ -1391,7 +1391,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASlideNavigationTransitionInfo : WUXMANavigationTransitionInfo
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMASlideNavigationTransitionInfo_DEFINED__
@@ -1402,7 +1402,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMASuppressNavigationTransitionInfo : WUXMANavigationTransitionInfo
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMASuppressNavigationTransitionInfo_DEFINED__

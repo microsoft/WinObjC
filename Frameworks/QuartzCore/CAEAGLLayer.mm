@@ -52,7 +52,7 @@ typedef wchar_t WCHAR;
 - (void)setContentsScale:(float)factor {
     [super setContentsScale:factor];
 
-    WUXMScaleTransform* scaleTransform = [WUXMScaleTransform create];
+    WUXMScaleTransform* scaleTransform = [WUXMScaleTransform make];
     scaleTransform.scaleX = 1.0 / factor;
     scaleTransform.scaleY = 1.0 / factor;
 
@@ -61,7 +61,7 @@ typedef wchar_t WCHAR;
 }
 
 - (instancetype)init {
-    _swapChainPanel = [WXCSwapChainPanel create];
+    _swapChainPanel = [WXCSwapChainPanel make];
     [super init];
     self.contentsElement = _swapChainPanel;
 

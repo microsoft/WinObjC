@@ -156,7 +156,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WFGUID* applicationId;
 @property (readonly) NSString* authenticatedSafeCustomerId;
 @property (readonly) BOOL canSignOut;

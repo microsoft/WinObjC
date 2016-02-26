@@ -92,7 +92,7 @@ typedef wchar_t WCHAR;
 }
 
 static void initWebKit(UIWebView* self) {
-    self->_xamlWebControl = [WXCWebView create];
+    self->_xamlWebControl = [WXCWebView make];
     [self layer].contentsElement = self->_xamlWebControl;
     self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
         self->_isLoading = false;

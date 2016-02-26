@@ -563,7 +563,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyIndividualizationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (copy) WFUri* uri;
@@ -583,7 +583,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainJoinServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
@@ -606,7 +606,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainLeaveServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
@@ -629,7 +629,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseAcquisitionServiceRequest
     : RTObject <WMPPIPlayReadyLicenseAcquisitionServiceRequest, WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
@@ -651,7 +651,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyMeteringReportServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (copy) NSArray* meteringCertificate;
@@ -672,7 +672,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyRevocationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (copy) WFUri* uri;
@@ -720,7 +720,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseIterable : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WMPPPlayReadyLicenseIterable*)createInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
 @end
 
@@ -860,7 +860,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyITADataGenerator : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (NSArray*)generateData:(WFGUID*)guidCPSystemId
           countOfStreams:(unsigned int)countOfStreams
            configuration:(RTObject<WFCIPropertySet>*)configuration
@@ -888,7 +888,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDDownloadEngineNotifier : RTObject <WMPPINDDownloadEngineNotifier>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)onStreamOpened;
 - (void)onPlayReadyObjectReceived:(id<NSFastEnumeration> /* uint8_t */)dataBytes;
 - (void)onContentIDReceived:(RTObject<WMPPINDLicenseFetchDescriptor>*)licenseFetchDescriptor;
@@ -905,7 +905,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDStreamParserNotifier : RTObject <WMPPINDStreamParserNotifier>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)onContentIDReceived:(RTObject<WMPPINDLicenseFetchDescriptor>*)licenseFetchDescriptor;
 - (void)onMediaStreamDescriptorCreated:(id<NSFastEnumeration> /* WMCAudioStreamDescriptor* */)audioStreamDescriptors
                 videoStreamDescriptors:(id<NSFastEnumeration> /* WMCVideoStreamDescriptor* */)videoStreamDescriptors;
@@ -1025,7 +1025,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDStorageFileHelper : RTObject <WMPPINDStorageFileHelper>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (NSMutableArray*)getFileURLs:(RTObject<WSIStorageFile>*)file;
 @end
 

@@ -216,7 +216,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSValueAndLanguage : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* value;
 @property (copy) NSString* language;
 @end
@@ -251,7 +251,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSIndexableContent : RTObject <WSSIIndexableContent>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* streamContentType;
 @property (copy) RTObject<WSSIRandomAccessStream>* stream;
 @property (copy) NSString* id;
@@ -269,7 +269,7 @@ WINRT_EXPORT
 + (WSSQueryOptions*)createCommonFileQuery:(WSSCommonFileQuery)query
                            fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
 + (WSSQueryOptions*)createCommonFolderQuery:(WSSCommonFolderQuery)query ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* userSearchFilter;
 @property (copy) NSString* language;
 @property WSSIndexerOption indexerOption;

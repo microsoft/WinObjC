@@ -803,22 +803,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     }
 }
 
-// TODO: Remove this function once casting is supported in RTObject
-static id UWPObjectCast(Class desiredClass, RTObject* rtObject) {
-    auto internalComPtr = (__bridge IInspectable*)[rtObject internalObject];
-    auto newObject = (RTObject*)NSAllocateObject(desiredClass, 0, nil);
-    [newObject setComObj:internalComPtr];
-    return [newObject autorelease];
-}
-
-/*
- * Returns the RTObject casted to the desired class - unsafe. Templated implementation.
- */
-template <typename TDesiredClass>
-static id UWPObjectCast(RTObject* rtObject) {
-    return UWPObjectCast([TDesiredClass class], rtObject);
-}
-
 /**
  @Status Interoperable
 */
@@ -843,7 +827,7 @@ static id UWPObjectCast(RTObject* rtObject) {
         return;
     }
 
-    WDXDXmlElement* badgeElement = UWPObjectCast<WDXDXmlElement>(badgeObject);
+    WDXDXmlElement* badgeElement = rt_dynamic_cast<WDXDXmlElement>(badgeObject);
     [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
 
     WUNBadgeNotification* notification = [WUNBadgeNotification createBadgeNotification:doc];

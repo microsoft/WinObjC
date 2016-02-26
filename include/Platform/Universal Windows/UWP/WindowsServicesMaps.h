@@ -241,7 +241,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSMMapRouteRestrictions routeRestrictions;
 @property WSMMapRouteOptimization routeOptimization;
 @property unsigned int maxAlternateRouteCount;

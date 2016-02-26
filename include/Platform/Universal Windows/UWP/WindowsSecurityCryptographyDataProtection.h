@@ -35,7 +35,7 @@
 
 WINRT_EXPORT
 @interface WSCDDataProtectionProvider : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WSCDDataProtectionProvider*)createOverloadExplicit:(NSString*)protectionDescriptor ACTIVATOR;
 - (void)protectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
 - (void)unprotectAsync:(RTObject<WSSIBuffer>*)data success:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
