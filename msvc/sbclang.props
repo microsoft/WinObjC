@@ -40,7 +40,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardDefaultLibs>Starboard.lib;Foundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;CoreText.lib;Security.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;Accounts.lib;AdSupport.lib;StoreKit.lib;AssetsLibrary.lib;QuickLook.lib;MediaPlayer.lib;GameKit.lib;CoreData.lib;WebKit.lib;HomeKit.lib;CoreVideo.lib;AddressBook.lib;AddressBookUI.lib;HealthKit.lib;LocalAuthentication.lib;GamePlayKit.lib;CoreTelephony.lib;CloudKit.lib;AVKit.lib;GameController.lib;Contacts.lib;MediaAccessibility.lib;Social.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs>Starboard.lib;Foundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;CoreText.lib;Security.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;Accounts.lib;AdSupport.lib;StoreKit.lib;AssetsLibrary.lib;QuickLook.lib;MediaPlayer.lib;GameKit.lib;CoreData.lib;WebKit.lib;HomeKit.lib;CoreVideo.lib;AddressBook.lib;AddressBookUI.lib;HealthKit.lib;LocalAuthentication.lib;GamePlayKit.lib;CoreTelephony.lib;CloudKit.lib;AVKit.lib;GameController.lib;Contacts.lib;MediaAccessibility.lib;Social.lib;MobileCoreServices.lib</StarboardDefaultLibs>
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>

@@ -48,7 +48,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
@@ -63,7 +63,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
@@ -78,7 +78,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
@@ -93,7 +93,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>

@@ -343,6 +343,7 @@ LIBRARY Foundation
         CFBooleanGetValue
         CFCopyDescription
         CFDataGetBytePtr
+        CFDictionaryAddValue
         CFDictionaryApplyFunction
         CFDictionaryContainsKey
         CFDictionaryCreateMutable
