@@ -55,6 +55,8 @@ function DeployTests
     {
         # Copy the tests to the device
 
+        Write-Host "Copying tests to the device - this may take a while... (about 2 minutes)"
+
         Try {
             mdd $TestDstDirectory
         } Catch {
