@@ -247,6 +247,7 @@ int main(int argc, char* argv[]) {
     pugi::xml_parse_result result = doc.load_file(argv[1]);
     if (!result) {
         printf("Error opening %s\n", argv[1]);
+        TELEMETRY_FLUSH();
         exit(2);
         return -1;
     }
@@ -255,12 +256,14 @@ int main(int argc, char* argv[]) {
     const char* type = getNodeAttrib(rootNode, "type");
     if (!type) {
         printf("Unable to find input type\n");
+        TELEMETRY_FLUSH();
         exit(3);
         return -1;
     }
     if (strcmp(rootNode.name(), "document") == 0 && strcmp(type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB") == 0) {
         if (argc < 3) {
             printf("Usage: xib2nib input.storyboard <outputdir>\n");
+            TELEMETRY_FLUSH();
             exit(1);
             return -1;
         }
@@ -276,6 +279,7 @@ int main(int argc, char* argv[]) {
     } else if (strstr(type, ".XIB") != NULL) {
         if (argc < 3) {
             printf("Usage: xib2nib input.xib output.nib\n");
+            TELEMETRY_FLUSH();
             exit(1);
             return -1;
         }
@@ -283,6 +287,7 @@ int main(int argc, char* argv[]) {
         FILE* fpOut = fopen(argv[2], "wb");
         if (!fpOut) {
             printf("Error opening %s\n", argv[2]);
+            TELEMETRY_FLUSH();
             exit(3);
             return -1;
         }
@@ -295,7 +300,9 @@ int main(int argc, char* argv[]) {
         fclose(fpOut);
     } else {
         printf("Unable to determine input type type=\"%s\"\n", type);
+        TELEMETRY_FLUSH();
         exit(4);
+        TELEMETRY_FLUSH();
         return -1;
     }
 
