@@ -302,7 +302,6 @@ int main(int argc, char* argv[]) {
         printf("Unable to determine input type type=\"%s\"\n", type);
         TELEMETRY_FLUSH();
         exit(4);
-        TELEMETRY_FLUSH();
         return -1;
     }
 
