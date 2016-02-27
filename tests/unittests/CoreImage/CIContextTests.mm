@@ -31,16 +31,16 @@ TEST(CoreImage, CGImageFromRect) {
 
     char fullPath[_MAX_PATH];
     GetModuleFileNameA(NULL, fullPath, _MAX_PATH);
-    char* winObjCSDKRoot = strstr(fullPath, "\\build\\");
-    const char* relativePathToPhoto = "\\tests\\unittests\\CoreImage\\images\\Photo2.jpg\0";
-    strncpy (winObjCSDKRoot, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
+    char* executablePath = strrchr(fullPath, '\\');
+    const char* relativePathToPhoto = "\\Photo2.jpg";
+    strncpy (executablePath, relativePathToPhoto, strlen(relativePathToPhoto) + 1);
     UIImage* photo = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
     CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
     CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
     photo = [UIImage imageWithCGImage:cgImage];
 
-    const char* relativePathToCroppedPhoto = "\\tests\\unittests\\CoreImage\\images\\CroppedPhoto2.jpg\0";
-    strncpy (winObjCSDKRoot, relativePathToCroppedPhoto, strlen(relativePathToCroppedPhoto) + 1);
+    const char* relativePathToCroppedPhoto = "\\CroppedPhoto2.jpg";
+    strncpy (executablePath, relativePathToCroppedPhoto, strlen(relativePathToCroppedPhoto) + 1);
     UIImage* croppedPhoto = [UIImage imageNamed:[NSString stringWithCString:fullPath]];
     
     NSData* photoData = UIImagePNGRepresentation(photo);

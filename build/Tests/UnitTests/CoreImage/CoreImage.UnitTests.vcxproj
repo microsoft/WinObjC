@@ -240,6 +240,9 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <SBResourceCopy Include="..\..\..\..\tests\unittests\CoreImage\images\**\*" />
+  </ItemGroup>
+  <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\CoreImage\CIContextTests.mm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

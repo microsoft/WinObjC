@@ -68,6 +68,7 @@ function DeployTests
         putd -recurse $TestSrcDirectory\*.dll $TestDstDirectory
         putd -recurse $TestSrcDirectory\*.exe $TestDstDirectory
         putd -recurse $TestSrcDirectory\*.txt $TestDstDirectory
+        putd -recurse $TestSrcDirectory\*.jpg $TestDstDirectory
     }
     else
     {
