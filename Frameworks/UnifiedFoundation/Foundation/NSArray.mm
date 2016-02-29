@@ -156,23 +156,16 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 
     char* pData = (char*)[data bytes];
 
-    id ar;
-
-    if (memcmp(pData, "<?xml", 4) == 0) {
-        ar = [NSXMLPropertyList propertyListFromData:data];
-        if (![ar isKindOfClass:[NSArray class]]) {
-            ar = [ar objectForKey:@"$objects"];
+    id arrayData = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0];
+    if (![arrayData isKindOfClass:[NSArray class]]) {
+        arrayData = [arrayData objectForKey:@"$objects"];
+        if (![(id)arrayData isKindOfClass:[NSArray class]]) {
+            EbrDebugLog("object %s is not an array", [[arrayData description] UTF8String]);
+            return self;
         }
-        if (![(id)ar isKindOfClass:[NSArray class]]) {
-            assert(0);
-        }
-    } else {
-        NSPropertyListReaderA reader;
-        reader.init(data);
-        ar = reader.read();
     }
 
-    [self initWithArray:ar];
+    [self initWithArray:arrayData];
 
     return self;
 }

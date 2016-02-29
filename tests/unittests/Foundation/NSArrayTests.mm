@@ -159,3 +159,20 @@ TEST(Foundation, NSMutableArray_Subclassable) {
     CFArraySetValueAtIndex(test, 4, @3);
     [testArray verifyAndResetFlags:replaceObjectAtIndexCalled];
 }
+
+TEST(NSArray, NSArray_initWithContentsOfFile) {
+    NSArray* expectedArray = @[@1, @2, @3, @4, @5];
+
+    NSArray* cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSAllDomainsMask, YES);
+    ASSERT_NE(0, [cachesPaths count]);
+    NSString* path = cachesPaths[0];
+    NSString* file = [path stringByAppendingPathComponent:@"array.data"];
+    [[NSFileManager defaultManager] createDirectoryAtPath:path
+        withIntermediateDirectories:YES
+        attributes:nil
+        error:nil];
+    [expectedArray writeToFile:file atomically:NO];
+    NSArray* actualArray = [[NSArray alloc] initWithContentsOfFile:file];
+    ASSERT_OBJCEQ(expectedArray, actualArray);
+    [[NSFileManager defaultManager] removeItemAtPath:file error:nil];
+}

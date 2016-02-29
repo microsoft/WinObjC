@@ -63,7 +63,7 @@ void printContents(int level, id obj);
     }
 
     char* bytes = (char*)[data bytes];
-    if (len >= 4 && memcmp(bytes, "<?xml", 4) == 0) {
+    if (len >= 5 && memcmp(bytes, "<?xml", 5) == 0) {
         id ret = [NSXMLPropertyList propertyListFromData:data];
 
         if (ret == nil) {
