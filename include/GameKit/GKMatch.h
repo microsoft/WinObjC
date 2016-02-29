@@ -34,6 +34,13 @@ enum {
     GKMatchSendDataUnreliable,
 };
 
+typedef NSInteger GKPlayerConnectionState;
+enum {
+    GKPlayerStateUnknown,
+    GKPlayerStateConnected,
+    GKPlayerStateDisconnected,
+};
+
 GAMEKIT_EXPORT_CLASS
 @interface GKMatch : NSObject <NSObject>
 - (void)chooseBestHostingPlayerWithCompletionHandler:(void (^)(GKPlayer*))completionHandler STUB_METHOD;
