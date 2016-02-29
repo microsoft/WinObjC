@@ -17,7 +17,7 @@
 #import "MainViewController.h"
 #import "TilesViewController.h"
 #import "ToastsViewController.h"
-
+#import "IAPViewController.h"
 
 @implementation MainViewController
 
@@ -27,6 +27,7 @@
 
     [self addMenuItemViewController:[[TilesViewController alloc] init] andTitle:@"Tiles"];
     [self addMenuItemViewController:[[ToastsViewController alloc] init] andTitle:@"Toasts"];
+    [self addMenuItemViewController:[[IAPViewController alloc] init] andTitle:@"In App Purchases"];
 }
 
 - (void)didReceiveMemoryWarning {

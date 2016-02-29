@@ -40,7 +40,7 @@
 UIKIT_EXPORT NSString* const UITableViewIndexSearch;
 UIKIT_EXPORT const CGFloat UITableViewAutomaticDimension;
 
-UIKIT_EXPORT NSString *const UITableViewSelectionDidChangeNotification;
+UIKIT_EXPORT NSString* const UITableViewSelectionDidChangeNotification;
 
 typedef enum {
     UITableViewStylePlain,
@@ -99,7 +99,7 @@ UIKIT_EXPORT_CLASS
 - (void)deselectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated;
 - (void)endUpdates;
 
-- (void)insertRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation STUB_METHOD;
+- (void)insertRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;
 - (void)insertSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animation;
 - (void)moveRowAtIndexPath:(NSIndexPath*)indexPath toIndexPath:(NSIndexPath*)newIndexPath;
 - (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection STUB_METHOD;
