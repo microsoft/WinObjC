@@ -22,7 +22,6 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIViewController.h"
 #include "UIKit/UIView.h"
-using WCHAR = wchar_t;
 #include "UWP/WindowsApplicationModel.h"
 #include "MurmurHash3.h"
 

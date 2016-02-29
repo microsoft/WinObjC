@@ -23,7 +23,6 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-typedef wchar_t WCHAR;
 #include <UWP/WindowsUIXamlControls.h>
 
 #import <COMIncludes.h>
