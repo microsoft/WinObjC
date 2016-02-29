@@ -37,5 +37,5 @@ TEST(Dispatch, DispatchC99) {
     test_ptr_notnull("dispatch_get_main_queue", q);
 
     dispatch_async_f(dispatch_get_main_queue(), NULL, work);
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

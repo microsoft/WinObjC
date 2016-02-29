@@ -15,14 +15,14 @@
 //******************************************************************************
 
 #include <TestFramework.h>
+#include "dispatch_test.h"
 #import <UIKit/UIKit.h>
 #include <dispatch/dispatch.h>
-
-UIKIT_EXPORT void UIShutdown();
 
 static int ranAsyncBlock = 0;
 
 TEST(Dispatch, DispatchTest) {
+    test_start("Dispatch Test");
     dispatch_async(dispatch_get_main_queue(),
                    ^void() {
                        ASSERT_TRUE([NSThread isMainThread]);
@@ -37,11 +37,11 @@ TEST(Dispatch, DispatchTest) {
                                                          ^void() {
                                                              ranAsyncBlock++;
                                                              LOG_INFO("async shutdown method called.");
-                                                             UIShutdown();
+                                                             test_stop();
                                                          });
                                       });
                    });
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
     ASSERT_EQ_MSG(ranAsyncBlock, 3, "Main queue was NOT drained from main runloop.");
 }

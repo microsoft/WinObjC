@@ -34,22 +34,25 @@
 #include <errno.h>
 
 #include <string.h>
-#include <windows.h>
-#import <UIKit/UIKit.h>
-
-UIKIT_EXPORT void UIShutdown();
+#import <Foundation/Foundation.h>
+#import <NSThread-Internal.h>
+#import <NSRunLoop+Internal.h>
 
 static int _exitcode = 0;
+static bool _stopWait = false;
 
+/**
+ *
+ */
 void test_start(const char* desc) {
     LOG_INFO("\n==================================================");
     LOG_INFO("[TEST] %s", desc);
     LOG_INFO("[PID] %d", GetCurrentProcessId());
     LOG_INFO("==================================================\n");
-}
 
-void test_stop(void) {
-    test_stop_after_delay((void*)(intptr_t)0);
+    // Associate current thread as the main thread.
+    [[NSThread currentThread] _associateWithMainThread];
+    _stopWait = false;
 }
 
 void test_stop_after_delay(void* delay) {
@@ -82,5 +85,26 @@ void test_stop_after_delay(void* delay) {
         perror(args[0]);
     }
 #endif
-    UIShutdown();
+    test_unblock();
+}
+
+void test_stop(void) {
+    test_stop_after_delay((void*)(intptr_t)0);
+}
+
+void test_unblock(void) {
+    _stopWait = true;
+    [[NSRunLoop mainRunLoop] _stop];
+    [[NSRunLoop mainRunLoop] _wakeUp];
+}
+
+void test_block_until_stopped(void) {
+    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
+
+    for (;;) {
+        if (_stopWait) {
+            break;
+        }
+        [runLoop run];
+    }
 }

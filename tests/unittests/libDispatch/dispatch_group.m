@@ -110,5 +110,5 @@ TEST(Dispatch, DispatchGroup) {
     dispatch_release(group);
     group = NULL;
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

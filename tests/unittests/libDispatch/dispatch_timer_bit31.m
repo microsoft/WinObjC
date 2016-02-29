@@ -72,5 +72,5 @@ TEST(Dispatch, DispatchBit31) {
 
     dispatch_resume(timer);
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

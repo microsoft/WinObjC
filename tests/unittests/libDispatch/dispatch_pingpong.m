@@ -57,6 +57,6 @@ TEST(Dispatch, DispatchPingpong) {
     dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
     test_long("count", count, final);
+
     test_stop();
-    UIApplicationMainLoop();
 }

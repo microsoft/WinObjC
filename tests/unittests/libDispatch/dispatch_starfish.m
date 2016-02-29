@@ -146,5 +146,5 @@ TEST(Dispatch, DispatchStarfish) {
 
     do_test();
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

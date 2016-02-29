@@ -439,10 +439,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return self;
 }
 
-- (void)_stop {
-    _stop = true;
-}
-
 + (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
     [NSRunLoopState setUIThreadWaitFunction:callback];
 }
@@ -485,6 +481,10 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     for (NSRunLoopState* curMode in static_cast<id>(modeStates)) {
         [curMode removeInputSource:source];
     }
+}
+
+- (void)_stop {
+    _stop = true;
 }
 
 - (void)_wakeUp {

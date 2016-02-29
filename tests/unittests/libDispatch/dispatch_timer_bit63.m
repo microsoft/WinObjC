@@ -70,5 +70,5 @@ TEST(Dispatch, DispatchBit63) {
                        test_stop();
                    });
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }
