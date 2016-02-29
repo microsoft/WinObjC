@@ -244,6 +244,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSAttributedString+UIKitAdditionsTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIApplication.m" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIViewTest.mm" />
     <ClangCompile Include="UIFontTests.mm" />
   </ItemGroup>
   <ItemGroup>

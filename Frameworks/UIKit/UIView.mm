@@ -119,7 +119,7 @@ int viewCount = 0;
     self->layer.attach([[[self class] layerClass] new]);
     [self->layer setDelegate:self];
 
-    // TraceWarning(TAG,L"%d: Allocing %s (%x)\n", viewCount, object_getClassName(self), (id) self);
+    // TraceWarning(TAG,L"%d: Allocing %hs (%x)", viewCount, object_getClassName(self), (id) self);
 }
 
 - (void)initAccessibility {
@@ -140,7 +140,7 @@ int viewCount = 0;
 }
 
 static UIView* initInternal(UIView* self, CGRect pos) {
-    TraceWarning(TAG, L"[%f,%f] @ %fx%f\n", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
+    TraceWarning(TAG, L"[%f,%f] @ %fx%f", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
 
     [self initPriv];
     [self setOpaque:TRUE];
@@ -240,7 +240,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         if ([self respondsToSelector:@selector(setDelegate:)]) {
             [self performSelector:@selector(setDelegate:) withObject:uiDelegate];
         } else {
-            TraceWarning(TAG, L"UIDelegate decoded but %hs doens't support setDelegate!\n", object_getClassName(self));
+            TraceWarning(TAG, L"UIDelegate decoded but %hs doens't support setDelegate!", object_getClassName(self));
         }
     }
 
@@ -274,7 +274,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        TraceWarning(TAG, L"Removing constraint (%hs): \n", [[wayward description] UTF8String]);
+                        TraceWarning(TAG, L"Removing constraint (%hs): ", [[wayward description] UTF8String]);
                         [wayward printConstraint];
                         remove = true;
                         break;
@@ -288,7 +288,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     }
                 }
             } else {
-                TraceWarning(TAG, L"Skipping unsupported constraint type: %hs\n", [[constraint description] UTF8String]);
+                TraceWarning(TAG, L"Skipping unsupported constraint type: %hs", [[constraint description] UTF8String]);
             }
         }
     }
@@ -312,7 +312,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 
     NSArray* gestures = [coder decodeObjectForKey:@"gestureRecognizers"];
     if (gestures != nil) {
-        TraceWarning(TAG, L"UIView initWithCoder adding gesture recognizers\n");
+        TraceWarning(TAG, L"UIView initWithCoder adding gesture recognizers");
         [self setGestureRecognizers:gestures];
     }
 
@@ -320,7 +320,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 }
 
 - (void)encodeWithCoder:(NSCoder*)coder {
-    TraceWarning(TAG, L"Unsupported attempt to encode a UIView\n");
+    TraceWarning(TAG, L"Unsupported attempt to encode a UIView");
 }
 
 /**
@@ -560,7 +560,7 @@ static void adjustSubviews(UIView* self, CGSize parentSize, CGSize delta) {
                 subview->priv->_resizeRoundingError.size.height = beforeRound.size.height - curFrame.size.height;
 
                 /*
-                TraceWarning(TAG,L"Resizing %s (%f, %f, %f, %f) -> (%f, %f, %f, %f)\n", object_getClassName(subview),
+                TraceWarning(TAG,L"Resizing %hs (%f, %f, %f, %f) -> (%f, %f, %f, %f)", object_getClassName(subview),
                 origFrame.origin.x, origFrame.origin.y, origFrame.size.width, origFrame.size.height,
                 curFrame.origin.x, curFrame.origin.y, curFrame.size.width, curFrame.size.height);
                 */
@@ -586,7 +586,7 @@ static float doRound(float f) {
 */
 - (void)setFrame:(CGRect)frame {
     if (memcmp(&frame, &CGRectNull, sizeof(CGRect)) == 0) {
-        TraceWarning(TAG, L"setFrame: CGRectNull!\n");
+        TraceWarning(TAG, L"setFrame: CGRectNull!");
         return;
     }
 
@@ -603,8 +603,8 @@ static float doRound(float f) {
     frame.size.width = doRound(frame.size.width);
     frame.size.height = doRound(frame.size.height);
 
-    TraceVerbose(TAG,
-                 L"SetFrame(%hs): %f, %f, %f, %f\n",
+    TraceWarning(TAG,
+                 L"SetFrame(%hs): %f, %f, %f, %f",
                  object_getClassName(self),
                  frame.origin.x,
                  frame.origin.y,
@@ -686,7 +686,7 @@ static float doRound(float f) {
     CGRect curBounds;
     curBounds = [self bounds];
 
-    // TraceWarning(TAG,L"Resizing %s (%f, %f, %f, %f)\n", object_getClassName(self), curBounds.origin.x, curBounds.origin.y,
+    // TraceWarning(TAG,L"Resizing %hs (%f, %f, %f, %f)", object_getClassName(self), curBounds.origin.x, curBounds.origin.y,
     // curBounds.size.width, curBounds.size.height);
 
     CGSize delta;
@@ -828,7 +828,7 @@ static float doRound(float f) {
         UIView* superview = priv->superview;
         UIView* pSuper = curSuperview;
         if (superview != curSuperview) {
-            TraceWarning(TAG, L"Warning: superview changed!\n");
+            TraceWarning(TAG, L"Warning: superview changed!");
         }
 
         pSuper->priv->removeChild(priv);
@@ -871,18 +871,18 @@ static float doRound(float f) {
 */
 - (void)addSubview:(UIView*)subview {
     if (subview == nil) {
-        TraceWarning(TAG, L"subview = nil!\n");
+        TraceWarning(TAG, L"subview = nil!");
         return;
     }
     if (subview == self) {
-        TraceWarning(TAG, L"subview = self?!\n");
+        TraceWarning(TAG, L"subview = self?!");
         return;
     }
     if (((UIView*)subview)->priv->_isChangingParent) {
         assert(0);
     }
 
-    // TraceWarning(TAG,L"Adding subview %s to %s\n", subview.object_getClassName(), self.object_getClassName());
+    // TraceWarning(TAG,L"Adding subview %hs to %hs", subview.object_getClassName(), self.object_getClassName());
 
     UIWindow* subviewWindow = [subview _getWindowInternal];
     UIWindow* curWindow = [self _getWindowInternal];
@@ -931,52 +931,50 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)insertSubview:(UIView*)subview atIndex:(int)index {
-    if (!priv->containsChild(subview)) {
-        UIWindow* subviewWindow = [subview _getWindowInternal];
-        UIWindow* curWindow = [self _getWindowInternal];
+    UIWindow* subviewWindow = [subview _getWindowInternal];
+    UIWindow* curWindow = [self _getWindowInternal];
 
-        [subview retain];
+    [subview retain];
 
-        //  Notify the subview it's about to be moved
-        if ([subview respondsToSelector:@selector(willMoveToSuperview:)]) {
-            [subview willMoveToSuperview:self];
-        }
-        if (subviewWindow != curWindow) {
-            [subview _notifyWillMoveToWindow:curWindow superview:self];
-        }
-
-        //  Remove the view from its superview
-        [subview _removeFromSuperviewNoNotify];
-
-        //  Add it to our views
-        if (priv->childCount < index) {
-            index = priv->childCount;
-            TraceWarning(TAG, L"Warning: Tried to insert subview at bad index\n");
-        }
-        priv->insertChildAtIndex(subview, index);
-        [subview retain];
-        ((UIView*)subview)->priv->superview = self;
-
-        //  Add its layer to our layers
-        CALayer* subviewLayer = [subview layer];
-        [layer insertSublayer:subviewLayer atIndex:index];
-
-        //  Notify the subview it's about to be moved
-        [subview didMoveToSuperview];
-        [UIAppearanceSetter _applyAppearance:subview];
-
-        if (subviewWindow != curWindow) {
-            [subview _notifyDidMoveToWindow:curWindow superview:self];
-        }
-
-        //  Notify our view it was added
-        if ([self respondsToSelector:@selector(didAddSubview:)]) {
-            [self didAddSubview:subview];
-        }
-
-        [subview setNeedsDisplay];
-        [subview release];
+    //  Notify the subview it's about to be moved
+    if ([subview respondsToSelector:@selector(willMoveToSuperview:)]) {
+        [subview willMoveToSuperview:self];
     }
+    if (subviewWindow != curWindow) {
+        [subview _notifyWillMoveToWindow:curWindow superview:self];
+    }
+
+    //  Remove the view from its superview
+    [subview _removeFromSuperviewNoNotify];
+
+    //  Add it to our views
+    if (priv->childCount < index) {
+        index = priv->childCount;
+        TraceWarning(TAG, L"Warning: Tried to insert subview at bad index");
+    }
+    priv->insertChildAtIndex(subview, index);
+    [subview retain];
+    ((UIView*)subview)->priv->superview = self;
+
+    //  Add its layer to our layers
+    CALayer* subviewLayer = [subview layer];
+    [layer insertSublayer:subviewLayer atIndex:index];
+
+    //  Notify the subview it's about to be moved
+    [subview didMoveToSuperview];
+    [UIAppearanceSetter _applyAppearance:subview];
+
+    if (subviewWindow != curWindow) {
+        [subview _notifyDidMoveToWindow:curWindow superview:self];
+    }
+
+    //  Notify our view it was added
+    if ([self respondsToSelector:@selector(didAddSubview:)]) {
+        [self didAddSubview:subview];
+    }
+
+    [subview setNeedsDisplay];
+    [subview release];
 }
 
 /**
@@ -984,60 +982,65 @@ static float doRound(float f) {
 */
 - (void)insertSubview:(UIView*)subview belowSubview:(UIView*)belowSubview {
     if (subview == nil) {
-        TraceWarning(TAG, L"Subview = nil!\n");
+        TraceWarning(TAG, L"Subview = nil!");
         return;
     }
 
-    int index = priv->indexOfChild(belowSubview);
-    if (index == 0x7fffffff) {
-        index = 0;
-
-        TraceWarning(TAG, L"Sketchy ...\n");
-        // assert(0);
+    if (belowSubview == nil) {
+        TraceWarning(TAG, L"belowSubview = nil!");
+        return;
     }
 
-    if (!priv->containsChild(subview)) {
-        UIWindow* subviewWindow = [subview _getWindowInternal];
-        UIWindow* curWindow = [self _getWindowInternal];
+    UIWindow* subviewWindow = [subview _getWindowInternal];
+    UIWindow* curWindow = [self _getWindowInternal];
 
-        [subview retain];
+    [subview retain];
 
-        //  Notify the subview it's about to be moved
-        if ([subview respondsToSelector:@selector(willMoveToSuperview:)]) {
-            [subview willMoveToSuperview:self];
-        }
-        if (subviewWindow != curWindow) {
-            [subview _notifyWillMoveToWindow:curWindow superview:self];
-        }
-
-        //  Remove the view from its superview
-        [subview _removeFromSuperviewNoNotify];
-
-        //  Add it to our views
-        priv->insertChildAtIndex(subview, index);
-        [subview retain];
-        ((UIView*)subview)->priv->superview = self;
-
-        //  Add its layet to our layers
-        CALayer* subviewLayer = [subview layer];
-        [layer insertSublayer:subviewLayer atIndex:index];
-
-        //  Notify the subview it's about to be moved
-        [subview didMoveToSuperview];
-        [UIAppearanceSetter _applyAppearance:subview];
-
-        if (subviewWindow != curWindow) {
-            [subview _notifyDidMoveToWindow:curWindow superview:self];
-        }
-
-        //  Notify our view it was added
-        if ([self respondsToSelector:@selector(didAddSubview:)]) {
-            [self didAddSubview:subview];
-        }
-
-        [subview setNeedsDisplay];
-        [subview release];
+    //  Notify the subview it's about to be moved
+    if ([subview respondsToSelector:@selector(willMoveToSuperview:)]) {
+        [subview willMoveToSuperview:self];
     }
+    if (subviewWindow != curWindow) {
+        [subview _notifyWillMoveToWindow:curWindow superview:self];
+    }
+
+    //  Remove the view from its superview
+    [subview _removeFromSuperviewNoNotify];
+
+    int index;
+
+    if (priv->containsChild(belowSubview)) {
+        index = priv->indexOfChild(belowSubview);
+    } else {
+        // If the below subview doesn't exist, default is to put it on top.
+        // This includes if the subview is the same as belowSubview and was removed.
+        index = priv->childCount;
+    }
+
+    //  Add it to our views
+    priv->insertChildAtIndex(subview, index);
+    [subview retain];
+    ((UIView*)subview)->priv->superview = self;
+
+    //  Add its layet to our layers
+    CALayer* subviewLayer = [subview layer];
+    [layer insertSublayer:subviewLayer atIndex:index];
+
+    //  Notify the subview it's about to be moved
+    [subview didMoveToSuperview];
+    [UIAppearanceSetter _applyAppearance:subview];
+
+    if (subviewWindow != curWindow) {
+        [subview _notifyDidMoveToWindow:curWindow superview:self];
+    }
+
+    //  Notify our view it was added
+    if ([self respondsToSelector:@selector(didAddSubview:)]) {
+        [self didAddSubview:subview];
+    }
+
+    [subview setNeedsDisplay];
+    [subview release];
 }
 
 /**
@@ -1055,7 +1058,7 @@ static float doRound(float f) {
     }
     if (view1 == nil || view2 == nil) {
         TraceWarning(TAG,
-                     L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)\n",
+                     L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)",
                      index1,
                      index2,
                      priv->childCount,
@@ -1079,63 +1082,66 @@ static float doRound(float f) {
 */
 - (void)insertSubview:(UIView*)subview aboveSubview:(UIView*)aboveSubview {
     if (subview == nil) {
-        TraceWarning(TAG, L"insertSubview: subview = nil!\n");
+        TraceWarning(TAG, L"insertSubview: subview = nil!");
+        return;
+    }
+
+    if (aboveSubview == nil) {
+        TraceWarning(TAG, L"aboveSubview = nil!");
         return;
     }
 
     UIWindow* subviewWindow = [subview _getWindowInternal];
     UIWindow* curWindow = [self _getWindowInternal];
 
-    int index = priv->indexOfChild(aboveSubview);
-    if (index == 0x7fffffff) {
-        index = -1;
+    [subview retain];
 
-        TraceWarning(TAG, L"Sketchy ...\n");
-        // assert(0);
+    //  Notify the subview it's about to be moved
+    if ([subview respondsToSelector:@selector(willMoveToSuperview:)]) {
+        [subview willMoveToSuperview:self];
+    }
+    if (subviewWindow != curWindow) {
+        [subview _notifyWillMoveToWindow:curWindow superview:self];
     }
 
-    if (!priv->containsChild(subview)) {
-        UIWindow* subviewWindow = [subview _getWindowInternal];
-        UIWindow* curWindow = [self _getWindowInternal];
+    //  Remove the view from its superview
+    [subview _removeFromSuperviewNoNotify];
 
-        [subview retain];
+    int index;
 
-        //  Notify the subview it's about to be moved
-        if ([subview respondsToSelector:@selector(willMoveToSuperview:)]) {
-            [subview willMoveToSuperview:self];
-        }
-        if (subviewWindow != curWindow) {
-            [subview _notifyWillMoveToWindow:curWindow superview:self];
-        }
-
-        //  Remove the view from its superview
-        [subview _removeFromSuperviewNoNotify];
-
-        //  Add it to our views
-        priv->insertChildAtIndex(subview, index + 1);
-        [subview retain];
-        ((UIView*)subview)->priv->superview = self;
-
-        //  Add its layet to our layers
-        CALayer* subviewLayer = [subview layer];
-        [layer insertSublayer:subviewLayer atIndex:index + 1];
-
-        //  Notify the subview it's about to be moved
-        [subview didMoveToSuperview];
-        [UIAppearanceSetter _applyAppearance:subview];
-
-        if (subviewWindow != curWindow) {
-            [subview _notifyDidMoveToWindow:curWindow superview:self];
-        }
-
-        //  Notify our view it was added
-        if ([self respondsToSelector:@selector(didAddSubview:)]) {
-            [self didAddSubview:subview];
-        }
-
-        [subview setNeedsDisplay];
-        [subview release];
+    if (priv->containsChild(aboveSubview)) {
+        // Put on top.
+        index = priv->indexOfChild(aboveSubview) + 1;
+    } else {
+        // If the below subview doesn't exist, default is to put it on top.
+        // This includes if the subview is the same as belowSubview and was removed.
+        index = priv->childCount;
     }
+
+    //  Add it to our views
+    priv->insertChildAtIndex(subview, index);
+    [subview retain];
+    ((UIView*)subview)->priv->superview = self;
+
+    //  Add its layet to our layers
+    CALayer* subviewLayer = [subview layer];
+    [layer insertSublayer:subviewLayer atIndex:index];
+
+    //  Notify the subview it's about to be moved
+    [subview didMoveToSuperview];
+    [UIAppearanceSetter _applyAppearance:subview];
+
+    if (subviewWindow != curWindow) {
+        [subview _notifyDidMoveToWindow:curWindow superview:self];
+    }
+
+    //  Notify our view it was added
+    if ([self respondsToSelector:@selector(didAddSubview:)]) {
+        [self didAddSubview:subview];
+    }
+
+    [subview setNeedsDisplay];
+    [subview release];
 }
 
 /**
@@ -1186,7 +1192,7 @@ static float doRound(float f) {
 }
 
 - (void)makeKey:(UIView*)view {
-    TraceWarning(TAG, L"UIVIew::makeKey\n");
+    TraceWarning(TAG, L"UIVIew::makeKey");
 }
 
 /**
@@ -1244,7 +1250,7 @@ static float doRound(float f) {
     if (![self pointInside:point withEvent:event])
         return nil;
 
-    // TraceWarning(TAG,L"HitTest inside %s (0x%08x)\n", object_getClassName(self), self);
+    // TraceWarning(TAG,L"HitTest inside %hs (0x%08x)", object_getClassName(self), self);
 
     //  Go through subviews backwards until we find the furthest descendant
     int subviewCount = 0;
@@ -1269,7 +1275,7 @@ static float doRound(float f) {
         CGPoint newPoint;
 
         newPoint = [window convertPoint:point fromView:self toView:view];
-        // TraceWarning(TAG,L"Point inside %s %d, %d?\n", object_getClassName(view), (int) newPoint.x, (int) newPoint.y);
+        // TraceWarning(TAG,L"Point inside %hs %d, %d?", object_getClassName(view), (int) newPoint.x, (int) newPoint.y);
         if ([view pointInside:newPoint withEvent:event]) {
             UIView* ret = [view hitTest:newPoint withEvent:event];
             if (ret != nil)
@@ -1438,7 +1444,7 @@ static float doRound(float f) {
 
 - (UIWindow*)_getWindowInternal {
     if (!priv) {
-        TraceWarning(TAG, L"priv = NULL!\n");
+        TraceWarning(TAG, L"priv = NULL!");
         return nil;
     }
 
@@ -1453,7 +1459,7 @@ static float doRound(float f) {
 */
 - (void)setMultipleTouchEnabled:(BOOL)enabled {
     if (!priv) {
-        TraceWarning(TAG, L"Priv is null, should alloc priv in alloc\n");
+        TraceWarning(TAG, L"Priv is null, should alloc priv in alloc");
         return;
     }
 
@@ -1701,7 +1707,7 @@ static float doRound(float f) {
         (constraint.secondItem && ((constraint.secondItem != self) && ([constraint.secondItem superview] != self)))) {
         TraceWarning(TAG,
                      L"Only constraints with relations to this view and its children may be added. "
-                     "This error may occur if your view hierarchy has not yet been initialized.\n");
+                     "This error may occur if your view hierarchy has not yet been initialized.");
         return;
     }
 
@@ -1806,7 +1812,7 @@ static float doRound(float f) {
 */
 - (void)removeMotionEffect:(UIMotionEffect*)effect {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"Unsupported use of motion effects in removeMotionEffect:\n");
+    TraceWarning(TAG, L"Unsupported use of motion effects in removeMotionEffect:");
 }
 
 /**
@@ -1814,7 +1820,7 @@ static float doRound(float f) {
 */
 - (void)addMotionEffect:(UIMotionEffect*)effect {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"Unsupported use of motion effects in addMotionEffect:\n");
+    TraceWarning(TAG, L"Unsupported use of motion effects in addMotionEffect:");
 }
 
 /**
@@ -1830,7 +1836,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            TraceWarning(TAG, L"Content compression resistance for unknown axis\n");
+            TraceWarning(TAG, L"Content compression resistance for unknown axis");
             return 0.0f;
     }
 }
@@ -1848,7 +1854,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            TraceWarning(TAG, L"Content compression resistance set on unknown axis\n");
+            TraceWarning(TAG, L"Content compression resistance set on unknown axis");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1867,7 +1873,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            TraceWarning(TAG, L"Content hugging for unknown axis\n");
+            TraceWarning(TAG, L"Content hugging for unknown axis");
             return 0.0f;
     }
 }
@@ -1885,7 +1891,7 @@ static float doRound(float f) {
             break;
         default:
             // assert?
-            TraceWarning(TAG, L"Content hugging set on unknown axis\n");
+            TraceWarning(TAG, L"Content hugging set on unknown axis");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1928,7 +1934,7 @@ static float doRound(float f) {
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    TraceWarning(TAG, L"Clicked: %hs\n", object_getClassName(self));
+    TraceWarning(TAG, L"Clicked: %hs", object_getClassName(self));
     UIResponder* nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -1964,7 +1970,7 @@ static float doRound(float f) {
 */
 - (void)setExclusiveTouch:(BOOL)isExclusive {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"setExclusiveTouch not supported\n");
+    TraceWarning(TAG, L"setExclusiveTouch not supported");
     // assert(0);
 }
 
@@ -2061,7 +2067,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock completion:(completionBlockFunc)completion {
-    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported\n");
+    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported");
     [self beginAnimations:nil context:0];
     _animationProperties[stackLevel]._completionBlock = COPYBLOCK(completion);
     [self setAnimationDuration:duration];
@@ -2125,7 +2131,7 @@ static float doRound(float f) {
                           completion:(void (^)(BOOL finished))completion {
     TraceWarning(TAG,
                  L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
-                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported\n");
+                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported");
     // remove all unsupported options.
     UIViewAnimationOptions uiViewAnimationOptions = (UIViewAnimationOptions)(0x23F & options);
 
@@ -2342,7 +2348,7 @@ static float doRound(float f) {
 */
 + (void)commitAnimations {
     if (stackLevel <= 0) {
-        TraceWarning(TAG, L"UIView: No animations stacked!\n");
+        TraceWarning(TAG, L"UIView: No animations stacked!");
         return;
     }
 
@@ -2365,7 +2371,7 @@ static float doRound(float f) {
                     TRUE,
                     _animationProperties[stackLevel]._context);
         if (_animationProperties[stackLevel]._completionBlock) {
-            // TraceWarning(TAG,L"Calling completion block %x\n", E2H(_animationProperties[stackLevel]._completionBlock)[3]);
+            // TraceWarning(TAG,L"Calling completion block %x", E2H(_animationProperties[stackLevel]._completionBlock)[3]);
             CALLCOMPLETIONBLOCK(_animationProperties[stackLevel]._completionBlock, TRUE);
             [_animationProperties[stackLevel]._completionBlock release];
         }
@@ -2450,7 +2456,7 @@ static float doRound(float f) {
         return;
     _deallocating = true;
     viewCount--;
-    TraceWarning(TAG, L"%d: dealloc %hs %x\n", viewCount, object_getClassName(self), self);
+    TraceWarning(TAG, L"%d: dealloc %hs %x", viewCount, object_getClassName(self), self);
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -2552,7 +2558,7 @@ static float doRound(float f) {
         if ([curgesture isKindOfClass:[UIGestureRecognizer class]]) {
             [curgesture _setView:self];
         } else {
-            TraceWarning(TAG, L"UIView: object %hs is not a gesture!\n", object_getClassName(curgesture));
+            TraceWarning(TAG, L"UIView: object %hs is not a gesture!", object_getClassName(curgesture));
         }
     }
 }
@@ -2565,12 +2571,12 @@ static float doRound(float f) {
 }
 
 + (id)appearance {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called\n", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called", __func__);
     return nil;
 }
 
 + (id)appearanceWhenContainedIn:(id)containedClass, ... {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called\n", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called", __func__);
     return nil;
 }
 
