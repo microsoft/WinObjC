@@ -80,6 +80,10 @@ CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataPro
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Hacky
+*/
 CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSequentialCallbacks* callBacks) {
     EbrDebugLog("Warning: CGDataProviderCreateSequential is hacky\n");
     char* pBytes = (char*)IwMalloc(1024 * 1024);

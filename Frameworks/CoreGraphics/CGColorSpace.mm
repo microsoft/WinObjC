@@ -60,11 +60,18 @@ __CGColorSpace::~__CGColorSpace() {
     }
 }
 
+/**
+ @Status Stub
+*/
 CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
+    UNIMPLEMENTED();
     EbrDebugLog("CGColorSpaceCreateCalibratedRGB not supported\n");
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* colorTable) {
     __CGColorSpace* ret = new __CGColorSpace(_ColorIndexed);
 
@@ -126,6 +133,10 @@ CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
     return (CGColorSpaceRef) new __CGColorSpace(_ColorGrayscale);
 }
 
+/**
+ @Status Caveat
+ @Notes Must be "kCGColorSpaceGenericRGB" or "kCGColorSpaceGenericRGBLinear"
+*/
 CGColorSpaceRef CGColorSpaceCreateWithName(id name) {
     char* strName = (char*)[name UTF8String];
 
