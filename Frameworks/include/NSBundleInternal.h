@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,20 +15,9 @@
 //******************************************************************************
 
 #pragma once
-#import "Starboard.h"
+
 #import <Foundation/NSRunLoop.h>
-#import <Foundation/NSString.h>
-#import "NSRunLoopState.h"
-#import "NSInputSource.h"
 
-@interface NSRunLoop (Internal)
-- (void)_stop;
-- (void)_wakeUp;
-- (void)_addInputSource:(NSInputSource*)source forMode:(NSString*)mode;
-- (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode;
-- (StrongId<NSArray*>)_statesForMode:(NSString*)mode;
-@end
-
-@interface NSRunLoop(XamlUIWaiter)
-+ (void)setUIThreadWaitFunction:(int(*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
+@interface NSBundle(Internal)
++ (void)setMainBundlePath:(NSString*)path;
 @end

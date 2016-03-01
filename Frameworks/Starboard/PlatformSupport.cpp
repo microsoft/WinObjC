@@ -885,7 +885,7 @@ int EbrChdir(const char* path) {
     return 0;
 }
 
-extern "C" void dbg_printf(const char* fmt, ...) {
+void dbg_printf(const char* fmt, ...) {
 #ifdef _DEBUG
     va_list va;
 
