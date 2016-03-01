@@ -302,6 +302,7 @@
       LLVMDirectory="$(StarboardLLVMDirectory)"
       ObjectiveCARC="%(ClangCompile.ObjectiveCARC)"
       ObjectiveCModules="%(ClangCompile.ObjectiveCModules)"
+      ObjectiveCModulesCachePath="%(ClangCompile.ObjectiveCModulesCachePath)"
       ObjectFileName="%(ClangCompile.ObjectFileName)"
       OptimizationLevel="%(ClangCompile.OptimizationLevel)"
       PrefixHeader="%(ClangCompile.PrefixHeader)"
@@ -397,8 +398,13 @@
   </Target>
 
   <!-- Create parent directories for all object files -->
-  <Target Name="MakeDirsForClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
+  <Target Name="MakeDirsForClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions;MakeDirsForClangModules">
     <MakeDir Directories="@(ClangCompile->Metadata('ObjectFileName')->DirectoryName()->Distinct()->ClearMetadata())" />
+  </Target>
+  
+  <!-- Create parent directories for module cache files -->
+  <Target Name="MakeDirsForClangModules" Condition="'@(ClangCompile)' != '' And '@(ClangCompile->Metadata('ObjectiveCModules')' == 'true'" DependsOnTargets="ComputeClangOptions">
+    <MakeDir Directories="@(ClangCompile->Metadata('ObjectiveCModulesCachePath')->Distinct()->ClearMetadata())" />
   </Target>
 
   <Target Name="ComputeClangOptions" Condition="">
@@ -503,5 +509,6 @@
   <Target Name="CleanClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
     <!-- Delete header maps -->
     <Delete Files="$(CombinedHMapFilename).txt;$(CombinedHMapFilename).hmap;$(ProjectHMapFilename).txt;$(ProjectHMapFilename).hmap" />
+    <RemoveDir Directories="@(ClangCompile->Metadata('ObjectiveCModulesCachePath')->Distinct()->ClearMetadata())" />
   </Target>
 </Project>

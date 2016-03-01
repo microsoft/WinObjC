@@ -14,6 +14,8 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #include "gtest-api.h"
 
 @import AdSupport;
@@ -69,7 +71,3 @@
 @import Twitter;
 @import UIKit;
 @import WebKit;
-
-TEST(ClangModules, BasicSanity) {
-    // If this file compiles successfully the test is considered to have passed.
-}

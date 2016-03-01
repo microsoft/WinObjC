@@ -661,8 +661,16 @@ namespace ClangCompile
             DisplayName = "Enable C and Objective-C Modules",
             Description = "Specifies whether to use Clang modules.",
             Category = "General",
-            Switch = "-fmodules")]
+            Switch = "-fmodules -fimplicit-module-maps")]
         public bool ObjectiveCModules { get; set; }
+
+        [PropertyPage(
+            DisplayName = "Path to Objective-C modules",
+            Description = "Path to the directory where the modules will be cached",
+            Category = "General",
+            Visible = false,
+            Switch = "-fmodules-cache-path=")]
+        public string ObjectiveCModulesCachePath { get; set; }
 
         [PropertyPage(
             Category = "Paths",
