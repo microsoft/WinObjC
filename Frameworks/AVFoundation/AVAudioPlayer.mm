@@ -47,7 +47,7 @@
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url fileTypeHint:(NSString*)utiString error:(NSError* _Nullable*)outError {
     UNIMPLEMENTED();
-    if (ourError)
+    if (outError)
         *outError = nil;
     return StubReturn();
 }
