@@ -758,9 +758,26 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSString*)description {
-    return [[NSString alloc]
-        initWithData:[NSPropertyListSerialization dataFromPropertyList:self format:NSPropertyListXMLFormat_v1_0 errorDescription:nullptr]
-            encoding:NSUTF8StringEncoding];
+    thread_local unsigned int indent = 0;
+    NSMutableString* s = [NSMutableString new];
+    [s appendString:@"{"];
+    {
+        ++indent;
+        auto deferPop = wil::ScopeExit([]() { --indent; });
+        for(id key in [self keyEnumerator]) {
+            [s appendString:@"\n"];
+            for (unsigned int i = 0; i < indent; ++i) {
+                [s appendString:@"    "];
+            }
+            [s appendFormat:@"\"%@\" = %@", [key description], [[self objectForKey:key] description]];
+        }
+    }
+    [s appendString:@"\n"];
+    for (unsigned int i = 0; i < indent; ++i) {
+        [s appendString:@"    "];
+    }
+    [s appendString:@"}"];
+    return [s autorelease];
 }
 
 - (NSString*)stringFromQueryComponents {
