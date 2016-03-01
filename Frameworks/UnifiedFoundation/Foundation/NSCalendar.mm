@@ -25,22 +25,22 @@
 
 #include <unicode/gregocal.h>
 
-NSString* const NSCalendarIdentifierGregorian = @"NSCalendarIdentifierGregorian";
-NSString* const NSCalendarIdentifierBuddhist = @"NSCalendarIdentifierBuddhist";
-NSString* const NSCalendarIdentifierChinese = @"NSCalendarIdentifierChinese";
-NSString* const NSCalendarIdentifierCoptic = @"NSCalendarIdentifierCoptic";
-NSString* const NSCalendarIdentifierEthiopicAmeteMihret = @"NSCalendarIdentifierEthiopicAmeteMihret";
-NSString* const NSCalendarIdentifierEthiopicAmeteAlem = @"NSCalendarIdentifierEthiopicAmeteAlem";
-NSString* const NSCalendarIdentifierHebrew = @"NSCalendarIdentifierHebrew";
-NSString* const NSCalendarIdentifierISO8601 = @"NSCalendarIdentifierISO8601";
-NSString* const NSCalendarIdentifierIndian = @"NSCalendarIdentifierIndian";
-NSString* const NSCalendarIdentifierIslamic = @"NSCalendarIdentifierIslamic";
-NSString* const NSCalendarIdentifierIslamicCivil = @"NSCalendarIdentifierIslamicCivil";
-NSString* const NSCalendarIdentifierJapanese = @"NSCalendarIdentifierJapanese";
-NSString* const NSCalendarIdentifierPersian = @"NSCalendarIdentifierPersian";
-NSString* const NSCalendarIdentifierRepublicOfChina = @"NSCalendarIdentifierRepublicOfChina";
-NSString* const NSCalendarIdentifierIslamicTabular = @"NSCalendarIdentifierIslamicTabular";
-NSString* const NSCalendarIdentifierIslamicUmmAlQura = @"NSCalendarIdentifierIslamicUmmAlQura";
+NSString* const NSCalendarIdentifierGregorian = @"gregorian";
+NSString* const NSCalendarIdentifierBuddhist = @"buddhist";
+NSString* const NSCalendarIdentifierChinese = @"chinese";
+NSString* const NSCalendarIdentifierCoptic = @"coptic";
+NSString* const NSCalendarIdentifierEthiopicAmeteMihret = @"ethiopic";
+NSString* const NSCalendarIdentifierEthiopicAmeteAlem = @"ethiopic-amete-alem";
+NSString* const NSCalendarIdentifierHebrew = @"hebrew";
+NSString* const NSCalendarIdentifierISO8601 = @"iso8601";
+NSString* const NSCalendarIdentifierIndian = @"indian";
+NSString* const NSCalendarIdentifierIslamic = @"islamic";
+NSString* const NSCalendarIdentifierIslamicCivil = @"islamic-civil";
+NSString* const NSCalendarIdentifierJapanese = @"japanese";
+NSString* const NSCalendarIdentifierPersian = @"persian";
+NSString* const NSCalendarIdentifierRepublicOfChina = @"roc";
+NSString* const NSCalendarIdentifierIslamicTabular = @"islamic-tbla";
+NSString* const NSCalendarIdentifierIslamicUmmAlQura = @"islamic-umalqura";
 NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotification";
 
 @implementation NSCalendar {
