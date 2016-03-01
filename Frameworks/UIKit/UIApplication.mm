@@ -2457,6 +2457,7 @@ void UIShutdown() {
     _fixedHeight = 480.0f;
     _fixedAspectRatio = 0.0f;
     _magnification = 1.0f;
+    _autoMagnification = TRUE;
     _sizeUIWindowToFit = TRUE;
     _useHostScaleFactor = TRUE;
     _clampScaleToClosestExpected = TRUE;
