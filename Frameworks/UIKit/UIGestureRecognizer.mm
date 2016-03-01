@@ -25,6 +25,9 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 #import "UIGestureRecognizerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIGestureRecognizer";
 
 extern NSMutableDictionary* g_curGesturesDict;
 
@@ -196,7 +199,7 @@ static void commonInit(UIGestureRecognizer* self) {
 
         {
             TimingFunction t("Gesture");
-            // EbrDebugLog("Gesture %s detected - calling %s::%s\n", object_getClassName(self),
+            // TraceVerbose(TAG, L"Gesture %hs detected - calling %hs::%hs", object_getClassName(self),
             // object_getClassName(target), sel);
             [target performSelector:sel withObject:self];
         }
@@ -262,7 +265,7 @@ static void commonInit(UIGestureRecognizer* self) {
     id curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
-            EbrDebugLog("Cancelling %s\n", object_getClassName(curGesture));
+            TraceVerbose(TAG, L"Cancelling %hs", object_getClassName(curGesture));
             [curGesture cancel];
         }
     }

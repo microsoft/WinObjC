@@ -27,6 +27,9 @@
 #include "UIKit/UIWindow.h"
 #include "UIKit/UIApplication.h"
 #include "UIKit/UITouch.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIWindow";
 
 UIWindow* m_pMainWindow = NULL;
 
@@ -251,13 +254,13 @@ static void initInternal(UIWindow* self, CGRect pos) {
         id view = [controller view];
 
         if ([[view superview] isKindOfClass:[UIWindow class]]) {
-            EbrDebugLog("Setting root controller to %s\n", object_getClassName(controller));
+            TraceVerbose(TAG, L"Setting root controller to %hs", object_getClassName(controller));
             CGRect screenFrame;
             screenFrame = [[UIScreen mainScreen] applicationFrame];
             [view setFrame:screenFrame];
         }
     } else {
-        EbrDebugLog("Setting root controller to nil");
+        TraceVerbose(TAG, L"Setting root controller to nil");
     }
 }
 

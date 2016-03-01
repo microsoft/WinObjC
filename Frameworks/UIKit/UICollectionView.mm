@@ -27,7 +27,9 @@
 #import "UICollectionViewLayout+Internal.h"
 #include "UICollectionViewLayoutAttributes+Internal.h"
 #import "UICollectionViewItemKey.h"
+#import "NSLogging.h"
 
+static const wchar_t* TAG = L"UICollectionView";
 static CGFloat UIAnimationDragCoefficient = 1.f;
 static CGFloat UISimulatorAnimationDragCoefficient(void) {
     return UIAnimationDragCoefficient;
@@ -265,7 +267,7 @@ static char kUIColletionViewExt;
         transition.type = kCATransitionFade;
         [self.layer addAnimation:transition forKey:@"rotationAnimation"];
 #endif
-        NSLog(@"fadeCellsForBoundsChange not supported");
+        NSTraceWarning(TAG, @"fadeCellsForBoundsChange not supported");
     }
 
     [_collectionViewData validateLayoutInRect:self.bounds];

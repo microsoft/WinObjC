@@ -24,6 +24,10 @@
 
 #import "UIGestureRecognizerInternal.h"
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UILongPressGestureRecognizer";
+
 // used to track a single touch and its startPosition
 typedef struct {
     UITouch* touch;
@@ -112,7 +116,7 @@ typedef struct {
  @Status Interoperable
 */
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("UILongPressGestureRecognizer:touchesBegan. begining state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesBegan. begining state = %d", self.state);
 
     // Add each of the new presses to our list of tracked ones:
     for (UITouch* touch in touches) {
@@ -125,7 +129,7 @@ typedef struct {
 
     // when tracked touches met the minimum required, fire the timer
     if (_trackedTouches.size() >= numberOfTouchesRequired && _recognizeTimer == nil) {
-        EbrDebugLog("UILongPressGestureRecognizer:touchesBegan starting recognizer timer.\n");
+        TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesBegan starting recognizer timer.");
         _recognizeTimer = [NSTimer scheduledTimerWithTimeInterval:minimumPressDuration
                                                            target:self
                                                          selector:@selector(_recognizeTimerFired)
@@ -133,7 +137,7 @@ typedef struct {
                                                           repeats:FALSE];
     }
 
-    EbrDebugLog("UILongPressGestureRecognizer:touchesBegan. ending state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesBegan. ending state = %d", self.state);
 }
 
 static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touches) {
@@ -149,7 +153,7 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("UILongPressGestureRecognizer:touchesMoved. begining state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesMoved. begining state = %d", self.state);
 
     // for each of the touch, caculate the distance
     for (UITouch* touch in touches) {
@@ -167,7 +171,7 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
             // if a gesture has already been UIGestureRecognizerStateBegan or UIGestureRecognizerStateChanged state
             // The gesture should transit to ended state .
             // if a gesture is in possible state, has not began yet, it will transit to failed state directly
-            EbrDebugLog("UILongPressGestureRecognizer:touchesMoved distance beyond allowable distance\n");
+            TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesMoved distance beyond allowable distance");
 
             if (self.state == UIGestureRecognizerStateBegan || self.state == UIGestureRecognizerStateChanged) {
                 self.state = UIGestureRecognizerStateEnded;
@@ -193,14 +197,14 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
         }
     }
 
-    EbrDebugLog("UILongPressGestureRecognizer:touchesMoved. ending state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesMoved. ending state = %d", self.state);
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("UILongPressGestureRecognizer:touchesEnded. begining state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesEnded. begining state = %d", self.state);
 
     for (UITouch* touch in touches) {
         TrackedTouch* originalTouch = findTouch(touch, _trackedTouches);
@@ -216,33 +220,33 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
         }
     }
 
-    EbrDebugLog("UILongPressGestureRecognizer:touchesEnded. ending state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:touchesEnded. ending state = %d", self.state);
 }
 
 /**
  @Status Interoperable
 */
 - (void)reset {
-    EbrDebugLog("UILongPressGestureRecognizer:reset. begining state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:reset. begining state = %d", self.state);
 
     _trackedTouches.clear();
 
     if (_recognizeTimer != nil) {
-        EbrDebugLog("UILongPressGestureRecognizer:reset invalidate timer.\n");
+        TraceVerbose(TAG, L"UILongPressGestureRecognizer:reset invalidate timer.");
         [_recognizeTimer invalidate];
         _recognizeTimer = nil;
     }
 
     [super reset];
 
-    EbrDebugLog("UILongPressGestureRecognizer:reset. ending state = %d\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:reset. ending state = %d", self.state);
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("[UILongPressGestureRecognizer:touchesCancelled.\n");
+    TraceVerbose(TAG, L"[UILongPressGestureRecognizer:touchesCancelled.");
     self.state = UIGestureRecognizerStateCancelled;
     [self reset];
 }
@@ -255,7 +259,7 @@ static TrackedTouch* findTouch(UITouch* touch, std::vector<TrackedTouch>& touche
 }
 
 - (void)_recognizeTimerFired {
-    EbrDebugLog("UILongPressGestureRecognizer:_recognizeTimerFired, current state %d.\n", self.state);
+    TraceVerbose(TAG, L"UILongPressGestureRecognizer:_recognizeTimerFired, current state %d.", self.state);
     // when timer fires, current staste must be possible, transit the state to Began state
     FAIL_FAST_HR_IF(E_UNEXPECTED, self.state != UIGestureRecognizerStatePossible);
     self.state = UIGestureRecognizerStateBegan;

@@ -18,6 +18,9 @@
 #include "UIViewControllerInternal.h"
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIView.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UINavigationController";
 
 const CGFloat UINavigationControllerHideShowBarDuration = .25f;
 const CGFloat UINavigationBarHeight = 45.0f;
@@ -252,7 +255,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
         animated = 1;
 
     if ([_viewControllers count] <= 1) {
-        EbrDebugLog("attempted to pop root view controller\n");
+        TraceVerbose(TAG, L"attempted to pop root view controller");
         return nil;
     }
 

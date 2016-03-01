@@ -29,6 +29,9 @@
 #include "IcuHelper.h"
 
 #include <Starboard/String.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSString";
 
 NSString* const NSParseErrorException = @"NSParseErrorException";
 NSString* const NSCharacterConversionException = @"NSCharacterConversionException";
@@ -400,7 +403,7 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (NSString*)stringByAppendingString:(NSString*)str {
     if (str == nil) {
-        EbrDebugLog("stringByAppendingString: str = nil!\n");
+        TraceVerbose(TAG, L"stringByAppendingString: str = nil!");
         return [self copy];
     }
 
@@ -592,7 +595,7 @@ typedef NSUInteger NSStringCompareOptions;
         }
 
         default:
-            EbrDebugLog("Unknown encoding %d\n", encoding);
+            TraceCritical(TAG, L"Unknown encoding %d", encoding);
             assert(0);
     }
 
@@ -624,7 +627,7 @@ typedef NSUInteger NSStringCompareOptions;
         }
 
         case NSUTF16LittleEndianStringEncoding:
-            EbrDebugLog("Warning: NSUTF16LittleEndianStringEncoding is being treated as unicode\n");
+            TraceWarning(TAG, L"Warning: NSUTF16LittleEndianStringEncoding is being treated as unicode");
 
         case NSUnicodeStringEncoding: {
             UnicodeString str((UChar*)bytes, length / 2);
@@ -753,16 +756,16 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (instancetype)initWithContentsOfFile:(NSString*)path {
     if (path == nil) {
-        EbrDebugLog("NSString: path = nil!\n");
+        TraceVerbose(TAG, L"NSString: path = nil!");
         return nil;
     }
 
     const char* fileName = (const char*)[path UTF8String];
-    EbrDebugLog("NSString:opening %s\n", fileName);
+    TraceVerbose(TAG, L"NSString:opening %hs", fileName);
 
     EbrFile* fpIn = EbrFopen(fileName, "rb");
     if (!fpIn) {
-        EbrDebugLog("Couldn't open file %s\n", fileName);
+        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
         return nil;
     }
 
@@ -806,20 +809,20 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
     if (!file) {
-        EbrDebugLog("WriteToFile: nil!\n");
+        TraceVerbose(TAG, L"WriteToFile: nil!");
         return FALSE;
     }
     UStringHolder s1(self);
 
     const char* fileName = (const char*)[file UTF8String];
-    EbrDebugLog("NSString: writing %s\n", fileName);
+    TraceVerbose(TAG, L"NSString: writing %hs", fileName);
 
     EbrFile* fpOut = EbrFopen(fileName, "wb");
     if (!fpOut) {
         if (err) {
             assert(0); //  Write NSError
         }
-        EbrDebugLog("Couldn't open file %s\n", fileName);
+        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
         return FALSE;
     }
 
@@ -863,16 +866,16 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
     if (path == nil) {
-        EbrDebugLog("initWithContentsOfFile: path = nil!\n");
+        TraceVerbose(TAG, L"initWithContentsOfFile: path = nil!");
         return nil;
     }
 
     const char* fileName = (const char*)[path UTF8String];
-    EbrDebugLog("NSString:opening %s\n", fileName);
+    TraceVerbose(TAG, L"NSString:opening %hs", fileName);
 
     EbrFile* fpIn = EbrFopen(fileName, "rb");
     if (!fpIn) {
-        EbrDebugLog("Couldn't open file %s\n", fileName);
+        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
         if (errorRet) {
             *errorRet = [objc_getClass("NSError") errorWithDomain:@"File not found" code:100 userInfo:nil];
         }
@@ -993,7 +996,7 @@ typedef NSUInteger NSStringCompareOptions;
 
     if (usedEncoding)
         *usedEncoding = NSASCIIStringEncoding;
-    EbrDebugLog("Encoding: ASCII?\n");
+    TraceVerbose(TAG, L"Encoding: ASCII?");
 
     return [[ret initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
 }
@@ -1005,7 +1008,7 @@ typedef NSUInteger NSStringCompareOptions;
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     if (usedEncoding)
         *usedEncoding = NSASCIIStringEncoding;
-    EbrDebugLog("Encoding: ASCII?\n");
+    TraceVerbose(TAG, L"Encoding: ASCII?");
 
     return [self initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet];
 }
@@ -1449,6 +1452,14 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
+- (const unichar*)_rawTerminatedCharacters {
+    UStringHolder s1(self);
+    return (const unichar*)s1.string().getTerminatedBuffer();
+}
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)stringByAppendingPathComponent:(NSString*)pathStr {
     UStringHolder s1(self);
     int len = s1.string().length();
@@ -1547,7 +1558,6 @@ typedef NSUInteger NSStringCompareOptions;
     if (s2.string().startsWith("fb")) {
         const char* pStr1 = (const char*)[self UTF8String];
         const char* pStr2 = (const char*)[prefixStr UTF8String];
-        EbrDebugLog("Hi\n");
     }
 
     if (s1.string().startsWith(s2.string())) {
@@ -1729,11 +1739,11 @@ typedef NSUInteger NSStringCompareOptions;
 }
 
 - (int)versionStringCompare:(NSString*)compStrAddr {
-    EbrDebugLog("Warning: versionStringCompare not implemented\n");
+    TraceWarning(TAG, L"Warning: versionStringCompare not implemented");
     char* str = (char*)[self UTF8String];
 
     if (compStrAddr == nil) {
-        EbrDebugLog("Compare to nil?");
+        TraceVerbose(TAG, L"Compare to nil?");
         return strcmp(str, "");
     }
 
@@ -2512,7 +2522,7 @@ typedef NSUInteger NSStringCompareOptions;
 }
 
 id error(id obj, char* buf, char* error, ...) {
-    EbrDebugLog("propertyListFromStrings error: %s\n", buf);
+    TraceError(TAG, L"propertyListFromStrings error: %hs", buf);
     // assert(0);
 
     return nil;
@@ -3086,7 +3096,7 @@ const int s_oneByte = 16;
 */
 - (NSString*)precomposedStringWithCanonicalMapping {
     UNIMPLEMENTED();
-    EbrDebugLog("precomposedStringWithCanonicalMapping??\n");
+    TraceVerbose(TAG, L"precomposedStringWithCanonicalMapping??");
     return [self retain];
 }
 

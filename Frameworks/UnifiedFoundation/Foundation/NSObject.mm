@@ -32,12 +32,13 @@
 #import <Starboard/String.h>
 #import <StringHelpers.h>
 #import <ErrorHandling.h>
-#import <Logging.h>
+#import <LoggingNative.h>
 #import <StubReturn.h>
 
 #import <mutex>
 
 static BOOL _NSSelectorNotFoundIsNonFatal;
+static const wchar_t* TAG = L"Objective-C";
 
 @class NSZone;
 
@@ -337,7 +338,7 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
     }
 
     if (_NSSelectorNotFoundIsNonFatal) {
-        TraceWarning(L"Objective-C", L"%hs", reason.c_str());
+        TraceWarning(TAG, L"%hs", reason.c_str());
     } else {
         THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), "%hs", reason.c_str());
     }

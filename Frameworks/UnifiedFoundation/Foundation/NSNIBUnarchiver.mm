@@ -25,6 +25,9 @@
 #include "Foundation/NSNull.h"
 #include "NSNibUnarchiver.h"
 #include "NSUnarchiverInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSNIBUnarchiver";
 
 #define NIBOBJ_INT8 0x00
 #define NIBOBJ_INT16 0x01
@@ -109,8 +112,6 @@ static Item* itemForKey(NSNibUnarchiver* self, const char* keyName) {
         }
     }
 
-    // EbrDebugLog("Key %s not found in %x\n", keyName, cur);
-
     return NULL;
 }
 
@@ -133,9 +134,7 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
             if (strcmp(curItem->key, "UINibEncoderEmptyKey") == 0) {
                 id item = idForItem(self, curItem);
                 if (item == nil) {
-                    // idForItem(self, curItem);
-                    // assert(0);
-                    // EbrDebugLog("Array initialization failed\n");
+                    TraceWarning(TAG, L"Unable to create item for UINibEncoderEmptyKey.");
                 } else {
                     arrayItems[numArrayItems++] = item;
                 }
@@ -204,7 +203,6 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
         id classId = pObj->classType; // objc_getClass(pObj->className);
         assert(classId != nil);
 
-        // EbrDebugLog("Instantiating %s\n", pObj->className);
         pObj->cachedId = [classId alloc];
 
         pushObject(self, pObj);
@@ -212,7 +210,7 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
             pObj->cachedId = [pObj->cachedId initWithCoder:(id)self];
         } else {
             if (pObj->cachedId) {
-                EbrDebugLog("%s does not respond to initWithCoder\n", object_getClassName(pObj->cachedId));
+                TraceVerbose(TAG, L"%hs does not respond to initWithCoder", object_getClassName(pObj->cachedId));
             }
         }
 
@@ -312,7 +310,7 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
         _classNames[i][len] = '\0';
         _classTypes[i] = objc_getClass(_classNames[i]);
         if (_classTypes[i] == nil) {
-            EbrDebugLog("Couldn't find class: %hs\n", _classNames[i]);
+            TraceVerbose(TAG, L"Couldn't find class");
         }
         _curOffset += len;
     }
@@ -570,7 +568,7 @@ static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
             break;
 
         case NIBOBJ_INT64:
-            EbrDebugLog("Warning: 64-bit NIB item truncated to 32 bits\n");
+            TraceWarning(TAG, L"Warning: 64-bit NIB item truncated to 32 bits");
             ret = *((DWORD*)pItem->data);
             break;
 

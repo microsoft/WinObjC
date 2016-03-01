@@ -39,6 +39,10 @@ THE SOFTWARE.
 #ifdef WFMO
 #include <algorithm>
 #include <deque>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"pevents";
+
 #endif
 
 namespace neosmart {
@@ -58,13 +62,13 @@ struct neosmart_wfmo_t_ {
     void Destroy() {
         int ret = pthread_mutex_destroy(&Mutex);
         if (ret != 0) {
-            EbrDebugLog("pevents mutex destroy error: %d", ret);
+            TraceError(TAG, L"pevents mutex destroy error: %d", ret);
         }
 
         ret = pthread_cond_destroy(&CVariable);
 
         if (ret != 0) {
-            EbrDebugLog("pevents cond destroy error: %d", ret);
+            TraceError(TAG, L"pevents cond destroy error: %d", ret);
         }
     }
 };

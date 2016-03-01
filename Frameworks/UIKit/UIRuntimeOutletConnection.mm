@@ -16,6 +16,9 @@
 
 #include "Starboard.h"
 #include "UIRuntimeOutletConnection.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIRuntimeOutletConnection";
 
 @implementation UIRuntimeOutletConnection
 - (instancetype)initWithCoder:(NSCoder*)coder {
@@ -28,9 +31,9 @@
 - (void)_makeConnection {
     const char* labelName = [label UTF8String];
     if (source != nil) {
-        EbrDebugLog("Setting property on %s: %s\n", object_getClassName(source), labelName);
+        TraceVerbose(TAG, L"Setting property on %hs: %hs", object_getClassName(source), labelName);
     } else {
-        EbrDebugLog("Source = nil, can't set property %s\n", labelName);
+        TraceVerbose(TAG, L"Source = nil, can't set property %hs", labelName);
     }
 
     [source setValue:dest forKey:label];
@@ -44,7 +47,7 @@
 
     if ( !setProperty(source, labelName, dest) ) {
     if ( [source respondsToSelector:setName] ) {
-    EbrDebugLog("Setting property on %s: %s\n", object_getClassName(source), setName);
+    TraceVerbose(TAG, L"Setting property on %hs: %hs", object_getClassName(source), setName);
     MSGSEND1(source, setName, dest);
     } else {
     assert(0);

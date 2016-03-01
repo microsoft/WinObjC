@@ -23,6 +23,9 @@
 #include "libxml/uri.h"
 #include "HashFn.h"
 #include "Etc.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSURL";
 
 #define NSURLMAXLEN SIZE_MAX
 
@@ -712,7 +715,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 */
 - (NSURL*)URLByAppendingPathComponent:(id)path isDirectory:(BOOL)isDirectory {
     if (path == nil) {
-        EbrDebugLog("URLByAppendingPathComponent: path is nil!\n");
+        TraceVerbose(TAG, L"URLByAppendingPathComponent: path is nil!");
         return nil;
     }
 
@@ -894,7 +897,6 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         return self;
     } else {
         assert(0);
-        // NSLog(@"NSURL only supports keyed unarchiving");
         [self release];
         return nil;
     }
@@ -911,7 +913,6 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         [coder encodeObject:fullURL forKey:@"NS.path"];
     } else {
         assert(0);
-        // NSLog(@"NSURL only supports keyed archiving");
     }
 }
 
@@ -1199,7 +1200,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 */
 - (id)standardizedURL {
     UNIMPLEMENTED();
-    EbrDebugLog("standardizedURL needs attention\n");
+    TraceVerbose(TAG, L"standardizedURL needs attention");
     return [self copy];
 }
 

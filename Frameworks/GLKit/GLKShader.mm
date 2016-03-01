@@ -24,6 +24,9 @@
 #import <GLKit/GLKShaderDefs.h>
 
 #import "ShaderInfo.h"
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"GLKShader";
 
 using namespace GLKitShader;
 
@@ -85,7 +88,7 @@ static GLKShaderCache* imp = nil;
     glCompileShader(vsh);
     glGetShaderiv(vsh, GL_COMPILE_STATUS, &compileStatus);
     if (compileStatus == GL_FALSE) {
-        NSLog(@"WARNING: vertex shader compilation failed!");
+        NSTraceWarning(TAG, @"WARNING: vertex shader compilation failed!");
         return nil;
     }
 
@@ -95,7 +98,7 @@ static GLKShaderCache* imp = nil;
     glCompileShader(psh);
     glGetShaderiv(psh, GL_COMPILE_STATUS, &compileStatus);
     if (compileStatus == GL_FALSE) {
-        NSLog(@"WARNING: pixel shader compilation failed!");
+        NSTraceWarning(TAG, @"WARNING: pixel shader compilation failed!");
         return nil;
     }
 
@@ -116,7 +119,7 @@ static GLKShaderCache* imp = nil;
         GLsizei len = 0;
         char buf[1024];
         glGetProgramInfoLog(program, sizeof(buf), &len, buf);
-        NSLog(@"Shader Link failure: %s", buf);
+        NSTraceWarning(TAG, @"Shader Link failure: %s", buf);
         return nil;
     }
 

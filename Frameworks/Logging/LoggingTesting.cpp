@@ -14,19 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UINavigationController.h"
-#include "LoggingNative.h"
+#include "LoggingTesting.h"
 
-static const wchar_t* TAG = L"UINavigationPane";
-
-@implementation UINavigationPane
-- (void)layoutSubviews {
-    if (_parentController == nil) {
-        TraceVerbose(TAG, L"UINavigationPane: parent destroyed?");
-    }
-    [_parentController layoutContainer];
-}
-
-@end
+// Test hooks
+bool g_isTestHookEnabled;
+std::wstring g_debugTestHook;
+int g_etlLevelTestHook;
+std::wstring g_etlTagTestHook;
+std::wstring g_etlBufferTestHook;
+std::string g_etlBufferNarrowTestHook;

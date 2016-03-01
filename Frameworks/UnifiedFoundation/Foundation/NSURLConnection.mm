@@ -21,6 +21,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSRunLoop.h"
 #include "NSURLConnectionState.h"
 #include "Foundation/NSURLConnection.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSURLConnection";
 
 @implementation NSURLConnection
 
@@ -38,7 +41,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 + (void)sendAsynchronousRequest:(id)request
                           queue:(id)queue
               completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))completionHandler {
-    EbrDebugLog("sendAsynchronousRequest not fully supported\n");
+    TraceVerbose(TAG, L"sendAsynchronousRequest not fully supported");
 
     id response, error;
     id data = [self sendSynchronousRequest:request returningResponse:&response error:&error];
@@ -183,7 +186,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (void)URLProtocol:(id)urlProtocol didFailWithError:(id)error {
-    EbrDebugLog("URL protocol did fail\n");
+    TraceError(TAG, L"URL protocol did fail");
     // if ( [_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)] ) [_delegate
     // connection:self willSendRequest:_request redirectResponse:nil];
     if ([_delegate respondsToSelector:@selector(connection:didFailWithError:)]) {

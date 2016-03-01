@@ -28,15 +28,18 @@
 #import "Foundation/NSDate.h"
 #import "Foundation/NSAutoreleasePool.h"
 #import "Etc.h"
+#import "NSLogging.h"
 
 #import "Hash.h"
+
+static const wchar_t* TAG = L"NSKeyedArchiver";
+
 typedef HashMap<id, unsigned> o2uHash;
 typedef HashMap<id, id> o2oHash;
 
 NSString* const NSInvalidArchiveOperationException = @"NSInvalidArchiveOperationException";
 
 NSString* const NSKeyedArchiveRootObjectKey = @"NSKeyedArchiveRootObjectKey";
-
 static HashMap<Class, StrongId<NSString>> s_clsMap;
 struct NSKeyedArchiverPriv {
     HashMap<Class, StrongId<NSString>> clsMap; /* Map classes to names.    */
@@ -49,14 +52,14 @@ void printContents(int level, id obj);
 
 static inline void _checkKey(NSString* aKey, NSMutableDictionary* _enc) {
     if (![aKey isKindOfClass:[NSString class]]) {
-        NSLog(@"Key is not an NSString\n");
+        NSTraceCritical(TAG, @"Key is not an NSString\n");
         assert(0);
     }
     if ([aKey hasPrefix:@"$"]) {
         aKey = [@"$" stringByAppendingString:aKey];
     }
     if ([_enc objectForKey:aKey] != nil) {
-        NSLog(@"Key not found:%s\n", [aKey UTF8String]);
+        NSTraceCritical(TAG, @"Key not found:%s\n", [aKey UTF8String]);
         assert(0);
     }
 }

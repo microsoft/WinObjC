@@ -17,6 +17,9 @@
 #include "Starboard.h"
 #import <Foundation/NSNotification.h>
 #import <Foundation/NSNotificationCenter.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSNotificationCenter";
 
 @interface NSNotificationReceiver : NSObject {
 @public
@@ -163,7 +166,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
                              queue:(NSNotificationQueue*)queue
                         usingBlock:(void (^)(NSNotification*))block {
     if (queue != nil) {
-        EbrDebugLog("addObserverForName: queue != nil!\n");
+        TraceVerbose(TAG, L"addObserverForName: queue != nil!");
         assert(0);
         return nil;
     }

@@ -28,6 +28,9 @@
 
 #include <functional>
 #include <map>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDateFormatter";
 
 static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
     switch (fmt) {
@@ -41,7 +44,7 @@ static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
             return icu::DateFormat::kFull;
 
         default:
-            EbrDebugLog("Unrecognized formatter style, defaulting to UDAT_NONE.\n");
+            TraceVerbose(TAG, L"Unrecognized formatter style, defaulting to UDAT_NONE.");
         case NSDateFormatterNoStyle:
             return icu::DateFormat::kNone;
     }
@@ -124,7 +127,7 @@ static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbol
     for (int i = 0; i < count - startIdx; i++) {
         NSString* string = NSStringFromSymbol(formatter, symbol, i + startIdx, error);
         if (string == nil || error != U_ZERO_ERROR) {
-            EbrDebugLog("Error retrieving symbol 0x%x index %d\n", symbol, i);
+            TraceError(TAG, L"Error retrieving symbol 0x%x index %d", symbol, i);
             return nil;
         }
         [symbolList addObject:string];

@@ -40,6 +40,9 @@ extern "C" {
 
 #include <vector>
 #include <algorithm>
+#include "LoggingNative"
+
+static const wchar_t* TAG = L"FontAtlas";
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
@@ -656,7 +659,7 @@ bool FontCacheInfo::renderNewGlyphs(ID3D11Device1* device, ID3D11DeviceContext* 
     totalOps++;
     totalMS += ms;
 
-    EbrDebugLog("------ %d glyphs added in %dms. Total %d ops, %d ms.  Atlas chars: %d, size: %dK\n",
+    TraceNarrowVerbose(TAG, "------ %d glyphs added in %dms. Total %d ops, %d ms.  Atlas chars: %d, size: %dK",
                 glyphsToBeRenderedCount,
                 ms,
                 totalOps,

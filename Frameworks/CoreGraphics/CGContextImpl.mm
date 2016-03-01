@@ -35,6 +35,10 @@ extern "C" {
 #import <ftsizes.h>
 }
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGContextImpl";
+
 static IWLazyClassLookup _LazyUIFont("UIFont");
 
 id CGContextState::getCurFont() {
@@ -238,7 +242,7 @@ void CGContextImpl::CGContextSetCTM(CGAffineTransform transform) {
 
 void CGContextImpl::CGContextDrawImage(CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -260,7 +264,7 @@ void CGContextImpl::CGContextDrawImage(CGRect rct, CGImageRef img) {
 
 void CGContextImpl::CGContextDrawImageRect(CGImageRef img, CGRect src, CGRect rct) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -272,7 +276,7 @@ void CGContextImpl::CGContextDrawImageRect(CGImageRef img, CGRect src, CGRect rc
 
 void CGContextImpl::CGContextDrawTiledImage(CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -431,7 +435,7 @@ void CGContextImpl::CGContextSaveGState() {
 
 void CGContextImpl::CGContextRestoreGState() {
     if (curStateNum == 0) {
-        EbrDebugLog("CGContextRestoreGState: no state to restore!\n");
+        TraceWarning(TAG, L"CGContextRestoreGState: no state to restore!");
         return;
     }
 

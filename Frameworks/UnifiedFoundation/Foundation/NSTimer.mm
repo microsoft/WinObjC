@@ -22,6 +22,9 @@
 #import <Foundation/NSTimer.h>
 #import "NSRunLoopState.h"
 #import "NSRunLoop+Internal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSTimer";
 
 @implementation NSTimer {
     BOOL _repeats;
@@ -68,7 +71,7 @@
 */
 - (void)dealloc {
     if (_isDestroying) {
-        EbrDebugLog("Warning: NSTimer over-released\n");
+        TraceWarning(TAG, L"Warning: NSTimer over-released");
         return;
     }
 

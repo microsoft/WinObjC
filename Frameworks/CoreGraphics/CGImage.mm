@@ -40,6 +40,10 @@ struct _BGRA_swizzle {
     BYTE b, g, r, a;
 };
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGImage";
+
 @interface CGNSImage : _CGLifetimeBridgingType
 @end
 @implementation CGNSImage
@@ -66,7 +70,7 @@ __CGImage::__CGImage() {
     _has32BitAlpha = true;
 
 #ifdef DEBUG_IMG_COUNT
-    EbrDebugLog("Number of CGImages: %d created=%x\n", numCGImages, this);
+    TraceVerbose(TAG, L"Number of CGImages: %d created=%x", numCGImages, this);
 #endif
 
     object_setClass((id) this, [CGNSImage class]);
@@ -80,7 +84,7 @@ COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListene
 __CGImage::~__CGImage() {
     numCGImages--;
 #ifdef DEBUG_IMG_COUNT
-    EbrDebugLog("destroyed=%x from=%x\n", this, _ReturnAddress());
+    TraceVerbose(TAG, L"destroyed=%x from=%x", this, _ReturnAddress());
 #endif
     for (CGImageDestructionListener& curListener : _imageDestructionListeners) {
         curListener(this);
@@ -148,7 +152,7 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
 */
 CGImageRef CGImageCreateWithImageInRect(CGImageRef ref, CGRect rect) {
     if (ref == NULL) {
-        EbrDebugLog("CGImageCreateWithImageInRect: ref = NULL!\n");
+        TraceWarning(TAG, L"CGImageCreateWithImageInRect: ref = NULL!");
         return 0;
     }
 
@@ -397,7 +401,7 @@ CGImageRef CGImageMaskCreate(size_t width,
 */
 CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
     if (!img) {
-        EbrDebugLog("CGImageGetAlphaInfo: nil!\n");
+        TraceWarning(TAG, L"CGImageGetAlphaInfo: nil!");
         return (CGImageAlphaInfo)0;
     }
 
@@ -466,7 +470,7 @@ CGColorSpaceRef CGImageGetColorSpace(CGImageRef img) {
 */
 size_t CGImageGetBitsPerPixel(CGImageRef img) {
     if (!img) {
-        EbrDebugLog("CGImageGetBitsPerPixel: nil!\n");
+        TraceWarning(TAG, L"CGImageGetBitsPerPixel: nil!");
         return 0;
     }
 
@@ -494,7 +498,7 @@ size_t CGImageGetBitsPerPixel(CGImageRef img) {
 */
 size_t CGImageGetBitsPerComponent(CGImageRef img) {
     if (!img) {
-        EbrDebugLog("CGImageGetBitsPerComponent: nil!\n");
+        TraceWarning(TAG, L"CGImageGetBitsPerComponent: nil!");
         return 0;
     }
 
@@ -546,7 +550,6 @@ size_t CGImageGetHeight(CGImageRef img) {
  @Status Interoperable
 */
 void CGImageRelease(CGImageRef img) {
-    // EbrDebugLog("Releasing %x\n", img);
     CFRelease((id)img);
 }
 
@@ -726,19 +729,19 @@ static void PNGWriteFunc(png_structp png_ptr, png_bytep data, png_size_t length)
 
 NSData* _CGImagePNGRepresentation(UIImage* img) {
     if (img == nil) {
-        EbrDebugLog("UIImagePNGRepresentation: img = nil!\n");
+        TraceWarning(TAG, L"UIImagePNGRepresentation: img = nil!");
         return nil;
     }
 
     CGImageRef pImage = (CGImageRef)[img CGImage];
     if (pImage == NULL) {
-        EbrDebugLog("No image passed to UIImagePNGRepresentation\n");
+        TraceWarning(TAG, L"No image passed to UIImagePNGRepresentation");
         return nil;
     }
     NSMutableData* ret = [NSMutableData data];
 
     if (pImage == NULL || pImage->Backing()->Width() == 0 || pImage->Backing()->Height() == 0) {
-        EbrDebugLog("%x\n", pImage);
+        TraceVerbose(TAG, L"%x", pImage);
         FAIL_FAST_HR(E_UNEXPECTED);
     }
 
@@ -752,7 +755,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
     info_ptr = png_create_info_struct(png_ptr);
 
     if (setjmp(png_jmpbuf(png_ptr))) {
-        EbrDebugLog("Error during png creation\n");
+        TraceError(TAG, L"Error during png creation");
         return nil;
     }
 
@@ -797,7 +800,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
             break;
 
         default:
-            EbrDebugLog("Unknown image orientation %d\n", orientation);
+            TraceWarning(TAG, L"Unknown image orientation %d", orientation);
             break;
     }
 

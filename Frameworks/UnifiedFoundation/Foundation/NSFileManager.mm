@@ -33,6 +33,9 @@
 
 #include <sys/stat.h>
 #include <errno.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSFileManager";
 
 #ifdef __linux__
 #define _S_IFDIR S_IFDIR
@@ -319,7 +322,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
             if (strlen(curPath) > 0) {
                 bool success = EbrMkdir(curPath);
                 if (!success && errno != EEXIST) {
-                    EbrDebugLog("Failed to make path %s: %d\n", curPath, errno);
+                    TraceError(TAG, L"Failed to make path %hs: %d", curPath, errno);
                     // return FALSE;
                 }
             }
@@ -343,12 +346,12 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 - (BOOL)createFileAtPath:(id)pathAddr contents:(id)contents attributes:(id)attributes {
     const char* path = [pathAddr UTF8String];
 
-    EbrDebugLog("createFileAtPath: %s\n", path);
+    TraceVerbose(TAG, L"createFileAtPath: %hs", path);
 
     EbrFile* fpOut = EbrFopen(path, "wb");
 
     if (!fpOut) {
-        EbrDebugLog("failed to createFileAtPath: %s\n", path);
+        TraceError(TAG, L"failed to createFileAtPath: %hs", path);
         return FALSE;
     }
 
@@ -368,7 +371,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 - (BOOL)removeItemAtURL:(NSURL*)URL error:(NSError**)error {
     id pathAddr = [URL path];
     if (pathAddr == nil) {
-        EbrDebugLog("removeItemAtURL: nil!\n");
+        TraceVerbose(TAG, L"removeItemAtURL: nil!");
         return YES;
     }
 
@@ -412,7 +415,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (BOOL)copyItemAtPath:(id)srcPath toPath:(id)destPath error:(NSError**)error {
     if (srcPath == nil || destPath == nil) {
-        EbrDebugLog("copyItemAtPath: nil!\n");
+        TraceVerbose(TAG, L"copyItemAtPath: nil!");
         return FALSE;
     }
 
@@ -424,22 +427,22 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
             // TODO: standardize the error code and message
             *error = [NSError errorWithDomain:@"Would overwrite destination" code:100 userInfo:nil];
         }
-        EbrDebugLog("Not copying %s to %s because dest exists\n", src, dest);
+        TraceVerbose(TAG, L"Not copying %hs to %hs because dest exists", src, dest);
         return FALSE;
     }
 
-    EbrDebugLog("Copying %s to %s\n", src, dest);
+    TraceVerbose(TAG, L"Copying %hs to %hs", src, dest);
 
     EbrFile* fpIn = EbrFopen(src, "rb");
     if (!fpIn) {
-        EbrDebugLog("Error opening %s\n", src);
+        TraceError(TAG, L"Error opening %hs", src);
         return FALSE;
     }
 
     EbrFile* fpOut = EbrFopen(dest, "wb");
     if (!fpOut) {
         EbrFclose(fpIn);
-        EbrDebugLog("Error opening %s\n", dest);
+        TraceError(TAG, L"Error opening %hs", dest);
         return FALSE;
     }
 
@@ -452,7 +455,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     EbrFclose(fpOut);
     EbrFclose(fpIn);
 
-    EbrDebugLog("Done copying\n");
+    TraceVerbose(TAG, L"Done copying");
 
     return TRUE;
 }
@@ -474,11 +477,11 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     const char* src = [srcPath UTF8String];
     const char* dest = [destPath UTF8String];
 
-    EbrDebugLog("Moving %s to %s\n", src, dest);
+    TraceVerbose(TAG, L"Moving %hs to %hs", src, dest);
 
     bool success = EbrRename(src, dest);
     if (!success) {
-        EbrDebugLog("Rename failed.\n");
+        TraceError(TAG, L"Rename failed.");
         return FALSE;
         // assert(0);
     }
@@ -576,7 +579,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 - (id)destinationOfSymbolicLinkAtPath:(id)path error:(NSError**)error {
     UNIMPLEMENTED();
     const char* pPath = [path UTF8String];
-    EbrDebugLog("destinationOfSymbolicLinkAtPath: %s\n", pPath);
+    TraceVerbose(TAG, L"destinationOfSymbolicLinkAtPath: %hs", pPath);
 
     return [path retain];
 }
@@ -600,7 +603,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     if (EbrAccess(path, 0) == 0) {
         return TRUE;
     } else {
-        EbrDebugLog("File @ %s doesn't exist\n", path);
+        TraceVerbose(TAG, L"File @ %hs doesn't exist", path);
         return FALSE;
     }
 }
@@ -631,7 +634,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     if (EbrAccess(path, 6) == 0) {
         return TRUE;
     } else {
-        EbrDebugLog("File @ %s isn't writable\n", path);
+        TraceVerbose(TAG, L"File @ %hs isn't writable", path);
         return FALSE;
     }
 }
@@ -645,7 +648,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     if (EbrAccess(path, 4) == 0) {
         return TRUE;
     } else {
-        EbrDebugLog("File @ %s isn't readable\n", path);
+        TraceVerbose(TAG, L"File @ %hs isn't readable", path);
         return FALSE;
     }
 }
@@ -690,7 +693,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (id)attributesOfItemAtPath:(id)pathAddr error:(NSError**)error {
     if (pathAddr == nil) {
-        EbrDebugLog("attributesOfItemAtPath nil!");
+        TraceVerbose(TAG, L"attributesOfItemAtPath nil!");
 
         if (error) {
             // TODO: standardize the error code and message
@@ -703,7 +706,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     struct stat st;
 
     const char* path = [pathAddr UTF8String];
-    EbrDebugLog("attributesOfItemAtPath: %s\n", path);
+    TraceVerbose(TAG, L"attributesOfItemAtPath: %hs", path);
 
     if (EbrStat(path, &st) == -1) {
         if (error) {
@@ -736,7 +739,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     const char* path = [pathAddr UTF8String];
 
-    EbrDebugLog("fileAttributesAtPath: %s\n", path);
+    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
 
     id ret = [NSMutableDictionary dictionary];
     [ret setValue:[NSNumber numberWithInt:256 * 1024 * 1024] forKey:NSFileSystemFreeSize];
@@ -905,7 +908,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (NSDictionary*)fileAttributesAtPath:(NSString*)pathAddr traverseLink:(BOOL)traveseLinks {
     if (pathAddr == nil) {
-        EbrDebugLog("fileAttributesAtPath nil!");
+        TraceVerbose(TAG, L"fileAttributesAtPath nil!");
 
         return nil;
     }
@@ -913,7 +916,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     struct stat st;
 
     const char* path = [pathAddr UTF8String];
-    EbrDebugLog("fileAttributesAtPath: %s\n", path);
+    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
 
     if (EbrStat(path, &st) == -1) {
         return nil;
@@ -943,7 +946,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     UNIMPLEMENTED();
     const char* path = [pathAddr UTF8String];
 
-    EbrDebugLog("fileAttributesAtPath: %s\n", path);
+    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
 
     id ret = [NSMutableDictionary dictionary];
 
@@ -1014,7 +1017,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     }
 
     const char* path = [pathAddr UTF8String];
-    EbrDebugLog("removeItemAtPath: %s\n", path);
+    TraceVerbose(TAG, L"removeItemAtPath: %hs", path);
 
     BOOL ret = EbrRemove(path);
     if (!ret && error) {

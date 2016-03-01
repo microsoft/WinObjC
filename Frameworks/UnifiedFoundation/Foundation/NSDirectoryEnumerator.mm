@@ -25,6 +25,10 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDirectoryEnumerator";
+
 @implementation NSDirectoryEnumerator {
     idretaint<NSMutableDictionary> _rootFiles;
     idretaint<NSString> _currentFile;
@@ -293,7 +297,7 @@ static NSDictionary* fileAttributesForFilePath(const char* path) {
     }
     strcpy_s(fullPath, _countof(fullPath), path);
 
-    EbrDebugLog("fileAttributesAtPath: %s\n", fullPath);
+    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", fullPath);
 
     return fileAttributesForFilePath(fullPath);
 }

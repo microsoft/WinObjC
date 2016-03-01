@@ -24,7 +24,10 @@
 #include "CACompositor.h"
 
 #include "CAAnimationInternal.h"
+#include "LoggingNative.h"
 #include "UIAnimationNotification.h"
+
+static const wchar_t* TAG = L"CAAnimation";
 
 @implementation CAAnimation {
     idretain _delegate;
@@ -333,7 +336,7 @@
  @Public No
 */
 - (void)setValue:(id)val forUndefinedKey:(id)key {
-    EbrDebugLog("CAAnimation setting value for key \"%s\"\n", [key UTF8String]);
+    TraceVerbose(TAG, L"CAAnimation setting value for key \"%hs\"", [key UTF8String]);
     if (_undefinedKeys == nil) {
         _undefinedKeys.attach([NSMutableDictionary new]);
     }
@@ -349,7 +352,7 @@
     id ret = [(NSMutableDictionary*)_undefinedKeys objectForKey:keyPath];
 
     if (ret == nil) {
-        EbrDebugLog("CAAnimation: no value for undefined key \"%s\"\n", [keyPath UTF8String]);
+        TraceVerbose(TAG, L"CAAnimation: no value for undefined key \"%hs\"", [keyPath UTF8String]);
     }
     return ret;
 }

@@ -20,6 +20,9 @@
 #import "CGContextInternal.h"
 #import "CGColorSpaceInternal.h"
 #import "_CGLifetimeBridgingType.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGColorSpace";
 
 const CFStringRef kCGColorSpaceGenericGray = static_cast<CFStringRef>(@"kCGColorSpaceGenericGray");
 const CFStringRef kCGColorSpaceGenericRGB = static_cast<CFStringRef>(@"kCGColorSpaceGenericRGB");
@@ -68,7 +71,7 @@ __CGColorSpace::~__CGColorSpace() {
 */
 CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
     UNIMPLEMENTED();
-    EbrDebugLog("CGColorSpaceCreateCalibratedRGB not supported\n");
+    TraceWarning(TAG, L"CGColorSpaceCreateCalibratedRGB not supported");
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
@@ -106,7 +109,7 @@ CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
 */
 CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
     UNIMPLEMENTED();
-    EbrDebugLog("CGColorSpaceGetModel not implemented\n");
+    TraceWarning(TAG, L"CGColorSpaceGetModel not implemented");
     return kCGColorSpaceModelRGB;
 }
 

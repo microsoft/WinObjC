@@ -27,6 +27,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\StarboardWS\dll\StarboardWS.vcxproj">
       <Project>{156D3280-1ABB-4EE2-B0D7-1E59C6E95A31}</Project>
     </ProjectReference>

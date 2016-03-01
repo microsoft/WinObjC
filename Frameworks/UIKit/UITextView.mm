@@ -19,6 +19,9 @@
 #include "UIKit/UITextInputTraits.h"
 #include "CGContextInternal.h"
 #include "NSTextStorageInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITextView";
 
 const float textViewLeftPadding = 12.5f;
 const float textViewRightPadding = 12.5f;
@@ -458,7 +461,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 */
 - (void)scrollRangeToVisible:(NSRange)range {
     UNIMPLEMENTED();
-    EbrDebugLog("scrollRangeToVisible not implemented\n");
+    TraceVerbose(TAG, L"scrollRangeToVisible not implemented");
 }
 
 - (void)keyPressed:(uint32_t)key {

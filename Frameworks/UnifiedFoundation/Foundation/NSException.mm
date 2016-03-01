@@ -17,7 +17,9 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #import "Foundation/NSException.h"
+#import "NSLogging.h"
 
+static const wchar_t* TAG = L"NSException";
 NSString* const NSRangeException = @"NSRangeExcepton";
 NSString* const NSGenericException = @"NSGenericException";
 NSString* const NSInvalidArgumentException = @"NSInvalidArgumentException";
@@ -97,7 +99,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     NSString* reason = [[NSString alloc] initWithFormat:format arguments:reader];
     va_end(reader);
 
-    NSLog(@"Exception %@ raised!\nReason: %@\n", name, reason);
+    NSTraceError(TAG, @"Exception %@ raised!\nReason: %@\n", name, reason);
 
     NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
     [reason release];

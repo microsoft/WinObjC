@@ -22,6 +22,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSOperation.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSOperation";
 
 #if __cplusplus
 #include <pthread.h>
@@ -110,7 +113,7 @@ struct NSOperationPriv;
 }
 
 - (id)setThreadPriority:(double)priority {
-    EbrDebugLog("NSOperationQueue setThreadPriority not supported\n");
+    TraceVerbose(TAG, L"NSOperationQueue setThreadPriority not supported");
     return self;
 }
 

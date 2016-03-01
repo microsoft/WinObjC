@@ -27,6 +27,9 @@ using namespace rapidxml;
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableData.h"
 #include "NSXMLPropertyList.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSXMLPropertyList";
 
 namespace rapidxml {
 // todo: setjump/longjump here O_O
@@ -156,7 +159,7 @@ static id propertyListFromElement(xml_node<>* elem) {
         Str numStr(elem->value(), elem->value_size());
         return [NSDate dateWithTimeIntervalSinceReferenceDate:atof(numStr.cstr())];
     } else {
-        EbrDebugLog("Unrecognized element type!\n");
+        TraceVerbose(TAG, L"Unrecognized element type!");
     }
 
     return nil;

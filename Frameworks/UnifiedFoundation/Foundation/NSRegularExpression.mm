@@ -19,7 +19,7 @@
 #include <unicode/regex.h>
 #include <memory>
 
-#import "Logging.h"
+#import "LoggingNative.h"
 
 @interface NSRegularExpression () {
     std::unique_ptr<RegexPattern> _icuRegex;

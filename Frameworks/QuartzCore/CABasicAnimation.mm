@@ -21,6 +21,9 @@
 #include "QuartzCore/CABasicAnimation.h"
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CABasicAnimation";
 
 @implementation CABasicAnimation {
     idretain _from;

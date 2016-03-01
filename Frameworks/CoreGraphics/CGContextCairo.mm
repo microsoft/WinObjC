@@ -40,6 +40,10 @@ extern "C" {
 #import <ftsizes.h>
 }
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGContextCairo";
+
 static IWLazyClassLookup _LazyUIFont("UIFont");
 static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
@@ -112,7 +116,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         return;
     }
     if (src.size.width == 1 && dest.size.height == 1) { /* [BUG: Cairo doesn't like 1x1 source images] */
-        EbrDebugLog("1x1 source image\n");
+        TraceInfo(TAG, L"1x1 source image");
         cairo_path_t* curPath = cairo_copy_path(_drawContext);
         cairo_save(_drawContext);
 
@@ -444,7 +448,7 @@ void CGContextCairo::CGContextSetCTM(CGAffineTransform transform) {
 
 void CGContextCairo::CGContextDrawImage(CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -583,7 +587,7 @@ void CGContextCairo::CGContextRestoreGState() {
     ObtainLock();
 
     if (curStateNum == 0) {
-        EbrDebugLog("CGContextRestoreGState: no state to restore!\n");
+        TraceWarning(TAG, L"CGContextRestoreGState: no state to restore!");
         return;
     }
 
@@ -1073,7 +1077,7 @@ void CGContextCairo::CGContextEOFillPath() {
 void CGContextCairo::CGContextEOClip() {
     ObtainLock();
 
-    EbrDebugLog("CGContextEOClip not supported\n");
+    TraceWarning(TAG, L"CGContextEOClip not supported");
     LOCK_CAIRO();
     cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_EVEN_ODD);
     cairo_clip(_drawContext);

@@ -18,7 +18,10 @@
 #import <Starboard.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
+#include "LoggingNative.h"
 #import <CoreGraphics/CGDataProvider.h>
+
+static const wchar_t* TAG = L"CGDataProvider";
 
 @interface CGDataProvider : NSData {
 @public
@@ -72,7 +75,7 @@ CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
  @Notes Only calls getBytePointer
 */
 CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataProviderDirectCallbacks* callBacks) {
-    EbrDebugLog("Warning: CGDataProviderCreateDirect is hacky\n");
+    TraceWarning(TAG, L"Warning: CGDataProviderCreateDirect is hacky");
     char* pBytes = (char*)callBacks->getBytePointer(info);
 
     id ret = [[CGDataProvider alloc] initWithBytesNoCopy:pBytes length:(DWORD)size freeWhenDone:FALSE];
@@ -85,7 +88,7 @@ CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataPro
  @Notes Hacky
 */
 CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSequentialCallbacks* callBacks) {
-    EbrDebugLog("Warning: CGDataProviderCreateSequential is hacky\n");
+    TraceWarning(TAG, L"Warning: CGDataProviderCreateSequential is hacky");
     char* pBytes = (char*)IwMalloc(1024 * 1024);
 
     int amt = callBacks->getBytes(info, pBytes, 1024 * 1024);

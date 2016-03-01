@@ -21,6 +21,8 @@
 #import "CGContextImpl.h"
 #import "CGContextCairo.h"
 
+#include "LoggingNative.h"
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 
@@ -30,6 +32,8 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4146)
+
+static const wchar_t* TAG = L"CGBitmapImage";
 
 // NOTE: the negative strides below are to convert from bitmap file format
 // (which are generally bottom-up) to in-memory layout.
@@ -47,8 +51,6 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
     _internalHeight = height;
     _bottomOrientation = FALSE;
     _freeWhenDone = FALSE;
-
-    // EbrDebugLog("Creating bitmap\n");
 
     switch (fmt) {
         case _Color565:
@@ -255,7 +257,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             break;
 
         case _ColorGrayscale:
-            EbrDebugLog("*** Warning: Grayscale not properly implemented ***\n");
+            TraceWarning(TAG, L"*** Warning: Grayscale not properly implemented ***");
             if (!_imageData) {
                 _imageData = (void*)IwCalloc(_width * height, 1);
                 _freeWhenDone = TRUE;
@@ -306,9 +308,9 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             break;
     }
 
-    EbrDebugLog("Constructed image from addr:%x\n", _imageData);
+    TraceVerbose(TAG, L"Constructed image from addr:%x", _imageData);
     imgDataSize += _internalWidth * _height * _bytesPerPixel;
-    EbrDebugLog("Allocated %dx%dx%d Number of images: %d (%dKB)\n", _width, _height, _bytesPerPixel, imgDataCount, imgDataSize / 1024);
+    TraceVerbose(TAG, L"Allocated %dx%dx%d Number of images: %d (%dKB)", _width, _height, _bytesPerPixel, imgDataCount, imgDataSize / 1024);
 
     _bitmapFmt = fmt;
 }
@@ -316,7 +318,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 CGImageData::~CGImageData() {
     EbrDecrement((volatile int*)&imgDataCount);
     imgDataSize -= _internalWidth * _height * _bytesPerPixel;
-    EbrDebugLog("Destroyed (freeing 0x%x) - Number of images: %d (%dKB total)\n", _imageData, imgDataCount, imgDataSize / 1024);
+    TraceVerbose(TAG, L"Destroyed (freeing 0x%x) - Number of images: %d (%dKB total)", _imageData, imgDataCount, imgDataSize / 1024);
 
     assert(_refCount == 0);
     if (_imageData) {
@@ -402,7 +404,7 @@ CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
 
 CGBitmapImageBacking::~CGBitmapImageBacking() {
     if (_cairoLocks != 0 || _imageLocks != 0) {
-        EbrDebugLog("Warning: Image data not unlocked (refcnt=%d, %d)\n", _cairoLocks, _imageLocks);
+        TraceWarning(TAG, L"Warning: Image data not unlocked (refcnt=%d, %d)", _cairoLocks, _imageLocks);
 
         while (_cairoLocks > 0) {
             ReleaseCairoSurface();

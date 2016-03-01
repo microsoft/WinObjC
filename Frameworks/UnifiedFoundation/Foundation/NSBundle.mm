@@ -30,6 +30,9 @@
 #include "Foundation/NSException.h"
 
 #include <sys/stat.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSBundle";
 
 NSString* const NSLoadedClasses = @"NSLoadedClasses";
 
@@ -634,7 +637,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Notes Always returns +[NSBundle mainBundle]
 */
 + (NSBundle*)bundleForClass:(id)_class {
-    EbrDebugLog("bundleForClass: %s\n", _class ? object_getClassName(_class) : "nil");
+    TraceVerbose(TAG, L"bundleForClass: %hs", _class ? object_getClassName(_class) : "nil");
     return [self mainBundle];
 }
 
@@ -643,7 +646,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Notes Forwards to +[NSBundle bundleWithPath:]
 */
 + (NSBundle*)bundleWithIdentifier:(NSString*)identifier {
-    EbrDebugLog("bundleForIdentifier: %s\n", [identifier UTF8String]);
+    TraceVerbose(TAG, L"bundleForIdentifier: %hs", [identifier UTF8String]);
     return [self bundleWithPath:identifier];
 }
 
@@ -691,7 +694,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     if ([url isFileURL]) {
         return [[[self alloc] initWithPath:[url path]] autorelease];
     } else {
-        EbrDebugLog("bad URL\n");
+        TraceCritical(TAG, L"bad URL");
         assert(0);
         return nil;
     }
@@ -705,7 +708,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
         return [self initWithPath:[url path]];
     }
 
-    EbrDebugLog("bad URL\n");
+    TraceWarning(TAG, L"bad URL");
     return nil;
 }
 
@@ -913,10 +916,10 @@ static NSString* checkPath(
     NSString* ret = makePath(self, name, extension, directory, localization, sublocal);
 
     char* path = (char*)[ret UTF8String];
-    EbrDebugLog("Finding %s", path);
+    TraceVerbose(TAG, L"Finding %hs", path);
 
     if (EbrAccess(path, 0) == -1 || EbrIsDir(path)) {
-        EbrDebugLog(" - not found\n");
+        TraceVerbose(TAG, L" - not found");
 
         if (!isTabletDevice()) {
             ret = makePath(self, name, extension, directory, localization, sublocal, @"~iphone");
@@ -925,33 +928,33 @@ static NSString* checkPath(
         }
 
         path = (char*)[ret UTF8String];
-        EbrDebugLog("Finding %s", path);
+        TraceVerbose(TAG, L"Finding %hs", path);
 
         if (EbrAccess(path, 0) == -1 || EbrIsDir(path)) {
-            EbrDebugLog(" - not found\n");
+            TraceVerbose(TAG, L" - not found");
             return nil;
         } else {
-            EbrDebugLog(" - OK\n");
+            TraceVerbose(TAG, L" - OK");
             return ret;
         }
 #if 0
 ret = makePath(name, extension, directory, localization, sublocal, @"-iPad");
 
 path = (char *) [ret UTF8String];
-EbrDebugLog("Finding %s", path);
+TraceVerbose(TAG, L"Finding %hs", path);
 
 if (EbrAccess(path, 0) == -1 ) {
-EbrDebugLog(" - not found\n");
+TraceVerbose(TAG, L" - not found");
 return nil;
 } else {
-EbrDebugLog(" - OK\n");
+TraceVerbose(TAG, L" - OK");
 return ret;
 }
 #else
         return nil;
 #endif
     } else {
-        EbrDebugLog(" - OK\n");
+        TraceVerbose(TAG, L" - OK");
         return ret;
     }
 }
@@ -984,13 +987,13 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     NSString* ret = makePathNonLocal(name, extension, directory, localization);
 
     char* path = (char*)[ret UTF8String];
-    EbrDebugLog("Finding %s", path);
+    TraceVerbose(TAG, L"Finding %hs", path);
 
     if (EbrAccess(path, 0) == -1 || EbrIsDir(path)) {
-        EbrDebugLog(" - not found\n");
+        TraceVerbose(TAG, L" - not found");
         return nil;
     } else {
-        EbrDebugLog(" - OK\n");
+        TraceVerbose(TAG, L" - OK");
         return ret;
     }
 }
@@ -1065,7 +1068,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     char* pDir = (char*)[directory UTF8String];
     char* pExt = (char*)[type UTF8String];
 
-    EbrDebugLog("Searching for %s in %s\n", pDir, pExt ? pExt : "(null)");
+    TraceVerbose(TAG, L"Searching for %hs in %hs", pDir, pExt ? pExt : "(null)");
 
     NSString* curFile = [files nextObject];
     while (curFile != nil) {
@@ -1074,7 +1077,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
             char* pFile = (char*)[fullPath UTF8String];
 
             if (!EbrIsDir(pFile)) {
-                EbrDebugLog("Found file %s\n", pFile);
+                TraceVerbose(TAG, L"Found file %hs", pFile);
                 [ret addObject:fullPath];
             }
         }
@@ -1100,7 +1103,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     if (pFile) {
         NSString* ret = [NSString stringWithFormat:@"%@/%s", _bundlePath, pFile->pszFullPath];
 #ifdef NSBUNDLE_LOG
-        EbrDebugLog("Found %s\n", [ret UTF8String]);
+        TraceVerbose(TAG, L"Found %hs", [ret UTF8String]);
 #endif
         return ret;
     }
@@ -1141,7 +1144,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     if (pFile) {
         NSString* ret = [NSString stringWithFormat:@"%@%s", _bundlePath, pFile->pszFullPath];
 #ifdef NSBUNDLE_LOG
-        EbrDebugLog("Found %s\n", [ret UTF8String]);
+        TraceVerbose(TAG, L"Found %hs", [ret UTF8String]);
 #endif
         return ret;
     }
@@ -1161,7 +1164,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     if (pFile) {
         NSString* ret = [NSString stringWithFormat:@"%@%s", _bundlePath, pFile->pszFullPath];
 #ifdef NSBUNDLE_LOG
-        EbrDebugLog("Found %s\n", [ret UTF8String]);
+        TraceVerbose(TAG, L"Found %hs", [ret UTF8String]);
 #endif
         return ret;
     }
@@ -1282,7 +1285,7 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 - (id)classNamed:(NSString*)name {
     char* pName = (char*)[name UTF8String];
 
-    EbrDebugLog("Finding class %s\n", pName);
+    TraceVerbose(TAG, L"Finding class %hs", pName);
     return objc_getClass(pName);
 }
 

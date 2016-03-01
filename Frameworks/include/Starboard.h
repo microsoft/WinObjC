@@ -17,7 +17,7 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
-#include "Logging.h"
+#include "LoggingNative.h"
 #include "IwMalloc.h"
 
 // Interface should not be defined for Objective-C code
@@ -42,7 +42,6 @@
 #define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 extern "C" void dbg_printf(const char* fmt, ...);
-#define EbrDebugLog(...) EbrDebugLogShim(__VA_ARGS__)
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
@@ -106,7 +105,7 @@ private:
         if (!_initialized) {
             Ivar var = class_getInstanceVariable(_cls, _ivarName);
             if (!var) {
-                EbrDebugLog("Couldn't lazy lookup offset of ivar %s\n", _ivarName);
+                TraceCritical(L"Starboard", L"Couldn't lazy lookup offset of ivar %hs", _ivarName);
                 assert(var);
             }
             _offset = ivar_getOffset(var);

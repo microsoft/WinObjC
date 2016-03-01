@@ -15,6 +15,9 @@
 //******************************************************************************
 
 #import "UrlLauncher.h"
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"UrlLauncher";
 
 @interface UrlLauncher () {
     Class _launcher;
@@ -73,7 +76,7 @@
         _launchCompleted = YES;
         [_launchCondition signal];
         [_launchCondition unlock];
-        NSLog(@"openURL failed. Error: %@", launchError);
+        NSTraceError(TAG, @"openURL failed. Error: %@", launchError);
     };
 
     [_launcher launchUriAsync:uri success:launchSuccess failure:launchFailure];
@@ -114,7 +117,7 @@
         _canOpenCompleted = YES;
         [_canOpenCondition signal];
         [_canOpenCondition unlock];
-        NSLog(@"canOpenURL failed. Error: %@", queryError);
+        NSTraceError(TAG, @"canOpenURL failed. Error: %@", queryError);
     };
 
     [_launcher queryUriSupportAsync:uri launchQuerySupportType:WSLaunchQuerySupportTypeUri success:querySuccess failure:queryFailure];

@@ -23,6 +23,9 @@
 #include "UIKit/UINavigationController.h"
 #include "UIViewControllerInternal.h"
 #include "UITabPane.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITabBarController";
 
 @implementation UITabMoreTableView
 - (unsigned)numberOfSectionsInTableView:(UITableView*)tableview {
@@ -62,7 +65,7 @@
     _tabBar = [coder decodeObjectForKey:@"UITabBar"];
     [_tabBar setDelegate:self];
     if (_tabBar == nil) {
-        EbrDebugLog("No tab!\n");
+        TraceVerbose(TAG, L"No tab!");
     }
     _moreNavigationController = [UITabMoreController new];
     [self setViewControllers:viewControllers];
@@ -164,7 +167,7 @@
         NSArray* items = [_tabBar items];
 
         if (index >= [items count]) {
-            EbrDebugLog("setSelectedIndex: bad index\n");
+            TraceVerbose(TAG, L"setSelectedIndex: bad index");
             return;
         }
 
@@ -240,7 +243,7 @@
 }
 
 - (NSArray*)customizableViewControllers {
-    EbrDebugLog("Warning: No customizableViewControllers");
+    TraceWarning(TAG, L"Warning: No customizableViewControllers");
     return _customizableControllers;
 }
 

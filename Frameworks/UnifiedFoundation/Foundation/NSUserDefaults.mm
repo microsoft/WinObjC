@@ -26,6 +26,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSUserDefaults.h"
 #import "Foundation/NSThread.h"
 #import "NSPersistentDomain.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSUserDefaults";
 
 FOUNDATION_EXPORT NSString* const NSGlobalDomain = @"NSGlobalDomain";
 FOUNDATION_EXPORT NSString* const NSArgumentDomain = @"NSArgumentDomain";
@@ -168,7 +171,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Status Interoperable
 */
 - (void)setPersistentDomain:(id)domain forName:(NSString*)name {
-    EbrDebugLog("Setting domain for %s\n", [name UTF8String]);
+    TraceVerbose(TAG, L"Setting domain for %hs", [name UTF8String]);
     [_domains setObject:domain forKey:name];
 }
 
@@ -381,7 +384,7 @@ static id deepCopyValue(id obj) {
     if (!_willSave) {
         _willSave = TRUE;
         if (![NSThread isMainThread]) {
-            EbrDebugLog("Warning: NSUserDefaults accessed from non-main thread\n");
+            TraceWarning(TAG, L"Warning: NSUserDefaults accessed from non-main thread");
             [self performSelectorOnMainThread:@selector(_scheduleSync) withObject:nil waitUntilDone:FALSE];
         } else {
             [self performSelector:@selector(synchronize) withObject:nil afterDelay:1.0];
@@ -527,7 +530,7 @@ static id deepCopyValue(id obj) {
 */
 + (void)resetStandardUserDefaults {
     UNIMPLEMENTED();
-    EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
+    TraceWarning(TAG, L"Warning: resetStandardUserDefaults not implemented");
 }
 
 /**

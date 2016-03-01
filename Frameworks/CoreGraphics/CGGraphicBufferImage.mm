@@ -19,6 +19,8 @@
 #import <stdlib.h>
 #import "CGContextCairo.h"
 
+#include "LoggingNative.h"
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 
@@ -26,6 +28,7 @@
 
 #pragma clang diagnostic pop
 
+static const wchar_t* TAG = L"CGGraphicBufferImage";
 extern int imgDataCount;
 
 CGGraphicBufferImage::CGGraphicBufferImage(DWORD width, DWORD height, surfaceFormat fmt) {
@@ -46,7 +49,7 @@ CGGraphicBufferImage::CGGraphicBufferImage(
 CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(
     DWORD width, DWORD height, surfaceFormat fmt, DisplayTexture* nativeTexture, DisplayTextureLocking* locking) {
     EbrIncrement((volatile int*)&imgDataCount);
-    EbrDebugLog("Number of images: %d\n", imgDataCount);
+    TraceVerbose(TAG, L"Number of images: %d", imgDataCount);
 
     _imageLocks = 0;
     _cairoLocks = 0;
@@ -101,14 +104,14 @@ CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(
 
 CGGraphicBufferImageBacking::~CGGraphicBufferImageBacking() {
     EbrDecrement((volatile int*)&imgDataCount);
-    EbrDebugLog("Destroyed (freeing fasttexture 0x%x) - Number of images: %d\n", _nativeTexture, imgDataCount);
+    TraceVerbose(TAG, L"Destroyed (freeing fasttexture 0x%x) - Number of images: %d", _nativeTexture, imgDataCount);
 
     while (_cairoLocks > 0) {
-        EbrDebugLog("Warning: surface lock not released cnt=%d\n", _cairoLocks);
+        TraceWarning(TAG, L"Warning: surface lock not released cnt=%d", _cairoLocks);
         ReleaseCairoSurface();
     }
     while (_imageLocks > 0) {
-        EbrDebugLog("Warning: image lock not released cnt=%d\n", _imageLocks);
+        TraceWarning(TAG, L"Warning: image lock not released cnt=%d", _imageLocks);
         ReleaseImageData();
     }
     if (_nativeTexture)
@@ -190,7 +193,7 @@ void CGGraphicBufferImageBacking::ReleaseImageData() {
             _imageData = NULL;
         }
     } else {
-        EbrDebugLog("Warning: Image lock over-released\n");
+        TraceWarning(TAG, L"Warning: Image lock over-released");
     }
 }
 
@@ -256,11 +259,11 @@ void CGGraphicBufferImageBacking::SetFreeWhenDone(bool freeWhenDone) {
 
 DisplayTexture* CGGraphicBufferImageBacking::GetDisplayTexture() {
     while (_cairoLocks > 0) {
-        EbrDebugLog("Warning: surface lock not released cnt=%d\n", _cairoLocks);
+        TraceWarning(TAG, L"Warning: surface lock not released cnt=%d", _cairoLocks);
         ReleaseCairoSurface();
     }
     while (_imageLocks > 0) {
-        EbrDebugLog("Warning: image lock not released cnt=%d\n", _imageLocks);
+        TraceWarning(TAG, L"Warning: image lock not released cnt=%d", _imageLocks);
         ReleaseImageData();
     }
 

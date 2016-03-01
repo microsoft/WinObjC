@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Logging.h"
+#include "LoggingNative.h"
 
 #include <Foundation/NSString.h>
 #include <Windows.h>
@@ -23,25 +23,24 @@
 /**
  @Status Interoperable
 */
-void NSLogv(NSString* fmt, va_list list) {
-    auto str = [[NSString alloc] initWithFormat:fmt arguments:list];
-    INT len = [str length];
-    LPWSTR terminatedBuf = (LPWSTR)IwCalloc(len + 1, sizeof(WCHAR));
-    memcpy(terminatedBuf, [str rawCharacters], len * sizeof(WCHAR));
+void NSLogv(NSString* format, va_list list) {
+    StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
+    const wchar_t* wideBuffer = (const wchar_t*)[formattedString _rawTerminatedCharacters];
 
     // This traces to ETW in debug and release modes.
     // This prints to OutputDebugString only in debug mode.
-    TraceVerbose(L"NSLog", L"%s", terminatedBuf);
+    TraceVerbose(L"NSLog", L"%ws", wideBuffer);
 
 // This prints to OutputDebugString only in release mode.
 #ifndef _DEBUG
-    OutputDebugStringW(terminatedBuf);
+    OutputDebugStringW(wideBuffer);
     OutputDebugStringW(L"\n");
 #endif
 
-    IwFree(terminatedBuf);
-    printf("%s\n", [str UTF8String]);
-    [str release];
+    // Only print to stderr if we are a console application
+    if (_fileno(stderr) >= 0) {
+        fprintf(stderr, "%s\n", [formattedString UTF8String]);
+    }
 }
 
 /**

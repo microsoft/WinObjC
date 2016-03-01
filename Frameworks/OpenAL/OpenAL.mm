@@ -44,6 +44,9 @@
 
 #include "OpenAL\al.h"
 #include "OpenAL\alc.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"OpenAL";
 
 #undef AL_API
 #undef ALC_API
@@ -511,7 +514,7 @@ public:
             case AL_GAIN:
             case AL_ROLLOFF_FACTOR:
             case AL_PITCH: {
-                EbrDebugLog("Not supported");
+                TraceVerbose(TAG, L"Not supported");
                 // assert(value == 1.0);
             } break;
 
@@ -767,7 +770,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
     outputFmt.nAvgBytesPerSec = outputFmt.nSamplesPerSec * outputFmt.nBlockAlign;
 
     if (FAILED(hr) || !client) {
-        EbrDebugLog("Failed to create client audio device");
+        TraceError(TAG, L"Failed to create client audio device");
     } else {
         hr = client->Initialize(AUDCLNT_SHAREMODE_SHARED,
                                 AUDCLNT_STREAMFLAGS_RATEADJUST | AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
@@ -776,28 +779,28 @@ void ALCdevice_struct::AudioPlaybackThread() {
                                 &outputFmt,
                                 NULL);
         if (FAILED(hr)) {
-            EbrDebugLog("IAudioClient::Initialize failed hr=0x%x\n", hr);
+            TraceError(TAG, L"IAudioClient::Initialize failed hr=0x%x", hr);
         }
 
         hr = client->SetEventHandle(hBufferReadyEvent);
         if (FAILED(hr)) {
-            EbrDebugLog("IAudioClient::SetEventHandle failed hr=0x%x\n", hr);
+            TraceError(TAG, L"IAudioClient::SetEventHandle failed hr=0x%x", hr);
         }
 
         hr = client->GetService(__uuidof(IAudioRenderClient), (void**)renderClient.GetAddressOf());
         if (FAILED(hr)) {
-            EbrDebugLog("IAudioClient::GetService failed hr=0x%x\n", hr);
+            TraceError(TAG, L"IAudioClient::GetService failed hr=0x%x", hr);
         }
 
         hr = client->Start();
         if (FAILED(hr)) {
-            EbrDebugLog("IAudioClient::Start failed hr=0x%x\n", hr);
+            TraceError(TAG, L"IAudioClient::Start failed hr=0x%x", hr);
         }
     }
 
     bool playing = false;
     if (renderClient == nullptr) {
-        EbrDebugLog("Failed to obtain audio interface");
+        TraceError(TAG, L"Failed to obtain audio interface");
     }
 
     BYTE* sampleBacking = 0;
@@ -860,7 +863,7 @@ void ALCdevice_struct::AudioPlaybackThread() {
             if (renderClient) {
                 hr = renderClient->GetBuffer(framesToFill, &sampleBuf);
                 if (FAILED(hr)) {
-                    EbrDebugLog("GetBuffer failed hr=0x%x\n", hr);
+                    TraceError(TAG, L"GetBuffer failed hr=0x%x", hr);
                 }
                 if (sampleBuf == NULL) {
                     EbrThrowFatal(0, "NULL sampleBuf");

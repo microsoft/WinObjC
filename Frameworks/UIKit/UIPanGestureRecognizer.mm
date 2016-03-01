@@ -26,6 +26,9 @@
 #import <UIKit/UITouch.h>
 
 #import "UIGestureRecognizerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIPanGestureRecognizer";
 
 // So we can allocate explicitly because otherwise constructors aren't called:
 struct TouchInfo {
@@ -297,7 +300,7 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
 
             if (start) {
                 _state = UIGestureRecognizerStateBegan;
-                EbrDebugLog("Pan gesture recognized\n");
+                TraceVerbose(TAG, L"Pan gesture recognized");
             } else {
                 _state = UIGestureRecognizerStateFailed;
             }

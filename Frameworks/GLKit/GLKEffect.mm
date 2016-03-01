@@ -24,8 +24,11 @@
 #import "ShaderInfo.h"
 #import "ShaderGen.h"
 #import "ShaderProg.h"
+#import "NSLogging.h"
 
 #include <algorithm>
+
+static const wchar_t* TAG = L"GLKEffect";
 
 #define MAX_LIGHTS 3
 #define MAX_TEXTURES 2
@@ -76,7 +79,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 - (BOOL)prepareShaders {
     _shader = [[GLKShaderCache get] shaderNamed:self.shaderName];
     if (_shader == nil) {
-        NSLog(@"Unable to find shader named %@, cannot setup for draw call!", self.shaderName);
+        NSTraceError(TAG, @"Unable to find shader named %@, cannot setup for draw call!", self.shaderName);
         return FALSE;
     }
 
@@ -121,7 +124,7 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
         GLKShaderVarType type = _mat.findVariable(v.first, true, &loc);
 
         if (!type) {
-            NSLog(@"ERROR: Shader variable %s not found in material!", v.first.c_str());
+            NSTraceError(TAG, @"ERROR: Shader variable %s not found in material!", v.first.c_str());
         } else {
             switch (type) {
                 case GLKS_SAMPLER2D:
@@ -519,14 +522,14 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
         shd.generate(*m, p);
 
-        NSLog(@"For shader named: %@", self.shaderName);
-        NSLog(@"---[ VERTEX SHADER ]------------------------------------------------------------");
-        NSLog(p.vertexShader);
-        NSLog(@"---[ PIXEL SHADER ]-------------------------------------------------------------");
-        NSLog(p.pixelShader);
+        NSTraceVerbose(TAG, @"For shader named: %@", self.shaderName);
+        NSTraceVerbose(TAG, @"---[ VERTEX SHADER ]------------------------------------------------------------");
+        NSTraceVerbose(TAG, p.vertexShader);
+        NSTraceVerbose(TAG, @"---[ PIXEL SHADER ]-------------------------------------------------------------");
+        NSTraceVerbose(TAG, p.pixelShader);
         self.shader = [[GLKShaderCache get] addShaderNamed:self.shaderName source:p];
         if (self.shader == nil) {
-            NSLog(@"There was a problem generating a shader for material %@", self.shaderName);
+            NSTraceError(TAG, @"There was a problem generating a shader for material %@", self.shaderName);
             [p release];
             return FALSE;
         }

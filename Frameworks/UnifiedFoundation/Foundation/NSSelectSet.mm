@@ -29,6 +29,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSSelectSet.h"
 #include "Foundation/NSMutableSet.h"
 #include "NSSocket.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSSelectSet";
 
 @implementation NSSelectSet
 typedef struct {
@@ -194,12 +197,12 @@ static void transferNativeToSetWithOriginals(native_set* sset, id set, id origin
         if ((numFds = select(maxDescriptor + 1, activeRead->fdset, activeWrite->fdset, activeExcept->fdset, &timeval)) < 0) {
 #if defined(WIN32) || defined(WINPHONE)
             DWORD err = WSAGetLastError();
-            EbrDebugLog("Select error %d\n", err);
+            TraceError(TAG, L"Select error %d", err);
 #else
-            EbrDebugLog("Select error %d\n", errno);
+            TraceError(TAG, L"Select error %d", errno);
 #endif
             if (errno == EINTR) {
-                EbrDebugLog("Interrupted, restarting\n");
+                TraceVerbose(TAG, L"Interrupted, restarting");
                 fflush(stdout);
                 numFds = 0;
                 continue;
@@ -222,7 +225,7 @@ static void transferNativeToSetWithOriginals(native_set* sset, id set, id origin
             /*
             for(int i=0;i<activeRead->max;i++){
             if(native_set_is_set(activeRead,i)){
-            EbrDebugLog("%d is readable\n", i);
+            TraceVerbose(TAG, L"%d is readable", i);
             }
             }
             */

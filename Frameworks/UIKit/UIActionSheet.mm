@@ -24,6 +24,9 @@
 #include "UIKit/UIImage.h"
 #include "UIKit/UIActionSheet.h"
 #include "UIBarButtonItem+Internals.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIActionSheet";
 
 @implementation UIActionSheet {
     id<UIActionSheetDelegate> _delegate;
@@ -454,7 +457,7 @@ static void dismissView(UIActionSheet* self, int index) {
  @Status Interoperable
 */
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
-    EbrDebugLog("dismissWithClicked .. fire an event?\n");
+    TraceVerbose(TAG, L"dismissWithClicked .. fire an event?");
     return self;
 }
 

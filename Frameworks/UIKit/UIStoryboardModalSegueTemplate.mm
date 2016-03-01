@@ -16,6 +16,9 @@
 
 #include "Starboard.h"
 #include <UIKit/UIStoryboard.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
 
 @interface UIStoryboardModalSegueTemplate : NSObject
 @end
@@ -50,7 +53,7 @@
 
 - (id)perform:(id)arg {
     if (_identifier == nil) {
-        EbrDebugLog("performSegue: identifier = nil!  dest = %s\n", [_destination UTF8String]);
+        TraceVerbose(TAG, L"performSegue: identifier = nil!  dest = %hs", [_destination UTF8String]);
         [_viewController performSegueWithDestination:(id)_destination sender:arg];
         return self;
     }
@@ -97,7 +100,7 @@
 
 - (void)perform:(id)arg {
     if (_identifier == nil) {
-        EbrDebugLog("performSegue: identifier = nil!  dest = %s\n", [_destination UTF8String]);
+        TraceVerbose(TAG, L"performSegue: identifier = nil!  dest = %hs", [_destination UTF8String]);
         [_viewController performSegueWithDestination:(id)_destination sender:arg];
         return;
     }
@@ -144,7 +147,7 @@
 
 - (void)perform:(id)arg {
     if (_identifier == nil) {
-        EbrDebugLog("performSegue: identifier = nil!  dest = %s\n", [_destination UTF8String]);
+        TraceVerbose(TAG, L"performSegue: identifier = nil!  dest = %hs", [_destination UTF8String]);
         [_viewController performSegueWithDestination:(id)_destination sender:arg];
         return;
     }

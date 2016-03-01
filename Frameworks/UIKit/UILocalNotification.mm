@@ -22,6 +22,9 @@
 #include "Foundation/NSDictionary.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSTimeZone.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UILocalNotification";
 
 NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefaultSoundName";
 

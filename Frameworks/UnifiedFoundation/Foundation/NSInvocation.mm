@@ -16,8 +16,8 @@
 
 #include "Starboard.h"
 #include "Foundation/NSInvocation.h"
-#include "Logging.h"
 #include <ctype.h>
+#include "LoggingNative.h"
 #include <objc/encoding.h>
 
 static const wchar_t* TAG = L"NSInvocation";
@@ -92,7 +92,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 */
 - (void)setArgument:(void*)buf atIndex:(int)index {
     if (index >= MAX_ARGS) {
-        EbrDebugLog("index = %d, MAX_ARGS = %d!\n", index, MAX_ARGS);
+        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d!", index, MAX_ARGS);
         assert(0);
     }
 
@@ -122,7 +122,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 */
 - (void)getArgument:(void*)buf atIndex:(int)index {
     if (index >= MAX_ARGS) {
-        EbrDebugLog("index = %d, MAX_ARGS = %d!\n", index, MAX_ARGS);
+        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d!", index, MAX_ARGS);
         assert(0);
     }
 
@@ -350,7 +350,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
             if (curArg != NULL) {
                 memcpy(&curWord, curArg, size > 4 ? 4 : size);
             } else {
-                EbrDebugLog("Warning: NSInvocation argument not set\n");
+                TraceWarning(TAG, L"Warning: NSInvocation argument not set");
             }
 
             stackParams[stackParamsLen++] = curWord;
@@ -433,7 +433,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                 } break;
 
                 default:
-                    EbrDebugLog("Unhandled # of args: %d\n", stackParamsLen);
+                    TraceVerbose(TAG, L"Unhandled # of args: %d", stackParamsLen);
                     assert(0);
                     *((char*)0) = 0;
                     break;

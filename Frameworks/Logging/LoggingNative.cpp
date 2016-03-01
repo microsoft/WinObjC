@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "Logging.h"
+#include "LoggingNative.h"
 #include "LoggingInternal.h"
 
 #include <mutex>
@@ -25,6 +25,8 @@
 #include <winmeta.h>
 #include <windows.h>
 #include <TraceLoggingProvider.h>
+// TODO: WIL logging hook
+// #include "ErrorHandling.h"
 
 // Init for WinObjCTraceLoggingProvider with GUID {E4BABC11-825E-4D44-8104-D6CFAC39AE13}
 TRACELOGGING_DECLARE_PROVIDER(s_traceLoggingProvider);
@@ -36,80 +38,78 @@ TRACELOGGING_DEFINE_PROVIDER(s_traceLoggingProvider,
 bool s_isRegistered = false;
 std::mutex s_isRegisteredMutex;
 
+// TODO: WIL logging hook
+// This is where we store the WIL hook
+//namespace wil {
+//namespace details {
+//
+//void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
+//
+//}
+//}
+
 void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...) {
     va_list varArgs;
     va_start(varArgs, format);
-    TraceRegister();
-    _V_TRACE(WINEVENT_LEVEL_VERBOSE, LABEL_VERBOSE, tag, format, varArgs);
+    _V_TRACE_WIDE(WINEVENT_LEVEL_VERBOSE, LABEL_VERBOSE, tag, format, varArgs);
     va_end(varArgs);
 }
 
 void TraceInfo(const wchar_t* tag, const wchar_t* format, ...) {
     va_list varArgs;
     va_start(varArgs, format);
-    TraceRegister();
-    _V_TRACE(WINEVENT_LEVEL_INFO, LABEL_INFO, tag, format, varArgs);
+    _V_TRACE_WIDE(WINEVENT_LEVEL_INFO, LABEL_INFO, tag, format, varArgs);
     va_end(varArgs);
 }
 
 void TraceWarning(const wchar_t* tag, const wchar_t* format, ...) {
     va_list varArgs;
     va_start(varArgs, format);
-    TraceRegister();
-    _V_TRACE(WINEVENT_LEVEL_WARNING, LABEL_WARNING, tag, format, varArgs);
+    _V_TRACE_WIDE(WINEVENT_LEVEL_WARNING, LABEL_WARNING, tag, format, varArgs);
     va_end(varArgs);
 }
 
 void TraceError(const wchar_t* tag, const wchar_t* format, ...) {
     va_list varArgs;
     va_start(varArgs, format);
-    TraceRegister();
-    _V_TRACE(WINEVENT_LEVEL_ERROR, LABEL_ERROR, tag, format, varArgs);
+    _V_TRACE_WIDE(WINEVENT_LEVEL_ERROR, LABEL_ERROR, tag, format, varArgs);
     va_end(varArgs);
 }
 
 void TraceCritical(const wchar_t* tag, const wchar_t* format, ...) {
     va_list varArgs;
     va_start(varArgs, format);
-    TraceRegister();
-    _V_TRACE(WINEVENT_LEVEL_CRITICAL, LABEL_CRITICAL, tag, format, varArgs);
+    _V_TRACE_WIDE(WINEVENT_LEVEL_CRITICAL, LABEL_CRITICAL, tag, format, varArgs);
     va_end(varArgs);
 }
 
-void TraceRegister() {
-    std::lock_guard<std::mutex> lock(s_isRegisteredMutex);
+// TODO: WIL logging hook
+//void __stdcall _wilLoggingCallback(wil::FailureInfo const& failure) {
+//    wchar_t debugString[2048];
+//    wil::GetFailureLogString(debugString, _countof(debugString), failure);
+//    TraceVerbose(L"WIL", debugString);
+//}
 
+void TraceRegister() {
     if (!s_isRegistered) {
         s_isRegistered = true;
         TraceLoggingRegister(s_traceLoggingProvider);
     }
+
+    // TODO: WIL logging hook
+    //if (wil::details::g_pfnLoggingCallback == nullptr) {
+    //    wil::details::g_pfnLoggingCallback = &_wilLoggingCallback;
+    //}
 }
 
 void TraceUnregister() {
-    std::lock_guard<std::mutex> lock(s_isRegisteredMutex);
-
     if (s_isRegistered) {
         s_isRegistered = false;
         TraceLoggingUnregister(s_traceLoggingProvider);
     }
-}
 
-void EbrDebugLogShim(const char* format, ...) {
-#ifdef _DEBUG
-    va_list va;
-
-    va_start(va, format);
-    char buf[c_bufferCount];
-    int len = vsnprintf_s(buf, _countof(buf), _TRUNCATE, format, va);
-    va_end(va);
-
-    // Trim off newline for EBR debug.
-    if ((len > 0) && (len < (c_bufferCount - 1)) && (buf[len - 1] == '\n')) {
-        buf[len - 1] = '\0';
-    }
-    wchar_t wbuf[c_bufferCount];
-    size_t wlen;
-    mbstowcs_s(&wlen, wbuf, _countof(wbuf), buf, _TRUNCATE);
-    TraceVerbose(L"EbrDebugLog", wbuf);
-#endif
+    // TODO: WIL logging hook
+    //if (wil::details::g_pfnLoggingCallback == &_wilLoggingCallback) {
+    //    wil::details::g_pfnLoggingCallback = nullptr;
+    //}
 }

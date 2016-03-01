@@ -20,6 +20,9 @@
 #include "Foundation/NSNumber.h"
 #include "Foundation/NSOutputStream.h"
 #include "NSStreamInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSOutputStream";
 
 @interface NSOutputStream () {
     NSString* _filename;
@@ -75,7 +78,7 @@
     _append = append;
 
     _filename = file;
-    EbrDebugLog("NSOutputStream opening %s\n", [file UTF8String]);
+    TraceVerbose(TAG, L"NSOutputStream opening %hs", [file UTF8String]);
 
     return self;
 }
@@ -189,10 +192,10 @@
         if (_append) {
             mode = const_cast<char*>("ab");
         }
-        EbrDebugLog("Opening %s for writing\n", [_filename UTF8String]);
+        TraceVerbose(TAG, L"Opening %hs for writing", [_filename UTF8String]);
         fp = EbrFopen([_filename UTF8String], mode);
         if (!fp) {
-            EbrDebugLog("Open of %s failed\n", [_filename UTF8String]);
+            TraceError(TAG, L"Open of %hs failed", [_filename UTF8String]);
             _status = NSStreamStatusNotOpen;
         } else {
             _status = NSStreamStatusOpen;

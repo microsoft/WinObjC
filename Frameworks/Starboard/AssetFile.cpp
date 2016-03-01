@@ -26,6 +26,9 @@
 #include "Platform/EbrPlatform.h"
 #include "AssetFile.h"
 #include "PathMapper.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"AssetFile";
 
 #define strtok_r strtok_s
 
@@ -333,7 +336,7 @@ int EbrStat(const char* filename, struct stat* ret) {
     }
 
     if (!map.MappedPath()) {
-        EbrDebugLog("OH GOD WHY EbrStat failure!\n");
+        TraceError(TAG, L"EbrStat failure!");
         return -1;
     }
 

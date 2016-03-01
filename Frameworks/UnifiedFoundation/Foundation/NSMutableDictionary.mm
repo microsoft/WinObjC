@@ -60,7 +60,6 @@
  @Status Interoperable
 */
 - (void)setValue:(id)value forKey:(NSString*)key {
-    // EbrDebugLog("Setting %s to %x\n", E2H([key UTF8String]), value);
     if (value != nil) {
         [self setObject:value forKey:key];
     } else {

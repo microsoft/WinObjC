@@ -19,6 +19,9 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "Foundation/NSDate.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDate";
 
 double TimeIntervalSinceReferenceDate() {
     double result;
@@ -155,7 +158,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSDate*)initWithCoder:(NSCoder*)coder {
-    EbrDebugLog("NSDate initWithCoder not supported\n");
+    TraceVerbose(TAG, L"NSDate initWithCoder not supported");
     return [self init];
 }
 
@@ -164,7 +167,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 */
 - (NSDate*)initWithString:(NSString*)string {
     UNIMPLEMENTED();
-    EbrDebugLog("NSDate initWithString not supported\n");
+    TraceVerbose(TAG, L"NSDate initWithString not supported");
     [self init];
 
     return self;
@@ -313,7 +316,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    EbrDebugLog("NSDate: encodeWithCoder not supported\n");
+    TraceVerbose(TAG, L"NSDate: encodeWithCoder not supported");
 }
 
 /**

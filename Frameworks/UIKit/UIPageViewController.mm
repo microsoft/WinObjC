@@ -20,9 +20,11 @@
 #import <UIKit/UIScrollView.h>
 #import <Foundation/NSException.h>
 #import <UIKit/UIPageViewController.h>
+#import "NSLogging.h"
 
 #include <algorithm>
 
+static const wchar_t* TAG = L"UIPageViewController";
 NSString* const UIPageViewControllerOptionSpineLocationKey = @"SpineLocation";
 NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
@@ -152,7 +154,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
                 [self setContentOffset:CGPointMake(0, 0) animated:YES];
                 break;
             default:
-                NSLog(@"Parameter 'direction' out of range");
+                NSTraceCritical(TAG, @"Parameter 'direction' out of range");
                 FAIL_FAST();
         }
 
@@ -474,7 +476,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
                   animated:(BOOL)animated
                 completion:(void (^)(BOOL finished))completion {
     if (viewControllers == nil) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Parameter viewControllers nil!" userInfo:nil];
+        THROW_NS_HR_MSG(E_INVALIDARG, "Parameter viewControllers nil!");
     }
 
     switch (self.spineLocation) {
@@ -483,37 +485,29 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         case UIPageViewControllerSpineLocationMax:
             if (self.doubleSided) {
                 if (viewControllers.count != 2) {
-                    @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                                   reason:@"Doublesided spine type requires 2 UIViewControllers!"
-                                                 userInfo:nil];
+                    THROW_NS_HR_MSG(E_INVALIDARG, "Doublesided spine type requires 2 UIViewControllers!");
                 } else {
-                    NSLog(@"Double sided transitions not supported. Only first element will be used for transition.");
+                    NSTraceWarning(TAG, @"Double sided transitions not supported. Only first element will be used for transition.");
                     viewControllers = [[NSArray arrayWithObjects:[viewControllers objectAtIndex:0]] autorelease];
                 }
             }
             if (viewControllers.count != 1) {
-                @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                               reason:@"Spine type requires 1 UIViewController!"
-                                             userInfo:nil];
+                THROW_NS_HR_MSG(E_INVALIDARG, "Spine type requires 1 UIViewController!");
             }
             break;
         case UIPageViewControllerSpineLocationMid:
             if (viewControllers.count > 2) {
-                @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                               reason:@"Spine type requires 2 UIViewControllers!"
-                                             userInfo:nil];
+                THROW_NS_HR_MSG(E_INVALIDARG, "Spine type requires 2 UIViewControllers!");
             }
             break;
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Parameter 'direction' out of range." userInfo:nil];
+            THROW_NS_HR_MSG(E_INVALIDARG, "Parameter 'direction' out of range.");
     }
 
     for (int i = 0; i < viewControllers.count; i++) {
         id viewController = [viewControllers objectAtIndex:i];
         if ((viewController != nil) && ![viewController isKindOfClass:[UIViewController class]]) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                           reason:@"Not all elements in viewControllers conform to UIViewController"
-                                         userInfo:nil];
+            THROW_NS_HR_MSG(E_INVALIDARG, "Not all elements in viewControllers conform to UIViewController.");
         }
     }
 
@@ -527,7 +521,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
                                          completion:completion];
             break;
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Invalid navigation direction" userInfo:nil];
+            THROW_NS_HR_MSG(E_INVALIDARG, "Invalid navigation direction.");
     }
 }
 
@@ -554,13 +548,14 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
     switch (style) {
         case UIPageViewControllerTransitionStylePageCurl:
-            NSLog(@"UIPageViewControllerTransitionStylePageCurl unsupported. Transition style will fall back to Scroll.");
+            NSTraceWarning(TAG,
+                                 @"UIPageViewControllerTransitionStylePageCurl unsupported. Transition style will fall back to Scroll.");
         // Fallthrough
         case UIPageViewControllerTransitionStyleScroll:
             _transitionStyle = style;
             break;
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Parameter \"style\" out of range" userInfo:nil];
+            THROW_NS_HR_MSG(E_INVALIDARG, "Parameter \"style\" out of range");
     }
 
     switch (navigationOrientation) {
@@ -569,13 +564,11 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             _navigationOrientation = navigationOrientation;
             break;
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                           reason:@"Parameter \"navigationOrientation\" out of range"
-                                         userInfo:nil];
+            THROW_NS_HR_MSG(E_INVALIDARG, "Parameter \"navigationOrientation\" out of range");
     }
 
     if (options != nil) {
-        NSLog(@"UIPageViewController parameter \"options\" unsupported.");
+        NSTraceWarning(TAG, @"UIPageViewController parameter \"options\" unsupported.");
     }
 
     // TODO: Should we pull the pan gesture recognizer from UIScrollView?

@@ -27,6 +27,9 @@
 
 #import "CACompositor.h"
 #import "UIGestureRecognizerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITapGestureRecognizer";
 
 static id _pendingTaps;
 extern NSMutableDictionary* g_curGesturesDict;
@@ -84,7 +87,7 @@ static savedTouch* findTouch(UITapGestureRecognizer* self, id touch) {
     if (imp != nil) {
         _numberOfTapsRequired = imp->_numberOfTapsRequired;
     }
-    EbrDebugLog("number of taps required - %d\n", _numberOfTapsRequired);
+    TraceVerbose(TAG, L"number of taps required - %d", _numberOfTapsRequired);
     return self;
 }
 
@@ -156,7 +159,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         _maxTouches = [[event allTouches] count];
     }
 
-    EbrDebugLog("Tap touch detected %x\n", curTouch);
+    TraceVerbose(TAG, L"Tap touch detected %x", curTouch);
     if (_numberOfTapsRequired == 1) {
         //  Delay the tap gesture recognition if there's more than one tap gesture recognizer
         bool shouldDelay = false;
@@ -195,7 +198,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         CGPoint startPos = save->_savedPos;
 
         if (startPos.distGr(curPos, 10.0f)) {
-            EbrDebugLog("UITapGestureRecognizer: touch moved too far\n");
+            TraceVerbose(TAG, L"UITapGestureRecognizer: touch moved too far");
             _state = UIGestureRecognizerStateFailed;
             [_pendingTaps removeObject:self];
             [_recognizeTimer invalidate];
@@ -203,7 +206,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             _wasRecognized = false;
         }
     } else {
-        EbrDebugLog("UITapGestureRecognizer: touch %x not found - count=%d\n", curTouch, _numSavedTouches);
+        TraceVerbose(TAG, L"UITapGestureRecognizer: touch %x not found - count=%d", curTouch, _numSavedTouches);
     }
     return self;
 }
@@ -217,19 +220,19 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         CGPoint startPos = save->_savedPos;
 
         if (startPos.distGr(curPos, TAP_SLACK_AREA)) {
-            EbrDebugLog("UITapGestureRecognizer: touch moved too far on end\n");
+            TraceVerbose(TAG, L"UITapGestureRecognizer: touch moved too far on end");
             _state = UIGestureRecognizerStateFailed;
             return self;
         }
     } else {
-        EbrDebugLog("UITapGestureRecognizer: touch not found\n");
+        TraceVerbose(TAG, L"UITapGestureRecognizer: touch not found");
     }
 
     id allTouches = [event allTouches];
     unsigned count = [touches count];
 
     if (count > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.2f) {
-        EbrDebugLog("UITapGestureRecognizer: too many touches\n");
+        TraceVerbose(TAG, L"UITapGestureRecognizer: too many touches");
         _state = UIGestureRecognizerStateFailed;
         return self;
     } else if (count == _numberOfTouchesRequired) {
@@ -238,7 +241,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             unsigned tapCount = [curTouch tapCount];
 
             if (tapCount > _numberOfTapsRequired) {
-                EbrDebugLog("UITapGestureRecognizer: too many taps\n");
+                TraceVerbose(TAG, L"UITapGestureRecognizer: too many taps");
                 _state = UIGestureRecognizerStateFailed;
                 success = false;
             } else if (tapCount < _numberOfTapsRequired) {

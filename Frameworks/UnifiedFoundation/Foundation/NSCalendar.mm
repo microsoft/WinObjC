@@ -24,6 +24,9 @@
 #include "NSLocaleInternal.h"
 
 #include <unicode/gregocal.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSCalendar";
 
 NSString* const NSCalendarIdentifierGregorian = @"NSCalendarIdentifierGregorian";
 NSString* const NSCalendarIdentifierBuddhist = @"NSCalendarIdentifierBuddhist";
@@ -367,7 +370,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 */
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)inUnit inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
     UNIMPLEMENTED();
-    EbrDebugLog("ordinalityOfUnit not supported\n");
+    TraceVerbose(TAG, L"ordinalityOfUnit not supported");
     return 0;
 }
 

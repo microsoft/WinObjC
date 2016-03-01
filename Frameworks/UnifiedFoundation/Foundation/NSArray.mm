@@ -34,6 +34,9 @@
 #include "Foundation/NSNull.h"
 #include "NSArrayInternal.h"
 #include "VAListHelper.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSArray";
 
 @class NSXMLPropertyList, NSPropertyListReader, NSArrayConcrete, NSMutableArrayConcrete, NSPropertyListWriter_Binary;
 
@@ -160,7 +163,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     if (![arrayData isKindOfClass:[NSArray class]]) {
         arrayData = [arrayData objectForKey:@"$objects"];
         if (![(id)arrayData isKindOfClass:[NSArray class]]) {
-            EbrDebugLog("object %s is not an array", [[arrayData description] UTF8String]);
+            TraceWarning(TAG, L"object %hs is not an array", [[arrayData description] UTF8String]);
             return self;
         }
     }
@@ -216,7 +219,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 */
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
-        EbrDebugLog("objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self));
+        TraceCritical(TAG, L"objectAtIndex: index > count (%d > %d), throwing exception", index, CFArrayGetCount((CFArrayRef)self));
         [NSException raise:@"Array out of bounds" format:@""];
         return nil;
     }
@@ -799,7 +802,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
-    EbrDebugLog("Writing array to file %s\n", [file UTF8String]);
+    TraceVerbose(TAG, L"Writing array to file %hs", [file UTF8String]);
 
     id data = [NSMutableData data];
     [NSPropertyListWriter_Binary serializePropertyList:self intoData:data];
@@ -826,7 +829,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSString*)description {
-    EbrDebugLog("NSArray description not supported\n");
+    TraceWarning(TAG, L"NSArray description not supported");
     return @"Not supported";
 }
 
@@ -959,7 +962,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 
     while (idx != NSNotFound) {
         if (idx >= count) {
-            EbrDebugLog("objectsAtIndexes: index > count (%d > %d), throwing exception\n", idx, count);
+            TraceCritical(TAG, L"objectsAtIndexes: index > count (%d > %d), throwing exception", idx, count);
             [NSException raise:@"Array out of bounds" format:@""];
             return nil;
         }

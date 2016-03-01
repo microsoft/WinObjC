@@ -22,6 +22,9 @@
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSMutableArray.h"
 #include "NSArrayInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSMutableArray";
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
 
@@ -165,7 +168,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 */
 - (void)removeObject:(NSObject*)objAddr {
     if (objAddr == nil) {
-        EbrDebugLog("objAddr = nil!\n");
+        TraceVerbose(TAG, L"objAddr = nil!");
     }
 
     int idx = [self indexOfObject:objAddr];

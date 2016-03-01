@@ -27,6 +27,9 @@
 #include "CoreGraphics/CGPattern.h"
 
 #include <math.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIColor";
 
 typedef struct {
     double r; // percent
@@ -194,7 +197,7 @@ static id _cachedColorsDict;
     }
     if (pattern != nil) {
         const char* pPattern = [pattern UTF8String];
-        TraceVerbose(L"UIColor", L"Selecting pattern %hs\n", pPattern);
+        TraceVerbose(TAG, L"Selecting pattern %hs", pPattern);
 
         return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
     } else {
@@ -549,7 +552,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
         CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
     } else {
-        EbrDebugLog("UIColor::set - context not set\n");
+        TraceVerbose(TAG, L"UIColor::set - context not set");
     }
 }
 
@@ -569,7 +572,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     if (UIGraphicsGetCurrentContext()) {
         CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
     } else {
-        EbrDebugLog("UIColor::setFill - context not set\n");
+        TraceVerbose(TAG, L"UIColor::setFill - context not set");
     }
 }
 

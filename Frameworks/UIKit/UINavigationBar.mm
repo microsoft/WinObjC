@@ -33,6 +33,9 @@
 #include "UIKit/UINavigationBar.h"
 #include "UIKit/UIBarButtonItem.h"
 #include "UIBarButtonItem+Internals.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UINavigationBar";
 
 @implementation UINavigationBar {
     idretaintype(NSMutableArray) _items;
@@ -245,7 +248,7 @@ static void setBackground(UINavigationBar* self) {
 - (void)popNavigationItemAnimated:(BOOL)animated {
     id item = [_items lastObject];
     if (item == nil) {
-        EbrDebugLog("No navigation item to pop!\n");
+        TraceVerbose(TAG, L"No navigation item to pop!");
         return;
     }
 

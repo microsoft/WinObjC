@@ -28,6 +28,9 @@
 #include <mach/mach_time.h>
 
 #include <algorithm>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CFMisc";
 
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
@@ -47,7 +50,7 @@ extern "C" uint32_t arc4random() {
 
     UINT32 randResult = 0;
     if (!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult))) {
-        EbrDebugLog("Unable to get random number!\n");
+        TraceVerbose(TAG, L"Unable to get random number!");
     }
     return randResult;
 }

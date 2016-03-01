@@ -13,11 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#import "Foundation/Foundation.h"
 
 //
 // Trace a verbose message.
@@ -26,7 +25,7 @@ extern "C" {
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
+void NSTraceVerbose(const wchar_t* tag, NSString* format, ...);
 
 //
 // Trace an info message.
@@ -35,7 +34,7 @@ void TraceVerbose(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceInfo(const wchar_t* tag, const wchar_t* format, ...);
+void NSTraceInfo(const wchar_t* tag, NSString* format, ...);
 
 //
 // Trace a warning message.
@@ -44,7 +43,7 @@ void TraceInfo(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceWarning(const wchar_t* tag, const wchar_t* format, ...);
+void NSTraceWarning(const wchar_t* tag, NSString* format, ...);
 
 //
 // Trace an error message.
@@ -53,7 +52,7 @@ void TraceWarning(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceError(const wchar_t* tag, const wchar_t* format, ...);
+void NSTraceError(const wchar_t* tag, NSString* format, ...);
 
 //
 // Trace a critical message.
@@ -62,22 +61,4 @@ void TraceError(const wchar_t* tag, const wchar_t* format, ...);
 // format - a "printf" style format string
 // ... - var args for printf.
 //
-void TraceCritical(const wchar_t* tag, const wchar_t* format, ...);
-
-//
-// Ensures the the trace logging provider is registered.
-//
-void TraceRegister();
-
-//
-// Ensures the trace logging provider is unregistered.
-//
-void TraceUnregister();
-
-// Shim for legacy EbrDebugLog
-// TODO: replace calls to EbrDebugLog with trace calls.
-void EbrDebugLogShim(const char* format, ...);
-
-#ifdef __cplusplus
-}
-#endif
+void NSTraceCritical(const wchar_t* tag, NSString* format, ...);

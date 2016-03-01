@@ -35,6 +35,9 @@ typedef id idweak;
 #import <Foundation/NSNib.h>
 
 #include "UITableViewInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITableView";
 
 NSString* const UITableViewIndexSearch = @"UITableViewIndexSearch";
 /** @Status Stub */
@@ -358,7 +361,7 @@ public:
         UITableViewCell* view = [_parent->tablePriv->_dataSource tableView:_parent cellForRowAtIndexPath:index];
 
         if (view == nil) {
-            EbrDebugLog("Didn't return a cell!\n");
+            TraceVerbose(TAG, L"Didn't return a cell!");
             // assert(0);
         } else {
             ((UITableViewCell*)view)->_deferredIndexPath = index;
@@ -1266,7 +1269,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 
             int numRows = [dataSource tableView:self numberOfRowsInSection:i];
             if (numRows < 0) {
-                EbrDebugLog("numRows < 0!\n");
+                TraceVerbose(TAG, L"numRows < 0!");
                 numRows = 0;
             }
 
@@ -1770,7 +1773,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     float y = 0.0f;
 
     if (section >= tablePriv->sectionCount()) {
-        EbrDebugLog("section(%d) > numSections(%d)\n", section, tablePriv->sectionCount());
+        TraceVerbose(TAG, L"section(%d) > numSections(%d)", section, tablePriv->sectionCount());
         assert(0);
     }
 
@@ -1847,7 +1850,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 */
 - (void)insertSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animate {
     UNIMPLEMENTED();
-    EbrDebugLog("insertSections not supported\n");
+    TraceVerbose(TAG, L"insertSections not supported");
 }
 
 /**

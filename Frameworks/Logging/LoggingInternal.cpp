@@ -21,6 +21,10 @@ void _vdebugPrintf(const wchar_t* format, va_list va) {
     wchar_t buf[c_bufferCount];
     _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, format, va);
     OutputDebugStringW(buf);
+    if (g_isTestHookEnabled) {
+        std::wstring bufString(buf);
+        g_debugTestHook = bufString;
+    }
 #endif
 }
 

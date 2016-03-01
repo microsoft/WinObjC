@@ -21,6 +21,9 @@
 #include "QuartzCore/CATransaction.h"
 #include "QuartzCore/CABasicAnimation.h"
 #include "CALayerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CATransaction";
 
 NSString* const kCATransactionAnimationDuration = @"kCATransactionAnimationDuration";
 NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
@@ -112,7 +115,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 */
 + (void)flush {
     UNIMPLEMENTED();
-    EbrDebugLog("CATransaction flush?\n");
+    TraceVerbose(TAG, L"CATransaction flush?");
 }
 
 /**

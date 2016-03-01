@@ -50,6 +50,9 @@ typedef wchar_t WCHAR;
 #include <math.h>
 
 #include "UWP/WindowsUINotifications.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIApplication";
 
 const NSTimeInterval UIMinimumKeepAliveTimeout = StubConstant();
 const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax;
@@ -336,8 +339,7 @@ static idretaintype(NSMutableArray) _curNotifications;
         id mainRunLoop = [NSRunLoop mainRunLoop];
         id currentRunLoop = [NSRunLoop currentRunLoop];
         if (mainRunLoop != currentRunLoop) {
-            EbrDebugLog("**** Error - UI updated on non-UI thread ******\n");
-            // return;
+            TraceError(TAG, L"**** Error - UI updated on non-UI thread ******");
         }
 
         refreshPending = TRUE;
@@ -457,7 +459,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
 + (void)_launchedWithURL:(NSURL*)url {
     UIApplication* shared = [self sharedApplication];
     id delegate = [shared delegate];
-    EbrDebugLog("Launchedwithurl: %x\n", url);
+    TraceVerbose(TAG, L"Launchedwithurl: %x", url);
     char* pURL = (char*)[[url absoluteString] UTF8String];
 
     if ([delegate respondsToSelector:@selector(application:handleOpenURL:)]) {
@@ -661,7 +663,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             break;
 
         default:
-            EbrDebugLog("Unknown orientation %d\n", _curOrientation);
+            TraceVerbose(TAG, L"Unknown orientation %d", _curOrientation);
             assert(0);
             break;
     }
@@ -870,7 +872,7 @@ static void printViews(id curView, int level) {
               rect.size.height);
     */
 
-    EbrDebugLog("%s%s", szOut, [fmt UTF8String]);
+    TraceVerbose(TAG, L"%hs%hs", szOut, [fmt UTF8String]);
 
     for (unsigned i = 0; i < [[curView subviews] count]; i++) {
         printViews([[curView subviews] objectAtIndex:i], level + 1);
@@ -951,7 +953,7 @@ static void printViews(id curView, int level) {
                 }
 
                 if (mouseView != nil) {
-                    EbrDebugLog("%s touched\n", object_getClassName(mouseView));
+                    TraceVerbose(TAG, L"%hs touched", object_getClassName(mouseView));
                 }
                 touches[finger]->_view = mouseView;
                 [touches[finger].view retain];
@@ -1129,7 +1131,7 @@ static void printViews(id curView, int level) {
         UIGestureRecognizer* curgesture = recognizers[i];
 
         if ([curgesture state] != UIGestureRecognizerStateCancelled) {
-            // EbrDebugLog("Checking gesture %s\n", object_getClassName(curgesture));
+            // TraceVerbose(TAG, L"Checking gesture %hs", object_getClassName(curgesture));
             id delegate = [curgesture delegate];
             BOOL send = TRUE;
             if (touch.phase == UITouchPhaseBegan && [delegate respondsToSelector:@selector(gestureRecognizer:shouldReceiveTouch:)]) {
@@ -1168,7 +1170,7 @@ static void printViews(id curView, int level) {
         if (state == UIGestureRecognizerStateRecognized || state == UIGestureRecognizerStateEnded ||
             state == UIGestureRecognizerStateFailed || state == UIGestureRecognizerStateCancelled) {
             [curgesture reset];
-            EbrDebugLog("Removing gesture %s %x state=%d\n", object_getClassName(curgesture), curgesture, state);
+            TraceVerbose(TAG, L"Removing gesture %hs %x state=%d", object_getClassName(curgesture), curgesture, state);
             [currentlyTrackingGesturesList removeObject:curgesture];
             id gesturesArr = [g_curGesturesDict objectForKey:[curgesture class]];
             [gesturesArr removeObject:curgesture];
@@ -1184,18 +1186,18 @@ static void printViews(id curView, int level) {
     }
 
     if (touch.phase != UITouchPhaseBegan && ![view->priv->currentTouches containsObject:touch]) {
-        // EbrDebugLog("View not aware of touch, ignoring\n");
+        // TraceVerbose(TAG, L"View not aware of touch, ignoring");
         return;
     }
 
     if (touch.phase == UITouchPhaseBegan && ignoringInteractionEvents > 0) {
-        EbrDebugLog("Global interaction disabled, ignoring\n");
+        TraceVerbose(TAG, L"Global interaction disabled, ignoring");
         return;
     }
 
     if (touch.phase == UITouchPhaseBegan && !view->priv->multipleTouchEnabled) {
         if ([view->priv->currentTouches count] > 0) {
-            EbrDebugLog("View already has a touch, ignoring\n");
+            TraceVerbose(TAG, L"View already has a touch, ignoring");
             return;
         }
     }
@@ -1302,7 +1304,7 @@ static void printViews(id curView, int level) {
 */
 - (UIBackgroundTaskIdentifier)beginBackgroundTaskWithExpirationHandler:(void (^)())handler {
     UNIMPLEMENTED();
-    EbrDebugLog("beginBackgroundTaskWithExpirationHandler not supported\n");
+    TraceVerbose(TAG, L"beginBackgroundTaskWithExpirationHandler not supported");
     return 0;
 }
 
@@ -1319,7 +1321,7 @@ static void printViews(id curView, int level) {
 */
 - (void)endBackgroundTask:(UIBackgroundTaskIdentifier)handler {
     UNIMPLEMENTED();
-    EbrDebugLog("endBackgroundTask not supported\n");
+    TraceVerbose(TAG, L"endBackgroundTask not supported");
 }
 
 - (void)_showScene:(UIViewController*)controller {
@@ -1632,7 +1634,7 @@ static void WarnViewControllers(UIView* subview) {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification" object:self];
 
     _applicationState = UIApplicationStateActive;
-    EbrDebugLog("Bringing to foreground with: %x\n", url);
+    TraceVerbose(TAG, L"Bringing to foreground with: %x", url);
     if (url != nil) {
         [UIApplication _launchedWithURL:url];
     }
@@ -1942,7 +1944,7 @@ static void evaluateKeyboard(id self) {
     return;
 #endif
     NSString* str = [[NSString alloc] initWithData:tokenData encoding:NSUTF8StringEncoding];
-    EbrDebugLog("Received token: %s\n", [str UTF8String]);
+    TraceVerbose(TAG, L"Received token: %hs", [str UTF8String]);
 
     if ([_delegate respondsToSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)]) {
         [_delegate application:self didRegisterForRemoteNotificationsWithDeviceToken:tokenData];
@@ -1988,8 +1990,8 @@ static void evaluateKeyboard(id self) {
 
     id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 
-    EbrDebugLog("Type is: %s\n", object_getClassName(obj));
-    EbrDebugLog("Received notification: %s\n", [[obj description] UTF8String]);
+    TraceVerbose(TAG, L"Type is: %hs", object_getClassName(obj));
+    TraceVerbose(TAG, L"Received notification: %hs", [[obj description] UTF8String]);
 
     if ([_delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
         [_delegate application:self didReceiveRemoteNotification:obj];

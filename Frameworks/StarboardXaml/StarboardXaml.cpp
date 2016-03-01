@@ -20,6 +20,7 @@
 #include "StringConversion.h"
 
 #include "winobjc\winobjc.h"
+#include "LoggingNative.h"
 
 using namespace Windows::UI;
 using namespace Windows::ApplicationModel::Activation;
@@ -88,6 +89,9 @@ public:
 extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+    // Register tracelogging
+    TraceRegister();
 
     // Copy the principal and delegate class names into our globals
     if (principalClassName) {

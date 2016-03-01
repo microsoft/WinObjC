@@ -77,6 +77,10 @@ void EbrDumpStack();
 
 // UIView -> UIViewController mapping:
 #include <unordered_map>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIViewController";
+
 namespace {
 std::unordered_map<UIView*, UIViewController*> viewMap;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -547,7 +551,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
     priv->navigationItem = [coder decodeObjectForKey:@"UINavigationItem"];
     if (priv->navigationItem != nil) {
-        EbrDebugLog("UIVIewController navigationItem is %s\n", object_getClassName(priv->navigationItem));
+        TraceVerbose(TAG, L"UIVIewController navigationItem is %hs", object_getClassName(priv->navigationItem));
     }
 
     priv->nibName = [coder decodeObjectForKey:@"UINibName"];
@@ -696,7 +700,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
                 NSString* runtimePath = [storyboardPath stringByAppendingPathComponent:priv->nibName];
                 runtimePath = [runtimePath stringByAppendingString:@".nib"];
 
-                EbrDebugLog("Searching = %s\n", (char*)[runtimePath UTF8String]);
+                TraceVerbose(TAG, L"Searching = %hs", (char*)[runtimePath UTF8String]);
                 nibPath = [bundle pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
 
                 if (nibPath == nil) {
@@ -706,7 +710,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         }
 
         if (nibPath == nil) {
-            EbrDebugLog("Couldn't find %s\n", [priv->nibName UTF8String]);
+            TraceCritical(TAG, L"Couldn't find %hs", [priv->nibName UTF8String]);
             assert(0);
         }
     } else {
@@ -741,7 +745,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
         const char* name = (const char*)[nibPath UTF8String];
 
-        EbrDebugLog("Loading view %s with owner=%s\n", name ? name : "nil", object_getClassName(self));
+        TraceVerbose(TAG, L"Loading view %hs with owner=%hs", name ? name : "nil", object_getClassName(self));
 
         if (EbrAccess(openname, 0) != -1) {
             UIStoryboard* proxyObjects[1];
@@ -832,7 +836,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         priv->isLoading = FALSE;
 
         if (priv->view == nil) {
-            EbrDebugLog("Class name=%s\n", object_getClassName(self));
+            TraceVerbose(TAG, L"Class name=%hs", object_getClassName(self));
             CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
 
             frame = [[UIScreen mainScreen] applicationFrame];
@@ -951,7 +955,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 - (UITabBarItem*)tabBarItem {
     if (priv->tabBarItem == nil) {
         priv->tabBarItem.attach([[UITabBarItem alloc] initWithTitle:priv->_title image:nil tag:0]);
-        EbrDebugLog("New tab: %s\n", object_getClassName(self));
+        TraceVerbose(TAG, L"New tab: %hs", object_getClassName(self));
     }
 
     return priv->tabBarItem;
@@ -1032,14 +1036,14 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         curController = curController->priv->_parentViewController;
     }
     if (!shouldShow) {
-        EbrDebugLog("Controller is not visible!\n");
+        TraceWarning(TAG, L"Controller is not visible!");
         return;
     }
 
     UIViewController* oldViewController = self;
     if (priv->_modalViewController != nil) {
         oldViewController = priv->_modalViewController;
-        EbrDebugLog("Can't present view controller %08x (%s) - view controller %08x (%s) already has a presented controller!\n",
+        TraceWarning(TAG, L"Can't present view controller %08x (%hs) - view controller %08x (%hs) already has a presented controller!",
                     controller,
                     object_getClassName(controller),
                     self,
@@ -1111,7 +1115,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     if ( priv->_parentViewController ) {
     return [priv->_parentViewController dismissModalViewControllerAnimated:animated];
     }
-    EbrDebugLog("dismissModalViewController invalid!\n");
+    TraceVerbose(TAG, L"dismissModalViewController invalid!");
     //assert(0);
     return nil;
     }
@@ -1134,7 +1138,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [myView setHidden:FALSE];
 
     if ( [[self view] superview] == nil ) {
-    EbrDebugLog("View is not part of the heirarchy!\n");
+    TraceVerbose(TAG, L"View is not part of the heirarchy!");
     *((char *) 0) = 0;
     } else {
     [[[self view] superview] bringSubviewToFront:[self view]];
@@ -1183,7 +1187,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if (priv->_parentViewController) {
             return;
         }
-        EbrDebugLog("dismissModalViewController invalid!\n");
+        TraceWarning(TAG, L"dismissModalViewController invalid!");
         // assert(0);
         return;
     }
@@ -1247,18 +1251,17 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [curView removeFromSuperview];
 
         if ([[self view] superview] == nil) {
-            // EbrDebugLog("View is not part of the heirarchy!\n");
-            //*((char *) 0) = 0;
+
         } else {
             [[[self view] superview] bringSubviewToFront:[self view]];
         }
 
         [curController notifyViewDidDisappear:FALSE];
         [self notifyViewDidAppear:animated];
-        EbrDebugLog("Preparing completion\n");
+        TraceVerbose(TAG, L"Preparing completion");
         if (completion)
             completion();
-        EbrDebugLog("Done completion\n");
+        TraceVerbose(TAG, L"Done completion");
     }
 }
 
@@ -1383,7 +1386,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
         [priv->_parentViewController notifyViewDidDisappear:animated];
     } else {
-        EbrDebugLog("Modal controller doesn't have a parent!\n");
+        TraceVerbose(TAG, L"Modal controller doesn't have a parent!");
     }
 
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1503,11 +1506,11 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
         case controllerWillDisappearAnimated:
         case controllerWillDisappear:
-            EbrDebugLog("Warning: Can't notify controller appeared when disappearing\n");
+            TraceWarning(TAG, L"Warning: Can't notify controller appeared when disappearing");
             break;
 
         case controllerNotVisible:
-            EbrDebugLog("Warning: Controller not visible\n");
+            TraceWarning(TAG, L"Warning: Controller not visible");
             break;
 
         case controllerVisible:
@@ -1582,7 +1585,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
             break;
 
         case controllerVisible:
-            EbrDebugLog("Warning: Didn't notify view will disappear\n");
+            TraceWarning(TAG, L"Warning: Didn't notify view will disappear");
             priv->_visibility = controllerNotVisible;
             if (priv->_searchDisplayController) {
                 [priv->_searchDisplayController notifyViewDidDisappear:isAnimated];
@@ -1807,7 +1810,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     UIViewController* cur = self;
 
     while (cur != nil) {
-        EbrDebugLog("Class is %s\n", object_getClassName(cur));
+        TraceVerbose(TAG, L"Class is %hs", object_getClassName(cur));
         if ([cur isKindOfClass:[UITabBarController class]]) {
             return cur;
         }
@@ -1933,7 +1936,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (void)performSegueWithIdentifier:(NSString*)identifier sender:(id)sender {
-    EbrDebugLog("perform segue for %s\n", [identifier UTF8String]);
+    TraceVerbose(TAG, L"perform segue for %hs", [identifier UTF8String]);
 
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
@@ -1964,7 +1967,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (void)performSegueWithDestination:(NSString*)destination sender:(id)sender {
-    EbrDebugLog("perform destination segue for %s\n", [destination UTF8String]);
+    TraceVerbose(TAG, L"perform destination segue for %hs", [destination UTF8String]);
 
     NSString* controllerName = nil;
     UIStoryboardSegueTemplate* segueTemplate = nil;
@@ -2061,7 +2064,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 }
 
 - (void)dealloc {
-    EbrDebugLog("View controller dealloc: %s\n", object_getClassName(self));
+    TraceVerbose(TAG, L"View controller dealloc: %hs", object_getClassName(self));
     if (priv->view != nil) {
         removeViewMapping(priv->view);
     }
@@ -2108,7 +2111,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 - (id)undoManager {
     //  This should come from UIResponder, which we do not actually inherit from
-    EbrDebugLog("Undo manager not supported\n");
+    TraceWarning(TAG, L"Undo manager not supported");
 
     return nil;
 }
@@ -2124,7 +2127,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 */
 - (void)setNeedsStatusBarAppearanceUpdate {
     UNIMPLEMENTED();
-    EbrDebugLog("ignoring setNeedsStatusBarAppearanceUpdate!\n");
+    TraceWarning(TAG, L"ignoring setNeedsStatusBarAppearanceUpdate!");
 }
 
 /**

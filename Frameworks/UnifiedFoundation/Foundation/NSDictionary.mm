@@ -25,6 +25,9 @@
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSKeyedArchiver.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDictionary";
 
 @class NSPropertyListReader;
 @class NSPropertyListSerialization;
@@ -237,7 +240,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 - (id)objectForKey:(id)key {
     if (key == nil) {
-        EbrDebugLog("Warning: objectForKey called with nil\n");
+        TraceWarning(TAG, L"Warning: objectForKey called with nil");
         return nil;
     }
 
@@ -342,7 +345,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 - (NSDictionary*)initWithContentsOfFile:(NSString*)filename {
     if (filename == nil) {
-        EbrDebugLog("initWithContentsOfFile: nil!\n");
+        TraceVerbose(TAG, L"initWithContentsOfFile: nil!");
         return nil;
     }
 
@@ -358,7 +361,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
                           format:0
                 errorDescription:0];
         if (deserializedDict == nil) {
-            EbrDebugLog("Error deserializing NSDictionary\n");
+            TraceError(TAG, L"Error deserializing NSDictionary");
             return nil;
         }
     }
@@ -610,7 +613,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
-    EbrDebugLog("Writing dictionary to file %s\n", [file UTF8String]);
+    TraceVerbose(TAG, L"Writing dictionary to file %hs", [file UTF8String]);
 
     NSMutableData* data = [NSMutableData data];
     [NSPropertyListWriter_Binary serializePropertyList:self intoData:data];
@@ -826,7 +829,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 - (NSString*)stringFromQueryComponents {
-    EbrDebugLog("stringFromQueryComponents not supported\n");
+    TraceVerbose(TAG, L"stringFromQueryComponents not supported");
     return nil;
 }
 
@@ -1069,7 +1072,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...) {
     if (keys == nil) {
-        EbrDebugLog("Nil keys string.\n");
+        TraceVerbose(TAG, L"Nil keys string.");
         return nil;
     }
     NSArray* keyArray = [keys componentsSeparatedByString:@", "];
@@ -1087,7 +1090,7 @@ NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...) {
     va_end(va);
 
     if ([values count] != [keyArray count]) {
-        EbrDebugLog("Number of keys does not match the number of objects; nil is not a valid variable\n");
+        TraceVerbose(TAG, L"Number of keys does not match the number of objects; nil is not a valid variable\n");
         return nil;
     }
 

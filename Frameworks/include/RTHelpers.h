@@ -25,12 +25,15 @@
 #import <CoreFoundation/CFBase.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSString.h>
+#import <NSLogging.h>
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::ApplicationModel::Store;
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Foundation::Collections;
 using namespace Microsoft::WRL::Wrappers;
+
+static const wchar_t* TAG = L"RTHelpers";
 
 //
 // COM Helpers:
@@ -53,7 +56,7 @@ static NSString* _nsstringFromHstring(HSTRING str, bool free = false) {
 
     unsigned len;
     auto buff = WindowsGetStringRawBuffer(str, &len);
-    NSLog(@"ptr: 0x%x len:%d", str, len);
+    NSTraceVerbose(TAG, @"ptr: 0x%x len:%d", str, len);
     OutputDebugStringW(buff);
     auto ret = [[NSString alloc] initWithBytes:buff length:len * 2 encoding:NSUnicodeStringEncoding];
 
