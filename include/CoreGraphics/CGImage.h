@@ -67,11 +67,11 @@ COREGRAPHICS_EXPORT CGImageRef CGImageCreateCopyWithColorSpace(CGImageRef image,
 COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                                                  const CGFloat* decode,
                                                                  bool shouldInterpolate,
-                                                                 CGColorRenderingIntent intent) STUB_METHOD;
+                                                                 CGColorRenderingIntent intent);
 COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                                                 const CGFloat* decode,
                                                                 bool shouldInterpolate,
-                                                                CGColorRenderingIntent intent) STUB_METHOD;
+                                                                CGColorRenderingIntent intent);
 
 COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithImageInRect(CGImageRef image, CGRect rect);
 COREGRAPHICS_EXPORT CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask);

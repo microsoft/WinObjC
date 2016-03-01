@@ -111,15 +111,14 @@ CGImageRef CGImageBacking::CopyOnWrite() {
 }
 
 /**
- @Status Stub
- @Notes Calls CGImageCreateWithPNGDataProvider
+ @Status Caveat
+ @Notes decode parameter not supported and must be nullptr.
 */
 CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              const CGFloat decode[],
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
-    UNIMPLEMENTED();
-    FAIL_FAST_IF_NULL(decode);
+    FAIL_FAST_IF_FALSE(decode == nullptr);
     FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
     
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
@@ -127,13 +126,14 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes decode parameter not supported and must be nullptr.
 */
 CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             const CGFloat decode[],
                                             bool shouldInterpolate,
                                             CGColorRenderingIntent intent) {
-    FAIL_FAST_IF_NULL(decode);
+    FAIL_FAST_IF_FALSE(decode == nullptr);
     FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
 
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
