@@ -25,7 +25,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-/// NSDirectoryEnumerator implementation
 @implementation NSDirectoryEnumerator {
     idretaint<NSMutableDictionary> _rootFiles;
     idretaint<NSString> _currentFile;
@@ -35,6 +34,9 @@
     idretaint<NSString> _searchPath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return self;
 }
@@ -127,6 +129,9 @@ static void searchRecursive(const char* rootpath,
     return;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithPath:(const char*)path
                      shallow:(BOOL)shallow
   includingPropertiesForKeys:(NSArray*)keys
@@ -156,6 +161,9 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableArray*)allObjects {
     id ret = [NSMutableArray array];
     id curEnum = [_rootFiles objectEnumerator];
@@ -165,6 +173,9 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
@@ -192,6 +203,9 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
     return numRet;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _rootFiles = nil;
     _currentFile = nil;
@@ -214,6 +228,9 @@ static void addAllFiles(NSDirectoryEnumerator* enumerator, NSMutableArray* allFi
     _skipDescendents = true;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ nextObject {
     id curObj, ret = nil;
 

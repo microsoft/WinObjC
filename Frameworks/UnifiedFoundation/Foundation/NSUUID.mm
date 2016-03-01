@@ -101,19 +101,37 @@
     return self;
 }
 
-- (id)initWithCoder:(NSKeyedUnarchiver*)coder {
-    NSUInteger len = 0;
-    const uint8_t* bytes = [coder decodeBytesForKey:@"NSU.uuid" returnedLength:&len];
-    if (!bytes || len != sizeof(_guid)) {
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
+- (id)initWithCoder:(NSCoder*)coder {
+    if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
+        NSUInteger len = 0;
+        const uint8_t* bytes = [coder decodeBytesForKey:@"NSU.uuid" returnedLength:&len];
+        if (!bytes || len != sizeof(_guid)) {
+            [self release];
+            return nil;
+        }
+
+        return [self initWithUUIDBytes:bytes];
+    } else {
+        UNIMPLEMENTED_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
         [self release];
         return nil;
     }
-
-    return [self initWithUUIDBytes:bytes];
 }
 
-- (void)encodeWithCoder:(NSKeyedArchiver*)coder {
-    [coder encodeBytes:reinterpret_cast<uint8_t*>(&_guid) length:sizeof(_guid) forKey:@"NSU.uuid"];
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
+        [coder encodeBytes:reinterpret_cast<uint8_t*>(&_guid) length:sizeof(_guid) forKey:@"NSU.uuid"];
+    } else {
+        UNIMPLEMENTED();
+    }
 }
 
 /**
@@ -141,10 +159,16 @@
     memcpy(bytes, &_guid, 16);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     if (![other isKindOfClass:[self class]]) {
         return NO;
@@ -152,7 +176,10 @@
     return memcmp(&_guid, &static_cast<NSUUID*>(other)->_guid, sizeof(_guid)) == 0;
 }
 
-// This is the same hashing function we use in objcrt and NSValue.
+/**
+ @Status Interoperable
+ This is the same hashing function we use in objcrt and NSValue.
+*/
 - (unsigned)hash {
     unsigned ret = 0;
     char* cur = (char*)&_guid;
@@ -167,17 +194,18 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     return [[[super description] stringByAppendingString:@" "] stringByAppendingString:[self UUIDString]];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 @end

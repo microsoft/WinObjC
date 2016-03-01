@@ -684,6 +684,9 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     return [[[self alloc] initWithPath:path] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSBundle*)bundleWithURL:(NSURL*)url {
     if ([url isFileURL]) {
         return [[[self alloc] initWithPath:[url path]] autorelease];
@@ -787,6 +790,9 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     return StubReturn();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_infoDictionary release];
     [_localizedStrings release];

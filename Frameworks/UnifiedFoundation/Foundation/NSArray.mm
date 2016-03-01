@@ -184,6 +184,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return CFArrayGetCount((CFArrayRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)init {
     _CFArrayInitInternal((CFArrayRef)self);
     return self;
@@ -326,15 +329,28 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return NSNotFound;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
 - (NSArray*)initWithCoder:(NSCoder*)coder {
-    id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
+    if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
+        id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
-    [self initWithArray:array];
-    return self;
+        [self initWithArray:array];
+        return self;
+    } else {
+        UNIMPLEMENTED_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        [self release];
+        return nil;
+    }
 }
 
 /**
@@ -391,6 +407,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)valueForKey:(NSString*)key {
     id ret = [NSMutableArray array];
 
@@ -411,6 +430,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
@@ -451,6 +473,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(NSObject*)value forKey:(NSString*)key {
     for (NSObject* cur in self) {
         [cur setValue:value forKey:key];
@@ -540,14 +565,23 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)mutableCopy {
     return [self mutableCopyWithZone:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableArray alloc] initWithArray:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -757,6 +791,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     CFArrayRemoveAllValues((CFArrayRef)self);
     _CFArrayDestroyInternal((CFArrayRef)self);
@@ -776,6 +813,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [data writeToFile:file atomically:atomically];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         [coder _encodeArrayOfObjects:self forKey:@"NS.objects"];
@@ -789,11 +829,17 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     EbrDebugLog("NSArray description not supported\n");
     return @"Not supported";
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSArray class]) {
         return NSAllocateObject((Class)[NSArrayConcrete class], 0, zone);
@@ -859,6 +905,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(NSObject*)other {
     if (self == other) {
         return YES;
@@ -871,6 +920,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [self isEqualToArray:other];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allObjects {
     return self;
 }
@@ -1084,7 +1136,10 @@ NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnum
 }
 
 @implementation NSArrayConcrete
-// NSArrayConcrete ignores the passed-in stackbuf+size, as it has its own contiguous storage for its internal object pointers.
+/**
+ @Status Interoperable
+ Note: NSArrayConcrete ignores the passed-in stackbuf+size, as it has its own contiguous storage for its internal object pointers.
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     return _NSArrayConcreteCountByEnumeratingWithState(self, state);
 }

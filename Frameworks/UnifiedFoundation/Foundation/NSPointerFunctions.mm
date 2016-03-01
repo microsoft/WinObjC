@@ -91,6 +91,9 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
 
 @implementation NSPointerFunctions
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     // alloc the concrete subclass instead
     if (self == [NSPointerFunctions class]) {

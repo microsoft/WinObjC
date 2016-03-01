@@ -53,6 +53,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithURL:nil];
 }

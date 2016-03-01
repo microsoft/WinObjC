@@ -132,6 +132,9 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setObject:(NSObject*)obj atIndexedSubscript:(NSUInteger)index {
     if (index == [self count]) {
         [self addObject:obj];
@@ -294,6 +297,9 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL select
     [self sortUsingFunction:compFunc context:context range:NSMakeRange(0, count)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sortUsingFunction:(NSCompareFunc)compFunc context:(void*)context range:(NSRange)range {
     uint32_t base = range.location;
     uint32_t num = range.length;
@@ -462,12 +468,18 @@ recurse:
     [self sortUsingFunction:CFNSDescriptorCompare context:descriptors];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     NSArray* ret = [[NSArray alloc] initWithArray:self];
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSMutableArray class])
         return NSAllocateObject((Class)[NSMutableArrayConcrete class], 0, zone);

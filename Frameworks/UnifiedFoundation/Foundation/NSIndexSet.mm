@@ -116,6 +116,9 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_ranges) {
         IwFree(_ranges);
@@ -192,10 +195,16 @@
     return (_ranges[first].location < NSMaxRange(range)) ? YES : NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableIndexSet allocWithZone:zone] initWithIndexSet:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }

@@ -82,6 +82,9 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class uses setObject:forKey: as a setter, and has no key-specific setters.
     return NO;
@@ -505,10 +508,16 @@ static id deepCopyValue(id obj) {
     return array;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)valueForKey:(NSString*)key {
     return [self objectForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(id)value forKey:(NSString*)key {
     [self setObject:value forKey:key];
 }

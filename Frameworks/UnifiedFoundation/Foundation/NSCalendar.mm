@@ -77,6 +77,10 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
 
     return _cal;
 }
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     NSCalendar* result = [NSCalendar alloc];
 
@@ -110,6 +114,9 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_identifier release];
     [_timeZone release];

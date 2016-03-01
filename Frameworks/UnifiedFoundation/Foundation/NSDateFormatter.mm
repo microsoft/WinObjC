@@ -383,10 +383,16 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return _formatter;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithDateFormat:@"" allowNaturalLanguage:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     NSDateFormatter* copy = [super copyWithZone:zone];
 
@@ -428,6 +434,9 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _dateFormat = nil;
     _locale = nil;
@@ -621,6 +630,9 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return [NSDate dateWithTimeIntervalSince1970:date / 1000.0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)getObjectValue:(id*)outObj forString:(id)str errorDescription:(NSString**)err {
     if (err)
         *err = nil;
@@ -629,6 +641,9 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringForObjectValue:(NSObject*)object {
     if ([object isKindOfClass:[NSDate class]]) {
         return [self stringFromDate:(NSDate*)object];

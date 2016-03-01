@@ -50,6 +50,9 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
 
 @implementation NSStream
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
 }
 
@@ -71,6 +74,9 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
     _status = NSStreamStatusClosed;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (fp) {
         EbrFclose(fp);
@@ -102,6 +108,9 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
     *outputStreamp = output = [[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
 }
 
+/**
+ @Status Stub
+*/
 - (id)propertyForKey:(NSString*)key {
     UNIMPLEMENTED();
     return StubReturn();

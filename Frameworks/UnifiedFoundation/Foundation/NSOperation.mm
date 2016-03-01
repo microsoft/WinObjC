@@ -66,11 +66,17 @@ struct NSOperationPriv;
 
 @implementation NSOperation
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class dispatches its own notifications.
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)allocWithZone:(NSZone*)zone {
     NSOperation* ret = [super allocWithZone:zone];
 
@@ -272,6 +278,9 @@ struct NSOperationPriv;
     return priv->dependencies;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     assert(!priv->completionBlock);
     delete priv;

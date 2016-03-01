@@ -125,6 +125,9 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeObject:_authenticationMethod forKey:@"authenticationMethod"];
     [coder encodeObject:_distinguishedNames forKey:@"distinguishedNames"];
@@ -180,6 +183,9 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)hash {
     NSUInteger result = _hashCode;
     if (result == 0) {
@@ -218,6 +224,9 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_authenticationMethod release];
     [_distinguishedNames release];

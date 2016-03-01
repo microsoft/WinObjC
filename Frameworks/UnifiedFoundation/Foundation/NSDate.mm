@@ -151,6 +151,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:secondsSinceRef] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)initWithCoder:(NSCoder*)coder {
     EbrDebugLog("NSDate initWithCoder not supported\n");
     return [self init];
@@ -228,6 +231,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(NSDate*)toDate {
     if (self == toDate) {
         return TRUE;
@@ -239,6 +245,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     return [self isEqualToDate:(id)toDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)hash {
     NSUInteger hashRet[2];
 
@@ -274,6 +283,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -297,10 +309,16 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     EbrDebugLog("NSDate: encodeWithCoder not supported\n");
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     static NSDateFormatter* formatter;
 

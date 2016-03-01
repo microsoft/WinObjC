@@ -161,6 +161,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     [coder encodeObject:_callStackSymbols forKey:@"callStackSymbols"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_name release];
     [_reason release];

@@ -60,6 +60,9 @@ typedef unsigned short unichar;
     return _string;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_string release];
     [_skipSet release];

@@ -161,6 +161,9 @@
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_data release];
     [super dealloc];

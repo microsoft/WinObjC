@@ -204,6 +204,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hasMoreWork {
     if (priv->curOperation != nil) {
         return TRUE;
@@ -460,6 +463,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)resume {
     [priv->suspendedCondition lock];
     if (priv->isSuspended) {
@@ -471,6 +477,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)suspend {
     [priv->suspendedCondition lock];
     priv->isSuspended = TRUE;
@@ -512,6 +521,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return _mainQueue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [priv->workAvailable release];
     [priv->suspendedCondition release];
@@ -522,10 +534,16 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)retain {
     return [super retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)release {
     [super release];
 }

@@ -64,6 +64,9 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     return defaultCenter;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     observers = [[NSMutableDictionary alloc] init];
     return self;

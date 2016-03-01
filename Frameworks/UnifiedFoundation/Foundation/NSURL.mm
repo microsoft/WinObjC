@@ -856,6 +856,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return [[[self alloc] initWithString:string relativeToURL:parent] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_baseURL release];
     if (_uri) {
@@ -872,10 +875,16 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder allowsKeyedCoding]) {
         id path = [coder decodeObjectForKey:@"NS.path"];
@@ -891,6 +900,10 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 }
 
+/**
+ @Status Caveat
+ @ Notes Only supports NSKeyedArchiver coder type.
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         /* [TODO: Encode baseURL as well] */
@@ -902,6 +915,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     if (_fullUri->_path) {
         return murmurHash3(_fullUri->_path, strnlen_s(_fullUri->_path, NSURLMAXLEN), 0x834cba12);
@@ -909,6 +925,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     NSURL* otherURL;
 
@@ -1157,6 +1176,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return [[self scheme] isEqualToString:@"file"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)description {
     return [self absoluteString];
 }

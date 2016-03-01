@@ -67,10 +67,16 @@ static inline OSVERSIONINFO winOsVersion() {
     return _processInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     _processInfo = [self new];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     // set up environment, currently only HOME and TMPDIR
     _environment = [NSMutableDictionary new];
@@ -246,6 +252,9 @@ static inline OSVERSIONINFO winOsVersion() {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_processName release];
     [_environment release];

@@ -82,7 +82,6 @@ NSString* const NSFileProtectionComplete = @"NSFileProtectionComplete";
 NSString* const NSFileProtectionCompleteUnlessOpen = @"NSFileProtectionCompleteUnlessOpen";
 NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileProtectionCompleteUntilFirstUserAuthentication";
 
-/// NSFileManager implementation
 @implementation NSFileManager {
     // instance variable to keep current directory path.
     idretaint<NSString> _currentDirectoryPath;
@@ -1026,6 +1025,9 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _currentDirectoryPath = nil;
     [super dealloc];

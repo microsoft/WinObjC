@@ -243,6 +243,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return [[[self alloc] initWithArray:array] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     NSSetTableInit(self, 0);
     return self;
@@ -329,15 +332,29 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    return [self initWithArray:[coder decodeObjectForKey:@"NS.objects"]];
+    if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
+        return [self initWithArray:[coder decodeObjectForKey:@"NS.objects"]];
+    } else {
+        UNIMPLEMENTED_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        [self release];
+        return nil;
+    }
 }
 
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         [coder _encodeArrayOfObjects:[self allObjects] forKey:@"NS.objects"];
     } else {
-        assert(0);
+        UNIMPLEMENTED();
     }
 }
 
@@ -373,10 +390,16 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return [[self objectEnumerator] allObjects];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableSet*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableSet alloc] initWithSet:self];
 }
@@ -390,6 +413,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
     if (state->state == 0) {
         state->state = 1;
@@ -509,6 +535,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return NSSetTableCount(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     NSSetTableFree(self);
     [super dealloc];

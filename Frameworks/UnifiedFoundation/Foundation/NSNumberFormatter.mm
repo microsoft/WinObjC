@@ -125,6 +125,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     return _defaultFormatterBehavior;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     [super init];
     _behavior = _defaultFormatterBehavior;
@@ -147,6 +150,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_attributedStringForNil release];
     [_attributedStringForNotANumber release];
@@ -520,6 +526,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     _minimumIntegerDigits = value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)stringFromNumberNoStyle:(id)number {
     number = multipliedNumber(number, [self multiplier]);
 
@@ -551,6 +560,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)stringFromNumber10_4:(id)number {
     switch (_numberStyle) {
         case NSNumberFormatterNoStyle:
@@ -763,10 +775,16 @@ static BOOL numberIsNegative(id number) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)stringForObjectValue:(id)obj {
     return [self stringFromNumber:obj];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)getObjectValue:(id*)objOut forString:(id)str errorDescription:(NSString**)error {
     const char* pVal = [str UTF8String];
 

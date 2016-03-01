@@ -141,6 +141,9 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
     return @"Generic failure";
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     return [self localizedDescription];
 }
@@ -149,10 +152,16 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
     _description.attach([description copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _domain = nil;
     _userInfo = nil;

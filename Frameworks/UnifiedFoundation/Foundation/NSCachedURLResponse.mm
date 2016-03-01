@@ -26,6 +26,9 @@
 
 @implementation NSCachedURLResponse
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithResponse:(NSURLResponse*)response
                   data:(NSData*)data
               userInfo:(NSDictionary*)userInfo
@@ -38,6 +41,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithResponse:(NSURLResponse*)response data:(NSData*)data {
     if (self = [super init]) {
         _response = [response copy];
@@ -48,6 +54,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     NSCachedURLResponse* copy = [[self class] allocWithZone:zone];
     if (copy != nil) {
@@ -60,10 +69,16 @@
     return copy;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
         _data = [[coder decodeObjectForKey:@"data"] retain];
@@ -75,6 +90,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeObject:_data forKey:@"data"];
     [coder encodeObject:_response forKey:@"response"];
@@ -82,6 +100,9 @@
     [coder encodeInt64:_storagePolicy forKey:@"storagePolicy"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_response release];
     [_data release];

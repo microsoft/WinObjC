@@ -133,6 +133,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ open {
     if (_data == nil) {
         EbrDebugLog("Opening %s\n", [filename UTF8String]);
@@ -150,7 +153,12 @@
     return self;
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
+    UNIMPLEMENTED();
     return 0;
 }
 

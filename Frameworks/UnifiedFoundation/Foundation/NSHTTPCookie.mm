@@ -364,16 +364,19 @@ void parseCookies(const char* lineptr, id dict) {
     [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
     if (![_properties objectForKey:NSHTTPCookieDiscard])
         [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 &&
-                                                      ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
-                                                         @"TRUE" :
-                                                         @"FALSE"
-                                              forKey:NSHTTPCookieDiscard];
+                                ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
+                                   @"TRUE" :
+                                   @"FALSE"
+                        forKey:NSHTTPCookieDiscard];
     if (![_properties objectForKey:NSHTTPCookieDomain])
         [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_properties release];
     [super dealloc];

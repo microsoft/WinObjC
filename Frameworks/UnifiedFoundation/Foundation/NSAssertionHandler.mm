@@ -24,6 +24,9 @@ const NSString* NSAssertionHandlerKey = @"NSAssertionHandlerKey";
 
 @implementation NSAssertionHandler
 
+/**
+ @Status Interoperable
+*/
 + (NSAssertionHandler*)currentHandler {
     id currentHandlerForThread = [[[NSThread currentThread] threadDictionary] objectForKey:NSAssertionHandlerKey];
 
@@ -36,6 +39,9 @@ const NSString* NSAssertionHandlerKey = @"NSAssertionHandlerKey";
     return currentHandlerForThread;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)handleFailureInMethod:(SEL)selector
                        object:(id)object
                          file:(NSString*)fileName
@@ -54,6 +60,9 @@ const NSString* NSAssertionHandlerKey = @"NSAssertionHandlerKey";
     va_end(arguments);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)handleFailureInFunction:(NSString*)functionName
                            file:(NSString*)fileName
                      lineNumber:(NSInteger)line

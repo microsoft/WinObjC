@@ -54,6 +54,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 }
 
 @implementation NSRunLoop
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     dispatch_set_wakeup_callback(DispatchMainRunLoopWakeup, NULL);
 }
@@ -72,6 +75,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return [[NSThread mainThread] _runLoop];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)init {
     _modes = [NSMutableDictionary new];
     _commonModes = [NSMutableArray new];
@@ -89,6 +95,9 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     pthread_mutex_destroy(&_modeLock);
     [_modes release];

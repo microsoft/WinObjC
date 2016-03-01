@@ -63,6 +63,9 @@
     [_addedToModes removeObject:runLoopState];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_isDestroying) {
         EbrDebugLog("Warning: NSTimer over-released\n");
