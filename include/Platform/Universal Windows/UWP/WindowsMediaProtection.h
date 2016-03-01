@@ -116,7 +116,7 @@ typedef void (^WMPComponentLoadFailedEventHandler)(WMPMediaProtectionManager* se
 
 WINRT_EXPORT
 @interface WMPMediaProtectionManager : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (EventRegistrationToken)addComponentLoadFailedEvent:(WMPComponentLoadFailedEventHandler)del;
 - (void)removeComponentLoadFailedEvent:(EventRegistrationToken)tok;

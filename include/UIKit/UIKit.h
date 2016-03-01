@@ -134,7 +134,6 @@
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerDelegate.h>
-#import <UIKit/UIGestureRecognizerSubclass.h>
 #import <UIKit/UIGraphics.h>
 #import <UIKit/UIGravityBehavior.h>
 #import <UIKit/UIGuidedAccessRestrictionDelegate.h>

@@ -257,9 +257,8 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, NSCompareF
 }
 
 static signed int selComp(NSMutableArray* self, int i1, int i2, SEL selector) {
-    typedef int (*ftype)(id self, SEL sel, ...);
-    ftype f = (ftype)class_getMethodImplementation(object_getClass([self objectAtIndex:i1]), selector);
-    return f([self objectAtIndex:i1], selector, [self objectAtIndex:i2]);
+    typedef int (*ftype)(id, SEL, id);
+    return ((ftype)objc_msgSend)([self objectAtIndex:i1], selector, [self objectAtIndex:i2]);
 }
 
 static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL selector) {

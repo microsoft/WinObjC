@@ -38,11 +38,8 @@ NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgro
 template <typename... Args>
 static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd, Args... args) {
     if (object && [object respondsToSelector:cmd]) {
-        // does not currently support forwarding implementations
-        // just like our objective-c runtime :(
-        auto imp = class_getMethodImplementation(object_getClass(object), cmd);
         [queue addOperationWithBlock:^{
-            reinterpret_cast<void (*)(id, SEL, Args...)>(imp)(object, cmd, args...);
+            reinterpret_cast<void (*)(id, SEL, Args...)>(objc_msgSend)(object, cmd, args...);
         }];
         return true;
     }

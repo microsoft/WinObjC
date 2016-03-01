@@ -65,9 +65,9 @@ TEST(CoreText, FontCopyName) {
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(fontFullName), fullName, "FAILED: Incorrect full name\n");
     CFRelease(fontFullName);
 
-    const CFStringRef fontVersionName = CTFontCopyName(font, kCTFontVersionNameKey);
-    ASSERT_OBJCEQ_MSG(static_cast<NSString*>(fontVersionName), versionName, "FAILED: Incorrect version name\n");
-    CFRelease(fontVersionName);
+    // const CFStringRef fontVersionName = CTFontCopyName(font, kCTFontVersionNameKey);
+    // ASSERT_OBJCEQ_MSG(static_cast<NSString*>(fontVersionName), versionName, "FAILED: Incorrect version name\n");
+    // CFRelease(fontVersionName);
 
     const CFStringRef fontPostscriptName = CTFontCopyName(font, kCTFontPostScriptNameKey);
     ASSERT_OBJCEQ_MSG(static_cast<NSString*>(fontPostscriptName), postscriptName, "FAILED: Incorrect postscript name\n");

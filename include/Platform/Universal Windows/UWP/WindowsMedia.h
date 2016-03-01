@@ -270,7 +270,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSystemMediaTransportControlsTimelineProperties : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFTimeSpan* startTime;
 @property (copy) WFTimeSpan* position;
 @property (copy) WFTimeSpan* minSeekTime;
@@ -462,7 +462,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMMediaExtensionManager : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)registerSchemeHandler:(NSString*)activatableClassId scheme:(NSString*)scheme;
 - (void)registerSchemeHandlerWithSettings:(NSString*)activatableClassId
                                    scheme:(NSString*)scheme

@@ -406,7 +406,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNNetworkOperatorTetheringAccessPointConfiguration : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* ssid;
 @property (copy) NSString* passphrase;
 @end
@@ -489,7 +489,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandAccountWatcher : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNNMobileBroadbandAccountWatcherStatus status;
 - (EventRegistrationToken)addAccountAddedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
 - (void)removeAccountAddedEvent:(EventRegistrationToken)tok;
@@ -950,7 +950,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNProvisioningAgent : RTObject
 + (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString*)networkAccountId;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)provisionFromXmlDocumentAsync:(NSString*)provisioningXmlDocument
                               success:(void (^)(WNNProvisionFromXmlDocumentResults*))success
                               failure:(void (^)(NSError*))failure;

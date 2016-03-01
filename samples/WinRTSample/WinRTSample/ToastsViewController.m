@@ -109,7 +109,7 @@ NSString* const kScheduled = @"scheduled (1 min) toast notification";
 }
 
 - (void)sendNewToast:(NSString*)xmlString {
-    WDXDXmlDocument* toastXml = [WDXDXmlDocument create];
+    WDXDXmlDocument* toastXml = [WDXDXmlDocument make];
     [toastXml loadXml:xmlString];
 
     WUNToastNotification* toast = [WUNToastNotification createToastNotification:toastXml];
@@ -266,11 +266,11 @@ NSString* const kScheduled = @"scheduled (1 min) toast notification";
                            "</visual>"
                            "</toast>";
 
-    WDXDXmlDocument* toastXml = [WDXDXmlDocument create];
+    WDXDXmlDocument* toastXml = [WDXDXmlDocument make];
     [toastXml loadXml:xmlString];
 
     // TODO: Try converting NSDateTime to WFDateTime.
-    WGCalendar* _calendar = [WGCalendar create];
+    WGCalendar* _calendar = [WGCalendar make];
     [_calendar setToNow];
     [_calendar addMinutes:1];
     WFDateTime* dt = [_calendar getDateTime];

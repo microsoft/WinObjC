@@ -22,6 +22,10 @@
         WBITelemetry::WBITelemetryManager::InitializeAppInsights(ikey);\
     }
 
+#define TELEMETRY_FLUSH() {\
+        WBITelemetry::WBITelemetryManager::Flush();\
+    }
+
 #define TELEMETRY_EVENT(msg) {\
         WBITelemetry::WBITelemetryManager::AITrackEvent(msg);\
     }
@@ -64,6 +68,8 @@ namespace WBITelemetry
         static ApplicationInsights::core::TelemetryClient m_tc;
 
         static void InitializeAppInsights(wstring ikey);
+
+        static void Flush();
 
         static void AITrackEvent(wstring eventMessage);
 

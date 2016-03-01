@@ -100,7 +100,7 @@ NSString* const kUpdateBadge = @"update badge";
 - (void)updateBadge:(UIButton*)button {
     NSString* xmlString = @"<badge value=\"10\"/>";
 
-    WDXDXmlDocument* badgeXml = [WDXDXmlDocument create];
+    WDXDXmlDocument* badgeXml = [WDXDXmlDocument make];
     [badgeXml loadXml:xmlString];
     WUNBadgeNotification* badge = [WUNBadgeNotification createBadgeNotification:badgeXml];
     [[WUNBadgeUpdateManager createBadgeUpdaterForApplication] update:badge];
@@ -110,7 +110,7 @@ NSString* const kUpdateBadge = @"update badge";
     WDXDXmlDocument* tileXml = [self createTileXml];
 
     // TODO: Try converting NSDateTime to WFDateTime.
-    WGCalendar* _calendar = [WGCalendar create];
+    WGCalendar* _calendar = [WGCalendar make];
     [_calendar setToNow];
     [_calendar addMinutes:1];
     WFDateTime* dt = [_calendar getDateTime];

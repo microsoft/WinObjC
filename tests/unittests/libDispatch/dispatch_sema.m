@@ -50,7 +50,6 @@ TEST(Dispatch, DispatchSema) {
     dispatch_release(dsema);
 
     test_long("count", total, LAPS);
-    test_stop();
 
-    UIApplicationMainLoop();
+    test_stop();
 }

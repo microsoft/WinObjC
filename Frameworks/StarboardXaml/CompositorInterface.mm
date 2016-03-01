@@ -400,8 +400,8 @@ private:
                 return;
             } else if (_byValue != nil) {
                 // Interpolate between _fromValue and (_fromValue + _byValue)
-                float fromValue  = [static_cast<NSNumber*>(_fromValue) floatValue];
-                float byValue  = [static_cast<NSNumber*>(_byValue) floatValue];
+                float fromValue = [static_cast<NSNumber*>(_fromValue) floatValue];
+                float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _toValue = [[NSNumber numberWithFloat:(fromValue + byValue)] retain];
             } else {
                 // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
@@ -410,8 +410,8 @@ private:
         } else if (_toValue != nil) {
             if (_byValue != nil) {
                 // Interpolate between (_toValue - _byValue) and _toValue
-                float toValue  = [static_cast<NSNumber*>(_toValue) floatValue];
-                float byValue  = [static_cast<NSNumber*>(_byValue) floatValue];
+                float toValue = [static_cast<NSNumber*>(_toValue) floatValue];
+                float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _fromValue = [[NSNumber numberWithFloat:(toValue - byValue)] retain];
             } else {
                 // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
@@ -449,13 +449,13 @@ private:
             [_toValue release];
             _toValue = [[NSNumber numberWithFloat:toSize.width] retain];
         }
-    
+
         if (byValid) {
             [static_cast<NSValue*>(_byValue) getValue:&bySize];
             [_byValue release];
             _byValue = [NSNumber numberWithFloat:bySize.width];
         }
-    
+
         NSString* newKeyPath = [curKeyPath stringByAppendingString:@".width"];
         _adjustFloatValuesForKeyPath(newKeyPath);
         fromSize.width = [static_cast<NSNumber*>(_fromValue) floatValue];
@@ -474,7 +474,7 @@ private:
         } else {
             _toValue = nil;
         }
-    
+
         if (byValid) {
             _byValue = [NSNumber numberWithFloat:bySize.height];
         } else {
@@ -517,13 +517,13 @@ private:
             [_toValue release];
             _toValue = [[NSNumber numberWithFloat:toPoint.x] retain];
         }
-    
+
         if (byValid) {
             [static_cast<NSValue*>(_byValue) getValue:&byPoint];
             [_byValue release];
             _byValue = [NSNumber numberWithFloat:byPoint.x];
         }
-    
+
         NSString* newKeyPath = [curKeyPath stringByAppendingString:@".x"];
         _adjustFloatValuesForKeyPath(newKeyPath);
         fromPoint.x = [static_cast<NSNumber*>(_fromValue) floatValue];
@@ -542,7 +542,7 @@ private:
         } else {
             _toValue = nil;
         }
-    
+
         if (byValid) {
             _byValue = [NSNumber numberWithFloat:byPoint.y];
         } else {
@@ -580,12 +580,12 @@ private:
             _fromValue = [[NSValue valueWithCGPoint:fromRect.origin] retain];
         }
 
-        if (toValid) { 
+        if (toValid) {
             [static_cast<NSValue*>(_toValue) getValue:&toRect];
             [_toValue release];
             _toValue = [[NSValue valueWithCGPoint:toRect.origin] retain];
         }
-    
+
         if (byValid) {
             [static_cast<NSValue*>(_byValue) getValue:&byRect];
             [_byValue release];
@@ -593,7 +593,7 @@ private:
             // _byValue is will be released by _adjustCGPointValuesForKeyPath
             _byValue = [[NSValue valueWithCGPoint:byRect.origin] retain];
         }
-    
+
         NSString* newKeyPath = [curKeyPath stringByAppendingString:@".origin"];
         _adjustCGPointValuesForKeyPath(newKeyPath);
         [static_cast<NSValue*>(_fromValue) getValue:&(fromRect.origin)];
@@ -612,7 +612,7 @@ private:
         } else {
             _toValue = nil;
         }
-    
+
         if (byValid) {
             // _byValue is will be released by _adjustCGSizeValuesForKeyPath
             _byValue = [[NSValue valueWithCGSize:byRect.size] retain];
@@ -626,18 +626,14 @@ private:
         [static_cast<NSValue*>(_toValue) getValue:&(toRect.size)];
         [_fromValue release];
         [_toValue release];
-        
+
         _fromValue = [[NSValue valueWithCGRect:fromRect] retain];
         _toValue = [[NSValue valueWithCGRect:toRect] retain];
         _byValue = nil;
     }
 
-    bool _adjustCATransform3DValues(float* translationFrom,
-                                    float* scaleFrom,
-                                    float* angleFrom,
-                                    float* translationTo,
-                                    float* scaleTo,
-                                    float* angleTo) {
+    bool _adjustCATransform3DValues(
+        float* translationFrom, float* scaleFrom, float* angleFrom, float* translationTo, float* scaleTo, float* angleTo) {
         const int dimensions = 3;
         float translationBy[dimensions] = { 0 };
         float scaleBy[dimensions] = { 1.0f, 1.0f, 1.0f };
@@ -646,17 +642,23 @@ private:
         CATransform3D fromValue = [static_cast<NSValue*>(_fromValue) CATransform3DValue];
         CATransform3D toValue = [static_cast<NSValue*>(_toValue) CATransform3DValue];
         CATransform3D byValue = [static_cast<NSValue*>(_byValue) CATransform3DValue];
-        float (^add) (float, float) = ^(float a, float b) { return (a + b);};
-        float (^subtract) (float, float) = ^(float a, float b) { return (a - b);};
-        float (^multiply) (float, float) = ^(float a, float b) { return a*b;};
-        float (^divide) (float, float) = ^(float a, float b) {
+        float (^add)(float, float) = ^(float a, float b) {
+            return (a + b);
+        };
+        float (^subtract)(float, float) = ^(float a, float b) {
+            return (a - b);
+        };
+        float (^multiply)(float, float) = ^(float a, float b) {
+            return a * b;
+        };
+        float (^divide)(float, float) = ^(float a, float b) {
             if (b == 0.0f) {
                 return 0.0f;
             }
-            return a/b;
+            return a / b;
         };
-        void (^performOperation) (float*, float*, float*, int, float (^)(float, float)) = 
-            ^(float* array1, float* array2, float* resultArray, int size, float (^operation) (float, float)) {
+        void (^performOperation)(float*, float*, float*, int, float (^)(float, float)) =
+            ^(float* array1, float* array2, float* resultArray, int size, float (^operation)(float, float)) {
                 for (int i = 0; i < size; i++) {
                     resultArray[i] = operation(array1[i], array2[i]);
                 }
@@ -774,8 +776,10 @@ public:
         speed = timingProperties->_speed;
         timeOffset = timingProperties->_timeOffset;
 
-        if ( repeatCount > 0xFFFFFF ) repeatCount = 0xFFFFFF;
-        if ( repeatDuration > 0xFFFFFF ) repeatDuration = 0xFFFFFF;
+        if (repeatCount > 0xFFFFFF)
+            repeatCount = 0xFFFFFF;
+        if (repeatDuration > 0xFFFFFF)
+            repeatDuration = 0xFFFFFF;
     }
 
     ~DisplayAnimationBasic() {
@@ -813,14 +817,14 @@ public:
             _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
-            
+
             AddAnimation(node, L"transform.translation.x", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "transform.translation.y") == 0) {
             _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
-            
+
             AddAnimation(node, L"transform.translation.y", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "position") == 0) {
@@ -874,12 +878,7 @@ public:
             float scaleTo[3] = { 1.0f, 1.0f, 1.0f };
             float angleTo = 0.0f;
 
-            bool isValid = _adjustCATransform3DValues(translationFrom,
-                                                    scaleFrom,
-                                                    &angleFrom,
-                                                    translationTo,
-                                                    scaleTo,
-                                                    &angleTo);
+            bool isValid = _adjustCATransform3DValues(translationFrom, scaleFrom, &angleFrom, translationTo, scaleTo, &angleTo);
 
             if (scaleFrom[0] != 1.0f || scaleFrom[1] != 1.0f || scaleTo[0] != 1.0f || scaleTo[1] != 1.0f) {
                 AddAnimation(node, L"transform.scale.x", isValid, scaleFrom[0], isValid, scaleTo[0]);
@@ -1061,6 +1060,18 @@ public:
             //  [TODO: Update contents scale in Xaml node]
             // contentScale = [(NSNumber *) newValue floatValue];
         } else if (strcmp(name, "contentsOrientation") == 0) {
+            int position = [newValue intValue];
+            float toPosition = 0;
+            if (position == UIImageOrientationUp) {
+                toPosition = 0;
+            } else if (position == UIImageOrientationDown) {
+                toPosition = 180;
+            } else if (position == UIImageOrientationLeft) {
+                toPosition = 270;
+            } else if (position == UIImageOrientationRight) {
+                toPosition = 90;
+            }
+            SetProperty(L"transform.rotation", toPosition);
         } else if (strcmp(name, "contentsSize") == 0) {
         } else if (strcmp(name, "gravity") == 0) {
             SetPropertyInt(L"gravity", [newValue intValue]);
@@ -1508,12 +1519,7 @@ public:
                                                        NSObject* toValue,
                                                        NSObject* byValue,
                                                        CAMediaTimingProperties* timingProperties) {
-        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj,
-                                                                     propertyName,
-                                                                     fromValue,
-                                                                     toValue,
-                                                                     byValue,
-                                                                     timingProperties);
+        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, byValue, timingProperties);
         return basicAnim;
     }
 
@@ -1585,9 +1591,9 @@ public:
             if (scale < 1.0f) {
                 scale = 1.0f;
             }
-         }
+        }
 
-         return scale;
+        return scale;
     }
     virtual int deviceWidth() {
         return ::deviceWidth;

@@ -529,7 +529,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WDEDevicePickerFilter* filter;
 @property (readonly) NSMutableArray* requestedProperties;

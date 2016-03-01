@@ -472,7 +472,7 @@ WINRT_EXPORT
 #define __WUTITextRange_DEFINED__
 
 @protocol WUTITextRange
-@property WCHAR character;
+@property wchar_t character;
 @property (copy) RTObject<WUTITextCharacterFormat>* characterFormat;
 @property int endPosition;
 @property (copy) RTObject<WUTITextRange>* formattedText;
@@ -486,7 +486,7 @@ WINRT_EXPORT
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
-- (void)copy;
+- (void)Copy;
 - (void)cut;
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
@@ -510,7 +510,7 @@ WINRT_EXPORT
       alternateText:(NSString*)alternateText
               value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
-- (BOOL)isEqual:(RTObject<WUTITextRange>*)range;
+- (BOOL)IsEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveEnd:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveStart:(WUTTextRangeUnit)unit count:(int)count;
@@ -544,7 +544,7 @@ WINRT_EXPORT
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
-- (void)copy;
+- (void)Copy;
 - (void)cut;
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
@@ -568,7 +568,7 @@ WINRT_EXPORT
       alternateText:(NSString*)alternateText
               value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
-- (BOOL)isEqual:(RTObject<WUTITextRange>*)range;
+- (BOOL)IsEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveEnd:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveStart:(WUTTextRangeUnit)unit count:(int)count;
@@ -616,7 +616,7 @@ WINRT_EXPORT
 @property int weight;
 - (void)setClone:(RTObject<WUTITextCharacterFormat>*)value;
 - (RTObject<WUTITextCharacterFormat>*)getClone;
-- (BOOL)isEqual:(RTObject<WUTITextCharacterFormat>*)format;
+- (BOOL)IsEqual:(RTObject<WUTITextCharacterFormat>*)format;
 @end
 
 #endif // __WUTITextCharacterFormat_DEFINED__
@@ -653,7 +653,7 @@ WINRT_EXPORT
 - (void)deleteTab:(float)position;
 - (RTObject<WUTITextParagraphFormat>*)getClone;
 - (void)getTab:(int)index position:(float*)position align:(WUTTabAlignment*)align leader:(WUTTabLeader*)leader;
-- (BOOL)isEqual:(RTObject<WUTITextParagraphFormat>*)format;
+- (BOOL)IsEqual:(RTObject<WUTITextParagraphFormat>*)format;
 - (void)setClone:(RTObject<WUTITextParagraphFormat>*)format;
 - (void)setIndents:(float)start left:(float)left right:(float)right;
 - (void)setLineSpacing:(WUTLineSpacingRule)rule spacing:(float)spacing;

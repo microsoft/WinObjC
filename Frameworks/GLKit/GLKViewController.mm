@@ -41,7 +41,7 @@ typedef wchar_t WCHAR;
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
     [_link retain];
 
-    _calendar = [WGCalendar create];
+    _calendar = [WGCalendar make];
     [_calendar setToNow];
     WFDateTime* dt = [_calendar getDateTime];
     _firstStart = dt.universalTime;

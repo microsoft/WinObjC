@@ -14,10 +14,12 @@
 //
 //******************************************************************************
 
-#include <math.h>
-#include "UIKit/UIKit.h"
+#import <math.h>
+#import <UIKit/UIKit.h>
+#import <UIkit/UIPinchGestureRecognizer.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
-#include "UIGestureRecognizerInternal.h"
+#import "UIGestureRecognizerInternal.h"
 
 @implementation UIPinchGestureRecognizer {
     struct TrackingTouch {

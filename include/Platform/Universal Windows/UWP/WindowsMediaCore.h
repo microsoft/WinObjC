@@ -599,7 +599,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMseStreamSource : RTObject <WMCIMediaSource>
 + (BOOL)isContentTypeSupported:(NSString*)contentType;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id duration;
 @property (readonly) WMCMseSourceBufferList* activeSourceBuffers;
 @property (readonly) WMCMseReadyState readyState;
@@ -786,7 +786,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCSceneAnalysisEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -844,7 +844,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCFaceDetectionEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL synchronousDetectionEnabled;
 @property WMCFaceDetectionMode detectionMode;
 @property (readonly) NSString* activatableClassId;
@@ -887,7 +887,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCVideoStabilizationEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -1000,7 +1000,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedTextRegion : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* name;
 @property (copy) WMCTimedTextDouble* lineHeight;
 @property BOOL isOverflowClipped;
@@ -1023,7 +1023,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedTextStyle : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUColor* foreground;
 @property WMCTimedTextWeight fontWeight;
 @property (copy) WMCTimedTextDouble* fontSize;
@@ -1046,7 +1046,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedTextLine : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* text;
 @property (readonly) NSMutableArray* subformats;
 @end
@@ -1059,7 +1059,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedTextSubformat : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WMCTimedTextStyle* subformatStyle;
 @property int startIndex;
 @property int length;
@@ -1119,7 +1119,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCTimedTextCue : RTObject <WMCIMediaCue>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFTimeSpan* startTime;
 @property (copy) NSString* id;
 @property (copy) WFTimeSpan* duration;
@@ -1136,7 +1136,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCDataCue : RTObject <WMCIMediaCue>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject<WSSIBuffer>* data;
 @property (copy) WFTimeSpan* startTime;
 @property (copy) NSString* id;

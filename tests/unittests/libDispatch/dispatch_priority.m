@@ -137,5 +137,5 @@ TEST(Dispatch, DispatchPriority) {
         submit_work(q[i], &counts[i].count);
     }
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

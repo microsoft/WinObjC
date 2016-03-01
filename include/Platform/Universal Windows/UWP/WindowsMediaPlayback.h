@@ -389,7 +389,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackList : RTObject <WMPIMediaPlaybackSource>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL shuffleEnabled;
 @property BOOL autoRepeatEnabled;
 @property (readonly) WMPMediaPlaybackItem* currentItem;

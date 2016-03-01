@@ -70,7 +70,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL enabled;
 @property (copy) NSString* aqsFilter;
 @property (readonly) NSMutableArray* locations;

@@ -206,7 +206,7 @@ WINRT_EXPORT
 
 @protocol WSIStorageItem2 <WSIStorageItem>
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isEqual:(RTObject<WSIStorageItem>*)item;
+- (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
 - (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
 - (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
@@ -347,7 +347,7 @@ WINRT_EXPORT
                   success:(void (^)(WSFStorageItemThumbnail*))success
                   failure:(void (^)(NSError*))failure;
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isEqual:(RTObject<WSIStorageItem>*)item;
+- (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
 - (void)openWithOptionsAsync:(WSFileAccessMode)accessMode
                      options:(WSStorageOpenOptions)options
                      success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
@@ -548,7 +548,7 @@ WINRT_EXPORT
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
 - (BOOL)isCommonFileQuerySupported:(WSSCommonFileQuery)query;
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isEqual:(RTObject<WSIStorageItem>*)item;
+- (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
 - (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
 @end
 

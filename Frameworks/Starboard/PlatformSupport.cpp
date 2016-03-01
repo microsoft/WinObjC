@@ -30,7 +30,6 @@
 
 #include "pevents.h"
 #include "PathMapper.h"
-#include <direct.h>
 
 void EbrBlockIfBackground() {
 }
@@ -807,6 +806,10 @@ void EbrSetWritableFolder(const char* folder) {
     strcpy_s(g_WritableFolder, folder);
 }
 
+const char* EbrGetWritableFolder() {
+    return g_WritableFolder;
+}
+
 bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
     if (dirName == NULL) {
         strcpy_s(dirOut, maxLen, FSROOT);
@@ -939,5 +942,5 @@ __declspec(dllexport) void EbrThreadMakeBackgroundExecutable(void) {
 
 void EbrThrowFatal(int code, const char* msg, ...) {
     printf("FATAL: %s\n", msg);
-    *((char*)0) = 0;
+    __fastfail(code);
 }

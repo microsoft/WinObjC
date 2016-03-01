@@ -15,10 +15,6 @@
 //******************************************************************************
 #pragma once
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-#define NSNotFound 0x7fffffff
-
 static inline unsigned positionOfRangeGreaterThanOrEqualToLocation(NSRange* ranges, unsigned length, unsigned location) {
     for (unsigned i = 0; i < length; i++) {
         if (location < NSMaxRange(ranges[i])) {
@@ -55,16 +51,11 @@ static inline NSRange raItemAtIndex(NSIndexSet* set, unsigned i) {
     return set->_ranges[i];
 }
 
-static inline void raAddItem(NSIndexSet* set, NSRange r) {
-    if (set->_length + 1 >= set->_maxLength) {
-        set->_maxLength += 64;
-        set->_ranges = (NSRange*)IwRealloc(set->_ranges, set->_maxLength * sizeof(NSRange));
+static inline void raInsertItem(NSIndexSet* set, NSRange r, NSUInteger idx) {
+    if (NSNotFound - r.location < r.length) {
+        THROW_NS_HR(E_BOUNDS);
     }
 
-    set->_ranges[set->_length++] = r;
-}
-
-static inline void raInsertItem(NSIndexSet* set, NSRange r, NSUInteger idx) {
     if (idx > set->_length) {
         assert(0);
     }
@@ -78,6 +69,10 @@ static inline void raInsertItem(NSIndexSet* set, NSRange r, NSUInteger idx) {
     memmove(&set->_ranges[idx + 1], &set->_ranges[idx], sizeof(NSRange) * (set->_length - idx));
     set->_ranges[idx] = r;
     set->_length++;
+}
+
+static inline void raAddItem(NSIndexSet* set, NSRange r) {
+    raInsertItem(set, r, set->_length);
 }
 
 static inline void raSetItemAtIndex(NSIndexSet* set, NSRange r, NSUInteger idx) {

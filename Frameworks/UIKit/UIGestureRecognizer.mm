@@ -14,18 +14,19 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSValue.h"
-#include "Foundation/NSString.h"
-#include <math.h>
-#include "UIKit/UIGestureRecognizer.h"
-#include "UIKit/UIRuntimeEventConnection.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSValue.h>
+#import <Foundation/NSString.h>
+#import <math.h>
+#import <UIKit/UIGestureRecognizer.h>
+#import <UIKit/UIRuntimeEventConnection.h>
+#import <UIKit/UIGestureRecognizerSubclass.h>
 
-#include "UIGestureRecognizerInternal.h"
+#import "UIGestureRecognizerInternal.h"
 
-extern NSMutableDictionary* curGesturesDict;
+extern NSMutableDictionary* g_curGesturesDict;
 
 @implementation UIGestureRecognizer
 
@@ -251,14 +252,14 @@ static void commonInit(UIGestureRecognizer* self) {
 }
 
 - (void)cancelIfActive {
-    id curList = [curGesturesDict objectForKey:[self class]];
+    id curList = [g_curGesturesDict objectForKey:[self class]];
     if ([curList containsObject:self]) {
         [self cancel];
     }
 }
 
 + (void)cancelActiveExcept:(UIGestureRecognizer*)gesture {
-    id curList = [curGesturesDict objectForKey:self];
+    id curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
             EbrDebugLog("Cancelling %s\n", object_getClassName(curGesture));
@@ -268,7 +269,7 @@ static void commonInit(UIGestureRecognizer* self) {
 }
 
 + (void)failActiveExcept:(UIGestureRecognizer*)gesture {
-    NSArray* curList = [curGesturesDict objectForKey:self];
+    NSArray* curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
             UIGestureRecognizer* gesture = curGesture;

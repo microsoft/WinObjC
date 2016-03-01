@@ -22,6 +22,7 @@
 #import "NSInputSource.h"
 
 @interface NSRunLoop (Internal)
+- (void)_stop;
 - (void)_wakeUp;
 - (void)_addInputSource:(NSInputSource*)source forMode:(NSString*)mode;
 - (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode;

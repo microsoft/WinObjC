@@ -44,5 +44,4 @@ TEST(Dispatch, DispatchApply) {
 
     test_long("count", count, final);
     test_stop();
-    UIApplicationMainLoop();
 }

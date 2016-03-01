@@ -144,7 +144,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDTUnicodeCharacters : RTObject
 + (unsigned int)getCodepointFromSurrogatePair:(unsigned int)highSurrogate lowSurrogate:(unsigned int)lowSurrogate;
-+ (void)getSurrogatePairFromCodepoint:(unsigned int)codepoint highSurrogate:(WCHAR*)highSurrogate lowSurrogate:(WCHAR*)lowSurrogate;
++ (void)getSurrogatePairFromCodepoint:(unsigned int)codepoint highSurrogate:(wchar_t*)highSurrogate lowSurrogate:(wchar_t*)lowSurrogate;
 + (BOOL)isHighSurrogate:(unsigned int)codepoint;
 + (BOOL)isLowSurrogate:(unsigned int)codepoint;
 + (BOOL)isSupplementary:(unsigned int)codepoint;

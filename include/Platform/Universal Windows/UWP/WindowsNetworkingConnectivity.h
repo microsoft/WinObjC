@@ -422,7 +422,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCConnectionProfileFilter : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id serviceProviderGuid;
 @property WNCNetworkCostType networkCostType;
 @property BOOL isWwanConnectionProfile;
@@ -470,7 +470,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCCellularApnContext : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* userName;
 @property (copy) NSString* providerId;
 @property (copy) NSString* password;

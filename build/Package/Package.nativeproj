@@ -158,6 +158,8 @@
     <ItemGroup>
       <!-- We're replacing the starboard files included while building the SDK with the ones that will be released externally. -->
       <MSVCFiles Remove="@(MSVCFiles)" Condition="'%(MSVCFiles.Filename)' == 'starboard'" />
+      <!-- sdk-build files are needed only when building the SDK -->
+      <MSVCFiles Remove="@(MSVCFiles)" Condition="'%(MSVCFiles.Filename)' == 'sdk-build'" />
     </ItemGroup>
     <ItemGroup>
       <MSVCFiles>

@@ -286,7 +286,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiTuneRequestMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -300,7 +300,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiTimingClockMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -314,7 +314,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiStartMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -328,7 +328,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiContinueMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -342,7 +342,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiStopMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -356,7 +356,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiActiveSensingMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -370,7 +370,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiSystemResetMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;

@@ -276,7 +276,10 @@ struct NSKVOFinalNotifier : public NSKVOConcreteNotifier {
         if (prior) {
             NSMutableDictionary* outgoing = [notificationDictionary mutableCopy];
             [outgoing setObject:@(YES) forKey:NSKeyValueChangeNotificationIsPriorKey];
-            [observer observeValueForKeyPath:[NSString stringWithUTF8String:keypath.c_str()] ofObject:instance change:outgoing context:context];
+            [observer observeValueForKeyPath:[NSString stringWithUTF8String:keypath.c_str()]
+                                    ofObject:instance
+                                      change:outgoing
+                                     context:context];
         } else {
             [observer observeValueForKeyPath:[NSString stringWithUTF8String:keypath.c_str()]
                                     ofObject:instance
@@ -505,8 +508,7 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
         auto selectorName = woc::string::format("automaticallyNotifiesObserversOf%c%s", toupper(rawKey[0]), rawKey + 1);
         SEL sel = sel_registerName(selectorName.c_str());
         if ([self respondsToSelector:sel]) {
-            BOOL (*imp)(Class, SEL) = reinterpret_cast<decltype(imp)>(class_getMethodImplementation(object_getClass(self), sel));
-            return imp(self, sel);
+            return ((BOOL (*)(id, SEL))objc_msgSend)(self, sel);
         }
     }
     return YES;
@@ -576,14 +578,14 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
 /**
  @Status Stub
 */
-- (void)willChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key {
+- (void)willChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet*)indexes forKey:(NSString*)key {
     UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
 */
-- (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet *)indexes forKey:(NSString *)key {
+- (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet*)indexes forKey:(NSString*)key {
     UNIMPLEMENTED();
 }
 

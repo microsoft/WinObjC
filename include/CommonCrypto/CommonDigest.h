@@ -17,6 +17,7 @@
 #pragma once
 
 #include <StarboardExport.h>
+#include <StubIncludes.h>
 
 struct CC_Digest_State;
 typedef struct CC_Digest_State* CC_MD2_CTX;
@@ -61,10 +62,10 @@ int CC_SHA1_Update(CC_SHA1_CTX* ctx, const void* data, CC_LONG len);
 int CC_SHA1_Final(unsigned char* digest, CC_SHA1_CTX* ctx);
 unsigned char* CC_SHA1(const void* data, CC_LONG len, unsigned char* md);
 
-int CC_SHA224_Init(CC_SHA224_CTX* ctx);
-int CC_SHA224_Update(CC_SHA224_CTX* ctx, const void* data, CC_LONG len);
-int CC_SHA224_Final(unsigned char* digest, CC_SHA224_CTX* ctx);
-unsigned char* CC_SHA224(const void* data, CC_LONG len, unsigned char* md);
+int CC_SHA224_Init(CC_SHA224_CTX* ctx) STUB_METHOD;
+int CC_SHA224_Update(CC_SHA224_CTX* ctx, const void* data, CC_LONG len) STUB_METHOD;
+int CC_SHA224_Final(unsigned char* digest, CC_SHA224_CTX* ctx) STUB_METHOD;
+unsigned char* CC_SHA224(const void* data, CC_LONG len, unsigned char* md) STUB_METHOD;
 
 int CC_SHA256_Init(CC_SHA256_CTX* ctx);
 int CC_SHA256_Update(CC_SHA256_CTX* ctx, const void* data, CC_LONG len);

@@ -164,7 +164,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateRequestProperties : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* subject;
 @property WSCCEnrollKeyUsages keyUsages;
 @property (copy) NSString* keyStorageProviderName;
@@ -222,7 +222,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCPfxImportParameters : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* readerName;
 @property (copy) NSString* keyStorageProviderName;
 @property WSCCKeyProtectionLevel keyProtectionLevel;
@@ -287,7 +287,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateQuery : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSArray* thumbprint;
 @property (copy) NSString* issuerName;
 @property BOOL hardwareOnly;
@@ -368,7 +368,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCChainBuildingParameters : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFDateTime* validationTimestamp;
 @property BOOL revocationCheckEnabled;
 @property BOOL networkRetrievalEnabled;
@@ -386,7 +386,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCChainValidationParameters : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WNHostName* serverDnsName;
 @property WSCCCertificateChainPolicy certificateChainPolicy;
 @end
@@ -412,7 +412,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCertificateKeyUsages : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL nonRepudiation;
 @property BOOL keyEncipherment;
 @property BOOL keyCertificateSign;
@@ -431,7 +431,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCSubjectAlternativeNameInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSArray* distinguishedName;
 @property (readonly) NSArray* dnsName;
 @property (readonly) NSArray* emailName;
@@ -461,7 +461,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCCCmsSignerInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* hashAlgorithmName;
 @property (copy) WSCCCertificate* certificate;
 @property (readonly) WSCCCmsTimestampInfo* timestampInfo;

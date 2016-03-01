@@ -145,7 +145,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEMediaComposition : RTObject
 + (void)loadAsync:(WSStorageFile*)file success:(void (^)(WMEMediaComposition*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray* backgroundAudioTracks;
 @property (readonly) NSMutableArray* clips;
 @property (readonly) WFTimeSpan* duration;
@@ -195,7 +195,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEMediaOverlayLayer : RTObject
 + (WMEMediaOverlayLayer*)createWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WMEIVideoCompositorDefinition>* customCompositorDefinition;
 @property (readonly) NSMutableArray* overlays;
 - (WMEMediaOverlayLayer*)clone;

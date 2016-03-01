@@ -22,8 +22,6 @@
 #include <unicode/dtfmtsym.h>
 #include <unicode/locid.h>
 
-using WCHAR = wchar_t;
-
 #include <COMIncludes.h>
 #include <wrl/client.h>
 #include <wrl/wrappers/corewrappers.h>

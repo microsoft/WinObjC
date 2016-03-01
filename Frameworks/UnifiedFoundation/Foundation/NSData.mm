@@ -17,8 +17,6 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 
-using WCHAR = wchar_t;
-
 #include <string>
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSError.h"

@@ -89,7 +89,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL useProxy;
 @property (copy) WSCPasswordCredential* serverCredential;
 @property (copy) WSCPasswordCredential* proxyCredential;

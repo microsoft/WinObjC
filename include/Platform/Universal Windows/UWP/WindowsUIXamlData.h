@@ -262,7 +262,7 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 
 WINRT_EXPORT
 @interface WUXDCurrentChangingEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL cancel;
 @property (readonly) BOOL isCancelable;
 @end
@@ -307,7 +307,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -326,7 +326,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBindingBase : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDBindingBase_DEFINED__
@@ -350,7 +350,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* source;
 @property (copy) WXPropertyPath* itemsPath;
 @property BOOL isSourceGrouped;
@@ -369,7 +369,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDRelativeSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXDRelativeSourceMode mode;
 @end
 
@@ -381,7 +381,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBinding : WUXDBindingBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXPropertyPath* path;
 @property WUXDBindingMode mode;
 @property (copy) NSString* elementName;

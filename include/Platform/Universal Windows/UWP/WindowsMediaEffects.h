@@ -320,7 +320,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEVideoTransformEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @property WMMMediaRotation rotation;

@@ -30,7 +30,7 @@
 
 #pragma once
 
-#import "UIKitExport.h"
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
 typedef enum {
@@ -43,48 +43,42 @@ typedef enum {
     UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded,
 } UIGestureRecognizerState;
 
-typedef struct {
-    __unsafe_unretained id _target;
-    SEL _selector;
-} gestureTarget;
-
 @class UIView, UIGestureRecognizer, UITouch, UIEvent, UIPress, UIPressesEvent;
 @protocol UIGestureRecognizerDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UIGestureRecognizer : NSObject
 
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer STUB_METHOD;
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer STUB_METHOD;
-- (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer STUB_METHOD;
-- (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer STUB_METHOD;
+// Initializing a Gesture Recognizer
+- (instancetype)initWithTarget:(id)target action:(SEL)action;
+
+// Getting the Touches and Location of a Gesture
 - (CGPoint)locationInView:(UIView*)view STUB_METHOD;
 - (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view STUB_METHOD;
 - (NSUInteger)numberOfTouches STUB_METHOD;
-- (instancetype)initWithTarget:(id)target action:(SEL)action;
-- (void)addTarget:(id)target action:(SEL)action;
-- (void)ignorePress:(UIPress*)button forEvent:(UIPressesEvent*)event STUB_METHOD;
-- (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event STUB_METHOD;
-- (void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent*)event STUB_METHOD;
-- (void)pressesCancelled:(NSSet*)presses withEvent:(UIPressesEvent*)event STUB_METHOD;
-- (void)pressesChanged:(NSSet*)presses withEvent:(UIPressesEvent*)event STUB_METHOD;
-- (void)pressesEnded:(NSSet*)presses withEvent:(UIPressesEvent*)event STUB_METHOD;
-- (void)removeTarget:(id)target action:(SEL)action STUB_METHOD;
-- (void)requireGestureRecognizerToFail:(UIGestureRecognizer*)otherGestureRecognizer;
-- (void)reset;
-- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
-- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event;
-- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event;
-- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event;
 
-@property (copy, nonatomic) NSArray* allowedPressTypes STUB_PROPERTY;
-@property (copy, nonatomic) NSArray* allowedTouchTypes STUB_PROPERTY;
+// Adding and Removing Targets and Actions
+- (void)addTarget:(id)target action:(SEL)action;
+- (void)removeTarget:(id)target action:(SEL)action STUB_METHOD;
+
+// Specifying Dependencies Between Gesture Recognizers
+- (void)requireGestureRecognizerToFail:(UIGestureRecognizer*)otherGestureRecognizer;
+
+// Canceling and Delaying Touches
 @property (nonatomic) BOOL cancelsTouchesInView;
 @property (nonatomic) BOOL delaysTouchesBegan;
 @property (nonatomic) BOOL delaysTouchesEnded;
-@property (nonatomic, assign) id<UIGestureRecognizerDelegate> delegate;
+
+// Setting and Getting the Delegate
+@property (nonatomic, weak) id<UIGestureRecognizerDelegate> delegate;
+
+// Getting the Recognizer’s State and View
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, readonly) UIGestureRecognizerState state;
 @property (nonatomic, readonly) UIView* view;
+
+// Recognizing Different Gestures
+@property (copy, nonatomic) NSArray* allowedPressTypes STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* allowedTouchTypes STUB_PROPERTY;
 
 @end

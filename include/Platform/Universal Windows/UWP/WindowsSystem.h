@@ -528,7 +528,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL treatAsUntrusted;
 @property (copy) NSString* preferredApplicationPackageFamilyName;
 @property (copy) NSString* preferredApplicationDisplayName;
@@ -549,7 +549,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray* itemsToSelect;
 @property WUVViewSizePreference desiredRemainingView;
 @end

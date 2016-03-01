@@ -237,18 +237,17 @@ int main(int argc, char* argv[]) {
     argc = 3;
 #endif
 
-    // TODO: telemetry
-    // TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
+    TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
     std::tr2::sys::path fName(argv[1]);
 
-    // TODO: telemetry
-    // TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
+    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);
     if (!result) {
         printf("Error opening %s\n", argv[1]);
+        TELEMETRY_FLUSH();
         exit(2);
         return -1;
     }
@@ -257,12 +256,14 @@ int main(int argc, char* argv[]) {
     const char* type = getNodeAttrib(rootNode, "type");
     if (!type) {
         printf("Unable to find input type\n");
+        TELEMETRY_FLUSH();
         exit(3);
         return -1;
     }
     if (strcmp(rootNode.name(), "document") == 0 && strcmp(type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB") == 0) {
         if (argc < 3) {
             printf("Usage: xib2nib input.storyboard <outputdir>\n");
+            TELEMETRY_FLUSH();
             exit(1);
             return -1;
         }
@@ -278,6 +279,7 @@ int main(int argc, char* argv[]) {
     } else if (strstr(type, ".XIB") != NULL) {
         if (argc < 3) {
             printf("Usage: xib2nib input.xib output.nib\n");
+            TELEMETRY_FLUSH();
             exit(1);
             return -1;
         }
@@ -285,6 +287,7 @@ int main(int argc, char* argv[]) {
         FILE* fpOut = fopen(argv[2], "wb");
         if (!fpOut) {
             printf("Error opening %s\n", argv[2]);
+            TELEMETRY_FLUSH();
             exit(3);
             return -1;
         }
@@ -297,12 +300,14 @@ int main(int argc, char* argv[]) {
         fclose(fpOut);
     } else {
         printf("Unable to determine input type type=\"%s\"\n", type);
+        TELEMETRY_FLUSH();
         exit(4);
         return -1;
     }
 
-    // TODO: telemetry
-    //TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
+    TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
+
+    TELEMETRY_FLUSH();
 
     exit(0);
 }

@@ -94,8 +94,9 @@ static const int64_t c_timeoutInSeconds = 15LL;
 }
 
 /**
- * @return {BOOL} indicates whether location services are enabled on the device.
- */
+ @Status Interoperable
+ @return {BOOL} indicates whether location services are enabled on the device.
+*/
 + (BOOL)locationServicesEnabled {
     return (g_authorizationStatus == kCLAuthorizationStatusAuthorized) ? YES : NO;
 }
@@ -209,8 +210,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
         accessFailure = ^void(NSError* error) {
             VLog(@"Location authorization error: %@", error);
-            // TODO: switch to failfast call.
-            assert(!"Unexpected failure while authorizing location.");
+            FAIL_FAST_MSG(E_UNEXPECTED, "Unexpected failure while authorizing location.");
         };
 
         [WDGGeolocator requestAccessAsyncWithSuccess:accessSucess failure:accessFailure];
@@ -430,7 +430,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         _location = nullptr;
         // Cache the caller's thread object to use it to call delegates on.
         _callerThread = [NSThread currentThread];
-        _uwpGeolocator = [WDGGeolocator create];
+        _uwpGeolocator = [WDGGeolocator make];
     }
 
     return self;

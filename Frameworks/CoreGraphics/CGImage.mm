@@ -30,6 +30,16 @@ extern "C" {
 #import <png.h>
 };
 
+// This is the format libpng expects.
+struct _RGBA_swizzle {
+    BYTE r, g, b, a;
+};
+
+// This is what comes out of pixman.
+struct _BGRA_swizzle {
+    BYTE b, g, r, a;
+};
+
 @interface CGNSImage : _CGLifetimeBridgingType
 @end
 @implementation CGNSImage
@@ -38,7 +48,11 @@ extern "C" {
 }
 
 - (void)dealloc {
+#pragma diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
+    // __CGImage is a C++ class massaged into an objc object. 
     delete (__CGImage*)self;
+#pragma diagnostic pop
 }
 @end
 
@@ -97,28 +111,30 @@ CGImageRef CGImageBacking::CopyOnWrite() {
 }
 
 /**
- @Status Stub
- @Notes Calls CGImageCreateWithPNGDataProvider
+ @Status Caveat
+ @Notes decode parameter not supported and must be nullptr.
 */
 CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              const CGFloat decode[],
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
-    UNIMPLEMENTED();
-    assert(decode == NULL);
-
+    FAIL_FAST_IF_FALSE(decode == nullptr);
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
+    
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
     return (CGImageRef)[img CGImage];
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes decode parameter not supported and must be nullptr.
 */
 CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             const CGFloat decode[],
                                             bool shouldInterpolate,
                                             CGColorRenderingIntent intent) {
-    assert(decode == NULL);
+    FAIL_FAST_IF_FALSE(decode == nullptr);
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
 
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
 
@@ -339,10 +355,12 @@ CGImageRef CGImageMaskCreate(size_t width,
                              CGDataProviderRef provider,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
-    assert(bitsPerComponent == 8 && bitsPerPixel == 32);
+    FAIL_FAST_HR_IF_FALSE(E_UNEXPECTED, ((bitsPerComponent == 8) && (bitsPerPixel == 32)));
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
 
-    char* pData = (char*)[provider bytes];
-    size_t dataLen = (size_t)[provider length];
+    NSData* dataProvider = (__bridge NSData*)provider;
+    char* pData = (char*)[dataProvider bytes];
+    size_t dataLen = (size_t)[dataProvider length];
 
     //  Create an 8-bit mask from the data
     CGImageRef newImage = new CGBitmapImage(width, height, _ColorGrayscale, NULL);
@@ -392,6 +410,15 @@ CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
 
         case _ColorRGBA:
             ret |= kCGImageAlphaFirst;
+            break;
+
+        case _Color565:
+        case _ColorRGB32:
+        case _ColorRGB32HE:
+        case _ColorGrayscale:
+        case _ColorRGB:
+        case _ColorA8:
+        case _ColorIndexed:
             break;
     }
 
@@ -456,7 +483,7 @@ size_t CGImageGetBitsPerPixel(CGImageRef img) {
             break;
 
         default:
-            assert(0);
+            FAIL_FAST();
     }
 
     return ret;
@@ -489,7 +516,7 @@ size_t CGImageGetBitsPerComponent(CGImageRef img) {
             break;
 
         default:
-            assert(0);
+            FAIL_FAST();
     }
 
     return ret;
@@ -559,7 +586,7 @@ CGBitmapInfo CGImageGetBitmapInfo(CGImageRef img) {
             break;
 
         default:
-            assert(0);
+            FAIL_FAST();
             break;
     }
     return (CGBitmapInfo)ret;
@@ -582,7 +609,7 @@ size_t CGImageGetBytesPerRow(CGImageRef img) {
             break;
 
         default:
-            assert(0);
+            FAIL_FAST();
             break;
     }
     return ret;
@@ -605,9 +632,11 @@ CGImageRef CGImageCreate(size_t width,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
     CGBitmapImage* newImage;
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
+    NSData* dataProvider = (__bridge NSData*)provider;
     DWORD alphaType = bitmapInfo & 0x1F;
 
-    char* data = (char*)[provider bytes];
+    char* data = (char*)[dataProvider bytes];
 
     if (((__CGColorSpace*)colorSpace)->colorSpace == _ColorRGBA) {
         switch (alphaType) {
@@ -646,7 +675,7 @@ CGImageRef CGImageCreate(size_t width,
                 break;
 
             default:
-                assert(0);
+                FAIL_FAST();
                 break;
         }
     } else if (((__CGColorSpace*)colorSpace)->colorSpace == _ColorIndexed) {
@@ -684,7 +713,7 @@ CGImageRef CGImageCreate(size_t width,
         newImage = new CGBitmapImage(width, height, ((__CGColorSpace*)colorSpace)->colorSpace, data);
     }
 
-    newImage->_provider = (id)provider;
+    newImage->_provider = dataProvider;
 
     return (CGImageRef)newImage;
 }
@@ -710,7 +739,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
 
     if (pImage == NULL || pImage->Backing()->Width() == 0 || pImage->Backing()->Height() == 0) {
         EbrDebugLog("%x\n", pImage);
-        *((char*)0) = 0;
+        FAIL_FAST_HR(E_UNEXPECTED);
     }
 
     png_structp png_ptr;
@@ -731,40 +760,37 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
 
     int width = pImage->Backing()->Width();
     int height = pImage->Backing()->Height();
-    int xstride = pImage->Backing()->BytesPerPixel();
-    int ystride = pImage->Backing()->BytesPerRow();
+    int xStrideImg = pImage->Backing()->BytesPerPixel();
+    int yStrideImg = pImage->Backing()->BytesPerRow();
     BYTE* pImgData = (BYTE*)pImage->Backing()->LockImageData();
-    bool rotate = false;
 
     int orientation = [img imageOrientation];
     switch (orientation) {
         case UIImageOrientationDown:
-            pImgData += ystride * (height - 1);
-            ystride = -ystride;
+            pImgData += yStrideImg * (height - 1);
+            yStrideImg = -yStrideImg;
             break;
         case UIImageOrientationRight: {
-            pImgData += xstride * (width - 1);
+            pImgData += xStrideImg * (width - 1);
 
-            int tmp = ystride;
-            ystride = -xstride;
-            xstride = tmp;
+            int tmp = yStrideImg;
+            yStrideImg = -xStrideImg;
+            xStrideImg = tmp;
 
             tmp = width;
             width = height;
             height = tmp;
-            rotate = true;
         } break;
         case UIImageOrientationLeft: {
-            pImgData += ystride * (height - 1);
+            pImgData += yStrideImg * (height - 1);
 
-            int tmp = ystride;
-            ystride = xstride;
-            xstride = -tmp;
+            int tmp = yStrideImg;
+            yStrideImg = xStrideImg;
+            xStrideImg = -tmp;
 
             tmp = width;
             width = height;
             height = tmp;
-            rotate = true;
         } break;
 
         case UIImageOrientationUp:
@@ -775,8 +801,13 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
             break;
     }
 
+    int xStrideOut;
+    int yStrideOut;
+    surfaceFormat backingFormat = pImage->Backing()->SurfaceFormat();
+
     // Write header (8 bit colour depth)
-    switch (pImage->Backing()->SurfaceFormat()) {
+    switch (backingFormat) {
+        case _Color565:
         case _ColorRGB:
             png_set_IHDR(png_ptr,
                          info_ptr,
@@ -787,6 +818,7 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
                          PNG_INTERLACE_NONE,
                          PNG_COMPRESSION_TYPE_BASE,
                          PNG_FILTER_TYPE_BASE);
+            xStrideOut = 3;
             break;
 
         case _ColorGrayscale:
@@ -800,9 +832,13 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
                          PNG_INTERLACE_NONE,
                          PNG_COMPRESSION_TYPE_BASE,
                          PNG_FILTER_TYPE_BASE);
+            xStrideOut = 1;
             break;
 
-        default:
+        case _ColorARGB:
+        case _ColorRGBA:
+        case _ColorRGB32:
+        case _ColorRGB32HE:
             png_set_IHDR(png_ptr,
                          info_ptr,
                          width,
@@ -812,36 +848,108 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
                          PNG_INTERLACE_NONE,
                          PNG_COMPRESSION_TYPE_BASE,
                          PNG_FILTER_TYPE_BASE);
+            xStrideOut = 4;
             break;
+
+        default:
+            // Any other backing formats are outside the scope of libpng, and extremely unlikely to be used.
+            FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unsupported backing format!");
+            break;
+
     }
+
+    yStrideOut = xStrideOut * width;
 
     png_write_info(png_ptr, info_ptr);
 
     int x, y;
-    if (!rotate) {
-        for (y = 0; y < height; y++) {
-            png_write_row(png_ptr, ((BYTE*)pImgData) + y * ystride);
-        }
-    } else {
-        int bytesperpixel = pImage->Backing()->BytesPerPixel();
-        BYTE* pRow = (BYTE*)IwMalloc(width * bytesperpixel);
-        for (y = 0; y < height; y++) {
-            BYTE* rowStart = pImgData;
-            BYTE* rowOut = pRow;
+    int bytesperpixel = pImage->Backing()->BytesPerPixel();
+    BYTE* pRow = static_cast<BYTE*>(IwMalloc(yStrideOut));
+    FAIL_FAST_HR_IF_NULL(E_OUTOFMEMORY, pRow);
+    for (y = 0; y < height; y++) {
+        BYTE* rowStart = pImgData;
+        BYTE* rowOut = pRow;
 
-            for (x = 0; x < width; x++) {
-                int bpp = bytesperpixel;
-                BYTE* pixel = rowStart;
-                while (bpp--) {
-                    *(rowOut++) = *(pixel++);
-                }
-                rowStart += xstride;
+        for (x = 0; x < width; x++) {
+            BYTE* pixel = rowStart;
+            _RGBA_swizzle* outSwizzle = reinterpret_cast<_RGBA_swizzle*>(rowOut);
+            _BGRA_swizzle* pixelSwizzle = reinterpret_cast<_BGRA_swizzle*>(pixel);
+            switch (backingFormat) {
+                // PIXMAN_g8 | PIXMAN_a8
+                case _ColorGrayscale:
+                case _ColorA8:
+                    *rowOut = *pixel;
+                    break;
+
+                // PIXMAN_b8g8r8
+                case _ColorRGB:
+                    {
+                        outSwizzle->r = pixelSwizzle->b;
+                        outSwizzle->g = pixelSwizzle->g;
+                        outSwizzle->b = pixelSwizzle->r;
+                    }
+                    break;
+
+                // PIXMAN_r5g6b5
+                case _Color565:
+                    {
+                        unsigned short shortPixel = *reinterpret_cast<unsigned short*>(pixel);
+
+                        // Mask out the RGB portions
+                        outSwizzle->r = (BYTE)(shortPixel >> 11);
+                        outSwizzle->g = (BYTE)((shortPixel >> 5) & 0x3F);
+                        outSwizzle->b = (BYTE)(shortPixel & 0x1F);
+
+                        // Scale component to BYTE with LSB extension. (00011b << 3 becomes 11111b, 00010b becomes 10000b)
+                        outSwizzle->r = (outSwizzle->r << 3) | (((outSwizzle->r & 0x1) << 3) - (outSwizzle->r & 0x1));
+                        outSwizzle->g = (outSwizzle->g << 2) | (((outSwizzle->g & 0x1) << 2) - (outSwizzle->g & 0x1));
+                        outSwizzle->b = (outSwizzle->b << 3) | (((outSwizzle->b & 0x1) << 3) - (outSwizzle->b & 0x1));
+                    }
+                    break;
+                    
+                // PIXMAN_a8r8g8b8
+                case _ColorARGB:
+                    {
+                        outSwizzle->r = pixelSwizzle->r;
+                        outSwizzle->g = pixelSwizzle->g;
+                        outSwizzle->b = pixelSwizzle->b;
+                        outSwizzle->a = pixelSwizzle->a;
+                    }
+                    break;
+
+                // PIXMAN_x8b8g8r8 | PIXMAN_a8b8g8r8
+                case _ColorRGB32HE:
+                case _ColorRGBA:
+                    {
+                        outSwizzle->r = pixelSwizzle->b;
+                        outSwizzle->g = pixelSwizzle->g;
+                        outSwizzle->b = pixelSwizzle->r;
+                        outSwizzle->a = pixelSwizzle->a;
+                    }
+                    break;
+
+                // PIXMAN_b8g8r8x8
+                case _ColorRGB32:
+                    {
+                        outSwizzle->r = pixelSwizzle->b;
+                        outSwizzle->g = pixelSwizzle->g;
+                        outSwizzle->b = pixelSwizzle->r;
+                        outSwizzle->a = pixelSwizzle->a;
+                    }
+                    break;
+                
+                default:
+                    // Impossible state, we should have failed higher up.
+                    FAIL_FAST_HR(E_UNEXPECTED);
+                    break;
             }
-            pImgData += ystride;
-            png_write_row(png_ptr, pRow);
+            rowOut += xStrideOut;
+            rowStart += xStrideImg;
         }
-        IwFree(pRow);
+        pImgData += yStrideImg;
+        png_write_row(png_ptr, pRow);
     }
+    IwFree(pRow);
     pImage->Backing()->ReleaseImageData();
 
     png_write_end(png_ptr, NULL);

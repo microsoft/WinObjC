@@ -85,7 +85,7 @@ typedef void (^WUXPPaginateEventHandler)(RTObject* sender, WUXPPaginateEventArgs
 
 WINRT_EXPORT
 @interface WUXPAddPagesEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
 @end
 
@@ -97,7 +97,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXPGetPreviewPageEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int pageNumber;
 @end
 
@@ -109,7 +109,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXPPaginateEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int currentPreviewPageNumber;
 @property (readonly) WGPPrintTaskOptions* printTaskOptions;
 @end
@@ -122,7 +122,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -141,7 +141,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXPPrintDocument : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WGPIPrintDocumentSource>* documentSource;
 + (WXDependencyProperty*)documentSourceProperty;
 - (EventRegistrationToken)addAddPagesEvent:(WUXPAddPagesEventHandler)del;

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
@@ -57,9 +57,6 @@
     <ClangCompile Include="..\..\WinRTSample\TilesViewController.m">
       <Filter>WinRTSample</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\WinRTSample\MainViewController.m">
-      <Filter>WinRTSample</Filter>
-    </ClangCompile>
     <SBResourceCopy Include="..\..\WinRTSample\cappuccino.jpg">
       <Filter>WinRTSample</Filter>
     </SBResourceCopy>
@@ -82,5 +79,25 @@
     <Text Include="WinRTSample-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <Xml Include="..\..\WinRTSample\in-app-purchase.xml">
+      <Filter>WinRTSample</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinRTSample_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\WinRTSample\MainViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\IAPViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
   </ItemGroup>
 </Project>

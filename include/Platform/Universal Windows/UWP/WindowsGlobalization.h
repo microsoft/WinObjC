@@ -310,7 +310,7 @@ WINRT_EXPORT
 @interface WGGeographicRegion : RTObject
 + (BOOL)isSupported:(NSString*)geographicRegionCode;
 + (WGGeographicRegion*)createGeographicRegion:(NSString*)geographicRegionCode ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSString* code;
 @property (readonly) NSString* codeThreeDigit;
 @property (readonly) NSString* codeThreeLetter;
@@ -351,7 +351,7 @@ WINRT_EXPORT
                                  calendar:(NSString*)calendar
                                     clock:(NSString*)clock
                                timeZoneId:(NSString*)timeZoneId ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WGCalendar*)createCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
 + (WGCalendar*)createCalendar:(id<NSFastEnumeration> /* NSString * */)languages
                      calendar:(NSString*)calendar

@@ -85,7 +85,7 @@ WINRT_EXPORT
 @interface WDJJsonArray : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonArray*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonArray**)result;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
@@ -122,7 +122,7 @@ WINRT_EXPORT
 @interface WDJJsonObject : RTObject <WDJIJsonValue, WFIStringable>
 + (WDJJsonObject*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input result:(WDJJsonObject**)result;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDJJsonValueType valueType;
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;

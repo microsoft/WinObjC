@@ -13,8 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
+
+#import <objc/runtime.h>
+
+typedef struct {
+    __unsafe_unretained id _target;
+    SEL _selector;
+} GestureTarget;
 
 @interface UIGestureRecognizer () {
 @protected
@@ -28,7 +34,7 @@
     NSMutableArray* _registeredActions;
     NSMutableArray* _trackingTouches;
 
-    gestureTarget _targets[32];
+    GestureTarget _targets[32];
     int _numTargets;
 
     struct {

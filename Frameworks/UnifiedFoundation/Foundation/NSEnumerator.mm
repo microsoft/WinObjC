@@ -18,6 +18,7 @@
 #import "Foundation/NSEnumerator.h"
 #import "Foundation/NSMutableArray.h"
 #import "NSEnumeratorInternal.h"
+#import "NSRaise.h"
 
 // Abstract NSEnumerator superclass
 @implementation NSEnumerator
@@ -41,8 +42,7 @@
  @Status Interoperable
 */
 - (NSObject*)nextObject {
-    [NSException raise:NSInternalInconsistencyException format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
-    return nil;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

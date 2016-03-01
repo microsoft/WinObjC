@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -166,6 +166,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Xml Include="..\..\WinRTSample\in-app-purchase.xml" />
     <Xml Include="default.rd.xml" />
     <None Include="WinRTSample_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
@@ -177,11 +178,12 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <ClangCompile Include="..\..\WinRTSample\AppDelegate.m" />
     <ClangCompile Include="..\..\WinRTSample\ButtonsViewController.m" />
+    <ClangCompile Include="..\..\WinRTSample\IAPViewController.m" />
     <ClangCompile Include="..\..\WinRTSample\main.m" />
+    <ClangCompile Include="..\..\WinRTSample\MainViewController.m" />
     <ClangCompile Include="..\..\WinRTSample\MenuTableViewController.m" />
     <ClangCompile Include="..\..\WinRTSample\ToastsViewController.m" />
     <ClangCompile Include="..\..\WinRTSample\TilesViewController.m" />
-    <ClangCompile Include="..\..\WinRTSample\MainViewController.m" />
     <SBResourceCopy Include="..\..\WinRTSample\cappuccino.jpg" />
     <SBResourceCopy Include="..\..\WinRTSample\espresso.jpg" />
     <SBResourceCopy Include="..\..\WinRTSample\icon-black-espresso.png" />

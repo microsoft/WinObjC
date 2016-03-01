@@ -21,6 +21,7 @@
 #import "Starboard.h"
 
 #import "GenericPasswordItemHandler.h"
+#import "FoundationErrorHandling.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <Security/SecItem.h>
@@ -383,7 +384,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
 }
 
 - (instancetype)init {
-    return [self initWithVault:[[WSCPasswordVault create] autorelease]];
+    return [self initWithVault:[[WSCPasswordVault make] autorelease]];
 }
 
 - (instancetype)initWithVault:(WSCPasswordVault*)vault {
@@ -400,7 +401,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
 }
 
 - (OSStatus)add:(NSDictionary*)attributes withResult:(id*)result {
-    WSCPasswordCredential* credential = [WSCPasswordCredential create];
+    WSCPasswordCredential* credential = [WSCPasswordCredential make];
 
     for (const auto& entry : GetPropertyHandlers()) {
         id value = [attributes objectForKey:entry.first];
@@ -433,15 +434,8 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
     try {
         [_vault add:credential];
     } catch (NSException* e) {
-        // Assume that projection exceptions will come as NSException with an hr?
-        NSNumber* errorCode = [e.userInfo objectForKey:_NSHResultErrorDictKey];
-        if (errorCode) {
-            switch (static_cast<HRESULT>([errorCode unsignedIntValue])) {
-                case E_INVALIDARG:
-                    return errSecParam;
-                default:
-                    return errSecInteractionNotAllowed;
-            };
+        if ([e _hresult] == E_INVALIDARG) {
+            return errSecParam;
         }
 
         return errSecInteractionNotAllowed;

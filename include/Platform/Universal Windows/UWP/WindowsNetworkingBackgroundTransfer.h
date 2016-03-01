@@ -244,7 +244,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBBackgroundTransferCompletionGroup : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL isEnabled;
 @property (readonly) RTObject<WABIBackgroundTrigger>* trigger;
 - (void)enable;
@@ -260,7 +260,7 @@ WINRT_EXPORT
 @interface WNBBackgroundTransferContentPart : RTObject
 + (WNBBackgroundTransferContentPart*)createWithName:(NSString*)name ACTIVATOR;
 + (WNBBackgroundTransferContentPart*)createWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)setHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 - (void)setText:(NSString*)value;
 - (void)setFile:(RTObject<WSIStorageFile>*)value;
@@ -296,7 +296,7 @@ WINRT_EXPORT
                                    failure:(void (^)(NSError*))failure;
 + (void)getCurrentDownloadsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentDownloadsForGroupAsync:(NSString*)group success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WNBBackgroundDownloader*)createWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 @property (copy) WUNToastNotification* failureToastNotification;
 @property (copy) WUNTileNotification* successTileNotification;
@@ -338,7 +338,7 @@ WINRT_EXPORT
 + (void)getCurrentUploadsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentUploadsForGroupAsync:(NSString*)group success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (WNBBackgroundUploader*)createWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WSCPasswordCredential* serverCredential;
 @property (copy) WSCPasswordCredential* proxyCredential;
 @property (copy) NSString* method;

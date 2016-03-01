@@ -31,10 +31,62 @@
 @implementation NSMutableIndexSet
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)addIndexesInRange:(NSRange)aRange {
-    UNIMPLEMENTED();
+- (void)addIndexesInRange:(NSRange)candidateRange {
+    // A range is added to the index by finding its appropriate sorted position such
+    // that no overlaps exist. This may mean that multiple ranges are subsumed by the addition of this range.
+    // Additionally, a candidate range may be a total subset of an existing range which should result in a no-op.
+    // A range is ordered in the _ranges array according to its left edge (range.location). The length of each range is
+    // at most the distance to the next left edge as any range would be coalesced with a longer distance.
+    // In order to coalesce two or more ranges, the current list of ranges will be scanned for any overlaps. When an overlap is
+    // detected the candidate range will be updated to include the new maximal bounds and the current entry marked for removal.
+    // Once all overlaps are accounted for, old items will be removed, and the candidate range will be inserted into the least vacated
+    // index (all removed indices should be contiguous and by definition everything non overlapping was not removed.)
+
+    NSRange removalRange = { 0, 0 }; // The set of ranges to remove during cleanup. Start with removing at index 0 with a length of 0.
+    for (unsigned int i = 0; i < (raCount(self)); i++) {
+        NSRange cur = raItemAtIndex(self, i);
+
+        // There are six ways two ranges can be arranged relative to each other.
+        //                   |================|
+        // 1. |=====|                                          (left of)
+        // 2.             |====|                               (left overlap)
+        // 3.                     |====|                       (subset)
+        // 4.                             |========|           (right overlap)
+        // 5.                                     |=========|  (right of)
+        // 6.         |==============================|         (super set)
+
+        if (cur.location > NSMaxRange(candidateRange)) {
+            // current range's left side is beyond that of the candidate range's right side.
+            // This is means that the candidate range is (left of) the current range. All overlaps
+            // are done and its time to clean up.
+            break;
+        } else if (NSMaxRange(cur) < candidateRange.location) {
+            // The candidate range's left edge is beyond the current range's right edge.
+            // this means that the candidate range is (right of) the current range. No overlap.
+            // move along.
+            removalRange.location++;
+        } else {
+            // the 4 other cases all involve some overlap (or adjacency). This means that the candidate range needs
+            // to expand to include the maximal range and the current range removed.
+            removalRange.length++;
+            candidateRange = NSUnionRange(candidateRange, cur);
+        }
+    }
+
+    // Cleanup step is to first remove everything we need and then to insert at the min removed index.
+    // Since all ranges to be removed are contiguous, simply shift the ranges beyond the removed chunk
+    // down into vacated spots.
+    if (removalRange.length > 0) {
+        memmove(&_ranges[removalRange.location], // dest
+                &_ranges[removalRange.location + removalRange.length], // src
+                sizeof(NSRange) * ((_length) - (removalRange.location + removalRange.length))); // numbytes
+        _length -= removalRange.length;
+    }
+
+    // Now insert the candidate range
+    raInsertItem(self, candidateRange, removalRange.location);
 }
 
 /**

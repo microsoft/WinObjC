@@ -211,7 +211,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessage : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* transportId;
 @property (copy) WFDateTime* networkTimestamp;
 @property (copy) WFDateTime* localTimestamp;
@@ -293,7 +293,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatConversationThreadingInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACChatConversationThreadingKind kind;
 @property (copy) NSString* custom;
 @property (copy) NSString* conversationId;
@@ -309,7 +309,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* transportAddress;
 @property (copy) id readTime;
 @property (copy) id deliveryTime;
@@ -473,7 +473,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatQueryOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* searchString;
 @end
 

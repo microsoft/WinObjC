@@ -239,6 +239,10 @@ CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
  @Notes textRange parameter not supported
 */
 void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
+    if (!run) {
+        return;
+    }
+
     _CTRun* curRun = (_CTRun*)run;
 
     NSString* string = curRun->_stringFragment;

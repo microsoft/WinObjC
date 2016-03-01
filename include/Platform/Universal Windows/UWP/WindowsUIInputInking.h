@@ -270,7 +270,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkDrawingAttributes : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFSize* size;
 @property WUIIPenTipShape penTip;
 @property BOOL ignorePressure;
@@ -323,7 +323,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokeBuilder : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)beginStroke:(WUIPointerPoint*)pointerPoint;
 - (WUIPointerPoint*)appendToStroke:(WUIPointerPoint*)pointerPoint;
 - (WUIIInkStroke*)endStroke:(WUIPointerPoint*)pointerPoint;
@@ -353,7 +353,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkStrokeContainer : RTObject <WUIIIInkStrokeContainer>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFRect* boundingRect;
 - (void)addStroke:(WUIIInkStroke*)stroke;
 - (WFRect*)deleteSelected;
@@ -394,7 +394,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkRecognizerContainer : RTObject <WUIIIInkRecognizerContainer>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)setDefaultRecognizer:(WUIIInkRecognizer*)recognizer;
 - (void)recognizeAsync:(WUIIInkStrokeContainer*)strokeCollection
      recognitionTarget:(WUIIInkRecognitionTarget)recognitionTarget
@@ -411,7 +411,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkManager : RTObject <WUIIIInkRecognizerContainer, WUIIIInkStrokeContainer>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUIIInkManipulationMode mode;
 @property (readonly) WFRect* boundingRect;
 - (void)processPointerDown:(WUIPointerPoint*)pointerPoint;

@@ -172,7 +172,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingDevicePicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMCCastingDevicePickerFilter* filter;
 - (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void (^)(WMCCastingDevicePicker*, RTObject*))del;

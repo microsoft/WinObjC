@@ -169,7 +169,7 @@ typedef void (^WXSizeChangedEventHandler)(RTObject* sender, WXSizeChangedEventAr
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -336,7 +336,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXThickness* margin;
 @property (copy) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
@@ -406,7 +406,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSShape : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMDoubleCollection* strokeDashArray;
 @property (copy) WUXMBrush* stroke;
 @property WUXMStretch stretch;
@@ -440,7 +440,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSEllipse : WUXSShape
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXSEllipse_DEFINED__
@@ -451,7 +451,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSLine : WUXSShape
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double y2;
 @property double y1;
 @property double x2;
@@ -470,7 +470,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSPath : WUXSShape
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMGeometry* data;
 + (WXDependencyProperty*)dataProperty;
 @end
@@ -483,7 +483,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSPolygon : WUXSShape
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
 + (WXDependencyProperty*)fillRuleProperty;
@@ -498,7 +498,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSPolyline : WUXSShape
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
 + (WXDependencyProperty*)fillRuleProperty;
@@ -513,7 +513,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXSRectangle : WUXSShape
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double radiusY;
 @property double radiusX;
 + (WXDependencyProperty*)radiusXProperty;

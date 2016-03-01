@@ -125,7 +125,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WSProductPurchaseDisplayProperties*)createProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
 @property (copy) NSString* name;
 @property (copy) WFUri* image;

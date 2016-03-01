@@ -14,34 +14,30 @@
 //
 //******************************************************************************
 
-#import <XCTest/XCTest.h>
+#include <CommonCrypto\CommonCryptor.h>
+#include <StubReturn.h>
 
-@interface WinRTSampleTests : XCTestCase
-
-@end
-
-@implementation WinRTSampleTests
-
-- (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+/**
+@Status Stub
+*/
+void CCHmac(uint32_t alg, uint8_t* key, uint32_t keylength, uint8_t* msg, int msglength, void* out) {
+    UNIMPLEMENTED();
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+/**
+@Status Stub
+*/
+int32_t CCCrypt(uint32_t op, /* kCCEncrypt, etc. */
+    uint32_t alg, /* kCCAlgorithmAES128, etc. */
+    uint32_t options, /* kCCOptionPKCS7Padding, etc. */
+    const void* key,
+    size_t keyLength,
+    const void* iv, /* optional initialization vector */
+    const void* dataIn, /* optional per op and alg */
+    size_t dataInLength,
+    void* dataOut, /* data RETURNED here */
+    size_t dataOutAvailable,
+    size_t* dataOutMoved) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
-
-- (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
-}
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
-
-@end

@@ -257,7 +257,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id samplingInterval;
 @property (copy) id outOfRangeTimeout;
 @property (copy) id outOfRangeThresholdInDBm;
