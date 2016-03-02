@@ -16,7 +16,6 @@
 
 #include "gtest-api.h"
 #include "UIKit/UIApplication.h"
-typedef wchar_t WCHAR;
 #include "UWP/WindowsSystem.h"
 
 // Mock launcher allowing us to spoof launchUriAsync and queryUriSupportAsync behavior

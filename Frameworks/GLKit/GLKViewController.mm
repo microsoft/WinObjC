@@ -19,7 +19,6 @@
 #import <GLKit/GLKView.h>
 #import <GLKit/GLKViewController.h>
 
-typedef wchar_t WCHAR;
 #import <UWP/WindowsFoundation.h>
 #import <UWP/WindowsGlobalization.h>
 

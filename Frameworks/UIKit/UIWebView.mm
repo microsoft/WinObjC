@@ -27,7 +27,6 @@
 #include "UIKit/UIColor.h"
 
 #include "UIKit/UIWebView.h"
-typedef wchar_t WCHAR;
 #include "UWP/WindowsUIXamlControls.h"
 
 #include <algorithm>
