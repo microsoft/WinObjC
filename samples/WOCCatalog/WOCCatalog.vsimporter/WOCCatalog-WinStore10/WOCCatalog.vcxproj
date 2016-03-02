@@ -174,7 +174,6 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm" />
