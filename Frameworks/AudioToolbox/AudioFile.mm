@@ -25,6 +25,7 @@
 #include "CAFDecoder.h"
 
 #import "stb_vorbis.h"
+#import <AudioToolbox/AudioFile.h>
 #import <AudioToolbox/AudioFileTypes.h>
 #import <AudioToolbox/ExtendedAudioFile.h>
 #import <StubReturn.h>
@@ -603,6 +604,10 @@ OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UI
     return fileID->getProperty(propID, ioDataSize, propOutData);
 }
 
+/**
+ @Status Caveat
+ @Notes Limited properties supported depending on codec
+*/
 DWORD AudioFileGetPropertyInfo(AudioFileID fileID, DWORD propID, DWORD* outDataSize, DWORD* isWritable) {
     if (isWritable) {
         *isWritable = FALSE;
