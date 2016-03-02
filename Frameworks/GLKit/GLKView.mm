@@ -28,6 +28,8 @@
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKView.h>
 
+#import "CALayerInternal.h"
+
 @implementation GLKView {
     CADisplayLink* _link;
 
@@ -210,8 +212,8 @@
 
     [EAGLContext setCurrentContext:self.context];
     if ([self.delegate respondsToSelector:@selector(glkView:drawInRect:)]) {
-        int width = (int)[self.layer _pixelWidth];
-        int height = (int)[self.layer _pixelHeight];
+        int width = (int)[(CAEAGLLayer*)self.layer _pixelWidth];
+        int height = (int)[(CAEAGLLayer*)self.layer _pixelHeight];
         glViewport(0, 0, width, height);
         [self.delegate glkView:self drawInRect:self.frame];
         res = TRUE;
