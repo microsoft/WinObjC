@@ -20,7 +20,7 @@
 
 class FontCopyName : public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>> {
 public:
-    FontCopyName() : _font(nullptr), public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>>() {
+    FontCopyName() : _font(nullptr) {
     }
 
 protected:
