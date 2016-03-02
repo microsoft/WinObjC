@@ -232,3 +232,13 @@ LIBRARY Accelerate
           cblas_zdrot
           SetBLASParamErrorProc
           BLASDefaultErrorProc
+          vDSP_DFT_zop_CreateSetup
+          vDSP_DFT_zop_CreateSetupD
+          vDSP_DFT_zrop_CreateSetup
+          vDSP_DFT_zrop_CreateSetupD
+          vDSP_DFT_DestroySetup
+          vDSP_DFT_DestroySetupD
+          vDSP_DFT_Execute
+          vDSP_DFT_ExecuteD
+          vImageBoxConvolve_ARGB8888
+          vImageMatrixMultiply_ARGB8888

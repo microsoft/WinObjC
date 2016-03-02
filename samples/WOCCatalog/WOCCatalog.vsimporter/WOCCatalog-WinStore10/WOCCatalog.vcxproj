@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -29,7 +29,7 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
-    <ProjectGuid>{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}</ProjectGuid>
+    <ProjectGuid>{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}</ProjectGuid>
     <WINOBJC_SDK_ROOT>..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -38,7 +38,7 @@
     <PlatformToolset>v140</PlatformToolset>
     <TargetName>WOCCatalog</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <TargetName>WOCCatalog</TargetName>
@@ -50,7 +50,7 @@
     <Optimize>true</Optimize>
     <TargetName>WOCCatalog</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v140</PlatformToolset>
     <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
@@ -67,13 +67,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -90,12 +90,13 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -111,12 +112,13 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>Disabled</OptimizationLevel>
       <PreprocessorDefinitions>DEBUG=1</PreprocessorDefinitions>
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -130,11 +132,12 @@
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -148,11 +151,12 @@
     <ClangCompile>
       <HeaderMap>Project</HeaderMap>
       <ObjectiveCARC>true</ObjectiveCARC>
+      <ObjectiveCModules>true</ObjectiveCModules>
       <OptimizationLevel>MinSpace</OptimizationLevel>
     </ClangCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies);GLKit.lib;OpenGLES.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);Accelerate.lib;GLKit.lib;OpenGLES.lib</AdditionalDependencies>
     </Link>
     <SBInfoPlistCopy>
       <ExcludedFromBuild>true</ExcludedFromBuild>
@@ -164,7 +168,6 @@
     </AppxManifest>
     <Xml Include="default.rd.xml" />
     <None Include="WOCCatalog_TemporaryKey.pfx" />
-    <Image Include="..\..\WOCCatalog\Images\tf_bgimage.jpg" />
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
     <Image Include="Assets\SplashScreen.scale-200.png" />
     <Image Include="Assets\Square150x150Logo.scale-200.png" />
@@ -172,10 +175,6 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
@@ -189,10 +188,13 @@
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PageViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\MainViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\OpenGLES20Controller.m" />
     <ClangCompile Include="..\..\WOCCatalog\SegmentsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PhotogridViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m" />
@@ -202,12 +204,16 @@
     <ClangCompile Include="..\..\WOCCatalog\ImagesViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo4.jpg" />
     <XibCompile Include="..\..\WOCCatalog\BezierViewController.xib" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\tf_bgimage.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo8.tif" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_check.png" />
+    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_search.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo1.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo7.gif" />
@@ -215,8 +221,6 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo3.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo5.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg" />
-    <SBResourceCopy Include="..\..\WOCCatalog\Images\photo10.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png" />
