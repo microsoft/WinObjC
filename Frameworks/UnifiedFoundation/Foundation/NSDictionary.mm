@@ -850,27 +850,25 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id, id, BOOL*))block {
-    NSEnumerator* state = [self keyEnumerator];
-    id key;
-    NSInteger i;
-    BOOL stop = FALSE;
-
-    for (i = 0; (key = [state nextObject]) != nil; i++) {
-        id value = [self objectForKey:key];
-
-        block(key, value, &stop);
-        if (stop) {
-            break;
-        }
-    }
+    [self enumerateKeysAndObjectsWithOptions:0 usingBlock:block];
 }
 
 /**
    @Status Caveat
-   @Notes enumeration options are not implemented.
+   @Notes NSEnumerationReverse not implemented.
 */
 - (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block {
-    [self enumerateKeysAndObjectsUsingBlock:block];
+    if (options & NSEnumerationReverse) {
+        UNIMPLEMENTED();
+        return;
+    }
+
+    _enumerateWithBlock([self keyEnumerator],
+                        options,
+                        ^(id key, BOOL* stop) {
+                            id value = [self objectForKey:key];
+                            block(key, value, stop);
+                        });
 }
 
 /**

@@ -862,22 +862,30 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)enumerateObjectsWithOptions:(NSUInteger)options usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
-    int i, count = [self count];
-
-    BOOL stop = FALSE;
-
+- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
+    id<NSFastEnumeration> enumerator;
+    __block NSUInteger index;
+    __block BOOL reverse;
     if (options & NSEnumerationReverse) {
-        for (i = count - 1; i >= 0 && !stop; i--) {
-            id curObj = [self objectAtIndex:i];
-            block(curObj, i, &stop);
-        }
+        enumerator = [self reverseObjectEnumerator];
+        index = [self count] - 1;
+        reverse = true;
     } else {
-        for (i = 0; i < count && !stop; i++) {
-            id curObj = [self objectAtIndex:i];
-            block(curObj, i, &stop);
-        }
+        enumerator = self;
+        index = 0;
+        reverse = false;
     }
+
+    _enumerateWithBlock(enumerator,
+                        options,
+                        ^(id key, BOOL* stop) {
+                            block(key, index, stop);
+                            if (reverse) {
+                                index--;
+                            } else {
+                                index++;
+                            }
+                        });
 }
 
 /**

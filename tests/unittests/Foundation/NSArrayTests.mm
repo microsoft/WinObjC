@@ -34,7 +34,7 @@ void assertArrayContents(NSArray* array, NSObject* first, ...) {
     ASSERT_EQ(i, [array count]);
 }
 
-TEST(Foundation, NSArray_ArrayWithObjects) {
+TEST(NSArray, ArrayWithObjects) {
     // Empty list
     assertArrayContents([NSArray arrayWithObjects:nil], nil);
 
@@ -45,7 +45,7 @@ TEST(Foundation, NSArray_ArrayWithObjects) {
     assertArrayContents([NSArray arrayWithObjects:@1, @2, @3, nil], @1, @2, @3, nil);
 }
 
-TEST(Foundation, NSArray_InitWithObjects) {
+TEST(NSArray, InitWithObjects) {
     // Empty list
     assertArrayContents([[NSArray alloc] initWithObjects:nil], nil);
 
@@ -57,7 +57,7 @@ TEST(Foundation, NSArray_InitWithObjects) {
 }
 
 @interface NSTestArray : NSArray
-@end 
+@end
 
 @implementation NSTestArray
 - (NSUInteger)count {
@@ -69,7 +69,7 @@ TEST(Foundation, NSArray_InitWithObjects) {
 }
 @end
 
-TEST(Foundation, NSArray_Subclassable) {
+TEST(NSArray, Subclassable) {
     NSArray* testArray = [NSTestArray new];
     ASSERT_EQ(@2, testArray[0]);
     int sum = 0;
@@ -78,23 +78,17 @@ TEST(Foundation, NSArray_Subclassable) {
     }
     ASSERT_EQ(10, sum);
 
-    NSArray* testArray2 = @[@2, @2, @2, @2, @2];
+    NSArray* testArray2 = @[ @2, @2, @2, @2, @2 ];
 
     ASSERT_OBJCEQ(testArray, testArray2);
 }
 
-NS_OPTIONS(NSUInteger, NSMutableTestArrayCalls) {
-    countCalled,
-    objectAtIndexCalled,
-    insertObjectCalled,
-    addObjectCalled,
-    removeObjectAtIndexCalled,
-    replaceObjectAtIndexCalled
-};
+NS_OPTIONS(NSUInteger, NSMutableTestArrayCalls){ countCalled,     objectAtIndexCalled,       insertObjectCalled,
+                                                 addObjectCalled, removeObjectAtIndexCalled, replaceObjectAtIndexCalled };
 
 @interface NSMutableTestArray : NSMutableArray
 @property unsigned int calledMethods;
-@end 
+@end
 
 @implementation NSMutableTestArray
 - (NSUInteger)count {
@@ -135,12 +129,12 @@ NS_OPTIONS(NSUInteger, NSMutableTestArrayCalls) {
     ASSERT_EQ(expectedCalls & replaceObjectAtIndexCalled, _calledMethods & replaceObjectAtIndexCalled);
     _calledMethods = 0;
 }
-@end 
+@end
 
-TEST(Foundation, NSMutableArray_Subclassable) {
+TEST(NSArray, NSMutableArray_Subclassable) {
     NSMutableTestArray* testArray = [NSMutableTestArray new];
     CFMutableArrayRef test = (CFMutableArrayRef)testArray;
-    
+
     CFArrayGetCount(test);
     [testArray verifyAndResetFlags:countCalled];
 
@@ -175,4 +169,43 @@ TEST(NSArray, NSArray_initWithContentsOfFile) {
     NSArray* actualArray = [[NSArray alloc] initWithContentsOfFile:file];
     ASSERT_OBJCEQ(expectedArray, actualArray);
     [[NSFileManager defaultManager] removeItemAtPath:file error:nil];
+}
+
+TEST(NSArray, Enumerate) {
+    __block NSArray* testArray = @[ @0, @1, @2, @3 ];
+
+    [testArray enumerateObjectsWithOptions:0
+                                usingBlock:^(id object, NSUInteger index, BOOL* stop) {
+                                    ASSERT_EQ((unsigned)[(NSNumber*)[testArray objectAtIndex:index] integerValue], (unsigned)index);
+                                }];
+
+    __block unsigned expectedIndex = 3;
+    // Verify that the NSReverseEnumeration option iterates in reverse
+    [testArray enumerateObjectsWithOptions:NSEnumerationReverse
+                                usingBlock:^(id object, NSUInteger index, BOOL* stop) {
+                                    ASSERT_EQ(expectedIndex, index);
+                                    ASSERT_EQ((unsigned)[(NSNumber*)[testArray objectAtIndex:index] integerValue], (unsigned)index);
+                                    expectedIndex--;
+                                }];
+
+    // Verify that the NSEnumerationConcurrent option executes the blocks concurrently
+    __block NSCondition* condition = [NSCondition new];
+    __block unsigned waitingCount = 0;
+    [testArray enumerateObjectsWithOptions:NSEnumerationConcurrent
+                                usingBlock:^(id object, NSUInteger index, BOOL* stop) {
+                                    [condition lock];
+                                    waitingCount++;
+                                    if (waitingCount == 4) {
+                                        waitingCount--;
+                                        [condition signal];
+                                        [condition unlock];
+                                        return;
+                                    }
+                                    [condition wait];
+                                    waitingCount--;
+                                    [condition signal];
+                                    [condition unlock];
+                                }];
+
+    ASSERT_EQ(0, waitingCount);
 }

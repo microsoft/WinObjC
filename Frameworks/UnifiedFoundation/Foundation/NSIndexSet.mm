@@ -169,17 +169,52 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes NSEnumerationReverse not implemented.
 */
-- (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL* stop))block {
-    BOOL stop = FALSE;
+- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block {
+    if (options & NSEnumerationReverse) {
+        UNIMPLEMENTED();
+        return;
+    }
+
+    dispatch_queue_t queue;
+    dispatch_group_t group;
+
+    // Initialize dispatch queue for concurrent enumeration
+    if (options & NSEnumerationConcurrent) {
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        group = dispatch_group_create();
+    }
+
+    __block BOOL stop = FALSE;
     for (unsigned long i = 0; i < raCount(self) && !stop; i++) {
         NSRange cur = raItemAtIndex(self, i);
 
-        for (unsigned long j = cur.location; j < cur.location + cur.length && !stop; j++) {
-            block(j, &stop);
+        for (__block unsigned long j = cur.location; j < cur.location + cur.length && !stop; j++) {
+            if (options & NSEnumerationConcurrent) {
+                dispatch_group_async(group,
+                                     queue,
+                                     ^() {
+                                         block(j, &stop);
+                                     });
+            } else {
+                block(j, &stop);
+            }
         }
     }
+
+    if (options & NSEnumerationConcurrent) {
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL* stop))block {
+    [self enumerateIndexesWithOptions:0 usingBlock:block];
 }
 
 /**
@@ -404,14 +439,6 @@
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block {
-    UNIMPLEMENTED();
 }
 
 /**

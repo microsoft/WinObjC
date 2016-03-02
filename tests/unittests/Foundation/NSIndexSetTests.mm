@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSIndexSetAddIndexesInRange) {
+TEST(NSIndexSet, AddIndexesInRange) {
     NSMutableIndexSet* indexSet = [NSMutableIndexSet new];
 
     LOG_INFO("Basic addIndexesInRange operation tests of NSIndexSet");
@@ -94,7 +94,7 @@ TEST(Foundation, NSIndexSetAddIndexesInRange) {
     LOG_INFO("Adjacent addIndexesInRange operation tests of NSIndexSet");
     callCount = 0;
     [indexSet addIndexesInRange:NSMakeRange(16, 2)]; // [16-17]
-    expected = @[ @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17];
+    expected = @[ @0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13, @14, @15, @16, @17 ];
 
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
         ASSERT_OBJCEQ([NSNumber numberWithUnsignedInt:index], [expected objectAtIndex:callCount++]);
@@ -105,12 +105,37 @@ TEST(Foundation, NSIndexSetAddIndexesInRange) {
     [indexSet release];
 }
 
-TEST(Foundation, NSIndexSetInit) {
+TEST(NSIndexSet, Init) {
     NSIndexSet* testSet = [[[NSIndexSet alloc] initWithIndex:2] autorelease];
     ASSERT_EQ(1, [testSet count]);
 
-    testSet = [[[NSIndexSet alloc] initWithIndexesInRange:(NSRange){2,0}] autorelease];
+    testSet = [[[NSIndexSet alloc] initWithIndexesInRange:(NSRange){ 2, 0 }] autorelease];
     ASSERT_EQ(0, [testSet count]);
 
-    ASSERT_ANY_THROW(([[NSIndexSet alloc] initWithIndexesInRange:(NSRange){NSNotFound-1, 2}]));
+    ASSERT_ANY_THROW(([[NSIndexSet alloc] initWithIndexesInRange:(NSRange){ NSNotFound - 1, 2 }]));
+}
+
+TEST(NSIndexSet, EnumerateConcurrent) {
+    __block NSCondition* condition = [NSCondition new];
+    __block unsigned waitingCount = 0;
+
+    // Validates that the block is executed on all indices concurrently by waiting on a condition until the count gets to 4.
+    NSIndexSet* testSet = [[[NSIndexSet alloc] initWithIndexesInRange:(NSRange){ 2, 4 }] autorelease];
+    [testSet enumerateIndexesWithOptions:NSEnumerationConcurrent
+                              usingBlock:^(NSUInteger index, BOOL* stop) {
+                                  [condition lock];
+                                  waitingCount++;
+                                  if (waitingCount == 4) {
+                                      waitingCount--;
+                                      [condition signal];
+                                      [condition unlock];
+                                      return;
+                                  }
+                                  [condition wait];
+                                  waitingCount--;
+                                  [condition signal];
+                                  [condition unlock];
+                              }];
+
+    ASSERT_EQ(0, waitingCount);
 }

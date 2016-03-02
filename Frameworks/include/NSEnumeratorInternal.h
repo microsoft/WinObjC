@@ -31,3 +31,36 @@ typedef int (*nextValueFunc)(id obj, void* enumeratorHolder, id* ret, int count)
 + (NSEnumerator*)enumeratorWithIterator:(initIteratorFunc)initIterator forObject:(id)obj nextFunction:(nextValueFunc)nextValueFunction;
 
 @end
+
+__inline void _enumerateWithBlock(id<NSFastEnumeration> enumerator, NSEnumerationOptions options, void (^block)(id, BOOL*)) {
+    dispatch_queue_t queue;
+    dispatch_group_t group;
+
+    // Initialize dispatch queue for concurrent enumeration
+    if (options & NSEnumerationConcurrent) {
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        group = dispatch_group_create();
+    }
+
+    __block BOOL stop = FALSE;
+    for (id key in enumerator) {
+        if (options & NSEnumerationConcurrent) {
+            dispatch_group_async(group,
+                                 queue,
+                                 ^() {
+                                     block(key, &stop);
+                                 });
+        } else {
+            block(key, &stop);
+        }
+
+        if (stop) {
+            break;
+        }
+    }
+
+    if (options & NSEnumerationConcurrent) {
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
+}
