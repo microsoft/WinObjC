@@ -62,6 +62,15 @@ static std::mt19937 s_rng;
 }
 @end
 
+@implementation _UILoading
++ (void)hideLoadingScreen {
+}
+@end
+
+bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation) {
+    return false;
+}
+
 __declspec(dllexport) extern "C" unsigned random() {
     std::lock_guard<std::mutex> lock(s_rngGuard);
 
