@@ -42,6 +42,18 @@ NSAttributedString* getString() {
 }
 
 class TypographicBounds : public ::testing::TestWithParam<::testing::tuple<std::function<CFRange(CFRange)>, double>> {
+public:
+    explicit TypographicBounds()
+        : _frameRef(nullptr),
+          _framesetter(nullptr),
+          _pathRef(nullptr),
+          _attributedStringRef(nullptr),
+          _textLength(0),
+          _run(nullptr),
+          _runRange{ 0, 0 },
+          ::testing::TestWithParam<::testing::tuple<std::function<CFRange(CFRange)>, double>>() {
+    }
+
 protected:
     virtual void SetUp() {
         _textLength = CFStringGetLength((CFStringRef)c_testString);
@@ -71,10 +83,18 @@ protected:
     }
 
     virtual void TearDown() {
-        CGPathRelease(_pathRef);
-        CFRelease(_attributedStringRef);
-        CFRelease(_frameRef);
-        CFRelease(_framesetter);
+        if (_pathRef) {
+            CGPathRelease(_pathRef);
+        }
+        if (_attributedStringRef) {
+            CFRelease(_attributedStringRef);
+        }
+        if (_frameRef) {
+            CFRelease(_frameRef);
+        }
+        if (_framesetter) {
+            CFRelease(_framesetter);
+        }
     }
 
     CTFrameRef _frameRef;

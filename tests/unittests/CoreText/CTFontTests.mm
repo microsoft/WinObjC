@@ -19,6 +19,10 @@
 #import <CoreText/CoreText.h>
 
 class FontCopyName : public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>> {
+public:
+    FontCopyName() : _font(nullptr), public ::testing::TestWithParam<::testing::tuple<CFStringRef, const NSString*>>() {
+    }
+
 protected:
     virtual void SetUp() {
         const CFStringRef fontName = static_cast<CFStringRef>(@"SegoeUI");
@@ -27,7 +31,9 @@ protected:
     }
 
     virtual void TearDown() {
-        CFRelease(_font);
+        if (_font) {
+            CFRelease(_font);
+        }
     }
 
     CTFontRef _font;
