@@ -97,6 +97,7 @@
       <IncludeMobileCoreServices Condition="$(LinkAdditionalDependencies.Contains('MobileCoreServices.lib'))">true</IncludeMobileCoreServices>
       <IncludeTwitter Condition="$(LinkAdditionalDependencies.Contains('Twitter.lib'))">true</IncludeTwitter>
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
+      <IncludeCFNetwork Condition="$(LinkAdditionalDependencies.Contains('CFNetwork.lib'))">true</IncludeCFNetwork>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -191,6 +192,7 @@
       <SBResourceCopy Condition="'$(IncludeMobileCoreServices)' == 'true'" Include="$(StarboardLibDirs)\MobileCoreServices.dll" />
       <SBResourceCopy Condition="'$(IncludeTwitter)' == 'true'" Include="$(StarboardLibDirs)\Twitter.dll" />
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeCFNetwork)' == 'true'" Include="$(StarboardLibDirs)\CFNetwork.dll" />
     </ItemGroup>
   </Target>
 
