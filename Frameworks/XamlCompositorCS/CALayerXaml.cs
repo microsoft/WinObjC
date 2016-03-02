@@ -22,7 +22,6 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Markup;
 using System.Threading.Tasks;
-
 using System.Runtime.InteropServices;
 
 namespace XamlCompositorCS
@@ -32,18 +31,21 @@ namespace XamlCompositorCS
         [Bindable]
         public sealed class CALayerXamlAutomationPeer : FrameworkElementAutomationPeer
         {
-            public CALayerXamlAutomationPeer(CALayerXaml owner) : base(owner) {
+            public CALayerXamlAutomationPeer(CALayerXaml owner) : base(owner)
+            {
             }
 
-            protected override string GetClassNameCore() {
+            protected override string GetClassNameCore()
+            {
                 return "FakeClassName";
             }
-                
-            protected override AutomationControlType GetAutomationControlTypeCore() {
+
+            protected override AutomationControlType GetAutomationControlTypeCore()
+            {
                 return AutomationControlType.ScrollBar;
             }
         }
-        
+
         [Bindable]
         public sealed class CALayerXaml : Panel, CacheableObject
         {
@@ -231,10 +233,12 @@ namespace XamlCompositorCS
                 if (storyboard != null)
                 {
                     AddAnimation("(UIElement.RenderTransform).(TranslateTransform.X)", content, storyboard, properties, fromValue != null ? (Object)fromValue : null, toValue);
-                } else {
-                    ((TranslateTransform)content.RenderTransform).X = (double) toValue;
                 }
-                if (content is LayerContent) {
+                else {
+                    ((TranslateTransform)content.RenderTransform).X = (double)toValue;
+                }
+                if (content is LayerContent)
+                {
                     (content as LayerContent).AdjustContentOriginX(storyboard, properties, fromValue, toValue);
                 }
             }
@@ -249,7 +253,8 @@ namespace XamlCompositorCS
                 {
                     ((TranslateTransform)content.RenderTransform).Y = (double)toValue;
                 }
-                if (content is LayerContent) {
+                if (content is LayerContent)
+                {
                     (content as LayerContent).AdjustContentOriginY(storyboard, properties, fromValue, toValue);
                 }
             }
@@ -270,12 +275,12 @@ namespace XamlCompositorCS
                     GetValue = getValue;
                 }
             }
-            internal static Dictionary<String, AnimatableProperty> animatableProperties = new Dictionary<String, AnimatableProperty> 
+            internal static Dictionary<String, AnimatableProperty> animatableProperties = new Dictionary<String, AnimatableProperty>
         {
-            {   
-                "position.x", 
+            {
+                "position.x",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)", target, storyboard, properties, from, to);
@@ -283,7 +288,7 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             target._position.X = (double)toValue;
-                            if (target._createdTransforms) { 
+                            if (target._createdTransforms) {
                                 ((TranslateTransform)((TransformGroup)target.RenderTransform).Children[3]).X = (double)toValue;
                             }
                             else
@@ -299,10 +304,10 @@ namespace XamlCompositorCS
                     )
 
             },
-            {   
-                "position.y", 
+            {
+                "position.y",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)", target, storyboard, properties, from, to);
@@ -310,7 +315,7 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             target._position.Y = (double)toValue;
-                            if (target._createdTransforms) { 
+                            if (target._createdTransforms) {
                                 ((TranslateTransform)((TransformGroup)target.RenderTransform).Children[3]).Y = (double)toValue;
                             }
                             else
@@ -326,10 +331,10 @@ namespace XamlCompositorCS
                     )
 
             },
-            {   
-                "position", 
+            {
+                "position",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             animatableProperties["position.x"].Animate(target, storyboard, properties, from != null ? (Object)((Point)from).X : null, ((Point)to).X);
                             animatableProperties["position.y"].Animate(target, storyboard, properties, from != null ? (Object)((Point)from).Y : null, ((Point)to).Y);
@@ -339,17 +344,17 @@ namespace XamlCompositorCS
                             animatableProperties["position.x"].Set(target, ((Point)toValue).X);
                             animatableProperties["position.y"].Set(target, ((Point)toValue).Y);
                         },
-                        (target) => 
+                        (target) =>
                         {
                             return new Point((double)target.Get("position.x"), (double)target.Get("position.y"));
                         }
                     )
 
             },
-            {   
-                "origin.x", 
+            {
+                "origin.x",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             target.SetupBackground();
@@ -387,10 +392,10 @@ namespace XamlCompositorCS
                         }
                     )
             },
-            {   
-                "origin.y", 
+            {
+                "origin.y",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             target.SetupBackground();
@@ -411,7 +416,7 @@ namespace XamlCompositorCS
                             targetValue = RoundCoordinate(targetValue);
                             target._origin.Y = targetValue;
 
-                            if (target._createdTransforms) { 
+                            if (target._createdTransforms) {
                                 ((TranslateTransform)((TransformGroup)target.RenderTransform).Children[1]).Y = -targetValue;
                             }
                             else
@@ -428,10 +433,10 @@ namespace XamlCompositorCS
                         }
                     )
             },
-            {   
-                "origin", 
+            {
+                "origin",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             animatableProperties["origin.x"].Animate(target, storyboard, properties, from != null ? (Object)((Point)from).X : null, ((Point)to).X);
                             animatableProperties["origin.y"].Animate(target, storyboard, properties, from != null ? (Object)((Point)from).Y : null, ((Point)to).Y);
@@ -448,9 +453,9 @@ namespace XamlCompositorCS
                     )
 
             },
-            {   "anchorPoint.x", 
+            {   "anchorPoint.x",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             Object fromVal = from != null ? (Object)(-target._size.Width * (double)from) : null;
@@ -477,9 +482,9 @@ namespace XamlCompositorCS
                         }
                     )
             },
-            {   "anchorPoint.y", 
+            {   "anchorPoint.y",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             Object fromVal = from != null ? (Object)(-target._size.Height * (double)from) : null;
@@ -490,7 +495,7 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             target._anchorPoint.Y = (double)toValue;
-                            if (target._createdTransforms) { 
+                            if (target._createdTransforms) {
                                 double destY = -target._size.Height * ((double)toValue);
                                 ((TranslateTransform) ((TransformGroup)target.RenderTransform).Children[0]).Y = destY;
                             }
@@ -505,9 +510,9 @@ namespace XamlCompositorCS
                         }
                     )
             },
-            {   "anchorPoint", 
+            {   "anchorPoint",
                     new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             animatableProperties["anchorPoint.x"].Animate(target, storyboard, properties, from != null ? (Object)((Point)from).X : null, ((Point)to).X);
                             animatableProperties["anchorPoint.y"].Animate(target, storyboard, properties, from != null ? (Object)((Point)from).Y : null, ((Point)to).Y);
@@ -517,7 +522,7 @@ namespace XamlCompositorCS
                             animatableProperties["anchorPoint.x"].Set(target, ((Point)toValue).X);
                             animatableProperties["anchorPoint.y"].Set(target, ((Point)toValue).Y);
                         },
-                        (target) => 
+                        (target) =>
                         {
                             return new Point((double)target.Get("anchorPoint.x"), (double)target.Get("anchorPoint.y"));
                         }
@@ -525,7 +530,7 @@ namespace XamlCompositorCS
             },
             {   "size.width",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             if ( from != null ) if ( (double) from < 0.0 ) from = 0.0;
@@ -546,7 +551,7 @@ namespace XamlCompositorCS
                             target._size.Width = (double)toValue;
                             target.Width = (double)toValue;
 
-                            if (target._createdTransforms) { 
+                            if (target._createdTransforms) {
                                 double destX = -((double) toValue) * target._anchorPoint.X;
                                 ((TranslateTransform)((TransformGroup)target.RenderTransform).Children[0]).X = destX;
                                 target.VisualWidth = (double)toValue;
@@ -566,7 +571,7 @@ namespace XamlCompositorCS
             },
             {   "size.height",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             if ( from != null ) if ( (double) from < 0.0 ) from = 0.0;
@@ -585,7 +590,7 @@ namespace XamlCompositorCS
                             target._size.Height = (double)toValue;
                             target.Height = (double)toValue;
 
-                            if (target._createdTransforms) { 
+                            if (target._createdTransforms) {
                                 double destY = -((double) toValue) * target._anchorPoint.Y;
                                 ((TranslateTransform)((TransformGroup)target.RenderTransform).Children[0]).Y = destY;
                                 target.VisualHeight = (double)toValue;
@@ -605,7 +610,7 @@ namespace XamlCompositorCS
             },
             {   "size",
                 new AnimatableProperty(
-                    (target, storyboard, properties, from, to) => 
+                    (target, storyboard, properties, from, to) =>
                     {
                         animatableProperties["size.width"].Animate(target, storyboard, properties, from != null ? (Object)((Size)from).Width : null, ((Size)to).Width);
                         animatableProperties["size.height"].Animate(target, storyboard, properties, from != null ? (Object)((Size)from).Height : null, ((Size)to).Height);
@@ -615,7 +620,7 @@ namespace XamlCompositorCS
                         animatableProperties["size.width"].Set(target, ((Size)toValue).Width);
                         animatableProperties["size.height"].Set(target, ((Size)toValue).Height);
                     },
-                    (target) => 
+                    (target) =>
                     {
                         return new Size((double) target.Get("size.width"), (double) target.Get("size.height"));
                     }
@@ -624,7 +629,7 @@ namespace XamlCompositorCS
             {
                 "transform.rotation",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[2].(TransformGroup.Children)[0].(RotateTransform.Angle)", target, storyboard, properties, from, to);
@@ -644,7 +649,7 @@ namespace XamlCompositorCS
             {
                 "transform.scale.x",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[2].(TransformGroup.Children)[1].(ScaleTransform.ScaleX)", target, storyboard, properties, from, to);
@@ -664,7 +669,7 @@ namespace XamlCompositorCS
             {
                 "transform.scale.y",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[2].(TransformGroup.Children)[1].(ScaleTransform.ScaleY)", target, storyboard, properties, from, to);
@@ -684,7 +689,7 @@ namespace XamlCompositorCS
             {
                 "transform.translation.x",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[2].(TransformGroup.Children)[2].(TranslateTransform.X)", target, storyboard, properties, from, to);
@@ -704,7 +709,7 @@ namespace XamlCompositorCS
             {
                 "transform.translation.y",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             target.CreateTransforms();
                             AddAnimation("(UIElement.RenderTransform).(TransformGroup.Children)[2].(TransformGroup.Children)[2].(TranslateTransform.Y)", target, storyboard, properties, from, to);
@@ -724,7 +729,7 @@ namespace XamlCompositorCS
             {
                 "opacity",
                 new AnimatableProperty(
-                        (target, storyboard, properties, from, to) => 
+                        (target, storyboard, properties, from, to) =>
                         {
                             AddAnimation("(UIElement.Opacity)", target, storyboard, properties, from, to);
                         },
@@ -1106,7 +1111,7 @@ namespace XamlCompositorCS
                 else
                 {
                     LayerContent c = GetImageContent(true);
-                    c.SetImageContent(source, (int) width, (int) height);
+                    c.SetImageContent(source, (int)width, (int)height);
                     c.SetImageParams(width, height, scale);
                 }
             }
@@ -1184,7 +1189,7 @@ namespace XamlCompositorCS
             AnimationMethod _Completed;
             AnimationMethod _Started;
             bool aborted = false;
-            
+
             public EventedStoryboard()
             {
                 // AppxManifest.xml appears to fail to enumerate runtimeclasses with accessors and no default constructor in the Win8.1 SDK.
@@ -1627,7 +1632,8 @@ namespace XamlCompositorCS
                 Windows.UI.Input.PointerPoint point = e.GetCurrentPoint(rootLayer);
                 InputEventHandler.PointerDown((float)point.Position.X, (float)point.Position.Y, point.PointerId, point.Timestamp);
 
-                if (DummyFocus == null) {
+                if (DummyFocus == null)
+                {
                     DummyFocus = new UserControl();
                     DummyFocus.Width = 0;
                     DummyFocus.Height = 0;
@@ -1809,6 +1815,17 @@ namespace XamlCompositorCS
                 CAXamlDebugCounters.DecCounter("LayerContent");
             }
 
+            int IfNegativeMakeZero(int value)
+            {
+
+                if (value < 0)
+                {
+                    return 0;
+                }
+                return value;
+
+            }
+
             void ApplyContentsCenter()
             {
                 if (image == null)
@@ -1832,12 +1849,35 @@ namespace XamlCompositorCS
                     int right = ((int)imageSize.Width) - (left + ((int)(contentsCenter.Width * imageSize.Width)));
                     int bottom = ((int)imageSize.Height) - (top + ((int)(contentsCenter.Height * imageSize.Height)));
 
-                    /*
-                    left--;
-                    top--;
-                    right--;
-                    bottom--;
-                     */
+                    //remove edge cases that contentsCenter supports but NineGrid does not. 1/3 for top 1/3 for bottom 1/3 for the center etc..
+
+                    left = IfNegativeMakeZero(left);
+                    top = IfNegativeMakeZero(top);
+                    right = IfNegativeMakeZero(right);
+                    bottom = IfNegativeMakeZero(bottom);
+                    
+                    int maxWidth = (int)imageSize.Width / 3;
+
+                    if (left >= maxWidth)
+                    {
+                        left = maxWidth;
+                    }
+                    if (right >= maxWidth)
+                    {
+                        right = maxWidth;
+                    }
+
+                    int maxHeight = (int)imageSize.Height / 3;
+
+                    if (top >= maxHeight)
+                    {
+                        top = maxHeight;
+                    }
+
+                    if (bottom >= maxHeight)
+                    {
+                        bottom = maxHeight;
+                    }
 
                     image.NineGrid = new Thickness(left, top, right, bottom);
                 }
@@ -1925,7 +1965,7 @@ namespace XamlCompositorCS
                         top = 0;
                         width = size.Width;
                         height = size.Height;
-                        if ( image != null ) image.Stretch = Stretch.Uniform;
+                        if (image != null) image.Stretch = Stretch.Uniform;
                         break;
 
                     case ContentGravity.ResizeAspectFill:
