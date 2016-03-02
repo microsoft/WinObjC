@@ -68,11 +68,22 @@ function DeployTests($testList)
         foreach($test in $testList) {
           $testPath = Join-Path $TestSrcDirectory $test
           $testDirectory = [System.IO.Path]::GetDirectoryName($testPath);
+          
+          $testOutputPath = Join-Path $TestDstDirectory $test
+          $testOutputDirectory = [System.IO.Path]::GetDirectoryName($testOutputPath);
+          
+          Try {
+            mdd $testOutputDirectory
+          } Catch {
+              # putd fails if the directory doesn't already exist.
+              # mdd fails if the directory does already exist.
+              # This is awkward.
+          }
 
-          putd -recurse $testDirectory\*.jpg $TestDstDirectory
-          putd -recurse $testDirectory\*.dll $TestDstDirectory
-          putd -recurse $testDirectory\*.exe $TestDstDirectory
-          putd -recurse $testDirectory\*.txt $TestDstDirectory
+          putd -recurse $testDirectory\*.jpg $testOutputDirectory
+          putd -recurse $testDirectory\*.dll $testOutputDirectory
+          putd -recurse $testDirectory\*.exe $testOutputDirectory
+          putd -recurse $testDirectory\*.txt $testOutputDirectory
         }
     }
     else
