@@ -49,6 +49,9 @@ typedef wchar_t WCHAR;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentsScale:(float)factor {
     [super setContentsScale:factor];
 
@@ -60,11 +63,14 @@ typedef wchar_t WCHAR;
     [scaleTransform release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _swapChainPanel = [WXCSwapChainPanel make];
-    [super init];
-    self.contentsElement = _swapChainPanel;
-
+    if (self = [super init]) {
+        _swapChainPanel = [WXCSwapChainPanel make];
+        self.contentsElement = _swapChainPanel;
+    }
     return self;
 }
 

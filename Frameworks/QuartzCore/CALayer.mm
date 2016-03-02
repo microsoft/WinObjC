@@ -1977,6 +1977,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+ @Notes Intended override point for subclasses.
+*/
 + (id<CAAction>)defaultActionForKey:(NSString*)key {
     return nil;
 }
@@ -2025,6 +2029,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return priv->needsDisplayOnBoundsChange;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CALayer*)hitTest:(CGPoint)point {
     if (priv->opacity <= 0.01f || priv->hidden == 1) {
         return nil;
@@ -2068,6 +2075,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)containsPoint:(CGPoint)point {
     if (point.x >= priv->bounds.origin.x && point.y >= priv->bounds.origin.y && point.x < priv->bounds.origin.x + priv->bounds.size.width &&
         point.y < priv->bounds.origin.x + priv->bounds.size.height) {
@@ -2092,14 +2102,18 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [super dealloc];
 }
 
-- (instancetype)retain {
-    return [super retain];
-}
-
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)valueForUndefinedKey:(NSString*)keyPath {
     return [priv->_undefinedKeys valueForKey:keyPath];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)valueForKeyPath:(NSString*)keyPath {
     char* pPath = (char*)[keyPath UTF8String];
     if (strcmp(pPath, "position.x") == 0) {
@@ -2178,6 +2192,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return [super valueForKeyPath:keyPath];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
     if (priv->_undefinedKeys == nil) {
         priv->_undefinedKeys.attach([NSMutableDictionary new]);
@@ -2185,6 +2203,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [priv->_undefinedKeys setObject:value forKey:key];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setValue:(id)value forKeyPath:(NSString*)keyPath {
     if ([keyPath isEqual:@"transform.scale"]) {
         CATransform3D curTransform;
@@ -2454,6 +2476,10 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     return GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
 }
 
+/**
+ @Status Interoperable
+ @Notes WinObjC extension.
+*/
 - (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
     GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
 }

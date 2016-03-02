@@ -46,11 +46,15 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _timingProperties._duration = 1.0;
-    _timingProperties._speed = 1.0;
-    _timingProperties._removedOnCompletion = TRUE;
-
+    if (self = [super init]) {
+        _timingProperties._duration = 1.0;
+        _timingProperties._speed = 1.0;
+        _timingProperties._removedOnCompletion = TRUE;
+    }
     return self;
 }
 
@@ -324,6 +328,10 @@
     _wasAborted = TRUE;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setValue:(id)val forUndefinedKey:(id)key {
     EbrDebugLog("CAAnimation setting value for key \"%s\"\n", [key UTF8String]);
     if (_undefinedKeys == nil) {
@@ -333,6 +341,10 @@
     [(NSMutableDictionary*)_undefinedKeys setObject:val forKey:key];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)valueForUndefinedKey:(id)keyPath {
     id ret = [(NSMutableDictionary*)_undefinedKeys objectForKey:keyPath];
 
@@ -342,6 +354,10 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)copyWithZone:(NSZone*)zone {
     CAAnimation* ret = [[self class] alloc];
 

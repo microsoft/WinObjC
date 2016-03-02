@@ -326,10 +326,16 @@ void CATransform3DTransformPoints(CATransform3D a, CAPoint3D* points, int count)
     (*((CATransform3D*)&a)).TransformPoints(points, count);
 }
 
+/**
+ @Status Interoperable
+*/
 void CATransform3DGetScale(CATransform3D a, float* scale) {
     (*((CATransform3D*)&a)).GetScale(scale);
 }
 
+/**
+ @Status Interoperable
+*/
 void CATransform3DGetPosition(CATransform3D a, float* position) {
     (*((CATransform3D*)&a)).GetPosition(position);
 }

@@ -47,18 +47,22 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     return _curTransaction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _disableActions = FALSE;
-    _duration = 0.25f;
+    if (self = [super init]) {
+        _disableActions = FALSE;
+        _duration = 0.25f;
 
-    _transactionQueue = GetCACompositor()->CreateDisplayTransaction();
+        _transactionQueue = GetCACompositor()->CreateDisplayTransaction();
 
-    if (_curTransaction != NULL) {
-        _parent = _curTransaction;
-    } else {
-        _parent = _rootTransaction;
+        if (_curTransaction != NULL) {
+            _parent = _curTransaction;
+        } else {
+            _parent = _rootTransaction;
+        }
     }
-
     return self;
 }
 
