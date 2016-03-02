@@ -444,6 +444,9 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
                 case pathComponentLineTo:
                     c.point = CGPointApplyAffineTransform(c.point, *m);
                     break;
+                default:
+                    // Append the path anyway, without transforming.
+                    break;
             }
         }
 
@@ -909,6 +912,10 @@ CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padd
                 if (startPointSet) {
                     s.AddLine(curPoint, startPoint);
                 }
+                break;
+
+            default:
+                // The other path types don't effect bounding rects.
                 break;
         }
     }

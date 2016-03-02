@@ -421,7 +421,7 @@ CFStringRef CGFontCopyFullName(CGFontRef font) {
 */
 CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
     CFRetain(cgDataProvider);
-    return (CGFontRef)[[_LazyUIFont fontWithData:cgDataProvider] retain];
+    return (CGFontRef)[[_LazyUIFont fontWithData:(NSData*)cgDataProvider] retain];
 }
 
 /**

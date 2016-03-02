@@ -20,8 +20,6 @@
 #import <UIKit/UIImage.h>
 #import "CGContextInternal.h"
 
-#define EXTERN(type) extern type
-
 extern "C" {
 #import <jpeglib.h>
 };

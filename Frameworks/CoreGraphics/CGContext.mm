@@ -41,9 +41,12 @@ EbrLock _cairoLock = EBRLOCK_INITIALIZE;
 @end
 
 @implementation CGNSContext
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 - (void)dealloc {
     delete (__CGContext*)self;
 }
+#pragma clang diagnostic pop
 @end
 
 __CGContext::__CGContext(CGImageRef pDest) {
@@ -903,7 +906,6 @@ void CGContextSetGrayStrokeColor(CGContextRef ctx, float gray, float alpha) {
 */
 void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
     UNIMPLEMENTED();
-    [colorSpace retain];
 }
 
 /**
@@ -1042,6 +1044,9 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef ctx) {
 
         case _ColorRGBA:
             ret |= kCGImageAlphaFirst;
+            break;
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported surface format %d.", ctx->Backing()->DestImage()->Backing()->SurfaceFormat());
             break;
     }
 

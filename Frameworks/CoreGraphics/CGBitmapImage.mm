@@ -21,7 +21,12 @@
 #import "CGContextImpl.h"
 #import "CGContextCairo.h"
 
-#import <cairoint.h>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+
+#import <cairoint.h> // uses 'register int'
+
+#pragma clang diagnostic pop
 
 #pragma warning(push)
 #pragma warning(disable : 4146)

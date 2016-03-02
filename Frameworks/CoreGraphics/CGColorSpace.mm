@@ -40,9 +40,12 @@ static IWLazyClassLookup _LazyUIColor2("UIColor");
 @end
 
 @implementation CGNSColorSpace
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 - (void)dealloc {
     delete (__CGColorSpace*)self;
 }
+#pragma clang diagnostic pop
 @end
 
 __CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
@@ -174,7 +177,7 @@ CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace) {
 CGColorRef CGColorGetConstantColor(CFStringRef name) {
     UIColor* ret;
 
-    char* pName = (char*)[name UTF8String];
+    char* pName = (char*)[(NSString*)name UTF8String];
     if (strcmp(pName, "BLACK") == 0) {
         ret = [_LazyUIColor2 blackColor];
     } else if (strcmp(pName, "WHITE") == 0) {

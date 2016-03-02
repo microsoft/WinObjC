@@ -17,8 +17,14 @@
 #import <Starboard.h>
 #import <math.h>
 #import <stdlib.h>
-#import <cairoint.h>
 #import "CGContextCairo.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+
+#import <cairoint.h> // uses 'register int'
+
+#pragma clang diagnostic pop
 
 extern int imgDataCount;
 
@@ -80,6 +86,11 @@ CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(
         case _ColorGrayscale:
         case _ColorA8:
             _bytesPerPixel = 1;
+            break;
+
+        case _ColorIndexed:
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported bitmap format %d", _bitmapFmt);
             break;
     }
     _bytesPerRow = 0;
@@ -166,8 +177,7 @@ void* CGGraphicBufferImageBacking::LockImageData() {
 }
 
 void* CGGraphicBufferImageBacking::StaticImageData() {
-    assert(0);
-    *((char*)0) = 0;
+    UNIMPLEMENTED();
     return _imageData;
 }
 
@@ -215,6 +225,16 @@ cairo_surface_t* CGGraphicBufferImageBacking::LockCairoSurface() {
                                                                       _width,
                                                                       _height,
                                                                       -_internalWidth * _bytesPerPixel);
+            break;
+
+        case _Color565:
+        case _ColorRGB32:
+        case _ColorRGB32HE:
+        case _ColorGrayscale:
+        case _ColorA8:
+        case _ColorIndexed:
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported bitmap format %d", _bitmapFmt);
             break;
     }
 

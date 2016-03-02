@@ -22,6 +22,9 @@
 #import "CGPatternInternal.h"
 #import "CoreGraphics/CGGeometry.h"
 #import "cairo-ft.h"
+#import "CGPathInternal.h"
+#import "UIColorInternal.h"
+#import "UIFontInternal.h"
 
 extern "C" {
 #import <ft2build.h>
@@ -338,12 +341,12 @@ void CGContextImpl::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextImpl::CGContextSetStrokeColorWithColor(id color) {
-    [color getColors:&curState->curStrokeColor];
+    [(UIColor*)color getColors:(float*)&curState->curStrokeColor];
 }
 
 void CGContextImpl::CGContextSetFillColorWithColor(id color) {
-    if ((int)[color _type] == solidBrush) {
-        [color getColors:&curState->curFillColor];
+    if ((int)[(UIColor*)color _type] == solidBrush) {
+        [(UIColor*)color getColors:(float*)&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];
@@ -540,7 +543,7 @@ void CGContextImpl::CGContextFillEllipseInRect(CGRect rct) {
 }
 
 void CGContextImpl::CGContextAddPath(id path) {
-    [path _applyPath:_rootContext];
+    [(CGPath*)path _applyPath:_rootContext];
 }
 
 void CGContextImpl::CGContextStrokePath() {

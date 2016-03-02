@@ -26,7 +26,7 @@
     void* info;
     size_t size;
     const void* data;
-    idretain filename;
+    StrongId<NSString> filename;
 }
 @end
 
@@ -60,8 +60,8 @@ CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
  @Status Interoperable
 */
 CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
-    void* data = (void*)[provider bytes];
-    DWORD size = [provider length];
+    void* data = (void*)[(NSData*)provider bytes];
+    DWORD size = [(NSData*)provider length];
     id ret = [[CGDataProvider alloc] initWithBytes:data length:size];
 
     return (CFDataRef)ret;
@@ -100,7 +100,7 @@ CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSeque
  @Status Interoperable
 */
 CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data) {
-    return [data retain];
+    return (CGDataProviderRef)CFRetain(data);
 }
 
 /**

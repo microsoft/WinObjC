@@ -24,6 +24,8 @@
 #import "CGColorSpaceInternal.h"
 #import "CGContextCairo.h"
 #import "CGFontInternal.h"
+#import "CGPathInternal.h"
+#import "UIColorInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
@@ -511,12 +513,12 @@ void CGContextCairo::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextCairo::CGContextSetStrokeColorWithColor(id color) {
-    [color getColors:&curState->curStrokeColor];
+    [(UIColor*)color getColors:(float*)&curState->curStrokeColor];
 }
 
 void CGContextCairo::CGContextSetFillColorWithColor(id color) {
-    if ((int)[color _type] == solidBrush) {
-        [color getColors:&curState->curFillColor];
+    if ((int)[(UIColor*)color _type] == solidBrush) {
+        [(UIColor*)color getColors:(float*)&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];
@@ -926,7 +928,7 @@ void CGContextCairo::CGContextFillEllipseInRect(CGRect rct) {
 void CGContextCairo::CGContextAddPath(id path) {
     ObtainLock();
 
-    [path _applyPath:_rootContext];
+    [(CGPath*)path _applyPath:_rootContext];
 }
 
 void CGContextCairo::CGContextStrokePath() {
@@ -1671,7 +1673,8 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
         case kCGTextFillClip:
         case kCGTextStrokeClip:
         case kCGTextFillStrokeClip:
-            assert(0);
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported text drawing mode %d", curState->textDrawingMode);
             break;
     }
 
