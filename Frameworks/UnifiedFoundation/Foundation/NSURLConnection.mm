@@ -142,6 +142,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return [self initWithRequest:request delegate:delegate startImmediately:YES];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_request release];
     [_protocol release];
@@ -176,6 +179,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _scheduled = NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didFailWithError:(id)error {
     EbrDebugLog("URL protocol did fail\n");
     // if ( [_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)] ) [_delegate
@@ -192,6 +198,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _delegate = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didReceiveResponse:(id)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     /*
     if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
@@ -210,12 +219,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didLoadData:(id)data {
     if ([_delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
         [_delegate connection:self didReceiveData:data];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocolDidFinishLoading:(id)urlProtocol {
     /*
     if(_storagePolicy==NSURLCacheStorageNotAllowed) {
@@ -257,6 +272,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didReceiveAuthenticationChallenge:(id)challenge {
     if ([_delegate respondsToSelector:@selector(connection:willSendRequestForAuthenticationChallenge:)]) {
         [_delegate connection:self willSendRequestForAuthenticationChallenge:challenge];
@@ -265,6 +283,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol wasRedirectedToRequest:(NSURLRequest*)request redirectResponse:(NSURLResponse*)response {
     [_protocol stopLoading];
     NSURLRequest* newRequest = request;
@@ -374,7 +395,7 @@ return [super dealloc];
     UNIMPLEMENTED();
 }
 
-/*
+/**
  @Status Stub
  @Notes
 */
@@ -382,7 +403,7 @@ return [super dealloc];
     UNIMPLEMENTED();
 }
 
-/*
+/**
  @Status Stub
  @Notes
 */

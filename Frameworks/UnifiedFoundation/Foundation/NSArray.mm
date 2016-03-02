@@ -347,7 +347,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
         [self initWithArray:array];
         return self;
     } else {
-        UNIMPLEMENTED_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
         [self release];
         return nil;
     }

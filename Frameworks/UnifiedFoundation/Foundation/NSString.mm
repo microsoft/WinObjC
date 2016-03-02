@@ -301,6 +301,9 @@ static void* _conversionTempStr(int size) {
 typedef NSUInteger NSStringCompareOptions;
 
 @implementation NSString : NSObject
+/**
+ @Status Interoperable
+*/
 - (id)initWithCoder:(NSCoder*)coder {
     NSString* str = [coder decodeObjectForKey:@"NS.string"];
 
@@ -952,6 +955,9 @@ typedef NSUInteger NSStringCompareOptions;
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)stringWithContentsOfURL:(NSURL*)url {
     return [self stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 }
@@ -1306,6 +1312,9 @@ typedef NSUInteger NSStringCompareOptions;
     [self getCharacters:dest range:NSMakeRange(0, s1.string().length())];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -1887,6 +1896,9 @@ typedef NSUInteger NSStringCompareOptions;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(NSString*)objAddr {
     if (objAddr == self)
         return TRUE;
@@ -2485,10 +2497,16 @@ typedef NSUInteger NSStringCompareOptions;
     return [NSString pathWithComponents:components];
 }
 
+/**
+ @Status Interoperable
+*/
 - (Class)classForCoder {
     return [NSString class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableString*)mutableCopy {
     return [[NSMutableString alloc] initWithString:self];
 }
@@ -2778,6 +2796,9 @@ return ret;
 }
 #endif
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     if (strType == NSConstructedString_Unicode && u->ConstructedString._hashIsCached) {
         return u->ConstructedString._hashCache;
@@ -2867,8 +2888,8 @@ NSString* s_percentEncodedFormat = @"%%%s%X";
 const int s_oneByte = 16;
 
 /**
- * @Status Interoperable
- */
+ @Status Interoperable
+*/
 - (NSString*)stringByAddingPercentEncodingWithAllowedCharacters:(NSCharacterSet*)set {
     NSMutableString* returnValue = [NSMutableString stringWithCapacity:[self length] * 2];
 
@@ -3176,6 +3197,9 @@ const int s_oneByte = 16;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     switch (strType) {
         case NSConstructedString_NoOwn:

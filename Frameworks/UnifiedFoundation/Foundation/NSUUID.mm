@@ -116,7 +116,7 @@
 
         return [self initWithUUIDBytes:bytes];
     } else {
-        UNIMPLEMENTED_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
         [self release];
         return nil;
     }

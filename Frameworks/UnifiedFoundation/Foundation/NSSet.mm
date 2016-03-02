@@ -340,7 +340,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
         return [self initWithArray:[coder decodeObjectForKey:@"NS.objects"]];
     } else {
-        UNIMPLEMENTED_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
         [self release];
         return nil;
     }

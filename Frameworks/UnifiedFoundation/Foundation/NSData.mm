@@ -54,9 +54,9 @@ using namespace Windows::Foundation;
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
     ComPtr<IBuffer> wrlBuffer;
-    IBuffer* rawBuffer = nullptr; 
+    IBuffer* rawBuffer = nullptr;
     HRESULT result;
-    
+
     result = BufferFromRawData(&rawBuffer, _bytes, _length);
 
     if (FAILED(result)) {
@@ -207,6 +207,9 @@ using namespace Windows::Foundation;
     return [[[self alloc] initWithBytesNoCopy:(void*)bytes length:length freeWhenDone:free] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithBytes:"" length:0];
 }
@@ -241,10 +244,16 @@ using namespace Windows::Foundation;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeBytes:_bytes length:_length forKey:@"NS.data"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     NSData* nsData = [coder decodeObjectForKey:@"NS.data"];
 
@@ -564,10 +573,16 @@ using namespace Windows::Foundation;
     return [NSData dataWithBytes:_bytes + range.location length:range.length];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableData*)mutableCopyWithZone:(void**)zone {
     return [[NSMutableData alloc] initWithData:self];
 }
@@ -583,6 +598,9 @@ using namespace Windows::Foundation;
     return memcmp(_bytes, other->_bytes, _length) == 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)objAddr {
     if (objAddr == self) {
         return TRUE;
@@ -650,6 +668,9 @@ using namespace Windows::Foundation;
     return _length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_freeWhenDone && _bytes) {
         IwFree(_bytes);

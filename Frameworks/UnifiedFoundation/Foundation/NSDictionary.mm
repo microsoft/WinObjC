@@ -53,6 +53,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class uses setObject:forKey: as a setter, and has no key-specific setters.
     return NO;
@@ -107,6 +110,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjectsTakeOwnership:(id*)vals forKeys:(id*)keys count:(unsigned)count {
     [self init];
 
@@ -194,6 +200,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObject:(id)val forKey:(id)key {
     [self init];
 
@@ -204,10 +213,16 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithCoder:(NSCoder*)coder {
     NSArray* keys = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.keys"];
     NSArray* values = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
@@ -236,6 +251,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self objectForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)valueForKey:(id)key {
     const char* keyName = (const char*)[key UTF8String];
 
@@ -410,6 +428,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)init {
     _CFDictionaryInitInternal((CFDictionaryRef)self);
 
@@ -541,6 +562,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return CFDictionaryGetCount((CFDictionaryRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
     Class ours = [self class];
 
@@ -636,14 +660,23 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self objectForKey:NSFileModificationDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)fileCreationDate {
     return [self objectForKey:NSFileCreationDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (Class)classForCoder {
     return [NSDictionary class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         [coder _encodeArrayOfObjects:[self allKeys] forKey:@"NS.keys"];
@@ -668,6 +701,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (dict != NULL) {
         CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
@@ -677,14 +713,23 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableDictionary*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableDictionary alloc] initWithDictionary:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     if (self == other) {
         return YES;
@@ -764,7 +809,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     {
         ++indent;
         auto deferPop = wil::ScopeExit([]() { --indent; });
-        for(id key in [self keyEnumerator]) {
+        for (id key in [self keyEnumerator]) {
             [s appendString:@"\n"];
             for (unsigned int i = 0; i < indent; ++i) {
                 [s appendString:@"    "];
