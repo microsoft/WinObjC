@@ -120,12 +120,18 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return [[ret initWithUnsignedLong:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)zero {
     return [self numberWithInt:0];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)one {
-    return [self numberWithInt:0];
+    return [self numberWithInt:1];
 }
 
 /**
