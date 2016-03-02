@@ -635,6 +635,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{2E8B028B-3237-42B7-A23C-EE6BFCC567A5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IwNewLib", "IwNew\lib\IwNewLib.vcxproj", "{B16C8766-1D05-46C0-B231-10C3AA43C19B}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MobileCoreServices", "MobileCoreServices", "{319FD757-2BC7-4275-96CE-6199981F00BD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MobileCoreServices.UnitTests", "Tests\UnitTests\MobileCoreServices\MobileCoreServices.UnitTests.vcxproj", "{6141CBC8-95CB-4E26-BE9B-4A322043C333}"
