@@ -183,7 +183,8 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Only limited header fields are supported.
 */
 - (NSString*)valueForHTTPHeaderField:(NSString*)field {
     id ret = [_allHTTPHeaderFields objectForKey:field];

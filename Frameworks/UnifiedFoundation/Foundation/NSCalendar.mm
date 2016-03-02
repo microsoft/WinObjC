@@ -370,8 +370,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 */
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)inUnit inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
     UNIMPLEMENTED();
-    TraceVerbose(TAG, L"ordinalityOfUnit not supported");
-    return 0;
+    return StubReturn();
 }
 
 /**

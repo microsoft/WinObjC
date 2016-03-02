@@ -155,11 +155,11 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (NSDate*)initWithCoder:(NSCoder*)coder {
-    TraceVerbose(TAG, L"NSDate initWithCoder not supported");
-    return [self init];
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -313,10 +313,10 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    TraceVerbose(TAG, L"NSDate: encodeWithCoder not supported");
+    UNIMPLEMENTED();
 }
 
 /**

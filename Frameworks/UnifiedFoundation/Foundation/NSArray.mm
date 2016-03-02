@@ -829,8 +829,8 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSString*)description {
-    TraceWarning(TAG, L"NSArray description not supported");
-    return @"Not supported";
+    UNIMPLEMENTED();
+    return [super description];
 }
 
 /**

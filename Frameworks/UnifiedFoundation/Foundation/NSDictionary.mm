@@ -828,9 +828,12 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [s autorelease];
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)stringFromQueryComponents {
-    TraceVerbose(TAG, L"stringFromQueryComponents not supported");
-    return nil;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

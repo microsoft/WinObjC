@@ -112,9 +112,19 @@ struct NSOperationPriv;
     priv->priority = priority;
 }
 
-- (id)setThreadPriority:(double)priority {
-    TraceVerbose(TAG, L"NSOperationQueue setThreadPriority not supported");
-    return self;
+/**
+ @Status Stub
+*/
+- (double)threadPriority {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setThreadPriority:(double)priority {
+    UNIMPLEMENTED();
 }
 
 /**
