@@ -13,6 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// clang-format does not seem to like C++/CX
+// clang-format off
 
 #include "LayerRegistration.h"
 #include "StringConversion.h"
@@ -20,6 +22,7 @@
 #include "winobjc\winobjc.h"
 
 using namespace Windows::UI;
+using namespace Windows::ApplicationModel::Activation;
 
 static Platform::String^ g_principalClassName;
 static Platform::String^ g_delegateClassName;
@@ -44,8 +47,8 @@ public:
         return _provider->GetXamlTypeByName(fullName);
     }
 
-    virtual Platform::Array<Xaml::Markup::XmlnsDefinition>^ GetXmlnsDefinitions() { 
-        return ref new Platform::Array<Xaml::Markup::XmlnsDefinition>(0); 
+    virtual Platform::Array<Xaml::Markup::XmlnsDefinition>^ GetXmlnsDefinitions() {
+        return ref new Platform::Array<Xaml::Markup::XmlnsDefinition>(0);
     }
 
     void InitializeComponent() {
@@ -57,6 +60,12 @@ public:
     void OnLaunched(Windows::ApplicationModel::Activation::LaunchActivatedEventArgs^ e) override {
         if (e->PrelaunchActivated) {
             // Opt out of prelaunch for now. MSDN guidance is to check the flag and just return.
+            return;
+        }
+
+        if ((e->PreviousExecutionState == ApplicationExecutionState::Running) ||
+            (e->PreviousExecutionState == ApplicationExecutionState::Suspended)) {
+            // Skip re-initializing as the app is being resumed from memory.
             return;
         }
 
@@ -102,3 +111,5 @@ extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], v
 
     return 0;
 }
+
+// clang-format on
