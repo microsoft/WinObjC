@@ -31,6 +31,10 @@ typedef wchar_t WCHAR;
     WGCalendar* _calendar;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([self.view isKindOfClass:[GLKView class]]) {
@@ -53,6 +57,10 @@ typedef wchar_t WCHAR;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.delegate glkViewController:self willPause:FALSE];
@@ -64,6 +72,10 @@ typedef wchar_t WCHAR;
     _lastStart = dt.universalTime;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.delegate glkViewController:self willPause:TRUE];

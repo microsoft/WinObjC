@@ -44,6 +44,10 @@
     GLKViewDrawableMultisample _drawableMultisample;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 + (Class)layerClass {
     return [CAEAGLLayer class];
 }
@@ -190,6 +194,10 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setNeedsDisplay {
     [super setNeedsDisplay];
     if (self.enableSetNeedsDisplay) {
@@ -220,6 +228,7 @@
 
 /**
  @Status Interoperable
+ @Public No
 */
 - (void)layoutSubviews {
     [super layoutSubviews];

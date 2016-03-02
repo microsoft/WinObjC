@@ -20,6 +20,7 @@
 #import <GLKit/GLKEffect.h>
 #import <GLKit/GLKShader.h>
 #import <GLKit/GLKTexture.h>
+#import "GLKEffectInternal.h"
 #import "ShaderInfo.h"
 #import "ShaderGen.h"
 #import "ShaderProg.h"
@@ -51,21 +52,27 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     ShaderMaterial _mat;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
-    self = [super init];
-    if (!self)
-        return nil;
-    _effectChanged = TRUE;
-
-    _transform = [[GLKEffectPropertyTransform alloc] initWith:self];
-
+    if (self = [super init]) {
+        _effectChanged = TRUE;
+        _transform = [[GLKEffectPropertyTransform alloc] initWith:self];
+    }
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)updateShaderMaterialParams {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)prepareShaders {
     _shader = [[GLKShaderCache get] shaderNamed:self.shaderName];
     if (_shader == nil) {
@@ -167,34 +174,31 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
  @Status Interoperable
 */
 - (id)init {
-    self = [super init];
-    if (!self)
-        return nil;
+    if (self = [super init]) {
+        _lights = [[NSMutableArray alloc] init];
+        [_lights addObject:[[GLKEffectPropertyLight alloc] initWith:self]];
+        [_lights addObject:[[GLKEffectPropertyLight alloc] initWith:self]];
+        [_lights addObject:[[GLKEffectPropertyLight alloc] initWith:self]];
 
-    _lights = [[NSMutableArray alloc] init];
-    [_lights addObject:[[GLKEffectPropertyLight alloc] initWith:self]];
-    [_lights addObject:[[GLKEffectPropertyLight alloc] initWith:self]];
-    [_lights addObject:[[GLKEffectPropertyLight alloc] initWith:self]];
+        _lightingType = GLKLightingTypePerPixel;
+        _lightModelAmbientColor = GLKVector4Make(0.2f, 0.2f, 0.2f, 1.f);
+        _lightModelTwoSided = FALSE;
+        _lightingEnabled = TRUE;
 
-    _lightingType = GLKLightingTypePerPixel;
-    _lightModelAmbientColor = GLKVector4Make(0.2f, 0.2f, 0.2f, 1.f);
-    _lightModelTwoSided = FALSE;
-    _lightingEnabled = TRUE;
+        _textures = [[NSMutableArray alloc] init];
+        [_textures addObject:[[GLKEffectPropertyTexture alloc] initWith:self]];
+        [_textures addObject:[[GLKEffectPropertyTexture alloc] initWith:self]];
 
-    _textures = [[NSMutableArray alloc] init];
-    [_textures addObject:[[GLKEffectPropertyTexture alloc] initWith:self]];
-    [_textures addObject:[[GLKEffectPropertyTexture alloc] initWith:self]];
+        self.colorMaterialEnabled = FALSE;
+        self.useConstantColor = TRUE;
+        self.constantColor = GLKVector4White();
+        self.shaderExtName = @"";
 
-    self.colorMaterialEnabled = FALSE;
-    self.useConstantColor = TRUE;
-    self.constantColor = GLKVector4White();
-    self.shaderExtName = @"";
+        _material = [[GLKEffectPropertyMaterial alloc] initWith:self];
+        _fog = [[GLKEffectPropertyFog alloc] initWith:self];
 
-    _material = [[GLKEffectPropertyMaterial alloc] initWith:self];
-    _fog = [[GLKEffectPropertyFog alloc] initWith:self];
-
-    self.shaderName = @GLKSH_STANDARD_SHADER;
-
+        self.shaderName = @GLKSH_STANDARD_SHADER;
+    }
     return self;
 }
 
@@ -291,6 +295,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     }
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (BOOL)updateShaderMaterialParams {
     [super updateShaderMaterialParams];
 
@@ -491,6 +499,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (BOOL)prepareShaders {
     // Account for subclasses.
     self.shaderName = [self.shaderName stringByAppendingString:self.shaderExtName];
@@ -595,8 +607,9 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 }
 
 - (id)initWith:(GLKShaderEffect*)parent {
-    [super init];
-    _parent = parent;
+    if (self = [super init]) {
+        _parent = parent;
+    }
     return self;
 }
 
@@ -604,13 +617,13 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 
 @implementation GLKEffectPropertyFog
 - (id)initWith:(GLKShaderEffect*)parent {
-    [super initWith:parent];
-    self.color = GLKVector4Black();
-    self.mode = GLKFogModeExp;
-    self.density = 1.f;
-    self.start = 0.f;
-    self.end = 1000.f;
-
+    if (self = [super initWith:parent]) {
+        _color = GLKVector4Black();
+        _mode = GLKFogModeExp;
+        _density = 1.f;
+        _start = 0.f;
+        _end = 1000.f;
+    }
     return self;
 }
 
@@ -622,24 +635,25 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 }
 
 - (id)initWith:(GLKShaderEffect*)parent {
-    [super initWith:parent];
-    _transform = [[GLKEffectPropertyTransform alloc] initWith:parent];
+    if (self = [super initWith:parent]) {
+        _transform = [[GLKEffectPropertyTransform alloc] initWith:parent];
 
-    self.position = GLKVector4Origin();
+        _position = GLKVector4Origin();
 
-    self.ambientColor = GLKVector4Black();
-    self.diffuseColor = GLKVector4White();
-    self.specularColor = GLKVector4Black();
+        _ambientColor = GLKVector4Black();
+        _diffuseColor = GLKVector4White();
+        _specularColor = GLKVector4Black();
 
-    // NOTE: total light atten: 1.f / (K2 * d^2 + K1 * d + K0)
+        // NOTE: total light atten: 1.f / (K2 * d^2 + K1 * d + K0)
 
-    self.constantAttenuation = 1.f;
-    self.linearAttenuation = 0.f;
-    self.quadraticAttenuation = 0.f;
+        _constantAttenuation = 1.f;
+        _linearAttenuation = 0.f;
+        _quadraticAttenuation = 0.f;
 
-    self.spotDirection = GLKVector3Make(0.f, 0.f, -1.f);
-    self.spotCutoff = 180.f;
-    self.spotExponent = 0.f; // means super-sharp.
+        _spotDirection = GLKVector3Make(0.f, 0.f, -1.f);
+        _spotCutoff = 180.f;
+        _spotExponent = 0.f; // means super-sharp.
+    }
 
     return self;
 }
@@ -687,14 +701,14 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 @implementation GLKEffectPropertyMaterial
 
 - (id)initWith:(GLKShaderEffect*)parent {
-    [super initWith:parent];
-    self.ambientColor = GLKVector4White();
-    self.diffuseColor = GLKVector4White();
-    self.specularColor = GLKVector4Black();
-    self.emissiveColor = GLKVector4Black();
-    self.shininess = 0.f;
-    self.reflectionBlendAlpha = 1.f;
-
+    if (self = [super initWith:parent]) {
+        _ambientColor = GLKVector4White();
+        _diffuseColor = GLKVector4White();
+        _specularColor = GLKVector4Black();
+        _emissiveColor = GLKVector4Black();
+        _shininess = 0.f;
+        _reflectionBlendAlpha = 1.f;
+    }
     return self;
 }
 
@@ -703,11 +717,11 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 @implementation GLKEffectPropertyTexture
 
 - (id)initWith:(GLKShaderEffect*)parent {
-    [super initWith:parent];
-    self.name = 0;
-    self.envMode = GLKTextureEnvModeReplace;
-    self.target = GLKTextureTarget2D;
-
+    if (self = [super initWith:parent]) {
+        _name = 0;
+        _envMode = GLKTextureEnvModeReplace;
+        _target = GLKTextureTarget2D;
+    }
     return self;
 }
 
@@ -716,10 +730,10 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
 @implementation GLKEffectPropertyTransform
 
 - (id)initWith:(GLKShaderEffect*)parent {
-    [super initWith:parent];
-    self.modelviewMatrix = GLKMatrix4MakeIdentity();
-    self.projectionMatrix = GLKMatrix4MakeIdentity();
-
+    if (self = [super initWith:parent]) {
+        _modelviewMatrix = GLKMatrix4MakeIdentity();
+        _projectionMatrix = GLKMatrix4MakeIdentity();
+    }
     return self;
 }
 
@@ -745,11 +759,16 @@ static LightVars lightVarNames[MAX_LIGHTS] = {
  @Status Interoperable
 */
 - (id)init {
-    [super init];
-    _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];
+    if (self = [super init]) {
+        _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];
+    }
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (BOOL)updateShaderMaterialParams {
     [super updateShaderMaterialParams];
 
