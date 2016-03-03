@@ -90,7 +90,10 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
 /**
  @Status Stub
 */
-+ (void)getStreamsToHost:(id)host port:(int)port inputStream:(NSInputStream**)inputStreamp outputStream:(NSOutputStream**)outputStreamp {
++ (void)getStreamsToHost:(id)host
+                    port:(int)port
+             inputStream:(NSInputStream* _Nullable*)inputStreamp
+            outputStream:(NSOutputStream* _Nullable*)outputStreamp {
     UNIMPLEMENTED();
     id socket = [[[NSSocket alloc] initTCPStream] autorelease];
     id error;
@@ -99,13 +102,21 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
     id output;
 
     if ((error = [socket connectToHost:host port:port immediate:&immediate]) != nil) {
-        *inputStreamp = nil;
-        *outputStreamp = nil;
+        if (inputStreamp) {
+            *inputStreamp = nil;
+        }
+        if (outputStreamp) {
+            *outputStreamp = nil;
+        }
         return;
     }
 
-    *inputStreamp = input = [[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
-    *outputStreamp = output = [[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+    if (inputStreamp) {
+        *inputStreamp = input = [[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+    }
+    if (outputStreamp) {
+        *outputStreamp = output = [[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
+    }
 }
 
 /**

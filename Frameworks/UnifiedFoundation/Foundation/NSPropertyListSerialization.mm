@@ -50,8 +50,9 @@ void printContents(int level, id obj);
           errorDescription:(NSString**)error {
     if (data == nil) {
         TraceVerbose(TAG, L"propertyListFromData: data is nil!");
-        if (error)
+        if (error) {
             *error = @"Data was null.";
+        }
 
         return nil;
     }
@@ -59,8 +60,9 @@ void printContents(int level, id obj);
     unsigned len = [data length];
     if (len == 0) {
         TraceVerbose(TAG, L"propertyListFromData: data is too short!");
-        if (error)
+        if (error) {
             *error = @"Data is too short.";
+        }
 
         return nil;
     }
@@ -71,8 +73,9 @@ void printContents(int level, id obj);
 
         if (ret == nil) {
             TraceVerbose(TAG, L"propertyListFromData: return is nil!");
-            if (error)
+            if (error) {
                 *error = @"No objects.";
+            }
 
             return nil;
         }
@@ -95,14 +98,16 @@ void printContents(int level, id obj);
 
         if (ret == nil) {
             TraceVerbose(TAG, L"propertyListFromData: return is nil!");
-            if (error)
+            if (error) {
                 *error = @"No objects.";
+            }
 
             return nil;
         }
 
-        if (formatOut)
+        if (formatOut) {
             *formatOut = NSPropertyListBinaryFormat_v1_0;
+        }
 
         return ret;
     } else if (len >= 2 && memcmp(bytes, "\xfe\xff", 2) == 0) {

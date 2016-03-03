@@ -478,10 +478,11 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
  @Status Interoperable
 */
 - (void)display {
-    TraceVerbose(TAG, L"Displaying for 0x%08x (%hs, %hs)",
-                priv->delegate,
-                object_getClassName(self),
-                priv->delegate ? object_getClassName(priv->delegate) : "nil");
+    TraceVerbose(TAG,
+                 L"Displaying for 0x%08x (%hs, %hs)",
+                 priv->delegate,
+                 object_getClassName(self),
+                 priv->delegate ? object_getClassName(priv->delegate) : "nil");
 
     if (priv->savedContext != NULL) {
         CGContextRelease(priv->savedContext);
@@ -1140,11 +1141,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     if (bounds.origin.x != bounds.origin.x || bounds.origin.y != bounds.origin.y || bounds.size.width != bounds.size.width ||
         bounds.size.height != bounds.size.height) {
-        TraceWarning(TAG, L"**** Warning: Bad bounds on CALayer - %f, %f, %f, %f *****",
-                    bounds.origin.x,
-                    bounds.origin.y,
-                    bounds.size.width,
-                    bounds.size.height);
+        TraceWarning(TAG,
+                     L"**** Warning: Bad bounds on CALayer - %f, %f, %f, %f *****",
+                     bounds.origin.x,
+                     bounds.origin.y,
+                     bounds.size.width,
+                     bounds.size.height);
         memset(&bounds, 0, sizeof(CGRect));
 #if defined(_DEBUG) || !defined(WINPHONE)
         assert(0);
@@ -2129,8 +2131,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         Quaternion qval;
         qval.CreateFromMatrix(reinterpret_cast<float*>(&curTransform));
         return [NSNumber numberWithFloat:(float)-qval.roll() * 180.0f / M_PI];
-    } else if (strcmp(pPath, "transform.rotation.x") == 0 ||
-               strcmp(pPath, "transform.rotation.y") == 0) {
+    } else if (strcmp(pPath, "transform.rotation.x") == 0 || strcmp(pPath, "transform.rotation.y") == 0) {
         TraceVerbose(TAG, L"Should get rotation");
         return [NSNumber numberWithFloat:0.0f];
     } else if (strcmp(pPath, "transform.scale") == 0) {
@@ -2191,7 +2192,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     } else if (strcmp(pPath, "bounds.origin.y") == 0) {
         CGRect bounds = [self bounds];
         return [NSNumber numberWithFloat:bounds.origin.y];
-    } 
+    }
 
     return [super valueForKeyPath:keyPath];
 }

@@ -68,10 +68,14 @@ struct NSPropertyListReaderA {
 
         value = ReadSizedInt(ptr, length, offset + 1, size);
 
-        if (outValue != NULL)
+        if (outValue) {
             *outValue = value;
-        if (outSize != NULL)
+        }
+
+        if (outSize) {
             *outSize = size + 1; // +1 for tag byte.
+        }
+
         return TRUE;
     }
 

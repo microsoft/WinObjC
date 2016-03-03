@@ -994,8 +994,7 @@ typedef NSUInteger NSStringCompareOptions;
 + (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     NSString* ret = [self alloc];
 
-    if (usedEncoding)
-        *usedEncoding = NSASCIIStringEncoding;
+    *usedEncoding = NSASCIIStringEncoding;
     TraceVerbose(TAG, L"Encoding: ASCII?");
 
     return [[ret initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
@@ -1006,8 +1005,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available
 */
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
-    if (usedEncoding)
-        *usedEncoding = NSASCIIStringEncoding;
+    *usedEncoding = NSASCIIStringEncoding;
     TraceVerbose(TAG, L"Encoding: ASCII?");
 
     return [self initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet];
@@ -1193,7 +1191,9 @@ typedef NSUInteger NSStringCompareOptions;
                     left->length = s1.string().length() - left->location;
                 }
             } else {
-                *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
+                if (usedLength) {
+                    *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
+                }
             }
         } break;
 
@@ -1222,7 +1222,9 @@ typedef NSUInteger NSStringCompareOptions;
                     left->length = s1.string().length() - left->location;
                 }
             } else {
-                *usedLength = subStr.length() * sizeof(UChar);
+                if (usedLength) {
+                    *usedLength = subStr.length() * sizeof(UChar);
+                }
             }
         } break;
 
@@ -1252,7 +1254,9 @@ typedef NSUInteger NSStringCompareOptions;
                     left->length = s1.string().length() - left->location;
                 }
             } else {
-                *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
+                if (usedLength) {
+                    *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
+                }
             }
         } break;
 
@@ -1282,7 +1286,9 @@ typedef NSUInteger NSStringCompareOptions;
                     left->length = s1.string().length() - left->location;
                 }
             } else {
-                *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
+                if (usedLength) {
+                    *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
+                }
             }
         } break;
 
@@ -3083,12 +3089,15 @@ const int s_oneByte = 16;
         contentsEnd = end;
     }
 
-    if (startp != NULL)
+    if (startp) {
         *startp = start;
-    if (endp != NULL)
+    }
+    if (endp) {
         *endp = end;
-    if (contentsEndp != NULL)
+    }
+    if (contentsEndp) {
         *contentsEndp = contentsEnd;
+    }
 }
 
 /**

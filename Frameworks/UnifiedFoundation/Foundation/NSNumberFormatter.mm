@@ -785,12 +785,12 @@ static BOOL numberIsNegative(id number) {
 /**
  @Status Interoperable
 */
-- (BOOL)getObjectValue:(id*)objOut forString:(id)str errorDescription:(NSString**)error {
-    const char* pVal = [str UTF8String];
-
-    int val = atoi(pVal);
-
-    *objOut = [NSNumber numberWithInteger:val];
+- (BOOL)getObjectValue:(out id _Nullable*)objOut forString:(id)str errorDescription:(out NSString* _Nullable*)error {
+    if (objOut) {
+        const char* pVal = [str UTF8String];
+        int val = atoi(pVal);
+        *objOut = [NSNumber numberWithInteger:val];
+    }
 
     return TRUE;
 }

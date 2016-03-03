@@ -58,7 +58,7 @@ static const wchar_t* TAG = L"NSURLConnection";
     NSURLConnection* connection = [[self alloc] initWithRequest:request delegate:state startImmediately:FALSE];
 
     if (connection == nil) {
-        if (errorp != NULL) {
+        if (errorp) {
             *errorp = [NSError errorWithDomain:@"NSURLErrorDomain" code:50 userInfo:nil];
         }
 
@@ -77,11 +77,11 @@ static const wchar_t* TAG = L"NSURLConnection";
 
     [connection cancel];
 
-    if (errorp != NULL) {
+    if (errorp) {
         *errorp = state.error;
     }
 
-    if (responsep != NULL) {
+    if (responsep) {
         *responsep = state.response;
     }
 

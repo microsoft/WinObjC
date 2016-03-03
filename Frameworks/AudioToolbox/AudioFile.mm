@@ -27,7 +27,6 @@
 
 static const wchar_t* TAG = L"AudioFile";
 
-
 #import "stb_vorbis.h"
 #import <AudioToolbox/AudioFile.h>
 #import <AudioToolbox/AudioFileTypes.h>
@@ -486,7 +485,7 @@ public:
  @Status Caveat
  @Notes Only file:// URLs supported
 */
-OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID* out) {
+OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID _Nullable* out) {
     char* filename = (char*)[[url path] UTF8String];
     EbrFile* f = EbrFopen(filename, "rb");
     if (!f) {
@@ -499,18 +498,20 @@ OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioF
     EbrFclose(f);
 
     // Try to figure out what this is:
-    if (strncmp(header, "OggS", 4) == 0) {
-        *out = AudioFileOGG::openURL(filename);
-    } else if (strncmp(header, "RIFF", 4) == 0) {
-        *out = AudioFileWAV::openURL(filename);
-    } else if (strncmp(header, "caff", 4) == 0) {
-        *out = AudioFileCAF::openURL(filename);
-    } else if (strncmp(header, "ID3", 3) == 0) {
-        TraceError(TAG, L"MP3s not supported!");
-        return 1234;
-    } else {
-        TraceError(TAG, L"What is %hs?!", filename);
-        return 1234;
+    if (out) {
+        if (strncmp(header, "OggS", 4) == 0) {
+            *out = AudioFileOGG::openURL(filename);
+        } else if (strncmp(header, "RIFF", 4) == 0) {
+            *out = AudioFileWAV::openURL(filename);
+        } else if (strncmp(header, "caff", 4) == 0) {
+            *out = AudioFileCAF::openURL(filename);
+        } else if (strncmp(header, "ID3", 3) == 0) {
+            TraceError(TAG, L"MP3s not supported!");
+            return 1234;
+        } else {
+            TraceError(TAG, L"What is %hs?!", filename);
+            return 1234;
+        }
     }
 
     return 0;
@@ -559,7 +560,7 @@ DWORD AudioFileOpenWithCallbacks(void* context,
                                  AudioFile_GetSizeProc getSizeFunc,
                                  AudioFile_SetSizeProc setSizeFunc,
                                  DWORD typeHint,
-                                 AudioFileID* out) {
+                                 AudioFileID _Nullable* out) {
     EbrCallbackFile* callbackFP = new EbrCallbackFile(context, readFunc, writeFunc, getSizeFunc, setSizeFunc);
     EbrFile* in = EbrAllocFile(callbackFP);
 
@@ -567,11 +568,13 @@ DWORD AudioFileOpenWithCallbacks(void* context,
     EbrFread(&header, sizeof(header), 1, in);
 
     // Try to figure out what this is:
-    if (strncmp(header, "RIFF", 4) == 0) {
-        *out = AudioFileWAV::openFile(in);
-    } else {
-        TraceError(TAG, L"What is this format?!");
-        return 1234;
+    if (out) {
+        if (strncmp(header, "RIFF", 4) == 0) {
+            *out = AudioFileWAV::openFile(in);
+        } else {
+            TraceError(TAG, L"What is this format?!");
+            return 1234;
+        }
     }
 
     return 0;
@@ -581,9 +584,11 @@ DWORD AudioFileOpenWithCallbacks(void* context,
  @Status Interoperable
 */
 OSStatus AudioFileCreateWithURL(
-    CFURLRef url, AudioFileTypeID type, const AudioStreamBasicDescription* format, UInt32 inFlags, AudioFileID* out) {
+    CFURLRef url, AudioFileTypeID type, const AudioStreamBasicDescription* format, UInt32 inFlags, AudioFileID _Nullable* out) {
     TraceWarning(TAG, L"_AudioFileCreateWithURL not supported");
-    *out = 0;
+    if (out) {
+        *out = 0;
+    }
 
     return 0;
 }

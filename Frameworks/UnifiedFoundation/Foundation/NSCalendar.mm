@@ -408,10 +408,12 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 /**
  @Status Stub
 */
-- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate**)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
+- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
     UNIMPLEMENTED();
     // HACK: implement me!
-    *datep = [date retain];
+    if (datep) {
+        *datep = [date retain];
+    }
     return NO;
 }
 

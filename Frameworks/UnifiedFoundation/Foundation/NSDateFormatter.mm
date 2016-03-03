@@ -636,11 +636,15 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 /**
  @Status Interoperable
 */
-- (BOOL)getObjectValue:(id*)outObj forString:(id)str errorDescription:(NSString**)err {
-    if (err)
+- (BOOL)getObjectValue:(out id _Nullable*)outObj forString:(id)str errorDescription:(out NSString* _Nullable*)err {
+    if (err) {
         *err = nil;
+    }
 
-    *outObj = [self dateFromString:str];
+    if (outObj) {
+        *outObj = [self dateFromString:str];
+    }
+
     return TRUE;
 }
 
