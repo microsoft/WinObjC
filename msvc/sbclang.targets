@@ -98,6 +98,7 @@
       <IncludeTwitter Condition="$(LinkAdditionalDependencies.Contains('Twitter.lib'))">true</IncludeTwitter>
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
       <IncludeCFNetwork Condition="$(LinkAdditionalDependencies.Contains('CFNetwork.lib'))">true</IncludeCFNetwork>
+      <IncludeAudioUnit Condition="$(LinkAdditionalDependencies.Contains('AudioUnit.lib'))">true</IncludeAudioUnit>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -193,6 +194,7 @@
       <SBResourceCopy Condition="'$(IncludeTwitter)' == 'true'" Include="$(StarboardLibDirs)\Twitter.dll" />
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
       <SBResourceCopy Condition="'$(IncludeCFNetwork)' == 'true'" Include="$(StarboardLibDirs)\CFNetwork.dll" />
+      <SBResourceCopy Condition="'$(IncludeAudioUnit)' == 'true'" Include="$(StarboardLibDirs)\AudioUnit.dll" />
     </ItemGroup>
   </Target>
 

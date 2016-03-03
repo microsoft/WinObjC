@@ -23,6 +23,7 @@
 @import AddressBookUI;
 @import AssetsLibrary;
 @import AudioToolbox;
+@import AudioUnit;
 @import AVFoundation;
 @import AVKit;
 @import CFNetwork;
