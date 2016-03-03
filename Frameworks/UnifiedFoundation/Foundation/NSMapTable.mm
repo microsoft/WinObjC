@@ -201,6 +201,11 @@ using internalmap_t = std::unordered_map<id, id, _NSMapTableKeyHash, _NSMapTable
         objc_setAssociatedObject(key, self, nil, OBJC_ASSOCIATION_RETAIN);
     }
 
+    if ([reinterpret_cast<_NSConcretePointerFunctions*>(_valuePointerFunctions) weakMemory]) {
+        // If values are weak, mark the value as no longer weakly stored, so that it does not get invalidly auto-nilled later
+        objc_destroyWeak(&entry->second);
+    }
+
     _internalMap.erase(entry);
     [NSMapTable _relinquishItem:value pointerFunctions:_valuePointerFunctions];
     [NSMapTable _relinquishItem:key pointerFunctions:_keyPointerFunctions];
