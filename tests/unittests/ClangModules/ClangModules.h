@@ -39,6 +39,7 @@
 @import CoreImage;
 @import CoreLocation;
 @import CoreMedia;
+@import CoreMIDI;
 @import CoreMotion;
 @import CoreTelephony;
 @import CoreText;

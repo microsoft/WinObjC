@@ -99,6 +99,7 @@
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
       <IncludeCFNetwork Condition="$(LinkAdditionalDependencies.Contains('CFNetwork.lib'))">true</IncludeCFNetwork>
       <IncludeAudioUnit Condition="$(LinkAdditionalDependencies.Contains('AudioUnit.lib'))">true</IncludeAudioUnit>
+      <IncludeCoreMIDI Condition="$(LinkAdditionalDependencies.Contains('CoreMIDI.lib'))">true</IncludeCoreMIDI>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -195,6 +196,7 @@
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
       <SBResourceCopy Condition="'$(IncludeCFNetwork)' == 'true'" Include="$(StarboardLibDirs)\CFNetwork.dll" />
       <SBResourceCopy Condition="'$(IncludeAudioUnit)' == 'true'" Include="$(StarboardLibDirs)\AudioUnit.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreMIDI)' == 'true'" Include="$(StarboardLibDirs)\CoreMIDI.dll" />
     </ItemGroup>
   </Target>
 
