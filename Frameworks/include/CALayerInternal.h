@@ -113,5 +113,14 @@ public:
 - (void)bringSublayerToFront:(CALayer*)sublayer;
 - (void)validateDisplayHierarchy;
 - (void)discardDisplayHierarchy;
+
+- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info;
+
+- (void)_removeAnimation:(CAAnimation*)animation;
+- (DisplayTexture*)_getDisplayTexture;
+
+- (CAPrivateInfo*)_priv;
+
 @end
+
 #endif /* _CALAYERPRIVATE_H_ */

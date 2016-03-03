@@ -546,11 +546,13 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [ret autorelease];
 }
 
-- (void)getColors:(float*)colors {
-    colors[0] = _r;
-    colors[1] = _g;
-    colors[2] = _b;
-    colors[3] = _a;
+- (void)getColors:(ColorQuad*)colors {
+    if (colors) {
+        colors->r = _r;
+        colors->g = _g;
+        colors->b = _b;
+        colors->a = _a;
+    }
 }
 
 /**

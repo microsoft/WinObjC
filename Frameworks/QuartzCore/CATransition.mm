@@ -84,7 +84,7 @@ NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
     _attachedLayer = layer;
     _runningAnimation = _globalCompositor->GetMoveDisplayAnimation(&_runningAnimation2,
                                                                    self,
-                                                                   layer->priv->_presentationNode,
+                                                                   [layer _priv]->_presentationNode,
                                                                    _type,
                                                                    _subtype,
                                                                    &_timingProperties);

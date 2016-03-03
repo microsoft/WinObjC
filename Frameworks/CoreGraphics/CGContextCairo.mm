@@ -517,12 +517,12 @@ void CGContextCairo::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextCairo::CGContextSetStrokeColorWithColor(id color) {
-    [(UIColor*)color getColors:(float*)&curState->curStrokeColor];
+    [(UIColor*)color getColors:&curState->curStrokeColor];
 }
 
 void CGContextCairo::CGContextSetFillColorWithColor(id color) {
     if ((int)[(UIColor*)color _type] == solidBrush) {
-        [(UIColor*)color getColors:(float*)&curState->curFillColor];
+        [(UIColor*)color getColors:&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];

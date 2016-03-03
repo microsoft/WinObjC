@@ -31,6 +31,9 @@
 - (void)_addObserver:(NSObject*)observer forMode:(NSString*)mode;
 - (void)_removeObserver:(NSObject*)observer forMode:(NSString*)mode;
 - (StrongId<NSArray*>)_statesForMode:(NSString*)mode;
+
+- (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode;
+
 @end
 
 @interface NSRunLoop (XamlUIWaiter)

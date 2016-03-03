@@ -60,13 +60,11 @@ CGColorRef CGColorCreateCopy(CGColorRef color) {
  @Status Interoperable
 */
 CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
-    float curColor[4];
+    ColorQuad curColor;
 
-    [(UIColor*)color getColors:curColor];
+    [(UIColor*)color getColors:&curColor];
 
-    id ret = [[_LazyUIColor colorWithRed:curColor[0] green:curColor[1] blue:curColor[2] alpha:alpha] retain];
-
-    return (CGColorRef)ret;
+    return static_cast<CGColorRef>([[_LazyUIColor colorWithRed:curColor.r green:curColor.g blue:curColor.b alpha:alpha] retain]);
 }
 
 /**
@@ -82,30 +80,25 @@ CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, id pattern, floa
  @Status Interoperable
 */
 bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
-    float components1[4] = { 0.0f };
-    float components2[4] = { 0.0f };
+    ColorQuad components1{};
+    ColorQuad components2{};
 
-    [(UIColor*)color1 getColors:components1];
-    [(UIColor*)color2 getColors:components2];
+    [(UIColor*)color1 getColors:&components1];
+    [(UIColor*)color2 getColors:&components2];
 
-    for (int i = 0; i < 4; i++) {
-        if (components1[i] != components2[i]) {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
+    return ((components1.r == components1.r) && (components1.g == components1.g) && (components1.b == components1.b) &&
+            (components1.a == components1.a));
 }
 
 /**
  @Status Interoperable
 */
 CGFloat CGColorGetAlpha(CGColorRef color) {
-    float components[4];
+    ColorQuad components;
 
-    [(UIColor*)color getColors:components];
+    [(UIColor*)color getColors:&components];
 
-    return (CGFloat)components[3];
+    return (CGFloat)components.a;
 }
 
 /**
@@ -123,7 +116,11 @@ CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
 */
 const CGFloat* CGColorGetComponents(CGColorRef color) {
     float* ret = (float*)IwMalloc(sizeof(float) * 4);
-    [(UIColor*)color getColors:ret];
+    ColorQuad colorComponents;
+    [(UIColor*)color getColors:&colorComponents];
+
+    ColorQuadToFloatArray(colorComponents, ret);
+
     return ret;
 }
 

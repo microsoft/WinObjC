@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UIColor.h>
-#import <CoreGraphics/CGPattern.h>
-
-@interface UIColor (Internal) {
+@interface CATextLayer (Internal) {
 }
-+ (UIColor*)colorWithCGPattern:(CGPatternRef)pattern;
-- (void)getColors:(ColorQuad*)colors;
-- (BrushType)_type;
+
+- (void)_setDisplayParams:(UIFont*)font
+                     text:(NSString*)text
+                    color:(UIColor*)color
+                alignment:(UITextAlignment)alignment
+                lineBreak:(UILineBreakMode)lineBreak
+              shadowColor:(UIColor*)shadowColor
+             shadowOffset:(CGSize)shadowOffset
+                 numLines:(int)numLines;
 @end

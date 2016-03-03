@@ -23,6 +23,7 @@
 #include "UIKit/UIView.h"
 #include "QuartzCore/CAEAGLLayer.h"
 #include "CACompositor.h"
+#include "CAEAGLLayerInternal.h"
 
 #include <d3d11.h>
 #include <d3d11_1.h>
@@ -97,6 +98,9 @@
 }
 
 - (void)_releaseContents {
+}
+
+- (void)_unlockTexture {
 }
 
 - (void)dealloc {

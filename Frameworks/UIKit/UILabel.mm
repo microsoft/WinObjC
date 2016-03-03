@@ -26,6 +26,7 @@
 #import "UIFontInternal.h"
 
 #import "CGContextInternal.h"
+#import "CATextLayerInternal.h"
 
 #import "QuartzCore/CATextLayer.h"
 #define USE_TEXT_LAYER 1
@@ -104,7 +105,14 @@
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [[self layer] _setDisplayParams:(id) _font:(id) _text:color:_alignment:_lineBreakMode:(id) _shadowColor:_shadowOffset:_numberOfLines];
+    [[self layer] _setDisplayParams:(id)_font
+                               text:(id)_text
+                              color:color
+                          alignment:_alignment
+                          lineBreak:_lineBreakMode
+                        shadowColor:(id)_shadowColor
+                       shadowOffset:_shadowOffset
+                           numLines:_numberOfLines];
 #endif
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];
@@ -619,7 +627,6 @@
 
     return ret;
 }
-
 
 /**
  @Status Interoperable

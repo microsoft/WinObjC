@@ -326,14 +326,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return FALSE;
 }
 
-- (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode {
-    NSArray* modeStates = [self _statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode removeTimer:timer];
-    }
-}
-
 - (NSArray*)_getModes {
     pthread_mutex_lock(&_modeLock);
 
@@ -501,6 +493,14 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
 - (void)_wakeUp {
     [[self _stateForMode:_currentMode] wakeUp];
+}
+
+- (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode {
+    NSArray* modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in modeStates) {
+        [curMode removeTimer:timer];
+    }
 }
 
 @end

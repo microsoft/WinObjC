@@ -23,6 +23,7 @@
 #include "QuartzCore/CATextLayer.h"
 #include "CALayerInternal.h"
 #include "CACompositor.h"
+#include "CATextLayerInternal.h"
 
 NSString* const kCATruncationNone = @"kCATruncationNone";
 NSString* const kCATruncationStart = @"kCATruncationStart";
@@ -67,12 +68,12 @@ NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
 }
 
 - (DisplayTexture*)_getDisplayTexture {
-    if (priv->_shouldRasterize) {
+    if ([self _priv]->_shouldRasterize) {
         return (DisplayTexture*)[super _getDisplayTexture];
     }
 
-    priv->contentsSize.width = ceilf(priv->bounds.size.width) * priv->contentsScale;
-    priv->contentsSize.height = ceilf(priv->bounds.size.height) * priv->contentsScale;
+    [self _priv]->contentsSize.width = ceilf([self _priv]->bounds.size.width) * [self _priv]->contentsScale;
+    [self _priv]->contentsSize.height = ceilf([self _priv]->bounds.size.height) * [self _priv]->contentsScale;
 
     if (__font == nil || _text == nil) {
         return nullptr;
@@ -95,13 +96,13 @@ NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
 }
 
 - (void)_setDisplayParams:(UIFont*)font
-                         :(NSString*)text
-                         :(UIColor*)color
-                         :(UITextAlignment)alignment
-                         :(UILineBreakMode)lineBreak
-                         :(UIColor*)shadowColor
-                         :(CGSize)shadowOffset
-                         :(int)numLines {
+                     text:(NSString*)text
+                    color:(UIColor*)color
+                alignment:(UITextAlignment)alignment
+                lineBreak:(UILineBreakMode)lineBreak
+              shadowColor:(UIColor*)shadowColor
+             shadowOffset:(CGSize)shadowOffset
+                 numLines:(int)numLines {
     __font = font;
     _text = text;
     _alignment = alignment;

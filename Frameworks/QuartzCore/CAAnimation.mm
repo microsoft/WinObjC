@@ -17,6 +17,8 @@
 #import <StubReturn.h>
 #include "Starboard.h"
 
+#include "CATransactionInternal.h"
+#include "CALayerInternal.h"
 #include "QuartzCore/CAAnimation.h"
 #include "QuartzCore/CALayer.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -259,7 +261,7 @@ static const wchar_t* TAG = L"CAAnimation";
 - (void)animationDidStart {
     if (_delegate) {
         if ([_delegate respondsToSelector:@selector(animationDidStart:)]) {
-            [_delegate animationDidStart:self];
+            [static_cast<id<CAAnimationDelegate>>(_delegate) animationDidStart:self];
         }
     }
 }

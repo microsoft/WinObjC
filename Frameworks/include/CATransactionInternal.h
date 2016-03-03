@@ -32,4 +32,7 @@
 + (CAAnimation*)_implicitAnimationForKey:(NSString*)forKey;
 + (void)_commitRootQueue;
 
++ (void)_setPropertyForLayer:(CALayer*)layer name:(NSString*)propertyName value:(NSObject*)newValue;
++ (void)_addSublayerToTop:(CALayer*)layer;
++ (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim;
 @end

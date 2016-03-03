@@ -19,6 +19,7 @@
 #include "AccessibilityInternal.h"
 
 #import <UIKit/UIAccessibility.h>
+#import "CALayerInternal.h"
 
 UIAccessibilityTraits UIAccessibilityTraitNone = 0;
 UIAccessibilityTraits UIAccessibilityTraitButton = ACC_FLAG_BUTTON;

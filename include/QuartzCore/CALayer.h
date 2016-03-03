@@ -64,18 +64,8 @@ CA_EXPORT NSString* const kCAFilterTrilinear;
 
 @class WXFrameworkElement;
 
-#if defined(__cplusplus)
-class CAPrivateInfo;
-struct IWAccessibilityInfo;
-#else
-typedef void* CAPrivateInfo;
-typedef void* IWAccessibilityInfo;
-#endif
-
 CA_EXPORT_CLASS
 @interface CALayer : NSObject <NSCoding, CAMediaTiming> {
-@public
-    CAPrivateInfo* priv;
 }
 
 + (instancetype)layer;
@@ -145,12 +135,10 @@ CA_EXPORT_CLASS
 @property (readonly) CALayer* superlayer;
 - (void)addSublayer:(CALayer*)aLayer;
 - (void)removeFromSuperlayer;
-- (void)insertSublayer:(CALayer*)aLayer
-               atIndex:(unsigned int)index;
+- (void)insertSublayer:(CALayer*)aLayer atIndex:(unsigned int)index;
 - (void)insertSublayer:(CALayer*)aLayer below:(CALayer*)sublayer;
 - (void)insertSublayer:(CALayer*)aLayer above:(CALayer*)sublayer;
-- (void)replaceSublayer:(CALayer*)oldLayer
-                   with:(CALayer*)newLayer;
+- (void)replaceSublayer:(CALayer*)oldLayer with:(CALayer*)newLayer;
 
 - (void)setNeedsDisplay;
 - (void)setNeedsDisplayInRect:(CGRect)theRect;
@@ -159,8 +147,7 @@ CA_EXPORT_CLASS
 - (BOOL)needsDisplay;
 + (BOOL)needsDisplayForKey:(NSString*)key;
 
-- (void)addAnimation:(CAAnimation*)anim
-              forKey:(NSString*)key;
+- (void)addAnimation:(CAAnimation*)anim forKey:(NSString*)key;
 - (CAAnimation*)animationForKey:(NSString*)key;
 - (void)removeAllAnimations;
 - (void)removeAnimationForKey:(NSString*)key;
@@ -174,12 +161,10 @@ CA_EXPORT_CLASS
 
 - (id<CAAction>)actionForKey:(NSString*)key;
 @property (copy) NSDictionary* actions;
-+ (id<CAAction>)defaultActionForKey:(NSString*)key STUB_METHOD;
++ (id<CAAction>)defaultActionForKey:(NSString*)key;
 
-- (CGPoint)convertPoint:(CGPoint)aPoint
-              fromLayer:(CALayer*)layer;
-- (CGPoint)convertPoint:(CGPoint)aPoint
-                toLayer:(CALayer*)layer;
+- (CGPoint)convertPoint:(CGPoint)aPoint fromLayer:(CALayer*)layer;
+- (CGPoint)convertPoint:(CGPoint)aPoint toLayer:(CALayer*)layer;
 - (CGRect)convertRect:(CGRect)aRect fromLayer:(CALayer*)layer;
 - (CGRect)convertRect:(CGRect)aRect toLayer:(CALayer*)layer;
 - (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer;
@@ -209,7 +194,6 @@ CA_EXPORT_CLASS
 
 // Adding by MS.
 + (CGPoint)convertPoint:(CGPoint)point fromLayer:(CALayer*)layer toLayer:(CALayer*)layer;
-- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info;
 @property WXFrameworkElement* contentsElement;
 
 @end

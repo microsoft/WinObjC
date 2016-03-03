@@ -35,6 +35,8 @@ struct CAMediaTimingProperties {
 }
 
 - (void)setDelay:(double)delay;
+- (void)_abortAnimation;
+- (void)_removeAnimationsFromLayer;
 - (void)_setFinishedSelector:(SEL)selector;
 @end
 

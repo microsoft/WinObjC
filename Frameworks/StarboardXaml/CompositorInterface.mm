@@ -344,7 +344,11 @@ public:
         _insets[2] = edgeInsets.right;
         _insets[3] = edgeInsets.bottom;
 
-        [color getColors:_color];
+        ColorQuad colorComponents;
+        [color getColors:&colorComponents];
+
+        ColorQuadToFloatArray(colorComponents, _color);
+
         _fontSize = [font pointSize];
         _centerVertically = centerVertically;
         _lineHeight = [font ascender] - [font descender];
@@ -1089,9 +1093,9 @@ public:
         } else if (strcmp(name, "contentColor") == 0) {
         } else if (strcmp(name, "sublayerTransform") == 0) {
         } else if (strcmp(name, "backgroundColor") == 0) {
-            float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-            [(UIColor*)newValue getColors:color];
-            SetBackgroundColor(color[0], color[1], color[2], color[3]);
+            ColorQuad color{};
+            [(UIColor*)newValue getColors:&color];
+            SetBackgroundColor(color.r, color.g, color.b, color.a);
         } else {
             assert(0);
         }
