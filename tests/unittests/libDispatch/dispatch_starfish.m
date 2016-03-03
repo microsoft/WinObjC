@@ -138,7 +138,6 @@ void do_test(void) {
     for (i = 0; i < COUNT; i++) {
         dispatch_resume(queues[i]);
     }
-    test_stop();
 }
 
 TEST(Dispatch, DispatchStarfish) {
