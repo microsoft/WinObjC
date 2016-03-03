@@ -59,10 +59,9 @@
       <IncludeICUDT Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icudt.lib'))">true</IncludeICUDT>
       <IncludeICUIn Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icuin.lib'))">true</IncludeICUIn>
       <IncludeICUUC Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icuuc.lib'))">true</IncludeICUUC>
-      <IncludeLibCurl Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('libcurl_imp.lib'))">true</IncludeLibCurl>
-      <IncludeLibEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('libeay32.lib'))">true</IncludeLibEAY32>
+      <IncludeLibEAY32 Condition="$(LinkAdditionalDependencies.Contains('libeay32.lib'))">true</IncludeLibEAY32>
       <IncludeLibXML2 Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or '$(IncludeUIKit)' == 'true' or $(LinkAdditionalDependencies.Contains('libxml2.lib'))">true</IncludeLibXML2>
-      <IncludeSSLEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
+      <IncludeSSLEAY32 Condition="$(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
       <IncludeStoreKit Condition="$(LinkAdditionalDependencies.Contains('StoreKit.lib'))">true</IncludeStoreKit>
       <IncludeMediaPlayer Condition="$(LinkAdditionalDependencies.Contains('MediaPlayer.lib'))">true</IncludeMediaPlayer>
       <IncludeMapKit Condition="$(LinkAdditionalDependencies.Contains('MapKit.lib'))">true</IncludeMapKit>
@@ -72,7 +71,7 @@
       <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
       <IncludeCairo Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeCairo>
       <IncludeLibPNG Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeLibPNG>
-      <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibCurl)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
+      <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
       <IncludeEventKitUI Condition="$(LinkAdditionalDependencies.Contains('EventKitUI.lib'))">true</IncludeEventKitUI>
       <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
       <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
@@ -127,7 +126,6 @@
       <SBResourceCopy Condition="'$(IncludeICUDT)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
       <SBResourceCopy Condition="'$(IncludeICUIn)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
       <SBResourceCopy Condition="'$(IncludeICUUC)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
-      <SBResourceCopy Condition="'$(IncludeLibCurl)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
       <SBResourceCopy Condition="'$(IncludeLibEAY32)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
       <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
       <SBResourceCopy Condition="'$(IncludeLibPNG)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
