@@ -189,9 +189,12 @@ static id _cachedColorsDict;
     _type = solidBrush;
 
     NSString* pattern = [coder decodeObjectForKey:@"UIPatternSelector"];
+    if (pattern == nil) {
+        pattern = [coder decodeObjectForKey: @"UISystemColorName"];
+    }
     if (pattern != nil) {
         const char* pPattern = [pattern UTF8String];
-        EbrDebugLog("Selecting pattern %s\n", pPattern);
+        TraceVerbose(L"UIColor", L"Selecting pattern %hs\n", pPattern);
 
         return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
     } else {
