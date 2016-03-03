@@ -284,65 +284,107 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationInView:(UIView*)view {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (NSUInteger)numberOfTouches {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (void)ignorePress:(UIPress*)button forEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesCancelled:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesChanged:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesEnded:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)removeTarget:(id)target action:(SEL)action {
     UNIMPLEMENTED();
 }

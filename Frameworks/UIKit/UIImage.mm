@@ -787,6 +787,9 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     CGContextRestoreGState(cur);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawAsPatternInRect:(CGRect)pos {
     [self drawAtPoint:pos.origin];
 }

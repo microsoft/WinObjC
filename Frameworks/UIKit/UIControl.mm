@@ -70,6 +70,9 @@ static const wchar_t* TAG = L"UIControl";
     [_registeredActions addObject:connection];
 }
 
+/*
+ @Status Interoperable
+*/
 - (void)sendAction:(SEL)sel to:(id)target forEvent:(UIEvent*)event {
     if (target == nil) {
         target = self;
