@@ -18,10 +18,22 @@
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
 
-#define CACHE_NSNUMBERS_BELOW 16
-static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
+static const size_t c_cacheNSNumbersBelow = 16;
+static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
 
 @implementation NSNumber
+
+/**
+ @Status Interoperable
+*/
++ (void)initialize {
+    if (self == [NSNumber class]) {
+        for (size_t i = 0; i < c_cacheNSNumbersBelow; i++) {
+            s_cachedNumbers[i].attach([[NSNumber alloc] initWithInt:i]);
+        }
+    }
+}
+
 /**
  @Status Interoperable
 */
@@ -76,19 +88,11 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithInt:(int)num {
-    if (num >= 0 && num < CACHE_NSNUMBERS_BELOW) {
-        if (cachedNumbers[num] != nil) {
-            return [cachedNumbers[num] retain];
-        }
+    if (num >= 0 && num < c_cacheNSNumbersBelow) {
+        return s_cachedNumbers[num];
+    } else {
+        return [[[self alloc] initWithInt:num] autorelease];
     }
-    NSNumber* ret = [self alloc];
-    ret = [[ret initWithInt:num] autorelease];
-
-    if (num >= 0 && num < CACHE_NSNUMBERS_BELOW) {
-        cachedNumbers[num] = [ret retain];
-    }
-
-    return ret;
 }
 
 /**
