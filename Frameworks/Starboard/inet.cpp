@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,18 @@
 //
 //******************************************************************************
 
-#ifndef _UIAPPEARANCESETTER_H_
-#define _UIAPPEARANCESETTER_H_
+#include <Windows.h>
+#include <inaddr.h>
+#include <StubReturn.h>
 
-#import <Foundation/NSObject.h>
+extern "C" {
+    
+/**
+ @Status Stub
+*/
+char* __inet_ntoa(struct in_addr addr) {
+    UNIMPLEMENTED();
+    return nullptr;
+}
 
-@class UIView;
-
-@interface UIAppearanceSetter : NSObject
-+ (void)_applyAppearance:(id)view;
-+ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView;
-+ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass;
-@end
-
-#endif /* _UIAPPEARANCESETTER_H_ */
+}

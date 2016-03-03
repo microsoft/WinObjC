@@ -30,6 +30,7 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActionSheet.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAlertView.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAnimationNotification.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAppearanceSetter.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplication.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivity.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivityViewController.mm" />

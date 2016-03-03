@@ -104,8 +104,9 @@ UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrienta
     return UIInterfaceOrientationPortrait;
 }
 
+UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
+
 BOOL _doShutdown = FALSE;
-int newDeviceOrientation;
 volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 

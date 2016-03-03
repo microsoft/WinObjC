@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,22 @@
 //
 //******************************************************************************
 
-#ifndef _UIAPPEARANCESETTER_H_
-#define _UIAPPEARANCESETTER_H_
+#import "UIAppearanceSetter.h"
+#include <StubReturn.h>
 
-#import <Foundation/NSObject.h>
+@implementation UIAppearanceSetter
 
-@class UIView;
++ (void)_applyAppearance:(id)view {
+    UNIMPLEMENTED();
+}
 
-@interface UIAppearanceSetter : NSObject
-+ (void)_applyAppearance:(id)view;
-+ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView;
-+ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass;
++ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView {
+    UNIMPLEMENTED();
+}
+
++ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass {
+    UNIMPLEMENTED();
+    return nil;
+}
+
 @end
-
-#endif /* _UIAPPEARANCESETTER_H_ */

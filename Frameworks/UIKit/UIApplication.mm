@@ -15,9 +15,6 @@
 //******************************************************************************
 
 #include "Starboard.h"
-@interface UIKeyboardRotationView : UIView
-@end
-
 #import <StubReturn.h>
 
 #include "Platform/EbrPlatform.h"
@@ -61,6 +58,21 @@
 #include "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIApplication";
+
+@interface UIKeyboardRotationView : UIView
+@end
+
+@implementation UIKeyboardRotationView
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
+    UIView* ret = [super hitTest:point withEvent:event];
+
+    if (ret == self) {
+        return nil;
+    }
+
+    return ret;
+}
+@end
 
 const NSTimeInterval UIMinimumKeepAliveTimeout = StubConstant();
 const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax;
@@ -181,10 +193,6 @@ extern BOOL _doShutdown;
 EbrEvent g_NewMouseEvent, g_shutdownEvent;
 extern id _curFirstResponder;
 
-extern pthread_t renderTid;
-extern pthread_mutex_t g_ChangeOrientationLock;
-extern pthread_cond_t g_ChangeOrientationCond;
-
 UIApplicationState _applicationState = UIApplicationStateInactive;
 
 NSMutableDictionary* g_curGesturesDict;
@@ -249,8 +257,6 @@ static int GetTouchCount(float x, float y, double timeStamp) {
 
     return 0;
 }
-
-extern int glDrawContext;
 
 int GetMouseEvents(EbrInputEvent* pDest, int max);
 
@@ -681,47 +687,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             assert(0);
             break;
     }
-
-#if defined(ANDROID) || defined(QNX)
-    pthread_mutex_lock(&g_ChangeOrientationLock);
-    requestDeviceOrientation = changeHostOrientation;
-    pthread_cond_wait(&g_ChangeOrientationCond, &g_ChangeOrientationLock);
-    if (!statusBarHidden) {
-#ifdef NO_STATUSBAR
-        windowInsetLeft = _statusBarInsets.left;
-        windowInsetRight = _statusBarInsets.right;
-        windowInsetTop = _statusBarInsets.top;
-        windowInsetBottom = _statusBarInsets.bottom;
-        g_bDidChangeView = true;
-#endif
-    }
-
-#ifdef RUN_NATIVE_RESOLUTION
-    //  Resize base windows to screen size
-    id windows = [self windows];
-    int count = [windows count];
-
-    CGRect frame;
-    frame.origin.x = 0;
-    frame.origin.y = 0;
-    frame.size.width = GetCACompositor()->screenWidth();
-    frame.size.height = GetCACompositor()->screenHeight();
-
-    CGPoint center;
-    center.x = frame.origin.x + frame.size.width / 2.0f;
-    center.y = frame.origin.y + frame.size.height / 2.0f;
-
-    int i;
-    for (i = 0; i < count; i++) {
-        id window = [windows objectAtIndex:i];
-        id windowLayer = [window layer];
-
-        [windowLayer setBounds:frame];
-        [windowLayer setPosition:center];
-    }
-#endif
-    pthread_mutex_unlock(&g_ChangeOrientationLock);
-#endif
 }
 
 - (void)_setInternalOrientation:(UIInterfaceOrientation)orientation {

@@ -149,13 +149,6 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &ret);
     assert(err == 0);
 
-//  Adjust the line height up by 20% for system fonts to be consistent
-#if 0 // defined( USE_ROBOTO_FONT )
-int ascenderDelta = (int) (ret->ascender * 0.2);
-ret->ascender += ascenderDelta;
-ret->height += ascenderDelta;
-#endif
-
     if (!sizing) {
         CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)ret);
     } else {

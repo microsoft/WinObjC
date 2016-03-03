@@ -204,12 +204,7 @@ static void commonInit(UIGestureRecognizer* self) {
         id target = _targets[i]._target;
         SEL sel = _targets[i]._selector;
 
-        {
-            TimingFunction t("Gesture");
-            // TraceVerbose(TAG, L"Gesture %hs detected - calling %hs::%hs", object_getClassName(self),
-            // object_getClassName(target), sel);
-            [target performSelector:sel withObject:self];
-        }
+        [target performSelector:sel withObject:self];
     }
 }
 

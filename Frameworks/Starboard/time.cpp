@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,13 @@
 //
 //******************************************************************************
 
-#ifndef _UIAPPEARANCESETTER_H_
-#define _UIAPPEARANCESETTER_H_
+#include <sys/time.h>
+#include "Platform/EbrPlatform.h"
 
-#import <Foundation/NSObject.h>
-
-@class UIView;
-
-@interface UIAppearanceSetter : NSObject
-+ (void)_applyAppearance:(id)view;
-+ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView;
-+ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass;
-@end
-
-#endif /* _UIAPPEARANCESETTER_H_ */
+extern "C" int gettimeofday(struct timeval* tv, struct timezone* tz) {
+    EbrTimeval curtime;
+    EbrGetTimeOfDay(&curtime);
+    tv->tv_sec = curtime.tv_sec;
+    tv->tv_usec = curtime.tv_usec;
+    return 0;
+}

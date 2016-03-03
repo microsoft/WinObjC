@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,28 @@
 //
 //******************************************************************************
 
-#ifndef _UIAPPEARANCESETTER_H_
-#define _UIAPPEARANCESETTER_H_
+#include <mutex>
+#include <random>
 
-#import <Foundation/NSObject.h>
+namespace {
 
-@class UIView;
+std::mutex s_rngGuard;
+std::mt19937 s_rng;
 
-@interface UIAppearanceSetter : NSObject
-+ (void)_applyAppearance:(id)view;
-+ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView;
-+ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass;
-@end
+}
 
-#endif /* _UIAPPEARANCESETTER_H_ */
+extern "C" {
+
+unsigned random() {
+    std::lock_guard<std::mutex> lock(s_rngGuard);
+
+    //  The expected range for random() is a value 0->0x7fffffff
+    return (s_rng() >> 1);
+}
+
+void srandom(unsigned val) {
+    std::lock_guard<std::mutex> lock(s_rngGuard);
+    s_rng.seed(val);
+}
+
+}
