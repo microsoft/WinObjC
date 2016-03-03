@@ -17,8 +17,8 @@
 #import <Foundation/NSRange.h>
 #import <Metal/MetalDataTypes.h>
 #import <Metal/MetalConstants.h>
+#import <Metal/MTLResource.h>
 
-@protocol MTLResource;
 @protocol MTLBuffer;
 
 typedef NS_ENUM(NSUInteger, MTLTextureType) {
