@@ -139,6 +139,10 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     [coder encodeBool:_receivesCredentialSecurely forKey:@"receivesCredentialSecurely"];
 }
 
+- (BOOL)_bothEqual:(id)first second:(id)second {
+    return ((first && [first isEqual:second]) || (!first && !second));
+}
+
 /**
  @Status Interoperable
 */
@@ -152,23 +156,23 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
 
     NSURLProtectionSpace* object = (NSURLProtectionSpace*)anObject;
 
-    if (![_authenticationMethod isEqual:object.authenticationMethod]) {
+    if (![self _bothEqual:_authenticationMethod second:object.authenticationMethod]) {
         return NO;
     }
 
-    if (![_protocol isEqualToString:object.protocol]) {
+    if (![self _bothEqual:_protocol second:object.protocol]) {
         return NO;
     }
 
-    if (![_distinguishedNames isEqualToArray:object.distinguishedNames]) {
+    if (![self _bothEqual:_distinguishedNames second:object.distinguishedNames]) {
         return NO;
     }
 
-    if (![_realm isEqualToString:object.realm]) {
+    if (![self _bothEqual:_realm second:object.realm]) {
         return NO;
     }
 
-    if (![_proxyType isEqualToString:object.proxyType]) {
+    if (![self _bothEqual:_proxyType second:object.proxyType]) {
         return NO;
     }
 
