@@ -58,7 +58,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AFD46DD2-1CE7-4572-B931-E39334846AD6}</ProjectGuid>
     <ProjectName>HealthKitLib</ProjectName>
-    <RootNamespace>HealthKit</RootNamespace>
+    <RootNamespace>HealthKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>HealthKitLib</OutputName>

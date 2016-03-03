@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2B6C43D2-52A0-435B-9BD0-7539B364ACBA}</ProjectGuid>
     <ProjectName>QuickLookLib</ProjectName>
-    <RootNamespace>QuickLook</RootNamespace>
+    <RootNamespace>QuickLookLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>QuickLookLib</OutputName>

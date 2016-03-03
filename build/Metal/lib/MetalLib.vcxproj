@@ -53,7 +53,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7B48E9AD-B809-4919-B9EA-822A87C269BC}</ProjectGuid>
     <ProjectName>MetalLib</ProjectName>
-    <RootNamespace>Metal</RootNamespace>
+    <RootNamespace>MetalLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>MetalLib</OutputName>

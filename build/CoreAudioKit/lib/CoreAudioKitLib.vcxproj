@@ -25,7 +25,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{748BA5C7-DCE6-4C96-8314-C171447AE5BA}</ProjectGuid>
     <ProjectName>CoreAudioKitLib</ProjectName>
-    <RootNamespace>CoreAudioKit</RootNamespace>
+    <RootNamespace>CoreAudioKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreAudioKitLib</OutputName>

@@ -27,7 +27,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{96908FE1-AEA3-447E-BA88-AD6B017B6858}</ProjectGuid>
     <ProjectName>SocialLib</ProjectName>
-    <RootNamespace>Social</RootNamespace>
+    <RootNamespace>SocialLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>SocialLib</OutputName>

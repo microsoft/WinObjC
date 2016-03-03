@@ -25,7 +25,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B9EF64A0-E4F8-4FE5-931D-B07528F7500A}</ProjectGuid>
     <ProjectName>MessageUILib</ProjectName>
-    <RootNamespace>MessageUI</RootNamespace>
+    <RootNamespace>MessageUILib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>MessageUILib</OutputName>

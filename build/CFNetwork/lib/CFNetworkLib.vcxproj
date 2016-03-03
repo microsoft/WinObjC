@@ -33,7 +33,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{45C3CD35-65B9-43A7-8060-30B8EE1E4F4F}</ProjectGuid>
     <ProjectName>CFNetworkLib</ProjectName>
-    <RootNamespace>CFNetwork</RootNamespace>
+    <RootNamespace>CFNetworkLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CFNetworkLib</OutputName>

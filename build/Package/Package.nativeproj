@@ -19,7 +19,7 @@
     <Import Project="..\..\msvc\zip.tasks" />
   </ImportGroup>
   <PropertyGroup Label="PackageSDKDefaults">
-    <SBSDKDir>$(SolutionDir)SDKPackage\$(Configuration)\</SBSDKDir>
+    <SBSDKDir>$(MSBuildThisFileDirectory)\..\SDKPackage\$(Configuration)\</SBSDKDir>
     <SBSDKZipFile>$(SBSDKDir)winobjc.zip</SBSDKZipFile>
     <SBPackageDir>$(OutDir)package\</SBPackageDir>
 
@@ -131,26 +131,35 @@
       </SBLibsWin10ARM>
     </ItemGroup>  
   </Target>
-  <Target Name="CompileSDKs">
-    <Message Importance="high" Text="Building x86 SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=x86 /p:Configuration=$(Configuration)" />
+
+
+  <ItemGroup>
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
+      <Properties>Configuration=$(Configuration);Platform=x86</Properties>
+    </ProjectToBuild>
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
+      <Properties>Configuration=$(Configuration);Platform=ARM</Properties>
+    </ProjectToBuild>
+
     <!-- Build WinObjCRT for the opposite configuration. This is the only project that always needs to be built for all configurations to generate a package. -->
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj&quot;  /p:Platform=x86 /p:Configuration=$(OppositeConfiguration)" />
-    <Message Importance="high" Text="Building ARM SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=ARM /p:Configuration=$(Configuration)" />
-    <!-- Build WinObjCRT for the opposite configuration -->
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj&quot;  /p:Platform=ARM /p:Configuration=$(OppositeConfiguration)" />
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Properties>Configuration=$(OppositeConfiguration);Platform=x86</Properties>
+    </ProjectToBuild>
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Properties>Configuration=$(OppositeConfiguration);Platform=ARM</Properties>
+    </ProjectToBuild>
+  </ItemGroup>
+
+  <Target Name="CompileSDKs" DependsOnTargets="CheckSolution">
+    <Message Importance="high" Text="Building SDK" />
+    <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true"/>
   </Target>
+
   <Target Name="CleanSDKs">
-    <Message Importance="high" Text="Cleaning x86 SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=x86 /p:Configuration=$(Configuration) /t:Clean" />
-    <!-- Clean WinObjCRT for the opposite configuration -->
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj&quot;  /p:Platform=x86 /p:Configuration=$(OppositeConfiguration) /t:Clean" />
-    <Message Importance="high" Text="Cleaning ARM SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=ARM /p:Configuration=$(Configuration) /t:Clean" />
-    <!-- Clean WinObjCRT for the opposite configuration -->
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj&quot;  /p:Platform=ARM /p:Configuration=$(OppositeConfiguration) /t:Clean" />
+    <Message Importance="high" Text="Cleaning SDK" />
+    <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true" Targets="clean"/>
   </Target>
+  
   <Target Name="Build" DependsOnTargets="CompileSDKs;ComputeBuildTarget">
     <!-- We want to start from scratch each time, in case we remove a dependency we don't want in the package -->
     <Message Importance="high" Text="Removing old package" />
@@ -206,6 +215,12 @@
     <CallTarget Targets="Clean" />
     <CallTarget Targets="Build" />
   </Target>
+
+  <Target Name="CheckSolution">
+    <Message Importance="high" Text="Building SDK" />
+    <Error Condition="'$(SolutionFileName)' != ''" Text="Building within VS or package.sln is not currently supported.  Please build using &quot;msbuild build\package\package.nativeproj /m /p:Configuration=Debug /p:Platform=All&quot; in VS2015 x86 Native Tools command prompt." />
+  </Target>
+
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
