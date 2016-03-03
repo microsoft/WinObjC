@@ -14,12 +14,19 @@
 //
 //******************************************************************************
 
+#include <limits>
 #import "Starboard.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
 
 static const size_t c_cacheNSNumbersBelow = 16;
 static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
+
+template <typename T>
+static bool shouldStoreAsInt(T value) {
+    // Small integers should be stored as ints so we can satisfy requests out of the cache
+    return std::numeric_limits<T>::is_integer && (value >= 0) && (value < c_cacheNSNumbersBelow);
+}
 
 @implementation NSNumber
 
@@ -53,6 +60,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithChar:(char)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     return [[self alloc] initWithChar:num];
 }
 
@@ -60,6 +71,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedChar:(unsigned char)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     return [[self alloc] initWithUnsignedChar:num];
 }
 
@@ -99,6 +114,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithShort:(short)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithShort:num] autorelease];
 }
@@ -107,6 +126,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedShort:(unsigned short)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedShort:num] autorelease];
 }
@@ -115,6 +138,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithLong:(long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithLong:num] autorelease];
 }
@@ -123,6 +150,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedLong:(unsigned long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedLong:num] autorelease];
 }
@@ -145,6 +176,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithLongLong:(long long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithLongLong:num] autorelease];
 }
@@ -153,6 +188,10 @@ static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedLongLong:(unsigned long long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedLongLong:num] autorelease];
 }
