@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\..\Frameworks\Accelerate\cblas_globals.c" />
     <ClCompile Include="..\..\..\Frameworks\Accelerate\cblas_xerbla.c" />
     <ClCompile Include="..\..\..\Frameworks\Accelerate\vDSP.cpp" />
+    <ClCompile Include="..\..\..\Frameworks\Accelerate\vImage.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{05EB0ADE-A598-42BA-BA3D-960AEEAA3C95}</ProjectGuid>

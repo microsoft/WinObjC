@@ -810,8 +810,7 @@ void vDSP_measqv(const float *A, vDSP_Stride IA, float *C, vDSP_Length N) {
         }
 
         *C = c;
-    }
-    else {
+    } else {
         *C = FP_NAN;
     }
 }
@@ -828,8 +827,7 @@ void vDSP_measqvD(const double *A, vDSP_Stride IA, double *C, vDSP_Length N) {
         }
 
         *C = c;
-    }
-    else {
+    } else {
         *C = FP_NAN;
     }
 }
@@ -855,8 +853,7 @@ void vDSP_rmsqv(const float *A, vDSP_Stride IA, float *C, vDSP_Length N) {
             c = sqrt(c) * max;
         }
         *C = c;
-    }
-    else {
+    } else {
         *C = FP_NAN;
     }
 }
@@ -883,8 +880,7 @@ void vDSP_rmsqvD(const double *A, vDSP_Stride IA, double *C, vDSP_Length N) {
             c = sqrt(c) * max;
         }
         *C = c;
-    }
-    else {
+    } else {
         *C = FP_NAN;
     }
 }
@@ -922,3 +918,303 @@ void vDSP_blkman_windowD(double *C, vDSP_Length N, int Flag) {
     }
 }
 
+
+static inline int isPowerOfTwo(vDSP_Length length) {
+    return !(length & (length - 1));
+}
+
+
+static inline int isValidDFTLength(vDSP_Length length, unsigned int minLength) {
+    return isPowerOfTwo(length) ||
+           ((length % 3 == 0) && isPowerOfTwo(length / 3) && (length >= 3 * minLength)) ||
+           ((length % 5 == 0) && isPowerOfTwo(length / 5) && (length >= 5 * minLength)) ||
+           ((length % 15 == 0) && isPowerOfTwo(length / 15) && (length >= 15 * minLength));
+}
+
+
+//Creates a setup object to be used for complex-to-complex single-precision DFT/IDFT computation
+vDSP_DFT_Setup vDSP_DFT_zop_CreateSetup(vDSP_DFT_Setup __Previous, vDSP_Length __Length, vDSP_DFT_Direction __Direction) {
+    vDSP_DFT_Setup DFTObject;
+    if (!__Previous) {
+        DFTObject = new vDSP_DFT_SetupStruct;
+    } else {
+        DFTObject = __Previous;
+    }
+
+    if (!DFTObject || __Length <= 0 || (__Direction != vDSP_DFT_FORWARD && __Direction != vDSP_DFT_INVERSE)) {
+        return nullptr;
+    }
+
+    //Check for length requirements - Power of Two (or) Power of Two multiplied by 3, 5, or 15
+    if (!isValidDFTLength(__Length, 8)) {
+        return nullptr;
+    }
+
+    DFTObject->transformLength = __Length;
+    DFTObject->transformDirection = __Direction;
+    DFTObject->transformType = ZOP;
+    return DFTObject;
+}
+
+
+//Creates a setup object to be used for complex-to-complex double-precision DFT/IDFT computation
+vDSP_DFT_SetupD vDSP_DFT_zop_CreateSetupD(vDSP_DFT_SetupD __Previous, vDSP_Length __Length, vDSP_DFT_Direction __Direction) {
+    vDSP_DFT_SetupD DFTDObject;
+    if (!__Previous) {
+        DFTDObject = new vDSP_DFT_SetupStructD;
+    } else {
+        DFTDObject = __Previous;
+    }
+
+    if (!DFTDObject || __Length <= 0 || (__Direction != vDSP_DFT_FORWARD && __Direction != vDSP_DFT_INVERSE)) {
+        return nullptr;
+    }
+
+    //Check for length requirements - Power of Two (or) Power of Two multiplied by 3, 5, or 15
+    if (!isValidDFTLength(__Length, 8)) {
+        return nullptr;
+    }
+
+    DFTDObject->transformLength = __Length;
+    DFTDObject->transformDirection = __Direction;
+    DFTDObject->transformType = ZOP;
+    return DFTDObject;
+}
+
+
+//Creates a setup object to be used for real-to-complex (complex-to-real) single-precision DFT (IDFT) computation
+vDSP_DFT_Setup vDSP_DFT_zrop_CreateSetup(vDSP_DFT_Setup __Previous, vDSP_Length __Length, vDSP_DFT_Direction __Direction) {
+    vDSP_DFT_Setup DFTObject;
+    if (!__Previous) {
+        DFTObject = new vDSP_DFT_SetupStruct;
+    } else {
+        DFTObject = __Previous;
+    }
+
+    if (!DFTObject || __Length <= 0 || (__Direction != vDSP_DFT_FORWARD && __Direction != vDSP_DFT_INVERSE)) {
+        return nullptr;
+    }
+
+    //Check for length requirements - Power of Two (or) Power of Two multiplied by 3, 5, or 15
+    if (!isValidDFTLength(__Length, 16)) {
+        return nullptr;
+    }
+
+    DFTObject->transformLength = __Length;
+    DFTObject->transformDirection = __Direction;
+    DFTObject->transformType = ZROP;
+    return DFTObject;
+}
+
+
+//Creates a setup object to be used for real-to-complex (complex-to-real) double-precision DFT (IDFT) computation
+vDSP_DFT_SetupD vDSP_DFT_zrop_CreateSetupD(vDSP_DFT_SetupD __Previous, vDSP_Length __Length, vDSP_DFT_Direction __Direction) {
+    vDSP_DFT_SetupD DFTDObject;
+    if (!__Previous) {
+        DFTDObject = new vDSP_DFT_SetupStructD;
+    } else {
+        DFTDObject = __Previous;
+    }
+
+    if (!DFTDObject || __Length <= 0 || (__Direction != vDSP_DFT_FORWARD && __Direction != vDSP_DFT_INVERSE)) {
+        return nullptr;
+    }
+
+    //Check for length requirements - Power of Two (or) Power of Two multiplied by 3, 5, or 15
+    if (!isValidDFTLength(__Length, 16)) {
+        return nullptr;
+    }
+
+    DFTDObject->transformLength = __Length;
+    DFTDObject->transformDirection = __Direction;
+    DFTDObject->transformType = ZROP;
+    return DFTDObject;
+}
+
+
+//Computes the single-precision DFT for a vector
+void vDSP_DFT_Execute(const struct vDSP_DFT_SetupStruct *__Setup, const float *__Ir, const float *__Ii, float *__Or, float *__Oi) {
+    if (!__Setup) {
+        return;
+    }
+
+    int length = __Setup->transformLength;
+    int direction = __Setup->transformDirection;
+    float scale;
+    float kscale;
+    float real;
+    float imaginary;
+
+    if (__Setup->transformType == ZOP) {
+        scale = 2 * static_cast<float>(M_PI) * direction / length;
+        for (int k = 0; k < length; k++) {
+            real = 0;
+            imaginary = 0;
+            kscale = k * scale;
+            for (int n = 0; n < length; n++) {
+                real += (__Ir[n] * cos(n * kscale)) + (__Ii[n] * sin(n * kscale));
+                imaginary += (__Ii[n] * cos(n * kscale)) - (__Ir[n] * sin(n * kscale));
+            }
+
+            __Or[k] = real;
+            __Oi[k] = imaginary;
+        }
+    } else if (__Setup->transformType == ZROP) {
+        if (direction == vDSP_DFT_FORWARD) {
+            float* realInput = new float[length];
+            for (int i = 0; i < length / 2; i++) {
+                realInput[2 * i + 0] = __Ir[i];
+                realInput[2 * i + 1] = __Ii[i];
+            }
+
+            scale = 2 * static_cast<float>(M_PI) / length;
+            for (int k = 0; k < length / 2; k++) {
+                real = 0;
+                imaginary = 0;
+                kscale = k * scale;
+                for (int n = 0; n < length; n++) {
+                    real += realInput[n] * cos(n * kscale);
+
+                    //Block added to match Apple's special case for the first imaginary output
+                    if (k == 0) {
+                        imaginary += realInput[n] * cos(static_cast<float>(M_PI) * n);
+                    } else {
+                        imaginary -= realInput[n] * sin(n * kscale);
+                    }
+                }
+
+                __Or[k] = real * 2;
+                __Oi[k] = imaginary * 2;
+            }
+
+            delete realInput;
+        } else if (direction == vDSP_DFT_INVERSE) {
+            float* realOutput = new float[length];
+            scale = 2 * static_cast<float>(M_PI) / length;
+            for (int k = 0; k < length; k++) {
+                real = 0;
+                kscale = k * scale;
+                for (int n = 0; n < length; n++) {
+                    real += (__Ir[n] * cos(n * kscale)) - (__Ii[n] * sin(n * kscale));
+                }
+
+                realOutput[k] = real;
+            }
+
+            for (int i = 0; i < length / 2; i++) {
+                __Or[i] = realOutput[2 * i + 0];
+                __Oi[i] = realOutput[2 * i + 1];
+
+                //Block added to match iOS behavior
+                __Or[i] -= __Ir[length / 2];
+                __Oi[i] += __Ir[length / 2];
+            }
+
+            delete realOutput;
+        }
+    }
+}
+
+
+//Computes the double-precision DFT for a vector
+void vDSP_DFT_ExecuteD(const struct vDSP_DFT_SetupStructD *__Setup, const double *__Ir, const double *__Ii, double *__Or, double *__Oi) {
+    if (!__Setup) {
+        return;
+    }
+
+    int length = __Setup->transformLength;
+    int direction = __Setup->transformDirection;
+    double scale;
+    double kscale;
+    double real;
+    double imaginary;
+
+    if (__Setup->transformType == ZOP) {
+        scale = 2 * M_PI * direction / length;
+        for (int k = 0; k < length; k++) {
+            real = 0;
+            imaginary = 0;
+            kscale = k * scale;
+            for (int n = 0; n < length; n++) {
+                real += (__Ir[n] * cos(n * kscale)) + (__Ii[n] * sin(n * kscale));
+                imaginary += (__Ii[n] * cos(n * kscale)) - (__Ir[n] * sin(n * kscale));
+            }
+
+            __Or[k] = real;
+            __Oi[k] = imaginary;
+        }
+    } else if (__Setup->transformType == ZROP) {
+        if (direction == vDSP_DFT_FORWARD) {
+            double* realInput = new double[length];
+            for (int i = 0; i < length / 2; i++) {
+                realInput[2 * i + 0] = __Ir[i];
+                realInput[2 * i + 1] = __Ii[i];
+            }
+
+            scale = 2 * M_PI / length;
+            for (int k = 0; k < length / 2; k++) {
+                real = 0;
+                imaginary = 0;
+                kscale = k * scale;
+                for (int n = 0; n < length; n++) {
+                    real += realInput[n] * cos(n * kscale);
+
+                    //Block added to match Apple's special case for the first imaginary output
+                    if (k == 0) {
+                        imaginary += realInput[n] * cos(M_PI * n);
+                    } else {
+                        imaginary -= realInput[n] * sin(n * kscale);
+                    }
+                }
+
+                __Or[k] = real * 2;
+                __Oi[k] = imaginary * 2;
+            }
+
+            delete realInput;
+        } else if (direction == vDSP_DFT_INVERSE) {
+            double* realOutput = new double[length];
+            scale = 2 * M_PI / length;
+            for (int k = 0; k < length; k++) {
+                real = 0;
+                kscale = k * scale;
+                for (int n = 0; n < length; n++) {
+                    real += (__Ir[n] * cos(n * kscale)) - (__Ii[n] * sin(n * kscale));
+                }
+
+                realOutput[k] = real;
+            }
+
+            for (int i = 0; i < length / 2; i++) {
+                __Or[i] = realOutput[2 * i + 0];
+                __Oi[i] = realOutput[2 * i + 1];
+
+                //Block added to match iOS behavior
+                __Or[i] -= __Ir[length / 2];
+                __Oi[i] += __Ir[length / 2];
+            }
+
+            delete realOutput;
+        }
+    }
+}
+
+
+//Releases a single-precision setup object
+void vDSP_DFT_DestroySetup(vDSP_DFT_Setup __Setup) {
+    if (__Setup) {
+        delete __Setup;
+    }
+
+    return;
+}
+
+
+//Releases a double-precision setup object
+void vDSP_DFT_DestroySetupD(vDSP_DFT_SetupD __Setup) {
+    if (__Setup) {
+        delete __Setup;
+    }
+
+    return;
+}

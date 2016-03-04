@@ -37,6 +37,7 @@
 #import "ApplicationViewController.h"
 #import "FoundationsViewController.h"
 #import "BasicAnimationViewController.h"
+#import "AccelerateViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -120,6 +121,9 @@
 
     // Basic Animation
     [self addMenuItemViewController:[[BasicAnimationViewController alloc] init] andTitle:@"Animation"];
+    
+    // Accelerate
+    [self addMenuItemViewController:[[AccelerateViewController alloc] init] andTitle:@"Accelerate"];
 }
 
 - (void)didReceiveMemoryWarning {

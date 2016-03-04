@@ -1,6 +1,5 @@
 //******************************************************************************
 //
-// Copyright (c) 2016, Intel Corporation
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -15,10 +14,9 @@
 //
 //******************************************************************************
 
-#pragma once
-#include "AccelerateExport.h"
-#include "vDSP.h"
-#include "cblas.h"
-#include "eigen.h"
-#include "vImage.h"
+#import <UIKit/UIKit.h>
+#import <Accelerate/Accelerate.h>
 
+@interface AccelerateViewController : UITableViewController
+
+@end
