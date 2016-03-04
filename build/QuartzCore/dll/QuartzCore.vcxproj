@@ -55,7 +55,6 @@
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
       <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -69,7 +68,6 @@
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
       <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -83,7 +81,6 @@
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
       <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -97,7 +94,6 @@
     <Link>
       <ModuleDefinitionFile>QuartzCore.def</ModuleDefinitionFile>
       <AdditionalDependencies>objcuwp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
