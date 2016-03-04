@@ -38,7 +38,6 @@
 /*
  * Header files.
  */
-
 #include <sys/_pthreadtypes.h>
 #ifdef WOCSTDLIB
 #include <sched.h>
@@ -139,8 +138,6 @@ struct _pthread_cleanup_info {
     uintptr_t pthread_cleanup_pad[8];
 };
 
-struct sched_param;
-
 /*
  * Thread function prototype definitions:
  */
@@ -238,6 +235,7 @@ int pthread_spin_lock(pthread_spinlock_t* __spin) __locks_exclusive(*__spin);
 int pthread_spin_trylock(pthread_spinlock_t* __spin) __trylocks_exclusive(0, *__spin);
 int pthread_spin_unlock(pthread_spinlock_t* __spin) __unlocks(*__spin);
 int pthread_cancel(pthread_t);
+int pthread_kill(pthread_t, int);
 int pthread_setcancelstate(int, int*);
 int pthread_setcanceltype(int, int*);
 void pthread_testcancel(void);
@@ -258,7 +256,7 @@ int pthread_mutexattr_setprotocol(pthread_mutexattr_t*, int);
 
 int pthread_attr_getinheritsched(const pthread_attr_t*, int*);
 int pthread_attr_getschedparam(const pthread_attr_t*, struct sched_param*);
-int pthread_attr_getschedpolicy(const pthread_attr_t*, int*);
+int pthread_attr_getschedpolicy(const pthread_attr_t*, int* policy);
 int pthread_attr_getscope(const pthread_attr_t*, int*);
 int pthread_attr_setinheritsched(pthread_attr_t*, int);
 int pthread_attr_setschedparam(pthread_attr_t*, const struct sched_param*);

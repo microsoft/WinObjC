@@ -66,10 +66,15 @@ LIBRARY Starboard
         pthread_rwlock_wrlock
         pthread_self
         pthread_setspecific
+        pthread_setschedparam
+        pthread_getschedparam
         sleep
         task_info
         uname
         usleep
+        sched_get_priority_max
+        sched_get_priority_min
+        pthread_attr_setschedparam
 
         ; Error Handling Internal
         failFastOnUnimplemented
