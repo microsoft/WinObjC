@@ -14,17 +14,23 @@
 //
 //******************************************************************************
 
-#ifndef _SCHED_H_
-#define _SCHED_H_
+#include "sched.h"
 
-#include <sys/cdefs.h>
+const static size_t pthread_max_priority = 100;
+const static size_t pthread_min_priority = 0;
 
-__BEGIN_DECLS
-struct sched_param {
-    int _schedPriority;
-};
+/**
+@Status Caveat
+@Notes Ignores different thread priorities between policies.
+*/
+int sched_get_priority_max(int policy) {
+    return pthread_max_priority;
+}
 
-int sched_get_priority_max(int);
-int sched_get_priority_min(int);
-__END_DECLS
-#endif /* !_SCHED_H_ */
+/**
+@Status Caveat
+@Notes Ignores different thread priorities between policies.
+*/
+int sched_get_priority_min(int policy) {
+    return pthread_min_priority;
+}

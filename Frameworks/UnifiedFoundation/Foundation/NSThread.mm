@@ -16,6 +16,8 @@
 
 #include "Starboard.h"
 
+#include <windows.h>
+
 #include "Foundation/NSThread.h"
 #include "Foundation/NSRunLoop.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -24,6 +26,8 @@
 #include "Platform/EbrPlatform.h"
 
 #include <mutex>
+
+static const wchar_t* TAG = L"NSThread";
 
 static const NSUInteger kNSThreadDefaultStackSize = 1024 * 1024;
 static const double kNSThreadDefaultPriority = 0.5;
@@ -45,6 +49,8 @@ static BOOL s_isMultiThreaded = NO;
 
     StrongId<NSDictionary> _threadDictionary;
     StrongId<NSString> _name;
+
+    pthread_t _pthread;
 }
 + (NSThread*)_threadObjectFromCurrentThread;
 - (void)_associateWithCurrentThread;
@@ -86,38 +92,82 @@ static BOOL s_isMultiThreaded = NO;
     }
 }
 
-/**
-@Status Stub
-*/
-+ (void)setThreadPriority:(double)priority {
-    UNIMPLEMENTED();
-    NSThread* curThread = [self currentThread];
-    [curThread setThreadPriority:priority];
+static int _convertPriorityToThreadPriority(double priority, int policy) {
+    return static_cast<int>(priority * (double)sched_get_priority_max(policy) - (double)sched_get_priority_min(policy));
+}
+
+- (BOOL)_updateThreadPriority:(double)priority {
+    int policy;
+    struct sched_param getparam;
+    int status = pthread_getschedparam(_pthread, &policy, &getparam);
+    if (status != 0) {
+        TraceError(TAG, L"Error retrieving pthread sched_param. Error code : %d.", status);
+        return NO;
+    }
+
+    // Convert double to expected pthread priority value
+    int pthreadPriority = _convertPriorityToThreadPriority(priority, policy);
+
+    const struct sched_param param { pthreadPriority };
+
+    // call setpriority on pthread
+    status = pthread_setschedparam(_pthread, policy, &param);
+
+    if (status != 0) {
+        TraceError(TAG, L"Error setting pthread sched_param. Error code : %d. Requested priority: %d", status, priority);
+    }
+    return status == 0;
 }
 
 /**
-@Status Stub
+@Status Interoperable
+@Notes Thread priority is never guaranteed to affect the behavior of thread execution. Valid values for priority are 0 to 1 with .5 being
+the default thread priority. Utilizes win32 thread priority.
+*/
++ (BOOL)setThreadPriority:(double)priority {
+    NSThread* curThread = [self currentThread];
+    if (curThread != nil) {
+        [curThread setThreadPriority:priority];
+        return YES;
+    }
+    return NO;
+}
+
+/**
+@Status Interoperable
+@Notes The priority of the currently running thread. Utilizes win32 thread priority mapped to a 0 to 1 representation.
 */
 + (double)threadPriority {
-    UNIMPLEMENTED();
     NSThread* curThread = [self currentThread];
     return [curThread threadPriority];
 }
 
 /**
-@Status Stub
+@Status Interoperable
 */
 - (void)setThreadPriority:(double)priority {
-    UNIMPLEMENTED();
     _threadPriority = priority;
+    if (_pthread) {
+        [self _updateThreadPriority:priority];
+    }
 }
 
 /**
-@Status Stub
+@Status Interoperable
 */
 - (double)threadPriority {
-    UNIMPLEMENTED();
-    return _threadPriority;
+    int policy;
+    struct sched_param param;
+    int status = pthread_getschedparam(_pthread, &policy, &param);
+
+    if (status != 0) {
+        TraceError(TAG, L"Error retrieving pthread sched_param. Error code : %d.", status);
+        return _threadPriority;
+    }
+
+    double convertedPriority = ((double)param._schedPriority) / (double)(sched_get_priority_max(policy) - sched_get_priority_min(policy));
+
+    return convertedPriority;
 }
 
 /**
@@ -241,13 +291,27 @@ static void* _threadBody(void* context) {
     ThreadBodyData* bodyData = new ThreadBodyData{ self };
     // bodyData is deleted in _threadBody when the thread exits.
 
-    pthread_t newThread;
+    struct sched_param param = { _convertPriorityToThreadPriority(_threadPriority, 0) };
+
     pthread_attr_t attrs;
     pthread_attr_init(&attrs);
+    auto attrDestroy = wil::ScopeExit([&attrs]() { pthread_attr_destroy(&attrs); });
 
-    pthread_attr_setstacksize(&attrs, _stackSize);
-    pthread_create(&newThread, &attrs, _threadBody, bodyData);
-    pthread_attr_destroy(&attrs);
+    int status = pthread_attr_setstacksize(&attrs, _stackSize);
+
+    if (status != 0) {
+        TraceError(TAG, L"Error setting pthread stack size. Error code : %d.", status);
+        return;
+    }
+
+    status = pthread_attr_setschedparam(&attrs, &param);
+
+    if (status != 0) {
+        TraceError(TAG, L"Error setting pthread sched_param. Error code : %d.", status);
+        return;
+    }
+
+    pthread_create(&_pthread, &attrs, _threadBody, bodyData);
 }
 
 /**

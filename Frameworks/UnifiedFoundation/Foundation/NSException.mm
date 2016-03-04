@@ -58,8 +58,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
         _name = [name copy];
         _reason = [reason copy];
         _userInfo = [userInfo copy];
-        _callStackReturnAddresses = [NSThread callStackReturnAddresses];
-        _callStackSymbols = [NSThread callStackSymbols];
+        // VSO 6794375: Implement NSThread callStackReturnAddresses, callStackSymbols
+        //_callStackReturnAddresses = [NSThread callStackReturnAddresses];
+        //_callStackSymbols = [NSThread callStackSymbols];
     }
 
     return self;
