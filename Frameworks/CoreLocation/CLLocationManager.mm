@@ -20,12 +20,15 @@
 #import <CoreLocation/CLLocation.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
+#import "NSLogging.h"
 typedef wchar_t WCHAR;
 #import <UWP/WindowsDevicesGeolocation.h>
 #import <limits>
 
 const CLLocationDistance CLLocationDistanceMax = std::numeric_limits<double>::max();
 const NSTimeInterval CLTimeIntervalMax = std::numeric_limits<double>::max();
+
+static const wchar_t* TAG = L"CLLocationManager";
 
 /**
  * CLLocationManager class extension.
@@ -71,7 +74,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         _uwpGeolocator.desiredAccuracy = WDGPositionAccuracyHigh;
     }
 
-    DLog(@"desiredAccuracyInMeters set to %f ", accuracy);
+    DLog(TAG, @"desiredAccuracyInMeters set to %f ", accuracy);
 }
 
 /**
@@ -82,7 +85,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 - (void)setDistanceFilter:(CLLocationDistance)filter {
     _distanceFilter = filter;
     _uwpGeolocator.movementThreshold = filter;
-    DLog(@"movementThreshold set to %f", filter);
+    DLog(TAG, @"movementThreshold set to %f", filter);
 }
 
 /**
@@ -180,7 +183,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
                         g_authorizationStatus = kCLAuthorizationStatusDenied;
                         break;
                     default:
-                        VLog(@"CLLocationManager: Unexpected location authorization status %d: ", status);
+                        VLog(TAG, @"CLLocationManager: Unexpected location authorization status %d: ", status);
                         g_authorizationStatus = kCLAuthorizationStatusDenied;
                 }
 
@@ -209,7 +212,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         };
 
         accessFailure = ^void(NSError* error) {
-            VLog(@"Location authorization error: %@", error);
+            VLog(TAG, @"Location authorization error: %@", error);
             FAIL_FAST_MSG(E_UNEXPECTED, "Unexpected failure while authorizing location.");
         };
 
@@ -224,22 +227,22 @@ static const int64_t c_timeoutInSeconds = 15LL;
  */
 - (void)_handleStatusChangedEvent:(WDGGeolocator*)geolocator statusEvent:(WDGStatusChangedEventArgs*)event {
     @synchronized(self) {
-        DLog(@"Received status change event.");
+        DLog(TAG, @"Received status change event.");
         CLAuthorizationStatus authorizationStatus = g_authorizationStatus;
         BOOL positionStatusNoData = NO;
         switch (event.status) {
             case WDGPositionStatusDisabled:
-                DLog(@"Received status change event with status denied (%d).", event.status);
+                DLog(TAG, @"Received status change event with status denied (%d).", event.status);
                 authorizationStatus = kCLAuthorizationStatusDenied;
                 break;
             case WDGPositionStatusNoData:
-                DLog(@"Received status change event with status no-data (%d).", event.status);
+                DLog(TAG, @"Received status change event with status no-data (%d).", event.status);
                 positionStatusNoData = YES;
                 break;
             default:
                 // For all other status events WDGPositionStatusReady, WDGPositionStatusInitializing, WDGPositionStatusNotAvailable and
                 // WDGPositionStatusNotInitialized.
-                DLog(@"Received status change event with status %d.", event.status);
+                DLog(TAG, @"Received status change event with status %d.", event.status);
                 authorizationStatus = kCLAuthorizationStatusAuthorized;
         }
 
@@ -266,7 +269,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
  * @param {WDGPositionChangedEventArgs*} event PositionChangedEventArgs received from Windows.
  */
 - (void)_handlePositionChangedEvent:(WDGGeolocator*)geolocator statusEvent:(WDGPositionChangedEventArgs*)event {
-    DLog(@"Received position changed event.");
+    DLog(TAG, @"Received position changed event.");
     [self _handleLocationUpdate:event.position];
 }
 
@@ -316,13 +319,13 @@ static const int64_t c_timeoutInSeconds = 15LL;
     void (^onFailure)(NSError* error);
 
     onSucess = ^void(WDGGeoposition* position) {
-        VLog(@"Get geoposition update succeeded.");
+        VLog(TAG, @"Get geoposition update succeeded.");
         // We purposely do not update the location from here as we already have a PositionChange event registered in this code path and
         // updating the location from here would just be a duplicate.
     };
 
     onFailure = ^void(NSError* error) {
-        VLog(@"Get geoposition update failed with error: %@(%d)", error, [error code]);
+        VLog(TAG, @"Get geoposition update failed with error: %@(%d)", error, [error code]);
         [self _handleLocationUpdateError:[NSError errorWithDomain:(NSString*)c_CLLocationManagerErrorDomain
                                                              code:kCLErrorNetwork
                                                          userInfo:nil]];
@@ -340,12 +343,12 @@ static const int64_t c_timeoutInSeconds = 15LL;
     void (^onFailure)(NSError* error);
 
     onSucess = ^void(WDGGeoposition* position) {
-        VLog(@"Get single geoposition update succeeded.");
+        VLog(TAG, @"Get single geoposition update succeeded.");
         [self _handleLocationUpdate:position];
     };
 
     onFailure = ^void(NSError* error) {
-        VLog(@"Get single geoposition update failed with error: %@(%d)", error, [error code]);
+        VLog(TAG, @"Get single geoposition update failed with error: %@(%d)", error, [error code]);
         [self _handleLocationUpdateError:[NSError errorWithDomain:(NSString*)c_CLLocationManagerErrorDomain
                                                              code:kCLErrorNetwork
                                                          userInfo:nil]];

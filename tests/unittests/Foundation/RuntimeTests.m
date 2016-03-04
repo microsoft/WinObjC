@@ -23,13 +23,12 @@
 @end
 
 @implementation IVarTestDerived
-- init{
+- init {
     kaboom = YES;
-    NSLog(@"%x", self.state); // Should not segfault
+    LOG_INFO("%x", self.state); // Should not segfault
     return self;
 }
 @end
-
 
 TEST(Foundation, Runtime_IVarOffsets) {
     // This will AV if the runtime/compiler don't handle ivar offsets properly

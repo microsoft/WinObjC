@@ -16,7 +16,19 @@
 
 #pragma once
 
-#import "Foundation/Foundation.h"
+#import "Foundation/NSString.h"
+
+//
+// Helper macros for NSLog
+//
+// DLog displays output only when with DEBUG setting.
+#if (defined(DEBUG) || defined(_DEBUG))
+#define DLog(tag, fmt, ...) NSTraceInfo(tag, (@"%s [Line \"%d\"] : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define DLog(...)
+#endif
+// VLog always displays output regardless of the DEBUG setting.
+#define VLog(tag, fmt, ...) NSTraceInfo(tag, (@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
 
 //
 // Trace a verbose message.

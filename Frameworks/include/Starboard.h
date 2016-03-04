@@ -29,18 +29,6 @@
 #define IWPLATFORM_EXPORT
 #endif
 
-//
-// Helper macros for NSLog
-//
-// DLog displays output only when with DEBUG setting.
-#if (defined(DEBUG) || defined(_DEBUG))
-#define DLog(fmt, ...) NSLog((@"%s [Line \"%d\"] : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define DLog(...)
-#endif
-// VLog always displays output regardless of the DEBUG setting.
-#define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
-
 extern "C" void dbg_printf(const char* fmt, ...);
 #define fatal_printf(...)
 #define EbrShutdownAV()
