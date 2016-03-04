@@ -1352,7 +1352,7 @@ static int capture_pattern(vorb *f)
 
 static int start_page_no_capturepattern(vorb *f)
 {
-   uint32 loc0,loc1,n,i;
+   uint32 loc0,loc1,n;
    // stream structure version
    if (0 != get8(f)) return error(f, VORBIS_invalid_stream_structure_version);
    // header flag
@@ -1377,6 +1377,7 @@ static int start_page_no_capturepattern(vorb *f)
    f->end_seg_with_known_loc = -2;
    if (loc0 != ~0 || loc1 != ~0) {
       // determine which packet is the last one that will complete
+      int i;
       for (i=f->segment_count-1; i >= 0; --i)
          if (f->segments[i] < 255)
             break;
@@ -1472,13 +1473,13 @@ static int next_segment(vorb *f)
 
 static int get8_packet_raw(vorb *f)
 {
-	if (!f->bytes_in_seg) {
-		if (f->last_seg) {
-			return EOP;
-		}
-	} else if (!next_segment(f)) {
-		return EOP;
-	}
+  if (!f->bytes_in_seg) {
+    if (f->last_seg) {
+      return EOP;
+    }
+  } else if (!next_segment(f)) {
+    return EOP;
+  }
    assert(f->bytes_in_seg > 0);
    --f->bytes_in_seg;
    ++f->packet_bytes;
