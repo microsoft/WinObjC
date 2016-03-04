@@ -20,9 +20,6 @@
 #include <Foundation/NSString.h>
 #include <Windows.h>
 
-// Test hook that regulates whether to print to stderr
-bool g_isNSLogTestHookEnabled;
-
 /**
  @Status Interoperable
 */
@@ -41,7 +38,7 @@ void NSLogv(NSString* format, va_list list) {
 #endif
 
     // Only print to stderr if we are a console application
-    if (_fileno(stderr) >= 0 && !g_isNSLogTestHookEnabled) {
+    if (_fileno(stderr) >= 0) {
         fprintf(stderr, "%s\n", [formattedString UTF8String]);
     }
 }

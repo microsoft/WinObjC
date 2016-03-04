@@ -171,8 +171,6 @@ typedef double NSTimeInterval;
 #warning ABS is already defined, ABS(a) may not behave as expected.
 #endif
 
-// Test hook that regulates whether to print to stderr
-extern bool g_isNSLogTestHookEnabled;
 FOUNDATION_EXPORT void NSLog(NSString* format, ...);
 FOUNDATION_EXPORT void NSLogv(NSString* format, va_list args);
 
