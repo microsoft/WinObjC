@@ -457,6 +457,7 @@
             fontHeight = [@" " sizeWithFont:_font];
             size.height = fontHeight.height;
         }
+
         size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:_lineBreakMode];
 
         EbrCenterTextInRectVertically(&rect, &size, _font);
@@ -522,12 +523,22 @@
             [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
         }
 
-        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:_lineBreakMode];
+        CGSize fontHeight;
+        fontHeight = [@" " sizeWithFont:_font];
 
-        if (_numberOfLines == 1) {
-            CGSize fontHeight;
+        if (curSize.width == 0 || self.numberOfLines == 1) {
+            curSize.width = FLT_MAX;
+        }
 
-            fontHeight = [@" " sizeWithFont:_font];
+        if ((self.numberOfLines == 0) || (self.numberOfLines == 1)) {
+            curSize.height = FLT_MAX;
+        } else {
+            curSize.height = fontHeight.height * self.numberOfLines;
+        }
+
+        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:self.lineBreakMode];
+
+        if (self.numberOfLines == 1) {
             ret.height = fontHeight.height;
         }
     }
@@ -559,35 +570,6 @@
     }
 
     return ret;
-}
-
-- (void)sizeToFit {
-    CGRect idealSize;
-
-    idealSize = [self frame];
-
-    if (idealSize.size.width == 0.0f) {
-        idealSize.size.width = GetCACompositor()->screenWidth();
-        idealSize.size = [self sizeThatFits:idealSize.size];
-    } else {
-        idealSize.size = [self sizeThatFits:idealSize.size];
-
-        CGRect superSize = CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight());
-        UIView* superview = [self superview];
-
-        if (superview != nil) {
-            superSize = [superview bounds];
-        }
-
-        if (idealSize.size.width > superSize.size.width && superSize.size.width > 0.0f) {
-            idealSize.size.width = superSize.size.width;
-        }
-        if (idealSize.size.height > superSize.size.height && superSize.size.height > 0.0f) {
-            idealSize.size.height = superSize.size.height;
-        }
-    }
-
-    [self setFrame:idealSize];
 }
 
 - (void)dealloc {
