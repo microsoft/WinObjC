@@ -670,6 +670,7 @@ namespace ClangCompile
             Category = "General",
             Visible = false,
             Switch = "-fmodules-cache-path=")]
+        [ResolvePath()]
         public string ObjectiveCModulesCachePath { get; set; }
 
         [PropertyPage(
