@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,12 +14,6 @@
 //
 //******************************************************************************
 
-#include "LoggingTesting.h"
+#pragma once
 
-// Test hooks
-bool g_isTestHookEnabled = false;
-std::wstring g_debugTestHook;
-int g_etlLevelTestHook = -1;
-std::wstring g_etlTagTestHook;
-std::wstring g_etlBufferTestHook;
-std::string g_etlBufferNarrowTestHook;
+extern bool g_isNSLogTestHookEnabled;

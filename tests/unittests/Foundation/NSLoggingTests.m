@@ -21,6 +21,7 @@
 #include "LoggingNative.h"
 #include "LoggingTesting.h"
 #include "winmeta.h"
+#include "NSLogInternal.h"
 
 #define EXPECTED L"/TAG: FORMAT\n"
 
@@ -167,8 +168,10 @@ TEST(NSLogging, NSLoggingNSStringFormatTests) {
 
 TEST(NSLogging, NSLogTests) {
     g_isTestHookEnabled = true;
+    g_isNSLogTestHookEnabled = true;
     auto reset = wil::ScopeExit([] () {
         g_isTestHookEnabled = false;
+        g_isNSLogTestHookEnabled = false;
     });
 
     int intSample = 12345;
@@ -183,7 +186,7 @@ TEST(NSLogging, NSLogTests) {
 
     setup();
     NSLog(format, intSample, floatSample, narrowSample, (NSString*)wideNSStringSample, (NSString*)narrowNSStringSample);
-    // NSLog is printed also to debug output and stdout in release mode manually, without a test hook.
+    // NSLog is printed also to debug output and stderr in release mode manually, without a test hook.
     validateDebugOutputDebugMode(expectedDebug);
     validateWideEtl(tag, expectedBody, WINEVENT_LEVEL_VERBOSE);
 }
