@@ -19,6 +19,7 @@
 
 #include "Starboard.h"
 #include "CoreGraphics/CGImage.h"
+#include <objc/runtime.h>
 
 struct _cairo_surface;
 typedef struct _cairo_surface cairo_surface_t;
@@ -86,9 +87,8 @@ typedef enum {
     CGImageTypeJPEG
 } CGImageType;
 
-class __CGImage {
+class __CGImage: private objc_object {
 protected:
-    id isa;
     CGImageBacking* _img;
 
 public:
@@ -114,5 +114,6 @@ public:
 
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);
+COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(UIImage* img);
 
 #endif

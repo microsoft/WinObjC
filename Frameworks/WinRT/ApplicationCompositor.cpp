@@ -142,12 +142,12 @@ void InitializeApp() {
     // Set our writable and temp folders
     char writableFolder[2048];
     size_t outLen;
-    auto pathData = Windows::Storage::ApplicationData::Current->LocalFolder->Path->Data();
-    wcstombs_s(&outLen, writableFolder, pathData, sizeof(writableFolder));
+    auto pathData = Windows::Storage::ApplicationData::Current->LocalFolder->Path;
+    wcstombs_s(&outLen, writableFolder, pathData->Data(), sizeof(writableFolder) - 1);
     EbrSetWritableFolder(writableFolder);
 
-    auto tempPathData = Windows::Storage::ApplicationData::Current->TemporaryFolder->Path->Data();
-    wcstombs_s(&outLen, writableFolder, tempPathData, sizeof(writableFolder));
+    auto tempPathData = Windows::Storage::ApplicationData::Current->TemporaryFolder->Path;
+    wcstombs_s(&outLen, writableFolder, tempPathData->Data(), sizeof(writableFolder) - 1);
     IWSetTemporaryFolder(writableFolder);
 
     // Set the waiter routine for yielding waits to the XAML/UI thread

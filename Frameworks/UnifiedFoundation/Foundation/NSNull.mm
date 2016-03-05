@@ -15,11 +15,12 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSNull.h"
 
 static NSNull* nullSingleton;
 
-@implementation NSNull : NSObject
+@implementation NSNull
 + (void)initialize {
     if (self == [NSNull class]) {
         nullSingleton = [super allocWithZone:nil];
@@ -64,5 +65,14 @@ static NSNull* nullSingleton;
 */
 + (NSNull*)null {
     return nullSingleton;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 @end

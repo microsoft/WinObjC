@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,28 +14,28 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
+#import <CoreGraphics/CGGeometry.h>
 
-#include "CoreGraphics/CGGeometry.h"
-#include "CGContextImpl.h"
-#include "CGImageInternal.h"
-#include "CGGradientInternal.h"
-#include "CGPatternInternal.h"
-#include "CGColorSpaceInternal.h"
-#include "CGContextCairo.h"
-#include "CGFontInternal.h"
+#import "CGContextImpl.h"
+#import "CGImageInternal.h"
+#import "CGGradientInternal.h"
+#import "CGPatternInternal.h"
+#import "CGColorSpaceInternal.h"
+#import "CGContextCairo.h"
+#import "CGFontInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
-#include "cairo-ft.h"
+#import "cairo-ft.h"
 
 extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
+#import <ft2build.h>
+#import FT_FREETYPE_H
+#import <ftglyph.h>
+#import <tttables.h>
+#import <ftadvanc.h>
+#import <ftsizes.h>
 }
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
@@ -43,7 +43,8 @@ static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizon
 static IWLazyIvarLookup<void*> _LazyUIFontHandle(_LazyUIFont, "_font");
 static IWLazyIvarLookup<void*> _LazyUISizingFontHandle(_LazyUIFont, "_sizingFont");
 
-CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage) : CGContextImpl(base, destinationImage), _drawContext(0) {
+CGContextCairo::CGContextCairo(CGContextRef base, CGImageRef destinationImage)
+    : CGContextImpl(base, destinationImage), _drawContext(0), _filter(CAIRO_FILTER_BILINEAR) {
 }
 
 CGContextCairo::~CGContextCairo() {
@@ -68,6 +69,11 @@ void CGContextCairo::ReleaseLock() {
         _imgDest->Backing()->ReleaseCairoSurface();
         _drawContext = NULL;
     }
+}
+
+void CGContextCairo::_assignAndResetFilter(cairo_pattern_t* pattern) {
+    cairo_pattern_set_filter(pattern, _filter);
+    _filter = CAIRO_FILTER_BILINEAR;
 }
 
 void CGContextCairo::Clear(float r, float g, float b, float a) {
@@ -125,6 +131,8 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         float r, g, b, a;
         img->Backing()->GetPixel(int(src.origin.x), int(src.origin.y), r, g, b, a);
         cairo_set_source_rgba(_drawContext, r, g, b, a);
+        cairo_pattern_t* pattern = cairo_get_source(_drawContext);
+        _assignAndResetFilter(pattern);
         cairo_new_path(_drawContext);
         cairo_rectangle(_drawContext, 0, 0, dest.size.width, dest.size.height);
         cairo_clip(_drawContext);
@@ -140,6 +148,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
 
         cairo_matrix_t srcMatrix;
         cairo_pattern_t* p = cairo_pattern_create_for_surface(img->Backing()->LockCairoSurface());
+        _assignAndResetFilter(p);
 
         if (tiled) {
             cairo_pattern_set_extend(p, CAIRO_EXTEND_REPEAT);
@@ -242,7 +251,7 @@ CGBlendMode CGContextCairo::CGContextGetBlendMode() {
 }
 
 void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)EbrMalloc(length * sizeof(WORD));
+    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
     DWORD i;
 
     _isDirty = true;
@@ -254,7 +263,7 @@ void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str,
     CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
     CGContextShowGlyphsAtPoint(x, y, glyphs, length);
 
-    EbrFree(glyphs);
+    IwFree(glyphs);
 }
 
 void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
@@ -1176,6 +1185,7 @@ void CGContextCairo::CGContextDrawLinearGradient(CGGradientRef gradient, CGPoint
 
     LOCK_CAIRO();
     cairo_pattern_t* pattern = cairo_pattern_create_linear(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+    _assignAndResetFilter(pattern);
 
     switch (gradient->_colorSpace) {
         case _ColorRGBA:
@@ -1216,6 +1226,7 @@ void CGContextCairo::CGContextDrawRadialGradient(
 
     LOCK_CAIRO();
     cairo_pattern_t* pattern = cairo_pattern_create_radial(startCenter.x, startCenter.y, startRadius, endCenter.x, endCenter.y, endRadius);
+    _assignAndResetFilter(pattern);
 
     switch (gradient->_colorSpace) {
         case _ColorRGBA:
@@ -1286,10 +1297,78 @@ DrawImage(layer->_layerBacking, src, destRect);
 #endif
 }
 
+CGInterpolationQuality CGContextCairo::CGContextGetInterpolationQuality() {
+    CGInterpolationQuality quality = kCGInterpolationDefault;
+
+    // Convert cairo_filter_t to CGInterpolationQuality
+    switch (_filter) {
+        case CAIRO_FILTER_NEAREST:
+            quality = kCGInterpolationNone;
+            break;
+
+        case CAIRO_FILTER_FAST:
+            quality = kCGInterpolationLow;
+            break;
+
+        case CAIRO_FILTER_GOOD:
+            quality = kCGInterpolationMedium;
+            break;
+
+        case CAIRO_FILTER_BEST:
+            quality = kCGInterpolationHigh;
+            break;
+
+        case CAIRO_FILTER_BILINEAR:
+            quality = kCGInterpolationDefault;
+            break;
+
+        default:
+            // Apple framework allows invalid values to be set for interpolation quality.
+            // We are emulating this behavior so _filter could be having a value
+            // which is beyond the enums defined for cairo_filter_t,
+            // nevertheless we still return this value as CGInterpolationQuality.
+            quality = static_cast<CGInterpolationQuality>(_filter);
+    }
+
+    return quality;
+}
+
+void CGContextCairo::CGContextSetInterpolationQuality(CGInterpolationQuality quality) {
+    // Convert CGInterpolationQuality to cairo_filter_t
+    switch (quality) {
+        case kCGInterpolationNone:
+            _filter = CAIRO_FILTER_NEAREST;
+            break;
+
+        case kCGInterpolationLow:
+            _filter = CAIRO_FILTER_FAST;
+            break;
+
+        case kCGInterpolationMedium:
+            _filter = CAIRO_FILTER_GOOD;
+            break;
+
+        case kCGInterpolationHigh:
+            _filter = CAIRO_FILTER_BEST;
+            break;
+
+        case kCGInterpolationDefault:
+            _filter = CAIRO_FILTER_BILINEAR;
+            break;
+
+        default:
+            // Apple framework allows invalid values to be set for interpolation quality.
+            // We are emulating this behavior so quality could be having a value
+            // which is beyond the enums defined for CGInterpolationQuality,
+            // nevertheless we still store and use this value as cairo_filter_t.
+            _filter = static_cast<cairo_filter_t>(quality);
+    }
+}
+
 void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
     ObtainLock();
 
-    double* dLengths = (double*)EbrMalloc(count * sizeof(double));
+    double* dLengths = (double*)IwMalloc(count * sizeof(double));
     for (unsigned i = 0; i < count; i++)
         dLengths[i] = lengths[i];
 
@@ -1297,7 +1376,7 @@ void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD cou
     cairo_set_dash(_drawContext, dLengths, count, phase);
     UNLOCK_CAIRO();
 
-    EbrFree(dLengths);
+    IwFree(dLengths);
 }
 
 void CGContextCairo::CGContextSetMiterLimit(float limit) {
@@ -1462,7 +1541,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
 
     CGSize ret = { 0.0f, 0.0f };
 
-    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)EbrMalloc(sizeof(cairo_glyph_t) * length);
+    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)IwMalloc(sizeof(cairo_glyph_t) * length);
 
     _CGFontLock();
 
@@ -1603,7 +1682,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
     cairo_append_path(_drawContext, curPath);
     cairo_path_destroy(curPath);
 
-    EbrFree(cairoGlyphs);
+    IwFree(cairoGlyphs);
     _CGFontUnlock();
     UNLOCK_CAIRO();
 

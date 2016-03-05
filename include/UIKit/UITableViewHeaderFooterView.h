@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UITABLEVIEWHEADERFOOTERVIEW_H_
-#define _UITABLEVIEWHEADERFOOTERVIEW_H_
+#pragma once
 
 #import <UIKit/UIView.h>
 
@@ -31,5 +30,3 @@ UIKIT_EXPORT_CLASS
 - (id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 
 @end
-
-#endif /* _UITABLEVIEWHEADERFOOTERVIEW_H_ */

@@ -24,6 +24,8 @@ UISegment::UISegment(XIBObject *info, int style, int position, UIColor *tintColo
     _position = position;
     _tintColor = tintColor;
     _outputClassName = "UISegment";
+    _connectedObjects = nullptr;
+    _connections = nullptr;
 }
 
 void UISegment::InitFromXIB(XIBObject *obj)

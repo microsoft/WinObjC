@@ -1,72 +1,62 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSURLCache.h>
 #import <Foundation/NSCachedURLResponse.h>
 
-@class NSURLProtocol;
 @class NSURLRequest;
-@class NSURLResponse;
-@class NSURLAuthenticationChallenge;
+@class NSString;
 @class NSData;
 @class NSError;
 @class NSMutableURLRequest;
+@class NSURLAuthenticationChallenge;
 
-@protocol NSURLProtocolClient
--(void)URLProtocol:(NSURLProtocol *)urlProtocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirect;
+@protocol NSURLProtocolClient;
 
-/**
- @Status Interoperable
-*/
--(void)URLProtocol:(NSURLProtocol *)urlProtocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)URLProtocol:(NSURLProtocol *)urlProtocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)URLProtocol:(NSURLProtocol *)urlProtocol didReceiveResponse:(NSURLResponse *)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy;
--(void)URLProtocol:(NSURLProtocol *)urlProtocol cachedResponseIsValid:(NSCachedURLResponse *)response;
-
-/**
- @Status Interoperable
-*/
--(void)URLProtocol:(NSURLProtocol *)urlProtocol didLoadData:(NSData *)data;
-
-/**
- @Status Interoperable
-*/
--(void)URLProtocol:(NSURLProtocol *)urlProtocol didFailWithError:(NSError *)error;
-
-/**
- @Status Interoperable
-*/
--(void)URLProtocolDidFinishLoading:(NSURLProtocol *)urlProtocol;
+FOUNDATION_EXPORT_CLASS
+@interface NSURLProtocol : NSObject
+- (instancetype)initWithRequest:(NSURLRequest*)request
+                 cachedResponse:(NSCachedURLResponse*)cachedResponse
+                         client:(id<NSURLProtocolClient>)client;
++ (BOOL)registerClass:(Class)protocolClass;
++ (void)unregisterClass:(Class)protocolClass;
++ (BOOL)canInitWithRequest:(NSURLRequest*)request;
++ (id)propertyForKey:(NSString*)key inRequest:(NSURLRequest*)request STUB_METHOD;
++ (void)setProperty:(id)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request STUB_METHOD;
++ (void)removePropertyForKey:(NSString*)key inRequest:(NSMutableURLRequest*)request STUB_METHOD;
++ (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request STUB_METHOD;
++ (BOOL)requestIsCacheEquivalent:(NSURLRequest*)aRequest toRequest:(NSURLRequest*)bRequest STUB_METHOD;
+- (void)startLoading;
+- (void)stopLoading;
+@property (readonly, copy) NSCachedURLResponse* cachedResponse;
+@property (readonly, retain) id<NSURLProtocolClient> client;
+@property (readonly, copy) NSURLRequest* request;
 @end
 
-@interface NSURLProtocol : NSObject
-
-+(BOOL)registerClass:(Class)cls;
-+(void)unregisterClass:(Class)cls;
-
-+propertyForKey:(NSString *)key inRequest:(NSURLRequest *)request;
-+(void)removePropertyForKey:(NSString *)key inRequest:(NSMutableURLRequest *)request;
-+(void)setProperty:value forKey:(NSString *)key inRequest:(NSMutableURLRequest *)request;
-
-+(BOOL)canInitWithRequest:(NSURLRequest *)request;
-+(NSURLRequest *)canonicalRequestForRequest:(NSURLRequest *)request;
-+(BOOL)requestIsCacheEquivalent:(NSURLRequest *)request toRequest:(NSURLRequest *)other;
-
-+(id)propertyForKey:(NSString *)key inRequest:(NSURLRequest *)request;
-
--initWithRequest:(NSURLRequest *)request cachedResponse:(NSCachedURLResponse *)response client:(id <NSURLProtocolClient>)client;
-
--(NSURLRequest *)request;
--(NSCachedURLResponse *)cachedResponse;
--(id <NSURLProtocolClient>)client;
-
--(void)startLoading;
--(void)stopLoading;
-
+@protocol NSURLProtocolClient <NSObject>
+- (void)URLProtocol:(NSURLProtocol*)protocol cachedResponseIsValid:(NSCachedURLResponse*)cachedResponse;
+- (void)URLProtocol:(NSURLProtocol*)protocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)URLProtocol:(NSURLProtocol*)protocol didFailWithError:(NSError*)error;
+- (void)URLProtocol:(NSURLProtocol*)protocol didLoadData:(NSData*)data;
+- (void)URLProtocol:(NSURLProtocol*)protocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)URLProtocol:(NSURLProtocol*)protocol didReceiveResponse:(NSURLResponse*)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy;
+- (void)URLProtocol:(NSURLProtocol*)protocol
+    wasRedirectedToRequest:(NSURLRequest*)request
+          redirectResponse:(NSURLResponse*)redirectResponse;
+- (void)URLProtocolDidFinishLoading:(NSURLProtocol*)protocol;
 @end

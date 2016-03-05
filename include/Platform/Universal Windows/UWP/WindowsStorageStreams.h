@@ -352,7 +352,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSDataWriter : RTObject <WSSIDataWriter, WFIClosable>
 + (WSSDataWriter*)createDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSByteOrder byteOrder;
 @property (readonly) unsigned int unstoredBufferLength;
@@ -570,7 +570,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSInMemoryRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;

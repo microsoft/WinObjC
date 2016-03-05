@@ -20,5 +20,5 @@
 #include "vDSP.h"
 #include "cblas.h"
 #include "eigen.h"
-
+#include "vImage.h"
 

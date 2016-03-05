@@ -186,7 +186,7 @@ static void adjustImages(UISwitch* self, float pos, bool animated) {
 
         if (finalValue != _on) {
             _on = finalValue;
-            [self sendEvent:self mask:UIControlEventValueChanged];
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
         }
 
         if (_on) {
@@ -221,7 +221,7 @@ static void adjustImages(UISwitch* self, float pos, bool animated) {
 
     if (finalValue != _on) {
         _on = finalValue;
-        [self sendEvent:self mask:UIControlEventValueChanged];
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
 
     if (_on) {

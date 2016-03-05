@@ -250,7 +250,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapActualCameraChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapCamera* camera;
 @end
 
@@ -262,7 +262,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapActualCameraChangingEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapCamera* camera;
 @end
 
@@ -274,7 +274,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapCustomExperienceChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXCMMapCustomExperienceChangedEventArgs_DEFINED__
@@ -285,7 +285,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElementClickEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) NSMutableArray* mapElements;
 @property (readonly) WFPoint* position;
@@ -299,7 +299,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElementPointerEnteredEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WUXCMMapElement* mapElement;
 @property (readonly) WFPoint* position;
@@ -313,7 +313,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElementPointerExitedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WUXCMMapElement* mapElement;
 @property (readonly) WFPoint* position;
@@ -327,7 +327,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTargetCameraChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapCamera* camera;
 @end
 
@@ -339,7 +339,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileBitmapRequestDeferral : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)complete;
 @end
 
@@ -351,7 +351,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileBitmapRequest : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject<WSSIRandomAccessStreamReference>* pixelData;
 - (WUXCMMapTileBitmapRequestDeferral*)getDeferral;
 @end
@@ -364,7 +364,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileBitmapRequestedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapTileBitmapRequest* request;
 @property (readonly) int x;
 @property (readonly) int y;
@@ -379,7 +379,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileUriRequestDeferral : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)complete;
 @end
 
@@ -391,7 +391,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileUriRequest : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFUri* uri;
 - (WUXCMMapTileUriRequestDeferral*)getDeferral;
 @end
@@ -404,7 +404,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileUriRequestedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapTileUriRequest* request;
 @property (readonly) int x;
 @property (readonly) int y;
@@ -419,7 +419,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -463,7 +463,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapCustomExperience : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXCMMapCustomExperience_DEFINED__
@@ -474,7 +474,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElement : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property int zIndex;
 @property BOOL visible;
 @property int mapTabIndex;
@@ -491,7 +491,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapInputEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WFPoint* position;
 @end
@@ -504,7 +504,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapItemsControl : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* itemsSource;
 @property (copy) WXDataTemplate* itemTemplate;
 @property (readonly) NSMutableArray* items;
@@ -565,7 +565,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileDataSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXCMMapTileDataSource_DEFINED__
@@ -576,7 +576,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isTransparencyEnabled;
 @property BOOL isRetryEnabled;
 @property BOOL isFadingEnabled;
@@ -627,7 +627,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMCustomMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (EventRegistrationToken)addBitmapRequestedEvent:(void (^)(WUXCMCustomMapTileDataSource*, WUXCMMapTileBitmapRequestedEventArgs*))del;
 - (void)removeBitmapRequestedEvent:(EventRegistrationToken)tok;
 @end
@@ -640,7 +640,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMHttpMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* uriFormatString;
 @property BOOL allowCaching;
 @property (readonly) NSMutableDictionary* additionalRequestHeaders;
@@ -656,7 +656,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMLocalMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* uriFormatString;
 - (EventRegistrationToken)addUriRequestedEvent:(void (^)(WUXCMLocalMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
 - (void)removeUriRequestedEvent:(EventRegistrationToken)tok;
@@ -670,7 +670,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapIcon : WUXCMMapElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* title;
 @property (copy) WFPoint* normalizedAnchorPoint;
 @property (copy) WDGGeopoint* location;
@@ -690,7 +690,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapPolygon : WUXCMMapElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double strokeThickness;
 @property BOOL strokeDashed;
 @property (copy) WUColor* strokeColor;
@@ -709,7 +709,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapPolyline : WUXCMMapElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double strokeThickness;
 @property BOOL strokeDashed;
 @property (copy) WUColor* strokeColor;
@@ -963,7 +963,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXThickness* margin;
 @property (copy) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
@@ -1035,7 +1035,7 @@ WINRT_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
 @property WUTFontStretch fontStretch;
@@ -1125,7 +1125,7 @@ WINRT_EXPORT
 + (void)setLocation:(WXDependencyObject*)element value:(WDGGeopoint*)value;
 + (WFPoint*)getNormalizedAnchorPoint:(WXDependencyObject*)element;
 + (void)setNormalizedAnchorPoint:(WXDependencyObject*)element value:(WFPoint*)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL landmarksVisible;
 @property double heading;
 @property double desiredPitch;

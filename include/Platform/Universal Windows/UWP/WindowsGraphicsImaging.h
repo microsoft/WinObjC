@@ -242,7 +242,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapTransform : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int scaledWidth;
 @property unsigned int scaledHeight;
 @property WGIBitmapRotation rotation;
@@ -272,7 +272,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapPropertySet : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
@@ -669,7 +669,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGISoftwareBitmap : RTObject <WFIClosable>
-+ (WGISoftwareBitmap*)copy:(WGISoftwareBitmap*)source;
++ (WGISoftwareBitmap*)Copy:(WGISoftwareBitmap*)source;
 + (WGISoftwareBitmap*)convert:(WGISoftwareBitmap*)source format:(WGIBitmapPixelFormat)format;
 + (WGISoftwareBitmap*)convertWithAlpha:(WGISoftwareBitmap*)source format:(WGIBitmapPixelFormat)format alpha:(WGIBitmapAlphaMode)alpha;
 + (WGISoftwareBitmap*)createCopyFromBuffer:(RTObject<WSSIBuffer>*)source

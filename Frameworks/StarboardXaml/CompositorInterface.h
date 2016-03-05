@@ -196,6 +196,8 @@ public:
     void SetContentsElement(winobjc::Id& elem);
     void SetAccessibilityInfo(const IWAccessibilityInfo& info);
 
+    void SetShouldRasterize(bool shouldRasterize);
+
     float GetPresentationPropertyValue(const char* name);
     void AddToRoot();
 

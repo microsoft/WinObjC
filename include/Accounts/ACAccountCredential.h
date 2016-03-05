@@ -17,13 +17,14 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
 
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountCredential : NSObject
 
 @property (copy, nonatomic) NSString* oauthToken;
 
-- (instancetype)initWithOAuthToken:(NSString*)token tokenSecret:(NSString*)secret;
-- (instancetype)initWithOAuth2Token:(NSString*)token refreshToken:(NSString*)refreshToken expiryDate:(NSDate*)expiryDate;
+- (instancetype)initWithOAuthToken:(NSString*)token tokenSecret:(NSString*)secret STUB_METHOD;
+- (instancetype)initWithOAuth2Token:(NSString*)token refreshToken:(NSString*)refreshToken expiryDate:(NSDate*)expiryDate STUB_METHOD;
 
 @end

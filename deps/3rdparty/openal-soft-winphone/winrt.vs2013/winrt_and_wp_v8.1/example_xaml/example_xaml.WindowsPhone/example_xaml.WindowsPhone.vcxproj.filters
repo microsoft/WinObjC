@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>d87e6eb1-a48c-4d21-8229-ad79a770294f</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>7b6a8c1a-c939-4a3f-ad9b-816a45604d44</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>6ea9b3ff-f61b-4f7e-b4a8-40c34b4463f9</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_ARM">
+      <UniqueIdentifier>{e2e63cf9-cb80-43bb-a35f-e43ff35211ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_ARM\Debug">
+      <UniqueIdentifier>{f24b8a0b-57c1-4461-a2c5-1a6cd19c8567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_ARM\Release">
+      <UniqueIdentifier>{c5b866b7-055e-43ea-b984-2b53170c1469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_Win32">
+      <UniqueIdentifier>{9564b8e8-3da6-485d-998d-0d68fc4bbca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_Win32\Debug">
+      <UniqueIdentifier>{c0f5ca4c-9489-4454-9eb7-34e5548108d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="prebuilt_Win32\Release">
+      <UniqueIdentifier>{b5f7cd65-8bc3-4936-a4a4-e5c9e012cd74}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.xaml.cpp" />
+    <ClCompile Include="DirectXPage.xaml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.xaml.h" />
+    <ClInclude Include="DirectXPage.xaml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Logo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square71x71Logo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\WideLogo.scale-240.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="DirectXPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\bin\ARM\Debug\OpenAL.wp8.dll">
+      <Filter>prebuilt_ARM\Debug</Filter>
+    </None>
+    <None Include="..\..\bin\ARM\Release\OpenAL.wp8.dll">
+      <Filter>prebuilt_ARM\Release</Filter>
+    </None>
+    <None Include="..\..\bin\Win32\Debug\OpenAL.wp8.dll">
+      <Filter>prebuilt_Win32\Debug</Filter>
+    </None>
+    <None Include="..\..\bin\Win32\Release\OpenAL.wp8.dll">
+      <Filter>prebuilt_Win32\Release</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -77,7 +77,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEExtendedExecutionSession : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WAEExtendedExecutionReason reason;
 @property unsigned int percentProgress;
 @property (copy) NSString* description;

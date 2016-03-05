@@ -29,10 +29,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKitExport.h>
 
+UIKIT_EXPORT NSString* const UIDeviceBatteryLevelDidChangeNotification;
+UIKIT_EXPORT NSString* const UIDeviceBatteryStateDidChangeNotification;
 UIKIT_EXPORT NSString* const UIDeviceOrientationDidChangeNotification;
+UIKIT_EXPORT NSString* const UIDeviceProximityStateDidChangeNotification;
 
 typedef enum {
     UIDeviceOrientationUnknown,
@@ -45,6 +50,7 @@ typedef enum {
 } UIDeviceOrientation;
 
 typedef enum {
+    UIUserInterfaceIdiomUnspecified = -1,
     UIUserInterfaceIdiomPhone,
     UIUserInterfaceIdiomPad,
     UIUserInterfaceIdiomDesktop,
@@ -62,12 +68,6 @@ typedef uint32_t UIDeviceBatteryState;
     ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom] : \
                                                                                    UIUserInterfaceIdiomPhone)
 
-#define UIDeviceOrientationIsPortrait(orientation) \
-    ((orientation) == UIDeviceOrientationPortrait || (orientation) == UIDeviceOrientationPortraitUpsideDown)
-
-#define UIDeviceOrientationIsLandscape(orientation) \
-    ((orientation) == UIDeviceOrientationLandscapeLeft || (orientation) == UIDeviceOrientationLandscapeRight)
-
 UIKIT_EXPORT_CLASS
 @interface UIDevice : NSObject {
     UIDeviceOrientation _curOrientation;
@@ -76,6 +76,11 @@ UIKIT_EXPORT_CLASS
 }
 
 + (UIDevice*)currentDevice;
+
+- (void)playInputClick STUB_METHOD;
+
+@property (getter=isProximityMonitoringEnabled, nonatomic) BOOL proximityMonitoringEnabled STUB_PROPERTY;
+@property (readonly, nonatomic) BOOL proximityState STUB_PROPERTY;
 
 @property (nonatomic, readonly, retain) NSString* name;
 @property (nonatomic, readonly) UIUserInterfaceIdiom userInterfaceIdiom; // always returns UIUserInterfaceIdiomDesktop
@@ -91,6 +96,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) float batteryLevel;
 @property (nonatomic, readonly) UIDeviceBatteryState batteryState;
 @property (nonatomic, getter=isBatteryMonitoringEnabled) BOOL batteryMonitoringEnabled;
+@property (readonly, nonatomic, strong) NSString* localizedModel STUB_PROPERTY;
 - (void)beginGeneratingDeviceOrientationNotifications; // no effect
 - (void)endGeneratingDeviceOrientationNotifications; // no effect
 

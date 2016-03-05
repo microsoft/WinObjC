@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 
 #include "Foundation/NSString.h"
@@ -31,15 +32,15 @@
 #include "UIKit/UIScreen.h"
 #include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGAffineTransform.h"
-#include "UIKit/UIEmptyController.h"
 #include "UIViewInternal.h"
 #include "UIViewControllerInternal.h"
 #include "AutoLayout.h"
 #include "UIViewControllerInternal.h"
 #include "UIKit/UIPopoverPresentationController.h"
+#include "UIEmptyController.h"
 
-NSString* const UITransitionContextFromViewControllerKey = (NSString * const) @"UITransitionContextFromViewControllerKey";
-NSString* const UITransitionContextToViewControllerKey = (NSString * const) @"UITransitionContextToViewControllerKey";
+NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
+NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
 
 @interface _TransitionNotifier : NSObject
 @end
@@ -57,8 +58,7 @@ NSString* const UITransitionContextToViewControllerKey = (NSString * const) @"UI
 }
 
 - (void)animationDidStop:(CAAnimation*)animation finished:(BOOL)finished {
-    void (*imp)(id, SEL, CAAnimation*, BOOL) = (void (*)(id, SEL, CAAnimation*, BOOL))[_animDelegate methodForSelector:_selector];
-    imp(_animDelegate, _selector, animation, finished);
+    ((void (*)(id, SEL, CAAnimation*, BOOL))objc_msgSend)(_animDelegate, _selector, animation, finished);
     _animDelegate = nil;
 }
 @end
@@ -268,12 +268,21 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
 @implementation UIViewController : UIResponder
 
+@synthesize preferredFocusedView;
+@synthesize traitCollection;
+
 /**
  @Status Stub
 */
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+- (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
-    return TRUE;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return [[UIApplication sharedApplication] statusBarOrientation];
 }
 
 /**
@@ -307,7 +316,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIViewController* ret = [super allocWithZone:zone];
 
-    ret->priv = (UIViewControllerPriv*)EbrCalloc(1, sizeof(UIViewControllerPriv));
+    ret->priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
     ret->priv->_curOrientation = UIInterfaceOrientationPortrait;
     ret->priv->_edgesForExtendedLayout = 0xF;
     ret->priv->_contentSizeForViewInPopover.width = 320.0f;
@@ -521,7 +530,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             if (sendEvent)
                 [self willRotateToInterfaceOrientation:orientation duration:0.25];
 
-            int oldOrientation = priv->_curOrientation;
+            UIInterfaceOrientation oldOrientation = priv->_curOrientation;
             priv->_curOrientation = orientation;
             priv->_didSetRotation = true;
             [self setOrientationInternal:orientation animated:animated];
@@ -544,7 +553,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     priv->nibName = [coder decodeObjectForKey:@"UINibName"];
 
     //  Attempt to locate resources from the same bundle as the unarchiver that's loading us
-    if ( [coder respondsToSelector: @selector(_bundle)] ) {
+    if ([coder respondsToSelector:@selector(_bundle)]) {
         priv->nibBundle = [coder _bundle];
     }
     priv->tabBarItem = [coder decodeObjectForKey:@"UITabBarItem"];
@@ -587,7 +596,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         NSString* ret = nil;
         NSString* nibPath;
 
-        char* ourClass = _strdup(object_getClassName(self));
+        char* ourClass = IwStrDup(object_getClassName(self));
         char tryClass[255];
 
         assert(strlen(ourClass) < 255);
@@ -611,7 +620,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             }
         }
 
-        free(ourClass);
+        IwFree(ourClass);
 
         return ret;
     }
@@ -631,7 +640,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 */
 - (instancetype)initWithNibName:(NSString*)strNib bundle:(NSBundle*)bundle {
     if (!priv) {
-        priv = (UIViewControllerPriv*)EbrCalloc(1, sizeof(UIViewControllerPriv));
+        priv = (UIViewControllerPriv*)IwCalloc(1, sizeof(UIViewControllerPriv));
         priv->_curOrientation = UIInterfaceOrientationPortrait;
         priv->_contentSizeForViewInPopover.width = 320.0f;
         priv->_contentSizeForViewInPopover.height = 1100.0f;
@@ -669,11 +678,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     NSString* nibPath = nil;
 
     if (priv->nibName != nil) {
-        NSBundle *bundle = priv->nibBundle;
+        NSBundle* bundle = priv->nibBundle;
 
-        //  Search the bundle we were passed on initialization for the .nib file given to us. 
+        //  Search the bundle we were passed on initialization for the .nib file given to us.
         //  If no bundle was specified, search the main application bundle.
-        if ( bundle == nil ) {
+        if (bundle == nil) {
             bundle = [NSBundle mainBundle];
         }
 
@@ -701,7 +710,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             assert(0);
         }
     } else {
-        char* ourClass = _strdup(object_getClassName(self));
+        char* ourClass = IwStrDup(object_getClassName(self));
         char tryClass[255];
 
         assert(strlen(ourClass) < 255);
@@ -719,7 +728,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             nibPath = [[NSBundle mainBundle] pathForResource:[NSString stringWithCString:ourClass] ofType:@"nib"];
         }
 
-        free(ourClass);
+        IwFree(ourClass);
         // if ( nibPath == nil ) assert(0);
     }
 
@@ -744,8 +753,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
-            NSNib* nib = [NSNib nibWithNibName: [NSString stringWithCString:openname] bundle: priv->nibBundle];
-            [nib instantiateWithOwner:self options: @{UINibExternalObjects : proxyObjectsDict} ];
+            NSNib* nib = [NSNib nibWithNibName:[NSString stringWithCString:openname] bundle:priv->nibBundle];
+            [nib instantiateWithOwner:self options:@{ UINibExternalObjects : proxyObjectsDict }];
             priv->_externalObjects = nil;
         } else {
             assert(0);
@@ -905,9 +914,12 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
  @Status Interoperable
 */
 - (void)setView:(UIView*)newView {
-    if (newView == priv->view)
+    // No work necessary if it's the same view we already have
+    if (newView == priv->view) {
         return;
+    }
 
+    // Remove the existing view if it exists
     UIView* oldSuper = nil;
     UIView* oldView = nil;
     if (priv->view != nil) {
@@ -916,32 +928,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         removeViewMapping(priv->view);
     }
 
+    // Store the new view
     priv->view = newView;
-
     if (priv->view != nil) {
-        CGRect curRect = [priv->view bounds];
-        CGRect appFrame = [[UIScreen mainScreen] applicationFrame];
-
-        if ((curRect.size.width == 0.0f && curRect.size.height == 0.0f) || curRect.size.width > appFrame.size.width ||
-            curRect.size.height > appFrame.size.height) {
-            appFrame.origin.x = 0.0f;
-            appFrame.origin.y = 0.0f;
-            [priv->view setFrame:appFrame];
-        }
-
-        /*
-        if ( curSize.size.width == 320.0f &&
-        (curSize.size.height == 460.0f || curSize.size.height == 480.0f) ) {
-        CGRect frame;
-
-        frame = [[UIScreen mainScreen] bounds];
-        frame.size.height -= 480.0f - curSize.size.height;
-        frame.origin.y += 480.0f - curSize.size.height;
-
-        [priv->view setFrame:frame];
-        }
-        */
-
         addViewMapping(priv->view, self);
         if (oldSuper != nil && oldSuper != priv->view) {
             [oldSuper insertSubview:priv->view aboveSubview:oldView];
@@ -1345,11 +1334,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             UIWindow* applicationPopupWindow = [[UIApplication sharedApplication] _popupWindow];
             NSArray* windows = [[UIApplication sharedApplication] windows];
             NSUInteger index = [windows count] - 1;
-            UIWindow *window = nil;
+            UIWindow* window = nil;
             do {
                 window = [windows objectAtIndex:index];
                 index--;
-            } while(window == applicationPopupWindow);
+            } while (window == applicationPopupWindow);
 
             [window addSubview:view];
         }
@@ -1484,8 +1473,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 
     if (priv->_didSetRotation && [self interfaceOrientation] != [[UIApplication sharedApplication] statusBarOrientation]) {
-        int ourOrientation = [self interfaceOrientation];
-        [[UIApplication sharedApplication] setStatusBarOrientation:ourOrientation];
+        [[UIApplication sharedApplication] setStatusBarOrientation:[self interfaceOrientation]];
     }
 }
 
@@ -2012,7 +2000,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
                     toViewController:(UIViewController*)toController
                             duration:(double)duration
                              options:(unsigned)options
-                          animations:(id)animations // TODO(DH): animations
+                          animations:(void (^)(void))animations // TODO(DH): animations
                           completion:(void (^)(BOOL finished))completion {
     UIView* fromView = [fromController view];
     [fromView removeFromSuperview];
@@ -2110,7 +2098,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     priv->_storyboard = nil;
     priv->_modalTemplates = nil;
     priv->_dismissController = nil;
-    EbrFree(priv);
+    IwFree(priv);
 
     //  For safety since most people seem to forget
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -2268,4 +2256,384 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 - (void)updateViewConstraints {
     [((UIView*)(priv->view))_applyConstraints];
 }
+
+/**
+ @Status Stub
+*/
+- (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController*)fromViewController withSender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)disablesAutomaticKeyboardDismissal {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isBeingPresented {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isMovingFromParentViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isMovingToParentViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)prefersStatusBarHidden {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldAutomaticallyForwardAppearanceMethods {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldAutomaticallyForwardRotationMethods {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString*)identifier sender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)allowedChildViewControllersForUnwindingFromSource:(UIStoryboardUnwindSegueSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)previewActionItems {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIStoryboardSegue*)segueForUnwindingToViewController:(UIViewController*)toViewController
+                                     fromViewController:(UIViewController*)fromViewController
+                                             identifier:(NSString*)identifier {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UITraitCollection*)overrideTraitCollectionForChildViewController:(UIViewController*)childViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)rotatingFooterView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)rotatingHeaderView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)childViewControllerContainingSegueSource:(UIStoryboardUnwindSegueSource*)source {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)childViewControllerForStatusBarHidden {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)childViewControllerForStatusBarStyle {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)separateSecondaryViewControllerForSplitViewController:(UISplitViewController*)splitViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)targetViewControllerForAction:(SEL)action sender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIViewController*)viewControllerForUnwindSegueAction:(SEL)action
+                                     fromViewController:(UIViewController*)fromViewController
+                                             withSender:(id)sender {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id<UIViewControllerPreviewing>)registerForPreviewingWithDelegate:(id<UIViewControllerPreviewingDelegate>)delegate
+                                                         sourceView:(UIView*)sourceView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id<UIViewControllerTransitionCoordinator>)transitionCoordinator {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)addKeyCommand:(UIKeyCommand*)keyCommand {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)applicationFinishedRestoringState {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)collapseSecondaryViewController:(UIViewController*)secondaryViewController
+                 forSplitViewController:(UISplitViewController*)splitViewController {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)loadViewIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)removeKeyCommand:(UIKeyCommand*)keyCommand {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setOverrideTraitCollection:(UITraitCollection*)collection forChildViewController:(UIViewController*)childViewController {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)showDetailViewController:(UIViewController*)vc sender:(id)sender {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)showViewController:(UIViewController*)vc sender:(id)sender {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)unregisterForPreviewingWithContext:(id<UIViewControllerPreviewing>)previewing {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)unwindForSegue:(UIStoryboardSegue*)unwindSegue towardsViewController:(UIViewController*)subsequentVC {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)willAnimateSecondHalfOfRotationFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+                                                       duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (void)attemptRotationToDeviceOrientation {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)willTransitionToTraitCollection:(UITraitCollection*)newCollection
+              withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)sizeForChildContentContainer:(id<UIContentContainer>)container withParentContainerSize:(CGSize)parentSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)preferredContentSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)systemLayoutFittingSizeDidChangeForChildContentContainer:(id<UIContentContainer>)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setNeedsFocusUpdate {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)updateFocusIfNeeded {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext*)context {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext*)context withAnimationCoordinator:(UIFocusAnimationCoordinator*)coordinator {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)traitCollectionDidChange:(UITraitCollection*)previousTraitCollection {
+    UNIMPLEMENTED();
+}
+
 @end

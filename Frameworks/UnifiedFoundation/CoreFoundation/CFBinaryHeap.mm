@@ -15,7 +15,8 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import <Foundation/CFBinaryHeap.h>
+#import <CoreFoundation/CFType.h>
+#import <CoreFoundation/CFBinaryHeap.h>
 #import <CFBridgeBase.h>
 #include <algorithm>
 #include <vector>

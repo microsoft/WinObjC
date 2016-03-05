@@ -17,11 +17,18 @@
 #include "gtest-api.h"
 
 @import AdSupport;
+@import AddressBook;
+@import AddressBookUI;
+@import AssetsLibrary;
 @import AudioToolbox;
 @import AVFoundation;
+@import AVKit;
 @import CFNetwork;
+@import CloudKit;
 @import CommonCrypto;
+@import Contacts;
 @import CoreAudio;
+@import CoreAudioKit;
 @import CoreBluetooth;
 @import CoreData;
 @import CoreFoundation;
@@ -29,22 +36,39 @@
 @import CoreImage;
 @import CoreLocation;
 @import CoreMedia;
+@import CoreMotion;
 @import CoreTelephony;
 @import CoreText;
 @import CoreVideo;
+@import EventKit;
+@import EventKitUI;
 @import Foundation;
+@import GameController;
 @import GameKit;
+@import GamePlayKit;
 @import GLKit;
+@import HealthKit;
+@import HomeKit;
+@import iAd;
+@import ImageIO;
+@import LocalAuthentication;
+@import MapKit;
+@import MediaAccessibility;
 @import MediaPlayer;
 @import MessageUI;
+@import MobileCoreServices;
+@import Metal;
 @import OpenAL;
 @import OpenGLES;
 @import QuartzCore;
+@import QuickLook;
 @import Security;
 @import Social;
 @import StoreKit;
 @import SystemConfiguration;
+@import Twitter;
 @import UIKit;
+@import WebKit;
 
 TEST(ClangModules, BasicSanity) {
     // If this file compiles successfully the test is considered to have passed.

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
+#pragma once
+
 #ifndef STOREKIT_IMPEXP
 #define STOREKIT_IMPEXP __declspec(dllimport)
 #endif
@@ -24,5 +27,15 @@
 #else
 #define STOREKIT_EXPORT STOREKIT_IMPEXP extern
 #define STOREKIT_EXPORT_CLASS STOREKIT_IMPEXP
+#endif
+#endif
+
+#ifndef STOREKIT_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define STOREKIT_EXTERNC_BEGIN extern "C" {
+#define STOREKIT_EXTERNC_END }
+#else
+#define STOREKIT_EXTERNC_BEGIN
+#define STOREKIT_EXTERNC_END
 #endif
 #endif

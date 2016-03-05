@@ -95,7 +95,7 @@ public:
     int getInputVar(const std::string& name, int def = 0);
 
     // Main shader generation function.
-    GLKShaderPair* generate(ShaderMaterial& inputs);
+    void generate(ShaderMaterial& inputs, GLKShaderPair* shaderOutput);
 
     // Accessors.
     inline bool isVertexStage() const {

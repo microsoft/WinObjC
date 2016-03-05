@@ -15,13 +15,12 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #import <Foundation/Foundation.h>
 #include <unicode/datefmt.h>
 #include <unicode/dtfmtsym.h>
 #include <unicode/locid.h>
-
-using WCHAR = wchar_t;
 
 #include <COMIncludes.h>
 #include <wrl/client.h>
@@ -226,7 +225,7 @@ static NSLocale* _currentLocale;
         for (NSString* userPreferredLanguage in _userPreferredLanguages) {
             NSArray* userPreferredLanguageSeperatedByString = [userPreferredLanguage componentsSeparatedByString:@"-"];
             [languageCodes addObject:[userPreferredLanguageSeperatedByString objectAtIndex:0]];
-            if ([userPreferredLanguageSeperatedByString count] > 0) {
+            if ([userPreferredLanguageSeperatedByString count] > 1) {
                 [countryCodes addObject:[userPreferredLanguageSeperatedByString objectAtIndex:1]];
             }
         }
@@ -498,6 +497,15 @@ static NSLocale* _currentLocale;
     [coder encodeObject:_userPreferredLanguagesSeperatedByString forKey:@"userPreferredLanguagesSeperatedByString"];
     [coder encodeObject:_ISOCountryCodes forKey:@"ISOCountryCodes"];
     [coder encodeObject:_ISOLanguageCodes forKey:@"ISOLanguageCodes"];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

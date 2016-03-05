@@ -1,0 +1,8 @@
+module Contacts [extern_c] {
+    umbrella header "Contacts.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

@@ -13,12 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <QuartzCore/CALayer.h>
 #import <OpenGLES/EAGLDrawable.h>
 
 CA_EXPORT_CLASS
-@interface CAEAGLLayer : CALayer
+@interface CAEAGLLayer : CALayer <CAMediaTiming, EAGLDrawable, NSCoding>
 @property (copy) NSDictionary* drawableProperties;
 @end
 

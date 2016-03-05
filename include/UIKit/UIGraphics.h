@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,6 +28,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIKitExport.h"
 #import <ApplicationServices/ApplicationServices.h>
 
@@ -39,16 +42,16 @@ extern "C" {
 UIKIT_EXPORT void UIGraphicsPushContext(CGContextRef ctx);
 UIKIT_EXPORT void UIGraphicsPopContext(void);
 UIKIT_EXPORT CGContextRef UIGraphicsGetCurrentContext(void);
-    
+
 UIKIT_EXPORT CGFloat _UIGraphicsGetContextScaleFactor(CGContextRef ctx);
 
 UIKIT_EXPORT void UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat scale);
 UIKIT_EXPORT void UIGraphicsBeginImageContext(CGSize size);
-UIKIT_EXPORT UIImage *UIGraphicsGetImageFromCurrentImageContext(void);
+UIKIT_EXPORT UIImage* UIGraphicsGetImageFromCurrentImageContext(void);
 UIKIT_EXPORT void UIGraphicsEndImageContext(void);
 
 UIKIT_EXPORT void UIRectClip(CGRect rect);
-    
+
 UIKIT_EXPORT void UIRectFill(CGRect rect);
 UIKIT_EXPORT void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode blendMode);
 

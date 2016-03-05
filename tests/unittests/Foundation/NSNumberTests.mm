@@ -54,3 +54,15 @@ TEST(Foundation, NSNumber_getValueSigned) {
 
     ASSERT_EQ_MSG(-12, value, "FAILED: values do not match as expected.");
 }
+
+TEST(Foundation, NSNumber_numberWithCharGetStringValueSigned) {
+    NSNumber* number = [NSNumber numberWithChar:-5];
+    ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
+    ASSERT_OBJCEQ_MSG(@"-5", [number stringValue], "FAILED: values do not match as expected.");
+}
+
+TEST(Foundation, NSNumber_numberWithCharGetStringValueUnsigned) {
+    NSNumber* number = [NSNumber numberWithUnsignedChar:5];
+    ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
+    ASSERT_OBJCEQ_MSG(@"5", [number stringValue], "FAILED: values do not match as expected.");
+}

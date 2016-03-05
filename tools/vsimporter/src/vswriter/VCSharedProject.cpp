@@ -30,8 +30,8 @@ VCSharedProject::VCSharedProject(VSTemplateProject* projTemplate)
   m_sharedId = sole::uuid4().str();
 
   m_globalProps.clear();
-  m_globalProps["ItemsProjectGuid"] = formatVSGUID(m_id);
-  m_globalProps["SharedGUID"] = formatVSGUID(m_sharedId);
+  addGlobalProperty("ItemsProjectGuid", formatVSGUID(m_id));
+  addGlobalProperty("SharedGUID", formatVSGUID(m_sharedId));
 }
 
 const std::string& VCSharedProject::getSharedId() const

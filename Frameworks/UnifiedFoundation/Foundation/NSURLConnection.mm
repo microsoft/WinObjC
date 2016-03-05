@@ -101,7 +101,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     if (self = [super init]) {
         @try {
             [self _setRequest:request];
-        } @catch(NSException* exception) {
+        } @catch (NSException* exception) {
             [self release];
             return nil;
         }
@@ -111,7 +111,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         if (startLoading) {
             [self start];
         }
-
     }
     return self;
 }
@@ -125,8 +124,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 
     _protocol = [[cls alloc] initWithRequest:copiedRequest
-                                   cachedResponse:[[NSURLCache sharedURLCache] cachedResponseForRequest:copiedRequest]
-                                           client:self];
+                              cachedResponse:[[NSURLCache sharedURLCache] cachedResponseForRequest:copiedRequest]
+                                      client:self];
     if (!_protocol) {
         return NO;
     }
@@ -168,14 +167,12 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 */
 - (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
     _scheduled = YES;
-    [_protocol scheduleInRunLoop:runLoop forMode:mode];
 }
 
 /**
  @Status Interoperable
 */
 - (void)unscheduleFromRunLoop:(id)runLoop forMode:(id)mode {
-    [_protocol unscheduleFromRunLoop:runLoop forMode:mode];
     _scheduled = NO;
 }
 
@@ -268,7 +265,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
-- (void)URLProtocol:(NSURLProtocol *)urlProtocol wasRedirectedToRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse*)response {
+- (void)URLProtocol:(NSURLProtocol*)urlProtocol wasRedirectedToRequest:(NSURLRequest*)request redirectResponse:(NSURLResponse*)response {
     [_protocol stopLoading];
     NSURLRequest* newRequest = request;
     if ([_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)]) {
@@ -283,9 +280,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
     [self _setRequest:newRequest]; // regenerates _protocol
 
-    if (_scheduled) {
-        [_protocol scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:@"NSURLConnectionRequestMode"];
-    }
     [_protocol startLoading];
 }
 
@@ -370,6 +364,30 @@ return [super dealloc];
 
 - (id)_protocol {
     return _protocol;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setDelegateQueue:(NSOperationQueue*)queue {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (void)URLProtocol:(NSURLProtocol*)protocol cachedResponseIsValid:(NSCachedURLResponse*)cachedResponse {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (void)URLProtocol:(NSURLProtocol*)protocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
+    UNIMPLEMENTED();
 }
 
 @end

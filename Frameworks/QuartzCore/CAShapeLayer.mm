@@ -26,6 +26,15 @@
 #include "CGGraphicBufferImage.h"
 #include "QuartzCore/CAShapeLayer.h"
 
+NSString* const kCAFillRuleNonZero = @"kCAFillRuleNonZero";
+NSString* const kCAFillRuleEvenOdd = @"kCAFillRuleEvenOdd";
+NSString* const kCALineJoinMiter = @"kCALineJoinMiter";
+NSString* const kCALineJoinRound = @"kCALineJoinRound";
+NSString* const kCALineJoinBevel = @"kCALineJoinBevel";
+NSString* const kCALineCapButt = @"kCALineCapButt";
+NSString* const kCALineCapRound = @"kCALineCapRound";
+NSString* const kCALineCapSquare = @"kCALineCapSquare";
+
 CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 
 @implementation CAShapeLayer {
@@ -194,25 +203,6 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
 - (CGFloat)lineWidth {
     UNIMPLEMENTED();
     return _lineWidth;
-}
-
-- (void)setLineDashPattern:(id)pattern {
-}
-
-/**
- @Status Stub
-*/
-- (void)setLineCap:(NSString*)cap {
-    UNIMPLEMENTED();
-}
-
-- (void)setLineJoin:(id)join {
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setFillRule:(id)rule {
 }
 
 - (instancetype)init {

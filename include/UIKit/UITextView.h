@@ -29,34 +29,22 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UITEXTVIEW_H_
-#define _UITEXTVIEW_H_
+#pragma once
 
-#import "UIKitExport.h"
-#import "UIStringDrawing.h"
-#import "UIScrollView.h"
-#import "UIDataDetectors.h"
-#import "UITextInputTraits.h"
-#import "NSTextContainer.h"
+#import <UIKit/UIKitExport.h>
+#import <UIKit/UIScrollView.h>
+#import <UIKit/UIDataDetectors.h>
+#import <UIKit/UITextInputTraits.h>
+#import <UIKit/NSTextContainer.h>
 #import <UIKit/UITextInput.h>
 #import <UIKit/NSLayoutManager.h>
+#import <UIKit/UITextViewDelegate.h>
 
 UIKIT_EXPORT NSString* const UITextViewTextDidBeginEditingNotification;
 UIKIT_EXPORT NSString* const UITextViewTextDidChangeNotification;
 UIKIT_EXPORT NSString* const UITextViewTextDidEndEditingNotification;
 
-@class UIColor, UIFont, UITextLayer, UITextView, NSLayoutManager;
-
-@protocol UITextViewDelegate <NSObject, UIScrollViewDelegate>
-@optional
-- (BOOL)textViewShouldBeginEditing:(UITextView*)textView;
-- (void)textViewDidBeginEditing:(UITextView*)textView;
-- (BOOL)textViewShouldEndEditing:(UITextView*)textView;
-- (void)textViewDidEndEditing:(UITextView*)textView;
-- (BOOL)textView:(UITextView*)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
-- (void)textViewDidChange:(UITextView*)textView;
-- (void)textViewDidChangeSelection:(UITextView*)textView;
-@end
+@class UIColor, UIFont, NSLayoutManager;
 
 UIKIT_EXPORT_CLASS
 @interface UITextView : UIScrollView <UITextInputTraits, UITextInput, NSLayoutManagerDelegate>
@@ -85,5 +73,3 @@ UIKIT_EXPORT_CLASS
 - (BOOL)hasText;
 
 @end
-
-#endif /* _UITEXTVIEW_H_ */

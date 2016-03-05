@@ -95,7 +95,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -114,7 +114,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMTransform3D : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMMTransform3D_DEFINED__
@@ -125,7 +125,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMCompositeTransform3D : WUXMMTransform3D
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double rotationZ;
 @property double rotationY;
 @property double rotationX;
@@ -160,7 +160,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMPerspectiveTransform3D : WUXMMTransform3D
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double offsetY;
 @property double offsetX;
 @property double depth;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,32 +14,22 @@
 //
 //******************************************************************************
 
-#include <math.h>
-#include <time.h>
-#include <pthread.h>
-#include <algorithm>
+#import <math.h>
+#import <time.h>
+#import <pthread.h>
+#import <algorithm>
 
-#include "Starboard.h"
-#include "Platform/EbrPlatform.h"
-#include "Etc.h"
+#import "Starboard.h"
+#import "Platform/EbrPlatform.h"
+#import "Etc.h"
+#include "CAFDecoder.h"
 
-#include "stb_vorbis.h"
-#include "AudioToolbox/ExtendedAudioFile.h"
+#import "stb_vorbis.h"
+#import <AudioToolbox/AudioFileTypes.h>
+#import <AudioToolbox/ExtendedAudioFile.h>
+#import <StubReturn.h>
 
-typedef unsigned int uint;
-
-typedef int64_t i64;
-typedef uint64_t u64;
-typedef int32_t i32;
-typedef uint32_t u32;
-typedef int16_t i16;
-typedef uint16_t u16;
-
-#include "AudioToolbox/AudioFile.h"
-
-#define kExtAudioFileError_InvalidProperty -66561
-
-class AudioFile {
+struct OpaqueAudioFileID {
 protected:
     AudioStreamBasicDescription clientDataFormat;
     bool clientDataFormatSet;
@@ -47,14 +37,21 @@ protected:
     AudioStreamBasicDescription fileFormat;
 
 public:
-    AudioFile() : clientDataFormatSet(false) {
+    OpaqueAudioFileID() : clientDataFormatSet(false) {
         memset(&fileFormat, 0, sizeof(fileFormat));
     }
 
-    virtual int read(u32* outFrameCount, AudioBufferList* buffers) = 0;
-    virtual int readBytes(i64 start, u32* numBytes, void* buffer) = 0;
+    virtual int read(u32* outFrameCount, AudioBufferList* buffers) {
+        return 0;
+    }
+    virtual int readBytes(i64 start, u32* numBytes, void* buffer) {
+        return 0;
+    }
 
-    virtual u32 getProperty(u32 propID, u32* dataSize, void* out) = 0;
+    virtual u32 getProperty(u32 propID, u32* dataSize, void* out) {
+        return 0;
+    }
+
     virtual int setProperty(u32 propID, u32 dataSize, const void* out) {
         switch (propID) {
             case kExtAudioFileProperty_ClientDataFormat:
@@ -67,11 +64,11 @@ public:
         return 0;
     }
 
-    virtual ~AudioFile() {
+    virtual ~OpaqueAudioFileID() {
     }
 };
 
-class AudioFileOGG : public AudioFile {
+class AudioFileOGG : public OpaqueAudioFileID {
     stb_vorbis* _handle;
 
     AudioFileOGG(stb_vorbis* handle) : _handle(handle) {
@@ -85,7 +82,7 @@ public:
         }
     }
 
-    static AudioFile* openURL(char* url) {
+    static OpaqueAudioFileID* openURL(char* url) {
         int err = 0;
         stb_vorbis* handle = stb_vorbis_open_filename(url, &err, 0);
 
@@ -161,7 +158,7 @@ public:
     }
 };
 
-class AudioFileWAV : public AudioFile {
+class AudioFileWAV : public OpaqueAudioFileID {
     struct Header {
         u16 formatTag;
         u16 channels;
@@ -192,7 +189,7 @@ class AudioFileWAV : public AudioFile {
     }
 
 public:
-    static AudioFile* openURL(char* url) {
+    static OpaqueAudioFileID* openURL(char* url) {
         EbrFile* f = EbrFopen(url, "rb");
         if (!f)
             return 0;
@@ -205,7 +202,7 @@ public:
             return 0;
         }
 
-        AudioFile* ret = openFile(f);
+        OpaqueAudioFileID* ret = openFile(f);
         if (!ret) {
             EbrDebugLog("Failed to open %s as a WAV\n", url);
             EbrFclose(f);
@@ -215,7 +212,7 @@ public:
         return ret;
     }
 
-    static AudioFile* openFile(EbrFile* f) {
+    static OpaqueAudioFileID* openFile(EbrFile* f) {
         u32 size;
         char id[4];
         EbrFread(&size, sizeof(size), 1, f);
@@ -364,9 +361,7 @@ public:
     }
 };
 
-#include "CAFDecoder.h"
-
-class AudioFileCAF : public AudioFile {
+class AudioFileCAF : public OpaqueAudioFileID {
     CAFDecoder _decoder;
 
     // Storing this in here really sucks but we can't really know until
@@ -374,7 +369,7 @@ class AudioFileCAF : public AudioFile {
     std::vector<i16> _data;
 
 public:
-    static AudioFile* openURL(char* url) {
+    static OpaqueAudioFileID* openURL(char* url) {
         EbrFile* f = EbrFopen(url, "rb");
         if (!f) {
             EbrDebugLog("CAF %s doesn't exist..\n", url);
@@ -466,11 +461,27 @@ public:
     }
 };
 
+class OpaqueExtAudioFile {
+public:
+    AudioFileID pAudioFile;
+    bool ownsAudioFile;
+
+    OpaqueExtAudioFile(AudioFileID pAudio, bool owns) : pAudioFile(pAudio), ownsAudioFile(owns) {
+    }
+
+    ~OpaqueExtAudioFile() {
+        if (ownsAudioFile) {
+            delete pAudioFile;
+        }
+        pAudioFile = NULL;
+    }
+};
+
 /**
  @Status Caveat
  @Notes Only file:// URLs supported
 */
-OSStatus AudioFileOpenURL(CFURLRef url, SInt8 permissions, AudioFileTypeID type, AudioFileID* out) {
+OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID* out) {
     char* filename = (char*)[[url path] UTF8String];
     EbrFile* f = EbrFopen(filename, "rb");
     if (!f) {
@@ -534,13 +545,16 @@ public:
     }
 };
 
+/**
+ @Status Interoperable
+*/
 DWORD AudioFileOpenWithCallbacks(void* context,
                                  AudioFile_ReadProc readFunc,
                                  AudioFile_WriteProc writeFunc,
                                  AudioFile_GetSizeProc getSizeFunc,
                                  AudioFile_SetSizeProc setSizeFunc,
                                  DWORD typeHint,
-                                 AudioFile** out) {
+                                 AudioFileID* out) {
     EbrCallbackFile* callbackFP = new EbrCallbackFile(context, readFunc, writeFunc, getSizeFunc, setSizeFunc);
     EbrFile* in = EbrAllocFile(callbackFP);
 
@@ -558,45 +572,9 @@ DWORD AudioFileOpenWithCallbacks(void* context,
     return 0;
 }
 
-class ExtAudioFile {
-public:
-    AudioFile* pAudioFile;
-    bool ownsAudioFile;
-
-    ExtAudioFile(AudioFile* pAudio, bool owns) : pAudioFile(pAudio), ownsAudioFile(owns) {
-    }
-
-    ~ExtAudioFile() {
-        if (ownsAudioFile) {
-            delete pAudioFile;
-        }
-        pAudioFile = NULL;
-    }
-};
-
-typedef ExtAudioFile* ExtAudioFileRef;
-
 /**
- @Status Caveat
- @Notes Only file:// URLs supported
+ @Status Interoperable
 */
-OSStatus ExtAudioFileOpenURL(CFURLRef url, ExtAudioFileRef* out) {
-    AudioFile* audioFile = NULL;
-    int ret = AudioFileOpenURL(url, 0, 0, &audioFile);
-
-    if (audioFile) {
-        *out = new ExtAudioFile(audioFile, true);
-    }
-
-    return ret;
-}
-
-OSStatus ExtAudioFileWrapAudioFileID(AudioFileID fileID, Boolean writing, ExtAudioFileRef* out) {
-    *out = new ExtAudioFile(fileID, false);
-
-    return 0;
-}
-
 OSStatus AudioFileCreateWithURL(
     CFURLRef url, AudioFileTypeID type, const AudioStreamBasicDescription* format, UInt32 inFlags, AudioFileID* out) {
     EbrDebugLog("_AudioFileCreateWithURL not supported\n");
@@ -614,14 +592,6 @@ OSStatus AudioFileClose(AudioFileID fileID) {
 }
 
 /**
- @Status Interoperable
-*/
-OSStatus ExtAudioFileDispose(ExtAudioFileRef fileID) {
-    delete fileID;
-    return 0;
-}
-
-/**
  @Status Caveat
  @Notes Limited properties supported depending on codec
 */
@@ -633,28 +603,7 @@ OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UI
     return fileID->getProperty(propID, ioDataSize, propOutData);
 }
 
-/**
- @Status Caveat
- @Notes Limited properties supported depending on codec
-*/
-OSStatus ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize, void* propOutData) {
-    if (fileID) {
-        return fileID->pAudioFile->getProperty(propID, ioDataSize, propOutData);
-    } else {
-        return kExtAudioFileError_InvalidProperty;
-    }
-}
-
-/**
- @Status Caveat
- @Notes Only ClientDataFormat property supported
-*/
-OSStatus ExtAudioFileSetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32 ioDataSize, const void* propInData) {
-    fileID->pAudioFile->setProperty(propID, ioDataSize, propInData);
-    return 0;
-}
-
-DWORD AudioFileGetPropertyInfo(AudioFile* fileID, DWORD propID, DWORD* outDataSize, DWORD* isWritable) {
+DWORD AudioFileGetPropertyInfo(AudioFileID fileID, DWORD propID, DWORD* outDataSize, DWORD* isWritable) {
     if (isWritable) {
         *isWritable = FALSE;
     }
@@ -692,24 +641,10 @@ OSStatus AudioFileReadBytes(AudioFileID fileID, Boolean useCached, SInt64 startB
     return fileID->readBytes(startByte, ioNumBytes, outBuffer);
 }
 
-OSStatus ExtAudioFileSeek(ExtAudioFileRef fileID, SInt64 pos) {
-    EbrDebugLog("ExtAudioFileSeek not supported\n");
-    return 0;
-}
-
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
-OSStatus ExtAudioFileRead(ExtAudioFileRef fileID, UInt32* numFrames, AudioBufferList* pData) {
-    if (fileID == NULL) {
-        *numFrames = 0;
-        return 1234;
-    }
-    fileID->pAudioFile->read(numFrames, pData);
-
-    return 0;
-}
-
 OSStatus AudioFileReadPacketData(AudioFileID fileID,
                                  Boolean useCached,
                                  UInt32* outNumBytes,
@@ -717,6 +652,7 @@ OSStatus AudioFileReadPacketData(AudioFileID fileID,
                                  SInt64 firstPacket,
                                  UInt32* numPackets,
                                  void* outBuf) {
+    UNIMPLEMENTED();
     EbrDebugLog("AudioFileReadPacketData not supported\n");
 
     *outNumBytes = 0;
@@ -725,6 +661,10 @@ OSStatus AudioFileReadPacketData(AudioFileID fileID,
     return 0;
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
 OSStatus AudioFileReadPackets(AudioFileID fileID,
                               Boolean useCached,
                               UInt32* outNumBytes,
@@ -732,6 +672,7 @@ OSStatus AudioFileReadPackets(AudioFileID fileID,
                               SInt64 firstPacket,
                               UInt32* numPackets,
                               void* outBuf) {
+    UNIMPLEMENTED();
     if (fileID == NULL) {
         *outNumBytes = 0;
         return 1234;
@@ -740,13 +681,173 @@ OSStatus AudioFileReadPackets(AudioFileID fileID,
     return 0;
 }
 
-DWORD AudioConverterNew(AudioStreamBasicDescription* in, AudioStreamBasicDescription* out, DWORD* handle) {
-    *handle = 1234;
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileInitializeWithCallbacks(void* inClientData,
+                                          AudioFile_ReadProc inReadFunc,
+                                          AudioFile_WriteProc inWriteFunc,
+                                          AudioFile_GetSizeProc inGetSizeFunc,
+                                          AudioFile_SetSizeProc inSetSizeFunc,
+                                          AudioFileTypeID inFileType,
+                                          const AudioStreamBasicDescription* inFormat,
+                                          AudioFileFlags inFlags,
+                                          AudioFileID _Nullable* outAudioFile) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileWriteBytes(AudioFileID inAudioFile, Boolean inUseCache, SInt64 inStartingByte, UInt32* ioNumBytes, const void* inBuffer) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileWritePackets(AudioFileID inAudioFile,
+                               Boolean inUseCache,
+                               UInt32 inNumBytes,
+                               const AudioStreamPacketDescription* inPacketDescriptions,
+                               SInt64 inStartingPacket,
+                               UInt32* ioNumPackets,
+                               const void* inBuffer) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileSetProperty(AudioFileID inAudioFile, AudioFilePropertyID inPropertyID, UInt32 inDataSize, const void* inPropertyData) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileCountUserData(AudioFileID inAudioFile, UInt32 inUserDataID, UInt32* outNumberItems) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileGetUserDataSize(AudioFileID inAudioFile, UInt32 inUserDataID, UInt32 inIndex, UInt32* outUserDataSize) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileRemoveUserData(AudioFileID inAudioFile, UInt32 inUserDataID, UInt32 inIndex) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileSetUserData(AudioFileID inAudioFile, UInt32 inUserDataID, UInt32 inIndex, UInt32 inUserDataSize, const void* inUserData) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileGetUserData(AudioFileID inAudioFile, UInt32 inUserDataID, UInt32 inIndex, UInt32* ioUserDataSize, void* outUserData) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileGetGlobalInfoSize(AudioFilePropertyID inPropertyID, UInt32 inSpecifierSize, void* inSpecifier, UInt32* outDataSize) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileGetGlobalInfo(
+    AudioFilePropertyID inPropertyID, UInt32 inSpecifierSize, void* inSpecifier, UInt32* ioDataSize, void* outPropertyData) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+OSStatus AudioFileOptimize(AudioFileID inAudioFile) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+extern "C" OSStatus _ExtAudioFileDispose(ExtAudioFileRef fileID) {
+    delete fileID;
+    return 0;
+}
+
+extern "C" OSStatus _ExtAudioFileOpenURL(CFURLRef url, ExtAudioFileRef* out) {
+    AudioFileID audioFile = NULL;
+    int ret = AudioFileOpenURL(url, kAudioFileReadPermission, 0, &audioFile);
+
+    if (audioFile) {
+        *out = new OpaqueExtAudioFile(audioFile, true);
+    }
+
+    return ret;
+}
+
+extern "C" OSStatus _ExtAudioFileWrapAudioFileID(AudioFileID fileID, Boolean writing, ExtAudioFileRef* out) {
+    *out = new OpaqueExtAudioFile(fileID, false);
 
     return 0;
 }
 
-DWORD AudioConverterFillComplexBuffer(
-    DWORD handle, DWORD inProc, DWORD userData, DWORD* outPacketSize, AudioBufferList* outData, AudioStreamBasicDescription* out) {
+extern "C" OSStatus _ExtAudioFileGetProperty(ExtAudioFileRef fileID, ExtAudioFilePropertyID propID, UInt32* ioDataSize, void* propOutData) {
+    if (fileID) {
+        return fileID->pAudioFile->getProperty(propID, ioDataSize, propOutData);
+    } else {
+        return kExtAudioFileError_InvalidProperty;
+    }
+}
+
+extern "C" OSStatus _ExtAudioFileSetProperty(ExtAudioFileRef fileID,
+                                             ExtAudioFilePropertyID propID,
+                                             UInt32 ioDataSize,
+                                             const void* propInData) {
+    fileID->pAudioFile->setProperty(propID, ioDataSize, propInData);
+    return 0;
+}
+
+extern "C" OSStatus _ExtAudioFileRead(ExtAudioFileRef fileID, UInt32* numFrames, AudioBufferList* pData) {
+    if (fileID == NULL) {
+        *numFrames = 0;
+        return 1234;
+    }
+    fileID->pAudioFile->read(numFrames, pData);
+
     return 0;
 }

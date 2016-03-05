@@ -18,11 +18,15 @@
 #import <Windows.h>
 #import <Foundation/NSURLCredentialStorage.h>
 
-@interface NSURLCredentialStorage ()
+@interface NSURLCredentialStorage () {
+    NSMutableDictionary *_allCredentials;
+}
 @property (readwrite, copy) NSDictionary* allCredentials;
 @end
 
 NSString* const NSURLCredentialStorageChangedNotification = @"NSURLCredentialStorageChangedNotification";
+
+NSString* const NSURLCredentialStorageRemoveSynchronizableCredentials = @"NSURLCredentialStorageRemoveSynchronizableCredentials";
 
 @implementation NSURLCredentialStorage
 
@@ -63,7 +67,7 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
 /**
  @Status Interoperable
 */
-- (NSDictionary*)_obtainValidCredentialForProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
+- (NSMutableDictionary*)_obtainValidCredentialForProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
     NSDictionary* protectionSpaceValue = [_allCredentials objectForKey:protectionSpace];
 
     if (protectionSpaceValue == nil) {
@@ -85,20 +89,20 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
     if ((!anObject) || (![anObject isKindOfClass:[self class]])) {
         return NO;
     }
-	
-	NSURLCredentialStorage* object = (NSURLCredentialStorage*)anObject;
-	return [_allCredentials isEqual:object.allCredentials];
+
+    NSURLCredentialStorage* object = (NSURLCredentialStorage*)anObject;
+    return [_allCredentials isEqual:object.allCredentials];
 }
 
 - (NSUInteger)hash {
-	return [_allCredentials hash];
+    return [_allCredentials hash];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
-    NSDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
+    NSMutableDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
     [protectionSpaceValue setObject:credential forKey:[credential user]];
 }
 
@@ -106,7 +110,7 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
  @Status Interoperable
 */
 - (void)setDefaultCredential:(NSURLCredential*)credential forProtectionSpace:(NSURLProtectionSpace*)protectionSpace {
-    NSDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
+    NSMutableDictionary* protectionSpaceValue = [self _obtainValidCredentialForProtectionSpace:protectionSpace];
     [protectionSpaceValue setObject:credential forKey:DEFAULT_CREDENTIALS];
 }
 
@@ -123,6 +127,16 @@ NSString* const DEFAULT_CREDENTIALS = @"defaultCredentials";
 - (void)dealloc {
     [_allCredentials release];
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeCredential:(NSURLCredential*)credential
+      forProtectionSpace:(NSURLProtectionSpace*)protectionSpace
+                 options:(NSDictionary*)options {
+    UNIMPLEMENTED();
 }
 
 @end

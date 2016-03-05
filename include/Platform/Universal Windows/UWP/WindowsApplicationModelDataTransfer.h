@@ -218,7 +218,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataPackage : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WADDataPackageOperation requestedOperation;
 @property (readonly) WADDataPackagePropertySet* properties;
 @property (readonly) NSMutableDictionary* resourceMap;

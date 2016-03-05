@@ -23,7 +23,7 @@
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSNull.h"
 #import "Foundation/NSValue.h"
-#import "Foundation/NSPropertyList.h"
+#import "Foundation/NSPropertyListSerialization.h"
 #import "Foundation/NSKeyedArchiver.h"
 #import "Foundation/NSDate.h"
 #import "Foundation/NSAutoreleasePool.h"
@@ -35,8 +35,11 @@ typedef HashMap<id, id> o2oHash;
 
 NSString* const NSInvalidArchiveOperationException = @"NSInvalidArchiveOperationException";
 
+NSString* const NSKeyedArchiveRootObjectKey = @"NSKeyedArchiveRootObjectKey";
+
+static HashMap<Class, StrongId<NSString>> s_clsMap;
 struct NSKeyedArchiverPriv {
-    o2oHash clsMap; /* Map classes to names.    */
+    HashMap<Class, StrongId<NSString>> clsMap; /* Map classes to names.    */
     o2uHash cIdMap; /* Conditionally coded.     */
     o2uHash uIdMap; /* Unconditionally coded.   */
     o2oHash repMap; /* Mappings for objects.    */
@@ -460,33 +463,41 @@ static id makeReference(unsigned ref) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-+ (NSString*)classNameForClass:(id)aClass {
-    UNIMPLEMENTED();
-    return nil;
++ (NSString*)classNameForClass:(Class)aClass {
+    auto className = s_clsMap.get(aClass);
+    return className ? *className : nil;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (void)setClassName:(NSString*)codedName forClass:(Class)aClass {
-    UNIMPLEMENTED();
+    if (!codedName) {
+        s_clsMap.remove(aClass);
+        return;
+    }
+    s_clsMap.insert(aClass, codedName);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (NSString*)classNameForClass:(id)aClass {
-    UNIMPLEMENTED();
-    return nil;
+- (NSString*)classNameForClass:(Class)aClass {
+    auto className = _priv->clsMap.get(aClass);
+    return className ? *className : nil;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setClassName:(NSString*)codedName forClass:(Class)aClass {
-    UNIMPLEMENTED();
+    if (!codedName) {
+        _priv->clsMap.remove(aClass);
+        return;
+    }
+    _priv->clsMap.insert(aClass, codedName);
 }
 
 /**

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #import "Foundation/NSException.h"
 
 NSString* const NSRangeException = @"NSRangeExcepton";
@@ -34,6 +35,15 @@ NSString* const WinObjCException = @"WinObjC Exception"; // not exported
 */
 void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*) {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @implementation NSException
@@ -191,5 +201,16 @@ void NSSetUncaughtExceptionHandler(NSUncaughtExceptionHandler*) {
     NSException* ret = [[self alloc] initWithName:[self _exceptionNameForHRESULT:errorCode] reason:reason userInfo:userInfo];
 
     return [ret autorelease];
+}
+
+- (HRESULT)_hresult {
+    // If we have an hresult in our user dict, use that, otherwise this was unexpected:
+    NSNumber* hresultValue = [self.userInfo objectForKey:g_NSHResultErrorDictKey];
+    if (hresultValue) {
+        return [hresultValue unsignedIntValue];
+    }
+
+    TraceWarning(L"NSException", L"Called -hresult on an NSException without an HRESULT!");
+    return E_UNEXPECTED;
 }
 @end

@@ -35,11 +35,11 @@
 * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _UISEARCHBAR_H_
-#define _UISEARCHBAR_H_
+#pragma once
 
 #import "UIView.h"
 #import "UITextField.h"
+#import "UISearchBarDelegate.h"
 #import <UIKit/UIInterface.h>
 
 typedef enum {
@@ -53,8 +53,6 @@ typedef enum {
     UISearchBarStyleDefault,
     UISearchBarStyleMinimal,
 } UISearchBarStyle;
-
-@protocol UISearchBarDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UISearchBar : UIView
@@ -84,25 +82,3 @@ UIKIT_EXPORT_CLASS
 - (void)setSearchFieldBackgroundImage:(UIImage*)iconImage forState:(UIControlState)state;
 
 @end
-
-@protocol UISearchBarDelegate <NSObject>
-
-@optional
-
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar*)searchBar;
-- (void)searchBarTextDidBeginEditing:(UISearchBar*)searchBar;
-- (BOOL)searchBarShouldEndEditing:(UISearchBar*)searchBar;
-- (void)searchBarTextDidEndEditing:(UISearchBar*)searchBar;
-- (void)searchBar:(UISearchBar*)searchBar textDidChange:(NSString*)searchText;
-- (BOOL)searchBar:(UISearchBar*)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString*)text;
-
-- (void)searchBarSearchButtonClicked:(UISearchBar*)searchBar;
-- (void)searchBarBookmarkButtonClicked:(UISearchBar*)searchBar;
-- (void)searchBarCancelButtonClicked:(UISearchBar*)searchBar;
-- (void)searchBarResultsListButtonClicked:(UISearchBar*)searchBar;
-
-- (void)searchBar:(UISearchBar*)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope;
-
-@end
-
-#endif /* _UISEARCHBAR_H_ */

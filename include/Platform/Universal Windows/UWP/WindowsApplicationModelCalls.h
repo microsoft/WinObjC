@@ -84,7 +84,7 @@ WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryAddress : RTObject
 + (WACPhoneCallHistoryEntryAddress*)create:(NSString*)rawAddress
                             rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACPhoneCallHistoryEntryRawAddressKind rawAddressKind;
 @property (copy) NSString* rawAddress;
 @property (copy) NSString* displayName;
@@ -99,7 +99,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntry : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACPhoneCallHistoryEntryMedia media;
 @property BOOL isMissed;
 @property BOOL isIncoming;
@@ -139,7 +139,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryQueryOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACPhoneCallHistoryEntryQueryDesiredMedia desiredMedia;
 @property (readonly) NSMutableArray* sourceIds;
 @end

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #ifndef CORETEXT_IMPEXP
 #define CORETEXT_IMPEXP __declspec(dllimport)
@@ -25,5 +26,15 @@
 #else
 #define CORETEXT_EXPORT CORETEXT_IMPEXP extern
 #define CORETEXT_EXPORT_CLASS CORETEXT_IMPEXP
+#endif
+#endif
+
+#ifndef CORETEXT_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define CORETEXT_EXTERNC_BEGIN extern "C" {
+#define CORETEXT_EXTERNC_END }
+#else
+#define CORETEXT_EXTERNC_BEGIN
+#define CORETEXT_EXTERNC_END
 #endif
 #endif

@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIPRINTIINFO_H_
-#define _UIPRINTIINFO_H_
+#pragma once
 
 #import <Foundation/NSObject.h>
 
@@ -34,5 +33,3 @@ typedef enum {
 + (UIPrintInfo*)printInfo;
 
 @end
-
-#endif /* _UIPRINTIINFO_H_ */

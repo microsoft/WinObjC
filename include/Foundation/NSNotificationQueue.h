@@ -1,46 +1,42 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
 
-@class NSNotificationCenter,NSNotification,NSArray,NSMutableArray;
+@class NSNotificationCenter;
+@class NSNotification;
+@class NSArray;
 
 typedef enum {
-   NSPostWhenIdle=1,
-   NSPostASAP,
-   NSPostNow
-} NSPostingStyle;
-
-typedef enum {
-   NSNotificationNoCoalescing=0x00,
-   NSNotificationCoalescingOnName=0x01,
-   NSNotificationCoalescingOnSender=0x02
+    NSNotificationNoCoalescing = 0,
+    NSNotificationCoalescingOnName = 1,
+    NSNotificationCoalescingOnSender = 2
 } NSNotificationCoalescing;
+typedef enum { NSPostWhenIdle = 1, NSPostASAP = 2, NSPostNow = 3 } NSPostingStyle;
 
-@interface NSNotificationQueue:NSObject {
-    NSNotificationCenter *_center;
-    NSMutableArray       *_asapQueue;
-    NSMutableArray       *_idleQueue;
-}
-
--initWithNotificationCenter:(NSNotificationCenter *)center;
-
-+(NSNotificationQueue *)defaultQueue;
-
--(void)enqueueNotification:(NSNotification *)note
-              postingStyle:(NSPostingStyle)style
-              coalesceMask:(NSUInteger)mask
-                  forModes:(NSArray *)modes;
-
--(void)enqueueNotification:(NSNotification *)note
-              postingStyle:(NSPostingStyle)style;
-
--(void)dequeueNotificationsMatching:(NSNotification *)note
-                       coalesceMask:(NSUInteger)mask;
-
+FOUNDATION_EXPORT_CLASS
+@interface NSNotificationQueue : NSObject
+- (instancetype)initWithNotificationCenter:(NSNotificationCenter*)notificationCenter STUB_METHOD;
++ (NSNotificationQueue*)defaultQueue;
+- (void)enqueueNotification:(NSNotification*)notification postingStyle:(NSPostingStyle)postingStyle STUB_METHOD;
+- (void)enqueueNotification:(NSNotification*)notification
+               postingStyle:(NSPostingStyle)postingStyle
+               coalesceMask:(NSNotificationCoalescing)coalesceMask
+                   forModes:(NSArray*)modes STUB_METHOD;
+- (void)dequeueNotificationsMatching:(NSNotification*)notification coalesceMask:(NSUInteger)coalesceMask STUB_METHOD;
 @end

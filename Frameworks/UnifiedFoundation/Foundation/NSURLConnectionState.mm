@@ -18,6 +18,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSRunLoop.h"
 #include "Foundation/NSDate.h"
 #include "NSRunLoopSource.h"
+#include "NSRunLoop+Internal.h"
 
 @interface NSURLConnectionState ()
 @property (nonatomic, readwrite, retain) NSError* error;
@@ -26,7 +27,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 @implementation NSURLConnectionState
 - (id)init {
-    if(self = [super init]) {
+    if (self = [super init]) {
         _error = nil;
         _wakeUp.attach([NSRunLoopSource new]);
         [_wakeUp setSourceDelegate:(id)self selector:@selector(_doneWakeup)];
@@ -52,13 +53,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 - (void)receiveAllDataInMode:(id)mode {
     _isRunning = YES;
 
-    [[NSRunLoop currentRunLoop] addInputSource:(id)_wakeUp forMode:mode];
+    [[NSRunLoop currentRunLoop] _addInputSource:(id)_wakeUp forMode:mode];
 
     while ([self isRunning]) {
         [[NSRunLoop currentRunLoop] runMode:mode beforeDate:[NSDate distantFuture]];
     }
 
-    [[NSRunLoop currentRunLoop] removeInputSource:(id)_wakeUp forMode:mode];
+    [[NSRunLoop currentRunLoop] _removeInputSource:(id)_wakeUp forMode:mode];
 }
 
 - (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
@@ -73,7 +74,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 }
 
 - (void)_doneWakeup {
-
 }
 
 - (void)connection:(id)connection didFailWithError:(id)error {

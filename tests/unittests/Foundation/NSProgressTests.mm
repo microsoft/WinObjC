@@ -14,8 +14,9 @@
 // floating
 //******************************************************************************
 
-#import <TestFramework.h>
-#import <Foundation/Foundation.h>
+#import "Foundation/Foundation.h"
+#import "Starboard.h"
+#import "TestFramework.h"
 #import <thread>
 
 static const uint64_t work1pendingUnitCount = 2;
@@ -41,7 +42,7 @@ static const uint64_t work2pendingUnitCount = 30;
 
 - (void)_workImpl:(NSProgress*)parent pendingUnitCount:(int64_t)pendingUnitCount {
     [parent becomeCurrentWithPendingUnitCount:pendingUnitCount];
-    NSProgress* child = [NSProgress progressWithTotalUnitCount:10];
+    StrongId<NSProgress> child = [NSProgress progressWithTotalUnitCount:10];
     [child setCompletedUnitCount:10];
     [parent resignCurrent];
 }
@@ -83,13 +84,13 @@ static const uint64_t work2pendingUnitCount = 30;
 }
 
 - (void)becomeResignCheckCurrentWithChild:(NSProgress*)parent {
-    NSProgress* child = [NSProgress progressWithTotalUnitCount:10];
+    StrongId<NSProgress> child = [NSProgress progressWithTotalUnitCount:10];
     [parent addChild:child withPendingUnitCount:[parent totalUnitCount]];
     [self _becomeResignCheckCurrentImpl:child];
 }
 
 - (void)addParentTo:(NSProgress*)child {
-    NSProgress* parent = [NSProgress progressWithTotalUnitCount:25235];
+    StrongId<NSProgress> parent = [NSProgress progressWithTotalUnitCount:25235];
     @try {
         [parent addChild:child withPendingUnitCount:[parent totalUnitCount]];
     } @catch (NSException* exception) {
@@ -101,7 +102,7 @@ static const uint64_t work2pendingUnitCount = 30;
 
 TEST(Foundation, NSProgress_UserInfo) {
     // Nil userInfo as param
-    NSProgress* nilUserInfo = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+    StrongId<NSProgress> nilUserInfo = [[NSProgress alloc] initWithParent:nil userInfo:nil];
     ASSERT_OBJCNE(nil, [nilUserInfo userInfo]);
 
     [nilUserInfo setUserInfoObject:@"value1" forKey:@"key1"];
@@ -109,8 +110,8 @@ TEST(Foundation, NSProgress_UserInfo) {
     ASSERT_EQ(2, [[nilUserInfo userInfo] count]);
 
     // Pass in userInfo
-    NSMutableDictionary* mutableDict = [[NSMutableDictionary alloc] initWithDictionary:@{ @"key1" : @"value1" }];
-    NSProgress* actualUserInfo = [[NSProgress alloc] initWithParent:nil userInfo:mutableDict];
+    StrongId<NSMutableDictionary> mutableDict = [[NSMutableDictionary alloc] initWithDictionary:@{ @"key1" : @"value1" }];
+    StrongId<NSProgress> actualUserInfo = [[NSProgress alloc] initWithParent:nil userInfo:mutableDict];
     ASSERT_OBJCEQ(mutableDict, [actualUserInfo userInfo]);
 
     // Make sure mutableDict was copied
@@ -119,7 +120,7 @@ TEST(Foundation, NSProgress_UserInfo) {
 }
 
 TEST(Foundation, NSProgress_FractionCompleted) {
-    NSProgress* userInfo = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+    StrongId<NSProgress> userInfo = [[NSProgress alloc] initWithParent:nil userInfo:nil];
     ASSERT_EQ(0, [userInfo totalUnitCount]);
     ASSERT_EQ(0, [userInfo completedUnitCount]);
 
@@ -130,7 +131,7 @@ TEST(Foundation, NSProgress_FractionCompleted) {
 }
 
 TEST(Foundation, NSProgress_IsIndeterminate) {
-    NSProgress* progress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
+    StrongId<NSProgress> progress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
     ASSERT_EQ(YES, [progress isIndeterminate]);
 
     [progress setTotalUnitCount:5];
@@ -144,11 +145,11 @@ TEST(Foundation, NSProgress_IsIndeterminate) {
 }
 
 TEST(Foundation, NSProgress_ChainImplicit) {
-    NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> prog1 = [NSProgress progressWithTotalUnitCount:100];
     [prog1 becomeCurrentWithPendingUnitCount:100];
-    NSProgress* prog2 = [NSProgress progressWithTotalUnitCount:50];
+    StrongId<NSProgress> prog2 = [NSProgress progressWithTotalUnitCount:50];
     [prog2 becomeCurrentWithPendingUnitCount:50];
-    NSProgress* prog3 = [NSProgress progressWithTotalUnitCount:10];
+    StrongId<NSProgress> prog3 = [NSProgress progressWithTotalUnitCount:10];
     [prog3 setCompletedUnitCount:6];
 
     ASSERT_EQ(0.6, [prog3 fractionCompleted]);
@@ -174,11 +175,11 @@ TEST(Foundation, NSProgress_ChainImplicit) {
 }
 
 TEST(Foundation, NSProgress_TreeImplicit) {
-    NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
-    ProgressThreadHelper* progressThreadHelper = [ProgressThreadHelper new];
+    StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<ProgressThreadHelper> progressThreadHelper = [ProgressThreadHelper new];
 
-    NSThread* thread1 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work1:) object:root];
-    NSThread* thread2 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work2:) object:root];
+    StrongId<NSThread> thread1 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work1:) object:root];
+    StrongId<NSThread> thread2 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(work2:) object:root];
 
     [thread1 start];
     [thread2 start];
@@ -192,23 +193,23 @@ TEST(Foundation, NSProgress_TreeImplicit) {
 }
 
 TEST(Foundation, NSProgress_TreeExplicit) {
-    NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
 
     // layer 1 children
-    NSProgress* child1 = [NSProgress progressWithTotalUnitCount:100];
-    NSProgress* child2 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> child1 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> child2 = [NSProgress progressWithTotalUnitCount:100];
     [root addChild:child1 withPendingUnitCount:30];
     [root addChild:child2 withPendingUnitCount:50];
 
     // layer 2 children
-    NSProgress* child11 = [NSProgress progressWithTotalUnitCount:100];
-    NSProgress* child12 = [NSProgress progressWithTotalUnitCount:100];
-    NSProgress* child13 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> child11 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> child12 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> child13 = [NSProgress progressWithTotalUnitCount:100];
     [child1 addChild:child11 withPendingUnitCount:10];
     [child1 addChild:child12 withPendingUnitCount:20];
     [child1 addChild:child13 withPendingUnitCount:70];
 
-    NSProgress* child21 = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> child21 = [NSProgress progressWithTotalUnitCount:100];
     [child2 addChild:child21 withPendingUnitCount:100];
 
     [child11 setCompletedUnitCount:100];
@@ -226,10 +227,11 @@ TEST(Foundation, NSProgress_TreeExplicit) {
 }
 
 TEST(Foundation, NSProgress_CurrentProgress_ThreadLocal) {
-    NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
     [root becomeCurrentWithPendingUnitCount:50];
-    ProgressThreadHelper* progressThreadHelper = [ProgressThreadHelper new];
-    NSThread* thread1 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(becomeResignCheckCurrent:) object:nil];
+    StrongId<ProgressThreadHelper> progressThreadHelper = [ProgressThreadHelper new];
+    StrongId<NSThread> thread1 =
+        [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(becomeResignCheckCurrent:) object:nil];
     [thread1 start];
 
     size_t i = 0;
@@ -256,12 +258,12 @@ TEST(Foundation, NSProgress_CurrentProgress_ThreadLocal) {
     [root resignCurrent];
 }
 
-TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
-    NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
-    ProgressThreadHelper* progressThreadHelper = [ProgressThreadHelper new];
+ARM_DISABLED_TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
+    StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<ProgressThreadHelper> progressThreadHelper = [ProgressThreadHelper new];
 
-    NSThread* thread1 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(addParentTo:) object:root];
-    NSThread* thread2 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(addParentTo:) object:root];
+    StrongId<NSThread> thread1 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(addParentTo:) object:root];
+    StrongId<NSThread> thread2 = [[NSThread alloc] initWithTarget:progressThreadHelper selector:@selector(addParentTo:) object:root];
 
     [thread1 start];
     [thread2 start];
@@ -276,7 +278,7 @@ TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
 
 TEST(Foundation, NSProgress_ResignCurrentAutomaticBehavior) {
     // Become current and resign current without a child in-between should automatically increment by adding the pending units
-    NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
     [root becomeCurrentWithPendingUnitCount:50];
     [root resignCurrent];
 
@@ -284,26 +286,26 @@ TEST(Foundation, NSProgress_ResignCurrentAutomaticBehavior) {
 
     // Implicitly adding a child in-between should cancel this behavior
     [root becomeCurrentWithPendingUnitCount:50];
-    NSProgress* child1 = [NSProgress progressWithTotalUnitCount:30];
+    StrongId<NSProgress> child1 = [NSProgress progressWithTotalUnitCount:30];
     [root resignCurrent];
     ASSERT_EQ(50, [root completedUnitCount]);
 
     // Explicitly adding a child in-between should still trigger the behavior
     [root becomeCurrentWithPendingUnitCount:50];
-    NSProgress* child2 = [NSProgress discreteProgressWithTotalUnitCount:30];
+    StrongId<NSProgress> child2 = [NSProgress discreteProgressWithTotalUnitCount:30];
     [root addChild:child2 withPendingUnitCount:1];
     [root resignCurrent];
     ASSERT_EQ(100, [root completedUnitCount]);
 
     // This constructor is also explicit
     [root becomeCurrentWithPendingUnitCount:50];
-    NSProgress* child3 = [NSProgress progressWithTotalUnitCount:10 parent:root pendingUnitCount:50];
+    StrongId<NSProgress> child3 = [NSProgress progressWithTotalUnitCount:10 parent:root pendingUnitCount:50];
     [root resignCurrent];
     ASSERT_EQ(150, [root completedUnitCount]);
 }
 
 TEST(Foundation, NSProgress_CancelPauseResume) {
-    NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> root = [NSProgress progressWithTotalUnitCount:100];
 
     // Cancellable/Pausable are documented to not actually affect cancelling/pausing
     [root setCancellable:NO];
@@ -341,43 +343,43 @@ TEST(Foundation, NSProgress_CancelPauseResume) {
 
 TEST(Foundation, NSProgress_LocalizedDescription) {
     // Testing for exact strings is not very robust here, just validate that the strings change/don't change based on input
-    NSProgress* progress = [NSProgress progressWithTotalUnitCount:100];
+    StrongId<NSProgress> progress = [NSProgress progressWithTotalUnitCount:100];
 
     // Basic
-    NSString* baseLocalizedDescription = [progress localizedDescription];
-    NSString* baseLocalizedAdditionalDescription = [progress localizedAdditionalDescription];
+    StrongId<NSString> baseLocalizedDescription = [progress localizedDescription];
+    StrongId<NSString> baseLocalizedAdditionalDescription = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", baseLocalizedDescription);
     ASSERT_OBJCNE(@"", baseLocalizedAdditionalDescription);
 
     // Set kind
     [progress setKind:NSProgressKindFile];
     [progress setUserInfoObject:NSProgressFileOperationKindDownloading forKey:NSProgressFileOperationKindKey];
-    NSString* localizedDescriptionWithKind = [progress localizedDescription];
-    NSString* localizedAdditionalDescriptionWithKind = [progress localizedAdditionalDescription];
+    StrongId<NSString> localizedDescriptionWithKind = [progress localizedDescription];
+    StrongId<NSString> localizedAdditionalDescriptionWithKind = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", localizedDescriptionWithKind);
     ASSERT_OBJCEQ(@"", localizedAdditionalDescriptionWithKind); // Yes, this matches the reference platform
     ASSERT_OBJCNE(baseLocalizedDescription, localizedDescriptionWithKind);
 
     // Change kind key
     [progress setUserInfoObject:NSProgressFileOperationKindCopying forKey:NSProgressFileOperationKindKey];
-    NSString* localizedDescriptionWithNewKind = [progress localizedDescription];
+    StrongId<NSString> localizedDescriptionWithNewKind = [progress localizedDescription];
     ASSERT_OBJCNE(@"", localizedDescriptionWithNewKind);
     ASSERT_OBJCNE(localizedDescriptionWithKind, localizedDescriptionWithNewKind);
 
     // Other keys
     [progress setUserInfoObject:@23 forKey:NSProgressEstimatedTimeRemainingKey];
-    NSString* localizedAdditionalDescriptionWithEstimatedTime = [progress localizedAdditionalDescription];
+    StrongId<NSString> localizedAdditionalDescriptionWithEstimatedTime = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", localizedAdditionalDescriptionWithEstimatedTime);
     ASSERT_OBJCNE(localizedAdditionalDescriptionWithKind, localizedAdditionalDescriptionWithEstimatedTime);
 
     [progress setUserInfoObject:@17 forKey:NSProgressThroughputKey];
-    NSString* localizedAdditionalDescriptionWithThroughput = [progress localizedAdditionalDescription];
+    StrongId<NSString> localizedAdditionalDescriptionWithThroughput = [progress localizedAdditionalDescription];
     ASSERT_OBJCNE(@"", localizedAdditionalDescriptionWithThroughput);
     ASSERT_OBJCNE(localizedAdditionalDescriptionWithEstimatedTime, localizedAdditionalDescriptionWithThroughput);
 
     // Manually set
-    NSString* userSetLocalizedDescription = @"user-set localizedDescription";
-    NSString* userSetLocalizedAdditionalDescription = @"user-set localizedAdditionalDescription";
+    StrongId<NSString> userSetLocalizedDescription = @"user-set localizedDescription";
+    StrongId<NSString> userSetLocalizedAdditionalDescription = @"user-set localizedAdditionalDescription";
     [progress setLocalizedDescription:userSetLocalizedDescription];
     [progress setLocalizedAdditionalDescription:userSetLocalizedAdditionalDescription];
     ASSERT_OBJCEQ(userSetLocalizedDescription, [progress localizedDescription]);
@@ -388,4 +390,17 @@ TEST(Foundation, NSProgress_LocalizedDescription) {
     [progress setKind:0];
     ASSERT_OBJCEQ(userSetLocalizedDescription, [progress localizedDescription]);
     ASSERT_OBJCEQ(userSetLocalizedAdditionalDescription, [progress localizedAdditionalDescription]);
+
+    // Ensure copy
+    userSetLocalizedDescription = @"foo";
+    userSetLocalizedAdditionalDescription = @"foo2";
+    ASSERT_OBJCEQ(@"user-set localizedDescription", [progress localizedDescription]);
+    ASSERT_OBJCEQ(@"user-set localizedAdditionalDescription", [progress localizedAdditionalDescription]);
+
+    StrongId<NSString> outLocalizedDescription = [progress localizedDescription];
+    StrongId<NSString> outLocalizedAdditionalDescription = [progress localizedAdditionalDescription];
+    [progress setLocalizedDescription:userSetLocalizedDescription];
+    [progress setLocalizedAdditionalDescription:userSetLocalizedAdditionalDescription];
+    ASSERT_OBJCEQ(@"user-set localizedDescription", outLocalizedDescription);
+    ASSERT_OBJCEQ(@"user-set localizedAdditionalDescription", outLocalizedAdditionalDescription);
 }

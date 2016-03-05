@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, Casey Marshall. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,6 +28,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
 
 #import <Foundation/Foundation.h>
 #import "UIControl.h"
@@ -35,22 +37,23 @@ typedef enum {
     UIDatePickerModeTime,
     UIDatePickerModeDate,
     UIDatePickerModeDateAndTime,
-    UIDatePickerModeCountDownTimer
+    UIDatePickerModeCountDownTimer,
 } UIDatePickerMode;
 
 UIKIT_EXPORT_CLASS
-@interface UIDatePicker : UIControl {
-}
-@property (nonatomic, retain) NSCalendar *calendar;
-@property (nonatomic, retain) NSDate *date;
-@property (nonatomic, retain) NSLocale *locale;
-@property (nonatomic, retain) NSTimeZone *timeZone;
+@interface UIDatePicker : UIControl
+@property (nonatomic, retain) NSCalendar* calendar;
+@property (nonatomic, retain) NSDate* date;
+@property (nonatomic, retain) NSLocale* locale;
+@property (nonatomic, retain) NSTimeZone* timeZone;
 
 @property (nonatomic, assign) UIDatePickerMode datePickerMode;
 
-@property (nonatomic, retain) NSDate *minimumDate;
-@property (nonatomic, retain) NSDate *maximumDate;
+@property (nonatomic, retain) NSDate* minimumDate;
+@property (nonatomic, retain) NSDate* maximumDate;
 @property (nonatomic, assign) NSInteger minuteInterval;
 @property (nonatomic, assign) NSTimeInterval countDownDuration;
+
+- (void)setDate:(NSDate*)date animated:(BOOL)animated STUB_METHOD;
 
 @end

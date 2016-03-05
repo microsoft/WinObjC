@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,22 +14,22 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <Starboard.h>
+#import <CoreGraphics/CGContext.h>
 
-#include "CoreGraphics/CGContext.h"
-#include "CGContextInternal.h"
-#include "CGFontInternal.h"
-#include "CGPatternInternal.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "cairo-ft.h"
+#import "CGContextInternal.h"
+#import "CGFontInternal.h"
+#import "CGPatternInternal.h"
+#import "CoreGraphics/CGGeometry.h"
+#import "cairo-ft.h"
 
 extern "C" {
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
-#include <tttables.h>
-#include <ftadvanc.h>
-#include <ftsizes.h>
+#import <ft2build.h>
+#import FT_FREETYPE_H
+#import <ftglyph.h>
+#import <tttables.h>
+#import <ftadvanc.h>
+#import <ftsizes.h>
 }
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
@@ -130,7 +130,7 @@ CGBlendMode CGContextImpl::CGContextGetBlendMode() {
 }
 
 void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)EbrMalloc(length * sizeof(WORD));
+    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
     DWORD i;
 
     for (i = 0; i < length; i++) {
@@ -140,7 +140,7 @@ void CGContextImpl::CGContextShowTextAtPoint(float x, float y, const char* str, 
     CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
     CGContextShowGlyphsAtPoint(x, y, glyphs, length);
 
-    EbrFree(glyphs);
+    IwFree(glyphs);
 }
 
 void CGContextImpl::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
@@ -614,6 +614,17 @@ destRect.size.height = (float) layer->_layerBacking->Backing()->Height();
 
 DrawImage(layer->_layerBacking, src, destRect);
 #endif
+}
+
+CGInterpolationQuality CGContextImpl::CGContextGetInterpolationQuality() {
+    // CGContext could be backed by CGContextImpl or CGContextCairo.
+    // CGContextImpl is not being currently used but, by convention we add the method here.
+    return kCGInterpolationDefault;
+}
+
+void CGContextImpl::CGContextSetInterpolationQuality(CGInterpolationQuality) {
+    // CGContext could be backed by CGContextImpl or CGContextCairo.
+    // CGContextImpl is not being currently used but, by convention we add the method here
 }
 
 void CGContextImpl::CGContextSetLineDash(float phase, float* lengths, DWORD count) {

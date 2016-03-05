@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #include "../CoreFoundation/CFDictionaryInternal.h"
 #include "CoreFoundation/CFArray.h"
@@ -23,6 +24,9 @@
 #include "NSArrayInternal.h"
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
+
+@interface NSMutableArrayConcrete : NSMutableArray
+@end
 
 @implementation NSMutableArray
 
@@ -113,7 +117,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)obj {
     if (object_getClass(self) == [NSMutableArrayConcrete class]) {
         //  Fastpath
         CFRange range;
@@ -213,10 +217,6 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     [index _removeFromArray:self];
 }
 
-- (void)_moveObjectAtIndexToEnd:(NSUInteger)index {
-    CFArrayMoveValueAtIndexToEnd((CFMutableArrayRef)self, index);
-}
-
 /**
  @Status Interoperable
 */
@@ -257,9 +257,8 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, NSCompareF
 }
 
 static signed int selComp(NSMutableArray* self, int i1, int i2, SEL selector) {
-    typedef int (*ftype)(id self, SEL sel, ...);
-    ftype f = (ftype)class_getMethodImplementation(object_getClass([self objectAtIndex:i1]), selector);
-    return f([self objectAtIndex:i1], selector, [self objectAtIndex:i2]);
+    typedef int (*ftype)(id, SEL, id);
+    return ((ftype)objc_msgSend)([self objectAtIndex:i1], selector, [self objectAtIndex:i2]);
 }
 
 static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL selector) {
@@ -492,6 +491,54 @@ recurse:
         if (![predicate evaluateWithObject:check])
             [self removeObjectAtIndex:count];
     }
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObjectIdenticalTo:(id)anObject inRange:(NSRange)aRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObjectsFromIndices:(NSUInteger*)indices numIndices:(NSUInteger)count {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)replaceObjectsAtIndexes:(NSIndexSet*)indexes withObjects:(NSArray*)objects {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray range:(NSRange)otherRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
+    UNIMPLEMENTED();
 }
 
 @end

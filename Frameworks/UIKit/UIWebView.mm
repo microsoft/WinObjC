@@ -92,7 +92,7 @@ typedef wchar_t WCHAR;
 }
 
 static void initWebKit(UIWebView* self) {
-    self->_xamlWebControl = [WXCWebView create];
+    self->_xamlWebControl = [WXCWebView make];
     [self layer].contentsElement = self->_xamlWebControl;
     self->_xamlLoadCompletedEventCookie = [self->_xamlWebControl addLoadCompletedEvent:^void(RTObject* sender, WUXNNavigationEventArgs* e) {
         self->_isLoading = false;
@@ -247,12 +247,15 @@ static void initWebKit(UIWebView* self) {
     [super setBackgroundColor:color];
 
     [color getRed:&r green:&g blue:&b alpha:&a];
-    
+
     // XAML WebView transparency is not used unless it's set to the transparent system color.
     if (a != 1.0f) {
         [_xamlWebControl setDefaultBackgroundColor:[WUColors transparent]];
     } else {
-        [_xamlWebControl setDefaultBackgroundColor:[WUColorHelper fromArgb:255 r:(unsigned char)(r * 255.0) g:(unsigned char)(g * 255.0) b:(unsigned char)(b * 255.0)]];
+        [_xamlWebControl setDefaultBackgroundColor:[WUColorHelper fromArgb:255
+                                                                         r:(unsigned char)(r * 255.0)
+                                                                         g:(unsigned char)(g * 255.0)
+                                                                         b:(unsigned char)(b * 255.0)]];
     }
 }
 

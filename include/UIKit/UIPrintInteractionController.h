@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#ifndef _UIPRINTINTERACTIONCONTROLLER_H_
-#define _UIPRINTINTERACTIONCONTROLLER_H_
+#pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 @protocol UIPrintInteractionControllerDelegate;
@@ -30,7 +30,9 @@
 typedef void (^UIPrintInteractionCompletionHandler)(UIPrintInteractionController* printInteractionController,
                                                     BOOL completed,
                                                     NSError* error);
+UIKIT_EXPORT NSString* const UIPrintErrorDomain;
 
+UIKIT_EXPORT
 @interface UIPrintInteractionController : NSObject
 
 @property (nonatomic, retain) UIPrintInfo* printInfo;
@@ -42,7 +44,7 @@ typedef void (^UIPrintInteractionCompletionHandler)(UIPrintInteractionController
 + (UIPrintInteractionController*)sharedPrintController;
 + (BOOL)isPrintingAvailable;
 
-- (void)presentAnimated:(BOOL)animated completionHandler:(UIPrintInteractionCompletionHandler)completion;
+- (BOOL)presentAnimated:(BOOL)animated completionHandler:(UIPrintInteractionCompletionHandler)completion;
 - (void)dismissAnimated:(BOOL)animated;
 
 - (BOOL)presentFromBarButtonItem:(UIBarButtonItem*)item
@@ -50,8 +52,3 @@ typedef void (^UIPrintInteractionCompletionHandler)(UIPrintInteractionController
                completionHandler:(UIPrintInteractionCompletionHandler)completion;
 
 @end
-
-@protocol UIPrintInteractionControllerDelegate <NSObject>
-@end
-
-#endif /* _UIPRINTINTERACTIONCONTROLLER_H_ */

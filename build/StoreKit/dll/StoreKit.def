@@ -1,0 +1,57 @@
+LIBRARY StoreKit
+    EXPORTS
+        ; SKDownload.mm
+        SKDownloadTimeRemainingUnknown DATA
+        _OBJC_CLASS_SKDownload DATA
+        __objc_class_name_SKDownload CONSTANT
+
+        ; SKMutablePayment.mm
+        _OBJC_CLASS_SKMutablePayment DATA
+        __objc_class_name_SKMutablePayment CONSTANT
+
+        ; SKPayment.mm
+        _OBJC_CLASS_SKPayment DATA
+        __objc_class_name_SKPayment CONSTANT
+
+        ; SKPaymentQueue.mm
+        _OBJC_CLASS_SKPaymentQueue DATA
+        __objc_class_name_SKPaymentQueue CONSTANT
+
+        ; SKPaymentTransaction.mm
+        _OBJC_CLASS_SKPaymentTransaction DATA
+        __objc_class_name_SKPaymentTransaction CONSTANT
+
+        ; SKProduct.mm
+        _OBJC_CLASS_SKProduct DATA
+        __objc_class_name_SKProduct CONSTANT
+
+        ; SKProductsRequest.mm
+        _OBJC_CLASS_SKProductsRequest DATA
+        __objc_class_name_SKProductsRequest CONSTANT
+
+        ; SKProductsResponse.mm
+        _OBJC_CLASS_SKProductsResponse DATA
+        __objc_class_name_SKProductsResponse CONSTANT
+
+        ; SKReceiptRefreshRequest.mm
+        SKReceiptPropertyIsExpired DATA
+        SKReceiptPropertyIsRevoked DATA
+        SKReceiptPropertyIsVolumePurchase DATA
+        _OBJC_CLASS_SKReceiptRefreshRequest DATA
+        __objc_class_name_SKReceiptRefreshRequest CONSTANT
+
+        ; SKRequest.mm
+        _OBJC_CLASS_SKRequest DATA
+        __objc_class_name_SKRequest CONSTANT
+
+        ; SKStoreProductViewController.mm
+        SKStoreProductParameterITunesItemIdentifier DATA
+        SKStoreProductParameterAffiliateToken DATA
+        SKStoreProductParameterCampaignToken DATA
+        SKStoreProductParameterProviderToken DATA
+        _OBJC_CLASS_SKStoreProductViewController DATA
+        __objc_class_name_SKStoreProductViewController CONSTANT
+
+        ; StoreKit Constants.mm
+        SKErrorDomain DATA
+

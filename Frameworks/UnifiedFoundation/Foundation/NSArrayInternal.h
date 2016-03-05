@@ -17,3 +17,10 @@
 #pragma once
 
 NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state);
+
+@interface NSArray (Internal) {
+}
+
+- (NSArray*)initWithObject:(NSObject*)obj;
+
+@end

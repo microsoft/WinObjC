@@ -38,18 +38,21 @@ typedef wchar_t WCHAR;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setDrawableProperties:(NSDictionary*)propertiesDict {
-    UNIMPLEMENTED();
-    [_properties release];
-    _properties = [propertiesDict copy];
+    if (![propertiesDict isEqualToDictionary:_properties]) {
+        [_properties release];
+        _properties = [propertiesDict copy];
+
+        [self setNeedsLayout];
+    }
 }
 
 - (void)setContentsScale:(float)factor {
     [super setContentsScale:factor];
 
-    WUXMScaleTransform* scaleTransform = [WUXMScaleTransform create];
+    WUXMScaleTransform* scaleTransform = [WUXMScaleTransform make];
     scaleTransform.scaleX = 1.0 / factor;
     scaleTransform.scaleY = 1.0 / factor;
 
@@ -58,7 +61,7 @@ typedef wchar_t WCHAR;
 }
 
 - (instancetype)init {
-    _swapChainPanel = [WXCSwapChainPanel create];
+    _swapChainPanel = [WXCSwapChainPanel make];
     [super init];
     self.contentsElement = _swapChainPanel;
 
@@ -78,10 +81,10 @@ typedef wchar_t WCHAR;
 }
 
 /**
- @Status Stub
+   @Status Caveat
+   @Notes kEAGLDrawablePropertyRetainedBacking, while implemented here, depends on ANGLE code that is not implemented.
 */
 - (NSDictionary*)drawableProperties {
-    UNIMPLEMENTED();
     return _properties;
 }
 

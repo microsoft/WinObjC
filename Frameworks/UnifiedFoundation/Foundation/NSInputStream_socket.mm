@@ -19,8 +19,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSSelectInputSource.h"
 #include "NSSSLHandler.h"
 #include "NSStreamInternal.h"
+#include "NSRunLoop+Internal.h"
 
-@implementation NSInputStream_socket : NSStream
+@implementation NSInputStream_socket
 - (id)initWithSocket:(id)socket streamStatus:(DWORD)status {
     _delegate = self;
     _error = nil;
@@ -56,14 +57,14 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         [_inputSource setSelectEventMask:NSSelectReadEvent | NSSelectExceptEvent];
     }
 
-    [runLoop addInputSource:_inputSource forMode:mode];
+    [runLoop _addInputSource:_inputSource forMode:mode];
 
     return self;
 }
 
 - (id)removeFromRunLoop:(id)runLoop forMode:(id)mode {
     if (_inputSource != nil) {
-        [runLoop removeInputSource:_inputSource forMode:mode];
+        [runLoop _removeInputSource:_inputSource forMode:mode];
     }
 
     return self;

@@ -32,7 +32,11 @@
 #define NSEC_PER_SEC 1000000000
 #endif
 
-dispatch_group_t create_group(size_t count, int delay) {
+#ifndef MSEC_PER_SEC
+#define MSEC_PER_SEC 1000
+#endif
+
+dispatch_group_t create_group(size_t count, int delayInSec) {
     size_t i;
 
     dispatch_group_t group = dispatch_group_create();
@@ -44,9 +48,9 @@ dispatch_group_t create_group(size_t count, int delay) {
         dispatch_group_async(group,
                              queue,
                              ^{
-                                 if (delay) {
+                                 if (delayInSec) {
                                      LOG_INFO("sleeping...\n");
-                                     Sleep(delay);
+                                     Sleep(delayInSec * MSEC_PER_SEC);
                                      LOG_INFO("done.\n");
                                  }
                              });
@@ -106,5 +110,5 @@ TEST(Dispatch, DispatchGroup) {
     dispatch_release(group);
     group = NULL;
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

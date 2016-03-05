@@ -47,19 +47,43 @@ static BOOL NSLocationInRange(NSUInteger idx, NSRange r) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 NSString* NSStringFromRange(NSRange range) {
-    UNIMPLEMENTED();
-    return nil;
+    return [NSString stringWithFormat:@"{%lu, %lu}", (unsigned long)range.location, (unsigned long)range.length];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 NSRange NSRangeFromString(NSString* s) {
-    UNIMPLEMENTED();
-    return { 0, 0 };
+    static NSCharacterSet* trimChars = [NSCharacterSet characterSetWithCharactersInString:@"{}- "];
+
+    // Valid string begins with '{' and ends with '}'
+    if ([s characterAtIndex:0] == '{' && [s characterAtIndex:([s length] - 1)] == '}') {
+        NSArray* components = [s componentsSeparatedByString:@","];
+
+        // The two components are position and length - any other number of components is invalid.
+        if ([components count] != 2) {
+            return NSMakeRange(0, 0);
+        }
+
+        unsigned long long position;
+        NSScanner* scanner = [NSScanner scannerWithString:[components[0] stringByTrimmingCharactersInSet:trimChars]];
+        if (![scanner scanUnsignedLongLong:&position]) {
+            return NSMakeRange(0, 0);
+        }
+
+        unsigned long long length;
+        scanner = [NSScanner scannerWithString:[components[1] stringByTrimmingCharactersInSet:trimChars]];
+        if (![scanner scanUnsignedLongLong:&length]) {
+            return NSMakeRange(0, 0);
+        }
+
+        return NSMakeRange(position, length);
+    }
+
+    return NSMakeRange(0, 0);
 }
 
 /**
@@ -83,9 +107,13 @@ NSRange NSIntersectionRange(NSRange first, NSRange second) {
 }
 
 /**
-@Status Stub
+@Status Interoperable
 */
 NSRange NSUnionRange(NSRange range1, NSRange range2) {
-    UNIMPLEMENTED();
-    return { 0, 0 };
+    NSRange result;
+    result.location = MIN(range1.location, range2.location);
+    NSUInteger maximum = MAX(NSMaxRange(range1), NSMaxRange(range2));
+    result.length = maximum - result.location;
+
+    return result;
 }

@@ -16,7 +16,7 @@
 
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
-#include <Foundation/CFBinaryHeap.h>
+#include <CoreFoundation/CFBinaryHeap.h>
 #include <string.h>
 
 TEST(Foundation, CFBinaryHeap_BasicCreation) {

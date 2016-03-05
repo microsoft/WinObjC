@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,13 +28,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIEvent.h"
 #import "UIKitExport.h"
 
 UIKIT_EXPORT_CLASS
 @interface UIResponder : NSObject
 
-- (UIResponder *)nextResponder;
+- (UIResponder*)nextResponder;
 - (BOOL)isFirstResponder;
 - (BOOL)canBecomeFirstResponder;
 - (BOOL)becomeFirstResponder;
@@ -42,29 +45,29 @@ UIKIT_EXPORT_CLASS
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender;
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event;
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event;
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event;
 
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event;
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event;
-- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent *)event;
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event;
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event;
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event;
 - (void)reloadInputViews;
 
-@property (readonly) NSUndoManager *undoManager;
+@property (readonly) NSUndoManager* undoManager;
 
 @end
 
 @interface UIResponder (inputAdditions)
-@property (readonly, retain) UIView *inputAccessoryView;
-@property (readonly, retain) UIView *inputView;
+@property (readonly, retain) UIView* inputAccessoryView;
+@property (readonly, retain) UIView* inputView;
 @end
 
 @interface NSObject (UIResponderStandardEditActions)
 - (void)copy:(id)sender;
 - (void)cut:(id)sender;
-- (void)delete:(id)sender;
+- (void) delete:(id)sender;
 - (void)paste:(id)sender;
 - (void)select:(id)sender;
 - (void)selectAll:(id)sender;

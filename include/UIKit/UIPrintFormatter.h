@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIPRINTFORMATTER_H_
-#define _UIPRINTFORMATTER_H_
+#pragma once
 
 #import <Foundation/NSObject.h>
 #import <UIKit/UIView.h>
@@ -26,12 +25,3 @@
 @property (nonatomic) UIEdgeInsets contentInsets;
 
 @end
-
-@interface UIViewPrintFormatter : UIPrintFormatter
-@end
-
-@interface UIView (UIPrintFormatter)
-- (UIViewPrintFormatter*)viewPrintFormatter;
-@end
-
-#endif /* _UIPRINTFORMATTER_H_ */

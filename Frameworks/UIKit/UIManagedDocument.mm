@@ -15,9 +15,140 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 
 #include "UIKit/UIManagedDocument.h"
 
 @implementation UIManagedDocument
 
+/*
+ @Status Stub
+ @Notes
+*/
++ (NSManagedObjectModel*)modelByMergingModels:(NSArray*)models {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
++ (NSManagedObjectModel*)mergedModelFromBundles:(NSArray*)bundles {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)entities {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)entitiesByName {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)localizationDictionary {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (void)setEntities:(NSArray*)entities {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (void)setLocalizationDictionary:(NSDictionary*)dictionary {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)configurations {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)entitiesForConfiguration:(NSString*)configuration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (void)setEntities:(NSArray*)entities forConfiguration:(NSString*)configuration {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSFetchRequest*)fetchRequestTemplateForName:(NSString*)name {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (NSFetchRequest*)fetchRequestFromTemplateWithName:(NSString*)name substitutionVariables:(NSDictionary*)variables {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (void)setFetchRequestTemplate:(NSFetchRequest*)fetchRequest forName:(NSString*)name {
+    UNIMPLEMENTED();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isConfiguration:(NSString*)configuration compatibleWithStoreMetadata:(NSDictionary*)metadata {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 @end

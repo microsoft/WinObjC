@@ -42,6 +42,24 @@
 
 extern int gettimeofday(struct timeval* tp, void* tzp);
 
+static dispatch_source_t s_timer;
+
+@interface LocalTestHelper : NSObject
++ (void)stopTest:(NSNumber*)delayInSec;
++ (void)stopTestAfterDelay:(DWORD)delayInSec;
+@end
+@implementation LocalTestHelper
++ (void)stopTest:(NSNumber*)delayInSec {
+    [NSThread sleepForTimeInterval:[delayInSec intValue]];
+    dispatch_source_cancel(s_timer);
+    dispatch_release(s_timer);
+    test_stop();
+}
++ (void)stopTestAfterDelay:(DWORD)delayInSec {
+    [NSThread detachNewThreadSelector:@selector(stopTest:) toTarget:self withObject:[NSNumber numberWithInt:delayInSec]];
+}
+@end
+
 TEST(Dispatch, DispatchDrift) {
     __block uint32_t count = 0;
     __block double last_jitter = 0;
@@ -59,11 +77,10 @@ TEST(Dispatch, DispatchDrift) {
 
     test_start("Timer drift test");
 
-    dispatch_source_t timer;
-    timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
-    test_ptr_notnull("DISPATCH_SOURCE_TYPE_TIMER", timer);
+    s_timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    test_ptr_notnull("DISPATCH_SOURCE_TYPE_TIMER", s_timer);
 
-    dispatch_source_set_event_handler(timer,
+    dispatch_source_set_event_handler(s_timer,
                                       ^{
                                           struct timeval now_tv;
                                           gettimeofday(&now_tv, NULL);
@@ -77,17 +94,17 @@ TEST(Dispatch, DispatchDrift) {
                                           double jitter = goal - now;
                                           double drift = jitter - last_jitter;
 
-                                          count += dispatch_source_get_data(timer);
+                                          count += dispatch_source_get_data(s_timer);
                                           jittersum += jitter;
                                           driftsum += drift;
 
-                                          printf("%4d: jitter %f, drift %f\n", count, jitter, drift);
+                                          LOG_INFO("%4d: jitter %f, drift %f\n", count, jitter, drift);
 
                                           if (count >= target) {
                                               /* In WINOBJC, our timers are currently based upon 10ms resolution. */
                                               test_double_less_than("average jitter", fabs(jittersum) / (double)count, 0.01);
                                               test_double_less_than("average drift", fabs(driftsum) / (double)count, 0.0001);
-                                              test_stop();
+                                              [LocalTestHelper stopTestAfterDelay:0];
                                           }
                                           last_jitter = jitter;
                                       });
@@ -99,10 +116,10 @@ TEST(Dispatch, DispatchDrift) {
     now_ts.tv_sec = now_tv.tv_sec;
     now_ts.tv_nsec = now_tv.tv_usec * NSEC_PER_USEC;
 
-    dispatch_source_set_timer(timer, dispatch_walltime(&now_ts, interval), interval, 0);
+    dispatch_source_set_timer(s_timer, dispatch_walltime(&now_ts, interval), interval, 0);
 
-    dispatch_resume((dispatch_object_t)timer);
+    dispatch_resume((dispatch_object_t)s_timer);
 
-    test_stop();
-    UIApplicationMainLoop();
+    [LocalTestHelper stopTestAfterDelay:5];
+    test_block_until_stopped();
 }

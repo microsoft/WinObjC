@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -27,7 +28,7 @@ id EbrGetExternalCookies(id url) {
     return nil;
 }
 
-@implementation NSHTTPCookieStorage : NSObject
+@implementation NSHTTPCookieStorage
 
 /**
  @Status Caveat
@@ -195,6 +196,24 @@ id EbrGetExternalCookies(id url) {
 */
 - (void)setCookieAcceptPolicy:(int)policy {
     _cookieAcceptPolicy = (NSHTTPCookieAcceptPolicy)policy;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithStorageLocation:(NSURL*)storageFileURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)sortedCookiesUsingDescriptors:(NSArray*)sortOrder {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

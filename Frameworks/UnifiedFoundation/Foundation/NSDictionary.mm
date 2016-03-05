@@ -15,7 +15,9 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "../CoreFoundation/CFDictionaryInternal.h"
+#include "NSEnumeratorInternal.h"
 #include "CoreFoundation/CFDictionary.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSString.h"
@@ -49,7 +51,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
-@implementation NSDictionary : NSObject
+@implementation NSDictionary
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class uses setObject:forKey: as a setter, and has no key-specific setters.
@@ -257,15 +259,15 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         } else {
             unsigned numPairs = [dictionary count];
 
-            id* keys = (id*)EbrCalloc(numPairs, sizeof(id));
-            id* vals = (id*)EbrCalloc(numPairs, sizeof(id));
+            id* keys = (id*)IwCalloc(numPairs, sizeof(id));
+            id* vals = (id*)IwCalloc(numPairs, sizeof(id));
 
             CFDictionaryGetKeysAndValues((CFDictionaryRef)dictionary, (const void**)keys, (const void**)vals);
 
             [self initWithObjects:vals forKeys:keys count:numPairs];
 
-            EbrFree(keys);
-            EbrFree(vals);
+            IwFree(keys);
+            IwFree(vals);
         }
     } else {
         [self init];
@@ -280,8 +282,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 - (NSDictionary*)initWithDictionary:(NSDictionary*)dict copyItems:(BOOL)copyItems {
     unsigned count = [dict count];
 
-    id* keys = (id*)EbrCalloc(count, sizeof(id));
-    id* vals = (id*)EbrCalloc(count, sizeof(id));
+    id* keys = (id*)IwCalloc(count, sizeof(id));
+    id* vals = (id*)IwCalloc(count, sizeof(id));
     unsigned numPairs = 0;
 
     NSEnumerator* enumerator = [dict keyEnumerator];
@@ -311,8 +313,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         [vals[i] release];
     }
 
-    EbrFree(keys);
-    EbrFree(vals);
+    IwFree(keys);
+    IwFree(vals);
 
     return self;
 }
@@ -425,11 +427,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* values = (id*)EbrCalloc(count, sizeof(id));
+        id* values = (id*)IwCalloc(count, sizeof(id));
         CFDictionaryGetKeysAndValues((CFDictionaryRef)self, NULL, (const void**)values);
 
         NSArray* ret = [NSArray arrayWithObjects:values count:count];
-        EbrFree(values);
+        IwFree(values);
 
         return ret;
     } else {
@@ -439,7 +441,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* values = (id*)EbrCalloc(count, sizeof(id));
+        id* values = (id*)IwCalloc(count, sizeof(id));
         id state = [self keyEnumerator];
         id key;
         unsigned i;
@@ -452,7 +454,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         assert(i == count);
 
         NSArray* ret = [NSArray arrayWithObjects:values count:count];
-        EbrFree(values);
+        IwFree(values);
 
         return ret;
     }
@@ -469,11 +471,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* keys = (id*)EbrCalloc(count, sizeof(id));
+        id* keys = (id*)IwCalloc(count, sizeof(id));
         CFDictionaryGetKeysAndValues((CFDictionaryRef)self, (const void**)keys, NULL);
 
         NSArray* ret = [NSArray arrayWithObjects:keys count:count];
-        EbrFree(keys);
+        IwFree(keys);
 
         return ret;
     } else {
@@ -483,7 +485,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             return [NSArray array];
         }
 
-        id* keys = (id*)EbrCalloc(count, sizeof(id));
+        id* keys = (id*)IwCalloc(count, sizeof(id));
         id state = [self keyEnumerator];
         id key;
         int i;
@@ -495,7 +497,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         assert(i == count);
 
         NSArray* ret = [NSArray arrayWithObjects:keys count:count];
-        EbrFree(keys);
+        IwFree(keys);
 
         return ret;
     }
@@ -510,7 +512,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     //  Grab all keys and toss 'em into an array if isEqual returns true
     unsigned numKeys = [self count];
-    id* values = (id*)EbrCalloc(numKeys, sizeof(id));
+    id* values = (id*)IwCalloc(numKeys, sizeof(id));
     unsigned numValues = 0;
 
     id curKey = [keyEnum nextObject];
@@ -527,7 +529,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 
     NSArray* ret = [NSArray arrayWithObjects:values count:numValues];
-    EbrFree(values);
+    IwFree(values);
 
     return ret;
 }
@@ -595,14 +597,18 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetValueEnumerator forObject:self nextFunction:CFDictionaryGetNextValue];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFDictionaryGetValueEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)CFDictionaryGetNextValue];
 }
 
 /**
  @Status Interoperable
 */
 - (NSEnumerator*)keyEnumerator {
-    return [NSEnumerator enumeratorWithIterator:CFDictionaryGetKeyEnumerator forObject:self nextFunction:CFDictionaryGetNextKey];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFDictionaryGetKeyEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)CFDictionaryGetNextKey];
 }
 
 /* NSFileManager category helpers */
@@ -824,6 +830,178 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
     return result;
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)keysOfEntriesPassingTest:(BOOL (^)(id, id, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, id, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)fileExtensionHidden {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSNumber*)fileGroupOwnerAccountID {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)fileGroupOwnerAccountName {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (OSType)fileHFSCreatorCode {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (OSType)fileHFSTypeCode {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)fileIsAppendOnly {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)fileIsImmutable {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSNumber*)fileOwnerAccountID {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)fileOwnerAccountName {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)filePosixPermissions {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)fileSystemFileNumber {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSInteger)fileSystemNumber {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)sharedKeySetForKeys:(NSArray*)keys {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end
 
 /**

@@ -13,23 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#import <QuartzCore/CoreAnimationExport.h>
 #import <Foundation/NSString.h>
 #import <CoreGraphics/CGColor.h>
-#import <QuartzCore/CABase.h>
 #import <QuartzCore/CALayer.h>
 
 CA_EXPORT NSString* const kCAFillRuleNonZero;
 CA_EXPORT NSString* const kCAFillRuleEvenOdd;
+CA_EXPORT NSString* const kCALineJoinMiter;
+CA_EXPORT NSString* const kCALineJoinRound;
+CA_EXPORT NSString* const kCALineJoinBevel;
+CA_EXPORT NSString* const kCALineCapButt;
+CA_EXPORT NSString* const kCALineCapRound;
+CA_EXPORT NSString* const kCALineCapSquare;
 
 CA_EXPORT_CLASS
-@interface CAShapeLayer : CALayer
+@interface CAShapeLayer : CALayer <CAMediaTiming, NSCoding>
 
 @property CGPathRef path;
 @property CGColorRef fillColor;
-@property (copy) NSString* fillRule;
-@property CGColorRef strokeColor;
+@property (copy) NSString* fillRule STUB_PROPERTY;
+@property (copy) NSString* lineCap STUB_PROPERTY;
+@property (copy) NSArray* lineDashPattern STUB_PROPERTY;
+@property CGFloat lineDashPhase STUB_PROPERTY;
+@property (copy) NSString* lineJoin STUB_PROPERTY;
 @property CGFloat lineWidth;
-@property NSString* lineCap;
+@property CGFloat miterLimit STUB_PROPERTY;
+@property CGColorRef strokeColor;
+@property CGFloat strokeStart STUB_PROPERTY;
+@property CGFloat strokeEnd STUB_PROPERTY;
 
 @end

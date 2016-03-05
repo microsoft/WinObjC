@@ -209,7 +209,7 @@ typedef unsigned WAAAppointmentStoreChangeType;
 
 WINRT_EXPORT
 @interface WAAAppointment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* location;
 @property BOOL allDay;
 @property (copy) WAAAppointmentOrganizer* organizer;
@@ -328,7 +328,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentOrganizer : RTObject <WAAIAppointmentParticipant>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* displayName;
 @property (copy) NSString* address;
 @end
@@ -341,7 +341,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentInvitee : RTObject <WAAIAppointmentParticipant>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WAAAppointmentParticipantRole role;
 @property WAAAppointmentParticipantResponse response;
 @property (copy) NSString* displayName;
@@ -356,7 +356,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentRecurrence : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WAAAppointmentRecurrenceUnit unit;
 @property (copy) id occurrences;
 @property unsigned int month;
@@ -437,7 +437,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAFindAppointmentsOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int maxCount;
 @property BOOL includeHidden;
 @property (readonly) NSMutableArray* calendarIds;

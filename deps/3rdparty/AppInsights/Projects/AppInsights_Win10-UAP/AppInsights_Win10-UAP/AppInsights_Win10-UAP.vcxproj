@@ -1,0 +1,312 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{64c33816-c431-4ca3-bff6-7d09334ac6fe}</ProjectGuid>
+    <Keyword>DynamicLibrary</Keyword>
+    <ProjectName>AppInsights_Win10-UAP</ProjectName>
+    <RootNamespace>AppInsights_Win10_UAP</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication>true</AppContainerApplication>
+    <ApplicationType>Windows Store</ApplicationType>
+    <ApplicationTypeRevision>8.2</ApplicationTypeRevision>
+    <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <PreprocessorDefinitions>TELEMETRY_CLIENT_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\core\BaseTelemetryContext.h" />
+    <ClInclude Include="..\..\..\src\core\channel\TelemetryChannel.h" />
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderField.h" />
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpHeaderFields.h" />
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpRequest.h" />
+    <ClInclude Include="..\..\..\src\core\channel\utils\HttpResponse.h" />
+    <ClInclude Include="..\..\..\src\core\common\Common.h" />
+    <ClInclude Include="..\..\..\src\core\common\JsonWriter.h" />
+    <ClInclude Include="..\..\..\src\core\common\Nullable.h" />
+    <ClInclude Include="..\..\..\src\core\common\Serializer.h" />
+    <ClInclude Include="..\..\..\src\core\common\StreamWriter.h" />
+    <ClInclude Include="..\..\..\src\core\common\StringWriter.h" />
+    <ClInclude Include="..\..\..\src\core\common\Utils.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Application.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Base.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Contracts.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\CrashData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\CrashDataBinary.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\CrashDataHeaders.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\CrashDataThread.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\CrashDataThreadFrame.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Data.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\DataPoint.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\DataPointType.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\DependencyKind.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\DependencySourceType.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Device.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Domain.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Envelope.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\EventData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\ExceptionData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\ExceptionDetails.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Internal.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Location.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\MessageData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\MetricData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Operation.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\PageViewData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\PageViewPerfData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\RemoteDependencyData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\RequestData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\Session.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\SessionState.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\SessionStateData.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\SeverityLevel.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\shared\Nullable.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\StackFrame.h" />
+    <ClInclude Include="..\..\..\src\core\contracts\User.h" />
+    <ClInclude Include="..\..\..\src\core\TelemetryClient.h" />
+    <ClInclude Include="..\..\..\src\core\TelemetryClientConfig.h" />
+    <ClInclude Include="..\..\..\src\core\TelemetryContext.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\core\BaseTelemetryContext.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\TelemetryChannel.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\utils\HttpHeaderField.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\utils\HttpRequest.cpp" />
+    <ClCompile Include="..\..\..\src\core\channel\utils\HttpResponse.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\JsonWriter.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\Serializer.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\StreamWriter.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\StringWriter.cpp" />
+    <ClCompile Include="..\..\..\src\core\common\Utils.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Application.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Base.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\CrashData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\CrashDataBinary.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\CrashDataHeaders.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\CrashDataThread.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\CrashDataThreadFrame.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Data.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\DataPoint.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Device.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Domain.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Envelope.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\EventData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\ExceptionData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\ExceptionDetails.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Internal.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Location.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\MessageData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\MetricData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Operation.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\PageViewData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\PageViewPerfData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\RemoteDependencyData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\RequestData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\Session.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\SessionStateData.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\StackFrame.cpp" />
+    <ClCompile Include="..\..\..\src\core\contracts\User.cpp" />
+    <ClCompile Include="..\..\..\src\core\TelemetryClient.cpp" />
+    <ClCompile Include="..\..\..\src\core\TelemetryContextOther.cpp" />
+    <ClCompile Include="..\..\..\src\core\TelemetryContextWin32.cpp" />
+    <ClCompile Include="..\..\..\src\core\TelemetryContextWinStore.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,7 +28,29 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGGeometry.h>
+
+typedef enum {
+    UIForceTouchCapabilityUnknown = 0,
+    UIForceTouchCapabilityUnavailable = 1,
+    UIForceTouchCapabilityAvailable = 2,
+} UIForceTouchCapability;
+
+typedef enum {
+    UITouchTypeDirect,
+    UITouchTypeIndirect,
+    UITouchTypeStylus,
+} UITouchType;
+
+typedef enum {
+    UITouchPropertyForce = (1UL << 0),
+    UITouchPropertyAzimuth = (1UL << 1),
+    UITouchPropertyAltitude = (1UL << 2),
+    UITouchPropertyLocation = (1UL << 3),
+} UITouchProperties;
 
 typedef enum {
     UITouchPhaseBegan,
@@ -35,45 +58,46 @@ typedef enum {
     UITouchPhaseStationary,
     UITouchPhaseEnded,
     UITouchPhaseCancelled,
-    _UITouchPhaseGestureBegan,
-    _UITouchPhaseGestureChanged,
-    _UITouchPhaseGestureEnded,
-    _UITouchPhaseDiscreteGesture
 } UITouchPhase;
 
-typedef enum {
-    _UITouchGestureUnknown = 0,
-    _UITouchGesturePan,                 // maps only to touch-enabled scrolling devices like magic trackpad, etc. for older wheels, use _UITouchGestureScrollWheel
-    _UITouchGestureRotation,            // only works for touch-enabled input devices
-    _UITouchGesturePinch,               // only works for touch-enabled input devices
-    _UITouchGestureSwipe,               // only works for touch-enabled input devices (this is actually discrete, but OSX sends gesture begin/end events around it)
-    _UITouchDiscreteGestureRightClick,  // should be pretty obvious
-    _UITouchDiscreteGestureScrollWheel, // this is used by old fashioned wheel mice or when the OS sends its automatic momentum scroll events
-    _UITouchDiscreteGestureMouseMove    // the mouse moved but wasn't in a gesture or the button was not being held down
-} _UITouchGesture;
-
-@class UIView, UIWindow;
+@class UIView, UIWindow, SKNode;
 
 @interface UITouch : NSObject {
 @public
     float touchX, touchY;
     float previousTouchX, previousTouchY;
-    double timeStamp;
     float velocityX, velocityY;
-    UIView *inView;
-    int tapCount;
-    UITouchPhase phase;
+    UIView* _view;
+    NSTimeInterval _timestamp;
+    unsigned _tapCount;
+    UITouchPhase _phase;
 }
 
-- (CGPoint)locationInView:(UIView *)inView;
-- (CGPoint)previousLocationInView:(UIView *)inView;
+- (CGFloat)azimuthAngleInView:(UIView*)view STUB_METHOD;
+- (CGPoint)locationInNode:(SKNode*)node STUB_METHOD;
+- (CGPoint)locationInView:(UIView*)inView;
+- (CGPoint)preciseLocationInView:(UIView*)view STUB_METHOD;
+- (CGPoint)preciseLocationInView:(UIView*)view STUB_METHOD;
+- (CGPoint)precisePreviousLocationInView:(UIView*)view STUB_METHOD;
+- (CGPoint)precisePreviousLocationInView:(UIView*)view STUB_METHOD;
+- (CGPoint)previousLocationInNode:(SKNode*)node STUB_METHOD;
+- (CGPoint)previousLocationInView:(UIView*)inView;
 - (CGPoint)velocity;
-
+- (CGVector)azimuthUnitVectorInView:(UIView*)view STUB_METHOD;
 @property (nonatomic, readonly) NSTimeInterval timestamp;
 @property (nonatomic, readonly) NSUInteger tapCount;
 @property (nonatomic, readonly) UITouchPhase phase;
-@property (nonatomic, readonly, retain) UIView *view;
-@property (nonatomic, readonly, retain) UIWindow *window;
-@property (nonatomic,readonly,copy) NSArray *gestureRecognizers;
+@property (nonatomic, readonly, copy) NSArray* gestureRecognizers;
+@property (nonatomic, readonly, retain) UIView* view;
+@property (nonatomic, readonly, retain) UIWindow* window;
+@property (readonly, nonatomic) CGFloat altitudeAngle STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat force STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat majorRadius STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat majorRadiusTolerance STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat maximumPossibleForce STUB_PROPERTY;
+@property (readonly, nonatomic) NSNumber* estimationUpdateIndex STUB_PROPERTY;
+@property (readonly, nonatomic) UITouchProperties estimatedProperties STUB_PROPERTY;
+@property (readonly, nonatomic) UITouchProperties estimatedPropertiesExpectingUpdates STUB_PROPERTY;
+@property (readonly, nonatomic) UITouchType type STUB_PROPERTY;
 
 @end

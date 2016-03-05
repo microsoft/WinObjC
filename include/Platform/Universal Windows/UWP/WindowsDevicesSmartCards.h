@@ -185,7 +185,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardPinPolicy : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WDSSmartCardPinCharacterPolicyOption uppercaseLetters;
 @property WDSSmartCardPinCharacterPolicyOption specialCharacters;
 @property unsigned int minLength;

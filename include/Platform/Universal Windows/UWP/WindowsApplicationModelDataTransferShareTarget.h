@@ -36,7 +36,7 @@
 
 WINRT_EXPORT
 @interface WADSQuickLink : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* title;
 @property (copy) WSSRandomAccessStreamReference* thumbnail;
 @property (copy) NSString* id;

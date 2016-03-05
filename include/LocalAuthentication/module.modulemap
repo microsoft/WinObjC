@@ -1,0 +1,8 @@
+module LocalAuthentication [extern_c] {
+    umbrella header "LocalAuthentication.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

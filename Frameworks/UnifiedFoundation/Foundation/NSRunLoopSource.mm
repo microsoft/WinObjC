@@ -16,7 +16,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Starboard.h"
 #include "NSRunLoopSource.h"
 
-@implementation NSRunLoopSource : NSInputSource
+@implementation NSRunLoopSource
 + (NSRunLoopSource*)sourceWithContext:(CFRunLoopSourceContext*)ctx {
     NSRunLoopSource* ret = [[super alloc] init];
 

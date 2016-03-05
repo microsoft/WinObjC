@@ -15,11 +15,15 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#import <StubReturn.h>
 #include <UIKit/UIKit.h>
 #include <UIViewInternal.h>
-#include "CGFontInternal.h"
+
+#include <Foundation/NSMutableDictionary.h>
 #include "CoreGraphics/CGContext.h"
-#include "Foundation/NSMutableDictionary.h"
+
+#include "CGFontInternal.h"
+
 #include <assert.h>
 
 void NSStringForceinclude() {
@@ -73,7 +77,7 @@ static void drawCharsAtPoint(UIFont* font,
 
         CGContextSetFont(context, font);
 
-        WORD* glyphs = (WORD*)EbrMalloc(strLength * sizeof(WORD));
+        WORD* glyphs = (WORD*)IwMalloc(strLength * sizeof(WORD));
         DWORD numGlyphs = CGFontGetGlyphs(font, str, strLength, glyphs);
 
         t = CGAffineTransformMakeScale(1.0, -1.0);
@@ -83,7 +87,7 @@ static void drawCharsAtPoint(UIFont* font,
         CGContextShowGlyphsAtPoint(context, outX, outY, glyphs, numGlyphs);
         CGContextTranslateCTM(context, 0, -[font ascender]);
 
-        EbrFree(glyphs);
+        IwFree(glyphs);
     }
 }
 
@@ -238,7 +242,7 @@ static void drawString(UIFont* font,
                         }
 
                         // Allocate enough room for the entire string, a null terminator and the ...s
-                        WORD* tempStr = (WORD*)EbrMalloc(sizeof(WORD) * (strLength + 4));
+                        WORD* tempStr = (WORD*)IwMalloc(sizeof(WORD) * (strLength + 4));
 
                         size_t lastGood = 0;
                         for (size_t i = 1; i <= strLength; ++i) {
@@ -271,7 +275,7 @@ static void drawString(UIFont* font,
                             sizeOut->height = y + extent.height - rct.origin.y;
                         }
 
-                        EbrFree(tempStr);
+                        IwFree(tempStr);
                     }
                     break;
                 } else {
@@ -316,7 +320,7 @@ static void drawString(UIFont* font,
                 }
 
                 // Allocate enough room for the entire string, a null terminator and the ...s
-                WORD* tempStr = (WORD*)EbrMalloc(sizeof(WORD) * (strLength + 4));
+                WORD* tempStr = (WORD*)IwMalloc(sizeof(WORD) * (strLength + 4));
 
                 size_t lastGood = 0;
                 for (size_t i = 1; i <= strLength; ++i) {
@@ -345,7 +349,7 @@ static void drawString(UIFont* font,
                 extent.width = ceilf(extent.width);
                 *sizeOut = extent;
 
-                EbrFree(tempStr);
+                IwFree(tempStr);
             }
             break;
         }
@@ -519,7 +523,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
              withFont:(UIFont*)font
           minFontSize:(float)minFontSize
        actualFontSize:(float*)actualFontSize
-        lineBreakMode:(DWORD)lineBreak
+        lineBreakMode:(UILineBreakMode)lineBreak
    baselineAdjustment:(DWORD)baseline {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -546,7 +550,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
              forWidth:(float)forWidth
              withFont:(UIFont*)font
              fontSize:(float)fontSize
-        lineBreakMode:(DWORD)lineBreak
+        lineBreakMode:(UILineBreakMode)lineBreak
    baselineAdjustment:(DWORD)baseline {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
@@ -661,7 +665,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)sizeWithFont:(UIFont*)font {
     if (font == nil) {
-        font = [objc_getClass("UIFont") defaultFont];
+        font = [UIFont defaultFont];
     }
 
     CGSize ret;
@@ -715,7 +719,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
 
 /**
  @Status Caveat
- @Notes Currently UITextAttributeTextShadowColor, UITextAttributeTextShadowOffset and NSStringDrawingOptions will be ignored.
+ @Notes Currently NSStringDrawingOptions will be ignored.
  Further only NSStringDrawingUsesLineFragmentOrigin is the only fully supported option. NSStringDrawingTruncatesLastVisibleLine maps to
  UILineBreakModeTailTruncation which may not fully map.
 */
@@ -727,26 +731,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
         return [self boundingRectWithSize:size options:options context:context];
     }
 
-    UIColor* uiShadowColor = [attributes valueForKey:UITextAttributeTextShadowColor];
-    NSValue* textShadowOffset = [attributes valueForKey:UITextAttributeTextShadowOffset];
-    CGContextRef localRefContext;
     if (context == nil) {
         context = [[NSStringDrawingContext new] autorelease];
-    }
-    localRefContext = [context _getContext];
-
-    // TODO enable UITextAttributeTextShadowColor and UITextAttributeTextShadowOffset
-    if (uiShadowColor != nil && textShadowOffset != nil) {
-        CGSize offset = textShadowOffset.sizeValue;
-        CGContextSetShadowWithColor(localRefContext, offset, 0, [uiShadowColor CGColor]);
-    } else if (textShadowOffset != nil) {
-        CGSize offset = textShadowOffset.sizeValue;
-        CGContextSetShadow(localRefContext, offset, 0);
-    }
-
-    UIColor* uiTextColor = [attributes valueForKey:UITextAttributeTextColor];
-    if (uiTextColor != nil) {
-        CGContextSetFillColorWithColor(localRefContext, [uiTextColor CGColor]);
     }
 
     UIFont* uiFont = [attributes valueForKey:UITextAttributeFont];
@@ -767,16 +753,14 @@ static NSDictionary* _getDefaultUITextAttributes() {
 // if provided size < mySize provide larger rect else provide the size rect.
 /**
  @Status Caveat
- @Notes Currently UITextAttributeTextShadowColor, UITextAttributeTextShadowOffset and NSStringDrawingOptions will be ignored.
+ @Notes Currently NSStringDrawingOptions will be ignored.
  Further only NSStringDrawingUsesLineFragmentOrigin is the only fully supported option. NSStringDrawingTruncatesLastVisibleLine maps to
  UILineBreakModeTailTruncation which may not fully map.
 */
 - (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
-    CGContextRef localRefContext;
     if (context == nil) {
         context = [[NSStringDrawingContext new] autorelease];
     }
-    localRefContext = [context _getContext];
 
     UILineBreakMode lineBreakMode = UILineBreakModeWordWrap;
     if ((options & NSStringDrawingTruncatesLastVisibleLine) > 0) {
@@ -788,6 +772,26 @@ static NSDictionary* _getDefaultUITextAttributes() {
     CGRect rect = CGRectMake(0, 0, mySize.width, mySize.height);
     [context _setInternalTotalBounds:rect];
     return rect;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGSize)drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)drawWithRect:(CGRect)rect
+             options:(NSStringDrawingOptions)options
+          attributes:(NSDictionary*)attributes
+             context:(NSStringDrawingContext*)context {
+    UNIMPLEMENTED();
 }
 
 @end
@@ -829,9 +833,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 /**
  @Status Stub
 */
-- (CGRect)drawInRect:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
+- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
     UNIMPLEMENTED();
-    return { { 0, 0 }, 20, 20 };
 }
 
 /**

@@ -386,7 +386,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextServicesConstants : RTObject
-+ (WCHAR)hiddenCharacter;
++ (wchar_t)hiddenCharacter;
 @end
 
 #endif // __WUTCCoreTextServicesConstants_DEFINED__

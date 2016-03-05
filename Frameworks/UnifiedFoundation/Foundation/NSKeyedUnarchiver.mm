@@ -33,7 +33,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <memory>
 #import <functional>
 
-NSString* NSInvalidUnarchiveOperationException = @"NSInvalidUnarchiveOperationException";
+NSString* const NSInvalidUnarchiveOperationException = @"NSInvalidUnarchiveOperationException";
 static NSString* _NSUnarchiverEncounteredInvalidClassException = @"_NSUnarchiverEncounteredInvalidClassException";
 static NSString* _NSUnarchiverEncounteredInvalidClassExceptionClassType = @"_NSUnarchiverEncounteredInvalidClassExceptionClassType";
 static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
@@ -208,7 +208,7 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
 
                 int curPos = self->_curUid;
 
-                self->_activeUid = uid;                
+                self->_activeUid = uid;
                 self->_curUid = 0;
 
                 if ([result respondsToSelector:@selector(initWithCoder:)]) {
@@ -222,7 +222,7 @@ static id decodeObjectForUID(NSKeyedUnarchiver* self, NSNumber* uid) {
                     }
                 }
 
-                self->_curUid = curPos;                
+                self->_curUid = curPos;
                 self->_activeUid = nil;
 
                 if (result != nil) {
@@ -632,4 +632,3 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 }
 
 @end
-

@@ -79,6 +79,8 @@ SBWorkspace* SBWorkspace::createFromWorkspace(const String &workspaceDir)
     s_workspace->openProject(projPaths[i]);
   }
 
+  s_workspace->findSchemes(workspaceDir);
+
   // A workspace MUST contain at least one scheme
   sbValidate(!s_workspace->m_schemes.empty(), "The \"" + s_workspace->getName() + "\" workspace does not contain any schemes.");
   
@@ -133,16 +135,21 @@ static bool schemeCompare (const XCScheme* i, const XCScheme* j)
   return (i->getName() < j->getName());
 }
 
-void SBWorkspace::findProjectSchemes(const String& projectAbsPath, const PBXProject* proj)
+void SBWorkspace::findSchemes(const String& containerAbsPath)
 {
+  if (containerAbsPath.empty()) {
+      SBLog::error() << "No container specified for schemes." << std::endl;
+      return;
+  }
+
   StringList schemePaths;
 
   // Find all scheme files in the shareddata directory
-  String sharedDir = joinPaths(projectAbsPath, "xcshareddata");
+  String sharedDir = joinPaths(containerAbsPath, "xcshareddata");
   if (fileExists(sharedDir))
     findFiles(sharedDir.c_str(), "*.xcscheme", DT_REG, true, schemePaths);
 
-  String userDir = joinPaths(projectAbsPath, "xcuserdata");
+  String userDir = joinPaths(containerAbsPath, "xcuserdata");
 #if !defined(_MSC_VER)
   // Only search the current user's data directory
   String user;
@@ -158,9 +165,10 @@ void SBWorkspace::findProjectSchemes(const String& projectAbsPath, const PBXProj
   StringList::iterator it = schemePaths.begin();
   StringList::iterator itEnd = schemePaths.end();
   for (; it != itEnd; it++) {
-    XCScheme* scheme = XCScheme::createFromFile(*it, proj);
-    if (scheme)
-      m_schemes.push_back(scheme);
+    XCScheme* scheme = XCScheme::createFromFile(*it, containerAbsPath);
+    if (scheme) {
+        m_schemes.push_back(scheme);
+    }
   }
 }
 
@@ -233,10 +241,9 @@ void SBWorkspace::queueSchemes(const StringSet& schemeNames, const StringSet& co
   for (auto scheme : schemePtrs) {
     // Process all build references in the scheme
     for (auto buildRef : scheme->getTargets()) {
-      // Get the project to which the scheme belongs
-      const PBXProject* parentProject = scheme->getProject();
       // Construct a path to the project specified by the BuildRef
-      String projectPath = joinPaths(parentProject->getProjectDir(), buildRef.container);
+      String projectPath = joinPaths(scheme->getContainerParentDir(), buildRef.container);
+
       // Find or create the project
       SBProject* targetProj = openProject(projectPath);
 
@@ -273,7 +280,7 @@ SBProject* SBWorkspace::openProject(const String& projectPath)
   // Save a pointer to the newly create project and find all of its schemes
   if (ret) {
     m_openProjects[absProjPath] = ret;
-    findProjectSchemes(absProjPath, ret->getPBXProject());
+    findSchemes(absProjPath);
   }
 
   return ret;

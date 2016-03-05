@@ -640,7 +640,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     constraint->_multiplier = multiplier;
     constraint->_constant = constant;
     constraint->_relation = relation;
-    constraint->_priority = NSLayoutPriorityRequired;
+    constraint->_priority = UILayoutPriorityRequired;
     return [constraint autorelease];
 }
 
@@ -670,7 +670,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 - (id)initWithCoder:(NSCoder*)coder {
     bool autoSpacing = false;
 
-    _priority = NSLayoutPriorityRequired;
+    _priority = UILayoutPriorityRequired;
     _multiplier = 1.0f;
     _constant = 0;
 
@@ -756,4 +756,21 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 + (void)printConstraints:(NSArray*)constraints {
     printConstraints(constraints);
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)activateConstraints:(NSArray*)constraints {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)deactivateConstraints:(NSArray*)constraints {
+    UNIMPLEMENTED();
+}
+
 @end

@@ -1,0 +1,44 @@
+LIBRARY AddressBookUI
+    EXPORTS
+        ; ABNewPersonViewController.mm
+        _OBJC_CLASS_ABNewPersonViewController DATA
+        __objc_class_name_ABNewPersonViewController CONSTANT
+
+        ; ABPeoplePickerNavigationController.mm
+        ABPersonNamePrefixProperty DATA
+        ABPersonGivenNameProperty DATA
+        ABPersonMiddleNameProperty DATA
+        ABPersonFamilyNameProperty DATA
+        ABPersonNameSuffixProperty DATA
+        ABPersonPreviousFamilyNameProperty DATA
+        ABPersonNicknameProperty DATA
+        ABPersonPhoneticGivenNameProperty DATA
+        ABPersonPhoneticMiddleNameProperty DATA
+        ABPersonPhoneticFamilyNameProperty DATA
+        ABPersonOrganizationNameProperty DATA
+        ABPersonDepartmentNameProperty DATA
+        ABPersonJobTitleProperty DATA
+        ABPersonBirthdayProperty DATA
+        ABPersonNoteProperty DATA
+        ABPersonPhoneNumbersProperty DATA
+        ABPersonEmailAddressesProperty DATA
+        ABPersonUrlAddressesProperty DATA
+        ABPersonDatesProperty DATA
+        ABPersonInstantMessageAddressesProperty DATA
+        ABPersonRelatedNamesProperty DATA
+        ABPersonSocialProfilesProperty DATA
+        ABPersonPostalAddressesProperty DATA
+        _OBJC_CLASS_ABPeoplePickerNavigationController DATA
+        __objc_class_name_ABPeoplePickerNavigationController CONSTANT
+
+        ; ABPersonViewController.mm
+        _OBJC_CLASS_ABPersonViewController DATA
+        __objc_class_name_ABPersonViewController CONSTANT
+
+        ; ABUnknownPersonViewController.mm
+        _OBJC_CLASS_ABUnknownPersonViewController DATA
+        __objc_class_name_ABUnknownPersonViewController CONSTANT
+
+        ; AddressBookUIFunctions.mm
+        ABCreateStringWithAddressDictionary
+

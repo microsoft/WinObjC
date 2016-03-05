@@ -23,7 +23,9 @@
 #include "CAAnimationInternal.h"
 
 @implementation CABasicAnimation {
-    idretain _from, _to;
+    idretain _from;
+    idretain _to;
+    idretain _by;
 }
 
 /**
@@ -36,16 +38,15 @@
 /**
  @Status Interoperable
 */
-- (void)setToValue:(id)value {
-    _to.attach([value copy]);
+- (id)fromValue {
+    return _from;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)setByValue:(id)value {
-    UNIMPLEMENTED();
-    EbrDebugLog("CABasicAnimation::setByValue not supported\n");
+- (void)setToValue:(id)value {
+    _to.attach([value copy]);
 }
 
 /**
@@ -53,6 +54,20 @@
 */
 - (id)toValue {
     return _to;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setByValue:(id)value {
+    _by.attach([value copy]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)byValue {
+    return _by;
 }
 
 + (instancetype)animationWithKeyPath:(NSString*)path {
@@ -65,14 +80,12 @@
     return [ret autorelease];
 }
 
-- (id)runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
+- (void)runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
     if (_to == nil) {
         _to = [object valueForKey:_keyPath];
     }
 
     [object addAnimation:self forKey:key];
-
-    return self;
 }
 
 - (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(id)forKey {
@@ -82,7 +95,22 @@
         _keyPath = forKey;
     }
 
-    _runningAnimation = _globalCompositor->GetBasicDisplayAnimation(self, _keyPath, _from, _to, &_timingProperties);
+    if (_from != nil) {
+        if (_by == nil && _to == nil) {
+            // populate _to with the value of property on layer
+            _to = [[layer valueForKeyPath:_keyPath] retain];
+        }
+    } else if (_to != nil) {
+        if (_by == nil) {
+            // populate _from with the value of property on layer
+            _from = [[layer valueForKeyPath:_keyPath] retain];
+        }
+    } else if (_by != nil) {
+        // populate _from with the value of property on layer
+        _from = [[layer valueForKeyPath:_keyPath] retain];
+    }
+
+    _runningAnimation = _globalCompositor->GetBasicDisplayAnimation(self, _keyPath, _from, _to, _by, &_timingProperties);
 
     return _runningAnimation;
 }
@@ -93,6 +121,7 @@
     assert(_runningAnimation == NULL);
     ret->_from.attach([_from copy]);
     ret->_to.attach([_to copy]);
+    ret->_by.attach([_by copy]);
 
     return ret;
 }
@@ -100,6 +129,7 @@
 - (void)dealloc {
     _from = nil;
     _to = nil;
+    _by = nil;
     [super dealloc];
 }
 

@@ -47,7 +47,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGCCharacterGroupings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;

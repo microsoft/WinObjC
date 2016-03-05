@@ -29,7 +29,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "UIGestureRecognizer.h"
+#pragma once
+
+#import <UIKit/UIGestureRecognizer.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIPinchGestureRecognizer : UIGestureRecognizer

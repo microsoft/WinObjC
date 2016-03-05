@@ -163,7 +163,7 @@ WINRT_EXPORT
 + (WSAWCWebTokenResponse*)createWithTokenAccountAndError:(NSString*)token
                                               webAccount:(WSCWebAccount*)webAccount
                                                    error:(WSAWCWebProviderError*)error ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableDictionary* properties;
 @property (readonly) WSAWCWebProviderError* providerError;
 @property (readonly) NSString* token;

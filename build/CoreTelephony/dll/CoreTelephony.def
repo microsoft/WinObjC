@@ -1,0 +1,38 @@
+LIBRARY CoreTelephony
+    EXPORTS
+        ; CTCall.mm
+        CTCallStateDialing DATA
+        CTCallStateIncoming DATA
+        CTCallStateConnected DATA
+        CTCallStateDisconnected DATA
+        _OBJC_CLASS_CTCall DATA
+        __objc_class_name_CTCall CONSTANT
+
+        ; CTCallCenter.mm
+        _OBJC_CLASS_CTCallCenter DATA
+        __objc_class_name_CTCallCenter CONSTANT
+
+        ; CTCarrier.mm
+        _OBJC_CLASS_CTCarrier DATA
+        __objc_class_name_CTCarrier CONSTANT
+
+        ; CTSubscriber.mm
+        CTSubscriberTokenRefreshed DATA
+        _OBJC_CLASS_CTSubscriber DATA
+        __objc_class_name_CTSubscriber CONSTANT
+
+        ; CTTelephonyNetworkInfo.mm
+        _OBJC_CLASS_CTTelephonyNetworkInfo DATA
+        __objc_class_name_CTTelephonyNetworkInfo CONSTANT
+        CTRadioAccessTechnologyGPRS DATA
+        CTRadioAccessTechnologyEdge DATA
+        CTRadioAccessTechnologyWCDMA DATA
+        CTRadioAccessTechnologyHSDPA DATA
+        CTRadioAccessTechnologyHSUPA DATA
+        CTRadioAccessTechnologyCDMA1x DATA
+        CTRadioAccessTechnologyCDMAEVDORev0 DATA
+        CTRadioAccessTechnologyCDMAEVDORevA DATA
+        CTRadioAccessTechnologyCDMAEVDORevB DATA
+        CTRadioAccessTechnologyeHRPD DATA
+        CTRadioAccessTechnologyLTE DATA
+

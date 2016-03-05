@@ -172,7 +172,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDPackageManager : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)addPackageAsync:(WFUri*)packageUri
   dependencyPackageUris:(id<NSFastEnumeration> /* WFUri* */)dependencyPackageUris
       deploymentOptions:(WMDDeploymentOptions)deploymentOptions

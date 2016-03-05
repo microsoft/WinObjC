@@ -264,7 +264,7 @@ typedef unsigned WAEEmailQuerySearchScope;
 
 WINRT_EXPORT
 @interface WAEEmailMessage : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* body;
 @property (copy) NSString* subject;
 @property (readonly) NSMutableArray* bcc;
@@ -451,7 +451,7 @@ WINRT_EXPORT
 @interface WAEEmailQueryOptions : RTObject
 + (WAEEmailQueryOptions*)createWithText:(NSString*)text ACTIVATOR;
 + (WAEEmailQueryOptions*)createWithTextAndFields:(NSString*)text fields:(WAEEmailQuerySearchFields)fields ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WAEEmailQuerySortProperty sortProperty;
 @property WAEEmailQuerySortDirection sortDirection;
 @property WAEEmailQueryKind kind;
@@ -537,7 +537,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailRecipient : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WAEEmailRecipient*)create:(NSString*)address ACTIVATOR;
 + (WAEEmailRecipient*)createWithName:(NSString*)address name:(NSString*)name ACTIVATOR;
 @property (copy) NSString* name;
@@ -553,7 +553,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAEEmailIrmTemplate : RTObject
 + (WAEEmailIrmTemplate*)create:(NSString*)id name:(NSString*)name description:(NSString*)description ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* name;
 @property (copy) NSString* id;
 @property (copy) NSString* description;
@@ -568,7 +568,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAEEmailIrmInfo : RTObject
 + (WAEEmailIrmInfo*)create:(WFDateTime*)expiration irmTemplate:(WAEEmailIrmTemplate*)irmTemplate ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL canRemoveIrmOnResponse;
 @property BOOL canPrintData;
 @property BOOL canModifyRecipientsOnResponse;
@@ -591,7 +591,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailAttachment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WAEEmailAttachment*)create:(NSString*)fileName
                          data:(RTObject<WSSIRandomAccessStreamReference>*)data
                      mimeType:(NSString*)mimeType ACTIVATOR;
@@ -616,7 +616,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailMeetingInfo : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* location;
 @property BOOL isResponseRequested;
 @property BOOL isAllDay;
@@ -724,7 +724,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailMailboxAutoReplySettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id startTime;
 @property WAEEmailMailboxAutoReplyMessageResponseKind responseKind;
 @property BOOL isEnabled;

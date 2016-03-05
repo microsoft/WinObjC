@@ -1,0 +1,9 @@
+module Metal [system] [extern_c] {
+    use Foundation
+    umbrella header "Metal.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

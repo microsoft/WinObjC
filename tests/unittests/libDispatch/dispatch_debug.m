@@ -48,5 +48,4 @@ TEST(Dispatch, DispatchDebug) {
     dispatch_debug(as_do(g), "dispatch_group_t");
 
     test_stop();
-    UIApplicationMainLoop();
 }

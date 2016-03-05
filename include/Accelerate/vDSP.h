@@ -41,6 +41,31 @@ typedef struct {
     double* imagp; 
 } DSPDoubleSplitComplex;
 
+//Specifies whether to perform a Forward or inverse DFT
+typedef enum {
+    vDSP_DFT_FORWARD = +1,
+    vDSP_DFT_INVERSE = -1
+} vDSP_DFT_Direction;
+
+//Specifies whether the DFT transformation is complex-to-complex or real-to-complex and vice versa for IDFT
+typedef enum {
+    ZOP = 1,
+    ZROP = 2
+} vDSP_DFT_TransformType;
+
+//Setup object to be fed while computing the DFT/IDFT for a set of single-precision vectors   
+typedef struct vDSP_DFT_SetupStruct {
+    vDSP_Length transformLength;
+    vDSP_DFT_Direction transformDirection;
+    vDSP_DFT_TransformType transformType;
+} *vDSP_DFT_Setup;
+
+//Setup object to be fed while computing the DFT/IDFT for a set of double-precision vectors
+typedef struct vDSP_DFT_SetupStructD {
+    vDSP_Length transformLength;
+    vDSP_DFT_Direction transformDirection;
+    vDSP_DFT_TransformType transformType;
+} *vDSP_DFT_SetupD;
 
 ACCELERATE_EXPORT void vDSP_vabs(const float* A, vDSP_Stride IA, float* C, vDSP_Stride IC, vDSP_Length N);
 ACCELERATE_EXPORT void vDSP_vabsD(const double* A, vDSP_Stride IA, double* C, vDSP_Stride IC, vDSP_Length N);
@@ -167,3 +192,17 @@ ACCELERATE_EXPORT void vDSP_ctoz(const DSPComplex *C, vDSP_Stride IC, const DSPS
 ACCELERATE_EXPORT void vDSP_ctozD(const DSPDoubleComplex *C, vDSP_Stride IC, const DSPDoubleSplitComplex *Z, vDSP_Stride IZ, vDSP_Length N);
 ACCELERATE_EXPORT void vDSP_blkman_window(float *C, vDSP_Length N, int Flag);
 ACCELERATE_EXPORT void vDSP_blkman_windowD(double *C, vDSP_Length N, int Flag);
+ACCELERATE_EXPORT vDSP_DFT_Setup vDSP_DFT_zop_CreateSetup(vDSP_DFT_Setup __Previous, vDSP_Length __Length,
+                                                          vDSP_DFT_Direction __Direction);
+ACCELERATE_EXPORT vDSP_DFT_SetupD vDSP_DFT_zop_CreateSetupD(vDSP_DFT_SetupD __Previous, vDSP_Length __Length,
+                                                            vDSP_DFT_Direction __Direction);
+ACCELERATE_EXPORT vDSP_DFT_Setup vDSP_DFT_zrop_CreateSetup(vDSP_DFT_Setup __Previous, vDSP_Length __Length,
+                                                           vDSP_DFT_Direction __Direction);
+ACCELERATE_EXPORT vDSP_DFT_SetupD vDSP_DFT_zrop_CreateSetupD(vDSP_DFT_SetupD __Previous, vDSP_Length __Length,
+                                                             vDSP_DFT_Direction __Direction);
+ACCELERATE_EXPORT void vDSP_DFT_DestroySetup(vDSP_DFT_Setup __Setup);
+ACCELERATE_EXPORT void vDSP_DFT_DestroySetupD(vDSP_DFT_SetupD __Setup);
+ACCELERATE_EXPORT void vDSP_DFT_Execute(const struct vDSP_DFT_SetupStruct *__Setup, const float *__Ir, const float *__Ii, float *__Or,
+                                        float *__Oi);
+ACCELERATE_EXPORT void vDSP_DFT_ExecuteD(const struct vDSP_DFT_SetupStructD *__Setup, const double *__Ir, const double *__Ii, double *__Or,
+                                         double *__Oi);

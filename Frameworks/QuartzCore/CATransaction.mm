@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSThread.h"
@@ -21,7 +22,10 @@
 #include "QuartzCore/CABasicAnimation.h"
 #include "CALayerInternal.h"
 
+NSString* const kCATransactionAnimationDuration = @"kCATransactionAnimationDuration";
 NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
+NSString* const kCATransactionAnimationTimingFunction = @"kCATransactionAnimationTimingFunction";
+NSString* const kCATransactionCompletionBlock = @"kCATransactionCompletionBlock";
 
 __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 
@@ -124,7 +128,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 /**
  @Status Stub
 */
-+ (void)setCompletionBlock:(id)block {
++ (void)setCompletionBlock:(void (^)(void))block {
     UNIMPLEMENTED();
     *((char*)0) = 0;
     [self _currentTransaction]->_completionBlock = [block copy];
@@ -133,7 +137,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 /**
  @Status Stub
 */
-+ (id)completionBlock {
++ (void (^)(void))completionBlock {
     UNIMPLEMENTED();
     return [self _currentTransaction]->_completionBlock;
 }
@@ -156,7 +160,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
  @Status Caveat
  @Notes Only kCATransactionDisableActions and kCATransactionAnimationDuration supported
 */
-+ (void)setValue:(NSObject*)anObject forKey:(NSString*)keyName {
++ (void)setValue:(id)anObject forKey:(NSString*)keyName {
     if (strcmp([keyName UTF8String], "kCATransactionDisableActions") == 0) {
         [self setDisableActions:[anObject boolValue]];
     }
@@ -243,4 +247,48 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 + (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim {
     GetCACompositor()->removeAnimationRaw([self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, anim);
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (CFTimeInterval)animationDuration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (CAMediaTimingFunction*)animationTimingFunction {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)valueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)lock {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (void)unlock {
+    UNIMPLEMENTED();
+}
+
 @end

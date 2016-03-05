@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,23 +13,23 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _AUDIOFILESTREAM_H_
-#define _AUDIOFILESTREAM_H_
-
-#import <StarboardExport.h>
+#import <AudioToolbox/AudioToolboxExport.h>
 #import <CoreAudio/CoreAudioTypes.h>
+#import <AudioToolbox/AudioConverter.h>
 #import <AudioToolbox/AudioFile.h>
 
-typedef struct OpaqueAudioFileStreamID* AudioFileStreamID;
-typedef UInt32 AudioFileStreamPropertyID;
-
-enum {
+typedef CF_ENUM(UInt32, AudioFileStreamParseFlags) {
     kAudioFileStreamPropertyFlag_PropertyIsCached = 1,
     kAudioFileStreamPropertyFlag_CacheProperty = 2,
-    kAudioFileStreamParseFlag_Discontinuity = 1,
-    kAudioFileStreamSeekFlag_OffsetIsEstimated = 1
 };
+
+enum {
+    kAudioFileStreamParseFlag_Discontinuity = 1,
+};
+
+typedef CF_ENUM(UInt32, AudioFileStreamSeekFlags) { kAudioFileStreamSeekFlag_OffsetIsEstimated = 1 };
 
 enum {
     kAudioFileStreamProperty_ReadyToProducePackets = 'redy',
@@ -52,6 +52,23 @@ enum {
     kAudioFileStreamProperty_BitRate = 'brat'
 };
 
+enum {
+    kAudioFileStreamError_UnsupportedFileType = 'typ?',
+    kAudioFileStreamError_UnsupportedDataFormat = 'fmt?',
+    kAudioFileStreamError_UnsupportedProperty = 'pty?',
+    kAudioFileStreamError_BadPropertySize = '!siz',
+    kAudioFileStreamError_NotOptimized = 'optm',
+    kAudioFileStreamError_InvalidPacketOffset = 'pck?',
+    kAudioFileStreamError_InvalidFile = 'dta?',
+    kAudioFileStreamError_ValueUnknown = 'unk?',
+    kAudioFileStreamError_DataUnavailable = 'more',
+    kAudioFileStreamError_IllegalOperation = 'nope',
+    kAudioFileStreamError_UnspecifiedError = 'wht?',
+    kAudioFileStreamError_DiscontinuityCantRecover = 'dsc!'
+};
+
+typedef UInt32 AudioFileStreamPropertyID;
+typedef struct OpaqueAudioFileStreamID* AudioFileStreamID;
 typedef void (*AudioFileStream_PropertyListenerProc)(void* inClientData,
                                                      AudioFileStreamID inAudioFileStream,
                                                      AudioFileStreamPropertyID inPropertyID,
@@ -62,27 +79,29 @@ typedef void (*AudioFileStream_PacketsProc)(void* inClientData,
                                             const void* inInputData,
                                             AudioStreamPacketDescription* inPacketDescriptions);
 
-SB_EXPORT OSStatus AudioFileStreamClose(AudioFileStreamID inAudioFileStream);
-SB_EXPORT OSStatus AudioFileStreamSeek(AudioFileStreamID inAudioFileStream,
-                                       SInt64 inAbsolutePacketOffset,
-                                       SInt64* outAbsoluteByteOffset,
-                                       UInt32* ioFlags);
-SB_EXPORT OSStatus AudioFileStreamOpen(void* inClientData,
-                                       AudioFileStream_PropertyListenerProc inPropertyListenerProc,
-                                       AudioFileStream_PacketsProc inPacketsProc,
-                                       AudioFileTypeID inFileTypeHint,
-                                       AudioFileStreamID* outAudioFileStream);
-SB_EXPORT OSStatus AudioFileStreamParseBytes(AudioFileStreamID inAudioFileStream,
-                                             UInt32 inDataByteSize,
-                                             const void* inData,
-                                             UInt32 inFlags);
-SB_EXPORT OSStatus AudioFileStreamGetProperty(AudioFileStreamID inAudioFileStream,
-                                              AudioFileStreamPropertyID inPropertyID,
-                                              UInt32* ioPropertyDataSize,
-                                              void* outPropertyData);
-SB_EXPORT OSStatus AudioFileStreamGetPropertyInfo(AudioFileStreamID inAudioFileStream,
-                                                  AudioFileStreamPropertyID inPropertyID,
-                                                  UInt32* outPropertyDataSize,
-                                                  Boolean* outWritable);
-
-#endif /* _AUDIOFILESTREAM_H_ */
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamOpen(void* inClientData,
+                                                 AudioFileStream_PropertyListenerProc inPropertyListenerProc,
+                                                 AudioFileStream_PacketsProc inPacketsProc,
+                                                 AudioFileTypeID inFileTypeHint,
+                                                 AudioFileStreamID _Nullable* outAudioFileStream) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamParseBytes(AudioFileStreamID inAudioFileStream,
+                                                       UInt32 inDataByteSize,
+                                                       const void* inData,
+                                                       AudioFileStreamParseFlags inFlags) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamSeek(AudioFileStreamID inAudioFileStream,
+                                                 SInt64 inPacketOffset,
+                                                 SInt64* outDataByteOffset,
+                                                 AudioFileStreamSeekFlags* ioFlags) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamGetPropertyInfo(AudioFileStreamID inAudioFileStream,
+                                                            AudioFileStreamPropertyID inPropertyID,
+                                                            UInt32* outPropertyDataSize,
+                                                            Boolean* outWritable) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamGetProperty(AudioFileStreamID inAudioFileStream,
+                                                        AudioFileStreamPropertyID inPropertyID,
+                                                        UInt32* ioPropertyDataSize,
+                                                        void* outPropertyData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamSetProperty(AudioFileStreamID inAudioFileStream,
+                                                        AudioFileStreamPropertyID inPropertyID,
+                                                        UInt32 inPropertyDataSize,
+                                                        const void* inPropertyData) STUB_METHOD;
+AUDIOTOOLBOX_EXPORT OSStatus AudioFileStreamClose(AudioFileStreamID inAudioFileStream) STUB_METHOD;

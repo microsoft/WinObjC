@@ -173,7 +173,7 @@ public:
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
                         EbrFseek(fpIn, 0, SEEK_SET);
-                        void* pngData = (void*)malloc(fileLen);
+                        void* pngData = (void*)IwMalloc(fileLen);
                         len = EbrFread(pngData, 1, fileLen, fpIn);
                         EbrFclose(fpIn);
 
@@ -197,7 +197,7 @@ public:
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
                         EbrFseek(fpIn, 0, SEEK_SET);
-                        void* imgData = (void*)malloc(fileLen);
+                        void* imgData = (void*)IwMalloc(fileLen);
                         len = EbrFread(imgData, 1, fileLen, fpIn);
                         EbrFclose(fpIn);
 
@@ -210,8 +210,9 @@ public:
                 } break;
             }
             _xamlImage = CreateBitmapFromImageData(data, len);
-            if (freeData)
-                free((void*)data);
+            if (freeData) {
+                IwFree((void*)data);
+            }
             return;
         }
         lockPtr = NULL;
@@ -391,9 +392,340 @@ public:
 };
 
 class DisplayAnimationBasic : public DisplayAnimation {
+private:
+    void _adjustFloatValuesForKeyPath(NSString* curKeyPath) {
+        if (_fromValue != nil) {
+            if (_toValue != nil) {
+                // Interpolate between _fromValue and _toValue.
+                return;
+            } else if (_byValue != nil) {
+                // Interpolate between _fromValue and (_fromValue + _byValue)
+                float fromValue = [static_cast<NSNumber*>(_fromValue) floatValue];
+                float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
+                _toValue = [[NSNumber numberWithFloat:(fromValue + byValue)] retain];
+            } else {
+                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
+                assert(0);
+            }
+        } else if (_toValue != nil) {
+            if (_byValue != nil) {
+                // Interpolate between (_toValue - _byValue) and _toValue
+                float toValue = [static_cast<NSNumber*>(_toValue) floatValue];
+                float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
+                _fromValue = [[NSNumber numberWithFloat:(toValue - byValue)] retain];
+            } else {
+                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
+                assert(0);
+            }
+        } else if (_byValue != nil) {
+            // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
+            assert(0);
+        } else {
+            UNIMPLEMENTED_WITH_MSG("Unsupported when all CABasicAnimation properties are nil");
+        }
+    }
+
+    void _adjustCGSizeValuesForKeyPath(NSString* curKeyPath) {
+        if (_fromValue != nil && _toValue != nil) {
+            return;
+        }
+
+        bool fromValid = _fromValue != nil;
+        bool toValid = _toValue != nil;
+        bool byValid = _byValue != nil;
+
+        CGSize fromSize;
+        CGSize toSize;
+        CGSize bySize;
+
+        if (fromValid) {
+            [static_cast<NSValue*>(_fromValue) getValue:&fromSize];
+            [_fromValue release];
+            _fromValue = [[NSNumber numberWithFloat:fromSize.width] retain];
+        }
+
+        if (toValid) {
+            [static_cast<NSValue*>(_toValue) getValue:&toSize];
+            [_toValue release];
+            _toValue = [[NSNumber numberWithFloat:toSize.width] retain];
+        }
+
+        if (byValid) {
+            [static_cast<NSValue*>(_byValue) getValue:&bySize];
+            [_byValue release];
+            _byValue = [NSNumber numberWithFloat:bySize.width];
+        }
+
+        NSString* newKeyPath = [curKeyPath stringByAppendingString:@".width"];
+        _adjustFloatValuesForKeyPath(newKeyPath);
+        fromSize.width = [static_cast<NSNumber*>(_fromValue) floatValue];
+        toSize.width = [static_cast<NSNumber*>(_toValue) floatValue];
+        [_fromValue release];
+        [_toValue release];
+
+        if (fromValid) {
+            _fromValue = [[NSNumber numberWithFloat:fromSize.height] retain];
+        } else {
+            _fromValue = nil;
+        }
+
+        if (toValid) {
+            _toValue = [[NSNumber numberWithFloat:toSize.height] retain];
+        } else {
+            _toValue = nil;
+        }
+
+        if (byValid) {
+            _byValue = [NSNumber numberWithFloat:bySize.height];
+        } else {
+            _byValue = nil;
+        }
+
+        newKeyPath = [curKeyPath stringByAppendingString:@".height"];
+        _adjustFloatValuesForKeyPath(newKeyPath);
+        fromSize.height = [static_cast<NSNumber*>(_fromValue) floatValue];
+        toSize.height = [static_cast<NSNumber*>(_toValue) floatValue];
+        [_fromValue release];
+        [_toValue release];
+
+        _fromValue = [[NSValue valueWithCGSize:fromSize] retain];
+        _toValue = [[NSValue valueWithCGSize:toSize] retain];
+        _byValue = nil;
+    }
+
+    void _adjustCGPointValuesForKeyPath(NSString* curKeyPath) {
+        if (_fromValue != nil && _toValue != nil) {
+            return;
+        }
+
+        bool fromValid = _fromValue != nil;
+        bool toValid = _toValue != nil;
+        bool byValid = _byValue != nil;
+
+        CGPoint fromPoint;
+        CGPoint toPoint;
+        CGPoint byPoint;
+
+        if (fromValid) {
+            [static_cast<NSValue*>(_fromValue) getValue:&fromPoint];
+            [_fromValue release];
+            _fromValue = [[NSNumber numberWithFloat:fromPoint.x] retain];
+        }
+
+        if (toValid) {
+            [static_cast<NSValue*>(_toValue) getValue:&toPoint];
+            [_toValue release];
+            _toValue = [[NSNumber numberWithFloat:toPoint.x] retain];
+        }
+
+        if (byValid) {
+            [static_cast<NSValue*>(_byValue) getValue:&byPoint];
+            [_byValue release];
+            _byValue = [NSNumber numberWithFloat:byPoint.x];
+        }
+
+        NSString* newKeyPath = [curKeyPath stringByAppendingString:@".x"];
+        _adjustFloatValuesForKeyPath(newKeyPath);
+        fromPoint.x = [static_cast<NSNumber*>(_fromValue) floatValue];
+        toPoint.x = [static_cast<NSNumber*>(_toValue) floatValue];
+        [_fromValue release];
+        [_toValue release];
+
+        if (fromValid) {
+            _fromValue = [[NSNumber numberWithFloat:fromPoint.y] retain];
+        } else {
+            _fromValue = nil;
+        }
+
+        if (toValid) {
+            _toValue = [[NSNumber numberWithFloat:toPoint.y] retain];
+        } else {
+            _toValue = nil;
+        }
+
+        if (byValid) {
+            _byValue = [NSNumber numberWithFloat:byPoint.y];
+        } else {
+            _byValue = nil;
+        }
+
+        newKeyPath = [curKeyPath stringByAppendingString:@".y"];
+        _adjustFloatValuesForKeyPath(newKeyPath);
+        fromPoint.y = [static_cast<NSNumber*>(_fromValue) floatValue];
+        toPoint.y = [static_cast<NSNumber*>(_toValue) floatValue];
+        [_fromValue release];
+        [_toValue release];
+
+        _fromValue = [[NSValue valueWithCGPoint:fromPoint] retain];
+        _toValue = [[NSValue valueWithCGPoint:toPoint] retain];
+        _byValue = nil;
+    }
+
+    void _adjustCGRectValuesForKeyPath(NSString* curKeyPath) {
+        if (_fromValue != nil && _toValue != nil) {
+            return;
+        }
+
+        bool fromValid = _fromValue != nil;
+        bool toValid = _toValue != nil;
+        bool byValid = _byValue != nil;
+
+        CGRect fromRect;
+        CGRect toRect;
+        CGRect byRect;
+
+        if (fromValid) {
+            [static_cast<NSValue*>(_fromValue) getValue:&fromRect];
+            [_fromValue release];
+            _fromValue = [[NSValue valueWithCGPoint:fromRect.origin] retain];
+        }
+
+        if (toValid) {
+            [static_cast<NSValue*>(_toValue) getValue:&toRect];
+            [_toValue release];
+            _toValue = [[NSValue valueWithCGPoint:toRect.origin] retain];
+        }
+
+        if (byValid) {
+            [static_cast<NSValue*>(_byValue) getValue:&byRect];
+            [_byValue release];
+
+            // _byValue is will be released by _adjustCGPointValuesForKeyPath
+            _byValue = [[NSValue valueWithCGPoint:byRect.origin] retain];
+        }
+
+        NSString* newKeyPath = [curKeyPath stringByAppendingString:@".origin"];
+        _adjustCGPointValuesForKeyPath(newKeyPath);
+        [static_cast<NSValue*>(_fromValue) getValue:&(fromRect.origin)];
+        [static_cast<NSValue*>(_toValue) getValue:&(toRect.origin)];
+        [_fromValue release];
+        [_toValue release];
+
+        if (fromValid) {
+            _fromValue = [[NSValue valueWithCGSize:fromRect.size] retain];
+        } else {
+            _fromValue = nil;
+        }
+
+        if (toValid) {
+            _toValue = [[NSValue valueWithCGSize:toRect.size] retain];
+        } else {
+            _toValue = nil;
+        }
+
+        if (byValid) {
+            // _byValue is will be released by _adjustCGSizeValuesForKeyPath
+            _byValue = [[NSValue valueWithCGSize:byRect.size] retain];
+        } else {
+            _byValue = nil;
+        }
+
+        newKeyPath = [curKeyPath stringByAppendingString:@".size"];
+        _adjustCGSizeValuesForKeyPath(newKeyPath);
+        [static_cast<NSValue*>(_fromValue) getValue:&(fromRect.size)];
+        [static_cast<NSValue*>(_toValue) getValue:&(toRect.size)];
+        [_fromValue release];
+        [_toValue release];
+
+        _fromValue = [[NSValue valueWithCGRect:fromRect] retain];
+        _toValue = [[NSValue valueWithCGRect:toRect] retain];
+        _byValue = nil;
+    }
+
+    bool _adjustCATransform3DValues(
+        float* translationFrom, float* scaleFrom, float* angleFrom, float* translationTo, float* scaleTo, float* angleTo) {
+        const int dimensions = 3;
+        float translationBy[dimensions] = { 0 };
+        float scaleBy[dimensions] = { 1.0f, 1.0f, 1.0f };
+        float angleBy = 0.0f;
+        Quaternion qval;
+        CATransform3D fromValue = [static_cast<NSValue*>(_fromValue) CATransform3DValue];
+        CATransform3D toValue = [static_cast<NSValue*>(_toValue) CATransform3DValue];
+        CATransform3D byValue = [static_cast<NSValue*>(_byValue) CATransform3DValue];
+        float (^add)(float, float) = ^(float a, float b) {
+            return (a + b);
+        };
+        float (^subtract)(float, float) = ^(float a, float b) {
+            return (a - b);
+        };
+        float (^multiply)(float, float) = ^(float a, float b) {
+            return a * b;
+        };
+        float (^divide)(float, float) = ^(float a, float b) {
+            if (b == 0.0f) {
+                return 0.0f;
+            }
+            return a / b;
+        };
+        void (^performOperation)(float*, float*, float*, int, float (^)(float, float)) =
+            ^(float* array1, float* array2, float* resultArray, int size, float (^operation)(float, float)) {
+                for (int i = 0; i < size; i++) {
+                    resultArray[i] = operation(array1[i], array2[i]);
+                }
+            };
+
+        bool isValid = true;
+        if (_fromValue != nil) {
+            qval.CreateFromMatrix(reinterpret_cast<float*>(&fromValue));
+            *angleFrom = (float)-qval.roll() * 180.0f / M_PI;
+            CATransform3DGetScale(fromValue, scaleFrom);
+            CATransform3DGetPosition(fromValue, translationFrom);
+            if (_toValue != nil) {
+                // Interpolate between _fromValue and _toValue.
+                qval.CreateFromMatrix(reinterpret_cast<float*>(&toValue));
+                *angleTo = (float)-qval.roll() * 180.0f / M_PI;
+                CATransform3DGetScale(toValue, scaleTo);
+                CATransform3DGetPosition(toValue, translationTo);
+            } else if (_byValue != nil) {
+                // Interpolate between _fromValue and (_fromValue + _byValue)
+                qval.CreateFromMatrix(reinterpret_cast<float*>(&byValue));
+                angleBy = (float)-qval.roll() * 180.0f / M_PI;
+                CATransform3DGetScale(byValue, scaleBy);
+                CATransform3DGetPosition(byValue, translationBy);
+                *angleTo = *angleFrom + angleBy;
+                performOperation(scaleFrom, scaleBy, scaleTo, dimensions, multiply);
+                performOperation(translationFrom, translationBy, translationTo, dimensions, add);
+            } else {
+                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
+                assert(0);
+                isValid = false;
+            }
+        } else if (_toValue != nil) {
+            qval.CreateFromMatrix(reinterpret_cast<float*>(&toValue));
+            *angleTo = (float)-qval.roll() * 180.0f / M_PI;
+            CATransform3DGetScale(toValue, scaleTo);
+            CATransform3DGetPosition(toValue, translationTo);
+            if (_byValue != nil) {
+                // Interpolate between (_toValue - _byValue) and _toValue
+                qval.CreateFromMatrix(reinterpret_cast<float*>(&byValue));
+                angleBy = (float)-qval.roll() * 180.0f / M_PI;
+                CATransform3DGetScale(byValue, scaleBy);
+                CATransform3DGetPosition(byValue, translationBy);
+
+                *angleFrom = *angleTo - angleBy;
+                performOperation(scaleTo, scaleBy, scaleFrom, dimensions, divide);
+                performOperation(translationTo, translationBy, translationFrom, dimensions, subtract);
+            } else {
+                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
+                assert(0);
+                isValid = false;
+            }
+        } else if (_byValue != nil) {
+            // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
+            assert(0);
+            isValid = false;
+        } else {
+            UNIMPLEMENTED_WITH_MSG("Unsupported when all interpolation values are nil");
+            isValid = false;
+        }
+        return isValid;
+    }
+
 public:
     NSString* _propertyName;
-    NSObject *_fromValue, *_toValue;
+    NSObject* _fromValue;
+    NSObject* _toValue;
+    NSObject* _byValue;
     id _animHandler;
 
     void Completed() {
@@ -405,8 +737,12 @@ public:
                        });
     }
 
-    DisplayAnimationBasic(
-        id animHandler, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) {
+    DisplayAnimationBasic(id animHandler,
+                          NSString* propertyName,
+                          NSObject* fromValue,
+                          NSObject* toValue,
+                          NSObject* byValue,
+                          CAMediaTimingProperties* timingProperties) {
         IncrementCounter("BasicAnimation");
 
         CAMediaTimingFunction* mediaTiming = timingProperties->_timingFunction;
@@ -430,14 +766,20 @@ public:
         _propertyName = [propertyName retain];
         _fromValue = [fromValue retain];
         _toValue = [toValue retain];
+        _byValue = [byValue retain];
 
-        beginTime = timingProperties->_beginTime;
+        beginTime = timingProperties->_beginTime - CACurrentMediaTime();
         duration = timingProperties->_duration;
         autoReverse = (bool)timingProperties->_autoReverses;
         repeatCount = timingProperties->_repeatCount;
         repeatDuration = timingProperties->_repeatDuration;
         speed = timingProperties->_speed;
         timeOffset = timingProperties->_timeOffset;
+
+        if (repeatCount > 0xFFFFFF)
+            repeatCount = 0xFFFFFF;
+        if (repeatDuration > 0xFFFFFF)
+            repeatDuration = 0xFFFFFF;
     }
 
     ~DisplayAnimationBasic() {
@@ -446,6 +788,7 @@ public:
         [_propertyName release];
         [_fromValue release];
         [_toValue release];
+        [_byValue release];
     }
 
     void AddToNode(DisplayNode* node) {
@@ -453,6 +796,7 @@ public:
 
         const char* propName = [_propertyName UTF8String];
         if (strcmp(propName, "transform.scale") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
 
@@ -460,6 +804,7 @@ public:
             AddAnimation(node, L"transform.scale.y", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "transform.rotation.z") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
 
@@ -469,18 +814,21 @@ public:
             AddAnimation(node, L"transform.rotation", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "transform.translation.x") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
-            
+
             AddAnimation(node, L"transform.translation.x", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "transform.translation.y") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
-            
+
             AddAnimation(node, L"transform.translation.y", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "position") == 0) {
+            _adjustCGPointValuesForKeyPath(_propertyName);
             CGPoint fromValue = [(NSValue*)_fromValue CGPointValue];
             CGPoint toValue = [(NSValue*)_toValue CGPointValue];
 
@@ -488,6 +836,7 @@ public:
             AddAnimation(node, L"position.y", _fromValue != nil, fromValue.y, _toValue != nil, toValue.y);
             Start();
         } else if (strcmp(propName, "bounds.size") == 0) {
+            _adjustCGSizeValuesForKeyPath(_propertyName);
             CGSize fromValue = [(NSValue*)_fromValue CGSizeValue];
             CGSize toValue = [(NSValue*)_toValue CGSizeValue];
 
@@ -495,6 +844,7 @@ public:
             AddAnimation(node, L"size.height", _fromValue != nil, fromValue.height, _toValue != nil, toValue.height);
             Start();
         } else if (strcmp(propName, "bounds.origin") == 0) {
+            _adjustCGPointValuesForKeyPath(_propertyName);
             CGPoint fromValue = [(NSValue*)_fromValue CGPointValue];
             CGPoint toValue = [(NSValue*)_toValue CGPointValue];
 
@@ -502,6 +852,7 @@ public:
             AddAnimation(node, L"origin.y", _fromValue != nil, fromValue.y, _toValue != nil, toValue.y);
             Start();
         } else if (strcmp(propName, "bounds") == 0) {
+            _adjustCGRectValuesForKeyPath(_propertyName);
             CGRect fromValue = [(NSValue*)_fromValue CGRectValue];
             CGRect toValue = [(NSValue*)_toValue CGRectValue];
 
@@ -511,6 +862,7 @@ public:
             AddAnimation(node, L"size.height", _fromValue != nil, fromValue.size.height, _toValue != nil, toValue.size.height);
             Start();
         } else if (strcmp(propName, "opacity") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
             AddAnimation(node, L"opacity", _fromValue != nil, fromValue, _toValue != nil, toValue);
@@ -518,6 +870,7 @@ public:
         } else if (strcmp(propName, "transform") == 0) {
             CATransform3D fromValue = [(NSValue*)_fromValue CATransform3DValue];
             CATransform3D toValue = [(NSValue*)_toValue CATransform3DValue];
+
             float translationFrom[3] = { 0 };
             float scaleFrom[3] = { 1.0f, 1.0f, 1.0f };
             float angleFrom = 0.0f;
@@ -525,32 +878,33 @@ public:
             float scaleTo[3] = { 1.0f, 1.0f, 1.0f };
             float angleTo = 0.0f;
 
-            if (_fromValue != nil) {
-                Quaternion qval;
-                qval.CreateFromMatrix((float*)&(fromValue));
-                angleFrom = (float)-qval.roll() * 180.0f / M_PI;
-                CATransform3DGetScale(fromValue, scaleFrom);
-                CATransform3DGetPosition(fromValue, translationFrom);
-            }
-            if (_toValue != nil) {
-                Quaternion qval;
-                qval.CreateFromMatrix((float*)&(toValue));
-                angleTo = (float)-qval.roll() * 180.0f / M_PI;
-                CATransform3DGetScale(toValue, scaleTo);
-                CATransform3DGetPosition(toValue, translationTo);
-            }
+            bool isValid = _adjustCATransform3DValues(translationFrom, scaleFrom, &angleFrom, translationTo, scaleTo, &angleTo);
 
             if (scaleFrom[0] != 1.0f || scaleFrom[1] != 1.0f || scaleTo[0] != 1.0f || scaleTo[1] != 1.0f) {
-                AddAnimation(node, L"transform.scale.x", _fromValue != nil, scaleFrom[0], _toValue != nil, scaleTo[0]);
-                AddAnimation(node, L"transform.scale.y", _fromValue != nil, scaleFrom[1], _toValue != nil, scaleTo[1]);
+                AddAnimation(node, L"transform.scale.x", isValid, scaleFrom[0], isValid, scaleTo[0]);
+                AddAnimation(node, L"transform.scale.y", isValid, scaleFrom[1], isValid, scaleTo[1]);
             }
             if (translationFrom[0] != 0.0f || translationFrom[1] != 0.0f || translationTo[0] != 0.0f || translationTo[1] != 0.0f) {
-                AddAnimation(node, L"transform.translation.x", _fromValue != nil, translationFrom[0], _toValue != nil, translationTo[0]);
-                AddAnimation(node, L"transform.translation.y", _fromValue != nil, translationFrom[1], _toValue != nil, translationTo[1]);
+                AddAnimation(node, L"transform.translation.x", isValid, translationFrom[0], isValid, translationTo[0]);
+                AddAnimation(node, L"transform.translation.y", isValid, translationFrom[1], isValid, translationTo[1]);
             }
             if (angleFrom != 0.0f || angleTo != 0.0f) {
-                AddAnimation(node, L"transform.rotation", _fromValue != nil, angleFrom, _toValue != nil, angleTo);
+                AddAnimation(node, L"transform.rotation", isValid, angleFrom, isValid, angleTo);
             }
+            Start();
+        } else if (strcmp(propName, "transform.translation.y") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
+            float fromValue = [(NSNumber*)_fromValue floatValue];
+            float toValue = [(NSNumber*)_toValue floatValue];
+
+            AddAnimation(node, L"transform.translation.y", _fromValue != nil, fromValue, _toValue != nil, toValue);
+            Start();
+        } else if (strcmp(propName, "transform.translation.x") == 0) {
+            _adjustFloatValuesForKeyPath(_propertyName);
+            float fromValue = [(NSNumber*)_fromValue floatValue];
+            float toValue = [(NSNumber*)_toValue floatValue];
+
+            AddAnimation(node, L"transform.translation.x", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "contents") == 0) {
         } else {
@@ -706,6 +1060,18 @@ public:
             //  [TODO: Update contents scale in Xaml node]
             // contentScale = [(NSNumber *) newValue floatValue];
         } else if (strcmp(name, "contentsOrientation") == 0) {
+            int position = [newValue intValue];
+            float toPosition = 0;
+            if (position == UIImageOrientationUp) {
+                toPosition = 0;
+            } else if (position == UIImageOrientationDown) {
+                toPosition = 180;
+            } else if (position == UIImageOrientationLeft) {
+                toPosition = 270;
+            } else if (position == UIImageOrientationRight) {
+                toPosition = 90;
+            }
+            SetProperty(L"transform.rotation", toPosition);
         } else if (strcmp(name, "contentsSize") == 0) {
         } else if (strcmp(name, "gravity") == 0) {
             SetPropertyInt(L"gravity", [newValue intValue]);
@@ -797,7 +1163,7 @@ public:
     QueuedProperty(DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = _strdup("contents");
+        _propertyName = IwStrDup("contents");
         _propertyValue = NULL;
         _newTexture = newTexture;
         _contentsScale = contentsScale;
@@ -808,7 +1174,7 @@ public:
     QueuedProperty(DisplayNode* node, const char* propertyName, NSObject* propertyValue) {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = _strdup(propertyName);
+        _propertyName = IwStrDup(propertyName);
         _propertyValue = [propertyValue retain];
         _newTexture = NULL;
         _applyingTexture = false;
@@ -816,8 +1182,9 @@ public:
 
     ~QueuedProperty() {
         DecrementCounter("QueuedProperty");
-        if (_propertyName)
-            free(_propertyName);
+        if (_propertyName) {
+            IwFree(_propertyName);
+        }
         [_propertyValue release];
 
         _propertyName = nullptr;
@@ -1146,9 +1513,13 @@ public:
             ->SetParams(font, text, color, alignment, lineBreak, shadowColor, shadowOffset, numLines, edgeInsets, centerVertically);
     }
 
-    virtual DisplayAnimation* GetBasicDisplayAnimation(
-        id animobj, NSString* propertyName, NSObject* fromValue, NSObject* toValue, CAMediaTimingProperties* timingProperties) {
-        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, timingProperties);
+    virtual DisplayAnimation* GetBasicDisplayAnimation(id animobj,
+                                                       NSString* propertyName,
+                                                       NSObject* fromValue,
+                                                       NSObject* toValue,
+                                                       NSObject* byValue,
+                                                       CAMediaTimingProperties* timingProperties) {
+        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, byValue, timingProperties);
         return basicAnim;
     }
 
@@ -1201,7 +1572,28 @@ public:
         return ::screenHeight;
     }
     virtual float screenScale() {
-        return ::screenMagnification * [[UIApplication displayMode] hostScreenScale];
+        float scale = ::screenMagnification;
+
+        if ([[UIApplication displayMode] useHostScaleFactor]) {
+            scale *= [[UIApplication displayMode] hostScreenScale];
+        }
+
+        // On an iOS device, the only expected values for UIScreen.scale is 1, or 2 for retina displays.
+        // Some code paths rely on this.
+        if ([[UIApplication displayMode] clampScaleToClosestExpected]) {
+            // Round to nearest int
+            scale = static_cast<float>(static_cast<int>(scale + 0.5f));
+
+            // Clamp
+            if (scale > 2.0f) {
+                scale = 2.0f;
+            }
+            if (scale < 1.0f) {
+                scale = 1.0f;
+            }
+        }
+
+        return scale;
     }
     virtual int deviceWidth() {
         return ::deviceWidth;
@@ -1277,6 +1669,10 @@ public:
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
         node->SetAccessibilityInfo(info);
+    }
+
+    virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
+        node->SetShouldRasterize(rasterize);
     }
 };
 

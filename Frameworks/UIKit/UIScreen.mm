@@ -16,36 +16,35 @@
 
 #include "Starboard.h"
 
-#include "UIKit/UIView.h"
-#include "UIKit/UIDevice.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSArray.h"
-#include "UIKit/UIScreen.h"
+#include <UIKit/UIView.h>
+#include <UIKit/UIDevice.h>
+#include <UIKit/UIApplication.h>
+#include <Foundation/NSArray.h>
+#include <UIKit/UIScreen.h>
 
 extern float statusBarHeight;
 
-@implementation UIScreenMode : NSObject
-
-/**
- @Status Interoperable
-*/
-- (CGSize)size {
-    CGSize ret;
-    ret.width = GetCACompositor()->screenWidth() * GetCACompositor()->screenScale();
-    ret.height = GetCACompositor()->screenHeight() * GetCACompositor()->screenScale();
-
-    return ret;
-}
-
-@end
-
 static UIScreen* mainScreen;
-static UIScreenMode* curMode;
+static UIScreenMode* _curMode;
+static NSArray* _availableModes;
+static UIScreenMode* _preferredMode;
+
+NSString* const UIScreenDidConnectNotification = @"UIScreenDidConnectNotification";
+NSString* const UIScreenDidDisconnectNotification = @"UIScreenDidDisconnectNotification";
+NSString* const UIScreenModeDidChangeNotification = @"UIScreenModeDidChangeNotification";
+NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDidChangeNotification";
 
 @implementation UIScreen : NSObject
 + (void)initialize {
-    mainScreen = [self alloc];
-    curMode = [UIScreenMode alloc];
+    if (self == [UIScreen self]) {
+        mainScreen = [self alloc];
+        _curMode = [[UIScreenMode alloc] init];
+        _preferredMode = [[UIScreenMode alloc] init];
+
+        UIScreenMode* arrayArgs[1];
+        arrayArgs[0] = [[UIScreenMode alloc] init];
+        _availableModes = [[NSArray alloc] initWithObjects:arrayArgs count:1];
+    }
 }
 
 /**
@@ -60,7 +59,23 @@ static UIScreenMode* curMode;
 */
 - (UIScreenMode*)currentMode {
     UNIMPLEMENTED();
-    return curMode;
+    return _curMode;
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)availableModes {
+    UNIMPLEMENTED()
+    return _availableModes;
+}
+
+/**
+ @Status Stub
+*/
+- (UIScreenMode*)preferredMode {
+    UNIMPLEMENTED();
+    return _preferredMode;
 }
 
 /**

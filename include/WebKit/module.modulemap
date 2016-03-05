@@ -1,0 +1,11 @@
+module WebKit [system] [extern_c] {
+    use CoreFoundation
+    use Foundation
+    use UIKit
+    umbrella header "WebKit.h"
+    export *
+    
+    module * {
+        export *
+    }
+}

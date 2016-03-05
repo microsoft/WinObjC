@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "CFArrayInternal.h"
 #include "../CoreFoundation/CFDictionaryInternal.h"
 #include "NSPropertyListReader.h"
@@ -23,6 +24,9 @@
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSKeyedArchiver.h"
 #include "Foundation/NSArray.h"
+#include "../Foundation/NSXMLPropertyList.h"
+#include "NSEnumeratorInternal.h"
+#include "../Foundation/NSPropertyListWriter_binary.h"
 #include "CoreFoundation/CFArray.h"
 #include "Foundation/NSMutableString.h"
 #include "CoreFoundation/CFType.h"
@@ -152,7 +156,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 
     char* pData = (char*)[data bytes];
 
-    NSArray* ar;
+    id ar;
 
     if (memcmp(pData, "<?xml", 4) == 0) {
         ar = [NSXMLPropertyList propertyListFromData:data];
@@ -352,14 +356,14 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
         int objCount = 0;
 
         int count = [arrayToCopy count];
-        objs = (id*)malloc(count * sizeof(id));
+        objs = (id*)IwMalloc(count * sizeof(id));
 
         for (int i = 0; i < count; i++) {
             objs[objCount++] = [arrayToCopy objectAtIndex:i];
         }
 
         _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, objCount, true);
-        free(objs);
+        IwFree(objs);
     }
 
     return self;
@@ -509,7 +513,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingFunction:(compFuncType)compFunc context:(void*)context {
-    NSArray* ret = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
     [ret sortUsingFunction:compFunc context:context];
 
     return ret;
@@ -519,7 +523,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingComparator:(NSComparator)comparator {
-    NSArray* ret = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
 
     [ret sortUsingFunction:CFNSBlockCompare context:comparator];
 
@@ -530,7 +534,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)filteredArrayUsingPredicate:(NSPredicate*)predicate {
-    NSArray* ret = [NSMutableArray arrayWithArray:self];
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
     [ret filterUsingPredicate:predicate];
 
     return ret;
@@ -552,7 +556,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    id ret = [NSEnumerator enumeratorWithIterator:CFArrayGetValueEnumerator forObject:self nextFunction:CFArrayGetNextValue];
+    id ret = [NSEnumerator enumeratorWithIterator:(initIteratorFunc)CFArrayGetValueEnumerator
+                                        forObject:self
+                                     nextFunction:(nextValueFunc)CFArrayGetNextValue];
 
     return ret;
 }
@@ -568,7 +574,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingSelector:(SEL)selector {
-    NSArray* newArray = [NSMutableArray alloc];
+    NSMutableArray* newArray = [NSMutableArray alloc];
     [newArray initWithArray:self];
 
     [newArray sortUsingSelector:selector];
@@ -580,7 +586,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)descriptors {
-    NSArray* newArray = [NSMutableArray alloc];
+    NSMutableArray* newArray = [NSMutableArray alloc];
     [newArray initWithArray:self];
 
     [newArray sortUsingDescriptors:descriptors];
@@ -908,6 +914,156 @@ typedef NSInteger (*compFuncType)(id, id, void*);
         idx = [indexes indexGreaterThanIndex:idx];
     }
     return ret;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)addObserver:(NSObject*)anObserver
+ toObjectsAtIndexes:(NSIndexSet*)indexes
+         forKeyPath:(NSString*)keyPath
+            options:(NSKeyValueObservingOptions)options
+            context:(void*)context {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeObserver:(NSObject*)observer fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath context:(void*)context {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSArray*)arrayWithContentsOfURL:(NSURL*)aURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateObjectsAtIndexes:(NSIndexSet*)indexSet
+                          options:(NSEnumerationOptions)opts
+                       usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
+                                 options:(NSEnumerationOptions)opts
+                             passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)initWithContentsOfURL:(NSURL*)aURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context hint:(NSData*)hint {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
+                             options:(NSEnumerationOptions)opts
+                         passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

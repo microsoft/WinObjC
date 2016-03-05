@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,13 +14,13 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "CGPathInternal.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphics/CGGeometry.h"
-
-#include <vector>
-#include <algorithm>
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <algorithm>
+#import <vector>
+#import <CoreGraphics/CGContext.h>
+#import <CoreGraphics/CGGeometry.h>
+#import "CGPathInternal.h"
 
 class BBox {
 public:
@@ -57,7 +57,7 @@ public:
 @implementation CGPath : NSObject
 - (void)dealloc {
     if (_components) {
-        EbrFree(_components);
+        IwFree(_components);
     }
 
     [super dealloc];
@@ -231,7 +231,7 @@ public:
     CGPath* ret = [CGPath alloc];
     ret->_max = _max;
     ret->_count = _count;
-    ret->_components = (pathComponent*)EbrRealloc(ret->_components, ret->_max * sizeof(pathComponent));
+    ret->_components = (pathComponent*)IwRealloc(ret->_components, ret->_max * sizeof(pathComponent));
     memcpy(ret->_components, _components, _count * sizeof(pathComponent));
 
     return ret;
@@ -281,7 +281,7 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, flo
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentLineTo;
@@ -304,7 +304,7 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, floa
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentArcToPoint;
@@ -335,7 +335,7 @@ void CGPathAddArc(CGMutablePathRef path,
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentArcAngle;
@@ -369,7 +369,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentMove;
@@ -406,7 +406,7 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rec
 
     if ( pathObj->_count + 1 >= pathObj->_max ) {
     pathObj->_max += 32;
-    pathObj->_components = (pathComponent *) EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+    pathObj->_components = (pathComponent *) IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentRectangle;
@@ -432,7 +432,7 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
 
     if (pathObj->_count + copyObj->_count >= pathObj->_max) {
         pathObj->_max += copyObj->_count;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     for (unsigned i = 0; i < copyObj->_count; i++) {
@@ -467,7 +467,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentEllipseInRect;
@@ -487,7 +487,7 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     pathObj->_components[pathObj->_count].type = pathComponentClose;
@@ -546,7 +546,7 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     int count = pathObj->_count;
@@ -572,7 +572,7 @@ void CGPathAddCurveToPoint(
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)EbrRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
     }
 
     int count = pathObj->_count;
@@ -618,6 +618,132 @@ CGRect CGPathGetPathBoundingBox(CGPathRef self) {
 
     CGRect ret;
     return ret;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGPathAddRects(CGMutablePathRef path, const CGAffineTransform* m, const CGRect* rects, size_t count) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGPathAddRelativeArc(
+    CGMutablePathRef path, const CGAffineTransform* matrix, CGFloat x, CGFloat y, CGFloat radius, CGFloat startAngle, CGFloat delta) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGPathAddRoundedRect(
+    CGMutablePathRef path, const CGAffineTransform* transform, CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPathRef CGPathCreateCopyByDashingPath(
+    CGPathRef path, const CGAffineTransform* transform, CGFloat phase, const CGFloat* lengths, size_t count) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPathRef CGPathCreateCopyByStrokingPath(
+    CGPathRef path, const CGAffineTransform* transform, CGFloat lineWidth, CGLineCap lineCap, CGLineJoin lineJoin, CGFloat miterLimit) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPathRef CGPathCreateCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path, const CGAffineTransform* transform) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerWidth, CGFloat cornerHeight, const CGAffineTransform* transform) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGPoint CGPathGetCurrentPoint(CGPathRef path) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGPathGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+bool CGPathIsRect(CGPathRef path, CGRect* rect) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 class ScanlineCalculator {

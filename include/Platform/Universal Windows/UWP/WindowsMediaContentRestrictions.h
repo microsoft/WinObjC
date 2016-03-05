@@ -86,7 +86,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WMCRatedContentRestrictions*)createWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
 - (EventRegistrationToken)addRestrictionsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;

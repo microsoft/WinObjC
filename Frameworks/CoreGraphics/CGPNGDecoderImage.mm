@@ -36,12 +36,12 @@
 *   Chris Wilson <chris@chris-wilson.co.uk>
 */
 
-#include <math.h>
-#include <stdlib.h>
-#include "CGContextInternal.h"
+#import <math.h>
+#import <stdlib.h>
+#import "CGContextInternal.h"
 
 extern "C" {
-#include <png.h>
+#import <png.h>
 };
 
 CGPNGDecoderImage::CGPNGDecoderImage(const char* filename) {
@@ -322,7 +322,7 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
 
         out = (BYTE*)imgDest;
 
-        row_pointers = (BYTE**)EbrMalloc(png_height * sizeof(char*));
+        row_pointers = (BYTE**)IwMalloc(png_height * sizeof(char*));
 
         for (i = 0; i < png_height; i++) {
             row_pointers[i] = (BYTE*)&out[i * stride];
@@ -339,7 +339,7 @@ error:
         int curRow = png_get_current_row_number(png);
         if (curRow == 0) {
             if (row_pointers != NULL) {
-                EbrFree(row_pointers);
+                IwFree(row_pointers);
             }
             if (png != NULL) {
                 png_destroy_read_struct(&png, &info, NULL);
@@ -358,7 +358,7 @@ error:
     }
 
     if (row_pointers != NULL) {
-        EbrFree(row_pointers);
+        IwFree(row_pointers);
     }
     if (png != NULL) {
         png_destroy_read_struct(&png, &info, NULL);
@@ -399,7 +399,7 @@ bool CGPNGImageBacking::DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CG
 
 CGPNGImageBacking::CGPNGImageBacking(const char* filename) {
     size_t fileNameSize = strlen(filename) + 1;
-    _fileName = (char*)malloc(fileNameSize);
+    _fileName = (char*)IwMalloc(fileNameSize);
     strcpy_s(_fileName, fileNameSize, filename);
     Decode(NULL, 0);
 }
@@ -413,6 +413,6 @@ CGPNGImageBacking::CGPNGImageBacking(id data) {
 CGPNGImageBacking::~CGPNGImageBacking() {
     _data = nil;
     if (_fileName) {
-        free(_fileName);
+        IwFree(_fileName);
     }
 }

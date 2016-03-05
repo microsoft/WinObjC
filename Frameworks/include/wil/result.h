@@ -19,9 +19,13 @@
 
 #pragma once
 
+#ifndef __ERRORHANDLING_H
+#error "Please include ErrorHandling.h rather than directly including Result.h"
+#endif
+
 #include <WinError.h>
 #include <strsafe.h>
-#include <malloc.h> // malloc / free used for internal buffer management
+#include <IwMalloc.h> // IwMalloc / IwFree used for internal buffer management
 #include <intrin.h> // provides the _ReturnAddress() intrinsic
 #include "Common.h"
 #if defined(WIL_ENABLE_EXCEPTIONS) && !defined(WIL_SUPPRESS_NEW)
@@ -1452,6 +1456,10 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 // Objective-C Error Macros
 //*****************************************************************************
 
+__declspec(selectany) bool (*g_resultFromUncaughtExceptionObjC)(HRESULT* out);
+__declspec(selectany) void (*g_rethrowAsNSException)();
+__declspec(selectany) void (*g_objcThrowFailureInfo)(const wil::FailureInfo& fi);
+
 #define THROW_NS_HR(hr) __R_FN(Objc_Throw_HrMsg)(__R_INFO(#hr) wil::verify_hresult(hr), nullptr)
 #define THROW_NS_HR_MSG(hr, msg, ...) __R_FN(Objc_Throw_HrMsg)(__R_INFO(#hr) wil::verify_hresult(hr), msg, __VA_ARGS__)
 #define THROW_NS_IF_FAILED(hr) __R_FN(Objc_Throw_IfFailed)(__R_INFO(#hr) wil::verify_hresult(hr))
@@ -1547,9 +1555,6 @@ __declspec(selectany) HRESULT(__stdcall* g_pfnResultFromCaughtException)() WI_NO
 
 // [optionally] Use to configure fast fail of unknown exceptions (turn them off).
 __declspec(selectany) bool g_fResultFailFastUnknownExceptions = true;
-
-// [optionally] Set to false to a configure all THROW_XXX macros in C++/CX to throw ResultException rather than Platform::Exception^
-__declspec(selectany) bool g_fResultThrowPlatformException = true;
 
 //! @cond
 namespace details {
@@ -1678,12 +1683,6 @@ __declspec(selectany) void(__stdcall* g_pfnFailFastInLoaderCallout)() WI_NOEXCEP
 // Desktop Only:  Private module load convert NtStatus to HResult (automatically setup)
 __declspec(selectany) ULONG(__stdcall* g_pfnRtlNtStatusToDosErrorNoTeb)(NTSTATUS) = nullptr;
 
-// C++/cx compiled additions
-__declspec(selectany) void(__stdcall* g_pfnThrowPlatformException)(FailureInfo const& failure, PCWSTR debugString) = nullptr;
-__declspec(selectany) void(__stdcall* g_pfnRethrowNormalizedCaughtException_WinRt)(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR message) = nullptr;
-__declspec(selectany) _Always_(_Post_satisfies_(return < 0))
-    HRESULT(__stdcall* g_pfnResultFromCaughtException_WinRt)() WI_NOEXCEPT = nullptr;
-
 enum class ReportFailureOptions { None = 0x00, ForcePlatformException = 0x01, SuppressAction = 0x02 };
 DEFINE_ENUM_FLAG_OPERATORS(ReportFailureOptions);
 
@@ -1746,7 +1745,7 @@ public:
     void reset() WI_NOEXCEPT {
         if (m_pCopy != nullptr) {
             if (0 == ::InterlockedDecrementRelease(m_pCopy)) {
-                free(m_pCopy);
+                ::IwFree(m_pCopy);
             }
             m_pCopy = nullptr;
             m_size = 0;
@@ -1759,7 +1758,7 @@ public:
             return true;
         }
 
-        long* pCopyRefCount = reinterpret_cast<long*>(malloc(sizeof(long) + cbData));
+        long* pCopyRefCount = reinterpret_cast<long*>(::IwMalloc(sizeof(long) + cbData));
         if (pCopyRefCount == nullptr) {
             return false;
         }
@@ -1915,8 +1914,7 @@ private:
         }
 
         template <typename param_t>
-        RefAndObject(param_t&& param1)
-            : m_refCount(1), m_object(wistd::forward<param_t>(param1)) {
+        RefAndObject(param_t&& param1) : m_refCount(1), m_object(wistd::forward<param_t>(param1)) {
         }
     };
 
@@ -2181,7 +2179,7 @@ public:
                 auto pCurrent = pNode;
                 pNode = pNode->pNext;
                 pCurrent->~Node();
-                free(pCurrent);
+                ::IwFree(pCurrent);
             }
             entry = nullptr;
         }
@@ -2197,7 +2195,7 @@ public:
             }
         }
         if (shouldAllocate) {
-            Node* pNew = reinterpret_cast<Node*>(malloc(sizeof(Node)));
+            Node* pNew = reinterpret_cast<Node*>(::IwMalloc(sizeof(Node)));
             if (pNew != nullptr) {
                 // placement new would be preferred, but components include this file that do not enable it
                 pNew->Construct(threadId);
@@ -2848,28 +2846,14 @@ inline wil::details::ScopeExitFnGuard<TLambda> ScopeExitIgnore(TLambda&& fnAtExi
 // }
 
 _Always_(_Post_satisfies_(return < 0)) __declspec(noinline) inline HRESULT ResultFromCaughtException() WI_NOEXCEPT {
-    if (details::g_pfnResultFromCaughtException_WinRt != nullptr) {
-        HRESULT hr = details::g_pfnResultFromCaughtException_WinRt();
-        __analysis_assume(hr < 0);
+    HRESULT hr;
+    if (g_resultFromUncaughtExceptionObjC && g_resultFromUncaughtExceptionObjC(&hr)) {
         return hr;
     }
 
     try {
         throw;
-    }
-#ifdef __OBJC__
-    catch (NSException* e) {
-        // If we have an hresult in our user dict, use that, otherwise this was unexpected:
-        NSNumber* hresultValue = [e.userInfo objectForKey:_NSHResultErrorDictKey];
-        if (hresultValue) {
-            return [hresultValue unsignedIntValue];
-        }
-
-        return E_UNEXPECTED;
-    }
-#endif
-    // These catches are intentionally by value to mitigate bug 5488436
-    catch (ResultException re) {
+    } catch (const ResultException& re) {
         return re.GetErrorCode();
     } catch (std::bad_alloc) {
         return E_OUTOFMEMORY;
@@ -2951,72 +2935,10 @@ _declspec(noreturn) inline void RethrowUnknownCaughtException(__R_FN_PARAMS_FULL
     ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, HRESULT_FROM_WIN32(ERROR_UNHANDLED_EXCEPTION), message);
 }
 
-#ifdef __cplusplus_winrt
-__declspec(noreturn) inline void __stdcall RethrowNormalizedCaughtException_WinRt(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR message) {
-    try {
-        throw;
-    } catch (ResultException const& re) {
-        auto& failure = re.GetFailureInfo();
-        ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, failure.hr, message, ReportFailureOptions::SuppressAction);
-
-        // Convert to a Platform::Exception^ by re-throwing with the existing failure information
-        // to maintain as much context as we can.
-        ReportFailure(failure.callerReturnAddress,
-                      failure.uLineNumber,
-                      failure.pszFile,
-                      failure.pszFunction,
-                      failure.pszCode,
-                      failure.returnAddress,
-                      FailureType::Exception,
-                      failure.hr,
-                      failure.pszMessage,
-                      ReportFailureOptions::ForcePlatformException);
-    } catch (Platform::Exception ^ exception) {
-        wchar_t messageString[2048];
-        if (exception->Message) {
-            StringCchCopyW(messageString, ARRAYSIZE(messageString), reinterpret_cast<STRSAFE_LPCWSTR>(exception->Message->Data()));
-            if (message != nullptr) {
-                StringCchCatW(messageString, ARRAYSIZE(messageString), L" - ");
-            }
-        } else {
-            messageString[0] = L'\0';
-        }
-        if (message != nullptr) {
-            StringCchCatW(messageString, ARRAYSIZE(messageString), message);
-        }
-
-        ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, exception->HResult, messageString, ReportFailureOptions::SuppressAction);
-
-        // In C++/CX, Platform::Exception^ is our normalized exception... we can re-throw it.
-        throw;
-    } catch (std::bad_alloc const&) {
-        ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, E_OUTOFMEMORY, message);
-    } catch (...) {
-        RethrowUnknownCaughtException(__R_FN_CALL_FULL, message);
-    }
-    RESULT_RAISE_FAST_FAIL_EXCEPTION;
-}
-#endif
-
 __declspec(noreturn) inline void RethrowNormalizedCaughtException_Helper(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR message = nullptr) {
-    if (g_pfnRethrowNormalizedCaughtException_WinRt != nullptr) {
-        g_pfnRethrowNormalizedCaughtException_WinRt(__R_FN_CALL_FULL, message);
-    }
-
     try {
         throw;
-    }
-#ifdef __OBJC__
-    catch (NSException* e) {
-        // Log this exception before rethrowing it.
-        HRESULT hr = [[e.userInfo objectForKey:_NSHResultErrorDictKey] unsignedIntValue];
-        ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, hr, message);
-
-        throw;
-    }
-#endif
-    // These catches are intentionally by value to mitigate bug 5488436
-    catch (ResultException re) {
+    } catch (const ResultException& re) {
         ReportFailure(__R_FN_CALL_FULL, FailureType::Exception, re.GetErrorCode(), message, ReportFailureOptions::SuppressAction);
 
         // Outside of C++/CX, ResultException is our normalized exception.  Because it's our class
@@ -3058,31 +2980,6 @@ _Always_(_Post_satisfies_(return < 0)) inline HRESULT ResultFromUnknownCaughtExc
 
     return HRESULT_FROM_WIN32(ERROR_UNHANDLED_EXCEPTION);
 }
-
-#ifdef __cplusplus_winrt
-_Always_(_Post_satisfies_(return < 0)) inline HRESULT __stdcall ResultFromCaughtException_WinRt() WI_NOEXCEPT {
-    try {
-        throw;
-    } catch (ResultException const& re) {
-        return re.GetErrorCode();
-    } catch (Platform::Exception ^ exception) {
-        return exception->HResult;
-    } catch (std::bad_alloc const&) {
-        return E_OUTOFMEMORY;
-    } catch (...) {
-        return ResultFromUnknownCaughtException();
-    }
-}
-
-#if !defined(RESULT_SUPPRESS_STATIC_INITIALIZERS)
-WI_HEADER_INITITALIZATION_FUNCTION(InitializeWinRtExceptions,
-                                   [] {
-                                       g_pfnRethrowNormalizedCaughtException_WinRt = RethrowNormalizedCaughtException_WinRt;
-                                       g_pfnResultFromCaughtException_WinRt = ResultFromCaughtException_WinRt;
-                                       return 1;
-                                   });
-#endif
-#endif
 #endif // WIL_ENABLE_EXCEPTIONS
 
 //*****************************************************************************
@@ -3202,27 +3099,8 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
     }
 }
 
-#ifdef __cplusplus_winrt
-inline void __stdcall ThrowPlatformException(FailureInfo const& failure, const wchar_t* debugString) {
-    throw Platform::Exception::CreateException(failure.hr,
-                                               ref new Platform::String(reinterpret_cast<_Null_terminated_ const __wchar_t*>(debugString)));
-}
-
-#if !defined(RESULT_SUPPRESS_STATIC_INITIALIZERS)
-WI_HEADER_INITITALIZATION_FUNCTION(InitializeWinRt,
-                                   [] {
-                                       g_pfnThrowPlatformException = ThrowPlatformException;
-                                       return 1;
-                                   });
-#endif
-#endif
-
 inline __declspec(noinline) void ReportFailure(
     __R_FN_PARAMS_FULL, FailureType type, HRESULT hr, _In_opt_ PCWSTR message, ReportFailureOptions options) {
-    bool needPlatformException =
-        ((type == FailureType::Exception) && (g_pfnThrowPlatformException != nullptr) &&
-         (g_fResultThrowPlatformException || WI_IS_FLAG_SET(options, ReportFailureOptions::ForcePlatformException)));
-
     FailureInfo failure;
     wchar_t debugString[2048];
     char callContextString[1024];
@@ -3231,7 +3109,7 @@ inline __declspec(noinline) void ReportFailure(
                type,
                hr,
                message,
-               needPlatformException,
+               false,
                debugString,
                ARRAYSIZE(debugString),
                callContextString,
@@ -3243,17 +3121,24 @@ inline __declspec(noinline) void ReportFailure(
             // This is an explicit fail fast - examine the callstack to determine the precise reason for this failure
             RESULT_RAISE_FAST_FAIL_EXCEPTION;
         } else if (type == FailureType::Exception) {
-            if (needPlatformException) {
-                g_pfnThrowPlatformException(failure, debugString);
+            throw ResultException(failure);
+        } else if (type == FailureType::ObjCException) {
+            if (!g_objcThrowFailureInfo) {
+                LogFailure(__R_FN_CALL_FULL,
+                           type,
+                           E_FAIL,
+                           L"Throwing an Objective C exception requires having Objective C code",
+                           false,
+                           debugString,
+                           ARRAYSIZE(debugString),
+                           callContextString,
+                           ARRAYSIZE(callContextString),
+                           &failure);
+                RESULT_RAISE_FAST_FAIL_EXCEPTION;
             }
 
-            throw ResultException(failure);
+            g_objcThrowFailureInfo(failure);
         }
-#ifdef __OBJC__
-        else if (type == FailureType::ObjCException) {
-            @throw _NSExceptionFromFailureInfo(failure);
-        }
-#endif
     }
 }
 
@@ -3449,8 +3334,8 @@ __R_DIRECT_METHOD(HRESULT, Return_GetLastErrorMsg)(__R_DIRECT_FN_PARAMS _Printf_
     return wil::details::ReportFailure_GetLastErrorHrMsg(__R_DIRECT_FN_CALL FailureType::Return, formatString, argList);
 }
 
-__R_DIRECT_METHOD(HRESULT, Return_NtStatusMsg)(__R_DIRECT_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_DIRECT_METHOD(HRESULT, Return_NtStatusMsg)
+(__R_DIRECT_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __R_FN_LOCALS;
@@ -3586,8 +3471,8 @@ __R_CONDITIONAL_METHOD(HANDLE, Log_IfHandleNull)(__R_CONDITIONAL_FN_PARAMS HANDL
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(PointerT, Log_IfNullAlloc)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(PointerT, Log_IfNullAlloc)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Log_NullAlloc)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -3595,8 +3480,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(void, Log_IfNullAlloc)(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(void, Log_IfNullAlloc)
+(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Log_NullAlloc)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -3617,8 +3502,8 @@ __R_CONDITIONAL_METHOD(bool, Log_HrIfFalse)(__R_CONDITIONAL_FN_PARAMS HRESULT hr
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(PointerT, Log_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(PointerT, Log_HrIfNull)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Log_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
@@ -3626,8 +3511,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(void, Log_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(void, Log_HrIfNull)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Log_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
@@ -3648,8 +3533,8 @@ __R_CONDITIONAL_METHOD(bool, Log_GetLastErrorIfFalse)(__R_CONDITIONAL_FN_PARAMS 
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(PointerT, Log_GetLastErrorIfNull)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(PointerT, Log_GetLastErrorIfNull)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Log_GetLastError)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -3657,8 +3542,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(void, Log_GetLastErrorIfNull)(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(void, Log_GetLastErrorIfNull)
+(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Log_GetLastError)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -3694,8 +3579,8 @@ __R_DIRECT_METHOD(DWORD, Log_GetLastErrorMsg)(__R_DIRECT_FN_PARAMS _Printf_forma
     return wil::details::ReportFailure_GetLastErrorMsg(__R_DIRECT_FN_CALL FailureType::Log, formatString, argList);
 }
 
-__R_DIRECT_METHOD(NTSTATUS, Log_NtStatusMsg)(__R_DIRECT_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_DIRECT_METHOD(NTSTATUS, Log_NtStatusMsg)
+(__R_DIRECT_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __R_FN_LOCALS;
@@ -3703,38 +3588,38 @@ __R_DIRECT_METHOD(NTSTATUS, Log_NtStatusMsg)(__R_DIRECT_FN_PARAMS NTSTATUS statu
     return status;
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Log_HrMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Log_HrMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __R_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Log, hr, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Log_GetLastErrorMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __R_FN_LOCALS;
     wil::details::ReportFailure_GetLastErrorMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Log, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Log_Win32Msg)(__R_INTERNAL_NOINLINE_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Log_Win32Msg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __R_FN_LOCALS;
     wil::details::ReportFailure_Win32Msg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Log, err, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Log_NullAllocMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Log_NullAllocMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __R_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Log, E_OUTOFMEMORY, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Log_NtStatusMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Log_NtStatusMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __R_FN_LOCALS;
     wil::details::ReportFailure_NtStatusMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Log, status, formatString, argList);
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(HRESULT, Log_IfFailedMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(HRESULT, Log_IfFailedMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (FAILED(hr)) {
         va_list argList;
         va_start(argList, formatString);
@@ -3743,8 +3628,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(HRESULT, Log_IfFailedMsg)(__R_CONDITIONAL_FN_PAR
     return hr;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(BOOL, Log_IfWin32BoolFalseMsg)(__R_CONDITIONAL_FN_PARAMS BOOL ret, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(BOOL, Log_IfWin32BoolFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS BOOL ret, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!ret) {
         va_list argList;
         va_start(argList, formatString);
@@ -3753,8 +3638,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(BOOL, Log_IfWin32BoolFalseMsg)(__R_CONDITIONAL_F
     return ret;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(DWORD, Log_IfWin32ErrorMsg)(__R_CONDITIONAL_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(DWORD, Log_IfWin32ErrorMsg)
+(__R_CONDITIONAL_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (FAILED_WIN32(err)) {
         va_list argList;
         va_start(argList, formatString);
@@ -3763,8 +3648,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(DWORD, Log_IfWin32ErrorMsg)(__R_CONDITIONAL_FN_P
     return err;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Log_IfHandleInvalidMsg)(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Log_IfHandleInvalidMsg)
+(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (handle == INVALID_HANDLE_VALUE) {
         va_list argList;
         va_start(argList, formatString);
@@ -3773,8 +3658,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Log_IfHandleInvalidMsg)(__R_CONDITIONAL_
     return handle;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Log_IfHandleNullMsg)(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Log_IfHandleNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (handle == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3784,8 +3669,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Log_IfHandleNullMsg)(__R_CONDITIONAL_FN_
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(PointerT, Log_IfNullAllocMsg)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(PointerT, Log_IfNullAllocMsg)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3795,8 +3680,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Log_IfNullAllocMsg)(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Log_IfNullAllocMsg)
+(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3804,8 +3689,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_C
     }
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_HrIfMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_HrIfMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -3814,8 +3699,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Log_HrIfMsg)(__R_CONDITIONAL_FN_PARAMS HRE
     return condition;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_HrIfFalseMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_HrIfFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -3825,8 +3710,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Log_HrIfFalseMsg)(__R_CONDITIONAL_FN_PARAM
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(PointerT, Log_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(PointerT, Log_HrIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3836,8 +3721,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Log_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Log_HrIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3845,8 +3730,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_C
     }
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_GetLastErrorIfMsg)(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_GetLastErrorIfMsg)
+(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -3855,8 +3740,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Log_GetLastErrorIfMsg)(__R_CONDITIONAL_FN_
     return condition;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_GetLastErrorIfFalseMsg)(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Log_GetLastErrorIfFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -3866,8 +3751,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Log_GetLastErrorIfFalseMsg)(__R_CONDITIONA
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(PointerT, Log_GetLastErrorIfNullMsg)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(PointerT, Log_GetLastErrorIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3877,8 +3762,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Log_GetLastErrorIfNullMsg)(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Log_GetLastErrorIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -3886,8 +3771,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_C
     }
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(NTSTATUS, Log_IfNtStatusFailedMsg)(__R_CONDITIONAL_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(NTSTATUS, Log_IfNtStatusFailedMsg)
+(__R_CONDITIONAL_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (FAILED_NTSTATUS(status)) {
         va_list argList;
         va_start(argList, formatString);
@@ -3983,8 +3868,8 @@ __RFF_CONDITIONAL_METHOD(RESULT_NORETURN_NULL HANDLE, FailFast_IfHandleNull)(__R
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNullAlloc)(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNullAlloc)
+(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_NullAlloc)(__RFF_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -3992,8 +3877,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNullAlloc)(__RFF_CONDITIONAL_FN_PARAMS const PointerT& pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNullAlloc)
+(__RFF_CONDITIONAL_FN_PARAMS const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_NullAlloc)(__RFF_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4014,8 +3899,8 @@ __RFF_CONDITIONAL_METHOD(bool, FailFast_HrIfFalse)(__RFF_CONDITIONAL_FN_PARAMS H
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_HrIfNull)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_HrIfNull)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_Hr)(__RFF_CONDITIONAL_FN_CALL hr);
     }
@@ -4023,8 +3908,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_HrIfNull)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_HrIfNull)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_Hr)(__RFF_CONDITIONAL_FN_CALL hr);
     }
@@ -4045,8 +3930,8 @@ __RFF_CONDITIONAL_METHOD(bool, FailFast_GetLastErrorIfFalse)(__RFF_CONDITIONAL_F
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_GetLastErrorIfNull)(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_GetLastErrorIfNull)
+(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_GetLastError)(__RFF_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4054,8 +3939,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_GetLastErrorIfNull)(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_GetLastErrorIfNull)
+(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_GetLastError)(__RFF_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4068,70 +3953,70 @@ __RFF_CONDITIONAL_METHOD(NTSTATUS, FailFast_IfNtStatusFailed)(__RFF_CONDITIONAL_
     return status;
 }
 
-__RFF_DIRECT_NORET_METHOD(void, FailFast_HrMsg)(__RFF_DIRECT_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_DIRECT_NORET_METHOD(void, FailFast_HrMsg)
+(__RFF_DIRECT_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__RFF_DIRECT_FN_CALL FailureType::FailFast, hr, formatString, argList);
 }
 
-__RFF_DIRECT_NORET_METHOD(void, FailFast_Win32Msg)(__RFF_DIRECT_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_DIRECT_NORET_METHOD(void, FailFast_Win32Msg)
+(__RFF_DIRECT_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_Win32Msg(__RFF_DIRECT_FN_CALL FailureType::FailFast, err, formatString, argList);
 }
 
-__RFF_DIRECT_NORET_METHOD(void, FailFast_GetLastErrorMsg)(__RFF_DIRECT_FN_PARAMS _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_DIRECT_NORET_METHOD(void, FailFast_GetLastErrorMsg)
+(__RFF_DIRECT_FN_PARAMS _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_GetLastErrorMsg(__RFF_DIRECT_FN_CALL FailureType::FailFast, formatString, argList);
 }
 
-__RFF_DIRECT_NORET_METHOD(void, FailFast_NtStatusMsg)(__RFF_DIRECT_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_DIRECT_NORET_METHOD(void, FailFast_NtStatusMsg)
+(__RFF_DIRECT_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_NtStatusMsg(__RFF_DIRECT_FN_CALL FailureType::FailFast, status, formatString, argList);
 }
 
-__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_HrMsg)(__RFF_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_HrMsg)
+(__RFF_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, hr, formatString, argList);
 }
 
-__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_GetLastErrorMsg)(__RFF_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_GetLastErrorMsg)
+(__RFF_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_GetLastErrorMsg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, formatString, argList);
 }
 
-__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_Win32Msg)(__RFF_INTERNAL_NOINLINE_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_Win32Msg)
+(__RFF_INTERNAL_NOINLINE_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_Win32Msg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, err, formatString, argList);
 }
 
-__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_NullAllocMsg)(__RFF_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_NullAllocMsg)
+(__RFF_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, E_OUTOFMEMORY, formatString, argList);
 }
 
-__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_NtStatusMsg)(__RFF_INTERNAL_NOINLINE_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_NtStatusMsg)
+(__RFF_INTERNAL_NOINLINE_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_NtStatusMsg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, status, formatString, argList);
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(HRESULT, FailFast_IfFailedMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(HRESULT, FailFast_IfFailedMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (FAILED(hr)) {
         va_list argList;
         va_start(argList, formatString);
@@ -4140,8 +4025,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(HRESULT, FailFast_IfFailedMsg)(__RFF_CONDITION
     return hr;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(BOOL, FailFast_IfWin32BoolFalseMsg)(__RFF_CONDITIONAL_FN_PARAMS BOOL ret, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(BOOL, FailFast_IfWin32BoolFalseMsg)
+(__RFF_CONDITIONAL_FN_PARAMS BOOL ret, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!ret) {
         va_list argList;
         va_start(argList, formatString);
@@ -4150,8 +4035,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(BOOL, FailFast_IfWin32BoolFalseMsg)(__RFF_COND
     return ret;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(DWORD, FailFast_IfWin32ErrorMsg)(__RFF_CONDITIONAL_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(DWORD, FailFast_IfWin32ErrorMsg)
+(__RFF_CONDITIONAL_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (FAILED_WIN32(err)) {
         va_list argList;
         va_start(argList, formatString);
@@ -4160,8 +4045,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(DWORD, FailFast_IfWin32ErrorMsg)(__RFF_CONDITI
     return err;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(HANDLE, FailFast_IfHandleInvalidMsg)(__RFF_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(HANDLE, FailFast_IfHandleInvalidMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (handle == INVALID_HANDLE_VALUE) {
         va_list argList;
         va_start(argList, formatString);
@@ -4170,8 +4055,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(HANDLE, FailFast_IfHandleInvalidMsg)(__RFF_CON
     return handle;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(RESULT_NORETURN_NULL HANDLE, FailFast_IfHandleNullMsg)(__RFF_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(RESULT_NORETURN_NULL HANDLE, FailFast_IfHandleNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (handle == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4181,8 +4066,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(RESULT_NORETURN_NULL HANDLE, FailFast_IfHandle
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNullAllocMsg)(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNullAllocMsg)
+(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4192,8 +4077,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNullAllocMsg)(__RFF_CONDITIONAL_FN_PARAMS const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNullAllocMsg)
+(__RFF_CONDITIONAL_FN_PARAMS const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4201,8 +4086,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
     }
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_HrIfMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_HrIfMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4211,8 +4096,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_HrIfMsg)(__RFF_CONDITIONAL_FN_P
     return condition;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_HrIfFalseMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_HrIfFalseMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4222,8 +4107,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_HrIfFalseMsg)(__RFF_CONDITIONAL
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_HrIfNullMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_HrIfNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4233,8 +4118,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_HrIfNullMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_HrIfNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4242,8 +4127,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
     }
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_GetLastErrorIfMsg)(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_GetLastErrorIfMsg)
+(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4252,8 +4137,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_GetLastErrorIfMsg)(__RFF_CONDIT
     return condition;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_GetLastErrorIfFalseMsg)(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_GetLastErrorIfFalseMsg)
+(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4263,8 +4148,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_GetLastErrorIfFalseMsg)(__RFF_C
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_GetLastErrorIfNullMsg)(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_GetLastErrorIfNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4274,8 +4159,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_GetLastErrorIfNullMsg)(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_GetLastErrorIfNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4283,8 +4168,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
     }
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(NTSTATUS, FailFast_IfNtStatusFailedMsg)(__RFF_CONDITIONAL_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(NTSTATUS, FailFast_IfNtStatusFailedMsg)
+(__RFF_CONDITIONAL_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (FAILED_NTSTATUS(status)) {
         va_list argList;
         va_start(argList, formatString);
@@ -4318,8 +4203,8 @@ __RFF_CONDITIONAL_METHOD(bool, FailFast_IfFalse)(__RFF_CONDITIONAL_FN_PARAMS boo
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNull)(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNull)
+(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_Unexpected)(__RFF_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4327,29 +4212,29 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNull)(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNull)
+(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFast_Unexpected)(__RFF_CONDITIONAL_FN_CALL_ONLY);
     }
 }
 
-__RFF_DIRECT_NORET_METHOD(void, FailFast_UnexpectedMsg)(__RFF_DIRECT_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_DIRECT_NORET_METHOD(void, FailFast_UnexpectedMsg)
+(__RFF_DIRECT_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     va_list argList;
     va_start(argList, formatString);
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__RFF_DIRECT_FN_CALL FailureType::FailFast, E_UNEXPECTED, formatString, argList);
 }
 
-__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_UnexpectedMsg)(__RFF_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT
-            {
+__RFF_INTERNAL_NOINLINE_NORET_METHOD(_FailFast_UnexpectedMsg)
+(__RFF_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) WI_NOEXCEPT {
     __RFF_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__RFF_INTERNAL_NOINLINE_FN_CALL FailureType::FailFast, E_UNEXPECTED, formatString, argList);
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)
+(__RFF_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4358,8 +4243,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfMsg)(__RFF_CONDITIONAL_FN_PAR
     return condition;
 }
 
-__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfFalseMsg)(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfFalseMsg)
+(__RFF_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4369,8 +4254,8 @@ __RFF_CONDITIONAL_NOINLINE_METHOD(bool, FailFast_IfFalseMsg)(__RFF_CONDITIONAL_F
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNullMsg)(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFast_IfNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4380,8 +4265,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNullMsg)(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFast_IfNullMsg)
+(__RFF_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) WI_NOEXCEPT {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4423,8 +4308,8 @@ __RFF_CONDITIONAL_METHOD(bool, FailFastImmediate_IfFalse)(bool condition) WI_NOE
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFastImmediate_IfNull)(_Pre_maybenull_ PointerT pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, FailFastImmediate_IfNull)
+(_Pre_maybenull_ PointerT pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFastImmediate_Unexpected)();
     }
@@ -4432,8 +4317,8 @@ template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS
 }
 
 template <__RFF_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFastImmediate_IfNull)(_In_opt_ const PointerT& pointer) WI_NOEXCEPT
-            {
+__RFF_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, FailFastImmediate_IfNull)
+(_In_opt_ const PointerT& pointer) WI_NOEXCEPT {
     if (pointer == nullptr) {
         __RFF_CALL_INTERNAL_METHOD(_FailFastImmediate_Unexpected)();
     }
@@ -4534,8 +4419,8 @@ __R_CONDITIONAL_METHOD(RESULT_NORETURN_NULL HANDLE, Throw_IfHandleNull)(__R_COND
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_IfNullAlloc)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_IfNullAlloc)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Throw_NullAlloc)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4543,8 +4428,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(void, Throw_IfNullAlloc)(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(void, Throw_IfNullAlloc)
+(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Throw_NullAlloc)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4565,8 +4450,8 @@ __R_CONDITIONAL_METHOD(bool, Throw_HrIfFalse)(__R_CONDITIONAL_FN_PARAMS HRESULT 
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_HrIfNull)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
@@ -4574,8 +4459,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(void, Throw_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(void, Throw_HrIfNull)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
@@ -4596,8 +4481,8 @@ __R_CONDITIONAL_METHOD(bool, Throw_GetLastErrorIfFalse)(__R_CONDITIONAL_FN_PARAM
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_GetLastErrorIfNull)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_GetLastErrorIfNull)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Throw_GetLastError)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4605,8 +4490,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, Throw_GetLastErrorIfNull)(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, Throw_GetLastErrorIfNull)
+(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Throw_GetLastError)(__R_CONDITIONAL_FN_CALL_ONLY);
     }
@@ -4647,38 +4532,38 @@ __R_DIRECT_METHOD(void, Throw_NtStatusMsg)(__R_DIRECT_FN_PARAMS NTSTATUS status,
     wil::details::ReportFailure_NtStatusMsg(__R_DIRECT_FN_CALL FailureType::Exception, status, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Throw_HrMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList)
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Throw_HrMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) {
     __R_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Exception, hr, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList)
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Throw_GetLastErrorMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) {
     __R_FN_LOCALS;
     wil::details::ReportFailure_GetLastErrorMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Exception, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Throw_Win32Msg)(__R_INTERNAL_NOINLINE_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, va_list argList)
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Throw_Win32Msg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, va_list argList) {
     __R_FN_LOCALS;
     wil::details::ReportFailure_Win32Msg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Exception, err, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Throw_NullAllocMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList)
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Throw_NullAllocMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS _Printf_format_string_ PCSTR formatString, va_list argList) {
     __R_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Exception, E_OUTOFMEMORY, formatString, argList);
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Throw_NtStatusMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, va_list argList)
-            {
+__R_INTERNAL_NOINLINE_METHOD(_Throw_NtStatusMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, va_list argList) {
     __R_FN_LOCALS;
     wil::details::ReportFailure_NtStatusMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::Exception, status, formatString, argList);
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(HRESULT, Throw_IfFailedMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(HRESULT, Throw_IfFailedMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, ...) {
     if (FAILED(hr)) {
         va_list argList;
         va_start(argList, formatString);
@@ -4687,8 +4572,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(HRESULT, Throw_IfFailedMsg)(__R_CONDITIONAL_FN_P
     return hr;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(BOOL, Throw_IfWin32BoolFalseMsg)(__R_CONDITIONAL_FN_PARAMS BOOL ret, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(BOOL, Throw_IfWin32BoolFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS BOOL ret, _Printf_format_string_ PCSTR formatString, ...) {
     if (!ret) {
         va_list argList;
         va_start(argList, formatString);
@@ -4697,8 +4582,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(BOOL, Throw_IfWin32BoolFalseMsg)(__R_CONDITIONAL
     return ret;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(DWORD, Throw_IfWin32ErrorMsg)(__R_CONDITIONAL_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(DWORD, Throw_IfWin32ErrorMsg)
+(__R_CONDITIONAL_FN_PARAMS DWORD err, _Printf_format_string_ PCSTR formatString, ...) {
     if (FAILED_WIN32(err)) {
         va_list argList;
         va_start(argList, formatString);
@@ -4707,8 +4592,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(DWORD, Throw_IfWin32ErrorMsg)(__R_CONDITIONAL_FN
     return err;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Throw_IfHandleInvalidMsg)(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Throw_IfHandleInvalidMsg)
+(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) {
     if (handle == INVALID_HANDLE_VALUE) {
         va_list argList;
         va_start(argList, formatString);
@@ -4717,8 +4602,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(HANDLE, Throw_IfHandleInvalidMsg)(__R_CONDITIONA
     return handle;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(RESULT_NORETURN_NULL HANDLE, Throw_IfHandleNullMsg)(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(RESULT_NORETURN_NULL HANDLE, Throw_IfHandleNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HANDLE handle, _Printf_format_string_ PCSTR formatString, ...) {
     if (handle == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4728,8 +4613,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(RESULT_NORETURN_NULL HANDLE, Throw_IfHandleNullM
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_IfNullAllocMsg)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_IfNullAllocMsg)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4739,8 +4624,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, Throw_IfNullAllocMsg)(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, Throw_IfNullAllocMsg)
+(__R_CONDITIONAL_FN_PARAMS const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4748,8 +4633,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_C
     }
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_HrIfMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_HrIfMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4758,8 +4643,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_HrIfMsg)(__R_CONDITIONAL_FN_PARAMS H
     return condition;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_HrIfFalseMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_HrIfFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4769,8 +4654,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_HrIfFalseMsg)(__R_CONDITIONAL_FN_PAR
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_HrIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4780,8 +4665,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Throw_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Throw_HrIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4789,8 +4674,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_C
     }
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_GetLastErrorIfMsg)(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_GetLastErrorIfMsg)
+(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4799,8 +4684,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_GetLastErrorIfMsg)(__R_CONDITIONAL_F
     return condition;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_GetLastErrorIfFalseMsg)(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_GetLastErrorIfFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS bool condition, _Printf_format_string_ PCSTR formatString, ...) {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4810,8 +4695,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Throw_GetLastErrorIfFalseMsg)(__R_CONDITIO
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_GetLastErrorIfNullMsg)(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Throw_GetLastErrorIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4821,8 +4706,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, Throw_GetLastErrorIfNullMsg)(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL void, Throw_GetLastErrorIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4830,8 +4715,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_C
     }
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(NTSTATUS, Throw_IfNtStatusFailedMsg)(__R_CONDITIONAL_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(NTSTATUS, Throw_IfNtStatusFailedMsg)
+(__R_CONDITIONAL_FN_PARAMS NTSTATUS status, _Printf_format_string_ PCSTR formatString, ...) {
     if (FAILED_NTSTATUS(status)) {
         va_list argList;
         va_start(argList, formatString);
@@ -4858,7 +4743,8 @@ __R_CONDITIONAL_METHOD(void, Objc_Throw_IfFailed)(__R_CONDITIONAL_FN_PARAMS HRES
     }
 }
 
-__R_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) {
+__R_INTERNAL_NOINLINE_METHOD(_Objc_Throw_HrMsg)
+(__R_INTERNAL_NOINLINE_FN_PARAMS HRESULT hr, _Printf_format_string_ PCSTR formatString, va_list argList) {
     __R_FN_LOCALS;
     wil::details::ReportFailure_HrMsg(__R_INTERNAL_NOINLINE_FN_CALL FailureType::ObjCException, hr, formatString, argList);
 }
@@ -4885,8 +4771,8 @@ __R_CONDITIONAL_METHOD(bool, Objc_Throw_HrIfFalse)(__R_CONDITIONAL_FN_PARAMS HRE
     return condition;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) {
     if (condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4895,8 +4781,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfMsg)(__R_CONDITIONAL_FN_PAR
     return condition;
 }
 
-__R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfFalseMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfFalseMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, bool condition, _Printf_format_string_ PCSTR formatString, ...) {
     if (!condition) {
         va_list argList;
         va_start(argList, formatString);
@@ -4906,8 +4792,8 @@ __R_CONDITIONAL_NOINLINE_METHOD(bool, Objc_Throw_HrIfFalseMsg)(__R_CONDITIONAL_F
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Objc_Throw_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Objc_Throw_HrIfNull)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
@@ -4915,16 +4801,16 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_TEMPLATE_METHOD(void, Objc_Throw_HrIfNull)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer)
-            {
+__R_CONDITIONAL_TEMPLATE_METHOD(void, Objc_Throw_HrIfNull)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer) {
     if (pointer == nullptr) {
         __R_CALL_INTERNAL_METHOD(_Objc_Throw_Hr)(__R_CONDITIONAL_FN_CALL hr);
     }
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_NOT_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Objc_Throw_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(RESULT_NORETURN_NULL PointerT, Objc_Throw_HrIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _Pre_maybenull_ PointerT pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -4934,8 +4820,8 @@ template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_N
 }
 
 template <__R_CONDITIONAL_PARTIAL_TEMPLATE typename PointerT, __R_ENABLE_IF_IS_CLASS(PointerT)>
-            __R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Objc_Throw_HrIfNullMsg)(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...)
-            {
+__R_CONDITIONAL_NOINLINE_TEMPLATE_METHOD(void, Objc_Throw_HrIfNullMsg)
+(__R_CONDITIONAL_FN_PARAMS HRESULT hr, _In_opt_ const PointerT& pointer, _Printf_format_string_ PCSTR formatString, ...) {
     if (pointer == nullptr) {
         va_list argList;
         va_start(argList, formatString);
@@ -5038,5 +4924,127 @@ struct err_exception_policy {
 #endif
 
 } // namespace wil
+
+#ifdef __OBJC__
+
+#import <Foundation/NSError.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSDictionary.h>
+#import "FoundationErrorHandling.h"
+
+namespace {
+static NSString* const g_winobjcDomain = @"WinObjCErrorDomain";
+static NSString* const g_hresultDomain = @"HRESULTErrorDomain";
+static NSString* const g_NSHResultErrorDictKey = @"hresult";
+
+// Create the extra information we can communicate as part of the exception:
+NSDictionary* _createFailureInfoDict(const wil::FailureInfo& fi) {
+    return @{
+        @"file" : [NSString stringWithUTF8String:fi.pszFile],
+        @"function" : [NSString stringWithUTF8String:fi.pszFunction],
+        @"line" : [NSNumber numberWithInt:fi.uLineNumber],
+        g_NSHResultErrorDictKey : [NSNumber numberWithInt:fi.hr],
+    };
+}
+
+NSString* _NSStringFromHResult(HRESULT hr) {
+    wchar_t errorText[256];
+    errorText[0] = L'\0';
+    auto strLen = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                                 nullptr,
+                                 hr,
+                                 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                                 errorText,
+                                 ARRAYSIZE(errorText),
+                                 nullptr);
+
+    return [NSString stringWithCharacters:reinterpret_cast<const unichar*>(errorText) length:strLen];
+}
+
+// Construct an NSError for the out parameter representing a failure info from WRL:
+NSError* _NSErrorFromFailureInfo(const wil::FailureInfo& fi) {
+    return [NSError errorWithDomain:g_hresultDomain code:fi.hr userInfo:_createFailureInfoDict(fi)];
+}
+
+// This is a helper to create NSExceptions from HRESULTs:
+NSException* _NSExceptionFromFailureInfo(const wil::FailureInfo& fi) {
+    NSString* msg = [NSString string];
+    if (fi.pszMessage) {
+        msg = [NSString stringWithCharacters:reinterpret_cast<const unichar*>(fi.pszMessage) length:wcslen(fi.pszMessage)];
+    }
+
+    return [NSException _exceptionWithHRESULT:fi.hr reason:msg userInfo:_createFailureInfoDict(fi)];
+}
+
+bool _resultFromUncaughtExceptionObjC(HRESULT* out) {
+    try {
+        throw;
+    } catch (NSException* e) {
+        *out = [e _hresult];
+        return true;
+    }
+
+    return false;
+}
+
+void _rethrowAsNSException() {
+    try {
+        throw;
+    } catch (NSException*) {
+        // Already an NSException and we need to catch it so the catch (...) doesn't:
+        throw;
+    } catch (const wil::ResultException& re) {
+        @throw _NSExceptionFromFailureInfo(re.GetFailureInfo());
+    } catch (...) {
+        @throw [NSException _exceptionWithHRESULT:wil::ResultFromCaughtException()
+                                           reason:_NSStringFromHResult(wil::ResultFromCaughtException())
+                                         userInfo:nil];
+    }
+}
+
+void _objcThrowFailureInfo(const wil::FailureInfo& fi) {
+    @throw _NSExceptionFromFailureInfo(fi);
+}
+
+void _catchAndPopulateNSError(NSError** outError) {
+    NSError* error;
+
+    try {
+        throw;
+    } catch (NSException* e) {
+        unsigned errorCode = E_UNEXPECTED;
+
+        // If we have an hresult in our user dict, use that, otherwise this was unexpected:
+        NSNumber* hresultValue = [e.userInfo objectForKey:[NSString stringWithCString:"hresult"]];
+        if (hresultValue) {
+            errorCode = [hresultValue unsignedIntValue];
+        }
+
+        error = [NSError errorWithDomain:g_winobjcDomain code:errorCode userInfo:e.userInfo];
+    } catch (const wil::ResultException& re) {
+        error = _NSErrorFromFailureInfo(re.GetFailureInfo());
+    } catch (...) {
+        error = [NSError errorWithDomain:g_hresultDomain code:wil::ResultFromCaughtException() userInfo:nil];
+    }
+
+    if (outError) {
+        *outError = error;
+    } else {
+        HRESULT code = error.code;
+        LOG_HR_MSG(code, "NSError occurred where caller is ignoring value: %hs", [[error description] UTF8String]);
+    }
+}
+}
+
+WI_HEADER_INITITALIZATION_FUNCTION(InitializeObjCExceptions, [] {
+    g_resultFromUncaughtExceptionObjC = _resultFromUncaughtExceptionObjC;
+    g_rethrowAsNSException = _rethrowAsNSException;
+    g_objcThrowFailureInfo = _objcThrowFailureInfo;
+    return 1;
+});
+
+#endif
 
 #pragma warning(pop)

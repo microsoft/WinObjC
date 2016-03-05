@@ -21,6 +21,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UICollectionViewData.h"
+#import "UICollectionViewLayoutAttributes+Internal.h"
+#include "IwMalloc.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;
@@ -79,7 +81,7 @@
 }
 
 - (void)dealloc {
-    free(_sectionItemCounts);
+    IwFree(_sectionItemCounts);
 }
 
 - (NSString*)description {
@@ -166,7 +168,7 @@
         // All checks via assertions are done on CollectionView animation methods, specially 'endAnimations'.
         return 0;
         //@throw [NSException exceptionWithName:NSInvalidArgumentException reason:[NSString stringWithFormat:@"Section %d out of range:
-        //0...%d", section, _numSections] userInfo:nil];
+        // 0...%d", section, _numSections] userInfo:nil];
     }
 
     NSInteger numberOfItemsInSection = 0;
@@ -247,16 +249,16 @@
     }
     if (_numSections <= 0) { // early bail-out
         _numItems = 0;
-        free(_sectionItemCounts);
+        IwFree(_sectionItemCounts);
         _sectionItemCounts = 0;
         _collectionViewDataFlags.itemCountsAreValid = YES;
         return;
     }
     // allocate space
     if (!_sectionItemCounts) {
-        _sectionItemCounts = (NSInteger*)malloc((size_t)_numSections * sizeof(NSInteger));
+        _sectionItemCounts = (NSInteger*)IwMalloc((size_t)_numSections * sizeof(NSInteger));
     } else {
-        _sectionItemCounts = (NSInteger*)realloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
+        _sectionItemCounts = (NSInteger*)IwRealloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
     }
 
     // query cells per section

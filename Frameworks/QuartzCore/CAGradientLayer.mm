@@ -17,5 +17,7 @@
 #include "Starboard.h"
 #import <QuartzCore\CAGradientLayer.h>
 
+NSString* const kCAGradientLayerAxial = @"kCAGradientLayerAxial";
+
 @implementation CAGradientLayer
 @end

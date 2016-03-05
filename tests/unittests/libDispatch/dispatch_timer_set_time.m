@@ -91,5 +91,5 @@ TEST(Dispatch, DispatchSettime) {
     gettimeofday(&start_time, NULL);
     dispatch_resume(as_do(timer));
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

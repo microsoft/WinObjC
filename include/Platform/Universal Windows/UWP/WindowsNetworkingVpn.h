@@ -335,7 +335,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnRouteAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSMutableArray* ipv6InclusionRoutes;
 @property (copy) NSMutableArray* ipv6ExclusionRoutes;
 @property (copy) NSMutableArray* ipv4InclusionRoutes;
@@ -351,7 +351,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnNamespaceAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFUri* proxyAutoConfigUri;
 @property (copy) NSMutableArray* namespaceList;
 @end
@@ -515,7 +515,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnDomainNameAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFUri* proxyAutoConfigurationUri;
 @property (readonly) NSMutableArray* domainNameList;
 @end
@@ -553,7 +553,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnTrafficFilterAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL allowOutbound;
 @property BOOL allowInbound;
 @property (readonly) NSMutableArray* trafficFilterList;
@@ -634,7 +634,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomEditBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL noEcho;
 @property (copy) NSString* defaultText;
 @property (readonly) NSString* text;
@@ -651,7 +651,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptTextInput : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL emphasized;
 @property (copy) NSString* displayName;
 @property BOOL compulsory;
@@ -668,7 +668,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomComboBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSArray* optionsText;
 @property (readonly) unsigned int selected;
 @property (copy) NSString* label;
@@ -684,7 +684,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptOptionSelector : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL emphasized;
 @property (copy) NSString* displayName;
 @property BOOL compulsory;
@@ -700,7 +700,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomTextBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
@@ -715,7 +715,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptText : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL emphasized;
 @property (copy) NSString* displayName;
 @property BOOL compulsory;
@@ -730,7 +730,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomCheckBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL initialCheckState;
 @property (readonly) BOOL checked;
 @property (copy) NSString* label;
@@ -746,7 +746,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptBooleanInput : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL initialValue;
 @property (readonly) BOOL value;
 @property BOOL emphasized;
@@ -762,7 +762,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomErrorBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
@@ -776,7 +776,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnPlugInProfile : RTObject <WNVIVpnProfile>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* vpnPluginPackageFamilyName;
 @property (copy) NSString* customConfiguration;
 @property (readonly) NSMutableArray* serverUris;
@@ -797,7 +797,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnNativeProfile : RTObject <WNVIVpnProfile>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WNVVpnAuthenticationMethod userAuthenticationMethod;
 @property WNVVpnAuthenticationMethod tunnelAuthenticationMethod;
 @property WNVVpnRoutingPolicyType routingPolicyType;
@@ -821,7 +821,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnManagementAgent : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)addProfileFromXmlAsync:(NSString*)xml success:(void (^)(WNVVpnManagementErrorStatus))success failure:(void (^)(NSError*))failure;
 - (void)addProfileFromObjectAsync:(RTObject<WNVIVpnProfile>*)profile
                           success:(void (^)(WNVVpnManagementErrorStatus))success

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSStream.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSInputStream.h"
@@ -27,7 +28,7 @@
 //#include <unistd.h>
 #endif
 
-@implementation NSInputStream : NSStream
+@implementation NSInputStream
 
 /**
  @Status Interoperable
@@ -151,6 +152,33 @@
 
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
     return 0;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getBuffer:(uint8_t* _Nullable*)buffer length:(NSUInteger*)len {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)inputStreamWithURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

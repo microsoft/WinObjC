@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 
 struct buttonState {
@@ -147,7 +148,7 @@ static void createLabel(UIButton* self) {
     _backgroundColor.b = 1.f;
     _backgroundColor.a = 1.f;
 
-    _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
+    _states = (buttonState*)IwCalloc(16, sizeof(buttonState));
     _font = [coder decodeObjectForKey:@"UIFont"];
 
     if (isOSTarget(@"7.0")) {
@@ -301,7 +302,7 @@ static void createLabel(UIButton* self) {
         _defaultColor = [UIColor blackColor];
     }
 
-    _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
+    _states = (buttonState*)IwCalloc(16, sizeof(buttonState));
     _font = [UIFont buttonFont];
     [self setOpaque:FALSE];
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -929,6 +930,8 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
             contentColor.g = 0.5f;
             contentColor.b = 0.5f;
         }
+        //  TODO: I think this should always be the case?  Should UIButton always stretch its background?
+        self.layer.contentsGravity = kCAGravityResize;
         [[self layer] _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
         _didSetBackgroundImage = true;
     } else if (_didSetBackgroundImage) {
@@ -985,7 +988,7 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     _label = nil;
     [_imageView removeFromSuperview];
     _imageView = nil;
-    EbrFree(_states);
+    IwFree(_states);
     [super dealloc];
 }
 
@@ -1036,6 +1039,51 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     return ret;
 }
 
-//
+/**
+ @Status Stub
+*/
+- (CGRect)backgroundRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)contentRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)imageRectForContentRect:(CGRect)contentRect {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)titleRectForContentRect:(CGRect)contentRect {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSAttributedString*)attributedTitleForState:(UIControlState)state {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setAttributedTitle:(NSAttributedString*)title forState:(UIControlState)state {
+    UNIMPLEMENTED();
+}
 
 @end

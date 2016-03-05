@@ -20,9 +20,6 @@
 @interface UIStoryboardModalSegueTemplate : NSObject
 @end
 
-@interface UIStoryboardPushSegueTemplate : NSObject
-@end
-
 @implementation UIStoryboardModalSegueTemplate {
     idretaintype(NSString) _identifier, _destination;
     id _viewController;
@@ -116,56 +113,11 @@
 
 @end
 
-@implementation UIStoryboardSegue {
-    idretain _identifier, _source, _destination;
-}
-
-- (id)initWithIdentifier:(id)identifier source:(id)source destination:(id)dest {
-    _identifier = [identifier copy];
-    _source = source;
-    _destination = dest;
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)identifier {
-    return _identifier;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)destinationViewController {
-    return _destination;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)sourceViewController {
-    return _source;
-}
-
-- (void)dealloc {
-    _identifier = nil;
-    _source = nil;
-    _destination = nil;
-    [super dealloc];
-}
-
-@end
-
-@interface UIStoryboardSegueTemplate : NSObject {
+@implementation UIStoryboardSegueTemplate {
 @public
     idretaintype(NSString) _identifier, _destination;
     id _viewController;
 }
-@end
-
-@implementation UIStoryboardSegueTemplate : NSObject
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
     _identifier = [coder decodeObjectForKey:@"UIIdentifier"];

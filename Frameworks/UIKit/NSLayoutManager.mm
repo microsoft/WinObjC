@@ -14,10 +14,13 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include "Starboard.h"
 
 #include "UIKit/NSLayoutManager.h"
-#import <CoreText/CoreText.h>
+
+#include "CoreTextInternal.h"
+
 #include <vector>
 
 @implementation NSLayoutManager {
@@ -72,45 +75,45 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
             //  to ask what the maximum width is, once it figures out the height it needs to put
             //  a single character in
             CFIndex pos =
-                CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts,
-                                                                  curIdx,
-                                                                  0,
-                                                                  invokeWidthBlock,
-                                                                  ^float(CFIndex idx, float offset, float height) {
-                                                                      lastFontHeight = height;
-                                                                      if (height > maxFontHeight) {
-                                                                          maxFontHeight = height;
-                                                                      }
-                                                                      CGRect proposed = CGRectMake(curX + offset,
-                                                                                                   y + maxFontHeight - height,
-                                                                                                   containerSize.width - (curX + offset),
-                                                                                                   height);
-                                                                      CGRect remaining;
-                                                                      CGRect lineRect = [container
-                                                                          lineFragmentRectForProposedRect:proposed
-                                                                                                  atIndex:idx
-                                                                                         writingDirection:NSWritingDirectionLeftToRight
-                                                                                            remainingRect:&proposed];
+                _CTTypesetterSuggestLineBreakWithOffsetAndCallback(ts,
+                                                                   curIdx,
+                                                                   0,
+                                                                   invokeWidthBlock,
+                                                                   ^float(CFIndex idx, float offset, float height) {
+                                                                       lastFontHeight = height;
+                                                                       if (height > maxFontHeight) {
+                                                                           maxFontHeight = height;
+                                                                       }
+                                                                       CGRect proposed = CGRectMake(curX + offset,
+                                                                                                    y + maxFontHeight - height,
+                                                                                                    containerSize.width - (curX + offset),
+                                                                                                    height);
+                                                                       CGRect remaining;
+                                                                       CGRect lineRect = [container
+                                                                           lineFragmentRectForProposedRect:proposed
+                                                                                                   atIndex:idx
+                                                                                          writingDirection:NSWritingDirectionLeftToRight
+                                                                                             remainingRect:&proposed];
 
-                                                                      if (lineRect.size.width == 0.0f) {
-                                                                          stop = true;
-                                                                          return 0.0f;
-                                                                      }
+                                                                       if (lineRect.size.width == 0.0f) {
+                                                                           stop = true;
+                                                                           return 0.0f;
+                                                                       }
 
-                                                                      if (lineRect.origin.x != curX + offset) {
-                                                                          newX = lineRect.origin.x;
-                                                                          return 0.0f;
-                                                                      }
-                                                                      if (lineRect.origin.x + lineRect.size.width > newX) {
-                                                                          newX = lineRect.origin.x + lineRect.size.width;
-                                                                      }
+                                                                       if (lineRect.origin.x != curX + offset) {
+                                                                           newX = lineRect.origin.x;
+                                                                           return 0.0f;
+                                                                       }
+                                                                       if (lineRect.origin.x + lineRect.size.width > newX) {
+                                                                           newX = lineRect.origin.x + lineRect.size.width;
+                                                                       }
 
-                                                                      float ret = lineRect.size.width;
-                                                                      if (ret < 0.0f) {
-                                                                          ret = 0.0f;
-                                                                      }
-                                                                      return ret;
-                                                                  });
+                                                                       float ret = lineRect.size.width;
+                                                                       if (ret < 0.0f) {
+                                                                           ret = 0.0f;
+                                                                       }
+                                                                       return ret;
+                                                                   });
 
             //  Always advance at least 5px
             curX = newX;
@@ -137,7 +140,7 @@ static float invokeWidthBlock(void* opaque, CFIndex idx, float offset, float hei
                 _lineOrigins.push_back(lineOrigin);
                 CFRelease(line);
 
-                //  Record what the height of the line was; we'll need to adjust all lines that fit within 
+                //  Record what the height of the line was; we'll need to adjust all lines that fit within
                 curIdx = pos;
                 if (lineOrigin.x + width > _totalSize.width) {
                     _totalSize.width = lineOrigin.x + width;
@@ -515,8 +518,8 @@ static NSRange NSRangeFromCFRange(CFRange range) {
         CTRunRef curRun = (CTRunRef)CFArrayGetValueAtIndex(runs, curRunIdx);
 
         CFRange runRange = CTRunGetStringRange(curRun);
-        CGPoint* glyphPositions = (CGPoint*)malloc(sizeof(CGPoint) * runRange.length);
-        CGSize* glyphSizes = (CGSize*)malloc(sizeof(CGSize) * runRange.length);
+        CGPoint* glyphPositions = (CGPoint*)IwMalloc(sizeof(CGPoint) * runRange.length);
+        CGSize* glyphSizes = (CGSize*)IwMalloc(sizeof(CGSize) * runRange.length);
 
         CFRange indexes;
         indexes.location = 0;
@@ -551,8 +554,8 @@ static NSRange NSRangeFromCFRange(CFRange range) {
             }
         }
 
-        free(glyphPositions);
-        free(glyphSizes);
+        IwFree(glyphPositions);
+        IwFree(glyphSizes);
     }
 
     return ret;
@@ -675,4 +678,491 @@ static NSRange NSRangeFromCFRange(CFRange range) {
     [_ctLines release];
     [super dealloc];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)insertTextContainer:(NSTextContainer*)container atIndex:(NSUInteger)index {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeTextContainerAtIndex:(NSUInteger)index {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setTextContainer:(NSTextContainer*)container forGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)invalidateDisplayForGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)invalidateGlyphsForCharacterRange:(NSRange)charRange
+                           changeInLength:(NSInteger)delta
+                     actualCharacterRange:(NSRangePointer)actualCharRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)invalidateLayoutForCharacterRange:(NSRange)charRange actualCharacterRange:(NSRangePointer)actualCharRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)ensureGlyphsForCharacterRange:(NSRange)charRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)ensureGlyphsForGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)ensureLayoutForBoundingRect:(CGRect)bounds inTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)ensureLayoutForCharacterRange:(NSRange)charRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)ensureLayoutForGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)ensureLayoutForTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setGlyphs:(const CGGlyph*)glyphs
+       properties:(const NSGlyphProperty*)props
+ characterIndexes:(const NSUInteger*)charIndexes
+             font:(UIFont*)aFont
+    forGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)characterIndexForGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)getGlyphsInRange:(NSRange)glyphRange
+                        glyphs:(CGGlyph*)glyphBuffer
+                    properties:(NSGlyphProperty*)props
+              characterIndexes:(NSUInteger*)charIndexBuffer
+                    bidiLevels:(unsigned char*)bidiLevelBuffer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGGlyph)glyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGGlyph)glyphAtIndex:(NSUInteger)glyphIndex isValidIndex:(BOOL*)isValidIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)glyphIndexForCharacterAtIndex:(NSUInteger)charIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isValidGlyphIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSGlyphProperty)propertyForGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setAttachmentSize:(CGSize)attachmentSize forGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setDrawsOutsideLineFragment:(BOOL)flag forGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setExtraLineFragmentRect:(CGRect)fragmentRect usedRect:(CGRect)usedRect textContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setLineFragmentRect:(CGRect)fragmentRect forGlyphRange:(NSRange)glyphRange usedRect:(CGRect)usedRect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setLocation:(CGPoint)location forStartOfGlyphRange:(NSRange)glyphRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setNotShownAttribute:(BOOL)flag forGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGSize)attachmentSizeForGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)drawsOutsideLineFragmentForGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)firstUnlaidCharacterIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)firstUnlaidGlyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getFirstUnlaidCharacterIndex:(NSUInteger*)charIndex glyphIndex:(NSUInteger*)glyphIndex {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)notShownAttributeForGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)truncatedGlyphRangeInLineFragmentForGlyphAtIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)characterIndexForPoint:(CGPoint)point
+                             inTextContainer:(NSTextContainer*)container
+    fractionOfDistanceBetweenInsertionPoints:(CGFloat*)partialFraction {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateEnclosingRectsForGlyphRange:(NSRange)glyphRange
+                    withinSelectedGlyphRange:(NSRange)selectedRange
+                             inTextContainer:(NSTextContainer*)textContainer
+                                  usingBlock:(void (^)(CGRect, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)enumerateLineFragmentsForGlyphRange:(NSRange)glyphRange
+                                 usingBlock:(void (^)(CGRect, CGRect, NSTextContainer*, NSRange, BOOL*))block {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGFloat)fractionOfDistanceThroughGlyphForPoint:(CGPoint)point inTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)getLineFragmentInsertionPointsForCharacterAtIndex:(NSUInteger)charIndex
+                                             alternatePositions:(BOOL)aFlag
+                                                 inDisplayOrder:(BOOL)dFlag
+                                                      positions:(CGFloat*)positions
+                                               characterIndexes:(NSUInteger*)charIndexes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSUInteger)glyphIndexForPoint:(CGPoint)point inTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)glyphRangeForBoundingRect:(CGRect)bounds inTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)glyphRangeForBoundingRectWithoutAdditionalLayout:(CGRect)bounds inTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)glyphRangeForTextContainer:(NSTextContainer*)container {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSRange)rangeOfNominallySpacedGlyphsContainingIndex:(NSUInteger)glyphIndex {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)drawStrikethroughForGlyphRange:(NSRange)glyphRange
+                     strikethroughType:(NSUnderlineStyle)strikethroughVal
+                        baselineOffset:(CGFloat)baselineOffset
+                      lineFragmentRect:(CGRect)lineRect
+                lineFragmentGlyphRange:(NSRange)lineGlyphRange
+                       containerOrigin:(CGPoint)containerOrigin {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)drawUnderlineForGlyphRange:(NSRange)glyphRange
+                     underlineType:(NSUnderlineStyle)underlineVal
+                    baselineOffset:(CGFloat)baselineOffset
+                  lineFragmentRect:(CGRect)lineRect
+            lineFragmentGlyphRange:(NSRange)lineGlyphRange
+                   containerOrigin:(CGPoint)containerOrigin {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)fillBackgroundRectArray:(const CGRect*)rectArray
+                          count:(NSUInteger)rectCount
+              forCharacterRange:(NSRange)charRange
+                          color:(UIColor*)color {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)showCGGlyphs:(const CGGlyph*)glyphs
+           positions:(const CGPoint*)positions
+               count:(NSUInteger)glyphCount
+                font:(UIFont*)font
+              matrix:(CGAffineTransform)textMatrix
+          attributes:(NSDictionary*)attributes
+           inContext:(CGContextRef)graphicsContext {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)strikethroughGlyphRange:(NSRange)glyphRange
+              strikethroughType:(NSUnderlineStyle)strikethroughVal
+               lineFragmentRect:(CGRect)lineRect
+         lineFragmentGlyphRange:(NSRange)lineGlyphRange
+                containerOrigin:(CGPoint)containerOrigin {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)underlineGlyphRange:(NSRange)glyphRange
+              underlineType:(NSUnderlineStyle)underlineVal
+           lineFragmentRect:(CGRect)lineRect
+     lineFragmentGlyphRange:(NSRange)lineGlyphRange
+            containerOrigin:(CGPoint)containerOrigin {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGRect)lineFragmentUsedRectForGlyphAtIndex:(NSUInteger)glyphIndex effectiveRange:(NSRangePointer)effectiveGlyphRange {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

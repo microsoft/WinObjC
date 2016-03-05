@@ -17,7 +17,7 @@
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 
-@implementation UIRuntimeEventConnection : NSObject
+@implementation UIRuntimeEventConnection
 - (id)initWithCoder:(NSCoder*)coder {
     targetControl = [coder decodeObjectForKey:@"UISource"];
     obj = [coder decodeObjectForKey:@"UIDestination"];
@@ -30,7 +30,7 @@
 - (void)_makeConnection {
     EbrDebugLog("Source: %s\n", object_getClassName(targetControl));
     EbrDebugLog("Dest: %s\n", obj != nil ? object_getClassName(obj) : "nil (first responder?)");
-    EbrDebugLog("Event label: %s\n", selector);
+    EbrDebugLog("Event label: %x\n", selector);
     EbrDebugLog("Event mask: %x\n", mask);
 
     valid = TRUE;

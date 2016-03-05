@@ -250,7 +250,7 @@ WINRT_EXPORT
                                  sortOptions:(WNHostNameSortOptions)sortOptions
                                      success:(void (^)(NSArray*))success
                                      failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSDatagramSocketControl* control;
 @property (readonly) WNSDatagramSocketInformation* information;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
@@ -289,7 +289,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamSocket : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSStreamSocketControl* control;
 @property (readonly) WNSStreamSocketInformation* information;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
@@ -326,7 +326,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamSocketListener : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSStreamSocketListenerControl* control;
 @property (readonly) WNSStreamSocketListenerInformation* information;
 - (EventRegistrationToken)addConnectionReceivedEvent:(void (^)(WNSStreamSocketListener*,
@@ -538,7 +538,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSMessageWebSocket : RTObject <WNSIWebSocket, WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSMessageWebSocketControl* control;
 @property (readonly) WNSMessageWebSocketInformation* information;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
@@ -601,7 +601,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamWebSocket : RTObject <WNSIWebSocket, WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSStreamWebSocketControl* control;
 @property (readonly) WNSStreamWebSocketInformation* information;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
@@ -632,7 +632,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSWebSocketKeepAlive : RTObject <WABIBackgroundTask>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 

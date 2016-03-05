@@ -151,7 +151,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDevicePicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMDDialDevicePickerFilter* filter;
 - (EventRegistrationToken)addDialDevicePickerDismissedEvent:(void (^)(WMDDialDevicePicker*, RTObject*))del;

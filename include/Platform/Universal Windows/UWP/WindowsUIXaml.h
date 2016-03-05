@@ -705,7 +705,7 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 
 WINRT_EXPORT
 @interface WXDispatcherTimer : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WFTimeSpan* interval;
 @property (readonly) BOOL isEnabled;
 - (EventRegistrationToken)addTickEvent:(void (^)(RTObject*, RTObject*))del;
@@ -791,7 +791,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -843,7 +843,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* originalSource;
 @end
 
@@ -868,7 +868,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXVisualState* oldState;
 @property (copy) WXVisualState* newState;
 @property (copy) WXCControl* control;
@@ -894,7 +894,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDataTemplateKey : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* dataType;
 @end
 
@@ -983,7 +983,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
 - (void)load:(NSString*)entryPoint;
@@ -1009,7 +1009,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXSetterBaseCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 @property (readonly) BOOL isSealed;
 - (unsigned int)count;
@@ -1033,7 +1033,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXTargetPropertyPath : RTObject
 + (WXTargetPropertyPath*)createInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* target;
 @property (copy) WXPropertyPath* path;
 @end
@@ -1046,7 +1046,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXTriggerActionCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -1127,7 +1127,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObjectCollection : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 // Could not generate add_VectorChanged (Can't marshal
 // Windows.Foundation.Collections.VectorChangedEventHandler`1<Windows.UI.Xaml.DependencyObject>)
@@ -1209,7 +1209,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXFrameworkTemplate_DEFINED__
@@ -1222,7 +1222,7 @@ WINRT_EXPORT
 @interface WXDataTemplate : WXFrameworkTemplate
 + (RTObject<WXIDataTemplateExtension>*)getExtensionInstance:(WXFrameworkElement*)element;
 + (void)setExtensionInstance:(WXFrameworkElement*)element value:(RTObject<WXIDataTemplateExtension>*)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WXDependencyProperty*)extensionInstanceProperty;
 - (WXDependencyObject*)loadContent;
 @end
@@ -1247,7 +1247,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXResourceDictionary : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 @property (copy) WFUri* source;
 @property (readonly) NSMutableArray* mergedDictionaries;
@@ -1300,7 +1300,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXStateTriggerBase : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)setActive:(BOOL)IsActive;
 @end
 
@@ -1313,7 +1313,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXStyle : WXDependencyObject
 + (WXStyle*)createInstance:(WUXITypeName*)targetType ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXITypeName* targetType;
 @property (copy) WXStyle* basedOn;
 @property (readonly) BOOL isSealed;
@@ -1497,7 +1497,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXVisualState : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WUXMAStoryboard* storyboard;
 @property (readonly) NSString* name;
 @property (readonly) WXSetterBaseCollection* setters;
@@ -1512,7 +1512,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXVisualStateGroup : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WXVisualState* currentState;
 @property (readonly) NSString* name;
 @property (readonly) NSMutableArray* states;
@@ -1535,7 +1535,7 @@ WINRT_EXPORT
 + (WXVisualStateManager*)getCustomVisualStateManager:(WXFrameworkElement*)obj;
 + (void)setCustomVisualStateManager:(WXFrameworkElement*)obj value:(WXVisualStateManager*)value;
 + (BOOL)goToState:(WXCControl*)control stateName:(NSString*)stateName useTransitions:(BOOL)useTransitions;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WXDependencyProperty*)customVisualStateManagerProperty;
 - (BOOL)goToStateCore:(WXCControl*)control
          templateRoot:(WXFrameworkElement*)templateRoot
@@ -1561,7 +1561,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXVisualTransition : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* to;
 @property (copy) WUXMAStoryboard* storyboard;
 @property (copy) WUXMAEasingFunctionBase* generatedEasingFunction;
@@ -1577,7 +1577,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXAdaptiveTrigger : WXStateTriggerBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double minWindowWidth;
 @property double minWindowHeight;
 + (WXDependencyProperty*)minWindowHeightProperty;
@@ -1592,7 +1592,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXEventTrigger : WXTriggerBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXRoutedEvent* routedEvent;
 @property (readonly) WXTriggerActionCollection* actions;
 @end
@@ -1605,7 +1605,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXThickness* margin;
 @property (copy) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
@@ -1687,7 +1687,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXSetter : WXSetterBase
 + (WXSetter*)createInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) RTObject* value;
 @property (copy) WXDependencyProperty* property ;
 @property (copy) WXTargetPropertyPath* target;
@@ -1701,7 +1701,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXStateTrigger : WXStateTriggerBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isActive;
 + (WXDependencyProperty*)isActiveProperty;
 @end
@@ -1747,7 +1747,7 @@ WINRT_EXPORT
 + (void)loadComponentWithResourceLocation:(RTObject*)component
                           resourceLocator:(WFUri*)resourceLocator
                 componentResourceLocation:(WUXCPComponentResourceLocation)componentResourceLocation;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) WXResourceDictionary* resources;
 @property WXApplicationTheme requestedTheme;
 @property (readonly) WXDebugSettings* debugSettings;
@@ -1788,7 +1788,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkViewSource : RTObject <WACIFrameworkViewSource>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (RTObject<WACIFrameworkView>*)createView;
 @end
 

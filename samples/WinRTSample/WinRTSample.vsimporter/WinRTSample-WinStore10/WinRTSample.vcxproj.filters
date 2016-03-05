@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{adfd4a34-aee6-444b-8678-c09f9396d6bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{688a1064-76d5-42ae-b53c-df27503c2ec0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinRTSample">
+      <UniqueIdentifier>{159B738B-D58C-49A5-B64C-E78195676D32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinRTSample\Supporting Files">
+      <UniqueIdentifier>{49BF5A74-74AE-465B-ACF7-9AF7DDA151FF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{B1E78DE2-DF0C-44C7-92A1-70E4F93D89F8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <ClangCompile Include="..\..\WinRTSample\AppDelegate.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\ButtonsViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\main.m">
+      <Filter>WinRTSample\Supporting Files</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\MenuTableViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\ToastsViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\TilesViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <SBResourceCopy Include="..\..\WinRTSample\cappuccino.jpg">
+      <Filter>WinRTSample</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WinRTSample\espresso.jpg">
+      <Filter>WinRTSample</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WinRTSample\icon-black-espresso.png">
+      <Filter>WinRTSample</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WinRTSample\icon-white-espresso.png">
+      <Filter>WinRTSample</Filter>
+    </SBResourceCopy>
+    <SBResourceCopy Include="..\..\WinRTSample\latte.jpg">
+      <Filter>WinRTSample</Filter>
+    </SBResourceCopy>
+    <SBInfoPlistCopy Include="..\..\WinRTSample\Info.plist" />
+    <Text Include="WinRTSample-Debug-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+    <Text Include="WinRTSample-Release-xcvars.txt">
+      <Filter>Xcode Variable Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <Xml Include="..\..\WinRTSample\in-app-purchase.xml">
+      <Filter>WinRTSample</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WinRTSample_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\WinRTSample\MainViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WinRTSample\IAPViewController.m">
+      <Filter>WinRTSample</Filter>
+    </ClangCompile>
+  </ItemGroup>
+</Project>

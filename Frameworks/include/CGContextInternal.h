@@ -21,6 +21,8 @@
 #include "CoreGraphics/CGContext.h"
 #include "CGImageInternal.h"
 
+#include <objc/runtime.h>
+
 class CGContextImpl;
 COREGRAPHICS_EXPORT void EbrCenterTextInRectVertically(CGRect* rect, CGSize* textSize, id font);
 COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreate32(int width,
@@ -43,9 +45,8 @@ COREGRAPHICS_EXPORT CGImageRef CGPNGImageCreateFromData(NSData* data);
 COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromFile(NSString* path);
 COREGRAPHICS_EXPORT CGImageRef CGJPEGImageCreateFromData(NSData* data);
 
-class __CGContext {
+class __CGContext: private objc_object {
 public:
-    id isa;
     float scale;
     CGContextImpl* _backing;
 

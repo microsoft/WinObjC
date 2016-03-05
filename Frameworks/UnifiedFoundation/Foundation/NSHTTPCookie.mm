@@ -79,31 +79,35 @@ void parseCookies(const char* lineptr, id dict) {
 
     do {
         name[0] = what[0] = '\0';
-        if (sscanf_s(ptr, "%" MAX_NAME_TXT "[^;\r\n =]=%" MAX_COOKIE_LINE_TXT "[^;\r\n]", name, what) > 0) {
+        if (sscanf_s(ptr, "%" MAX_NAME_TXT "[^;\r\n =]=%" MAX_COOKIE_LINE_TXT "[^;\r\n]", name, MAX_NAME, what, MAX_COOKIE_LINE) > 0) {
             const char* endOfName = ptr + strlen(name);
-            while (*endOfName && ISBLANK(*endOfName))
+            while (*endOfName && ISBLANK(*endOfName)) {
                 ++endOfName;
+            }
 
-            bool sep = *endOfName == '=';
+            bool sep = (*endOfName == '=');
 
             // Trim first post then pre spaces on the what string.
             size_t whatLen = strlen(what);
             while (whatLen && ISBLANK(what[whatLen - 1])) {
                 what[--whatLen] = 0;
             }
+
             char* whatptr = what;
-            while (ISBLANK(*whatptr))
+            while (ISBLANK(*whatptr)) {
                 ++whatptr;
+            }
 
             bool done = false;
             if (whatLen == 0) {
                 done = true;
-                if (Curl_raw_equal(name, "secure"))
+                if (Curl_raw_equal(name, "secure")) {
                     [dict setObject:[NSNumber numberWithBool:YES] forKey:NSHTTPCookieSecure];
-                else if (Curl_raw_equal(name, "httponly"))
-                    ; // CURL cares about httponly cookies but it doesn't seem like we do (in the old impl)
-                else if (sep)
+                } else if (Curl_raw_equal(name, "httponly")) {
+                    // CURL cares about httponly cookies but it doesn't seem like we do (in the old impl)
+                } else if (sep) {
                     done = false;
+                }
             }
 
 #define ADD_COOKIE_VALUE(name, str) [dict setObject:[NSString stringWithUTF8String:str] forKey:name];
@@ -117,8 +121,9 @@ void parseCookies(const char* lineptr, id dict) {
                 // CURL validates based on the number of dots in the domain, but this doesn't seem
                 // necessary for us.
 
-                if (whatptr[0] == '.')
+                if (whatptr[0] == '.') {
                     ++whatptr;
+                }
 
                 // We should eventually validate this against the domain we're expecting but this wasn't
                 // in the original impl so we should do it as needed.
@@ -155,8 +160,9 @@ void parseCookies(const char* lineptr, id dict) {
 
             // We're done with this one, advance to the next.
             ptr = nextptr + 1;
-            while (ISBLANK(*ptr))
+            while (ISBLANK(*ptr)) {
                 ++ptr;
+            }
 
             nextptr = strchr(ptr, ';');
             if (!nextptr && *ptr) {
@@ -167,7 +173,13 @@ void parseCookies(const char* lineptr, id dict) {
     } while (nextptr);
 }
 
-@implementation NSHTTPCookie : NSObject
+@interface NSHTTPCookie () {
+    NSMutableDictionary* _properties;
+    BOOL _external;
+}
+@end
+
+@implementation NSHTTPCookie
 + (id)_parseField:(id)field forHeader:(id)header andURL:(id)url {
     // The default path settings:
     id defaultPath = [url path];
@@ -320,15 +332,16 @@ void parseCookies(const char* lineptr, id dict) {
 /**
  @Status Interoperable
 */
-- (id)isSessionOnly {
+- (BOOL)isSessionOnly {
     return NO;
 }
 
 /**
  @Status Interoperable
 */
-- (id)properties {
-    return _properties;
+- (NSDictionary*)properties {
+    // We do not want external consumers modifying this dictionary.
+    return [[_properties copy] autorelease];
 }
 
 /**
@@ -351,10 +364,10 @@ void parseCookies(const char* lineptr, id dict) {
     [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
     if (![_properties objectForKey:NSHTTPCookieDiscard])
         [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 &&
-                                ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
-                                   @"TRUE" :
-                                   @"FALSE"
-                        forKey:NSHTTPCookieDiscard];
+                                                      ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
+                                                         @"TRUE" :
+                                                         @"FALSE"
+                                              forKey:NSHTTPCookieDiscard];
     if (![_properties objectForKey:NSHTTPCookieDomain])
         [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];
 

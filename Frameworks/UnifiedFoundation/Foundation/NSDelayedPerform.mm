@@ -16,7 +16,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Starboard.h"
 #include "NSDelayedPerform.h"
 
-@implementation NSDelayedPerform : NSObject
+@implementation NSDelayedPerform
 - (NSDelayedPerform*)initWithObject:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument {
     _object = [object retain];
     _selector = selector;

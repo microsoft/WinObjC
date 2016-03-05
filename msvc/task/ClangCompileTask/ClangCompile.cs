@@ -472,7 +472,8 @@ namespace ClangCompile
 
                     string versionString = clangVersionProc.StandardError.ReadToEnd();
                     LogMessage(MessageImportance.Low, "Clang version: {0}", versionString);
-                    string version = versionString.Split(' ')[2];
+                    // clang's version output: clang with Microsoft CodeGen version <version number>
+                    string version = versionString.Split(' ')[5];
                     LLVMClangVersion = version;
                 }
                 return LLVMClangVersionValue;
@@ -573,6 +574,13 @@ namespace ClangCompile
         HeaderMapEnum HeaderMapValue;
 
         [PropertyPage(
+            DisplayName = "Framework-style header map entries",
+            Description = "Add framework-style entries to header map.",
+            Category = "General",
+            IncludeInCommandLine = false)]
+        public bool HeaderMapAddFrameworkEntries { get; set; }
+
+        [PropertyPage(
             Category = "General",
             DisplayName = "Header Map Include",
             Description = "Header Map Include",
@@ -622,9 +630,7 @@ namespace ClangCompile
         [EnumeratedValue(Enumeration = typeof(OptimizationLevelEnum))]
         public string OptimizationLevel
         {
-            //get { return OptimizationLevelValue.ToString(); }
-            /* Override until clang/c2 supports optimization */
-            get { return "Disabled"; }
+            get { return OptimizationLevelValue.ToString(); }
             set { OptimizationLevelValue = (OptimizationLevelEnum)Enum.Parse(typeof(OptimizationLevelEnum), value, true); }
         }
 

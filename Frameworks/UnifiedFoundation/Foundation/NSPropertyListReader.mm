@@ -180,7 +180,7 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
 
         if (topNibble == 0xA) {
             NSArray* result;
-            id* objs = (id*)EbrMalloc(length * sizeof(id));
+            id* objs = (id*)IwMalloc(length * sizeof(id));
             uint64_t i;
             for (i = 0; i < length; i++) {
                 objs[i] = _readInlineObjectAtOffset(offset);
@@ -192,14 +192,14 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
                 result = [[NSArray alloc] initWithObjectsTakeOwnership:objs count:length];
             }
 
-            EbrFree(objs);
+            IwFree(objs);
             return result;
         }
 
         if (topNibble == 0xD) {
             id result;
-            id* keys = (id*)EbrMalloc(length * sizeof(id));
-            id* objs = (id*)EbrMalloc(length * sizeof(id));
+            id* keys = (id*)IwMalloc(length * sizeof(id));
+            id* objs = (id*)IwMalloc(length * sizeof(id));
             uint64_t i;
             for (i = 0; i < length; i++) {
                 keys[i] = _readInlineObjectAtOffset(offset);
@@ -214,8 +214,8 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
                 result = [[NSDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];
             }
 
-            EbrFree(keys);
-            EbrFree(objs);
+            IwFree(keys);
+            IwFree(objs);
             return result;
         }
     }

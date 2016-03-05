@@ -6,6 +6,7 @@
 //
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,8 +34,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UISLIDER_H_
-#define _UISLIDER_H_
+#pragma once
 
 #import "UIControl.h"
 #import <QuartzCore/QuartzCore.h>
@@ -48,14 +48,12 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) float minimumValue;
 @property (nonatomic) float maximumValue;
 @property (nonatomic, getter=isContinuous) BOOL continuous;
-@property (nonatomic, retain) UIColor *minimumTrackTintColor;
-@property (nonatomic, retain) UIColor *maximumTrackTintColor;
-@property (nonatomic, retain) UIColor *thumbTintColor;
+@property (nonatomic, retain) UIColor* minimumTrackTintColor;
+@property (nonatomic, retain) UIColor* maximumTrackTintColor;
+@property (nonatomic, retain) UIColor* thumbTintColor;
 
-- (void)setThumbImage:(UIImage *)image forState:(UIControlState)state;
-- (void)setMinimumTrackImage:(UIImage *)image forState:(UIControlState)state;
-- (void)setMaximumTrackImage:(UIImage *)image forState:(UIControlState)state;
+- (void)setThumbImage:(UIImage*)image forState:(UIControlState)state;
+- (void)setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state;
+- (void)setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state;
 
 @end
-
-#endif /* _UISLIDER_H_ */

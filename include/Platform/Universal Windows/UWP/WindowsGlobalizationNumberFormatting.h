@@ -161,7 +161,7 @@ typedef unsigned WGNCurrencyFormatterMode;
 
 WINRT_EXPORT
 @interface WGNSignificantDigitsNumberRounder : RTObject <WGNINumberRounder>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int significantDigits;
 @property WGNRoundingAlgorithm roundingAlgorithm;
 - (int)roundInt32:(int)value;
@@ -180,7 +180,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGNIncrementNumberRounder : RTObject <WGNINumberRounder>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WGNRoundingAlgorithm roundingAlgorithm;
 @property double increment;
 - (int)roundInt32:(int)value;
@@ -205,7 +205,7 @@ WINRT_EXPORT
                                            WGNISignificantDigitsOption,
                                            WGNINumberRounderOption,
                                            WGNISignedZeroOption>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WGNDecimalFormatter*)createDecimalFormatter:(id<NSFastEnumeration> /* NSString * */)languages
                               geographicRegion:(NSString*)geographicRegion ACTIVATOR;
 @property BOOL isDecimalPointAlwaysDisplayed;
@@ -242,7 +242,7 @@ WINRT_EXPORT
                                            WGNISignificantDigitsOption,
                                            WGNINumberRounderOption,
                                            WGNISignedZeroOption>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WGNPercentFormatter*)createPercentFormatter:(id<NSFastEnumeration> /* NSString * */)languages
                               geographicRegion:(NSString*)geographicRegion ACTIVATOR;
 @property BOOL isDecimalPointAlwaysDisplayed;
@@ -281,7 +281,7 @@ WINRT_EXPORT
                                             WGNISignedZeroOption>
 + (WGNPermilleFormatter*)createPermilleFormatter:(id<NSFastEnumeration> /* NSString * */)languages
                                 geographicRegion:(NSString*)geographicRegion ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isDecimalPointAlwaysDisplayed;
 @property int integerDigits;
 @property BOOL isGrouped;
@@ -352,7 +352,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGNNumeralSystemTranslator : RTObject
 + (WGNNumeralSystemTranslator*)create:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* numeralSystem;
 @property (readonly) NSArray* languages;
 @property (readonly) NSString* resolvedLanguage;

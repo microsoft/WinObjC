@@ -119,7 +119,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL hasInstanceNameChanged;
 @property (readonly) WNHostName* iPAddress;
 @property (readonly) WNSDDnssdRegistrationStatus status;

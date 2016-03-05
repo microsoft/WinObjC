@@ -19,10 +19,28 @@
 
 #include <sys/cdefs.h>
 
+#ifndef SB_IMPEXP
+#define SB_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef SB_EXPORT
 #ifdef __cplusplus
-#define SB_EXPORT extern "C"
+#define SB_EXPORT SB_IMPEXP extern "C"
+#define SB_EXPORT_CLASS SB_IMPEXP
 #else
-#define SB_EXPORT extern
+#define SB_EXPORT SB_IMPEXP extern
+#define SB_EXPORT_CLASS SB_IMPEXP
+#endif
+#endif
+
+#ifndef SB_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define SB_EXTERNC_BEGIN extern "C" {
+#define SB_EXTERNC_END }
+#else
+#define SB_EXTERNC_BEGIN
+#define SB_EXTERNC_END
+#endif
 #endif
 
 #define SB_INLINE static __inline

@@ -1,76 +1,58 @@
-/* Copyright (c) 2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSFETCHREQUEST_H_
-#define _NSFETCHREQUEST_H_
-
+#import <CoreData/CoreDataExport.h>
 #import <Foundation/NSObject.h>
+#import <CoreData/NSPersistentStoreRequest.h>
 
-@class NSEntityDescription, NSPredicate, NSArray;
+@class NSString;
+@class NSEntityDescription;
+@class NSPredicate;
+@class NSArray;
 
-enum {
-   NSManagedObjectResultType        = 0x00,
-   NSManagedObjectIDResultType      = 0x01,
-   NSDictionaryResultType           = 0x02
+typedef NS_ENUM(NSUInteger, NSFetchRequestResultType) {
+    NSManagedObjectResultType = 0x00,
+    NSManagedObjectIDResultType = 0x01,
+    NSDictionaryResultType = 0x02,
+    NSCountResultType = 0x04
 };
-typedef NSUInteger NSFetchRequestResultType;
 
-@interface NSFetchRequest : NSObject <NSCoding, NSCopying>
-
-+(NSFetchRequest *)fetchRequestWithEntityName:(NSString *)entityName;
-
--(NSFetchRequestResultType)resultType;
-
--(NSEntityDescription *)entity;
--(NSPredicate *)predicate;
--(NSArray *)sortDescriptors;
--(NSArray *)affectedStores;
-
--(NSUInteger)fetchLimit;
--(NSUInteger)fetchBatchSize;
--(NSUInteger)fetchOffset;
-
--(BOOL)includesPendingChanges;
--(BOOL)includesPropertyValues;
--(BOOL)includesSubentities;
-
--(BOOL)returnsDistinctResults;
--(BOOL)returnsObjectsAsFaults;
-
--(NSArray *)propertiesToFetch;
-
--(NSArray *)relationshipKeyPathsForPrefetching;
-
--(void)setResultType:(NSFetchRequestResultType)type;
--(void)setEntity:(NSEntityDescription *)value;
--(void)setPredicate:(NSPredicate *)value;
--(void)setSortDescriptors:(NSArray *)value;
--(void)setAffectedStores:(NSArray *)value;
-
--(void)setFetchLimit:(NSUInteger)value;
--(void)setFetchBatchSize:(NSUInteger)value;
--(void)setFetchOffset:(NSUInteger)value;
-
--(void)setIncludesPendingChanges:(BOOL)value;
--(void)setIncludesPropertyValues:(BOOL)value;
--(void)setIncludesSubentities:(BOOL)value;
-
--(void)setReturnsDistinctResults:(BOOL)value;
--(void)setReturnsObjectsAsFaults:(BOOL)value;
-
--(void)setPropertiesToFetch:(NSArray *)value;
-
--(void)setRelationshipKeyPathsForPrefetching:(NSArray *)value;
-
-- (NSString *)entityName;
-
-- (id)initWithEntityName:(NSString *)entityName;
-
+COREDATA_EXPORT_CLASS
+@interface NSFetchRequest : NSPersistentStoreRequest <NSCoding, NSCopying>
++ (instancetype)fetchRequestWithEntityName:(NSString*)entityName STUB_METHOD;
+- (instancetype)initWithEntityName:(NSString*)entityName STUB_METHOD;
+@property (readonly, nonatomic, strong) NSString* entityName STUB_PROPERTY;
+@property (nonatomic, strong) NSEntityDescription* entity STUB_PROPERTY;
+@property (nonatomic) BOOL includesSubentities STUB_PROPERTY;
+@property (nonatomic, strong) NSPredicate* predicate STUB_PROPERTY;
+@property (nonatomic) NSUInteger fetchLimit STUB_PROPERTY;
+@property (nonatomic) NSUInteger fetchOffset STUB_PROPERTY;
+@property (nonatomic) NSUInteger fetchBatchSize STUB_PROPERTY;
+@property (nonatomic, strong) NSArray* affectedStores STUB_PROPERTY;
+@property (nonatomic, strong) NSArray* sortDescriptors STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* relationshipKeyPathsForPrefetching STUB_PROPERTY;
+@property (nonatomic) NSFetchRequestResultType resultType STUB_PROPERTY;
+@property (nonatomic) BOOL includesPendingChanges STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* propertiesToFetch STUB_PROPERTY;
+@property (nonatomic) BOOL returnsDistinctResults STUB_PROPERTY;
+@property (nonatomic) BOOL includesPropertyValues STUB_PROPERTY;
+@property (nonatomic) BOOL shouldRefreshRefetchedObjects STUB_PROPERTY;
+@property (nonatomic) BOOL returnsObjectsAsFaults STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* propertiesToGroupBy STUB_PROPERTY;
+@property (nonatomic, strong) NSPredicate* havingPredicate STUB_PROPERTY;
 @end
-
-#endif /* _NSFETCHREQUEST_H_ */

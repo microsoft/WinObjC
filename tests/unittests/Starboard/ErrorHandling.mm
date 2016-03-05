@@ -29,7 +29,7 @@ HRESULT catchReturnHrTest() {
 }
 }
 
-TEST(Core, ErrorHandling) {
+ARM_DISABLED_TEST(Core, ErrorHandling) {
     NSError* error = nil;
 
     try {

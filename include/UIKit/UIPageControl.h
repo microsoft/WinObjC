@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,6 +28,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
 #import "UIControl.h"
 
 UIKIT_EXPORT_CLASS
@@ -40,7 +43,7 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic) BOOL hidesForSinglePage;
 
-@property (nonatomic,retain) UIColor* currentPageIndicatorTintColor;
-@property (nonatomic,retain) UIColor* pageIndicatorTintColor;
+@property (nonatomic, retain) UIColor* currentPageIndicatorTintColor;
+@property (nonatomic, retain) UIColor* pageIndicatorTintColor;
 
 @end

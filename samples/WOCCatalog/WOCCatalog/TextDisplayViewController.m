@@ -16,6 +16,8 @@
 
 #import "TextDisplayViewController.h"
 
+#import <CoreText/CoreText.h>
+
 int const NumberOfDrawWithAttrTestCases = 4;
 int const NumberOfSizeWithAttrTestCases = 5;
 int const DefaultHeightOfCell = 70;
@@ -210,6 +212,21 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     title = @"boundingRectWithSize of testParagraph";
     [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:11]]];
 
+    title = @"CTFontCreateCopyWithSymbolicTraits (With and without bold trait)";
+    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:12]]];
+
+    title = @"CTLineCreateTruncatedLine:\nLine 1: Original line, \nLine2:(from left to right) truncationType:Start, middle and end with "
+            @"truncationToken as string with two dots \"..\", \nLine3:(from left to right) truncationType:Start, middle and end with no "
+            @"truncationToken";
+    [rows
+        addObject:[self makeTestCellWithTitle:title
+                          WithAccessoryUIView:[self makeTextDrawer:13 WithCustomHeight:130 WithCustomBackgroundColor:[UIColor grayColor]]]];
+
+    title =
+        @"CTFontManagerRegisterFontsForURL: (Register different fonts familys)\nfont 1: Harlow Solid Italic\nfont 2: Goudy Stout\nfont 3: "
+        @"Kunstler Script";
+    [rows addObject:[self makeTestCellWithTitle:title WithAccessoryUIView:[self makeTextDrawer:14]]];
+
     return self;
 }
 
@@ -299,6 +316,11 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     if (indexPath.row == 8 || indexPath.row == 9) {
         //  Circular letter view and UITextView row need more height
         return 350.0f;
+    } else if (indexPath.row == 13) {
+        return 200.0f;
+    }
+    if (indexPath.row == 13) {
+        return 150.0f;
     }
     return DefaultHeightOfCell;
 }
@@ -319,7 +341,6 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 }
 - (id)initWithFrame:(CGRect)rect WithUICase:(int)testChoice {
     testNumber = testChoice;
-
     return [super initWithFrame:rect];
 }
 
@@ -359,9 +380,190 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
         case 11:
             [self boundingRectWithSize:rect];
             break;
+        case 12:
+            [self testCTFontCreateCopyWithSymbolicTraits:rect];
+            break;
+        case 13:
+            [self testCTLineCreateTruncatedLine:rect];
+            break;
+        case 14:
+            [self testCTFontManagerRegisterFontsForURL:rect];
+            break;
     }
 }
 
+- (void)testCTLineCreateTruncatedLine:(CGRect)rect {
+    // creating an attributed string
+    UIFontDescriptor* descriptor = [UIFontDescriptor fontDescriptorWithName:@"Arial" size:24];
+    UIFont* font = [UIFont fontWithDescriptor:descriptor size:24];
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    NSRange range = NSMakeRange(0, 11);
+    [string addAttribute:kCTFontAttributeName value:font range:range];
+    range = NSMakeRange(5, 6);
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor redColor] range:range];
+    CFAttributedStringRef str = (__bridge CFAttributedStringRef)string;
+    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(str);
+    CFRange range2 = { 0, 11 };
+    CTLineRef line = CTTypesetterCreateLineWithOffset(ts, range2, 0.0f);
+
+    // context setting
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // Flip the context coordinates, in iOS only.
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    // case 0: draw the whole line
+    CGContextSetTextPosition(context, 0.0, 100.0);
+    CTLineDraw(line, context);
+
+    CTLineRef truncatedline;
+    // case 1: without truncation token, truncationType = kCTLineTruncationStart
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationStart, NULL);
+    CGContextSetTextPosition(context, 0.0, 10.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 2: without truncation token, truncationType = kCTLineTruncationMiddle
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationMiddle, NULL);
+    CGContextSetTextPosition(context, 100.0, 10.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 3: without truncation token, truncationType = kCTLineTruncationEnd
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationEnd, NULL);
+    CGContextSetTextPosition(context, 200.0, 10.0);
+    CTLineDraw(truncatedline, context);
+
+    CTLineRef trunToken = getTruncationToken();
+
+    // case 4 : with the truncation token, truncationType = kCTLineTruncationStart
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationStart, trunToken);
+    CGContextSetTextPosition(context, 0.0, 50.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 5 : with the truncation token, truncationType = kCTLineTruncationMiddle
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationMiddle, trunToken);
+    CGContextSetTextPosition(context, 100.0, 50.0);
+    CTLineDraw(truncatedline, context);
+
+    // case 6 : with the truncation token, truncationType = kCTLineTruncationEnd
+    truncatedline = CTLineCreateTruncatedLine(line, 28, kCTLineTruncationEnd, trunToken);
+    CGContextSetTextPosition(context, 200.0, 50.0);
+    CTLineDraw(truncatedline, context);
+}
+
+- (void)testCTFontManagerRegisterFontsForURL:(CGRect)rect {
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // Flip the context coordinates, in iOS only.
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    // font 1
+    NSURL* url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/KUNSTLER.TTF"];
+    bool result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Kunstler Script" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CTLineDraw(line, context);
+    }
+    // font 2
+    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/GOUDYSTO.TTF"];
+    result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Goudy Stout" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CGContextSetTextPosition(context, 0.0, 25.0);
+        CTLineDraw(line, context);
+    }
+    // font 3
+    url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/HARLOWSI.TTF"];
+    result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    if (result) {
+        UIFont* font = [UIFont fontWithName:@"Harlow Solid Italic" size:22.0];
+        CTTypesetterRef typesetter =
+            CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[self getAttributedStringForFont:font]);
+        CFRange range = { 0, 11 };
+        CTLineRef line = CTTypesetterCreateLineWithOffset(typesetter, range, 0.0f);
+        CGContextSetTextPosition(context, 0.0, 50.0);
+        CTLineDraw(line, context);
+    }
+}
+
+- (NSAttributedString*)getAttributedStringForFont:(UIFont*)font {
+    NSRange wholeRange = NSMakeRange(0, 11);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
+
+    return string;
+}
+
+- (void)testCTFontCreateCopyWithSymbolicTraits:(CGRect)rect {
+    // Right now we do not have support for symbolicTraits, so both the strings will appear visually the same.
+    // In future when we support symbolic traits for eg: italic,etc they  will appear correctly.
+    CFAttributedStringRef string1 = (__bridge CFAttributedStringRef)[self getAttributedString];
+    CFAttributedStringRef string2 = (__bridge CFAttributedStringRef)[self getAttributedStringWithTraits];
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // Flip the context coordinates, in iOS only.
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    CTTypesetterRef ts1 = CTTypesetterCreateWithAttributedString(string1);
+    CTTypesetterRef ts2 = CTTypesetterCreateWithAttributedString(string2);
+
+    CFRange range = { 0, 11 };
+    CTLineRef line1 = CTTypesetterCreateLineWithOffset(ts1, range, 0.0f);
+    CTLineRef line2 = CTTypesetterCreateLineWithOffset(ts2, range, 0.0f);
+
+    CTLineDraw(line1, context);
+    CGContextSetTextPosition(context, 0.0, 25.0);
+    CTLineDraw(line2, context);
+}
+
+- (NSAttributedString*)getAttributedString {
+    CGFloat fontsize = 20;
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:fontsize];
+    UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:fontsize];
+
+    NSRange wholeRange = NSMakeRange(0, 11);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
+
+    return string;
+}
+
+CTLineRef getTruncationToken() {
+    UIFont* font = [UIFont systemFontOfSize:16];
+    NSRange wholeRange = NSMakeRange(0, 2);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@".."];
+    [string addAttribute:NSFontAttributeName value:font range:wholeRange];
+
+    CTTypesetterRef ts = CTTypesetterCreateWithAttributedString((__bridge CFAttributedStringRef)string);
+    CFRange range = { 0, 2 };
+    CTLineRef token = CTTypesetterCreateLineWithOffset(ts, range, 0.0f);
+
+    return token;
+}
+
+- (NSAttributedString*)getAttributedStringWithTraits {
+    CGFloat fontsize = 20;
+    UIFontDescriptor* fontDescriptor = [UIFontDescriptor fontDescriptorWithName:@"Times New Roman" size:fontsize];
+    UIFont* font = [UIFont fontWithDescriptor:fontDescriptor size:fontsize];
+
+    CTFontRef fontref = CTFontCreateCopyWithSymbolicTraits((__bridge CTFontRef)font, fontsize, NULL, kCTFontTraitBold, kCTFontTraitBold);
+    NSRange wholeRange = NSMakeRange(0, 11);
+    NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
+    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:kCTFontAttributeName value:(__bridge UIFont*)fontref range:wholeRange];
+
+    return string;
+}
 - (void)boundingRectWithSize:(CGRect)rect {
     UIFont* font = [UIFont boldSystemFontOfSize:DefaultFontSize];
     UIColor* color = [UIColor blackColor];

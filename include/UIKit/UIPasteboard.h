@@ -1,74 +1,73 @@
-/*
- * Copyright (c) 2011, The Iconfactory. All rights reserved.
- *
- * Copyright (c) 2015 Microsoft Corporation. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of The Iconfactory nor the names of its contributors may
- *    be used to endorse or promote products derived from this software without
- *    specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE ICONFACTORY BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
- * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-#ifndef _UIPASTEBOARD_H_
-#define _UIPASTEBOARD_H_
+#pragma once
 
 #import <UIKit/UIKitExport.h>
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
 
-UIKIT_EXPORT NSArray* UIPasteboardTypeListString;
-UIKIT_EXPORT NSArray* UIPasteboardTypeListURL;
-UIKIT_EXPORT NSArray* UIPasteboardTypeListImage;
-UIKIT_EXPORT NSArray* UIPasteboardTypeListColor;
+@class NSString;
+@class NSArray;
+@class NSData;
+@class NSIndexSet;
+@class UIImage;
+@class NSURL;
+@class UIColor;
 
-@class UIImage, UIColor, NSPasteboard;
+UIKIT_EXPORT NSString* const UIPasteboardNameGeneral;
+UIKIT_EXPORT NSString* const UIPasteboardNameFind;
+UIKIT_EXPORT NSArray* const UIPasteboardTypeListString;
+UIKIT_EXPORT NSArray* const UIPasteboardTypeListURL;
+UIKIT_EXPORT NSArray* const UIPasteboardTypeListImage;
+UIKIT_EXPORT NSArray* const UIPasteboardTypeListColor;
+UIKIT_EXPORT NSString* const UIPasteboardChangedTypesAddedKey;
+UIKIT_EXPORT NSString* const UIPasteboardChangedTypesRemovedKey;
+
+UIKIT_EXPORT NSString* const UIPasteboardChangedNotification;
+UIKIT_EXPORT NSString* const UIPasteboardRemovedNotification;
 
 UIKIT_EXPORT_CLASS
 @interface UIPasteboard : NSObject
-
-+ (UIPasteboard*)generalPasteboard;
-+ (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create;
-+ (UIPasteboard*)pasteboardWithUniqueName;
-+ (void)removePasteboardWithName:(NSString*)pasteboardName;
-
-@property (nonatomic, copy) NSURL* URL;
-@property (nonatomic, copy) NSArray* URLs;
-@property (nonatomic, copy) NSString* string;
-@property (nonatomic, copy) NSArray* strings;
-@property (nonatomic, copy) UIImage* image;
-@property (nonatomic, copy) NSArray* images;
-@property (nonatomic, copy) UIColor* color;
-@property (nonatomic, copy) NSArray* colors;
-@property (nonatomic, copy) NSArray* items;
-@property (getter=isPersistent, nonatomic) BOOL persistent;
-@property (readonly, nonatomic) NSString* name;
-
-- (void)addItems:(NSArray*)items;
-- (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType;
-- (void)setValue:(id)value forPasteboardType:(NSString*)pasteboardType;
-- (NSData*)dataForPasteboardType:(NSString*)pasteboardType;
-- (id)valueForPasteboardType:(NSString*)pasteboardType;
-- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes;
-
++ (UIPasteboard*)generalPasteboard STUB_METHOD;
++ (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create STUB_METHOD;
++ (UIPasteboard*)pasteboardWithUniqueName STUB_METHOD;
++ (void)removePasteboardWithName:(NSString*)pasteboardName STUB_METHOD;
+@property (readonly, nonatomic) NSString* name STUB_PROPERTY;
+@property (getter=isPersistent, nonatomic) BOOL persistent STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger changeCount STUB_PROPERTY;
+- (NSArray*)pasteboardTypes STUB_METHOD;
+- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes STUB_METHOD;
+- (NSData*)dataForPasteboardType:(NSString*)pasteboardType STUB_METHOD;
+- (id)valueForPasteboardType:(NSString*)pasteboardType STUB_METHOD;
+- (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType STUB_METHOD;
+- (void)setValue:(id)value forPasteboardType:(NSString*)pasteboardType STUB_METHOD;
+@property (readonly, nonatomic) NSInteger numberOfItems STUB_PROPERTY;
+- (NSArray*)pasteboardTypesForItemSet:(NSIndexSet*)itemSet STUB_METHOD;
+- (NSIndexSet*)itemSetWithPasteboardTypes:(NSArray*)pasteboardTypes STUB_METHOD;
+- (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
+@property (copy, nonatomic) NSArray* items STUB_PROPERTY;
+- (NSArray*)dataForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
+- (NSArray*)valuesForPasteboardType:(NSString*)pasteboardType inItemSet:(NSIndexSet*)itemSet STUB_METHOD;
+- (void)addItems:(NSArray*)items STUB_METHOD;
+@property (copy, nonatomic) NSString* string STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* strings STUB_PROPERTY;
+@property (copy, nonatomic) UIImage* image STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* images STUB_PROPERTY;
+@property (copy, nonatomic) NSURL* URL STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* URLs STUB_PROPERTY;
+@property (copy, nonatomic) UIColor* color STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* colors STUB_PROPERTY;
 @end
-
-#endif /* _UIPASTEBOARD_H_ */

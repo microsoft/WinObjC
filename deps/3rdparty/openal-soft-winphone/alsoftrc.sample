@@ -1,0 +1,304 @@
+# OpenAL config file. Options that are not under a block or are under the
+# [general] block are for general, non-backend-specific options. Blocks may
+# appear multiple times, and duplicated options will take the last value
+# specified.
+# The system-wide settings can be put in /etc/openal/alsoft.conf and user-
+# specific override settings in ~/.alsoftrc.
+# For Windows, these settings should go into %AppData%\alsoft.ini
+# The environment variable ALSOFT_CONF can be used to specify another config
+# override
+
+# Option and block names are case-insenstive. The supplied values are only
+# hints and may not be honored (though generally it'll try to get as close as
+# possible). Note: options that are left unset may default to app- or system-
+# specified values. These are the current available settings:
+
+## format:
+#  Sets the output format. Can be one of:
+#  AL_FORMAT_MONO8    (8-bit mono)
+#  AL_FORMAT_STEREO8  (8-bit stereo)
+#  AL_FORMAT_QUAD8    (8-bit 4-channel)
+#  AL_FORMAT_51CHN8   (8-bit 5.1 output)
+#  AL_FORMAT_61CHN8   (8-bit 6.1 output)
+#  AL_FORMAT_71CHN8   (8-bit 7.1 output)
+#  AL_FORMAT_MONO16   (16-bit mono)
+#  AL_FORMAT_STEREO16 (16-bit stereo)
+#  AL_FORMAT_QUAD16   (16-bit 4-channel)
+#  AL_FORMAT_51CHN16  (16-bit 5.1 output)
+#  AL_FORMAT_61CHN16  (16-bit 6.1 output)
+#  AL_FORMAT_71CHN16  (16-bit 7.1 output)
+#  AL_FORMAT_MONO32   (32-bit float mono)
+#  AL_FORMAT_STEREO32 (32-bit float stereo)
+#  AL_FORMAT_QUAD32   (32-bit float 4-channel)
+#  AL_FORMAT_51CHN32  (32-bit float 5.1 output)
+#  AL_FORMAT_61CHN32  (32-bit float 6.1 output)
+#  AL_FORMAT_71CHN32  (32-bit float 7.1 output)
+#format = AL_FORMAT_STEREO32
+
+## hrtf:
+#  Enables HRTF filters. These filters provide for better sound spatialization
+#  while using headphones. The default filter will only work when output is
+#  44100hz stereo. While HRTF is active, the cf_level option is disabled.
+#  Default is disabled since stereo speaker output quality may suffer.
+#hrtf = false
+
+## cf_level:
+#  Sets the crossfeed level for stereo output. Valid values are:
+#  0 - No crossfeed
+#  1 - Low crossfeed
+#  2 - Middle crossfeed
+#  3 - High crossfeed (virtual speakers are closer to itself)
+#  4 - Low easy crossfeed
+#  5 - Middle easy crossfeed
+#  6 - High easy crossfeed
+#  Users of headphones may want to try various settings. Has no effect on non-
+#  stereo modes.
+#cf_level = 0
+
+## frequency:
+#  Sets the output frequency.
+#frequency = 44100
+
+## resampler:
+#  Selects the resampler used when mixing sources. Valid values are:
+#  point - nearest sample, no interpolation
+#  linear - extrapolates samples using a linear slope between samples
+#  cubic - extrapolates samples using a Catmull-Rom spline
+#  Specifying other values will result in using the default (linear).
+#resampler = linear
+
+## rt-prio:
+#  Sets real-time priority for the mixing thread. Not all drivers may use this
+#  (eg. PortAudio) as they already control the priority of the mixing thread.
+#  0 and negative values will disable it. Note that this may constitute a
+#  security risk since a real-time priority thread can indefinitely block
+#  normal-priority threads if it fails to wait. As such, the default is
+#  disabled.
+#rt-prio = 0
+
+## period_size:
+#  Sets the update period size, in frames. This is the number of frames needed
+#  for each mixing update.
+#period_size = 1024
+
+## periods:
+#  Sets the number of update periods. Higher values create a larger mix ahead,
+#  which helps protect against skips when the CPU is under load, but increases
+#  the delay between a sound getting mixed and being heard.
+#periods = 4
+
+## sources:
+#  Sets the maximum number of allocatable sources. Lower values may help for
+#  systems with apps that try to play more sounds than the CPU can handle.
+#sources = 256
+
+## stereodup:
+#  Sets whether to duplicate stereo sounds behind the listener. This provides a
+#  "fuller" playback quality for surround sound output modes, although each
+#  individual speaker will have a slight reduction in volume to compensate for
+#  the extra output speakers. True, yes, on, and non-0 values will duplicate
+#  stereo sources. 0 and anything else will cause stereo sounds to only play in
+#  front. This only has an effect when a suitable output format is used (ie.
+#  those that contain side and/or rear speakers).
+#stereodup = true
+
+## drivers:
+#  Sets the backend driver list order, comma-seperated. Unknown backends and
+#  duplicated names are ignored. Unlisted backends won't be considered for use
+#  unless the list is ended with a comma (eg. 'oss,' will list OSS first
+#  followed by all other available backends, while 'oss' will list OSS only).
+#  Backends prepended with - won't be available for use (eg. '-oss,' will allow
+#  all available backends except OSS). An empty list means the default.
+#drivers = pulse,alsa,core,oss,solaris,sndio,mmdevapi,dsound,winmm,port,opensl,null,wave
+
+## excludefx:
+#  Sets which effects to exclude, preventing apps from using them. This can
+#  help for apps that try to use effects which are too CPU intensive for the
+#  system to handle. Available effects are: eaxreverb,reverb,echo,modulator,
+#  dedicated
+#excludefx =
+
+## slots:
+#  Sets the maximum number of Auxiliary Effect Slots an app can create. A slot
+#  can use a non-negligible amount of CPU time if an effect is set on it even
+#  if no sources are feeding it, so this may help when apps use more than the
+#  system can handle.
+#slots = 4
+
+## sends:
+#  Sets the number of auxiliary sends per source. When not specified (default),
+#  it allows the app to request how many it wants. The maximum value currently
+#  possible is 4.
+#sends =
+
+## layout:
+#  Sets the virtual speaker layout. Values are specified in degrees, where 0 is
+#  straight in front, negative goes left, and positive goes right. Unspecified
+#  speakers will remain at their default positions (which are dependant on the
+#  output format). Available speakers are back-left(bl), side-left(sl), front-
+#  left(fl), front-center(fc), front-right(fr), side-right(sr), back-right(br),
+#  and back-center(bc).
+#layout =
+
+## layout_*:
+#  Channel-specific layouts may be specified to override the layout option. The
+#  same speakers as the layout option are available, and the default settings
+#  are shown below.
+#layout_STEREO = fl=-90, fr=90
+#layout_QUAD   = fl=-45, fr=45, bl=-135, br=135
+#layout_51CHN  = fl=-30, fr=30, fc=0, bl=-110, br=110
+#layout_61CHN  = fl=-30, fr=30, fc=0, sl=-90, sr=90, bc=180
+#layout_71CHN  = fl=-30, fr=30, fc=0, sl=-90, sr=90, bl=-150, br=150
+
+## default-reverb:
+#  A reverb preset that applies by default to all sources on send 0
+#  (applications that set their own slots on send 0 will override this).
+#  Available presets are: Generic, PaddedCell, Room, Bathroom, Livingroom,
+#  Stoneroom, Auditorium, ConcertHall, Cave, Arena, Hangar, CarpettedHallway,
+#  Hallway, StoneCorridor, Alley, Forest, City, Moutains, Quarry, Plain,
+#  ParkingLot, SewerPipe, Underwater, Drugged, Dizzy, Psychotic. Optionally,
+#  the __ALSOFT_DEFAULT_REVERB env var may be set before running the app
+#  instead.
+#default-reverb =
+
+## trap-alc-error:
+#  Generates a SIGTRAP signal when an ALC device error is generated, on systems
+#  that support it. This helps when debugging, while trying to find the cause
+#  of a device error. On Windows, a breakpoint exception is generated.
+#  Optionally, the __ALSOFT_TRAP_ALC_ERROR env var may be set before running
+#  the app instead.
+#trap-alc-error = false
+
+## trap-al-error:
+#  Generates a SIGTRAP signal when an AL context error is generated, on systems
+#  that support it. This helps when debugging, while trying to find the cause
+#  of a context error. On Windows, a breakpoint exception is generated.
+#  Optionally, the __ALSOFT_TRAP_AL_ERROR env var may be set before running the
+#  app instead.
+#trap-al-error = false
+
+##
+## Reverb effect stuff (includes EAX reverb)
+##
+[reverb]
+
+## boost:
+#  A global amplification for reverb output, expressed in decibels. The value
+#  is logarithmic, so +6 will be a scale of (approximately) 2x, +12 will be a
+#  scale of 4x, etc. Similarly, -6 will be about half, and -12 about 1/4th. A
+#  value of 0 means no change.
+#boost = 0
+
+## emulate-eax:
+#  Allows the standard reverb effect to be used in place of EAX reverb. EAX
+#  reverb processing is a bit more CPU intensive than standard, so this option
+#  allows a simpler effect to be used at the loss of some quality.
+#emulate-eax = false
+
+##
+## ALSA backend stuff
+##
+[alsa]
+
+## device:
+#  Sets the device name for the default playback device.
+#device = default
+
+## device-prefix:
+#  Sets the prefix used by the discovered (non-default) playback devices. This
+#  will be appended with "CARD=c,DEV=d", where c is the card id and d is the
+#  device index for the requested device name.
+#device-prefix = plughw:
+
+## capture:
+#  Sets the device name for the default capture device.
+#capture = default
+
+## capture-prefix:
+#  Sets the prefix used by the discovered (non-default) capture devices. This
+#  will be appended with "CARD=c,DEV=d", where c is the card id and d is the
+#  device number for the requested device name.
+#capture-prefix = plughw:
+
+## mmap:
+#  Sets whether to try using mmap mode (helps reduce latencies and CPU
+#  consumption). If mmap isn't available, it will automatically fall back to
+#  non-mmap mode. True, yes, on, and non-0 values will attempt to use mmap. 0
+#  and anything else will force mmap off.
+#mmap = true
+
+##
+## OSS backend stuff
+##
+[oss]
+
+## device:
+#  Sets the device name for OSS output.
+#device = /dev/dsp
+
+## capture:
+#  Sets the device name for OSS capture.
+#capture = /dev/dsp
+
+##
+## Solaris backend stuff
+##
+[solaris]
+
+## device:
+#  Sets the device name for Solaris output.
+#device = /dev/audio
+
+##
+## MMDevApi backend stuff
+##
+[mmdevapi]
+
+##
+## DirectSound backend stuff
+##
+[dsound]
+
+##
+## Windows Multimedia backend stuff
+##
+[winmm]
+
+##
+## PortAudio backend stuff
+##
+[port]
+
+## device:
+#  Sets the device index for output. Negative values will use the default as
+#  given by PortAudio itself.
+#device = -1
+
+## capture:
+#  Sets the device index for capture. Negative values will use the default as
+#  given by PortAudio itself.
+#capture = -1
+
+##
+## PulseAudio backend stuff
+##
+[pulse]
+
+## spawn-server:
+#  Attempts to spawn a PulseAudio server when requesting to open a PulseAudio
+#  device. Note that some apps may open and probe all enumerated devices on
+#  startup, causing a server to spawn even if a PulseAudio device is not
+#  actually selected. Setting autospawn to false in Pulse's client.conf will
+#  still prevent autospawning even if this is set to true.
+#spawn-server = false
+
+##
+## Wave File Writer stuff
+##
+[wave]
+
+## file:
+#  Sets the filename of the wave file to write to. An empty name prevents the
+#  backend from opening, even when explicitly requested.
+#  THIS WILL OVERWRITE EXISTING FILES WITHOUT QUESTION!
+#file =

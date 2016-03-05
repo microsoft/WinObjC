@@ -1,0 +1,21 @@
+LIBRARY MediaAccessibility
+    EXPORTS
+        ; Media Accessibility Function Reference.mm
+        MAMediaCharacteristicDescribesMusicAndSoundForAccessibility DATA
+        MAMediaCharacteristicTranscribesSpokenDialogForAccessibility DATA
+        MACaptionAppearanceCopyPreferredCaptioningMediaCharacteristics
+        MACaptionAppearanceGetDisplayType
+        MACaptionAppearanceSetDisplayType
+        MACaptionAppearanceAddSelectedLanguage
+        MACaptionAppearanceCopySelectedLanguages
+        MACaptionAppearanceCopyFontDescriptorForStyle
+        MACaptionAppearanceCopyForegroundColor
+        MACaptionAppearanceGetForegroundOpacity
+        MACaptionAppearanceGetRelativeCharacterSize
+        MACaptionAppearanceGetTextEdgeStyle
+        MACaptionAppearanceCopyBackgroundColor
+        MACaptionAppearanceGetBackgroundOpacity
+        MACaptionAppearanceCopyWindowColor
+        MACaptionAppearanceGetWindowOpacity
+        MACaptionAppearanceGetWindowRoundedCornerRadius
+

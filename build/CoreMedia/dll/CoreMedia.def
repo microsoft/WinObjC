@@ -1,0 +1,339 @@
+LIBRARY CoreMedia
+    EXPORTS
+        ; CMAttachment Reference.mm
+        CMCopyDictionaryOfAttachments
+        CMGetAttachment
+        CMPropagateAttachments
+        CMRemoveAllAttachments
+        CMRemoveAttachment
+        CMSetAttachment
+        CMSetAttachments
+
+        ; CMBlockBuffer Reference.mm
+        CMBlockBufferAccessDataBytes
+        CMBlockBufferAppendBufferReference
+        CMBlockBufferAppendMemoryBlock
+        CMBlockBufferAssureBlockMemory
+        CMBlockBufferCopyDataBytes
+        CMBlockBufferCreateContiguous
+        CMBlockBufferCreateEmpty
+        CMBlockBufferCreateWithBufferReference
+        CMBlockBufferCreateWithMemoryBlock
+        CMBlockBufferFillDataBytes
+        CMBlockBufferGetDataLength
+        CMBlockBufferGetDataPointer
+        CMBlockBufferGetTypeID
+        CMBlockBufferIsEmpty
+        CMBlockBufferIsRangeContiguous
+        CMBlockBufferReplaceDataBytes
+
+        ; CMBufferQueue Reference.mm
+        CMBufferQueueCreate
+        CMBufferQueueCallForEachBuffer
+        CMBufferQueueDequeueAndRetain
+        CMBufferQueueDequeueIfDataReadyAndRetain
+        CMBufferQueueEnqueue
+        CMBufferQueueInstallTrigger
+        CMBufferQueueInstallTriggerWithIntegerThreshold
+        CMBufferQueueMarkEndOfData
+        CMBufferQueueRemoveTrigger
+        CMBufferQueueReset
+        CMBufferQueueResetWithCallback
+        CMBufferQueueSetValidationCallback
+        CMBufferQueueContainsEndOfData
+        CMBufferQueueIsAtEndOfData
+        CMBufferQueueIsEmpty
+        CMBufferQueueTestTrigger
+        CMBufferQueueGetBufferCount
+        CMBufferQueueGetMaxPresentationTimeStamp
+        CMBufferQueueGetCallbacksForUnsortedSampleBuffers
+        CMBufferQueueGetDuration
+        CMBufferQueueGetEndPresentationTimeStamp
+        CMBufferQueueGetFirstDecodeTimeStamp
+        CMBufferQueueGetMinDecodeTimeStamp
+        CMBufferQueueGetFirstPresentationTimeStamp
+        CMBufferQueueGetHead
+        CMBufferQueueGetMinPresentationTimeStamp
+        CMBufferQueueGetTypeID
+
+        ; CMFormatDescription Reference.mm
+        kCMFormatDescriptionConformsToMPEG2VideoProfile DATA
+        kCMFormatDescriptionExtension_TemporalQuality DATA
+        kCMFormatDescriptionExtension_SpatialQuality DATA
+        kCMFormatDescriptionExtension_Version DATA
+        kCMFormatDescriptionExtension_RevisionLevel DATA
+        kCMFormatDescriptionExtension_Vendor DATA
+        kCMFormatDescriptionVendor_Apple DATA
+        kCMTextFormatDescriptionExtension_DisplayFlags DATA
+        kCMTextFormatDescriptionExtension_BackgroundColor DATA
+        kCMTextFormatDescriptionColor_Red DATA
+        kCMTextFormatDescriptionColor_Green DATA
+        kCMTextFormatDescriptionColor_Blue DATA
+        kCMTextFormatDescriptionColor_Alpha DATA
+        kCMTextFormatDescriptionExtension_DefaultTextBox DATA
+        kCMTextFormatDescriptionRect_Top DATA
+        kCMTextFormatDescriptionRect_Left DATA
+        kCMTextFormatDescriptionRect_Bottom DATA
+        kCMTextFormatDescriptionRect_Right DATA
+        kCMTextFormatDescriptionExtension_DefaultStyle DATA
+        kCMTextFormatDescriptionStyle_StartChar DATA
+        kCMTextFormatDescriptionStyle_Font DATA
+        kCMTextFormatDescriptionStyle_FontFace DATA
+        kCMTextFormatDescriptionStyle_ForegroundColor DATA
+        kCMTextFormatDescriptionStyle_FontSize DATA
+        kCMTextFormatDescriptionExtension_HorizontalJustification DATA
+        kCMTextFormatDescriptionExtension_VerticalJustification DATA
+        kCMTextFormatDescriptionStyle_EndChar DATA
+        kCMTextFormatDescriptionExtension_FontTable DATA
+        kCMTextFormatDescriptionExtension_TextJustification DATA
+        kCMTextFormatDescriptionStyle_Height DATA
+        kCMTextFormatDescriptionStyle_Ascent DATA
+        kCMTextFormatDescriptionExtension_DefaultFontName DATA
+        CMFormatDescriptionCreate
+        CMFormatDescriptionEqual
+        CMFormatDescriptionGetExtension
+        CMFormatDescriptionGetExtensions
+        CMFormatDescriptionGetMediaSubType
+        CMFormatDescriptionGetMediaType
+        CMFormatDescriptionGetTypeID
+        CMAudioFormatDescriptionCreate
+        CMAudioFormatDescriptionEqual
+        CMAudioFormatDescriptionGetChannelLayout
+        CMAudioFormatDescriptionGetFormatList
+        CMAudioFormatDescriptionGetMagicCookie
+        CMAudioFormatDescriptionGetMostCompatibleFormat
+        CMAudioFormatDescriptionGetRichestDecodableFormat
+        CMAudioFormatDescriptionGetStreamBasicDescription
+        CMVideoFormatDescriptionCreate
+        CMVideoFormatDescriptionCreateForImageBuffer
+        CMVideoFormatDescriptionGetCleanAperture
+        CMVideoFormatDescriptionGetDimensions
+        CMVideoFormatDescriptionGetExtensionKeysCommonWithImageBuffers
+        CMVideoFormatDescriptionGetPresentationDimensions
+        CMVideoFormatDescriptionMatchesImageBuffer
+        CMMuxedFormatDescriptionCreate
+        CMMetadataFormatDescriptionCreateWithKeys
+        CMMetadataFormatDescriptionGetKeyWithLocalID
+        CMTextFormatDescriptionGetDefaultStyle
+        CMTextFormatDescriptionGetDefaultTextBox
+        CMTextFormatDescriptionGetDisplayFlags
+        CMTextFormatDescriptionGetFontName
+        CMTextFormatDescriptionGetJustification
+        CMTimeCodeFormatDescriptionCreate
+        CMTimeCodeFormatDescriptionGetFrameDuration
+        CMTimeCodeFormatDescriptionGetFrameQuanta
+        CMTimeCodeFormatDescriptionGetTimeCodeFlags
+
+        ; CMSampleBuffer Reference.mm
+        kCMSampleBufferNotification_DataBecameReady DATA
+        kCMSampleBufferConduitNotification_InhibitOutputUntil DATA
+        kCMSampleBufferConduitNotification_ResetOutput DATA
+        kCMSampleBufferConduitNotification_UpcomingOutputPTSRangeChanged DATA
+        kCMSampleBufferConsumerNotification_BufferConsumed DATA
+        kCMSampleBufferConduitNotificationParameter_ResumeTag DATA
+        kCMSampleBufferConduitNotificationParameter_UpcomingOutputPTSRangeMayOverlapQueuedOutputPTSRange DATA
+        kCMSampleBufferConduitNotificationParameter_MinUpcomingOutputPTS DATA
+        kCMSampleBufferConduitNotificationParameter_MaxUpcomingOutputPTS DATA
+        kCMSampleAttachmentKey_NotSync DATA
+        kCMSampleAttachmentKey_PartialSync DATA
+        kCMSampleAttachmentKey_HasRedundantCoding DATA
+        kCMSampleAttachmentKey_IsDependedOnByOthers DATA
+        kCMSampleAttachmentKey_DependsOnOthers DATA
+        kCMSampleAttachmentKey_EarlierDisplayTimesAllowed DATA
+        kCMSampleAttachmentKey_DisplayImmediately DATA
+        kCMSampleAttachmentKey_DoNotDisplay DATA
+        kCMSampleBufferAttachmentKey_ResetDecoderBeforeDecoding DATA
+        kCMSampleBufferAttachmentKey_DrainAfterDecoding DATA
+        kCMSampleBufferAttachmentKey_PostNotificationWhenConsumed DATA
+        kCMSampleBufferAttachmentKey_ResumeOutput DATA
+        kCMSampleBufferAttachmentKey_TransitionID DATA
+        kCMSampleBufferAttachmentKey_TrimDurationAtStart DATA
+        kCMSampleBufferAttachmentKey_TrimDurationAtEnd DATA
+        kCMSampleBufferAttachmentKey_SpeedMultiplier DATA
+        kCMSampleBufferAttachmentKey_Reverse DATA
+        kCMSampleBufferAttachmentKey_FillDiscontinuitiesWithSilence DATA
+        kCMSampleBufferAttachmentKey_EmptyMedia DATA
+        kCMSampleBufferAttachmentKey_PermanentEmptyMedia DATA
+        kCMSampleBufferAttachmentKey_DisplayEmptyMediaImmediately DATA
+        kCMSampleBufferAttachmentKey_EndsPreviousSampleDuration DATA
+        kCMSampleBufferAttachmentKey_SampleReferenceURL DATA
+        kCMSampleBufferAttachmentKey_SampleReferenceByteOffset DATA
+        kCMSampleBufferAttachmentKey_GradualDecoderRefresh DATA
+        kCMSampleBufferAttachmentKey_DroppedFrameReason DATA
+        kCMSampleBufferAttachmentKey_DroppedFrameReasonInfo DATA
+        kCMSampleBufferDroppedFrameReason_FrameWasLate DATA
+        kCMSampleBufferDroppedFrameReason_OutOfBuffers DATA
+        kCMSampleBufferDroppedFrameReason_Discontinuity DATA
+        kCMSampleBufferDroppedFrameReasonInfo_CameraModeSwitch DATA
+        CMAudioSampleBufferCreateWithPacketDescriptions
+        CMSampleBufferCallForEachSample
+        CMSampleBufferCopySampleBufferForRange
+        CMSampleBufferCreate
+        CMSampleBufferCreateCopy
+        CMSampleBufferCreateCopyWithNewTiming
+        CMSampleBufferCreateForImageBuffer
+        CMSampleBufferDataIsReady
+        CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer
+        CMSampleBufferGetAudioStreamPacketDescriptions
+        CMSampleBufferGetAudioStreamPacketDescriptionsPtr
+        CMSampleBufferGetDataBuffer
+        CMSampleBufferGetDecodeTimeStamp
+        CMSampleBufferGetDuration
+        CMSampleBufferGetFormatDescription
+        CMSampleBufferGetImageBuffer
+        CMSampleBufferGetNumSamples
+        CMSampleBufferGetOutputDecodeTimeStamp
+        CMSampleBufferGetOutputDuration
+        CMSampleBufferGetOutputPresentationTimeStamp
+        CMSampleBufferGetOutputSampleTimingInfoArray
+        CMSampleBufferGetPresentationTimeStamp
+        CMSampleBufferGetSampleAttachmentsArray
+        CMSampleBufferGetSampleSize
+        CMSampleBufferGetSampleSizeArray
+        CMSampleBufferGetSampleTimingInfo
+        CMSampleBufferGetSampleTimingInfoArray
+        CMSampleBufferGetTotalSampleSize
+        CMSampleBufferGetTypeID
+        CMSampleBufferInvalidate
+        CMSampleBufferIsValid
+        CMSampleBufferMakeDataReady
+        CMSampleBufferSetDataBuffer
+        CMSampleBufferSetDataBufferFromAudioBufferList
+        CMSampleBufferSetDataReady
+        CMSampleBufferSetInvalidateCallback
+        CMSampleBufferSetOutputPresentationTimeStamp
+        CMSampleBufferTrackDataReadiness
+
+        ; CMSync Reference.mm
+        kCMTimebaseNotification_EffectiveRateChanged DATA
+        kCMTimebaseNotification_TimeJumped DATA
+        CMClockGetTypeID
+        CMClockGetHostTimeClock
+        CMClockConvertHostTimeToSystemUnits
+        CMClockMakeHostTimeFromSystemUnits
+        CMClockGetTime
+        CMClockGetAnchorTime
+        CMClockMightDrift
+        CMClockInvalidate
+        CMTimebaseGetTypeID
+        CMTimebaseCreateWithMasterClock
+        CMTimebaseCreateWithMasterTimebase
+        CMTimebaseGetMasterTimebase
+        CMTimebaseGetMasterClock
+        CMTimebaseGetMaster
+        CMTimebaseGetUltimateMasterClock
+        CMTimebaseGetTime
+        CMTimebaseGetTimeWithTimeScale
+        CMTimebaseSetTime
+        CMTimebaseSetAnchorTime
+        CMTimebaseGetRate
+        CMTimebaseGetTimeAndRate
+        CMTimebaseSetRate
+        CMTimebaseSetRateAndAnchorTime
+        CMTimebaseGetEffectiveRate
+        CMTimebaseAddTimer
+        CMTimebaseRemoveTimer
+        CMTimebaseSetTimerNextFireTime
+        CMTimebaseSetTimerToFireImmediately
+        CMTimebaseAddTimerDispatchSource
+        CMTimebaseRemoveTimerDispatchSource
+        CMTimebaseSetTimerDispatchSourceNextFireTime
+        CMTimebaseSetTimerDispatchSourceToFireImmediately
+        CMSyncGetRelativeRate
+        CMSyncGetRelativeRateAndAnchorTime
+        CMSyncConvertTime
+        CMSyncMightDrift
+        CMSyncGetTime
+        CMTimebaseNotificationBarrier
+
+        ; CMTextMarkup Reference.mm
+        kCMTextMarkupAttribute_ForegroundColorARGB DATA
+        kCMTextMarkupAttribute_BackgroundColorARGB DATA
+        kCMTextMarkupAttribute_CharacterBackgroundColorARGB DATA
+        kCMTextMarkupAttribute_BoldStyle DATA
+        kCMTextMarkupAttribute_ItalicStyle DATA
+        kCMTextMarkupAttribute_UnderlineStyle DATA
+        kCMTextMarkupAttribute_FontFamilyName DATA
+        kCMTextMarkupAttribute_GenericFontFamilyName DATA
+        kCMTextMarkupAttribute_BaseFontSizePercentageRelativeToVideoHeight DATA
+        kCMTextMarkupAttribute_RelativeFontSize DATA
+        kCMTextMarkupAttribute_VerticalLayout DATA
+        kCMTextMarkupAttribute_Alignment DATA
+        kCMTextMarkupAttribute_TextPositionPercentageRelativeToWritingDirection DATA
+        kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection DATA
+        kCMTextMarkupAttribute_WritingDirectionSizePercentage DATA
+        kCMTextMarkupAttribute_CharacterEdgeStyle DATA
+        kCMTextMarkupGenericFontName_Default DATA
+        kCMTextMarkupGenericFontName_Serif DATA
+        kCMTextMarkupGenericFontName_SansSerif DATA
+        kCMTextMarkupGenericFontName_Monospace DATA
+        kCMTextMarkupGenericFontName_ProportionalSerif DATA
+        kCMTextMarkupGenericFontName_ProportionalSansSerif DATA
+        kCMTextMarkupGenericFontName_MonospaceSerif DATA
+        kCMTextMarkupGenericFontName_MonospaceSansSerif DATA
+        kCMTextMarkupGenericFontName_Casual DATA
+        kCMTextMarkupGenericFontName_Cursive DATA
+        kCMTextMarkupGenericFontName_Fantasy DATA
+        kCMTextMarkupGenericFontName_SmallCapital DATA
+        kCMTextVerticalLayout_LeftToRight DATA
+        kCMTextVerticalLayout_RightToLeft DATA
+        kCMTextMarkupAlignmentType_Start DATA
+        kCMTextMarkupAlignmentType_Middle DATA
+        kCMTextMarkupAlignmentType_End DATA
+        kCMTextMarkupAlignmentType_Left DATA
+        kCMTextMarkupAlignmentType_Right DATA
+        kCMTextMarkupCharacterEdgeStyle_None DATA
+        kCMTextMarkupCharacterEdgeStyle_Raised DATA
+        kCMTextMarkupCharacterEdgeStyle_Depressed DATA
+        kCMTextMarkupCharacterEdgeStyle_Uniform DATA
+        kCMTextMarkupCharacterEdgeStyle_DropShadow DATA
+
+        ; CMTime Reference.mm
+        kCMTimeInvalid DATA
+        kCMTimeIndefinite DATA
+        kCMTimePositiveInfinity DATA
+        kCMTimeNegativeInfinity DATA
+        kCMTimeZero DATA
+        kCMTimeValueKey DATA
+        kCMTimeScaleKey DATA
+        kCMTimeEpochKey DATA
+        kCMTimeFlagsKey DATA
+        CMTimeMake
+        CMTimeMakeFromDictionary
+        CMTimeMakeWithEpoch
+        CMTimeMakeWithSeconds
+        CMTimeAbsoluteValue
+        CMTimeAdd
+        CMTimeCompare
+        CMTimeConvertScale
+        CMTimeCopyAsDictionary
+        CMTimeCopyDescription
+        CMTimeGetSeconds
+        CMTimeMaximum
+        CMTimeMinimum
+        CMTimeMultiply
+        CMTimeMultiplyByFloat64
+        CMTimeShow
+        CMTimeSubtract
+
+        ; CMTimeRange Reference.mm
+        kCMTimeRangeStartKey DATA
+        kCMTimeRangeDurationKey DATA
+        kCMTimeRangeZero DATA
+        kCMTimeRangeInvalid DATA
+        CMTimeClampToRange
+        CMTimeMapDurationFromRangeToRange
+        CMTimeMapTimeFromRangeToRange
+        CMTimeRangeContainsTime
+        CMTimeRangeContainsTimeRange
+        CMTimeRangeCopyAsDictionary
+        CMTimeRangeCopyDescription
+        CMTimeRangeEqual
+        CMTimeRangeFromTimeToTime
+        CMTimeRangeGetEnd
+        CMTimeRangeGetIntersection
+        CMTimeRangeGetUnion
+        CMTimeRangeMake
+        CMTimeRangeMakeFromDictionary
+        CMTimeRangeShow
+

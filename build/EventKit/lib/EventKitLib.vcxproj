@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKAlarm.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKCalendar.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKCalendarItem.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKEvent.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKEventStore.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKObject.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKParticipant.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKRecurrenceDayOfWeek.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKRecurrenceEnd.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKRecurrenceRule.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKReminder.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKSource.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EKStructuredLocation.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\EventKit\EventKitConstants.mm" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8ECA5E02-182F-4C5A-893B-3C83D3957073}</ProjectGuid>
+    <ProjectName>EventKitLib</ProjectName>
+    <RootNamespace>EventKit</RootNamespace>
+    <AppContainerApplication>true</AppContainerApplication>
+    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <OutputName>EventKitLib</OutputName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DEVENTKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
+  </ImportGroup>
+</Project>

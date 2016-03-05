@@ -1,33 +1,41 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSMUTABLEDICTIONARY_H_
-#define _NSMUTABLEDICTIONARY_H_
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSFastEnumeration.h>
+#import <Foundation/NSObject.h>
 
 #import <Foundation/NSDictionary.h>
 
+@class NSString;
+@class NSArray;
+
 FOUNDATION_EXPORT_CLASS
-@interface NSMutableDictionary : NSDictionary
-
-- initWithCapacity:(NSUInteger)capacity;
-
-+ dictionaryWithCapacity:(NSUInteger)capacity;
-
-- (void)setObject:object forKey:key;
-- (void)addEntriesFromDictionary:(NSDictionary *)dictionary;
-- (void)setDictionary:(NSDictionary *)dictionary;
-
-- (void)removeObjectForKey:key;
+@interface NSMutableDictionary : NSDictionary <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
++ (instancetype)dictionaryWithCapacity:(NSUInteger)numItems;
+- (instancetype)initWithCapacity:(NSUInteger)numItems;
+- (instancetype)init;
++ (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset STUB_METHOD;
+- (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey;
+- (void)setObject:(id)object forKeyedSubscript:(id<NSCopying>)aKey;
+- (void)setValue:(id)value forKey:(NSString*)key;
+- (void)addEntriesFromDictionary:(NSDictionary*)otherDictionary;
+- (void)setDictionary:(NSDictionary*)otherDictionary;
+- (void)removeObjectForKey:(id)aKey;
 - (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray *)keys;
-
-- (void) setObject:(id)obj forKeyedSubscript:(id)key;
-
+- (void)removeObjectsForKeys:(NSArray*)keyArray;
 @end
-
-#endif /* _NSMUTABLEDICTIONARY_H_ */

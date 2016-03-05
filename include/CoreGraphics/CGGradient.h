@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,33 +13,26 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CGGRADIENT_H_
-#define _CGGRADIENT_H_
-
-#import <StarboardExport.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGColorSpace.h>
 
 ENABLE_IMPLICIT_BRIDGING
 
-typedef struct __CGGradient* CGGradientRef;
+typedef enum { kCGGradientDrawsBeforeStartLocation = (1 << 0), kCGGradientDrawsAfterEndLocation = (1 << 1) } CGGradientDrawingOptions;
 
-enum {
-    kCGGradientDrawsBeforeStartLocation = 0x01,
-    kCGGradientDrawsAfterEndLocation = 0x02,
-};
-typedef uint32_t CGGradientDrawingOptions;
-
-COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef colorSpace,
-                                                                      const CGFloat components[],
-                                                                      const CGFloat locations[],
+COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColorComponents(CGColorSpaceRef space,
+                                                                      const CGFloat* components,
+                                                                      const CGFloat* locations,
                                                                       size_t count);
-COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef colorSpace, CFArrayRef colors, const CGFloat locations[]);
+COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef space,
+                                                             CFArrayRef colors,
+                                                             const CGFloat* locations) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGGradientRelease(CGGradientRef gradient);
+COREGRAPHICS_EXPORT CGGradientRef CGGradientRetain(CGGradientRef gradient);
 
-COREGRAPHICS_EXPORT void CGGradientRelease(CGGradientRef self);
-COREGRAPHICS_EXPORT CGGradientRef CGGradientRetain(CGGradientRef self);
+COREGRAPHICS_EXPORT CFTypeID CGGradientGetTypeID() STUB_METHOD;
 
 DISABLE_IMPLICIT_BRIDGING
-
-#endif // _CGGRADIENT_H_

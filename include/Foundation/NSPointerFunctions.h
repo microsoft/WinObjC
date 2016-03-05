@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-typedef int NSPointerFunctionsOptions;
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
 
-enum {
+@class NSString;
+
+typedef NS_OPTIONS(NSUInteger, NSPointerFunctionsOptions) {
     NSPointerFunctionsStrongMemory = (0 << 0),
-    NSPointerFunctionsZeroingWeakMemory = (1 << 0),
     NSPointerFunctionsOpaqueMemory = (2 << 0),
     NSPointerFunctionsMallocMemory = (3 << 0),
     NSPointerFunctionsMachVirtualMemory = (4 << 0),
@@ -33,3 +34,20 @@ enum {
     NSPointerFunctionsIntegerPersonality = (5 << 8),
     NSPointerFunctionsCopyIn = (1 << 16),
 };
+
+FOUNDATION_EXPORT_CLASS
+@interface NSPointerFunctions : NSObject <NSCopying>
+
+- (instancetype)initWithOptions:(NSPointerFunctionsOptions)options;
++ (NSPointerFunctions*)pointerFunctionsWithOptions:(NSPointerFunctionsOptions)options;
+
+@property (nonnull) NSUInteger (*hashFunction)(const void*, NSUInteger (*)(const void*));
+@property (nonnull) BOOL (*isEqualFunction)(const void*, const void*, NSUInteger (*)(const void*));
+@property (nonnull) NSUInteger (*sizeFunction)(const void*);
+@property (nullable) NSString* (*descriptionFunction)(const void*);
+@property (nonnull) void* (*acquireFunction)(const void*, NSUInteger (*)(const void*), BOOL);
+@property (nonnull) void (*relinquishFunction)(const void*, NSUInteger (*)(const void*));
+@property BOOL usesStrongWriteBarrier;
+@property BOOL usesWeakReadAndWriteBarriers;
+
+@end

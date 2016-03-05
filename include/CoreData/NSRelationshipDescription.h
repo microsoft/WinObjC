@@ -1,39 +1,38 @@
-/* Copyright (c) 2008 Dan Knapp
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#pragma once
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-#ifndef _NSRELATIONSHIPDESCRIPTION_H_
-#define _NSRELATIONSHIPDESCRIPTION_H_
-
+#import <CoreData/CoreDataExport.h>
+#import <Foundation/NSObject.h>
 #import <CoreData/NSPropertyDescription.h>
 
-typedef enum {
-    NSNoActionDeleteRule,
-    NSNullifyDeleteRule,
-    NSCascadeDeleteRule,
-    NSDenyDeleteRule
-} NSDeleteRule;
+@class NSEntityDescription;
+@class NSData;
 
-@interface NSRelationshipDescription : NSPropertyDescription
+typedef NS_ENUM(NSUInteger, NSDeleteRule) { NSNoActionDeleteRule, NSNullifyDeleteRule, NSCascadeDeleteRule, NSDenyDeleteRule };
 
-- (BOOL)isToMany;
-- (int)maxCount;
-- (int)minCount;
-- (NSDeleteRule)deleteRule;
-- (NSEntityDescription *)destinationEntity;
-- (NSRelationshipDescription *)inverseRelationship;
-
-- (void)setMaxCount:(int)value;
-- (void)setMinCount:(int)value;
-- (void)setDeleteRule:(NSDeleteRule)value;
-- (void)setDestinationEntity:(NSEntityDescription *)value;
-- (void)setInverseRelationship:(NSRelationshipDescription *)value;
-- (BOOL)isOrdered;
-
+COREDATA_EXPORT_CLASS
+@interface NSRelationshipDescription : NSPropertyDescription <NSCoding, NSCopying>
+@property (assign, nonatomic) NSEntityDescription* destinationEntity STUB_PROPERTY;
+@property (assign, nonatomic) NSRelationshipDescription* inverseRelationship STUB_PROPERTY;
+@property NSDeleteRule deleteRule STUB_PROPERTY;
+@property NSUInteger maxCount STUB_PROPERTY;
+@property NSUInteger minCount STUB_PROPERTY;
+@property (readonly, getter=isToMany) BOOL toMany STUB_PROPERTY;
+@property (getter=isOrdered) BOOL ordered STUB_PROPERTY;
+@property (readonly, copy) NSData* versionHash STUB_PROPERTY;
 @end
-
-#endif /* _NSRELATIONSHIPDESCRIPTION_H_ */

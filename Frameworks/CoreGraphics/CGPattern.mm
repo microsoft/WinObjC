@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,9 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "CGPatternInternal.h"
-#include "CGContextInternal.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import "CGPatternInternal.h"
+#import "CGContextInternal.h"
 
 @implementation CGPattern {
     CGImageRef generatedImage;
@@ -165,4 +166,21 @@ void CGPatternRelease(CGPatternRef pattern) {
 */
 CGPatternRef CGPatternCreateFromImage(CGImageRef img) {
     return [CGPattern patternWithImage:img];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGPatternGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+ */
+CGPatternRef CGPatternRetain(CGPatternRef pattern) {
+    CFRetain((id)pattern);
+    return pattern;
 }

@@ -21,8 +21,6 @@
 
 #pragma once
 
-#import <UIKit/UICollectionViewCommon.h>
-
 @class UICollectionView, UICollectionViewLayout, UICollectionViewLayoutAttributes;
 
 @interface UICollectionViewData : NSObject

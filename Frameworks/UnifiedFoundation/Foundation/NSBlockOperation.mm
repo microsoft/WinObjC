@@ -52,11 +52,18 @@
 }
 
 - (void)main {
-    for (void (^curblock)() in (NSArray*)_executionBlocks) {
+    for (void (^curblock)() in(NSArray*)_executionBlocks) {
         curblock();
     }
     _executionBlocks = nil;
     _executionBlocks.attach([NSMutableArray new]);
+}
+
+/**
+@Status Interoperable
+*/
+- (NSArray*)executionBlocks {
+    return [[_executionBlocks retain] autorelease];
 }
 
 @end

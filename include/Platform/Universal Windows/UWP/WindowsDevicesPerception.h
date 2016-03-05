@@ -432,7 +432,7 @@ WINRT_EXPORT
 @property (readonly) WFTimeSpan* frameDuration;
 @property (readonly) int height;
 @property (readonly) int width;
-- (BOOL)isEqual:(WDPPerceptionVideoProfile*)other;
+- (BOOL)IsEqual:(WDPPerceptionVideoProfile*)other;
 @end
 
 #endif // __WDPPerceptionVideoProfile_DEFINED__

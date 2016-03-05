@@ -15,69 +15,8 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Foundation/NSNotificationCenter.h"
-
-@implementation NSNotification {
-    NSString* notificationName;
-    id notificationObj;
-    id userInfo;
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSNotification*)notificationWithName:(NSString*)name object:(id)obj {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = nil;
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSNotification*)notificationWithName:(NSString*)name object:(id)obj userInfo:(NSDictionary*)info {
-    NSNotification* ret = [self alloc];
-
-    ret->notificationName = [name retain];
-    ret->notificationObj = [obj retain];
-    ret->userInfo = [info retain];
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)object {
-    return notificationObj;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)name {
-    return notificationName;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)userInfo {
-    return userInfo;
-}
-
-- (void)dealloc {
-    [notificationName release];
-    [notificationObj release];
-    [userInfo release];
-
-    [super dealloc];
-}
-@end
+#import <Foundation/NSNotification.h>
+#import <Foundation/NSNotificationCenter.h>
 
 @interface NSNotificationReceiver : NSObject {
 @public
@@ -152,7 +91,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
     NSObject* sender = [notification object];
     int count = CFArrayGetCount((CFArrayRef)arr);
     unsigned int numSendTo = 0;
-    id* sendTo = (id*)malloc(count * sizeof(id));
+    id* sendTo = (id*)IwMalloc(count * sizeof(id));
     for (unsigned int i = 0; i < count; i++) {
         NSNotificationReceiver* observer = (NSNotificationReceiver*)CFArrayGetValueAtIndex((CFArrayRef)arr, i);
         if (!observer->valid) {
@@ -181,7 +120,7 @@ static NSMutableArray* arrayForObservers(NSNotificationCenter* self, NSString* k
         }
         [observer release];
     }
-    free(sendTo);
+    IwFree(sendTo);
 }
 
 /**

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,53 +14,62 @@
 //
 //******************************************************************************
 
-#ifndef _NSSTRINGDRAWING_H_
-#define _NSSTRINGDRAWING_H_
+#pragma once
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSString.h>
-#import <Foundation/NSAttributedString.h>
+#import <UIKit/UIKitExport.h>
+#import <UIKit/UIKitTypes.h>
+#import <CoreGraphics/CGGeometry.h>
+#import <UIKit/NSParagraphStyle.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/NSAttributedString+UIKitAdditions.h>
 
-typedef NS_OPTIONS(NSInteger, NSStringDrawingOptions) {
-    NSStringDrawingTruncatesLastVisibleLine = 1 << 5,
-    NSStringDrawingUsesLineFragmentOrigin = 1 << 0,
-    NSStringDrawingUsesFontLeading = 1 << 1,
-    NSStringDrawingUsesDeviceMetrics = 1 << 3,
-};
+@class NSDictionary;
+@class NSString;
+@class NSStringDrawingContext;
+@class UIFont;
 
-@interface NSStringDrawingContext : NSObject
+UIKIT_EXPORT NSString* const UITextAttributeFont;
+UIKIT_EXPORT NSString* const UITextAttributeTextColor;
+UIKIT_EXPORT NSString* const UITextAttributeTextShadowColor;
+UIKIT_EXPORT NSString* const UITextAttributeTextShadowOffset;
 
-@property (nonatomic, readonly) CGFloat actualScaleFactor;
-@property (nonatomic) CGFloat minimumScaleFactor;
-@property (nonatomic, readonly) CGRect totalBounds;
-
-@property (nonatomic, readonly) CGFloat actualTrackingAdjustment; // depr
-@property (nonatomic) CGFloat minimumTrackingAdjustment; // depr
-
-@end
-
-@interface NSString (NSStringDrawing)
-- (CGSize)sizeWithAttributes:(NSDictionary*)attrs;
+@interface NSString (UIKit)
+- (CGSize)sizeWithFont:(UIFont*)font;
+- (CGSize)sizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)sizeWithFont:(UIFont*)font
+           minFontSize:(CGFloat)minFontSize
+        actualFontSize:(CGFloat*)actualFontSize
+              forWidth:(CGFloat)width
+         lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size;
+- (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)drawAtPoint:(CGPoint)point withFont:(UIFont*)font;
+- (CGSize)drawAtPoint:(CGPoint)point forWidth:(CGFloat)width withFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont*)font
+             fontSize:(CGFloat)fontSize
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment;
+- (CGSize)drawAtPoint:(CGPoint)point
+             forWidth:(CGFloat)width
+             withFont:(UIFont*)font
+          minFontSize:(CGFloat)minFontSize
+       actualFontSize:(CGFloat*)actualFontSize
+        lineBreakMode:(NSLineBreakMode)lineBreakMode
+   baselineAdjustment:(UIBaselineAdjustment)baselineAdjustment;
 - (void)drawAtPoint:(CGPoint)point withAttributes:(NSDictionary*)attrs;
-@end
-
-@interface NSString (NSExtendedStringDrawing)
+- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font;
+- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode;
+- (CGSize)drawInRect:(CGRect)rect withFont:(UIFont*)font lineBreakMode:(NSLineBreakMode)lineBreakMode alignment:(NSTextAlignment)alignment;
 - (CGRect)boundingRectWithSize:(CGSize)size
                        options:(NSStringDrawingOptions)options
                     attributes:(NSDictionary*)attributes
                        context:(NSStringDrawingContext*)context;
+- (void)drawInRect:(CGRect)rect withAttributes:(NSDictionary*)attrs;
+- (void)drawWithRect:(CGRect)rect
+             options:(NSStringDrawingOptions)options
+          attributes:(NSDictionary*)attributes
+             context:(NSStringDrawingContext*)context;
+- (CGSize)sizeWithAttributes:(NSDictionary*)attrs;
 @end
-
-@interface NSAttributedString (NSExtendedStringDrawing)
-- (void)drawAtPoint:(CGPoint)point;
-- (void)drawInRect:(CGRect)rect;
-- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
-- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context;
-- (CGRect)boundingRectWithSize:(CGSize)size
-                       options:(NSStringDrawingOptions)options
-                    attributes:(NSDictionary*)attributes
-                       context:(NSStringDrawingContext*)context;
-- (CGSize)size;
-@end
-
-#endif /* _NSSTRINGDRAWING_H_ */

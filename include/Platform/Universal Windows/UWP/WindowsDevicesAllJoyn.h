@@ -152,7 +152,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDAAllJoynBusAttachment : RTObject
 + (WDAAllJoynBusAttachment*)create:(NSString*)connectionSpecification ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDAAllJoynAboutData* aboutData;
 @property (readonly) NSMutableArray* authenticationMechanisms;
 @property (readonly) NSString* connectionSpecification;

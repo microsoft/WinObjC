@@ -15,9 +15,10 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSIndexPath.h"
 
-@implementation NSIndexPath : NSObject
+@implementation NSIndexPath
 
 /**
  @Status Interoperable
@@ -62,9 +63,9 @@
 */
 - (instancetype)initWithIndexes:(unsigned*)indexes length:(unsigned)length {
     _length = length;
-    _indexes = (unsigned*)EbrMalloc(length * sizeof(unsigned));
+    _indexes = (unsigned*)IwMalloc(length * sizeof(unsigned));
     if (_indexes == nil) {
-		[self release];
+        [self release];
         return nil;
     }
 
@@ -85,7 +86,7 @@
 
 - (void)dealloc {
     if (_indexes) {
-        EbrFree(_indexes);
+        IwFree(_indexes);
     }
     [super dealloc];
 }
@@ -123,13 +124,13 @@
 - (NSIndexPath*)indexPathByAddingIndex:(int)newIndex {
     id ret = [[self class] alloc];
 
-    NSUInteger* indexCopy = (NSUInteger*)EbrMalloc((_length + 1) * sizeof(DWORD));
+    NSUInteger* indexCopy = (NSUInteger*)IwMalloc((_length + 1) * sizeof(DWORD));
     memcpy(indexCopy, _indexes, _length * sizeof(DWORD));
     indexCopy[_length] = newIndex;
 
     [ret initWithIndexes:indexCopy length:_length + 1];
 
-    EbrFree(indexCopy);
+    IwFree(indexCopy);
 
     return [ret autorelease];
 }
@@ -207,6 +208,49 @@
 - (NSIndexPath*)indexPathByRemovingLastIndex {
     UNIMPLEMENTED();
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)init {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)getIndexes:(NSUInteger*)indexes range:(NSRange)positionRange {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 @end

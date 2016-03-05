@@ -347,7 +347,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVAccessibilitySettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL highContrast;
 @property (readonly) NSString* highContrastScheme;
 - (EventRegistrationToken)addHighContrastChangedEvent:(void (^)(WUVAccessibilitySettings*, RTObject*))del;
@@ -362,7 +362,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVUISettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL animationsEnabled;
 @property (readonly) unsigned int caretBlinkRate;
 @property (readonly) BOOL caretBrowsingEnabled;

@@ -15,6 +15,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #import "Starboard.h"
+#import "StubReturn.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSString.h"
 #import "Foundation/NSMutableDictionary.h"
@@ -26,21 +27,21 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSThread.h"
 #import "NSPersistentDomain.h"
 
-NSString* const NSGlobalDomain = @"NSGlobalDomain";
-NSString* const NSArgumentDomain = @"NSArgumentDomain";
-NSString* const NSRegistrationDomain = @"NSRegistrationDomain";
+FOUNDATION_EXPORT NSString* const NSGlobalDomain = @"NSGlobalDomain";
+FOUNDATION_EXPORT NSString* const NSArgumentDomain = @"NSArgumentDomain";
+FOUNDATION_EXPORT NSString* const NSRegistrationDomain = @"NSRegistrationDomain";
 
-NSString* const NSMonthNameArray = @"NSMonthNameArray";
-NSString* const NSWeekDayNameArray = @"NSWeekDayNameArray";
-NSString* const NSTimeFormatString = @"NSTimeFormatString";
-NSString* const NSDateFormatString = @"NSDateFormatString";
-NSString* const NSAMPMDesignation = @"NSAMPMDesignation";
-NSString* const NSTimeDateFormatString = @"NSTimeDateFormatString";
+FOUNDATION_EXPORT NSString* const NSMonthNameArray = @"NSMonthNameArray";
+FOUNDATION_EXPORT NSString* const NSWeekDayNameArray = @"NSWeekDayNameArray";
+FOUNDATION_EXPORT NSString* const NSTimeFormatString = @"NSTimeFormatString";
+FOUNDATION_EXPORT NSString* const NSDateFormatString = @"NSDateFormatString";
+FOUNDATION_EXPORT NSString* const NSAMPMDesignation = @"NSAMPMDesignation";
+FOUNDATION_EXPORT NSString* const NSTimeDateFormatString = @"NSTimeDateFormatString";
 
-NSString* const NSShortWeekDayNameArray = @"NSShortWeekDayNameArray";
-NSString* const NSShortMonthNameArray = @"NSShortMonthNameArray";
+FOUNDATION_EXPORT NSString* const NSShortWeekDayNameArray = @"NSShortWeekDayNameArray";
+FOUNDATION_EXPORT NSString* const NSShortMonthNameArray = @"NSShortMonthNameArray";
 
-NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeNotification";
+FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUserDefaultsDidChangeNotification";
 
 @implementation NSUserDefaults {
     NSMutableDictionary* _domains;
@@ -304,7 +305,7 @@ static id deepCopyValue(id obj) {
     if ([obj isKindOfClass:[NSArray class]]) {
         int count = [obj count];
         int i = 0;
-        id* objs = (id*)EbrMalloc(count * sizeof(id));
+        id* objs = (id*)IwMalloc(count * sizeof(id));
         for (id curObj in obj) {
             objs[i] = deepCopyValue(curObj);
             i++;
@@ -322,14 +323,14 @@ static id deepCopyValue(id obj) {
             [objs[i] release];
         }
 
-        EbrFree(objs);
+        IwFree(objs);
 
         return ret;
     } else if ([obj isKindOfClass:[NSDictionary class]]) {
         int count = [obj count];
         int i = 0;
-        id* objs = (id*)EbrMalloc(count * sizeof(id));
-        id* keys = (id*)EbrMalloc(count * sizeof(id));
+        id* objs = (id*)IwMalloc(count * sizeof(id));
+        id* keys = (id*)IwMalloc(count * sizeof(id));
 
         for (id curObj in obj) {
             keys[i] = curObj;
@@ -348,8 +349,8 @@ static id deepCopyValue(id obj) {
             [objs[i] release];
         }
 
-        EbrFree(objs);
-        EbrFree(keys);
+        IwFree(objs);
+        IwFree(keys);
 
         return ret;
     }
@@ -367,7 +368,7 @@ static id deepCopyValue(id obj) {
 
     value = deepCopyValue(value);
 
-    [[self persistantDomain] setObject:value forKey:key];
+    [(NSMutableDictionary*)[self persistantDomain] setObject:value forKey:key];
     [value release];
     [_dictionaryRep autorelease];
     _dictionaryRep = nil;
@@ -481,7 +482,7 @@ static id deepCopyValue(id obj) {
  @Status Interoperable
 */
 - (void)removeObjectForKey:(NSString*)key {
-    [[self persistantDomain] removeObjectForKey:key];
+    [(NSMutableDictionary*)[self persistantDomain] removeObjectForKey:key];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
 }
@@ -519,4 +520,91 @@ static id deepCopyValue(id obj) {
     UNIMPLEMENTED();
     EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)initWithUser:(NSString*)username {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithSuiteName:(NSString*)suitename {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSArray*)persistentDomainNames {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)objectIsForcedForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)objectIsForcedForKey:(NSString*)key inDomain:(NSString*)domain {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeVolatileDomainForName:(NSString*)domainName {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setVolatileDomain:(NSDictionary*)domain forName:(NSString*)domainName {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)volatileDomainForName:(NSString*)domainName {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)addSuiteNamed:(NSString*)suiteName {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeSuiteNamed:(NSString*)suiteName {
+    UNIMPLEMENTED();
+}
+
 @end

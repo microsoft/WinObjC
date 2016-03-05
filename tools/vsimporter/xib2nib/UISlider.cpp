@@ -43,6 +43,16 @@ void UISlider::InitFromStory(XIBObject *obj)
 {
     UIControl::InitFromStory(obj);
 
+    if (getAttrib("minValue")) {
+        _minValue = strtof(getAttrAndHandle("minValue"), NULL);
+    }
+    if (getAttrib("maxValue")) {
+        _maxValue = strtof(getAttrAndHandle("maxValue"), NULL);
+    }
+    if (getAttrib("value")) {
+        _value = strtof(getAttrAndHandle("value"), NULL);
+    }
+
     _outputClassName = "UISlider";
 }
 

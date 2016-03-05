@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,46 +13,52 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _GKLEADERBOARD_H_
-#define _GKLEADERBOARD_H_
+#pragma once
 
 #import <GameKit/GameKitExport.h>
+
+#import <Foundation/NSObject.h>
+#import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSRange.h>
-#include <GameKit/GKScore.h>
-#include <stdint.h>
-
-enum {
-    GKLeaderboardPlayerScopeGlobal = 0,
-    GKLeaderboardPlayerScopeFriendsOnly = 1,
-};
-typedef uint32_t GKLeaderboardPlayerScope;
-
-enum {
-    GKLeaderboardTimeScopeToday = 0,
-    GKLeaderboardTimeScopeWeek = 1,
-    GKLeaderboardTimeScopeAllTime = 2,
-};
-typedef uint32_t GKLeaderboardTimeScope;
 
 @class NSArray;
 @class NSError;
+@class NSString;
+@class UIImage;
+@class GKScore;
 
-@interface GKLeaderboard : NSObject
+typedef NSInteger GKLeaderboardTimeScope;
+typedef NSInteger GKLeaderboardPlayerScope;
 
-@property (nonatomic, retain) NSString* category;
-@property (nonatomic, assign) GKLeaderboardPlayerScope playerScope;
-@property (nonatomic, assign) GKLeaderboardTimeScope timeScope;
-@property (nonatomic, assign) NSRange range;
-@property (nonatomic, readonly, retain) NSArray* scores;
-@property (nonatomic, readonly, retain) GKScore* localPlayerScore;
-@property (readonly, getter=isLoading) BOOL loading;
+enum {
+    GKLeaderboardTimeScopeToday = 0,
+    GKLeaderboardTimeScopeWeek,
+    GKLeaderboardTimeScopeAllTime,
+};
+enum {
+    GKLeaderboardPlayerScopeGlobal = 0,
+    GKLeaderboardPlayerScopeFriendsOnly,
+};
 
-+ (void)loadCategoriesWithCompletionHandler:(void (^)(NSArray* categories, NSArray* titles, NSError* error))completionHandler;
-
-- (id)initWithPlayerIDs:(NSArray*)playerIDs;
-- (void)loadScoresWithCompletionHandler:(void (^)(NSArray* scores, NSError* error))completionHandler;
-
+GAMEKIT_EXPORT_CLASS
+@interface GKLeaderboard : NSObject <NSObject>
++ (void)loadLeaderboardsWithCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
++ (void)loadCategoriesWithCompletionHandler:(void (^)(NSArray*, NSArray*, NSError*))completionHandler STUB_METHOD;
+- (instancetype)init STUB_METHOD;
+- (instancetype)initWithPlayerIDs:(NSArray*)playerIDs STUB_METHOD;
+- (instancetype)initWithPlayers:(NSArray*)players STUB_METHOD;
+- (void)loadImageWithCompletionHandler:(void (^)(UIImage*, NSError*))completionHandler STUB_METHOD;
+- (void)loadScoresWithCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
++ (void)setDefaultLeaderboard:(NSString*)leaderboardIdentifier withCompletionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+@property (readonly, retain, nonatomic) NSString* groupIdentifier STUB_PROPERTY;
+@property (readonly, getter=isLoading) BOOL loading STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* title STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSArray* scores STUB_PROPERTY;
+@property (readonly, retain, nonatomic) GKScore* localPlayerScore STUB_PROPERTY;
+@property (readonly, assign, nonatomic) NSUInteger maxRange STUB_PROPERTY;
+@property (assign, nonatomic) GKLeaderboardPlayerScope playerScope STUB_PROPERTY;
+@property (assign, nonatomic) NSRange range STUB_PROPERTY;
+@property (assign, nonatomic) GKLeaderboardTimeScope timeScope STUB_PROPERTY;
+@property (copy, nonatomic) NSString* identifier STUB_PROPERTY;
+@property (copy, nonatomic) NSString* category STUB_PROPERTY;
 @end
-
-#endif /* _GKLEADERBOARD_H_ */

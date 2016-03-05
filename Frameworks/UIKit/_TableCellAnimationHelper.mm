@@ -17,14 +17,14 @@
 #include "Starboard.h"
 #include "_TableCellAnimationHelper.h"
 
-@implementation _TableCellAnimationHelper : NSObject
+@implementation _TableCellAnimationHelper
 
 - (void)animationFinished {
     for (int i = 0; i < _numCellsToBeRemoved; i++) {
         [_cellsToBeRemoved[i] removeFromSuperview];
         [_cellsToBeRemoved[i] release];
     }
-    EbrFree(_cellsToBeRemoved);
+    IwFree(_cellsToBeRemoved);
 
     [self release];
 }

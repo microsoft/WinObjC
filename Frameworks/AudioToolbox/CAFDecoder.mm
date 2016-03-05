@@ -197,7 +197,7 @@ int CAFDecoder::GetUsedInputBufferByteSize(EbrFile* fpIn) {
 }
 
 Byte* CAFDecoder::GetBytes(EbrFile* fpIn, int len) {
-    Byte* ret = (Byte*)malloc(len);
+    Byte* ret = (Byte*)IwMalloc(len);
 
     EbrFread(ret, 1, len, fpIn);
 
@@ -278,7 +278,7 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
             std::advance(theIterator, 1);
         }
 
-        free(theInputData);
+        IwFree(theInputData);
 
         // ConsumeInputData(inputByteSize);
     } else {

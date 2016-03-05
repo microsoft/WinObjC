@@ -13,3 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <StubIncludes.h>
+#import <CoreFoundation/CFBase.h>
+
+COREFOUNDATION_EXPORT CFStringRef CFCopyDescription(CFTypeRef self);
+COREFOUNDATION_EXPORT void CFShow(CFTypeRef self) STUB_METHOD;

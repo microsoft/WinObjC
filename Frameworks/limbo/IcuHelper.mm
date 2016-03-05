@@ -34,7 +34,7 @@ int _icuTotal = 0;
 
 void* icuMalloc(const void* context, size_t size) {
     _icuTotal += size;
-    return malloc(size);
+    return IwMalloc(size);
 }
 
 void icuFree(const void* context, void* mem) {
@@ -43,7 +43,7 @@ void icuFree(const void* context, void* mem) {
     //  Use EbrBlockSize!
     // if ( mem ) memcpy(&ret, ((DWORD *) mem) - 3, 4);
     _icuTotal -= ret;
-    free(mem);
+    IwFree(mem);
 }
 
 void* icuRealloc(const void* context, void* mem, size_t size) {
@@ -53,7 +53,7 @@ void* icuRealloc(const void* context, void* mem, size_t size) {
     // if ( mem ) memcpy(&ret, ((DWORD *) mem) - 3, 4);
     _icuTotal -= ret;
     _icuTotal += size;
-    return realloc(mem, size);
+    return IwRealloc(mem, size);
 }
 
 static void destroyConverter(void* ptr) {

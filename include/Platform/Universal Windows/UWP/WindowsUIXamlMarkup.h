@@ -176,7 +176,7 @@ WINRT_EXPORT
 + (RTObject*)convertValue:(WUXITypeName*)type value:(RTObject*)value;
 + (void)setPropertyFromString:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(NSString*)value;
 + (void)setPropertyFromBoolean:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(BOOL)value;
-+ (void)setPropertyFromChar16:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WCHAR)value;
++ (void)setPropertyFromChar16:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(wchar_t)value;
 + (void)setPropertyFromDateTime:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WFDateTime*)value;
 + (void)setPropertyFromDouble:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(double)value;
 + (void)setPropertyFromInt32:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(int)value;

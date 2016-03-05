@@ -15,24 +15,63 @@
 //******************************************************************************
 
 #import "ImagesViewController.h"
+#import <CoreImage/CIImage.h>
+#import <CoreImage/CIContext.h>
+#import <CoreGraphics/CGImage.h>
 
 @implementation ImagesViewController
+
++ (UIImage*)scaleImage:(CGImageRef)imageRef scaledRect:(CGRect)rect quality:(CGInterpolationQuality)quality {
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextSetInterpolationQuality(context, quality);
+    CGAffineTransform flipVertical = CGAffineTransformMake(1, 0, 0, -1, 0, rect.size.height);
+    CGContextConcatCTM(context, flipVertical);  
+    CGContextDrawImage(context, rect, imageRef);
+    CGImageRef scaledImageRef = CGBitmapContextCreateImage(context);
+    UIImage* scaledImage = [UIImage imageWithCGImage:scaledImageRef];
+    CGImageRelease(scaledImageRef);
+
+    UIGraphicsEndImageContext();
+
+    return scaledImage;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor blackColor];
-    UIImageView *imagesView = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-        
+    CGRect rect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    UIImageView* imagesView = [[UIImageView alloc] initWithFrame: rect];
+    UIImage* photo = [UIImage imageNamed:@"photo9.jpg"];
+    UIImage* scaledPhotoHighInterpolation = [ImagesViewController scaleImage:
+                                                photo.CGImage
+                                                scaledRect:rect
+                                                quality:kCGInterpolationHigh];
+    UIImage* scaledPhotoNoInterpolation = [ImagesViewController scaleImage:
+                                                photo.CGImage 
+                                                scaledRect:rect
+                                                quality:kCGInterpolationNone];
+
+    CIContext* context = [CIContext contextWithOptions:nil];
+    photo = [UIImage imageNamed:@"photo2.jpg"];
+    CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
+    CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
+
     imagesView.animationImages = [NSArray arrayWithObjects:
+                            scaledPhotoHighInterpolation,
+                            scaledPhotoNoInterpolation,
                             [UIImage imageNamed:@"photo1.jpg"],
                             [UIImage imageNamed:@"photo2.jpg"],
+                            [UIImage imageWithCGImage:cgImage],
                             [UIImage imageNamed:@"photo3.jpg"],
                             [UIImage imageNamed:@"photo4.jpg"],
                             [UIImage imageNamed:@"photo5.jpg"],
                             [UIImage imageNamed:@"photo6.jpg"],
                             [UIImage imageNamed:@"photo7.gif"],
                             [UIImage imageNamed:@"photo8.tif"],
-                                                            nil];
+                            nil];
+
     imagesView.animationDuration = 10.0;
 
     [imagesView setContentMode:UIViewContentModeScaleAspectFit];
@@ -40,6 +79,7 @@
     imagesView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [[self view] addSubview: imagesView];
 }
+
 @end
 
 

@@ -13,5 +13,30 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#import <CoreFoundation/CFBase.h>
+#import <CoreFoundation/CFDictionary.h>
+#import <Security/SecBase.h>
+
+// This header file is not yet fully implemented
+
+typedef struct OpaqueSecPolicyRef* SecPolicyRef;
+
+SECURITY_EXPORT const CFTypeRef kSecPolicyOid;
+SECURITY_EXPORT const CFTypeRef kSecPolicyName;
+SECURITY_EXPORT const CFTypeRef kSecPolicyClient;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleX509Basic;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleSSL;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleSMIME;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleEAP;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleIPsec;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleCodeSigning;
+SECURITY_EXPORT const CFTypeRef kSecPolicyMacAppStoreReceipt;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleIDValidation;
+SECURITY_EXPORT const CFTypeRef kSecPolicyAppleTimeStamping;
+
+SECURITY_EXPORT CFTypeID SecPolicyGetTypeID(void) STUB_METHOD;
+SECURITY_EXPORT CFDictionaryRef SecPolicyCopyProperties(SecPolicyRef policyRef) STUB_METHOD;
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateBasicX509(void) STUB_METHOD;
+SECURITY_EXPORT SecPolicyRef SecPolicyCreateSSL(Boolean server, CFStringRef hostname) STUB_METHOD;

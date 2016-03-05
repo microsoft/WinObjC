@@ -21,6 +21,7 @@
 #import "CoreLocation/CLLocation.h"
 
 #include <type_traits>
+#include <objc/encoding.h>
 
 static NSValueType valueTypeFromObjCType(const char* objcType) {
     if (strncmp(objcType, "{CGSize", 7) == 0) {
@@ -330,7 +331,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     return @encode(NSRange);
 }
 
-- (NSRange)NSRangeValue {
+- (NSRange)rangeValue {
     return _val;
 }
 
@@ -340,6 +341,14 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 
 - (void)getValue:(void*)dest {
     memcpy(dest, (char*)&_val, sizeof(NSRange));
+}
+
+- (const void*)_rawBytes {
+    return &_val;
+}
+
+- (size_t)_rawSize {
+    return sizeof(_val);
 }
 @end
 
@@ -429,9 +438,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (NSValue*)initWithBytes:(const void*)ptr objCType:(const char*)ocType {
     if ((self = [super init]) != nil) {
         _valueType = NSValueTypeGeneric;
-        _objcType = _strdup(ocType);
-        size_t size = getArgumentSize(ocType);
-        _valPtr = malloc(size);
+        _objcType = IwStrDup(ocType);
+        size_t size = objc_sizeof_type(ocType);
+        _valPtr = IwMalloc(size);
         memcpy(_valPtr, ptr, size);
     }
     return self;
@@ -439,10 +448,10 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 
 - (void)dealloc {
     if (_objcType) {
-        free((void*)_objcType);
+        IwFree((void*)_objcType);
     }
     if (_valPtr) {
-        free(_valPtr);
+        IwFree(_valPtr);
     }
     [super dealloc];
 }
@@ -456,7 +465,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (void)getValue:(void*)dest {
-    memcpy(dest, _valPtr, getArgumentSize(_objcType));
+    memcpy(dest, _valPtr, objc_sizeof_type(_objcType));
 }
 
 - (NSString*)description {
@@ -468,7 +477,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 }
 
 - (size_t)_rawSize {
-    return getArgumentSize(_objcType);
+    return objc_sizeof_type(_objcType);
 }
 @end
 
@@ -682,7 +691,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (void)encodeWithCoder:(NSKeyedArchiver*)coder {
     [coder encodeInt:(int)_valueType forKey:@"NSV.type"];
     [coder encodeObject:[NSString stringWithUTF8String:[self objCType]] forKey:@"NSV.objcType"];
-    [coder encodeBytes:[self _rawBytes] length:[self _rawSize] forKey:@"NSV.data"];
+    [coder encodeBytes:static_cast<const unsigned char*>([self _rawBytes]) length:[self _rawSize] forKey:@"NSV.data"];
 }
 
 /**
@@ -747,7 +756,7 @@ static unsigned hashBytes(const void* bytes, size_t len) {
 */
 - (CLLocationCoordinate2D)MKCoordinateValue {
     UNIMPLEMENTED();
-    return {0,0};
+    return { 0, 0 };
 }
 
 /**

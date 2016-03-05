@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableData.h"
 #include "NSSSLHandler.h"
@@ -42,7 +43,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 }
 #endif
 
-@implementation NSSSLHandler : NSObject
+@implementation NSSSLHandler
 #if defined(WIN32) || defined(ANDROID)
 + (id)initialize {
     if (self == [NSSSLHandler class]) {
@@ -105,7 +106,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
     chance it and just maintain a buffer for this purpose. */
 
     _stableBufferCapacity = 8192;
-    _stableBuffer = (uint8_t*)EbrMalloc(_stableBufferCapacity);
+    _stableBuffer = (uint8_t*)IwMalloc(_stableBufferCapacity);
     _readBuffer = [[NSMutableData alloc] init];
 
     return self;
@@ -114,7 +115,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 - (id)dealloc {
     [_properties release];
     SSL_free(_connection);
-    EbrFree(_stableBuffer);
+    IwFree(_stableBuffer);
     [super dealloc];
 
     return self;
@@ -363,11 +364,160 @@ id close__unused() {
 
     return self;
 }
-#endif
+#else
+/*
+ @Status Stub
+ @Notes
+*/
+- (int)writePlaintext:(const uint8_t*)buffer maxLength:(int)length {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
 
-#if defined(WIN32) || defined(ANDROID)
-#endif
-#if defined(WIN32) || defined(ANDROID)
+/*
+ @Status Stub
+ @Notes
+*/
+- (unsigned)readPlaintext:(uint8_t*)buffer maxLength:(unsigned)length {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)initWithProperties:(id)properties {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)dealloc {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)isHandshaking {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)writeBytesAvailable {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)wantsMoreIncoming {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)readEncrypted:(uint8_t*)buffer maxLength:(int)length {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)_readPostSSL:(uint8_t*)buffer maxLength:(int)length {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)readBytesAvailable {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)transferOneBufferFromSSLToSocket:(id)socket {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)transferOneBufferFromSocketToSSL:(id)socket {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)runHandshakeIfNeeded:(id)socket {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)runWithSocket:(id)socket {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (id)setOutputStream:(id)stream {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
++ (id)initialize {
+    UNIMPLEMENTED()
+    return StubReturn();
+}
+
 #endif
 
 @end

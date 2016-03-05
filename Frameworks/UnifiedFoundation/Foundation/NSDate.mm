@@ -17,9 +17,8 @@
 #include <time.h>
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSDate.h"
-
-extern const NSTimeInterval NSTimeIntervalSince1970 = (NSTimeInterval)978307200.0;
 
 double TimeIntervalSinceReferenceDate() {
     double result;
@@ -32,7 +31,7 @@ double TimeIntervalSinceReferenceDate() {
     return result;
 }
 
-@implementation NSDate : NSObject
+@implementation NSDate
 
 // Number of seconds between Jan 1, 1601 UTC (Windows FILETIME) and Jan 1, 1970 UTC (POSIX/Epoch time)
 static const int64_t c_windowsToUnixNumSecondsOffset = 11644473600LL;
@@ -326,6 +325,24 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     // Note: this corrects for the 10 year base time difference between gps epoch (1980) and  posix epoch (1970)
     int64_t posixEpoch = (windowsFileTime / c_windowsToUnixTimeUnitRatio) - c_windowsToUnixNumSecondsOffset * 1000LL;
     return [NSDate dateWithTimeIntervalSince1970:(double)posixEpoch];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

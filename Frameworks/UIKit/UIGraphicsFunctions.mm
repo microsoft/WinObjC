@@ -15,12 +15,21 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include <StubReturn.h>
 #include "UIKit/UIKit.h"
 #include "CGContextInternal.h"
 
 #define MAX_CONTEXT_DEPTH 128
 __declspec(thread) CGContextRef _currentCGContext[MAX_CONTEXT_DEPTH];
 __declspec(thread) int _currentCGContextDepth;
+
+/**
+ @Status Stub
+ @Notes
+*/
+void UIRectFrameUsingBlendMode(CGRect rect, CGBlendMode blendMode) {
+    UNIMPLEMENTED();
+}
 
 /**
  @Status Interoperable
@@ -139,6 +148,31 @@ void UIRectFillUsingBlendMode(CGRect rect, CGBlendMode mode) {
 }
 
 /**
+ @Status Stub
+ @Notes
+*/
+void UIImageWriteToSavedPhotosAlbum(UIImage* image, id completionTarget, SEL completionSelector, void* contextInfo) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void UISaveVideoAtPathToSavedPhotosAlbum(NSString* videoPath, id completionTarget, SEL completionSelector, void* contextInfo) {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+BOOL UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(NSString* videoPath) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
  @Status Interoperable
 */
 NSString* NSStringFromCGPoint(CGPoint p) {
@@ -157,4 +191,49 @@ NSString* NSStringFromCGSize(CGSize s) {
 */
 NSString* NSStringFromCGRect(CGRect r) {
     return [NSString stringWithFormat:@"{{%f, %f}, {%f, %f}}", r.origin.x, r.origin.y, r.size.width, r.size.height];
+}
+
+/**
+ @Status Interoperable
+*/
+CGPoint CGPointFromString(NSString* strPt) {
+    if (!strPt) {
+        return { 0, 0 };
+    }
+
+    CGPoint ret;
+
+    const char* str = [strPt UTF8String];
+    sscanf_s(str, "{%f, %f}", &ret.x, &ret.y);
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+CGRect CGRectFromString(NSString* string) {
+    if (!string) {
+        return { { 0, 0 }, 0, 0 };
+    }
+
+    CGRect ret;
+
+    const char* str = [string UTF8String];
+    sscanf_s(str, "{{%f, %f}, {%f, %f}}", &ret.origin.x, &ret.origin.y, &ret.size.width, &ret.size.height);
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+CGSize CGSizeFromString(NSString* strSize) {
+    if (!strSize) {
+        return { 0, 0 };
+    }
+
+    CGSize ret;
+
+    const char* str = [strSize UTF8String];
+    sscanf_s(str, "{%f, %f}", &ret.width, &ret.height);
+    return ret;
 }

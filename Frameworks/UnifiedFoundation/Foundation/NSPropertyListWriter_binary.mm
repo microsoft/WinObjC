@@ -34,53 +34,24 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #define AUTORELEASE(object) [object autorelease]
 #define ASSIGN(a, b) (a) = RETAIN(b)
 
-/**
- @Status Interoperable
-*/
-WORD NSSwapHostShortToBig(WORD val) {
-    return ((val & 0xFF) << 8) | (val >> 8);
-}
-
-/**
- @Status Interoperable
-*/
-unsigned __int64 NSSwapHostLongLongToBig(unsigned __int64 val) {
-    union {
-        unsigned long long word;
-        uint8_t bytes[8];
-    } value, result;
-
-    value.word = val;
-
-    result.bytes[0] = value.bytes[7];
-    result.bytes[1] = value.bytes[6];
-    result.bytes[2] = value.bytes[5];
-    result.bytes[3] = value.bytes[4];
-    result.bytes[4] = value.bytes[3];
-    result.bytes[5] = value.bytes[2];
-    result.bytes[6] = value.bytes[1];
-    result.bytes[7] = value.bytes[0];
-
-    return result.word;
-}
-
-/**
- @Status Interoperable
-*/
-NSSwappedFloat NSSwapHostFloatToBig(float val) {
-    DWORD ret = NSSwapHostIntToBig(*((DWORD*)&val));
-
-    return *((NSSwappedFloat*)&ret);
-}
-
-/**
- @Status Interoperable
-*/
-NSSwappedDouble NSSwapHostDoubleToBig(double val) {
-    unsigned __int64 ret = NSSwapHostLongLongToBig(*((unsigned __int64*)&val));
-
-    return *((NSSwappedDouble*)&ret);
-}
+enum {
+    NULLTAG = 0x00, // code indicating a null value is stored
+    BOOLTAG_FALSE = 0x08, // code indicating a bool false value is stored
+    BOOLTAG_TRUE = 0x09, // code indicating a bool true value is stored
+    INTTAG_8 = 0x10, // code indicating the size of the int that follows is 8 bits
+    INTTAG_16 = 0x11, // code indicating the size of the int that follows is 16 bits
+    INTTAG_32 = 0x12, // code indicating the size of the int that follows is 32 bits
+    INTTAG_64 = 0x13, // code indicating the size of the int that follows is 64 bits
+    FLOATTAG = 0x22, // code indicating a float follows
+    DOUBLETAG = 0x23, // code indicating a double follows
+    DATETAG = 0x33, // code indicating a date follows
+    DATATAG = 0x40, // code indicating serialized data of variable length follows
+    ASCIITAG = 0x50, // code indicating serizlized ascii of variable length follows
+    UTF16TAG = 0x60, // code indicating serialized utf16 of variable length follows
+    UIDTAG = 0x80, // code indicating a UID follows
+    ARRAYTAG = 0xA0, // code indicating a serialized array follows
+    DICTIONARYTAG = 0xD0 // code indicating a dictionary follows
+} intTag;
 
 void storeReversed(void* pos, unsigned value, unsigned width) {
     for (unsigned i = 0; i < width; ++i) {
@@ -93,14 +64,14 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     while (self->outBufLen + len > self->outBufMaxLen) {
         self->outBufMaxLen += 64000;
 
-        self->outBuf = (char*)EbrRealloc(self->outBuf, self->outBufMaxLen);
+        self->outBuf = (char*)IwRealloc(self->outBuf, self->outBufMaxLen);
     }
 
     memcpy(&self->outBuf[self->outBufLen], data, len);
     self->outBufLen += len;
 }
 
-@implementation NSPropertyListWriter_Binary : NSObject
+@implementation NSPropertyListWriter_Binary
 
 + (void)serializePropertyList:(id)aPropertyList intoData:(NSMutableData*)destination {
     NSPropertyListWriter_Binary* gen = [[NSPropertyListWriter_Binary alloc] initWithPropertyList:aPropertyList intoData:destination];
@@ -121,7 +92,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     [self cleanup];
     DESTROY(_dest);
     if (outBuf)
-        EbrFree(outBuf);
+        IwFree(outBuf);
     [super dealloc];
 }
 
@@ -141,7 +112,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         table_size = std::numeric_limits<unsigned int>::max();
     }
 
-    table = (unsigned int*)EbrMalloc(table_size * sizeof(int));
+    table = (unsigned int*)IwMalloc(table_size * sizeof(int));
 
     objectsToDoList = [[NSMutableArray alloc] init];
     _objList = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, NULL);
@@ -154,7 +125,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     DESTROY(objectsToDoList);
     [(id)_objList release];
     if (table != NULL) {
-        EbrFree(table);
+        IwFree(table);
         table = NULL;
     }
 }
@@ -205,7 +176,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     unsigned len = CFDictionaryGetCount(_objList);
     unsigned size = offset_size * len;
 
-    unsigned char* buffer = (unsigned char*)EbrMalloc(size);
+    unsigned char* buffer = (unsigned char*)IwMalloc(size);
     int bufpos = 0;
 
     for (unsigned i = 0; i < len; i++) {
@@ -229,7 +200,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     }
 
     appendBytes(self, buffer, size);
-    EbrFree(buffer);
+    IwFree(buffer);
 }
 
 - (void)writeMetaData {
@@ -284,20 +255,20 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     if (count < 256) {
         unsigned char c;
 
-        code = 0x10;
+        code = INTTAG_8;
         appendBytes(self, &code, 1);
         c = count;
         appendBytes(self, &c, 1);
     } else if (count < 256 * 256) {
         unsigned short c;
 
-        code = 0x11;
+        code = INTTAG_16;
         appendBytes(self, &code, 1);
         c = count;
         c = NSSwapHostShortToBig(c);
         appendBytes(self, &c, 2);
     } else {
-        code = 0x13;
+        code = INTTAG_32;
         appendBytes(self, &code, 1);
         count = NSSwapHostIntToBig(count);
         appendBytes(self, &count, 4);
@@ -311,11 +282,11 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     len = [data length];
 
     if (len < 0x0F) {
-        code = 0x40 + len;
+        code = DATATAG + len;
         appendBytes(self, &code, 1);
         appendBytes(self, (char*)[data bytes], [data length]);
     } else {
-        code = 0x4F;
+        code = DATATAG | 0xF;
         appendBytes(self, &code, 1);
         [self storeCount:len];
         appendBytes(self, (char*)[data bytes], [data length]);
@@ -343,40 +314,40 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
 
     if (ascii) {
         if (len < 0x0F) {
-            code = 0x50 + len;
+            code = ASCIITAG + len;
             appendBytes(self, &code, 1);
             appendBytes(self, (char*)[string UTF8String], len);
         } else {
-            code = 0x5F;
+            code = ASCIITAG | 0xF;
             appendBytes(self, &code, 1);
             [self storeCount:len];
             appendBytes(self, (char*)[string UTF8String], len);
         }
     } else {
         if (len < 0x0F) {
-            WORD* buffer = (WORD*)EbrMalloc((len + 1) * 2);
+            WORD* buffer = (WORD*)IwMalloc((len + 1) * 2);
 
-            code = 0x60 + len;
+            code = UTF16TAG + len;
             appendBytes(self, &code, 1);
             [string getCharacters:buffer];
             for (unsigned int i = 0; i < len; i++) {
                 buffer[i] = NSSwapHostShortToBig(buffer[i]);
             }
             appendBytes(self, buffer, len * sizeof(WORD));
-            EbrFree(buffer);
+            IwFree(buffer);
         } else {
             WORD* buffer;
 
-            code = 0x6F;
+            code = UTF16TAG | 0xF;
             appendBytes(self, &code, 1);
-            buffer = (WORD*)EbrMalloc(sizeof(WORD) * (len + 1));
+            buffer = (WORD*)IwMalloc(sizeof(WORD) * (len + 1));
             [self storeCount:len];
             [string getCharacters:buffer];
             for (i = 0; i < len; i++) {
                 buffer[i] = NSSwapHostShortToBig(buffer[i]);
             }
             appendBytes(self, buffer, sizeof(WORD) * len);
-            EbrFree(buffer);
+            IwFree(buffer);
         }
     }
 }
@@ -401,36 +372,36 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
 
             // FIXME: We need a better way to determine boolean values!
             if ((val == 0) && ((*type == 'c') || (*type == 'C'))) {
-                code = 0x08;
+                code = BOOLTAG_FALSE;
                 appendBytes(self, &code, 1);
             } else if ((val == 1) && ((*type == 'c') || (*type == 'C'))) {
-                code = 0x09;
+                code = BOOLTAG_TRUE;
                 appendBytes(self, &code, 1);
             } else if (val < 256) {
                 unsigned char cval;
 
-                code = 0x10;
+                code = INTTAG_8;
                 appendBytes(self, &code, 1);
                 cval = (unsigned char)val;
                 appendBytes(self, &cval, 1);
             } else if (val < 256 * 256) {
                 unsigned short sval;
 
-                code = 0x11;
+                code = INTTAG_16;
                 appendBytes(self, &code, 1);
                 sval = NSSwapHostShortToBig((WORD)([number unsignedShortValue]));
                 appendBytes(self, &sval, 2);
             } else if (val <= std::numeric_limits<unsigned int>::max()) {
                 unsigned int ival;
 
-                code = 0x12;
+                code = INTTAG_32;
                 appendBytes(self, &code, 1);
                 ival = NSSwapHostIntToBig([number unsignedIntValue]);
                 appendBytes(self, &ival, 4);
             } else {
                 unsigned long long lval;
 
-                code = 0x13;
+                code = INTTAG_64;
                 appendBytes(self, &code, 1);
                 lval = [number unsignedLongLongValue];
                 lval = NSSwapHostLongLongToBig(lval);
@@ -443,7 +414,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         case 'f': {
             NSSwappedFloat val = NSSwapHostFloatToBig([number floatValue]);
 
-            code = 0x22;
+            code = FLOATTAG;
             appendBytes(self, &code, 1);
             appendBytes(self, &val, sizeof(float));
             break;
@@ -452,7 +423,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         case 'd': {
             NSSwappedDouble val = NSSwapHostDoubleToBig([number doubleValue]);
 
-            code = 0x23;
+            code = DOUBLETAG;
             appendBytes(self, &code, 1);
             appendBytes(self, &val, sizeof(double));
             break;
@@ -467,7 +438,7 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
 }
 
 - (void)storeDate:(id)date {
-    unsigned char code = 0x33;
+    unsigned char code = DATETAG;
     appendBytes(self, &code, 1);
     NSSwappedDouble out = NSSwapHostDoubleToBig([date timeIntervalSinceReferenceDate]);
     appendBytes(self, &out, sizeof(double));
@@ -480,10 +451,10 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
     unsigned len = [array count];
 
     if (len < 0x0F) {
-        code = 0xA0 + len;
+        code = ARRAYTAG + len;
         appendBytes(self, &code, 1);
     } else {
-        code = 0xAF;
+        code = ARRAYTAG | 0xF;
         appendBytes(self, &code, 1);
         [self storeCount:len];
     }
@@ -511,14 +482,14 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         if (index < 256) {
             unsigned char ci;
 
-            code = 0x80;
+            code = UIDTAG;
             appendBytes(self, &code, 1);
             ci = (unsigned char)index;
             appendBytes(self, &ci, 1);
         } else {
             unsigned short si;
 
-            code = 0x81;
+            code = UIDTAG | 0x1;
             appendBytes(self, &code, 1);
             si = NSSwapHostShortToBig((unsigned short)index);
             appendBytes(self, &si, 2);
@@ -535,10 +506,10 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         }
 
         if (len < 0x0F) {
-            code = 0xD0 + len;
+            code = DICTIONARYTAG + len;
             appendBytes(self, &code, 1);
         } else {
-            code = 0xDF;
+            code = DICTIONARYTAG | 0xF;
             appendBytes(self, &code, 1);
             [self storeCount:len];
         }

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSNumber.h"
@@ -83,6 +84,57 @@ NSString* const NSURLIsAliasFileKey = @"NSURLIsAliasFileKey";
 NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
 NSString* const NSURLTotalFileSizeKey = @"NSURLTotalFileSizeKey";
 
+NSString* const NSThumbnail1024x1024SizeKey = @"NSThumbnail1024x1024SizeKey";
+NSString* const NSURLGenerationIdentifierKey = @"NSURLGenerationIdentifierKey";
+NSString* const NSURLVolumeLocalizedFormatDescriptionKey = @"NSURLVolumeLocalizedFormatDescriptionKey";
+NSString* const NSURLVolumeTotalCapacityKey = @"NSURLVolumeTotalCapacityKey";
+NSString* const NSURLVolumeAvailableCapacityKey = @"NSURLVolumeAvailableCapacityKey";
+NSString* const NSURLVolumeResourceCountKey = @"NSURLVolumeResourceCountKey";
+NSString* const NSURLVolumeSupportsPersistentIDsKey = @"NSURLVolumeSupportsPersistentIDsKey";
+NSString* const NSURLVolumeSupportsSymbolicLinksKey = @"NSURLVolumeSupportsSymbolicLinksKey";
+NSString* const NSURLVolumeSupportsHardLinksKey = @"NSURLVolumeSupportsHardLinksKey";
+NSString* const NSURLVolumeSupportsJournalingKey = @"NSURLVolumeSupportsJournalingKey";
+NSString* const NSURLVolumeIsJournalingKey = @"NSURLVolumeIsJournalingKey";
+NSString* const NSURLVolumeSupportsSparseFilesKey = @"NSURLVolumeSupportsSparseFilesKey";
+NSString* const NSURLVolumeSupportsZeroRunsKey = @"NSURLVolumeSupportsZeroRunsKey";
+NSString* const NSURLVolumeSupportsCaseSensitiveNamesKey = @"NSURLVolumeSupportsCaseSensitiveNamesKey";
+NSString* const NSURLVolumeSupportsCasePreservedNamesKey = @"NSURLVolumeSupportsCasePreservedNamesKey";
+NSString* const NSURLVolumeSupportsRootDirectoryDatesKey = @"NSURLVolumeSupportsRootDirectoryDatesKey";
+NSString* const NSURLVolumeSupportsVolumeSizesKey = @"NSURLVolumeSupportsVolumeSizesKey";
+NSString* const NSURLVolumeSupportsRenamingKey = @"NSURLVolumeSupportsRenamingKey";
+NSString* const NSURLVolumeSupportsAdvisoryFileLockingKey = @"NSURLVolumeSupportsAdvisoryFileLockingKey";
+NSString* const NSURLVolumeSupportsExtendedSecurityKey = @"NSURLVolumeSupportsExtendedSecurityKey";
+NSString* const NSURLVolumeIsBrowsableKey = @"NSURLVolumeIsBrowsableKey";
+NSString* const NSURLVolumeMaximumFileSizeKey = @"NSURLVolumeMaximumFileSizeKey";
+NSString* const NSURLVolumeIsEjectableKey = @"NSURLVolumeIsEjectableKey";
+NSString* const NSURLVolumeIsRemovableKey = @"NSURLVolumeIsRemovableKey";
+NSString* const NSURLVolumeIsInternalKey = @"NSURLVolumeIsInternalKey";
+NSString* const NSURLVolumeIsAutomountedKey = @"NSURLVolumeIsAutomountedKey";
+NSString* const NSURLVolumeIsLocalKey = @"NSURLVolumeIsLocalKey";
+NSString* const NSURLVolumeIsReadOnlyKey = @"NSURLVolumeIsReadOnlyKey";
+NSString* const NSURLVolumeCreationDateKey = @"NSURLVolumeCreationDateKey";
+NSString* const NSURLVolumeURLForRemountingKey = @"NSURLVolumeURLForRemountingKey";
+NSString* const NSURLVolumeUUIDStringKey = @"NSURLVolumeUUIDStringKey";
+NSString* const NSURLVolumeNameKey = @"NSURLVolumeNameKey";
+NSString* const NSURLVolumeLocalizedNameKey = @"NSURLVolumeLocalizedNameKey";
+NSString* const NSURLKeysOfUnsetValuesKey = @"NSURLKeysOfUnsetValuesKey";
+NSString* const NSURLIsUbiquitousItemKey = @"NSURLIsUbiquitousItemKey";
+NSString* const NSURLUbiquitousItemDownloadingErrorKey = @"NSURLUbiquitousItemDownloadingErrorKey";
+NSString* const NSURLUbiquitousItemDownloadingStatusKey = @"NSURLUbiquitousItemDownloadingStatusKey";
+NSString* const NSURLUbiquitousItemHasUnresolvedConflictsKey = @"NSURLUbiquitousItemHasUnresolvedConflictsKey";
+NSString* const NSURLUbiquitousItemIsDownloadedKey = @"NSURLUbiquitousItemIsDownloadedKey";
+NSString* const NSURLUbiquitousItemIsDownloadingKey = @"NSURLUbiquitousItemIsDownloadingKey";
+NSString* const NSURLUbiquitousItemIsUploadedKey = @"NSURLUbiquitousItemIsUploadedKey";
+NSString* const NSURLUbiquitousItemIsUploadingKey = @"NSURLUbiquitousItemIsUploadingKey";
+NSString* const NSURLUbiquitousItemUploadingErrorKey = @"NSURLUbiquitousItemUploadingErrorKey";
+NSString* const NSURLUbiquitousItemDownloadRequestedKey = @"NSURLUbiquitousItemDownloadRequestedKey";
+NSString* const NSURLUbiquitousItemContainerDisplayNameKey = @"NSURLUbiquitousItemContainerDisplayNameKey";
+NSString* const NSURLUbiquitousItemPercentUploadedKey = @"NSURLUbiquitousItemPercentUploadedKey";
+NSString* const NSURLUbiquitousItemDownloadingStatusCurrent = @"NSURLUbiquitousItemDownloadingStatusCurrent";
+NSString* const NSURLUbiquitousItemDownloadingStatusDownloaded = @"NSURLUbiquitousItemDownloadingStatusDownloaded";
+NSString* const NSURLUbiquitousItemDownloadingStatusNotDownloaded = @"NSURLUbiquitousItemDownloadingStatusNotDownloaded";
+NSString* const NSURLThumbnailDictionaryKey = @"NSURLThumbnailDictionaryKey";
+
 static void StripSlashes(char* pPath) {
     size_t length = strnlen_s(pPath, NSURLMAXLEN);
     while (length > 0 && pPath[length - 1] == '/') {
@@ -135,18 +187,18 @@ struct EbrURL {
 
     void ProcessURI() {
         if (_path) {
-            free(_path);
+            IwFree(_path);
             _path = NULL;
         }
         if (_parameters) {
-            free(_parameters);
+            IwFree(_parameters);
             _parameters = NULL;
         }
 
         //  Remove parameters and any trailing / from the path we report to the app
         if (_uri->path) {
             size_t newSize = strnlen_s(_uri->path, NSURLMAXLEN) + 1;
-            _path = (char*)malloc(newSize);
+            _path = (char*)IwMalloc(newSize);
             FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, newSize, _uri->path) != 0);
 
             char* params = strstr(_path, ";");
@@ -155,7 +207,7 @@ struct EbrURL {
                 params++;
 
                 size_t newParamSize = strnlen_s(params, NSURLMAXLEN) + 1;
-                _parameters = (char*)malloc(newParamSize);
+                _parameters = (char*)IwMalloc(newParamSize);
                 FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, newParamSize, params) != 0);
             }
 
@@ -187,11 +239,11 @@ struct EbrURL {
         }
 
         if (_parameters) {
-            free(_parameters);
+            IwFree(_parameters);
         }
 
         if (_path) {
-            free(_path);
+            IwFree(_path);
         }
     }
 
@@ -234,7 +286,7 @@ struct EbrURL {
     }
 
     static char* escape(const char* in, const char* escapeChars) {
-        char* ret = (char*)malloc(strnlen_s(in, NSURLMAXLEN) * 3 + 1);
+        char* ret = (char*)IwMalloc(strnlen_s(in, NSURLMAXLEN) * 3 + 1);
         int retLen = 0;
         int inLen = strnlen_s(in, NSURLMAXLEN);
         const char* hex = "0123456789ABCDEF";
@@ -277,7 +329,7 @@ struct EbrURL {
             xmlFree(str);
         }
 
-        free(escaped);
+        IwFree(escaped);
         if (_uri) {
             ProcessURI();
         }
@@ -310,12 +362,12 @@ struct EbrURL {
         int newLen = 16;
 
         if (path) {
-            _path = (char*)malloc(strnlen_s(path, NSURLMAXLEN) + 1);
+            _path = (char*)IwMalloc(strnlen_s(path, NSURLMAXLEN) + 1);
             FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, NSURLMAXLEN, path) != 0);
             newLen += strnlen_s(_path, NSURLMAXLEN);
         }
         if (params) {
-            _parameters = (char*)malloc(strnlen_s(params, NSURLMAXLEN) + 1);
+            _parameters = (char*)IwMalloc(strnlen_s(params, NSURLMAXLEN) + 1);
             FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, NSURLMAXLEN, params) != 0);
             newLen += strnlen_s(params, NSURLMAXLEN);
         }
@@ -336,11 +388,11 @@ struct EbrURL {
         _uri->path = newPath;
 
         if (oldPath) {
-            free(oldPath);
+            IwFree(oldPath);
         }
 
         if (oldParams) {
-            free(oldParams);
+            IwFree(oldParams);
         }
     }
 
@@ -356,8 +408,8 @@ struct EbrURL {
         }
 
         //  Strip out parameter
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -382,8 +434,8 @@ struct EbrURL {
             newLen += strnlen_s(pPath, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -405,8 +457,8 @@ struct EbrURL {
             newLen += strnlen_s(_path, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -440,8 +492,8 @@ struct EbrURL {
             newLen += strnlen_s(_path, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -483,8 +535,8 @@ struct EbrURL {
             newLen += strnlen_s(standardizedPath, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
 
@@ -565,7 +617,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
 
     //  Strip trailing /'s
@@ -578,7 +630,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         isDirectory = TRUE;
     }
 
-    free(szPath);
+    IwFree(szPath);
 
     return [self initFileURLWithPath:path isDirectory:isDirectory];
 }
@@ -604,7 +656,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
 
     //  Strip trailing /'s
@@ -624,7 +676,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         initPath(self, NULL, NULL, szPath);
     }
 
-    free(szPath);
+    IwFree(szPath);
 
     buildFullURI(self, baseURL);
 
@@ -666,7 +718,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
     NSURL* ret = [[[self class] alloc] init];
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
     StripSlashes(szPath);
     if (isDirectory) {
@@ -675,7 +727,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
     ret->_uri = _uri->Clone();
     ret->_uri->AppendPath(szPath);
-    free(szPath);
+    IwFree(szPath);
     buildFullURI(ret, _baseURL);
 
     return [ret autorelease];
@@ -759,7 +811,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     const char* pURL = [string UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pURL, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pURL, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pURL) != 0);
     StripSlashes(szPath);
     if (isDirectory) {
@@ -767,7 +819,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     buildURIs(self, szPath, parent);
-    free(szPath);
+    IwFree(szPath);
     _baseURL = [parent retain];
     if (_uri == NULL) {
         return nil;
@@ -1179,4 +1231,222 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 - (id)propertyForKey:(NSString*)propertyKey {
     return [_properties objectForKey:propertyKey];
 }
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)setResourceValues:(NSDictionary*)keyedValues error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initByResolvingBookmarkData:(NSData*)bookmarkData
+                                    options:(NSURLBookmarkResolutionOptions)options
+                              relativeToURL:(NSURL*)relativeURL
+                        bookmarkDataIsStale:(BOOL*)isStale
+                                      error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSData*)bookmarkDataWithOptions:(NSURLBookmarkCreationOptions)options
+    includingResourceValuesForKeys:(NSArray*)keys
+                     relativeToURL:(NSURL*)relativeURL
+                             error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)startAccessingSecurityScopedResource {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)stopAccessingSecurityScopedResource {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)resourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeAllCachedResourceValues {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)removeCachedResourceValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setTemporaryResourceValue:(id)value forKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)checkPromisedItemIsReachableAndReturnError:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)getPromisedItemResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSDictionary*)promisedItemResourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSURL*)fileURLWithPathComponents:(NSArray*)components {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)URLByResolvingAliasFileAtURL:(NSURL*)url options:(NSURLBookmarkResolutionOptions)options error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)URLByResolvingBookmarkData:(NSData*)bookmarkData
+                                   options:(NSURLBookmarkResolutionOptions)options
+                             relativeToURL:(NSURL*)relativeURL
+                       bookmarkDataIsStale:(BOOL*)isStale
+                                     error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSData*)bookmarkDataWithContentsOfURL:(NSURL*)bookmarkFileURL error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSDictionary*)resourceValuesForKeys:(NSArray*)keys fromBookmarkData:(NSData*)bookmarkData {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)writeBookmarkData:(NSData*)bookmarkData
+                    toURL:(NSURL*)bookmarkFileURL
+                  options:(NSURLBookmarkFileCreationOptions)options
+                    error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

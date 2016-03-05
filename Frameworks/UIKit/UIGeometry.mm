@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #import <UIKit/UIGeometry.h>
 
 const UIEdgeInsets UIEdgeInsetsZero = UIEdgeInsetsMake(0, 0, 0, 0);

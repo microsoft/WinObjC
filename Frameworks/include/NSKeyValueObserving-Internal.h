@@ -39,7 +39,7 @@ struct std::hash<std::tuple<id, std::string>> {
 // should be removed.
 struct NSKVOMatchAnyContextTag {};
 
-class NSKVONotifier {
+class NSKVONotifier: public std::enable_shared_from_this<NSKVONotifier> {
 public:
     // dispatch a notification towards the observer.
     virtual void dispatch(bool) = 0;
@@ -74,6 +74,7 @@ private:
 
     void _removeNotifier(id instance, const std::string& key, const NSKVONotifier* notifier);
     static std::shared_ptr<NSKVONotifier> _notifierForSubkeyOnInstance(id newValue,
+                                                                       const std::string& keyComponent,
                                                                        const std::string& keypath,
                                                                        const std::shared_ptr<NSKVONotifier>& leafNotifier);
     std::shared_ptr<NSKVONotifier> _linkedNotifierForLeaf(id instance,
@@ -87,7 +88,7 @@ public:
 
     const std::unordered_set<std::string>& valueDependingKeys(const std::string& key);
 
-    id valueForKey(id instance, const std::string& key) {
+    static id valueForKey(id instance, const std::string& key) {
         return [instance valueForKeyPath:[NSString stringWithUTF8String:key.c_str()]];
     }
 

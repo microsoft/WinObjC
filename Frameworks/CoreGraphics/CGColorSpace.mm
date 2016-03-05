@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,13 +14,27 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import <StubReturn.h>
+#import <Starboard.h>
 
-#include "CGContextInternal.h"
-#include "CGColorSpaceInternal.h"
-#include "_CGLifetimeBridgingType.h"
+#import "CGContextInternal.h"
+#import "CGColorSpaceInternal.h"
+#import "_CGLifetimeBridgingType.h"
 
-static IWLazyClassLookup _LazyUIColor("UIColor");
+const CFStringRef kCGColorSpaceGenericGray = static_cast<CFStringRef>(@"kCGColorSpaceGenericGray");
+const CFStringRef kCGColorSpaceGenericRGB = static_cast<CFStringRef>(@"kCGColorSpaceGenericRGB");
+const CFStringRef kCGColorSpaceGenericCMYK = static_cast<CFStringRef>(@"kCGColorSpaceGenericCMYK");
+const CFStringRef kCGColorSpaceGenericRGBLinear = static_cast<CFStringRef>(@"kCGColorSpaceGenericRGBLinear");
+const CFStringRef kCGColorSpaceAdobeRGB1998 = static_cast<CFStringRef>(@"kCGColorSpaceAdobeRGB1998");
+const CFStringRef kCGColorSpaceSRGB = static_cast<CFStringRef>(@"kCGColorSpaceSRGB");
+const CFStringRef kCGColorSpaceGenericGrayGamma2_2 = static_cast<CFStringRef>(@"kCGColorSpaceGenericGrayGamma2_2");
+const CFStringRef kCGColorSpaceGenericXYZ = static_cast<CFStringRef>(@"kCGColorSpaceGenericXYZ");
+const CFStringRef kCGColorSpaceACESCGLinear = static_cast<CFStringRef>(@"kCGColorSpaceACESCGLinear");
+const CFStringRef kCGColorSpaceITUR_709 = static_cast<CFStringRef>(@"kCGColorSpaceITUR_709");
+const CFStringRef kCGColorSpaceITUR_2020 = static_cast<CFStringRef>(@"kCGColorSpaceITUR_2020");
+const CFStringRef kCGColorSpaceROMMRGB = static_cast<CFStringRef>(@"kCGColorSpaceROMMRGB");
+
+static IWLazyClassLookup _LazyUIColor2("UIColor");
 
 @interface CGNSColorSpace : _CGLifetimeBridgingType
 @end
@@ -32,7 +46,6 @@ static IWLazyClassLookup _LazyUIColor("UIColor");
 @end
 
 __CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
-    isa = NULL;
     object_setClass((id) this, [CGNSColorSpace class]);
 
     colorSpace = fmt;
@@ -42,7 +55,7 @@ __CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
 
 __CGColorSpace::~__CGColorSpace() {
     if (palette) {
-        delete palette;
+        IwFree(palette);
         palette = NULL;
     }
 }
@@ -55,7 +68,7 @@ CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
 CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* colorTable) {
     __CGColorSpace* ret = new __CGColorSpace(_ColorIndexed);
 
-    ret->palette = (char*)malloc(3 * (lastIndex + 1));
+    ret->palette = (char*)IwMalloc(3 * (lastIndex + 1));
     memcpy(ret->palette, colorTable, 3 * (lastIndex + 1));
     ret->lastColor = lastIndex;
     return (CGColorSpaceRef)ret;
@@ -144,90 +157,6 @@ CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace) {
 }
 
 /**
- @Status Interoperable
-*/
-void CGColorRelease(CGColorRef color) {
-    CFRelease(color);
-}
-
-/**
- @Status Interoperable
-*/
-CGColorRef CGColorRetain(CGColorRef color) {
-    CFRetain((id)color);
-
-    return color;
-}
-
-/**
- @Status Interoperable
-*/
-CGColorRef CGColorCreateCopy(CGColorRef color) {
-    // Revisit?
-    return CGColorRetain(color);
-}
-
-/**
- @Status Interoperable
-*/
-CGColorRef CGColorCreate(CGColorSpaceRef colorSpace, const float* components) {
-    CGColorRef ret =
-        (CGColorRef)[[_LazyUIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]] retain];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
-    float curColor[4];
-
-    [(UIColor*)color getColors:curColor];
-
-    id ret = [[_LazyUIColor colorWithRed:curColor[0] green:curColor[1] blue:curColor[2] alpha:alpha] retain];
-
-    return (CGColorRef)ret;
-}
-
-/**
- @Status Interoperable
-*/
-CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, id pattern, float components[]) {
-    CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithCGPattern:pattern] retain];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-CGColorRef CGColorCreateGenericRGB(float r, float g, float b, float a) {
-    CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithRed:r green:g blue:b alpha:a] retain];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-bool CGColorEqualToColor(CGColorRef color1, CGColorRef color2) {
-    float components1[4] = { 0.0f };
-    float components2[4] = { 0.0f };
-
-    [(UIColor*)color1 getColors:components1];
-    [(UIColor*)color2 getColors:components2];
-
-    for (int i = 0; i < 4; i++) {
-        if (components1[i] != components2[i]) {
-            return FALSE;
-        }
-    }
-
-    return TRUE;
-}
-
-/**
  @Status Caveat
  @Notes Limited constants supported
 */
@@ -236,9 +165,9 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
 
     char* pName = (char*)[name UTF8String];
     if (strcmp(pName, "BLACK") == 0) {
-        ret = [_LazyUIColor blackColor];
+        ret = [_LazyUIColor2 blackColor];
     } else if (strcmp(pName, "WHITE") == 0) {
-        ret = [_LazyUIColor whiteColor];
+        ret = [_LazyUIColor2 whiteColor];
     } else {
         assert(0);
     }
@@ -248,29 +177,98 @@ CGColorRef CGColorGetConstantColor(CFStringRef name) {
 
 /**
  @Status Stub
+ @Notes
 */
-size_t CGColorGetNumberOfComponents(CGColorRef color) {
+CFDataRef CGColorSpaceCopyICCProfile(CGColorSpaceRef space) {
     UNIMPLEMENTED();
-    /* [BUG: Not all colors have 4 components, but all of the ones we currently
-    * support do!] */
-    return 4;
-}
-
-/**
- @Status Interoperable
-*/
-CGFloat CGColorGetAlpha(CGColorRef color) {
-    float components[4];
-
-    [(UIColor*)color getColors:components];
-
-    return (CGFloat)components[3];
+    return StubReturn();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
+CGColorSpaceRef CGColorSpaceCreateCalibratedGray(const CGFloat whitePoint[3], const CGFloat blackPoint[3], CGFloat gamma) {
     UNIMPLEMENTED();
-    return CGColorSpaceCreateDeviceRGB();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorSpaceRef CGColorSpaceCreateDeviceCMYK() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorSpaceRef CGColorSpaceCreateICCBased(size_t nComponents, const CGFloat* range, CGDataProviderRef profile, CGColorSpaceRef alternate) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorSpaceRef CGColorSpaceCreateLab(const CGFloat whitePoint[3], const CGFloat blackPoint[3], const CGFloat range[4]) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorSpaceRef CGColorSpaceCreateWithICCProfile(CFDataRef data) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorSpaceRef CGColorSpaceCreateWithPlatformColorSpace(const void* ref) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CGColorSpaceRef CGColorSpaceGetBaseColorSpace(CGColorSpaceRef space) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+size_t CGColorSpaceGetColorTableCount(CGColorSpaceRef space) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+CFTypeID CGColorSpaceGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+void CGColorSpaceGetColorTable(CGColorSpaceRef space, uint8_t* table) {
+    UNIMPLEMENTED();
 }

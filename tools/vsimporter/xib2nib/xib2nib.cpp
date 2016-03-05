@@ -23,6 +23,7 @@
 #include <direct.h>
 #include <assert.h>
 #include <map>
+#include <filesystem>
 
 #include "XIBObject.h"
 #include "XIBObjectTypes.h"
@@ -30,9 +31,10 @@
 #include "NIBWriter.h"
 #include "Plist.hpp"
 
+#include "..\WBITelemetry\WBITelemetry.h"
+
 static char _g_outputDirectory[4096];
-std::string GetOutputFilename(const char *filename)
-{
+std::string GetOutputFilename(const char* filename) {
     std::string ret = std::string(_g_outputDirectory) + "\\" + std::string(filename);
 
     return ret;
@@ -40,26 +42,29 @@ std::string GetOutputFilename(const char *filename)
 
 extern std::map<std::string, std::string> _g_exportedControllers;
 
-void ConvertStoryboard(pugi::xml_document& doc)
-{
+void ConvertStoryboard(pugi::xml_document& doc) {
     pugi::xml_node curNode = doc.first_child();
 
     //  Storyboard XIB file - get topmost controller, then export it
-    const char *initialController = curNode.attribute("initialViewController").value();
+    const char* initialController = curNode.attribute("initialViewController").value();
 
     for (; curNode; curNode = curNode.next_sibling()) {
         if (curNode.type() == pugi::xml_node_type::node_element) {
-            XIBArray *root = new XIBArray();
+            XIBArray* root = new XIBArray();
             root->ScanStoryObjects(curNode);
         }
     }
 
     XIBObject::ParseAllStoryMembers();
 
+    // Print which XML nodes we did not handle during the parse for diagnostic purpose.
+    XIBObject::getDocumentCoverage(doc);
+
     NIBWriter::ExportController(initialController);
 
     Plist::dictionary_type viewControllerInfo;
-    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] = std::string("UIViewController-") + std::string(initialController);
+    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] =
+        std::string("UIViewController-") + std::string(initialController);
     viewControllerInfo[std::string("UIStoryboardVersion")] = (int)1;
 
     Plist::dictionary_type viewControllerMappings;
@@ -72,21 +77,21 @@ void ConvertStoryboard(pugi::xml_document& doc)
     Plist::writePlistBinary(GetOutputFilename("Info.plist").c_str(), viewControllerInfo);
 }
 
-void ConvertXIB3ToNib(FILE *fpOut, pugi::xml_document& doc)
-{
+void ConvertXIB3ToNib(FILE* fpOut, pugi::xml_document& doc) {
     pugi::xml_node curNode = doc.first_child();
 
     //  XIB3 file
-    XIBDocument *rootDocument = new XIBDocument(curNode);
+    XIBDocument* rootDocument = new XIBDocument(curNode);
     XIBObject::ParseAllStoryMembers();
+    XIBObject::getDocumentCoverage(doc);
 
-    XIBArray *viewObjects = rootDocument->Objects();
+    XIBArray* viewObjects = rootDocument->Objects();
     if (viewObjects) {
-        NIBWriter *writer = new NIBWriter(fpOut, NULL, NULL);
+        NIBWriter* writer = new NIBWriter(fpOut, NULL, NULL);
 
-        XIBArray *arr = (XIBArray *)viewObjects;
+        XIBArray* arr = (XIBArray*)viewObjects;
         for (int i = 0; i < arr->count(); i++) {
-            XIBObject *curObj = arr->objectAtIndex(i);
+            XIBObject* curObj = arr->objectAtIndex(i);
 
             writer->ExportObject(curObj);
         }
@@ -94,30 +99,29 @@ void ConvertXIB3ToNib(FILE *fpOut, pugi::xml_document& doc)
         writer->WriteObjects();
     }
 }
-void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
-{
+void ConvertXIBToNib(FILE* fpOut, pugi::xml_document& doc) {
     pugi::xml_node dataNode = doc.first_element_by_path("/archive/data");
 
-    XIBObject *root = new XIBObject();
+    XIBObject* root = new XIBObject();
     root->ScanXIBNode(dataNode);
     XIBObject::ParseAllXIBMembers();
 
-    XIBObject *Objects = root->FindMember("IBDocument.Objects");
-    XIBObject *objectRecords = Objects->FindMember("objectRecords");
-    XIBDictionary *properties = (XIBDictionary *) Objects->FindMember("flattenedProperties");
+    XIBObject* Objects = root->FindMember("IBDocument.Objects");
+    XIBObject* objectRecords = Objects->FindMember("objectRecords");
+    XIBDictionary* properties = (XIBDictionary*)Objects->FindMember("flattenedProperties");
 
-    XIBObject *orderedObjects = objectRecords->FindMember("orderedObjects");
+    XIBObject* orderedObjects = objectRecords->FindMember("orderedObjects");
 
     //  Go through each ordered object to find replacements
-    for ( memberList::iterator cur = orderedObjects->_members.begin(); cur != orderedObjects->_members.end(); cur ++ ) {
-        XIBMember *curMember = *cur;
-        XIBObject *curObject = curMember->_obj;
+    for (memberList::iterator cur = orderedObjects->_members.begin(); cur != orderedObjects->_members.end(); cur++) {
+        XIBMember* curMember = *cur;
+        XIBObject* curObject = curMember->_obj;
 
-        if ( strcmp(curObject->ClassName(), "IBObjectRecord") == 0 ) {
-            XIBObject *obj = curObject->FindMember("object");
+        if (strcmp(curObject->ClassName(), "IBObjectRecord") == 0) {
+            XIBObject* obj = curObject->FindMember("object");
 
-            if ( obj ) {
-                XIBObject *objectId = curObject->FindMember("objectID");
+            if (obj) {
+                XIBObject* objectId = curObject->FindMember("objectID");
                 if (!objectId) {
                     objectId = curObject->FindMember("id");
                 }
@@ -126,11 +130,11 @@ void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
                 //  Attempt to find any associated custom class name
                 char szPropName[255];
                 sprintf(szPropName, "%d.CustomClassName", objId);
-                const char *pClassName = obj->ClassName();
+                const char* pClassName = obj->ClassName();
 
-                XIBObject *customName = properties->ObjectForKey(szPropName);
-                if ( customName ) {
-                    const char *pCustomName = customName->stringValue();
+                XIBObject* customName = properties->ObjectForKey(szPropName);
+                if (customName) {
+                    const char* pCustomName = customName->stringValue();
                     obj->SetSwappedClassName(pCustomName);
                 }
 
@@ -146,47 +150,49 @@ void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
     }
 
     //  Create connections list
-    XIBArray *connections = new XIBArray();
-    XIBObject *connectionrecords = Objects->FindMember("connectionRecords");
+    XIBArray* connections = new XIBArray();
+    XIBObject* connectionrecords = Objects->FindMember("connectionRecords");
 
-    for ( memberList::iterator cur = connectionrecords->_members.begin(); cur != connectionrecords->_members.end(); cur ++ ) {
-        XIBMember *curMember = *cur;
-        XIBObject *curObject = curMember->_obj;
+    for (memberList::iterator cur = connectionrecords->_members.begin(); cur != connectionrecords->_members.end(); cur++) {
+        XIBMember* curMember = *cur;
+        XIBObject* curObject = curMember->_obj;
 
-        if ( strcmp(curObject->ClassName(), "IBConnectionRecord") == 0 ) {
-            XIBObject *obj = curObject->FindMember("connection");
+        if (strcmp(curObject->ClassName(), "IBConnectionRecord") == 0) {
+            XIBObject* obj = curObject->FindMember("connection");
 
-            if ( obj ) {
+            if (obj) {
                 connections->AddMember(NULL, obj);
             }
         }
     }
 
     //  Sort connection records alphabetically using stable, uh, bubble sort
-    for ( ;; ) {
+    for (;;) {
         bool didSwap = false;
 
-        for ( memberList::iterator cur = connections->_members.begin(); cur != connections->_members.end(); cur ++ ) {
-            if ( (cur + 1) == connections->_members.end() ) break;
-            XIBMember *curMember = (*cur);
-            XIBMember *nextMember = (*(cur + 1));
+        for (memberList::iterator cur = connections->_members.begin(); cur != connections->_members.end(); cur++) {
+            if ((cur + 1) == connections->_members.end())
+                break;
+            XIBMember* curMember = (*cur);
+            XIBMember* nextMember = (*(cur + 1));
 
-            if ( curMember->_name != NULL ) continue;
+            if (curMember->_name != NULL)
+                continue;
 
             //  Event connections first
-            if ( strcmp(curMember->_obj->_className, "IBCocoaTouchOutletConnection") == 0 &&
-                 strcmp(nextMember->_obj->_className, "IBCocoaTouchEventConnection") == 0 ) {
+            if (strcmp(curMember->_obj->_className, "IBCocoaTouchOutletConnection") == 0 &&
+                strcmp(nextMember->_obj->_className, "IBCocoaTouchEventConnection") == 0) {
                 *cur = nextMember;
                 *(cur + 1) = curMember;
                 didSwap = true;
                 continue;
             }
 
-            if ( strcmp(curMember->_obj->_className, nextMember->_obj->_className) == 0 ) {
-                const char *label1 = curMember->_obj->FindMember("label")->stringValue();
-                const char *label2 = nextMember->_obj->FindMember("label")->stringValue();
+            if (strcmp(curMember->_obj->_className, nextMember->_obj->_className) == 0) {
+                const char* label1 = curMember->_obj->FindMember("label")->stringValue();
+                const char* label2 = nextMember->_obj->FindMember("label")->stringValue();
 
-                if ( strcmp(label1, label2) > 0 ) {
+                if (strcmp(label1, label2) > 0) {
                     *cur = nextMember;
                     *(cur + 1) = curMember;
                     didSwap = true;
@@ -194,19 +200,20 @@ void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
             }
         }
 
-        if ( !didSwap ) break;
+        if (!didSwap)
+            break;
     }
 
     //  Construct root object
-    XIBObject *rootObjects = root->FindMember("IBDocument.RootObjects");
+    XIBObject* rootObjects = root->FindMember("IBDocument.RootObjects");
     rootObjects->_className = "NSArray";
     connections->_className = "NSArray";
 
-    XIBArray *allObjects = new XIBArray();
-    XIBArray *accessibilityObjects = new XIBAccessibilityArray();
-    XIBArray *visibleWindows = new XIBArray();
+    XIBArray* allObjects = new XIBArray();
+    XIBArray* accessibilityObjects = new XIBAccessibilityArray();
+    XIBArray* visibleWindows = new XIBArray();
 
-    XIBObject *nibRoot = new XIBArray();
+    XIBObject* nibRoot = new XIBArray();
     nibRoot->_className = "NSObject";
     nibRoot->_members.clear();
     nibRoot->AddMember("UINibTopLevelObjectsKey", rootObjects);
@@ -216,77 +223,91 @@ void ConvertXIBToNib(FILE *fpOut, pugi::xml_document& doc)
     nibRoot->AddMember("UINibAccessibilityConfigurationsKey", accessibilityObjects);
     nibRoot->AddMember("UINibKeyValuePairsKey", new XIBArray());
 
-    NIBWriter *writer = new NIBWriter(fpOut);
+    NIBWriter* writer = new NIBWriter(fpOut);
     writer->_allUIObjects = allObjects;
     writer->_visibleWindows = visibleWindows;
     writer->AddOutputObject(nibRoot);
     writer->WriteData();
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 #if 0
     argv[1] = "input.xib";
     argv[2] = "output.nib";
     argc = 3;
 #endif
 
+    TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
+
+    std::tr2::sys::path fName(argv[1]);
+
+    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
+
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);
-    if ( !result ) {
+    if (!result) {
         printf("Error opening %s\n", argv[1]);
+        TELEMETRY_FLUSH();
         exit(2);
         return -1;
     }
 
     pugi::xml_node rootNode = doc.first_child();
-    const char *type = getNodeAttrib(rootNode, "type");
-    if ( !type ) {
+    const char* type = getNodeAttrib(rootNode, "type");
+    if (!type) {
         printf("Unable to find input type\n");
+        TELEMETRY_FLUSH();
         exit(3);
         return -1;
     }
-    if ( strcmp(rootNode.name(), "document") == 0 && strcmp(type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB") == 0 ) {
+    if (strcmp(rootNode.name(), "document") == 0 && strcmp(type, "com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB") == 0) {
         if (argc < 3) {
             printf("Usage: xib2nib input.storyboard <outputdir>\n");
+            TELEMETRY_FLUSH();
             exit(1);
             return -1;
         }
 
         struct stat st = { 0 };
         stat(argv[2], &st);
-        if (!(((st.st_mode)& S_IFMT) == S_IFDIR) && _mkdir(argv[2]) != 0) {
+        if (!(((st.st_mode) & S_IFMT) == S_IFDIR) && _mkdir(argv[2]) != 0) {
             printf("Unable to create directory %s err=%d\n", argv[2], errno);
             return -1;
         }
         strcpy(_g_outputDirectory, argv[2]);
         ConvertStoryboard(doc);
-    } else if ( strstr(type, ".XIB") != NULL) {
-        if ( argc < 3 ) {
+    } else if (strstr(type, ".XIB") != NULL) {
+        if (argc < 3) {
             printf("Usage: xib2nib input.xib output.nib\n");
+            TELEMETRY_FLUSH();
             exit(1);
             return -1;
         }
 
-        FILE *fpOut = fopen(argv[2], "wb");
-        if ( !fpOut ) {
+        FILE* fpOut = fopen(argv[2], "wb");
+        if (!fpOut) {
             printf("Error opening %s\n", argv[2]);
+            TELEMETRY_FLUSH();
             exit(3);
             return -1;
         }
 
         if (strcmp(rootNode.name(), "document") == 0) {
             ConvertXIB3ToNib(fpOut, doc);
-        }
-        else {
+        } else {
             ConvertXIBToNib(fpOut, doc);
         }
         fclose(fpOut);
     } else {
         printf("Unable to determine input type type=\"%s\"\n", type);
+        TELEMETRY_FLUSH();
         exit(4);
         return -1;
     }
+
+    TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
+
+    TELEMETRY_FLUSH();
 
     exit(0);
 }

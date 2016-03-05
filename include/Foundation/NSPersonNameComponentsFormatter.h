@@ -1,0 +1,46 @@
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
+
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSFormatter.h>
+
+@class NSString;
+@class NSPersonNameComponents;
+@class NSAttributedString;
+
+typedef NS_ENUM(NSInteger, NSPersonNameComponentsFormatterStyle) {
+    NSPersonNameComponentsFormatterStyleDefault = 0,
+    NSPersonNameComponentsFormatterStyleShort,
+    NSPersonNameComponentsFormatterStyleMedium,
+    NSPersonNameComponentsFormatterStyleLong,
+    NSPersonNameComponentsFormatterStyleAbbreviated
+};
+
+typedef NS_OPTIONS(NSUInteger, NSPersonNameComponentsFormatterOptions) { NSPersonNameComponentsFormatterPhonetic = (1UL << 1) };
+
+FOUNDATION_EXPORT_CLASS
+@interface NSPersonNameComponentsFormatter : NSFormatter <NSCoding, NSCopying>
+@property NSPersonNameComponentsFormatterStyle style STUB_PROPERTY;
+@property (getter=isPhonetic) BOOL phonetic STUB_PROPERTY;
++ (NSString*)localizedStringFromPersonNameComponents:(NSPersonNameComponents*)components
+                                               style:(NSPersonNameComponentsFormatterStyle)nameFormatStyle
+                                             options:(NSPersonNameComponentsFormatterOptions)nameOptions STUB_METHOD;
+- (NSString*)stringFromPersonNameComponents:(NSPersonNameComponents*)components STUB_METHOD;
+- (NSAttributedString*)annotatedStringFromPersonNameComponents:(NSPersonNameComponents*)components STUB_METHOD;
+- (BOOL)getObjectValue:(id _Nullable*)obj forString:(NSString*)string errorDescription:(NSString* _Nullable*)error STUB_METHOD;
+@end

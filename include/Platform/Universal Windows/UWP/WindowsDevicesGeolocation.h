@@ -292,7 +292,7 @@ WINRT_EXPORT
                                       duration:(WFTimeSpan*)duration
                                        success:(void (^)(NSArray*))success
                                        failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int reportInterval;
 @property double movementThreshold;
 @property WDGPositionAccuracy desiredAccuracy;

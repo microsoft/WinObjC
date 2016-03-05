@@ -18,10 +18,10 @@
 #define __CGGRADIENTINTERNAL_H
 
 #include "CoreGraphics/CGGradient.h"
+#include <objc/runtime.h>
 
-class __CGGradient {
+class __CGGradient: private objc_object {
 public:
-    id isa;
     surfaceFormat _colorSpace;
     float* _components;
     float* _locations;

@@ -15,12 +15,12 @@
 //******************************************************************************
 
 #include "Starboard.h"
-
-using WCHAR = wchar_t;
+#include "StubReturn.h"
 
 #include <string>
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSError.h"
+#include "Foundation/NSScanner.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSValue.h"
@@ -35,6 +35,8 @@ using WCHAR = wchar_t;
 #include <windows.storage.streams.h>
 #include <COMIncludes_End.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
 
 #include "StringHelpers.h"
 
@@ -43,19 +45,25 @@ using namespace ABI::Windows::Security::Cryptography;
 using namespace ABI::Windows::Storage::Streams;
 using namespace Windows::Foundation;
 
+// TODO: BUG 192601: Enable ARC on this file once the code gen error is fixed
+
 @implementation NSData
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
-    // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
-    // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
+    ComPtr<IBuffer> wrlBuffer;
+    IBuffer* rawBuffer = nullptr; 
+    HRESULT result;
+    
+    result = BufferFromRawData(&rawBuffer, _bytes, _length);
 
-    ComPtr<IBuffer> wrlBuffer = BufferFromRawData(_bytes, _length);
-    if (!wrlBuffer) {
+    if (FAILED(result)) {
         return nil;
     }
+
+    wrlBuffer.Attach(rawBuffer);
 
     ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
     RETURN_NULL_IF_FAILED(
@@ -68,23 +76,85 @@ using namespace Windows::Foundation;
     unsigned int rawLength;
     const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
 
-    return [[[NSString alloc] initWithBytes:rawEncodedString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
-        autorelease];
+    NSString* nsEncodedString =
+        [[NSString alloc] initWithBytes:rawEncodedString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding];
+
+    // Do any necessary post-processing for options
+    // If line length specified, place a newline character (/r, /n, or /r/n every (specified number) characters)
+    if ((options & NSDataBase64Encoding64CharacterLineLength) || (options & NSDataBase64Encoding76CharacterLineLength)) {
+        size_t lineLength = (options & NSDataBase64Encoding64CharacterLineLength) ? 64 : 76;
+        // Calculate number of times to insert newlines
+        // Since no newline is needed at the end if stringLength is evenly divisible by lineLength,
+        // subtract 1 from stringLength when dividing
+        size_t stringLength = [nsEncodedString length];
+        size_t newLineCount = (stringLength != 0) ? ((stringLength - 1) / lineLength) : 0;
+
+        if (newLineCount > 0) {
+            NSDataBase64EncodingOptions useCR = options & NSDataBase64EncodingEndLineWithCarriageReturn;
+            NSDataBase64EncodingOptions useLF = options & NSDataBase64EncodingEndLineWithLineFeed;
+
+            StrongId<NSString> newLineChar;
+            if (useCR && !useLF) {
+                newLineChar = @"\r";
+            } else if (!useCR && useLF) {
+                newLineChar = @"\n";
+            } else {
+                // Use CRLF by default, but can also be manually specified
+                newLineChar = @"\r\n";
+            }
+
+            NSMutableString* mutableEncodedString = [NSMutableString stringWithString:nsEncodedString];
+
+            // Add new line every (lineLength) chars
+            // Iterate backwards to avoid compensating for changes in length
+            for (size_t i = newLineCount; i > 0; i--) {
+                [mutableEncodedString insertString:newLineChar atIndex:(i * lineLength)];
+            }
+
+            return [NSString stringWithString:mutableEncodedString];
+        }
+    }
+
+    // If line length not specified, or newLineCount <= 0, none of the other options matter, just return nsEncodedString
+    return [nsEncodedString autorelease];
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 - (instancetype)initWithBase64EncodedString:(NSString*)base64String options:(NSDataBase64DecodingOptions)options {
-    // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
-    // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
+    StrongId<NSString> stringToUse = base64String;
+
+    // Create a clean version of the string if IgnoreUnknownCharacters is specified
+    if (options & NSDataBase64DecodingIgnoreUnknownCharacters) {
+        NSMutableString* cleanedString = [NSMutableString stringWithCapacity:[base64String length]];
+        StrongId<NSScanner> scanner = [NSScanner scannerWithString:base64String];
+        StrongId<NSCharacterSet> base64AllowedCharacters =
+            [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="];
+
+        while (![scanner isAtEnd]) {
+            NSString* buf;
+            if ([scanner scanCharactersFromSet:base64AllowedCharacters intoString:&buf]) {
+                [cleanedString appendString:buf];
+                [buf release];
+            } else {
+                [scanner setScanLocation:[scanner scanLocation] + 1];
+            }
+        }
+
+        stringToUse = cleanedString;
+    }
+
+    if ([stringToUse length] == 0) {
+        return [self initWithBytes:"" length:0];
+    }
 
     ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
     RETURN_NULL_IF_FAILED(
         GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
                              &cryptographicBufferStatics));
 
-    Wrappers::HString wrlBase64String = Strings::NarrowToWide<HSTRING>(base64String);
+    Wrappers::HString wrlBase64String = Strings::NarrowToWide<HSTRING>(stringToUse);
 
     ComPtr<IBuffer> wrlBuffer;
     RETURN_NULL_IF_FAILED(cryptographicBufferStatics->DecodeFromBase64String(wrlBase64String.Get(), wrlBuffer.GetAddressOf()));
@@ -157,7 +227,7 @@ using namespace Windows::Foundation;
     _length = length;
 
     if (_length) {
-        _bytes = (uint8_t*)EbrMalloc(_length);
+        _bytes = (uint8_t*)IwMalloc(_length);
         if (!_bytes) {
             [self release];
             return nil;
@@ -358,7 +428,7 @@ using namespace Windows::Foundation;
         EbrFseek(fpIn, 0, SEEK_SET);
 
         if (length) {
-            _bytes = (uint8_t*)EbrMalloc(length);
+            _bytes = (uint8_t*)IwMalloc(length);
             if (!_bytes) {
                 if (error) {
                     *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
@@ -383,19 +453,19 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initWithBase64EncodedData:(NSData*)base64Data options:(NSDataBase64DecodingOptions)options {
-    UNIMPLEMENTED();
-    return nil;
+    StrongId<NSString> base64String = [[[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding] autorelease];
+    auto ret = [self initWithBase64EncodedString:base64String options:options];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initWithBase64Encoding:(NSString*)base64String {
-    UNIMPLEMENTED();
-    return nil;
+    return [self initWithBase64EncodedString:base64String options:0];
 }
 
 /**
@@ -424,19 +494,17 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSData*)base64EncodedDataWithOptions:(NSDataBase64EncodingOptions)options {
-    UNIMPLEMENTED();
-    return nil;
+    return [[self base64EncodedStringWithOptions:options] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)base64Encoding {
-    UNIMPLEMENTED();
-    return nil;
+    return [self base64EncodedStringWithOptions:0];
 }
 
 /**
@@ -532,19 +600,40 @@ using namespace Windows::Foundation;
 - (NSString*)description {
     const char* bytes = (const char*)[self bytes];
     NSUInteger length = [self length];
-    NSMutableString* ret = [NSMutableString stringWithCapacity:1 + length * 2 + (length / 4)];
 
-    [ret appendString:@"<"];
+    const int tmpBufSize = 16 + length * 2 + (length / 4);
+    std::vector<char> tmpBuf(tmpBufSize);
+    int tmpBufLen = 0;
+
+    tmpBuf[tmpBufLen++] = '<';
 
     for (auto i = 0; i < length;) {
-        [ret appendFormat:@"%02X", bytes[i++]];
+        int outDigit = ((bytes[i] & 0xF0) >> 4);
+        if (outDigit < 10) {
+            tmpBuf[tmpBufLen++] = '0' + outDigit;
+        } else {
+            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
+        }
+        assert(tmpBufLen < tmpBufSize);
+        outDigit = bytes[i] & 0xF;
+        if (outDigit < 10) {
+            tmpBuf[tmpBufLen++] = '0' + outDigit;
+        } else {
+            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
+        }
+        assert(tmpBufLen < tmpBufSize);
+        i++;
+
         if ((i % 4) == 0 && i < length) {
-            [ret appendString:@" "];
+            tmpBuf[tmpBufLen++] = ' ';
+            assert(tmpBufLen < tmpBufSize);
         }
     }
-    [ret appendString:@">"];
+    tmpBuf[tmpBufLen++] = '>';
 
-    return ret;
+    NSString* ret = [[NSString alloc] initWithCString:tmpBuf.data() length:tmpBufLen];
+
+    return [ret autorelease];
 }
 
 /**
@@ -563,11 +652,20 @@ using namespace Windows::Foundation;
 
 - (void)dealloc {
     if (_freeWhenDone && _bytes) {
-        free(_bytes);
+        IwFree(_bytes);
         _bytes = nullptr;
     }
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

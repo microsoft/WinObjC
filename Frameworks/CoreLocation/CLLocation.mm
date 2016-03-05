@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #import <Starboard.h>
 #import <CoreLocation/CLLocation.h>
 
@@ -29,18 +30,14 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
  * CLLocation class extension.
  */
 @interface CLLocation () {
-    volatile NSUInteger _hashCode;
 }
 
 @property (readwrite, nonatomic) CLLocationCoordinate2D coordinate;
 @property (readwrite, nonatomic, assign) CLLocationDistance altitude;
-// TODO::
-// todo-nithishm-11022015 - Need to implement CLFloor.
-// @property(readwrite, nonatomic, copy) CLFloor* floor;
+@property (readwrite, nonatomic, copy) CLFloor* floor;
 @property (readwrite, nonatomic, assign) CLLocationAccuracy horizontalAccuracy;
 @property (readwrite, nonatomic, assign) CLLocationAccuracy verticalAccuracy;
 @property (readwrite, nonatomic, copy) NSDate* timestamp;
-@property (readwrite, nonatomic, copy) NSString* description;
 @property (readwrite, nonatomic, assign) CLLocationSpeed speed;
 @property (readwrite, nonatomic, assign) CLLocationDirection course;
 @end
@@ -48,7 +45,9 @@ const CLLocationDistance kCLDistanceFilterNone = 0;
 /**
  * CLLocation main implementation.
  */
-@implementation CLLocation
+@implementation CLLocation {
+    volatile NSUInteger _hashCode;
+}
 
 /**
  @Status Stub
@@ -61,17 +60,9 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
 /**
  @Status Stub
 */
-- (CLLocationDistance)distanceFromLocation:(const CLLocation*)location {
-    UNIMPLEMENTED();
-    return (CLLocationDistance)0;
-}
-
-/**
- @Status Stub
-*/
 - (CLLocationDistance)getDistanceFrom:(const CLLocation*)location {
     UNIMPLEMENTED();
-    return (CLLocationDistance)0;
+    return StubReturn();
 }
 
 /**
@@ -120,19 +111,17 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
         _course = course;
         _speed = speed;
         _timestamp = [timestamp copy];
-        _description = nil;
     }
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_timestamp != nil) {
         [_timestamp release];
-    }
-
-    if (_description != nil) {
-        [_description release];
     }
 
     [super dealloc];
@@ -245,18 +234,46 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
     if (newLocation) {
         newLocation->_coordinate = _coordinate;
         newLocation->_altitude = _altitude;
-        // TODO::
-        // todo-nithishm-11022015 - Need to implement CLFloor.
-        // newLocation->_floor = _floor;
+        newLocation->_floor = _floor;
         newLocation->_horizontalAccuracy = _horizontalAccuracy;
         newLocation->_verticalAccuracy = _verticalAccuracy;
         newLocation->_timestamp = [_timestamp copyWithZone:zone];
-        newLocation->_description = [_description copyWithZone:zone];
         newLocation->_speed = _speed;
         newLocation->_course = _course;
     }
 
     return newLocation;
+}
+
+/**
+ @Status Stub
+*/
+- (CLLocationDistance)distanceFromLocation:(const CLLocation*)location {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
 }
 
 @end

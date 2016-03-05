@@ -97,7 +97,7 @@ typedef unsigned WDUUsbWriteOptions;
 
 WINRT_EXPORT
 @interface WDUUsbControlRequestType : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WDUUsbControlRecipient recipient;
 @property WDUUsbTransferDirection direction;
 @property WDUUsbControlTransferType controlTransferType;
@@ -113,7 +113,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbSetupPacket : RTObject
 + (WDUUsbSetupPacket*)createWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int value;
 @property (copy) WDUUsbControlRequestType* requestType;
 @property uint8_t request;
@@ -129,7 +129,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbDeviceClass : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) id subclassCode;
 @property (copy) id protocolCode;
 @property uint8_t classCode;

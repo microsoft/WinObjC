@@ -65,7 +65,7 @@
 }
 
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _data = [[coder decodeObjectForKey:@"data"] retain];
         _response = [[coder decodeObjectForKey:@"response"] retain];
         NSDictionary* userInfoDict = [coder decodeObjectForKey:@"userInfo"];

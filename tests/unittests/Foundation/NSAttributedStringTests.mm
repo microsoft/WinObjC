@@ -15,13 +15,13 @@
 //******************************************************************************
 
 #import <TestFramework.h>
-#import "Starboard.h"
-#import <windows.h>
+#import <Starboard.h>
 #import <CoreFoundation\CFAttributedString.h>
 #import <Foundation\NSAttributedString.h>
 #import <Foundation\NSDictionary.h>
 #import <Foundation\NSMutableAttributedString.h>
-#import <UIKit\UIKit.h>
+
+#import <windows.h>
 #import <vector>
 
 static NSString* c_defaultAttributeName = @"defaultAttributeName";
@@ -510,7 +510,7 @@ TEST(Foundation, AttributedString_SetAttributedString) {
 
 // This test is known to fail on Release builds
 // TODO: 5902592 THROW_NS_HR does not throw on Release when called through Foundation from unit tests
-TEST(Foundation, AttributedString_ThrowsBounds) {
+ARM_DISABLED_TEST(Foundation, AttributedString_ThrowsBounds) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
 
     NSError* error = nil;

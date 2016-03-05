@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,21 +14,46 @@
 //
 //******************************************************************************
 
-#ifndef _UISTEPPER_H_
-#define _UISTEPPER_H_
+#pragma once
 
-#import "UIKitExport.h"
+#import <UIKit/UIKitExport.h>
+#import <Foundation/NSObject.h>
+#import <UIKit/UIAppearance.h>
+#import <UIKit/UIAppearanceContainer.h>
+#import <UIKit/UICoordinateSpace.h>
+#import <UIKit/UIDynamicItem.h>
+#import <UIKit/UIFocusEnvironment.h>
+#import <UIKit/UITraitEnvironment.h>
 #import <UIKit/UIControl.h>
 
+@class UIColor;
+@class UIImage;
+
 UIKIT_EXPORT_CLASS
-@interface UIStepper : UIControl
-
-@property (nonatomic) double value;
-@property (nonatomic) double minimumValue;
-@property (nonatomic) double maximumValue;
-@property (nonatomic) double stepValue;
-@property (nonatomic, retain) UIColor* tintColor;
-
+@interface UIStepper : UIControl <NSCoding,
+                                  NSObject,
+                                  UIAppearance,
+                                  UIAppearanceContainer,
+                                  UICoordinateSpace,
+                                  UIDynamicItem,
+                                  UIFocusEnvironment,
+                                  UITraitEnvironment>
+@property (getter=isContinuous, nonatomic) BOOL continuous STUB_PROPERTY;
+@property (nonatomic) BOOL autorepeat STUB_PROPERTY;
+@property (nonatomic) BOOL wraps STUB_PROPERTY;
+@property (nonatomic) double minimumValue STUB_PROPERTY;
+@property (nonatomic) double maximumValue STUB_PROPERTY;
+@property (nonatomic) double stepValue STUB_PROPERTY;
+@property (nonatomic) double value STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* tintColor STUB_PROPERTY;
+- (UIImage*)backgroundImageForState:(UIControlState)state STUB_METHOD;
+- (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state STUB_METHOD;
+- (UIImage*)decrementImageForState:(UIControlState)state STUB_METHOD;
+- (void)setDecrementImage:(UIImage*)image forState:(UIControlState)state STUB_METHOD;
+- (UIImage*)dividerImageForLeftSegmentState:(UIControlState)leftState rightSegmentState:(UIControlState)rightState STUB_METHOD;
+- (void)setDividerImage:(UIImage*)image
+    forLeftSegmentState:(UIControlState)leftState
+      rightSegmentState:(UIControlState)rightState STUB_METHOD;
+- (UIImage*)incrementImageForState:(UIControlState)state STUB_METHOD;
+- (void)setIncrementImage:(UIImage*)image forState:(UIControlState)state STUB_METHOD;
 @end
-
-#endif /* _UISTEPPER_H_ */

@@ -198,7 +198,8 @@
         if (strcmp(pName, "User-Agent") == 0) {
             return nil;
         }
-        assert(0);
+
+        UNIMPLEMENTED_WITH_MSG("%s HTTP header field is not supported in valueForHTTPHeaderField", pName);
     }
 
     return nil;

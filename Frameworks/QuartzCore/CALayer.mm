@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include <math.h>
 #include "CoreGraphics/CGContext.h"
 #include "CGContextInternal.h"
@@ -35,11 +36,33 @@
 
 #include "..\include\CACompositor.h"
 #include "CAAnimationInternal.h"
+#include "CATransactionInternal.h"
+#include "Quaternion.h"
+
+NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
+NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
+NSString* const kCATransition = @"kCATransition";
+NSString* const kCAGravityCenter = @"kCAGravityCenter";
+NSString* const kCAGravityTop = @"kCAGravityTop";
+NSString* const kCAGravityBottom = @"kCAGravityBottom";
+NSString* const kCAGravityLeft = @"kCAGravityLeft";
+NSString* const kCAGravityRight = @"kCAGravityRight";
+NSString* const kCAGravityTopLeft = @"kCAGravityTopLeft";
+NSString* const kCAGravityTopRight = @"kCAGravityTopRight";
+NSString* const kCAGravityBottomLeft = @"kCAGravityBottomLeft";
+NSString* const kCAGravityBottomRight = @"kCAGravityBottomRight";
+NSString* const kCAGravityResize = @"kCAGravityResize";
+NSString* const kCAGravityResizeAspect = @"kCAGravityResizeAspect";
+NSString* const kCAGravityResizeAspectFill = @"kCAGravityResizeAspectFill";
+NSString* const kCAFilterLinear = @"kCAFilterLinear";
+NSString* const kCAFilterNearest = @"kCAFilterNearest";
+NSString* const kCAFilterTrilinear = @"kCAFilterTrilinear";
 
 // FIXME(DH): Compatibility shim to avoid rewriting parts of CA for libobjc2.
 // VSO 6149838
 static BOOL object_isMethodFromClass(id object, SEL selector, const char* className) {
-    return class_getMethodImplementation(objc_getClass(className), selector) != class_getMethodImplementation(object_getClass(object), selector);
+    return class_getMethodImplementation(objc_getClass(className), selector) ==
+           class_getMethodImplementation(object_getClass(object), selector);
 }
 
 @interface NSValue (CATransform3D)
@@ -75,14 +98,14 @@ public:
 
     ~NodeList() {
         if (items) {
-            EbrFree(items);
+            IwFree(items);
         }
     }
 
     inline void AddNode(T* item) {
         if (count + 1 > max) {
             max += 64;
-            items = (T**)EbrRealloc(items, max * sizeof(T*));
+            items = (T**)IwRealloc(items, max * sizeof(T*));
         }
         items[count++] = item;
     }
@@ -1130,7 +1153,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     (int) bounds.size.width, (int) bounds.size.height);
     bounds.size.height = 32;
     bounds.size.width = 32;
-    //*((char *) 0) = 0;
+    //((char *) 0) = 0;
     //assert(0);
     }
     */
@@ -1217,6 +1240,14 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
+
+- (CGRect)contentsCenter {
+    return priv->contentsCenter;
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setContentsCenter:(CGRect)rect {
     memcpy(&priv->contentsCenter, &rect, sizeof(CGRect));
 
@@ -1260,6 +1291,40 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     NSNumber* newGravity = [[NSNumber alloc] initWithInt:priv->gravity];
     [CATransaction _setPropertyForLayer:self name:@"gravity" value:newGravity];
     [newGravity release];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)contentsGravity {
+    if (priv->gravity == kGravityCenter) {
+        return kCAGravityCenter;
+    } else if (priv->gravity == kGravityResize) {
+        return kCAGravityResize;
+    } else if (priv->gravity == kGravityTop) {
+        return kCAGravityTop;
+    } else if (priv->gravity == kGravityResizeAspect) {
+        return kCAGravityResizeAspect;
+    } else if (priv->gravity == kGravityTopLeft) {
+        return kCAGravityTopLeft;
+    } else if (priv->gravity == kGravityTopRight) {
+        return kCAGravityTopRight;
+    } else if (priv->gravity == kGravityBottomLeft) {
+        return kCAGravityBottomLeft;
+    } else if (priv->gravity == kGravityLeft) {
+        return kCAGravityLeft;
+    } else if (priv->gravity == kGravityAspectFill) {
+        return kCAGravityResizeAspectFill;
+    } else if (priv->gravity == kGravityBottom) {
+        return kCAGravityBottom;
+    } else if (priv->gravity == kGravityRight) {
+        return kCAGravityRight;
+    } else if (priv->gravity == kGravityBottomRight) {
+        return kCAGravityBottomRight;
+    } else {
+        assert(0);
+    }
+    return nil;
 }
 
 /**
@@ -1347,7 +1412,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return nil;
 }
 
-- (void)setContentsOrientation:(UIInterfaceOrientation)orientation {
+- (UIImageOrientation)contentsOrientation {
+    return priv->contentsOrientation;
+}
+
+- (void)setContentsOrientation:(UIImageOrientation)orientation {
     priv->contentsOrientation = orientation;
     NSNumber* newOrientation = [[NSNumber alloc] initWithInt:priv->contentsOrientation];
     [CATransaction _setPropertyForLayer:self name:@"contentsOrientation" value:newOrientation];
@@ -1432,6 +1501,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 /**
  @Status Interoperable
+ @Notes For CABasicAnimation when all three animation properties are nil, our behavior (i.e. no animation)
+        remains consistent with what happens on Mac, but varies from Apple Documentation.
 */
 - (void)addAnimation:(CAAnimation*)anim forKey:(NSString*)key {
     if (priv->_animations == nil) {
@@ -1471,7 +1542,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
-- (void)animationForKey:(NSString*)key {
+- (CAAnimation*)animationForKey:(NSString*)key {
     if (priv->_animations == nil) {
         priv->_animations = [NSMutableDictionary new];
     }
@@ -1480,7 +1551,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         key = @"";
     }
 
-    [priv->_animations objectForKey:key];
+    return [priv->_animations objectForKey:key];
 }
 
 /**
@@ -1500,12 +1571,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)removeAllAnimations {
     if (priv->_animations) {
         int count = CFDictionaryGetCount((CFDictionaryRef)priv->_animations);
-        id* vals = (id*)malloc(sizeof(id) * count);
+        id* vals = (id*)IwMalloc(sizeof(id) * count);
         CFDictionaryGetKeysAndValues((CFDictionaryRef)priv->_animations, NULL, (const void**)vals);
         for (int i = 0; i < count; i++) {
             [vals[i] _removeAnimationsFromLayer];
         }
-        free(vals);
+        IwFree(vals);
 
         [priv->_animations removeAllObjects];
     }
@@ -1599,17 +1670,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Stub
-*/
-- (void)setDoubleSided:(BOOL)doubleSided {
-    UNIMPLEMENTED();
-}
-
-- (void)setGeometryFlipped:(BOOL)flipped {
-    EbrDebugLog("setGeometryFlipped not supported\n");
-}
-
-/**
  @Status Interoperable
 */
 - (void)setBackgroundColor:(CGColorRef)color {
@@ -1628,6 +1688,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     CGColorRelease(old);
 
     [self setNeedsDisplay];
+}
+
+/**
+ @Status Interoperable
+*/
+- (CGColorRef)backgroundColor {
+    return priv->_backgroundColor;
 }
 
 - (void)_setContentColor:(CGColorRef)newColor {
@@ -1708,14 +1775,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Stub
 */
-- (void)setRasterizationScale:(float)scale {
-    UNIMPLEMENTED();
-    EbrDebugLog("setRasterizationScale not supported\n");
-}
-
-/**
- @Status Stub
-*/
 - (void)setShadowOffset:(CGSize)size {
     UNIMPLEMENTED();
 }
@@ -1777,10 +1836,18 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (BOOL)shouldRasterize {
+    return priv->_shouldRasterize;
+}
+
+/**
+   @Status Interoperable
 */
 - (void)setShouldRasterize:(BOOL)shouldRasterize {
-    UNIMPLEMENTED();
+    priv->_shouldRasterize = shouldRasterize;
+    GetCACompositor()->SetShouldRasterize(priv->_presentationNode, shouldRasterize);
 }
 
 /**
@@ -1788,23 +1855,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (float)contentsScale {
     return priv->contentsScale;
-}
-
-/**
- @Status Stub
-*/
-- (void)setMagnificationFilter:(NSString*)filter {
-    UNIMPLEMENTED();
-}
-
-- (void)setEdgeAntialiasingMask:(unsigned)mask {
-}
-
-/**
- @Status Stub
-*/
-- (void)setMinificationFilter:(NSString*)filter {
-    UNIMPLEMENTED();
 }
 
 /**
@@ -1847,6 +1897,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (NSString*)name {
     return priv->_name;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setSublayers:(NSArray*)sublayers {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1961,6 +2018,13 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     priv->needsDisplayOnBoundsChange = needsDisplayOnBoundsChange;
 }
 
+/**
+ @Status Interoperable
+*/
+- (BOOL)needsDisplayOnBoundsChange {
+    return priv->needsDisplayOnBoundsChange;
+}
+
 - (CALayer*)hitTest:(CGPoint)point {
     if (priv->opacity <= 0.01f || priv->hidden == 1) {
         return nil;
@@ -2032,48 +2096,86 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return [super retain];
 }
 
-- (void)release {
-    [super release];
+- (id)valueForUndefinedKey:(NSString*)keyPath {
+    return [priv->_undefinedKeys valueForKey:keyPath];
 }
 
-- (id)valueForUndefinedKey:(NSString*)keyPath {
+- (id)valueForKeyPath:(NSString*)keyPath {
     char* pPath = (char*)[keyPath UTF8String];
-    if (strcmp(pPath, "position.y") == 0) {
+    if (strcmp(pPath, "position.x") == 0) {
+        return [NSNumber numberWithFloat:priv->position.x];
+    } else if (strcmp(pPath, "position.y") == 0) {
         return [NSNumber numberWithFloat:priv->position.y];
-    } else if (strcmp(pPath, "transform.rotation.z") == 0) {
+    } else if (strcmp(pPath, "transform.rotation.z") == 0 || strcmp(pPath, "transform.rotation") == 0) {
         CATransform3D curTransform = [self transform];
-        EbrDebugLog("Should get rotation\n");
-        return [NSNumber numberWithFloat:0.0f];
-    } else if (strcmp(pPath, "transform.rotation") == 0) {
-        CATransform3D curTransform = [self transform];
-
+        Quaternion qval;
+        qval.CreateFromMatrix(reinterpret_cast<float*>(&curTransform));
+        return [NSNumber numberWithFloat:(float)-qval.roll() * 180.0f / M_PI];
+    } else if (strcmp(pPath, "transform.rotation.x") == 0 ||
+               strcmp(pPath, "transform.rotation.y") == 0) {
         EbrDebugLog("Should get rotation\n");
         return [NSNumber numberWithFloat:0.0f];
     } else if (strcmp(pPath, "transform.scale") == 0) {
         CATransform3D curTransform = [self transform];
-
         float scale[3];
-
         CATransform3DGetScale(curTransform, scale);
         return [NSNumber numberWithFloat:(scale[0] + scale[1] + scale[2]) / 3.0f];
+    } else if (strcmp(pPath, "transform.scale.x") == 0) {
+        CATransform3D curTransform = [self transform];
+        float scale[3];
+        CATransform3DGetScale(curTransform, scale);
+        return [NSNumber numberWithFloat:scale[0]];
+    } else if (strcmp(pPath, "transform.scale.y") == 0) {
+        CATransform3D curTransform = [self transform];
+        float scale[3];
+        CATransform3DGetScale(curTransform, scale);
+        return [NSNumber numberWithFloat:scale[1]];
+    } else if (strcmp(pPath, "transform.scale.z") == 0) {
+        CATransform3D curTransform = [self transform];
+        float scale[3];
+        CATransform3DGetScale(curTransform, scale);
+        return [NSNumber numberWithFloat:scale[2]];
+    } else if (strcmp(pPath, "transform.translation") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSValue valueWithCGSize:CGSizeMake(translation[0] - priv->position.x, translation[1] - priv->position.y)];
+    } else if (strcmp(pPath, "transform.translation.x") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSNumber numberWithFloat:translation[0]];
+    } else if (strcmp(pPath, "transform.translation.y") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSNumber numberWithFloat:translation[1]];
+    } else if (strcmp(pPath, "transform.translation.z") == 0) {
+        CATransform3D curTransform = [self transform];
+        float translation[3];
+        CATransform3DGetPosition(curTransform, translation);
+        return [NSNumber numberWithFloat:translation[2]];
     } else if (strcmp(pPath, "bounds.origin") == 0) {
         CGRect bounds = [self bounds];
-
         return [NSValue valueWithCGPoint:bounds.origin];
     } else if (strcmp(pPath, "bounds.size") == 0) {
         CGRect bounds = [self bounds];
-
         return [NSValue valueWithCGSize:bounds.size];
-    } else {
-        id ret = [priv->_undefinedKeys valueForKey:keyPath];
-        if (ret == nil) {
-            assert(0);
-        }
+    } else if (strcmp(pPath, "bounds.size.width") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.size.width];
+    } else if (strcmp(pPath, "bounds.size.height") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.size.height];
+    } else if (strcmp(pPath, "bounds.origin.x") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.origin.x];
+    } else if (strcmp(pPath, "bounds.origin.y") == 0) {
+        CGRect bounds = [self bounds];
+        return [NSNumber numberWithFloat:bounds.origin.y];
+    } 
 
-        return ret;
-    }
-
-    return nil;
+    return [super valueForKeyPath:keyPath];
 }
 
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
@@ -2120,10 +2222,6 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     UNIMPLEMENTED();
     EbrDebugLog("mask not supported\n");
     return nil;
-}
-
-- (void)setFillMode:(NSString*)mode {
-    EbrDebugLog("setFillMode not supported\n");
 }
 
 /**
@@ -2358,6 +2456,137 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
 
 - (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
     GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)needsDisplay {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)needsDisplayForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setNeedsDisplayInRect:(CGRect)theRect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)needsLayout {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)modelLayer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)contentsAreFlipped {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CGSize)preferredFrameSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval toLayer:(CALayer*)layer {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)scrollPoint:(CGPoint)thePoint {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)scrollRectToVisible:(CGRect)theRect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)shouldArchiveValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (id)defaultValueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

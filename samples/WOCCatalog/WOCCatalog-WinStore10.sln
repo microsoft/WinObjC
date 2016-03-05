@@ -1,35 +1,43 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{802EC330-1C66-4ECE-ACAC-A22F0058E869}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{B2E97B00-7169-4019-A43B-2BBEE8A27371}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{A74AAE3B-53F9-42FE-B857-87153273DA20}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{6117D215-F749-41BD-834E-B5CC22B1784C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{A74AAE3B-53F9-42FE-B857-87153273DA20}*SharedItemsImports = 9
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}*SharedItemsImports = 4
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{6117D215-F749-41BD-834E-B5CC22B1784C}*SharedItemsImports = 9
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
 		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Build.0 = Debug|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Deploy.0 = Debug|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.ActiveCfg = Release|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Build.0 = Release|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Deploy.0 = Release|Win32
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Debug|ARM.Build.0 = Debug|ARM
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Debug|ARM.Deploy.0 = Debug|ARM
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Debug|Win32.Build.0 = Debug|Win32
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Debug|Win32.Deploy.0 = Debug|Win32
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Release|ARM.ActiveCfg = Release|ARM
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Release|ARM.Build.0 = Release|ARM
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Release|ARM.Deploy.0 = Release|ARM
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Release|Win32.ActiveCfg = Release|Win32
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Release|Win32.Build.0 = Release|Win32
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A74AAE3B-53F9-42FE-B857-87153273DA20} = {802EC330-1C66-4ECE-ACAC-A22F0058E869}
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7} = {802EC330-1C66-4ECE-ACAC-A22F0058E869}
+		{6117D215-F749-41BD-834E-B5CC22B1784C} = {B2E97B00-7169-4019-A43B-2BBEE8A27371}
+		{7ACE16A9-EA45-422A-80C9-0783F0ED4E9C} = {B2E97B00-7169-4019-A43B-2BBEE8A27371}
 	EndGlobalSection
 EndGlobal

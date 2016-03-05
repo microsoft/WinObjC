@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,27 +13,46 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _GKLOCALPLAYER_H_
-#define _GKLOCALPLAYER_H_
+#pragma once
 
 #import <GameKit/GameKitExport.h>
 #import <GameKit/GKPlayer.h>
 
+#import <Foundation/NSObject.h>
+
 @class UIViewController;
+@class NSError;
+@class NSURL;
+@class NSData;
+@class NSArray;
+@class NSString;
+@protocol GKLocalPlayerListener;
+@class GKSavedGame;
 
 GAMEKIT_EXPORT_CLASS
-@interface GKLocalPlayer : GKPlayer
-
-@property (nonatomic, copy) void (^authenticateHandler)(UIViewController* viewController, NSError* err);
-@property (nonatomic, readonly, getter=isAuthenticated) BOOL authenticated;
-
-+ (GKLocalPlayer*)localPlayer;
-- (void)authenticateWithCompletionHandler:(void (^)(NSError* error))completionHandler;
-- (void)loadFriendsWithCompletionHandler:(void (^)(NSArray* friends, NSError* error))completionHandler;
-
+@interface GKLocalPlayer : GKPlayer <NSObject>
++ (GKLocalPlayer*)localPlayer STUB_METHOD;
+- (void)generateIdentityVerificationSignatureWithCompletionHandler:(void (^)(NSURL*, NSData*, NSData*, uint64_t, NSError*))completionHandler
+    STUB_METHOD;
+- (void)loadFriendPlayersWithCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
+- (void)loadDefaultLeaderboardIdentifierWithCompletionHandler:(void (^)(NSString*, NSError*))completionHandler STUB_METHOD;
+- (void)setDefaultLeaderboardIdentifier:(NSString*)leaderboardIdentifier
+                      completionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+- (void)registerListener:(id<GKLocalPlayerListener>)listener STUB_METHOD;
+- (void)unregisterAllListeners STUB_METHOD;
+- (void)unregisterListener:(id<GKLocalPlayerListener>)listener STUB_METHOD;
+- (void)deleteSavedGamesWithName:(NSString*)name completionHandler:(void (^)(NSError*))handler STUB_METHOD;
+- (void)fetchSavedGamesWithCompletionHandler:(void (^)(NSArray*, NSError*))handler STUB_METHOD;
+- (void)resolveConflictingSavedGames:(NSArray*)conflictingSavedGames
+                            withData:(NSData*)data
+                   completionHandler:(void (^)(NSArray*, NSError*))handler STUB_METHOD;
+- (void)saveGameData:(NSData*)data withName:(NSString*)name completionHandler:(void (^)(GKSavedGame*, NSError*))handler STUB_METHOD;
+- (void)authenticateWithCompletionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+- (void)loadDefaultLeaderboardCategoryIDWithCompletionHandler:(void (^)(NSString*, NSError*))completionHandler STUB_METHOD;
+- (void)loadFriendsWithCompletionHandler:(void (^)(NSArray*, NSError*))completionHandler STUB_METHOD;
+- (void)setDefaultLeaderboardCategoryID:(NSString*)categoryID completionHandler:(void (^)(NSError*))completionHandler STUB_METHOD;
+@property (copy, nonatomic, nullable) void (^authenticateHandler)(UIViewController*, NSError*) STUB_PROPERTY;
+@property (readonly, getter=isAuthenticated, nonatomic) BOOL authenticated STUB_PROPERTY;
+@property (readonly, getter=isUnderage, nonatomic) BOOL underage STUB_PROPERTY;
+@property (readonly, retain, nonatomic) NSArray* friends STUB_PROPERTY;
 @end
-
-SB_EXPORT NSString* GKPlayerAuthenticationDidChangeNotificationName;
-
-#endif /* _GKLOCALPLAYER_H_ */

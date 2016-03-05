@@ -1,73 +1,100 @@
-/* Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2007 Christopher J. W. Lloyd
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+#import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
-#import <Foundation/NSURLCache.h>
+#import <Foundation/NSURLProtocol.h>
 
-@protocol NSURLConnectionDelegate<NSObject>
-@end
-
-@protocol NSURLConnectionDataDelegate<NSURLConnectionDelegate>
-@end
-
-@class NSInputStream;
-@class NSOutputStream;
-@class NSRunLoop;
 @class NSURLRequest;
 @class NSData;
 @class NSURLResponse;
 @class NSError;
-@class NSMutableArray;
-@class NSURLAuthenticationChallenge;
-@class NSCachedURLResponse;
-@class NSURLProtocol;
-@class NSMutableData;
 @class NSOperationQueue;
-
-#import <Foundation/NSURLProtocol.h>
+@class NSRunLoop;
+@class NSString;
+@class NSInputStream;
+@class NSURLProtectionSpace;
+@class NSURL;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSURLConnection : NSObject<NSURLProtocolClient> {
-   id _request;
-   id _protocol;
-   id _delegate;
-   id _response;
-   unsigned _storagePolicy;
-   BOOL _didRetain, _didRelease, _scheduled;
+@interface NSURLConnection : NSObject <NSURLProtocolClient> {
+    id _request;
+    id _protocol;
+    id _delegate;
+    id _response;
+    unsigned _storagePolicy;
+    BOOL _didRetain, _didRelease, _scheduled;
 }
 
-+(BOOL)canHandleRequest:(NSURLRequest *)request;
-+(NSData *)sendSynchronousRequest:(NSURLRequest *)request returningResponse:(NSURLResponse **)response error:(NSError **)error;
-
-+(NSURLConnection *)connectionWithRequest:(NSURLRequest *)request delegate:delegate;
-+(void)sendAsynchronousRequest:(NSURLRequest *)request queue:(NSOperationQueue *)queue completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
-+(void)setDefaultAllowsInvalidSSLCertificate: (BOOL) allowInvalidCertificates;
--(BOOL)defaultAllowsInvalidSSLCertificate;
-
--initWithRequest:(NSURLRequest *)request delegate:delegate startImmediately:(BOOL)startLoading;
--initWithRequest:(NSURLRequest *)request delegate:delegate;
-
--(void)start;
--(void)cancel;
-
--(void)scheduleInRunLoop:(NSRunLoop *)runLoop forMode:(NSString *)mode;
--(void)unscheduleFromRunLoop:(NSRunLoop *)runLoop forMode:(NSString *)mode;
-
++ (BOOL)canHandleRequest:(NSURLRequest*)request;
+@property (readonly, copy) NSURLRequest* originalRequest;
+@property (readonly, copy) NSURLRequest* currentRequest;
++ (NSData*)sendSynchronousRequest:(NSURLRequest*)request
+                returningResponse:(NSURLResponse* _Nullable*)response
+                            error:(NSError* _Nullable*)error;
++ (NSURLConnection*)connectionWithRequest:(NSURLRequest*)request delegate:(id)delegate;
+- (instancetype)initWithRequest:(NSURLRequest*)request delegate:(id)delegate;
+- (instancetype)initWithRequest:(NSURLRequest*)request delegate:(id)delegate startImmediately:(BOOL)startImmediately;
++ (void)sendAsynchronousRequest:(NSURLRequest*)request
+                          queue:(NSOperationQueue*)queue
+              completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))handler;
+- (void)start;
+- (void)cancel;
+- (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
+- (void)setDelegateQueue:(NSOperationQueue*)queue STUB_METHOD;
+- (void)unscheduleFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
 @end
 
-@interface NSObject(NSURLConnectionDelegate)
--(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
--(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)connection:(NSURLConnection *)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
--(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
--(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response;
--(NSCachedURLResponse *)connection:(NSURLConnection *)connection willCacheResponse:(NSCachedURLResponse *)response;
--(NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response;
--(void)connectionDidFinishLoading:(NSURLConnection *)connection;
+@protocol NSURLConnectionDelegate <NSObject>
+@optional
+- (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (BOOL)connection:(NSURLConnection*)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace*)protectionSpace;
+- (void)connection:(NSURLConnection*)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)connection:(NSURLConnection*)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection*)connection;
+- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error;
+@end
 
+@protocol NSURLConnectionDataDelegate <NSURLConnectionDelegate>
+@optional
+- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response;
+- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data;
+- (void)connection:(NSURLConnection*)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
+- (void)connectionDidFinishLoading:(NSURLConnection*)connection;
+- (NSURLRequest*)connection:(NSURLConnection*)connection
+            willSendRequest:(NSURLRequest*)request
+           redirectResponse:(NSURLResponse*)redirectResponse;
+- (NSInputStream*)connection:(NSURLConnection*)connection needNewBodyStream:(NSURLRequest*)request;
+- (NSCachedURLResponse*)connection:(NSURLConnection*)connection willCacheResponse:(NSCachedURLResponse*)cachedResponse;
+@end
+
+@protocol NSURLConnectionDownloadDelegate <NSURLConnectionDelegate>
+@optional
+- (void)connection:(NSURLConnection*)connection
+      didWriteData:(long long)bytesWritten
+ totalBytesWritten:(long long)totalBytesWritten
+expectedTotalBytes:(long long)expectedTotalBytes;
+- (void)connectionDidResumeDownloading:(NSURLConnection*)connection
+                     totalBytesWritten:(long long)totalBytesWritten
+                    expectedTotalBytes:(long long)expectedTotalBytes;
+
+- (void)connectionDidFinishDownloading:(NSURLConnection*)connection destinationURL:(NSURL*)destinationURL;
 @end

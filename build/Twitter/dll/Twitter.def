@@ -1,0 +1,10 @@
+LIBRARY Twitter
+    EXPORTS
+        ; TWRequest.mm
+        _OBJC_CLASS_TWRequest DATA
+        __objc_class_name_TWRequest CONSTANT
+
+        ; TWTweetComposeViewController.mm
+        _OBJC_CLASS_TWTweetComposeViewController DATA
+        __objc_class_name_TWTweetComposeViewController CONSTANT
+

@@ -1,0 +1,8 @@
+module CoreMIDI [extern_c] {
+    umbrella header "CoreMIDI.h"
+    export *
+
+    module * {
+        export *
+    }
+}

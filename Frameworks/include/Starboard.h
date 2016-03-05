@@ -18,6 +18,7 @@
 #define __STARBOARD_H
 
 #include "Logging.h"
+#include "IwMalloc.h"
 
 // Interface should not be defined for Objective-C code
 #ifdef interface
@@ -262,10 +263,6 @@ public:
 };
 #endif
 
-#define EbrMalloc malloc
-#define EbrRealloc realloc
-#define EbrFree free
-#define EbrCalloc calloc
 #define idt(type) type *
 
 #ifdef __OBJC__

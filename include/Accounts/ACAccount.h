@@ -16,6 +16,12 @@
 
 #pragma once
 
+#import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
+
+@class ACAccountType;
+@class ACAccountCredential;
+
 ACCOUNTS_EXPORT NSString* const ACErrorDomain;
 
 typedef NS_ENUM(NSUInteger, ACErrorCode) {
@@ -40,11 +46,12 @@ typedef NS_ENUM(NSUInteger, ACErrorCode) {
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccount : NSObject
 
-@property (copy, nonatomic) NSString* accountDescription;
-@property (strong, nonatomic) ACAccountType* accountType;
-@property (strong, nonatomic) ACAccountCredential* credential;
-@property (readonly, weak, nonatomic) NSString* identifier;
-@property (copy, nonatomic) NSString* username;
+@property (copy, nonatomic) NSString* accountDescription STUB_PROPERTY;
+@property (strong, nonatomic) ACAccountType* accountType STUB_PROPERTY;
+@property (strong, nonatomic) ACAccountCredential* credential STUB_PROPERTY;
+@property (readonly, weak, nonatomic) NSString* identifier STUB_PROPERTY;
+@property (copy, nonatomic) NSString* username STUB_PROPERTY;
+@property (copy, nonatomic) NSString* userFullName STUB_PROPERTY;
 
-- (instancetype)initWithAccountType:(ACAccountType*)type;
+- (instancetype)initWithAccountType:(ACAccountType*)type STUB_METHOD;
 @end

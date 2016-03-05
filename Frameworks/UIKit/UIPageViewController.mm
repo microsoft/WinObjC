@@ -23,18 +23,21 @@
 
 #include <algorithm>
 
-NSString * const UIPageViewControllerOptionSpineLocationKey = @"SpineLocation";
-NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
+NSString* const UIPageViewControllerOptionSpineLocationKey = @"SpineLocation";
+NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
 @interface _UIPageViewPage : UIView
 - (instancetype)initWithFrame:(CGRect)frame viewController:(UIViewController*)controller;
 - (void)unhide;
 @end
 
-@interface _UIPageViewScrollView : UIScrollView<UIScrollViewDelegate>
-- (NSArray *)_currentPages;
+@interface _UIPageViewScrollView : UIScrollView <UIScrollViewDelegate>
+- (NSArray*)_currentPages;
 - (void)_resetToCurrent;
-- (void)_scrollToNewViewController:(UIViewController *)controller direction:(UIPageViewControllerNavigationDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
+- (void)_scrollToNewViewController:(UIViewController*)controller
+                         direction:(UIPageViewControllerNavigationDirection)direction
+                          animated:(BOOL)animated
+                        completion:(void (^)(BOOL finished))completion;
 @end
 
 @implementation _UIPageViewPage {
@@ -50,7 +53,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    CGRect fitFrame = { 0, 0, frame.size.width, frame.size.height }; 
+    CGRect fitFrame = { 0, 0, frame.size.width, frame.size.height };
     for (int i = 0; i < [self.subviews count]; i++) {
         [[self.subviews objectAtIndex:i] setFrame:fitFrame];
     }
@@ -74,7 +77,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     BOOL _skipUpdates;
 }
 
-- (instancetype)_initWithPageViewController:(UIPageViewController *)viewController {
+- (instancetype)_initWithPageViewController:(UIPageViewController*)viewController {
     [super init];
 
     _controllers.attach([NSMutableArray new]);
@@ -92,7 +95,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     return self;
 }
 
-- (NSArray *)_currentPages {
+- (NSArray*)_currentPages {
     // TODO: Multiple pages
     // TODO: Vertical orientation
     if ([_controllers count] == 0) {
@@ -111,7 +114,10 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 }
 
-- (void)_scrollToNewViewController:(UIViewController *)controller direction:(UIPageViewControllerNavigationDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
+- (void)_scrollToNewViewController:(UIViewController*)controller
+                         direction:(UIPageViewControllerNavigationDirection)direction
+                          animated:(BOOL)animated
+                        completion:(void (^)(BOOL finished))completion {
     CGRect currentFrame = self.frame;
     CGPoint currentOffset = self.contentOffset;
 
@@ -151,7 +157,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         }
 
         _keepAdjacent = FALSE;
-        
+
         // Completion handler called in scrollViewDidEndScrollingAnimation
     } else {
         CGPoint targetOffset = CGPointMake(0, 0);
@@ -159,7 +165,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         _previousControllers = [self _currentPages];
 
         [self setContentOffset:targetOffset animated:NO];
-        
+
         for (int i = 0; i < [_pages count]; i++) {
             [[_pages objectAtIndex:i] removeFromSuperview];
         }
@@ -169,7 +175,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 
         [self _pushController:controller direction:UIPageViewControllerNavigationDirectionForward targetOffset:&targetOffset];
 
-        if(completion) {
+        if (completion) {
             completion(YES);
         }
     }
@@ -188,7 +194,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     CGPoint targetOffset = self.contentOffset;
     [super touchesEnded:touches withEvent:event];
     [self _populatePagesWithOffset:&targetOffset interactive:NO];
@@ -250,16 +256,17 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             [[_pages objectAtIndex:i] unhide];
             if (self.tracking) {
                 if ([[_viewController delegate] respondsToSelector:@selector(pageViewController:willTransitionToViewControllers:)]) {
-                    [[_viewController delegate] pageViewController:_viewController willTransitionToViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:i], nil]];
+                    [[_viewController delegate] pageViewController:_viewController
+                                   willTransitionToViewControllers:[NSArray arrayWithObjects:[_controllers objectAtIndex:i], nil]];
                 }
             }
         }
     }
 }
 
-- (void)_pushController:(UIViewController *)controller 
-              direction:(UIPageViewControllerNavigationDirection)direction 
-           targetOffset:(inout CGPoint *)targetContentOffset {
+- (void)_pushController:(UIViewController*)controller
+              direction:(UIPageViewControllerNavigationDirection)direction
+           targetOffset:(inout CGPoint*)targetContentOffset {
     _UIPageViewPage* newPage = [[_UIPageViewPage alloc] initWithFrame:self.frame viewController:controller];
 
     switch (direction) {
@@ -298,47 +305,49 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             [self setContentOffset:CGPointMake(self.contentOffset.x - self.frame.size.width, 0)];
             break;
     }
-    
+
     [self setNeedsLayout];
 }
 
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+- (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
+                     withVelocity:(CGPoint)velocity
+              targetContentOffset:(inout CGPoint*)targetContentOffset {
     [self _populatePagesWithOffset:targetContentOffset interactive:YES];
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView*)scrollView {
     if (_completion) {
         _completion(!self.tracking);
         _completion = nil;
     }
 
     _previousControllers = nil;
-    
+
     CGPoint targetOffset = self.contentOffset;
     [self _populatePagesWithOffset:&targetOffset interactive:NO];
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
     if (_completion) {
         _completion(!self.tracking);
         _completion = nil;
     }
 
-    // We make the assumption that if the previous controllers and current controllers are different, we successfully transited... 
+    // We make the assumption that if the previous controllers and current controllers are different, we successfully transited...
     // this may not be correct for multipage.
-    if ([[_viewController delegate] respondsToSelector:@selector(pageViewController:didFinishAnimating:previousViewControllers:transitionCompleted:)]) {
+    if ([[_viewController delegate]
+            respondsToSelector:@selector(pageViewController:didFinishAnimating:previousViewControllers:transitionCompleted:)]) {
         [[_viewController delegate] pageViewController:_viewController
-                                   didFinishAnimating:!self.tracking
-                              previousViewControllers:_previousControllers
-                                  transitionCompleted:![_previousControllers isEqualToArray:[self _currentPages]]];
+                                    didFinishAnimating:!self.tracking
+                               previousViewControllers:_previousControllers
+                                   transitionCompleted:![_previousControllers isEqualToArray:[self _currentPages]]];
     }
-    
+
     _previousControllers = nil;
 
     CGPoint targetOffset = self.contentOffset;
     [self _populatePagesWithOffset:&targetOffset interactive:NO];
 }
- 
 
 - (void)layoutSubviews {
     CGRect frame = self.frame;
@@ -358,44 +367,47 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     [super layoutSubviews];
 }
 
-- (void)_populatePagesWithOffset:(inout CGPoint *)targetOffset interactive:(BOOL)interactive {
+- (void)_populatePagesWithOffset:(inout CGPoint*)targetOffset interactive:(BOOL)interactive {
     if ([_controllers count] == 0 && _skipUpdates) {
         return;
     }
 
     CGRect currentFrame = self.frame;
-    
+
     // TODO: Vertical direction.
     // TODO: Multiple pages
     // TODO: Probably shouldn't hammer the dataSource when it returns nil.
     if (interactive || _keepAdjacent) {
         if ((self.contentOffset.x + currentFrame.size.width) >= ([_controllers count] * currentFrame.size.width)) {
             // BUG: See https://github.com/Microsoft/WinObjC/issues/291 for the cast
-            UIViewController* nextController = 
-                [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController 
-                               viewControllerAfterViewController:[_controllers objectAtIndex:([_controllers count] - 1)]];
+            UIViewController* nextController = [(id<UIPageViewControllerDataSource>)[_viewController dataSource]
+                               pageViewController:_viewController
+                viewControllerAfterViewController:[_controllers objectAtIndex:([_controllers count] - 1)]];
             if (nextController != nil) {
                 [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionForward targetOffset:targetOffset];
             }
         }
         if (self.contentOffset.x <= 0) {
-            UIViewController* nextController = 
-                [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController 
-                              viewControllerBeforeViewController:[_controllers objectAtIndex:0]];
+            UIViewController* nextController =
+                [(id<UIPageViewControllerDataSource>)[_viewController dataSource] pageViewController:_viewController
+                                                                  viewControllerBeforeViewController:[_controllers objectAtIndex:0]];
             if (nextController != nil) {
                 [self _pushController:nextController direction:UIPageViewControllerNavigationDirectionReverse targetOffset:targetOffset];
             }
-        } 
+        }
         // This clears out any view not visible, keeps adjacent
-        while ((self.contentOffset.x > 0) && ((self.contentOffset.x + currentFrame.size.width) < (([_controllers count] * currentFrame.size.width) - currentFrame.size.width))) {
+        while ((self.contentOffset.x > 0) && ((self.contentOffset.x + currentFrame.size.width) <
+                                              (([_controllers count] * currentFrame.size.width) - currentFrame.size.width))) {
             [self _popControllerWithDirection:UIPageViewControllerNavigationDirectionForward];
         }
-        while (((self.contentOffset.x + currentFrame.size.width) < ([_controllers count] * currentFrame.size.width)) && (self.contentOffset.x > currentFrame.size.width)) {
+        while (((self.contentOffset.x + currentFrame.size.width) < ([_controllers count] * currentFrame.size.width)) &&
+               (self.contentOffset.x > currentFrame.size.width)) {
             [self _popControllerWithDirection:UIPageViewControllerNavigationDirectionReverse];
         }
     } else {
         // This clears out any view not visible and adjacent
-        while ((self.contentOffset.x + currentFrame.size.width) <= (([_controllers count] * currentFrame.size.width) - currentFrame.size.width)) {
+        while ((self.contentOffset.x + currentFrame.size.width) <=
+               (([_controllers count] * currentFrame.size.width) - currentFrame.size.width)) {
             [self _popControllerWithDirection:UIPageViewControllerNavigationDirectionForward];
         }
         while (self.contentOffset.x >= currentFrame.size.width) {
@@ -404,7 +416,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     CGPoint targetOffset = self.contentOffset;
     [self _populatePagesWithOffset:&targetOffset interactive:(self.tracking || self.decelerating)];
     [self _updateVisible];
@@ -418,20 +430,22 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 }
 
 - (instancetype)init {
-    return [self initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
+    return [self initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+                   navigationOrientation:UIPageViewControllerNavigationOrientationVertical
+                                 options:nil];
 }
 
 /**
 @Status Interoperable
 */
-- (NSArray *)gestureRecognizers {
+- (NSArray*)gestureRecognizers {
     if (_gestureRecognizers == nil) {
         _gestureRecognizers = [NSArray arrayWithObjects:[_scrollView panGestureRecognizer], nil];
     }
     return _gestureRecognizers;
 }
 
-- (NSArray *)viewControllers {
+- (NSArray*)viewControllers {
     return [_scrollView _currentPages];
 }
 
@@ -455,8 +469,11 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 @Status Caveat
 @Notes Only single page scroll style transitions supported.
 */
-- (void)setViewControllers:(NSArray *)viewControllers direction:(UIPageViewControllerNavigationDirection)direction animated:(BOOL)animated completion:(void (^)(BOOL finished))completion {
-    if (viewControllers == nil) { 
+- (void)setViewControllers:(NSArray*)viewControllers
+                 direction:(UIPageViewControllerNavigationDirection)direction
+                  animated:(BOOL)animated
+                completion:(void (^)(BOOL finished))completion {
+    if (viewControllers == nil) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Parameter viewControllers nil!" userInfo:nil];
     }
 
@@ -466,19 +483,25 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
         case UIPageViewControllerSpineLocationMax:
             if (self.doubleSided) {
                 if (viewControllers.count != 2) {
-                    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Doublesided spine type requires 2 UIViewControllers!" userInfo:nil];
+                    @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                                   reason:@"Doublesided spine type requires 2 UIViewControllers!"
+                                                 userInfo:nil];
                 } else {
                     NSLog(@"Double sided transitions not supported. Only first element will be used for transition.");
                     viewControllers = [[NSArray arrayWithObjects:[viewControllers objectAtIndex:0]] autorelease];
                 }
-            } 
+            }
             if (viewControllers.count != 1) {
-                @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Spine type requires 1 UIViewController!" userInfo:nil];
+                @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                               reason:@"Spine type requires 1 UIViewController!"
+                                             userInfo:nil];
             }
             break;
         case UIPageViewControllerSpineLocationMid:
             if (viewControllers.count > 2) {
-                @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Spine type requires 2 UIViewControllers!" userInfo:nil];
+                @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                               reason:@"Spine type requires 2 UIViewControllers!"
+                                             userInfo:nil];
             }
             break;
         default:
@@ -488,7 +511,9 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     for (int i = 0; i < viewControllers.count; i++) {
         id viewController = [viewControllers objectAtIndex:i];
         if ((viewController != nil) && ![viewController isKindOfClass:[UIViewController class]]) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Not all elements in viewControllers conform to UIViewController" userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                           reason:@"Not all elements in viewControllers conform to UIViewController"
+                                         userInfo:nil];
         }
     }
 
@@ -496,9 +521,9 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     switch (direction) {
         case UIPageViewControllerNavigationDirectionForward:
         case UIPageViewControllerNavigationDirectionReverse:
-            [_scrollView _scrollToNewViewController:[viewControllers objectAtIndex:0] 
-                                          direction:direction 
-                                           animated:animated 
+            [_scrollView _scrollToNewViewController:[viewControllers objectAtIndex:0]
+                                          direction:direction
+                                           animated:animated
                                          completion:completion];
             break;
         default:
@@ -519,16 +544,18 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
 @Status Caveat
 @Notes Only single page scroll style transitions supported. Only vertical orientation. Options ignored.
 */
-- (instancetype)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation options:(NSDictionary *)options {
+- (instancetype)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style
+                  navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation
+                                options:(NSDictionary*)options {
     // TODO: What happens when someone tries to set the view property? Should we fail out?
-    _scrollView = [[_UIPageViewScrollView alloc] _initWithPageViewController:self]; 
+    _scrollView = [[_UIPageViewScrollView alloc] _initWithPageViewController:self];
 
     self.view = [_scrollView retain];
 
     switch (style) {
         case UIPageViewControllerTransitionStylePageCurl:
             NSLog(@"UIPageViewControllerTransitionStylePageCurl unsupported. Transition style will fall back to Scroll.");
-            // Fallthrough
+        // Fallthrough
         case UIPageViewControllerTransitionStyleScroll:
             _transitionStyle = style;
             break;
@@ -542,7 +569,9 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
             _navigationOrientation = navigationOrientation;
             break;
         default:
-            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Parameter \"navigationOrientation\" out of range" userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                           reason:@"Parameter \"navigationOrientation\" out of range"
+                                         userInfo:nil];
     }
 
     if (options != nil) {
@@ -550,7 +579,7 @@ NSString * const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     }
 
     // TODO: Should we pull the pan gesture recognizer from UIScrollView?
-    
+
     return self;
 }
 

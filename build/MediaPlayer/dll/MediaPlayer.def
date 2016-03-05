@@ -1,0 +1,211 @@
+LIBRARY MediaPlayer
+    EXPORTS
+        ; MediaPlayerFunctions.mm
+        MPVolumeSettingsAlertShow
+        MPVolumeSettingsAlertHide
+        MPVolumeSettingsAlertIsVisible
+
+        ; MPChangePlaybackRateCommand.mm
+        _OBJC_CLASS_MPChangePlaybackRateCommand DATA
+        __objc_class_name_MPChangePlaybackRateCommand CONSTANT
+
+        ; MPChangePlaybackRateCommandEvent.mm
+        _OBJC_CLASS_MPChangePlaybackRateCommandEvent DATA
+        __objc_class_name_MPChangePlaybackRateCommandEvent CONSTANT
+
+        ; MPContentItem.mm
+        _OBJC_CLASS_MPContentItem DATA
+        __objc_class_name_MPContentItem CONSTANT
+
+        ; MPFeedbackCommand.mm
+        _OBJC_CLASS_MPFeedbackCommand DATA
+        __objc_class_name_MPFeedbackCommand CONSTANT
+
+        ; MPFeedbackCommandEvent.mm
+        _OBJC_CLASS_MPFeedbackCommandEvent DATA
+        __objc_class_name_MPFeedbackCommandEvent CONSTANT
+
+        ; MPMediaEntity.mm
+        MPMediaEntityPropertyPersistentID DATA
+        _OBJC_CLASS_MPMediaEntity DATA
+        __objc_class_name_MPMediaEntity CONSTANT
+
+        ; MPMediaItem.mm
+        MPMediaItemPropertyPersistentID DATA
+        MPMediaItemPropertyAlbumPersistentID DATA
+        MPMediaItemPropertyArtistPersistentID DATA
+        MPMediaItemPropertyAlbumArtistPersistentID DATA
+        MPMediaItemPropertyGenrePersistentID DATA
+        MPMediaItemPropertyComposerPersistentID DATA
+        MPMediaItemPropertyPodcastPersistentID DATA
+        MPMediaItemPropertyMediaType DATA
+        MPMediaItemPropertyTitle DATA
+        MPMediaItemPropertyAlbumTitle DATA
+        MPMediaItemPropertyArtist DATA
+        MPMediaItemPropertyAlbumArtist DATA
+        MPMediaItemPropertyGenre DATA
+        MPMediaItemPropertyComposer DATA
+        MPMediaItemPropertyPlaybackDuration DATA
+        MPMediaItemPropertyAlbumTrackNumber DATA
+        MPMediaItemPropertyAlbumTrackCount DATA
+        MPMediaItemPropertyDiscNumber DATA
+        MPMediaItemPropertyDiscCount DATA
+        MPMediaItemPropertyArtwork DATA
+        MPMediaItemPropertyLyrics DATA
+        MPMediaItemPropertyIsCompilation DATA
+        MPMediaItemPropertyReleaseDate DATA
+        MPMediaItemPropertyBeatsPerMinute DATA
+        MPMediaItemPropertyComments DATA
+        MPMediaItemPropertyAssetURL DATA
+        MPMediaItemPropertyIsCloudItem DATA
+        MPMediaItemPropertyPodcastTitle DATA
+        MPMediaItemPropertyPlayCount DATA
+        MPMediaItemPropertySkipCount DATA
+        MPMediaItemPropertyRating DATA
+        MPMediaItemPropertyLastPlayedDate DATA
+        MPMediaItemPropertyUserGrouping DATA
+        MPMediaItemPropertyBookmarkTime DATA
+        _OBJC_CLASS_MPMediaItem DATA
+        __objc_class_name_MPMediaItem CONSTANT
+
+        ; MPMediaItemArtwork.mm
+        _OBJC_CLASS_MPMediaItemArtwork DATA
+        __objc_class_name_MPMediaItemArtwork CONSTANT
+
+        ; MPMediaItemCollection.mm
+        _OBJC_CLASS_MPMediaItemCollection DATA
+        __objc_class_name_MPMediaItemCollection CONSTANT
+
+        ; MPMediaLibrary.mm
+        _OBJC_CLASS_MPMediaLibrary DATA
+        __objc_class_name_MPMediaLibrary CONSTANT
+
+        ; MPMediaPickerController.mm
+        _OBJC_CLASS_MPMediaPickerController DATA
+        __objc_class_name_MPMediaPickerController CONSTANT
+
+        ; MPMediaPlaylist.mm
+        MPMediaPlaylistPropertyPersistentID DATA
+        MPMediaPlaylistPropertyName DATA
+        MPMediaPlaylistPropertyPlaylistAttributes DATA
+        MPMediaPlaylistPropertySeedItems DATA
+        _OBJC_CLASS_MPMediaPlaylist DATA
+        __objc_class_name_MPMediaPlaylist CONSTANT
+
+        ; MPMediaPredicate.mm
+        _OBJC_CLASS_MPMediaPredicate DATA
+        __objc_class_name_MPMediaPredicate CONSTANT
+
+        ; MPMediaPropertyPredicate.mm
+        _OBJC_CLASS_MPMediaPropertyPredicate DATA
+        __objc_class_name_MPMediaPropertyPredicate CONSTANT
+
+        ; MPMediaQuery.mm
+        _OBJC_CLASS_MPMediaQuery DATA
+        __objc_class_name_MPMediaQuery CONSTANT
+
+        ; MPMediaQuerySection.mm
+        _OBJC_CLASS_MPMediaQuerySection DATA
+        __objc_class_name_MPMediaQuerySection CONSTANT
+
+        ; MPMovieAccessLog.mm
+        _OBJC_CLASS_MPMovieAccessLog DATA
+        __objc_class_name_MPMovieAccessLog CONSTANT
+
+        ; MPMovieAccessLogEvent.mm
+        _OBJC_CLASS_MPMovieAccessLogEvent DATA
+        __objc_class_name_MPMovieAccessLogEvent CONSTANT
+
+        ; MPMovieErrorLog.mm
+        _OBJC_CLASS_MPMovieErrorLog DATA
+        __objc_class_name_MPMovieErrorLog CONSTANT
+
+        ; MPMovieErrorLogEvent.mm
+        _OBJC_CLASS_MPMovieErrorLogEvent DATA
+        __objc_class_name_MPMovieErrorLogEvent CONSTANT
+
+        ; MPMoviePlayerController.mm
+        MPMoviePlayerThumbnailImageKey DATA
+        MPMoviePlayerThumbnailTimeKey DATA
+        MPMoviePlayerThumbnailErrorKey DATA
+        MPMoviePlayerFullscreenAnimationDurationUserInfoKey DATA
+        MPMoviePlayerFullscreenAnimationCurveUserInfoKey DATA
+        MPMoviePlayerPlaybackDidFinishReasonUserInfoKey DATA
+        MPMoviePlayerWillExitFullscreenNotification DATA
+        MPMoviePlayerDidExitFullscreenNotification DATA
+        MPMoviePlayerWillEnterFullscreenNotification DATA
+        MPMoviePlayerDidEnterFullscreenNotification DATA
+        MPMoviePlayerPlaybackDidFinishNotification DATA
+        MPMoviePlayerLoadStateDidChangeNotification DATA
+
+        _OBJC_CLASS_MPMoviePlayerController DATA
+        __objc_class_name_MPMoviePlayerController CONSTANT
+
+        ; MPMoviePlayerViewController.mm
+        _OBJC_CLASS_MPMoviePlayerViewController DATA
+        __objc_class_name_MPMoviePlayerViewController CONSTANT
+
+        ; MPMusicPlayerController.mm
+        _OBJC_CLASS_MPMusicPlayerController DATA
+        __objc_class_name_MPMusicPlayerController CONSTANT
+
+        ; MPNowPlayingInfoCenter.mm
+        MPNowPlayingInfoPropertyElapsedPlaybackTime DATA
+        MPNowPlayingInfoPropertyPlaybackRate DATA
+        MPNowPlayingInfoPropertyPlaybackQueueIndex DATA
+        MPNowPlayingInfoPropertyPlaybackQueueCount DATA
+        MPNowPlayingInfoPropertyChapterNumber DATA
+        MPNowPlayingInfoPropertyChapterCount DATA
+        _OBJC_CLASS_MPNowPlayingInfoCenter DATA
+        __objc_class_name_MPNowPlayingInfoCenter CONSTANT
+
+        ; MPPlayableContentManager.mm
+        _OBJC_CLASS_MPPlayableContentManager DATA
+        __objc_class_name_MPPlayableContentManager CONSTANT
+
+        ; MPRatingCommand.mm
+        _OBJC_CLASS_MPRatingCommand DATA
+        __objc_class_name_MPRatingCommand CONSTANT
+
+        ; MPRatingCommandEvent.mm
+        _OBJC_CLASS_MPRatingCommandEvent DATA
+        __objc_class_name_MPRatingCommandEvent CONSTANT
+
+        ; MPRemoteCommand.mm
+        _OBJC_CLASS_MPRemoteCommand DATA
+        __objc_class_name_MPRemoteCommand CONSTANT
+
+        ; MPRemoteCommandCenter.mm
+        _OBJC_CLASS_MPRemoteCommandCenter DATA
+        __objc_class_name_MPRemoteCommandCenter CONSTANT
+
+        ; MPRemoteCommandEvent.mm
+        _OBJC_CLASS_MPRemoteCommandEvent DATA
+        __objc_class_name_MPRemoteCommandEvent CONSTANT
+
+        ; MPSeekCommandEvent.mm
+        _OBJC_CLASS_MPSeekCommandEvent DATA
+        __objc_class_name_MPSeekCommandEvent CONSTANT
+
+        ; MPSkipIntervalCommand.mm
+        _OBJC_CLASS_MPSkipIntervalCommand DATA
+        __objc_class_name_MPSkipIntervalCommand CONSTANT
+
+        ; MPSkipIntervalCommandEvent.mm
+        _OBJC_CLASS_MPSkipIntervalCommandEvent DATA
+        __objc_class_name_MPSkipIntervalCommandEvent CONSTANT
+
+        ; MPTimedMetadata.mm
+        MPMoviePlayerTimedMetadataKeyName DATA
+        MPMoviePlayerTimedMetadataKeyInfo DATA
+        MPMoviePlayerTimedMetadataKeyMIMEType DATA
+        MPMoviePlayerTimedMetadataKeyDataType DATA
+        MPMoviePlayerTimedMetadataKeyLanguageCode DATA
+        _OBJC_CLASS_MPTimedMetadata DATA
+        __objc_class_name_MPTimedMetadata CONSTANT
+
+        ; MPVolumeView.mm
+        _OBJC_CLASS_MPVolumeView DATA
+        __objc_class_name_MPVolumeView CONSTANT
+
+        ; UIViewController.mm

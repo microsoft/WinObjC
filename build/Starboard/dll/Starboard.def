@@ -1,9 +1,37 @@
 LIBRARY Starboard
     EXPORTS
+        CC_MD2
+        CC_MD2_Final
+        CC_MD2_Init
+        CC_MD2_Update
+        CC_MD4
+        CC_MD4_Final
+        CC_MD4_Init
+        CC_MD4_Update
         CC_MD5
         CC_MD5_Final
         CC_MD5_Init
         CC_MD5_Update
+        CC_SHA1
+        CC_SHA1_Final
+        CC_SHA1_Init
+        CC_SHA1_Update
+        CC_SHA224
+        CC_SHA224_Final
+        CC_SHA224_Init
+        CC_SHA224_Update
+        CC_SHA256
+        CC_SHA256_Final
+        CC_SHA256_Init
+        CC_SHA256_Update
+        CC_SHA384
+        CC_SHA384_Final
+        CC_SHA384_Init
+        CC_SHA384_Update
+        CC_SHA512
+        CC_SHA512_Final
+        CC_SHA512_Init
+        CC_SHA512_Update
         dbg_printf
         host_page_size
         mach_task_self
@@ -38,8 +66,10 @@ LIBRARY Starboard
         pthread_rwlock_wrlock
         pthread_self
         pthread_setspecific
+        sleep
         task_info
         uname
+        usleep
 
         ; Error Handling Internal
         failFastOnUnimplemented
@@ -52,115 +82,7 @@ LIBRARY Starboard
         starboardOutputDebugStringW
         starboardInterlockedDecrementRelease
         starboardInterlockedCompareExchangePointer
-        _ReturnAddress
         __fastfail
 
         ; REMOVE / CLEANUP C++ EXPORTS
-        ??0EbrFile@@QAE@XZ
-        ??1EbrFile@@UAE@XZ
-        ?Clearerr@EbrFile@@UAEXXZ
-        ?Close@EbrFile@@UAEHXZ
-        ?Dup@EbrFile@@UAEHXZ
-        ?EbrAccess@@YAHPBDH@Z
-        ?EbrAllocFile@@YAPAVEbrFile@@PAV1@@Z
-        ?EbrBlockIfBackground@@YAXXZ
-        ?EbrChdir@@YAHPBD@Z
-        ?EbrClearerr@@YAXPAVEbrFile@@@Z
-        ?EbrClose@@YAHH@Z
-        ?EbrCloseDir@@YAXPAUEbrDir@@@Z
-        ?EbrCompareExchange@@YAHPCHHH@Z
-        ?EbrDecrement@@YAHPCH@Z
-        ?EbrDup@@YAHH@Z
-        ?EbrEventDestroy@@YAXPAX@Z
-        ?EbrEventInit@@YAXPAPAX@Z
-        ?EbrEventSignal@@YAXPAX@Z
-        ?EbrEventTimedMultipleWait@@YAHPAPAXHNPAUSocketWait@@@Z
-        ?EbrEventTimedWait@@YA_NPAXN@Z
-        ?EbrEventTryWait@@YA_NPAX@Z
-        ?EbrEventWait@@YAXPAX@Z
-        ?EbrFclose@@YAHPAVEbrFile@@@Z
-        ?EbrFd2Host@@YAHH@Z
-        ?EbrFdopen@@YAPAVEbrFile@@HPBD@Z
-        ?EbrFeof@@YAHPAVEbrFile@@@Z
-        ?EbrFerror@@YAHPAVEbrFile@@@Z
-        ?EbrFflush@@YAHPAVEbrFile@@@Z
-        ?EbrFgetc@@YAHPAVEbrFile@@@Z
-        ?EbrFgetpos@@YAHPAVEbrFile@@PA_J@Z
-        ?EbrFgets@@YAPADPADIPAVEbrFile@@@Z
-        ?EbrFileFromFd@@YAPAVEbrFile@@H@Z
-        ?EbrFileGetType@@YA?AW4EbrFileType@@PAVEbrFile@@@Z
-        ?EbrFileno@@YAHPAVEbrFile@@@Z
-        ?EbrFmake@@YAPAVEbrFile@@PAU_iobuf@@@Z
-        ?EbrFopen@@YAPAVEbrFile@@PBD0@Z
-        ?EbrFputc@@YAHHPAVEbrFile@@@Z
-        ?EbrFputs@@YAHPBDPAVEbrFile@@@Z
-        ?EbrFread@@YAIPAXIIPAVEbrFile@@@Z
-        ?EbrFreeFile@@YAXPAVEbrFile@@@Z
-        ?EbrFreopen@@YAPAVEbrFile@@PBD0PAV1@@Z
-        ?EbrFseek@@YAHPAVEbrFile@@JH@Z
-        ?EbrFsetpos@@YAHPAVEbrFile@@PA_J@Z
-        ?EbrFstat@@YAHHPAUstat@@@Z
-        ?EbrFtell@@YAIPAVEbrFile@@@Z
-        ?EbrFwrite@@YAIPAXIIPAVEbrFile@@@Z
-        ?EbrGetMediaTime@@YANXZ
-        ?EbrGetRootMapping@@YA_NPBDPADI@Z
-        ?EbrGetTimeOfDay@@YAHPAUEbrTimeval@@@Z
-        ?EbrGetWantedOrientation@@YAHXZ
-        ?EbrGetcwd@@YAPADPADI@Z
-        ?EbrIncrement@@YAHPCH@Z
-        ?EbrIsDir@@YA_NPBD@Z
-        ?EbrLockDestroy@@YAXI@Z
-        ?EbrLockEnter@@YAXAAI@Z
-        ?EbrLockInit@@YAXPAI@Z
-        ?EbrLockLeave@@YAXI@Z
-        ?EbrLockTryEnter@@YA_NAAI@Z
-        ?EbrLseek@@YAHHJH@Z
-        ?EbrMkdir@@YA_NPBD@Z
-        ?EbrMmap@@YAPAXPAXIIIHI@Z
-        ?EbrMunmap@@YAHPAXI@Z
-        ?EbrNativeFILE@@YAPAU_iobuf@@PAVEbrFile@@@Z
-        ?EbrOpen@@YAHPBDHH@Z
-        ?EbrOpenDir@@YAPAUEbrDir@@PBD@Z
-        ?EbrRead@@YAHHPAXI@Z
-        ?EbrReadDir@@YA_NPAUEbrDir@@PAU_EbrDirEnt@@@Z
-        ?EbrRemove@@YA_NPBD@Z
-        ?EbrRemoveEmptyDir@@YA_NPBD@Z
-        ?EbrRename@@YA_NPBD0@Z
-        ?EbrRewind@@YAHPAVEbrFile@@@Z
-        ?EbrSetCurrentThreadName@@YAXPBD@Z
-        ?EbrSetWritableFolder@@YAXPBD@Z
-        ?EbrSleep@@YAX_J@Z
-        ?EbrStat@@YAHPBDPAUstat@@@Z
-        ?EbrThreadMakeBackgroundExecutable@@YAXXZ
-        ?EbrThrowFatal@@YAXHPBDZZ
-        ?EbrTruncate@@YAHHJ@Z
-        ?EbrUngetc@@YAHHPAVEbrFile@@@Z
-        ?EbrUnlink@@YA_NPBD@Z
-        ?EbrWrite@@YAHHPBXI@Z
-        ?Eof@EbrFile@@UAEHXZ
-        ?Error@EbrFile@@UAEHXZ
-        ?Flush@EbrFile@@UAEHXZ
-        ?Getc@EbrFile@@UAEHXZ
-        ?Getpos@EbrFile@@UAEHPA_J@Z
-        ?Gets@EbrFile@@UAEPADPADI@Z
-        ?HostFd@EbrFile@@UAEHXZ
-        ?Lseek@EbrFile@@UAEHJH@Z
-        ?Mmap@EbrFile@@UAEPAXPAXIIII@Z
-        ?Munmap@EbrFile@@UAEHPAXI@Z
-        ?MurmurHash3_x64_128@@YAXPBXHIPAX@Z
-        ?MurmurHash3_x86_128@@YAXPBXHIPAX@Z
-        ?MurmurHash3_x86_32@@YAXPBXHIPAX@Z
-        ?Putc@EbrFile@@UAEHH@Z
-        ?Puts@EbrFile@@UAEHPBD@Z
-        ?Read@EbrFile@@UAEHPAXI@Z
-        ?Read@EbrFile@@UAEIPAXII@Z
-        ?Rewind@EbrFile@@UAEHXZ
-        ?Seek@EbrFile@@UAEHJH@Z
-        ?Setpos@EbrFile@@UAEHPA_J@Z
-        ?Stat@EbrFile@@UAEHPAUstat@@@Z
-        ?Tell@EbrFile@@UAEIXZ
-        ?Truncate@EbrFile@@UAEHJ@Z
-        ?Ungetc@EbrFile@@UAEHH@Z
-        ?Write@EbrFile@@UAEHPBXI@Z
-        ?Write@EbrFile@@UAEIPAXII@Z
         ?format@string@woc@@YA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBDZZ

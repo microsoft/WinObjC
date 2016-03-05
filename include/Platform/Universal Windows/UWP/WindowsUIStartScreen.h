@@ -114,7 +114,7 @@ WINRT_EXPORT
                       logoReference:(WFUri*)logoReference
                   wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
 + (WUSSecondaryTile*)createWithId:(NSString*)tileId ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* shortName;
 @property (copy) WFUri* logo;
 @property (copy) NSString* tileId;

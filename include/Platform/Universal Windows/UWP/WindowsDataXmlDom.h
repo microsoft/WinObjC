@@ -224,7 +224,7 @@ WINRT_EXPORT
                          loadSettings:(WDXDXmlLoadSettings*)loadSettings
                               success:(void (^)(WDXDXmlDocument*))success
                               failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDXDXmlDocumentType* doctype;
 @property (readonly) WDXDXmlElement* documentElement;
 @property (readonly) NSString* documentUri;
@@ -672,7 +672,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlLoadSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL validateOnParse;
 @property BOOL resolveExternals;
 @property BOOL prohibitDtd;

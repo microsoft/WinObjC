@@ -22,6 +22,7 @@ extern id kCFStreamSocketSecurityLevelTLSv1;
 extern id kCFStreamSSLValidatesCertificateChain;
 #endif
 
+#if defined(WIN32) || defined(ANDROID)
 struct ssl_st;
 struct ssl_ctx_st;
 struct bio_st;
@@ -31,6 +32,7 @@ typedef struct ssl_method_st SSL_METHOD;
 typedef struct ssl_st SSL;
 typedef struct bio_st BIO;
 typedef struct ssl_ctx_st SSL_CTX;
+#endif
 
 @interface NSSSLHandler : NSObject {
 @public
@@ -50,18 +52,17 @@ typedef struct ssl_ctx_st SSL_CTX;
 - (int)writePlaintext:(const uint8_t*)buffer maxLength:(int)length;
 - (unsigned)readPlaintext:(uint8_t*)buffer maxLength:(unsigned)length;
 - (id)initWithProperties:(id)properties;
-- (id)dealloc;
-- (id)isHandshaking;
-- (id)writeBytesAvailable;
-- (id)wantsMoreIncoming;
-- (id)readEncrypted:(uint8_t*)buffer maxLength:(int)length;
-- (id)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length;
-- (id)_readPostSSL:(uint8_t*)buffer maxLength:(int)length;
-- (id)readBytesAvailable;
-- (id)transferOneBufferFromSSLToSocket:(id)socket;
-- (id)transferOneBufferFromSocketToSSL:(id)socket;
-- (id)runHandshakeIfNeeded:(id)socket;
-- (id)runWithSocket:(id)socket;
-- (id)setOutputStream:(id)stream;
-+ (id)initialize;
+- (BOOL)isHandshaking;
+- (NSInteger)writeBytesAvailable;
+- (BOOL)wantsMoreIncoming;
+- (NSInteger)readEncrypted:(uint8_t*)buffer maxLength:(int)length;
+- (NSInteger)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length;
+- (NSInteger)_readPostSSL:(uint8_t*)buffer maxLength:(int)length;
+- (NSInteger)readBytesAvailable;
+- (NSInteger)transferOneBufferFromSSLToSocket:(id)socket;
+- (NSInteger)transferOneBufferFromSocketToSSL:(id)socket;
+- (void)runHandshakeIfNeeded:(id)socket;
+- (void)runWithSocket:(id)socket;
+- (void)setOutputStream:(id)stream;
++ (void)initialize;
 @end

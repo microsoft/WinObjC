@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,12 +13,19 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import <Foundation/FoundationExport.h>
+#import <Foundation/NSFastEnumeration.h>
+#import <Foundation/NSObject.h>
 
 #import <Foundation/NSMutableSet.h>
 
+@class NSArray;
+@class NSSet;
+@class NSEnumerator;
+
 FOUNDATION_EXPORT_CLASS
-@interface NSCountedSet : NSMutableSet
-
-- (NSUInteger)countForObject:(id)object;
-
+@interface NSCountedSet : NSMutableSet <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
+- (NSUInteger)countForObject:(id)anObject;
 @end

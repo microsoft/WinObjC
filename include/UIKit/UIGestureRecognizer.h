@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, The Iconfactory. All rights reserved.
+ * Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,10 +28,9 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _UIGESTURERECOGNIZER_H_
-#define _UIGESTURERECOGNIZER_H_
+#pragma once
 
-#import "UIKitExport.h"
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
 typedef enum {
@@ -40,58 +40,45 @@ typedef enum {
     UIGestureRecognizerStateEnded,
     UIGestureRecognizerStateCancelled,
     UIGestureRecognizerStateFailed,
-    UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded
+    UIGestureRecognizerStateRecognized = UIGestureRecognizerStateEnded,
 } UIGestureRecognizerState;
 
-typedef struct
-{
-    __unsafe_unretained id _target;
-    SEL _selector;
-} gestureTarget;
-
-@class UIView, UIGestureRecognizer, UITouch, UIEvent;
-
-@protocol UIGestureRecognizerDelegate <NSObject>
-@optional
-
-/**
- @Status Interoperable
-*/
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
-
-/**
- @Status Interoperable
-*/
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch;
-
-/**
- @Status Stub
-*/
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer;
-@end
+@class UIView, UIGestureRecognizer, UITouch, UIEvent, UIPress, UIPressesEvent;
+@protocol UIGestureRecognizerDelegate;
 
 UIKIT_EXPORT_CLASS
 @interface UIGestureRecognizer : NSObject
 
-- (id)initWithTarget:(id)target action:(SEL)action;
+// Initializing a Gesture Recognizer
+- (instancetype)initWithTarget:(id)target action:(SEL)action;
 
+// Getting the Touches and Location of a Gesture
+- (CGPoint)locationInView:(UIView*)view STUB_METHOD;
+- (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view STUB_METHOD;
+- (NSUInteger)numberOfTouches STUB_METHOD;
+
+// Adding and Removing Targets and Actions
 - (void)addTarget:(id)target action:(SEL)action;
-- (void)removeTarget:(id)target action:(SEL)action;
+- (void)removeTarget:(id)target action:(SEL)action STUB_METHOD;
 
-- (void)requireGestureRecognizerToFail:(UIGestureRecognizer *)otherGestureRecognizer;
-- (CGPoint)locationInView:(UIView *)view;
-- (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView *)view;
+// Specifying Dependencies Between Gesture Recognizers
+- (void)requireGestureRecognizerToFail:(UIGestureRecognizer*)otherGestureRecognizer;
 
-- (NSUInteger)numberOfTouches;
-
-@property (nonatomic, assign) id<UIGestureRecognizerDelegate> delegate;
+// Canceling and Delaying Touches
+@property (nonatomic) BOOL cancelsTouchesInView;
 @property (nonatomic) BOOL delaysTouchesBegan;
 @property (nonatomic) BOOL delaysTouchesEnded;
-@property (nonatomic) BOOL cancelsTouchesInView;
+
+// Setting and Getting the Delegate
+@property (nonatomic, weak) id<UIGestureRecognizerDelegate> delegate;
+
+// Getting the Recognizer’s State and View
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, readonly) UIGestureRecognizerState state;
-@property (nonatomic, readonly) UIView *view;
+@property (nonatomic, readonly) UIView* view;
+
+// Recognizing Different Gestures
+@property (copy, nonatomic) NSArray* allowedPressTypes STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* allowedTouchTypes STUB_PROPERTY;
 
 @end
-
-#endif /* _UIGESTURERECOGNIZER_H */

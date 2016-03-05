@@ -1,22 +1,37 @@
-/* Copyright (c) 2007 Christopher J. W. Lloyd
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
+#pragma once
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
+#import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGGeometry.h>
 
-typedef struct O2Function *CGFunctionRef;
-
+typedef void (*CGFunctionEvaluateCallback)(void* info, const float* inData, float* outData);
+typedef void (*CGFunctionReleaseInfoCallback)(void* info);
 typedef struct {
-   unsigned version;
-   void    (*evaluate)(void *,const float *,float *);
-   void    (*releaseInfo)(void *);
+    unsigned int version;
+    CGFunctionEvaluateCallback evaluate;
+    CGFunctionReleaseInfoCallback releaseInfo;
 } CGFunctionCallbacks;
 
-COREGRAPHICS_EXPORT CGFunctionRef CGFunctionRetain(CGFunctionRef self);
-COREGRAPHICS_EXPORT void          CGFunctionRelease(CGFunctionRef self);
-
-COREGRAPHICS_EXPORT CGFunctionRef CGFunctionCreate(void *info,size_t domainDimension,const CGFloat *domain,size_t rangeDimension,const CGFloat *range,const CGFunctionCallbacks *callbacks);
+COREGRAPHICS_EXPORT CGFunctionRef CGFunctionCreate(void* info,
+                                                   size_t domainDimension,
+                                                   const CGFloat* domain,
+                                                   size_t rangeDimension,
+                                                   const CGFloat* range,
+                                                   const CGFunctionCallbacks* callbacks) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGFunctionRelease(CGFunctionRef function) STUB_METHOD;
+COREGRAPHICS_EXPORT CGFunctionRef CGFunctionRetain(CGFunctionRef function) STUB_METHOD;
+COREGRAPHICS_EXPORT CFTypeID CGFunctionGetTypeID() STUB_METHOD;

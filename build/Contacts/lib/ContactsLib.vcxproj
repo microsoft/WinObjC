@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContact.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContactFetchRequest.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContactFormatter.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContactProperty.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContactRelation.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContactStore.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContactVCardSerialization.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNContainer.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNGroup.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNInstantMessageAddress.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNLabeledValue.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNMutableContact.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNMutableGroup.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNMutablePostalAddress.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNPhoneNumber.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNPostalAddress.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNPostalAddressFormatter.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNSaveRequest.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\CNSocialProfile.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Contacts\ContactsConstants.mm" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9A4532C3-3316-4D91-9BE3-2FCFD6A82191}</ProjectGuid>
+    <ProjectName>ContactsLib</ProjectName>
+    <RootNamespace>Contacts</RootNamespace>
+    <AppContainerApplication>true</AppContainerApplication>
+    <StarboardBasePath>..\..\..</StarboardBasePath>
+    <OutputName>ContactsLib</OutputName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCONTACTS_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCONTACTS_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCONTACTS_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
+    <ClCompile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+    </ClCompile>
+    <ClangCompile>
+      <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>"-DCONTACTS_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <OptimizationLevel>Full</OptimizationLevel>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
+  </ImportGroup>
+</Project>

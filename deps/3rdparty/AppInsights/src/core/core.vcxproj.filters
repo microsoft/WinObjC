@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="TelemetryClient.cpp" />
+    <ClCompile Include="Channel\TelemetryChannel.cpp">
+      <Filter>channel</Filter>
+    </ClCompile>
+    <ClCompile Include="channel\utils\HttpRequest.cpp">
+      <Filter>channel\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="channel\utils\HttpResponse.cpp">
+      <Filter>channel\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\StreamWriter.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Utils.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="channel\utils\HttpHeaderField.cpp">
+      <Filter>channel\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="common\StringWriter.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\JsonWriter.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Application.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Base.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\CrashData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\CrashDataBinary.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\CrashDataHeaders.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\CrashDataThread.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\CrashDataThreadFrame.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Data.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\DataPoint.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Device.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Domain.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Envelope.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\EventData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\ExceptionData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\ExceptionDetails.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Internal.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Location.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\MessageData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\MetricData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Operation.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\PageViewData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\PageViewPerfData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\RemoteDependencyData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\RequestData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\Session.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\SessionStateData.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\StackFrame.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="contracts\User.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Serializer.cpp">
+      <Filter>contracts</Filter>
+    </ClCompile>
+    <ClCompile Include="TelemetryContextWinPhone.cpp" />
+    <ClCompile Include="TelemetryContextWinStore.cpp" />
+    <ClCompile Include="TelemetryContextWin32.cpp" />
+    <ClCompile Include="BaseTelemetryContext.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TelemetryClient.h" />
+    <ClInclude Include="TelemetryClientConfig.h" />
+    <ClInclude Include="TelemetryContext.h" />
+    <ClInclude Include="channel\TelemetryChannel.h">
+      <Filter>channel</Filter>
+    </ClInclude>
+    <ClInclude Include="channel\utils\HttpRequest.h">
+      <Filter>channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="channel\utils\HttpResponse.h">
+      <Filter>channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\StreamWriter.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Utils.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Common.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="channel\utils\HttpHeaderField.h">
+      <Filter>channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="channel\utils\HttpHeaderFields.h">
+      <Filter>channel\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="common\StringWriter.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\JsonWriter.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\User.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Application.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Base.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Contracts.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\CrashData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\CrashDataBinary.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\CrashDataHeaders.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\CrashDataThread.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\CrashDataThreadFrame.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Data.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\DataPoint.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\DataPointType.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\DependencyKind.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\DependencySourceType.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Device.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Domain.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Envelope.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\EventData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\ExceptionData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\ExceptionDetails.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Internal.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Location.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\MessageData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\MetricData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Operation.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\PageViewData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\PageViewPerfData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\RemoteDependencyData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\RequestData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\Session.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\SessionState.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\SessionStateData.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\SeverityLevel.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="contracts\StackFrame.h">
+      <Filter>contracts</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Nullable.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Serializer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTelemetryContext.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="contracts">
+      <UniqueIdentifier>{f8f9af89-5978-4aa7-9a75-c746fe11cc3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="contracts\shared">
+      <UniqueIdentifier>{58df0004-debe-4a29-8c56-e6d8cfdafec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="channel">
+      <UniqueIdentifier>{4e946ab6-8603-4dd4-8511-015e5586c819}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="channel\utils">
+      <UniqueIdentifier>{c7cabae0-e33a-42b6-be50-c10a391b1cd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{01c317b8-85fb-4ce6-b607-49d1b8b0314e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -29,12 +29,15 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #include "Foundation/NSHTTPURLResponse.h"
 #include "NSURLProtocol_file.h"
-#include "NSURLProtocol_http.h"
 #include "NSURLProtocolInternal.h"
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 @implementation NSURLProtocol_file
++ (void)load {
+    [NSURLProtocol registerClass:self];
+}
+
 + (BOOL)canInitWithRequest:(id)request {
     id scheme = [[request URL] scheme];
 
@@ -97,10 +100,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     int len = EbrFtell(fpIn);
     EbrFseek(fpIn, 0, SEEK_SET);
 
-    char* pData = (char*)EbrMalloc(len);
+    char* pData = (char*)IwMalloc(len);
     len = EbrFread(pData, 1, len, fpIn);
     id dataReceived = [NSData dataWithBytes:pData length:len];
-    EbrFree(pData);
+    IwFree(pData);
 
     EbrFclose(fpIn);
 

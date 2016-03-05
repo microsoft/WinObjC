@@ -75,7 +75,7 @@ WINRT_EXPORT
 @property (readonly) WNCIPInformation* iPInformation;
 @property (readonly) NSString* rawName;
 @property (readonly) WNHostNameType type;
-- (BOOL)isEqual:(WNHostName*)hostName;
+- (BOOL)IsEqual:(WNHostName*)hostName;
 - (NSString*)toString;
 @end
 

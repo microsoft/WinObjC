@@ -18,4 +18,10 @@
 
 #import "CoreFoundation/CFBundle.h"
 
-const CFStringRef kCFBundleVersionKey = (CFStringRef) @"kCFBundleVersionKey";
+const CFStringRef kCFBundleNameKey = (CFStringRef) @"CFBundleName";
+const CFStringRef kCFBundleVersionKey = (CFStringRef) @"CFBundleVersion";
+const CFStringRef kCFBundleIdentifierKey = (CFStringRef) @"CFBundleIdentifier";
+const CFStringRef kCFBundleInfoDictionaryVersionKey = (CFStringRef) @"CFBundleInfoDictionaryVersion";
+const CFStringRef kCFBundleLocalizationsKey = (CFStringRef) @"CFBundleLocalizations";
+const CFStringRef kCFBundleExecutableKey = (CFStringRef) @"CFBundleExecutable";
+const CFStringRef kCFBundleDevelopmentRegionKey = (CFStringRef) @"CFBundleDevelopmentRegion";

@@ -24,6 +24,7 @@
 #include "UIKit/UIFont.h"
 #include "UIKit/UIFontDescriptor.h"
 #include "UIFontDescriptorInternal.h"
+#include "CoreText/CTFont.h"
 
 extern "C" {
 #include <ft2build.h>
@@ -32,13 +33,28 @@ extern "C" {
 #include <tttables.h>
 #include <ftadvanc.h>
 #include <ftsizes.h>
+#include <ftmodapi.h>
 }
 
+static const wchar_t* g_logTag = L"UIFont";
 FT_Library _fontLib;
+FT_MemoryRec_ _fontMemory;
 NSMutableDictionary* _fontList;
 CFMutableDictionaryRef _fontInstance, _fontSizingInstance;
 NSMutableDictionary* g_fontCache;
 NSMutableDictionary* _fontDataCache;
+
+void* FTAllocFunc(FT_Memory memory, long size) {
+    return IwMalloc(size);
+}
+
+void FTFreeFunc(FT_Memory memory, void* ptr) {
+    IwFree(ptr);
+}
+
+void* FTReallocFunc(FT_Memory memory, long curSize, long newSize, void* ptr) {
+    return IwRealloc(ptr, newSize);
+}
 
 @implementation UIFont {
 @public
@@ -52,6 +68,7 @@ NSMutableDictionary* _fontDataCache;
     bool _cachedCapHeight, _cachedXHeight;
     float _capHeight, _xHeight;
 }
+
 static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     FT_Error err;
 
@@ -100,8 +117,9 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
         filename = @"/fonts/Helvetica.ttf";
     }
     if (strstr(_faceName, "Condensed") != NULL) {
-        if (fontInfo != nil)
+        if (fontInfo != nil) {
             fontInfo->_horizontalScale = 0.85f;
+        }
     }
 #endif
 
@@ -159,7 +177,7 @@ ret->height += ascenderDelta;
 
     FT_Error err;
 
-    char* pCopy = (char*)EbrMalloc(fontLen);
+    char* pCopy = (char*)IwMalloc(fontLen);
     memcpy(pCopy, pFont, fontLen);
 
     _CGFontLock();
@@ -280,20 +298,32 @@ ret->height += ascenderDelta;
 + (UIFont*)systemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:12.0] size:0];
+    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:size] size:size];
 
     return ret;
 }
 
 + (void)initialize {
-    g_fontCache = [NSMutableDictionary new];
-    _fontDataCache = [NSMutableDictionary new];
-    FT_Error err = FT_Init_FreeType(&_fontLib);
-    _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
-    _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
-    _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
-
-    assert(err == 0);
+    if (self == [UIFont class]) {
+        g_fontCache = [NSMutableDictionary new];
+        _fontDataCache = [NSMutableDictionary new];
+        _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
+        if (!_fontList) {
+            _fontList = [NSMutableDictionary new];
+        }
+        _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
+        _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
+        _fontMemory.user = nullptr;
+        _fontMemory.alloc = FTAllocFunc;
+        _fontMemory.free = FTFreeFunc;
+        _fontMemory.realloc = FTReallocFunc;
+        FT_Error error = FT_New_Library(&_fontMemory, &(_fontLib));
+        if (!error) {
+            FT_Add_Default_Modules(_fontLib);
+        } else {
+            EbrDebugLog("Failed to instantiate FreeType library");
+        }
+    }
 }
 
 /**
@@ -303,8 +333,8 @@ ret->height += ascenderDelta;
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
     UIFontDescriptor* fontDes =
-        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:12.0] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
-    UIFont* ret = [self fontWithDescriptor:fontDes size:0];
+        [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Bold" size:size] fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitBold];
+    UIFont* ret = [self fontWithDescriptor:fontDes size:size];
 
     return ret;
 }
@@ -312,9 +342,9 @@ ret->height += ascenderDelta;
 + (UIFont*)italicSystemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:12.0]
+    UIFontDescriptor* fontDes = [[UIFontDescriptor fontDescriptorWithName:@"Helvetica Oblique" size:size]
         fontDescriptorWithSymbolicTraits:UIFontDescriptorTraitItalic];
-    UIFont* ret = [self fontWithDescriptor:fontDes size:0];
+    UIFont* ret = [self fontWithDescriptor:fontDes size:size];
 
     return ret;
 }
@@ -374,6 +404,14 @@ void loadFont(UIFont* self) {
     return _name;
 }
 
+/**
+ @Status Caveat
+ @Notes Supports only English language and limited encodings.
+*/
+- (NSString*)familyName {
+    CFStringRef name = CTFontCopyName(static_cast<CTFontRef>(self), kCTFontFamilyNameKey);
+    return static_cast<NSString*>(name);
+}
 /**
  @Status Interoperable
 */
@@ -617,20 +655,21 @@ void loadFont(UIFont* self) {
     return (uint32_t)_sizingFont;
 }
 
-@end
+// Internal methods
 
-/**
-@Status Interoperable
-*/
-bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
-    if (error)
+// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterGraphicsFont
+- (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error {
+    if (error) {
         *error = nullptr;
+    }
 
     UIFont* fnt = font;
-
-    if (((FT_Face)fnt->_font)->family_name == NULL)
+    if (((FT_Face)fnt->_font)->family_name == NULL) {
         return FALSE;
+    }
+
     FT_Face fntFace = (FT_Face)fnt->_font;
+
     id faceName = [NSString stringWithCString:((FT_Face)fnt->_font)->family_name];
 
     [font retain];
@@ -644,20 +683,46 @@ bool CTFontManagerRegisterGraphicsFont(CGFontRef font, CFErrorRef* error) {
     return true;
 }
 
-/**
-@Status Caveat
-@Notes matrix parameter not supported
-*/
-CTFontRef CTFontCreateWithName(CFStringRef name, CGFloat size, const CGAffineTransform* matrix) {
-    id ret = [[UIFont fontWithName:(NSString*)name size:size] retain];
+// Internal methods
+// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterFontsForURL in CTFontManager
++ (bool)_CTFontManagerRegisterFontsForURL:(CFURLRef)fontURL withScope:(CTFontManagerScope)scope withError:(CFErrorRef*)error {
+    NSURL* url = static_cast<NSURL*>(fontURL);
+    if (![url isFileURL]) {
+        TraceInfo(g_logTag, L"Only file urls supported");
+        if (error) {
+            *error = nil;
+        }
+        return false;
+    }
 
-    return (CTFontRef)ret;
+    NSString* fileName = [url path];
+    if ([[_fontList allValues] containsObject:fileName]) {
+        // this font is already registered
+        return true;
+    }
+
+    NSData* data = [NSData dataWithContentsOfURL:url];
+    FT_Face face;
+    char* pFont = (char*)[data bytes];
+    DWORD fontLen = [data length];
+
+    _CGFontLock();
+    FT_Error err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &face);
+    _CGFontUnlock();
+
+    if (err) {
+        if (!error) {
+            error = nil;
+        }
+        return false;
+    }
+
+    NSString* faceName = [NSString stringWithCString:face->family_name];
+    [_fontList setObject:fileName forKey:faceName];
+    [_fontDataCache setObject:data forKey:fileName];
+    CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)face);
+
+    return true;
 }
 
-/**
-@Status Stub
-*/
-bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef* error) {
-    UNIMPLEMENTED();
-    return false;
-}
+@end

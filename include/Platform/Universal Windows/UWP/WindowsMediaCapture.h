@@ -241,7 +241,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCameraCaptureUI : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WMCCameraCaptureUIPhotoCaptureSettings* photoSettings;
 @property (readonly) WMCCameraCaptureUIVideoCaptureSettings* videoSettings;
 - (void)captureFileAsync:(WMCCameraCaptureUIMode)mode success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
@@ -281,7 +281,7 @@ WINRT_EXPORT
 + (NSArray*)findAllVideoProfiles:(NSString*)videoDeviceId;
 + (NSArray*)findConcurrentProfiles:(NSString*)videoDeviceId;
 + (NSArray*)findKnownVideoProfiles:(NSString*)videoDeviceId name:(WMCKnownVideoProfile)name;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WMDAudioDeviceController* audioDeviceController;
 @property (readonly) WMCMediaCaptureSettings* mediaCaptureSettings;
 @property (readonly) WMDVideoDeviceController* videoDeviceController;
@@ -416,7 +416,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaCaptureInitializationSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (copy) NSString* videoDeviceId;
 @property WMCStreamingCaptureMode streamingCaptureMode;
 @property WMCPhotoCaptureSource photoCaptureSource;

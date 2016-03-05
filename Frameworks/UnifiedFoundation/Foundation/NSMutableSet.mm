@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSMutableArray.h"
 
@@ -100,7 +101,7 @@ NSUInteger NSSetTableCount(NSSet* set);
         if ([other member:curObj] == nil) {
             if (removeObjectsCount >= removeObjectsCapacity) {
                 removeObjectsCapacity += 128;
-                removeObjects = (id*)EbrRealloc(removeObjects, sizeof(id*) * removeObjectsCapacity);
+                removeObjects = (id*)IwRealloc(removeObjects, sizeof(id*) * removeObjectsCapacity);
             }
             removeObjects[removeObjectsCount++] = curObj;
         }
@@ -109,7 +110,7 @@ NSUInteger NSSetTableCount(NSSet* set);
     for (int i = 0; i < removeObjectsCount; i++) {
         [self removeObject:removeObjects[i]];
     }
-    EbrFree(removeObjects);
+    IwFree(removeObjects);
 }
 
 /**
@@ -132,6 +133,14 @@ NSUInteger NSSetTableCount(NSSet* set);
 */
 - (void)removeObject:(id)object {
     NSSetTableRemoveObject(self, object);
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)filterUsingPredicate:(NSPredicate*)predicate {
+    UNIMPLEMENTED();
 }
 
 @end

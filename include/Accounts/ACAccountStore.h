@@ -17,6 +17,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <Accounts/ACAccountExport.h>
 
 ACCOUNTS_EXPORT NSString* const ACFacebookAppIdKey;
 ACCOUNTS_EXPORT NSString* const ACFacebookPermissionsKey;
@@ -31,7 +32,7 @@ ACCOUNTS_EXPORT NSString* const ACAccountStoreDidChangeNotification;
 typedef NS_ENUM(NSUInteger, ACAccountCredentialRenewResult) {
     ACAccountCredentialRenewResultRenewed,
     ACAccountCredentialRenewResultRejected,
-    ACAccountDCredentialRenewResultFailed,
+    ACAccountCredentialRenewResultFailed,
 };
 
 typedef void(^ACAccountStoreSaveCompletionHandler)(BOOL success, NSError* error);
@@ -39,19 +40,21 @@ typedef void(^ACAccountStoreRemoveCompletionHandler)(BOOL success, NSError* erro
 typedef void(^ACAccountStoreRequestAccessCompletionHandler)(BOOL granted, NSError* error);
 typedef void(^ACAccountStoreCredentialRenewalHandler)(ACAccountCredentialRenewResult renewResult, NSError* error);
 
+@class ACAccount;
+@class ACAccountType;
+
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountStore : NSObject
-@property (readonly, weak, nonatomic) NSArray* accounts;
+@property (readonly, weak, nonatomic) NSArray* accounts STUB_PROPERTY;
 
-- (ACAccount*)accountWithIdentifier:(NSString*)identifier;
-- (NSArray*)accountsWithAccountType:(ACAccountType*)accountType;
-- (ACAccountType*)accountTypeWithAccountTypeIdentifier:(NSString*)typeIdentifier;
-- (void)saveAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreSaveCompletionHandler)completionHandler;
-- (void)requestAccewssToAccountsWithType:(ACAccountType*)accountType
+- (ACAccount*)accountWithIdentifier:(NSString*)identifier STUB_METHOD;
+- (NSArray*)accountsWithAccountType:(ACAccountType*)accountType STUB_METHOD;
+- (ACAccountType*)accountTypeWithAccountTypeIdentifier:(NSString*)typeIdentifier STUB_METHOD;
+- (void)saveAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreSaveCompletionHandler)completionHandler STUB_METHOD;
+- (void)requestAccessToAccountsWithType:(ACAccountType*)accountType
         options:(NSDictionary*)options
-        completion:(ACAccountStoreRequestAccessCompletionHandler)completion;
-- (void)renewCredentialsForAccount:(ACAccount*)account completion:(ACAccountStoreCredentialRenewalHandler)completionHandler;
-- (void)removeAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreRemoveCompletionHandler)completionHandler;
-
+        completion:(ACAccountStoreRequestAccessCompletionHandler)completion STUB_METHOD;
+- (void)renewCredentialsForAccount:(ACAccount*)account completion:(ACAccountStoreCredentialRenewalHandler)completionHandler STUB_METHOD;
+- (void)removeAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreRemoveCompletionHandler)completionHandler STUB_METHOD;
 
 @end

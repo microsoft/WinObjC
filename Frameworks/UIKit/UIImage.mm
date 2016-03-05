@@ -14,9 +14,12 @@
 //
 //******************************************************************************
 
+#include <StubReturn.h>
 #include <math.h>
+#import <StubReturn.h>
 #include "Starboard.h"
 
+#include "CGImageInternal.h"
 #include "CGContextInternal.h"
 #include "CoreGraphics/CGGeometry.h"
 
@@ -26,6 +29,7 @@
 
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
+#include "CALayerInternal.h"
 
 #include "Windows.h"
 #include "COMIncludes.h"
@@ -34,7 +38,7 @@
 
 #include "BMPDecode.h"
 
-typedef struct insetInfo {
+struct insetInfo {
     UIImage* img;
     CGRect size;
 };
@@ -48,14 +52,16 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
 
     if (cgImage != curImage) {
         [layer setContents:(id)cgImage];
+    }
+    if ([layer contentsScale] != [image scale]) {
         [layer setContentsScale:[image scale]];
+    }
+    if ([layer contentsOrientation] != [image imageOrientation]) {
         [layer setContentsOrientation:[image imageOrientation]];
-
-        CGRect stretch;
-        stretch = [image _imageStretch];
-        if (stretch.origin.x != 0.0f || stretch.size.width != 1.0f || stretch.origin.y != 0.0f || stretch.size.height != 1.0f) {
-            [layer setContentsCenter:stretch];
-        }
+    }
+    CGRect stretch = [image _imageStretch];
+    if (!CGRectEqualToRect([layer contentsCenter], stretch)) {
+        [layer setContentsCenter:stretch];
     }
 }
 
@@ -77,7 +83,7 @@ public:
     void addImage(UIImage* image) {
         if (_numImages + 1 >= _maxImages) {
             _maxImages += 64;
-            _images = (UIImage**)EbrRealloc(_images, sizeof(id) * _maxImages);
+            _images = (UIImage**)IwRealloc(_images, sizeof(id) * _maxImages);
         }
 
         _images[_numImages] = image;
@@ -132,6 +138,30 @@ imageCacheInfo imageInfo;
     uint8_t** row_pointers;
     idretaintype(NSData) _deferredImageData;
 }
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
 + (UIImageCachedObject*)cacheImage:(UIImage*)image withName:(NSString*)name {
     //  Cache the image
     UIImageCachedObject* obj = [UIImageCachedObject new];
@@ -396,14 +426,14 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 
     if (strrchr(path, '.') != NULL && GetCACompositor()->screenScale() > 1.5f) {
         size_t newStrSize = strlen(path) + 10;
-        char* newStr = (char*)malloc(newStrSize);
+        char* newStr = (char*)IwMalloc(newStrSize);
         const char* pathEnd = strrchr(path, '.');
         memcpy(newStr, path, pathEnd - path);
         newStr[pathEnd - path] = 0;
         strcat_s(newStr, newStrSize, "@2x");
         strcat_s(newStr, newStrSize, pathEnd);
 
-        pathStr = _strdup(newStr);
+        pathStr = IwStrDup(newStr);
 
         if (EbrAccess(pathStr, 0) == -1) {
             id pathFind =
@@ -412,20 +442,20 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             if (pathFind != nil) {
                 path = (char*)[pathFind UTF8String];
                 if (pathStr)
-                    free(pathStr);
-                pathStr = _strdup(path);
+                    IwFree(pathStr);
+                pathStr = IwStrDup(path);
                 found = true;
             }
         } else {
             found = true;
         }
-        free(newStr);
+        IwFree(newStr);
     }
 
     if (!found) {
         if (pathStr)
-            free(pathStr);
-        pathStr = _strdup(path);
+            IwFree(pathStr);
+        pathStr = IwStrDup(path);
 
         if (EbrAccess(pathStr, 0) == -1) {
             NSString* pathFind = [bundle pathForResource:pathAddr ofType:nil inDirectory:nil forLocalization:@"English"];
@@ -433,8 +463,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
                 if (pathStr)
-                    free(pathStr);
-                pathStr = _strdup(path);
+                    IwFree(pathStr);
+                pathStr = IwStrDup(path);
             }
         }
     }
@@ -446,8 +476,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         if (pathFind != nil) {
             path = [pathFind UTF8String];
             if (pathStr)
-                free(pathStr);
-            pathStr = _strdup(path);
+                IwFree(pathStr);
+            pathStr = IwStrDup(path);
             found = true;
         } else {
             pathFind = [bundle pathForResource:pathAddr ofType:@"png" inDirectory:nil forLocalization:@"English"];
@@ -455,8 +485,8 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             if (pathFind != nil) {
                 path = [pathFind UTF8String];
                 if (pathStr)
-                    free(pathStr);
-                pathStr = _strdup(path);
+                    IwFree(pathStr);
+                pathStr = IwStrDup(path);
                 found = true;
             }
         }
@@ -471,7 +501,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     UIImageCachedObject* cachedImage = [g_imageCache objectForKey:[NSString stringWithCString:pathStr]];
     if (cachedImage != nil) {
         if (pathStr)
-            free(pathStr);
+            IwFree(pathStr);
         m_pImage = cachedImage->m_pImage;
         _cacheImage = cachedImage;
         CFRetain((id)m_pImage);
@@ -523,7 +553,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         }
         EbrFseek(fpIn, 0, SEEK_SET);
 
-        in = (char*)malloc(len);
+        in = (char*)IwMalloc(len);
         len = EbrFread(in, 1, len, fpIn);
 
         EbrFclose(fpIn);
@@ -544,7 +574,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
             }
         }
 
-        free(in);
+        IwFree(in);
     }
 
     if (strstr(pathStr, "@2x") != NULL) {
@@ -560,7 +590,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     _cacheImage.attach([UIImage cacheImage:self withName:[NSString stringWithCString:pathStr]]);
 
     if (pathStr)
-        free(pathStr);
+        IwFree(pathStr);
 
 #ifdef UIIMAGE_CACHE_MANAGEMENT
     imageInfo.addImage(self);
@@ -1341,6 +1371,98 @@ static CGImageRef getImage(UIImage* self) {
     }
 
     return self->m_pImage;
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageFlippedForRightToLeftLayoutDirection {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageWithAlignmentRectInsets:(UIEdgeInsets)alignmentInsets {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+NSData* UIImagePNGRepresentation(UIImage* img) {
+   return _CGImagePNGRepresentation(img);
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)animatedResizableImageNamed:(NSString*)name
+                              capInsets:(UIEdgeInsets)capInsets
+                           resizingMode:(UIImageResizingMode)resizingMode
+                               duration:(NSTimeInterval)duration {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageNamed:(NSString*)name
+                         inBundle:(NSBundle*)bundle
+    compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage scale:(CGFloat)scale orientation:(UIImageOrientation)orientation {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (UIImage*)imageWithCIImage:(CIImage*)ciImage {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

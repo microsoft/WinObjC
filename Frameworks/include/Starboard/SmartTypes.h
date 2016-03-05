@@ -119,8 +119,8 @@ public:
         return reinterpret_cast<Any>(_val);
     }
 
-    // The id conversion operator is primarily used when an AutoId<> is the destination of a message.
-    operator id() const {
+    // The object conversion operator is primarily used when an AutoId<> is the destination of a message.
+    operator TObjPointer() const {
         return _val;
     }
 

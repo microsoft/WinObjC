@@ -15,10 +15,12 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "Foundation/NSSet.h"
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSCountedSet.h"
 #include "Foundation/NSEnumerator.h"
+#include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
 
 void NSSetTableInit(NSSet* set, NSUInteger capacity) {
@@ -172,7 +174,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
     if (count >= max) {
         max += 64;
-        objs = (id*)EbrRealloc(objs, max * sizeof(id));
+        objs = (id*)IwRealloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -182,7 +184,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)EbrRealloc(objs, max * sizeof(id));
+            objs = (id*)IwRealloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -193,7 +195,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     va_end(pReader);
 
     NSSet* ret = [[self alloc] initWithObjects:objs count:count];
-    EbrFree(objs);
+    IwFree(objs);
 
     return [ret autorelease];
 }
@@ -259,13 +261,13 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (instancetype)initWithArray:(NSArray*)array {
     NSUInteger count = [array count];
-    id* objects = (id*)EbrMalloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
 
     [array getObjects:objects];
 
     NSSet* ret = [self initWithObjects:objects count:count];
 
-    EbrFree(objects);
+    IwFree(objects);
     return ret;
 }
 
@@ -274,7 +276,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (instancetype)initWithSet:(NSSet*)set {
     NSUInteger count = [set count];
-    id* objects = (id*)EbrMalloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
     NSUInteger i = 0;
 
     for (id curObj in set) {
@@ -283,7 +285,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 
     NSSet* ret = [self initWithObjects:objects count:count];
-    EbrFree(objects);
+    IwFree(objects);
 
     return ret;
 }
@@ -301,7 +303,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
     if (count >= max) {
         max += 64;
-        objs = (id*)EbrRealloc(objs, max * sizeof(id));
+        objs = (id*)IwRealloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -311,7 +313,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)EbrRealloc(objs, max * sizeof(id));
+            objs = (id*)IwRealloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -322,7 +324,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     va_end(pReader);
 
     NSSet* ret = [self initWithObjects:objs count:count];
-    EbrFree(objs);
+    IwFree(objs);
 
     return ret;
 }
@@ -516,7 +518,97 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator forObject:self nextFunction:NSSetEnumeratorGetNextObject];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)NSSetGetEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)NSSetEnumeratorGetNextObject];
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)setByAddingObjectsFromArray:(NSArray*)other {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)filteredSetUsingPredicate:(NSPredicate*)predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSSet*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, BOOL*))predicate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (id)valueForKey:(NSString*)key {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setValue:(id)value forKey:(NSString*)key {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)descriptionWithLocale:(id)locale {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

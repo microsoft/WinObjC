@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #ifndef ADSUPPORT_IMPEXP
 #define ADSUPPORT_IMPEXP __declspec(dllimport)
 #endif
@@ -24,5 +25,15 @@
 #else
 #define ADSUPPORT_EXPORT ADSUPPORT_IMPEXP extern
 #define ADSUPPORT_EXPORT_CLASS ADSUPPORT_IMPEXP
+#endif
+#endif
+
+#ifndef ADSUPPORT_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define ADSUPPORT_EXTERNC_BEGIN extern "C" {
+#define ADSUPPORT_EXTERNC_END }
+#else
+#define ADSUPPORT_EXTERNC_BEGIN
+#define ADSUPPORT_EXTERNC_END
 #endif
 #endif

@@ -21,3 +21,9 @@
 #if defined FUNCTIONAL_TEST_FRAMEWORK
 #include "functionaltest-api.h"
 #endif
+
+#ifdef WINOBJC_DISABLE_TESTS
+#define ARM_DISABLED_TEST(category, testName) TEST(category, DISABLED_##testName)
+#else
+#define ARM_DISABLED_TEST(category, testName) TEST(category, testName)
+#endif

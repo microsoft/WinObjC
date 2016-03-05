@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,15 @@
 //
 //******************************************************************************
 
-#ifndef _UIACTIVITY_H_
-#define _UIACTIVITY_H_
+#pragma once
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+
+typedef enum : NSInteger {
+    UIActivityCategoryAction,
+    UIActivityCategoryShare,
+} UIActivityCategory;
 
 UIKIT_EXPORT NSString* const UIActivityTypePostToFacebook;
 UIKIT_EXPORT NSString* const UIActivityTypePostToTwitter;
@@ -29,13 +33,24 @@ UIKIT_EXPORT NSString* const UIActivityTypePrint;
 UIKIT_EXPORT NSString* const UIActivityTypeCopyToPasteboard;
 UIKIT_EXPORT NSString* const UIActivityTypeAssignToContact;
 UIKIT_EXPORT NSString* const UIActivityTypeSaveToCameraRoll;
+UIKIT_EXPORT NSString* const UIActivityTypeAddToReadingList;
+UIKIT_EXPORT NSString* const UIActivityTypePostToFlickr;
+UIKIT_EXPORT NSString* const UIActivityTypePostToVimeo;
+UIKIT_EXPORT NSString* const UIActivityTypePostToTencentWeibo;
 UIKIT_EXPORT NSString* const UIActivityTypeAirDrop;
+
+@class UIViewController;
+@class UIImage;
 
 UIKIT_EXPORT_CLASS
 @interface UIActivity : NSObject
-
-- (void)activityDidFinish:(BOOL)finished;
-
++ (UIActivityCategory)activityCategory STUB_METHOD;
+- (NSString*)activityType STUB_METHOD;
+- (NSString*)activityTitle STUB_METHOD;
+- (UIImage*)activityImage STUB_METHOD;
+- (BOOL)canPerformWithActivityItems:(NSArray*)activityItems STUB_METHOD;
+- (void)prepareWithActivityItems:(NSArray*)activityItems STUB_METHOD;
+- (UIViewController*)activityViewController STUB_METHOD;
+- (void)performActivity STUB_METHOD;
+- (void)activityDidFinish:(BOOL)completed STUB_METHOD;
 @end
-
-#endif /* _UIACTIVITY_H_ */

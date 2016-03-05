@@ -16,7 +16,8 @@
 
 #include "Starboard.h"
 
-#include "UIKit/UIActivity.h"
+#import <StubReturn.h>
+#import <UIKit/UIActivity.h>
 
 NSString* const UIActivityTypePostToFacebook = @"UIActivityTypePostToFacebook";
 NSString* const UIActivityTypePostToTwitter = @"UIActivityTypePostToTwitter";
@@ -27,8 +28,90 @@ NSString* const UIActivityTypePrint = @"UIActivityTypePrint";
 NSString* const UIActivityTypeCopyToPasteboard = @"UIActivityTypeCopyToPasteboard";
 NSString* const UIActivityTypeAssignToContact = @"UIActivityTypeAssignToContact";
 NSString* const UIActivityTypeSaveToCameraRoll = @"UIActivityTypeSaveToCameraRoll";
+NSString* const UIActivityTypeAddToReadingList = @"UIActivityTypeAddToReadingList";
+NSString* const UIActivityTypePostToFlickr = @"UIActivityTypePostToFlickr";
+NSString* const UIActivityTypePostToVimeo = @"UIActivityTypePostToVimeo";
+NSString* const UIActivityTypePostToTencentWeibo = @"UIActivityTypePostToTencentWeibo";
 NSString* const UIActivityTypeAirDrop = @"UIActivityTypeAirDrop";
 
 @implementation UIActivity
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (UIActivityCategory)activityCategory {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)activityType {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (NSString*)activityTitle {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (UIImage*)activityImage {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)canPerformWithActivityItems:(NSArray*)activityItems {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)prepareWithActivityItems:(NSArray*)activityItems {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (UIViewController*)activityViewController {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)performActivity {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)activityDidFinish:(BOOL)completed {
+    UNIMPLEMENTED();
+}
 
 @end
