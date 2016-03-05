@@ -35,7 +35,6 @@ NSString* const kCAAlignmentCenter = @"kCAAlignmentCenter";
 NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
 
 @implementation CATextLayer {
-    BOOL _shouldRasterize;
     idretain __font;
     idretain _text;
     idretain _color, _shadowColor;
@@ -68,7 +67,7 @@ NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
 }
 
 - (DisplayTexture*)_getDisplayTexture {
-    if (_shouldRasterize) {
+    if (priv->_shouldRasterize) {
         return (DisplayTexture*)[super _getDisplayTexture];
     }
 
@@ -111,18 +110,6 @@ NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
     _shadowOffset = shadowOffset;
     _lineBreakMode = lineBreak;
     _numLines = numLines;
-}
-
-- (void)_setEdgeInsets:(UIEdgeInsets)edgeInsets {
-    _edgeInsets = edgeInsets;
-}
-
-- (void)_setCenterVertically:(BOOL)centerVertically {
-    _centerVertically = centerVertically;
-}
-
-- (void)_setShouldRasterize:(BOOL)shouldRasterize {
-    _shouldRasterize = shouldRasterize;
 }
 
 @end

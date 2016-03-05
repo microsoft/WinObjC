@@ -290,6 +290,7 @@
 */
 - (void)setTextColor:(UIColor*)color {
     if (![_textColor isEqual:color]) {
+        [[_textColor retain] autorelease];
         _textColor = color;
         [self adjustTextLayerSize];
     }
@@ -448,7 +449,10 @@
             [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
         }
 
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
+        CGContextRef currentCtx = UIGraphicsGetCurrentContext();
+
+        CGContextSetFillColorWithColor(currentCtx, [_textColor CGColor]);
+        CGContextSetStrokeColorWithColor(currentCtx, [_textColor CGColor]);
 
         CGSize size = rect.size;
         if (_numberOfLines == 1) {
@@ -482,11 +486,13 @@
                     break;
             }
 
-            CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_shadowColor CGColor]);
+            CGContextSetFillColorWithColor(currentCtx, [_shadowColor CGColor]);
+            CGContextSetStrokeColorWithColor(currentCtx, [_shadowColor CGColor]);
             size = [_text drawInRect:shadowRect withFont:_font lineBreakMode:_lineBreakMode alignment:_alignment];
         }
 
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
+        CGContextSetFillColorWithColor(currentCtx, [_textColor CGColor]);
+        CGContextSetStrokeColorWithColor(currentCtx, [_textColor CGColor]);
         size = [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_alignment];
     }
 }
