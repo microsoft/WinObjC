@@ -33,6 +33,7 @@ UIViewController::UIViewController() {
     _navigationItem = NULL;
     _tabBarItem = NULL;
     _resizesToFullSize = true;
+    _storyboardIdentifier = NULL;
 }
 
 void UIViewController::InitFromXIB(XIBObject* obj) {
@@ -58,6 +59,10 @@ void UIViewController::InitFromXIB(XIBObject* obj) {
 void UIViewController::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
     _view = (UIView*)obj->FindMemberAndHandle("view");
+
+    if (getAttrib("storyboardIdentifier")) {
+        _storyboardIdentifier = getAttrAndHandle("storyboardIdentifier");
+    }
 
     if (_connections) {
         for (int i = 0; i < _connections->count(); i++) {

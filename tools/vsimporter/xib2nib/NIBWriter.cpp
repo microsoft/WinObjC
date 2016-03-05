@@ -21,7 +21,7 @@
 #include "UIProxyObject.h"
 #include <assert.h>
 #include <map>
-
+#include "UIViewController.h"
 #include "..\WBITelemetry\WBITelemetry.h"
 
 int curPlaceholder = 1;
@@ -302,21 +302,43 @@ XIBObject *NIBWriter::GetProxyFor(XIBObject *obj)
 }
 
 std::map<std::string, std::string> _g_exportedControllers;
+std::map<std::string, std::string> _g_exportedControllersbyStoryboardId;
+
+void NIBWriter::ExportAllControllers()
+{
+    viewControllerList::iterator cur = XIBObject::_viewControllerNames.begin();
+    for (; cur != XIBObject::_viewControllerNames.end(); cur++) {
+        ExportController(*(cur));
+    }
+}
 
 void NIBWriter::ExportController(const char *controllerId)
 {
     std::string controllerName = std::string("UIViewController-") + controllerId;
-    //  Check if we've already written out the controller
-    if (_g_exportedControllers.find(controllerName) != _g_exportedControllers.end()) {
-        return;
-    }
-
-    _g_exportedControllers[controllerName] = controllerName;
-
     char szFilename[255];
     sprintf(szFilename, "UIViewController-%s.nib", controllerId);
 
     XIBObject *controller = XIBObject::findReference(controllerId);
+    UIViewController *uiViewController = (UIViewController *)controller;
+    if (!uiViewController)
+    {
+        //object isn't really a controller
+        return;
+    }
+    //  Check if we've already written out the controller
+    if (_g_exportedControllers.find(controllerId) != _g_exportedControllers.end()) {
+        return;
+    }
+
+    const char* controllerIdentifier = uiViewController->_storyboardIdentifier;
+    if (controllerIdentifier == NULL) {
+        //not all viewcontrollers will have an identifier. If they don't use the controller Id for the key.
+        controllerIdentifier = controllerId;
+    }
+
+    _g_exportedControllers[controllerId] = controllerName;
+    _g_exportedControllersbyStoryboardId[controllerIdentifier] = controllerName;
+
     XIBArray *objects = (XIBArray *) controller->_parent;
 
     printf("Writing %s\n", GetOutputFilename(szFilename).c_str());
