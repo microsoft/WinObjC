@@ -401,15 +401,10 @@
   </Target>
 
   <!-- Create parent directories for all object files -->
-  <Target Name="MakeDirsForClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions;MakeDirsForClangModules">
+  <Target Name="MakeDirsForClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
     <MakeDir Directories="@(ClangCompile->Metadata('ObjectFileName')->DirectoryName()->Distinct()->ClearMetadata())" />
   </Target>
   
-  <!-- Create parent directories for module cache files -->
-  <Target Name="MakeDirsForClangModules" Condition="'@(ClangCompile)' != '' And '@(ClangCompile->Metadata('ObjectiveCModules')' == 'true'" DependsOnTargets="ComputeClangOptions">
-    <MakeDir Directories="@(ClangCompile->Metadata('ObjectiveCModulesCachePath')->Distinct()->ClearMetadata())" />
-  </Target>
-
   <Target Name="ComputeClangOptions" Condition="">
     <!-- Figure out what to compile each file as -->
     <ItemGroup>
