@@ -32,6 +32,7 @@ public:
     XIBObject *_parentViewController;
     XIBArray *_segueTemplates;
     bool _resizesToFullSize;
+	const char *_storyboardIdentifier;
 
     UIViewController();
     virtual void InitFromXIB(XIBObject *obj);
