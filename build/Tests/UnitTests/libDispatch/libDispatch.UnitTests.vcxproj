@@ -224,9 +224,6 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\tests\unittests\libDispatch\dispatch_test.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_after.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_api.m" />

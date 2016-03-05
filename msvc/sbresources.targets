@@ -128,7 +128,7 @@
     Inputs="@(SBResourceCopy)"
     Outputs="@(SBResourceCopy->'%(OutputFile)')"
     Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
-
+    <!-- Currently, this target is only for unit tests since they set AppContainerApplication==false -->
     <Message Importance="high"
       Text="Copying assets" />
 
@@ -140,6 +140,11 @@
       Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
       SourceFiles="@(SBResourceCopy)"
       DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
+
+    <Exec
+      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
+      Command="Link.exe /EDIT /NOLOGO /APPCONTAINER:NO %(SBResourceCopy.OutputFile)" />
+
   </Target>
 
   <Target

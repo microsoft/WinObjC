@@ -245,7 +245,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSOutputStream_socket.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSPersistentDomain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSPropertyListReader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSPropertyListSerialization.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSPropertyListWriter_binary.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSSelectInputSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSSelectSet.h" />
@@ -254,7 +253,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSURLConnectionState.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSURLProtocol_file.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSXMLPropertyList.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\RawBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\RawBuffer.cpp" />

@@ -290,8 +290,6 @@
     <ClInclude Include="..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewLayout+Internals.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />
