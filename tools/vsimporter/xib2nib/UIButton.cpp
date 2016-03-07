@@ -17,6 +17,7 @@
 #include "UIButton.h"
 #include "UIColor.h"
 #include "UIStoryboardSegue.h"
+#include "UICustomResource.h"
 #include "UIRuntimeEventConnection.h"
 #include "UIFont.h"
 #include <assert.h>
@@ -105,6 +106,12 @@ static XIBObject* GetButtonContentStoryboard(NIBWriter* writer, XIBObject* obj, 
         return buttonContent;
     }
 
+    if (obj->getAttrib("image") != NULL) {
+        UICustomResource* image = new UICustomResource();
+        image->_imageName = obj->getAttrAndHandle("image");
+        buttonContent->AddOutputMember(writer, "UIImage", image);
+    }
+
     if (obj->getAttrib("title") != NULL) {
         buttonContent->AddOutputMember(writer, "UITitle", new XIBObjectString(obj->getAttrAndHandle("title")));
     }
@@ -149,8 +156,9 @@ void UIButton::WriteStatefulContent(NIBWriter* writer, XIBObject* obj) {
         selectedContent = GetButtonContentStoryboard(writer, obj, "selected");
     }
 
-    if (normalContent->_outputMembers.size() > 0)
+    if (normalContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(normalState, normalContent);
+    }
     if (highlightedContent->_outputMembers.size() > 0) {
         contentDict->AddObjectForKey(highlightedState, highlightedContent);
         obj->AddOutputMember(writer, "UIAdjustsImageWhenHighlighted", new XIBObjectBool(true));
@@ -197,6 +205,9 @@ static PropertyMapper propertyMappings[] = {
     ConvertOffset,
     "IBUIShowsTouchWhenHighlighted",
     "UIShowsTouchWhenHighlighted",
+    NULL,
+    "IBUIImage",
+    "UIImage",
     NULL,
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
