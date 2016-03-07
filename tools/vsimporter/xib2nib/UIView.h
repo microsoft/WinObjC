@@ -64,7 +64,7 @@ public:
     bool     _clipsToBounds;
     bool     _userInteractionDisabled;
     bool     _clearsContextBeforeDrawing;
-
+	int		 _tag;
 public:
     UIView();
 
