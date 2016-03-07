@@ -32,13 +32,8 @@
 #include <TargetConditionals.h>
 #endif
 
-#if TARGET_OS_EMBEDDED
 #define COUNT 300ul
-#define LAPS 10ul
-#else
-#define COUNT 1000ul
-#define LAPS 10ul
-#endif
+#define LAPS 5ul
 
 static dispatch_queue_t queues[COUNT];
 static size_t lap_count_down = LAPS;
