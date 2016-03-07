@@ -16,11 +16,17 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import "Starboard/SmartTypes.h"
 
-@interface TestObject : NSObject
+#import <future>
 
-@property (nonatomic) int foo;
-@property (nonatomic) int bar;
+@interface TestObject : NSObject {
+    StrongId<NSCondition> _fooCondition;
+    StrongId<NSCondition> _barCondition;
+}
+
+@property (atomic) int foo;
+@property (atomic) int bar;
 
 - (void)incrementFoo;
 - (void)incrementBar:(NSNumber*)amount;
@@ -29,49 +35,128 @@
 
 @implementation TestObject
 
+- (id)init {
+    if (self = [super init]) {
+        _fooCondition.attach([[NSCondition alloc] init]);
+        _barCondition.attach([[NSCondition alloc] init]);
+    }
+    return self;
+}
+
 - (void)incrementFoo {
-    self.foo += 1;
+    @synchronized (self) {
+        self.foo += 1;
+        [_fooCondition broadcast];
+    }
 }
 
 - (void)incrementBar:(NSNumber*)amount {
-    self.bar += [amount intValue];
+    @synchronized (self) {
+        self.bar += [amount intValue];
+        [_barCondition broadcast];
+    }
 }
 
+- (BOOL)waitOnFooForInterval:(NSTimeInterval)interval {
+    return [_fooCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+}
+
+- (BOOL)waitOnBarForInterval:(NSTimeInterval)interval {
+    return [_barCondition waitUntilDate:[NSDate dateWithTimeIntervalSinceNow:interval]];
+}
 @end
 
-TEST(Foundation, NSObject_PerformSelectorAfterDelaySanity) {
-    TestObject* testObject = [[TestObject alloc] init];
+static const NSTimeInterval testDuration = 5.;
 
-    [testObject performSelector:@selector(incrementFoo) withObject:nil afterDelay:1];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.5]];
+TEST(NSObject, PerformSelectorAfterDelaySanity) {
+    volatile long fooWaitCompleted = 0;
+    StrongId<TestObject> testObject = [[[TestObject alloc] init] autorelease];
 
-    ASSERT_EQ_MSG(testObject.foo, 1, "FAILED: selector not fired");
+    auto fooChangedAsync = std::async(std::launch::async, [&fooWaitCompleted, testObject](){
+        BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
+        _InterlockedExchange(&fooWaitCompleted, 1L);
+        return fooChanged;
+    });
+
+    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
+
+    [testObject performSelector:@selector(incrementFoo) withObject:nil afterDelay:0.25];
+
+    for(;;) {
+        // Spin the run loop until the async test wait gives up or completes.
+        [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        if (fooWaitCompleted) {
+            break;
+        }
+    }
+
+    ASSERT_TRUE_MSG(fooChangedAsync.get(), "testObject.foo did not change despite waiting for selector to fire");
 }
 
-TEST(Foundation, NSObject_CancelPreviousPerformRequestsWithTarget) {
-    TestObject* testObject = [[TestObject alloc] init];
+TEST(NSObject, CancelPreviousPerformRequestsWithTarget) {
+    volatile long fooWaitCompleted = 0;
+    StrongId<TestObject> testObject = [[[TestObject alloc] init] autorelease];
+
+    auto fooChangedAsync = std::async(std::launch::async, [&fooWaitCompleted, testObject](){
+        BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
+        _InterlockedExchange(&fooWaitCompleted, 1L);
+        return fooChanged;
+    });
+
+    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
     [testObject performSelector:@selector(incrementFoo) withObject:nil afterDelay:1];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+    [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
     [NSObject cancelPreviousPerformRequestsWithTarget:testObject];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
 
-    ASSERT_EQ_MSG(testObject.foo, 0, "FAILED: perform request not cancelled");
+    for(;;) {
+        // Spin the run loop until the async test wait gives up or completes.
+        [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        if (fooWaitCompleted) {
+            break;
+        }
+    }
+
+    ASSERT_FALSE_MSG(fooChangedAsync.get(), "testObject.foo changed despite being cancelled");
 }
 
-TEST(Foundation, NSObject_CancelPreviousPerformRequestsWithTargetSelectorObject) {
-    TestObject* testObject = [[TestObject alloc] init];
+TEST(NSObject, CancelPreviousPerformRequestsWithTargetSelectorObject) {
+    volatile long fooWaitCompleted = 0, barWaitCompleted = 0;
+    StrongId<TestObject> testObject = [[[TestObject alloc] init] autorelease];
+
+    auto fooChangedAsync = std::async(std::launch::async, [&fooWaitCompleted, testObject](){
+        BOOL fooChanged = [testObject waitOnFooForInterval:testDuration] && [testObject foo] != 0;
+        _InterlockedExchange(&fooWaitCompleted, 1L);
+        return fooChanged;
+    });
+
+    auto barChangedAsync = std::async(std::launch::async, [&barWaitCompleted, testObject](){
+        bool barChanged = [testObject waitOnBarForInterval:testDuration] && [testObject bar] != 0;
+        _InterlockedExchange(&barWaitCompleted, 1L);
+        return barChanged;
+    });
+
     NSNumber* amount = @(5);
 
-    [testObject performSelector:@selector(incrementFoo) withObject:nil afterDelay:1];
+    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
+
+    [testObject performSelector:@selector(incrementFoo) withObject:nil afterDelay:0.25];
     [testObject performSelector:@selector(incrementBar:) withObject:amount afterDelay:1];
 
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
-    [NSObject cancelPreviousPerformRequestsWithTarget:testObject selector:@selector(incrementBar:) object:amount];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
-    ASSERT_EQ_MSG(testObject.foo, 1, "FAILED: selector not fired");
-    ASSERT_EQ_MSG(testObject.bar, 0, "FAILED: perform request not cancelled");
+    [NSObject cancelPreviousPerformRequestsWithTarget:testObject selector:@selector(incrementBar:) object:amount];
+
+    for(;;) {
+        // Spin the run loop until the async test wait gives up or completes.
+        [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+        if (fooWaitCompleted && barWaitCompleted) {
+            break;
+        }
+    }
+
+    ASSERT_TRUE_MSG(fooChangedAsync.get(), "testObject.foo did not change despite waiting for selector to fire");
+    ASSERT_FALSE_MSG(barChangedAsync.get(), "testObject.bar changed despite being cancelled");
 }
 
