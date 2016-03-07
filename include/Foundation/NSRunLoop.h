@@ -46,6 +46,4 @@ FOUNDATION_EXPORT_CLASS
 - (void)runUntilDate:(NSDate*)limitDate;
 - (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)limitDate;
 - (void)performSelector:(SEL)aSelector target:(id)target argument:(id)anArgument order:(NSUInteger)order modes:(NSArray*)modes;
-- (void)cancelPerformSelector:(SEL)aSelector target:(id)target argument:(id)anArgument;
-- (void)cancelPerformSelectorsWithTarget:(id)target;
 @end
