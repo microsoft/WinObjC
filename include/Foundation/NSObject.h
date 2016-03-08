@@ -82,8 +82,8 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 - (id)performSelector:(SEL)selector;
 - (id)performSelector:(SEL)selector withObject:(id)object0;
 - (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget STUB_METHOD;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument STUB_METHOD;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
 
 /* Method Introspection */
 + (BOOL)instancesRespondToSelector:(SEL)selector;

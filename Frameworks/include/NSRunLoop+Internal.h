@@ -21,6 +21,8 @@
 #import "NSRunLoopState.h"
 #import "NSInputSource.h"
 
+@class NSDelayedPerform;
+
 @interface NSRunLoop (Internal)
 - (void)_stop;
 - (void)_wakeUp;
@@ -31,4 +33,8 @@
 
 @interface NSRunLoop(XamlUIWaiter)
 + (void)setUIThreadWaitFunction:(int(*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
+@end
+
+@interface NSRunLoop ()
+- (void)_invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayedPerform;
 @end

@@ -25,6 +25,8 @@
 #import "NSValueTransformers.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #import "NSDelayedPerform.h"
+#import "NSRunLoop+Internal.h"
+#import "NSThread-Internal.h"
 
 #include <memory>
 #include <vector>
@@ -589,4 +591,27 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(double)delay inModes:(NSArray*)modes {
     [[self class] object:self performSelector:selector withObject:obj1 afterDelay:delay inModes:modes];
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+// We're temporarily disabling the warning about implementing a non-category method
+// in a category until we determine where to put the NSObject threading extensions.
+
+/**
+ @Status Interoperable
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget {
+    [self cancelPreviousPerformRequestsWithTarget:aTarget selector:NULL object:nil];
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument {
+    NSDelayedPerform* delayed = [[NSDelayedPerform alloc] initWithObject:aTarget selector:aSelector argument:anArgument];
+    [[NSRunLoop currentRunLoop] _invalidateTimerWithDelayedPerform:delayed];
+    [delayed release];
+}
+#pragma clang diagnostic pop
+
 @end

@@ -219,7 +219,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     }
 }
 
-- (void)invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayed {
+- (void)_invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayed {
     pthread_mutex_lock(&_modeLock);
 
     NSEnumerator* stateKeys = [_modes keyEnumerator];
