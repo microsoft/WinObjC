@@ -70,7 +70,7 @@ COREGRAPHICS_EXPORT CGPathRef CGPathCreateCopyByStrokingPath(CGPathRef path,
                                                              CGLineJoin lineJoin,
                                                              CGFloat miterLimit) STUB_METHOD;
 
-COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path);
 
 COREGRAPHICS_EXPORT CGMutablePathRef CGPathCreateMutableCopyByTransformingPath(CGPathRef path,
                                                                                const CGAffineTransform* transform) STUB_METHOD;

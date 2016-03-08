@@ -120,7 +120,7 @@ public:
     virtual void CGContextAddEllipseInRect(CGRect rct);
     virtual void CGContextStrokeEllipseInRect(CGRect rct);
     virtual void CGContextFillEllipseInRect(CGRect rct);
-    virtual void CGContextAddPath(id path);
+    virtual void CGContextAddPath(CGPathRef path);
     virtual void CGContextStrokePath();
     virtual void CGContextStrokeRect(CGRect rct);
     virtual void CGContextStrokeRectWithWidth(CGRect rct, float width);

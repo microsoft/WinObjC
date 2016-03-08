@@ -451,7 +451,7 @@ void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rct) {
  @Status Interoperable
 */
 void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
-    ctx->Backing()->CGContextAddPath((id)path);
+    ctx->Backing()->CGContextAddPath(path);
 }
 
 /**
@@ -847,9 +847,9 @@ CGContextRef CGBitmapContextCreate(void* data,
                 break;
 
             case 0:
-                TraceWarning(TAG, 
-                    L"Warning: Invalid number of bits per component passed to "
-                    "CGBitmapContextCreate");
+                TraceWarning(TAG,
+                             L"Warning: Invalid number of bits per component passed to "
+                             "CGBitmapContextCreate");
                 return 0;
 
             default:

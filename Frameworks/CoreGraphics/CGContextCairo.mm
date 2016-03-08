@@ -929,10 +929,10 @@ void CGContextCairo::CGContextFillEllipseInRect(CGRect rct) {
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextAddPath(id path) {
+void CGContextCairo::CGContextAddPath(CGPathRef path) {
     ObtainLock();
 
-    [(CGPath*)path _applyPath:_rootContext];
+    _CGPathApplyPath(path, _rootContext);
 }
 
 void CGContextCairo::CGContextStrokePath() {
