@@ -64,8 +64,9 @@ private:
         char* _data;
         size_t _size;
         uintptr_t _offset;
+
     public:
-        StringPage(size_t size = 8192): _data(new char[size]), _size(size), _offset(0) {
+        StringPage(size_t size = 8192) : _data(new char[size]), _size(size), _offset(0) {
         }
         ~StringPage() {
             delete[] _data;
@@ -86,7 +87,7 @@ private:
 public:
     static const size_t s_defaultPageSize = 8192;
 
-    StringPool(): _pages(1) {
+    StringPool() : _pages(1) {
     }
 
     char* reserve(size_t count) {
@@ -703,7 +704,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
 /**
  @Status Interoperable
 */
-- (instancetype)initWithUrl:(NSURL*)url {
+- (instancetype)initWithURL:(NSURL*)url {
     if ([url isFileURL]) {
         return [self initWithPath:[url path]];
     }
@@ -783,15 +784,6 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     return self;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**
@@ -1039,7 +1031,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 
     char* pDir = (char*)[directory UTF8String];
     char* pExt = (char*)[type UTF8String];
-
 
     for (NSString* curFile in files) {
         if (type == nil || [[curFile pathExtension] isEqual:type] == TRUE) {
