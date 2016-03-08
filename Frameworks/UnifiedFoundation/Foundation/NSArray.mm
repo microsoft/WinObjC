@@ -154,6 +154,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     NSData* data = [NSData dataWithContentsOfFile:filename];
 
     if (data == nil) {
+        [self release];
         return nil;
     }
 
@@ -164,7 +165,8 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
         arrayData = [arrayData objectForKey:@"$objects"];
         if (![(id)arrayData isKindOfClass:[NSArray class]]) {
             TraceWarning(TAG, L"object %hs is not an array", [[arrayData description] UTF8String]);
-            return self;
+            [self release];
+            return nil;
         }
     }
 
