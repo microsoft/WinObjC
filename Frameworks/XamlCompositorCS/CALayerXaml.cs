@@ -70,7 +70,6 @@ namespace XamlCompositorCS
             private bool _createdTransforms = false;
             private Point _anchorPoint;
             private bool _masksToBounds;
-            private bool _topMost = false;
             double _Opacity;
             bool _hidden = false;
 
@@ -1093,7 +1092,6 @@ namespace XamlCompositorCS
 
             public void SetTopMost()
             {
-                _topMost = true;
                 SetContent(null);
                 this.Background = null;
             }
@@ -1188,7 +1186,6 @@ namespace XamlCompositorCS
             Storyboard _container = new Storyboard();
             AnimationMethod _Completed;
             AnimationMethod _Started;
-            bool aborted = false;
 
             public EventedStoryboard()
             {
@@ -1198,11 +1195,11 @@ namespace XamlCompositorCS
 
             class Animation
             {
-                internal string propertyName;
-                internal Object toValue;
+                internal string propertyName = null;
+                internal Object toValue = null;
             }
             List<Animation> Animations = new List<Animation>();
-            CALayerXaml AnimatedLayer;
+            CALayerXaml AnimatedLayer = null;
 
             public AnimationMethod Completed
             {
@@ -1234,7 +1231,6 @@ namespace XamlCompositorCS
 
             public void Abort()
             {
-                aborted = true;
                 foreach (Animation curAnim in Animations)
                 {
                     Object curValue = CALayerXaml.animatableProperties[curAnim.propertyName].GetValue(AnimatedLayer);
@@ -1506,7 +1502,7 @@ namespace XamlCompositorCS
                 Windows.System.Threading.ThreadPoolTimer beginTimer = Windows.System.Threading.ThreadPoolTimer.CreateTimer(
                     (handler) =>
                     {
-                        _container.Dispatcher.RunAsync(
+                        IAsyncAction ret = _container.Dispatcher.RunAsync(
                             Windows.UI.Core.CoreDispatcherPriority.High,
                                 () =>
                                 {
@@ -1544,7 +1540,7 @@ namespace XamlCompositorCS
                     if (!_updating)
                     {
                         _updating = true;
-                        CAXamlDebugCounters._singleton.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                        IAsyncAction ret = CAXamlDebugCounters._singleton.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
                                 {
                                     if (textOutput == null)
                                     {
@@ -1563,7 +1559,7 @@ namespace XamlCompositorCS
                     }
                 }
             }
-            static internal CAXamlDebugCounters _singleton;
+            static internal CAXamlDebugCounters _singleton = null;
 
             Dictionary<String, Counter> _Counters = new Dictionary<string, Counter>();
 
@@ -1618,7 +1614,6 @@ namespace XamlCompositorCS
 
         public sealed class CALayerInputHandler
         {
-            internal static UIElement rootPane;
             static CALayerXamlInputEvents InputEventHandler;
             static Control DummyFocus;
 
