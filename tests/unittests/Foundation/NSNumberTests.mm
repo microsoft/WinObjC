@@ -50,44 +50,106 @@ static void testGetValue(NSNumber* number, T expected) {
     }
 }
 
-TEST(Foundation, NSNumber_numberWithShortGetStringValueUnSigned) {
+TEST(NSNumber, NumberWithShortGetStringValueUnSigned) {
     NSNumber* number = [NSNumber numberWithShort:25];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     ASSERT_OBJCEQ_MSG(@"25", [number stringValue], "FAILED: values do not match as expected.");
 }
 
-TEST(Foundation, NSNumber_numberWithShortGetStringValueSigned) {
+TEST(NSNumber, NumberWithShortGetStringValueSigned) {
     NSNumber* number = [NSNumber numberWithShort:-12];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     ASSERT_OBJCEQ_MSG(@"-12", [number stringValue], "FAILED: values do not match as expected.");
 }
 
-TEST(Foundation, NSNumber_numberWithUnsignedShort) {
+TEST(NSNumber, NumberWithUnsignedShort) {
     NSNumber* number = [NSNumber numberWithUnsignedShort:25];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     ASSERT_OBJCEQ_MSG(@"25", [number stringValue], "FAILED: values do not match as expected.");
 }
 
-TEST(Foundation, NSNumber_getValueUnSigned) {
+TEST(NSNumber, GetValueUnSigned) {
     NSNumber* number = [NSNumber numberWithUnsignedShort:25];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     testGetValue(number, static_cast<unsigned short>(25));
 }
 
-TEST(Foundation, NSNumber_getValueSigned) {
+TEST(NSNumber, GetValueSigned) {
     NSNumber* number = [NSNumber numberWithShort:-12];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     testGetValue(number, static_cast<short>(-12));
 }
 
-TEST(Foundation, NSNumber_numberWithCharGetStringValueSigned) {
+TEST(NSNumber, GetValueOther) {
+    testGetValue([NSNumber numberWithChar:'y'], 'y');
+    testGetValue([NSNumber numberWithInt:-235], -235);
+    testGetValue([NSNumber numberWithUnsignedLongLong:257260223451], (unsigned long long)257260223451);
+    testGetValue([NSNumber numberWithBool:YES], YES);
+    testGetValue([NSNumber numberWithDouble:-2352.26269435], (double)-2352.26269435);
+}
+
+TEST(NSNumber, NumberWithCharGetStringValueSigned) {
     NSNumber* number = [NSNumber numberWithChar:-5];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     ASSERT_OBJCEQ_MSG(@"-5", [number stringValue], "FAILED: values do not match as expected.");
 }
 
-TEST(Foundation, NSNumber_numberWithCharGetStringValueUnsigned) {
+TEST(NSNumber, NumberWithCharGetStringValueUnsigned) {
     NSNumber* number = [NSNumber numberWithUnsignedChar:5];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
     ASSERT_OBJCEQ_MSG(@"5", [number stringValue], "FAILED: values do not match as expected.");
+}
+
+TEST(NSNumber, EncodeDecode) {
+    NSArray* numberArray = @[
+        @5,
+        @500,
+        @-5,
+        @-50.7,
+        [NSNumber numberWithBool:YES],
+        [NSNumber numberWithShort:55],
+        [NSNumber numberWithUnsignedChar:'a'],
+        [NSNumber numberWithUnsignedInt:37],
+        [NSNumber numberWithDouble:544325.1414]
+    ];
+
+    for (NSNumber* number in numberArray) {
+        ASSERT_OBJCEQ(number, [NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:number]]);
+    }
+}
+
+TEST(NSNumber, IsEqual) {
+    // Test expected equality, even across data types
+    ASSERT_OBJCEQ([NSNumber numberWithInt:50], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCEQ([NSNumber numberWithShort:50], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCEQ([NSNumber numberWithFloat:50.0], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCEQ([NSNumber numberWithUnsignedInt:50], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCEQ([NSNumber numberWithLongLong:50], [NSNumber numberWithInt:50]);
+
+    // Test expected inequality, even across data types
+    ASSERT_OBJCNE([NSNumber numberWithInt:51], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCNE([NSNumber numberWithShort:51], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCNE([NSNumber numberWithFloat:50.1], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCNE([NSNumber numberWithUnsignedInt:51], [NSNumber numberWithInt:50]);
+    ASSERT_OBJCNE([NSNumber numberWithLongLong:51], [NSNumber numberWithInt:50]);
+}
+
+TEST(NSNumber, Compare) {
+    // Test floating point comparisons
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithFloat:55.36] compare:[NSNumber numberWithDouble:37125.2]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithFloat:55.36] compare:[NSNumber numberWithShort:26]]);
+    ASSERT_EQ(NSOrderedSame, [[NSNumber numberWithDouble:55.0] compare:[NSNumber numberWithLong:55]]);
+    ASSERT_EQ(NSOrderedSame, [[NSNumber numberWithDouble:55.0] compare:[NSNumber numberWithUnsignedLong:55]]);
+
+    // Test negative number comparisons, both with signed and unsigned numbers
+    ASSERT_EQ(NSOrderedAscending, [@-1 compare:@0]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-1515135] compare:[NSNumber numberWithInt:-252]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-1515135] compare:[NSNumber numberWithUnsignedInt:0]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithLongLong:-1515135] compare:[NSNumber numberWithLongLong:-2352356262]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithDouble:-23425.24]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithFloat:235.25]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithBool:YES]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithUnsignedLongLong:2352]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithChar:'a']]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithUnsignedChar:'a']]);
 }
