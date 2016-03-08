@@ -16,18 +16,18 @@
 
 #include "Starboard.h"
 
-#import <Foundation/NSString.h>
-#import <Foundation/NSDictionary.h>
 #import <Foundation/NSBundle.h>
+#import <Foundation/NSDictionary.h>
 #import <Foundation/NSNib.h>
-#import <UIKit/UIViewController.h>
+#import <Foundation/NSString.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIStoryboard.h>
+#import <UIKit/UIViewController.h>
 
 @implementation UIStoryboard {
     idretaintype(NSString) _entryPoint;
     idretaintype(NSDictionary) _fileMap;
-	idretaintype(NSDictionary) _fileMapByStoryboardId;
+    idretaintype(NSDictionary) _fileMapByStoryboardId;
     idretaintype(NSString) _path;
     idretaintype(NSBundle) _bundle;
 }
@@ -117,9 +117,9 @@
 - (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
     EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
     NSString* fileName = [_fileMap objectForKey:(id)identifier];
-	if (!fileName){
-		NSString* fileName = [_fileMapByStoryboardId objectForKey:(id)identifier];
-	}
+    if (!fileName) {
+        NSString* fileName = [_fileMapByStoryboardId objectForKey:(id)identifier];
+    }
 
     UIApplication* uiApplication = [UIApplication sharedApplication];
 
