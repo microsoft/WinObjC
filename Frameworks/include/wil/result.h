@@ -1377,7 +1377,7 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
         __R_FN(FailFast_HrMsg)(__R_INFO(nullptr) wil::ResultFromCaughtException(), fmt, __VA_ARGS__); \
     }
 
-// Conditionally normalize (rethrow) a caught exception to ResultException or Platform::Exception^ (always place immediately after a try { }
+// Conditionally normalize (rethrow) a caught exception to ResultException or NSException (always place immediately after a try { }
 // block)
 #define CATCH_THROW_NORMALIZED()                                                \
     catch (...) {                                                               \
@@ -1468,9 +1468,10 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 // Objective-C Error Macros
 //*****************************************************************************
 
-__declspec(selectany) bool (*g_resultFromUncaughtExceptionObjC)(HRESULT* out);
-__declspec(selectany) void (*g_rethrowAsNSException)();
-__declspec(selectany) void (*g_objcThrowFailureInfo)(const wil::FailureInfo& fi);
+__declspec(selectany) bool (*g_resultFromUncaughtExceptionObjC)(HRESULT* out) = nullptr;
+__declspec(selectany) void (*g_rethrowAsNSException)() = nullptr;
+__declspec(selectany) void (*g_objcThrowFailureInfo)(const wil::FailureInfo& fi) = nullptr;
+__declspec(selectany) void (*g_rethrowNormalizedCaughtExceptionObjC)(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR message) = nullptr;
 
 #define THROW_NS_HR(hr) __R_FN(Objc_Throw_HrMsg)(__R_INFO(#hr) wil::verify_hresult(hr), nullptr)
 #define THROW_NS_HR_MSG(hr, msg, ...) __R_FN(Objc_Throw_HrMsg)(__R_INFO(#hr) wil::verify_hresult(hr), msg, __VA_ARGS__)
@@ -1503,7 +1504,7 @@ namespace wil {
 // Indicates the kind of message / failure type that was used to produce a given error
 enum class FailureType {
     Exception, // THROW_...
-    ObjCException, // OBJC_THROW_...
+    ObjCException, // THROW_NS_...
     Return, // RETURN_..._LOG or RETURN_..._MSG
     ReturnPreRelease, // RETURN_...
     Log, // LOG_...
@@ -1698,7 +1699,7 @@ __declspec(selectany) void(__stdcall* g_pfnFailFastInLoaderCallout)() WI_NOEXCEP
 // Desktop Only:  Private module load convert NtStatus to HResult (automatically setup)
 __declspec(selectany) ULONG(__stdcall* g_pfnRtlNtStatusToDosErrorNoTeb)(NTSTATUS) = nullptr;
 
-enum class ReportFailureOptions { None = 0x00, ForcePlatformException = 0x01, SuppressAction = 0x02 };
+enum class ReportFailureOptions { None = 0x00, ForceObjCException = 0x01, SuppressAction = 0x02 };
 DEFINE_ENUM_FLAG_OPERATORS(ReportFailureOptions);
 
 // Forward declarations to enable use of fail fast and reporting internally...
@@ -2105,8 +2106,6 @@ _Must_inspect_result_ STRSAFEAPI StringCchLengthA(_In_reads_or_z_(cchMax) STRSAF
 }
 #pragma warning(pop)
 
-#if VS2015_CA_FIXED
-
 _Ret_range_(sizeof(char), (psz == nullptr) ? sizeof(char) : (_String_length_(psz) + sizeof(char))) inline size_t
     ResultStringSize(_In_opt_ PCSTR psz) {
     return (psz == nullptr) ? sizeof(char) : (strlen(psz) + sizeof(char));
@@ -2116,22 +2115,6 @@ _Ret_range_(sizeof(wchar_t), (psz == nullptr) ? sizeof(wchar_t) : ((_String_leng
     ResultStringSize(_In_opt_ PCWSTR psz) {
     return (psz == nullptr) ? sizeof(wchar_t) : (wcslen(psz) + 1) * sizeof(wchar_t);
 }
-
-#else
-
-_When_(psz == nullptr, _Post_satisfies_(return == sizeof(char)))
-    _When_(psz != nullptr, _Post_satisfies_(return == (_String_length_(psz) + 1) * sizeof(char))) inline size_t
-    ResultStringSize(_In_opt_ PCSTR psz) {
-    return (psz ? strlen(psz) : 1) * sizeof(char);
-}
-
-_When_(psz == nullptr, _Post_satisfies_(return == sizeof(wchar_t)))
-    _When_(psz != nullptr, _Post_satisfies_(return == (_String_length_(psz) + 1) * sizeof(wchar_t))) inline size_t
-    ResultStringSize(_In_opt_ PCWSTR psz) {
-    return (psz ? wcslen(psz) : 1) * sizeof(wchar_t);
-}
-
-#endif
 
 template <typename TString>
 _Ret_range_(pStart, pEnd) inline unsigned char* WriteResultString(_Out_writes_to_ptr_opt_(pEnd) unsigned char* pStart,
@@ -2951,6 +2934,10 @@ _declspec(noreturn) inline void RethrowUnknownCaughtException(__R_FN_PARAMS_FULL
 }
 
 __declspec(noreturn) inline void RethrowNormalizedCaughtException_Helper(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR message = nullptr) {
+    if (g_rethrowNormalizedCaughtExceptionObjC) {
+        g_rethrowNormalizedCaughtExceptionObjC(__R_FN_CALL_FULL, message);
+    }
+
     try {
         throw;
     } catch (const ResultException& re) {
@@ -3107,11 +3094,12 @@ inline __declspec(noinline) void ReportFailure(
     wchar_t debugString[2048];
     char callContextString[1024];
 
+    const bool forceObjCException = WI_IS_FLAG_SET(options, ReportFailureOptions::ForceObjCException);
     LogFailure(__R_FN_CALL_FULL,
                type,
                hr,
                message,
-               false,
+               forceObjCException, // Performs extra logging if we're forcing a conversion to ObjCException
                debugString,
                ARRAYSIZE(debugString),
                callContextString,
@@ -3122,24 +3110,24 @@ inline __declspec(noinline) void ReportFailure(
         if (type == FailureType::FailFast) {
             // This is an explicit fail fast - examine the callstack to determine the precise reason for this failure
             RESULT_RAISE_FAST_FAIL_EXCEPTION;
-        } else if (type == FailureType::Exception) {
-            throw ResultException(failure);
-        } else if (type == FailureType::ObjCException) {
+        } else if (type == FailureType::ObjCException || forceObjCException) {
             if (!g_objcThrowFailureInfo) {
                 LogFailure(__R_FN_CALL_FULL,
-                           type,
-                           E_FAIL,
-                           L"Throwing an Objective C exception requires having Objective C code",
-                           false,
-                           debugString,
-                           ARRAYSIZE(debugString),
-                           callContextString,
-                           ARRAYSIZE(callContextString),
-                           &failure);
+                    type,
+                    E_UNEXPECTED,
+                    L"Throwing an Objective C exception requires having Objective C code",
+                    false,
+                    debugString,
+                    ARRAYSIZE(debugString),
+                    callContextString,
+                    ARRAYSIZE(callContextString),
+                    &failure);
                 RESULT_RAISE_FAST_FAIL_EXCEPTION;
             }
 
             g_objcThrowFailureInfo(failure);
+        } else if (type == FailureType::Exception) {
+            throw ResultException(failure);
         }
     }
 }
@@ -5038,12 +5026,45 @@ void _catchAndPopulateNSError(NSError** outError) {
         LOG_HR_MSG(code, "NSError occurred where caller is ignoring value: %hs", [[error description] UTF8String]);
     }
 }
+
+void _rethrowNormalizedCaughtExceptionObjC(__R_FN_PARAMS_FULL, _In_opt_ PCWSTR message) {
+    try {
+        throw;
+    } catch (const wil::ResultException& re) {
+        // Report the exception
+        auto &failure = re.GetFailureInfo();
+        wil::details::ReportFailure(__R_FN_CALL_FULL, wil::FailureType::Exception, failure.hr, message, wil::details::ReportFailureOptions::SuppressAction);
+
+        // Convert to an NSException by re-throwing with the existing failure information to maintain as much context as we can.  
+        wil::details::ReportFailure(failure.callerReturnAddress, failure.uLineNumber, failure.pszFile, failure.pszFunction, failure.pszCode, failure.returnAddress, wil::FailureType::Exception, failure.hr, failure.pszMessage, wil::details::ReportFailureOptions::ForceObjCException);
+    } catch (NSException* e) {
+        wchar_t messageString[2048];
+        StringCchCopyW(messageString, ARRAYSIZE(messageString), reinterpret_cast<STRSAFE_LPCWSTR>([[e reason] cStringUsingEncoding:NSUnicodeStringEncoding]));
+        if (message) {
+            StringCchCatW(messageString, ARRAYSIZE(messageString), L" - ");
+            StringCchCatW(messageString, ARRAYSIZE(messageString), message);
+        }
+
+        // Report the exception
+        wil::details::ReportFailure(__R_FN_CALL_FULL, wil::FailureType::Exception, [e _hresult], messageString, wil::details::ReportFailureOptions::SuppressAction);
+
+        // In ObjC, NSException is our normalized exception...we can re-throw it.  
+        throw;
+    } catch (std::bad_alloc const &) {
+        wil::details::ReportFailure(__R_FN_CALL_FULL, wil::FailureType::Exception, E_OUTOFMEMORY, message);
+    } catch (...) {
+        wil::details::RethrowUnknownCaughtException(__R_FN_CALL_FULL, message);
+    }
+    RESULT_RAISE_FAST_FAIL_EXCEPTION;
+}
+
 }
 
 WI_HEADER_INITITALIZATION_FUNCTION(InitializeObjCExceptions, [] {
     g_resultFromUncaughtExceptionObjC = _resultFromUncaughtExceptionObjC;
     g_rethrowAsNSException = _rethrowAsNSException;
     g_objcThrowFailureInfo = _objcThrowFailureInfo;
+    g_rethrowNormalizedCaughtExceptionObjC = _rethrowNormalizedCaughtExceptionObjC;
     return 1;
 });
 
