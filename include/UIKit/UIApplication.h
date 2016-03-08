@@ -206,6 +206,9 @@ UIKIT_EXPORT int UIApplicationMainInit(
     int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);
 UIKIT_EXPORT int UIApplicationMainLoop();
 
+UIKIT_EXPORT void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
+UIKIT_EXPORT void UIApplicationMainHandleHighMemoryUsageEvent();
+
 UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
 

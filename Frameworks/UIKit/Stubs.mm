@@ -31,7 +31,6 @@
 
 typedef unsigned int mach_port_t;
 
-EbrEvent _applicationStateChanged;
 int g_browsersVisible = 0;
 UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
 

@@ -14,24 +14,24 @@
 //
 //******************************************************************************
 
-#include "ApplicationMain.h"
+#import "ApplicationMain.h"
 
-#include <assert.h>
-#include <math.h>
-#include <malloc.h>
-#include <string>
+#import <assert.h>
+#import <math.h>
+#import <malloc.h>
+#import <string>
 
-#include <vector>
-#include <algorithm>
+#import <vector>
+#import <algorithm>
 
-#include <d3d11.h>
-#include <d3d11_2.h>
+#import <d3d11.h>
+#import <d3d11_2.h>
 
-#include "Starboard.h"
-#include "UIInterface.h"
-#include "CACompositorClient.h"
-#include "UIApplicationInternal.h"
-#include "winobjc\winobjc.h"
+#import "Starboard.h"
+#import "UIInterface.h"
+#import "CACompositorClient.h"
+#import "UIApplicationInternal.h"
+#import "winobjc\winobjc.h"
 #import "NSBundleInternal.h"
 
 static CACompositorClientInterface* _compositorClient = NULL;
@@ -62,12 +62,9 @@ std::string GetAppNameFromPList() {
 
 int ApplicationMainStart(
     int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight) {
-
     // Note: We must use nil rather than an empty string for these class names
-    NSString* principalClassName = 
-        (principalName && *principalName != '\0') ? [[NSString alloc] initWithCString:principalName] : nil;
-    NSString* delegateClassName = 
-        (delegateName && *delegateName != '\0') ? [[NSString alloc] initWithCString:delegateName] : nil;
+    NSString* principalClassName = (principalName && *principalName != '\0') ? [[NSString alloc] initWithCString:principalName] : nil;
+    NSString* delegateClassName = (delegateName && *delegateName != '\0') ? [[NSString alloc] initWithCString:delegateName] : nil;
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
@@ -143,4 +140,12 @@ int ApplicationMainStart(
 
 void IWSetTemporaryFolder(const char* folder) {
     NSSetTemporaryDirectory([NSString stringWithCString:folder]);
+}
+
+void ApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
+    UIApplicationMainHandleWindowVisibilityChangeEvent(isVisible);
+}
+
+void ApplicationMainHandleHighMemoryUsageEvent() {
+    UIApplicationMainHandleHighMemoryUsageEvent();
 }

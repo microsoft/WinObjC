@@ -1162,6 +1162,8 @@ LIBRARY UIKit
         UIApplicationMainInit
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
+        UIApplicationMainHandleWindowVisibilityChangeEvent
+        UIApplicationMainHandleHighMemoryUsageEvent
 
         UIDeviceBatteryLevelDidChangeNotification
         UIDeviceBatteryStateDidChangeNotification

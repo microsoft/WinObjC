@@ -13,6 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// clang-format does not play well with C++/CX
+// clang-format off
 
 #include "ApplicationMain.h"
 #include "StringHelpers.h"
@@ -27,6 +29,8 @@ using namespace Windows::System::Threading;
 
 void EbrSetWritableFolder(const char* folder);
 void IWSetTemporaryFolder(const char* folder);
+void ApplicationMainHandleWindowVisibilityChangeEvent(bool visible);
+void ApplicationMainHandleHighMemoryUsageEvent();
 
 typedef void* EbrEvent;
 
@@ -46,17 +50,14 @@ int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, Socke
         bool signaled = false;
         auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
         ThreadPool::RunAsync(
-            ref new WorkItemHandler([&retval, &signaled, events, numEvents, timeout, sockets, dispatcher](IAsyncAction ^ action) {
-            //  Wait for an event
-            retval = EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
-            signaled = true;
+            ref new WorkItemHandler([&retval, &signaled, events, numEvents, timeout, sockets, dispatcher](IAsyncAction^ action) {
+                //  Wait for an event
+                retval = EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
+                signaled = true;
 
-            //  Dispatch it on the UI thread
-            dispatcher->RunAsync(CoreDispatcherPriority::High, ref new DispatchedHandler([]()
-            {
-                ::SwitchToFiber(g_WinObjcUIFiber);
+                //  Dispatch it on the UI thread
+                dispatcher->RunAsync(CoreDispatcherPriority::High, ref new DispatchedHandler([]() { ::SwitchToFiber(g_WinObjcUIFiber); }));
             }));
-        }));
 
         //  ** WARNING ** The "local" retval is passed by ref to the lamba - never wake up this
         //  fiber from somewhere else!
@@ -64,8 +65,7 @@ int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, Socke
 
         assert(signaled);
         return retval;
-    }
-    else {
+    } else {
         return EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
     }
 }
@@ -74,17 +74,13 @@ extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout) {
     int retval = 0;
     bool signaled = false;
     auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-    ThreadPool::RunAsync(
-        ref new WorkItemHandler([&retval, &signaled, hEvent, timeout, dispatcher](IAsyncAction ^ action) {
+    ThreadPool::RunAsync(ref new WorkItemHandler([&retval, &signaled, hEvent, timeout, dispatcher](IAsyncAction^ action) {
         //  Wait for an event
         retval = WaitForSingleObjectEx((HANDLE)hEvent, timeout, TRUE);
         signaled = true;
 
         //  Dispatch it on the UI thread
-        dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([]()
-        {
-            ::SwitchToFiber(g_WinObjcUIFiber);
-        }));
+        dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([]() { ::SwitchToFiber(g_WinObjcUIFiber); }));
     }));
 
     //  ** WARNING ** The "local" retval is passed by ref to the lamba - never wake up this
@@ -172,3 +168,13 @@ extern "C" void IWRunApplicationMain(Platform::String^ principalClassName,
     // Kick off the run loop
     StartCompositedRunLoop();
 }
+
+extern "C" void IWHandleWindowVisibilityChangeEvent(bool isVisible) {
+    ApplicationMainHandleWindowVisibilityChangeEvent(isVisible);
+}
+
+extern "C" void IWHandleHighMemoryUsageEvent() {
+    ApplicationMainHandleHighMemoryUsageEvent();
+}
+
+// clang-format off

@@ -45,7 +45,6 @@
 #include "UIResponderInternal.h"
 #include "UITouchInternal.h"
 #include "UIEventInternal.h"
-typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
 #include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
@@ -186,9 +185,7 @@ extern pthread_t renderTid;
 extern pthread_mutex_t g_ChangeOrientationLock;
 extern pthread_cond_t g_ChangeOrientationCond;
 
-UIApplicationState _applicationState;
-extern EbrEvent _applicationStateChanged;
-bool _drawingAllowed = true;
+UIApplicationState _applicationState = UIApplicationStateInactive;
 
 NSMutableDictionary* g_curGesturesDict;
 
@@ -1588,7 +1585,7 @@ static void printViews(id curView, int level) {
     return _applicationState;
 }
 
-static void WarnViewControllers(UIView* subview) {
+static void _sendMemoryWarningToViewControllers(UIView* subview) {
     id controller = [UIViewController controllerForView:subview];
     if ([controller respondsToSelector:@selector(didReceiveMemoryWarning)]) {
         [controller didReceiveMemoryWarning];
@@ -1596,72 +1593,69 @@ static void WarnViewControllers(UIView* subview) {
 
     NSArray* subviews = [subview subviews];
     for (UIView* curSubview in subviews) {
-        WarnViewControllers(curSubview);
+        _sendMemoryWarningToViewControllers(curSubview);
     }
 }
 
-- (void)_sendToBackground {
-    id delegate = [self delegate];
+- (void)_sendActiveStatus:(BOOL)isActive {
+    if (isActive) {
+        [self _sendEnteringForegroundEvents];
 
-    //  For devices with <= 512mb of memory, send a memory warning
-    //  so that the app will release as much memory as possible
-    uint64_t totalMemory = [UIDevice _deviceTotalMemory];
-    if (totalMemory <= 512 * 1024 * 1024) {
-        if ([delegate respondsToSelector:@selector(applicationDidReceiveMemoryWarning:)]) {
-            [delegate applicationDidReceiveMemoryWarning:self];
+        if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
+            [self.delegate applicationDidBecomeActive:self];
         }
-        if ([windows count] > 0) {
-            int windowCount = [windows count];
-
-            for (int i = 0; i < windowCount; i++) {
-                id window = [windows objectAtIndex:i];
-                WarnViewControllers(window);
-            }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:self];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(applicationWillResignActive:)]) {
+            [self.delegate applicationWillResignActive:self];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification" object:self];
+
+        [self _sendEnteringBackgroundEvents];
     }
+}
 
-    if ([delegate respondsToSelector:@selector(applicationWillResignActive:)]) {
-        [delegate applicationWillResignActive:self];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification" object:self];
-
-    if ([windows count] > 0) {
-        int windowCount = [windows count];
-
-        for (int i = 0; i < windowCount; i++) {
-            id window = [windows objectAtIndex:i];
-            CALayer* windowLayer = [window layer];
-            [windowLayer discardDisplayHierarchy];
-        }
-
-        GetCACompositor()->ProcessTransactions();
-    }
-    _applicationState = UIApplicationStateBackground;
-    _drawingAllowed = false;
-    if ([delegate respondsToSelector:@selector(applicationDidEnterBackground:)]) {
-        [delegate applicationDidEnterBackground:self];
+- (void)_sendEnteringBackgroundEvents {
+    if ([self.delegate respondsToSelector:@selector(applicationDidEnterBackground:)]) {
+        [self.delegate applicationDidEnterBackground:self];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidEnterBackgroundNotification" object:self];
-    EbrEventSignal(_applicationStateChanged);
+
+    _applicationState = UIApplicationStateBackground;
 }
 
-- (void)_bringToForeground:(NSURL*)url {
-    id delegate = [self delegate];
-    if ([delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
-        [delegate applicationWillEnterForeground:self];
+- (void)_sendEnteringForegroundEvents {
+    if (_applicationState == UIApplicationStateBackground) {
+        // Note: *applicationWillEnterForeground* events should only be sent when the app is coming to Foreground from Background.
+        if ([self.delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
+            [self.delegate applicationWillEnterForeground:self];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification" object:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification" object:self];
 
     _applicationState = UIApplicationStateActive;
-    TraceVerbose(TAG, L"Bringing to foreground with: %x", url);
+}
+
+- (void)_launchToForeground:(NSURL*)url {
+    [self _sendEnteringForegroundEvents];
+
+    TraceVerbose(TAG, L"Launching to foreground with: %@", url);
     if (url != nil) {
         [UIApplication _launchedWithURL:url];
     }
+}
 
-    if ([delegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-        [delegate applicationDidBecomeActive:self];
+- (void)_sendHighMemoryWarning {
+    if ([self.delegate respondsToSelector:@selector(applicationDidReceiveMemoryWarning:)]) {
+        [self.delegate applicationDidReceiveMemoryWarning:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidReceiveMemoryWarningNotification" object:self];
+
+    int windowCount = [windows count];
+    for (int i = 0; i < windowCount; i++) {
+        UIView* window = [windows objectAtIndex:i];
+        _sendMemoryWarningToViewControllers(window);
+    }
 }
 
 static void layoutBlankView(UIView* inputView, UIView* accessoryView, float totalHeight) {
@@ -1966,8 +1960,8 @@ static void evaluateKeyboard(id self) {
     NSString* str = [[NSString alloc] initWithData:tokenData encoding:NSUTF8StringEncoding];
     TraceVerbose(TAG, L"Received token: %hs", [str UTF8String]);
 
-    if ([_delegate respondsToSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)]) {
-        [_delegate application:self didRegisterForRemoteNotificationsWithDeviceToken:tokenData];
+    if ([self.delegate respondsToSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)]) {
+        [self.delegate application:self didRegisterForRemoteNotificationsWithDeviceToken:tokenData];
     }
 
     /*
@@ -2013,8 +2007,8 @@ static void evaluateKeyboard(id self) {
     TraceVerbose(TAG, L"Type is: %hs", object_getClassName(obj));
     TraceVerbose(TAG, L"Received notification: %hs", [[obj description] UTF8String]);
 
-    if ([_delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
-        [_delegate application:self didReceiveRemoteNotification:obj];
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+        [self.delegate application:self didReceiveRemoteNotification:obj];
     }
 }
 

@@ -30,6 +30,7 @@
 #import <UIKit/UINib.h>
 
 #import <UIKit/UIApplicationDelegate.h>
+#import <UIApplicationInternal.h>
 
 #import "UIInterface.h"
 #import "LoggingNative.h"
@@ -247,11 +248,6 @@ int UIApplicationMainInit(
         rootController = nil;
     }
 
-    if ([curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-        [curDelegate applicationDidBecomeActive:uiApplication];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:uiApplication];
-
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(setOrientation:) withObject:0 waitUntilDone:FALSE];
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
     g_uiMainRunning = true;
@@ -301,4 +297,12 @@ int UIApplicationMainLoop() {
     [outerPool release];
 
     return 0;
+}
+
+void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
+    [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
+}
+
+void UIApplicationMainHandleHighMemoryUsageEvent() {
+    [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }

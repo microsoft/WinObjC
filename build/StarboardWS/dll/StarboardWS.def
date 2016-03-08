@@ -3,3 +3,5 @@ LIBRARY StarboardWS
         IWRunApplicationMain
         SetCACompositorClient
         XamlWaitHandle
+        IWHandleWindowVisibilityChangeEvent
+        IWHandleHighMemoryUsageEvent

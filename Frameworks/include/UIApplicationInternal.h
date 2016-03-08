@@ -18,6 +18,14 @@
 #define _UIAPPLICATIONINTERNAL_H_
 #import <UIKit/UIApplication.h>
 
+@interface UIApplication (internal)
+- (void)_sendActiveStatus:(BOOL)isActive;
+- (void)_sendToBackground;
+- (void)_bringToForeground;
+- (void)_bringToForeground:(NSURL*)url;
+- (void)_sendHighMemoryWarning;
+@end
+
 @interface WOCDisplayMode (internal)
 - (float)currentWidth;
 - (float)currentHeight;
