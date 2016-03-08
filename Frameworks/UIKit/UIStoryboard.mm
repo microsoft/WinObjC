@@ -68,11 +68,6 @@
 - (UIViewController*)instantiateInitialViewController {
     NSString* fileName = [_fileMap objectForKey:_entryPoint];
 
-	if (!fileName){
-		//cannot find the fileName in the fileMap because the controller defines a storyboardId.
-		//default to convention from xib2nib and get the file based on name.
-		fileName = [@"UIViewController-" stringByAppendingString:_entryPoint];
-	}
     UIApplication* uiApplication = [UIApplication sharedApplication];
 
     NSString* pathToNib = nil;
@@ -118,7 +113,7 @@
     EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
     NSString* fileName = [_fileMap objectForKey:(id)identifier];
     if (!fileName) {
-        NSString* fileName = [_fileMapByStoryboardId objectForKey:(id)identifier];
+        fileName = [_fileMapByStoryboardId objectForKey:(id)identifier];
     }
 
     UIApplication* uiApplication = [UIApplication sharedApplication];
