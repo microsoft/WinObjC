@@ -156,14 +156,21 @@ NSCalculationError NSDecimalSubtract(NSDecimal* result,
 */
 + (NSDecimalNumber*)decimalNumberWithString:(NSString*)str {
     UNIMPLEMENTED();
+    NSDecimalNumber* ret = [self alloc];
     const char* pStr = [str UTF8String];
     if (strstr(pStr, ".") != NULL) {
         double fVal = strtod(pStr, NULL);
-        return [[self alloc] initWithDouble:fVal];
+        ret->val.f = fVal;
+        ret->type = floatType;
+        ret->objCType = "f";
     } else {
-        int64_t val = _strtoi64(pStr, NULL, 10);
-        return [[self alloc] initWithLongLong:val];
+        int64_t val;
+        val = _strtoi64(pStr, NULL, 10);
+        ret->val.i = val;
+        ret->type = int64Type;
+        ret->objCType = "q";
     }
+    return ret;
 }
 
 /**

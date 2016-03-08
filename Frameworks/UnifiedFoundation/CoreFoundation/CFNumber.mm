@@ -31,11 +31,38 @@ CFNumberType CFNumberGetType(CFNumberRef self) {
 
 extern "C" id _OBJC_CLASS_NSCFBoolean;
 
-static StrongId<NSNumber> cftrue = [NSNumber numberWithBool:true];
-static StrongId<NSNumber> cffalse = [NSNumber numberWithBool:false];
+struct CFStaticNumber {
+    id* isa;
+    NSValueType _valueType;
+    union {
+        uint64_t i;
+        double f;
+    } val;
+    NSNumberType type;
+    const char* objCType;
+    bool isBool;
+};
 
-const CFBooleanRef kCFBooleanTrue = reinterpret_cast<CFBooleanRef>(&*cftrue);
-const CFBooleanRef kCFBooleanFalse = reinterpret_cast<CFBooleanRef>(&*cftrue);
+static CFStaticNumber cftrue = { NULL,
+                                 NSValueTypeUnknown,
+                                 {
+                                     1,
+                                 },
+                                 integerType,
+                                 "c",
+                                 true };
+
+static CFStaticNumber cffalse = { NULL,
+                                  NSValueTypeUnknown,
+                                  {
+                                      0,
+                                  },
+                                  integerType,
+                                  "c",
+                                  true };
+
+const CFBooleanRef kCFBooleanTrue = (const CFBooleanRef)&cftrue;
+const CFBooleanRef kCFBooleanFalse = (const CFBooleanRef)&cffalse;
 
 extern "C" Boolean CFBooleanGetValue(CFBooleanRef boolean) {
     return [static_cast<id>(kCFBooleanTrue) isEqualToNumber:static_cast<NSNumber*>(boolean)];
