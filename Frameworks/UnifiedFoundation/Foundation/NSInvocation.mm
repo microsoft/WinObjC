@@ -91,9 +91,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
  @Status Interoperable
 */
 - (void)setArgument:(void*)buf atIndex:(int)index {
-    if (index >= MAX_ARGS) {
-        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d!", index, MAX_ARGS);
-        assert(0);
+    if ((index < 0) || (index >= [_methodSignature numberOfArguments]) || (index >= MAX_ARGS)) {
+        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d, MethodSig arguments = %d", index, MAX_ARGS, [_methodSignature numberOfArguments]);
+        [NSException raise:NSInvalidArgumentException format:@"The number of arguments exceeds the allowed limit."];
     }
 
     if (retainArguments) {
