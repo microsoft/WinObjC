@@ -201,6 +201,20 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
 /**
  @Status Interoperable
 */
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if ([coder containsValueForKey:@"NS.intval"]) {
+        _val.intValue = (int)[coder decodeIntForKey:@"NS.intval"];
+        _objCType = @encode(int);
+    } else {
+        FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSNumber initWithCoder with non-integer unsupported");
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithBool:(BOOL)num {
     return [[[self alloc] initWithBool:num] autorelease];
 }
