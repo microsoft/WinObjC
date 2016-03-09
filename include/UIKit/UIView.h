@@ -291,7 +291,7 @@ UIKIT_EXPORT_CLASS
 - (void)removeConstraint:(NSLayoutConstraint*)constraint;
 - (void)removeConstraints:(NSArray*)constraints;
 - (void)removeFromSuperview;
-- (void)removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer STUB_METHOD;
+- (void)removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer;
 - (void)removeLayoutGuide:(UILayoutGuide*)layoutGuide STUB_METHOD;
 - (void)removeMotionEffect:(UIMotionEffect*)effect;
 - (void)sendSubviewToBack:(UIView*)subview;

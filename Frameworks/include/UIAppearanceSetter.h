@@ -18,8 +18,9 @@
 #define _UIAPPEARANCESETTER_H_
 
 @interface UIAppearanceSetter : NSObject
-+ (void)_applyAppearance:(UIView*)view;
-+ (void)_applyAppearance:(UIView*)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView;
++ (void)_applyAppearance:(id)view;
++ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView;
++ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass;
 @end
 
 #endif /* _UIAPPEARANCESETTER_H_ */

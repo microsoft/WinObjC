@@ -72,7 +72,7 @@ public:
     BOOL _isPresentationLayer;
 
     BOOL _shouldRasterize;
-    
+
     DisplayNode* _presentationNode;
     idretain _undefinedKeys;
     idretain _actions;
@@ -110,5 +110,7 @@ public:
 - (void)exchangeSubviewAtIndex:(int)index1 withSubviewAtIndex:(int)index2;
 - (void)sendSublayerToBack:(CALayer*)sublayer;
 - (void)bringSublayerToFront:(CALayer*)sublayer;
+- (void)validateDisplayHierarchy;
+- (void)discardDisplayHierarchy;
 @end
 #endif /* _CALAYERPRIVATE_H_ */

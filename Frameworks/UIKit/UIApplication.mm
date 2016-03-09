@@ -17,7 +17,6 @@
 #include "Starboard.h"
 @interface UIKeyboardRotationView : UIView
 @end
-@class _UISettings;
 
 #import <StubReturn.h>
 
@@ -37,6 +36,15 @@
 #include "UIKit/UIColor.h"
 #include "UIViewInternal.h"
 #include "UIApplicationInternal.h"
+#include "UIKit/UIGestureRecognizerSubclass.h"
+#include "UIGestureRecognizerInternal.h"
+#include "UIWindowInternal.h"
+#include "UILocalNotificationInternal.h"
+#include "CALayerInternal.h"
+#include "CATransactionInternal.h"
+#include "UIResponderInternal.h"
+#include "UITouchInternal.h"
+#include "UIEventInternal.h"
 typedef wchar_t WCHAR;
 #include "UWP/WindowsGraphicsDisplay.h"
 #include "UWP/WindowsSystemDisplay.h"
@@ -162,8 +170,11 @@ id currentlyTrackingGesturesList;
 BOOL resetAllTrackingGestures = TRUE;
 
 BOOL refreshPending = FALSE;
-id newMouseEvent, shutdownEvent;
-id statusBar, statusBarRotationLayer, popupRotationLayer;
+NSRunLoopSource* newMouseEvent;
+NSRunLoopSource* shutdownEvent;
+UIImageView* statusBar;
+UIView* statusBarRotationLayer;
+UIView* popupRotationLayer;
 BOOL statusBarHidden = FALSE;
 unsigned ignoringInteractionEvents = 0;
 BOOL idleDisabled = FALSE;
@@ -280,7 +291,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 
     [[NSRunLoop mainRunLoop] _addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
-    [[NSRunLoop mainRunLoop] addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
     currentlyTrackingGesturesList = [NSMutableArray new];
 
     return sharedApplication;
@@ -292,7 +303,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     sharedApplication = nil;
 
     [[NSRunLoop mainRunLoop] _removeInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
-    [[NSRunLoop mainRunLoop] removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
 }
 
 - (void)notify:(unsigned)activity {
@@ -358,7 +369,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     }
 }
 
-static id findTopActionButtons(NSArray* arr, NSArray* windows, UIView* root) {
+static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* root) {
     id subviews = [root subviews];
     int count = [subviews count];
 
@@ -904,7 +915,7 @@ static void printViews(id curView, int level) {
                 [UIApplication _doBackAction];
                 return;
             }
-            [UIResponder keyPressed:evt->type];
+            [UIResponder _keyPressed:evt->type];
             return;
         }
 
@@ -1026,7 +1037,7 @@ static void printViews(id curView, int level) {
         }
 
         UIEvent* touchEvent = [[UIEvent createWithTouches:allTouches touchEvent:newTouchEvent] autorelease];
-        [touchEvent setTimestamp:evt->touchTime];
+        [touchEvent _setTimestamp:evt->touchTime];
 
         //  Send off the UIEvent
         [self sendEvent:touchEvent];
@@ -1501,7 +1512,7 @@ static void printViews(id curView, int level) {
         popupRect.size.width = GetCACompositor()->screenWidth();
         popupRect.size.height = GetCACompositor()->screenHeight();
 
-        popupWindow = [[UIWindow alloc] initWithContentRect:popupRect];
+        popupWindow = [[UIWindow alloc] _initWithContentRect:popupRect];
         [popupWindow setWindowLevel:100000.0f];
         [popupWindow addSubview:popupRotationLayer];
         building = false;
@@ -1544,7 +1555,7 @@ static void printViews(id curView, int level) {
     UNIMPLEMENTED();
     int count = [_curNotifications count];
     while (count > 0) {
-        id object = [_curNotifications objectAtIndex:count - 1];
+        UILocalNotification* object = [_curNotifications objectAtIndex:count - 1];
         [object _cancelAlarm];
         [_curNotifications removeLastObject];
         --count;
@@ -1619,7 +1630,7 @@ static void WarnViewControllers(UIView* subview) {
 
         for (int i = 0; i < windowCount; i++) {
             id window = [windows objectAtIndex:i];
-            id windowLayer = [window layer];
+            CALayer* windowLayer = [window layer];
             [windowLayer discardDisplayHierarchy];
         }
 
@@ -1854,7 +1865,8 @@ static void evaluateKeyboard(id self) {
     }
 
     // Figure out what's going on with our first responder:
-    id keyboardAccessory = nil, inputView = nil;
+    UIView* keyboardAccessory = nil;
+    UIView* inputView = nil;
     id curResponder = _curFirstResponder;
     showKeyboardType = 0;
 
@@ -1938,7 +1950,7 @@ static void evaluateKeyboard(id self) {
     [text getCharacters:chars range:NSMakeRange(0, len)];
 
     for (int i = 0; i < len; i++) {
-        [UIResponder keyPressed:chars[i]];
+        [UIResponder _keyPressed:chars[i]];
     }
     IwFree(chars);
 }
@@ -1996,7 +2008,7 @@ static void evaluateKeyboard(id self) {
     [str release];
     */
 
-    id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 
     TraceVerbose(TAG, L"Type is: %hs", object_getClassName(obj));
     TraceVerbose(TAG, L"Received notification: %hs", [[obj description] UTF8String]);
@@ -2012,10 +2024,6 @@ static void evaluateKeyboard(id self) {
     } else {
         g_logErrors = false;
     }
-}
-
-- (void)__showOptions {
-    [_UISettings showSettings];
 }
 
 /**

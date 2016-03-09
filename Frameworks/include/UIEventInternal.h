@@ -13,27 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "Foundation/NSCalendar.h"
-#include "Foundation/NSCoder.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSDictionary.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSTimeZone.h"
-#include "LoggingNative.h"
+@interface UIEvent ()
 
-static const wchar_t* TAG = L"UILocalNotification";
-
-NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefaultSoundName";
-
-@implementation UILocalNotification
-
-- (void)_setReceiver:(id)receiver {
-}
-
-- (void)_cancelAlarm {
-}
++ (UIEvent*)createWithTouches:(NSSet*)touchUISet touchEvent:(UITouch*)touch;
+- (UITouch*)_touchEvent;
+- (void)_setTimestamp:(double)time;
 
 @end

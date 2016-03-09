@@ -90,7 +90,7 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         commonInit(self);
 
@@ -144,6 +144,9 @@ static void numTouchesChanged(UIPanGestureRecognizer* o) {
                     // If we have non-zero fingers down, we may still be able to match - we don't want to remove
                     // ourselves from the list of possible gestures.
                 }
+                break;
+            default:
+                UNIMPLEMENTED_WITH_MSG("Unsupported gesture recoginizer state (%d)", o->_state);
                 break;
         }
     }

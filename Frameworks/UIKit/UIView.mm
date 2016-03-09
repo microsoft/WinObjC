@@ -605,12 +605,12 @@ static float doRound(float f) {
     frame.size.height = doRound(frame.size.height);
 
     TraceVerbose(TAG,
-                       L"SetFrame(%hs): %f, %f, %f, %f",
-                       object_getClassName(self),
-                       frame.origin.x,
-                       frame.origin.y,
-                       frame.size.width,
-                       frame.size.height);
+                 L"SetFrame(%hs): %f, %f, %f, %f",
+                 object_getClassName(self),
+                 frame.origin.x,
+                 frame.origin.y,
+                 frame.size.width,
+                 frame.size.height);
 
     CGRect startFrame = frame;
 
@@ -1059,13 +1059,13 @@ static float doRound(float f) {
     }
     if (view1 == nil || view2 == nil) {
         TraceWarning(TAG,
-                           L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)",
-                           index1,
-                           index2,
-                           priv->childCount,
-                           object_getClassName(self),
-                           view1 ? object_getClassName(view1) : "nil",
-                           view2 ? object_getClassName(view2) : "nil");
+                     L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)",
+                     index1,
+                     index2,
+                     priv->childCount,
+                     object_getClassName(self),
+                     view1 ? object_getClassName(view1) : "nil",
+                     view2 ? object_getClassName(view2) : "nil");
         return;
     }
 
@@ -2126,8 +2126,8 @@ static float doRound(float f) {
                           animations:(void (^)(void))animations
                           completion:(void (^)(BOOL finished))completion {
     TraceWarning(TAG,
-                       L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
-                       "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported.");
+                 L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
+                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported.");
     // remove all unsupported options.
     UIViewAnimationOptions uiViewAnimationOptions = (UIViewAnimationOptions)(0x23F & options);
 
@@ -2305,7 +2305,7 @@ static float doRound(float f) {
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft {
     if (stackLevel > 0) {
         _animationProperties[stackLevel]._numAnimations++;
-        id ret = [CATransition animation];
+        CATransition* ret = [CATransition animation];
         [ret setDuration:_animationProperties[stackLevel]._animationDuration];
         [ret setAutoreverses:_animationProperties[stackLevel]._autoReverses];
         [ret setRepeatCount:_animationProperties[stackLevel]._repeatCount];

@@ -186,4 +186,30 @@ const float c_buttonFontSize = 14.0f;
     [super dealloc];
 }
 
+/**
+@Status Stub
+@Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+@Status Stub
+@Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

@@ -100,9 +100,9 @@ static int _changingResponder = 0;
     return TRUE;
 }
 
-+ (void)keyPressed:(unsigned)key {
++ (void)_keyPressed:(unsigned)key {
     if (_curFirstResponder != nil) {
-        [_curFirstResponder keyPressed:key];
+        [_curFirstResponder _keyPressed:key];
     }
 }
 
@@ -116,7 +116,7 @@ static int _changingResponder = 0;
     return self;
 }
 
-- (void)keyPressed:(unsigned)key {
+- (void)_keyPressed:(unsigned)key {
 }
 
 /**

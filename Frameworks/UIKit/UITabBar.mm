@@ -14,20 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "UIKit/UITabBar.h"
-#include "UITabBarButton.h"
-
-#include "UIKit/UIColor.h"
-#include "CoreGraphics/CGContext.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "LoggingNative.h"
-
-#if 0
-#include "UIAppearanceSetter.h"
-#endif
+#import "Starboard.h"
+#import "UIKit/UITabBar.h"
+#import "UITabBarButton.h"
+#import "UIKit/UIColor.h"
+#import "CoreGraphics/CGContext.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "LoggingNative.h"
+#import "UIAppearanceSetter.h"
 
 static const wchar_t* TAG = L"UITabBar";
 

@@ -14,20 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "CGImageInternal.h"
-#include "CGContextInternal.h"
-#include "AudioToolbox/AudioToolbox.h"
-#include "AVFoundation/AVAudioPlayer.h"
-#include "Social/SLServiceTypes.h"
-#include "objc/runtime.h"
-#include <CommonCrypto/CommonDigest.h>
-#include <inttypes.h>
-#include <mach/mach.h>
-#include <dispatch/dispatch.h>
-#include <mutex>
-#include <random>
+#import "Starboard.h"
+#import "CGImageInternal.h"
+#import "CGContextInternal.h"
+#import "AudioToolbox/AudioToolbox.h"
+#import "AVFoundation/AVAudioPlayer.h"
+#import "Social/SLServiceTypes.h"
+#import "objc/runtime.h"
+#import <CommonCrypto/CommonDigest.h>
+#import <inttypes.h>
+#import <mach/mach.h>
+#import <dispatch/dispatch.h>
+#import <mutex>
+#import <random>
+#import "UIAppearanceSetter.h"
 
 typedef unsigned int mach_port_t;
 
@@ -52,33 +52,32 @@ static std::mt19937 s_rng;
 }
 @end
 
-@implementation _UISettings
-@end
-
 @implementation UIAppearanceSetter
-+ (void)_applyAppearance:(UIView*)view {
++ (void)_applyAppearance:(id)view {
+    UNIMPLEMENTED();
 }
-+ (void)_applyAppearance:(UIView*)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView {
++ (void)_applyAppearance:(id)view withAppearanceClass:(Class)cls withBaseView:(UIView*)baseView {
+    UNIMPLEMENTED();
 }
-@end
++ (id)_appearanceWhenContainedIn:(id)containedClass forUIClass:(id)uiClass {
+    UNIMPLEMENTED();
+    return nil;
+}
 
-@implementation _UILoading
-+ (void)hideLoadingScreen {
-}
 @end
 
 bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation) {
     return false;
 }
 
-__declspec(dllexport) extern "C" unsigned random() {
+extern "C" unsigned random() {
     std::lock_guard<std::mutex> lock(s_rngGuard);
 
     //  The expected range for random() is a value 0->0x7fffffff
     return (s_rng() >> 1);
 }
 
-__declspec(dllexport) extern "C" int gettimeofday(struct timeval* tv, void* restrict) {
+extern "C" int gettimeofday(struct timeval* tv, void* restrict) {
     EbrTimeval curtime;
     EbrGetTimeOfDay(&curtime);
     tv->tv_sec = curtime.tv_sec;
@@ -86,7 +85,7 @@ __declspec(dllexport) extern "C" int gettimeofday(struct timeval* tv, void* rest
     return 0;
 }
 
-__declspec(dllexport) extern "C" void srandom(unsigned val) {
+extern "C" void srandom(unsigned val) {
     std::lock_guard<std::mutex> lock(s_rngGuard);
     s_rng.seed(val);
 }
@@ -94,7 +93,7 @@ __declspec(dllexport) extern "C" void srandom(unsigned val) {
 /**
 @Status Stub
 */
-__declspec(dllexport) extern "C" mach_port_t mach_host_self(void) {
+extern "C" mach_port_t mach_host_self(void) {
     UNIMPLEMENTED();
     return (mach_port_t)0xBAADF00D;
 }
@@ -104,7 +103,7 @@ int vm_page_size = 65536;
 /**
 @Status Stub
 */
-__declspec(dllexport) extern "C" int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize) {
+extern "C" int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize) {
     if (type == HOST_VM_INFO && *dataOutSize >= sizeof(vm_statistics)) {
         *dataOutSize = sizeof(vm_statistics);
 
@@ -150,12 +149,6 @@ EbrPlatformInfo* EbrGetDeviceInfo() {
 
     return &info;
 }
-
-@implementation CBCentralManager
-@end
-
-@implementation GCDAsyncSocket
-@end
 
 typedef void* DNSServiceRef;
 typedef unsigned DNSServiceErrorType;

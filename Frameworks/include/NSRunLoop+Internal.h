@@ -28,11 +28,13 @@
 - (void)_wakeUp;
 - (void)_addInputSource:(NSInputSource*)source forMode:(NSString*)mode;
 - (void)_removeInputSource:(NSInputSource*)source forMode:(NSString*)mode;
+- (void)_addObserver:(NSObject*)observer forMode:(NSString*)mode;
+- (void)_removeObserver:(NSObject*)observer forMode:(NSString*)mode;
 - (StrongId<NSArray*>)_statesForMode:(NSString*)mode;
 @end
 
-@interface NSRunLoop(XamlUIWaiter)
-+ (void)setUIThreadWaitFunction:(int(*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
+@interface NSRunLoop (XamlUIWaiter)
++ (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
 @end
 
 @interface NSRunLoop ()

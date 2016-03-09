@@ -24,7 +24,7 @@
     idretaintype(UITouch) touchEvent;
     double _timestamp;
 }
-+ (UIEvent*)createWithTouches:(NSSet*)touchUISet touchEvent:(UIEvent*)touch {
++ (UIEvent*)createWithTouches:(NSSet*)touchUISet touchEvent:(UITouch*)touch {
     UIEvent* us = (UIEvent*)[self new];
     us->touches = touchUISet;
     us->touchEvent = touch;
@@ -80,7 +80,7 @@
     }
 }
 
-- (void)setTimestamp:(double)time {
+- (void)_setTimestamp:(double)time {
     _timestamp = time;
 }
 

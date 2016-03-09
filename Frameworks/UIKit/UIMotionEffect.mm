@@ -14,8 +14,26 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <UIKit/UIMotionEffect.h>
+#import "Starboard.h"
+#import <UIKit/UIMotionEffect.h>
+#import <StubReturn.h>
 
 @implementation UIMotionEffect
+/**
+@Status Stub
+@Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
 @end

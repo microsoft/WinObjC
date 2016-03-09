@@ -371,8 +371,6 @@ static void dismissView(UIActionSheet* self, int index) {
 
     if ([_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
         [_delegate actionSheet:self clickedButtonAtIndex:index];
-    } else if ([_delegate respondsToSelector:@selector(alertSheet:buttonClicked:)]) {
-        [_delegate alertSheet:self buttonClicked:index];
     }
 
     if ([_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)]) {
@@ -459,6 +457,13 @@ static void dismissView(UIActionSheet* self, int index) {
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
     TraceVerbose(TAG, L"dismissWithClicked .. fire an event?");
     return self;
+}
+
+/**
+ @Status Stub
+*/
+- (void)showFromRect:(CGRect)rect inView:(UIView*)view animated:(BOOL)animated STUB_METHOD {
+    UNIMPLEMENTED();
 }
 
 @end

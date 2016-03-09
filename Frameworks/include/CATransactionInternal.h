@@ -15,21 +15,21 @@
 //******************************************************************************
 #pragma once
 
-@interface CATransaction(Internal)
+@interface CATransaction (Internal)
 
 + (DisplayTransaction*)_currentDisplayTransaction;
 
++ (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer;
++ (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer before:(CALayer*)before;
++ (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer after:(CALayer*)after;
++ (void)_addSublayerToTop:(CALayer*)layer;
 
-+(void)_addSublayerToLayer:(CALayer*)layer sublayer : (CALayer*)sublayer;
-+(void)_addSublayerToLayer:(CALayer*)layer sublayer : (CALayer*)sublayer before : (CALayer*)before;
-+(void)_addSublayerToLayer:(CALayer*)layer sublayer : (CALayer*)sublayer after : (CALayer*)after;
++ (void)_replaceInLayer:(CALayer*)layer sublayer:(CALayer*)sublayer withSublayer:(CALayer*)newlayer;
++ (void)_moveLayer:(CALayer*)layer beforeLayer:(CALayer*)before afterLayer:(CALayer*)after;
++ (void)_removeLayer:(CALayer*)layer;
 
-+(void)_replaceInLayer:(CALayer*)layer sublayer : (CALayer*)sublayer withSublayer : (CALayer*)newlayer;
-+(void)_moveLayer:(CALayer*)layer beforeLayer : (CALayer*)before afterLayer : (CALayer*)after;
-+(void)_removeLayer:(CALayer*)layer;
-
-+(void)_addAnimationToLayer:(CALayer*)layer animation : (CAAnimation*)anim forKey : (NSString*)key;
-+(CAAnimation*)_implicitAnimationForKey:(NSString*)forKey;
++ (void)_addAnimationToLayer:(CALayer*)layer animation:(CAAnimation*)anim forKey:(NSString*)key;
++ (CAAnimation*)_implicitAnimationForKey:(NSString*)forKey;
++ (void)_commitRootQueue;
 
 @end
-

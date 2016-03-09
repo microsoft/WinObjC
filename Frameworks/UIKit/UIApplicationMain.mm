@@ -258,9 +258,6 @@ int UIApplicationMainInit(
     if (newDeviceOrientation != 0) {
         [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation) withObject:nil waitUntilDone:FALSE];
     }
-#ifdef SHOW_OPTIONS_ON_STARTUP
-    [[UIApplication sharedApplication] performSelectorOnMainThread:@selector(__showOptions) withObject:0 waitUntilDone:FALSE];
-#endif
 
     //  Make windows visible
     NSArray* windows = [[UIApplication sharedApplication] windows];

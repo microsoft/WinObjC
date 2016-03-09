@@ -62,7 +62,7 @@ UIKIT_EXPORT_CLASS
 - (id)showInView:(UIView*)view; // menu will appear wherever the mouse cursor is
 - (void)showFromRect:(CGRect)rect
               inView:(UIView*)view
-            animated:(BOOL)animated; // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
+            animated:(BOOL)animated STUB_METHOD; // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;
 
 // these are not yet implemented:

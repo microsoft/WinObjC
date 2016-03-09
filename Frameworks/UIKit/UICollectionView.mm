@@ -35,10 +35,6 @@ static CGFloat UISimulatorAnimationDragCoefficient(void) {
     return UIAnimationDragCoefficient;
 }
 
-@interface UICollectionViewLayout (Internal)
-@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
-@end
-
 @interface UICollectionViewData (Internal)
 - (void)prepareToLoadData;
 @end

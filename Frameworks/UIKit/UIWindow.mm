@@ -130,7 +130,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return self;
 }
 
-- (UIWindow*)initWithContentRect:(CGRect)pos {
+- (UIWindow*)_initWithContentRect:(CGRect)pos {
     [self initWithFrame:pos];
 
     return self;

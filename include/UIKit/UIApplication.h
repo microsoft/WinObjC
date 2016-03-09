@@ -248,7 +248,7 @@ UIKIT_EXPORT_CLASS
 - (void)sendEvent:(UIEvent*)event;
 - (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval STUB_METHOD;
 - (void)setNewsstandIconImage:(UIImage*)image STUB_METHOD;
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated STUB_METHOD;
+- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
 - (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation;
 - (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated;
 - (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated STUB_METHOD;

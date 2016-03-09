@@ -1442,7 +1442,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     return float(destScrollPage) * pageSize;
 }
 
-- (id)_panGestureCallback:(id)gesture {
+- (id)_panGestureCallback:(UIPanGestureRecognizer*)gesture {
     if (!_scrollEnabled) {
         return self;
     }

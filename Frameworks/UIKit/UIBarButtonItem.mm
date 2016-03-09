@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIBarItemInternal.h"
-#include "UIBarButtonItem+Internals.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UIBarItemInternal.h"
+#import "UIBarButtonItem+Internals.h"
+#import "LoggingNative.h"
+#import "UIAppearanceSetter.h"
 
 static const wchar_t* TAG = L"UIBarButtonItem";
 

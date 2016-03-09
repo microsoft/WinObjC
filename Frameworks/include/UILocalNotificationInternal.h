@@ -14,26 +14,9 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "Foundation/NSCalendar.h"
-#include "Foundation/NSCoder.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSDictionary.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSTimeZone.h"
-#include "LoggingNative.h"
+#pragma once
 
-static const wchar_t* TAG = L"UILocalNotification";
-
-NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefaultSoundName";
-
-@implementation UILocalNotification
-
-- (void)_setReceiver:(id)receiver {
-}
-
-- (void)_cancelAlarm {
-}
-
+@interface UILocalNotification ()
+- (void)_setReceiver:(id)receiver;
+- (void)_cancelAlarm;
 @end

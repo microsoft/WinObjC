@@ -22,7 +22,7 @@ typedef struct {
     SEL _selector;
 } GestureTarget;
 
-@interface UIGestureRecognizer () {
+@interface UIGestureRecognizer () <NSCoding> {
 @protected
     __unsafe_unretained id _delegate;
     BOOL _delaysTouchesBegan;
@@ -46,4 +46,6 @@ typedef struct {
 
 - (void)_setView:(UIView*)view;
 - (void)cancelIfActive;
+- (void)_fire;
++ (BOOL)_fireGestures:(id)gestures;
 @end

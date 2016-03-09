@@ -207,8 +207,8 @@
     for (UICollectionViewLayoutAttributes* attr in [collectionViewData layoutAttributesForElementsInRect:bounds]) {
         if (attr.isCell) {
             NSInteger index = (NSInteger)[collectionViewData globalIndexForItemAtIndexPath:attr.indexPath];
-
-            index = [update[@"newToOldIndexMap"][(NSUInteger)index] integerValue];
+            NSArray* newToOldIndexMap = update[@"newToOldIndexMap"];
+            index = [newToOldIndexMap[(NSUInteger)index] integerValue];
             if (index != NSNotFound) {
                 UICollectionViewLayoutAttributes* finalAttrs = [attr copy];
                 [finalAttrs setIndexPath:[update[@"oldModel"] indexPathForItemAtGlobalIndex:index]];

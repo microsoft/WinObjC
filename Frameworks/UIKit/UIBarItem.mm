@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIBarItem.h"
-#include "UIKit/UIView.h"
-#include "UIBarItemInternal.h"
+#import "Starboard.h"
+#import "UIKit/UIBarItem.h"
+#import "UIKit/UIView.h"
+#import "UIBarItemInternal.h"
+#import <StubReturn.h>
 
 @implementation UIBarItem {
     idretaintype(NSString) __title;
@@ -64,6 +65,23 @@
 - (void)dealloc {
     _tintColor = nil;
     [super dealloc];
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 @end

@@ -326,22 +326,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     return FALSE;
 }
 
-- (void)addObserver:(NSObject*)observer forMode:(NSString*)mode {
-    NSArray* modeStates = [self _statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode addObserver:(NSTimer*)observer];
-    }
-}
-
-- (void)removeObserver:(NSObject*)observer forMode:(NSString*)mode {
-    NSArray* modeStates = [self _statesForMode:mode];
-
-    for (NSRunLoopState* curMode in modeStates) {
-        [curMode removeObserver:observer];
-    }
-}
-
 - (void)removeTimer:(NSTimer*)timer forMode:(NSString*)mode {
     NSArray* modeStates = [self _statesForMode:mode];
 
@@ -492,6 +476,22 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
     for (NSRunLoopState* curMode in static_cast<id>(modeStates)) {
         [curMode removeInputSource:source];
+    }
+}
+
+- (void)_addObserver:(NSObject*)observer forMode:(NSString*)mode {
+    NSArray* modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in modeStates) {
+        [curMode addObserver:(NSTimer*)observer];
+    }
+}
+
+- (void)_removeObserver:(NSObject*)observer forMode:(NSString*)mode {
+    NSArray* modeStates = [self _statesForMode:mode];
+
+    for (NSRunLoopState* curMode in modeStates) {
+        [curMode removeObserver:observer];
     }
 }
 

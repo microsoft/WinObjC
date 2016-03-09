@@ -26,4 +26,8 @@
 - (void)_setHostScrenWidth:(float)width height:(float)height scale:(float)scale xDpi:(float)xdpi yDpi:(float)yDpi;
 @end
 
+@interface UIApplication ()
+- (UIView*)_popupLayer;
+@end
+
 #endif /* _UIAPPLICATIONINTERNAL_H_ */

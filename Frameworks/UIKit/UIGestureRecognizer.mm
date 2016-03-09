@@ -48,7 +48,7 @@ static void commonInit(UIGestureRecognizer* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
         commonInit(self);
 
@@ -75,6 +75,10 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
 }
 
 - (void)addEventConnection:(UIRuntimeEventConnection*)connection {

@@ -14,11 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UITabBar.h"
-#include "UIBarItemInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UITabBar.h"
+#import "UIBarItemInternal.h"
+#import "LoggingNative.h"
+#import "UIAppearanceSetter.h"
 
 static const wchar_t* TAG = L"UITabBarItem";
 
@@ -154,7 +155,7 @@ static const wchar_t* TAG = L"UITabBarItem";
 }
 
 + (id)appearance {
-    return [UIAppearanceSetter appearanceWhenContainedIn:nil forUIClass:self];
+    return [UIAppearanceSetter _appearanceWhenContainedIn:nil forUIClass:self];
 }
 
 + (id)appearanceWhenContainedIn:(id)containedClass, ... {
@@ -172,6 +173,6 @@ static const wchar_t* TAG = L"UITabBarItem";
 
     va_end(pReader);
 
-    return [UIAppearanceSetter appearanceWhenContainedIn:containedClass forUIClass:self];
+    return [UIAppearanceSetter _appearanceWhenContainedIn:containedClass forUIClass:self];
 }
 @end

@@ -14,18 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIAlertView.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UIColor.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "CoreFoundation/CFType.h"
-#include "UIKit/UIImage.h"
-#include <objc/objc-arc.h>
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIAlertView.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIColor.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "CoreFoundation/CFType.h"
+#import "UIKit/UIImage.h"
+#import "UIFontInternal.h"
+#import "UIApplicationInternal.h"
+#import <objc/objc-arc.h>
 
 typedef struct {
     idretain _buttonText;
