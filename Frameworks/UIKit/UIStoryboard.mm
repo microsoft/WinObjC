@@ -19,7 +19,7 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSBundle.h>
-#import <Foundation/NSNib.h>
+#import <UIKit/UINib.h>
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIStoryboard.h>
@@ -92,7 +92,7 @@ static const wchar_t* TAG = L"UIStoryboard";
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib* nib = [NSNib nibWithNibName:pathToNib bundle:_bundle];
+    UINib* nib = [UINib nibWithNibName:pathToNib bundle:_bundle];
     id obj = [nib instantiateWithOwner:uiApplication options:@{ UINibExternalObjects : proxyObjectsDict }];
     int count = [obj count];
 
@@ -136,7 +136,7 @@ static const wchar_t* TAG = L"UIStoryboard";
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib* nib = [NSNib nibWithNibName:pathToNib bundle:_bundle];
+    UINib* nib = [UINib nibWithNibName:pathToNib bundle:_bundle];
     id obj = [nib instantiateWithOwner:uiApplication options:@{ UINibExternalObjects : proxyObjectsDict }];
     int count = [obj count];
 

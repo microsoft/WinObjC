@@ -64,6 +64,7 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationItem.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINib.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINibUnarchiver.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPasteboard.mm" />

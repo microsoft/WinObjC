@@ -23,11 +23,11 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSData.h"
 #include "Foundation/NSNull.h"
-#include "NSNibUnarchiver.h"
+#include "UINibUnarchiver.h"
 #include "NSUnarchiverInternal.h"
 #include "LoggingNative.h"
 
-static const wchar_t* TAG = L"NSNIBUnarchiver";
+static const wchar_t* TAG = L"UINibUnarchiver";
 
 #define NIBOBJ_INT8 0x00
 #define NIBOBJ_INT16 0x01
@@ -41,7 +41,7 @@ static const wchar_t* TAG = L"NSNIBUnarchiver";
 #define NIBOBJ_NULL 0x09
 #define NIBOBJ_UID 0x0A
 
-class NSNibArchiver;
+class UINibArchiver;
 
 class Item {
 public:
@@ -89,21 +89,21 @@ public:
     }
 };
 
-@implementation NSNibUnarchiver
-static void pushObject(NSNibUnarchiver* self, Object* pCur) {
+@implementation UINibUnarchiver
+static void pushObject(UINibUnarchiver* self, Object* pCur) {
     assert(self->_curObjectLevel < 16);
     self->_curObjectLevel++;
     self->_curObject[self->_curObjectLevel] = pCur;
 }
-static void popObject(NSNibUnarchiver* self) {
+static void popObject(UINibUnarchiver* self) {
     self->_curObjectLevel--;
 }
-static Object* curObject(NSNibUnarchiver* self) {
+static Object* curObject(UINibUnarchiver* self) {
     assert(self->_curObjectLevel >= 0);
     return self->_curObject[self->_curObjectLevel];
 }
 
-static Item* itemForKey(NSNibUnarchiver* self, const char* keyName) {
+static Item* itemForKey(UINibUnarchiver* self, const char* keyName) {
     Object* cur = curObject(self);
 
     for (int i = 0; i < cur->itemCount; i++) {
@@ -115,11 +115,11 @@ static Item* itemForKey(NSNibUnarchiver* self, const char* keyName) {
     return NULL;
 }
 
-static Object* objectForUid(NSNibUnarchiver* self, int uid) {
+static Object* objectForUid(UINibUnarchiver* self, int uid) {
     return self->_objects[uid];
 }
 
-static id constructObject(NSNibUnarchiver* self, Object* pObj) {
+static id constructObject(UINibUnarchiver* self, Object* pObj) {
     if (strcmp(pObj->className, "NSArray") == 0 || strcmp(pObj->className, "NSMutableArray") == 0) {
         id* arrayItems;
         int numArrayItems = 0;
@@ -223,7 +223,7 @@ static id constructObject(NSNibUnarchiver* self, Object* pObj) {
     return pObj->cachedId;
 }
 
-static id idForItem(NSNibUnarchiver* self, Item* item) {
+static id idForItem(UINibUnarchiver* self, Item* item) {
     if (item->cachedId == nil) {
         switch (item->type) {
             case NIBOBJ_UID: {
@@ -264,7 +264,7 @@ static id idForItem(NSNibUnarchiver* self, Item* item) {
     return item->cachedId;
 }
 
-static id getObjectForKey(NSNibUnarchiver* self, const char* keyName) {
+static id getObjectForKey(UINibUnarchiver* self, const char* keyName) {
     Item* item = itemForKey(self, keyName);
     if (!item) {
         return nil;

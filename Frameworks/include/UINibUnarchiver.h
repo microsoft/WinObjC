@@ -13,14 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef __NSNIBUNARCHIVER_H
-#define __NSNIBUNARCHIVER_H
+#pragma once
 
 class Object;
 class Item;
 
-@interface NSNibUnarchiver : NSObject {
+@interface UINibUnarchiver : NSObject {
 @public
     char* _nibData;
     DWORD _nibLen;
@@ -55,5 +53,3 @@ class Item;
 + (id)unarchiveObjectWithFile:(NSString*)file;
 + (id)unarchiveObjectWithData:(NSData*)data;
 @end
-
-#endif

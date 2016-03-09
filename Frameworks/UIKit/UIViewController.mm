@@ -23,7 +23,7 @@
 #include "Foundation/NSNumber.h"
 #include "Foundation/NSBundle.h"
 #include "Foundation/NSNotificationCenter.h"
-#include "Foundation/NSNib.h"
+#include "UIKit/UINib.h"
 #include "Foundation/NSValue.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIViewController.h"
@@ -757,7 +757,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             NSMutableDictionary* proxyObjectsDict = [NSMutableDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:1];
             [proxyObjectsDict addEntriesFromDictionary:priv->_externalObjects];
 
-            NSNib* nib = [NSNib nibWithNibName:[NSString stringWithCString:openname] bundle:priv->nibBundle];
+            UINib* nib = [UINib nibWithNibName:[NSString stringWithCString:openname] bundle:priv->nibBundle];
             [nib instantiateWithOwner:self options:@{ UINibExternalObjects : proxyObjectsDict }];
             priv->_externalObjects = nil;
         } else {
@@ -1043,11 +1043,12 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     UIViewController* oldViewController = self;
     if (priv->_modalViewController != nil) {
         oldViewController = priv->_modalViewController;
-        TraceWarning(TAG, L"Can't present view controller %08x (%hs) - view controller %08x (%hs) already has a presented controller!",
-                    controller,
-                    object_getClassName(controller),
-                    self,
-                    object_getClassName(self));
+        TraceWarning(TAG,
+                     L"Can't present view controller %08x (%hs) - view controller %08x (%hs) already has a presented controller!",
+                     controller,
+                     object_getClassName(controller),
+                     self,
+                     object_getClassName(self));
         return;
     }
 
@@ -1251,7 +1252,6 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [curView removeFromSuperview];
 
         if ([[self view] superview] == nil) {
-
         } else {
             [[[self view] superview] bringSubviewToFront:[self view]];
         }

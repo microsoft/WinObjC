@@ -14,29 +14,26 @@
 //
 //******************************************************************************
 
-#include "StubReturn.h"
+#import "StubReturn.h"
 #include <string.h>
 #include <ctype.h>
 #include "Starboard.h"
-#include "NSStringInternal.h"
-#include "Foundation/NSBundle.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSPropertyListSerialization.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSFileManager.h"
-#include "Foundation/NSNib.h"
-#include "Foundation/NSException.h"
+#import "NSStringInternal.h"
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSPropertyListSerialization.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSFileManager.h>
+#import <Foundation/NSException.h>
 
 #include <sys/stat.h>
 
-#include <list>
-#include <algorithm>
+#import <list>
+#import <algorithm>
 
 NSString* const NSLoadedClasses = @"NSLoadedClasses";
-
-@class NSNib;
 
 static StrongId<NSString> g_mainBundlePath;
 static StrongId<NSMutableArray> g_allBundles;

@@ -15,23 +15,24 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "UIKit/UIFont.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSBundle.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSNib.h"
-#include "Foundation/NSNotificationCenter.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSAutoReleasePool.h"
 
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIDevice.h"
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSNotificationCenter.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSAutoReleasePool.h>
+
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UINib.h>
 
 #import <UIKit/UIApplicationDelegate.h>
 
-#include "UIInterface.h"
-#include "LoggingNative.h"
+#import "UIInterface.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -188,7 +189,7 @@ int UIApplicationMainInit(
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
             if (nibPath != nil) {
                 NSArray* obj =
-                    [[[NSNib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
+                    [[[UINib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
                 int count = [obj count];
 
                 for (int i = 0; i < count; i++) {

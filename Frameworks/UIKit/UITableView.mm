@@ -32,7 +32,7 @@
 #include <memory>
 
 typedef id idweak;
-#import <Foundation/NSNib.h>
+#import <UIKit/UINib.h>
 
 #include "UITableViewInternal.h"
 #include "LoggingNative.h"
@@ -43,7 +43,7 @@ NSString* const UITableViewIndexSearch = @"UITableViewIndexSearch";
 /** @Status Stub */
 const CGFloat UITableViewAutomaticDimension = StubConstant();
 
-UIKIT_EXPORT NSString *const UITableViewSelectionDidChangeNotification = @"UITableViewSelectionDidChangeNotification";
+UIKIT_EXPORT NSString* const UITableViewSelectionDidChangeNotification = @"UITableViewSelectionDidChangeNotification";
 
 // narsty hack
 extern id _curFirstResponder;
@@ -1959,7 +1959,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 - (void)deleteRowsAtIndexPaths:(NSArray*)paths withRowAnimation:(UITableViewRowAnimation)animate {
     int count = [paths count];
 
-    auto rows = std::make_unique<TableViewRow*[]>(count);
+    auto rows = std::make_unique<TableViewRow* []>(count);
     int numRows = 0;
 
     for (int i = 0; i < count; i++) {
@@ -2272,7 +2272,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 /**
  @Status Interoperable
 */
-- (void)registerNib:(NSNib*)nib forCellReuseIdentifier:(NSString*)identifier {
+- (void)registerNib:(UINib*)nib forCellReuseIdentifier:(NSString*)identifier {
     [tablePriv->_reusableCellNibs setObject:nib forKey:identifier];
 }
 

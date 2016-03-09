@@ -1423,7 +1423,7 @@ static CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 NSData* UIImagePNGRepresentation(UIImage* img) {
-   return _CGImagePNGRepresentation(img);
+    return _CGImagePNGRepresentation(img);
 }
 
 /**
@@ -1448,9 +1448,7 @@ NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
 /**
  @Status Stub
 */
-+ (UIImage*)imageNamed:(NSString*)name
-                         inBundle:(NSBundle*)bundle
-    compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
++ (UIImage*)imageNamed:(NSString*)name inBundle:(NSBundle*)bundle compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
     UNIMPLEMENTED();
     return StubReturn();
 }

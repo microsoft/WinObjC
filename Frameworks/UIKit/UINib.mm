@@ -16,11 +16,138 @@
 
 #include "Starboard.h"
 #import <UIKit/UINib.h>
-#import <Foundation/NSNib.h>
+#import <Foundation/NSString.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSKeyedUnarchiver.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIWindow.h>
+#import "UIProxyObject.h"
+#import <UIKit/UIWindow.h>
+#import "UINibUnarchiver.h"
 
-@implementation UINib
-// VSO 5762882: Redirect this to NSNib until we've completed replacing UINib with NSNib.
-+ (id)nibWithNibName:(id)name bundle:(id)bundle {
-    return [NSNib nibWithNibName:name bundle:bundle];
+NSString* const UINibExternalObjects = @"UINibExternalObjects";
+
+@implementation UINib {
+    idretaintype(NSData) _data;
 }
+
+/**
+ @Status Interoperable
+*/
++ (UINib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
+    NSData* data = [NSData dataWithContentsOfFile:name];
+    if (data == nil) {
+        data = [NSData dataWithContentsOfFile:[name stringByAppendingPathComponent:@"/runtime.nib"]];
+        // VSO 5763540: TODO - Change the order in which we resolve bundle paths or paths without .nib
+        if (data == nil) {
+            data = [NSData dataWithContentsOfFile:[name stringByAppendingPathExtension:@"nib"]];
+            if (data == nil) {
+                data = [NSData dataWithContentsOfFile:[bundle pathForResource:name ofType:@"nib"]];
+                if (data == nil) {
+                    return nil;
+                }
+            }
+        }
+    }
+
+    return [self nibWithData:data bundle:bundle];
+}
+
+/**
+ @Status Interoperable
+*/
++ (UINib*)nibWithData:(NSData*)data bundle:(NSBundle*)bundle {
+    if (data == nil) {
+        return nil;
+    }
+
+    UINib* ret = [self alloc];
+    ret->_data = data;
+    ret->_bundle = bundle;
+
+    return [ret autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray*)instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options {
+    const char* bytes = (const char*)[_data bytes];
+    if (!bytes) {
+        return nil;
+    }
+
+    id prop;
+
+    if (memcmp(bytes, "NIBArchive", 10) == 0) {
+        prop = [UINibUnarchiver alloc];
+    } else {
+        prop = [NSKeyedUnarchiver alloc];
+    }
+
+    [UIProxyObject addProxyObject:nil withName:@"IBFirstResponder" forCoder:prop];
+    [UIProxyObject addProxyObject:ownerObject withName:@"IBFilesOwner" forCoder:prop];
+
+    NSDictionary* proxies = options[UINibExternalObjects];
+
+    for (id key in proxies) {
+        id curObj = [proxies objectForKey:key];
+
+        [UIProxyObject addProxyObject:curObj withName:key forCoder:prop];
+    }
+
+    [prop _setBundle:(id)_bundle];
+    [prop initForReadingWithData:_data];
+    // id allObjects = prop("decodeObjectForKey:", @"UINibObjectsKey");
+    NSArray* connections = [prop decodeObjectForKey:@"UINibConnectionsKey"];
+    NSArray* topLevelObjects = [prop decodeObjectForKey:@"UINibTopLevelObjectsKey"];
+    NSArray* visibleObjects = [prop decodeObjectForKey:@"UINibVisibleWindowsKey"];
+    NSArray* allObjects = [prop decodeObjectForKey:@"UINibObjectsKey"];
+
+    // Can be UIRuntimeEventConnection, UIRuntimeOutletCollectionConnection, or UIRuntimeOutletConnection
+    for (id curconnection in connections) {
+        if ([curconnection respondsToSelector:@selector(_makeConnection)]) {
+            [curconnection _makeConnection];
+        }
+    }
+
+    for (UIView* curobject in visibleObjects) {
+        [curobject setHidden:FALSE];
+
+        if ([curobject isKindOfClass:[UIWindow class]]) {
+            [curobject makeKeyAndVisible];
+        }
+    };
+
+    for (id curobject in allObjects) {
+        if (curobject != ownerObject) {
+            if ([curobject respondsToSelector:@selector(awakeFromNib)]) {
+                [curobject awakeFromNib];
+            }
+        }
+    }
+
+    [prop autorelease];
+
+    //  Grab TLO's, excluding owner
+    NSMutableArray* ret = [NSMutableArray array];
+    for (id curobject in topLevelObjects) {
+        if (curobject != ownerObject) {
+            [ret addObject:curobject];
+        }
+    }
+
+    [UIProxyObject clearProxyObjects:prop];
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)dealloc {
+    [super dealloc];
+}
+
 @end
