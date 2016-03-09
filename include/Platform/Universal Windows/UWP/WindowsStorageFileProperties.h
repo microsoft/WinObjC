@@ -275,14 +275,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSFMusicProperties : RTObject <WSFIStorageItemExtraProperties>
 @property unsigned int rating;
-@property (copy) NSString* albumArtist;
-@property (copy) NSString* album;
-@property (copy) NSString* artist;
-@property (copy) NSString* publisher;
+@property (retain) NSString* albumArtist;
+@property (retain) NSString* album;
+@property (retain) NSString* artist;
+@property (retain) NSString* publisher;
 @property unsigned int year;
 @property unsigned int trackNumber;
-@property (copy) NSString* title;
-@property (copy) NSString* subtitle;
+@property (retain) NSString* title;
+@property (retain) NSString* subtitle;
 @property (readonly) NSMutableArray* producers;
 @property (readonly) NSMutableArray* composers;
 @property (readonly) NSMutableArray* conductors;
@@ -306,9 +306,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSFVideoProperties : RTObject <WSFIStorageItemExtraProperties>
 @property unsigned int year;
-@property (copy) NSString* title;
-@property (copy) NSString* subtitle;
-@property (copy) NSString* publisher;
+@property (retain) NSString* title;
+@property (retain) NSString* subtitle;
+@property (retain) NSString* publisher;
 @property unsigned int rating;
 @property (readonly) id latitude;
 @property (readonly) WSFVideoOrientation orientation;
@@ -336,11 +336,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFImageProperties : RTObject <WSFIStorageItemExtraProperties>
-@property (copy) NSString* title;
+@property (retain) NSString* title;
 @property unsigned int rating;
-@property (copy) WFDateTime* dateTaken;
-@property (copy) NSString* cameraModel;
-@property (copy) NSString* cameraManufacturer;
+@property (retain) WFDateTime* dateTaken;
+@property (retain) NSString* cameraModel;
+@property (retain) NSString* cameraManufacturer;
 @property (readonly) id latitude;
 @property (readonly) id longitude;
 @property (readonly) WSFPhotoOrientation orientation;
@@ -363,8 +363,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
-@property (copy) NSString* title;
-@property (copy) NSString* comment;
+@property (retain) NSString* title;
+@property (retain) NSString* comment;
 @property (readonly) NSMutableArray* author;
 @property (readonly) NSMutableArray* keywords;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve

@@ -86,7 +86,7 @@
         _delayLoadURL = urlStr;
     } else {
         _delayLoadURL = nil;
-        [_xamlWebControl navigate:[[WFUri createUri:urlStr] autorelease]];
+        [_xamlWebControl navigate:[[WFUri makeUri:urlStr] autorelease]];
     }
 }
 

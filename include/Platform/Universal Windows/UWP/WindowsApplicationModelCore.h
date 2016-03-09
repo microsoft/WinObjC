@@ -41,9 +41,9 @@
 #define __WACIFrameworkView_DEFINED__
 
 @protocol WACIFrameworkView
-- (void)initialize:(WACCoreApplicationView*)applicationView;
+- (void)Initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
-- (void)load:(NSString*)entryPoint;
+- (void)Load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
 @end

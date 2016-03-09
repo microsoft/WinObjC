@@ -186,7 +186,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionEffectSourceParameter : RTObject <WGEIGraphicsEffectSource>
-+ (WUCCompositionEffectSourceParameter*)create:(NSString*)name ACTIVATOR;
++ (WUCCompositionEffectSourceParameter*)make:(NSString*)name ACTIVATOR;
 @property (readonly) NSString* name;
 @end
 
@@ -363,7 +363,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCompositionTarget : WUCCompositionObject
-@property (copy) WUCVisual* root;
+@property (retain) WUCVisual* root;
 @end
 
 #endif // __WUCCompositionTarget_DEFINED__
@@ -374,7 +374,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCExpressionAnimation : WUCCompositionAnimation
-@property (copy) NSString* expression;
+@property (retain) NSString* expression;
 @end
 
 #endif // __WUCExpressionAnimation_DEFINED__
@@ -417,15 +417,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCVisual : WUCCompositionObject
-@property (copy) WFNQuaternion* orientation;
+@property (retain) WFNQuaternion* orientation;
 @property float opacity;
-@property (copy) WFNVector3* offset;
-@property (copy) WUCCompositionClip* clip;
-@property (copy) WFNVector3* centerPoint;
-@property (copy) WFNMatrix4x4* transformMatrix;
-@property (copy) WFNVector2* size;
-@property (copy) WFNVector3* scale;
-@property (copy) WFNVector3* rotationAxis;
+@property (retain) WFNVector3* offset;
+@property (retain) WUCCompositionClip* clip;
+@property (retain) WFNVector3* centerPoint;
+@property (retain) WFNMatrix4x4* transformMatrix;
+@property (retain) WFNVector2* size;
+@property (retain) WFNVector3* scale;
+@property (retain) WFNVector3* rotationAxis;
 @property float rotationAngle;
 @property (readonly) WUCContainerVisual* parent;
 @end
@@ -449,7 +449,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCEffectVisual : WUCContainerVisual
-@property (copy) WUCCompositionEffect* effect;
+@property (retain) WUCCompositionEffect* effect;
 @end
 
 #endif // __WUCEffectVisual_DEFINED__
@@ -462,7 +462,7 @@ WINRT_EXPORT
 @interface WUCImageVisual : WUCContainerVisual
 @property float verticalAlignmentRatio;
 @property WUCCompositionStretch stretch;
-@property (copy) RTObject<WUCICompositionSurface>* image;
+@property (retain) RTObject<WUCICompositionSurface>* image;
 @property float horizontalAlignmentRatio;
 @end
 
@@ -474,7 +474,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCSolidColorVisual : WUCContainerVisual
-@property (copy) WUColor* color;
+@property (retain) WUColor* color;
 @end
 
 #endif // __WUCSolidColorVisual_DEFINED__
@@ -529,8 +529,8 @@ WINRT_EXPORT
 @property WUCAnimationStopBehavior stopBehavior;
 @property int iterationCount;
 @property WUCAnimationIterationBehavior iterationBehavior;
-@property (copy) WFTimeSpan* duration;
-@property (copy) WFTimeSpan* delayTime;
+@property (retain) WFTimeSpan* duration;
+@property (retain) WFTimeSpan* delayTime;
 @property (readonly) int keyFrameCount;
 - (void)insertExpressionKeyFrame:(float)normalizedProgressKey value:(NSString*)value;
 - (void)insertExpressionKeyFrameWithEasingFunction:(float)normalizedProgressKey

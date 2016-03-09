@@ -351,8 +351,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject* source;
-@property (copy) WXPropertyPath* itemsPath;
+@property (retain) RTObject* source;
+@property (retain) WXPropertyPath* itemsPath;
 @property BOOL isSourceGrouped;
 @property (readonly) RTObject<WUXDICollectionView>* view;
 + (WXDependencyProperty*)isSourceGroupedProperty;
@@ -382,17 +382,17 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXDBinding : WUXDBindingBase
 + (instancetype)make ACTIVATOR;
-@property (copy) WXPropertyPath* path;
+@property (retain) WXPropertyPath* path;
 @property WUXDBindingMode mode;
-@property (copy) NSString* elementName;
-@property (copy) RTObject* converterParameter;
-@property (copy) NSString* converterLanguage;
-@property (copy) RTObject<WUXDIValueConverter>* converter;
-@property (copy) RTObject* source;
-@property (copy) WUXDRelativeSource* relativeSource;
+@property (retain) NSString* elementName;
+@property (retain) RTObject* converterParameter;
+@property (retain) NSString* converterLanguage;
+@property (retain) RTObject<WUXDIValueConverter>* converter;
+@property (retain) RTObject* source;
+@property (retain) WUXDRelativeSource* relativeSource;
 @property WUXDUpdateSourceTrigger updateSourceTrigger;
-@property (copy) RTObject* targetNullValue;
-@property (copy) RTObject* fallbackValue;
+@property (retain) RTObject* targetNullValue;
+@property (retain) RTObject* fallbackValue;
 @end
 
 #endif // __WUXDBinding_DEFINED__

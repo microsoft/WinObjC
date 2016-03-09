@@ -46,7 +46,7 @@
 
     [self tableView].allowsSelection = NO;
     self.playPauseButton = [WXCButton make];
-    self.playPauseButton.background = [WUXMSolidColorBrush createInstanceWithColor:[WUColors cornflowerBlue]];
+    self.playPauseButton.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors cornflowerBlue]];
     self.playPauseButton.requestedTheme = WXApplicationThemeDark;
     self.playPauseButton.content = [WFPropertyValue createString: @"Pause"];
 
@@ -118,7 +118,7 @@
        UIView *meView = [[UIView alloc] initWithFrame: CGRectMake(0.0f, 0.0f, 400.0f, 300.f)];
        self.mediaElement.autoPlay = YES;
        [meView setNativeElement: self.mediaElement];
-       self.mediaElement.source = [WFUri createUri: @"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
+       self.mediaElement.source = [WFUri makeUri: @"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
        cell.textLabel.text = @"MSDN tv";
        cell.accessoryView = meView;
     }

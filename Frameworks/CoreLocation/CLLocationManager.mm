@@ -86,7 +86,7 @@ static void _requestExtendedExecutionSession() {
         NSTraceInfo(TAG, @"Requesting extended execution.");
         s_uwpExecutionSession = [WAEExtendedExecutionSession make];
         s_uwpExecutionSession.reason = WAEExtendedExecutionReasonLocationTracking;
-        s_uwpExecutionSession.description = @"CoreLocation Periodic Location Update request";
+        s_uwpExecutionSession.Description = @"CoreLocation Periodic Location Update request";
         s_uwpEventRegistrationToken =
             [s_uwpExecutionSession addRevokedEvent:^void(RTObject* obj, WAEExtendedExecutionRevokedEventArgs* args) {
                 _handleExtendedExecutionRevokedEvent(args.reason);

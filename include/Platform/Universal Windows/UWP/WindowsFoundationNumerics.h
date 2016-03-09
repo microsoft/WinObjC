@@ -89,7 +89,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFNPlane : NSObject
 + (instancetype) new;
-@property (copy) WFNVector3* normal;
+@property (retain) WFNVector3* normal;
 @property float d;
 @end
 

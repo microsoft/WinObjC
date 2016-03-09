@@ -83,7 +83,7 @@ WINRT_EXPORT
 @property (readonly) unsigned short usageId;
 @property (readonly) unsigned short usagePage;
 @property (readonly) unsigned short vendorId;
-@property (readonly) unsigned short version;
+@property (readonly) unsigned short Version;
 - (EventRegistrationToken)addInputReportReceivedEvent:(void (^)(WDHHidDevice*, WDHHidInputReportReceivedEventArgs*))del;
 - (void)removeInputReportReceivedEvent:(EventRegistrationToken)tok;
 - (void)getInputReportAsyncWithSuccess:(void (^)(WDHHidInputReport*))success failure:(void (^)(NSError*))failure;
@@ -131,7 +131,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidFeatureReport : RTObject
-@property (copy) RTObject<WSSIBuffer>* data;
+@property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
 - (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
 - (WDHHidBooleanControl*)getBooleanControlByDescription:(WDHHidBooleanControlDescription*)controlDescription;
@@ -147,7 +147,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidOutputReport : RTObject
-@property (copy) RTObject<WSSIBuffer>* data;
+@property (retain) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
 - (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
 - (WDHHidBooleanControl*)getBooleanControlByDescription:(WDHHidBooleanControlDescription*)controlDescription;

@@ -60,7 +60,7 @@ static const wchar_t* TAG = L"UrlLauncher";
 
 // Called on a separate thread to avoid UI thread contention
 - (void)_openURLHelper:(NSURL*)url {
-    WFUri* uri = [[WFUri createUri:[url absoluteString]] autorelease];
+    WFUri* uri = [[WFUri makeUri:[url absoluteString]] autorelease];
 
     void (^launchSuccess)(BOOL) = ^void(BOOL didHandle) {
         [_launchCondition lock];
@@ -101,7 +101,7 @@ static const wchar_t* TAG = L"UrlLauncher";
 
 // Called on a separate thread to avoid UI thread contention
 - (void)_canOpenURLHelper:(NSURL*)url {
-    WFUri* uri = [[WFUri createUri:[url absoluteString]] autorelease];
+    WFUri* uri = [[WFUri makeUri:[url absoluteString]] autorelease];
 
     void (^querySuccess)(WSLaunchQuerySupportStatus) = ^void(WSLaunchQuerySupportStatus status) {
         [_canOpenCondition lock];

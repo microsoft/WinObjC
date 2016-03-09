@@ -49,7 +49,7 @@ NSString* const kProduct2 = @"product2";
     self->buttons = [NSMutableArray arrayWithObjects:nil];
 
     // Load up the listings.
-    WFUri* mockStoreURI = [WFUri createUri:@"ms-appx:///in-app-purchase.xml"];
+    WFUri* mockStoreURI = [WFUri makeUri:@"ms-appx:///in-app-purchase.xml"];
 
     // Open our XML file containing the product information for our mock store.
     [WSStorageFile getFileFromApplicationUriAsync:mockStoreURI

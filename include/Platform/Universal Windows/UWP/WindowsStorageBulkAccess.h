@@ -58,19 +58,19 @@
 
 WINRT_EXPORT
 @interface WSBFileInformationFactory : RTObject
-+ (WSBFileInformationFactory*)createWithMode:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode ACTIVATOR;
-+ (WSBFileInformationFactory*)createWithModeAndSize:(RTObject<WSSIStorageQueryResultBase>*)queryResult
-                                               mode:(WSFThumbnailMode)mode
-                             requestedThumbnailSize:(unsigned int)requestedThumbnailSize ACTIVATOR;
-+ (WSBFileInformationFactory*)createWithModeAndSizeAndOptions:(RTObject<WSSIStorageQueryResultBase>*)queryResult
-                                                         mode:(WSFThumbnailMode)mode
-                                       requestedThumbnailSize:(unsigned int)requestedThumbnailSize
-                                             thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions ACTIVATOR;
-+ (WSBFileInformationFactory*)createWithModeAndSizeAndOptionsAndFlags:(RTObject<WSSIStorageQueryResultBase>*)queryResult
-                                                                 mode:(WSFThumbnailMode)mode
-                                               requestedThumbnailSize:(unsigned int)requestedThumbnailSize
-                                                     thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions
-                                                            delayLoad:(BOOL)delayLoad ACTIVATOR;
++ (WSBFileInformationFactory*)makeWithMode:(RTObject<WSSIStorageQueryResultBase>*)queryResult mode:(WSFThumbnailMode)mode ACTIVATOR;
++ (WSBFileInformationFactory*)makeWithModeAndSize:(RTObject<WSSIStorageQueryResultBase>*)queryResult
+                                             mode:(WSFThumbnailMode)mode
+                           requestedThumbnailSize:(unsigned int)requestedThumbnailSize ACTIVATOR;
++ (WSBFileInformationFactory*)makeWithModeAndSizeAndOptions:(RTObject<WSSIStorageQueryResultBase>*)queryResult
+                                                       mode:(WSFThumbnailMode)mode
+                                     requestedThumbnailSize:(unsigned int)requestedThumbnailSize
+                                           thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions ACTIVATOR;
++ (WSBFileInformationFactory*)makeWithModeAndSizeAndOptionsAndFlags:(RTObject<WSSIStorageQueryResultBase>*)queryResult
+                                                               mode:(WSFThumbnailMode)mode
+                                             requestedThumbnailSize:(unsigned int)requestedThumbnailSize
+                                                   thumbnailOptions:(WSFThumbnailOptions)thumbnailOptions
+                                                          delayLoad:(BOOL)delayLoad ACTIVATOR;
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
               success:(void (^)(NSArray*))success

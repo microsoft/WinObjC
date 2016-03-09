@@ -93,7 +93,7 @@ NSString* const kUpdateBadge = @"update badge";
 
 - (void)updatePrimaryTile:(UIButton*)button {
     WDXDXmlDocument* tileXml = [self createTileXml];
-    WUNTileNotification* tile = [WUNTileNotification createTileNotification:tileXml];
+    WUNTileNotification* tile = [WUNTileNotification makeTileNotification:tileXml];
     [[WUNTileUpdateManager createTileUpdaterForApplication] update:tile];
 }
 
@@ -102,7 +102,7 @@ NSString* const kUpdateBadge = @"update badge";
 
     WDXDXmlDocument* badgeXml = [WDXDXmlDocument make];
     [badgeXml loadXml:xmlString];
-    WUNBadgeNotification* badge = [WUNBadgeNotification createBadgeNotification:badgeXml];
+    WUNBadgeNotification* badge = [WUNBadgeNotification makeBadgeNotification:badgeXml];
     [[WUNBadgeUpdateManager createBadgeUpdaterForApplication] update:badge];
 }
 
@@ -115,7 +115,7 @@ NSString* const kUpdateBadge = @"update badge";
     [_calendar addMinutes:1];
     WFDateTime* dt = [_calendar getDateTime];
 
-    WUNScheduledTileNotification* tile = [WUNScheduledTileNotification createScheduledTileNotification:tileXml deliveryTime:dt];
+    WUNScheduledTileNotification* tile = [WUNScheduledTileNotification makeScheduledTileNotification:tileXml deliveryTime:dt];
     [[WUNTileUpdateManager createTileUpdaterForApplication] addToSchedule:tile];
 }
 @end

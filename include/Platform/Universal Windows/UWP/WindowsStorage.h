@@ -1045,7 +1045,7 @@ WINRT_EXPORT
 @property (readonly) WSApplicationDataContainer* roamingSettings;
 @property (readonly) uint64_t roamingStorageQuota;
 @property (readonly) WSStorageFolder* temporaryFolder;
-@property (readonly) unsigned int version;
+@property (readonly) unsigned int Version;
 @property (readonly) WSStorageFolder* localCacheFolder;
 @property (readonly) WSStorageFolder* sharedLocalFolder;
 + (WSApplicationData*)current;

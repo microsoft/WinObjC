@@ -73,7 +73,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPFileOpenPickerUI : RTObject
-@property (copy) NSString* title;
+@property (retain) NSString* title;
 @property (readonly) NSArray* allowedFileTypes;
 @property (readonly) WSPPFileSelectionMode selectionMode;
 @property (readonly) NSString* settingsIdentifier;
@@ -130,7 +130,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPFileSavePickerUI : RTObject
-@property (copy) NSString* title;
+@property (retain) NSString* title;
 @property (readonly) NSArray* allowedFileTypes;
 @property (readonly) NSString* fileName;
 @property (readonly) NSString* settingsIdentifier;
@@ -160,7 +160,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSPPTargetFileRequest : RTObject
-@property (copy) RTObject<WSIStorageFile>* targetFile;
+@property (retain) RTObject<WSIStorageFile>* targetFile;
 - (WSPPTargetFileRequestDeferral*)getDeferral;
 @end
 

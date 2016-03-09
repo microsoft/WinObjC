@@ -94,9 +94,9 @@ typedef unsigned WDBABluetoothLEAdvertisementPublisherStatus;
 
 WINRT_EXPORT
 @interface WDBABluetoothLEManufacturerData : RTObject
-+ (WDBABluetoothLEManufacturerData*)create:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
++ (WDBABluetoothLEManufacturerData*)make:(unsigned short)companyId data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject<WSSIBuffer>* data;
+@property (retain) RTObject<WSSIBuffer>* data;
 @property unsigned short companyId;
 @end
 
@@ -108,10 +108,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementDataSection : RTObject
-+ (WDBABluetoothLEAdvertisementDataSection*)create:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
++ (WDBABluetoothLEAdvertisementDataSection*)make:(uint8_t)dataType data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property uint8_t dataType;
-@property (copy) RTObject<WSSIBuffer>* data;
+@property (retain) RTObject<WSSIBuffer>* data;
 @end
 
 #endif // __WDBABluetoothLEAdvertisementDataSection_DEFINED__
@@ -123,8 +123,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisement : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* localName;
-@property (copy) id flags;
+@property (retain) NSString* localName;
+@property (retain) id flags;
 @property (readonly) NSMutableArray* dataSections;
 @property (readonly) NSMutableArray* manufacturerData;
 @property (readonly) NSMutableArray* serviceUuids;
@@ -140,11 +140,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementBytePattern : RTObject
-+ (WDBABluetoothLEAdvertisementBytePattern*)create:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
++ (WDBABluetoothLEAdvertisementBytePattern*)make:(uint8_t)dataType offset:(int16_t)offset data:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property int16_t offset;
 @property uint8_t dataType;
-@property (copy) RTObject<WSSIBuffer>* data;
+@property (retain) RTObject<WSSIBuffer>* data;
 @end
 
 #endif // __WDBABluetoothLEAdvertisementBytePattern_DEFINED__
@@ -156,7 +156,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementFilter : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WDBABluetoothLEAdvertisement* advertisement;
+@property (retain) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) NSMutableArray* bytePatterns;
 @end
 
@@ -180,10 +180,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementWatcher : RTObject
 + (instancetype)make ACTIVATOR;
-+ (WDBABluetoothLEAdvertisementWatcher*)create:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
-@property (copy) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
++ (WDBABluetoothLEAdvertisementWatcher*)make:(WDBABluetoothLEAdvertisementFilter*)advertisementFilter ACTIVATOR;
+@property (retain) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @property WDBABluetoothLEScanningMode scanningMode;
-@property (copy) WDBABluetoothLEAdvertisementFilter* advertisementFilter;
+@property (retain) WDBABluetoothLEAdvertisementFilter* advertisementFilter;
 @property (readonly) WFTimeSpan* maxOutOfRangeTimeout;
 @property (readonly) WFTimeSpan* maxSamplingInterval;
 @property (readonly) WFTimeSpan* minOutOfRangeTimeout;
@@ -266,7 +266,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBABluetoothLEAdvertisementPublisher : RTObject
-+ (WDBABluetoothLEAdvertisementPublisher*)create:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;
++ (WDBABluetoothLEAdvertisementPublisher*)make:(WDBABluetoothLEAdvertisement*)advertisement ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @property (readonly) WDBABluetoothLEAdvertisementPublisherStatus status;

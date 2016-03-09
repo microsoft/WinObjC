@@ -381,8 +381,8 @@ typedef void (^WGPPrintTaskSourceRequestedHandler)(WGPPrintTaskSourceRequestedAr
 WINRT_EXPORT
 @interface WGPPrintPageDescription : NSObject
 + (instancetype) new;
-@property (copy) WFSize* pageSize;
-@property (copy) WFRect* imageableRect;
+@property (retain) WFSize* pageSize;
+@property (retain) WFRect* imageableRect;
 @property unsigned int dpiX;
 @property unsigned int dpiY;
 @end

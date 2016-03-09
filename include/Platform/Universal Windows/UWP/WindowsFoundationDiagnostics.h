@@ -296,7 +296,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDErrorDetails : RTObject
 + (void)createFromHResultAsync:(int)errorCode success:(void (^)(WFDErrorDetails*))success failure:(void (^)(NSError*))failure;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) WFUri* helpUri;
 @property (readonly) NSString* longDescription;
 @end
@@ -310,7 +310,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WFDLoggingOptions : RTObject
 + (instancetype)make ACTIVATOR;
-+ (WFDLoggingOptions*)createWithKeywords:(int64_t)keywords ACTIVATOR;
++ (WFDLoggingOptions*)makeWithKeywords:(int64_t)keywords ACTIVATOR;
 @property int16_t task;
 @property int tags;
 @property WFGUID* relatedActivityId;
@@ -327,7 +327,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingChannelOptions : RTObject
-+ (WFDLoggingChannelOptions*)create:(WFGUID*)group ACTIVATOR;
++ (WFDLoggingChannelOptions*)make:(WFGUID*)group ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property WFGUID* group;
 @end
@@ -526,10 +526,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingActivity : RTObject <WFIClosable, WFDILoggingTarget>
-+ (WFDLoggingActivity*)createLoggingActivity:(NSString*)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
-+ (WFDLoggingActivity*)createLoggingActivityWithLevel:(NSString*)activityName
-                                       loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel
-                                                level:(WFDLoggingLevel)level ACTIVATOR;
++ (WFDLoggingActivity*)makeLoggingActivity:(NSString*)activityName loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel ACTIVATOR;
++ (WFDLoggingActivity*)makeLoggingActivityWithLevel:(NSString*)activityName
+                                     loggingChannel:(RTObject<WFDILoggingChannel>*)loggingChannel
+                                              level:(WFDLoggingLevel)level ACTIVATOR;
 @property (readonly) WFGUID* id;
 @property (readonly) NSString* name;
 @property (readonly) WFDLoggingChannel* channel;
@@ -566,9 +566,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingChannel : RTObject <WFDILoggingChannel, WFIClosable, WFDILoggingTarget>
-+ (WFDLoggingChannel*)createWithOptions:(NSString*)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
-+ (WFDLoggingChannel*)createWithOptionsAndId:(NSString*)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
-+ (WFDLoggingChannel*)create:(NSString*)name ACTIVATOR;
++ (WFDLoggingChannel*)makeWithOptions:(NSString*)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
++ (WFDLoggingChannel*)makeWithOptionsAndId:(NSString*)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
++ (WFDLoggingChannel*)make:(NSString*)name ACTIVATOR;
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
 @property (readonly) NSString* name;
@@ -609,7 +609,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingSession : RTObject <WFDILoggingSession, WFIClosable>
-+ (WFDLoggingSession*)create:(NSString*)name ACTIVATOR;
++ (WFDLoggingSession*)make:(NSString*)name ACTIVATOR;
 @property (readonly) NSString* name;
 - (void)saveToFileAsync:(RTObject<WSIStorageFolder>*)folder
                fileName:(NSString*)fileName
@@ -640,7 +640,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDFileLoggingSession : RTObject <WFDIFileLoggingSession, WFIClosable>
-+ (WFDFileLoggingSession*)create:(NSString*)name ACTIVATOR;
++ (WFDFileLoggingSession*)make:(NSString*)name ACTIVATOR;
 @property (readonly) NSString* name;
 - (EventRegistrationToken)addLogFileGeneratedEvent:(void (^)(RTObject<WFDIFileLoggingSession>*, WFDLogFileGeneratedEventArgs*))del;
 - (void)removeLogFileGeneratedEvent:(EventRegistrationToken)tok;

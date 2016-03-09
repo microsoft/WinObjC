@@ -473,16 +473,16 @@ WINRT_EXPORT
 
 @protocol WUTITextRange
 @property wchar_t character;
-@property (copy) RTObject<WUTITextCharacterFormat>* characterFormat;
+@property (retain) RTObject<WUTITextCharacterFormat>* characterFormat;
 @property int endPosition;
-@property (copy) RTObject<WUTITextRange>* formattedText;
+@property (retain) RTObject<WUTITextRange>* formattedText;
 @property WUTRangeGravity gravity;
 @property (readonly) int length;
-@property (copy) NSString* link;
-@property (copy) RTObject<WUTITextParagraphFormat>* paragraphFormat;
+@property (retain) NSString* link;
+@property (retain) RTObject<WUTITextParagraphFormat>* paragraphFormat;
 @property int startPosition;
 @property (readonly) int storyLength;
-@property (copy) NSString* text;
+@property (retain) NSString* text;
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
@@ -591,17 +591,17 @@ WINRT_EXPORT
 
 @protocol WUTITextCharacterFormat
 @property WUTFormatEffect allCaps;
-@property (copy) WUColor* backgroundColor;
+@property (retain) WUColor* backgroundColor;
 @property WUTFormatEffect bold;
 @property WUTFontStretch fontStretch;
 @property WUTFontStyle fontStyle;
-@property (copy) WUColor* foregroundColor;
+@property (retain) WUColor* foregroundColor;
 @property WUTFormatEffect hidden;
 @property WUTFormatEffect italic;
 @property float kerning;
-@property (copy) NSString* languageTag;
+@property (retain) NSString* languageTag;
 @property (readonly) WUTLinkType linkType;
-@property (copy) NSString* name;
+@property (retain) NSString* name;
 @property WUTFormatEffect outline;
 @property float position;
 @property WUTFormatEffect protectedText;

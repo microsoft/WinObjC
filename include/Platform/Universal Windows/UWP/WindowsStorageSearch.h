@@ -103,7 +103,7 @@ typedef unsigned WSSIndexedState;
 WINRT_EXPORT
 @interface WSSSortEntry : NSObject
 + (instancetype) new;
-@property (copy) NSString* propertyName;
+@property (retain) NSString* propertyName;
 @property BOOL ascendingOrder;
 @end
 
@@ -112,10 +112,10 @@ WINRT_EXPORT
 #define __WSSIIndexableContent_DEFINED__
 
 @protocol WSSIIndexableContent
-@property (copy) NSString* id;
+@property (retain) NSString* id;
 @property (readonly) NSMutableDictionary* properties;
-@property (copy) RTObject<WSSIRandomAccessStream>* stream;
-@property (copy) NSString* streamContentType;
+@property (retain) RTObject<WSSIRandomAccessStream>* stream;
+@property (retain) NSString* streamContentType;
 @end
 
 #endif // __WSSIIndexableContent_DEFINED__
@@ -217,8 +217,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSValueAndLanguage : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject* value;
-@property (copy) NSString* language;
+@property (retain) RTObject* value;
+@property (retain) NSString* language;
 @end
 
 #endif // __WSSValueAndLanguage_DEFINED__
@@ -252,9 +252,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSIndexableContent : RTObject <WSSIIndexableContent>
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* streamContentType;
-@property (copy) RTObject<WSSIRandomAccessStream>* stream;
-@property (copy) NSString* id;
+@property (retain) NSString* streamContentType;
+@property (retain) RTObject<WSSIRandomAccessStream>* stream;
+@property (retain) NSString* id;
 @property (readonly) NSMutableDictionary* properties;
 @end
 
@@ -266,15 +266,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSQueryOptions : RTObject
-+ (WSSQueryOptions*)createCommonFileQuery:(WSSCommonFileQuery)query
-                           fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
-+ (WSSQueryOptions*)createCommonFolderQuery:(WSSCommonFolderQuery)query ACTIVATOR;
++ (WSSQueryOptions*)makeCommonFileQuery:(WSSCommonFileQuery)query
+                         fileTypeFilter:(id<NSFastEnumeration> /* NSString * */)fileTypeFilter ACTIVATOR;
++ (WSSQueryOptions*)makeCommonFolderQuery:(WSSCommonFolderQuery)query ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* userSearchFilter;
-@property (copy) NSString* language;
+@property (retain) NSString* userSearchFilter;
+@property (retain) NSString* language;
 @property WSSIndexerOption indexerOption;
 @property WSSFolderDepth folderDepth;
-@property (copy) NSString* applicationSearchFilter;
+@property (retain) NSString* applicationSearchFilter;
 @property (readonly) WSSDateStackOption dateStackOption;
 @property (readonly) NSMutableArray* fileTypeFilter;
 @property (readonly) NSString* groupPropertyName;

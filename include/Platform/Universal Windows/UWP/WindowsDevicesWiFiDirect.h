@@ -131,9 +131,9 @@ WINRT_EXPORT
 + (NSMutableArray*)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (NSMutableArray*)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject<WSSIBuffer>* value;
+@property (retain) RTObject<WSSIBuffer>* value;
 @property uint8_t ouiType;
-@property (copy) RTObject<WSSIBuffer>* oui;
+@property (retain) RTObject<WSSIBuffer>* oui;
 @end
 
 #endif // __WDWWiFiDirectInformationElement_DEFINED__
@@ -144,8 +144,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
-@property (copy) NSString* ssid;
-@property (copy) WSCPasswordCredential* passphrase;
+@property (retain) NSString* ssid;
+@property (retain) WSCPasswordCredential* passphrase;
 @property BOOL isEnabled;
 @end
 
@@ -159,7 +159,7 @@ WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
 @property WDWWiFiDirectAdvertisementListenStateDiscoverability listenStateDiscoverability;
 @property BOOL isAutonomousGroupOwnerEnabled;
-@property (copy) NSMutableArray* informationElements;
+@property (retain) NSMutableArray* informationElements;
 @property (readonly) WDWWiFiDirectLegacySettings* legacySettings;
 @end
 

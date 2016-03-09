@@ -61,7 +61,7 @@ typedef unsigned WAUUserDataAccountContentKinds;
 
 WINRT_EXPORT
 @interface WAUUserDataAccount : RTObject
-@property (copy) NSString* userDisplayName;
+@property (retain) NSString* userDisplayName;
 @property WAUUserDataAccountOtherAppReadAccess otherAppReadAccess;
 @property (readonly) NSString* deviceAccountTypeId;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* icon;

@@ -848,8 +848,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     WDXDXmlElement* badgeElement = rt_dynamic_cast<WDXDXmlElement>(badgeObject);
     [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
 
-    WUNBadgeNotification* notification = [WUNBadgeNotification createBadgeNotification:doc];
-    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
+    WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
+    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager makeBadgeUpdaterForApplication];
 
     [updater update:notification];
 }

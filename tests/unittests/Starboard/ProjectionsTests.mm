@@ -34,8 +34,7 @@ TEST(Projections, BasicTests) {
     ASSERT_TRUE_MSG(rt_dynamic_cast<WDXDXmlElement>(badge) != nil, "Our XML element isn't an element!");
 }
 
-// TODO 6772458: re-enable this test once a new drop of projections does not use NSLog.
-TEST(Projections, DISABLED_BadCastTests) {
+ARM_DISABLED_TEST(Projections, BadCastTests) {
     WDXDXmlDocument* doc = [WUNBadgeUpdateManager getTemplateContent:WUNBadgeTemplateTypeBadgeNumber];
     WDXDXmlNodeList* badges = [doc getElementsByTagName:@"badge"];
     ASSERT_TRUE_MSG(badges != nil, "Could not find our element!");
@@ -46,7 +45,7 @@ TEST(Projections, DISABLED_BadCastTests) {
     bool exceptionThrown = false;
     try {
         rt_dynamic_cast<WDXDXmlDocument>(badge);
-    } catch (...) {
+    } catch (NSException* e) {
         exceptionThrown = true;
     }
     ASSERT_TRUE_MSG(exceptionThrown, "Bad cast didn't throw exception!");

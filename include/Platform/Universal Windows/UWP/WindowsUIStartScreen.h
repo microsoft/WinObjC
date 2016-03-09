@@ -69,18 +69,18 @@ typedef unsigned WUSForegroundText;
 
 WINRT_EXPORT
 @interface WUSSecondaryTileVisualElements : RTObject
-@property (copy) WFUri* square150x150Logo;
+@property (retain) WFUri* square150x150Logo;
 @property BOOL showNameOnWide310x150Logo;
 @property BOOL showNameOnSquare310x310Logo;
 @property BOOL showNameOnSquare150x150Logo;
 @property WUSForegroundText foregroundText;
-@property (copy) WUColor* backgroundColor;
-@property (copy) WFUri* wide310x150Logo;
-@property (copy) WFUri* square70x70Logo;
-@property (copy) WFUri* square310x310Logo;
-@property (copy) WFUri* square30x30Logo;
-@property (copy) WFUri* square71x71Logo;
-@property (copy) WFUri* square44x44Logo;
+@property (retain) WUColor* backgroundColor;
+@property (retain) WFUri* wide310x150Logo;
+@property (retain) WFUri* square70x70Logo;
+@property (retain) WFUri* square310x310Logo;
+@property (retain) WFUri* square30x30Logo;
+@property (retain) WFUri* square71x71Logo;
+@property (retain) WFUri* square44x44Logo;
 @end
 
 #endif // __WUSSecondaryTileVisualElements_DEFINED__
@@ -95,40 +95,40 @@ WINRT_EXPORT
 + (void)findAllAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)findAllForApplicationAsync:(NSString*)applicationId success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)findAllForPackageAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (WUSSecondaryTile*)createMinimalTile:(NSString*)tileId
-                           displayName:(NSString*)displayName
-                             arguments:(NSString*)arguments
-                     square150x150Logo:(WFUri*)square150x150Logo
-                           desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
-+ (WUSSecondaryTile*)createTile:(NSString*)tileId
-                      shortName:(NSString*)shortName
-                    displayName:(NSString*)displayName
-                      arguments:(NSString*)arguments
-                    tileOptions:(WUSTileOptions)tileOptions
-                  logoReference:(WFUri*)logoReference ACTIVATOR;
-+ (WUSSecondaryTile*)createWideTile:(NSString*)tileId
-                          shortName:(NSString*)shortName
-                        displayName:(NSString*)displayName
-                          arguments:(NSString*)arguments
-                        tileOptions:(WUSTileOptions)tileOptions
-                      logoReference:(WFUri*)logoReference
-                  wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
-+ (WUSSecondaryTile*)createWithId:(NSString*)tileId ACTIVATOR;
++ (WUSSecondaryTile*)makeMinimalTile:(NSString*)tileId
+                         displayName:(NSString*)displayName
+                           arguments:(NSString*)arguments
+                   square150x150Logo:(WFUri*)square150x150Logo
+                         desiredSize:(WUSTileSize)desiredSize ACTIVATOR;
++ (WUSSecondaryTile*)makeTile:(NSString*)tileId
+                    shortName:(NSString*)shortName
+                  displayName:(NSString*)displayName
+                    arguments:(NSString*)arguments
+                  tileOptions:(WUSTileOptions)tileOptions
+                logoReference:(WFUri*)logoReference ACTIVATOR;
++ (WUSSecondaryTile*)makeWideTile:(NSString*)tileId
+                        shortName:(NSString*)shortName
+                      displayName:(NSString*)displayName
+                        arguments:(NSString*)arguments
+                      tileOptions:(WUSTileOptions)tileOptions
+                    logoReference:(WFUri*)logoReference
+                wideLogoReference:(WFUri*)wideLogoReference ACTIVATOR;
++ (WUSSecondaryTile*)makeWithId:(NSString*)tileId ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* shortName;
-@property (copy) WFUri* logo;
-@property (copy) NSString* tileId;
+@property (retain) NSString* shortName;
+@property (retain) WFUri* logo;
+@property (retain) NSString* tileId;
 @property BOOL lockScreenDisplayBadgeAndTileText;
-@property (copy) WFUri* lockScreenBadgeLogo;
-@property (copy) NSString* arguments;
+@property (retain) WFUri* lockScreenBadgeLogo;
+@property (retain) NSString* arguments;
 @property WUSForegroundText foregroundText;
-@property (copy) NSString* displayName;
-@property (copy) WUColor* backgroundColor;
-@property (copy) WFUri* wideLogo;
+@property (retain) NSString* displayName;
+@property (retain) WUColor* backgroundColor;
+@property (retain) WFUri* wideLogo;
 @property WUSTileOptions tileOptions;
-@property (copy) WFUri* smallLogo;
+@property (retain) WFUri* smallLogo;
 @property BOOL roamingEnabled;
-@property (copy) NSString* phoneticName;
+@property (retain) NSString* phoneticName;
 @property (readonly) WUSSecondaryTileVisualElements* visualElements;
 - (EventRegistrationToken)addVisualElementsRequestedEvent:(void (^)(WUSSecondaryTile*, WUSVisualElementsRequestedEventArgs*))del;
 - (void)removeVisualElementsRequestedEvent:(EventRegistrationToken)tok;

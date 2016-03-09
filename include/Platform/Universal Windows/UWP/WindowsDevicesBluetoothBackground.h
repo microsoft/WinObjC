@@ -44,8 +44,8 @@
 WINRT_EXPORT
 @interface WDBBRfcommInboundConnectionInformation : RTObject
 @property WDBBluetoothServiceCapabilities serviceCapabilities;
-@property (copy) RTObject<WSSIBuffer>* sdpRecord;
-@property (copy) WDBRRfcommServiceId* localServiceId;
+@property (retain) RTObject<WSSIBuffer>* sdpRecord;
+@property (retain) WDBRRfcommServiceId* localServiceId;
 @end
 
 #endif // __WDBBRfcommInboundConnectionInformation_DEFINED__
@@ -56,7 +56,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBRfcommOutboundConnectionInformation : RTObject
-@property (copy) WDBRRfcommServiceId* remoteServiceId;
+@property (retain) WDBRRfcommServiceId* remoteServiceId;
 @end
 
 #endif // __WDBBRfcommOutboundConnectionInformation_DEFINED__

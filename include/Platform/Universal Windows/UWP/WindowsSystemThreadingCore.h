@@ -68,11 +68,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSTCPreallocatedWorkItem : RTObject
-+ (WSTCPreallocatedWorkItem*)createWorkItem:(WSTWorkItemHandler)handler ACTIVATOR;
-+ (WSTCPreallocatedWorkItem*)createWorkItemWithPriority:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority ACTIVATOR;
-+ (WSTCPreallocatedWorkItem*)createWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler
-                                                         priority:(WSTWorkItemPriority)priority
-                                                          options:(WSTWorkItemOptions)options ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)makeWorkItem:(WSTWorkItemHandler)handler ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)makeWorkItemWithPriority:(WSTWorkItemHandler)handler priority:(WSTWorkItemPriority)priority ACTIVATOR;
++ (WSTCPreallocatedWorkItem*)makeWorkItemWithPriorityAndOptions:(WSTWorkItemHandler)handler
+                                                       priority:(WSTWorkItemPriority)priority
+                                                        options:(WSTWorkItemOptions)options ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)runAsync;
 @end
 

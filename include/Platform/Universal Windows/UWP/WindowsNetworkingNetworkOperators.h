@@ -299,7 +299,7 @@ WINRT_EXPORT
 @interface WNNProfileUsage : NSObject
 + (instancetype) new;
 @property unsigned int usageInMegabytes;
-@property (copy) WFDateTime* lastSyncTime;
+@property (retain) WFDateTime* lastSyncTime;
 @end
 
 // Windows.Networking.NetworkOperators.MobileBroadbandAccount
@@ -407,8 +407,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNNetworkOperatorTetheringAccessPointConfiguration : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* ssid;
-@property (copy) NSString* passphrase;
+@property (retain) NSString* ssid;
+@property (retain) NSString* passphrase;
 @end
 
 #endif // __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
@@ -965,8 +965,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNUssdMessage : RTObject
-+ (WNNUssdMessage*)createMessage:(NSString*)messageText ACTIVATOR;
-@property (copy) NSString* payloadAsText;
++ (WNNUssdMessage*)makeMessage:(NSString*)messageText ACTIVATOR;
+@property (retain) NSString* payloadAsText;
 @property uint8_t dataCodingScheme;
 - (NSArray*)getPayload;
 - (void)setPayload:(id<NSFastEnumeration> /* uint8_t */)value;
