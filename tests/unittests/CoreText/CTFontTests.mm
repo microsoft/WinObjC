@@ -51,7 +51,14 @@ const NSString* c_subFamilyName = @"Regular";
 const NSString* c_styleName = @"Regular";
 const NSString* c_uniqueName = @"Segoe UI Regular";
 const NSString* c_fullName = @"Segoe UI";
+
+// version name for Segoe UI font is different on ARM than on x86 platform, so we are using different version names for both platforms.
+#ifdef _M_ARM
+const NSString* c_versionName = @"Version 5.53; sf";
+#else
 const NSString* c_versionName = @"Version 5.53";
+#endif
+
 const NSString* c_postscriptName = @"SegoeUI";
 const NSString* c_trademarkName = @"Segoe is a trademark of the Microsoft group of companies.";
 const NSString* c_manufacturerName = @"Microsoft Corporation";
@@ -63,23 +70,22 @@ const NSString* c_licenseURLName = @"http://www.microsoft.com/typography/fonts/"
 const NSString* c_sampleTextName = nullptr;
 const NSString* c_postscriptCIDName = nullptr;
 
-ARM_DISABLED_INSTANTIATE_TEST_CASE_P(CoreText,
-                                     FontCopyName,
-                                     ::testing::Values(::testing::make_tuple(kCTFontCopyrightNameKey, c_copyrightName),
-                                                       ::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
-                                                       ::testing::make_tuple(kCTFontSubFamilyNameKey, c_subFamilyName),
-                                                       ::testing::make_tuple(kCTFontStyleNameKey, c_styleName),
-                                                       ::testing::make_tuple(kCTFontUniqueNameKey, c_uniqueName),
-                                                       ::testing::make_tuple(kCTFontFullNameKey, c_fullName),
-                                                       ::testing::make_tuple(kCTFontPostScriptNameKey, c_postscriptName),
-                                                       ::testing::make_tuple(kCTFontTrademarkNameKey, c_trademarkName),
-                                                       ::testing::make_tuple(kCTFontManufacturerNameKey, c_manufacturerName),
-                                                       ::testing::make_tuple(kCTFontDesignerNameKey, c_designerName),
-                                                       ::testing::make_tuple(kCTFontDescriptionNameKey, c_descriptionName),
-                                                       ::testing::make_tuple(kCTFontVendorURLNameKey, c_vendorURLName),
-                                                       ::testing::make_tuple(kCTFontDesignerURLNameKey, c_designerURLName),
-                                                       ::testing::make_tuple(kCTFontLicenseURLNameKey, c_licenseURLName),
-                                                       ::testing::make_tuple(kCTFontSampleTextNameKey, c_sampleTextName),
-                                                       ::testing::make_tuple(kCTFontPostScriptCIDNameKey, c_postscriptCIDName)),
-                                     // TODO 6697587: Re-enable this test once ARM version difference is understood.
-                                     ::testing::Values(::testing::make_tuple(kCTFontVersionNameKey, c_versionName)));
+INSTANTIATE_TEST_CASE_P(CoreText,
+                        FontCopyName,
+                        ::testing::Values(::testing::make_tuple(kCTFontCopyrightNameKey, c_copyrightName),
+                                          ::testing::make_tuple(kCTFontFamilyNameKey, c_familyName),
+                                          ::testing::make_tuple(kCTFontSubFamilyNameKey, c_subFamilyName),
+                                          ::testing::make_tuple(kCTFontStyleNameKey, c_styleName),
+                                          ::testing::make_tuple(kCTFontUniqueNameKey, c_uniqueName),
+                                          ::testing::make_tuple(kCTFontFullNameKey, c_fullName),
+                                          ::testing::make_tuple(kCTFontPostScriptNameKey, c_postscriptName),
+                                          ::testing::make_tuple(kCTFontTrademarkNameKey, c_trademarkName),
+                                          ::testing::make_tuple(kCTFontManufacturerNameKey, c_manufacturerName),
+                                          ::testing::make_tuple(kCTFontDesignerNameKey, c_designerName),
+                                          ::testing::make_tuple(kCTFontDescriptionNameKey, c_descriptionName),
+                                          ::testing::make_tuple(kCTFontVendorURLNameKey, c_vendorURLName),
+                                          ::testing::make_tuple(kCTFontDesignerURLNameKey, c_designerURLName),
+                                          ::testing::make_tuple(kCTFontLicenseURLNameKey, c_licenseURLName),
+                                          ::testing::make_tuple(kCTFontSampleTextNameKey, c_sampleTextName),
+                                          ::testing::make_tuple(kCTFontVersionNameKey, c_versionName),
+                                          ::testing::make_tuple(kCTFontPostScriptCIDNameKey, c_postscriptCIDName)));
