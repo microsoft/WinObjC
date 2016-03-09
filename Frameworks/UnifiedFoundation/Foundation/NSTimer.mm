@@ -45,9 +45,9 @@ static const wchar_t* TAG = L"NSTimer";
 */
 - (void)invalidate {
     if (_valid) {
-        _valid = FALSE;
+        _valid = NO;
         [_timerTarget release];
-        _timerTargetReleased = TRUE;
+        _timerTargetReleased = YES;
     }
 }
 
@@ -75,7 +75,7 @@ static const wchar_t* TAG = L"NSTimer";
         return;
     }
 
-    _isDestroying = TRUE;
+    _isDestroying = YES;
     int count = CFArrayGetCount((CFArrayRef)_addedToModes) - 1;
     while (count >= 0) {
         NSRunLoopState* runLoopState = (NSRunLoopState*)CFArrayGetValueAtIndex((CFArrayRef)_addedToModes, count);
@@ -85,7 +85,7 @@ static const wchar_t* TAG = L"NSTimer";
     [_addedToModes release];
     _addedToModes = nil;
     if (!_timerTargetReleased) {
-        _timerTargetReleased = TRUE;
+        _timerTargetReleased = YES;
         [_timerTarget release];
     }
 
@@ -103,7 +103,7 @@ static const wchar_t* TAG = L"NSTimer";
     [self retain];
 
     if (_canFire) {
-        _canFire = FALSE;
+        _canFire = NO;
 
         if (_valid) {
             if (_repeats) {
@@ -122,11 +122,11 @@ static const wchar_t* TAG = L"NSTimer";
             }
 
             if (!_repeats) {
-                _valid = FALSE;
+                _valid = NO;
             }
         }
 
-        _canFire = TRUE;
+        _canFire = YES;
     }
 
     [self release];
@@ -153,6 +153,9 @@ static const wchar_t* TAG = L"NSTimer";
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (double)nextFireTime {
     double ret;
 
@@ -168,22 +171,35 @@ static const wchar_t* TAG = L"NSTimer";
 /**
  @Status Interoperable
 */
+- (instancetype)initWithTimeInterval:(double)seconds
+                              target:(id)target
+                            selector:(SEL)selector
+                            userInfo:(NSObject*)userInfo
+                             repeats:(BOOL)repeats {
+    if (self = [super init]) {
+        _interval = ((seconds > 0.0) ? seconds : 0.0001);
+        _timerTarget = [target retain];
+        _sel = selector;
+        _userInfo = [userInfo retain];
+        _repeats = repeats;
+        _canFire = YES;
+        _valid = YES;
+        _addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
+        _nextFireTime = [NSDate timeIntervalSinceReferenceDate] + _interval;
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
 + (NSTimer*)scheduledTimerWithTimeInterval:(double)seconds
                                     target:(id)target
                                   selector:(SEL)selector
                                   userInfo:(NSObject*)userInfo
                                    repeats:(BOOL)repeats {
-    NSTimer* pNewTimer = [self alloc];
-
-    pNewTimer->_addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
-    pNewTimer->_repeats = repeats;
-    pNewTimer->_valid = TRUE;
-    pNewTimer->_sel = selector;
-    pNewTimer->_timerTarget = [target retain];
-    pNewTimer->_interval = seconds;
-    pNewTimer->_nextFireTime = [NSDate timeIntervalSinceReferenceDate] + pNewTimer->_interval;
-    pNewTimer->_userInfo = [userInfo retain];
-    pNewTimer->_canFire = TRUE;
+    NSTimer* pNewTimer = [[self alloc] initWithTimeInterval:seconds target:target selector:selector userInfo:userInfo repeats:repeats];
 
     [[NSRunLoop currentRunLoop] addTimer:pNewTimer forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop currentRunLoop] _wakeUp];
@@ -198,18 +214,7 @@ static const wchar_t* TAG = L"NSTimer";
                          selector:(SEL)selector
                          userInfo:(NSObject*)userInfo
                           repeats:(BOOL)repeats {
-    NSTimer* pNewTimer = [self alloc];
-
-    pNewTimer->_addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
-    pNewTimer->_repeats = repeats;
-    pNewTimer->_valid = TRUE;
-    pNewTimer->_sel = selector;
-    pNewTimer->_timerTarget = [target retain];
-    pNewTimer->_interval = seconds;
-    pNewTimer->_nextFireTime = [NSDate timeIntervalSinceReferenceDate] + pNewTimer->_interval;
-    pNewTimer->_userInfo = [userInfo retain];
-    pNewTimer->_canFire = TRUE;
-    return [pNewTimer autorelease];
+    return [[[self alloc] initWithTimeInterval:seconds target:target selector:selector userInfo:userInfo repeats:repeats] autorelease];
 }
 
 /**
@@ -221,17 +226,20 @@ static const wchar_t* TAG = L"NSTimer";
                     selector:(SEL)selector
                     userInfo:(NSObject*)userInfo
                      repeats:(BOOL)repeats {
-    _addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
-    _repeats = repeats;
-    _sel = selector;
-    _timerTarget = [target retain];
-    _interval = seconds;
-    _nextFireTime = [date timeIntervalSinceReferenceDate];
-    _userInfo = [userInfo retain];
-    _canFire = TRUE;
+    if (self = [self initWithTimeInterval:seconds target:target selector:selector userInfo:userInfo repeats:repeats]) {
+        _nextFireTime = [date timeIntervalSinceReferenceDate];
+    }
+    return self;
+}
 
-    _valid = TRUE;
-
+/**
+ @Status Interoperable
+*/
+- (instancetype)initTimerWithTimeInterval:(double)seconds invocation:(NSInvocation*)target repeats:(BOOL)repeats {
+    if (self = [self initWithTimeInterval:seconds target:nil selector:nil userInfo:nil repeats:repeats]) {
+        [target retainArguments];
+        _timerTarget = [target retain];
+    }
     return self;
 }
 
@@ -239,38 +247,14 @@ static const wchar_t* TAG = L"NSTimer";
  @Status Interoperable
 */
 + (NSTimer*)timerWithTimeInterval:(double)seconds invocation:(NSInvocation*)target repeats:(BOOL)repeats {
-    NSTimer* pNewTimer = [self alloc];
-
-    pNewTimer->_addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
-    pNewTimer->_repeats = repeats;
-    pNewTimer->_valid = TRUE;
-    pNewTimer->_sel = NULL;
-    [target retainArguments];
-    pNewTimer->_timerTarget = [target retain];
-    pNewTimer->_interval = seconds;
-    pNewTimer->_nextFireTime = [NSDate timeIntervalSinceReferenceDate] + pNewTimer->_interval;
-    pNewTimer->_userInfo = nil;
-    pNewTimer->_canFire = TRUE;
-
-    return [pNewTimer autorelease];
+    return [[[self alloc] initTimerWithTimeInterval:seconds invocation:target repeats:repeats] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (NSTimer*)scheduledTimerWithTimeInterval:(double)seconds invocation:(NSInvocation*)target repeats:(BOOL)repeats {
-    NSTimer* pNewTimer = [self alloc];
-
-    pNewTimer->_addedToModes = (NSMutableArray*)CFArrayCreateMutable(NULL, 0, NULL);
-    pNewTimer->_repeats = repeats;
-    pNewTimer->_valid = TRUE;
-    pNewTimer->_sel = NULL;
-    [target retainArguments];
-    pNewTimer->_timerTarget = [target retain];
-    pNewTimer->_interval = seconds;
-    pNewTimer->_nextFireTime = [NSDate timeIntervalSinceReferenceDate] + pNewTimer->_interval;
-    pNewTimer->_userInfo = nil;
-    pNewTimer->_canFire = TRUE;
+    NSTimer* pNewTimer = [[self alloc] initTimerWithTimeInterval:seconds invocation:target repeats:repeats];
 
     [[NSRunLoop currentRunLoop] addTimer:pNewTimer forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop currentRunLoop] _wakeUp];
