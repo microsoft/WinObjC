@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,18 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
+#import <CoreImage/CoreImageExport.h>
+#import <Foundation/NSObject.h>
 #import <CoreImage/CIImage.h>
-#include "Starboard.h"
 
-@interface CIImage () {
-    idretain _cgImage;
-    idretain _color;
-    CIFilter* _filter;
-}
+@class NSString;
 
--(CGImageRef)_CGImageFromRect:(CGRect)rect;
-
+@interface NSObject (CoreImage)
+- (void)provideImageData:(void*)data
+             bytesPerRow:(size_t)rowbytes
+                  origin:(size_t)
+                       x:(size_t)y
+                    size:(size_t)
+                   width:(size_t)height
+                userInfo:(id)info;
+@end
+COREIMAGE_EXPORT NSString* const kCIImageProviderTileSize;
+COREIMAGE_EXPORT NSString* const kCIImageProviderUserInfo;
+@interface CIImage (CIImageProvider)
 @end

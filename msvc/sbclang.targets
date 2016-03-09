@@ -85,7 +85,6 @@
       <IncludeCoreAudio Condition="$(LinkAdditionalDependencies.Contains('CoreAudio.lib'))">true</IncludeCoreAudio>
       <IncludeCoreAudioKit Condition="$(LinkAdditionalDependencies.Contains('CoreAudioKit.lib'))">true</IncludeCoreAudioKit>
       <IncludeCoreBluetooth Condition="$(LinkAdditionalDependencies.Contains('CoreBluetooth.lib'))">true</IncludeCoreBluetooth>
-      <IncludeCoreImage Condition="$(LinkAdditionalDependencies.Contains('CoreImage.lib'))">true</IncludeCoreImage>
       <IncludeCoreMotion Condition="$(LinkAdditionalDependencies.Contains('CoreMotion.lib'))">true</IncludeCoreMotion>
       <IncludeEventKit Condition="$(LinkAdditionalDependencies.Contains('EventKit.lib'))">true</IncludeEventKit>
       <IncludeiAd Condition="$(LinkAdditionalDependencies.Contains('iAd.lib'))">true</IncludeiAd>

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,43 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreImage/CIKernel.h>
 
-#import <CoreImage/CIImage.h>
-#include "Starboard.h"
-
-@interface CIImage () {
-    idretain _cgImage;
-    idretain _color;
-    CIFilter* _filter;
+@implementation CIKernel
+/**
+ @Status Stub
+ @Notes
+*/
++ (instancetype)kernelWithString:(NSString*)string {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
--(CGImageRef)_CGImageFromRect:(CGRect)rect;
+/**
+ @Status Stub
+ @Notes
+*/
++ (NSArray*)kernelsWithString:(NSString*)s {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setROISelector:(SEL)aMethod {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (CIImage*)applyWithExtent:(CGRect)extent roiCallback:(CIKernelROICallback)callback arguments:(NSArray*)args {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 @end

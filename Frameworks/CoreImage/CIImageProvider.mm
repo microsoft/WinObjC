@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,27 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreImage/CIImageProvider.h>
 
-#import <CoreImage/CIImage.h>
-#include "Starboard.h"
+NSString* const kCIImageProviderTileSize = @"kCIImageProviderTileSize";
+NSString* const kCIImageProviderUserInfo = @"kCIImageProviderUserInfo";
 
-@interface CIImage () {
-    idretain _cgImage;
-    idretain _color;
-    CIFilter* _filter;
+@implementation NSObject (CoreImage)
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)provideImageData:(void*)data
+             bytesPerRow:(size_t)rowbytes
+                  origin:(size_t)
+                       x:(size_t)y
+                    size:(size_t)
+                   width:(size_t)height
+                userInfo:(id)info {
+    UNIMPLEMENTED();
 }
 
--(CGImageRef)_CGImageFromRect:(CGRect)rect;
-
+@end
+@implementation CIImage (CIImageProvider)
 @end

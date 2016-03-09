@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,18 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <CoreImage/CIImage.h>
-#include "Starboard.h"
+#import <CoreImage/CoreImageExport.h>
+#import <Foundation/NSObject.h>
 
-@interface CIImage () {
-    idretain _cgImage;
-    idretain _color;
-    CIFilter* _filter;
-}
-
--(CGImageRef)_CGImageFromRect:(CGRect)rect;
-
+@class NSString;
+COREIMAGE_EXPORT NSString* const CIFeatureTypeFace;
+COREIMAGE_EXPORT NSString* const CIFeatureTypeRectangle;
+COREIMAGE_EXPORT NSString* const CIFeatureTypeQRCode;
+COREIMAGE_EXPORT NSString* const CIFeatureTypeText;
+COREIMAGE_EXPORT_CLASS
+@interface CIFeature : NSObject
+@property (readonly, assign) CGRect bounds STUB_PROPERTY;
+@property (readonly, retain) NSString* type STUB_PROPERTY;
 @end

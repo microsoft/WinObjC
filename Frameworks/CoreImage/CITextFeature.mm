@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,8 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <StubReturn.h>
+#import <CoreImage/CITextFeature.h>
 
-#import <CoreImage/CIImage.h>
-#include "Starboard.h"
-
-@interface CIImage () {
-    idretain _cgImage;
-    idretain _color;
-    CIFilter* _filter;
-}
-
--(CGImageRef)_CGImageFromRect:(CGRect)rect;
-
+@implementation CITextFeature
 @end

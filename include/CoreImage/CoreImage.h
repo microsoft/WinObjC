@@ -13,9 +13,27 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #import <CoreImage/CIColor.h>
-#import <CoreImage/CIImage.h>
-#import <CoreImage/CIFilter.h>
-#import <CoreImage/CIVector.h>
+#import <CoreImage/CIColorKernel.h>
 #import <CoreImage/CIContext.h>
+#import <CoreImage/CIDetector.h>
+#import <CoreImage/CIFaceFeature.h>
+#import <CoreImage/CIFeature.h>
+#import <CoreImage/CIFilter.h>
+#import <CoreImage/CIFilterConstructor.h>
+#import <CoreImage/CIFilterShape.h>
+#import <CoreImage/CIImage.h>
+#import <CoreImage/CIImageAccumulator.h>
+#import <CoreImage/CIImageProvider.h>
+#import <CoreImage/CIKernel.h>
+#import <CoreImage/CIQRCodeFeature.h>
+#import <CoreImage/CIRectangleFeature.h>
+#import <CoreImage/CISampler.h>
+#import <CoreImage/CITextFeature.h>
+#import <CoreImage/CIVector.h>
+#import <CoreImage/CIWarpKernel.h>
+#import <CoreImage/CIVector.h>
+#import <CoreImage/CIVector.h>
+#import <CoreImage/CIVector.h>
