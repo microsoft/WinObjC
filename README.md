@@ -1,4 +1,7 @@
-**ANNOUNCEMENT**: We've switched to using [Git LFS](https://git-lfs.github.com) to handle the large binaries included in the bridge. This does not affect using the [prebuilt releases found on our releases page](https://github.com/Microsoft/WinObjC/releases), but if you build the bridge from source, please see the instructions found on our [Building From Source wiki page](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source).
+##### ANNOUNCEMENT
+We've switched to using [Git LFS](https://git-lfs.github.com) to handle the large binaries included in the bridge. This does not affect using the [prebuilt releases found on our releases page](https://github.com/Microsoft/WinObjC/releases), but if you build the bridge from source, please see the instructions found on our [Building From Source wiki page](https://github.com/Microsoft/WinObjC/wiki/Building-From-Source).
+
+**Please do not use the "Download ZIP" button above, since you will not be able to build the bridge using the resulting .zip file.** For more information on why this is the case, see ["I'm getting errors after downloading the bridge through the "Download ZIP" button on Github. What should I do?"](https://github.com/Microsoft/WinObjC/wiki/FAQ#im-getting-errors-after-downloading-the-bridge-through-the-download-zip-button-on-github-what-should-i-do) in our FAQ.
 
 # Welcome to the Windows Bridge for iOS project preview
 The Windows Bridge for iOS (also referred to as WinObjC) is a Microsoft open-source project that provides an Objective-C development environment for Visual Studio and support for iOS APIs. The bridge allows you to create Universal Windows Apps (UWAs) that will run on any Windows 10 device using iOS APIs and Objective-C code.
