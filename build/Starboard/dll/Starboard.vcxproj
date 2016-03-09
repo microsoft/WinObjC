@@ -51,7 +51,7 @@
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ForceSymbolReferences>_EbrAssert</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences);_EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -65,7 +65,7 @@
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ForceSymbolReferences>_EbrAssert</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences);_EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -79,7 +79,7 @@
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ForceSymbolReferences>EbrAssert</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences);EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -93,7 +93,7 @@
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
       <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ForceSymbolReferences>EbrAssert</ForceSymbolReferences>
+      <ForceSymbolReferences>%(ForceSymbolReferences);EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
