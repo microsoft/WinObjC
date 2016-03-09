@@ -4,9 +4,6 @@
 [submodule "tools/vsimporter/third-party/sole"]
 	path = tools/vsimporter/third-party/sole
 	url = https://github.com/r-lyeh/sole.git
-[submodule "deps/3rdparty/curl"]
-	path = deps/3rdparty/curl
-	url = https://github.com/bagder/curl.git
 [submodule "deps/3rdparty/openssl"]
 	path = deps/3rdparty/openssl
 	url = https://github.com/microsoft/openssl

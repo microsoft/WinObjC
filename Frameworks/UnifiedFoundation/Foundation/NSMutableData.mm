@@ -67,6 +67,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)data {
     return [[[self alloc] initWithLength:0] autorelease];
 }
@@ -254,6 +257,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     return (void*)_bytes;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSMutableData alloc] initWithData:self];
 }

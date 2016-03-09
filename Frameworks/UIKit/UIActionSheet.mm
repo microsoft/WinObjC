@@ -24,6 +24,9 @@
 #include "UIKit/UIImage.h"
 #include "UIKit/UIActionSheet.h"
 #include "UIBarButtonItem+Internals.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIActionSheet";
 
 @implementation UIActionSheet {
     id<UIActionSheetDelegate> _delegate;
@@ -76,8 +79,6 @@ static int addButton(UIActionSheet* self, id text) {
     UIImageSetLayerContents([self layer], image);
 
     _totalHeight += 20.0f;
-
-    EbrOnShowKeyboardInternal();
 
     return self;
 }
@@ -356,8 +357,6 @@ static void dismissView(UIActionSheet* self, int index) {
     CGRect frame = self->_hidePosition;
     [self setFrame:frame];
     [UIView commitAnimations];
-
-    EbrOnHideKeyboardInternal();
 }
 
 - (void)buttonClicked:(id)button {
@@ -458,7 +457,7 @@ static void dismissView(UIActionSheet* self, int index) {
  @Status Interoperable
 */
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated {
-    EbrDebugLog("dismissWithClicked .. fire an event?\n");
+    TraceVerbose(TAG, L"dismissWithClicked .. fire an event?");
     return self;
 }
 

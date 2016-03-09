@@ -26,7 +26,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BA535474-97E6-4FCF-8711-0F0374487FA9}</ProjectGuid>
     <ProjectName>ImageIOLib</ProjectName>
-    <RootNamespace>ImageIO</RootNamespace>
+    <RootNamespace>ImageIOLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>ImageIOLib</OutputName>

@@ -159,7 +159,9 @@ static BOOL s_isMultiThreaded = NO;
     std::lock_guard<std::mutex> lock(s_mainThreadMutex);
     [self _associateWithCurrentThread];
     if (s_mainThread && s_mainThread != self) {
-        [NSException raise:NSInternalInconsistencyException format:@"+[NSThread mainThread] already associated with %@; attempt to usurp by %@.", static_cast<id>(s_mainThread), self];
+        [NSException
+             raise:NSInternalInconsistencyException
+            format:@"+[NSThread mainThread] already associated with %@; attempt to usurp by %@.", static_cast<id>(s_mainThread), self];
         return;
     }
     s_mainThread = self;
@@ -236,7 +238,7 @@ static void* _threadBody(void* context) {
 - (void)start {
     s_isMultiThreaded = YES;
 
-    ThreadBodyData* bodyData = new ThreadBodyData{self};
+    ThreadBodyData* bodyData = new ThreadBodyData{ self };
     // bodyData is deleted in _threadBody when the thread exits.
 
     pthread_t newThread;
@@ -312,6 +314,9 @@ static void* _threadBody(void* context) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     if (tlsNSThread == 0) {
         pthread_key_create(&tlsNSThread, NULL);

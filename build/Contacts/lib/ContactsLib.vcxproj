@@ -43,7 +43,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9A4532C3-3316-4D91-9BE3-2FCFD6A82191}</ProjectGuid>
     <ProjectName>ContactsLib</ProjectName>
-    <RootNamespace>Contacts</RootNamespace>
+    <RootNamespace>ContactsLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>ContactsLib</OutputName>

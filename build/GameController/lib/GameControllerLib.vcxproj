@@ -34,7 +34,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{42C2C44C-1287-42CB-95CF-6647AD207B99}</ProjectGuid>
     <ProjectName>GameControllerLib</ProjectName>
-    <RootNamespace>GameController</RootNamespace>
+    <RootNamespace>GameControllerLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>GameControllerLib</OutputName>

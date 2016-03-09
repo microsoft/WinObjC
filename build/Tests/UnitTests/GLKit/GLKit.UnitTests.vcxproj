@@ -156,7 +156,7 @@
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
@@ -179,7 +179,7 @@
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
@@ -205,7 +205,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
@@ -232,7 +232,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>

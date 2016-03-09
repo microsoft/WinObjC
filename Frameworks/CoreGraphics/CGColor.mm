@@ -18,6 +18,8 @@
 #import <Starboard.h>
 #import <CoreGraphics/CGColor.h>
 
+#import "UIColorInternal.h"
+
 static IWLazyClassLookup _LazyUIColor("UIColor");
 
 /**
@@ -71,7 +73,7 @@ CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
  @Status Interoperable
 */
 CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, id pattern, float components[]) {
-    CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithCGPattern:pattern] retain];
+    CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithCGPattern:(CGPatternRef)pattern] retain];
 
     return ret;
 }
@@ -116,14 +118,12 @@ CGColorSpaceRef CGColorGetColorSpace(CGColorRef color) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Works as expected for RGBA only, but returns a client-freed buffer.
 */
 const CGFloat* CGColorGetComponents(CGColorRef color) {
-    UNIMPLEMENTED();
-    UNIMPLEMENTED();
     float* ret = (float*)IwMalloc(sizeof(float) * 4);
-    [color getColors:ret];
+    [(UIColor*)color getColors:ret];
     return ret;
 }
 

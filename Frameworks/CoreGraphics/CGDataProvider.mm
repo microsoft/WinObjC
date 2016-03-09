@@ -18,7 +18,10 @@
 #import <Starboard.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSString.h>
+#include "LoggingNative.h"
 #import <CoreGraphics/CGDataProvider.h>
+
+static const wchar_t* TAG = L"CGDataProvider";
 
 @interface CGDataProvider : NSData {
 @public
@@ -26,7 +29,7 @@
     void* info;
     size_t size;
     const void* data;
-    idretain filename;
+    StrongId<NSString> filename;
 }
 @end
 
@@ -60,8 +63,8 @@ CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
  @Status Interoperable
 */
 CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
-    void* data = (void*)[provider bytes];
-    DWORD size = [provider length];
+    void* data = (void*)[(NSData*)provider bytes];
+    DWORD size = [(NSData*)provider length];
     id ret = [[CGDataProvider alloc] initWithBytes:data length:size];
 
     return (CFDataRef)ret;
@@ -72,7 +75,7 @@ CFDataRef CGDataProviderCopyData(CGDataProviderRef provider) {
  @Notes Only calls getBytePointer
 */
 CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataProviderDirectCallbacks* callBacks) {
-    EbrDebugLog("Warning: CGDataProviderCreateDirect is hacky\n");
+    TraceWarning(TAG, L"Warning: CGDataProviderCreateDirect is hacky");
     char* pBytes = (char*)callBacks->getBytePointer(info);
 
     id ret = [[CGDataProvider alloc] initWithBytesNoCopy:pBytes length:(DWORD)size freeWhenDone:FALSE];
@@ -80,8 +83,12 @@ CGDataProviderRef CGDataProviderCreateDirect(void* info, __int64 size, CGDataPro
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Hacky
+*/
 CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSequentialCallbacks* callBacks) {
-    EbrDebugLog("Warning: CGDataProviderCreateSequential is hacky\n");
+    TraceWarning(TAG, L"Warning: CGDataProviderCreateSequential is hacky");
     char* pBytes = (char*)IwMalloc(1024 * 1024);
 
     int amt = callBacks->getBytes(info, pBytes, 1024 * 1024);
@@ -96,7 +103,7 @@ CGDataProviderRef CGDataProviderCreateSequential(void* info, CGDataProviderSeque
  @Status Interoperable
 */
 CGDataProviderRef CGDataProviderCreateWithCFData(CFDataRef data) {
-    return [data retain];
+    return (CGDataProviderRef)CFRetain(data);
 }
 
 /**

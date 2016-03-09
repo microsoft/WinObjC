@@ -21,10 +21,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSURLProtocol_file.h"
 #include "Foundation/NSMutableArray.h"
 #include "NSURLProtocolInternal.h"
-#include "Logging.h"
 #include "NSRaise.h"
+#include "LoggingNative.h"
 
-static const wchar_t TAG[] = L"NSURLProtocol";
+static const wchar_t* TAG = L"NSURLProtocol";
 
 @implementation NSURLProtocol
 
@@ -62,6 +62,7 @@ static const wchar_t TAG[] = L"NSURLProtocol";
         id absStr = [url absoluteString];
         const char* urlStr = [absStr UTF8String];
         TraceWarning(TAG, L"Couldn't find protocol handler for %hs", urlStr ? urlStr : "(null)");
+
         return nil;
     }
 }

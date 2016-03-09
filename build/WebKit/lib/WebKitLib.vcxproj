@@ -41,7 +41,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CB45DF6D-66EF-42CC-9BF9-F2A96C954EBA}</ProjectGuid>
     <ProjectName>WebKitLib</ProjectName>
-    <RootNamespace>WebKit</RootNamespace>
+    <RootNamespace>WebKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>WebKitLib</OutputName>

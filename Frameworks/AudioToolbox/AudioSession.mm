@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <AudioToolbox/AudioSession.h>
+#import <AudioToolbox/AudioServices.h>
 #import <StubReturn.h>
 
 const CFStringRef kAudioSession_AudioRouteKey_Inputs = static_cast<CFStringRef>(@"AS_AudioRouteKey_Inputs");

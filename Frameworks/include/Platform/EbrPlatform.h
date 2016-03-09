@@ -159,19 +159,8 @@ IWPLATFORM_EXPORT double EbrGetMediaTime();
 IWPLATFORM_EXPORT void EbrSetAPC(int signal, void (*func)(int));
 IWPLATFORM_EXPORT void EbrCallAPC(pthread_t thread, int signal, int param);
 IWPLATFORM_EXPORT void EbrPlatformInit();
-IWPLATFORM_EXPORT void EbrShowKeyboard();
-IWPLATFORM_EXPORT void EbrHideKeyboard();
-IWPLATFORM_EXPORT void EbrSetKeyboardType(int type);
-IWPLATFORM_EXPORT void EbrPlatformShowKeyboard();
-IWPLATFORM_EXPORT void EbrPlatformHideKeyboard();
-IWPLATFORM_EXPORT void EbrRefreshKeyboard();
 IWPLATFORM_EXPORT int EbrGetWantedOrientation();
 IWPLATFORM_EXPORT void EbrExitToBackground();
-
-inline void EbrOnShowKeyboardInternal() {
-}
-inline void EbrOnHideKeyboardInternal() {
-}
 
 //  maxLen should be MAX_PATH.  Sorry Jordan.
 IWPLATFORM_EXPORT bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen);
@@ -179,9 +168,6 @@ IWPLATFORM_EXPORT const char* EbrGetWritableFolder();
 IWPLATFORM_EXPORT void EbrSetWritableFolder(const char* folder);
 
 IWPLATFORM_EXPORT void EbrPlatformCommonInit();
-
-IWPLATFORM_EXPORT void EbrPauseSound();
-IWPLATFORM_EXPORT void EbrResumeSound();
 
 IWPLATFORM_EXPORT void EbrBlockIfBackground();
 IWPLATFORM_EXPORT void EbrEnterBackground();
@@ -253,8 +239,6 @@ IWPLATFORM_EXPORT void EbrThrowFatalWithStack(int code, const char* errorFmt, ..
 IWPLATFORM_EXPORT void EbrSetCurrentThreadName(const char* name);
 
 IWPLATFORM_EXPORT void EbrThreadMakeBackgroundExecutable();
-
-IWPLATFORM_EXPORT void EbrSetApplicationBadgeNumber(int number);
 
 IWPLATFORM_EXPORT bool EbrGetRandomData(void* dest, int numBytes);
 

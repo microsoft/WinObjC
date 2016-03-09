@@ -44,6 +44,12 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     CALayer* _shapeImage;
     BOOL _needsRender;
 }
+
+/**
+ @Status Interoperable
+ @Public No
+ @Notes CALayerDelegate informal protocol.
+*/
 - (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key {
     if (layer == _shapeImage) {
         //  We do not want any animations on our shape bitmap sublayer
@@ -53,8 +59,12 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     return nil;
 }
 
-//  Performed in layoutSublayers because we need to reposition _shapeImage
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)layoutSublayers {
+    //  Performed in layoutSublayers because we need to reposition _shapeImage
     if (_needsRender == NO) {
         return;
     }
@@ -205,23 +215,30 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
     return _lineWidth;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    [super init];
+    if (self = [super init]) {
+        _shapeImage = [CALayer new];
+        _shapeImage.anchorPoint = CGPointMake(0.0f, 0.0f);
+        _shapeImage.contentsGravity = kCAGravityBottomLeft;
+        _shapeImage.contentsScale = self.contentsScale;
+        _shapeImage.delegate = self;
 
-    _shapeImage = [CALayer new];
-    _shapeImage.anchorPoint = CGPointMake(0.0f, 0.0f);
-    _shapeImage.contentsGravity = kCAGravityBottomLeft;
-    _shapeImage.contentsScale = self.contentsScale;
-    _shapeImage.delegate = self;
-
-    [self addSublayer:_shapeImage];
-    _fillColor = (CGColorRef)CGColorGetConstantColor((CFStringRef) @"BLACK");
-    CGColorRetain(_fillColor);
-    _lineWidth = 1.0f;
+        [self addSublayer:_shapeImage];
+        _fillColor = (CGColorRef)CGColorGetConstantColor((CFStringRef) @"BLACK");
+        CGColorRetain(_fillColor);
+        _lineWidth = 1.0f;
+    }
 
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setContentsScale:(float)scale {
     [super setContentsScale:scale];
     [_shapeImage setContentsScale:scale];

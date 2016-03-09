@@ -16,8 +16,8 @@
 
 #include "Starboard.h"
 #include "Foundation/NSInvocation.h"
-#include "Logging.h"
 #include <ctype.h>
+#include "LoggingNative.h"
 #include <objc/encoding.h>
 
 static const wchar_t* TAG = L"NSInvocation";
@@ -92,7 +92,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 */
 - (void)setArgument:(void*)buf atIndex:(int)index {
     if (index >= MAX_ARGS) {
-        EbrDebugLog("index = %d, MAX_ARGS = %d!\n", index, MAX_ARGS);
+        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d!", index, MAX_ARGS);
         assert(0);
     }
 
@@ -122,7 +122,7 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
 */
 - (void)getArgument:(void*)buf atIndex:(int)index {
     if (index >= MAX_ARGS) {
-        EbrDebugLog("index = %d, MAX_ARGS = %d!\n", index, MAX_ARGS);
+        TraceVerbose(TAG, L"index = %d, MAX_ARGS = %d!", index, MAX_ARGS);
         assert(0);
     }
 
@@ -181,6 +181,9 @@ static void* copyArgument(NSInvocation* self, void* buf, int index) {
     memcpy(returnValue, buf, length);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     DWORD numArgs = [_methodSignature numberOfArguments];
 
@@ -283,7 +286,6 @@ static char uniformTypeFromStructSpecifier(const char** type) {
     return uniformType;
 }
 
-
 #if _M_IX86
 #define ARCH_SMALL_STRUCT_SIZE 8
 typedef uint64_t arch_small_struct_type;
@@ -348,7 +350,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
             if (curArg != NULL) {
                 memcpy(&curWord, curArg, size > 4 ? 4 : size);
             } else {
-                EbrDebugLog("Warning: NSInvocation argument not set\n");
+                TraceWarning(TAG, L"Warning: NSInvocation argument not set");
             }
 
             stackParams[stackParamsLen++] = curWord;
@@ -431,7 +433,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                 } break;
 
                 default:
-                    EbrDebugLog("Unhandled # of args: %d\n", stackParamsLen);
+                    TraceVerbose(TAG, L"Unhandled # of args: %d", stackParamsLen);
                     assert(0);
                     *((char*)0) = 0;
                     break;
@@ -462,7 +464,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                 } else
 #endif
 #ifdef ARCH_SMALL_STRUCT_SIZE
-                if (returnSize <= ARCH_SMALL_STRUCT_SIZE) {
+                    if (returnSize <= ARCH_SMALL_STRUCT_SIZE) {
                     arch_small_struct_type (*smallStructImp)(id, SEL, ...) = (arch_small_struct_type (*)(id, SEL, ...))stretImp;
                     auto retVal = smallStructImp(target, sel);
                     memcpy(pReturnVal, &retVal, returnSize);
@@ -475,7 +477,10 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
             } break;
 
             default:
-                TraceError(TAG, L"Unable to realize stret imp call to -[%hs %hs] for >= 3 arguments.", class_getName(object_getClass(target)), sel_getName(sel));
+                TraceError(TAG,
+                           L"Unable to realize stret imp call to -[%hs %hs] for >= 3 arguments.",
+                           class_getName(object_getClass(target)),
+                           sel_getName(sel));
                 FAIL_FAST();
                 break;
         }

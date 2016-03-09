@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,12 +13,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <CFNetwork/CFSocketStream.h>
+#import <StubIncludes.h>
+#import <CFNetwork/CFNetworkBase.h>
+#import <CFNetwork/CFFTPStream.h>
 #import <CFNetwork/CFHost.h>
-#import <CFNetwork/CFNetServices.h>
-#import <CFNetwork/CFHTTPMessage.h>
 #import <CFNetwork/CFHTTPAuthentication.h>
+#import <CFNetwork/CFHTTPMessage.h>
 #import <CFNetwork/CFHTTPStream.h>
-#import <CFNetwork/CFProxySupport.h>
+#import <CFNetwork/CFNetDiagnostics.h>
+#import <CFNetwork/CFNetServices.h>
 #import <CFNetwork/CFNetworkErrors.h>
+#import <CFNetwork/CFNetworkExport.h>
+#import <CFNetwork/CFProxySupport.h>
+#import <CFNetwork/CFSocketStream.h>

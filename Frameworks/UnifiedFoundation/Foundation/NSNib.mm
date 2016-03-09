@@ -36,7 +36,6 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
 /**
  @Status Interoperable
 */
-
 + (NSNib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
     NSData* data = [NSData dataWithContentsOfFile:name];
     if (data == nil) {
@@ -59,7 +58,6 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
 /**
  @Status Interoperable
 */
-
 + (NSNib*)nibWithData:(NSData*)data bundle:(NSBundle*)bundle {
     if (data == nil) {
         return nil;
@@ -75,7 +73,6 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
 /**
  @Status Interoperable
 */
-
 - (NSArray*)instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options {
     const char* bytes = (const char*)[_data bytes];
     if (!bytes) {
@@ -147,6 +144,9 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [super dealloc];
 }

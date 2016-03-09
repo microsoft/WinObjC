@@ -23,6 +23,9 @@
 #include "UIKit/UIFont.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UISegmentedControl.h"
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"UISearchBar";
 
 static const CGFloat c_marginBottom = 10;
 static const CGFloat c_marginLeftAndRight = 10;
@@ -387,7 +390,7 @@ static void initInternal(UISearchBar* self) {
         [_textField setBackground:_backgroundImage];
         [self setNeedsDisplay];
     } else if (state == UIControlStateDisabled) {
-        NSLog(@"UIControlStateDisabled is not supported");
+        NSTraceWarning(TAG, @"UIControlStateDisabled is not supported");
     }
 }
 
@@ -401,7 +404,7 @@ static void initInternal(UISearchBar* self) {
     } else if (state == UIControlStateDisabled) {
         UNIMPLEMENTED();
     } else {
-        NSLog(@"Search field background image is only respected for UIControlStateNormal and UIControlStateDisabled.");
+        NSTraceWarning(TAG, @"Search field background image is only respected for UIControlStateNormal and UIControlStateDisabled.");
     }
     return nil;
 }

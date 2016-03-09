@@ -21,6 +21,9 @@
 #include "QuartzCore/CATransaction.h"
 #include "QuartzCore/CABasicAnimation.h"
 #include "CALayerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CATransaction";
 
 NSString* const kCATransactionAnimationDuration = @"kCATransactionAnimationDuration";
 NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
@@ -47,18 +50,22 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     return _curTransaction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _disableActions = FALSE;
-    _duration = 0.25f;
+    if (self = [super init]) {
+        _disableActions = FALSE;
+        _duration = 0.25f;
 
-    _transactionQueue = GetCACompositor()->CreateDisplayTransaction();
+        _transactionQueue = GetCACompositor()->CreateDisplayTransaction();
 
-    if (_curTransaction != NULL) {
-        _parent = _curTransaction;
-    } else {
-        _parent = _rootTransaction;
+        if (_curTransaction != NULL) {
+            _parent = _curTransaction;
+        } else {
+            _parent = _rootTransaction;
+        }
     }
-
     return self;
 }
 
@@ -108,7 +115,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 */
 + (void)flush {
     UNIMPLEMENTED();
-    EbrDebugLog("CATransaction flush?\n");
+    TraceVerbose(TAG, L"CATransaction flush?");
 }
 
 /**

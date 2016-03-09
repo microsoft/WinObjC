@@ -25,6 +25,9 @@
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSKeyedArchiver.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDictionary";
 
 @class NSPropertyListReader;
 @class NSPropertyListSerialization;
@@ -53,6 +56,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class uses setObject:forKey: as a setter, and has no key-specific setters.
     return NO;
@@ -107,6 +113,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObjectsTakeOwnership:(id*)vals forKeys:(id*)keys count:(unsigned)count {
     [self init];
 
@@ -194,6 +203,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithObject:(id)val forKey:(id)key {
     [self init];
 
@@ -204,10 +216,16 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithCoder:(NSCoder*)coder {
     NSArray* keys = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.keys"];
     NSArray* values = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
@@ -222,7 +240,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 - (id)objectForKey:(id)key {
     if (key == nil) {
-        EbrDebugLog("Warning: objectForKey called with nil\n");
+        TraceWarning(TAG, L"Warning: objectForKey called with nil");
         return nil;
     }
 
@@ -236,6 +254,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self objectForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)valueForKey:(id)key {
     const char* keyName = (const char*)[key UTF8String];
 
@@ -324,7 +345,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 - (NSDictionary*)initWithContentsOfFile:(NSString*)filename {
     if (filename == nil) {
-        EbrDebugLog("initWithContentsOfFile: nil!\n");
+        TraceVerbose(TAG, L"initWithContentsOfFile: nil!");
         return nil;
     }
 
@@ -340,7 +361,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
                           format:0
                 errorDescription:0];
         if (deserializedDict == nil) {
-            EbrDebugLog("Error deserializing NSDictionary\n");
+            TraceError(TAG, L"Error deserializing NSDictionary");
             return nil;
         }
     }
@@ -410,6 +431,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDictionary*)init {
     _CFDictionaryInitInternal((CFDictionaryRef)self);
 
@@ -541,6 +565,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return CFDictionaryGetCount((CFDictionaryRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
     Class ours = [self class];
 
@@ -586,7 +613,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
-    EbrDebugLog("Writing dictionary to file %s\n", [file UTF8String]);
+    TraceVerbose(TAG, L"Writing dictionary to file %hs", [file UTF8String]);
 
     NSMutableData* data = [NSMutableData data];
     [NSPropertyListWriter_Binary serializePropertyList:self intoData:data];
@@ -636,14 +663,23 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     return [self objectForKey:NSFileModificationDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSDate*)fileCreationDate {
     return [self objectForKey:NSFileCreationDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (Class)classForCoder {
     return [NSDictionary class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         [coder _encodeArrayOfObjects:[self allKeys] forKey:@"NS.keys"];
@@ -668,6 +704,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (dict != NULL) {
         CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
@@ -677,14 +716,23 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableDictionary*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableDictionary alloc] initWithDictionary:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     if (self == other) {
         return YES;
@@ -758,14 +806,34 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (NSString*)description {
-    return [[NSString alloc]
-        initWithData:[NSPropertyListSerialization dataFromPropertyList:self format:NSPropertyListXMLFormat_v1_0 errorDescription:nullptr]
-            encoding:NSUTF8StringEncoding];
+    thread_local unsigned int indent = 0;
+    NSMutableString* s = [NSMutableString new];
+    [s appendString:@"{"];
+    {
+        ++indent;
+        auto deferPop = wil::ScopeExit([]() { --indent; });
+        for (id key in [self keyEnumerator]) {
+            [s appendString:@"\n"];
+            for (unsigned int i = 0; i < indent; ++i) {
+                [s appendString:@"    "];
+            }
+            [s appendFormat:@"\"%@\" = %@", [key description], [[self objectForKey:key] description]];
+        }
+    }
+    [s appendString:@"\n"];
+    for (unsigned int i = 0; i < indent; ++i) {
+        [s appendString:@"    "];
+    }
+    [s appendString:@"}"];
+    return [s autorelease];
 }
 
+/**
+ @Status Stub
+*/
 - (NSString*)stringFromQueryComponents {
-    EbrDebugLog("stringFromQueryComponents not supported\n");
-    return nil;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -788,27 +856,25 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id, id, BOOL*))block {
-    NSEnumerator* state = [self keyEnumerator];
-    id key;
-    NSInteger i;
-    BOOL stop = FALSE;
-
-    for (i = 0; (key = [state nextObject]) != nil; i++) {
-        id value = [self objectForKey:key];
-
-        block(key, value, &stop);
-        if (stop) {
-            break;
-        }
-    }
+    [self enumerateKeysAndObjectsWithOptions:0 usingBlock:block];
 }
 
 /**
    @Status Caveat
-   @Notes enumeration options are not implemented.
+   @Notes NSEnumerationReverse not implemented.
 */
 - (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, id, BOOL*))block {
-    [self enumerateKeysAndObjectsUsingBlock:block];
+    if (options & NSEnumerationReverse) {
+        UNIMPLEMENTED();
+        return;
+    }
+
+    _enumerateWithBlock([self keyEnumerator],
+                        options,
+                        ^(id key, BOOL* stop) {
+                            id value = [self objectForKey:key];
+                            block(key, value, stop);
+                        });
 }
 
 /**
@@ -1009,7 +1075,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...) {
     if (keys == nil) {
-        EbrDebugLog("Nil keys string.\n");
+        TraceVerbose(TAG, L"Nil keys string.");
         return nil;
     }
     NSArray* keyArray = [keys componentsSeparatedByString:@", "];
@@ -1027,7 +1093,7 @@ NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...) {
     va_end(va);
 
     if ([values count] != [keyArray count]) {
-        EbrDebugLog("Number of keys does not match the number of objects; nil is not a valid variable\n");
+        TraceVerbose(TAG, L"Number of keys does not match the number of objects; nil is not a valid variable\n");
         return nil;
     }
 

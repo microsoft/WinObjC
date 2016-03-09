@@ -47,12 +47,14 @@ NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
     BOOL _centerVertically;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    if ([super init] == nil) {
-        return nil;
+    if (self = [super init]) {
+        __font = nil;
+        _centerVertically = true;
     }
-    __font = nil;
-    _centerVertically = true;
     return self;
 }
 

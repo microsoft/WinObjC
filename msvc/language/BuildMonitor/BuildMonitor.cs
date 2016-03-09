@@ -60,10 +60,11 @@ namespace BuildMonitor
         /// </summary>
         public const string PackageGuidString = "fad1be88-3546-4da2-aa6c-fb694819a313";
 
-        private const string TelemetryOptInRegKey = @"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VSCommon\14.0\SQM";
-        private const string TelemetryOptInRegValue = "OptIn";
-        private const string TelemetryMsftInternalRegKey = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient";
-        private const string TelemetryMsftInternalRegValue = "MSFTInternal";
+        private const string VS14OptInRegKey = @"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VSCommon\14.0\SQM";
+        private const string VS15OptInRegKey = @"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\VSCommon\15.0\SQM";
+        private const string OptInRegValue = "OptIn";
+        private const string MsftInternalRegKey = @"HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\SQMClient";
+        private const string MsftInternalRegValue = "MSFTInternal";
 
         #endregion Constants
 
@@ -93,10 +94,24 @@ namespace BuildMonitor
 
             try
             {
-                // check registry for opt in or ms internal user
-                int userOptedIn = (int)Registry.GetValue(BuildMonitor.TelemetryOptInRegKey, BuildMonitor.TelemetryOptInRegValue, 0);
-                int microsoftInternalUser = (int)Registry.GetValue(BuildMonitor.TelemetryMsftInternalRegKey, BuildMonitor.TelemetryMsftInternalRegValue, 0);
-                
+                string localOptInRegKeyVsCurrent = VS14OptInRegKey;
+                string localOptInRegKeyVsNext = VS15OptInRegKey;
+
+                // modify the registry key path to account for OS architecture
+                if (Environment.Is64BitOperatingSystem == false)
+                {
+                    localOptInRegKeyVsCurrent = localOptInRegKeyVsCurrent.Replace(@"\WOW6432Node", string.Empty);
+                    localOptInRegKeyVsNext = localOptInRegKeyVsNext.Replace(@"\WOW6432Node", string.Empty);
+                }
+
+                // check registry for opt in accounting for null values if key doesn't exist
+                int? vsCurrentOptIn = (int?)Registry.GetValue(localOptInRegKeyVsCurrent, OptInRegValue, 0);
+                int? vsNextOptIn = (int?)Registry.GetValue(localOptInRegKeyVsNext, OptInRegValue, 0);
+                int? userOptedIn = vsCurrentOptIn.GetValueOrDefault() + vsNextOptIn.GetValueOrDefault();
+
+                int? microsoftInternalUser = (int?)Registry.GetValue(BuildMonitor.MsftInternalRegKey, BuildMonitor.MsftInternalRegValue, 0);
+                microsoftInternalUser = microsoftInternalUser.GetValueOrDefault();
+
                 if (!(userOptedIn == 0 && microsoftInternalUser == 0))
                 {
                     DTE dte = GetService(typeof(SDTE)) as DTE;

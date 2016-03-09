@@ -23,6 +23,9 @@
 #include "objc/objc-arc.h"
 
 #include "Platform/EbrPlatform.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CFType";
 
 /**
  @Status Interoperable
@@ -111,7 +114,7 @@ void NSDeallocateObject(id obj) {
 }
 
 DWORD _NSSetLogCStringFunction(DWORD func) {
-    EbrDebugLog("NSSetLogCStringFunction not implemented\n");
+    TraceVerbose(TAG, L"NSSetLogCStringFunction not implemented");
 
     return 0;
 }

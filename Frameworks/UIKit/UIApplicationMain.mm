@@ -31,13 +31,16 @@
 #import <UIKit/UIApplicationDelegate.h>
 
 #include "UIInterface.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIApplicationMain";
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
 
 @implementation NSAutoreleasePoolWarn
 - (void)addObject:(id)obj {
-    EbrDebugLog("Autoreleasing a %s in the toplevel pool that will never be freed\n", object_getClassName(obj));
+    TraceVerbose(TAG, L"Autoreleasing a %hs in the toplevel pool that will never be freed", object_getClassName(obj));
     [super addObject:obj];
 }
 @end
@@ -84,12 +87,12 @@ UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrienta
 
         return UIInterfaceOrientationLandscapeRight;
     } else if (strcmp(pOrientation, "") == 0) {
-        EbrDebugLog("Warning: orientation is blank\n");
+        TraceWarning(TAG, L"Warning: orientation is blank");
         return UIInterfaceOrientationLandscapeRight;
     } else if (strcmp(pOrientation, "UIInterfaceOrientationPortraitUpsideDown") == 0) {
         return UIInterfaceOrientationPortraitUpsideDown;
     } else {
-        EbrDebugLog("Warning: Unsupported orientation %s\n", pOrientation);
+        TraceWarning(TAG, L"Warning: Unsupported orientation %hs", pOrientation);
         assert(0);
     }
 
@@ -283,7 +286,7 @@ int UIApplicationMainLoop() {
 
     for (;;) {
         [runLoop run];
-        EbrDebugLog("Warning: CFRunLoop stopped\n");
+        TraceWarning(TAG, L"Warning: CFRunLoop stopped");
         if (_doShutdown) {
             break;
         }
@@ -295,7 +298,7 @@ int UIApplicationMainLoop() {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillTerminateNotification"
                                                         object:[UIApplication sharedApplication]];
 
-    EbrDebugLog("Exiting uncleanly.\n");
+    TraceVerbose(TAG, L"Exiting uncleanly.");
     EbrShutdownAV();
     [outerPool release];
 

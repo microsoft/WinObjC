@@ -816,7 +816,7 @@ CFDictionaryRef CFDictionaryCreate(void* allocator,
 /**
  @Status Interoperable
 */
-void CFDictionaryAddValue(CFDictionaryRef dict, const void* key, void* value) {
+void CFDictionaryAddValue(CFMutableDictionaryRef dict, const void* key, const void* value) {
     const void* ret;
 
     if (!((NSDictionary*)(dict))->dict->objectForKey(key, ret)) {

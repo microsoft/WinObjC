@@ -27,7 +27,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A92B7F82-DE95-4D29-B942-276DC21C180C}</ProjectGuid>
     <ProjectName>AssetsLibraryLib</ProjectName>
-    <RootNamespace>AssetsLibrary</RootNamespace>
+    <RootNamespace>AssetsLibraryLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>AssetsLibraryLib</OutputName>

@@ -32,12 +32,13 @@
 #import <Starboard/String.h>
 #import <StringHelpers.h>
 #import <ErrorHandling.h>
-#import <Logging.h>
+#import <LoggingNative.h>
 #import <StubReturn.h>
 
 #import <mutex>
 
 static BOOL _NSSelectorNotFoundIsNonFatal;
+static const wchar_t* TAG = L"Objective-C";
 
 @class NSZone;
 
@@ -193,10 +194,10 @@ static id _NSWeakLoad(id obj) {
     return object_getClass(self);
 }
 
-/**
- @Status Interoperable
-*/
-- (Class)superclass {
+    /**
+     @Status Interoperable
+    */
+    - (Class)superclass {
     return class_getSuperclass(object_getClass(self));
 }
 
@@ -337,7 +338,7 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
     }
 
     if (_NSSelectorNotFoundIsNonFatal) {
-        TraceWarning(L"Objective-C", L"%hs", reason.c_str());
+        TraceWarning(TAG, L"%hs", reason.c_str());
     } else {
         THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), "%hs", reason.c_str());
     }
@@ -515,6 +516,9 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     return NSStringFromClass(self);
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)load {
     objc_proxy_lookup = _NSForwardingDestination;
     __objc_msg_forward2 = _NSIMPForward;
@@ -597,21 +601,28 @@ void WinObjC_SetMissingSelectorFatal(BOOL fatal) {
 #pragma region NSZombie Support
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-objc-isa-usage" // We are knowingly accessing ->isa directly.
-__attribute__((objc_root_class))
-@interface NSZombie {
+__attribute__((objc_root_class)) @interface NSZombie {
     Class isa;
 }
 @end
 
-@implementation NSZombie
-- (void)doesNotRecognizeSelector:(SEL)selector {
+    @implementation NSZombie
+    /**
+     @Status Interoperable
+    */
+    - (void)doesNotRecognizeSelector : (SEL)selector {
     // NSZombie subclasses store the original class as a class variable. Retrieve it here.
     Class oldIsa = reinterpret_cast<Class*>(object_getIndexedIvars(isa))[0];
-    THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE), "-[%hs %hs]: message sent to deallocated instance %p.", class_getName(oldIsa), sel_getName(selector), self);
+    THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE),
+                    "-[%hs %hs]: message sent to deallocated instance %p.",
+                    class_getName(oldIsa),
+                    sel_getName(selector),
+                    self);
 }
 @end
 
-static void _dealloc_dispose(id self, SEL _cmd) {
+    static void
+    _dealloc_dispose(id self, SEL _cmd) {
     object_dispose(self);
 }
 

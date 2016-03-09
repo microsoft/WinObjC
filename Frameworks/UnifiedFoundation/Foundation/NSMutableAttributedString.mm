@@ -16,6 +16,7 @@
 
 #import <Foundation/NSMutableAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
+#import <NSRaise.h>
 
 @implementation NSMutableAttributedString
 
@@ -23,27 +24,44 @@
  @Status Stub
 */
 - (NSMutableString*)mutableString {
-    return (__bridge NSMutableString*)CFAttributedStringGetMutableString(reinterpret_cast<CFMutableAttributedStringRef>(self));
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)addAttribute:(NSString*)name value:(id)value range:(NSRange)range {
-    CFAttributedStringSetAttribute(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                   CFRangeMake(range.location, range.length),
-                                   (__bridge CFStringRef)name,
-                                   value);
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeAttribute:(NSString*)name range:(NSRange)range {
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setAttributes:(NSDictionary*)attributes range:(NSRange)range {
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)replaceCharactersInRange:(NSRange)range withString:(NSString*)string {
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)addAttributes:(NSDictionary*)attributes range:(NSRange)range {
-    CFAttributedStringSetAttributes(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                    CFRangeMake(range.location, range.length),
-                                    (__bridge CFDictionaryRef)attributes,
-                                    false);
+    for (NSString* name in attributes) {
+        [self addAttribute:name value:[attributes objectForKey:name] range:range];
+    }
 }
 
 /**
@@ -62,15 +80,6 @@
 
 /**
  @Status Interoperable
-*/
-- (void)removeAttribute:(NSString*)name range:(NSRange)range {
-    CFAttributedStringRemoveAttribute(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                      CFRangeMake(range.location, range.length),
-                                      (__bridge CFStringRef)name);
-}
-
-/**
- @Status Interoperable
  */
 - (void)insertAttributedString:(NSAttributedString*)attributedString atIndex:(NSUInteger)index {
     [self replaceCharactersInRange:NSMakeRange(index, 0) withAttributedString:attributedString];
@@ -79,45 +88,23 @@
 /**
  @Status Interoperable
 */
-- (void)replaceCharactersInRange:(NSRange)range withString:(NSString*)string {
-    CFAttributedStringReplaceString(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                    CFRangeMake(range.location, range.length),
-                                    (__bridge CFStringRef)string);
-}
+- (void)replaceCharactersInRange:(NSRange)replaceRange withAttributedString:(NSAttributedString*)attributedString {
+    [self replaceCharactersInRange:replaceRange withString:[attributedString string]];
 
-/**
- @Status Interoperable
-*/
-- (void)replaceCharactersInRange:(NSRange)range withAttributedString:(NSAttributedString*)attributedString {
-    if (([attributedString class] != [NSAttributedString class]) && ([attributedString class] != [NSMutableAttributedString class])) {
-        // Can't guarantee that the underlying storage of a derived class is the same as the parent classes
-        // Convert the attributed string to the NSMutableAttributedString base class, for which the storage is known to CF
-        __block NSMutableAttributedString* attrStringToUse = [[NSMutableAttributedString alloc] initWithString:[attributedString string]];
-        [attributedString enumerateAttributesInRange:{ 0, [attributedString length] }
-                                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
-                                          usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
-                                              [attrStringToUse addAttributes:val range:range];
-                                          }];
-        CFAttributedStringReplaceAttributedString(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                                  CFRangeMake(range.location, range.length),
-                                                  (__bridge CFAttributedStringRef)attrStringToUse);
-        [attrStringToUse release];
+    NSRange postReplaceRange = { replaceRange.location, [attributedString length] };
+    [self enumerateAttributesInRange:postReplaceRange
+                             options:0
+                          usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
+                              for (NSString* name in val) {
+                                  [self removeAttribute:name range:postReplaceRange];
+                              }
+                          }];
 
-    } else {
-        CFAttributedStringReplaceAttributedString(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                                  CFRangeMake(range.location, range.length),
-                                                  (__bridge CFAttributedStringRef)attributedString);
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setAttributes:(NSDictionary*)attributes range:(NSRange)range {
-    CFAttributedStringSetAttributes(reinterpret_cast<CFMutableAttributedStringRef>(self),
-                                    CFRangeMake(range.location, range.length),
-                                    (__bridge CFDictionaryRef)attributes,
-                                    true);
+    [attributedString enumerateAttributesInRange:{ 0, [attributedString length] }
+                                         options:0
+                                      usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
+                                          [self addAttributes:val range:{ range.location + replaceRange.location, range.length }];
+                                      }];
 }
 
 /**
@@ -130,15 +117,15 @@
 /**
  @Status Interoperable
 */
-- (void)beginEditing {
-    CFAttributedStringBeginEditing(reinterpret_cast<CFMutableAttributedStringRef>(self));
+- (void)beginEditing{
+    // Default implementation is a no-op
 }
 
-/**
- @Status Interoperable
-*/
-- (void)endEditing {
-    CFAttributedStringEndEditing(reinterpret_cast<CFMutableAttributedStringRef>(self));
+    /**
+     @Status Interoperable
+    */
+    - (void)endEditing {
+    // Default implementation is a no-op
 }
 
 @end

@@ -69,6 +69,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return _url;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _url = nil;
     _mimeType = nil;
@@ -77,6 +80,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }

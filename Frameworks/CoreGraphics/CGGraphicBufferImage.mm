@@ -17,9 +17,18 @@
 #import <Starboard.h>
 #import <math.h>
 #import <stdlib.h>
-#import <cairoint.h>
 #import "CGContextCairo.h"
 
+#include "LoggingNative.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+
+#import <cairoint.h> // uses 'register int'
+
+#pragma clang diagnostic pop
+
+static const wchar_t* TAG = L"CGGraphicBufferImage";
 extern int imgDataCount;
 
 CGGraphicBufferImage::CGGraphicBufferImage(DWORD width, DWORD height, surfaceFormat fmt) {
@@ -40,7 +49,7 @@ CGGraphicBufferImage::CGGraphicBufferImage(
 CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(
     DWORD width, DWORD height, surfaceFormat fmt, DisplayTexture* nativeTexture, DisplayTextureLocking* locking) {
     EbrIncrement((volatile int*)&imgDataCount);
-    EbrDebugLog("Number of images: %d\n", imgDataCount);
+    TraceVerbose(TAG, L"Number of images: %d", imgDataCount);
 
     _imageLocks = 0;
     _cairoLocks = 0;
@@ -81,6 +90,11 @@ CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(
         case _ColorA8:
             _bytesPerPixel = 1;
             break;
+
+        case _ColorIndexed:
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported bitmap format %d", _bitmapFmt);
+            break;
     }
     _bytesPerRow = 0;
     _nativeTexture = nativeTexture;
@@ -90,14 +104,14 @@ CGGraphicBufferImageBacking::CGGraphicBufferImageBacking(
 
 CGGraphicBufferImageBacking::~CGGraphicBufferImageBacking() {
     EbrDecrement((volatile int*)&imgDataCount);
-    EbrDebugLog("Destroyed (freeing fasttexture 0x%x) - Number of images: %d\n", _nativeTexture, imgDataCount);
+    TraceVerbose(TAG, L"Destroyed (freeing fasttexture 0x%x) - Number of images: %d", _nativeTexture, imgDataCount);
 
     while (_cairoLocks > 0) {
-        EbrDebugLog("Warning: surface lock not released cnt=%d\n", _cairoLocks);
+        TraceWarning(TAG, L"Warning: surface lock not released cnt=%d", _cairoLocks);
         ReleaseCairoSurface();
     }
     while (_imageLocks > 0) {
-        EbrDebugLog("Warning: image lock not released cnt=%d\n", _imageLocks);
+        TraceWarning(TAG, L"Warning: image lock not released cnt=%d", _imageLocks);
         ReleaseImageData();
     }
     if (_nativeTexture)
@@ -166,8 +180,7 @@ void* CGGraphicBufferImageBacking::LockImageData() {
 }
 
 void* CGGraphicBufferImageBacking::StaticImageData() {
-    assert(0);
-    *((char*)0) = 0;
+    UNIMPLEMENTED();
     return _imageData;
 }
 
@@ -180,7 +193,7 @@ void CGGraphicBufferImageBacking::ReleaseImageData() {
             _imageData = NULL;
         }
     } else {
-        EbrDebugLog("Warning: Image lock over-released\n");
+        TraceWarning(TAG, L"Warning: Image lock over-released");
     }
 }
 
@@ -216,6 +229,16 @@ cairo_surface_t* CGGraphicBufferImageBacking::LockCairoSurface() {
                                                                       _height,
                                                                       -_internalWidth * _bytesPerPixel);
             break;
+
+        case _Color565:
+        case _ColorRGB32:
+        case _ColorRGB32HE:
+        case _ColorGrayscale:
+        case _ColorA8:
+        case _ColorIndexed:
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported bitmap format %d", _bitmapFmt);
+            break;
     }
 
     return _surface;
@@ -236,11 +259,11 @@ void CGGraphicBufferImageBacking::SetFreeWhenDone(bool freeWhenDone) {
 
 DisplayTexture* CGGraphicBufferImageBacking::GetDisplayTexture() {
     while (_cairoLocks > 0) {
-        EbrDebugLog("Warning: surface lock not released cnt=%d\n", _cairoLocks);
+        TraceWarning(TAG, L"Warning: surface lock not released cnt=%d", _cairoLocks);
         ReleaseCairoSurface();
     }
     while (_imageLocks > 0) {
-        EbrDebugLog("Warning: image lock not released cnt=%d\n", _imageLocks);
+        TraceWarning(TAG, L"Warning: image lock not released cnt=%d", _imageLocks);
         ReleaseImageData();
     }
 

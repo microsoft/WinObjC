@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{cc660634-40d3-4610-828e-88a95608f9e7}</ProjectGuid>
     <ProjectName>AdSupportLib</ProjectName>
-    <RootNamespace>AdSupport</RootNamespace>
+    <RootNamespace>AdSupportLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>AdSupportLib</OutputName>

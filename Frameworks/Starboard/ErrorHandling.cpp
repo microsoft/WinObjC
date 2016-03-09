@@ -22,6 +22,9 @@
 /* TEMPORARY: Intrinsic shims, removal contingent upon VSO 159174/159179 */
 extern "C" void __fastfail(unsigned) {
     RaiseFailFastException(nullptr, nullptr, 0);
+
+    // If control reaches here, abort
+    abort();
 }
 /* End Intrinsic Shims */
 

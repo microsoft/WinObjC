@@ -101,6 +101,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     NSURLCredential* copy = [[self class] allocWithZone:zone];
     if (copy != nil) {
@@ -122,6 +125,9 @@
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeObject:_user forKey:@"user"];
     [coder encodeObject:_password forKey:@"password"];
@@ -144,6 +150,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_user release];
     [_password release];

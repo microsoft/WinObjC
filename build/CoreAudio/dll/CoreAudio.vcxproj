@@ -48,7 +48,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreAudio.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -61,7 +60,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreAudio.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -74,7 +72,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreAudio.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -87,7 +84,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>CoreAudio.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

@@ -17,6 +17,9 @@
 #include "Starboard.h"
 #include "UIBarItemInternal.h"
 #include "UIBarButtonItem+Internals.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIBarButtonItem";
 
 @implementation UIBarButtonItem {
     idretaintype(NSString) _title;
@@ -449,12 +452,12 @@ static void initControls(UIBarButtonItem* self) {
  @Notes barMetrics parameter not supported
 */
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state barMetrics:(UIBarMetrics)metrics {
-    EbrDebugLog("UIBarButtonItem setBackgroundImage not fully supported\n");
+    TraceVerbose(TAG, L"UIBarButtonItem setBackgroundImage not fully supported");
     [_buttonView setBackgroundImage:image forState:state];
 }
 
 - (void)setTitlePositionAdjustment:(CGPoint)position forBarMetrics:(UIBarMetrics)metrics {
-    EbrDebugLog("UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported\n");
+    TraceVerbose(TAG, L"UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported");
 }
 
 /**
@@ -462,7 +465,7 @@ static void initControls(UIBarButtonItem* self) {
 */
 - (void)setBackButtonTitlePositionAdjustment:(UIOffset)position forBarMetrics:(UIBarMetrics)metrics {
     UNIMPLEMENTED();
-    EbrDebugLog("setBackButtonTitlePositionAdjustment not supported\n");
+    TraceVerbose(TAG, L"setBackButtonTitlePositionAdjustment not supported");
 }
 
 /**
@@ -470,7 +473,7 @@ static void initControls(UIBarButtonItem* self) {
  @Notes barMetrics parameter not supported
 */
 - (void)setBackButtonBackgroundImage:(UIImage*)image forState:(UIControlState)state barMetrics:(UIBarMetrics)metrics {
-    EbrDebugLog("UIBarButtonItem setBackButtonBackgroundImage not supported\n");
+    TraceVerbose(TAG, L"UIBarButtonItem setBackButtonBackgroundImage not supported");
     _backImage = image;
 }
 
@@ -554,15 +557,15 @@ static void initControls(UIBarButtonItem* self) {
 
 - (void)_sendAction:(id)event {
     if (_isDisabled) {
-        EbrDebugLog("Bar item is disabled\n");
+        TraceVerbose(TAG, L"Bar item is disabled");
         return;
     }
     if (_targetSel == NULL) {
-        EbrDebugLog("No selector on Bar item\n");
+        TraceVerbose(TAG, L"No selector on Bar item");
         return;
     }
 
-    EbrDebugLog("sending message %s to %x\n", _targetSel ? sel_getName(_targetSel) : "(null)", _target);
+    TraceVerbose(TAG, L"sending message %hs to %x", _targetSel ? sel_getName(_targetSel) : "(null)", _target);
     if (_target != nil && _targetSel != NULL) {
         [_target performSelector:_targetSel withObject:self withObject:event];
     } else {
@@ -574,7 +577,7 @@ static void initControls(UIBarButtonItem* self) {
                 break;
             }
 
-            EbrDebugLog("Next responder is %s\n", object_getClassName(nextResponder));
+            TraceVerbose(TAG, L"Next responder is %hs", object_getClassName(nextResponder));
             nextResponder = [nextResponder nextResponder];
         }
     }

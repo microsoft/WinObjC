@@ -33,7 +33,7 @@
 #import "StringHelpers.h"
 #import "CollectionHelpers.h"
 #import "WRLHelpers.h"
-#import "Logging.h"
+#import "LoggingNative.h"
 #import "RawBuffer.h"
 #import "NSURLProtocolInternal.h"
 #import "NSHTTPURLResponseInternal.h"

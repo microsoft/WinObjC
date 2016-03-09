@@ -14,8 +14,6 @@
 //
 //******************************************************************************
 
-#define STARBOARD_PORT
-
 #include "Starboard.h"
 #include "CACompositor.h"
 #include "CACompositorClient.h"
@@ -30,6 +28,12 @@
 #include <memory>
 #include "CompositorInterface.h"
 #include "CAAnimationInternal.h"
+#include "CALayerInternal.h"
+#include "UWP/interopBase.h"
+#include "UIApplicationInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CompositorInterface";
 
 @class RTObject;
 
@@ -208,6 +212,9 @@ public:
                         len = [(NSData*)jpgImg->_data length];
                     }
                 } break;
+                default:
+                    TraceError(TAG, L"Warning: unrecognized image format sent to DisplayTextureContent!");
+                    break;
             }
             _xamlImage = CreateBitmapFromImageData(data, len);
             if (freeData) {
@@ -1060,7 +1067,7 @@ public:
             //  [TODO: Update contents scale in Xaml node]
             // contentScale = [(NSNumber *) newValue floatValue];
         } else if (strcmp(name, "contentsOrientation") == 0) {
-            int position = [newValue intValue];
+            int position = [(NSNumber*) newValue intValue];
             float toPosition = 0;
             if (position == UIImageOrientationUp) {
                 toPosition = 0;
@@ -1074,13 +1081,13 @@ public:
             SetProperty(L"transform.rotation", toPosition);
         } else if (strcmp(name, "contentsSize") == 0) {
         } else if (strcmp(name, "gravity") == 0) {
-            SetPropertyInt(L"gravity", [newValue intValue]);
+            SetPropertyInt(L"gravity", [(NSNumber*) newValue intValue]);
         } else if (strcmp(name, "zPosition") == 0) {
         } else if (strcmp(name, "contentColor") == 0) {
         } else if (strcmp(name, "sublayerTransform") == 0) {
         } else if (strcmp(name, "backgroundColor") == 0) {
             float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-            [(UIColor*)newValue getColors:&color];
+            [(UIColor*)newValue getColors:color];
             SetBackgroundColor(color[0], color[1], color[2], color[3]);
         } else {
             assert(0);
@@ -1367,19 +1374,19 @@ deque<DisplayTransaction*> _queuedTransactions;
 
 class CAXamlCompositor : public CACompositorInterface {
 public:
-    virtual void DisplayTreeChanged() {
+    virtual void DisplayTreeChanged() override {
         _client->RequestTransactionProcessing();
     }
-    virtual DisplayNode* CreateDisplayNode() {
+    virtual DisplayNode* CreateDisplayNode() override {
         DisplayNode* ret = new DisplayNodeXaml();
         return ret;
     }
 
-    DisplayTransaction* CreateDisplayTransaction() {
+    DisplayTransaction* CreateDisplayTransaction() override {
         return new DisplayTransaction();
     }
 
-    void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) {
+    void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) override {
         if (onTransaction) {
             onTransaction->QueueTransaction(transaction);
         } else {
@@ -1391,35 +1398,35 @@ public:
     }
 
     virtual void addNode(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayNode* superNode, DisplayNode* beforeNode, DisplayNode* afterNode) {
+        DisplayTransaction* transaction, DisplayNode* node, DisplayNode* superNode, DisplayNode* beforeNode, DisplayNode* afterNode) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode);
         transaction->QueueNodeMovement(newNode);
     }
 
-    virtual void sortWindowLevels() {
+    virtual void sortWindowLevels() override {
     }
 
-    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) {
+    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Move, node, beforeNode, afterNode, NULL);
         transaction->QueueNodeMovement(newNode);
     }
 
-    virtual void removeNode(DisplayTransaction* transaction, DisplayNode* node) {
+    virtual void removeNode(DisplayTransaction* transaction, DisplayNode* node) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Remove, node, NULL, NULL, NULL);
         transaction->QueueNodeMovement(newNode);
     }
 
-    virtual void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) {
+    virtual void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) override {
         QueuedAnimation* newAnim = new QueuedAnimation(layer, animation, forKey);
 
         transaction->QueueAnimation(newAnim);
         DisplayTreeChanged();
     }
 
-    virtual void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) {
+    virtual void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
     }
 
-    virtual void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) {
+    virtual void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
         //  Removing animations while they're playing doesn't jibe well with the xaml compositor
         /*
         QueuedAnimation *newAnim = new QueuedAnimation(pAnimation);
@@ -1430,34 +1437,34 @@ public:
     }
 
     virtual void setNodeTexture(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
+        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) override {
         QueuedProperty* newPropChange = new QueuedProperty(node, newTexture, contentsSize, contentsScale);
 
         transaction->QueueProperty(newPropChange);
         DisplayTreeChanged();
     }
 
-    virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) {
+    virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) override {
     }
 
     virtual void setNewPatternBackground(id layer) {
     }
 
-    virtual void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) {
+    virtual void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) override {
         QueuedProperty* newPropChange = new QueuedProperty(node, propertyName, newValue);
 
         transaction->QueueProperty(newPropChange);
         DisplayTreeChanged();
     }
 
-    virtual void setNodeTopMost(DisplayNode* node, bool topMost) {
+    virtual void setNodeTopMost(DisplayNode* node, bool topMost) override {
         node->SetTopMost();
     }
 
-    virtual void setNodeTopWindowLevel(DisplayNode* node, float level) {
+    virtual void setNodeTopWindowLevel(DisplayNode* node, float level) override {
     }
 
-    virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) {
+    virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) override {
         CGImageRetain(img);
         DisplayTexture* ret = img->Backing()->GetDisplayTexture();
         if (ret) {
@@ -1477,20 +1484,20 @@ public:
         return ret;
     }
 
-    DisplayTexture* CreateWritableBitmapTexture32(int width, int height) {
+    DisplayTexture* CreateWritableBitmapTexture32(int width, int height) override {
         DisplayTexture* ret = new DisplayTextureContent(width, height);
         return ret;
     }
 
-    void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) {
+    void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) override {
         return ((DisplayTextureContent*)tex)->LockWritableBitmap(stride);
     }
 
-    void UnlockWritableBitmapTexture(DisplayTexture* tex) {
+    void UnlockWritableBitmapTexture(DisplayTexture* tex) override {
         ((DisplayTextureContent*)tex)->UnlockWritableBitmap();
     }
 
-    virtual DisplayTexture* CreateDisplayTextureForText() {
+    virtual DisplayTexture* CreateDisplayTextureForText() override {
         DisplayTextureText* texRet = new DisplayTextureText();
         return texRet;
     }
@@ -1505,7 +1512,7 @@ public:
                                              const CGSize& shadowOffset,
                                              int numLines,
                                              UIEdgeInsets edgeInsets,
-                                             bool centerVertically) {
+                                             bool centerVertically) override {
         if (!texture)
             return;
 
@@ -1518,7 +1525,7 @@ public:
                                                        NSObject* fromValue,
                                                        NSObject* toValue,
                                                        NSObject* byValue,
-                                                       CAMediaTimingProperties* timingProperties) {
+                                                       CAMediaTimingProperties* timingProperties) override {
         DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, byValue, timingProperties);
         return basicAnim;
     }
@@ -1528,50 +1535,50 @@ public:
                                                       DisplayNode* animNode,
                                                       NSString* typeStr,
                                                       NSString* subtypeStr,
-                                                      CAMediaTimingProperties* timingProperties) {
+                                                      CAMediaTimingProperties* timingProperties) override {
         DisplayAnimationTransition* transitionAnim = new DisplayAnimationTransition(animobj, typeStr, subtypeStr);
         return transitionAnim;
     }
 
-    virtual void RetainAnimation(DisplayAnimation* animation) {
+    virtual void RetainAnimation(DisplayAnimation* animation) override {
         if (animation)
             animation->AddRef();
     }
 
-    virtual void ReleaseAnimation(DisplayAnimation* animation) {
+    virtual void ReleaseAnimation(DisplayAnimation* animation) override {
         if (animation)
             animation->Release();
     }
 
-    virtual void RetainNode(DisplayNode* node) {
+    virtual void RetainNode(DisplayNode* node) override {
         node->AddRef();
     }
 
-    virtual void ReleaseNode(DisplayNode* node) {
+    virtual void ReleaseNode(DisplayNode* node) override {
         node->Release();
     }
 
-    virtual void RetainDisplayTexture(DisplayTexture* tex) {
+    virtual void RetainDisplayTexture(DisplayTexture* tex) override {
         tex->AddRef();
     }
 
-    virtual void ReleaseDisplayTexture(DisplayTexture* tex) {
+    virtual void ReleaseDisplayTexture(DisplayTexture* tex) override {
         tex->Release();
     }
 
-    void SortWindowLevels() {
+    void SortWindowLevels() override {
     }
 
-    virtual bool isTablet() {
+    virtual bool isTablet() override {
         return tabletMode;
     }
-    virtual float screenWidth() {
+    virtual float screenWidth() override {
         return ::screenWidth;
     }
-    virtual float screenHeight() {
+    virtual float screenHeight() override {
         return ::screenHeight;
     }
-    virtual float screenScale() {
+    virtual float screenScale() override {
         float scale = ::screenMagnification;
 
         if ([[UIApplication displayMode] useHostScaleFactor]) {
@@ -1595,20 +1602,20 @@ public:
 
         return scale;
     }
-    virtual int deviceWidth() {
+    virtual int deviceWidth() override {
         return ::deviceWidth;
     }
-    virtual int deviceHeight() {
+    virtual int deviceHeight() override {
         return ::deviceHeight;
     }
-    virtual float screenXDpi() {
+    virtual float screenXDpi() override {
         return ::screenXDpi;
     }
-    virtual float screenYDpi() {
+    virtual float screenYDpi() override {
         return ::screenYDpi;
     }
 
-    virtual void ProcessTransactions() {
+    virtual void ProcessTransactions() override {
         for (auto& cur : _queuedTransactions) {
             cur->Process();
             delete cur;
@@ -1616,53 +1623,53 @@ public:
         _queuedTransactions.clear();
     }
 
-    virtual void RequestRedraw() {
+    virtual void RequestRedraw() override {
         _client->RequestRedraw();
         CASignalDisplayLink();
     }
 
-    virtual void setScreenSize(float width, float height, float scale, float rotation) {
+    virtual void setScreenSize(float width, float height, float scale, float rotation) override {
         ::screenWidth = width;
         ::screenHeight = height;
         ::screenMagnification = scale;
         SetScreenParameters(::screenWidth, ::screenHeight, ::screenMagnification, rotation);
     }
 
-    virtual void setDeviceSize(int width, int height) {
+    virtual void setDeviceSize(int width, int height) override {
         ::deviceWidth = width;
         ::deviceHeight = height;
     }
 
-    virtual void setScreenDpi(int xDpi, int yDpi) {
+    virtual void setScreenDpi(int xDpi, int yDpi) override {
         ::screenXDpi = xDpi;
         ::screenYDpi = yDpi;
     }
 
-    virtual void setTablet(bool isTablet) {
+    virtual void setTablet(bool isTablet) override {
         ::tabletMode = isTablet;
     }
 
-    void EnableDisplaySyncNotification() {
+    void EnableDisplaySyncNotification() override {
         EnableRenderingListener(OnRenderedFrame);
     }
 
-    void DisableDisplaySyncNotification() {
+    void DisableDisplaySyncNotification() override {
         DisableRenderingListener();
     }
 
-    NSObject* getDisplayProperty(DisplayNode* node, const char* propertyName) {
+    NSObject* getDisplayProperty(DisplayNode* node, const char* propertyName) override {
         return (NSObject*)node->GetProperty(propertyName);
     }
 
-    void IncrementCounter(const char* name) {
+    void IncrementCounter(const char* name) override {
         ::IncrementCounter(name);
     }
 
-    void DecrementCounter(const char* name) {
+    void DecrementCounter(const char* name) override {
         ::DecrementCounter(name);
     }
 
-    DisplayTexture* CreateDisplayTextureForElement(id xamlElement) {
+    DisplayTexture* CreateDisplayTextureForElement(id xamlElement) override {
         GenericControlXaml* genericControlTexture = new GenericControlXaml((IUnknown*)[(RTObject*)xamlElement internalObject]);
         return genericControlTexture;
     }

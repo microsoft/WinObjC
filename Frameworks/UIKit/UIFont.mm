@@ -34,9 +34,13 @@ extern "C" {
 #include <ftadvanc.h>
 #include <ftsizes.h>
 #include <ftmodapi.h>
+
 }
 
+#include "LoggingNative.h"
+
 static const wchar_t* g_logTag = L"UIFont";
+
 FT_Library _fontLib;
 FT_MemoryRec_ _fontMemory;
 NSMutableDictionary* _fontList;
@@ -94,7 +98,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
 
     if (filename == nil) {
         if (strcmp(_faceName, "Helvetica")) {
-            EbrDebugLog("*** FONT NOT FOUND: %s -- falling back to Helvetica. ***\n", _faceName);
+            TraceVerbose(g_logTag, L"*** FONT NOT FOUND: %hs -- falling back to Helvetica. ***", _faceName);
             filename = [_fontList objectForKey:@"Helvetica"];
         }
 
@@ -125,7 +129,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
 
     id cachedData = [_fontDataCache objectForKey:filename];
     if (!cachedData) {
-        EbrDebugLog("Loading font %s\n", [filename UTF8String]);
+        TraceVerbose(g_logTag, L"Loading font %hs", [filename UTF8String]);
 
         cachedData = [[NSData alloc] initWithContentsOfFile:filename];
         [_fontDataCache setObject:cachedData forKey:filename];
@@ -186,7 +190,7 @@ ret->height += ascenderDelta;
     _CGFontUnlock();
 
     if (err != 0) {
-        EbrDebugLog("Error loading font\n");
+        TraceError(g_logTag, L"Error loading font");
         ret->_font = getFace(@"Helvetica", false);
         ret->_sizingFont = getFace(@"Helvetica", true);
     }
@@ -224,7 +228,7 @@ ret->height += ascenderDelta;
     }
 
     if (name == nil) {
-        EbrDebugLog("Warning: Font name is nil!\n");
+        TraceWarning(g_logTag, L"Warning: Font name is nil!");
         ret->_font = getFace(@"Helvetica", false, ret);
         ret->_sizingFont = getFace(@"Helvetica", true, ret);
     } else {
@@ -321,7 +325,7 @@ ret->height += ascenderDelta;
         if (!error) {
             FT_Add_Default_Modules(_fontLib);
         } else {
-            EbrDebugLog("Failed to instantiate FreeType library");
+            TraceWarning(g_logTag, L"Failed to instantiate FreeType library");
         }
     }
 }

@@ -25,6 +25,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "CoreFoundation/CFDictionary.h"
 #import "Foundation/NSMutableArray.h"
 #import <limits>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSPropertyListWriter_binary";
 
 #define NSNotFound 0x7fffffff
 
@@ -550,7 +553,7 @@ if ([object isKindOfClass:[NSString class]]) {
 } else if ([object isKindOfClass:[NSDictionary class]]) {
     [self storeDictionary:object];
 } else {
-    EbrDebugLog("Unknown object class %s\n", object_getClassName(object));
+    TraceVerbose(TAG, L"Unknown object class %hs", object_getClassName(object));
 }
 }
 

@@ -37,6 +37,10 @@
     [UIApplication.displayMode updateDisplaySettings];
 }
 
+- (void)toggleScreenAwake:(UISwitch*)sender {
+    [[UIApplication sharedApplication] setIdleTimerDisabled:sender.on];
+}
+
 - (void)setWidth:(UITextField*)sender {
     float val = [sender.text floatValue];
     if (val != val) {
@@ -247,6 +251,15 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     cell.accessoryView = adjustWindowSize;
     cell.textLabel.text = @"Size UIWindow to fit";
+    [self.rows addObject:cell];
+
+    UISwitch* enableScreenAwake = [UISwitch new];
+    enableScreenAwake.on = NO;
+    [enableScreenAwake addTarget:self action:@selector(toggleScreenAwake:) forControlEvents:UIControlEventValueChanged];
+
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    cell.accessoryView = enableScreenAwake;
+    cell.textLabel.text = @"Disable idle screen timer";
     [self.rows addObject:cell];
 
     fixedWidth = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];

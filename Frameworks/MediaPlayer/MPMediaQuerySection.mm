@@ -27,7 +27,7 @@
     return StubReturn();
 }
 
-/*
+/**
  @Status Stub
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {

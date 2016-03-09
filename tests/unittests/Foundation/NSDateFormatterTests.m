@@ -16,6 +16,9 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"NSDateFormatterTests";
 
 // keys: [[NSLocale localeIdentifier] stringByAppendingFormat:@"%d", timezone.secondsFromGMT]
 // eg "en_US-28800" or "en_GB0"
@@ -71,7 +74,7 @@ TEST(Foundation, NSDateFormatter) {
         timeZoneToTest = systemTimeZone;
         testCase = [[currentLocale localeIdentifier] stringByAppendingFormat:appendNumber, systemTimeZone.secondsFromGMT];
     } else {
-        NSLog(@"System locale unverified. Running test with GMT's expected values.");
+        LOG_INFO("System locale unverified. Running test with GMT's expected values.");
         localeToTest = [NSLocale localeWithLocaleIdentifier:@"en_GB"];
         timeZoneToTest = [NSTimeZone timeZoneWithName:@"GMT"];
         testCase = defaultTestCase;

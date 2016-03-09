@@ -54,6 +54,9 @@ FOUNDATION_EXPORT void NSIncrementExtraRefCount(id object) STUB_METHOD;
 FOUNDATION_EXPORT BOOL NSDecrementExtraRefCountWasZero(id object) STUB_METHOD;
 FOUNDATION_EXPORT NSUInteger NSExtraRefCount(id object) STUB_METHOD;
 
+/**
+ @Status Interoperable
+*/
 static inline id NSMakeCollectable(CFTypeRef cf) {
     id ret = nil;
 #if !__has_feature(objc_arc)

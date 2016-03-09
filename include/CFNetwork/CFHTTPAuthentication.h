@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,42 +13,35 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CFHTTPAUTHENTICATION_H_
-#define _CFHTTPAUTHENTICATION_H_
-
-#import <CoreFoundation/CFStream.h>
 #import <CFNetwork/CFNetworkExport.h>
+#import <CFNetwork/CFNetworkBase.h>
 #import <CFNetwork/CFHTTPMessage.h>
-#import <stdint.h>
+#import <CoreFoundation/CoreFoundation.h>
 
-typedef struct __CFHTTPAuthentication* CFHTTPAuthenticationRef;
-
-enum {
+typedef CF_ENUM(CFIndex, CFStreamErrorHTTPAuthentication) {
     kCFStreamErrorHTTPAuthenticationTypeUnsupported = -1000,
     kCFStreamErrorHTTPAuthenticationBadUserName = -1001,
     kCFStreamErrorHTTPAuthenticationBadPassword = -1002
 };
-typedef uint32_t CFStreamErrorHTTPAuthentication;
 
+CFNETWORK_EXPORT CFHTTPAuthenticationRef CFHTTPAuthenticationCreateFromResponse(CFAllocatorRef alloc,
+                                                                                CFHTTPMessageRef response) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHTTPAuthenticationAppliesToRequest(CFHTTPAuthenticationRef auth, CFHTTPMessageRef request) STUB_METHOD;
+CFNETWORK_EXPORT CFArrayRef CFHTTPAuthenticationCopyDomains(CFHTTPAuthenticationRef auth) STUB_METHOD;
+CFNETWORK_EXPORT CFStringRef CFHTTPAuthenticationCopyMethod(CFHTTPAuthenticationRef auth) STUB_METHOD;
+CFNETWORK_EXPORT CFStringRef CFHTTPAuthenticationCopyRealm(CFHTTPAuthenticationRef auth) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHTTPAuthenticationIsValid(CFHTTPAuthenticationRef auth, CFStreamError* error) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresAccountDomain(CFHTTPAuthenticationRef auth) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresOrderedRequests(CFHTTPAuthenticationRef auth) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresUserNameAndPassword(CFHTTPAuthenticationRef auth) STUB_METHOD;
+
+CFNETWORK_EXPORT CFTypeID CFHTTPAuthenticationGetTypeID() STUB_METHOD;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationSchemeBasic;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationSchemeDigest;
-CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationSchemeNTLM;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationSchemeNegotiate;
-
+CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationSchemeNTLM;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationUsername;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationPassword;
 CFNETWORK_EXPORT const CFStringRef kCFHTTPAuthenticationAccountDomain;
-
-CFNETWORK_EXPORT Boolean CFHTTPMessageApplyCredentialDictionary(CFHTTPMessageRef request,
-                                                                CFHTTPAuthenticationRef auth,
-                                                                CFDictionaryRef dict,
-                                                                CFStreamError* err);
-CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresAccountDomain(CFHTTPAuthenticationRef auth);
-CFNETWORK_EXPORT CFHTTPAuthenticationRef CFHTTPAuthenticationCreateFromResponse(CFAllocatorRef alloc, CFHTTPMessageRef reply);
-CFNETWORK_EXPORT CFStringRef CFHTTPAuthenticationCopyMethod(CFHTTPAuthenticationRef auth);
-CFNETWORK_EXPORT CFStringRef CFHTTPAuthenticationCopyRealm(CFHTTPAuthenticationRef auth);
-CFNETWORK_EXPORT Boolean CFHTTPAuthenticationIsValid(CFHTTPAuthenticationRef auth, CFStreamError* err);
-CFNETWORK_EXPORT Boolean CFHTTPAuthenticationRequiresUserNameAndPassword(CFHTTPAuthenticationRef auth);
-
-#endif // _CFHTTPAUTHENTICATION_H_

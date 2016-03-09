@@ -22,6 +22,9 @@
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037b568f-4104-417e-9fb8-b6899e398903}</Project>
     </ProjectReference>
@@ -57,7 +60,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
@@ -71,7 +73,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
@@ -85,7 +86,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
@@ -99,7 +99,6 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>AVFoundation.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>

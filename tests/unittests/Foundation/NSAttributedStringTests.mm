@@ -43,19 +43,19 @@ void assertAttributeAt(
 }
 
 NSMutableAttributedString* SixCharacterTestString() {
-    return [[NSMutableAttributedString alloc] initWithString:@"AAAAAA"];
+    return [[[NSMutableAttributedString alloc] initWithString:@"AAAAAA"] autorelease];
 }
 
 // Exercise the CFAttrList functions
 
-TEST(Foundation, AttributedString_Add) {
+TEST(NSAttributedString, Add) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
 
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 2, 2);
 }
 
-TEST(Foundation, AttributedString_AddBeforeAndAfter) {
+TEST(NSAttributedString, AddBeforeAndAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 1)];
@@ -66,7 +66,7 @@ TEST(Foundation, AttributedString_AddBeforeAndAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 5, 1);
 }
 
-TEST(Foundation, AttributedString_CoalesceOverlapAfter) {
+TEST(NSAttributedString, CoalesceOverlapAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(3, 2)];
@@ -74,7 +74,7 @@ TEST(Foundation, AttributedString_CoalesceOverlapAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 2, 3);
 }
 
-TEST(Foundation, AttributedString_CoalesceAdjacentAfter) {
+TEST(NSAttributedString, CoalesceAdjacentAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(4, 2)];
@@ -82,7 +82,7 @@ TEST(Foundation, AttributedString_CoalesceAdjacentAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 2, 4);
 }
 
-TEST(Foundation, AttributedString_CoalesceOverlapBefore) {
+TEST(NSAttributedString, CoalesceOverlapBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 2)];
@@ -90,7 +90,7 @@ TEST(Foundation, AttributedString_CoalesceOverlapBefore) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 1, 3);
 }
 
-TEST(Foundation, AttributedString_CoalesceAdjacentBefore) {
+TEST(NSAttributedString, CoalesceAdjacentBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 2)];
@@ -98,7 +98,7 @@ TEST(Foundation, AttributedString_CoalesceAdjacentBefore) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 0, 4);
 }
 
-TEST(Foundation, AttributedString_CoalesceComplex) {
+TEST(NSAttributedString, CoalesceComplex) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 2)];
@@ -108,7 +108,7 @@ TEST(Foundation, AttributedString_CoalesceComplex) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 0, 6);
 }
 
-TEST(Foundation, AttributedString_RemoveBefore) {
+TEST(NSAttributedString, RemoveBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr removeAttribute:c_defaultAttributeName range:NSMakeRange(1, 2)];
@@ -116,7 +116,7 @@ TEST(Foundation, AttributedString_RemoveBefore) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 3, 1);
 }
 
-TEST(Foundation, AttributedString_RemoveAfter) {
+TEST(NSAttributedString, RemoveAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr removeAttribute:c_defaultAttributeName range:NSMakeRange(3, 2)];
@@ -124,7 +124,7 @@ TEST(Foundation, AttributedString_RemoveAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 2, 1);
 }
 
-TEST(Foundation, AttributedString_RemoveCenter) {
+TEST(NSAttributedString, RemoveCenter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 4)];
     [aStr removeAttribute:c_defaultAttributeName range:NSMakeRange(2, 2)];
@@ -133,7 +133,7 @@ TEST(Foundation, AttributedString_RemoveCenter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 4, 1);
 }
 
-TEST(Foundation, AttributedString_RemoveAll) {
+TEST(NSAttributedString, RemoveAll) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 4)];
     [aStr removeAttribute:c_defaultAttributeName range:NSMakeRange(1, 4)];
@@ -145,7 +145,7 @@ TEST(Foundation, AttributedString_RemoveAll) {
     assertAttributeAt(aStr, c_defaultAttributeName, nil, 0, 6);
 }
 
-TEST(Foundation, AttributedString_OverwriteAfter) {
+TEST(NSAttributedString, OverwriteAfter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(3, 2)];
@@ -154,7 +154,7 @@ TEST(Foundation, AttributedString_OverwriteAfter) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value2", 3, 2);
 }
 
-TEST(Foundation, AttributedString_OverwriteBefore) {
+TEST(NSAttributedString, OverwriteBefore) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 2)];
@@ -163,7 +163,7 @@ TEST(Foundation, AttributedString_OverwriteBefore) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 1, 2);
 }
 
-TEST(Foundation, AttributedString_NoOverwrite) {
+TEST(NSAttributedString, NoOverwrite) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 2)];
@@ -174,7 +174,7 @@ TEST(Foundation, AttributedString_NoOverwrite) {
     assertAttributeAt(aStr, c_defaultAttributeName, @"value3", 4, 2);
 }
 
-TEST(Foundation, AttributedString_ReplaceConstantInner) {
+TEST(NSAttributedString, ReplaceConstantInner) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 4)];
     [aStr replaceCharactersInRange:NSMakeRange(2, 2) withString:@"BB"];
@@ -183,7 +183,7 @@ TEST(Foundation, AttributedString_ReplaceConstantInner) {
     ASSERT_OBJCEQ(@"AABBAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceExpandInner) {
+TEST(NSAttributedString, ReplaceExpandInner) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 4)];
     [aStr replaceCharactersInRange:NSMakeRange(2, 2) withString:@"BBBB"];
@@ -192,7 +192,7 @@ TEST(Foundation, AttributedString_ReplaceExpandInner) {
     ASSERT_OBJCEQ(@"AABBBBAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceContractInner) {
+TEST(NSAttributedString, ReplaceContractInner) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 4)];
     [aStr replaceCharactersInRange:NSMakeRange(2, 2) withString:@""];
@@ -201,7 +201,7 @@ TEST(Foundation, AttributedString_ReplaceContractInner) {
     ASSERT_OBJCEQ(@"AAAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceExpandOuter) {
+TEST(NSAttributedString, ReplaceExpandOuter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
 
@@ -218,7 +218,7 @@ TEST(Foundation, AttributedString_ReplaceExpandOuter) {
     ASSERT_OBJCEQ(@"DDDDDDDDDDDD", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceContractOuter) {
+TEST(NSAttributedString, ReplaceContractOuter) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 4)];
 
@@ -235,7 +235,7 @@ TEST(Foundation, AttributedString_ReplaceContractOuter) {
     ASSERT_OBJCEQ(@"D", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceAdjacent) {
+TEST(NSAttributedString, ReplaceAdjacent) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
 
@@ -244,7 +244,7 @@ TEST(Foundation, AttributedString_ReplaceAdjacent) {
     ASSERT_OBJCEQ(@"BAAAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceOverwriteExpand) {
+TEST(NSAttributedString, ReplaceOverwriteExpand) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(0, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(2, 2)];
@@ -255,7 +255,7 @@ TEST(Foundation, AttributedString_ReplaceOverwriteExpand) {
     ASSERT_OBJCEQ(@"ABBBBAAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceOverwriteContract) {
+TEST(NSAttributedString, ReplaceOverwriteContract) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(4, 2)];
@@ -266,7 +266,7 @@ TEST(Foundation, AttributedString_ReplaceOverwriteContract) {
     ASSERT_OBJCEQ(@"AAABA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_ReplaceOverwriteMultiple) {
+TEST(NSAttributedString, ReplaceOverwriteMultiple) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:c_defaultAttributeName value:@"value1" range:NSMakeRange(1, 1)];
     [aStr addAttribute:c_defaultAttributeName value:@"value2" range:NSMakeRange(2, 1)];
@@ -279,7 +279,7 @@ TEST(Foundation, AttributedString_ReplaceOverwriteMultiple) {
 }
 
 // Test unexercised exposed interfaces
-TEST(Foundation, AttributedString_AddAttributeToMultipleKeys) {
+TEST(NSAttributedString, AddAttributeToMultipleKeys) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(1, 1)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(3, 1)];
@@ -290,7 +290,7 @@ TEST(Foundation, AttributedString_AddAttributeToMultipleKeys) {
     assertAttributeAt(aStr, @"key3", @"value3", 3, 1);
 }
 
-TEST(Foundation, AttributedString_SetAttributes) {
+TEST(NSAttributedString, SetAttributes) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(1, 4)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(1, 4)];
@@ -308,7 +308,7 @@ TEST(Foundation, AttributedString_SetAttributes) {
     ASSERT_OBJCEQ(@"AAAAAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_AddAttributes) {
+TEST(NSAttributedString, AddAttributes) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
     [aStr addAttributes:attrs range:NSMakeRange(2, 2)];
@@ -317,16 +317,16 @@ TEST(Foundation, AttributedString_AddAttributes) {
     assertAttributeAt(aStr, @"key2", @"value2", 2, 2);
 }
 
-TEST(Foundation, AttributedString_InitWithString) {
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ"];
+TEST(NSAttributedString, InitWithString) {
+    NSAttributedString* aStr = [[[NSAttributedString alloc] initWithString:@"OBJ"] autorelease];
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     ASSERT_EQ(3, [aStr length]);
     assertAttributeAt(aStr, c_defaultAttributeName, nil, 0, 3);
 }
 
-TEST(Foundation, AttributedString_InitWithStringAttributes) {
+TEST(NSAttributedString, InitWithStringAttributes) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSAttributedString* aStr = [[[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
 
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     ASSERT_EQ(3, [aStr length]);
@@ -336,10 +336,10 @@ TEST(Foundation, AttributedString_InitWithStringAttributes) {
     assertAttributeAt(aStr, @"keyThatShouldntBeThere", nil, 0, 3);
 }
 
-TEST(Foundation, AttributedString_InitWithAttributedString) {
+TEST(NSAttributedString, InitWithAttributedString) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStrBase = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithAttributedString:aStrBase];
+    NSAttributedString* aStrBase = [[[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
+    NSAttributedString* aStr = [[[NSAttributedString alloc] initWithAttributedString:aStrBase] autorelease];
 
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
     ASSERT_EQ(3, [aStr length]);
@@ -349,15 +349,15 @@ TEST(Foundation, AttributedString_InitWithAttributedString) {
     assertAttributeAt(aStr, @"keyThatShouldntBeThere", nil, 0, 3);
 }
 
-TEST(Foundation, AttributedString_AttributeAtIndexNoRange) {
+TEST(NSAttributedString, AttributeAtIndexNoRange) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSAttributedString* aStr = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSAttributedString* aStr = [[[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
 
     ASSERT_OBJCEQ(@"value1", [aStr attribute:@"key1" atIndex:1 effectiveRange:nullptr]);
     ASSERT_OBJCEQ(@"value2", [aStr attribute:@"key2" atIndex:1 effectiveRange:nullptr]);
 }
 
-TEST(Foundation, AttributedString_AttributeAtIndexInRange) {
+TEST(NSAttributedString, AttributeAtIndexInRange) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
 
@@ -368,7 +368,7 @@ TEST(Foundation, AttributedString_AttributeAtIndexInRange) {
     ASSERT_EQ(1, outRange.length);
 }
 
-TEST(Foundation, AttributedString_AttributesAtIndex) {
+TEST(NSAttributedString, AttributesAtIndex) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(3, 2)];
@@ -388,7 +388,7 @@ TEST(Foundation, AttributedString_AttributesAtIndex) {
     ASSERT_EQ(1, outRange.length);
 }
 
-TEST(Foundation, AttributedString_AttributesAtIndexInRange) {
+TEST(NSAttributedString, AttributesAtIndexInRange) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(1, 3)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(0, 4)];
@@ -402,13 +402,13 @@ TEST(Foundation, AttributedString_AttributesAtIndexInRange) {
     ASSERT_EQ(1, outRange.length);
 }
 
-TEST(Foundation, AttributedString_AppendAttributedString) {
+TEST(NSAttributedString, AppendAttributedString) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
     [aStr addAttribute:@"key3" value:@"value3" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", @"notvalue3", @"key3", nil];
-    NSAttributedString* aStr2 = [[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSAttributedString* aStr2 = [[[NSAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
 
     [aStr appendAttributedString:aStr2];
 
@@ -419,9 +419,9 @@ TEST(Foundation, AttributedString_AppendAttributedString) {
     ASSERT_OBJCEQ(@"AAAAAAOBJ", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_DeleteCharactersInRange) {
+TEST(NSAttributedString, DeleteCharactersInRange) {
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSMutableAttributedString* aStr = [[[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
 
     [aStr deleteCharactersInRange:NSMakeRange(1, 1)];
 
@@ -430,18 +430,18 @@ TEST(Foundation, AttributedString_DeleteCharactersInRange) {
     ASSERT_OBJCEQ(@"OJ", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_DeleteCharactersInRangeEmptyString) {
-    NSMutableAttributedString* aStr = [[NSMutableAttributedString alloc] initWithString:@""];
+TEST(NSAttributedString, DeleteCharactersInRangeEmptyString) {
+    NSMutableAttributedString* aStr = [[[NSMutableAttributedString alloc] initWithString:@""] autorelease];
 
     [aStr deleteCharactersInRange:NSMakeRange(0, 0)];
 }
 
-TEST(Foundation, AttributedString_InsertAttributedString) {
+TEST(NSAttributedString, InsertAttributedString) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSMutableAttributedString* aStr2 = [[[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
     [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
 
     [aStr insertAttributedString:aStr2 atIndex:5];
@@ -452,7 +452,7 @@ TEST(Foundation, AttributedString_InsertAttributedString) {
     ASSERT_OBJCEQ(@"AAAAAOBJA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_IsEqualToAttributedString) {
+TEST(NSAttributedString, IsEqualToAttributedString) {
     NSMutableAttributedString* firstStr = SixCharacterTestString();
     NSMutableAttributedString* secondStr = SixCharacterTestString();
     ASSERT_EQ(YES, [firstStr isEqualToAttributedString:secondStr]);
@@ -475,12 +475,12 @@ TEST(Foundation, AttributedString_IsEqualToAttributedString) {
     ASSERT_EQ(YES, [secondStr isEqualToAttributedString:firstStr]);
 }
 
-TEST(Foundation, AttributedString_ReplaceCharactersInRangeWithAttributedString) {
+TEST(NSAttributedString, ReplaceCharactersInRangeWithAttributedString) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSMutableAttributedString* aStr2 = [[[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
     [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
 
     [aStr replaceCharactersInRange:NSMakeRange(2, 2) withAttributedString:aStr2];
@@ -491,13 +491,13 @@ TEST(Foundation, AttributedString_ReplaceCharactersInRangeWithAttributedString) 
     ASSERT_OBJCEQ(@"AAOBJAA", [aStr string]);
 }
 
-TEST(Foundation, AttributedString_SetAttributedString) {
+TEST(NSAttributedString, SetAttributedString) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 4)];
     [aStr addAttribute:@"key3" value:@"value3" range:NSMakeRange(2, 4)];
 
     NSDictionary* attrs = [NSDictionary dictionaryWithObjectsAndKeys:@"value1", @"key1", @"value2", @"key2", nil];
-    NSMutableAttributedString* aStr2 = [[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs];
+    NSMutableAttributedString* aStr2 = [[[NSMutableAttributedString alloc] initWithString:@"OBJ" attributes:attrs] autorelease];
     [aStr2 removeAttribute:@"key1" range:NSMakeRange(2, 1)];
 
     [aStr setAttributedString:aStr2];
@@ -510,7 +510,7 @@ TEST(Foundation, AttributedString_SetAttributedString) {
 
 // This test is known to fail on Release builds
 // TODO: 5902592 THROW_NS_HR does not throw on Release when called through Foundation from unit tests
-ARM_DISABLED_TEST(Foundation, AttributedString_ThrowsBounds) {
+ARM_DISABLED_TEST(NSAttributedString, ThrowsBounds) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
 
     NSError* error = nil;
@@ -521,7 +521,7 @@ ARM_DISABLED_TEST(Foundation, AttributedString_ThrowsBounds) {
     ASSERT_EQ(E_BOUNDS, error.code);
 }
 
-TEST(Foundation, AttributedString_AttributedSubstringFromRange) {
+TEST(NSAttributedString, AttributedSubstringFromRange) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(3, 2)];
@@ -533,8 +533,18 @@ TEST(Foundation, AttributedString_AttributedSubstringFromRange) {
     assertAttributeAt(testString, @"key2", @"value2", 2, 1);
 }
 
-TEST(Foundation, AttributedString_EnumerateAttribute) {
+TEST(NSAttributedString, EnumerateAttribute) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
+
+    // 0) enumerate with zero attributes
+    __block size_t timesEnumerated = 0;
+    [aStr enumerateAttribute:@"key1"
+                     inRange:NSMakeRange(1, 3)
+                     options:NSAttributedStringEnumerationReverse
+                  usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
+                      ++timesEnumerated;
+                  }];
+    ASSERT_EQ(0, timesEnumerated);
 
     // test block to pass to enumerateAttribute:
     // iterates through expected data and validates that it's the same as the returned data
@@ -566,7 +576,7 @@ TEST(Foundation, AttributedString_EnumerateAttribute) {
 
     // 2) test with holes, limit the range
     [aStr release];
-    aStr = [[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"]; // 10 characters
+    aStr = [[[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"] autorelease]; // 10 characters
 
     testAttributes.clear();
     testAttributes.insert(testAttributes.end(),
@@ -589,7 +599,7 @@ TEST(Foundation, AttributedString_EnumerateAttribute) {
 
     // 3) iterate in reverse, use longestEffectiveRange
     [aStr release];
-    aStr = [[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"]; // 10 characters
+    aStr = [[[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"] autorelease]; // 10 characters
 
     testAttributes.clear();
     testAttributes.insert(testAttributes.end(),
@@ -610,8 +620,8 @@ TEST(Foundation, AttributedString_EnumerateAttribute) {
     ASSERT_EQ(testAttributes.size() - 1, index); // last attribute is out of range
 }
 
-TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
-    NSMutableAttributedString* baseStr = [[NSMutableAttributedString alloc] initWithString:@"ABCDEF"];
+TEST(NSAttributedString, EnumerateAttributeAndChangeLength) {
+    NSMutableAttributedString* baseStr = [[[NSMutableAttributedString alloc] initWithString:@"ABCDEF"] autorelease];
     [baseStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(0, 1)];
     [baseStr addAttribute:@"key1" value:@"value2" range:NSMakeRange(1, 1)];
     [baseStr addAttribute:@"key1" value:@"value3" range:NSMakeRange(2, 1)];
@@ -620,7 +630,7 @@ TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
     [baseStr addAttribute:@"key1" value:@"value6" range:NSMakeRange(5, 1)];
 
     // 1) increase length, forward
-    __block NSMutableAttributedString* testString1 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    __block NSMutableAttributedString* testString1 = [[[NSMutableAttributedString alloc] initWithAttributedString:baseStr] autorelease];
     [testString1 enumerateAttribute:@"key1"
                             inRange:NSMakeRange(2, 2)
                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
@@ -630,7 +640,7 @@ TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
     ASSERT_OBJCEQ(@"ABZZZZEF", [testString1 string]);
 
     // 2) increase length, reverse
-    __block NSMutableAttributedString* testString2 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    __block NSMutableAttributedString* testString2 = [[[NSMutableAttributedString alloc] initWithAttributedString:baseStr] autorelease];
     [testString2 enumerateAttribute:@"key1"
                             inRange:NSMakeRange(2, 2)
                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired | NSAttributedStringEnumerationReverse
@@ -640,7 +650,7 @@ TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
     ASSERT_OBJCEQ(@"ABZZZZEF", [testString2 string]);
 
     // 3) decrease length, forward
-    __block NSMutableAttributedString* testString3 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    __block NSMutableAttributedString* testString3 = [[[NSMutableAttributedString alloc] initWithAttributedString:baseStr] autorelease];
     [testString3 enumerateAttribute:@"key1"
                             inRange:NSMakeRange(2, 2)
                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
@@ -650,7 +660,7 @@ TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
     ASSERT_OBJCEQ(@"ABEF", [testString3 string]);
 
     // 4) decrease length, reverse
-    __block NSMutableAttributedString* testString4 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    __block NSMutableAttributedString* testString4 = [[[NSMutableAttributedString alloc] initWithAttributedString:baseStr] autorelease];
     [testString4 enumerateAttribute:@"key1"
                             inRange:NSMakeRange(2, 2)
                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired | NSAttributedStringEnumerationReverse
@@ -660,7 +670,7 @@ TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
     ASSERT_OBJCEQ(@"ABEF", [testString4 string]);
 
     // 5) decrease length, reverse, stop early
-    __block NSMutableAttributedString* testString5 = [[NSMutableAttributedString alloc] initWithAttributedString:baseStr];
+    __block NSMutableAttributedString* testString5 = [[[NSMutableAttributedString alloc] initWithAttributedString:baseStr] autorelease];
     [testString5 enumerateAttribute:@"key1"
                             inRange:NSMakeRange(1, 4)
                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired | NSAttributedStringEnumerationReverse
@@ -671,8 +681,18 @@ TEST(Foundation, AttributedString_EnumerateAttributeAndChangeLength) {
     ASSERT_OBJCEQ(@"ABCDF", [testString5 string]);
 }
 
-TEST(Foundation, AttributedString_EnumerateAttributes) {
+TEST(NSAttributedString, EnumerateAttributes) {
     NSMutableAttributedString* aStr = SixCharacterTestString();
+
+    // enumerate with zero attributes
+    __block size_t timesEnumerated = 0;
+    [aStr enumerateAttributesInRange:NSMakeRange(1, 3)
+                             options:0
+                          usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
+                              ++timesEnumerated;
+                          }];
+    ASSERT_EQ(0, timesEnumerated);
+
     [aStr addAttribute:@"key1" value:@"value1" range:NSMakeRange(2, 2)];
     [aStr addAttribute:@"key2" value:@"value2" range:NSMakeRange(1, 2)];
     [aStr addAttribute:@"key3" value:@"value3" range:NSMakeRange(2, 4)];
@@ -695,4 +715,36 @@ TEST(Foundation, AttributedString_EnumerateAttributes) {
 
     [aStr enumerateAttributesInRange:NSMakeRange(2, 3) options:NSAttributedStringEnumerationReverse usingBlock:testBlock];
     ASSERT_EQ(expectedAttributes.size(), index);
+}
+
+@interface NSAttributedStringTestSubclassNoOverrides : NSAttributedString
+@end
+
+@implementation NSAttributedStringTestSubclassNoOverrides
+@end
+
+@interface NSAttributedStringTestSubclassMethodOverride : NSAttributedString
+@property BOOL methodCalled;
+@end
+
+@implementation NSAttributedStringTestSubclassMethodOverride
+- (NSUInteger)length {
+    _methodCalled = YES;
+    return 2;
+}
+
+@end
+
+TEST(NSAttributedString, Subclass) {
+    NSAttributedStringTestSubclassNoOverrides* noOverride = [[NSAttributedStringTestSubclassNoOverrides new] autorelease];
+    EXPECT_ANY_THROW([noOverride length]);
+    EXPECT_ANY_THROW(CFAttributedStringGetLength((__bridge CFAttributedStringRef)noOverride));
+
+    NSAttributedStringTestSubclassMethodOverride* didOverride = [[NSAttributedStringTestSubclassMethodOverride new] autorelease];
+    ASSERT_EQ(2, [didOverride length]);
+    ASSERT_EQ(YES, [didOverride methodCalled]);
+
+    [didOverride setMethodCalled:NO];
+    ASSERT_EQ(2, CFAttributedStringGetLength((__bridge CFAttributedStringRef)didOverride));
+    ASSERT_EQ(YES, [didOverride methodCalled]);
 }

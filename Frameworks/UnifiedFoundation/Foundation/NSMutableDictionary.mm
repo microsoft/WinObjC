@@ -21,6 +21,9 @@
 #include "CoreFoundation/CFDictionary.h"
 
 @implementation NSMutableDictionary
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionary {
     return [[self new] autorelease];
 }
@@ -32,10 +35,16 @@
     return [[[self alloc] initWithCapacity:capacity] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)dictionaryWithDictionary:(NSDictionary*)dictionary {
     return [[[self alloc] initWithDictionary:dictionary] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [super init];
 }
@@ -47,8 +56,10 @@
     return [self init];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(id)value forKey:(NSString*)key {
-    // EbrDebugLog("Setting %s to %x\n", E2H([key UTF8String]), value);
     if (value != nil) {
         [self setObject:value forKey:key];
     } else {
@@ -111,6 +122,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addEntriesFromDictionaryNoReplace:(NSDictionary*)otherDict {
     for (id curKey in otherDict) {
         if ([self objectForKey:curKey] == nil) {
@@ -128,10 +142,16 @@
     [self addEntriesFromDictionary:otherDict];
 }
 
+/**
+ @Status Interoperable
+*/
 - (Class)classForCoder {
     return [NSMutableDictionary class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSDictionary alloc] initWithDictionary:self];
 }

@@ -52,7 +52,6 @@
     <Link>
       <ModuleDefinitionFile>Twitter.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -66,7 +65,6 @@
     <Link>
       <ModuleDefinitionFile>Twitter.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -80,7 +78,6 @@
     <Link>
       <ModuleDefinitionFile>Twitter.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -94,7 +91,6 @@
     <Link>
       <ModuleDefinitionFile>Twitter.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

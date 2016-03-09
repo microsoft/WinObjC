@@ -30,6 +30,9 @@
 
 #include "pevents.h"
 #include "PathMapper.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"PlatformSupport";
 
 void EbrBlockIfBackground() {
 }
@@ -882,7 +885,7 @@ int EbrChdir(const char* path) {
     return 0;
 }
 
-extern "C" void dbg_printf(const char* fmt, ...) {
+void dbg_printf(const char* fmt, ...) {
 #ifdef _DEBUG
     va_list va;
 
@@ -904,7 +907,7 @@ bool EbrRemove(const char* path) {
             if (EbrUnlink(path)) {
                 return true;
             } else {
-                EbrDebugLog("Failed to unlink file %s\n", path);
+                TraceError(TAG, L"Failed to unlink file %hs", path);
                 return false;
             }
         } else if (s.st_mode & S_IFDIR) {
@@ -927,7 +930,7 @@ bool EbrRemove(const char* path) {
 
             return EbrRemoveEmptyDir(path);
         } else {
-            EbrDebugLog("Unrecognized file type: %d\n", s.st_mode);
+            TraceVerbose(TAG, L"Unrecognized file type: %d", s.st_mode);
             return false;
         }
     }

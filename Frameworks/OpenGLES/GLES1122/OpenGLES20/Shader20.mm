@@ -19,6 +19,9 @@ limitations under the License.
 #include "../OpenGLESConfig.h"
 #include "ShaderSource.h"
 #include "ShaderFile.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"Shader20";
 
 using namespace OpenGLES::OpenGLES2;
 
@@ -34,18 +37,18 @@ GLuint Shader::compile() {
     const char* typeString = type == GL_FRAGMENT_SHADER ? "Fragment shader" : "Vertex shader";
 
     if (id == 0) {
-        EbrDebugLog("Error creating shader\n");
+        TraceError(TAG, L"Error creating shader");
         LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Could not create ") + typeString);
         return 0;
     }
 
     if (!readShaderSource()) {
-        EbrDebugLog("Error reading shader source\n");
+        TraceError(TAG, L"Error reading shader source");
         LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Could not read ") + typeString + OpenGLESString(" source."));
         return 0;
     }
 
-    EbrDebugLog("Compiling\n");
+    TraceVerbose(TAG, L"Compiling");
 #ifndef WINPHONE
     glCompileShader(id);
 
@@ -56,13 +59,13 @@ GLuint Shader::compile() {
         GLint infoLength;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &infoLength);
 
-        EbrDebugLog("Compile failed %d\n", infoLength);
+        TraceError(TAG, L"Compile failed %d", infoLength);
         if (1) // infoLength > 1)
         {
             char* infoLog = (char*)calloc(sizeof(char) * 4096, 1);
             GLsizei len;
             glGetShaderInfoLog(id, 4096, &len, infoLog);
-            EbrDebugLog("Error compiling %d %s\n", len, infoLog);
+            TraceError(TAG, L"Error compiling %d %hs", len, infoLog);
 
             if (compiled) {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("WARNING: Compiled ") + typeString + " with warnings:\n" + infoLog);
@@ -96,9 +99,9 @@ char* convertStringToChar(const std::string& str) {
 bool Shader::readShaderSource() {
     char** shaderSources = (char**)malloc(sizeof(char*) * sources.size());
 
-    EbrDebugLog("shader count=%d\n", sources.size());
+    TraceVerbose(TAG, L"shader count=%d", sources.size());
     if (shaderSources == NULL) {
-        EbrDebugLog("Can't allocate memory\n");
+        TraceError(TAG, L"Can't allocate memory");
         LOG_MESSAGE(__FILE__, __LINE__, "ERROR: Cannot allocate memory.");
         return false;
     }

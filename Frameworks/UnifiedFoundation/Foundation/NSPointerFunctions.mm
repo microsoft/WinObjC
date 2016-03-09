@@ -19,6 +19,7 @@
 #import <Foundation/NSString.h>
 #import <NSPointerFunctionsConcrete.h>
 #import <NSRaise.h>
+#import "NSLogging.h"
 
 #import <objc/objc-arc.h>
 #import <string>
@@ -27,6 +28,8 @@
 // These bit masks are used to isolate just the memory option/personality option from a NSPointerFunctionsOptions
 static const NSUInteger kNSPointerFunctionsMemoryMask = (0b111 << 0);
 static const NSUInteger kNSPointerFunctionsPersonalityMask = (0b111 << 8);
+
+static const wchar_t* TAG = L"NSPointerFunctions";
 
 // Default functions for this class's @properties
 NSUInteger _NSPointerFunctionsHashNSObject(const void* item, NSUInteger (*size)(const void* item)) {
@@ -91,6 +94,9 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
 
 @implementation NSPointerFunctions
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     // alloc the concrete subclass instead
     if (self == [NSPointerFunctions class]) {
@@ -162,8 +168,10 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
 
             default:
                 partialInit = true;
-                NSLog(@"*** An unsupported PointerFunctions configuration was request, probably for use by NSMapTable, NSHashTable, or "
-                      @"NSPointerArray. The requested configuration fails due to objects with none of strong, weak, or opaque memory");
+                NSTraceWarning(
+                    TAG,
+                    @"*** An unsupported PointerFunctions configuration was request, probably for use by NSMapTable, NSHashTable, or "
+                    @"NSPointerArray. The requested configuration fails due to objects with none of strong, weak, or opaque memory");
                 break;
         }
 
@@ -202,8 +210,10 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
                     self.isEqualFunction = &_NSPointerFunctionsIsEqualDirectCompare;
                 } else {
                     partialInit = true;
-                    NSLog(@"*** An unsupported PointerFunctions configuration was request, probably for use by NSMapTable, NSHashTable, or "
-                          @"NSPointerArray. The requested configuration fails due to integer personality not using opaque memory");
+                    NSTraceWarning(
+                        TAG,
+                        @"*** An unsupported PointerFunctions configuration was request, probably for use by NSMapTable, NSHashTable, or "
+                        @"NSPointerArray. The requested configuration fails due to integer personality not using opaque memory");
                 }
                 break;
 
@@ -217,8 +227,10 @@ void _NSPointerFunctionsRelinquishNSObject(const void* item, NSUInteger (*size)(
                 _copyIn = true;
             } else {
                 partialInit = true;
-                NSLog(@"*** An unsupported PointerFunctions configuration was request, probably for use by NSMapTable, NSHashTable, or "
-                      @"NSPointerArray. The requested configuration fails due to copyin with opaque personality or opaque or weak memory");
+                NSTraceWarning(
+                    TAG,
+                    @"*** An unsupported PointerFunctions configuration was request, probably for use by NSMapTable, NSHashTable, or "
+                    @"NSPointerArray. The requested configuration fails due to copyin with opaque personality or opaque or weak memory");
             }
         }
 

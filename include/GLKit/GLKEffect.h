@@ -47,7 +47,6 @@ GLKIT_EXPORT_CLASS
 @interface GLKEffectProperty : NSObject
 @property (assign, nonatomic) BOOL enabled;
 @property (readonly) GLKShaderEffect* parent;
-- (id)initWith:(GLKShaderEffect*)parent;
 @end
 
 GLKIT_EXPORT_CLASS

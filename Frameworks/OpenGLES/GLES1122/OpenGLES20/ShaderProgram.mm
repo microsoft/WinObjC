@@ -22,7 +22,10 @@ limitations under the License.
 #include "Attribute.h"
 #include "OpenGLESState.h"
 #include <string>
+#include "LoggingNative.h"
 #include <memory>
+
+static const wchar_t* TAG = L"ShaderProgram";
 
 using namespace OpenGLES::OpenGLES2;
 using namespace OpenGLES;
@@ -89,7 +92,7 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
-            EbrDebugLog("Error compiling %s\n", infoLog);
+            TraceError(TAG, L"Error compiling %hs", infoLog);
             if (linked) {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("WARNING: Linked program ") + name + " with warnings:\n" + infoLog);
             } else {

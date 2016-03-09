@@ -25,6 +25,9 @@
 #include "CGFontInternal.h"
 
 #include <assert.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSString_Additions";
 
 void NSStringForceinclude() {
     [NSString class];
@@ -101,7 +104,7 @@ static void drawString(UIFont* font,
                        CGSize* sizeOut,
                        CGPoint* lastCharPos = NULL) {
     if (font == nil) {
-        EbrDebugLog("drawString: font = nil!\n");
+        TraceVerbose(TAG, L"drawString: font = nil!");
         return;
     }
 

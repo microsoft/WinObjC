@@ -1,0 +1,69 @@
+LIBRARY AudioUnit
+    EXPORTS
+        ; AUAudioUnit.mm
+        _OBJC_CLASS_AUAudioUnit DATA
+        __objc_class_name_AUAudioUnit CONSTANT
+
+        ; AUAudioUnitBus.mm
+        _OBJC_CLASS_AUAudioUnitBus DATA
+        __objc_class_name_AUAudioUnitBus CONSTANT
+
+        ; AUAudioUnitBusArray.mm
+        _OBJC_CLASS_AUAudioUnitBusArray DATA
+        __objc_class_name_AUAudioUnitBusArray CONSTANT
+
+        ; AUAudioUnitPreset.mm
+        _OBJC_CLASS_AUAudioUnitPreset DATA
+        __objc_class_name_AUAudioUnitPreset CONSTANT
+
+        ; AUAudioUnitV2Bridge.mm
+        _OBJC_CLASS_AUAudioUnitV2Bridge DATA
+        __objc_class_name_AUAudioUnitV2Bridge CONSTANT
+
+        ; AudioComponent.mm
+        AudioComponentCopyName
+        AudioComponentCount
+        AudioComponentFindNext
+        AudioComponentGetDescription
+        AudioComponentInstanceCanDo
+        AudioComponentGetVersion
+        AudioComponentInstanceDispose
+        AudioComponentInstanceGetComponent
+        AudioComponentInstanceNew
+
+        ; AudioUniT.mm
+        AudioUnitInitialize
+        AudioUnitUninitialize
+        AudioUnitAddRenderNotify
+        AudioUnitRemoveRenderNotify
+        AudioUnitRender
+        AudioUnitReset
+        AudioUnitAddPropertyListener
+        AudioUnitRemovePropertyListenerWithUserData
+        AudioUnitGetProperty
+        AudioUnitGetPropertyInfo
+        AudioUnitSetProperty
+        AudioUnitGetParameter
+        AudioUnitSetParameter
+        AudioUnitScheduleParameters
+
+        ; AUParameter.mm
+        _OBJC_CLASS_AUParameter DATA
+        __objc_class_name_AUParameter CONSTANT
+
+        ; AUParameterGroup.mm
+        _OBJC_CLASS_AUParameterGroup DATA
+        __objc_class_name_AUParameterGroup CONSTANT
+
+        ; AUParameterNode.mm
+        _OBJC_CLASS_AUParameterNode DATA
+        __objc_class_name_AUParameterNode CONSTANT
+
+        ; AUParameterTree.mm
+        _OBJC_CLASS_AUParameterTree DATA
+        __objc_class_name_AUParameterTree CONSTANT
+
+        ; OutputAudioUnit.mm
+        AudioOutputUnitStart
+        AudioOutputUnitStop
+

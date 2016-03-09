@@ -17,6 +17,7 @@
 #ifndef __CGPATHINTERNAL_H
 #define __CGPATHINTERNAL_H
 
+#include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
 
 enum pathComponentType {
@@ -80,6 +81,7 @@ typedef struct {
 }
 
 - (void)_getBoundingBox:(CGRect*)rectOut;
+- (void)_applyPath:(CGContextRef)context;
 
 @end
 

@@ -30,6 +30,9 @@ NSUInteger NSSetTableCount(NSSet* set);
 
 @implementation NSMutableSet
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSSet allocWithZone:zone] initWithSet:self];
 }

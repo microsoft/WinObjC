@@ -25,7 +25,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FB843AF7-02DD-4DDF-B50A-808F50422F1E}</ProjectGuid>
     <ProjectName>AVKitLib</ProjectName>
-    <RootNamespace>AVKit</RootNamespace>
+    <RootNamespace>AVKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>AVKitLib</OutputName>

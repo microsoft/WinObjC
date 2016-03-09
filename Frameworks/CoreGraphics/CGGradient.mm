@@ -19,15 +19,19 @@
 #import <CoreGraphics/CGContext.h>
 #import "CGColorSpaceInternal.h"
 #import "CGGradientInternal.h"
+#import "UIColorInternal.h"
 #import "_CGLifetimeBridgingType.h"
 
 @interface CGNSGradient : _CGLifetimeBridgingType
 @end
 
 @implementation CGNSGradient
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 - (void)dealloc {
     delete (__CGGradient*)self;
 }
+#pragma clang diagnostic pop
 @end
 
 __CGGradient::__CGGradient() : _components(NULL), _locations(NULL) {
@@ -114,7 +118,7 @@ void __CGGradient::initWithColors(CFArrayRef componentsArr, const float* locatio
     _components = new float[count * componentCount];
 
     for (int i = 0; i < count; i++) {
-        id curColor = [components objectAtIndex:i];
+        UIColor* curColor = [components objectAtIndex:i];
 
         float color[4];
         [curColor getColors:color];

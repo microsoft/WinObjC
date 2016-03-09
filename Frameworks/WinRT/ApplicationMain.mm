@@ -32,6 +32,7 @@
 #include "CACompositorClient.h"
 #include "UIApplicationInternal.h"
 #include "winobjc\winobjc.h"
+#import "NSBundleInternal.h"
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -91,7 +92,7 @@ int ApplicationMainStart(
             orientation = [infoDict objectForKey:@"UIInterfaceOrientation"];
 
         if ([orientation isKindOfClass:[NSString class]]) {
-            defaultOrientation = UIOrientationFromString(defaultOrientation, orientation);
+            defaultOrientation = UIOrientationFromString(defaultOrientation, (NSString*)orientation);
         } else if ([orientation isKindOfClass:[NSArray class]]) {
             bool found = false;
 
@@ -104,8 +105,8 @@ int ApplicationMainStart(
             }
 
             if (!found) {
-                if ([orientation count] > 0) {
-                    defaultOrientation = UIOrientationFromString(defaultOrientation, [orientation objectAtIndex:0]);
+                if ([(NSArray*)orientation count] > 0) {
+                    defaultOrientation = UIOrientationFromString(defaultOrientation, [(NSArray*)orientation objectAtIndex:0]);
                 } else {
                     defaultOrientation = UIInterfaceOrientationPortrait;
                 }

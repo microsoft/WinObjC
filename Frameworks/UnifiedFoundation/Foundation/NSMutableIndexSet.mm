@@ -269,6 +269,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)indexSet {
     return [[self new] autorelease];
 }
@@ -286,6 +289,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSIndexSet allocWithZone:zone] initWithIndexSet:self];
 }

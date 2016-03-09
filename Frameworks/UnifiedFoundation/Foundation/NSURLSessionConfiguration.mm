@@ -50,6 +50,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [self _initWithSharedDefaults]) {
         _TLSMaximumSupportedProtocol = kTLSProtocol12;
@@ -58,11 +61,17 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initEphemeralSession {
     self = [self _initTLSAndCache];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initBackgroundSession:(NSString*)identifier {
     if (self = [self _initTLSAndCache]) {
         _identifier = identifier;
@@ -70,6 +79,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     NSURLSessionConfiguration* copy = [[[self class] allocWithZone:zone] init];
     copy.identifier = _identifier;
@@ -96,18 +108,30 @@
     return copy;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURLSessionConfiguration*)defaultSessionConfiguration {
     return [[[NSURLSessionConfiguration alloc] init] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURLSessionConfiguration*)ephemeralSessionConfiguration {
     return [[[NSURLSessionConfiguration alloc] initEphemeralSession] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURLSessionConfiguration*)backgroundSessionConfigurationWithIdentifier:(NSString*)identifier {
     return [[[NSURLSessionConfiguration alloc] initBackgroundSession:identifier] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSURLSessionConfiguration*)backgroundSessionConfiguration:(NSString*)identifier {
     return [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
 }

@@ -22,6 +22,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSSelectSet.h"
 #include "NSStreamInternal.h"
 #include "NSRunLoop+Internal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSOutputStream_socket";
 
 static BOOL socketHasSpaceAvailable(id socket) {
     NSSelectSet* selectSet = [[[NSSelectSet alloc] init] autorelease];
@@ -171,7 +174,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
         NSInteger check = [sslHandler writePlaintext:buffer maxLength:length];
 
         if (check != length) {
-            EbrDebugLog("failure writePlaintext:%d=%d", length, check);
+            TraceError(TAG, L"failure writePlaintext:%d=%d", length, check);
         }
 
         [sslHandler runWithSocket:_socket];

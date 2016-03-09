@@ -70,6 +70,9 @@
     return userInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [notificationName release];
     [notificationObj release];

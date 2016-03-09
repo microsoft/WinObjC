@@ -21,6 +21,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSRunLoop.h"
 #include "NSURLConnectionState.h"
 #include "Foundation/NSURLConnection.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSURLConnection";
 
 @implementation NSURLConnection
 
@@ -38,7 +41,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 + (void)sendAsynchronousRequest:(id)request
                           queue:(id)queue
               completionHandler:(void (^)(NSURLResponse*, NSData*, NSError*))completionHandler {
-    EbrDebugLog("sendAsynchronousRequest not fully supported\n");
+    TraceVerbose(TAG, L"sendAsynchronousRequest not fully supported");
 
     id response, error;
     id data = [self sendSynchronousRequest:request returningResponse:&response error:&error];
@@ -55,7 +58,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     NSURLConnection* connection = [[self alloc] initWithRequest:request delegate:state startImmediately:FALSE];
 
     if (connection == nil) {
-        if (errorp != NULL) {
+        if (errorp) {
             *errorp = [NSError errorWithDomain:@"NSURLErrorDomain" code:50 userInfo:nil];
         }
 
@@ -74,11 +77,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
     [connection cancel];
 
-    if (errorp != NULL) {
+    if (errorp) {
         *errorp = state.error;
     }
 
-    if (responsep != NULL) {
+    if (responsep) {
         *responsep = state.response;
     }
 
@@ -142,6 +145,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     return [self initWithRequest:request delegate:delegate startImmediately:YES];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_request release];
     [_protocol release];
@@ -176,8 +182,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _scheduled = NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didFailWithError:(id)error {
-    EbrDebugLog("URL protocol did fail\n");
+    TraceError(TAG, L"URL protocol did fail");
     // if ( [_delegate respondsToSelector:@selector(connection:willSendRequest:redirectResponse:)] ) [_delegate
     // connection:self willSendRequest:_request redirectResponse:nil];
     if ([_delegate respondsToSelector:@selector(connection:didFailWithError:)]) {
@@ -192,6 +201,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _delegate = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didReceiveResponse:(id)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     /*
     if ( [response respondsToSelector:@selector(statusCode)] && [response statusCode] != 200 ) {
@@ -210,12 +222,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didLoadData:(id)data {
     if ([_delegate respondsToSelector:@selector(connection:didReceiveData:)]) {
         [_delegate connection:self didReceiveData:data];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocolDidFinishLoading:(id)urlProtocol {
     /*
     if(_storagePolicy==NSURLCacheStorageNotAllowed) {
@@ -257,6 +275,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(id)urlProtocol didReceiveAuthenticationChallenge:(id)challenge {
     if ([_delegate respondsToSelector:@selector(connection:willSendRequestForAuthenticationChallenge:)]) {
         [_delegate connection:self willSendRequestForAuthenticationChallenge:challenge];
@@ -265,6 +286,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)urlProtocol wasRedirectedToRequest:(NSURLRequest*)request redirectResponse:(NSURLResponse*)response {
     [_protocol stopLoading];
     NSURLRequest* newRequest = request;
@@ -374,7 +398,7 @@ return [super dealloc];
     UNIMPLEMENTED();
 }
 
-/*
+/**
  @Status Stub
  @Notes
 */
@@ -382,7 +406,7 @@ return [super dealloc];
     UNIMPLEMENTED();
 }
 
-/*
+/**
  @Status Stub
  @Notes
 */

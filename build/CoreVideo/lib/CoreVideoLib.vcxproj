@@ -33,7 +33,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{61F6EB66-D1EF-477D-83B1-C3C36132D49A}</ProjectGuid>
     <ProjectName>CoreVideoLib</ProjectName>
-    <RootNamespace>CoreVideo</RootNamespace>
+    <RootNamespace>CoreVideoLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreVideoLib</OutputName>

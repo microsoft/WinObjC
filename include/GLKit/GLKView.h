@@ -47,7 +47,7 @@ GLKIT_EXPORT_CLASS
                              UITraitEnvironment>
 
 @property (assign, nonatomic) id<GLKViewDelegate> delegate;
-@property (retain, nonatomic) EAGLContext* context STUB_PROPERTY;
+@property (retain, nonatomic) EAGLContext* context;
 
 @property (readonly, nonatomic) NSInteger drawableHeight;
 @property (readonly, nonatomic) NSInteger drawableWidth;

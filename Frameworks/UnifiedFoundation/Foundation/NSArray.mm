@@ -34,6 +34,9 @@
 #include "Foundation/NSNull.h"
 #include "NSArrayInternal.h"
 #include "VAListHelper.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSArray";
 
 @class NSXMLPropertyList, NSPropertyListReader, NSArrayConcrete, NSMutableArrayConcrete, NSPropertyListWriter_Binary;
 
@@ -156,23 +159,16 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 
     char* pData = (char*)[data bytes];
 
-    id ar;
-
-    if (memcmp(pData, "<?xml", 4) == 0) {
-        ar = [NSXMLPropertyList propertyListFromData:data];
-        if (![ar isKindOfClass:[NSArray class]]) {
-            ar = [ar objectForKey:@"$objects"];
+    id arrayData = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0];
+    if (![arrayData isKindOfClass:[NSArray class]]) {
+        arrayData = [arrayData objectForKey:@"$objects"];
+        if (![(id)arrayData isKindOfClass:[NSArray class]]) {
+            TraceWarning(TAG, L"object %hs is not an array", [[arrayData description] UTF8String]);
+            return self;
         }
-        if (![(id)ar isKindOfClass:[NSArray class]]) {
-            assert(0);
-        }
-    } else {
-        NSPropertyListReaderA reader;
-        reader.init(data);
-        ar = reader.read();
     }
 
-    [self initWithArray:ar];
+    [self initWithArray:arrayData];
 
     return self;
 }
@@ -184,6 +180,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return CFArrayGetCount((CFArrayRef)self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)init {
     _CFArrayInitInternal((CFArrayRef)self);
     return self;
@@ -220,7 +219,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 */
 - (id)objectAtIndex:(NSUInteger)index {
     if (index >= CFArrayGetCount((CFArrayRef)self)) {
-        EbrDebugLog("objectAtIndex: index > count (%d > %d), throwing exception\n", index, CFArrayGetCount((CFArrayRef)self));
+        TraceCritical(TAG, L"objectAtIndex: index > count (%d > %d), throwing exception", index, CFArrayGetCount((CFArrayRef)self));
         [NSException raise:@"Array out of bounds" format:@""];
         return nil;
     }
@@ -326,15 +325,28 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return NSNotFound;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
 - (NSArray*)initWithCoder:(NSCoder*)coder {
-    id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
+    if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
+        id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
-    [self initWithArray:array];
-    return self;
+        [self initWithArray:array];
+        return self;
+    } else {
+        UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        [self release];
+        return nil;
+    }
 }
 
 /**
@@ -391,6 +403,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)valueForKey:(NSString*)key {
     id ret = [NSMutableArray array];
 
@@ -411,6 +426,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
@@ -451,6 +469,9 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(NSObject*)value forKey:(NSString*)key {
     for (NSObject* cur in self) {
         [cur setValue:value forKey:key];
@@ -540,14 +561,23 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)mutableCopy {
     return [self mutableCopyWithZone:nil];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableArray alloc] initWithArray:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -757,6 +787,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     CFArrayRemoveAllValues((CFArrayRef)self);
     _CFArrayDestroyInternal((CFArrayRef)self);
@@ -769,13 +802,16 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Notes atomically parameter not supported
 */
 - (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically {
-    EbrDebugLog("Writing array to file %s\n", [file UTF8String]);
+    TraceVerbose(TAG, L"Writing array to file %hs", [file UTF8String]);
 
     id data = [NSMutableData data];
     [NSPropertyListWriter_Binary serializePropertyList:self intoData:data];
     return [data writeToFile:file atomically:atomically];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         [coder _encodeArrayOfObjects:self forKey:@"NS.objects"];
@@ -789,11 +825,17 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
-    EbrDebugLog("NSArray description not supported\n");
-    return @"Not supported";
+    UNIMPLEMENTED();
+    return [super description];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSArray class]) {
         return NSAllocateObject((Class)[NSArrayConcrete class], 0, zone);
@@ -823,22 +865,30 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)enumerateObjectsWithOptions:(NSUInteger)options usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
-    int i, count = [self count];
-
-    BOOL stop = FALSE;
-
+- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(id, NSUInteger, BOOL*))block {
+    id<NSFastEnumeration> enumerator;
+    __block NSUInteger index;
+    __block BOOL reverse;
     if (options & NSEnumerationReverse) {
-        for (i = count - 1; i >= 0 && !stop; i--) {
-            id curObj = [self objectAtIndex:i];
-            block(curObj, i, &stop);
-        }
+        enumerator = [self reverseObjectEnumerator];
+        index = [self count] - 1;
+        reverse = true;
     } else {
-        for (i = 0; i < count && !stop; i++) {
-            id curObj = [self objectAtIndex:i];
-            block(curObj, i, &stop);
-        }
+        enumerator = self;
+        index = 0;
+        reverse = false;
     }
+
+    _enumerateWithBlock(enumerator,
+                        options,
+                        ^(id key, BOOL* stop) {
+                            block(key, index, stop);
+                            if (reverse) {
+                                index--;
+                            } else {
+                                index++;
+                            }
+                        });
 }
 
 /**
@@ -859,6 +909,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(NSObject*)other {
     if (self == other) {
         return YES;
@@ -871,6 +924,9 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return [self isEqualToArray:other];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)allObjects {
     return self;
 }
@@ -906,7 +962,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 
     while (idx != NSNotFound) {
         if (idx >= count) {
-            EbrDebugLog("objectsAtIndexes: index > count (%d > %d), throwing exception\n", idx, count);
+            TraceCritical(TAG, L"objectsAtIndexes: index > count (%d > %d), throwing exception", idx, count);
             [NSException raise:@"Array out of bounds" format:@""];
             return nil;
         }
@@ -1084,7 +1140,10 @@ NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnum
 }
 
 @implementation NSArrayConcrete
-// NSArrayConcrete ignores the passed-in stackbuf+size, as it has its own contiguous storage for its internal object pointers.
+/**
+ @Status Interoperable
+ Note: NSArrayConcrete ignores the passed-in stackbuf+size, as it has its own contiguous storage for its internal object pointers.
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     return _NSArrayConcreteCountByEnumeratingWithState(self, state);
 }
