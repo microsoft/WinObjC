@@ -17,7 +17,9 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #import "Foundation/NSException.h"
+#import "NSLogging.h"
 
+static const wchar_t* TAG = L"NSException";
 NSString* const NSRangeException = @"NSRangeExcepton";
 NSString* const NSGenericException = @"NSGenericException";
 NSString* const NSInvalidArgumentException = @"NSInvalidArgumentException";
@@ -56,8 +58,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
         _name = [name copy];
         _reason = [reason copy];
         _userInfo = [userInfo copy];
-        _callStackReturnAddresses = [NSThread callStackReturnAddresses];
-        _callStackSymbols = [NSThread callStackSymbols];
+        // VSO 6794375: Implement NSThread callStackReturnAddresses, callStackSymbols
+        //_callStackReturnAddresses = [NSThread callStackReturnAddresses];
+        //_callStackSymbols = [NSThread callStackSymbols];
     }
 
     return self;
@@ -97,7 +100,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     NSString* reason = [[NSString alloc] initWithFormat:format arguments:reader];
     va_end(reader);
 
-    NSLog(@"Exception %@ raised!\nReason: %@\n", name, reason);
+    NSTraceError(TAG, @"Exception %@ raised!\nReason: %@\n", name, reason);
 
     NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
     [reason release];
@@ -161,6 +164,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     [coder encodeObject:_callStackSymbols forKey:@"callStackSymbols"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_name release];
     [_reason release];

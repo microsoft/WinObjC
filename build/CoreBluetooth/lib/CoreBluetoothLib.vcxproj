@@ -40,7 +40,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{25269720-4CDC-407F-B54C-D1B87732FFC5}</ProjectGuid>
     <ProjectName>CoreBluetoothLib</ProjectName>
-    <RootNamespace>CoreBluetooth</RootNamespace>
+    <RootNamespace>CoreBluetoothLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreBluetoothLib</OutputName>

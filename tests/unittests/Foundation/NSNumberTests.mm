@@ -17,6 +17,39 @@
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
 
+template <typename T>
+static void testGetValue(NSNumber* number, T expected) {
+    const char* encodedType = [number objCType];
+
+    ASSERT_EQ_MSG(1, strlen(encodedType), "FAILED: Unexpected NSNumber type");
+
+#define TYPE_CASE(code, type)                                                               \
+    case code: {                                                                            \
+        type value = 0;                                                                     \
+        [number getValue:&value];                                                           \
+        EXPECT_EQ_MSG(expected, value, "FAILED: Unexpected value from NSNumber getValue:"); \
+        break;                                                                              \
+    }
+
+    switch (encodedType[0]) {
+        TYPE_CASE('c', char)
+        TYPE_CASE('C', unsigned char)
+        TYPE_CASE('s', short)
+        TYPE_CASE('S', unsigned short)
+        TYPE_CASE('i', int)
+        TYPE_CASE('I', unsigned int)
+        TYPE_CASE('l', long)
+        TYPE_CASE('L', unsigned long)
+        TYPE_CASE('q', long long)
+        TYPE_CASE('Q', unsigned long long)
+        TYPE_CASE('f', float)
+        TYPE_CASE('d', double)
+
+        default:
+            EXPECT_TRUE_MSG(false, "FAILED: Unknown NSNumber type code");
+    }
+}
+
 TEST(Foundation, NSNumber_numberWithShortGetStringValueUnSigned) {
     NSNumber* number = [NSNumber numberWithShort:25];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
@@ -38,21 +71,13 @@ TEST(Foundation, NSNumber_numberWithUnsignedShort) {
 TEST(Foundation, NSNumber_getValueUnSigned) {
     NSNumber* number = [NSNumber numberWithUnsignedShort:25];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
-
-    unsigned short value;
-    [number getValue:&value];
-
-    ASSERT_EQ_MSG(25, value, "FAILED: values do not match as expected.");
+    testGetValue(number, static_cast<unsigned short>(25));
 }
 
 TEST(Foundation, NSNumber_getValueSigned) {
     NSNumber* number = [NSNumber numberWithShort:-12];
     ASSERT_TRUE_MSG(number != nil, "FAILED: number should not be nil!");
-
-    short value;
-    [number getValue:&value];
-
-    ASSERT_EQ_MSG(-12, value, "FAILED: values do not match as expected.");
+    testGetValue(number, static_cast<short>(-12));
 }
 
 TEST(Foundation, NSNumber_numberWithCharGetStringValueSigned) {

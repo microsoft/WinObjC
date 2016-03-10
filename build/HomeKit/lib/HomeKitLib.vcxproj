@@ -40,7 +40,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E0329C98-BDEC-4C5E-8396-ACA8771F8671}</ProjectGuid>
     <ProjectName>HomeKitLib</ProjectName>
-    <RootNamespace>HomeKit</RootNamespace>
+    <RootNamespace>HomeKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>HomeKitLib</OutputName>

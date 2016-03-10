@@ -17,6 +17,9 @@
 #import "Starboard.h"
 #import "UIClassSwapper.h"
 #import "NSUnarchiverInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIClassSwapper";
 
 @implementation UIClassSwapper
 
@@ -26,7 +29,7 @@
     const char* identifier = [_className UTF8String];
     const char* identifier2 = [_originalClassName UTF8String];
 
-    EbrDebugLog("Swap class: %s->%s\n", identifier2, identifier);
+    TraceVerbose(TAG, L"Swap class: %hs->%hs", identifier2, identifier);
     id classNameId = objc_getClass(identifier);
 
     [self autorelease];
@@ -40,7 +43,7 @@
             return [ret init];
         }
     } else {
-        EbrDebugLog("Class %s not found!\n", identifier);
+        TraceVerbose(TAG, L"Class %hs not found!", identifier);
         return nil;
     }
 }

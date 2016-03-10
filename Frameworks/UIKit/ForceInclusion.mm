@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-#define CURL_STATICLIB
-
-#include <curl/curl.h>
-
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 #include "UIButtonContent.h"

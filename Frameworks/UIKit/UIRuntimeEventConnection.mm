@@ -16,6 +16,9 @@
 
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIRuntimeEventConnection";
 
 @implementation UIRuntimeEventConnection
 - (id)initWithCoder:(NSCoder*)coder {
@@ -28,10 +31,10 @@
 }
 
 - (void)_makeConnection {
-    EbrDebugLog("Source: %s\n", object_getClassName(targetControl));
-    EbrDebugLog("Dest: %s\n", obj != nil ? object_getClassName(obj) : "nil (first responder?)");
-    EbrDebugLog("Event label: %x\n", selector);
-    EbrDebugLog("Event mask: %x\n", mask);
+    TraceVerbose(TAG, L"Source: %hs", object_getClassName(targetControl));
+    TraceVerbose(TAG, L"Dest: %hs", obj != nil ? object_getClassName(obj) : "nil (first responder?)");
+    TraceVerbose(TAG, L"Event label: %x", selector);
+    TraceVerbose(TAG, L"Event mask: %x", mask);
 
     valid = TRUE;
 

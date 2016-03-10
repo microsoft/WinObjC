@@ -23,6 +23,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSData.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSPropertyListReader";
 
 void NSPropertyListReaderA::_readHeader() {
     uint64_t trailerStart = (uint64_t)([_data length] - TRAILER_SIZE);
@@ -248,11 +251,11 @@ id NSPropertyListReaderA::read() {
         return nil;
     }
     if (memcmp((void*)[_data bytes], "bplist", 6) != 0) {
-        EbrDebugLog("Not a plist file\n");
+        TraceVerbose(TAG, L"Not a plist file");
         return nil;
     }
 
-    EbrDebugLog("got %d bytes\n", _length);
+    TraceVerbose(TAG, L"got %d bytes", _length);
 
     //@try
     _readHeader();

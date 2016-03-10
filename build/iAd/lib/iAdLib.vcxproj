@@ -27,7 +27,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8a77599c-fddc-4688-8b8c-58289044dd13}</ProjectGuid>
     <ProjectName>iAdLib</ProjectName>
-    <RootNamespace>iAd</RootNamespace>
+    <RootNamespace>iAdLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>iAdLib</OutputName>

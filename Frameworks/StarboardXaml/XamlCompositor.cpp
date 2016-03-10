@@ -543,8 +543,8 @@ void DisplayNode::SetContentsElement(winobjc::Id& elem, float width, float heigh
 void DisplayNode::SetContentsElement(winobjc::Id& elem) {
     XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::FrameworkElement ^ contents = (Windows::UI::Xaml::FrameworkElement ^ )(Platform::Object ^ )elem;
-    float width = contents->Width;
-    float height = contents->Height;
+    float width = static_cast<float>(contents->Width);
+    float height = static_cast<float>(contents->Height);
     float scale = 1.0f;
     xamlNode->setContentElement(contents, width, height, scale);
 }

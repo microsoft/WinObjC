@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreAudio\Empty.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreAudio\CoreAudioData.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E9AB5709-44BA-4AA0-8B5F-46FE35F143D5}</ProjectGuid>

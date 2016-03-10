@@ -39,6 +39,9 @@
 #include <iomanip>
 
 #include "StringHelpers.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSData";
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::Security::Cryptography;
@@ -54,9 +57,9 @@ using namespace Windows::Foundation;
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
     ComPtr<IBuffer> wrlBuffer;
-    IBuffer* rawBuffer = nullptr; 
+    IBuffer* rawBuffer = nullptr;
     HRESULT result;
-    
+
     result = BufferFromRawData(&rawBuffer, _bytes, _length);
 
     if (FAILED(result)) {
@@ -207,6 +210,9 @@ using namespace Windows::Foundation;
     return [[[self alloc] initWithBytesNoCopy:(void*)bytes length:length freeWhenDone:free] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithBytes:"" length:0];
 }
@@ -241,10 +247,16 @@ using namespace Windows::Foundation;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeBytes:_bytes length:_length forKey:@"NS.data"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     NSData* nsData = [coder decodeObjectForKey:@"NS.data"];
 
@@ -305,7 +317,7 @@ using namespace Windows::Foundation;
  @Notes File is not mapped; defers to initWithContentsOfFile:
 */
 - (instancetype)initWithContentsOfMappedFile:(NSString*)filename {
-    EbrDebugLog("Not actually mapping file ...\n");
+    TraceVerbose(TAG, L"Not actually mapping file ...");
     return [self initWithContentsOfFile:filename];
 }
 
@@ -323,9 +335,9 @@ using namespace Windows::Foundation;
 - (BOOL)writeToFile:(NSString*)filename atomically:(BOOL)atomically {
     char* fname = (char*)[filename UTF8String];
 
-    EbrDebugLog("NSData writing %s (%d bytes)\n", fname, _length);
+    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, _length);
     if (!fname) {
-        EbrDebugLog("Filename is null!\n");
+        TraceVerbose(TAG, L"Filename is null!");
         return FALSE;
     }
     EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
@@ -335,7 +347,7 @@ using namespace Windows::Foundation;
 
         return TRUE;
     } else {
-        EbrDebugLog("NSData couldn't open %s for write\n", fname);
+        TraceVerbose(TAG, L"NSData couldn't open %hs for write", fname);
         return FALSE;
     }
 }
@@ -346,7 +358,7 @@ using namespace Windows::Foundation;
 */
 - (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
     if (![url isFileURL]) {
-        EbrDebugLog("-[NSData::writeToURL]: Only file: URLs are supported. (%s)", [[url absoluteString] UTF8String]);
+        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
         return NO;
     }
     return [self writeToFile:[url path] atomically:atomically];
@@ -359,7 +371,7 @@ using namespace Windows::Foundation;
 - (BOOL)writeToFile:(NSString*)filename options:(NSDataWritingOptions)options error:(NSError**)error {
     char* fname = (char*)[filename UTF8String];
 
-    EbrDebugLog("NSData writing %s (%d bytes)\n", fname, _length);
+    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, _length);
     EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
     if (fpOut) {
         EbrFwrite(_bytes, 1, _length, fpOut);
@@ -367,7 +379,7 @@ using namespace Windows::Foundation;
 
         return TRUE;
     } else {
-        EbrDebugLog("NSData couldn't open %s for write (with options)\n", fname);
+        TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
         return FALSE;
     }
 }
@@ -378,7 +390,7 @@ using namespace Windows::Foundation;
 */
 - (BOOL)writeToURL:(NSURL*)url options:(NSDataWritingOptions)options error:(NSError**)errorp {
     if (![url isFileURL]) {
-        EbrDebugLog("-[NSData::writeToURL]: Only file: URLs are supported. (%s)", [[url absoluteString] UTF8String]);
+        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
         return NO;
     }
 
@@ -418,7 +430,7 @@ using namespace Windows::Foundation;
 
     char* fname = (char*)[filename UTF8String];
 
-    EbrDebugLog("NSData extended-opening %s\n", fname);
+    TraceVerbose(TAG, L"NSData extended-opening %hs", fname);
     EbrFile* fpIn = EbrFopen(fname, "rb");
     if (fpIn) {
         auto closeFile = wil::ScopeExit([&]() { EbrFclose(fpIn); });
@@ -441,7 +453,7 @@ using namespace Windows::Foundation;
             _length = EbrFread(_bytes, 1, length, fpIn);
         }
     } else {
-        EbrDebugLog("NSData couldn't open %s for read (extended)\n", fname);
+        TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", fname);
         if (error) {
             *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
         }
@@ -544,7 +556,7 @@ using namespace Windows::Foundation;
  @Notes options parameter not supported
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url options:(NSDataReadingOptions)options error:(NSError**)error {
-    EbrDebugLog("initWithContentsOfURL: %s\n", [[url absoluteString] UTF8String]);
+    TraceVerbose(TAG, L"initWithContentsOfURL: %hs", [[url absoluteString] UTF8String]);
 
     if ([url isFileURL]) {
         return [self initWithContentsOfFile:[url path] options:options error:error];
@@ -564,10 +576,16 @@ using namespace Windows::Foundation;
     return [NSData dataWithBytes:_bytes + range.location length:range.length];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableData*)mutableCopyWithZone:(void**)zone {
     return [[NSMutableData alloc] initWithData:self];
 }
@@ -583,6 +601,9 @@ using namespace Windows::Foundation;
     return memcmp(_bytes, other->_bytes, _length) == 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)objAddr {
     if (objAddr == self) {
         return TRUE;
@@ -650,6 +671,9 @@ using namespace Windows::Foundation;
     return _length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_freeWhenDone && _bytes) {
         IwFree(_bytes);

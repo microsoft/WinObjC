@@ -20,6 +20,7 @@
 #import <GLKit/GLKShader.h>
 #import <GLKit/GLKTexture.h>
 #import <GLKit/GLKSkyboxEffect.h>
+#import "GLKEffectInternal.h"
 #import "ShaderInfo.h"
 
 #define NM 0.5773502691896258f // 1 / sqrtf(3)
@@ -58,6 +59,9 @@ const char* psSrc =
     GLuint _vb, _ib;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     [super init];
     _textureCubeMap = [[GLKEffectPropertyTexture alloc] initWith:self];
@@ -75,6 +79,10 @@ const char* psSrc =
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (BOOL)updateShaderMaterialParams {
     [super updateShaderMaterialParams];
 

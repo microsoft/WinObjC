@@ -20,6 +20,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #define NSUndefinedDateComponent 0x7fffffff
 
 @implementation NSDateComponents
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     _era = NSUndefinedDateComponent;
     _year = NSUndefinedDateComponent;

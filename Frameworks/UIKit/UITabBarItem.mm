@@ -18,6 +18,9 @@
 #include "UIKit/UIView.h"
 #include "UIKit/UITabBar.h"
 #include "UIBarItemInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITabBarItem";
 
 @implementation UITabBarItem {
     idretaintype(NSString) _title, _badgeValue;
@@ -99,23 +102,23 @@
 - (void)setFinishedSelectedImage:(UIImage*)finishedSelected withFinishedUnselectedImage:(UIImage*)unselected {
     UNIMPLEMENTED();
     _image = finishedSelected;
-    EbrDebugLog("setFinishedSelectedImage not supported\n");
+    TraceVerbose(TAG, L"setFinishedSelectedImage not supported");
 }
 
 - (void)setTitleTextAttributes:(NSObject*)attributes forState:(NSUInteger)state {
-    EbrDebugLog("setTitleTextAttributes not supported\n");
+    TraceVerbose(TAG, L"setTitleTextAttributes not supported");
 }
 
 - (void)setTitlePositionAdjustment:(CGPoint)adjustment {
-    EbrDebugLog("setTitlePositionAdjustment not supported\n");
+    TraceVerbose(TAG, L"setTitlePositionAdjustment not supported");
 }
 
 - (void)setAccessibilityLabel:(NSString*)label {
-    EbrDebugLog("setAccessibilityLabel not supported\n");
+    TraceVerbose(TAG, L"setAccessibilityLabel not supported");
 }
 
 - (void)setImageInsets:(UIEdgeInsets)insets {
-    EbrDebugLog("setImageInsets not supported\n");
+    TraceVerbose(TAG, L"setImageInsets not supported");
 }
 
 - (void)setEnabled:(BOOL)enabled {

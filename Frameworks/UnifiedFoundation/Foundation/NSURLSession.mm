@@ -185,6 +185,9 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_configuration release];
     [_delegate release];
@@ -195,6 +198,9 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }

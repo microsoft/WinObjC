@@ -42,6 +42,18 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #pragma warning(push)
 #pragma warning(disable : 4714) // __forceinline not honored
 
+#ifndef WIL_IMPEXP
+#define WIL_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef WIL_EXPORT
+#ifdef __cplusplus
+#define WIL_EXPORT WIL_IMPEXP extern "C"
+#else
+#define WIL_EXPORT WIL_IMPEXP extern
+#endif
+#endif
+
 //*****************************************************************************
 // Behavioral setup (error handling macro configuration)
 //*****************************************************************************
@@ -1550,6 +1562,7 @@ __declspec(selectany) bool g_fResultOutputDebugString = true;
 __declspec(selectany) bool g_fResultOutputDebugString = false;
 #endif
 
+
 // [optionally] Plug in additional exception-type support (return S_OK when *unable* to remap the exception)
 __declspec(selectany) HRESULT(__stdcall* g_pfnResultFromCaughtException)() WI_NOEXCEPT = nullptr;
 
@@ -1669,6 +1682,8 @@ namespace details {
 __declspec(selectany) void(__stdcall* g_pfnTelemetryCallback)(bool alreadyReported, wil::FailureInfo const& failure) WI_NOEXCEPT = nullptr;
 
 // Observe all errors flowing through the system with this callback (set with wil::SetResultLoggingCallback); use with custom logging
+// TODO: WIL logging callback
+// WIL_EXPORT void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT;
 __declspec(selectany) void(__stdcall* g_pfnLoggingCallback)(wil::FailureInfo const& failure) WI_NOEXCEPT = nullptr;
 
 // True if g_pfnResultLoggingCallback is set (allows cutting off backwards compat calls to the function)
@@ -3059,20 +3074,10 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
     // Caller bug: Leaking a success code into a failure-only function
     FAIL_FAST_IF(SUCCEEDED(failure->hr) && (type != FailureType::FailFast));
 
-    // We log to OutputDebugString if:
-    // * Someone set g_fResultOutputDebugString to true (by the calling module or in the debugger)
-    // * OR we're in a PRELEASE build without ANY logging callback set (likely then a tool or test)
-    bool const fUseOutputDebugString = (g_fResultOutputDebugString
-#ifdef RESULT_PRERELEASE
-                                        ||
-                                        ((g_pfnTelemetryCallback == nullptr) && (g_pfnResultLoggingCallback == nullptr))
-#endif
-                                            );
-
     // We need to generate the logging message if:
     // * We're logging to OutputDebugString
     // * OR the caller asked us to (generally for attaching to a C++/CX exception)
-    if (fWantDebugString || fUseOutputDebugString) {
+    if (fWantDebugString) {
         // Call the logging callback (if present) to allow them to generate the debug string that will be pushed to the console
         // or the platform exception object if the caller desires it.
         if (g_pfnResultLoggingCallback != nullptr) {
@@ -3085,9 +3090,6 @@ inline void LogFailure(__R_FN_PARAMS_FULL,
             GetFailureLogString(debugString, debugStringSizeChars, *failure);
         }
 
-        if (fUseOutputDebugString) {
-            ::OutputDebugStringW(debugString);
-        }
     } else {
         // [deprecated behavior]
         // This callback was at one point *always* called for all failures, so we continue to call it for failures even when we don't

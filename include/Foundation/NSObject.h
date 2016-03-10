@@ -108,7 +108,7 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 - (id)mutableCopy;
 @end
 
-// clang-format off
+    // clang-format off
 @interface NSObject (NSCoding)
 @property (readonly) Class classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
@@ -169,11 +169,16 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 }
 #else
 #pragma clang diagnostic ignored "-Wignored-attributes"
-    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
-    CFBridgingRetain(id X) {
+/**
+ @Status Interoperable
+*/
+NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
     return X ? CFRetain((CFTypeRef)X) : NULL;
 }
 
+/**
+ @Status Interoperable
+*/
 NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
     return [(id)CFMakeCollectable(X) autorelease];
 }

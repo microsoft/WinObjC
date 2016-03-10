@@ -37,7 +37,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)main;
 + (void)sleepUntilDate:(NSDate*)aDate;
 + (void)sleepForTimeInterval:(NSTimeInterval)ti;
-+ (void)exit;
++ (void)exit STUB_METHOD;
 - (void)cancel;
 @property (readonly, getter=isExecuting) BOOL executing;
 @property (readonly, getter=isFinished) BOOL finished;
@@ -47,13 +47,13 @@ FOUNDATION_EXPORT_CLASS
 + (NSThread*)mainThread;
 + (BOOL)isMultiThreaded;
 + (NSThread*)currentThread;
-+ (NSArray*)callStackReturnAddresses;
-+ (NSArray*)callStackSymbols;
++ (NSArray*)callStackReturnAddresses STUB_METHOD;
++ (NSArray*)callStackSymbols STUB_METHOD;
 @property (readonly, retain) NSMutableDictionary* threadDictionary;
 @property (copy) NSString* name;
 @property NSUInteger stackSize;
 + (double)threadPriority;
-@property double threadPriority;
+@property (readwrite) double threadPriority;
 + (BOOL)setThreadPriority:(double)priority;
 @end
 

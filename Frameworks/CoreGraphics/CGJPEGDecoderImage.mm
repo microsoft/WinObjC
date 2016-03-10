@@ -20,11 +20,13 @@
 #import <UIKit/UIImage.h>
 #import "CGContextInternal.h"
 
-#define EXTERN(type) extern type
-
 extern "C" {
 #import <jpeglib.h>
 };
+
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGJPEGDecoderImage";
 
 CGJPEGDecoderImage::CGJPEGDecoderImage(const char* filename) {
     _img = new CGJPEGImageBacking(filename);
@@ -43,7 +45,7 @@ void CGJPEGImageBacking::DiscardIfPossible() {
     if (!_fileName) {
         return;
     }
-    EbrDebugLog("Discarding %s\n", _fileName);
+    TraceVerbose(TAG, L"Discarding %hs", _fileName);
     CGDiscardableImageBacking::DiscardIfPossible();
 }
 
@@ -61,7 +63,7 @@ typedef struct my_error_mgr* my_error_ptr;
 static void jpegerrmgr_output(j_common_ptr cinfo) {
     char buf[JMSG_LENGTH_MAX];
     cinfo->err->format_message(cinfo, buf);
-    EbrDebugLog("JPEG error: %s\n", buf);
+    TraceError(TAG, L"JPEG error: %hs", buf);
 }
 
 METHODDEF(void)
@@ -269,7 +271,7 @@ skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
 }
 
 CGImageBacking* CGJPEGImageBacking::ConstructBacking() {
-    EbrDebugLog("Delay-loading image %s\n", _fileName ? _fileName : "NIL");
+    TraceVerbose(TAG, L"Delay-loading image %hs", _fileName ? _fileName : "NIL");
 
     if (!_hasCachedInfo) {
         Decode(NULL, 0);
@@ -398,7 +400,7 @@ void CGJPEGImageBacking::Decode(void* imgDest, int stride) {
 
         default:
             _orientation = -1;
-            EbrDebugLog("Unknown JPEG orientation %d\n", orientation);
+            TraceVerbose(TAG, L"Unknown JPEG orientation %d", orientation);
             break;
     }
 

@@ -205,13 +205,13 @@ template<class T> bool fail_nan_test(const T &result, const T &expected) {
     }
 }
 
-static void checkArrayInt(int* result, int* expected, int size, char* name) {
+static void checkArrayInt(int* result, int* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         ASSERT_NEAR_MSG(result[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %i\nFOUND: %i", name, i, expected[i], result[i]);
     }
 }
 
-static void checkArraySingle(float* result, float* expected, int size, char* name) {
+static void checkArraySingle(float* result, float* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         if (!fail_nan_test(result[i], expected[i])) {
             ASSERT_NEAR_MSG(result[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %f\nFOUND: %f", name, i, expected[i], result[i]);
@@ -219,7 +219,7 @@ static void checkArraySingle(float* result, float* expected, int size, char* nam
     }
 }
 
-static void checkArrayDouble(double* result, double* expected, int size, char* name) {
+static void checkArrayDouble(double* result, double* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         if (!fail_nan_test(result[i], expected[i])) {
             ASSERT_NEAR_MSG(result[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %f\nFOUND: %f", name, i, expected[i], result[i]);

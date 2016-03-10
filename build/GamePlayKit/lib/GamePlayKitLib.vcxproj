@@ -53,7 +53,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{33CBF4B3-6D14-426B-AED4-6B674BAC23B1}</ProjectGuid>
     <ProjectName>GamePlayKitLib</ProjectName>
-    <RootNamespace>GamePlayKit</RootNamespace>
+    <RootNamespace>GamePlayKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>GamePlayKitLib</OutputName>

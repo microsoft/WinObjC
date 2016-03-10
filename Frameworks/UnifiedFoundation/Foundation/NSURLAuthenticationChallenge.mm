@@ -44,6 +44,9 @@
     return _protectionSpace;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     _protectionSpace = [NSURLProtectionSpace new];
 

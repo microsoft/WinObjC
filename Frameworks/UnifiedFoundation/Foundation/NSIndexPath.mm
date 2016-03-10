@@ -75,6 +75,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     if ([other isKindOfClass:[NSIndexPath class]]) {
         NSIndexPath* otherPath = other;
@@ -84,6 +87,9 @@
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_indexes) {
         IwFree(_indexes);
@@ -114,6 +120,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[[self class] alloc] initWithIndexes:_indexes length:_length];
 }
@@ -142,6 +151,9 @@
     return _length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     unsigned ret = 0;
 

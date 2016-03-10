@@ -161,6 +161,9 @@ static NSLocale* _currentLocale;
     return _locale.clone();
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         // Initialize user preferred languagess
@@ -172,6 +175,9 @@ static NSLocale* _currentLocale;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_userPreferredLanguagesSeperatedByString release];
     [_userPreferredLanguage release];
@@ -420,6 +426,9 @@ static NSLocale* _currentLocale;
     return [self valueForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     if (self == [NSLocale class]) {
         _currentLocale = [self new];
@@ -447,24 +456,30 @@ static NSLocale* _currentLocale;
     return [self currentLocale];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSArray*)preferredLanguages {
     return [[self systemLocale] _getUserPreferredLanguages];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)valueForUndefinedKey:(NSString*)key {
     // We always return nil for valueForKey we do not support.
     return nil;
 }
 
 /**
- @Interoperable
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
 /**
- @Interoperable
+ @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
@@ -487,7 +502,7 @@ static NSLocale* _currentLocale;
 }
 
 /**
- @Interoperable
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     // Can't encode/decode _locale. We will have to recreate it.

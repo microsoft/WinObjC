@@ -30,6 +30,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSHTTPURLResponse.h"
 #include "NSURLProtocol_file.h"
 #include "NSURLProtocolInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSURLProtocol_file";
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
@@ -53,7 +56,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _modes = [[NSMutableArray arrayWithObject:@"kCFRunLoopDefaultMode"] retain];
 
     id url = [_request URL];
-    EbrDebugLog("Loading %s\n", [[url absoluteString] UTF8String]);
+    TraceVerbose(TAG, L"Loading %hs", [[url absoluteString] UTF8String]);
 
     _path = [[url path] copy];
     // id host = [NSHost hostWithName:hostName];
@@ -66,9 +69,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
     fpIn = EbrFopen(pFilePath, "rb");
     if (!fpIn) {
-        EbrDebugLog("Couldn't open %s\n", pFilePath);
+        TraceVerbose(TAG, L"Couldn't open %hs", pFilePath);
     } else {
-        EbrDebugLog("Opened %s\n", pFilePath);
+        TraceVerbose(TAG, L"Opened %hs", pFilePath);
     }
     return self;
 }
@@ -90,7 +93,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     id url = [_request URL];
 
     if (fpIn == NULL) {
-        EbrDebugLog("doFileLoad: fpIn = NULL! self=%x\n", self);
+        TraceVerbose(TAG, L"doFileLoad: fpIn = NULL! self=%x", self);
         id error = [NSError errorWithDomain:@"Couldn't open file" code:100 userInfo:nil];
         [_client URLProtocol:self didFailWithError:error];
         return self;

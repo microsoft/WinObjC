@@ -17,6 +17,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <StubReturn.h>
 #import <ErrorHandling.h>
+#import <UTTypeInternalMap.h>
 
 // Type Declaration Dictionary Keys
 const CFStringRef kUTExportedTypeDeclarationsKey = static_cast<const CFStringRef>(@"UTExportedTypeDeclarations");
@@ -118,48 +119,114 @@ const CFStringRef kUTTypeVCard = static_cast<const CFStringRef>(@"public.vcard")
 const CFStringRef kUTTypeInkText = static_cast<const CFStringRef>(@"com.apple.ink.inktext");
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Only a subset of System UTIs are supported and inConformingToUTI is option not supported.
 */
 CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    if (inConformingToUTI != NULL) {
+        UNIMPLEMENTED_WITH_MSG("inConformingToUTI (%s) is not currently supported for UTTypeCreatePreferredIdentifierForTag",
+                               [static_cast<NSString*>(inConformingToUTI) UTF8String]);
+    }
+
+    CFComparisonResult result;
+
+    result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
+    if (result == kCFCompareEqualTo) {
+        CFArrayRef fileNameExtensions = _UTGetUTIsForFileNameExtension(inTag);
+        return static_cast<CFStringRef>(CFArrayGetValueAtIndex(fileNameExtensions, 0));
+    }
+
+    result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);
+    if (result == kCFCompareEqualTo) {
+        CFArrayRef mimeTypes = _UTGetUTIsForMIMEType(inTag);
+        return static_cast<CFStringRef>(CFArrayGetValueAtIndex(mimeTypes, 0));
+    }
+
+    return NULL;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Only a subset of System UTIs are supported and inConformingToUTI is option not supported.
 */
 CFArrayRef UTTypeCreateAllIdentifiersForTag(CFStringRef inTagClass, CFStringRef inTag, CFStringRef inConformingToUTI) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    if (inConformingToUTI != NULL) {
+        UNIMPLEMENTED_WITH_MSG("inConformingToUTI (%s) is not currently supported for UTTypeCreatePreferredIdentifierForTag",
+                               [static_cast<NSString*>(inConformingToUTI) UTF8String]);
+    }
+
+    CFComparisonResult result;
+
+    result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTGetUTIsForFileNameExtension(inTag);
+    }
+
+    result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTGetUTIsForMIMEType(inTag);
+    }
+
+    return NULL;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Only a subset of System UTIs are supported.
 */
 CFStringRef UTTypeCopyPreferredTagWithClass(CFStringRef inUTI, CFStringRef inTagClass) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    CFComparisonResult result;
+
+    result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTGetMimeTypeForUTI(inUTI);
+    }
+
+    result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
+    if (result == kCFCompareEqualTo) {
+        return _UTGetFileNameExtensionForUTI(inUTI);
+    }
+
+    return NULL;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes UTI conformance logic is not supported.
 */
 Boolean UTTypeEqual(CFStringRef inUTI1, CFStringRef inUTI2) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    CFComparisonResult result = CFStringCompare(inUTI1, inUTI2, 0);
+    return (result == kCFCompareEqualTo) ? true : false;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes UTI conformance logic is not supported.
 */
 Boolean UTTypeConformsTo(CFStringRef inUTI, CFStringRef inConformsToUTI) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Initialize MobileCoreServices System UTI.
+    _UTInitializeSystemUTIMaps();
+
+    if (UTTypeEqual(inUTI, inConformsToUTI)) {
+        return true;
+    } else {
+        UNIMPLEMENTED_WITH_MSG("UTI conformance check is not implemented! Checking %s conformance to %s.",
+                               [static_cast<NSString*>(inUTI) UTF8String],
+                               [static_cast<NSString*>(inConformsToUTI) UTF8String]);
+        return false;
+    }
 }
 
 /**

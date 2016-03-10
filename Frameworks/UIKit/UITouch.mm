@@ -63,8 +63,6 @@
             ret.x = touchX - rect.origin.x;
             ret.y = touchY - rect.origin.y;
         }
-        // EbrDebugLog("Mapping %s (%f, %f -> %f, %f)\n", object_getClassName(viewAddr), touchX, touchY, ret->x,
-        // ret->y);
     } else {
         ret.x = touchX;
         ret.y = touchY;

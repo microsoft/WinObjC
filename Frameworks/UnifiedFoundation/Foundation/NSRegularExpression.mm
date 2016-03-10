@@ -19,7 +19,7 @@
 #include <unicode/regex.h>
 #include <memory>
 
-#import "Logging.h"
+#import "LoggingNative.h"
 
 @interface NSRegularExpression () {
     std::unique_ptr<RegexPattern> _icuRegex;
@@ -34,6 +34,9 @@ static StrongId<NSCharacterSet> s_patternMetaCharacters;
 static StrongId<NSCharacterSet> s_templateMetaCharacters;
 
 @implementation NSRegularExpression
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     s_patternMetaCharacters = [NSCharacterSet characterSetWithCharactersInString:@"$^*()+/?[{}.\\"];
     s_templateMetaCharacters = [NSCharacterSet characterSetWithCharactersInString:@"$\\"];
@@ -121,6 +124,9 @@ static bool _U_LogIfError(UErrorCode status) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_pattern release];
 

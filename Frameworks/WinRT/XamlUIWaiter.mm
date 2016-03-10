@@ -15,9 +15,7 @@
 //******************************************************************************
 
 #include "UIKit/UIKit.h"
-
-typedef void* EbrEvent;
-struct SocketWait;
+#include "NSRunLoop+Internal.h"
 
 int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 

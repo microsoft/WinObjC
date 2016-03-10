@@ -177,8 +177,15 @@
       Category="General"
       DisplayName="Enable C and Objective-C Modules"
       Description="Specifies whether to use Clang modules."
-      Switch="-fmodules"
+      Switch="-fmodules -fimplicit-module-maps"
       Name="ObjectiveCModules" />
+    <StringProperty
+      Visible="False"
+      Category="General"
+      DisplayName="Path to Objective-C modules"
+      Description="Path to the directory where the modules will be cached"
+      Switch="-fmodules-cache-path="
+      Name="ObjectiveCModulesCachePath" />
     <StringListProperty
       Visible="False"
       Category="Paths"

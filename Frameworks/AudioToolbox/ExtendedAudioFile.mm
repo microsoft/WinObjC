@@ -112,7 +112,7 @@ OSStatus ExtAudioFileRead(ExtAudioFileRef fileID, UInt32* numFrames, AudioBuffer
 */
 OSStatus ExtAudioFileSeek(ExtAudioFileRef fileID, SInt64 pos) {
     UNIMPLEMENTED();
-    EbrDebugLog("ExtAudioFileSeek not supported\n");
+
     return 0;
 }
 

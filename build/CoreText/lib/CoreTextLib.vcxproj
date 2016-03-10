@@ -38,7 +38,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{39D93F30-F8F9-4D8E-A428-C188E918AA48}</ProjectGuid>
     <ProjectName>CoreTextLib</ProjectName>
-    <RootNamespace>CoreText</RootNamespace>
+    <RootNamespace>CoreTextLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreTextLib</OutputName>

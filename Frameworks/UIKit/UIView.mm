@@ -35,9 +35,11 @@
 #include <math.h>
 
 #include <Windows.h>
+#include <LoggingNative.h>
+#include <NSLogging.h>
 
-const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 static const wchar_t* TAG = L"UIView";
+const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 
 /** @Status Stub */
 const CGSize UILayoutFittingCompressedSize = StubConstant();
@@ -118,7 +120,6 @@ int viewCount = 0;
 
     self->layer.attach([[[self class] layerClass] new]);
     [self->layer setDelegate:self];
-
     // TraceWarning(TAG,L"%d: Allocing %hs (%x)", viewCount, object_getClassName(self), (id) self);
 }
 
@@ -274,7 +275,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        TraceWarning(TAG, L"Removing constraint (%hs): ", [[wayward description] UTF8String]);
+                        NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
                         [wayward printConstraint];
                         remove = true;
                         break;
@@ -288,7 +289,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     }
                 }
             } else {
-                TraceWarning(TAG, L"Skipping unsupported constraint type: %hs", [[constraint description] UTF8String]);
+                NSTraceVerbose(TAG, @"Skipping unsupported constraint type: %@", [constraint description]);
             }
         }
     }
@@ -312,7 +313,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 
     NSArray* gestures = [coder decodeObjectForKey:@"gestureRecognizers"];
     if (gestures != nil) {
-        TraceWarning(TAG, L"UIView initWithCoder adding gesture recognizers");
+        TraceVerbose(TAG, L"UIView initWithCoder adding gesture recognizers");
         [self setGestureRecognizers:gestures];
     }
 
@@ -603,13 +604,13 @@ static float doRound(float f) {
     frame.size.width = doRound(frame.size.width);
     frame.size.height = doRound(frame.size.height);
 
-    TraceWarning(TAG,
-                 L"SetFrame(%hs): %f, %f, %f, %f",
-                 object_getClassName(self),
-                 frame.origin.x,
-                 frame.origin.y,
-                 frame.size.width,
-                 frame.size.height);
+    TraceVerbose(TAG,
+                       L"SetFrame(%hs): %f, %f, %f, %f",
+                       object_getClassName(self),
+                       frame.origin.x,
+                       frame.origin.y,
+                       frame.size.width,
+                       frame.size.height);
 
     CGRect startFrame = frame;
 
@@ -1058,13 +1059,13 @@ static float doRound(float f) {
     }
     if (view1 == nil || view2 == nil) {
         TraceWarning(TAG,
-                     L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)",
-                     index1,
-                     index2,
-                     priv->childCount,
-                     object_getClassName(self),
-                     view1 ? object_getClassName(view1) : "nil",
-                     view2 ? object_getClassName(view2) : "nil");
+                           L"Cannot exchange subviews %d and %d count=%d on view %hs (view1=%hs view2=%hs)",
+                           index1,
+                           index2,
+                           priv->childCount,
+                           object_getClassName(self),
+                           view1 ? object_getClassName(view1) : "nil",
+                           view2 ? object_getClassName(view2) : "nil");
         return;
     }
 
@@ -1835,8 +1836,7 @@ static float doRound(float f) {
             return priv->_contentHuggingPriority.height;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content compression resistance for unknown axis");
+            TraceWarning(TAG, L"Content compression resistance for unknown axis.");
             return 0.0f;
     }
 }
@@ -1853,8 +1853,7 @@ static float doRound(float f) {
             priv->_contentCompressionResistancePriority.height = priority;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content compression resistance set on unknown axis");
+            TraceWarning(TAG, L"Content compression resistance set on unknown axis.");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1872,8 +1871,7 @@ static float doRound(float f) {
             return priv->_contentHuggingPriority.height;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content hugging for unknown axis");
+            TraceWarning(TAG, L"Content hugging for unknown axis.");
             return 0.0f;
     }
 }
@@ -1890,8 +1888,7 @@ static float doRound(float f) {
             priv->_contentHuggingPriority.height = priority;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content hugging set on unknown axis");
+            TraceWarning(TAG, L"Content hugging set on unknown axis.");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1934,7 +1931,7 @@ static float doRound(float f) {
 }
 
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    TraceWarning(TAG, L"Clicked: %hs", object_getClassName(self));
+    TraceVerbose(TAG, L"Clicked: %hs", object_getClassName(self));
     UIResponder* nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -1970,8 +1967,7 @@ static float doRound(float f) {
 */
 - (void)setExclusiveTouch:(BOOL)isExclusive {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"setExclusiveTouch not supported");
-    // assert(0);
+    TraceWarning(TAG, L"setExclusiveTouch not supported.");
 }
 
 - (id<CAAction>)actionForLayer:(CALayer*)actionLayer forKey:(NSString*)key {
@@ -2067,7 +2063,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock completion:(completionBlockFunc)completion {
-    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported");
+    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported.");
     [self beginAnimations:nil context:0];
     _animationProperties[stackLevel]._completionBlock = COPYBLOCK(completion);
     [self setAnimationDuration:duration];
@@ -2130,8 +2126,8 @@ static float doRound(float f) {
                           animations:(void (^)(void))animations
                           completion:(void (^)(BOOL finished))completion {
     TraceWarning(TAG,
-                 L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
-                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported");
+                       L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
+                       "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported.");
     // remove all unsupported options.
     UIViewAnimationOptions uiViewAnimationOptions = (UIViewAnimationOptions)(0x23F & options);
 
@@ -2456,7 +2452,7 @@ static float doRound(float f) {
         return;
     _deallocating = true;
     viewCount--;
-    TraceWarning(TAG, L"%d: dealloc %hs %x", viewCount, object_getClassName(self), self);
+    TraceInfo(TAG, L"%d: dealloc %hs %x", viewCount, object_getClassName(self), self);
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -2571,12 +2567,12 @@ static float doRound(float f) {
 }
 
 + (id)appearance {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called.", __func__);
     return nil;
 }
 
 + (id)appearanceWhenContainedIn:(id)containedClass, ... {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called", __func__);
+    TraceWarning(TAG, L"Unimplemented method %hs on UIView called.", __func__);
     return nil;
 }
 

@@ -36,3 +36,11 @@ struct CAMediaTimingProperties {
 
 - (void)setDelay:(double)delay;
 @end
+
+@interface NSObject(CAAnimationInternal)
+- (void)_removeAnimationsFromLayer;
+- (BOOL)wasRemoved;
+- (BOOL)wasAborted;
+- (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(id)forKey;
+- (id)animationHasStarted;
+@end

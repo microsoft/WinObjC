@@ -28,7 +28,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C693A263-7A21-4170-A292-32628D5D2B5B}</ProjectGuid>
     <ProjectName>CoreTelephonyLib</ProjectName>
-    <RootNamespace>CoreTelephony</RootNamespace>
+    <RootNamespace>CoreTelephonyLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreTelephonyLib</OutputName>

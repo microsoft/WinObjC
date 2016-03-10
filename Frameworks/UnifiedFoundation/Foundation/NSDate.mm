@@ -19,6 +19,9 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "Foundation/NSDate.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDate";
 
 double TimeIntervalSinceReferenceDate() {
     double result;
@@ -151,9 +154,12 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:secondsSinceRef] autorelease];
 }
 
+/**
+ @Status Stub
+*/
 - (NSDate*)initWithCoder:(NSCoder*)coder {
-    EbrDebugLog("NSDate initWithCoder not supported\n");
-    return [self init];
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -161,7 +167,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 */
 - (NSDate*)initWithString:(NSString*)string {
     UNIMPLEMENTED();
-    EbrDebugLog("NSDate initWithString not supported\n");
+    TraceVerbose(TAG, L"NSDate initWithString not supported");
     [self init];
 
     return self;
@@ -228,6 +234,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(NSDate*)toDate {
     if (self == toDate) {
         return TRUE;
@@ -239,6 +248,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     return [self isEqualToDate:(id)toDate];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)hash {
     NSUInteger hashRet[2];
 
@@ -274,6 +286,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -297,10 +312,16 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
     return self;
 }
 
+/**
+ @Status Stub
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
-    EbrDebugLog("NSDate: encodeWithCoder not supported\n");
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     static NSDateFormatter* formatter;
 

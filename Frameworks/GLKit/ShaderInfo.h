@@ -63,8 +63,9 @@ struct ShaderLayout {
             return GLKS_INVALID; // used in pixel shaders.
 
         it->second.used = true;
-        if (loc)
+        if (loc) {
             *loc = it->second.loc;
+        }
 
         return it->second.type;
     }

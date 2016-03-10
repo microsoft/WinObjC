@@ -28,6 +28,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSLock.h"
 
 #include <time.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSOperationQueue";
 
 typedef void* gpointer;
 
@@ -204,6 +207,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)hasMoreWork {
     if (priv->curOperation != nil) {
         return TRUE;
@@ -327,7 +333,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 - (id)operations {
     id ret = [NSMutableArray array];
 
-    EbrDebugLog("Should lock queue for this\n");
+    TraceVerbose(TAG, L"Should lock queue for this");
     id cur = priv->curOperation;
     if (cur != nil) {
         [ret addObject:cur];
@@ -393,7 +399,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
  @Status Interoperable
 */
 - (void)cancelAllOperations {
-    EbrDebugLog("Should lock queue for this\n");
+    TraceVerbose(TAG, L"Should lock queue for this");
 
     id cur = priv->curOperation;
     if (cur != nil) {
@@ -460,6 +466,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)resume {
     [priv->suspendedCondition lock];
     if (priv->isSuspended) {
@@ -471,6 +480,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)suspend {
     [priv->suspendedCondition lock];
     priv->isSuspended = TRUE;
@@ -512,6 +524,9 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return _mainQueue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [priv->workAvailable release];
     [priv->suspendedCondition release];
@@ -522,10 +537,16 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)retain {
     return [super retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)release {
     [super release];
 }

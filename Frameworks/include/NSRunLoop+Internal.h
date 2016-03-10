@@ -34,3 +34,8 @@
 @interface NSRunLoop ()
 - (void)_invalidateTimerWithDelayedPerform:(NSDelayedPerform*)delayedPerform;
 @end
+
+@interface NSRunLoop(XamlUIWaiter)
++ (void)setUIThreadWaitFunction:(int(*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
+@end
+

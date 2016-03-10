@@ -19,6 +19,9 @@
 #include "UIKit/UITextInputTraits.h"
 #include "CGContextInternal.h"
 #include "NSTextStorageInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITextView";
 
 const float textViewLeftPadding = 12.5f;
 const float textViewRightPadding = 12.5f;
@@ -458,7 +461,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 */
 - (void)scrollRangeToVisible:(NSRange)range {
     UNIMPLEMENTED();
-    EbrDebugLog("scrollRangeToVisible not implemented\n");
+    TraceVerbose(TAG, L"scrollRangeToVisible not implemented");
 }
 
 - (void)keyPressed:(uint32_t)key {
@@ -524,7 +527,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
         return FALSE;
     }
     if ([self isFirstResponder]) {
-        EbrRefreshKeyboard();
         return TRUE;
     }
 
@@ -537,7 +539,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if ([super becomeFirstResponder] == FALSE) {
         return FALSE;
     }
-    EbrShowKeyboard();
+
     _isEditing = TRUE;
     _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
     [_cursorBlink setHidden:FALSE];
@@ -562,7 +564,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if (_isEditing) {
         [self _adjustTextLayerSize:FALSE];
 
-        EbrHideKeyboard();
         _isEditing = FALSE;
         if ([_delegate respondsToSelector:@selector(textViewDidEndEditing:)]) {
             [_delegate textViewDidEndEditing:self];

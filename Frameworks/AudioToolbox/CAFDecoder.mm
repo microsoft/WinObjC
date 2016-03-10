@@ -17,6 +17,9 @@
 #include "Starboard.h"
 #include "AudioToolbox/AudioFile.h"
 #include "CAFDecoder.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CAFDecoder";
 
 const SInt32 CAFDecoder::kPredTolerance = 0x007F;
 const UInt32 CAFDecoder::kIndexMask = 0x007F;
@@ -95,12 +98,12 @@ void CAFDecoder::DecodeChannelSInt16(ChannelState& ioChannelState,
     SInt32 theStep = sStepTable[theStepTableIndex];
 
     for (; inNumberPacketsToDecode > 0; --inNumberPacketsToDecode) {
-        // EbrDebugLog("inNumberPacketsToDecode %d\n", inNumberPacketsToDecode);
+        // TraceVerbose(TAG, L"inNumberPacketsToDecode %d", inNumberPacketsToDecode);
         for (UInt32 theNumberSamplesLeft = kIMAFramesPerPacket; theNumberSamplesLeft > 0; --theNumberSamplesLeft) {
             if (theNumberSamplesLeft & 1) /* two samples per input char */
                 theCode = theTemporaryInputData >> 4;
             else {
-                // EbrDebugLog("IN %02X\n", *theInputData & 255);
+                // TraceVerbose(TAG, L"IN %02X", *theInputData & 255);
                 theTemporaryInputData = (UInt32)*theInputData++; /* buffer two ADPCM nibbles */
                 theCode = theTemporaryInputData & 0x0F;
             }
@@ -126,9 +129,9 @@ void CAFDecoder::DecodeChannelSInt16(ChannelState& ioChannelState,
                 thePredictedSample = -32768;
             }
 
-            // EbrDebugLog("   theCode %02X  theDifference %d\n", theCode,
+            // TraceVerbose(TAG, L"   theCode %02X  theDifference %d", theCode,
             // theDifference);
-            // EbrDebugLog("OUT %02X %d   \n", thePredictedSample & 255,
+            // TraceVerbose(TAG, L"OUT %02X %d   ", thePredictedSample & 255,
             // thePredictedSample);
 
             *theOutputData = thePredictedSample;
@@ -140,7 +143,7 @@ void CAFDecoder::DecodeChannelSInt16(ChannelState& ioChannelState,
             else if (theStepTableIndex > 88)
                 theStepTableIndex = 88;
             theStep = sStepTable[theStepTableIndex];
-            // EbrDebugLog("   theStep %d  theStepTableIndex %d\n", theStep,
+            // TraceVerbose(TAG, L"   theStep %d  theStepTableIndex %d", theStep,
             // theStepTableIndex);
         }
 
@@ -266,7 +269,7 @@ UInt32 CAFDecoder::ProduceOutputPackets(EbrFile* fpIn,
 
         ChannelStateList::iterator theIterator = mChannelStateList.begin();
         for (int theChannelIndex = 0; theChannelIndex < mOutputFormat.mChannelsPerFrame; ++theChannelIndex) {
-            // EbrDebugLog("->DecodeChannel %d %d %d %08X %08X\n",
+            // TraceVerbose(TAG, L"->DecodeChannel %d %d %d %08X %08X",
             // mOutputFormat.mChannelsPerFrame, theChannelIndex,
             // ioNumberPackets, theInputData, theOutputData);
             DecodeChannelSInt16(*theIterator,
@@ -332,7 +335,7 @@ bool CAFDecoder::InitForRead(EbrFile* in) {
                         break;
 
                     default:
-                        EbrDebugLog("Unrecognized CAF format %d\n", cafDesc.mFormatFlags);
+                        TraceError(TAG, L"Unrecognized CAF format %d", cafDesc.mFormatFlags);
                         return false;
                 }
 

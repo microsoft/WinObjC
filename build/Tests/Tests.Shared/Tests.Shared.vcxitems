@@ -11,7 +11,7 @@
     </ClCompile>
     <ClangCompile Condition="'$(Platform)'=='ARM'">
       <!-- Remove this once exception handling works on ARM -->
-      <PreprocessorDefinitions>WINOBJC_DISABLE_TESTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WINOBJC_DISABLE_TESTS</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

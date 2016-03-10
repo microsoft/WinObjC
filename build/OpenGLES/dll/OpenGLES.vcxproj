@@ -56,7 +56,6 @@
     <Link>
       <ModuleDefinitionFile>OpenGLES.def</ModuleDefinitionFile>
       <AdditionalDependencies>mincore.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -75,7 +74,6 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
     <Link>
       <ModuleDefinitionFile>OpenGLES.def</ModuleDefinitionFile>
       <AdditionalDependencies>mincore.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -94,7 +92,6 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
     <Link>
       <ModuleDefinitionFile>OpenGLES.def</ModuleDefinitionFile>
       <AdditionalDependencies>mincore.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -113,7 +110,6 @@ COPY /Y "$(angle-BinPath)\libGLESv2.dll" "$(OutDir)libGLESv2.dll"</Command>
     <Link>
       <ModuleDefinitionFile>OpenGLES.def</ModuleDefinitionFile>
       <AdditionalDependencies>mincore.lib;d3d11.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

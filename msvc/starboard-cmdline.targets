@@ -5,20 +5,4 @@
     <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.targets" />
   </ImportGroup>
 
-  <Target
-    Name="SBRemoveAppContainer"
-    AfterTargets="_SBResourceCopy"
-    Inputs="@(SBResourceCopy)"
-    Outputs="@(SBResourceCopy->'%(OutputFile).bitremoved')">
-    <Message Importance="high"
-      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
-      Text="Removing AppContainer bit from %(SBResourceCopy.OutputFile)" />
-
-    <Exec
-      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
-      Command="Link.exe /EDIT /NOLOGO /APPCONTAINER:NO %(SBResourceCopy.OutputFile)" />
-      
-    <WriteLinesToFile
-        File="%(SBResourceCopy.OutputFile).bitremoved" Lines="AppContainer bit removed"/>
-  </Target>
 </Project>

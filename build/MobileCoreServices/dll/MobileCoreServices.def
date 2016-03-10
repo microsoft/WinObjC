@@ -1,6 +1,6 @@
 LIBRARY MobileCoreServices
     EXPORTS
-        ; UTType Reference.mm
+        ; UTType.mm
         kUTExportedTypeDeclarationsKey DATA
         kUTImportedTypeDeclarationsKey DATA
         kUTTypeIdentifierKey DATA

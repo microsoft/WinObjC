@@ -27,6 +27,9 @@
 #include "Etc.h"
 #include <cctype>
 #include <ctype.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSHTTPCookie";
 
 #define CFREGISTER_STRING(name) const CFStringRef name = (const CFStringRef) @ #name;
 #define REGISTER_STRING(name) NSString* const name = @ #name;
@@ -146,9 +149,9 @@ void parseCookies(const char* lineptr, id dict) {
             } else if (Curl_raw_equal("discard", name)) {
                 [dict setObject:[NSNumber numberWithBool:YES] forKey:NSHTTPCookieDiscard];
             } else if (Curl_raw_equal("expires", name)) {
-                EbrDebugLog("Should parse and set cookie expiration dates!");
+                TraceVerbose(TAG, L"Should parse and set cookie expiration dates!");
             } else {
-                EbrDebugLog("Unrecognized cookie name: %s", name);
+                TraceVerbose(TAG, L"Unrecognized cookie name: %hs", name);
             }
 
 #undef ADD_COOKIE_VALUE
@@ -202,7 +205,7 @@ void parseCookies(const char* lineptr, id dict) {
         id cookie = [NSHTTPCookie cookieWithProperties:cookieDict];
 
         if (cookie) {
-            EbrDebugLog("Added cookie with name=%s value=%s domain=%s\n",
+            TraceVerbose(TAG, L"Added cookie with name=%hs value=%hs domain=%hs",
                         [[cookie name] UTF8String],
                         [[cookie value] UTF8String],
                         [[cookie domain] UTF8String]);
@@ -252,7 +255,7 @@ void parseCookies(const char* lineptr, id dict) {
             s = ss; // first
     }
     if (s) {
-        EbrDebugLog("Cookies are %s\n", [s UTF8String]);
+        TraceVerbose(TAG, L"Cookies are %hs", [s UTF8String]);
         return [NSDictionary dictionaryWithObject:s forKey:@"Cookie"]; // put them all into a single header line
     } else
         return [NSDictionary dictionary]; // empty
@@ -364,16 +367,19 @@ void parseCookies(const char* lineptr, id dict) {
     [_properties setObject:[NSNumber numberWithDouble:[NSDate timeIntervalSinceReferenceDate]] forKey:@"Created"];
     if (![_properties objectForKey:NSHTTPCookieDiscard])
         [_properties setObject:([[_properties objectForKey:NSHTTPCookieVersion] intValue] >= 1 &&
-                                                      ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
-                                                         @"TRUE" :
-                                                         @"FALSE"
-                                              forKey:NSHTTPCookieDiscard];
+                                ![_properties objectForKey:NSHTTPCookieMaximumAge]) ?
+                                   @"TRUE" :
+                                   @"FALSE"
+                        forKey:NSHTTPCookieDiscard];
     if (![_properties objectForKey:NSHTTPCookieDomain])
         [_properties setObject:[[_properties objectForKey:NSHTTPCookieOriginURL] host] forKey:NSHTTPCookieDomain];
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_properties release];
     [super dealloc];

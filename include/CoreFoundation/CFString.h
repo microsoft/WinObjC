@@ -257,10 +257,14 @@ COREFOUNDATION_EXPORT void CFStringReplace(CFMutableStringRef theString, CFRange
 COREFOUNDATION_EXPORT Boolean CFStringTransform(CFMutableStringRef string, CFRange* range, CFStringRef transform, Boolean reverse)
     STUB_METHOD;
 
+// TODO::
+// VSO ID 6669919 - Support for constant strings from CF.
+/*
 #ifdef CFSTR
 #undef CFSTR
 #endif
 #define CFSTR(str) ((CFStringRef)__builtin___CFStringMakeConstantString("" str ""))
+*/
 
 DISABLE_IMPLICIT_BRIDGING
 

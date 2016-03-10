@@ -139,14 +139,9 @@
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;$(StarboardBasePath)\tests\unittests\Tests.Shared;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
       <OtherCPlusPlusFlags>-Wdeprecated-declarations</OtherCPlusPlusFlags>
-      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>
-        rd /S /Q ".\modulecache"
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -169,11 +164,6 @@
       <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>
-        rd /S /Q ".\modulecache"
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -196,15 +186,10 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\tests\frameworks\include;$(StarboardBasePath)\tests\frameworks\gtest;$(StarboardBasePath)\tests\frameworks\gtest\include;$(StarboardBasePath)\;$(StarboardBasePath)\tests\unittests\Tests.Shared;%(AdditionalIncludeDirectories)</IncludePaths>
       <CompileAs>CompileAsObjCpp</CompileAs>
-      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>
-        rd /S /Q ".\modulecache"
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
     <ClCompile>
@@ -231,25 +216,12 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
-    <PostBuildEvent>
-      <Command>
-        rd /S /Q ".\modulecache"
-      </Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\Framework\Framework.cpp" />
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\ClangModulesTest.mm">
-      <ObjectiveCModules>true</ObjectiveCModules>
-      <OtherCPlusPlusFlags>-fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
-      <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">-fimplicit-module-maps -fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
-      <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">-fimplicit-module-maps -fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
-      <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">-fimplicit-module-maps -fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
-      <OtherCPlusPlusFlags Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">-fimplicit-module-maps -fmodules-cache-path=".\modulecache"</OtherCPlusPlusFlags>
-    </ClangCompile>
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\AutoIdTests_ARC.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\AutoIdTests_NoARC.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Starboard\CommonCryptoTests.mm" />

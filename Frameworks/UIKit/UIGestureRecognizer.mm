@@ -25,6 +25,9 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 #import "UIGestureRecognizerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIGestureRecognizer";
 
 extern NSMutableDictionary* g_curGesturesDict;
 
@@ -196,7 +199,7 @@ static void commonInit(UIGestureRecognizer* self) {
 
         {
             TimingFunction t("Gesture");
-            // EbrDebugLog("Gesture %s detected - calling %s::%s\n", object_getClassName(self),
+            // TraceVerbose(TAG, L"Gesture %hs detected - calling %hs::%hs", object_getClassName(self),
             // object_getClassName(target), sel);
             [target performSelector:sel withObject:self];
         }
@@ -262,7 +265,7 @@ static void commonInit(UIGestureRecognizer* self) {
     id curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
-            EbrDebugLog("Cancelling %s\n", object_getClassName(curGesture));
+            TraceVerbose(TAG, L"Cancelling %hs", object_getClassName(curGesture));
             [curGesture cancel];
         }
     }
@@ -281,65 +284,107 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationInView:(UIView*)view {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (NSUInteger)numberOfTouches {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (void)ignorePress:(UIPress*)button forEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesCancelled:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesChanged:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesEnded:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)removeTarget:(id)target action:(SEL)action {
     UNIMPLEMENTED();
 }

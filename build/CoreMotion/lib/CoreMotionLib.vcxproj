@@ -40,7 +40,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{AF9DAD32-9B21-41DA-9B36-A6B53D008523}</ProjectGuid>
     <ProjectName>CoreMotionLib</ProjectName>
-    <RootNamespace>CoreMotion</RootNamespace>
+    <RootNamespace>CoreMotionLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreMotionLib</OutputName>

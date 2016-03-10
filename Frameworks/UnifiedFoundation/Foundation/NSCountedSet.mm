@@ -21,6 +21,9 @@ NSUInteger NSSetTableGetValue(NSSet* set, id object);
 
 @implementation NSCountedSet
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countForObject:(id)object {
     NSUInteger count = NSSetTableGetValue(self, object);
     return count;

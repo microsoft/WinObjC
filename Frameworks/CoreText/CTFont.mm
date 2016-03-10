@@ -17,7 +17,7 @@
 #import <CoreText/CTFont.h>
 
 #import <CGFontInternal.h>
-#import <Logging.h>
+#import <LoggingNative.h>
 #import <Starboard.h>
 #import <StubReturn.h>
 
@@ -322,7 +322,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
 
     // For now only Microsoft platform is supported.
     if (charMap->platform_id != TT_PLATFORM_MICROSOFT) {
-        TraceInfo(g_logTag, L"Unsupported platform %u\n", charMap->platform_id);
+        TraceInfo(g_logTag, L"Unsupported platform %u", charMap->platform_id);
         return nullptr;
     }
 
@@ -337,7 +337,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
     const FT_ULong languageIdSuffixMask = 0xFF;
     const FT_ULong englishLanguageIdSuffix = 0x09;
     if ((languageId & languageIdSuffixMask) != englishLanguageIdSuffix) {
-        TraceInfo(g_logTag, L"Unsupported language %u\n", languageId);
+        TraceInfo(g_logTag, L"Unsupported language %u", languageId);
         return nullptr;
     }
 
@@ -369,7 +369,7 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
                     break;
 
                 default:
-                    TraceInfo(g_logTag, L"Unsupported encoding %u\n", charMap->encoding_id);
+                    TraceInfo(g_logTag, L"Unsupported encoding %u", charMap->encoding_id);
                     break;
             }
 

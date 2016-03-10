@@ -197,15 +197,15 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
     }
 
     UIFont* font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
-    if (ascent != nullptr) {
+    if (ascent) {
         *ascent = [font ascender];
     }
 
-    if (descent != nullptr) {
+    if (descent) {
         *descent = [font descender];
     }
 
-    if (leading != nullptr) {
+    if (leading) {
         *leading = [font leading];
     }
 

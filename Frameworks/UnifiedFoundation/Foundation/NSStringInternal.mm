@@ -16,14 +16,17 @@
 
 #include "Starboard.h"
 #include "NSStringInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSStringInternal";
 
 @implementation NSString (Internal)
 - (int)_versionStringCompare:(NSString*)compStrAddr {
-    EbrDebugLog("Warning: versionStringCompare not implemented\n");
+    TraceWarning(TAG, L"Warning: versionStringCompare not implemented");
     char* str = (char*)[self UTF8String];
 
     if (compStrAddr == nil) {
-        EbrDebugLog("Compare to nil?");
+        TraceVerbose(TAG, L"Compare to nil?");
         return strcmp(str, "");
     }
 

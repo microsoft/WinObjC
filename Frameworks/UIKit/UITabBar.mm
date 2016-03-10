@@ -23,10 +23,13 @@
 #include "CoreGraphics/CGContext.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
+#include "LoggingNative.h"
 
 #if 0
 #include "UIAppearanceSetter.h"
 #endif
+
+static const wchar_t* TAG = L"UITabBar";
 
 @implementation UITabBar {
     idretain _items;
@@ -220,7 +223,7 @@
 */
 - (void)setSelectedImageTintColor:(UIColor*)color {
     UNIMPLEMENTED();
-    EbrDebugLog("UITabBar setSelectedImageTintColor not supported\n");
+    TraceVerbose(TAG, L"UITabBar setSelectedImageTintColor not supported");
 }
 
 /**
@@ -228,7 +231,7 @@
 */
 - (void)setTintColor:(UIColor*)color {
     UNIMPLEMENTED();
-    EbrDebugLog("UITabBar setTintColor not supported\n");
+    TraceVerbose(TAG, L"UITabBar setTintColor not supported");
 }
 
 - (void)_setLayoutDirty {

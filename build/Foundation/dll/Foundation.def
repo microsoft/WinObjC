@@ -293,7 +293,6 @@ LIBRARY Foundation
         __objc_class_name_NSUUID CONSTANT
         __objc_class_name_NSValueTransformer CONSTANT
         __objc_class_name_NSXMLParser CONSTANT
-
         isOSTarget
         CFAbsoluteTimeGetCurrent
         CFArrayAppendArray
@@ -343,6 +342,7 @@ LIBRARY Foundation
         CFBooleanGetValue
         CFCopyDescription
         CFDataGetBytePtr
+        CFDictionaryAddValue
         CFDictionaryApplyFunction
         CFDictionaryContainsKey
         CFDictionaryCreateMutable
@@ -683,6 +683,11 @@ LIBRARY Foundation
         __objc_class_name_NSURLProtocol_file CONSTANT
         __objc_class_name_NSURLProtocol_WinHTTP CONSTANT
         __objc_class_name_NSValue CONSTANT
+        NSTraceVerbose
+        NSTraceInfo
+        NSTraceWarning
+        NSTraceError
+        NSTraceCritical
 
         ; Foundation Stubs
         NSMallocException DATA

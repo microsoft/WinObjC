@@ -80,6 +80,9 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     icu::TimeZone* _icuTZ;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     [self _setDefaultAbbreviationDictionary];
     s_KnownTimeZoneNames = [[self abbreviationDictionary] allValues];
@@ -238,6 +241,9 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     return [self timeZoneWithName:[s_abbreviationDictionary objectForKey:abbreviation]];
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
@@ -449,10 +455,12 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 - (NSInteger)secondsFromGMTForDate:(NSDate*)date {
     UNIMPLEMENTED();
-    assert(0);
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -473,6 +481,9 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     return [self isDaylightSavingTimeForDate:[NSDate date]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     delete _icuTZ;
     [super dealloc];

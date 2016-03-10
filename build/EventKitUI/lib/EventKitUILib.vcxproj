@@ -26,7 +26,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{543D860F-B4A3-4B9F-B59A-93B825E89F7D}</ProjectGuid>
     <ProjectName>EventKitUILib</ProjectName>
-    <RootNamespace>EventKitUI</RootNamespace>
+    <RootNamespace>EventKitUILib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>EventKitUILib</OutputName>

@@ -34,7 +34,6 @@
       <IncludeGameKit Condition="$(LinkAdditionalDependencies.Contains('GameKit.lib'))">true</IncludeGameKit>
       <IncludeAdSupport Condition="$(LinkAdditionalDependencies.Contains('AdSupport.lib'))">true</IncludeAdSupport>
       <IncludeAccelerate Condition="$(LinkAdditionalDependencies.Contains('Accelerate.lib'))">true</IncludeAccelerate>
-      <IncludeUIKit Condition="$(LinkAdditionalDependencies.Contains('UIKit.lib'))">true</IncludeUIKit>
       <IncludeAutoLayout Condition="$(LinkAdditionalDependencies.Contains('AutoLayout.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeAutoLayout>
       <IncludeAVFoundation Condition="$(LinkAdditionalDependencies.Contains('AVFoundation.lib'))">true</IncludeAVFoundation>
       <IncludeGLKit Condition="$(LinkAdditionalDependencies.Contains('GLKit.lib'))">true</IncludeGLKit>
@@ -59,10 +58,9 @@
       <IncludeICUDT Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icudt.lib'))">true</IncludeICUDT>
       <IncludeICUIn Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icuin.lib'))">true</IncludeICUIn>
       <IncludeICUUC Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('icuuc.lib'))">true</IncludeICUUC>
-      <IncludeLibCurl Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or $(LinkAdditionalDependencies.Contains('libcurl_imp.lib'))">true</IncludeLibCurl>
-      <IncludeLibEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('libeay32.lib'))">true</IncludeLibEAY32>
+      <IncludeLibEAY32 Condition="$(LinkAdditionalDependencies.Contains('libeay32.lib'))">true</IncludeLibEAY32>
       <IncludeLibXML2 Condition="'$(IncludeFoundation)' == 'true' or '$(IncludeLogging)' == 'true' or '$(IncludeUIKit)' == 'true' or $(LinkAdditionalDependencies.Contains('libxml2.lib'))">true</IncludeLibXML2>
-      <IncludeSSLEAY32 Condition="'$(IncludeLibCurl)' == 'true' or $(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
+      <IncludeSSLEAY32 Condition="$(LinkAdditionalDependencies.Contains('ssleay32.lib'))">true</IncludeSSLEAY32>
       <IncludeStoreKit Condition="$(LinkAdditionalDependencies.Contains('StoreKit.lib'))">true</IncludeStoreKit>
       <IncludeMediaPlayer Condition="$(LinkAdditionalDependencies.Contains('MediaPlayer.lib'))">true</IncludeMediaPlayer>
       <IncludeMapKit Condition="$(LinkAdditionalDependencies.Contains('MapKit.lib'))">true</IncludeMapKit>
@@ -72,7 +70,7 @@
       <IncludeUWP Condition="$(LinkAdditionalDependencies.Contains('ObjCUWP.lib')) or '$(IncludeUIKit)' == 'true'">true</IncludeUWP>
       <IncludeCairo Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeCairo>
       <IncludeLibPNG Condition="'$(IncludeCoreGraphics)' == 'true'">true</IncludeLibPNG>
-      <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibCurl)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
+      <IncludeLibZ Condition="'$(IncludeCoreGraphics)' == 'true' or '$(IncludeCairo)' == 'true' or '$(IncludeLibPNG)' == 'true'">true</IncludeLibZ>
       <IncludeEventKitUI Condition="$(LinkAdditionalDependencies.Contains('EventKitUI.lib'))">true</IncludeEventKitUI>
       <IncludeQuickLook Condition="$(LinkAdditionalDependencies.Contains('QuickLook.lib'))">true</IncludeQuickLook>
       <IncludeCoreData Condition="$(LinkAdditionalDependencies.Contains('CoreData.lib'))">true</IncludeCoreData>
@@ -97,6 +95,9 @@
       <IncludeMobileCoreServices Condition="$(LinkAdditionalDependencies.Contains('MobileCoreServices.lib'))">true</IncludeMobileCoreServices>
       <IncludeTwitter Condition="$(LinkAdditionalDependencies.Contains('Twitter.lib'))">true</IncludeTwitter>
       <IncludeWebKit Condition="$(LinkAdditionalDependencies.Contains('WebKit.lib'))">true</IncludeWebKit>
+      <IncludeCFNetwork Condition="$(LinkAdditionalDependencies.Contains('CFNetwork.lib'))">true</IncludeCFNetwork>
+      <IncludeAudioUnit Condition="$(LinkAdditionalDependencies.Contains('AudioUnit.lib'))">true</IncludeAudioUnit>
+      <IncludeCoreMIDI Condition="$(LinkAdditionalDependencies.Contains('CoreMIDI.lib'))">true</IncludeCoreMIDI>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(ConfigurationType)' == 'Application'">
@@ -124,7 +125,6 @@
       <SBResourceCopy Condition="'$(IncludeICUDT)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icudt.dll" />
       <SBResourceCopy Condition="'$(IncludeICUIn)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuin.dll" />
       <SBResourceCopy Condition="'$(IncludeICUUC)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\icuuc.dll" />
-      <SBResourceCopy Condition="'$(IncludeLibCurl)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libcurl.dll" />
       <SBResourceCopy Condition="'$(IncludeLibEAY32)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libeay32.dll" />
       <SBResourceCopy Condition="'$(IncludeCoreGraphics)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libjpeg.dll" />
       <SBResourceCopy Condition="'$(IncludeLibPNG)' == 'true'" Include="$(StarboardPrebuiltLibsDir)\libpng.dll" />
@@ -191,6 +191,9 @@
       <SBResourceCopy Condition="'$(IncludeMobileCoreServices)' == 'true'" Include="$(StarboardLibDirs)\MobileCoreServices.dll" />
       <SBResourceCopy Condition="'$(IncludeTwitter)' == 'true'" Include="$(StarboardLibDirs)\Twitter.dll" />
       <SBResourceCopy Condition="'$(IncludeWebKit)' == 'true'" Include="$(StarboardLibDirs)\WebKit.dll" />
+      <SBResourceCopy Condition="'$(IncludeCFNetwork)' == 'true'" Include="$(StarboardLibDirs)\CFNetwork.dll" />
+      <SBResourceCopy Condition="'$(IncludeAudioUnit)' == 'true'" Include="$(StarboardLibDirs)\AudioUnit.dll" />
+      <SBResourceCopy Condition="'$(IncludeCoreMIDI)' == 'true'" Include="$(StarboardLibDirs)\CoreMIDI.dll" />
     </ItemGroup>
   </Target>
 
@@ -302,6 +305,7 @@
       LLVMDirectory="$(StarboardLLVMDirectory)"
       ObjectiveCARC="%(ClangCompile.ObjectiveCARC)"
       ObjectiveCModules="%(ClangCompile.ObjectiveCModules)"
+      ObjectiveCModulesCachePath="%(ClangCompile.ObjectiveCModulesCachePath)"
       ObjectFileName="%(ClangCompile.ObjectFileName)"
       OptimizationLevel="%(ClangCompile.OptimizationLevel)"
       PrefixHeader="%(ClangCompile.PrefixHeader)"
@@ -400,7 +404,7 @@
   <Target Name="MakeDirsForClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
     <MakeDir Directories="@(ClangCompile->Metadata('ObjectFileName')->DirectoryName()->Distinct()->ClearMetadata())" />
   </Target>
-
+  
   <Target Name="ComputeClangOptions" Condition="">
     <!-- Figure out what to compile each file as -->
     <ItemGroup>
@@ -503,5 +507,6 @@
   <Target Name="CleanClang" Condition="'@(ClangCompile)' != ''" DependsOnTargets="ComputeClangOptions">
     <!-- Delete header maps -->
     <Delete Files="$(CombinedHMapFilename).txt;$(CombinedHMapFilename).hmap;$(ProjectHMapFilename).txt;$(ProjectHMapFilename).hmap" />
+    <RemoveDir Directories="@(ClangCompile->Metadata('ObjectiveCModulesCachePath')->Distinct()->ClearMetadata())" />
   </Target>
 </Project>

@@ -20,6 +20,9 @@
 #include "UIViewInternal.h"
 #include "_UIGroupEdgeView.h"
 #include "UITableViewInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UITableViewCell";
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -938,7 +941,7 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
 }
 
 - (void)setSelectedTextColor:(UIColor*)color {
-    EbrDebugLog("setSelectedTextColor not supported\n");
+    TraceVerbose(TAG, L"setSelectedTextColor not supported");
 }
 
 /**

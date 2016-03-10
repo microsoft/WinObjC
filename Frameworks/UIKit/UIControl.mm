@@ -21,6 +21,9 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableSet.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
 - (instancetype)initWithFrame:(CGRect)pos {
@@ -67,6 +70,9 @@
     [_registeredActions addObject:connection];
 }
 
+/*
+ @Status Interoperable
+*/
 - (void)sendAction:(SEL)sel to:(id)target forEvent:(UIEvent*)event {
     if (target == nil) {
         target = self;
@@ -297,11 +303,11 @@
  @Status Interoperable
 */
 - (void)addTarget:(id)target action:(SEL)actionSel forControlEvents:(UIControlEvents)events {
-    // EbrDebugLog("%s: addTaret(%s, %s) for 0x%08x\n", object_getClassName(self), target != nil ?
+    // TraceVerbose(TAG, L"%hs: addTaret(%hs, %hs) for 0x%08x", object_getClassName(self), target != nil ?
     // object_getClassName(target) : "(nil)", actionSel != NULL ? sel_getName(actionSel) : "(null)", events);
 
     if (actionSel == NULL) {
-        EbrDebugLog("addTarget: *** ERROR *** actionSel = NULL\n");
+        TraceError(TAG, L"addTarget: *** ERROR *** actionSel = NULL");
         return;
     }
 
@@ -339,7 +345,7 @@
 
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -363,7 +369,7 @@
 
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -391,7 +397,7 @@
     _touchInside = FALSE;
 
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -414,7 +420,7 @@
     _touchInside = FALSE;
 
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -425,7 +431,7 @@
  @Status Interoperable
 */
 - (void)cancelTrackingWithEvent:(UIEvent*)event {
-    EbrDebugLog("cancelTrackingWithEvent not implemented\n");
+    TraceVerbose(TAG, L"cancelTrackingWithEvent not implemented");
 }
 
 /**

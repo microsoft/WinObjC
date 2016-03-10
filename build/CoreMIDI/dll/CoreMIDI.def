@@ -1,0 +1,124 @@
+LIBRARY CoreMIDI
+    EXPORTS
+        ; MIDI Services Reference.mm
+        kMIDIPropertyAdvanceScheduleTimeMuSec DATA
+        kMIDIPropertyCanRoute DATA
+        kMIDIPropertyConnectionUniqueID DATA
+        kMIDIPropertyDeviceID DATA
+        kMIDIPropertyDisplayName DATA
+        kMIDIPropertyDriverDeviceEditorApp DATA
+        kMIDIPropertyDriverOwner DATA
+        kMIDIPropertyDriverVersion DATA
+        kMIDIPropertyImage DATA
+        kMIDIPropertyIsBroadcast DATA
+        kMIDIPropertyIsDrumMachine DATA
+        kMIDIPropertyIsEffectUnit DATA
+        kMIDIPropertyIsEmbeddedEntity DATA
+        kMIDIPropertyIsMixer DATA
+        kMIDIPropertyIsSampler DATA
+        kMIDIPropertyManufacturer DATA
+        kMIDIPropertyMaxReceiveChannels DATA
+        kMIDIPropertyMaxSysExSpeed DATA
+        kMIDIPropertyMaxTransmitChannels DATA
+        kMIDIPropertyModel DATA
+        kMIDIPropertyName DATA
+        kMIDIPropertyNameConfiguration DATA
+        kMIDIPropertyOffline DATA
+        kMIDIPropertyPanDisruptsStereo DATA
+        kMIDIPropertyPrivate DATA
+        kMIDIPropertyReceiveChannels DATA
+        kMIDIPropertyReceivesBankSelectLSB DATA
+        kMIDIPropertyReceivesBankSelectMSB DATA
+        kMIDIPropertyReceivesClock DATA
+        kMIDIPropertyReceivesMTC DATA
+        kMIDIPropertyReceivesNotes DATA
+        kMIDIPropertyReceivesProgramChanges DATA
+        kMIDIPropertySingleRealtimeEntity DATA
+        kMIDIPropertySupportsGeneralMIDI DATA
+        kMIDIPropertySupportsMMC DATA
+        kMIDIPropertySupportsShowControl DATA
+        kMIDIPropertyTransmitChannels DATA
+        kMIDIPropertyTransmitsBankSelectLSB DATA
+        kMIDIPropertyTransmitsBankSelectMSB DATA
+        kMIDIPropertyTransmitsClock DATA
+        kMIDIPropertyTransmitsMTC DATA
+        kMIDIPropertyTransmitsNotes DATA
+        kMIDIPropertyTransmitsProgramChanges DATA
+        kMIDIPropertyUniqueID DATA
+        MIDIInputPortCreate
+        MIDIOutputPortCreate
+        MIDIPortConnectSource
+        MIDIPortDisconnectSource
+        MIDIPortDispose
+        MIDIPacketListAdd
+        MIDIPacketListInit
+        MIDIPacketNext
+        MIDIObjectFindByUniqueID
+        MIDIObjectGetDataProperty
+        MIDIObjectGetDictionaryProperty
+        MIDIObjectGetIntegerProperty
+        MIDIObjectGetProperties
+        MIDIObjectGetStringProperty
+        MIDIObjectRemoveProperty
+        MIDIObjectSetDataProperty
+        MIDIObjectSetDictionaryProperty
+        MIDIObjectSetIntegerProperty
+        MIDIObjectSetStringProperty
+        MIDIFlushOutput
+        MIDIReceived
+        MIDIRestart
+        MIDISend
+        MIDISendSysex
+        MIDIGetExternalDevice
+        MIDIGetNumberOfExternalDevices
+        MIDIEntityGetDestination
+        MIDIEntityGetDevice
+        MIDIEntityGetNumberOfDestinations
+        MIDIEntityGetNumberOfSources
+        MIDIEntityGetSource
+        MIDIDestinationCreate
+        MIDIEndpointDispose
+        MIDIEndpointGetEntity
+        MIDIGetDestination
+        MIDIGetNumberOfDestinations
+        MIDIGetNumberOfSources
+        MIDIGetSource
+        MIDISourceCreate
+        MIDIDeviceGetEntity
+        MIDIDeviceGetNumberOfEntities
+        MIDIGetDevice
+        MIDIGetNumberOfDevices
+        MIDIClientCreate
+        MIDIClientDispose
+
+        ; MIDI Setup Reference.mm
+        MIDIDeviceAddEntity
+        MIDIDeviceRemoveEntity
+        MIDIEntityAddOrRemoveEndpoints
+        MIDIExternalDeviceCreate
+        MIDISetupAddDevice
+        MIDISetupAddExternalDevice
+        MIDISetupRemoveDevice
+        MIDISetupRemoveExternalDevice
+
+        ; MIDI Thru Connection Reference.mm
+        MIDIThruConnectionCreate
+        MIDIThruConnectionDispose
+        MIDIThruConnectionFind
+        MIDIThruConnectionGetParams
+        MIDIThruConnectionParamsInitialize
+        MIDIThruConnectionSetParams
+
+        ; MIDINetworkConnection.mm
+        _OBJC_CLASS_MIDINetworkConnection DATA
+        __objc_class_name_MIDINetworkConnection CONSTANT
+
+        ; MIDINetworkHost.mm
+        MIDINetworkBonjourServiceType DATA
+        _OBJC_CLASS_MIDINetworkHost DATA
+        __objc_class_name_MIDINetworkHost CONSTANT
+
+        ; MIDINetworkSession.mm
+        _OBJC_CLASS_MIDINetworkSession DATA
+        __objc_class_name_MIDINetworkSession CONSTANT
+

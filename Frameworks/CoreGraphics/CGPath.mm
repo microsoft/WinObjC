@@ -21,6 +21,9 @@
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGGeometry.h>
 #import "CGPathInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGPath";
 
 class BBox {
 public:
@@ -71,12 +74,12 @@ public:
                 break;
 
             case pathComponentMove:
-                EbrDebugLog("Move to %d, %d\n", (int)_components[i].point.x, (int)_components[i].point.y);
+                TraceVerbose(TAG, L"Move to %d, %d", (int)_components[i].point.x, (int)_components[i].point.y);
                 CGContextMoveToPoint(context, _components[i].point.x, _components[i].point.y);
                 break;
 
             case pathComponentLineTo:
-                EbrDebugLog("Line to %d, %d\n", (int)_components[i].point.x, (int)_components[i].point.y);
+                TraceVerbose(TAG, L"Line to %d, %d", (int)_components[i].point.x, (int)_components[i].point.y);
                 CGContextAddLineToPoint(context, _components[i].point.x, _components[i].point.y);
                 break;
 
@@ -443,6 +446,9 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
                 case pathComponentMove:
                 case pathComponentLineTo:
                     c.point = CGPointApplyAffineTransform(c.point, *m);
+                    break;
+                default:
+                    // Append the path anyway, without transforming.
                     break;
             }
         }
@@ -909,6 +915,10 @@ CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padd
                 if (startPointSet) {
                     s.AddLine(curPoint, startPoint);
                 }
+                break;
+
+            default:
+                // The other path types don't effect bounding rects.
                 break;
         }
     }

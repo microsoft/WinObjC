@@ -19,11 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\limbo\art.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\limbo\Stubs.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\art.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\Stubs.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSMutableAttributedString+UIKitAdditions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString_Additions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSValue_Additions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
@@ -291,8 +290,6 @@
     <ClInclude Include="..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewLayout+Internals.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />

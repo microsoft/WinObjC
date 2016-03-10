@@ -328,6 +328,9 @@ GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeWithRows(GLKVector4 r0, GLKVector4 r1, GLK
     return res;
 }
 
+/**
+ @Status Interoperable
+*/
 GLKIT_EXPORT GLKMatrix4 GLKMatrix4MakeOrthonormalXform(GLKVector3 right, GLKVector3 up, GLKVector3 forward, GLKVector3 pos) {
     GLKMatrix4 res;
 

@@ -20,6 +20,9 @@
 //******************************************************************************
 
 #import <UIKit/UIKit.h>
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"UICollectionViewCell";
 
 @implementation UICollectionViewCell {
     UIView* _contentView;
@@ -138,7 +141,7 @@
 }
 
 - (void)menuGesture:(UILongPressGestureRecognizer*)recognizer {
-    NSLog(@"Not yet implemented: %@", NSStringFromSelector(_cmd));
+    NSTraceWarning(TAG, @"Not yet implemented: %@", NSStringFromSelector(_cmd));
 }
 
 /**

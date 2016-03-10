@@ -70,6 +70,10 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)copyWithZone:(NSZone*)zone {
     CAPropertyAnimation* ret = [super copyWithZone:zone];
 

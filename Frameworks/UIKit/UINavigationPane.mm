@@ -17,11 +17,14 @@
 #include "Starboard.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UINavigationController.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UINavigationPane";
 
 @implementation UINavigationPane
 - (void)layoutSubviews {
     if (_parentController == nil) {
-        EbrDebugLog("UINavigationPane: parent destroyed?\n");
+        TraceVerbose(TAG, L"UINavigationPane: parent destroyed?");
     }
     [_parentController layoutContainer];
 }

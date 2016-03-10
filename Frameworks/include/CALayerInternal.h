@@ -102,7 +102,7 @@ public:
 - (void)_setShouldLayout;
 - (void)setContentsOrientation:(UIImageOrientation)orientation;
 - (UIImageOrientation)contentsOrientation;
-
+- (DisplayNode*)_presentationNode;
 - (void)_releaseContents:(BOOL)immediately;
 
 // Some additional non-standard layer swapping functionality:

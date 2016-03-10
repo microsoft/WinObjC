@@ -12,7 +12,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\include\**\*.h" />
-    <Text Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\**\*.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

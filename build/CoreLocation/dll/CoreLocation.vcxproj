@@ -19,6 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Starboard\dll\Starboard.vcxproj">
+      <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\CoreLocation\lib\CoreLocationLib.vcxproj">
       <Project>{96CEAFB4-5BDC-4972-97D7-302840B3CDA0}</Project>
     </ProjectReference>
@@ -49,7 +58,6 @@
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -63,7 +71,6 @@
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -77,7 +84,6 @@
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -91,7 +97,6 @@
     <Link>
       <ModuleDefinitionFile>CoreLocation.def</ModuleDefinitionFile>
       <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>

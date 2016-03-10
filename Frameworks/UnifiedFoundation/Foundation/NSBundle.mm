@@ -31,20 +31,24 @@
 
 #include <sys/stat.h>
 
+#include <list>
+#include <algorithm>
+
 NSString* const NSLoadedClasses = @"NSLoadedClasses";
 
 @class NSNib;
 
-static NSString* mainBundlePath;
-static NSMutableArray* allBundles;
-static NSBundle* mainBundle;
+static StrongId<NSString> g_mainBundlePath;
+static StrongId<NSMutableArray> g_allBundles;
+static StrongId<NSBundle> g_mainBundle;
+
 char g_globalExecutableName[255] = "";
 static const int c_maxPath = 4096;
-static IWLazyClassLookup _LazyCALayer("UIDevice");
+static IWLazyClassLookup _LazyUIDevice("UIDevice");
 
 bool isTabletDevice() {
     @try {
-        return [[_LazyCALayer currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+        return [[_LazyUIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
     } @catch (NSException* exception) {
         if (![[exception name] isEqualToString:NSObjectNotAvailableException]) {
             @throw exception;
@@ -55,41 +59,49 @@ bool isTabletDevice() {
 }
 
 class StringPool {
-    char* _base;
-    int _maxLen;
-    int _curLen;
-    int _availableSpace;
+private:
+    class StringPage {
+        char* _data;
+        size_t _size;
+        uintptr_t _offset;
 
-public:
-    StringPool() {
-        _base = NULL;
-        _maxLen = 0;
-        _curLen = 0;
-    }
-
-    char* AddString(int len) {
-        if (_curLen + len + 1 >= _maxLen) {
-            _maxLen = 8192;
-            _curLen = 0;
-            _base = (char*)IwMalloc(_maxLen);
+    public:
+        StringPage(size_t size = 8192) : _data(new char[size]), _size(size), _offset(0) {
+        }
+        ~StringPage() {
+            delete[] _data;
         }
 
-        char* ret = &_base[_curLen];
-        _curLen += len + 1;
+        char* reserve(size_t count) {
+            if (_offset + count > _size) {
+                return nullptr;
+            }
+            char* ret = _data + _offset;
+            _offset += count;
+            return ret;
+        }
+    };
 
-        return ret;
+    std::list<StringPage> _pages;
+
+public:
+    static const size_t s_defaultPageSize = 8192;
+
+    StringPool() : _pages(1) {
     }
 
-    char* AddString(char* str) {
-        size_t strLen = strlen(str);
-        char* ret = AddString(strLen);
-        strcpy_s(ret, GetAvailableSpace() + strLen, str);
+    char* reserve(size_t count) {
+        StringPage& page = _pages.back();
+        char* ret = page.reserve(count + 1);
+        if (!ret) {
+            // If we couldn't fit the string in a page, make a new page.
+            // The new page will be either the default size (and store N reservations) or
+            // the length of the current reservation, whichever is larger.
+            _pages.emplace_back(std::max(s_defaultPageSize, count + 1));
+            return reserve(count);
+        }
 
         return ret;
-    }
-
-    int GetAvailableSpace() {
-        return _maxLen - _curLen + 1;
     }
 };
 
@@ -185,7 +197,7 @@ static char* copyWithoutExtension(const char* name, const char* ext) {
     int nameLen = strlen(name);
     int extLen = strlen(ext);
 
-    char* ret = (char*)_bundleStrings.AddString(nameLen - extLen);
+    char* ret = (char*)_bundleStrings.reserve(nameLen - extLen);
     memcpy(ret, name, nameLen - extLen);
     ret[nameLen - extLen] = 0;
 
@@ -195,13 +207,12 @@ static char* copyWithoutExtension(const char* name, const char* ext) {
 bool ScanFilename(BundleFile* dest, char* pDirectory, char* pFilename) {
     memset(dest, 0, sizeof(BundleFile));
     size_t strLen = strlen(pDirectory) + strlen(pFilename) + 1;
-    dest->pszFullPath = (char*)_bundleStrings.AddString(strLen);
-    int pszFullPathSize = _bundleStrings.GetAvailableSpace() + strLen;
+    dest->pszFullPath = (char*)_bundleStrings.reserve(strLen);
 
     if (strlen(pDirectory) > 0) {
-        sprintf_s(dest->pszFullPath, pszFullPathSize, "%s/%s", pDirectory, pFilename);
+        sprintf_s(dest->pszFullPath, strLen + 1, "%s/%s", pDirectory, pFilename);
     } else {
-        sprintf_s(dest->pszFullPath, pszFullPathSize, "%s", pFilename);
+        sprintf_s(dest->pszFullPath, strLen + 1, "%s", pFilename);
     }
     char szTemp[c_maxPath];
     strcpy_s(szTemp, sizeof(szTemp), pDirectory);
@@ -288,6 +299,7 @@ extern "C" BOOL isOSTarget(NSString* versionStr) {
 }
 
 @interface NSBundle () {
+    StrongId<NSMutableDictionary> _stringTables;
     NSDictionary* _localizedStrings;
     NSMutableArray* _preferredLocalizations;
 
@@ -634,7 +646,6 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Notes Always returns +[NSBundle mainBundle]
 */
 + (NSBundle*)bundleForClass:(id)_class {
-    EbrDebugLog("bundleForClass: %s\n", _class ? object_getClassName(_class) : "nil");
     return [self mainBundle];
 }
 
@@ -643,7 +654,6 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Notes Forwards to +[NSBundle bundleWithPath:]
 */
 + (NSBundle*)bundleWithIdentifier:(NSString*)identifier {
-    EbrDebugLog("bundleForIdentifier: %s\n", [identifier UTF8String]);
     return [self bundleWithPath:identifier];
 }
 
@@ -651,7 +661,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Status Interoperable
 */
 + (NSArray*)allBundles {
-    return allBundles;
+    return g_allBundles;
 }
 
 /**
@@ -666,15 +676,15 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Status Interoperable
 */
 + (NSBundle*)mainBundle {
-    if (allBundles == nil) {
-        allBundles = [NSMutableArray new];
+    if (!g_allBundles) {
+        g_allBundles.attach([NSMutableArray new]);
     }
 
-    if (mainBundle == nil && mainBundlePath != nil) {
-        mainBundle = [[self bundleWithPath:mainBundlePath] retain];
+    if (!g_mainBundle && g_mainBundlePath) {
+        g_mainBundle = [self bundleWithPath:g_mainBundlePath];
     }
 
-    return mainBundle;
+    return g_mainBundle;
 }
 
 /**
@@ -684,25 +694,23 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     return [[[self alloc] initWithPath:path] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSBundle*)bundleWithURL:(NSURL*)url {
-    if ([url isFileURL]) {
-        return [[[self alloc] initWithPath:[url path]] autorelease];
-    } else {
-        EbrDebugLog("bad URL\n");
-        assert(0);
-        return nil;
-    }
+    return [[[self alloc] initWithURL:url] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithUrl:(NSURL*)url {
+- (instancetype)initWithURL:(NSURL*)url {
     if ([url isFileURL]) {
         return [self initWithPath:[url path]];
     }
 
-    EbrDebugLog("bad URL\n");
+    [self release];
+    THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_INVALID_PARAMETER), "Invalid non-local URL `%hs`.", [[url description] UTF8String]);
     return nil;
 }
 
@@ -715,7 +723,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     if (self = [super init]) {
-        [allBundles addObject:self];
+        [g_allBundles addObject:self];
 
         if (![path hasSuffix:@"/"]) {
             _bundlePath = [[path stringByAppendingString:@"/"] retain];
@@ -779,14 +787,8 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (instancetype)initWithURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
 - (void)dealloc {
     [_infoDictionary release];
     [_localizedStrings release];
@@ -806,15 +808,11 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     if (table == nil) {
         strRet = [_localizedStrings objectForKey:key];
     } else {
-        char* tableName = (char*)[table UTF8String];
-
-        static NSMutableDictionary* tables;
-
-        if (tables == nil) {
-            tables = [NSMutableDictionary new];
+        if (!_stringTables) {
+            _stringTables.attach([NSMutableDictionary new]);
         }
 
-        NSDictionary* stringDict = [tables objectForKey:table];
+        NSDictionary* stringDict = [_stringTables objectForKey:table];
         if (stringDict == nil) {
             NSString* path = [self pathForResource:table ofType:@"strings"];
 
@@ -826,7 +824,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
                                                                         format:0
                                                               errorDescription:0];
 
-                [tables setObject:stringDict forKey:table];
+                [_stringTables setObject:stringDict forKey:table];
             }
         }
 
@@ -907,11 +905,8 @@ static NSString* checkPath(
     NSString* ret = makePath(self, name, extension, directory, localization, sublocal);
 
     char* path = (char*)[ret UTF8String];
-    EbrDebugLog("Finding %s", path);
 
     if (EbrAccess(path, 0) == -1 || EbrIsDir(path)) {
-        EbrDebugLog(" - not found\n");
-
         if (!isTabletDevice()) {
             ret = makePath(self, name, extension, directory, localization, sublocal, @"~iphone");
         } else {
@@ -919,33 +914,14 @@ static NSString* checkPath(
         }
 
         path = (char*)[ret UTF8String];
-        EbrDebugLog("Finding %s", path);
 
         if (EbrAccess(path, 0) == -1 || EbrIsDir(path)) {
-            EbrDebugLog(" - not found\n");
             return nil;
         } else {
-            EbrDebugLog(" - OK\n");
             return ret;
         }
-#if 0
-ret = makePath(name, extension, directory, localization, sublocal, @"-iPad");
-
-path = (char *) [ret UTF8String];
-EbrDebugLog("Finding %s", path);
-
-if (EbrAccess(path, 0) == -1 ) {
-EbrDebugLog(" - not found\n");
-return nil;
-} else {
-EbrDebugLog(" - OK\n");
-return ret;
-}
-#else
         return nil;
-#endif
     } else {
-        EbrDebugLog(" - OK\n");
         return ret;
     }
 }
@@ -978,13 +954,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     NSString* ret = makePathNonLocal(name, extension, directory, localization);
 
     char* path = (char*)[ret UTF8String];
-    EbrDebugLog("Finding %s", path);
 
     if (EbrAccess(path, 0) == -1 || EbrIsDir(path)) {
-        EbrDebugLog(" - not found\n");
         return nil;
     } else {
-        EbrDebugLog(" - OK\n");
         return ret;
     }
 }
@@ -1059,20 +1032,15 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     char* pDir = (char*)[directory UTF8String];
     char* pExt = (char*)[type UTF8String];
 
-    EbrDebugLog("Searching for %s in %s\n", pDir, pExt ? pExt : "(null)");
-
-    NSString* curFile = [files nextObject];
-    while (curFile != nil) {
+    for (NSString* curFile in files) {
         if (type == nil || [[curFile pathExtension] isEqual:type] == TRUE) {
             NSString* fullPath = [directory stringByAppendingPathComponent:curFile];
             char* pFile = (char*)[fullPath UTF8String];
 
             if (!EbrIsDir(pFile)) {
-                EbrDebugLog("Found file %s\n", pFile);
                 [ret addObject:fullPath];
             }
         }
-        curFile = [files nextObject];
     }
 
     return ret;
@@ -1093,9 +1061,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     BundleFile* pFile = findFile(self, name, extension);
     if (pFile) {
         NSString* ret = [NSString stringWithFormat:@"%@/%s", _bundlePath, pFile->pszFullPath];
-#ifdef NSBUNDLE_LOG
-        EbrDebugLog("Found %s\n", [ret UTF8String]);
-#endif
         return ret;
     }
     /*
@@ -1134,9 +1099,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     BundleFile* pFile = findFileDirectory(self, name, extension, directory);
     if (pFile) {
         NSString* ret = [NSString stringWithFormat:@"%@%s", _bundlePath, pFile->pszFullPath];
-#ifdef NSBUNDLE_LOG
-        EbrDebugLog("Found %s\n", [ret UTF8String]);
-#endif
         return ret;
     }
 
@@ -1154,9 +1116,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
     BundleFile* pFile = findFileDirectoryLocal(self, name, extension, directory, localization);
     if (pFile) {
         NSString* ret = [NSString stringWithFormat:@"%@%s", _bundlePath, pFile->pszFullPath];
-#ifdef NSBUNDLE_LOG
-        EbrDebugLog("Found %s\n", [ret UTF8String]);
-#endif
         return ret;
     }
     return nil;
@@ -1274,14 +1233,11 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
  @Notes Returns objc_getClass(name)
 */
 - (id)classNamed:(NSString*)name {
-    char* pName = (char*)[name UTF8String];
-
-    EbrDebugLog("Finding class %s\n", pName);
-    return objc_getClass(pName);
+    return NSStringFromClass(name);
 }
 
 + (void)setMainBundlePath:(NSString*)path {
-    mainBundlePath = [path copy];
+    g_mainBundlePath.attach([path copy]);
 }
 
 /**

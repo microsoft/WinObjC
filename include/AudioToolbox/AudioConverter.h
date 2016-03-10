@@ -103,7 +103,7 @@ typedef struct AudioConverterPrimeInfo AudioConverterPrimeInfo;
 AUDIOTOOLBOX_EXPORT OSStatus AudioConverterDispose(AudioConverterRef inAudioConverter) STUB_METHOD;
 AUDIOTOOLBOX_EXPORT OSStatus AudioConverterNew(const AudioStreamBasicDescription* inSourceFormat,
                                                const AudioStreamBasicDescription* inDestinationFormat,
-                                               AudioConverterRef _Nullable* outAudioConverter);
+                                               AudioConverterRef _Nullable* outAudioConverter) STUB_METHOD;
 AUDIOTOOLBOX_EXPORT OSStatus AudioConverterNewSpecific(const AudioStreamBasicDescription* inSourceFormat,
                                                        const AudioStreamBasicDescription* inDestinationFormat,
                                                        UInt32 inNumberClassDescriptions,

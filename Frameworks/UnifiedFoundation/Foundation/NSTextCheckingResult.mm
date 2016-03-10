@@ -52,6 +52,9 @@ NSString* const NSTextCheckingPhoneKey = @"^Phone";
     NSMutableArray* _rangesForResult;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_replacementString release];
     [_regularExpression release];

@@ -16,6 +16,9 @@
 
 #include <StubReturn.h>
 #include "Starboard.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIButton";
 
 struct buttonState {
     idretaintype(UIImage) image, backgroundImage;
@@ -331,7 +334,7 @@ static void createLabel(UIButton* self) {
 
 static bool validateState(UIControlState state) {
     if (state >= 16) {
-        EbrDebugLog("UIButton: bad control state %x\n", state);
+        TraceVerbose(TAG, L"UIButton: bad control state %x", state);
         return false;
     }
 

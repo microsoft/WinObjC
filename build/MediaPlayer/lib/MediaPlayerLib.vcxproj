@@ -60,7 +60,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{29625E50-77E9-45FA-BCBC-D855CD45A715}</ProjectGuid>
     <ProjectName>MediaPlayerLib</ProjectName>
-    <RootNamespace>MediaPlayer</RootNamespace>
+    <RootNamespace>MediaPlayerLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>MediaPlayerLib</OutputName>

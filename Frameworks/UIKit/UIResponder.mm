@@ -15,6 +15,9 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIResponder";
 
 id _curFirstResponder;
 static int _changingResponder = 0;
@@ -150,14 +153,14 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesBegan!\n");
+    TraceVerbose(TAG, L"Unhandled touchesBegan!");
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("Clicked: %s\n", object_getClassName(self));
+    TraceVerbose(TAG, L"Clicked: %hs", object_getClassName(self));
     id nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -165,7 +168,7 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesMoved!\n");
+    TraceVerbose(TAG, L"Unhandled touchesMoved!");
 }
 
 /**
@@ -179,7 +182,7 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesEnded!\n");
+    TraceVerbose(TAG, L"Unhandled touchesEnded!");
 }
 
 /**
@@ -193,7 +196,7 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesCancelled!\n");
+    TraceVerbose(TAG, L"Unhandled touchesCancelled!");
 }
 
 /**

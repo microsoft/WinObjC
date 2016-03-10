@@ -48,8 +48,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -63,8 +62,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -78,8 +76,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -93,8 +90,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>MobileCoreServices.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

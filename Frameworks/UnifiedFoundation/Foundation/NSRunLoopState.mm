@@ -26,6 +26,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSSelectInputSource.h"
 #include "dispatch/dispatch.h"
 #include "sys/timespec.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSRunLoopState";
 
 int (*UIEventTimedMultipleWaitCallback)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets) = EbrEventTimedMultipleWait;
 
@@ -274,7 +277,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
 - (void)addInputSource:(NSInputSource*)source {
     if ([source isKindOfClass:[NSRunLoopSource class]]) {
         if (_numWaitSignals >= MAX_WAITSIGNALS) {
-            EbrDebugLog("Too many signal sources!  Count=%d\n", _numWaitSignals);
+            TraceVerbose(TAG, L"Too many signal sources!  Count=%d", _numWaitSignals);
             *((char*)0xBAAFF00D) = 0;
         }
         for (int i = 0; i < _numWaitSignals; i++) {
@@ -290,7 +293,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
         return;
     } else if ([source isKindOfClass:[NSSelectInputSource class]]) {
         if (_numWaitSockets >= MAX_WAITSOCKETS) {
-            EbrDebugLog("Too many socket sources!  Count=%d\n", _numWaitSockets);
+            TraceVerbose(TAG, L"Too many socket sources!  Count=%d", _numWaitSockets);
             *((char*)0xBAAFF00D) = 0;
         }
         _waitSocketObjects[_numWaitSockets] = [source retain];
@@ -320,7 +323,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
             memmove(&_waitSignalPriority[idx], &_waitSignalPriority[idx + 1], (_numWaitSignals - idx - 1) * sizeof(int));
             _numWaitSignals--;
         } else
-            EbrDebugLog("Warning: requested source for removal doesn't exist\n");
+            TraceWarning(TAG, L"Warning: requested source for removal doesn't exist");
         return;
     } else if ([source isKindOfClass:[NSSelectInputSource class]]) {
         int idx = NSNotFound;
@@ -337,7 +340,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
             memmove(&_waitSocketObjects[idx], &_waitSocketObjects[idx + 1], (_numWaitSockets - idx - 1) * sizeof(id));
             _numWaitSockets--;
         } else
-            EbrDebugLog("Warning: requested socket for removal doesn't exist\n");
+            TraceWarning(TAG, L"Warning: requested socket for removal doesn't exist");
         return;
     } else {
         assert(0);

@@ -37,7 +37,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8ECA5E02-182F-4C5A-893B-3C83D3957073}</ProjectGuid>
     <ProjectName>EventKitLib</ProjectName>
-    <RootNamespace>EventKit</RootNamespace>
+    <RootNamespace>EventKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>EventKitLib</OutputName>

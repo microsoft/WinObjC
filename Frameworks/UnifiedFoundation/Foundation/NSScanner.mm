@@ -60,6 +60,9 @@ typedef unsigned short unichar;
     return _string;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_string release];
     [_skipSet release];
@@ -161,13 +164,14 @@ typedef unsigned short unichar;
     // This assumes sizeof(long long) >= sizeof(int).
     if (![self scanLongLong:&scanValue]) {
         return FALSE;
-    } else if (NULL != valuep) {
-        if (scanValue > INT_MAX)
+    } else if (valuep) {
+        if (scanValue > INT_MAX) {
             *valuep = INT_MAX;
-        else if (scanValue < INT_MIN)
+        } else if (scanValue < INT_MIN) {
             *valuep = INT_MIN;
-        else
+        } else {
             *valuep = (int)scanValue;
+        }
     }
 
     return TRUE;
@@ -182,13 +186,14 @@ typedef unsigned short unichar;
     // This assumes sizeof(long long) >= sizeof(int).
     if (![self scanLongLong:&scanValue]) {
         return FALSE;
-    } else if (NULL != valuep) {
-        if (scanValue > LONG_MAX)
+    } else if (valuep) {
+        if (scanValue > LONG_MAX) {
             *valuep = LONG_MAX;
-        else if (scanValue < LONG_MIN)
+        } else if (scanValue < LONG_MIN) {
             *valuep = LONG_MIN;
-        else
+        } else {
             *valuep = (int)scanValue;
+        }
     }
 
     return TRUE;
@@ -236,17 +241,19 @@ typedef unsigned short unichar;
     }
 
     if (hasOverflow) {
-        if (NULL != valuep) {
-            if (sign > 0)
+        if (valuep) {
+            if (sign > 0) {
                 *valuep = long_long_MAX;
-            else
+            } else {
                 *valuep = long_long_MIN;
+            }
         }
 
         return TRUE;
     } else if (hasValue) {
-        if (NULL != valuep)
+        if (valuep) {
             *valuep = sign * value;
+        }
         return TRUE;
     }
 
@@ -262,8 +269,9 @@ typedef unsigned short unichar;
 
     r = [self scanDouble:&d];
 
-    if (NULL != valuep)
+    if (valuep) {
         *valuep = (float)d;
+    }
     return r;
 }
 
@@ -281,8 +289,9 @@ typedef unsigned short unichar;
 
     _location += pScanEnd - pScanStart;
 
-    if (valuep)
+    if (valuep) {
         *valuep = val;
+    }
 
     if ((pScanEnd - pScanStart) == 0) {
         return FALSE;
@@ -369,8 +378,9 @@ typedef unsigned short unichar;
                         }
                     }
                 } else {
-                    if (valuep != NULL)
+                    if (valuep) {
                         *valuep = value;
+                    }
 
                     return YES;
                 }
@@ -379,8 +389,9 @@ typedef unsigned short unichar;
     }
 
     if (hasValue) {
-        if (valuep != NULL)
+        if (valuep) {
             *valuep = value;
+        }
 
         return YES;
     }
@@ -466,8 +477,9 @@ typedef unsigned short unichar;
                         }
                     }
                 } else {
-                    if (valuep != NULL)
+                    if (valuep) {
                         *valuep = value;
+                    }
 
                     return YES;
                 }
@@ -476,8 +488,9 @@ typedef unsigned short unichar;
     }
 
     if (hasValue) {
-        if (valuep != NULL)
+        if (valuep) {
             *valuep = value;
+        }
 
         return YES;
     }
@@ -514,8 +527,9 @@ typedef unsigned short unichar;
             continue;
         }
         if ([_string compare:string options:compareOption range:NSMakeRange(range.location, range.length)] == 0) {
-            if (stringp != NULL)
+            if (stringp) {
                 *stringp = string;
+            }
 
             _location += [string length];
 
@@ -609,7 +623,7 @@ typedef unsigned short unichar;
     }
 
     if (scanStarted) {
-        if (stringp != NULL) {
+        if (stringp) {
             *stringp = [NSString stringWithCharacters:result length:resultLength];
         }
     }
@@ -643,8 +657,9 @@ typedef unsigned short unichar;
     }
 
     if (resultLength > 0) {
-        if (stringp != NULL)
+        if (stringp) {
             *stringp = [NSString stringWithCharacters:result length:resultLength];
+        }
 
         IwFree(result);
         return YES;

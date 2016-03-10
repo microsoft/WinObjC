@@ -255,7 +255,7 @@ UIKIT_EXPORT_CLASS
 - (void)unregisterForRemoteNotifications STUB_METHOD;
 @property (copy, nonatomic) NSArray* scheduledLocalNotifications STUB_PROPERTY;
 @property (copy, nonatomic) NSArray* shortcutItems STUB_PROPERTY;
-@property (getter=isIdleTimerDisabled, nonatomic) BOOL idleTimerDisabled STUB_PROPERTY;
+@property (getter=isIdleTimerDisabled, nonatomic) BOOL idleTimerDisabled;
 @property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible STUB_PROPERTY;
 @property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled STUB_PROPERTY;
 @property (nonatomic) BOOL applicationSupportsShakeToEdit STUB_PROPERTY;

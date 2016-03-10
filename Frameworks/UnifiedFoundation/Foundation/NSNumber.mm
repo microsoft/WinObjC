@@ -14,14 +14,36 @@
 //
 //******************************************************************************
 
+#include <limits>
 #import "Starboard.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
 
-#define CACHE_NSNUMBERS_BELOW 16
-static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
+static const size_t c_cacheNSNumbersBelow = 16;
+static StrongId<NSNumber> s_cachedNumbers[c_cacheNSNumbersBelow];
+
+template <typename T>
+static bool shouldStoreAsInt(T value) {
+    // Small integers should be stored as ints so we can satisfy requests out of the cache
+    return std::numeric_limits<T>::is_integer && (value >= 0) && (value < c_cacheNSNumbersBelow);
+}
 
 @implementation NSNumber
+
+/**
+ @Status Interoperable
+*/
++ (void)initialize {
+    if (self == [NSNumber class]) {
+        for (size_t i = 0; i < c_cacheNSNumbersBelow; i++) {
+            s_cachedNumbers[i].attach([[NSNumber alloc] initWithInt:i]);
+        }
+    }
+}
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder containsValueForKey:@"NS.intval"]) {
         val.i = (int)[coder decodeIntForKey:@"NS.intval"];
@@ -38,6 +60,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithChar:(char)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     return [[self alloc] initWithChar:num];
 }
 
@@ -45,6 +71,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedChar:(unsigned char)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     return [[self alloc] initWithUnsignedChar:num];
 }
 
@@ -73,25 +103,21 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithInt:(int)num {
-    if (num >= 0 && num < CACHE_NSNUMBERS_BELOW) {
-        if (cachedNumbers[num] != nil) {
-            return [cachedNumbers[num] retain];
-        }
+    if (num >= 0 && num < c_cacheNSNumbersBelow) {
+        return s_cachedNumbers[num];
+    } else {
+        return [[[self alloc] initWithInt:num] autorelease];
     }
-    NSNumber* ret = [self alloc];
-    ret = [[ret initWithInt:num] autorelease];
-
-    if (num >= 0 && num < CACHE_NSNUMBERS_BELOW) {
-        cachedNumbers[num] = [ret retain];
-    }
-
-    return ret;
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)numberWithShort:(short)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithShort:num] autorelease];
 }
@@ -100,6 +126,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedShort:(unsigned short)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedShort:num] autorelease];
 }
@@ -108,6 +138,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithLong:(long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithLong:num] autorelease];
 }
@@ -116,22 +150,36 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedLong:(unsigned long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedLong:num] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)zero {
-    return [self numberWithInt:0];
-}
-
-+ (instancetype)one {
     return [self numberWithInt:0];
 }
 
 /**
  @Status Interoperable
 */
++ (instancetype)one {
+    return [self numberWithInt:1];
+}
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)numberWithLongLong:(long long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithLongLong:num] autorelease];
 }
@@ -140,6 +188,10 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedLongLong:(unsigned long long)num {
+    if (shouldStoreAsInt(num)) {
+        return [self numberWithInt:num];
+    }
+
     NSNumber* ret = [self alloc];
     return [[ret initWithUnsignedLongLong:num] autorelease];
 }
@@ -334,6 +386,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(NSObject*)objAddr {
     return [self compare:objAddr] == 0;
 }
@@ -375,6 +430,9 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return -1;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -582,14 +640,23 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (const char*)objCType {
     return objCType;
 }
 
+/**
+ @Status Interoperable
+*/
 - (Class)classForCoder {
     return [NSNumber class];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     return [self stringValue];
 }
@@ -602,10 +669,16 @@ static id cachedNumbers[CACHE_NSNUMBERS_BELOW];
     return [self description];
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     return [self intValue];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)getValue:(void*)dest {
     switch (objCType[0]) {
         case 'i':
@@ -744,17 +817,29 @@ NSString* NSDecimalString(NSDecimal* num, id locale) {
 @implementation NSCFBoolean
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
 }
 #pragma clang diagnostic pop
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)retain {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (oneway void)release {
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)load {
     object_setClass(((NSCFBoolean*)kCFBooleanTrue), self);
     object_setClass(((NSCFBoolean*)kCFBooleanFalse), self);

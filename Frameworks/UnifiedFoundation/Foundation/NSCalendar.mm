@@ -24,6 +24,9 @@
 #include "NSLocaleInternal.h"
 
 #include <unicode/gregocal.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSCalendar";
 
 NSString* const NSCalendarIdentifierGregorian = @"gregorian";
 NSString* const NSCalendarIdentifierBuddhist = @"buddhist";
@@ -77,6 +80,10 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
 
     return _cal;
 }
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     NSCalendar* result = [NSCalendar alloc];
 
@@ -110,6 +117,9 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_identifier release];
     [_timeZone release];
@@ -360,8 +370,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 */
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)inUnit inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
     UNIMPLEMENTED();
-    EbrDebugLog("ordinalityOfUnit not supported\n");
-    return 0;
+    return StubReturn();
 }
 
 /**
@@ -399,10 +408,12 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 /**
  @Status Stub
 */
-- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate**)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
+- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
     UNIMPLEMENTED();
     // HACK: implement me!
-    *datep = [date retain];
+    if (datep) {
+        *datep = [date retain];
+    }
     return NO;
 }
 

@@ -52,7 +52,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D5BD554B-11CB-47FF-87F2-85709389DA27}</ProjectGuid>
     <ProjectName>CoreDataLib</ProjectName>
-    <RootNamespace>CoreData</RootNamespace>
+    <RootNamespace>CoreDataLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>CoreDataLib</OutputName>

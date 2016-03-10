@@ -35,7 +35,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC5BF26B-322D-4E39-9555-39C77C1E70A4}</ProjectGuid>
     <ProjectName>StoreKitLib</ProjectName>
-    <RootNamespace>StoreKit</RootNamespace>
+    <RootNamespace>StoreKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>StoreKitLib</OutputName>

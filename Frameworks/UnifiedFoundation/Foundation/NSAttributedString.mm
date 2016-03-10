@@ -15,13 +15,36 @@
 //******************************************************************************
 
 #import <Foundation/NSAttributedString.h>
+#import <Foundation/NSMutableAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
+#import <NSRaise.h>
 
 #import <algorithm>
-#import "Starboard.h"
 
 @implementation NSAttributedString
 
+/**
+ @Status Interoperable
+*/
+- (NSString*)string {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSDictionary*)attributesAtIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+// Override allocWithZone to create the concrete subclass if not subclassed
 + (instancetype)allocWithZone:(NSZone*)zone {
     if ((self == [NSAttributedString class]) || (self == [NSMutableAttributedString class])) {
         return (__bridge NSAttributedString*)_CFAttributedStringCreateEmpty();
@@ -59,91 +82,46 @@
  @Status Interoperable
  */
 - (NSAttributedString*)attributedSubstringFromRange:(NSRange)range {
-    NSAttributedString* ret =
-        (__bridge NSAttributedString*)CFAttributedStringCreateWithSubstring(nullptr,
-                                                                            reinterpret_cast<CFAttributedStringRef>(self),
-                                                                            CFRangeMake(range.location, range.length));
-    return [ret autorelease];
-}
+    NSMutableAttributedString* ret = [[NSMutableAttributedString alloc] initWithAttributedString:self];
 
-/**
- @Status Interoperable
-*/
-- (NSString*)string {
-    return (__bridge NSString*)CFAttributedStringGetString(reinterpret_cast<CFAttributedStringRef>(self));
+    // delete section before the range
+    [ret deleteCharactersInRange:NSMakeRange(0, range.location)];
+
+    // delete section after the range
+    // if done first, the range would be {range.location + range.length, [ret length] - (range.location + range.length)}
+    // since the first delete reduces length by range.location, subtract range.location from both sides
+    [ret deleteCharactersInRange:NSMakeRange(range.length, [ret length] - range.length)];
+
+    return ret;
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)length {
-    return CFAttributedStringGetLength(reinterpret_cast<CFAttributedStringRef>(self));
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)attributesAtIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
-    CFRange outRange;
-    NSDictionary* returnValue = (__bridge NSDictionary*)CFAttributedStringGetAttributes(reinterpret_cast<CFAttributedStringRef>(self),
-                                                                                        location,
-                                                                                        (range) ? &outRange : nullptr);
-    if (range) {
-        *range = NSMakeRange(outRange.location, outRange.length);
-    }
-
-    return returnValue;
+    return [[self string] length];
 }
 
 /**
  @Status Interoperable
 */
 - (NSDictionary*)attributesAtIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange {
-    CFRange outRange;
-    NSDictionary* returnValue =
-        (__bridge NSDictionary*)CFAttributedStringGetAttributesAndLongestEffectiveRange(reinterpret_cast<CFAttributedStringRef>(self),
-                                                                                        location,
-                                                                                        CFRangeMake(inRange.location, inRange.length),
-                                                                                        (range) ? &outRange : nullptr);
+    NSDictionary* ret = [self attributesAtIndex:location effectiveRange:range];
     if (range) {
-        *range = NSMakeRange(outRange.location, outRange.length);
+        *range = NSIntersectionRange(*range, inRange);
     }
-
-    return returnValue;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
-    CFRange outRange;
-
-    id returnValue = (__bridge id)CFAttributedStringGetAttribute(reinterpret_cast<CFAttributedStringRef>(self),
-                                                                 location,
-                                                                 (__bridge CFStringRef)name,
-                                                                 (range) ? &outRange : nullptr);
-    if (range) {
-        *range = NSMakeRange(outRange.location, outRange.length);
-    }
-
-    return returnValue;
+    return ret;
 }
 
 /**
  @Status Interoperable
 */
 - (id)attribute:(NSString*)name atIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange {
-    CFRange outRange;
-    id returnValue = (__bridge id)CFAttributedStringGetAttributeAndLongestEffectiveRange(reinterpret_cast<CFAttributedStringRef>(self),
-                                                                                         location,
-                                                                                         (__bridge CFStringRef)name,
-                                                                                         CFRangeMake(inRange.location, inRange.length),
-                                                                                         (range) ? &outRange : nullptr);
+    id ret = [self attribute:name atIndex:location effectiveRange:range];
     if (range) {
-        *range = NSMakeRange(outRange.location, outRange.length);
+        *range = NSIntersectionRange(*range, inRange);
     }
-
-    return returnValue;
+    return ret;
 }
 
 /**
@@ -189,6 +167,10 @@ struct EnumerationTraits<id> {
     static id getUnitWithoutLongestEffectiveRange(NSAttributedString* self, NSString* attrName, NSUInteger location, NSRange* range) {
         return [self attribute:attrName atIndex:location effectiveRange:range];
     }
+
+    static BOOL valid(id self) {
+        return (self != nil);
+    }
 };
 
 template <>
@@ -204,6 +186,10 @@ struct EnumerationTraits<NSDictionary*> {
                                                              NSRange* range) {
         return [self attributesAtIndex:location effectiveRange:range];
     }
+
+    static BOOL valid(NSDictionary* self) {
+        return (self) && ([self count] > 0);
+    }
 };
 
 // Internal helper for code reuse between enumerateAttribute: and enumerateAttributesInRange:
@@ -216,18 +202,9 @@ static void _enumerateInRange(NSAttributedString* self,
     bool reverse = opts & NSAttributedStringEnumerationReverse;
     bool longestEffectiveRangeNotRequired = opts & NSAttributedStringEnumerationLongestEffectiveRangeNotRequired;
 
-    NSUInteger enumerationBegin = std::max(0u, enumerationRange.location);
-    NSUInteger enumerationEnd = std::min(enumerationRange.location + enumerationRange.length, [self length] - 1);
+    NSUInteger currentIndex =
+        reverse ? std::min(enumerationRange.location + enumerationRange.length, [self length]) - 1 : enumerationRange.location;
 
-    if (reverse) {
-        std::swap(enumerationBegin, enumerationEnd);
-
-        // adjust for past-the-end
-        enumerationBegin -= 1;
-        enumerationEnd -= 1;
-    }
-
-    NSUInteger currentIndex = enumerationBegin;
     NSUInteger prevLength = [self length];
     NSUInteger lengthDiff = 0;
     NSRange currentRange;
@@ -248,7 +225,7 @@ static void _enumerateInRange(NSAttributedString* self,
                                                                                                 enumerationRange);
         }
 
-        if (currentUnit && block) {
+        if (EnumerationTraits<TEnumerationUnit>::valid(currentUnit) && block) {
             block(currentUnit, currentRange, &stop);
 
             // handle length changes by block
@@ -269,6 +246,10 @@ static void _enumerateInRange(NSAttributedString* self,
         } else {
             currentIndex += (currentRange.length + lengthDiff);
             enumerationRange.length += lengthDiff;
+        }
+
+        if (currentRange.length == 0) {
+            break;
         }
     }
 }
@@ -303,7 +284,10 @@ static void _enumerateInRange(NSAttributedString* self,
  @Status Interoperable
  */
 - (id)mutableCopyWithZone:(NSZone*)zone {
-    return reinterpret_cast<id>(CFAttributedStringCreateCopy(nullptr, reinterpret_cast<CFAttributedStringRef>(self)));
+    NSMutableAttributedString* ret =
+        [self isKindOfClass:[NSMutableAttributedString class]] ? [[self class] new] : [NSMutableAttributedString new];
+    [ret appendAttributedString:self];
+    return ret;
 }
 
 /**
