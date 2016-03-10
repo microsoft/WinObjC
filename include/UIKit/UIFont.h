@@ -31,6 +31,7 @@
 
 #pragma once
 
+#import <StubIncludes.h>
 #import "UIKitExport.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIFontDescriptor.h>
@@ -40,7 +41,7 @@ UIKIT_EXPORT_CLASS
 
 + (UIFont*)fontWithName:(NSString*)fontName size:(CGFloat)fontSize;
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize;
-+ (NSArray*)familyNames;
++ (NSArray*)familyNames STUB_METHOD;
 + (NSArray*)fontNamesForFamilyName:(NSString*)familyName;
 
 + (UIFont*)systemFontOfSize:(CGFloat)fontSize;
