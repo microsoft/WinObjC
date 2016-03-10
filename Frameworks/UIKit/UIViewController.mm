@@ -14,30 +14,30 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
+#import <StubReturn.h>
+#import "Starboard.h"
 
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSBundle.h"
-#include "Foundation/NSNotificationCenter.h"
-#include "UIKit/UINib.h"
-#include "Foundation/NSValue.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UIDevice.h"
-#include "UIKit/UIScreen.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "UIViewInternal.h"
-#include "UIViewControllerInternal.h"
-#include "AutoLayout.h"
-#include "UIViewControllerInternal.h"
-#include "UIKit/UIPopoverPresentationController.h"
-#include "UIEmptyController.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSBundle.h"
+#import "Foundation/NSNotificationCenter.h"
+#import "UIKit/UINib.h"
+#import "Foundation/NSValue.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIViewController.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIDevice.h"
+#import "UIKit/UIScreen.h"
+#import "CoreGraphics/CGContext.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "UIViewInternal.h"
+#import "UIViewControllerInternal.h"
+#import "AutoLayout.h"
+#import "UIViewControllerInternal.h"
+#import "UIKit/UIPopoverPresentationController.h"
+#import "UIEmptyController.h"
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
@@ -65,9 +65,9 @@ NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIView
 
 #import <UIKit/UIStoryboardPushSegueTemplate.h>
 
-#include "..\include\CACompositor.h"
+#import "..\include\CACompositor.h"
 
-#include "Etc.h"
+#import "Etc.h"
 
 extern "C" bool doLog;
 extern bool g_doLog;
@@ -76,8 +76,8 @@ extern BOOL g_presentingAnimated;
 void EbrDumpStack();
 
 // UIView -> UIViewController mapping:
-#include <unordered_map>
-#include "LoggingNative.h"
+#import <unordered_map>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIViewController";
 
@@ -379,7 +379,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return rect;
 }
 
-- (void)setResizeToScreen:(BOOL)resize {
+- (void)_setResizeToScreen:(BOOL)resize {
     priv->_resizeToScreen = TRUE;
 }
 
@@ -1952,7 +1952,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     UIViewController* controller = [[self storyboard] instantiateViewControllerWithIdentifier:controllerName];
     UIStoryboardSegue* segue = [[UIStoryboardSegue alloc] initWithIdentifier:identifier source:self destination:controller];
     [self prepareForSegue:segue sender:sender];
-    [controller setResizeToScreen:TRUE];
+    [controller _setResizeToScreen:TRUE];
 
     if ([segueTemplate isKindOfClass:[UIStoryboardPushSegueTemplate class]]) {
         [[self navigationController] pushViewController:controller animated:TRUE];
@@ -1983,7 +1983,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     UIViewController* controller = [[self storyboard] instantiateViewControllerWithIdentifier:controllerName];
     UIStoryboardSegue* segue = [[UIStoryboardSegue alloc] initWithIdentifier:nil source:self destination:controller];
     [self prepareForSegue:segue sender:sender];
-    [controller setResizeToScreen:TRUE];
+    [controller _setResizeToScreen:TRUE];
 
     if ([segueTemplate isKindOfClass:[UIStoryboardPushSegueTemplate class]]) {
         [[self navigationController] pushViewController:controller animated:TRUE];

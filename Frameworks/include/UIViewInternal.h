@@ -99,6 +99,7 @@ public:
 - (void)_applyConstraints;
 - (void)_setShouldLayout;
 + (void)_setNestedAnimationsEnabled:(BOOL)enable;
+- (void)_setBoundsOrigin:(CGPoint)origin;
 @end
 
 @interface NSLayoutConstraint () {

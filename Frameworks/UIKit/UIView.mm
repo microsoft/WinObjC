@@ -709,7 +709,7 @@ static float doRound(float f) {
     [layer setFrame:curFrame];
 }
 
-- (void)setBoundsOrigin:(CGPoint)origin {
+- (void)_setBoundsOrigin:(CGPoint)origin {
     [layer setOrigin:origin];
 }
 
@@ -743,8 +743,8 @@ static float doRound(float f) {
 
     if (window == nil) {
         for (UIGestureRecognizer* curgesture in priv->gestures) {
-            if ([curgesture respondsToSelector:@selector(cancelIfActive)]) {
-                [curgesture cancelIfActive];
+            if ([curgesture respondsToSelector:@selector(_cancelIfActive)]) {
+                [curgesture _cancelIfActive];
             }
         }
     }

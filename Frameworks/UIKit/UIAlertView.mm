@@ -18,6 +18,7 @@
 #import "UIKit/UIView.h"
 #import "UIKit/UIControl.h"
 #import "UIKit/UIAlertView.h"
+#import "UIKit/UIAlertViewDelegate.h"
 #import "UIKit/UIApplication.h"
 #import "UIKit/UIColor.h"
 #import "Foundation/NSString.h"

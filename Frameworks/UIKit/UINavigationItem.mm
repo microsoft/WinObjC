@@ -23,7 +23,7 @@
     idretaintype(UIView) _titleView;
     idretaintype(NSString) _prompt;
     idretaintype(UIBarButtonItem) _rightBarButtonItem, _leftBarButtonItem, _backBarButtonItem;
-    idretaintype(NSArray) _rightBarButtonItems, _leftBarButtonItems;
+    idretaintype(NSMutableArray) _rightBarButtonItems, _leftBarButtonItems;
     idretaintype(UIBarButtonItem) _rightSegmentedControlItem;
     BOOL _hidesBackButton;
     id _delegate;

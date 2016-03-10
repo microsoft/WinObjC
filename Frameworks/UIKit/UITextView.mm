@@ -14,12 +14,14 @@
 //
 //******************************************************************************
 
-#include "UIKit/UIKit.h"
-#include "QuartzCore/CATextLayer.h"
-#include "UIKit/UITextInputTraits.h"
-#include "CGContextInternal.h"
-#include "NSTextStorageInternal.h"
-#include "LoggingNative.h"
+#import "UIKit/UIKit.h"
+#import "UIKit/UITextInputTraits.h"
+#import "QuartzCore/CATextLayer.h"
+
+#import "CGContextInternal.h"
+#import "NSTextStorageInternal.h"
+#import "LoggingNative.h"
+#import "UIFontInternal.h"
 
 static const wchar_t* TAG = L"UITextView";
 

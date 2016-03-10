@@ -30,8 +30,11 @@
 #import <UIKit/UINib.h>
 
 #import <UIKit/UIApplicationDelegate.h>
-#import <UIApplicationInternal.h>
 
+#import "NSThread-Internal.h"
+#import "UIApplicationInternal.h"
+#import "UIFontInternal.h"
+#import "UIViewControllerInternal.h"
 #import "UIInterface.h"
 #import "LoggingNative.h"
 
@@ -197,8 +200,8 @@ int UIApplicationMainInit(
                     NSObject* curObj = [obj objectAtIndex:i];
 
                     if ([curObj isKindOfClass:[UIViewController class]]) {
-                        [curObj setResizeToScreen:1];
-                        [curObj _doResizeToScreen];
+                        [reinterpret_cast<UIViewController*>(curObj) _setResizeToScreen:YES];
+                        [reinterpret_cast<UIViewController*>(curObj) _doResizeToScreen];
                     }
                 }
             }
@@ -216,7 +219,7 @@ int UIApplicationMainInit(
                 UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
                 UIViewController* viewController = [storyBoard instantiateInitialViewController];
                 if (viewController != nil) {
-                    [viewController setResizeToScreen:1];
+                    [viewController _setResizeToScreen:1];
                     rootController = viewController;
                 }
             }

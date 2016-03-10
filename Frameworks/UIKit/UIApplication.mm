@@ -462,7 +462,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
         // Not handled by any of the windows, try sending a message about it:
         id appDelegate = [[self sharedApplication] delegate];
         if ([appDelegate respondsToSelector:@selector(applicationBackButtonPressed:)]) {
-            [appDelegate applicationBackButtonPressed:nil];
+            [appDelegate performSelector:@selector(applicationBackButtonPressed:) withObject:nil];
         }
     }
 }

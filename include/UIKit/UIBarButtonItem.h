@@ -56,8 +56,9 @@ typedef enum {
     UIBarButtonSystemItemPause,
     UIBarButtonSystemItemRewind,
     UIBarButtonSystemItemFastForward,
-    UIBarButtonSystemItemUndo, // iPhoneOS 3.0
-    UIBarButtonSystemItemRedo, // iPhoneOS 3.0
+    UIBarButtonSystemItemUndo = 0x15, // iOS 3.0 and later
+    UIBarButtonSystemItemRedo = 0x16, // iOS 3.0 and later
+    UIBarButtonSystemItemPageCurl = 0x17 // iOS 4.0 and later
 } UIBarButtonSystemItem;
 
 typedef enum {

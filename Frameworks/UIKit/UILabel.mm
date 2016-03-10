@@ -14,19 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGContext.h"
+#import "Starboard.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGContext.h"
 
-#include "UIKit/UIView.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UILabel.h"
-#include "UIKit/UIAccessibility.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIFont.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UILabel.h"
+#import "UIKit/UIAccessibility.h"
+#import "UIFontInternal.h"
 
-#include "CGContextInternal.h"
+#import "CGContextInternal.h"
 
-#include "QuartzCore/CATextLayer.h"
+#import "QuartzCore/CATextLayer.h"
 #define USE_TEXT_LAYER 1
 
 @implementation UILabel {

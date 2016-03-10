@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UITabBarButton.h"
-#include "UIKit/UIColor.h"
-#include "CGContextInternal.h"
+#import "Starboard.h"
+#import "UIFontInternal.h"
+#import "UITabBarButton.h"
+#import "UIKit/UIColor.h"
+#import "CGContextInternal.h"
 
 @implementation UITabBarButton : UIView
 - (instancetype)initWithFrame:(CGRect)frame item:(UITabBarItem*)item delegate:(id<UITabBarDelegate>)delegate {
@@ -47,8 +48,8 @@
         }
     }
 
-    id image = [_item image];
-    if (image != nil) {
+    UIImage* image = [_item image];
+    if (image) {
         CGSize size;
         size = [image size];
 

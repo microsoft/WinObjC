@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,19 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "UIKit/UIView.h"
+#import "UIKit/UIPickerView.h"
 
-@class UITabTabItem;
-@protocol UITabBarDelegate;
-
-@interface UITabBarButton : UIView {
-@public
-    UITabBarItem* _item;
-    id<UITabBarDelegate> _delegate;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame item:(UITabBarItem*)item delegate:(id<UITabBarDelegate>)delegate;
-- (void)drawRect:(CGRect)pos;
-- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
+@interface UIPickerView ()
+- (id)_setAlignment:(UITextAlignment)alignment forComponent:(int)component;
+- (void)_invalidateAllComponents;
 @end

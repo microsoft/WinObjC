@@ -18,5 +18,6 @@
 @interface UITouch ()
 
 + (UITouch*)createWithPoint:(CGPoint)point tapCount:(int)tapCount;
+- (void)_redirectTouch:(UIView*)view;
 
 @end

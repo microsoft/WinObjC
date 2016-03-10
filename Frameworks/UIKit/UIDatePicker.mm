@@ -14,8 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <UIKit/UIKit.h>
+#import "Starboard.h"
+#import <UIKit/UIKit.h>
+
+#import "UIPickerViewInternal.h"
 
 static const int MAX_DATEPICKER_COMPONENTS = 4;
 
@@ -25,15 +27,15 @@ static const int MAX_DATEPICKER_COMPONENTS = 4;
 #define YEAR_START (2010 - (MAX_YEAR_RANGE / 2))
 
 @implementation UIDatePicker {
-    idretaintype(NSDate) _date;
-    idretaintype(NSDate) _dayStartDate;
-    idretaintype(UIPickerView) _pickerView;
-    idretaintype(NSArray) _months, _shortMonths;
-    idretaintype(NSArray) _weekdays;
-    idretaintype(NSDate) _dayStartTime;
+    StrongId<NSDate> _date;
+    StrongId<NSDate> _dayStartDate;
+    StrongId<UIPickerView> _pickerView;
+    StrongId<NSMutableArray> _months, _shortMonths;
+    StrongId<NSMutableArray> _weekdays;
+    StrongId<NSDate> _dayStartTime;
     UIDatePickerMode _mode;
-    idretaintype(NSDate) __minimumDate, __maximumDate;
-    idretaintype(NSString) _hoursLabel, _minutesLabel;
+    StrongId<NSDate> __minimumDate, __maximumDate;
+    StrongId<UILabel> _hoursLabel, _minutesLabel;
     bool _didSnapTime;
 }
 
@@ -130,14 +132,14 @@ static void populateDates(UIDatePicker* self) {
             [_pickerView _setAlignment:UITextAlignmentLeft forComponent:0];
             CGRect frame = { 100, 88, 50, 50 };
 
-            _hoursLabel = [[UILabel alloc] initWithFrame:frame];
+            _hoursLabel.attach([[UILabel alloc] initWithFrame:frame]);
             [self addSubview:(id)_hoursLabel];
-            [_hoursLabel setBackgroundColor:[[UIColor clearColor] CGColor]];
+            [_hoursLabel setBackgroundColor:[UIColor clearColor]];
             [_hoursLabel setText:@"hours"];
 
             frame.origin.x += 100;
-            _minutesLabel = [[UILabel alloc] initWithFrame:frame];
-            [_minutesLabel setBackgroundColor:[[UIColor clearColor] CGColor]];
+            _minutesLabel.attach([[UILabel alloc] initWithFrame:frame]);
+            [_minutesLabel setBackgroundColor:[UIColor clearColor]];
             [self addSubview:(id)_minutesLabel];
             [_minutesLabel setText:@"min"];
 
@@ -349,7 +351,7 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
     } else {
         self->_date = clampedDate;
     }
-    [self->_pickerView invalidateAllComponents];
+    [self->_pickerView _invalidateAllComponents];
 
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 
@@ -363,7 +365,7 @@ static void didSelectDate(UIDatePicker* self, int row, int component) {
     }
     if (component == 0 || component == 2) {
         //  Selected a month/year, need to re-color days
-        [self->_pickerView invalidateAllComponents];
+        [self->_pickerView _invalidateAllComponents];
     }
 }
 
@@ -396,7 +398,7 @@ void didSelectTime(UIDatePicker* self, int row, int component) {
     } else {
         self->_didSnapTime = false; //  Valid time has been selected, we can now snap to a valid time
     }
-    [self->_pickerView invalidateAllComponents];
+    [self->_pickerView _invalidateAllComponents];
 
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
@@ -785,7 +787,7 @@ static void resetPickerPositions(UIDatePicker* self) {
 - (void)setMinimumDate:(NSDate*)date {
     _minimumDate = date;
     resetPickerPositions(self);
-    [_pickerView invalidateAllComponents];
+    [_pickerView _invalidateAllComponents];
 }
 
 /**
@@ -794,13 +796,13 @@ static void resetPickerPositions(UIDatePicker* self) {
 - (void)setMaximumDate:(NSDate*)date {
     _maximumDate = date;
     resetPickerPositions(self);
-    [_pickerView invalidateAllComponents];
+    [_pickerView _invalidateAllComponents];
 }
 
 /**
  @Status Stub
 */
-- (void)setMinuteInterval:(NSUInteger)interval {
+- (void)setMinuteInterval:(NSInteger)interval {
     UNIMPLEMENTED();
 }
 

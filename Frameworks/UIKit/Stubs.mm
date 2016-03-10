@@ -188,49 +188,49 @@ typedef void (*DNSServiceRegisterReply)(DNSServiceRef sdRef,
                                         void* context);
 
 UIKIT_EXPORT
-extern "C" void DNSServiceRefDeallocate(DNSServiceRef sdRef) {
+void DNSServiceRefDeallocate(DNSServiceRef sdRef) {
     [sdRef dealloc];
 }
 
 UIKIT_EXPORT
-extern "C" DNSServiceErrorType DNSServiceSetDispatchQueue(DNSServiceRef service, dispatch_queue_t queue) {
+DNSServiceErrorType DNSServiceSetDispatchQueue(DNSServiceRef service, dispatch_queue_t queue) {
     UNIMPLEMENTED_WITH_MSG("DNSServiceSetDispatchQueue");
     return 0;
 }
 
 UIKIT_EXPORT
-extern "C" DNSServiceErrorType DNSServiceBrowse(DNSServiceRef* sdRef,
-                                                DNSServiceFlags flags,
-                                                uint32_t interfaceIndex,
-                                                const char* regtype,
-                                                const char* domain,
-                                                /* may be NULL */ DNSServiceBrowseReply callBack,
-                                                void* context /* may be NULL */) {
+DNSServiceErrorType DNSServiceBrowse(DNSServiceRef* sdRef,
+                                     DNSServiceFlags flags,
+                                     uint32_t interfaceIndex,
+                                     const char* regtype,
+                                     const char* domain,
+                                     /* may be NULL */ DNSServiceBrowseReply callBack,
+                                     void* context /* may be NULL */) {
     UNIMPLEMENTED_WITH_MSG("DNSServiceBrowse");
     return 0;
 }
 
 UIKIT_EXPORT
-extern "C" DNSServiceErrorType DNSServiceGetAddrInfo(DNSServiceRef* sdRef,
-                                                     DNSServiceFlags flags,
-                                                     uint32_t interfaceIndex,
-                                                     DNSServiceProtocol protocol,
-                                                     const char* hostname,
-                                                     DNSServiceGetAddrInfoReply callBack,
-                                                     void* context /* may be NULL */) {
+DNSServiceErrorType DNSServiceGetAddrInfo(DNSServiceRef* sdRef,
+                                          DNSServiceFlags flags,
+                                          uint32_t interfaceIndex,
+                                          DNSServiceProtocol protocol,
+                                          const char* hostname,
+                                          DNSServiceGetAddrInfoReply callBack,
+                                          void* context /* may be NULL */) {
     UNIMPLEMENTED_WITH_MSG("DNSServiceGetAddrInfo");
     return 0;
 }
 
 UIKIT_EXPORT
-extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
-                                                 DNSServiceFlags flags,
-                                                 uint32_t interfaceIndex,
-                                                 const char* name,
-                                                 const char* regtype,
-                                                 const char* domain,
-                                                 DNSServiceResolveReply callBack,
-                                                 void* context /* may be NULL */) {
+DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
+                                      DNSServiceFlags flags,
+                                      uint32_t interfaceIndex,
+                                      const char* name,
+                                      const char* regtype,
+                                      const char* domain,
+                                      DNSServiceResolveReply callBack,
+                                      void* context /* may be NULL */) {
     UNIMPLEMENTED_WITH_MSG("DNSServiceResolve");
     return 0;
 }
@@ -244,28 +244,28 @@ extern "C" DNSServiceErrorType DNSServiceResolve(DNSServiceRef* sdRef,
 #include <Windows.h>
 #include <inaddr.h>
 
-UIKIT_EXPORT extern "C" char* __inet_ntoa(struct in_addr addr) {
+UIKIT_EXPORT char* __inet_ntoa(struct in_addr addr) {
     UNIMPLEMENTED_WITH_MSG("__inet_ntoa");
     return 0;
 }
 
-UIKIT_EXPORT extern "C" char* if_indextoname(unsigned int ifindex, char* ifname) {
+UIKIT_EXPORT char* if_indextoname(unsigned int ifindex, char* ifname) {
     UNIMPLEMENTED_WITH_MSG("if_indextoname");
     return 0;
 }
 
-UIKIT_EXPORT extern "C" DNSServiceErrorType DNSServiceRegister(DNSServiceRef* sdRef,
-                                                               DNSServiceFlags flags,
-                                                               uint32_t interfaceIndex,
-                                                               const char* name,
-                                                               /* may be NULL */ const char* regtype,
-                                                               const char* domain,
-                                                               /* may be NULL */ const char* host,
-                                                               /* may be NULL */ uint16_t port,
-                                                               /* In network byte order */ uint16_t txtLen,
-                                                               const void* txtRecord,
-                                                               /* may be NULL */ DNSServiceRegisterReply callBack,
-                                                               /* may be NULL */ void* context /* may be NULL */) {
+UIKIT_EXPORT DNSServiceErrorType DNSServiceRegister(DNSServiceRef* sdRef,
+                                                    DNSServiceFlags flags,
+                                                    uint32_t interfaceIndex,
+                                                    const char* name,
+                                                    /* may be NULL */ const char* regtype,
+                                                    const char* domain,
+                                                    /* may be NULL */ const char* host,
+                                                    /* may be NULL */ uint16_t port,
+                                                    /* In network byte order */ uint16_t txtLen,
+                                                    const void* txtRecord,
+                                                    /* may be NULL */ DNSServiceRegisterReply callBack,
+                                                    /* may be NULL */ void* context /* may be NULL */) {
     UNIMPLEMENTED_WITH_MSG("DNSServiceRegister");
     return 0;
 }

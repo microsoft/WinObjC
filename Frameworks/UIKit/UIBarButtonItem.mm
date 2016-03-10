@@ -17,8 +17,8 @@
 #import "Starboard.h"
 #import "UIBarItemInternal.h"
 #import "UIBarButtonItem+Internals.h"
-#import "LoggingNative.h"
 #import "UIAppearanceSetter.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIBarButtonItem";
 
@@ -251,7 +251,7 @@ static void initControls(UIBarButtonItem* self) {
             }
             break;
 
-        case 0x15:
+        case UIBarButtonSystemItemUndo:
             _title = @"Undo";
             {
                 CGSize size;
@@ -260,7 +260,7 @@ static void initControls(UIBarButtonItem* self) {
             }
             break;
 
-        case 0x16:
+        case UIBarButtonSystemItemRedo:
             _title = @"Redo";
             {
                 CGSize size;
@@ -269,7 +269,7 @@ static void initControls(UIBarButtonItem* self) {
             }
             break;
 
-        case 0x17:
+        case UIBarButtonSystemItemPageCurl:
             _title = @"Curl";
             {
                 CGSize size;
@@ -599,7 +599,7 @@ static void initControls(UIBarButtonItem* self) {
 }
 
 + (id)appearance {
-    return [UIAppearanceSetter appearanceWhenContainedIn:nil forUIClass:self];
+    return [UIAppearanceSetter _appearanceWhenContainedIn:nil forUIClass:self];
 }
 
 + (id)appearanceWhenContainedIn:(id)containedClass, ... {
@@ -617,7 +617,7 @@ static void initControls(UIBarButtonItem* self) {
 
     va_end(pReader);
 
-    return [UIAppearanceSetter appearanceWhenContainedIn:containedClass forUIClass:self];
+    return [UIAppearanceSetter _appearanceWhenContainedIn:containedClass forUIClass:self];
 }
 
 @end

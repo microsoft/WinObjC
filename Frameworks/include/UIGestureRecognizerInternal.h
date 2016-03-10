@@ -16,6 +16,8 @@
 #pragma once
 
 #import <objc/runtime.h>
+#import <UIKit/UIGestureRecognizer.h>
+#import <UIKit/UIPanGestureRecognizer.h>
 
 typedef struct {
     __unsafe_unretained id _target;
@@ -44,8 +46,18 @@ typedef struct {
     } _delegateHas;
 }
 
++ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture;
 - (void)_setView:(UIView*)view;
-- (void)cancelIfActive;
+- (void)_cancelIfActive;
 - (void)_fire;
++ (BOOL)_fireGestures:(id)gestures;
++ (void)_failActiveExcept:(UIGestureRecognizer*)gesture;
+@end
+
+@class UIView;
+@interface UIPanGestureRecognizer ()
+- (UIView*)_touchedView;
+- (void)_setDragSlack:(float)slack;
+- (void)_lockDirection:(int)dir;
 + (BOOL)_fireGestures:(id)gestures;
 @end

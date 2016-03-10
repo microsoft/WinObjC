@@ -14,26 +14,33 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSString.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSSet.h"
-#include "UIKit/UITouch.h"
-#include "UIKit/UIEvent.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "QuartzCore/CADisplayLink.h"
-#include "UIKit/UIGestureRecognizer.h"
-#include "UIKit/UIPanGestureRecognizer.h"
-#include "QuartzCore/CALayer.h"
-#include "UIKit/UIColor.h"
-#include "QuartzCore/CABasicAnimation.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSTimer.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSTimer.h"
+#import "Foundation/NSRunLoop.h"
+#import "Foundation/NSSet.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "CoreGraphics/CGGeometry.h"
+#import "QuartzCore/CABasicAnimation.h"
+#import "QuartzCore/CADisplayLink.h"
+#import "QuartzCore/CALayer.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UIEvent.h"
+#import "UIKit/UITouch.h"
+#import "UIKit/UIGestureRecognizer.h"
+#import "UIKit/UIPanGestureRecognizer.h"
 
-#include <cmath>
+#import "CAAnimationInternal.h"
+#import "CALayerInternal.h"
+#import "UIEventInternal.h"
+#import "UIGestureRecognizerInternal.h"
+#import "UITouchInternal.h"
+#import "UIViewInternal.h"
+
+#import <cmath>
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
@@ -42,11 +49,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 @interface __UIScrollerPosition : CALayer {
 @public
-    idretaintype(CAAnimation) _fadeAnimation;
+    idretaintype(CABasicAnimation) _fadeAnimation;
 }
 @end
 
-#include "UIKit/UIScrollView.h"
+#import "UIKit/UIScrollView.h"
 
 @implementation __UIScrollerPosition
 
@@ -90,7 +97,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 @end
 
-#include "Etc.h"
+#import "Etc.h"
 
 @implementation UIScrollView {
     id _delegate;
@@ -488,7 +495,7 @@ static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
 
     boundsVal.y = boundsVal.y;
 
-    [self setBoundsOrigin:boundsVal];
+    [self _setBoundsOrigin:boundsVal];
     positionScrollers(self);
     [self setNeedsLayout];
 
@@ -994,7 +1001,7 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
     [self->_displayLink invalidate];
     self->_displayLink = nil;
 
-    id view = self;
+    UIView* view = self;
     if ([self->_delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
         view = [self->_delegate viewForZoomingInScrollView:self];
         self->_zoomView = view;
@@ -1185,7 +1192,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 /**
  @Status Stub
 */
-- (void)setIndicatorStyle:(unsigned)style {
+- (void)setIndicatorStyle:(UIScrollViewIndicatorStyle)style {
     UNIMPLEMENTED();
 }
 
@@ -1499,7 +1506,6 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 
     if (state >= UIGestureRecognizerStateBegan && state <= UIGestureRecognizerStateEnded) {
         if (delta.x || delta.y) {
-            UIScrollView* touchedView = [gesture _touchedView];
             [self _doPan:gesture];
         }
     }
@@ -1606,7 +1612,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     }
     if (state == UIGestureRecognizerStateBegan) {
         //  Cancel any other pans
-        [UIPanGestureRecognizer cancelActiveExcept:(id)_panGesture];
+        [UIPanGestureRecognizer _cancelActiveExcept:(id)_panGesture];
         [_pinchGesture setScale:_zoomScale];
         _isZooming = true;
         [self setNeedsLayout];

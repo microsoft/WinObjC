@@ -258,14 +258,14 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
-- (void)cancelIfActive {
+- (void)_cancelIfActive {
     id curList = [g_curGesturesDict objectForKey:[self class]];
     if ([curList containsObject:self]) {
         [self cancel];
     }
 }
 
-+ (void)cancelActiveExcept:(UIGestureRecognizer*)gesture {
++ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture {
     id curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
@@ -275,7 +275,7 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
-+ (void)failActiveExcept:(UIGestureRecognizer*)gesture {
++ (void)_failActiveExcept:(UIGestureRecognizer*)gesture {
     NSArray* curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {

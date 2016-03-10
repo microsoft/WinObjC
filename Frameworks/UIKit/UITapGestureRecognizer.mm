@@ -139,7 +139,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
     [super reset];
 }
 
-- (id)touchesBegan:(id)touches withEvent:(id)event {
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     id curTouch = [touches anyObject];
     _tapTime = EbrGetMediaTime();
 
@@ -185,10 +185,9 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             _delayRecognition = true;
         }
     }
-    return self;
 }
 
-- (id)touchesMoved:(id)touches withEvent:(id)event {
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     id curTouch = [touches anyObject];
     CGPoint curPos;
     curPos = [curTouch locationInView:nil];
@@ -208,10 +207,9 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
     } else {
         TraceVerbose(TAG, L"UITapGestureRecognizer: touch %x not found - count=%d", curTouch, _numSavedTouches);
     }
-    return self;
 }
 
-- (id)touchesEnded:(id)touches withEvent:(id)event {
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     id curTouch = [touches anyObject];
     CGPoint curPos;
     curPos = [curTouch locationInView:nil];
@@ -222,7 +220,6 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         if (startPos.distGr(curPos, TAP_SLACK_AREA)) {
             TraceVerbose(TAG, L"UITapGestureRecognizer: touch moved too far on end");
             _state = UIGestureRecognizerStateFailed;
-            return self;
         }
     } else {
         TraceVerbose(TAG, L"UITapGestureRecognizer: touch not found");
@@ -234,7 +231,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
     if (count > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.2f) {
         TraceVerbose(TAG, L"UITapGestureRecognizer: too many touches");
         _state = UIGestureRecognizerStateFailed;
-        return self;
+
     } else if (count == _numberOfTouchesRequired) {
         bool success = true;
         for (id curTouch in allTouches) {
@@ -254,7 +251,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
                 _wasRecognized = true;
             } else {
                 _state = UIGestureRecognizerStateRecognized;
-                [[self class] failActiveExcept:self];
+                [[self class] _failActiveExcept:self];
             }
         } else {
             [_pendingTaps removeObject:self];
@@ -263,7 +260,6 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             _wasRecognized = false;
         }
     }
-    return self;
 }
 
 - (id)_fireRecognized {

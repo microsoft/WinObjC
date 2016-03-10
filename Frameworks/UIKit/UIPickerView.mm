@@ -557,7 +557,7 @@ static void layoutSubSections(UIPickerView* self) {
     layoutSubSections(self);
 }
 
-- (void)invalidateAllComponents {
+- (void)_invalidateAllComponents {
     for (int i = 0; i < _numSections; i++) {
         [_subSections[i] invalidateComponents];
     }

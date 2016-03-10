@@ -36,6 +36,7 @@
 
 @interface UIApplication ()
 - (UIView*)_popupLayer;
+- (void)_setInternalOrientation:(UIInterfaceOrientation)orientation;
 @end
 
 #endif /* _UIAPPLICATIONINTERNAL_H_ */
