@@ -28,13 +28,6 @@
 // TODO: WIL logging hook
 // #include "ErrorHandling.h"
 
-// Init for WinObjCTraceLoggingProvider with GUID {E4BABC11-825E-4D44-8104-D6CFAC39AE13}
-TRACELOGGING_DECLARE_PROVIDER(s_traceLoggingProvider);
-
-TRACELOGGING_DEFINE_PROVIDER(s_traceLoggingProvider,
-                             "WinObjCTraceLoggingProvider",
-                             (0xe4babc11, 0x825e, 0x4d44, 0x81, 0x4, 0xd6, 0xcf, 0xac, 0x39, 0xae, 0x13));
-
 bool s_isRegistered = false;
 std::mutex s_isRegisteredMutex;
 

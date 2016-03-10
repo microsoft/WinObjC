@@ -132,6 +132,10 @@
         <HintPath>$(StarboardLibDirs)\XamlCompositorCS.winmd</HintPath>
         <IsWinMDFile>true</IsWinMDFile>
       </Reference>
+      <Reference Include="ApplicationInsights" Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
+        <HintPath>$(StarboardLibDirs)\ApplicationInsights.winmd</HintPath>
+        <IsWinMDFile>true</IsWinMDFile>
+      </Reference>
     </ItemGroup>
   </Target>
 

@@ -26,6 +26,19 @@
   <ItemGroup>
     <None Include="Logging.def" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ApplicationInsights" Condition="'$(Platform)'=='Win32'">
+      <HintPath>$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\ApplicationInsights\ApplicationInsights.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="ApplicationInsights" Condition="'$(Platform)'=='ARM'">
+      <HintPath>$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\ApplicationInsights\ApplicationInsights.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Frameworks\Logging\Telemetry.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{862D36C2-CC83-4D04-B9B8-BEF07F479905}</ProjectGuid>
     <RootNamespace>Logging</RootNamespace>
@@ -41,9 +54,25 @@
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
   </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);$(NETFXKitsDir)Lib\um\arm;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\3rdparty\AppInsights\src\core;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);$(NETFXKitsDir)Lib\um\arm;$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\AppInsights_Win10-UAP;</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -52,10 +81,16 @@
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll" "$(OutDir)AppInsights_Win10-UAP.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Application Insights DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -64,10 +99,16 @@
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\Win32\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll" "$(OutDir)AppInsights_Win10-UAP.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Application Insights DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -76,10 +117,16 @@
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll" "$(OutDir)AppInsights_Win10-UAP.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Application Insights DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Logging.def</ModuleDefinitionFile>
@@ -88,6 +135,12 @@
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
+    <PostBuildEvent>
+      <Command>COPY /Y "$(StarboardBasePath)\deps\prebuilt\ApplicationInsights\ARM\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll" "$(OutDir)AppInsights_Win10-UAP.dll"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy Application Insights DLL</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
