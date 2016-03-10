@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016, Intel Corporation.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -15,28 +16,4 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreMotion/CMLogItem.h>
-#import <CoreMotion/CoreMotionExport.h>
-
-#import <Foundation/NSObject.h>
-
-#import <objc\runtime.h>
-
-typedef enum {
-    CMMagneticFieldCalibrationAccuracyUncalibrated = -1,
-    CMMagneticFieldCalibrationAccuracyLow,
-    CMMagneticFieldCalibrationAccuracyMedium,
-    CMMagneticFieldCalibrationAccuracyHigh
-} CMMagneticFieldCalibrationAccuracy;
-
-typedef struct { double x, y, z; } CMMagneticField;
-
-typedef struct {
-    CMMagneticField field;
-    CMMagneticFieldCalibrationAccuracy accuracy;
-} CMCalibratedMagneticField;
-
-COREMOTION_EXPORT_CLASS
-@interface CMMagnetometerData : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMMagneticField magneticField STUB_PROPERTY;
-@end
+bool checkDefaultAccelerometer();
