@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,7 +18,7 @@
 
 #include "ApplicationMain.h"
 #include "StringHelpers.h"
-#include "winobjc\winobjc.h"
+#include "ApplicationCompositor.h"
 
 #include <assert.h>
 #include <string>
@@ -150,7 +150,7 @@ void InitializeApp() {
     SetXamlUIWaiter();
 }
 
-extern "C" void IWRunApplicationMain(Platform::String^ principalClassName,
+extern "C" void RunApplicationMain(Platform::String^ principalClassName,
                                      Platform::String^ delegateClassName,
                                      float windowWidth,
                                      float windowHeight) {
@@ -167,14 +167,6 @@ extern "C" void IWRunApplicationMain(Platform::String^ principalClassName,
 
     // Kick off the run loop
     StartCompositedRunLoop();
-}
-
-extern "C" void IWHandleWindowVisibilityChangeEvent(bool isVisible) {
-    ApplicationMainHandleWindowVisibilityChangeEvent(isVisible);
-}
-
-extern "C" void IWHandleHighMemoryUsageEvent() {
-    ApplicationMainHandleHighMemoryUsageEvent();
 }
 
 // clang-format off

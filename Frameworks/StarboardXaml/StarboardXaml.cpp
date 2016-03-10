@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,11 +16,13 @@
 // clang-format does not seem to like C++/CX
 // clang-format off
 
+#include "ApplicationMain.h"
 #include "LayerRegistration.h"
 #include "StringConversion.h"
 
-#include "winobjc\winobjc.h"
+#include "ApplicationCompositor.h"
 #include "LoggingNative.h"
+#include "XamlCompositor.h"
 
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::UI;
@@ -77,13 +79,13 @@ public:
         auto rootFrame = ref new Xaml::Controls::Frame();
         rootFrame->Content = uiElem;
 
-        IWSetXamlRoot(uiElem);
+        SetXamlRoot(uiElem);
 
         Xaml::Window::Current->Content = rootFrame;
         Xaml::Window::Current->Activate();
 
         auto startupRect = Xaml::Window::Current->Bounds;
-        IWRunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
+        RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
 
         _RegisterEventHandlers();
     }
@@ -101,7 +103,7 @@ private:
     void _OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
     {
         TraceVerbose(TAG, L"VisibilityChanged event received - %d", args->Visible);
-        IWHandleWindowVisibilityChangeEvent(args->Visible);
+        ApplicationMainHandleWindowVisibilityChangeEvent(args->Visible);
     }
 
     void _OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args)
@@ -110,14 +112,14 @@ private:
 
         TraceVerbose(TAG, L"AppMemoryUsageIncreased event received - %d", level);
         if (level == AppMemoryUsageLevel::High) {
-            IWHandleHighMemoryUsageEvent();
+            ApplicationMainHandleHighMemoryUsageEvent();
         }
     }
 };
 
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.
-extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
+extern "C" int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 

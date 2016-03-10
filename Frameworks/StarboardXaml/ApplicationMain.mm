@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -31,7 +31,6 @@
 #import "UIInterface.h"
 #import "CACompositorClient.h"
 #import "UIApplicationInternal.h"
-#import "winobjc\winobjc.h"
 #import "NSBundleInternal.h"
 
 static CACompositorClientInterface* _compositorClient = NULL;

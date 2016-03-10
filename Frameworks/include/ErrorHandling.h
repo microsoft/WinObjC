@@ -17,7 +17,6 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
-#include <Foundation/FoundationExport.h>
 #include <sys/cdefs.h>
 #include <winerror.h>
 #include <stdarg.h>
@@ -203,7 +202,13 @@ IWPLATFORM_EXPORT long starboardInterlockedIncrementNoFence(long volatile* adden
 IWPLATFORM_EXPORT unsigned long starboardGetLastError();
 IWPLATFORM_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
 IWPLATFORM_EXPORT void starboardZeroMemory(void* destination, size_t length);
-IWPLATFORM_EXPORT unsigned long starboardFormatMessageW(unsigned long flags, const void* source, unsigned long messageId, unsigned long languageId, wchar_t* buffer, unsigned long size, va_list* arguments);
+IWPLATFORM_EXPORT unsigned long starboardFormatMessageW(unsigned long flags,
+                                                        const void* source,
+                                                        unsigned long messageId,
+                                                        unsigned long languageId,
+                                                        wchar_t* buffer,
+                                                        unsigned long size,
+                                                        va_list* arguments);
 IWPLATFORM_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
 IWPLATFORM_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
 IWPLATFORM_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);

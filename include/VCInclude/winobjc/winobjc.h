@@ -33,25 +33,6 @@
 #include <COMIncludes_End.h>
 #endif
 
-#ifndef IWEXPORT
-#ifndef OBJCRT_EXPORT
-#define IWEXPORT __declspec(dllimport)
-#else
-#define IWEXPORT OBJCRT_EXPORT
-#endif
-#endif
-
-#ifdef __cplusplus_winrt
-IWEXPORT extern "C" void IWRunApplicationMain(Platform::String^ principalClassName,
-                                              Platform::String^ delegateClassName,
-                                              float windowWidth,
-                                              float windowHeight);
-IWEXPORT extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid^ grid);
-IWEXPORT extern "C" Windows::UI::Xaml::Controls::SwapChainPanel^ IWSetSwapChainTarget(Windows::UI::Xaml::Controls::SwapChainPanel^ panel);
-IWEXPORT extern "C" void IWHandleWindowVisibilityChangeEvent(bool isVisible);
-IWEXPORT extern "C" void IWHandleHighMemoryUsageEvent();
-#endif
-
 namespace winobjc {
 
 class Id {

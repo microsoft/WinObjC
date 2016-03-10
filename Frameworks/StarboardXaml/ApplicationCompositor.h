@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,21 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-
-extern "C" {
-char* _getcwd(char* buffer, int maxlen) {
-    buffer[0] = 0;
-    return buffer;
-}
-
-char* getenv(const char* name) {
-    return NULL;
-}
-
-//  For compatibility - gives WinRT a stubbed implementation of getenv
-void* _imp__getenv = getenv;
-};
+#ifdef __cplusplus_winrt
+extern "C" void RunApplicationMain(Platform::String ^ principalClassName,
+                                   Platform::String ^ delegateClassName,
+                                   float windowWidth,
+                                   float windowHeight);
+extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout);
+#endif

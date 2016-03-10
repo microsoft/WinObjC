@@ -1,7 +1,0 @@
-LIBRARY StarboardWS
-    EXPORTS
-        IWRunApplicationMain
-        SetCACompositorClient
-        XamlWaitHandle
-        IWHandleWindowVisibilityChangeEvent
-        IWHandleHighMemoryUsageEvent
