@@ -38,12 +38,8 @@ static const wchar_t* TAG = L"UIBarButtonItem";
 }
 
 static void initInternal(UIBarButtonItem* self) {
-    if (isOSTarget(@"7.0")) {
-        self->_font = [UIFont boldSystemFontOfSize:17];
-    } else {
-        self->_font = [UIFont boldSystemFontOfSize:14];
-    }
-    self->_systemItem = (UIBarButtonSystemItem)-1;
+	self->_font = [UIFont systemFontOfSize : 15];
+	self->_systemItem = (UIBarButtonSystemItem)-1;
 }
 
 static void initControls(UIBarButtonItem* self) {
@@ -52,20 +48,6 @@ static void initControls(UIBarButtonItem* self) {
         CGRect frame = { 0, 0, 0, 0 };
 
         self->_buttonView.attach([[UIButton alloc] initWithFrame:frame]);
-
-        bool noBorder = false;
-
-        id infoDict = [[NSBundle mainBundle] infoDictionary];
-        if (isOSTarget(@"7.0")) {
-            noBorder = true;
-        }
-        if (self->_style != UIBarButtonItemStylePlain && noBorder == false) {
-            id image = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-            id pressedImage = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-
-            [self->_buttonView setBackgroundImage:(id)image forState:0];
-            [self->_buttonView setBackgroundImage:(id)pressedImage forState:1];
-        }
 
         [self->_buttonView setTitle:(id)self->_title forState:0];
         [self->_buttonView setImage:(id)self->_image forState:0];
