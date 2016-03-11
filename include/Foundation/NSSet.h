@@ -22,55 +22,56 @@
 #import <Foundation/NSKeyValueObserving.h>
 #import <Foundation/NSMutableDictionary.h>
 
-@class NSArray;
+@class NSArray<ObjectType>;
 @class NSPredicate;
-@class NSEnumerator;
+@class NSEnumerator<ObjectType>;
 @class NSString;
+@class NSSortDescriptor;
 
 struct NSSetTable {
     CFMutableDictionaryRef dict;
 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSSet : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
+@interface NSSet <__covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
     struct NSSetTable _table;
 }
 
 + (instancetype)set;
-+ (instancetype)setWithArray:(NSArray*)array;
-+ (instancetype)setWithObject:(id)object;
-+ (instancetype)setWithObjects:(id)firstObj, ...;
-+ (instancetype)setWithObjects:(id _Nonnull const[])objects count:(NSUInteger)cnt;
-+ (instancetype)setWithSet:(NSSet*)set;
-- (NSSet*)setByAddingObject:(id)anObject;
-- (NSSet*)setByAddingObjectsFromSet:(NSSet*)other;
-- (NSSet*)setByAddingObjectsFromArray:(NSArray*)other STUB_METHOD;
-- (instancetype)initWithArray:(NSArray*)array;
-- (instancetype)initWithObjects:(id)firstObj, ...;
-- (instancetype)initWithObjects:(id _Nonnull const[])objects count:(NSUInteger)cnt;
-- (instancetype)initWithSet:(NSSet*)set;
-- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag STUB_METHOD;
++ (instancetype)setWithArray:(NSArray<ObjectType>*)array;
++ (instancetype)setWithObject:(ObjectType)object;
++ (instancetype)setWithObjects:(ObjectType)firstObj, ...;
++ (instancetype)setWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)cnt;
++ (instancetype)setWithSet:(NSSet<ObjectType>*)set;
+- (NSSet*)setByAddingObject:(ObjectType)anObject;
+- (NSSet*)setByAddingObjectsFromSet:(NSSet<ObjectType>*)other;
+- (NSSet*)setByAddingObjectsFromArray:(NSArray<ObjectType>*)other STUB_METHOD;
+- (instancetype)initWithArray:(NSArray<ObjectType>*)array;
+- (instancetype)initWithObjects:(ObjectType)firstObj, ...;
+- (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)cnt;
+- (instancetype)initWithSet:(NSSet<ObjectType>*)set;
+- (instancetype)initWithSet:(NSSet<ObjectType>*)set copyItems:(BOOL)flag STUB_METHOD;
 - (instancetype)init;
 @property (readonly) NSUInteger count;
-@property (readonly, copy) NSArray* allObjects;
-- (id)anyObject;
-- (BOOL)containsObject:(id)anObject;
-- (NSSet*)filteredSetUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
+@property (readonly, copy) NSArray<ObjectType>* allObjects;
+- (ObjectType)anyObject;
+- (BOOL)containsObject:(ObjectType)anObject;
+- (NSSet<ObjectType>*)filteredSetUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
 - (void)makeObjectsPerformSelector:(SEL)aSelector;
 - (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)argument STUB_METHOD;
-- (id)member:(id)object;
-- (NSEnumerator*)objectEnumerator;
-- (void)enumerateObjectsUsingBlock:(void (^)(id, BOOL*))block;
-- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id, BOOL*))block;
-- (NSSet*)objectsPassingTest:(BOOL (^)(id, BOOL*))predicate STUB_METHOD;
-- (NSSet*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, BOOL*))predicate STUB_METHOD;
-- (BOOL)isSubsetOfSet:(NSSet*)otherSet;
-- (BOOL)intersectsSet:(NSSet*)otherSet;
-- (BOOL)isEqualToSet:(NSSet*)otherSet;
+- (ObjectType)member:(ObjectType)object;
+- (NSEnumerator<ObjectType>*)objectEnumerator;
+- (void)enumerateObjectsUsingBlock:(void (^)(ObjectType, BOOL*))block;
+- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(ObjectType, BOOL*))block;
+- (NSSet<ObjectType>*)objectsPassingTest:(BOOL (^)(ObjectType, BOOL*))predicate STUB_METHOD;
+- (NSSet<ObjectType>*)objectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(ObjectType, BOOL*))predicate STUB_METHOD;
+- (BOOL)isSubsetOfSet:(NSSet<ObjectType>*)otherSet;
+- (BOOL)intersectsSet:(NSSet<ObjectType>*)otherSet;
+- (BOOL)isEqualToSet:(NSSet<ObjectType>*)otherSet;
 - (id)valueForKey:(NSString*)key STUB_METHOD;
 - (void)setValue:(id)value forKey:(NSString*)key STUB_METHOD;
-- (NSArray*)sortedArrayUsingDescriptors:(NSArray*)sortDescriptors;
+- (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 @property (readonly, copy) NSString* description;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
 @end

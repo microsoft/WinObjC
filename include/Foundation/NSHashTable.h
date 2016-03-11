@@ -23,9 +23,9 @@
 #import <Foundation/NSPointerFunctions.h>
 
 @class NSPointerFunctions;
-@class NSArray;
-@class NSEnumerator;
-@class NSSet;
+@class NSArray<ObjectType>;
+@class NSEnumerator<ObjectType>;
+@class NSSet<ObjectType>;
 
 enum {
     NSHashTableStrongMemory = 0,
@@ -35,27 +35,27 @@ enum {
 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSHashTable : NSObject <NSCoding, NSCopying, NSFastEnumeration>
+@interface NSHashTable <ObjectType> : NSObject <NSCoding, NSCopying, NSFastEnumeration>
 - (instancetype)initWithOptions:(NSPointerFunctionsOptions)options capacity:(NSUInteger)capacity;
 - (instancetype)initWithPointerFunctions:(NSPointerFunctions*)functions capacity:(NSUInteger)initialCapacity;
-+ (NSHashTable*)weakObjectsHashTable;
-+ (NSHashTable*)hashTableWithOptions:(NSPointerFunctionsOptions)options;
-@property (readonly, copy) NSArray* allObjects;
-@property (readonly, nonatomic) id anyObject;
-- (BOOL)containsObject:(id)anObject;
++ (NSHashTable<ObjectType>*)weakObjectsHashTable;
++ (NSHashTable<ObjectType>*)hashTableWithOptions:(NSPointerFunctionsOptions)options;
+@property (readonly, copy) NSArray<ObjectType>* allObjects;
+@property (readonly, nonatomic) ObjectType anyObject;
+- (BOOL)containsObject:(ObjectType)anObject;
 @property (readonly) NSUInteger count;
-- (id)member:(id)object;
-- (NSEnumerator*)objectEnumerator;
-@property (readonly, copy) NSSet* setRepresentation;
-- (void)addObject:(id)object;
+- (ObjectType)member:(ObjectType)object;
+- (NSEnumerator<ObjectType>*)objectEnumerator;
+@property (readonly, copy) NSSet<ObjectType>* setRepresentation;
+- (void)addObject:(ObjectType)object;
 - (void)removeAllObjects;
-- (void)removeObject:(id)object;
-- (BOOL)intersectsHashTable:(NSHashTable*)other;
-- (void)intersectHashTable:(NSHashTable*)other;
-- (BOOL)isEqualToHashTable:(NSHashTable*)other;
-- (BOOL)isSubsetOfHashTable:(NSHashTable*)other;
-- (void)minusHashTable:(NSHashTable*)other;
-- (void)unionHashTable:(NSHashTable*)other;
+- (void)removeObject:(ObjectType)object;
+- (BOOL)intersectsHashTable:(NSHashTable<ObjectType>*)other;
+- (void)intersectHashTable:(NSHashTable<ObjectType>*)other;
+- (BOOL)isEqualToHashTable:(NSHashTable<ObjectType>*)other;
+- (BOOL)isSubsetOfHashTable:(NSHashTable<ObjectType>*)other;
+- (void)minusHashTable:(NSHashTable<ObjectType>*)other;
+- (void)unionHashTable:(NSHashTable<ObjectType>*)other;
 @property (readonly, copy) NSPointerFunctions* pointerFunctions;
 @end
 

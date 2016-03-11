@@ -23,57 +23,60 @@
 
 @class NSString;
 @class NSURL;
-@class NSArray;
-@class NSEnumerator;
-@class NSSet;
+@class NSArray<ObjectType>;
+@class NSEnumerator<ObjectType>;
+@class NSSet<ObjectType>;
 @class NSDate;
 @class NSNumber;
 
 #define __CFDICTIONARY_SIZE_BYTES (0x54)
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDictionary : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
+@interface NSDictionary <__covariant KeyType, __covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
     CFMutableDictionaryRef dict;
     uint32_t _dictSpace[((__CFDICTIONARY_SIZE_BYTES + 3) & ~3) / 4];
 }
 
 + (instancetype)dictionary;
-+ (NSDictionary*)dictionaryWithContentsOfFile:(NSString*)path;
-+ (NSDictionary*)dictionaryWithContentsOfURL:(NSURL*)aURL;
-+ (instancetype)dictionaryWithDictionary:(NSDictionary*)otherDictionary;
-+ (instancetype)dictionaryWithObject:(id)anObject forKey:(id<NSCopying>)aKey;
-+ (instancetype)dictionaryWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
-+ (instancetype)dictionaryWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
-+ (instancetype)dictionaryWithObjectsAndKeys:(id)firstObject, ...;
++ (instancetype)dictionaryWithContentsOfFile:(NSString*)path;
++ (instancetype)dictionaryWithContentsOfURL:(NSURL*)aURL;
++ (instancetype)dictionaryWithDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;
++ (instancetype)dictionaryWithObject:(ObjectType)anObject forKey:(id<NSCopying>)aKey;
++ (instancetype)dictionaryWithObjects:(NSArray*)objects forKeys:(NSArray<id<NSCopying>>*)keys;
++ (instancetype)dictionaryWithObjects:(const ObjectType _Nonnull[])objects
+                              forKeys:(const id<NSCopying> _Nonnull[])keys
+                                count:(NSUInteger)count;
++ (instancetype)dictionaryWithObjectsAndKeys:(ObjectType)firstObject, ...;
 - (instancetype)init;
-- (NSDictionary*)initWithContentsOfFile:(NSString*)path;
-- (NSDictionary*)initWithContentsOfURL:(NSURL*)aURL;
-- (instancetype)initWithDictionary:(NSDictionary*)otherDictionary;
-- (instancetype)initWithDictionary:(NSDictionary*)otherDictionary copyItems:(BOOL)flag;
-- (instancetype)initWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
-- (instancetype)initWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
-- (instancetype)initWithObjectsAndKeys:(id)firstObject, ...;
-+ (id)sharedKeySetForKeys:(NSArray*)keys STUB_METHOD;
+- (instancetype)initWithContentsOfFile:(NSString*)path;
+- (instancetype)initWithContentsOfURL:(NSURL*)aURL;
+- (instancetype)initWithDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;
+- (instancetype)initWithDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary copyItems:(BOOL)flag;
+- (instancetype)initWithObjects:(NSArray<ObjectType>*)objects forKeys:(NSArray<id<NSCopying>>*)keys;
+- (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects forKeys:(const id<NSCopying> _Nonnull[])keys count:(NSUInteger)count;
+- (instancetype)initWithObjectsAndKeys:(ObjectType)firstObject, ...;
++ (id)sharedKeySetForKeys:(NSArray<id<NSCopying>>*)keys STUB_METHOD;
 @property (readonly) NSUInteger count;
-- (BOOL)isEqualToDictionary:(NSDictionary*)otherDictionary;
-@property (readonly, copy) NSArray* allKeys;
-- (NSArray*)allKeysForObject:(id)anObject;
-@property (readonly, copy) NSArray* allValues;
-- (void)getObjects:(id __unsafe_unretained _Nonnull[])objects andKeys:(id __unsafe_unretained _Nonnull[])keys;
-- (id)objectForKey:(id)aKey;
-- (id)objectForKeyedSubscript:(id)key;
-- (NSArray*)objectsForKeys:(NSArray*)keys notFoundMarker:(id)anObject;
-- (id)valueForKey:(NSString*)key;
-- (NSEnumerator*)keyEnumerator;
-- (NSEnumerator*)objectEnumerator;
-- (void)enumerateKeysAndObjectsUsingBlock:(void (^)(id, id, BOOL*))block;
-- (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id, id, BOOL*))block;
-- (NSArray*)keysSortedByValueUsingSelector:(SEL)comparator;
-- (NSArray*)keysSortedByValueUsingComparator:(NSComparator)cmptr;
-- (NSArray*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
-- (NSSet*)keysOfEntriesPassingTest:(BOOL (^)(id, id, BOOL*))predicate STUB_METHOD;
-- (NSSet*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, id, BOOL*))predicate STUB_METHOD;
+- (BOOL)isEqualToDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;
+@property (readonly, copy) NSArray<KeyType>* allKeys;
+- (NSArray<KeyType>*)allKeysForObject:(ObjectType)anObject;
+@property (readonly, copy) NSArray<ObjectType>* allValues;
+- (void)getObjects:(ObjectType __unsafe_unretained _Nonnull[])objects andKeys:(KeyType __unsafe_unretained _Nonnull[])keys;
+- (ObjectType)objectForKey:(KeyType)aKey;
+- (ObjectType)objectForKeyedSubscript:(KeyType)key;
+- (NSArray<ObjectType>*)objectsForKeys:(NSArray<KeyType>*)keys notFoundMarker:(ObjectType)anObject;
+- (ObjectType)valueForKey:(NSString*)key;
+- (NSEnumerator<KeyType>*)keyEnumerator;
+- (NSEnumerator<ObjectType>*)objectEnumerator;
+- (void)enumerateKeysAndObjectsUsingBlock:(void (^)(KeyType, ObjectType, BOOL*))block;
+- (void)enumerateKeysAndObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(KeyType, ObjectType, BOOL*))block;
+- (NSArray<KeyType>*)keysSortedByValueUsingSelector:(SEL)comparator;
+- (NSArray<KeyType>*)keysSortedByValueUsingComparator:(NSComparator)cmptr;
+- (NSArray<KeyType>*)keysSortedByValueWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
+- (NSSet<KeyType>*)keysOfEntriesPassingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate STUB_METHOD;
+- (NSSet<KeyType>*)keysOfEntriesWithOptions:(NSEnumerationOptions)opts
+                                passingTest:(BOOL (^)(KeyType, ObjectType, BOOL*))predicate STUB_METHOD;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag STUB_METHOD;
 @property (readonly, copy) NSString* description;
@@ -100,5 +103,5 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)fileType;
 @end
 
-#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
-FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...);
+#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" #__VA_ARGS__, __VA_ARGS__, nil)
+FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...);

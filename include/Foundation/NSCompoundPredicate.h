@@ -19,7 +19,7 @@
 #import <Foundation/NSObject.h>
 
 #import <Foundation/NSPredicate.h>
-@class NSArray;
+@class NSArray<ObjectType>;
 
 typedef enum {
     NSNotPredicateType = 0,
@@ -29,10 +29,10 @@ typedef enum {
 
 FOUNDATION_EXPORT_CLASS
 @interface NSCompoundPredicate : NSPredicate <NSCopying, NSSecureCoding>
-+ (NSCompoundPredicate*)andPredicateWithSubpredicates:(NSArray*)subpredicates;
++ (NSCompoundPredicate*)andPredicateWithSubpredicates:(NSArray<NSPredicate*>*)subpredicates;
 + (NSCompoundPredicate*)notPredicateWithSubpredicate:(NSPredicate*)predicate;
-+ (NSCompoundPredicate*)orPredicateWithSubpredicates:(NSArray*)subpredicates;
-- (instancetype)initWithType:(NSCompoundPredicateType)type subpredicates:(NSArray*)subpredicates;
++ (NSCompoundPredicate*)orPredicateWithSubpredicates:(NSArray<NSPredicate*>*)subpredicates;
+- (instancetype)initWithType:(NSCompoundPredicateType)type subpredicates:(NSArray<NSPredicate*>*)subpredicates;
 @property (readonly) NSCompoundPredicateType compoundPredicateType;
-@property (readonly, copy) NSArray* subpredicates;
+@property (readonly, copy) NSArray<NSPredicate*>* subpredicates;
 @end

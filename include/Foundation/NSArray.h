@@ -25,9 +25,10 @@
 @class NSString;
 @class NSURL;
 @class NSIndexSet;
-@class NSEnumerator;
+@class NSEnumerator<ObjectType>;
 @class NSPredicate;
 @class NSData;
+@class NSSortDescriptor;
 
 typedef NSUInteger NSBinarySearchingOptions;
 enum {
@@ -39,79 +40,86 @@ enum {
 #define __CFARRAY_SIZE_BYTES (0x30)
 
 FOUNDATION_EXPORT_CLASS
-@interface NSArray : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
+@interface NSArray <__covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
     CFArrayRef arr;
     uint32_t _arraySpace[((__CFARRAY_SIZE_BYTES + 3) & ~3) / 4];
 }
 
 + (instancetype)array;
-+ (instancetype)arrayWithArray:(NSArray*)anArray;
-+ (NSArray*)arrayWithContentsOfFile:(NSString*)aPath;
-+ (NSArray*)arrayWithContentsOfURL:(NSURL*)aURL STUB_METHOD;
-+ (instancetype)arrayWithObject:(id)anObject;
-+ (instancetype)arrayWithObjects:(id)firstObj, ...;
-+ (instancetype)arrayWithObjects:(id _Nonnull const[])objects count:(NSUInteger)count;
++ (instancetype)arrayWithArray:(NSArray<ObjectType>*)anArray;
++ (instancetype)arrayWithContentsOfFile:(NSString*)aPath;
++ (instancetype)arrayWithContentsOfURL:(NSURL*)aURL STUB_METHOD;
++ (instancetype)arrayWithObject:(ObjectType)anObject;
++ (instancetype)arrayWithObjects:(ObjectType)firstObj, ...;
++ (instancetype)arrayWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)count;
 - (instancetype)init;
-- (instancetype)initWithArray:(NSArray*)anArray;
-- (instancetype)initWithArray:(NSArray*)array copyItems:(BOOL)flag;
-- (NSArray*)initWithContentsOfFile:(NSString*)aPath;
-- (NSArray*)initWithContentsOfURL:(NSURL*)aURL STUB_METHOD;
-- (instancetype)initWithObjects:(id)firstObj, ...;
-- (instancetype)initWithObjects:(id _Nonnull const[])objects count:(NSUInteger)count;
-- (BOOL)containsObject:(id)anObject;
+- (instancetype)initWithArray:(NSArray<ObjectType>*)anArray;
+- (instancetype)initWithArray:(NSArray<ObjectType>*)array copyItems:(BOOL)flag;
+- (instancetype)initWithContentsOfFile:(NSString*)aPath;
+- (instancetype)initWithContentsOfURL:(NSURL*)aURL STUB_METHOD;
+- (instancetype)initWithObjects:(ObjectType)firstObj, ...;
+- (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)count;
+- (BOOL)containsObject:(ObjectType)anObject;
 @property (readonly) NSUInteger count;
-- (void)getObjects:(id __unsafe_unretained _Nonnull[])aBuffer;
-- (void)getObjects:(id __unsafe_unretained _Nonnull[])aBuffer range:(NSRange)aRange;
-@property (readonly, nonatomic) id firstObject;
-@property (readonly, nonatomic) id lastObject;
-- (id)objectAtIndex:(NSUInteger)index;
-- (id)objectAtIndexedSubscript:(NSUInteger)idx;
-- (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes;
-- (NSEnumerator*)objectEnumerator;
-- (NSEnumerator*)reverseObjectEnumerator;
-- (NSUInteger)indexOfObject:(id)anObject;
-- (NSUInteger)indexOfObject:(id)anObject inRange:(NSRange)range;
-- (NSUInteger)indexOfObjectIdenticalTo:(id)anObject;
-- (NSUInteger)indexOfObjectIdenticalTo:(id)anObject inRange:(NSRange)range STUB_METHOD;
-- (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate;
-- (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate STUB_METHOD;
+- (void)getObjects:(ObjectType __unsafe_unretained _Nonnull[])aBuffer;
+- (void)getObjects:(ObjectType __unsafe_unretained _Nonnull[])aBuffer range:(NSRange)aRange;
+@property (readonly, nonatomic) ObjectType firstObject;
+@property (readonly, nonatomic) ObjectType lastObject;
+- (ObjectType)objectAtIndex:(NSUInteger)index;
+- (ObjectType)objectAtIndexedSubscript:(NSUInteger)idx;
+- (NSArray<ObjectType>*)objectsAtIndexes:(NSIndexSet*)indexes;
+- (NSEnumerator<ObjectType>*)objectEnumerator;
+- (NSEnumerator<ObjectType>*)reverseObjectEnumerator;
+- (NSUInteger)indexOfObject:(ObjectType)anObject;
+- (NSUInteger)indexOfObject:(ObjectType)anObject inRange:(NSRange)range;
+- (NSUInteger)indexOfObjectIdenticalTo:(ObjectType)anObject;
+- (NSUInteger)indexOfObjectIdenticalTo:(ObjectType)anObject inRange:(NSRange)range STUB_METHOD;
+- (NSUInteger)indexOfObjectPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
+- (NSUInteger)indexOfObjectWithOptions:(NSEnumerationOptions)opts
+                           passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
 - (NSUInteger)indexOfObjectAtIndexes:(NSIndexSet*)indexSet
                              options:(NSEnumerationOptions)opts
-                         passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate;
-- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate STUB_METHOD;
+                         passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSIndexSet*)indexesOfObjectsPassingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate;
+- (NSIndexSet*)indexesOfObjectsWithOptions:(NSEnumerationOptions)opts
+                               passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
 - (NSIndexSet*)indexesOfObjectsAtIndexes:(NSIndexSet*)indexSet
                                  options:(NSEnumerationOptions)opts
-                             passingTest:(BOOL (^)(id, NSUInteger, BOOL*))predicate STUB_METHOD;
-- (NSUInteger)indexOfObject:(id)obj inSortedRange:(NSRange)r options:(NSBinarySearchingOptions)opts usingComparator:(NSComparator)cmp;
+                             passingTest:(BOOL (^)(ObjectType, NSUInteger, BOOL*))predicate STUB_METHOD;
+- (NSUInteger)indexOfObject:(ObjectType)obj
+              inSortedRange:(NSRange)r
+                    options:(NSBinarySearchingOptions)opts
+            usingComparator:(NSComparator)cmp;
 - (void)makeObjectsPerformSelector:(SEL)aSelector;
 - (void)makeObjectsPerformSelector:(SEL)aSelector withObject:(id)anObject;
-- (void)enumerateObjectsUsingBlock:(void (^)(id, NSUInteger, BOOL*))block;
-- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(id, NSUInteger, BOOL*))block;
+- (void)enumerateObjectsUsingBlock:(void (^)(ObjectType, NSUInteger, BOOL*))block;
+- (void)enumerateObjectsWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(ObjectType, NSUInteger, BOOL*))block;
 - (void)enumerateObjectsAtIndexes:(NSIndexSet*)indexSet
                           options:(NSEnumerationOptions)opts
-                       usingBlock:(void (^)(id, NSUInteger, BOOL*))block STUB_METHOD;
-- (id)firstObjectCommonWithArray:(NSArray*)otherArray;
-- (BOOL)isEqualToArray:(NSArray*)otherArray;
-- (NSArray*)arrayByAddingObject:(id)anObject;
-- (NSArray*)arrayByAddingObjectsFromArray:(NSArray*)otherArray;
-- (NSArray*)filteredArrayUsingPredicate:(NSPredicate*)predicate;
-- (NSArray*)subarrayWithRange:(NSRange)range;
+                       usingBlock:(void (^)(ObjectType, NSUInteger, BOOL*))block STUB_METHOD;
+- (ObjectType)firstObjectCommonWithArray:(NSArray<ObjectType>*)otherArray;
+- (BOOL)isEqualToArray:(NSArray<ObjectType>*)otherArray;
+- (NSArray<ObjectType>*)arrayByAddingObject:(ObjectType)anObject;
+- (NSArray<ObjectType>*)arrayByAddingObjectsFromArray:(NSArray<ObjectType>*)otherArray;
+- (NSArray<ObjectType>*)filteredArrayUsingPredicate:(NSPredicate*)predicate;
+- (NSArray<ObjectType>*)subarrayWithRange:(NSRange)range;
 @property (readonly, copy) NSData* sortedArrayHint;
-- (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context;
-- (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context hint:(NSData*)hint;
-- (NSArray*)sortedArrayUsingDescriptors:(NSArray*)sortDescriptors;
-- (NSArray*)sortedArrayUsingSelector:(SEL)comparator;
-- (NSArray*)sortedArrayUsingComparator:(NSComparator)cmptr;
-- (NSArray*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
+- (NSArray<ObjectType>*)sortedArrayUsingFunction:(NSInteger (*)(ObjectType, ObjectType, void*))comparator context:(void*)context;
+- (NSArray<ObjectType>*)sortedArrayUsingFunction:(NSInteger (*)(ObjectType, ObjectType, void*))comparator
+                                         context:(void*)context
+                                            hint:(NSData*)hint;
+- (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
+- (NSArray<ObjectType>*)sortedArrayUsingSelector:(SEL)comparator;
+- (NSArray<ObjectType>*)sortedArrayUsingComparator:(NSComparator)cmptr;
+- (NSArray<ObjectType>*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
 - (NSString*)componentsJoinedByString:(NSString*)separator;
 @property (readonly, copy) NSString* description;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)flag;
 - (BOOL)writeToURL:(NSURL*)aURL atomically:(BOOL)flag STUB_METHOD;
-- (NSArray*)pathsMatchingExtensions:(NSArray*)filterTypes;
+- (NSArray<NSString*>*)pathsMatchingExtensions:(NSArray<NSString*>*)filterTypes;
 - (void)removeObserver:(NSObject*)observer
   fromObjectsAtIndexes:(NSIndexSet*)indexes
             forKeyPath:(NSString*)keyPath
@@ -124,7 +132,4 @@ FOUNDATION_EXPORT_CLASS
 - (void)removeObserver:(NSObject*)anObserver fromObjectsAtIndexes:(NSIndexSet*)indexes forKeyPath:(NSString*)keyPath STUB_METHOD;
 - (void)setValue:(id)value forKey:(NSString*)key;
 - (id)valueForKey:(NSString*)key;
-@end
-
-@interface NSArrayConcrete : NSArray
 @end

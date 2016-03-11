@@ -22,8 +22,8 @@
 #import <Foundation/NSPointerFunctions.h>
 
 @class NSPointerFunctions;
-@class NSEnumerator;
-@class NSDictionary;
+@class NSEnumerator<ObjectType>;
+@class NSDictionary<KeyType, ObjectType>;
 
 typedef NS_OPTIONS(NSUInteger, NSMapTableOptions) {
     NSMapTableStrongMemory = 0,
@@ -33,29 +33,30 @@ typedef NS_OPTIONS(NSUInteger, NSMapTableOptions) {
 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSMapTable : NSObject <NSCoding, NSCopying, NSFastEnumeration>
+@interface NSMapTable <KeyType, ObjectType> : NSObject <NSCoding, NSCopying, NSFastEnumeration>
 
 - (instancetype)initWithKeyOptions:(NSPointerFunctionsOptions)keys
                       valueOptions:(NSPointerFunctionsOptions)values
                           capacity:(NSUInteger)capacity;
-+ (NSMapTable*)mapTableWithKeyOptions:(NSPointerFunctionsOptions)keyOptions valueOptions:(NSPointerFunctionsOptions)valueOptions;
++ (NSMapTable<KeyType, ObjectType>*)mapTableWithKeyOptions:(NSPointerFunctionsOptions)keyOptions
+                                              valueOptions:(NSPointerFunctionsOptions)valueOptions;
 - (instancetype)initWithKeyPointerFunctions:(NSPointerFunctions*)keyFunctions
                       valuePointerFunctions:(NSPointerFunctions*)valueFunctions
                                    capacity:(NSUInteger)initialCapacity;
-+ (NSMapTable*)strongToStrongObjectsMapTable;
-+ (NSMapTable*)weakToStrongObjectsMapTable;
-+ (NSMapTable*)strongToWeakObjectsMapTable;
-+ (NSMapTable*)weakToWeakObjectsMapTable;
++ (NSMapTable<KeyType, ObjectType>*)strongToStrongObjectsMapTable;
++ (NSMapTable<KeyType, ObjectType>*)weakToStrongObjectsMapTable;
++ (NSMapTable<KeyType, ObjectType>*)strongToWeakObjectsMapTable;
++ (NSMapTable<KeyType, ObjectType>*)weakToWeakObjectsMapTable;
 
-- (id)objectForKey:(id)aKey;
-- (NSEnumerator*)keyEnumerator;
-- (NSEnumerator*)objectEnumerator;
+- (ObjectType)objectForKey:(KeyType)aKey;
+- (NSEnumerator<KeyType>*)keyEnumerator;
+- (NSEnumerator<ObjectType>*)objectEnumerator;
 
-- (void)setObject:(id)anObject forKey:(id)aKey;
-- (void)removeObjectForKey:(id)aKey;
+- (void)setObject:(ObjectType)anObject forKey:(KeyType)aKey;
+- (void)removeObjectForKey:(KeyType)aKey;
 - (void)removeAllObjects;
 
-- (NSDictionary*)dictionaryRepresentation;
+- (NSDictionary<KeyType, ObjectType>*)dictionaryRepresentation;
 
 @property (readonly) NSUInteger count;
 @property (readonly, copy) NSPointerFunctions* keyPointerFunctions;

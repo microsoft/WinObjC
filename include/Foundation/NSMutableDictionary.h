@@ -22,20 +22,20 @@
 #import <Foundation/NSDictionary.h>
 
 @class NSString;
-@class NSArray;
+@class NSArray<ObjectType>;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSMutableDictionary : NSDictionary <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
+@interface NSMutableDictionary <KeyType, ObjectType> : NSDictionary <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
 + (instancetype)dictionaryWithCapacity:(NSUInteger)numItems;
 - (instancetype)initWithCapacity:(NSUInteger)numItems;
 - (instancetype)init;
 + (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset STUB_METHOD;
-- (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey;
-- (void)setObject:(id)object forKeyedSubscript:(id<NSCopying>)aKey;
-- (void)setValue:(id)value forKey:(NSString*)key;
-- (void)addEntriesFromDictionary:(NSDictionary*)otherDictionary;
-- (void)setDictionary:(NSDictionary*)otherDictionary;
-- (void)removeObjectForKey:(id)aKey;
+- (void)setObject:(ObjectType)anObject forKey:(id<NSCopying>)aKey;
+- (void)setObject:(ObjectType)object forKeyedSubscript:(id<NSCopying>)aKey;
+- (void)setValue:(ObjectType)value forKey:(NSString*)key;
+- (void)addEntriesFromDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;
+- (void)setDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;
+- (void)removeObjectForKey:(KeyType)aKey;
 - (void)removeAllObjects;
-- (void)removeObjectsForKeys:(NSArray*)keyArray;
+- (void)removeObjectsForKeys:(NSArray<KeyType>*)keyArray;
 @end

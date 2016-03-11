@@ -22,12 +22,12 @@
 @protocol NSCacheDelegate;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSCache : NSObject
+@interface NSCache <KeyType, ObjectType> : NSObject
 @property (copy) NSString* name STUB_METHOD;
-- (id)objectForKey:(id)key STUB_METHOD;
-- (void)setObject:(id)obj forKey:(id)key STUB_METHOD;
-- (void)setObject:(id)obj forKey:(id)key cost:(NSUInteger)num STUB_METHOD;
-- (void)removeObjectForKey:(id)key STUB_METHOD;
+- (ObjectType)objectForKey:(KeyType)key STUB_METHOD;
+- (void)setObject:(ObjectType)obj forKey:(KeyType)key STUB_METHOD;
+- (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)num STUB_METHOD;
+- (void)removeObjectForKey:(KeyType)key STUB_METHOD;
 - (void)removeAllObjects STUB_METHOD;
 @property NSUInteger countLimit STUB_PROPERTY;
 @property NSUInteger totalCostLimit STUB_PROPERTY;

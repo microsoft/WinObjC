@@ -22,19 +22,19 @@
 #import <Foundation/NSSet.h>
 
 @class NSPredicate;
-@class NSArray;
+@class NSArray<ObjectType>;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSMutableSet : NSSet <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
+@interface NSMutableSet <ObjectType> : NSSet <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
 + (instancetype)setWithCapacity:(NSUInteger)numItems;
 - (instancetype)initWithCapacity:(NSUInteger)numItems;
-- (void)addObject:(id)object;
+- (void)addObject:(ObjectType)object;
 - (void)filterUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
-- (void)removeObject:(id)object;
+- (void)removeObject:(ObjectType)object;
 - (void)removeAllObjects;
-- (void)addObjectsFromArray:(NSArray*)array;
-- (void)unionSet:(NSSet*)otherSet;
-- (void)minusSet:(NSSet*)otherSet;
-- (void)intersectSet:(NSSet*)otherSet;
-- (void)setSet:(NSSet*)otherSet;
+- (void)addObjectsFromArray:(NSArray<ObjectType>*)array;
+- (void)unionSet:(NSSet<ObjectType>*)otherSet;
+- (void)minusSet:(NSSet<ObjectType>*)otherSet;
+- (void)intersectSet:(NSSet<ObjectType>*)otherSet;
+- (void)setSet:(NSSet<ObjectType>*)otherSet;
 @end

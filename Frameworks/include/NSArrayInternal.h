@@ -27,3 +27,6 @@ NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnum
 - (instancetype)_initWithObjectsTakeOwnership:(NSObject**)objs count:(NSUInteger)count;
 
 @end
+
+@interface NSArrayConcrete : NSArray
+@end
