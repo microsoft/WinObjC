@@ -14,18 +14,17 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UITableViewContentView.h"
-#include "UIKit/UILabel.h"
-#include "UIViewInternal.h"
-#include "_UIGroupEdgeView.h"
-#include "UITableViewInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UITableViewContentView.h"
+#import "UIKit/UILabel.h"
+#import "UIViewInternal.h"
+#import "_UIGroupEdgeView.h"
+#import "UITableViewInternal.h"
+#import "LoggingNative.h"
+
+#import <algorithm>
 
 static const wchar_t* TAG = L"UITableViewCell";
-
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 @implementation UITableViewCell
 
@@ -611,7 +610,7 @@ static void initInternal(UITableViewCell* self) {
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
- // Intentional no-op
+    // Intentional no-op
 }
 
 /**
@@ -645,7 +644,7 @@ static float getMarginWidth(UITableViewCell* self) {
         if (tableViewWidth < 400 || !GetCACompositor()->isTablet()) {
             marginWidth = 10.0f;
         } else {
-            marginWidth = MAX(31.0f, MIN(45.0f, tableViewWidth * 0.06f));
+            marginWidth = std::max(31.0f, std::min(45.0f, tableViewWidth * 0.06f));
         }
     } else {
         marginWidth = tableViewWidth - 10.0f;

@@ -142,7 +142,7 @@ imageCacheInfo imageInfo;
     bool _isFromCache;
     uint8_t* out;
     uint8_t** row_pointers;
-    idretaintype(NSData) _deferredImageData;
+    StrongId<NSData> _deferredImageData;
 }
 
 /**
@@ -504,8 +504,10 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         EbrLockInit(&imageCacheLock);
     }
 
-    UIImageCachedObject* cachedImage = [g_imageCache objectForKey:[NSString stringWithCString:pathStr]];
-    if (cachedImage != nil) {
+    const UIImageCachedObject* cachedImage =
+        reinterpret_cast<const UIImageCachedObject*>(CFDictionaryGetValue(g_imageCache, [NSString stringWithCString:pathStr]));
+
+    if (cachedImage) {
         if (pathStr)
             IwFree(pathStr);
         m_pImage = cachedImage->m_pImage;

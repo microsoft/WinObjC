@@ -20,17 +20,22 @@
 #import "UITabBarButton.h"
 #import "UIKit/UIColor.h"
 #import "CoreGraphics/CGContext.h"
-#import "Foundation/NSString.h"
 #import "Foundation/NSMutableArray.h"
+#import "Foundation/NSString.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UITabBar.h"
+
 #import "LoggingNative.h"
 #import "UIAppearanceSetter.h"
+#import "UITabBarButton.h"
+#import "UIViewInternal.h"
 
 static const wchar_t* TAG = L"UITabBar";
 
 @implementation UITabBar {
     idretain _items;
     bool _layoutDirty;
-    idretaintype(NSArray) _buttons;
+    StrongId<NSMutableArray> _buttons;
     idretain _backgroundImage, _selectionIndicatorImage;
     id _delegate;
     id _selectedItem;

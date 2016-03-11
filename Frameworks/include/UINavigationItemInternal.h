@@ -16,13 +16,8 @@
 
 #pragma once
 
-#import <Foundation/NSObject.h>
+#import <UIKit/UINavigationItem.h>
 
-@interface UIRuntimeEventConnection : NSObject
-@property (nonatomic, readonly, assign) NSUInteger mask;
-@property (nonatomic, readonly, assign) SEL sel;
-@property (nonatomic, readonly, assign) id obj;
-@property (nonatomic, readonly, assign) id targetControl;
-@property (nonatomic, readonly, assign) BOOL isValid;
-- (void)invalidate;
+@protocol UINavigationItemDelegate
+- (void)navigationItemChanged:(UINavigationItem*)item;
 @end

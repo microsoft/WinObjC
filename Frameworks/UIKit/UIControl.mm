@@ -159,7 +159,7 @@ static const wchar_t* TAG = L"UIControl";
 
         unsigned objMask = [obj mask];
         id target = [obj obj];
-        char* sel = (char*)[obj sel];
+        const char* sel = sel_getName([obj sel]);
 
         if ((objMask & controlEvent) != 0 && target == targetObj) {
             [ret addObject:[NSString stringWithCString:sel]];

@@ -33,11 +33,11 @@ struct UITableViewPriv {
     idretain _externalObjects;
     float _footerYPos;
     idretain _headerView;
-    idretaintype(UIView) _backgroundView;
+    StrongId<UIView> _backgroundView;
     std::unordered_map<std::string, std::vector<ReusableCell*>> _reusableCells;
-    idretaintype(NSMutableDictionary) _reusableCellNibs;
-    idretaintype(NSMutableDictionary) _reusableHeaderClasses;
-    idretaintype(NSMutableDictionary) _reusableCellClasses;
+    StrongId<NSMutableDictionary> _reusableCellNibs;
+    StrongId<NSMutableDictionary> _reusableHeaderClasses;
+    StrongId<NSMutableDictionary> _reusableCellClasses;
 
     float _defaultRowHeight;
     float _defaultSectionHeaderHeight;
@@ -65,7 +65,7 @@ struct UITableViewPriv {
     void addReusableCell(TableViewRow* row);
 };
 
-@interface UITableView () {
+@interface UITableView () <UITableViewDelegate> {
 @public
     id _dataSource;
     id<UICollectionViewDelegate> _collectionViewDelegate;
@@ -121,11 +121,13 @@ struct UITableViewPriv {
 }
 @end
 
+@class _UIGroupEdgeView;
+
 @interface UITableViewCell () {
 @public
-    idretaint<UIView> _contentView;
-    idretaint<UIView> _curAccessoryView;
-    idretaint<UIStoryboardSegueTemplate> _selectionSegueTemplate;
+    StrongId<UIView> _contentView;
+    StrongId<UIView> _curAccessoryView;
+    StrongId<UIStoryboardSegueTemplate> _selectionSegueTemplate;
 
     BOOL _isSelected, _isHighlighted, _currentlyHighlighted;
     BOOL _isEditing;
@@ -134,10 +136,10 @@ struct UITableViewPriv {
     UITableViewCellStyle _style;
     UITableViewCellSelectionStyle _selectionStyle;
     BOOL _showsReorderControl;
-    idretaintype(UIView) _textLabel;
-    idretaintype(UIView) _secondaryLabel;
-    idretaintype(UIImageView) _imageView;
-    idretaintype(UIView) _backgroundView, _selectedbackgroundView;
+    StrongId<UILabel> _textLabel;
+    StrongId<UILabel> _secondaryLabel;
+    StrongId<UIImageView> _imageView;
+    StrongId<UIView> _backgroundView, _selectedbackgroundView;
     idretain _deferredIndexPath, _indexPath;
     UIView *_accessoryView, *_editingAccessoryView;
     idretain _internalAccessoryView, _internalAccessoryButton;
@@ -147,15 +149,15 @@ struct UITableViewPriv {
     int _indentationLevel;
 
     int _groupEdgeStyle;
-    idretaintype(UIView) _groupEdgeView;
+    StrongId<_UIGroupEdgeView> _groupEdgeView;
     idretain _cellBackgroundColor;
     idretain _cellOldBackgroundColor;
     BOOL _cellBackgroundColorSet;
 
     idretain _swipeGestureRecognizer;
-    idretaintype(UIView) _removeButton;
+    StrongId<UIButton> _removeButton;
 
-    idretaintype(UIView) _editSelectedView;
+    StrongId<UIView> _editSelectedView;
     BOOL _editSelectedViewVisible;
 }
 @end

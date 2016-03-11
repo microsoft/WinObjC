@@ -14,16 +14,18 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "LoggingNative.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "LoggingNative.h"
+
+#import "CALayerInternal.h"
 
 static const wchar_t* TAG = L"UIButton";
 
 struct buttonState {
-    idretaintype(UIImage) image, backgroundImage;
-    idretaintype(UIColor) textColor, titleShadowColor;
-    idretaintype(NSString) title;
+    StrongId<UIImage> image, backgroundImage;
+    StrongId<UIColor> textColor, titleShadowColor;
+    StrongId<NSString> title;
 };
 
 @interface UIRoundedRectButton : UIButton {
@@ -35,12 +37,12 @@ struct buttonState {
 
 @implementation UIButton {
     ColorQuad _backgroundColor;
-    idretaintype(UIColor) _defaultColor;
+    StrongId<UIColor> _defaultColor;
     buttonState* _states;
     UIEdgeInsets titleInsets, imageInsets, contentInsets;
-    idretaintype(UIFont) _font;
-    idretaintype(UILabel) _label;
-    idretaintype(UIImageView) _imageView;
+    StrongId<UIFont> _font;
+    StrongId<UILabel> _label;
+    StrongId<UIImageView> _imageView;
     CGSize _shadowOffset;
     bool _showsTouchWhenHighlighted;
     bool _adjustsImageWhenHighlighted;
@@ -127,7 +129,7 @@ static void setImageProperties(UIButton* self) {
         contentColor.b = 0.5f;
     }
     [[self->_imageView layer]
-        _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
+        _setContentColor:[[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a] CGColor]];
 }
 
 static void createLabel(UIButton* self) {
@@ -194,8 +196,8 @@ static void createLabel(UIButton* self) {
         UIButtonType type = (UIButtonType)[self buttonType];
         if (type == UIButtonTypeRoundedRect ||
             type == UIButtonTypeRoundedRectLegacy) { // We're not sure about roundedRect, feel free to delete if needed.
-            id color = [coder decodeObjectForKey:@"UIBackgroundColor"];
-            [[_imageView layer] _setContentColor:color];
+            UIColor* color = [coder decodeObjectOfClass:[UIColor class] forKey:@"UIBackgroundColor"];
+            [[_imageView layer] _setContentColor:[color CGColor]];
         }
     }
 
@@ -960,7 +962,8 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
         }
         //  TODO: I think this should always be the case?  Should UIButton always stretch its background?
         self.layer.contentsGravity = kCAGravityResize;
-        [[self layer] _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
+        [[self layer]
+            _setContentColor:[[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a] CGColor]];
         _didSetBackgroundImage = true;
     } else if (_didSetBackgroundImage) {
         [[self layer] setContents:nil];

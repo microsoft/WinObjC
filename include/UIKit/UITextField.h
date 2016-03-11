@@ -106,4 +106,15 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readwrite, retain) UIView* inputAccessoryView STUB_PROPERTY;
 @property (nonatomic, readwrite, retain) UIView* inputView STUB_PROPERTY;
 
+@property (nonatomic) UITextAutocapitalizationType autocapitalizationType STUB_PROPERTY;
+@property (nonatomic) UITextAutocorrectionType autocorrectionType STUB_PROPERTY;
+@property (nonatomic) BOOL enablesReturnKeyAutomatically STUB_PROPERTY;
+@property (nonatomic) UIKeyboardAppearance keyboardAppearance STUB_PROPERTY;
+@property (nonatomic, getter=isSecureTextEntry) BOOL secureTextEntry STUB_PROPERTY;
+@property (nonatomic) UITextSpellCheckingType spellCheckingType STUB_PROPERTY;
+
+@property (nonatomic, readonly) UITextPosition* beginningOfDocument STUB_PROPERTY;
+@property (nonatomic, readonly) UITextPosition* endOfDocument STUB_PROPERTY;
+@property (readwrite, copy) UITextRange* selectedTextRange STUB_PROPERTY;
+
 @end

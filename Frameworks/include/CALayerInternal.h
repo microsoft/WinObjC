@@ -98,6 +98,7 @@ public:
 - (int)_pixelWidth;
 - (int)_pixelHeight;
 
+- (void)_setContentColor:(CGColorRef)newColor;
 - (void)setOrigin:(CGPoint)origin;
 - (void)_setShouldLayout;
 - (void)setContentsOrientation:(UIImageOrientation)orientation;

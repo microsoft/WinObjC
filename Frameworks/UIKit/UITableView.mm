@@ -90,7 +90,7 @@ public:
     bool _yValid;
     float _yPos, _oldYPos;
     float _height, _oldHeight;
-    idretaintype(UIView) _view;
+    StrongId<UIView> _view;
     UITableView* _parent;
     bool _addedToView;
     VisibleComponent* _visibleComponent;
@@ -2323,7 +2323,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 - (void)scrollViewWillEndDragging:(UIScrollView*)scroller
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint*)contentOffsetPtr {
-    if (tablePriv->_delegate != self &&
+    if ((id)tablePriv->_delegate != (id)self &&
         [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
         [tablePriv->_delegate scrollViewWillEndDragging:scroller withVelocity:velocity targetContentOffset:contentOffsetPtr];
     }
