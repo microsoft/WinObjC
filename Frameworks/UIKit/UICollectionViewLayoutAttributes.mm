@@ -22,6 +22,7 @@
 
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 #include "UICollectionViewLayoutAttributes+Internal.h"
 #include "UICollectionViewItemKey.h"

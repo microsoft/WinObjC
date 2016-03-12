@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKServerChangeToken.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKServerChangeToken
 /**

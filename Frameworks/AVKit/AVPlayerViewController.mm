@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <AVKit/AVPlayerViewController.h>
+#import "AssertARCEnabled.h"
 
 @implementation AVPlayerViewController
 

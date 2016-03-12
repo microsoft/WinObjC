@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKSubscription.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKSubscription
 /**

@@ -29,6 +29,7 @@
 #import <RawBuffer.h>
 #import <windows.storage.streams.h>
 #import <COMIncludes_End.h>
+#import "AssertARCEnabled.h"
 
 // 100 nanoseconds per tick
 static const double c_durationCoef = 10000000.0;

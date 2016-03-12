@@ -17,6 +17,7 @@
 #import <AddressBookUI/ABPersonViewController.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @implementation ABPersonViewController
 

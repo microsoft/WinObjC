@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKMarkNotificationsReadOperation.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKMarkNotificationsReadOperation
 /**

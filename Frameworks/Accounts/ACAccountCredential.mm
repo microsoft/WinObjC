@@ -16,6 +16,7 @@
 
 #import "Accounts/Accounts.h"
 #include "Starboard.h"
+#import "AssertARCEnabled.h"
 
 @implementation ACAccountCredential
 

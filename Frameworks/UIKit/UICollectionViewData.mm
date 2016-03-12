@@ -23,6 +23,7 @@
 #import "UICollectionViewData.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
 #include "IwMalloc.h"
+#import "AssertARCEnabled.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;

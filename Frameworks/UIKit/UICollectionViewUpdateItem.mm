@@ -21,6 +21,7 @@
 //******************************************************************************
 
 #import <UIKit/UIKit.h>
+#import "AssertARCEnabled.h"
 
 @interface UICollectionViewUpdateItem () {
     NSIndexPath* _initialIndexPath;

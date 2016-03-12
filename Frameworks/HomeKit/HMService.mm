@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMService.h>
+#import "AssertARCEnabled.h"
 
 NSString* const HMServiceTypeLightbulb = @"HMServiceTypeLightbulb";
 NSString* const HMServiceTypeSwitch = @"HMServiceTypeSwitch";

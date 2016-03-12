@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKQueryCursor.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKQueryCursor
 /**

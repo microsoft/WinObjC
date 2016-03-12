@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKRecord.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CKRecordTypeUserRecord = @"CKRecordTypeUserRecord";
 

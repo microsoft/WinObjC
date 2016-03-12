@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMHome.h>
+#import "AssertARCEnabled.h"
 
 NSString* const HMUserFailedAccessoriesKey = @"HMUserFailedAccessoriesKey";
 

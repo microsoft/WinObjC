@@ -23,6 +23,7 @@
 #import "UICollectionViewItemKey.h"
 #import "UICollectionViewData.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
+#import "AssertARCEnabled.h"
 
 @interface UICollectionView ()
 - (id)currentUpdate;

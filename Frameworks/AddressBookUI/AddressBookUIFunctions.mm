@@ -17,6 +17,7 @@
 #import <AddressBookUI/AddressBookUIFunctions.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 /**
  @Status Stub

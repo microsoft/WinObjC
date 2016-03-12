@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NSLogging.h"
+#import "AssertARCEnabled.h"
 
 static const wchar_t* TAG = L"UICollectionViewCell";
 

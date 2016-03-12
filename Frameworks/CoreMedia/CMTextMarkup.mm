@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMTextMarkup.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CFStringRef kCMTextMarkupAttribute_ForegroundColorARGB = static_cast<CFStringRef>(@"CMForegroundColorARGB");
 const CFStringRef kCMTextMarkupAttribute_BackgroundColorARGB = static_cast<CFStringRef>(@"CMBackgroundColorARGB");

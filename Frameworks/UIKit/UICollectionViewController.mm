@@ -20,6 +20,7 @@
 //******************************************************************************
 
 #import <UIKit/UIKit.h>
+#import "AssertARCEnabled.h"
 
 @interface UICollectionViewController () {
     UICollectionViewLayout* _layout;

@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKQuery.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKQuery
 /**

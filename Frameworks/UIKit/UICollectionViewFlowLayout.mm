@@ -26,6 +26,7 @@
 #import "UIGridLayoutRow.h"
 #import "UIGridLayoutSection.h"
 #import "UICollectionViewLayout+Internal.h"
+#import "AssertARCEnabled.h"
 
 NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";

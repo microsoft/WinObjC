@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @interface UICollectionReusableView () {
     UICollectionViewLayoutAttributes* _layoutAttributes;

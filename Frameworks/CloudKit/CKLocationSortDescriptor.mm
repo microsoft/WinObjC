@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKLocationSortDescriptor.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKLocationSortDescriptor
 /**

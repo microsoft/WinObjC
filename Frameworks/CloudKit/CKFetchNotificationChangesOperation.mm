@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKFetchNotificationChangesOperation.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKFetchNotificationChangesOperation
 /**

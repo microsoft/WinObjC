@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKAsset.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKAsset
 /**

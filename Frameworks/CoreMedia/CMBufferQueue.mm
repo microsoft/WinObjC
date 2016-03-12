@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMBufferQueue.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 /**
  @Status Stub

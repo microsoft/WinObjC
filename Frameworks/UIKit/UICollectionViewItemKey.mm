@@ -22,6 +22,7 @@
 #import <UIKit/UIKit.h>
 #import "UICollectionViewItemKey.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
+#import "AssertARCEnabled.h"
 
 NSString* const UICollectionElementKindCell = @"UICollectionElementKindCell";
 NSString* const UICollectionElementKindDecorationView = @"UICollectionElementKindDecorationView";

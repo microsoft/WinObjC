@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMTimeRange.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CFStringRef kCMTimeRangeStartKey = static_cast<CFStringRef>(@"start");
 const CFStringRef kCMTimeRangeDurationKey = static_cast<CFStringRef>(@"duration");

@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <AVKit/AVPictureInPictureController.h>
+#import "AssertARCEnabled.h"
 
 @implementation AVPictureInPictureController
 /**

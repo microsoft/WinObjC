@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-#import <AVFoundation/AVFoundation.h>
+#pragma once
 
-#import <StubReturn.h>
-#import "AssertARCEnabled.h"
-
-@implementation AVCaptureInput
-@end
+static_assert(__has_feature(objc_arc), "Arc must be enabled for this file");
