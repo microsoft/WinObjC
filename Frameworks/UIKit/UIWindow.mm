@@ -28,6 +28,7 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UITouch.h"
 #include "LoggingNative.h"
+#include "UIApplicationInternal.h"
 
 static const wchar_t* TAG = L"UIWindow";
 

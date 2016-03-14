@@ -63,9 +63,6 @@ typedef int32_t UIImageRenderingMode;
 UIKIT_EXPORT_CLASS
 @interface UIImage : NSObject <NSSecureCoding>
 
-// Starboard additions:
-- (CGRect)_imageStretch;
-
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGImageRef CGImage;
 @property (nonatomic, readonly) CGSize size;

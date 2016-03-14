@@ -39,6 +39,10 @@
 #include "BMPDecode.h"
 #include "LoggingNative.h"
 
+@interface UIImage ()
+- (CGRect)_imageStretch;
+@end
+
 static const wchar_t* TAG = L"UIImage";
 
 struct insetInfo {

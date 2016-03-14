@@ -23,6 +23,7 @@
 #include "UIKit/UIColor.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIActionSheet.h"
+#include "UIApplicationInternal.h"
 #include "UIBarButtonItem+Internals.h"
 #include "LoggingNative.h"
 

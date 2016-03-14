@@ -96,10 +96,6 @@ UIKIT_EXPORT_CLASS
 - (void)willTransitionToState:(UITableViewCellStateMask)state;
 - (void)didTransitionToState:(UITableViewCellStateMask)state;
 
-// -- internal --
-- (void)_setEditingMode:(BOOL)editingMode animated:(BOOL)animated;
-// --------------
-
 @property (nonatomic, readonly, retain) UIView* contentView;
 @property (nonatomic, readonly, retain) UILabel* textLabel;
 @property (nonatomic, readonly, retain) UILabel* detailTextLabel;

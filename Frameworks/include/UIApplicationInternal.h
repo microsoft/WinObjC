@@ -19,6 +19,7 @@
 #import <UIKit/UIApplication.h>
 
 @interface UIApplication (internal)
+- (UIWindow*)_popupWindow;
 - (void)_sendActiveStatus:(BOOL)isActive;
 - (void)_sendToBackground;
 - (void)_bringToForeground;

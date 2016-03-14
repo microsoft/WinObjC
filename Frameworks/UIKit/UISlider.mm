@@ -22,6 +22,8 @@
 #include "UIKit/UIGestureRecognizer.h"
 #include "UIKit/UISlider.h"
 
+#include "UIGestureRecognizerInternal.h"
+
 @implementation UISlider {
     idretaintype(UIImage) _sliderLeft, _sliderRight, _dot, _dotHighlighted;
     idretaintype(UIImageView) _sliderLeftView, _sliderRightView, _sliderThumbView;

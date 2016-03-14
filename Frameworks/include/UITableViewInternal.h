@@ -160,4 +160,6 @@ struct UITableViewPriv {
     StrongId<UIView> _editSelectedView;
     BOOL _editSelectedViewVisible;
 }
+
+- (void)_setEditingMode:(BOOL)editingMode animated:(BOOL)animated;
 @end

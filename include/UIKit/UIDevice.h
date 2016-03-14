@@ -116,6 +116,4 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, readonly) float screenPhysicalWidth;
 @property (nonatomic, readonly) float screenPhysicalHeight;
-
-+ (uint64_t)_deviceTotalMemory;
 @end

@@ -285,7 +285,6 @@ UIKIT_EXPORT_CLASS
 @end
 
 @interface UIApplication (UIApplicationStarboardAdditions)
-- (UIWindow*)_popupWindow;
 + (void)setStarboardInternalLoggingLevel:(int)level;
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(NSString*)id;
 @end

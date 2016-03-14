@@ -22,6 +22,9 @@
 #include "UIKit/UIImageView.h"
 #include "UIKit/UIGestureRecognizer.h"
 #include "UIKit/UISwitch.h"
+
+#include "UIGestureRecognizerInternal.h"
+
 #include <math.h>
 
 const float minX = 0.0f, maxX = 50.0f;
