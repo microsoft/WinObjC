@@ -44,6 +44,20 @@
   </PropertyGroup>
 
   <Target
+    Name="HandleExplicitLibs"
+    Condition="'$(ConfigurationType)' == 'Application'"
+    BeforeTargets="SBResourcePackage"
+    AfterTargets="Link">
+
+    <ItemGroup>
+      <!-- The AppInsights files are required by the Logging lib -->
+      <SBResourceCopy Include="$(StarboardLibDirs)\ApplicationInsights.winmd" />
+      <SBResourceCopy Include="$(StarboardLibDirs)\ApplicationInsights.dll" />
+      <SBResourceCopy Include="$(StarboardLibDirs)\AppInsights_Win10-UAP.dll" />
+    </ItemGroup>
+  </Target>
+
+  <Target
     Name="ComputeLibsToCopy"
     Condition="'$(ConfigurationType)' == 'Application'"
     BeforeTargets="SBResourcePackage"
@@ -130,10 +144,6 @@
     <ItemGroup>
       <Reference Include="XamlCompositorCS" Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
         <HintPath>$(StarboardLibDirs)\XamlCompositorCS.winmd</HintPath>
-        <IsWinMDFile>true</IsWinMDFile>
-      </Reference>
-      <Reference Include="ApplicationInsights" Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
-        <HintPath>$(StarboardLibDirs)\ApplicationInsights.winmd</HintPath>
         <IsWinMDFile>true</IsWinMDFile>
       </Reference>
     </ItemGroup>
