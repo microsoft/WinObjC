@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Composition;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
@@ -50,8 +51,6 @@ namespace XamlCompositorCS
         public sealed class CALayerXaml : Panel, CacheableObject
         {
             internal static double screenScale = 1.0;
-            static bool RoundInitialized = false;
-            static double RoundPixelsPerPoint;
             static SolidColorBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
 
             FrameworkElement content;
@@ -143,7 +142,12 @@ namespace XamlCompositorCS
                     return (CALayerXaml)ret;
                 }
 
-                return new CALayerXaml();
+                CALayerXaml newLayer = new CALayerXaml();
+
+                var layerVisual = Windows.UI.Xaml.Hosting.ElementCompositionPreview.GetElementVisual(newLayer);
+                layerVisual.BorderMode = CompositionBorderMode.Hard;
+
+                return newLayer;
             }
 
             static public void DestroyLayer(CALayerXaml layer)
@@ -175,17 +179,6 @@ namespace XamlCompositorCS
 
                 windowContainer.RenderTransform = globalTransform;
                 screenScale = (double)scale;
-            }
-
-            static public double RoundCoordinate(Object coord)
-            {
-
-                if (!RoundInitialized)
-                {
-                    RoundInitialized = true;
-                    RoundPixelsPerPoint = ((int)Windows.Graphics.Display.DisplayInformation.GetForCurrentView().ResolutionScale) / 100.0;
-                }
-                return Math.Floor((double)coord * screenScale * RoundPixelsPerPoint) / (screenScale * RoundPixelsPerPoint);
             }
 
             internal static void AddAnimation(String propertyName, UIElement target, Storyboard storyboard, DoubleAnimation copyProperties, Object fromValue, Object toValue, bool dependent = false)
@@ -371,7 +364,6 @@ namespace XamlCompositorCS
                             target.SetupBackground();
                             double targetValue = (double) toValue;
 
-                            targetValue = RoundCoordinate(targetValue);
                             target._origin.X = targetValue;
 
                             if (target._createdTransforms)
@@ -412,7 +404,6 @@ namespace XamlCompositorCS
                             target.SetupBackground();
                             double targetValue = (double) toValue;
 
-                            targetValue = RoundCoordinate(targetValue);
                             target._origin.Y = targetValue;
 
                             if (target._createdTransforms) {
@@ -544,7 +535,6 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             if (toValue != null) if ((double)toValue < 0) toValue = 0.0;
-                            toValue = RoundCoordinate(toValue);
 
                             if (target._size.Width == (double) toValue) return;
                             target._size.Width = (double)toValue;
@@ -584,7 +574,6 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             if (toValue != null) if ((double)toValue < 0) toValue = 0.0;
-                            toValue = RoundCoordinate(toValue);
                             if (target._size.Height == (double)toValue) return;
                             target._size.Height = (double)toValue;
                             target.Height = (double)toValue;
