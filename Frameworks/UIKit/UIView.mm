@@ -2013,6 +2013,13 @@ static float doRound(float f) {
 }
 
 /**
+ @Status Interoperable
+*/
+- (BOOL)clipsToBounds {
+    return [layer masksToBounds];
+}
+
+/**
  @Status Stub
 */
 - (void)setExclusiveTouch:(BOOL)isExclusive {

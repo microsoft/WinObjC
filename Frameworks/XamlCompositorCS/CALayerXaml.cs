@@ -1839,7 +1839,7 @@ namespace XamlCompositorCS
                     top = IfNegativeMakeZero(top);
                     right = IfNegativeMakeZero(right);
                     bottom = IfNegativeMakeZero(bottom);
-                    
+
                     int maxWidth = (int)imageSize.Width / 3;
 
                     if (left >= maxWidth)
@@ -1879,6 +1879,10 @@ namespace XamlCompositorCS
                         top = size.Height / 2 - contentSize.Height / 2;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.Top:
@@ -1886,6 +1890,10 @@ namespace XamlCompositorCS
                         top = size.Height - contentSize.Height;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.Bottom:
@@ -1893,6 +1901,10 @@ namespace XamlCompositorCS
                         top = 0;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.Left:
@@ -1900,6 +1912,10 @@ namespace XamlCompositorCS
                         top = size.Height / 2 - contentSize.Height / 2;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.Right:
@@ -1907,6 +1923,10 @@ namespace XamlCompositorCS
                         top = size.Height / 2 - contentSize.Height / 2;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.TopLeft:
@@ -1914,6 +1934,10 @@ namespace XamlCompositorCS
                         top = size.Height - contentSize.Height;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.TopRight:
@@ -1921,6 +1945,10 @@ namespace XamlCompositorCS
                         top = size.Height - contentSize.Height;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.BottomLeft:
@@ -1928,6 +1956,10 @@ namespace XamlCompositorCS
                         top = 0;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.BottomRight:
@@ -1935,29 +1967,52 @@ namespace XamlCompositorCS
                         top = 0;
                         width = contentSize.Width;
                         height = contentSize.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.Resize:
+                        // UIViewContentModeScaleToFill
                         left = 0;
                         top = 0;
                         width = size.Width;
                         height = size.Height;
+                        if (image != null)
+                        {
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
 
                     case ContentGravity.ResizeAspect:
+                        // UIViewContentModeScaleAspectFit 
                         left = 0;
                         top = 0;
                         width = size.Width;
                         height = size.Height;
-                        if (image != null) image.Stretch = Stretch.Uniform;
+                        if (image != null) {
+                            image.Stretch = Stretch.Uniform;
+                        }
                         break;
 
                     case ContentGravity.ResizeAspectFill:
-                        left = 0;
-                        top = 0;
-                        width = size.Width;
-                        height = size.Height;
-                        if (image != null) image.Stretch = Stretch.UniformToFill;
+                        // UIViewContentModeScaleAspectFill
+                        double widthAspect = size.Width / contentSize.Width;
+                        double heightAspect = size.Height / contentSize.Height;
+                        double maxAspect = Math.Max(widthAspect, heightAspect);
+                        
+                        width = contentSize.Width * maxAspect;
+                        height = contentSize.Height * maxAspect;
+
+
+                        left = size.Width / 2 - width / 2;
+                        top = size.Height / 2 - height / 2;
+                        if (image != null)
+                        {
+                            // Using Fill since we calculate the aspect outselves because XAML clips when setting UniformToFill.
+                            image.Stretch = Stretch.Fill;
+                        }
                         break;
                 }
 
