@@ -49,7 +49,7 @@ UIKIT_EXPORT_CLASS
 // Subclasses must always call super if they override.
 - (void)invalidateLayout;
 
-/// @name Registering Decoration Views
+// @name Registering Decoration Views
 - (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString*)kind;
 
 - (void)registerNib:(UINib*)nib forDecorationViewOfKind:(NSString*)kind;
@@ -122,7 +122,4 @@ UIKIT_EXPORT_CLASS
 @interface UICollectionViewLayout (Private)
 - (void)setCollectionViewBoundsSize:(CGSize)size;
 
-- (UICollectionReusableView*)decorationViewForCollectionView:(UICollectionView*)collectionView
-                                         withReuseIdentifier:(NSString*)reuseIdentifier
-                                                   indexPath:(NSIndexPath*)indexPath;
 @end

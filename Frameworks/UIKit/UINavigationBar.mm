@@ -67,6 +67,10 @@ static void setBackground(UINavigationBar* self) {
     return NULL;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     NSArray* items = [coder decodeObjectForKey:@"UIItems"];
 
@@ -122,6 +126,9 @@ static void setBackground(UINavigationBar* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     (_items).attach([NSMutableArray new]);
 
@@ -201,6 +208,9 @@ static void setBackground(UINavigationBar* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)pushNavigationItem:(UINavigationItem*)item {
     [_items addObject:item];
     [self setNeedsDisplay];
@@ -358,6 +368,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     [self->_titleLabel setShadowOffset:textShadowOffset];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (_newItem != nil) {
         bool backButtonHandler = false;
@@ -547,6 +560,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     return _leftButton;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_curItem != nil) {
         [_curItem setDelegate:nil];
@@ -573,6 +589,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 320.0f, 44.0f };
     return ret;

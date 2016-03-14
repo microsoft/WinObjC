@@ -109,6 +109,9 @@ int newDeviceOrientation;
 volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
+/**
+ @Public No
+*/
 int UIApplicationMainInit(
     int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, UIInterfaceOrientation defaultOrientation) {
     // Make sure we reference classes we need:
@@ -277,6 +280,9 @@ int UIApplicationMainInit(
     return 0;
 }
 
+/**
+ @Public No
+*/
 int UIApplicationMainLoop() {
     [[NSThread currentThread] _associateWithMainThread];
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];

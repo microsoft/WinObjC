@@ -19,6 +19,7 @@
 #import "UIBarButtonItem+Internals.h"
 #import "UIAppearanceSetter.h"
 #import "LoggingNative.h"
+#import "StubReturn.h"
 
 static const wchar_t* TAG = L"UIBarButtonItem";
 
@@ -57,6 +58,10 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (NSObject*)initWithCoder:(NSCoder*)coder {
     id customView = [coder decodeObjectForKey:@"UICustomView"];
     if (customView != nil) {
@@ -81,6 +86,14 @@ static void initControls(UIBarButtonItem* self) {
     initControls(self);
 
     return self;
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)backgroundImageForState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -330,7 +343,10 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (id)init {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     initInternal(self);
     initControls(self);
 
@@ -370,11 +386,17 @@ static void initControls(UIBarButtonItem* self) {
     return _width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)title {
     _title.attach([title copy]);
     [_buttonView setTitle:(id)_title forState:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)title {
     return _title;
 }
@@ -421,11 +443,17 @@ static void initControls(UIBarButtonItem* self) {
     _targetSel = pSel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)image {
     _image = image;
     [_buttonView setImage:(id)_image forState:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)image {
     return _image;
 }
@@ -439,8 +467,11 @@ static void initControls(UIBarButtonItem* self) {
     [_buttonView setBackgroundImage:image forState:state];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTitlePositionAdjustment:(CGPoint)position forBarMetrics:(UIBarMetrics)metrics {
-    TraceVerbose(TAG, L"UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported");
+    UNIMPLEMENTED_WITH_MSG("UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported\n");
 }
 
 /**
@@ -464,6 +495,9 @@ static void initControls(UIBarButtonItem* self) {
     return _backImage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state {
     id font = [attributes objectForKey:@"kCTFontAttributeName"];
     id textColor = [attributes objectForKey:@"UITextAttributeTextColor"];
@@ -506,6 +540,9 @@ static void initControls(UIBarButtonItem* self) {
     return [super tintColor];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enabled {
     bool update = false;
 
@@ -530,6 +567,9 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEnabled {
     if (_isDisabled) {
         return FALSE;
@@ -566,20 +606,37 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setImageInsets:(UIEdgeInsets)insets {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(NSString*)label {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTag:(NSInteger)tag {
     _tag = tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)tag {
     return _tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _title = nil;
     _font = nil;
@@ -590,6 +647,9 @@ static void initControls(UIBarButtonItem* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isFlexibleWidth {
     if (_systemItem == UIBarButtonSystemItemFlexibleSpace) {
         return TRUE;
@@ -598,11 +658,17 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
-+ (id)appearance {
+/**
+ @Status Interoperable
+*/
++ (instancetype)appearance {
     return [UIAppearanceSetter _appearanceWhenContainedIn:nil forUIClass:self];
 }
 
-+ (id)appearanceWhenContainedIn:(id)containedClass, ... {
+/**
+ @Status Interoperable
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
     id curClass = [self class];
 
     va_list pReader;

@@ -24,6 +24,7 @@
 #include "UIKit/UIColor.h"
 #include "UISegment.h"
 #include <math.h>
+#include "StubReturn.h"
 
 @implementation UISegmentedControl {
     StrongId<NSMutableArray> _segments;
@@ -38,7 +39,11 @@
     BOOL _customImages;
 }
 
-- (id)initWithCoder:(id)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     id result = [super initWithCoder:coder];
 
     if (isOSTarget(@"7.0")) {
@@ -86,7 +91,10 @@
     return result;
 }
 
-- (id)initWithFrame:(CGRect)pos {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)pos {
     _segments.attach([NSMutableArray new]);
     _curSelected = 0xFFFFFFFF;
     [super initWithFrame:pos];
@@ -134,7 +142,7 @@ static float widthForItems(id items) {
 /**
  @Status Interoperable
 */
-- (id)initWithItems:(id)items {
+- (instancetype)initWithItems:(id)items {
     _shouldResizeToSuper = TRUE;
     _curSelected = 0xFFFFFFFF;
     _segments.attach([NSMutableArray new]);
@@ -531,11 +539,17 @@ static void positionSegments(UISegmentedControl* self) {
     positionSegments(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
 }
 
-- (float)widthForSegmentAtIndex:(int)index {
+/**
+ @Status Interoperable
+*/
+- (CGFloat)widthForSegmentAtIndex:(NSUInteger)index {
     UISegment* curSegment = [_segments objectAtIndex:index];
 
     CGRect curFrame = { 0 };
@@ -543,6 +557,9 @@ static void positionSegments(UISegmentedControl* self) {
     return curFrame.size.width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (_shouldResizeToSuper) {
         CGRect superRect = { 0 };
@@ -563,6 +580,9 @@ static void positionSegments(UISegmentedControl* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _segments = nil;
     _tintColor = nil;
@@ -659,11 +679,17 @@ static void positionSegments(UISegmentedControl* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(int)enabled {
     [self setNeedsLayout];
     [super setEnabled:enabled];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret;
 
@@ -676,11 +702,29 @@ static void positionSegments(UISegmentedControl* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
     ret.width = getSegmentsDesiredWidth(self);
     ret.height = 32.0f;
     return ret;
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isEnabledForSegmentAtIndex:(NSUInteger)segment {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setContentOffset:(CGSize)offset forSegmentAtIndex:(NSUInteger)segment {
+    UNIMPLEMENTED();
 }
 
 @end

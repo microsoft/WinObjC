@@ -431,6 +431,9 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     idretaintype(_UIPageViewScrollView) _scrollView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                    navigationOrientation:UIPageViewControllerNavigationOrientationVertical

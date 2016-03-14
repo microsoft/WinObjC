@@ -68,7 +68,11 @@ struct UIAlertViewPriv {
 @implementation UIAlertView {
     struct UIAlertViewPriv* alertPriv;
 }
-+ (id)allocWithZone:(NSZone*)zone {
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)allocWithZone:(NSZone*)zone {
     UIAlertView* ret = [super allocWithZone:zone];
     ret->alertPriv = new UIAlertViewPriv();
 
@@ -84,7 +88,7 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
 /**
  @Status Interoperable
 */
-- (id)initWithTitle:(NSString*)title
+- (instancetype)initWithTitle:(NSString*)title
             message:(NSString*)message
            delegate:(id)delegate
   cancelButtonTitle:(NSString*)cancelButtonTitle
@@ -125,7 +129,10 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return self;
 }
 
-- (id)initWithTitle:(id)title
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithTitle:(id)title
             message:(id)message
            delegate:(id)delegate
       defaultButton:(id)defaultButton
@@ -168,7 +175,10 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return self;
 }
 
-- (id) /* use typed version */ init {
+/**
+ @Status Interoperable
+*/
+- (instancetype) init {
     alertPriv->_otherButtonIndex = -1;
     alertPriv->_cancelButtonIndex = -1;
 
@@ -594,6 +604,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     for (int i = 0; i < alertPriv->_numButtons; i++) {
         alertPriv->_buttons[i]._buttonView = nil;

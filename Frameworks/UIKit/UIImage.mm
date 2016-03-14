@@ -49,6 +49,9 @@ struct insetInfo {
 CFMutableDictionaryRef g_imageCache;
 static EbrLock imageCacheLock;
 
+/**
+ @Status Interoperable
+*/
 void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     CGImageRef cgImage = (CGImageRef)[image CGImage];
     CGImageRef curImage = (CGImageRef)[layer contents];
@@ -1194,6 +1197,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)_imageStretch {
     return _imageStretch;
 }
@@ -1315,6 +1321,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _cacheImage = nil;
     _deferredImageData = nil;
@@ -1338,7 +1347,7 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
 - (void)setAccessibilityLabel:(UILabel*)label {
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 

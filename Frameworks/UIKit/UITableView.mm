@@ -660,7 +660,10 @@ static void initInternal(UITableView* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     [super setDelegate:self];
     //[self setBackgroundColor:[UIColor whiteColor]];
@@ -699,6 +702,9 @@ static void initInternal(UITableView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
     [super setDelegate:self];
@@ -825,6 +831,9 @@ static void initInternal(UITableView* self) {
     return tablePriv->_allowsSelection;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutIfNeeded {
     //  Explicitly reload data if layoutIfNeeded is explicitly called
     if (tablePriv->_needsReload) {
@@ -1180,6 +1189,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     calcCellPositions(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
 
@@ -1490,6 +1502,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath*)indexPath
                         animated:(BOOL)animated
                   scrollPosition:(UITableViewScrollPosition)scrollPosition
@@ -1515,10 +1530,16 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return shouldHighlight;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)unhighlightItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
     return [self unhighlightItemAtIndexPath:indexPath animated:animated notifyDelegate:notifyDelegate shouldCheckHighlight:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)unhighlightItemAtIndexPath:(id)indexPath
                           animated:(BOOL)animated
                     notifyDelegate:(BOOL)notifyDelegate
@@ -1576,6 +1597,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cellTouchCancelled {
     // turn on ALL the *should be selected* cells (iOS6 UICollectionView does no state keeping or other fancy
     // optimizations)
@@ -1618,6 +1642,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)userSelectedItemAtIndexPath:(NSIndexPath*)indexPath {
     if ([self _currentlyAllowsMultipleSelection] && [_indexPathsForSelectedItems containsObject:indexPath]) {
         [self deselectItemAtIndexPath:indexPath animated:YES notifyDelegate:YES];
@@ -1626,6 +1653,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)selectItemAtIndexPath:(id)indexPath
                    animated:(BOOL)animated
              scrollPosition:(UITableViewScrollPosition)scrollPosition
@@ -1673,6 +1703,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)deselectItemAtIndexPath:(id)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
     // deselect only relevant during multi mode
     if (notifyDelegate && [tablePriv->_delegate respondsToSelector:@selector(tableView:willDeselectRowAtIndexPath:)]) {
@@ -1695,6 +1728,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deselectItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated {
     [self deselectItemAtIndexPath:indexPath animated:animated notifyDelegate:NO];
 }
@@ -2149,6 +2185,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return tablePriv->_isEditing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     [super layoutSubviews];
     if ([self window] == nil)
@@ -2160,6 +2199,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     showVisibleCells(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     for (const auto& rc : tablePriv->_reusableCells) {
         for (auto& cell : rc.second) {
@@ -2227,6 +2269,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidScroll:(UIScrollView*)scroller {
     showVisibleCells(self);
 
@@ -2236,30 +2281,45 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillBeginDecelerating:(UIScrollView*)scroller {
     if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
         [tablePriv->_delegate scrollViewWillBeginDecelerating:scroller];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scroller {
     if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
         [tablePriv->_delegate scrollViewDidEndDecelerating:scroller];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillBeginDragging:(UIScrollView*)scroller {
     if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
         [tablePriv->_delegate scrollViewWillBeginDragging:scroller];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewDidEndDragging:(UIScrollView*)scroller willDecelerate:(BOOL)willDecelerate {
     if (tablePriv->_delegate != self && [tablePriv->_delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
         [tablePriv->_delegate scrollViewDidEndDragging:scroller willDecelerate:willDecelerate];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)scrollViewWillEndDragging:(UIScrollView*)scroller
                      withVelocity:(CGPoint)velocity
               targetContentOffset:(inout CGPoint*)contentOffsetPtr {
@@ -2322,6 +2382,9 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(UIWindow*)newWindow {
     if (newWindow != nil) {
         [self _setShouldLayout];

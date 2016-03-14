@@ -37,7 +37,10 @@
 @synthesize indexPathBeforeUpdate = _initialIndexPath;
 @synthesize indexPathAfterUpdate = _finalIndexPath;
 
-- (id)initWithInitialIndexPath:(NSIndexPath*)initialIndexPath
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithInitialIndexPath:(NSIndexPath*)initialIndexPath
                 finalIndexPath:(NSIndexPath*)finalIndexPath
                   updateAction:(UICollectionUpdateAction)updateAction {
     if ((self = [super init])) {
@@ -48,7 +51,10 @@
     return self;
 }
 
-- (id)initWithAction:(UICollectionUpdateAction)updateAction forIndexPath:(NSIndexPath*)indexPath {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithAction:(UICollectionUpdateAction)updateAction forIndexPath:(NSIndexPath*)indexPath {
     if (updateAction == UICollectionUpdateActionInsert)
         return [self initWithInitialIndexPath:nil finalIndexPath:indexPath updateAction:updateAction];
     else if (updateAction == UICollectionUpdateActionDelete)
@@ -59,10 +65,16 @@
     return nil;
 }
 
-- (id)initWithOldIndexPath:(NSIndexPath*)oldIndexPath newIndexPath:(NSIndexPath*)newIndexPath {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithOldIndexPath:(NSIndexPath*)oldIndexPath newIndexPath:(NSIndexPath*)newIndexPath {
     return [self initWithInitialIndexPath:oldIndexPath finalIndexPath:newIndexPath updateAction:UICollectionUpdateActionMove];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     NSString* action = nil;
     switch (_updateAction) {
@@ -117,6 +129,9 @@
     return _initialIndexPath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSComparisonResult)compareIndexPaths:(UICollectionViewUpdateItem*)otherItem {
     NSComparisonResult result = NSOrderedSame;
     NSIndexPath* selfIndexPath = nil;
@@ -141,6 +156,9 @@
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSComparisonResult)inverseCompareIndexPaths:(UICollectionViewUpdateItem*)otherItem {
     return (NSComparisonResult)([self compareIndexPaths:otherItem] * -1);
 }

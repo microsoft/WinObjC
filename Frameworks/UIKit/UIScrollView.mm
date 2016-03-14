@@ -244,7 +244,11 @@ static void positionScrollers(UIScrollView* self) {
     }
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     commonInit(self);
 
     [super initWithCoder:coder];
@@ -292,6 +296,9 @@ static void positionScrollers(UIScrollView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
     [self setClipsToBounds:1];
@@ -628,7 +635,11 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
     }
 }
 
-- (void)touchesMoved:(id)touches withEvent:(id)event {
+/**
+ @Status Stub
+*/
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
 }
 
 #define returntobaseconst 7.0f
@@ -1227,6 +1238,9 @@ static void cancelScrolling(UIScrollView* self) {
     self->_displayLink = self->_pressTimer = self->_savedTouch = self->_savedEvent = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     cancelScrolling(self);
 
@@ -1239,6 +1253,9 @@ static void cancelScrolling(UIScrollView* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(id)newWindow {
     cancelScrolling(self);
     [super willMoveToWindow:newWindow];
@@ -1659,6 +1676,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if (self.scrollEnabled) {
         // If we get a touch down, cancel any scrolling we were doing:
@@ -1667,6 +1687,25 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     [super touchesBegan:touches withEvent:event];
 }
 
+/**
+ @Status Stub
+*/
+- (BOOL)touchesShouldBegin:(NSSet*)touches withEvent:(UIEvent*)event inContentView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)touchesShouldCancelInContentView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     [super layoutSubviews];
     //  Make sure we stay within our bounds
@@ -1682,6 +1721,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     positionScrollers(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key {
     if (_isZoomingToRect) {
         return [super actionForLayer:layer forKey:key];
@@ -1698,6 +1740,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     return [super actionForLayer:layer forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIPinchGestureRecognizer*)pinchGestureRecognizer {
     return _pinchGesture;
 }

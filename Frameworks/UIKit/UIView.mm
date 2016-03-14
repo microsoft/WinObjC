@@ -123,16 +123,25 @@ int viewCount = 0;
     // TraceWarning(TAG,L"%d: Allocing %hs (%x)", viewCount, object_getClassName(self), (id) self);
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     self.isAccessibilityElement = FALSE;
     self.accessibilityTraits = UIAccessibilityTraitNone;
     [self updateAccessibility];
 }
 
+/**
+ @Public No
+*/
 - (void)updateAccessibility {
     IWUpdateAccessibility(self.layer, self);
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIView* ret = [super allocWithZone:zone];
 
@@ -159,6 +168,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     return initInternal(self, pos);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     CGRect pos;
 
@@ -176,7 +188,11 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     if (g_nestedAnimationsDisabled < 0) \
         g_nestedAnimationsDisabled = 0;
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     CGRect bounds;
 
     id boundsObj = [coder decodeObjectForKey:@"UIBounds"];
@@ -320,6 +336,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     TraceWarning(TAG, L"Unsupported attempt to encode a UIView");
 }
@@ -366,6 +385,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     [layer setPosition:center];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSublayersOfLayer:(CALayer*)forLayer {
     if (forLayer == layer) {
         UIViewController* controller = [UIViewController controllerForView:self];
@@ -416,6 +438,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     [layer _setShouldLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)origin {
     CGRect curFrame;
 
@@ -700,6 +725,9 @@ static float doRound(float f) {
     [layer setBounds:bounds];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setOrigin:(CGPoint)origin {
     CGRect curFrame;
 
@@ -1189,11 +1217,19 @@ static float doRound(float f) {
     return [layer contentsScale];
 }
 
+/**
+ @Status Stub
+*/
 - (void)orderFront:(UIView*)view {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)makeKey:(UIView*)view {
     TraceWarning(TAG, L"UIVIew::makeKey");
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1397,21 +1433,17 @@ static float doRound(float f) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawLayer:(CALayer*)layer inContext:(CGContextRef)context {
     UIGraphicsPushContext(context);
 
     CGRect bounds;
-    // bounds = [layer bounds];
     bounds = CGContextGetClipBoundingBox(context);
     [self drawRect:bounds];
 
     UIGraphicsPopContext();
-}
-
-- (void)setTapDelegate:(id)delegateAddr {
-}
-
-- (void)setGestureDelegate:(id)delegateAddr {
 }
 
 /**
@@ -1470,7 +1502,7 @@ static float doRound(float f) {
 /**
  @Status Interoperable
 */
-+ (id)layerClass {
++ (Class)layerClass {
     return [CALayer class];
 }
 
@@ -1495,8 +1527,11 @@ static float doRound(float f) {
     [layer setAffineTransform:transform];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRotationBy:(float)degrees {
-    assert(0);
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1912,6 +1947,9 @@ static float doRound(float f) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)nextResponder {
     UIViewController* controller = [UIViewController controllerForView:self];
 
@@ -1922,6 +1960,9 @@ static float doRound(float f) {
     return priv->superview;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1930,6 +1971,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     TraceVerbose(TAG, L"Clicked: %hs", object_getClassName(self));
     UIResponder* nextResponder = [self nextResponder];
@@ -1939,6 +1983,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1947,6 +1994,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1970,6 +2020,9 @@ static float doRound(float f) {
     TraceWarning(TAG, L"setExclusiveTouch not supported.");
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<CAAction>)actionForLayer:(CALayer*)actionLayer forKey:(NSString*)key {
     if (stackLevel > 0 && g_animationsDisabled == 0 && g_nestedAnimationsDisabled == 0) {
         if ([key isEqualToString:@"opacity"] || [key isEqualToString:@"position"] || [key isEqualToString:@"bounds"] ||
@@ -2257,6 +2310,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)animationsEnabled {
     return (g_animationsDisabled == 0) && (g_nestedAnimationsDisabled == 0);
 }
@@ -2402,6 +2458,9 @@ static float doRound(float f) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)awakeFromNib {
 }
 
@@ -2447,6 +2506,9 @@ static float doRound(float f) {
     [self setFrame:curSize];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_deallocating)
         return;
@@ -2566,14 +2628,20 @@ static float doRound(float f) {
     return priv->gestures;
 }
 
-+ (id)appearance {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called.", __func__);
-    return nil;
+/**
+ @Status Stub
+*/
++ (instancetype)appearance {
+    UNIMPLEMENTED_WITH_MSG("Unimplemented method %hs on UIView called", __func__);
+    return StubReturn();
 }
 
-+ (id)appearanceWhenContainedIn:(id)containedClass, ... {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called.", __func__);
-    return nil;
+/**
+ @Status Stub
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
+    UNIMPLEMENTED_WITH_MSG("Unimplemented method %hs on UIView called", __func__);
+    return StubReturn();
 }
 
 /**
@@ -2599,10 +2667,16 @@ static float doRound(float f) {
     _backButtonPriority = priority;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enabled {
     [self setUserInteractionEnabled:enabled];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEnabled {
     return [self isUserInteractionEnabled];
 }

@@ -57,7 +57,14 @@ typedef enum {
 @class UIFont, UIColor, UIImage;
 
 UIKIT_EXPORT_CLASS
-@interface UITextField : UIControl <UITextInputTraits, UITextInput>
+@interface UITextField : UIControl <UITextInputTraits,
+                                    UIAppearance,
+                                    UIAppearanceContainer,
+                                    UICoordinateSpace,
+                                    UIDynamicItem,
+                                    UIFocusEnvironment,
+                                    UITextInput,
+                                    UITraitEnvironment>
 - (CGRect)borderRectForBounds:(CGRect)bounds;
 - (CGRect)clearButtonRectForBounds:(CGRect)bounds;
 - (CGRect)editingRectForBounds:(CGRect)bounds;
@@ -75,24 +82,28 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) NSAttributedString* attributedPlaceholder;
 @property (nonatomic, copy) NSString* text;
 @property (nonatomic, copy) NSAttributedString* attributedText;
+@property (copy, nonatomic) NSDictionary* defaultTextAttributes STUB_PROPERTY;
 @property (nonatomic, retain) UIFont* font;
+@property (copy, nonatomic) NSDictionary* typingAttributes STUB_PROPERTY;
 @property (nonatomic) UITextBorderStyle borderStyle;
 @property (nonatomic, retain) UIColor* textColor;
 @property (nonatomic, readonly, getter=isEditing) BOOL editing;
-@property (nonatomic) BOOL clearsOnBeginEditing;
-@property (nonatomic) BOOL adjustsFontSizeToFitWidth;
-@property (nonatomic) CGFloat minimumFontSize;
+@property (nonatomic) BOOL clearsOnBeginEditing STUB_PROPERTY;
+@property (nonatomic) BOOL clearsOnInsertion STUB_PROPERTY;
+@property (nonatomic) BOOL adjustsFontSizeToFitWidth STUB_PROPERTY;
+@property (nonatomic) BOOL allowsEditingTextAttributes STUB_PROPERTY;
+@property (nonatomic) CGFloat minimumFontSize STUB_PROPERTY;
 
 @property (nonatomic, retain) UIImage* background;
 @property (nonatomic, retain) UIImage* disabledBackground;
 
-@property (nonatomic) UITextFieldViewMode clearButtonMode;
-@property (nonatomic, retain) UIView* leftView;
-@property (nonatomic) UITextFieldViewMode leftViewMode;
-@property (nonatomic, retain) UIView* rightView;
-@property (nonatomic) UITextFieldViewMode rightViewMode;
+@property (nonatomic) UITextFieldViewMode clearButtonMode STUB_PROPERTY;
+@property (nonatomic, retain) UIView* leftView STUB_PROPERTY;
+@property (nonatomic) UITextFieldViewMode leftViewMode STUB_PROPERTY;
+@property (nonatomic, retain) UIView* rightView STUB_PROPERTY;
+@property (nonatomic) UITextFieldViewMode rightViewMode STUB_PROPERTY;
 
-@property (nonatomic, readwrite, retain) UIView* inputAccessoryView;
-@property (nonatomic, readwrite, retain) UIView* inputView;
+@property (nonatomic, readwrite, retain) UIView* inputAccessoryView STUB_PROPERTY;
+@property (nonatomic, readwrite, retain) UIView* inputView STUB_PROPERTY;
 
 @end

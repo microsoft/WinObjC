@@ -90,12 +90,19 @@ static void populateDates(UIDatePicker* self) {
     [self->_weekdays addObject:@"Sat"];
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     populateDates(self);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     pos.size.width = 320.0f;
     pos.size.height = 216.0f;
@@ -245,6 +252,9 @@ void setDay(UIDatePicker* self, id date) {
     [self->_pickerView selectRow:MAX_DAY_RANGE / 2 inComponent:0 animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setDate:(NSDate*)date animated:(BOOL)animated {
     switch (_mode) {
         case UIDatePickerModeTime:
@@ -447,6 +457,9 @@ static void didSelectDateAndTime(UIDatePicker* self, int row, int component) {
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)pickerView:(UIPickerView*)picker didSelectRow:(int)row inComponent:(int)component {
     switch (_mode) {
         case UIDatePickerModeTime:
@@ -554,6 +567,9 @@ int numRowsDay() {
     return MAX_DAY_RANGE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)pickerView:(id)picker numberOfRowsInComponent:(int)component {
     switch (_mode) {
         case UIDatePickerModeTime:
@@ -751,6 +767,9 @@ static NSString* titleForDayRow(UIDatePicker* self, int row) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)pickerView:(UIDatePicker*)picker titleForRow:(unsigned)row forComponent:(int)component withColor:(UIColor**)color {
     switch (_mode) {
         case UIDatePickerModeTime:
@@ -806,6 +825,9 @@ static void resetPickerPositions(UIDatePicker* self) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _date = nil;
     _dayStartDate = nil;

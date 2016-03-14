@@ -21,7 +21,12 @@
 static const wchar_t* TAG = L"UIRuntimeEventConnection";
 
 @implementation UIRuntimeEventConnection
-- (id)initWithCoder:(NSCoder*)coder {
+
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     targetControl = [coder decodeObjectForKey:@"UISource"];
     obj = [coder decodeObjectForKey:@"UIDestination"];
     selector = (SEL)NSSelectorFromString([coder decodeObjectForKey:@"UILabel"]);
@@ -47,6 +52,9 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
     [targetControl addEventConnection:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target sel:(id)targetsel eventMask:(uint32_t)targetmask {
     obj = target;
     selector = (SEL)NSSelectorFromString(targetsel);
@@ -57,6 +65,9 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target selector:(SEL)targetSel eventMask:(uint32_t)targetmask {
     obj = target;
     selector = targetSel;
@@ -67,22 +78,37 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)obj {
     return obj;
 }
 
+/**
+ @Status Interoperable
+*/
 - (SEL)sel {
     return selector;
 }
 
+/**
+ @Status Interoperable
+*/
 - (uint32_t)mask {
     return mask;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isValid {
     return valid;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)invalidate {
     valid = FALSE;
 }

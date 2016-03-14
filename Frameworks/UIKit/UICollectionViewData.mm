@@ -73,7 +73,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout {
+- (instancetype)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout {
     if ((self = [super init])) {
         _collectionView = collectionView;
         _layout = layout;

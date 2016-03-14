@@ -317,6 +317,10 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     UNIMPLEMENTED();
     return TRUE;
 }
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIViewController* ret = [super allocWithZone:zone];
 
@@ -545,7 +549,11 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     UIView* view = [coder decodeObjectForKey:@"UIView"];
     [self setView:view];
 
@@ -585,6 +593,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)awakeFromNib {
     if (priv->view != nil && priv->hasLoaded == FALSE) {
         priv->hasLoaded = TRUE;
@@ -665,6 +676,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     [super init];
 
@@ -1710,12 +1724,16 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 }
 
 /**
- @Status Caveat
+ @Status Stub
  @Notes Never gets called, but has also been deprecated.
 */
 - (void)viewDidUnload {
 }
 
+/**
+ @Status Stub
+ @Notes Never gets called, but has also been deprecated.
+*/
 - (void)viewWillUnload {
 }
 
@@ -1791,10 +1809,16 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 - (void)didMoveToParentViewController:(UIViewController*)parent {
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIViewController*)controllerForView:(UIView*)view {
     return lookupViewController(view);
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)nextResponder {
     if (priv->view != nil) {
         return [priv->view superview];
@@ -1821,6 +1845,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     id nextResponder = [self nextResponder];
 
@@ -1829,6 +1856,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1837,6 +1867,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1845,6 +1878,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1999,6 +2035,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)transitionFromViewController:(UIViewController*)fromController
                     toViewController:(UIViewController*)toController
                             duration:(double)duration
@@ -2063,6 +2102,9 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     return priv->_presentingViewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     TraceVerbose(TAG, L"View controller dealloc: %hs", object_getClassName(self));
     if (priv->view != nil) {
@@ -2109,11 +2151,13 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     [super dealloc];
 }
 
-- (id)undoManager {
+/**
+ @Status Stub
+*/
+- (NSUndoManager*)undoManager {
     //  This should come from UIResponder, which we do not actually inherit from
-    TraceWarning(TAG, L"Undo manager not supported");
-
-    return nil;
+    UNIMPLEMENTED_WITH_MSG("Undo manager not supported");
+    return StubReturn();
 }
 
 /**
@@ -2249,6 +2293,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
 /**
  @Status Interoperable
+ @Notes Intended subclass override point
 */
 - (void)viewWillLayoutSubviews {
 }

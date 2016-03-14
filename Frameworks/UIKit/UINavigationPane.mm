@@ -22,6 +22,10 @@
 static const wchar_t* TAG = L"UINavigationPane";
 
 @implementation UINavigationPane
+
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (_parentController == nil) {
         TraceVerbose(TAG, L"UINavigationPane: parent destroyed?");

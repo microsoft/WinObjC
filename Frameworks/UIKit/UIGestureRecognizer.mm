@@ -40,6 +40,9 @@ static void commonInit(UIGestureRecognizer* self) {
     self->_delaysTouchesEnded = YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         commonInit(self);

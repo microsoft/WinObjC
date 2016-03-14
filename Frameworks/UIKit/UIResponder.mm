@@ -134,6 +134,9 @@ static int _changingResponder = 0;
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_curFirstResponder == self) {
         _curFirstResponder = nil;
@@ -214,6 +217,9 @@ static int _changingResponder = 0;
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didMoveToWindow {
     if (_curFirstResponder == self && [self window] == nil) {
         [self resignFirstResponder];
@@ -221,24 +227,68 @@ static int _changingResponder = 0;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)_resignCurResponder {
     [_curFirstResponder resignFirstResponder];
     _curFirstResponder = nil;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(NSString*)label {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityHint:(NSString*)hint {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityTraits:(unsigned)traits {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setIsAccessibilityElement:(BOOL)enabled {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShouldGroupAccessibilityChildren:(BOOL)group {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
 }
 
 @end

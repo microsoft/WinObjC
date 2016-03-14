@@ -55,7 +55,10 @@ DWORD uuid_generate(BYTE* uuid);
     return _currentDevice;
 }
 
-- (id)init {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     self = [super init];
     if (self) {
         _systemVersion = @"7.0";
@@ -317,7 +320,11 @@ return ret;
     return EbrGetDeviceInfo()->devicePhysHeight;
 }
 
+/**
+ @Status Stub
+*/
 - (void)playInputClick {
+    UNIMPLEMENTED();
 }
 
 /**

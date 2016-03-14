@@ -145,7 +145,11 @@ static void createLabel(UIButton* self) {
     [self addSubview:(id)self->_imageView];
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _backgroundColor.r = 1.f;
     _backgroundColor.g = 1.f;
     _backgroundColor.b = 1.f;
@@ -291,6 +295,9 @@ static void createLabel(UIButton* self) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
 
@@ -341,13 +348,16 @@ static bool validateState(UIControlState state) {
     return true;
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     [super initAccessibility];
     self.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     if (!validateState(state)) {
@@ -489,6 +499,9 @@ static bool validateState(UIControlState state) {
     return getTitleShadowColor(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
         return;
@@ -502,6 +515,9 @@ static bool validateState(UIControlState state) {
     [super touchesBegan:touchSet withEvent:event];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (!_isPressed) {
         return;
@@ -514,6 +530,9 @@ static bool validateState(UIControlState state) {
     [super touchesEnded:touchSet withEvent:event];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (!_isPressed) {
         return;
@@ -744,6 +763,9 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sizeToFit {
     CGRect frame;
 
@@ -921,6 +943,9 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     id image = getBackgroundImage(self);
 
@@ -976,6 +1001,9 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     [super layoutSubviews];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     for (int i = 0; i < 16; i++) {
         _states[i].backgroundImage = nil;
@@ -995,10 +1023,16 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)viewForBaselineLayout {
     return _label;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
 

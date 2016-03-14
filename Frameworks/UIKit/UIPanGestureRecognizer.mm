@@ -74,6 +74,9 @@ static void commonInit(UIPanGestureRecognizer* self) {
     self->_priv = new Private;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
     if (self = [super initWithTarget:target action:selector]) {
         commonInit(self);
@@ -82,6 +85,9 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         commonInit(self);
@@ -90,6 +96,10 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         commonInit(self);
@@ -109,6 +119,9 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     delete _priv;
     [super dealloc];
@@ -220,10 +233,16 @@ static void deleteTouch(id touch, std::vector<TouchInfo>& touches) {
     assert(!"Trying to remove unmatched touch!");
 }
 
-- (unsigned)numberOfTouches {
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)numberOfTouches {
     return _priv->touches.size();
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)locationOfTouch:(NSUInteger)index inView:(UIView*)viewAddr {
     CGPoint ret;
     ret = [_priv->touches[index].touch locationInView:viewAddr];
@@ -231,6 +250,9 @@ static void deleteTouch(id touch, std::vector<TouchInfo>& touches) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if (_priv->touches.size() == 0) {
         _priv->currentTranslation.x = _priv->currentTranslation.y = 0.f;
@@ -273,6 +295,9 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
     return lastMidpoint;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     CGPoint prevPos = lastMidpoint(_priv->touches);
 
@@ -313,6 +338,9 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     // account for the timestamp and any final movement on the finger up event:
     for (UITouch* touch in touches) {
@@ -394,10 +422,16 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return _touchedView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)_setDragSlack:(float)slack {
     _dragSlack = slack;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)locationInView:(id)viewAddr {
     CGPoint ret;
     ret = [[viewAddr window] convertPoint:_priv->lastCenter fromView:nil toView:viewAddr];
@@ -435,6 +469,9 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return _stage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reset {
     _priv->touches.clear();
     _didFireEnded = false;

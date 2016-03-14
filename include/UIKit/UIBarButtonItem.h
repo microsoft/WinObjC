@@ -81,14 +81,14 @@ UIKIT_EXPORT_CLASS
 - (void)setBackButtonBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
 - (void)setBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
 - (UIImage*)backgroundImageForState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
-- (void)setBackButtonTitlePositionAdjustment:(UIOffset)adjustment forBarMetrics:(UIBarMetrics)barMetrics;
+- (void)setBackButtonTitlePositionAdjustment:(UIOffset)adjustment forBarMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
 
 @property (nonatomic) UIBarButtonItemStyle style;
 @property (nonatomic) CGFloat width;
 @property (nonatomic, retain) UIView* customView;
 @property (nonatomic, assign) id target;
 @property (nonatomic) SEL action;
-@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
 @property (nonatomic, copy) NSSet* possibleTitles;
 
 // ----------------------------------------------------------------------------------------------------------

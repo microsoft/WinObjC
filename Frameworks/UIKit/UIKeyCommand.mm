@@ -49,31 +49,29 @@ NSString* const UIKeyInputEscape = @"UIKeyInputEscape";
  @Status Stub
  @Notes
 */
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (instancetype)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (void)encodeWithCoder:(NSCoder*)coder {
+- (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
+ @Notes
 */
 + (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();

@@ -15,10 +15,65 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#import <StubReturn.h>
 
 #import <UIKit/NSParagraphStyle.h>
 #import "NSParagraphStyleInternal.h"
 
 @implementation NSParagraphStyle
+/**
+ @Status Stub
+*/
++ (NSParagraphStyle*)defaultParagraphStyle {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (NSWritingDirection)defaultWritingDirectionForLanguage:(NSString*)languageName {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 @end

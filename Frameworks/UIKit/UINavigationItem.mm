@@ -313,6 +313,9 @@
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _title = nil;
     _titleView = nil;

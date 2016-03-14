@@ -19,21 +19,36 @@
 #import <StubReturn.h>
 
 @implementation UIMotionEffect
+
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (instancetype)initWithCoder:(NSCoder*)coder {
+- (NSDictionary*)keyPathsAndRelativeValuesForViewerOffset:(UIOffset)viewerOffset {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (void)encodeWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

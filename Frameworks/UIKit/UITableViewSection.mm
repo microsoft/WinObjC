@@ -19,7 +19,7 @@
 
 @implementation UITableViewSection : NSObject
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _headerTitle = [coder decodeObjectForKey:@"UITableSectionHeaderTitle"];
     _rows = [coder decodeObjectForKey:@"UITableSectionRows"];
     return self;

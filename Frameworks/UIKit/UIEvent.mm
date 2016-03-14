@@ -91,6 +91,9 @@
     return UIEventTypeTouches;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     touches = nil;
     touchEvent = nil;

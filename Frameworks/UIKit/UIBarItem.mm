@@ -37,7 +37,11 @@
     idretaintype(UIColor) _tintColor;
 }
 
+/**
+ @Status Stub
+*/
 - (void)awakeFromNib {
+    UNIMPLEMENTED();
 }
 
 - (void)setTintColor:(UIColor*)color {
@@ -62,25 +66,63 @@
     return _image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _tintColor = nil;
     [super dealloc];
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (instancetype)initWithCoder:(NSCoder*)coder {
+- (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSObject*)initWithCoder:(NSCoder*)coder {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (void)encodeWithCoder:(NSCoder*)coder {
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (instancetype)appearance {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Public No
+*/
+- (void)initAccessibility {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Public No
+*/
+- (void)updateAccessibility {
     UNIMPLEMENTED();
 }
 

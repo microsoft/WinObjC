@@ -110,7 +110,7 @@ UIKIT_EXPORT_CLASS
 - (void)removeTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 - (NSArray*)actionsForTarget:(id)target forControlEvent:(UIControlEvents)controlEvent;
 - (NSSet*)allTargets;
-- (UIControlEvents)allControlEvents;
+- (UIControlEvents)allControlEvents STUB_METHOD;
 
 - (void)sendActionsForControlEvents:(UIControlEvents)controlEvents;
 - (void)sendAction:(SEL)action to:(id)target forEvent:(UIEvent*)event;
@@ -137,6 +137,6 @@ UIKIT_EXPORT_CLASS
 - (void)sendControlEventsOnBack:(UIControlEvents)controlEvents;
 
 // ----- Internal ----------------
-- (void)sendEvent:(id)event mask:(unsigned)mask;
+- (void)sendEvent:(id)event mask:(unsigned)mask STUB_METHOD;
 // -------------------------------
 @end

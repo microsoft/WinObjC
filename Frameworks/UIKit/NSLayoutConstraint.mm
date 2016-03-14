@@ -613,6 +613,9 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return [nsConstraints autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     NSLayoutConstraint* ret = [super allocWithZone:zone];
     ret->priv = new NSLayoutConstraintPrivateState();
@@ -647,6 +650,9 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return [constraint autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     // Eg, <<NSLayoutConstraint: 0x1234>: <UIView: 0x9876>-(NSLayoutAttributeTop>=NSLayoutAttributeTop*1.0+30@1000)-<_UILayoutGuide:
     // 0xABCD>>
@@ -662,15 +668,23 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
                                       [self.secondItem description]];
 }
 
+/**
+ @Status Stub
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
-    TraceVerbose(TAG, L"Unsupported attempt to encode an NSLayoutConstraint");
+    UNIMPLEMENTED_WITH_MSG("Unsupported attempt to encode an NSLayoutConstraint");
+    THROW_NS_HR(E_NOTIMPL);
 }
 
 - (NSLayoutConstraintPrivateState*)_privateState {
     return priv;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     bool autoSpacing = false;
 
     _priority = UILayoutPriorityRequired;
@@ -743,6 +757,9 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     TraceVerbose(TAG, L"Deallocing NSLayoutConstraint");
     if ([self conformsToProtocol:@protocol(AutoLayoutConstraint)]) {

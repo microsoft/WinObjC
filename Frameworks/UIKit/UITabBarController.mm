@@ -28,6 +28,10 @@
 static const wchar_t* TAG = L"UITabBarController";
 
 @implementation UITabMoreTableView
+
+/**
+ @Status Interoperable
+*/
 - (unsigned)numberOfSectionsInTableView:(UITableView*)tableview {
     return 0;
 }
@@ -35,6 +39,10 @@ static const wchar_t* TAG = L"UITabBarController";
 @end
 
 @implementation UITabMoreController
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     [super init];
 
@@ -57,6 +65,10 @@ static const wchar_t* TAG = L"UITabBarController";
     id _delegate;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -75,6 +87,9 @@ static const wchar_t* TAG = L"UITabBarController";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
     _selectedIndex = -1;
 
@@ -207,6 +222,9 @@ static const wchar_t* TAG = L"UITabBarController";
     [self setSelectedIndex:index];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)loadView {
     if (_moreNavigationController == nil) {
         _moreNavigationController = [UITabMoreController new];
@@ -242,6 +260,9 @@ static const wchar_t* TAG = L"UITabBarController";
     return _moreNavigationController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)customizableViewControllers {
     TraceWarning(TAG, L"Warning: No customizableViewControllers");
     return _customizableControllers;
@@ -257,6 +278,9 @@ static const wchar_t* TAG = L"UITabBarController";
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCustomizableViewControllers:(NSArray*)controllers {
     _customizableControllers = controllers;
 }
@@ -325,6 +349,9 @@ static const wchar_t* TAG = L"UITabBarController";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)notifyViewWillAppear:(BOOL)animated {
     if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewWillAppear:animated];
@@ -333,6 +360,9 @@ static const wchar_t* TAG = L"UITabBarController";
     [super notifyViewWillAppear:animated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)notifyViewDidAppear:(BOOL)isAnimated {
     if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewDidAppear:isAnimated];
@@ -341,6 +371,9 @@ static const wchar_t* TAG = L"UITabBarController";
     [super notifyViewDidAppear:isAnimated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)notifyViewWillDisappear:(BOOL)isAnimated {
     if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewWillDisappear:isAnimated];
@@ -349,6 +382,9 @@ static const wchar_t* TAG = L"UITabBarController";
     [super notifyViewWillDisappear:isAnimated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)notifyViewDidDisappear:(BOOL)isAnimated {
     if (_mainView != nil) {
         [((UITabPane*)_tabPane)->_curController notifyViewDidDisappear:isAnimated];
@@ -357,6 +393,9 @@ static const wchar_t* TAG = L"UITabBarController";
     [super notifyViewDidDisappear:isAnimated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
     if ([_viewControllers count] > 0 && _selectedIndex != -1) {
         UIViewController* curController = [_viewControllers objectAtIndex:_selectedIndex];
@@ -368,6 +407,9 @@ static const wchar_t* TAG = L"UITabBarController";
     return [super shouldAutorotateToInterfaceOrientation:orientation];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     _layoutForRotation = true;
     if ([_viewControllers count] > 0 && _selectedIndex != -1) {
@@ -382,6 +424,9 @@ static const wchar_t* TAG = L"UITabBarController";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     if ([_viewControllers count] > 0 && _selectedIndex != -1) {
         UIViewController* curController = [_viewControllers objectAtIndex:_selectedIndex];
@@ -391,6 +436,9 @@ static const wchar_t* TAG = L"UITabBarController";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
     // We need to tell the tab bar to layout itself again:
     [_tabBar _setLayoutDirty];
@@ -403,6 +451,13 @@ static const wchar_t* TAG = L"UITabBarController";
     } else {
         [super didRotateFromInterfaceOrientation:orientation];
     }
+}
+
+/**
+ @Status Stub
+*/
+- (void)setViewControllers:(NSArray*)viewControllers animated:(BOOL)animated {
+    UNIMPLEMENTED();
 }
 
 @end

@@ -74,8 +74,8 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, assign) id<UIActionSheetDelegate> delegate;
-@property (nonatomic, assign) UIActionSheetStyle actionSheetStyle;
-@property (nonatomic, readonly, getter=isVisible) BOOL visible;
+@property (nonatomic, assign) UIActionSheetStyle actionSheetStyle STUB_PROPERTY;
+@property (nonatomic, readonly, getter=isVisible) BOOL visible STUB_PROPERTY;
 @property (nonatomic) NSInteger destructiveButtonIndex;
 @property (nonatomic) NSInteger cancelButtonIndex;
 @property (nonatomic, readonly) NSInteger firstOtherButtonIndex;

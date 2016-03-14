@@ -50,21 +50,21 @@ UIKIT_EXPORT_CLASS
 @interface UITextView : UIScrollView <UITextInputTraits, UITextInput, NSLayoutManagerDelegate>
 
 - (instancetype)initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)container;
-- (void)scrollRangeToVisible:(NSRange)range;
+- (void)scrollRangeToVisible:(NSRange)range STUB_METHOD;
 
-@property (nonatomic) UITextAlignment textAlignment; // stub, not yet implemented!
-@property (nonatomic) NSRange selectedRange;
+@property (nonatomic) UITextAlignment textAlignment STUB_PROPERTY;
+@property (nonatomic) NSRange selectedRange STUB_PROPERTY;
 @property (nonatomic, getter=isEditable) BOOL editable;
 @property (nonatomic, copy) NSString* text;
 @property (nonatomic, retain) UIColor* textColor;
 @property (nonatomic, retain) UIFont* font;
-@property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
+@property (nonatomic) UIDataDetectorTypes dataDetectorTypes STUB_PROPERTY;
 @property (nonatomic, assign) id<UITextViewDelegate> delegate;
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextStorage* textStorage;
 
-@property (nonatomic, readwrite, retain) UIView* inputAccessoryView;
-@property (nonatomic, readwrite, retain) UIView* inputView;
+@property (nonatomic, readwrite, retain) UIView* inputAccessoryView STUB_PROPERTY;
+@property (nonatomic, readwrite, retain) UIView* inputView STUB_PROPERTY;
 @property (nonatomic, copy) NSAttributedString* attributedText;
 @property (nonatomic, readonly) NSTextContainer* textContainer;
 @property (nonatomic, assign) UIEdgeInsets textContainerInset;

@@ -69,7 +69,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) CGFloat scale;
 @property (nonatomic, readonly) CGImageRef CGImage;
 @property (nonatomic, readonly) CGSize size;
-@property (nonatomic, readonly) NSArray* images;
+@property (nonatomic, readonly) NSArray* images STUB_PROPERTY;
 @property (nonatomic, readonly) NSInteger leftCapWidth;
 @property (nonatomic, readonly) NSInteger topCapHeight;
 @property (nonatomic, readonly) NSTimeInterval duration;

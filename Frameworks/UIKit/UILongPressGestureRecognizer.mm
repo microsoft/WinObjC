@@ -70,7 +70,8 @@ typedef struct {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {

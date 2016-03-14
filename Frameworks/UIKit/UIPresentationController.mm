@@ -23,7 +23,7 @@
 /**
  @Status Interoperable
 */
-- (id)initWithPresentedViewController:(UIViewController*)presentedViewController
+- (instancetype)initWithPresentedViewController:(UIViewController*)presentedViewController
              presentingViewController:(UIViewController*)presentingViewController {
     _presentingViewController = presentingViewController;
     _presentedViewController = presentedViewController;

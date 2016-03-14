@@ -302,6 +302,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     if (self == [UIFont class]) {
         g_fontCache = [NSMutableDictionary new];
@@ -338,6 +341,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIFont*)italicSystemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
@@ -570,7 +576,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -580,7 +585,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -590,7 +594,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -600,7 +603,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -610,7 +612,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -642,6 +643,9 @@ void loadFont(UIFont* self) {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _fileName = nil;
     _name = nil;

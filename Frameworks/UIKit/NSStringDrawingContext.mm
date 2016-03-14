@@ -22,6 +22,9 @@
 @implementation NSStringDrawingContext {
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         _actualScaleFactor = 1.0f;

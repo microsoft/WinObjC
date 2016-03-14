@@ -266,6 +266,9 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 
 @synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)alloc {
     if (sharedApplication != nil) {
         return sharedApplication;
@@ -1358,6 +1361,9 @@ static void printViews(id curView, int level) {
     return _curKeyWindow;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     windows = (id)CFArrayCreateMutable(NULL, 32, NULL);
 
@@ -1429,7 +1435,11 @@ static void printViews(id curView, int level) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)endReceivingRemoteControlEvents {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1497,6 +1507,9 @@ static void printViews(id curView, int level) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIWindow*)_popupWindow {
     static BOOL building = false;
     if (popupWindow == nil && building == FALSE) {
@@ -2012,6 +2025,9 @@ static void evaluateKeyboard(id self) {
     }
 }
 
+/**
+ @Public No
+*/
 + (void)setStarboardInternalLoggingLevel:(int)level {
     if (level > 0) {
         g_logErrors = true;
@@ -2431,6 +2447,9 @@ void UIShutdown() {
     [[NSRunLoop mainRunLoop] _wakeUp];
 }
 
+/**
+ @Public No
+*/
 @implementation WOCDisplayMode {
     float _magnification;
     float _fixedWidth, _fixedHeight;

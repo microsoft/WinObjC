@@ -23,7 +23,7 @@ static const wchar_t* TAG = L"UIClassSwapper";
 
 @implementation UIClassSwapper
 
-- (id)initWithCoder:(id)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _className = [[coder decodeObjectForKey:@"UIClassName"] copy];
     _originalClassName = [[coder decodeObjectForKey:@"UIOriginalClassName"] copy];
     const char* identifier = [_className UTF8String];

@@ -22,7 +22,7 @@
  @Status Stub
  @Notes
 */
-- (id)initWithCurrentLayout:(UICollectionViewLayout*)currentLayout nextLayout:(UICollectionViewLayout*)newLayout {
+- (instancetype)initWithCurrentLayout:(UICollectionViewLayout*)currentLayout nextLayout:(UICollectionViewLayout*)newLayout {
     UNIMPLEMENTED();
     return StubReturn();
 }

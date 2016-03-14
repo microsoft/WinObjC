@@ -673,6 +673,9 @@ static NSRange NSRangeFromCFRange(CFRange range) {
     [self invalidateDisplayForCharacterRange:invalidRange];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_textContainers release];
     [_ctLines release];

@@ -22,10 +22,15 @@
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableSet.h"
 #include "LoggingNative.h"
+#include "StubReturn.h"
 
 static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     _registeredActions = [NSMutableArray new];
     _activeTouches = [NSMutableArray new];
@@ -37,7 +42,11 @@ static const wchar_t* TAG = L"UIControl";
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _registeredActions = [[NSMutableArray alloc] init];
     _activeTouches = [NSMutableArray new];
 
@@ -61,6 +70,9 @@ static const wchar_t* TAG = L"UIControl";
     return self;
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     [super initAccessibility];
     self.isAccessibilityElement = TRUE;
@@ -70,7 +82,7 @@ static const wchar_t* TAG = L"UIControl";
     [_registeredActions addObject:connection];
 }
 
-/*
+/**
  @Status Interoperable
 */
 - (void)sendAction:(SEL)sel to:(id)target forEvent:(UIEvent*)event {
@@ -90,7 +102,7 @@ static const wchar_t* TAG = L"UIControl";
     }
 }
 
-/*
+/**
  @Status Interoperable
 */
 - (void)sendActionsForControlEvents:(UIControlEvents)mask {
@@ -268,7 +280,11 @@ static const wchar_t* TAG = L"UIControl";
     [self setNeedsLayout];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(UILabel*)label {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -343,6 +359,9 @@ static const wchar_t* TAG = L"UIControl";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
         TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
@@ -367,6 +386,9 @@ static const wchar_t* TAG = L"UIControl";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
         TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
@@ -393,6 +415,9 @@ static const wchar_t* TAG = L"UIControl";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
     _touchInside = FALSE;
 
@@ -416,6 +441,9 @@ static const wchar_t* TAG = L"UIControl";
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
     _touchInside = FALSE;
 
@@ -461,6 +489,9 @@ static const wchar_t* TAG = L"UIControl";
 - (void)endTrackingWithTouch:(NSSet*)touchSet withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendControlEventsOnBack:(UIControlEvents)events {
     if (events == 0) {
         [self setBackButtonDelegate:nil action:NULL withParam:0];
@@ -474,11 +505,29 @@ static const wchar_t* TAG = L"UIControl";
     [self sendActionsForControlEvents:_sendControlEventsOnBack];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_registeredActions release];
     [_activeTouches release];
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+*/
+- (UIControlEvents)allControlEvents {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)sendEvent:(id)event mask:(unsigned)mask {
+    UNIMPLEMENTED();
 }
 
 @end

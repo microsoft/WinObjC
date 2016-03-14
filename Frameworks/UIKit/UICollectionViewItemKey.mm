@@ -93,7 +93,7 @@ NSString* UICollectionViewItemTypeToString(UICollectionViewItemType type) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UICollectionViewItemKey* itemKey = [self.class new];
     itemKey.indexPath = self.indexPath;
     itemKey.type = self.type;

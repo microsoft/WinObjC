@@ -316,6 +316,9 @@ enum {
 };
 typedef uint32_t WOCDeviceType;
 
+/**
+ @Public No
+*/
 @interface WOCDisplayMode : NSObject
 
 @property (nonatomic) float magnification;

@@ -53,23 +53,23 @@ NSString* const UIFontFeatureSelectorIdentifierKey = @"UIFontFeatureSelectorIden
 
 NSString* const SystemFontName = @"SegoeUI";
 
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightUltraLight = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightThin = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightLight = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightRegular = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightMedium = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightSemibold = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightBold = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightHeavy = StubConstant();
-/** @Status Stub */
+/**@Status Stub */
 const CGFloat UIFontWeightBlack = StubConstant();
 
 /**
@@ -88,7 +88,7 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
-  @Status        Interoperable
+ @Status Interoperable
 */
 + (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName size:(CGFloat)size {
     UIFontDescriptor* fontDescriptor = [[UIFontDescriptor alloc] init];
@@ -106,7 +106,7 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
-  @Status        Caveat
+ @Status Caveat
   @Notes         Force to use default font name and size.
 */
 + (UIFontDescriptor*)preferredFontDescriptorWithTextStyle:(NSString*)style {
@@ -154,7 +154,7 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
-  @Status        Interoperable
+ @Status Interoperable
 */
 - (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits {
     UIFontDescriptor* result = [UIFontDescriptor fontDescriptorWithDescriptor:self size:self->_size];
@@ -163,7 +163,7 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
-  @Status        Stub
+ @Status Stub
 */
 - (instancetype)initWithFontAttributes:(NSDictionary*)attributes {
     UNIMPLEMENTED();
@@ -175,37 +175,125 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
-  @Status        Interoperable
+ @Status Interoperable
 */
 - (UIFontDescriptorSymbolicTraits)symbolicTraits {
     return self->_traits;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _name = nil;
     [super dealloc];
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (instancetype)initWithCoder:(NSCoder*)coder {
++ (UIFontDescriptor*)fontDescriptorWithFontAttributes:(NSDictionary*)attributes {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
-- (void)encodeWithCoder:(NSCoder*)coder {
++ (UIFontDescriptor*)fontDescriptorWithName:(NSString*)fontName matrix:(CGAffineTransform)matrix {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIFontDescriptor*)fontDescriptorByAddingAttributes:(NSDictionary*)attributes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIFontDescriptor*)fontDescriptorWithFace:(NSString*)newFace {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIFontDescriptor*)fontDescriptorWithMatrix:(CGAffineTransform)matrix {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (NSDictionary*)fontAttributes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (id)objectForKey:(NSString*)anAttribute {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
 }
 
 /**
-@Status Stub
-@Notes
+ @Status Stub
 */
 + (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();

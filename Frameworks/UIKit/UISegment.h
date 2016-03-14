@@ -35,9 +35,9 @@
 - (unsigned)position;
 - (BOOL)isEnabled;
 - (void)dealloc;
-- (id)initWithCoder:(id)coder;
-- (id)initWithTitle:(id)title;
-- (id)initWithImage:(id)image;
+- (instancetype)initWithCoder:(id)coder;
+- (instancetype)initWithTitle:(id)title;
+- (instancetype)initWithImage:(id)image;
 - (id)setDelegate:(id)delegate;
 - (id)setTitle:(id)title;
 - (id)setImage:(id)image;
@@ -57,5 +57,5 @@
 - (id)_setDividerImage:(id)image;
 - (id)_setNoDefaultImages:(BOOL)noDefault;
 - (id)_setTintColor:(id)color;
-+ (id)initialize;
++ (instancetype)initialize;
 @end

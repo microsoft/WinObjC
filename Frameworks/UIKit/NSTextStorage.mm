@@ -16,6 +16,7 @@
 
 #import "Starboard.h"
 
+#import "StubReturn.h"
 #import "UIKit/NSParagraphStyle.h"
 #import "UIFontInternal.h"
 NSString* const NSTextStorageDidProcessEditingNotification = @"NSTextStorageDidProcessEditingNotification";
@@ -33,6 +34,9 @@ NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWil
     _defaultAttributes = [@{ NSFontAttributeName : [UIFont defaultFont] } mutableCopy];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     _composed = [[NSMutableAttributedString alloc] init];
     [self _initStorage];
@@ -76,6 +80,37 @@ NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWil
     }
 }
 
+/**
+ @Status Stub
+*/
+- (void)edited:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)ensureAttributesAreFixedInRange:(NSRange)range {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)invalidateAttributesInRange:(NSRange)range {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)removeLayoutManager:(NSLayoutManager*)aLayoutManager {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)setDefaultAttribute:(id)attr forKey:(NSString*)key {
     if (_defaultAttributes == nil) {
         _defaultAttributes = [NSMutableDictionary new];
@@ -120,32 +155,53 @@ NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWil
     return [self _combinedAttributes:ret];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_layoutManagers release];
     [_defaultAttributes release];
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToAttributedString:(NSAttributedString*)other {
     return [_composed isEqualToAttributedString:other];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)length {
     return [_composed length];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)string {
     return [_composed string];
 }
 
-- attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
+/**
+ @Status Interoperable
+*/
+- (id)attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range {
     return [_composed attribute:name atIndex:location effectiveRange:range];
 }
 
-- attribute:(NSString*)name atIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange {
+/**
+ @Status Interoperable
+*/
+- (id)attribute:(NSString*)name atIndex:(NSUInteger)location longestEffectiveRange:(NSRange*)range inRange:(NSRange)inRange {
     return [_composed attribute:name atIndex:location longestEffectiveRange:range inRange:inRange];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)enumerateAttribute:(NSString*)attrName
                    inRange:(NSRange)enumerationRange
                    options:(NSAttributedStringEnumerationOptions)opts
@@ -153,64 +209,97 @@ NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWil
     [_composed enumerateAttribute:attrName inRange:enumerationRange options:opts usingBlock:block];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableString*)mutableString {
     return [_composed mutableString];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addAttribute:(NSString*)name value:(id)value range:(NSRange)range {
     [self beginEditing];
     [_composed addAttribute:name value:value range:range];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addAttributes:(NSDictionary*)attributes range:(NSRange)range {
     [self beginEditing];
     [_composed addAttributes:attributes range:range];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)appendAttributedString:(NSAttributedString*)attributedString {
     [self beginEditing];
     [_composed appendAttributedString:attributedString];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteCharactersInRange:(NSRange)range {
     [self beginEditing];
     [_composed deleteCharactersInRange:range];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAttribute:(NSString*)name range:(NSRange)range {
     [self beginEditing];
     [_composed removeAttribute:name range:range];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)insertAttributedString:(NSAttributedString*)attributedString atIndex:(NSUInteger)index {
     [self beginEditing];
     [_composed insertAttributedString:attributedString atIndex:index];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceCharactersInRange:(NSRange)range withString:(NSString*)string {
     [self beginEditing];
     [_composed replaceCharactersInRange:range withString:string];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)replaceCharactersInRange:(NSRange)range withAttributedString:(NSAttributedString*)attributedString {
     [self beginEditing];
     [_composed replaceCharactersInRange:range withAttributedString:attributedString];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAttributes:(NSDictionary*)attributes range:(NSRange)range {
     [self beginEditing];
     [_composed setAttributes:attributes range:range];
     [self endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setAttributedString:(NSAttributedString*)attributedString {
     [self beginEditing];
     [_composed setAttributedString:attributedString];
@@ -253,4 +342,5 @@ NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWil
         [self processEditing];
     }
 }
+
 @end

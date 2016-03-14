@@ -45,7 +45,7 @@
 #pragma mark - Static
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 + (instancetype)layoutAttributesForCellWithIndexPath:(NSIndexPath*)indexPath {
     UICollectionViewLayoutAttributes* attributes = [self new];
@@ -56,7 +56,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 + (instancetype)layoutAttributesForSupplementaryViewOfKind:(NSString*)elementKind withIndexPath:(NSIndexPath*)indexPath {
     UICollectionViewLayoutAttributes* attributes = [self new];
@@ -67,7 +67,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 + (instancetype)layoutAttributesForDecorationViewOfKind:(NSString*)elementKind withIndexPath:(NSIndexPath*)indexPath {
     UICollectionViewLayoutAttributes* attributes = [self new];
@@ -81,9 +81,9 @@
 #pragma mark - NSObject
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)init {
+- (instancetype)init {
     if ((self = [super init])) {
         _alpha = 1.f;
         _transform3D = CATransform3DIdentity;
@@ -92,14 +92,14 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSUInteger)hash {
     return ([_elementKind hash] * 31) + [_indexPath hash];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (BOOL)isEqual:(id)other {
     if ([other isKindOfClass:self.class]) {
@@ -113,7 +113,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSString*)description {
     return [NSString stringWithFormat:@"<%@: %p frame:%@ indexPath:%@ elementKind:%@>",
@@ -128,7 +128,7 @@
 #pragma mark - Public
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewItemType)representedElementCategory {
     return _elementCategory;
@@ -138,56 +138,56 @@
 #pragma mark - Private
 
 /**
-   @Public No
+ @Public No
 */
 - (NSString*)representedElementKind {
     return self.elementKind;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (BOOL)isDecorationView {
     return self.representedElementCategory == UICollectionViewItemTypeDecorationView;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (BOOL)isSupplementaryView {
     return self.representedElementCategory == UICollectionViewItemTypeSupplementaryView;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (BOOL)isPinnedSupplementaryView {
     return (self.representedElementCategory == UICollectionViewItemTypeSupplementaryView) && (_layoutFlags.isPinned);
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (BOOL)isCell {
     return self.representedElementCategory == UICollectionViewItemTypeCell;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)updateFrame {
     _frame = (CGRect){ { _center.x - _size.width / 2, _center.y - _size.height / 2 }, _size };
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)setPinned:(BOOL)pinned {
     _layoutFlags.isPinned = pinned ? 1 : 0;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)setSize:(CGSize)size {
     _size = size;
@@ -195,7 +195,7 @@
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)setCenter:(CGPoint)center {
     _center = center;
@@ -203,7 +203,7 @@
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)setFrame:(CGRect)frame {
     _frame = frame;
@@ -215,9 +215,9 @@
 #pragma mark - NSCopying
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UICollectionViewLayoutAttributes* layoutAttributes = [self.class new];
     layoutAttributes.indexPath = self.indexPath;
     layoutAttributes.elementKind = self.elementKind;

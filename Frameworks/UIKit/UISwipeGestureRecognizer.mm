@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Starboard.h>
+#import <StubReturn.h>
 #import <math.h>
 
 #import <UIKit/UISwipeGestureRecognizer.h>
@@ -36,6 +37,10 @@ static void commonInit(UISwipeGestureRecognizer* self) {
     self->_numberOfTouchesRequired = 1;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         commonInit(self);
@@ -55,6 +60,9 @@ static void commonInit(UISwipeGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
     if (self = [super initWithTarget:target action:selector]) {
         commonInit(self);
@@ -63,6 +71,9 @@ static void commonInit(UISwipeGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         commonInit(self);
@@ -101,6 +112,9 @@ static void commonInit(UISwipeGestureRecognizer* self) {
     return _direction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([touches count] != 1) {
         _state = UIGestureRecognizerStateFailed;
@@ -111,6 +125,9 @@ static void commonInit(UISwipeGestureRecognizer* self) {
     _startTime = [touch timestamp];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([touches count] != 1) {
         _state = UIGestureRecognizerStateFailed;
@@ -139,10 +156,17 @@ static void commonInit(UISwipeGestureRecognizer* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+ // Intended no-op
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationInView:(UIView*)viewAddr {
-    return CGPointMake(0, 0);
+    return StubReturn();
 }
 @end

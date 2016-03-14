@@ -118,6 +118,9 @@ static void initWebKit(UIWebView* self) {
     [self setNeedsLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     [super init];
 
@@ -126,6 +129,10 @@ static void initWebKit(UIWebView* self) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -134,6 +141,9 @@ static void initWebKit(UIWebView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)rect {
     [super initWithFrame:rect];
 
@@ -259,6 +269,9 @@ static void initWebKit(UIWebView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _delayLoadURL = nil;
     [_xamlWebControl removeLoadCompletedEvent:_xamlLoadCompletedEventCookie];
@@ -276,12 +289,24 @@ static void initWebKit(UIWebView* self) {
     return _scrollView;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setScrollsToTop:(BOOL)scrollsToTop {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAllowsInlineMediaPlayback:(BOOL)allow {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setMediaPlaybackRequiresUserAction:(BOOL)allow {
+    UNIMPLEMENTED();
 }
 @end

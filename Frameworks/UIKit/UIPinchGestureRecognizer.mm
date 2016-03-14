@@ -55,6 +55,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     UITouch* touch = [touches anyObject];
 
@@ -68,6 +71,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     UITouch* touch = [touches anyObject];
 
@@ -97,6 +103,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     UITouch* touch = [touches anyObject];
 
@@ -165,6 +174,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     _touches[1]._firstTouchPos = _touches[1]._lastTouchPos;
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)startScale {
     return _startScale;
 }
@@ -180,6 +192,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     return _touchedView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)locationInView:(UIView*)viewAddr {
     CGPoint pos1, pos2;
 
@@ -192,6 +207,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
     [super initWithTarget:target action:selector];
 
@@ -202,6 +220,9 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     [super init];
 
@@ -212,6 +233,10 @@ static void deleteTouch(UIPinchGestureRecognizer* self, UITouch* touch) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes Always returns 2.
+*/
 - (NSUInteger)numberOfTouches {
     return 2;
 }

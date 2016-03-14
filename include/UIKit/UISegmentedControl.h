@@ -50,7 +50,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, assign, readonly) NSUInteger numberOfSegments;
 @property (nonatomic, assign) NSInteger selectedSegmentIndex;
 @property (nonatomic, getter=isMomentary) BOOL momentary;
-@property (nonatomic) BOOL apportionsSegmentWidthsByContent;
+@property (nonatomic) BOOL apportionsSegmentWidthsByContent STUB_PROPERTY;
 
 - (id)initWithItems:(NSArray*)items;
 
@@ -61,12 +61,12 @@ UIKIT_EXPORT_CLASS
 - (UIImage*)imageForSegmentAtIndex:(NSUInteger)segment;
 
 - (void)setEnabled:(BOOL)enabled forSegmentAtIndex:(NSUInteger)segment;
-- (BOOL)isEnabledForSegmentAtIndex:(NSUInteger)segment;
+- (BOOL)isEnabledForSegmentAtIndex:(NSUInteger)segment STUB_METHOD;
 
 - (void)setDividerImage:(UIImage*)dividerImage
     forLeftSegmentState:(UIControlState)leftState
       rightSegmentState:(UIControlState)rightState
-             barMetrics:(UIBarMetrics)barMetrics;
+             barMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
 
 - (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state;
 - (void)setBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics;
@@ -75,7 +75,7 @@ UIKIT_EXPORT_CLASS
 - (void)insertSegmentWithTitle:(NSString*)title atIndex:(NSUInteger)segment animated:(BOOL)animated;
 
 - (void)setWidth:(CGFloat)width forSegmentAtIndex:(NSUInteger)segment;
-- (void)setContentOffset:(CGSize)offset forSegmentAtIndex:(NSUInteger)segment;
+- (void)setContentOffset:(CGSize)offset forSegmentAtIndex:(NSUInteger)segment STUB_METHOD;
 - (void)insertSegmentWithImage:(UIImage*)image atIndex:(NSUInteger)segment animated:(BOOL)animated;
 
 @end

@@ -26,6 +26,11 @@
     idretain _keyboardCropper;
     idretaintype(UIRefreshControl) _refreshControl;
 }
+
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -48,6 +53,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [super init];
 }
@@ -64,6 +72,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)loadView {
     if ([self nibName] != nil) {
         [super loadView];
@@ -90,6 +101,9 @@
     [self setView:tableView];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setView:(UIView*)view {
     _keyboardCropper = nil;
     [super setView:view];
@@ -101,6 +115,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setStaticDataSource:(id<UITableViewDataSource>)dataSource {
     _staticSource = dataSource;
 }
@@ -112,6 +129,9 @@
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)numberOfSectionsInTableView:(UITableView*)tableView {
     if (_staticSource != nil) {
         return [_staticSource numberOfSections];
@@ -120,6 +140,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)index {
     if (_staticSource != nil) {
         return [[_staticSource sectionForIndex:index] numberOfRows];
@@ -129,6 +152,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)index {
     if (_staticSource != nil) {
         id section = [_staticSource sectionForIndex:index];
@@ -138,6 +164,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (float)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)index {
     if (_staticSource != nil) {
         UITableViewSection* section = [_staticSource sectionForIndex:[index section]];
@@ -148,6 +177,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)index {
     if (_staticSource != nil) {
         UITableViewSection* section = [_staticSource sectionForIndex:[index section]];
@@ -175,6 +207,9 @@
     return _refreshControl;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     [super setEditing:editing animated:animated];
     id view = [self view];
@@ -184,6 +219,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [priv->view setDelegate:nil];
     [priv->view setDataSource:nil];

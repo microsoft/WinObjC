@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AssertARCEnabled.h"
+#import <StubReturn.h>
 
 @interface UICollectionViewController () {
     UICollectionViewLayout* _layout;
@@ -39,7 +40,11 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     self = [super initWithCoder:coder];
     if (self) {
         self.layout = [UICollectionViewFlowLayout new];
@@ -50,9 +55,9 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout*)layout {
+- (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout*)layout {
     if ((self = [super init])) {
         self.layout = layout;
         self.clearsSelectionOnViewWillAppear = YES;
@@ -64,6 +69,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIViewController
 
+/**
+ @Status Interoperable
+*/
 - (void)loadView {
     [super loadView];
 
@@ -87,6 +95,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -104,6 +115,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -122,6 +136,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Lazy load the collection view
 
+/**
+ @Status Interoperable
+*/
 - (UICollectionView*)collectionView {
     if (!_collectionView) {
         _collectionView = [[UICollectionView alloc] initWithFrame:UIScreen.mainScreen.bounds collectionViewLayout:self.layout];
@@ -152,13 +169,21 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UICollectionViewDataSource
 
+/**
+ @Status Stub
+*/
 - (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 0;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
+    UNIMPLEMENTED();
     [self doesNotRecognizeSelector:_cmd];
-    return nil;
+    return StubReturn();
 }
 
 @end

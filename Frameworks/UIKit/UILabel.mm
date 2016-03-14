@@ -103,12 +103,19 @@
 }
 
 #if USE_TEXT_LAYER
-+ (id)layerClass {
+/**
+ @Status Interoperable
+*/
++ (Class)layerClass {
     return [CATextLayer class];
 }
 #endif
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
     _text = [coder decodeObjectForKey:@"UIText"];
@@ -159,6 +166,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -180,13 +190,16 @@
     return self;
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     [super initAccessibility];
     self.accessibilityTraits = UIAccessibilityTraitStaticText;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
     if (![_font isEqual:font]) {
@@ -332,6 +345,9 @@
     return _shadowOffset;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundColor:(UIColor*)colorref {
     if (_textLayer != nil) {
         [_textLayer setBackgroundColor:(CGColorRef)colorref];
@@ -435,6 +451,9 @@
     return _highlightedTextColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)rect {
     CGRect bounds = self.bounds;
     CGRect drawArea = CGRectMake(0, 0, bounds.size.width, bounds.size.height);
@@ -510,7 +529,7 @@
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setMinimumScaleFactor:(float)scale {
 }
@@ -522,6 +541,9 @@
     return _adjustFontSize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 0 };
 
@@ -579,6 +601,10 @@
     return ret;
 }
 
+
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _text = nil;
     _font = nil;
@@ -592,6 +618,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (_adjustFontSize) {
         [self adjustFontSizeToFit];
@@ -601,6 +630,9 @@
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
 

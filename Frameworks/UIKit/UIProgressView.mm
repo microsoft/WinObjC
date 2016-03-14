@@ -59,6 +59,10 @@ static void sizeViews(UIProgressView* self, bool animated) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -90,6 +94,9 @@ static void sizeViews(UIProgressView* self, bool animated) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -196,10 +203,16 @@ static void sizeViews(UIProgressView* self, bool animated) {
     return _value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     sizeViews(self, false);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _trackImage = nil;
 
