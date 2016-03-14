@@ -22,14 +22,19 @@ const static int s_mountainBias = -25200;
 const static int s_centralBias = -21600;
 const static int s_easternBias = -18000;
 
-TEST(Foundation, NSTimeZone) {
+TEST(NSTimeZone, SystemTimeZoneTests) {
     // Do the [NSTimeZone systemTimeZone] test if we're in a particular locale.
     NSLocale* currentLocale = [NSLocale currentLocale];
 
     if ([currentLocale.localeIdentifier isEqualToString:@"en_US"]) {
         NSTimeZone* systemTZ = [NSTimeZone systemTimeZone];
         NSTimeZone* expectedTZ = nil;
-        switch (systemTZ.secondsFromGMT) {
+        NSInteger timeZoneBias = systemTZ.secondsFromGMT;
+        if ([systemTZ isDaylightSavingTime]) {
+            timeZoneBias -= systemTZ.daylightSavingTimeOffset;
+        }
+
+        switch (timeZoneBias) {
             case s_pacificBias:
                 expectedTZ = [NSTimeZone timeZoneWithName:@"America/Los_Angeles"];
                 break;
@@ -46,7 +51,9 @@ TEST(Foundation, NSTimeZone) {
                 expectedTZ = [NSTimeZone timeZoneWithName:@"GMT"];
                 break;
         }
-        ASSERT_OBJCEQ([systemTZ abbreviation], [expectedTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ abbreviation], [systemTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ name], [systemTZ name]);
+        ASSERT_EQ([expectedTZ secondsFromGMT], [systemTZ secondsFromGMT]);
     } else if ([currentLocale.localeIdentifier isEqualToString:@"es_MX"]) {
         NSTimeZone* systemTZ = [NSTimeZone systemTimeZone];
         NSTimeZone* expectedTZ = nil;
@@ -61,7 +68,9 @@ TEST(Foundation, NSTimeZone) {
                 expectedTZ = [NSTimeZone timeZoneWithName:@"GMT"];
                 break;
         }
-        ASSERT_OBJCEQ([systemTZ abbreviation], [expectedTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ abbreviation], [systemTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ name], [systemTZ name]);
+        ASSERT_EQ([expectedTZ secondsFromGMT], [systemTZ secondsFromGMT]);
     } else {
         LOG_INFO("[NSTimeZone localizedStringFromDate] not tested. Current locale is not covered by test.\n");
     }

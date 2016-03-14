@@ -39,14 +39,16 @@
 @property (nonatomic, readwrite) NSInteger secondsFromGMT;
 @end
 
+static const wchar_t* TAG = L"NSTimeZone";
+
 static NSTimeZone* s_defaultTimeZone;
 static StrongId<NSDictionary> s_abbreviationDictionary;
 static StrongId<NSTimeZone> s_systemTimeZone;
-static NSArray* s_KnownTimeZoneNames;
+static StrongId<NSArray> s_knownTimeZoneNames;
 
 // This value is negative as TIME_ZONE_INFORMATION has an opposite sign for bias than icu.
 
-const static int c_minutesToMilliseconds = -60000;
+const static int c_minutesToMillisecondsBias = -60000;
 
 // Convert NSTimeZoneNameStyle to ICU EDisplayType.
 icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZoneNameStyle* style, UBool& isDaylight) {
@@ -85,55 +87,80 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 + (void)initialize {
     [self _setDefaultAbbreviationDictionary];
-    s_KnownTimeZoneNames = [[self abbreviationDictionary] allValues];
+    s_knownTimeZoneNames = [[self abbreviationDictionary] allValues];
 }
 
 + (void)_setTimeZoneToSystemSettings:(NSTimeZone*)timeZone {
-    s_systemTimeZone = timeZone;
+    @synchronized(self) {
+        s_systemTimeZone = timeZone;
+        [s_systemTimeZone setDaylightSavingTimeOffset:[timeZone daylightSavingTimeOffsetForDate:[NSDate date]]];
+    }
 }
 
 + (NSTimeZone*)_getSystemTZ {
     @synchronized(self) {
         if (!s_systemTimeZone) {
             // Get current locale.
-            NSLocale* currentLocale = [NSLocale currentLocale];
-            NSString* countryCode = [currentLocale getNSLocaleCountryCode];
+            NSString* countryCode = [NSLocale _currentNSLocaleCountryCode];
 
             // Get time zone info from system.
-            TIME_ZONE_INFORMATION timeZoneInfo;
-            GetTimeZoneInformation(&timeZoneInfo);
-
-            // TIME_ZONE_INFORMATION offset is in minutes, icu needs milliseconds
-            int milliseconds = timeZoneInfo.Bias * c_minutesToMilliseconds;
-
-            UErrorCode status = U_ZERO_ERROR;
-            icu::StringEnumeration* timeZoneIds =
-                icu::TimeZone::createTimeZoneIDEnumeration(UCAL_ZONE_TYPE_ANY, [countryCode UTF8String], &milliseconds, status);
+            DYNAMIC_TIME_ZONE_INFORMATION dtz;
+            int daylightSavings = GetDynamicTimeZoneInformation(&dtz);
 
             NSTimeZone* systemTimeZone = [[NSTimeZone alloc] init];
 
-            // Did we find a suitable time zone?
-            if (timeZoneIds->count(status) > 0) {
-                const UnicodeString* zoneId = timeZoneIds->snext(status);
-
-                systemTimeZone->_icuTZ = icu_48::TimeZone::createTimeZone(*zoneId);
+            if (daylightSavings == TIME_ZONE_ID_INVALID) {
+                systemTimeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+                TraceError(TAG, L"Could not retrieve Dynamic Time Zone Information : %d.", GetLastError());
+                [self _setTimeZoneToSystemSettings:systemTimeZone];
             } else {
-                // Try again without country code.
-                icu::StringEnumeration* timeZoneIds =
-                    icu::TimeZone::createTimeZoneIDEnumeration(UCAL_ZONE_TYPE_ANY, NULL, &milliseconds, status);
-
-                if (timeZoneIds->count(status) > 0) {
-                    const UnicodeString* zoneId = timeZoneIds->snext(status);
-
-                    systemTimeZone->_icuTZ = icu_48::TimeZone::createTimeZone(*zoneId);
+                int windowsBias = 0;
+                int millisecondsBias = 0;
+                if (daylightSavings == TIME_ZONE_ID_DAYLIGHT) {
+                    windowsBias = (dtz.Bias + dtz.DaylightBias);
                 } else {
-                    // There are no predefined time zones that match the system settings + language
-
-                    systemTimeZone = [NSTimeZone timeZoneWithName:@"GMT"];
+                    windowsBias = (dtz.Bias + dtz.StandardBias);
                 }
-            }
 
-            [self _setTimeZoneToSystemSettings:systemTimeZone];
+                millisecondsBias = (dtz.Bias + dtz.StandardBias) * c_minutesToMillisecondsBias;
+
+                UErrorCode status = U_ZERO_ERROR;
+
+                icu::StringEnumeration* timeZoneIds =
+                    icu::TimeZone::createTimeZoneIDEnumeration(UCAL_ZONE_TYPE_ANY, [countryCode UTF8String], &millisecondsBias, status);
+
+                NSTimeZone* systemTimeZone = [[NSTimeZone alloc] init];
+
+                BOOL gotICUTimeZone = NO;
+
+                // Did we find a suitable time zone?
+                if (!U_FAILURE(status) && timeZoneIds->count(status) > 0) {
+                    if (!U_FAILURE(status)) {
+                        const UnicodeString* zoneId = timeZoneIds->snext(status);
+                        if (!U_FAILURE(status)) {
+                            systemTimeZone->_icuTZ = icu_48::TimeZone::createTimeZone(*zoneId);
+                            gotICUTimeZone = YES;
+                        }
+                    }
+                }
+                if (!gotICUTimeZone) {
+                    if (U_FAILURE(status)) {
+                        TraceError(TAG,
+                                   L"ICU could not create proper time zone. Creating generic time zone. ICU Error code : %hs.",
+                                   u_errorName(status));
+                    }
+
+                    // The user's region settings do not match the time zone set. The best we can do is get a generic time zone
+                    // that matches the system time zone.
+                    int hourOffset = -windowsBias / 60;
+                    int minuteOffset = -windowsBias % 60;
+
+                    NSString* genericTimeZone = [NSString stringWithFormat:@"GMT%+d:%02d", hourOffset, minuteOffset];
+                    systemTimeZone = [NSTimeZone timeZoneWithName:genericTimeZone];
+                }
+
+                [self _setTimeZoneToSystemSettings:systemTimeZone];
+            }
         }
         return s_systemTimeZone;
     }
@@ -181,7 +208,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Interoperable
 */
 + (NSArray*)knownTimeZoneNames {
-    return s_KnownTimeZoneNames;
+    return s_knownTimeZoneNames;
 }
 
 - (icu::TimeZone*)_createICUTimeZone {
@@ -387,8 +414,11 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Stub
 */
 - (NSTimeInterval)daylightSavingTimeOffsetForDate:(NSDate*)date {
-    UNIMPLEMENTED();
-    return 0;
+    UErrorCode status = U_ZERO_ERROR;
+    int32_t stOffset;
+    int32_t dtOffset;
+    _icuTZ->getOffset([date timeIntervalSince1970] * 1000.0, FALSE, stOffset, dtOffset, status);
+    return (NSTimeInterval)dtOffset / 1000;
 }
 
 /**
@@ -404,16 +434,18 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 - (NSString*)name {
     icu_48::UnicodeString n;
-    _icuTZ->getDisplayName(n);
+    _icuTZ->getID(n);
     return NSStringFromICU(n);
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Displays correct abbreviation but with slightly incorrect formatting on the offset. GMT-07:00 vs GMT-7
 */
 - (NSString*)abbreviation {
     icu_48::UnicodeString n;
-    _icuTZ->getID(n);
+    UBool useDaylight = [self isDaylightSavingTime];
+    _icuTZ->getDisplayName(useDaylight, icu::TimeZone::EDisplayType::SHORT, n);
     return NSStringFromICU(n);
 }
 
@@ -421,9 +453,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Interoperable
 */
 - (NSString*)description {
-    icu_48::UnicodeString n;
-    _icuTZ->getDisplayName(n);
-    return NSStringFromICU(n);
+    return [NSString stringWithFormat:@"%@ (%@) %ld", [self name], [self abbreviation], (long)[self secondsFromGMT]];
 }
 
 /**
@@ -447,6 +477,10 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Interoperable
 */
 - (NSInteger)secondsFromGMT {
+    UBool useDaylight = [self isDaylightSavingTime];
+    if (useDaylight) {
+        return (_icuTZ->getRawOffset() + _icuTZ->getDSTSavings()) / 1000;
+    }
     return _icuTZ->getRawOffset() / 1000;
 }
 
@@ -470,8 +504,13 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 - (BOOL)isDaylightSavingTimeForDate:(NSDate*)date {
     UErrorCode status = U_ZERO_ERROR;
+    BOOL isDaylight = _icuTZ->inDaylightTime([date timeIntervalSince1970] * 1000.0, status) && _icuTZ->useDaylightTime();
+    if (U_FAILURE(status)) {
+        TraceError(TAG, L"ICU Status Error. Error Code : %hs.", u_errorName(status));
+        return NO;
+    }
 
-    return _icuTZ->inDaylightTime([date timeIntervalSince1970] * 1000.0, status);
+    return isDaylight;
 }
 
 /**

@@ -26,7 +26,9 @@
 #include <wrl/client.h>
 #include <wrl/wrappers/corewrappers.h>
 #include <windows.system.userprofile.h>
+#include <windows.globalization.h>
 #include <COMIncludes_End.h>
+#include "StringHelpers.h"
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::System::UserProfile;
@@ -83,6 +85,7 @@ static NSLocale* _currentLocale;
     // NSArray<NSString*>* _ISOLanguageCodes;
     NSArray* _ISOLanguageCodes;
     icu::Locale _locale;
+    StrongId<NSString> _localeCountryCode;
 }
 
 - (NSArray*)_getUserPreferredLanguages {
@@ -126,10 +129,26 @@ static NSLocale* _currentLocale;
  * @return {NSString*} the key for the locale country code.
  */
 - (NSString*)getNSLocaleCountryCode {
-    if ([_userPreferredLanguagesSeperatedByString count] > 1) {
-        return [_userPreferredLanguagesSeperatedByString objectAtIndex:1];
-    } else {
-        return nil;
+    if (!_localeCountryCode) {
+        _localeCountryCode = [NSLocale _currentNSLocaleCountryCode];
+    }
+    return _localeCountryCode;
+}
+
+/**
+ * Helper method for retrieving system's region setting.
+ */
++ (NSString*)_currentNSLocaleCountryCode {
+    @synchronized(self) {
+        ComPtr<IGlobalizationPreferencesStatics> globalizationPreferences;
+        RETURN_NULL_IF_FAILED(
+            GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_System_UserProfile_GlobalizationPreferences).Get(),
+                                 &globalizationPreferences));
+
+        Wrappers::HString regionSetting;
+        RETURN_NULL_IF_FAILED(globalizationPreferences->get_HomeGeographicRegion(regionSetting.GetAddressOf()));
+
+        return Strings::WideToNSString(regionSetting.Get());
     }
 }
 
@@ -166,6 +185,8 @@ static NSLocale* _currentLocale;
 */
 - (instancetype)init {
     if (self = [super init]) {
+        // Initialize region
+        _localeCountryCode = [NSLocale _currentNSLocaleCountryCode];
         // Initialize user preferred languagess
         [self _initUserPreferredLanguages];
         // Initialize user preferred currencies

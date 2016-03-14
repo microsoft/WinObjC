@@ -58,7 +58,7 @@ static const wchar_t* TAG = L"NSRegularExpression";
 // Helper function for logging an ICU error code.
 static bool _U_LogIfError(UErrorCode status) {
     if (U_FAILURE(status)) {
-        TraceError(TAG, L"ICU Status Error. Error Code : %s.", u_errorName(status));
+        TraceError(TAG, L"ICU Status Error. Error Code : %hs.", u_errorName(status));
         return true;
     }
     return false;
