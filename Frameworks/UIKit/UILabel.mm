@@ -50,7 +50,7 @@
 }
 
 - (void)adjustFontSizeToFit {
-    if (_numberOfLines != 1) {
+    if (_numberOfLines == 0) {
         [self adjustTextLayerSize];
         return;
     }
@@ -64,13 +64,18 @@
         return;
     }
 
-    while (curFontSize > _minimumFontSize) {
-        CGSize size;
+    while (curFontSize > _minimumFontSize && curFontSize > 0.0f) {
+        CGSize size = CGSizeZero;
 
-        size = rect.size;
-        size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
+        //  A single line of text should be clipped
+        if (_numberOfLines == 1) {
+            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
+        } else {
+            //  Multiple lines of text should be wrapped
+            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
+        }
 
-        if (size.width <= rect.size.width && size.height <= rect.size.height) {
+        if (size.width < rect.size.width && size.height <= rect.size.height) {
             break;
         }
 
@@ -80,6 +85,9 @@
 
     if (curFontSize < _minimumFontSize) {
         curFontSize = _minimumFontSize;
+    }
+    if (curFontSize < 0.0f) {
+        curFontSize = 1.0f;
     }
 
     _font = [_font fontWithSize:curFontSize];
@@ -548,13 +556,20 @@
     CGSize ret = { 0 };
 
     if (_text != nil) {
+        UIFont* measurementFont = nil;
         if (_font == nil) {
             [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
         }
 
-        CGSize fontHeight;
-        fontHeight = [@" " sizeWithFont:_font];
+        //  Grab the font at the original point size set in setFont:
+        measurementFont = [_font fontWithSize:_originalFontSize];
 
+        //  Measure the height of a single line of text of this font
+        CGSize fontHeight = [@" " sizeWithFont:measurementFont];
+
+        //  If we have to fit everything on one line, or if the current width
+        //  is incalculable (we can't wrap to a width of 0), set the
+        //  fit width to inifinite
         if (curSize.width == 0 || self.numberOfLines == 1) {
             curSize.width = FLT_MAX;
         }
@@ -565,8 +580,12 @@
             curSize.height = fontHeight.height * self.numberOfLines;
         }
 
-        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:self.lineBreakMode];
+        //  Calculate the size of the text set in our label
+        ret = [_text sizeWithFont:measurementFont
+                constrainedToSize:CGSizeMake(curSize.width, curSize.height)
+                    lineBreakMode:self.lineBreakMode];
 
+        //  The returned height to 1 line if the number of lines is 1
         if (self.numberOfLines == 1) {
             ret.height = fontHeight.height;
         }
