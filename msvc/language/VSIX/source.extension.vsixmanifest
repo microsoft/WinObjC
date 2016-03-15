@@ -18,5 +18,7 @@
   <Assets>
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ObjectiveC" d:VsixSubPath="Asset" Path="|ObjectiveC|" />
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:VsixSubPath="BM" Path="|BuildMonitor;PkgdefProjectOutputGroup|" />
+    <Asset Type="NativeVisualizer" d:Source="File" Path="Visualizers\ObjectiveC.natvis" />
+    <Asset Type="StepFilter" d:Source="File" Path="Visualizers\ObjectiveC.natstepfilter" />
   </Assets>
 </PackageManifest>
