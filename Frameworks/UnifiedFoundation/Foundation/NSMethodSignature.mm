@@ -21,12 +21,14 @@
 #include <objc/encoding.h>
 
 #include <vector>
+#include <memory>
+#include <unordered_map>
 
 @interface NSMethodSignature () {
     std::string _returnType;
     uintptr_t _frameLength;
-    std::vector<std::string> _arguments;
-    std::vector<uintptr_t> _argumentOffsets;
+
+    std::vector<std::pair<std::string, uintptr_t>> _arguments;
 }
 @end
 
@@ -43,13 +45,22 @@
     //  - Has a stack frame length of 12 bytes
     //  - Takes an `id` argument (@) at stack frame offset 0
     //  - Takes a `SEL` argument (:) at stack frame offset 4
-    return [[[self alloc] _initWithObjCTypes:funcTypes] autorelease];
+    static std::unordered_map<std::string, StrongId<NSMethodSignature>> s_cachedMethodSignatures;
+    @synchronized (self) {
+        std::string objCTypes(funcTypes);
+        const auto found = s_cachedMethodSignatures.find(objCTypes);
+        if (found != s_cachedMethodSignatures.end()) {
+            return found->second;
+        }
+        NSMethodSignature* newMethodSignature = [[[self alloc] _initWithObjCTypes:funcTypes] autorelease];
+        s_cachedMethodSignatures.emplace(std::piecewise_construct, std::forward_as_tuple(std::move(objCTypes)), std::forward_as_tuple(newMethodSignature));
+        return newMethodSignature;
+    }
 }
 
 - (instancetype)_initWithObjCTypes:(const char*)objcTypes {
     if (self = [super init]) {
-        std::vector<std::string> types;
-        std::vector<uintptr_t> offsets;
+        _arguments.reserve(16);
 
         const char* ptr = objcTypes;
         while (*ptr) {
@@ -57,22 +68,21 @@
 
             ptr = objc_skip_typespec(ptr);
 
-            types.emplace_back(typeBegin, ptr);
-
+            std::string argumentType(typeBegin, ptr);
             uintptr_t offset = atoi(ptr);
 
-            offsets.emplace_back(offset);
+            // The first entry is the return type and the stack frame length.
+            if (typeBegin == objcTypes) {
+                _returnType = std::move(argumentType);
+                _frameLength = offset;
+            } else {
+                _arguments.emplace_back(std::move(argumentType), offset);
+            }
 
             while (*ptr && isdigit(*ptr)) {
                 ptr++;
             }
         }
-
-        _returnType = types.front();
-        _frameLength = offsets.front();
-
-        _arguments.assign(types.begin() + 1, types.end());
-        _argumentOffsets.assign(offsets.begin() + 1, offsets.end());
     }
     return self;
 }
@@ -102,11 +112,11 @@
  @Status Interoperable
 */
 - (const char*)getArgumentTypeAtIndex:(NSUInteger)index {
-    return _arguments[index].c_str();
+    return _arguments[index].first.c_str();
 }
 
 - (NSInteger)getArgumentSizeAtIndex:(NSUInteger)index {
-    return objc_sizeof_type(_arguments[index].c_str());
+    return objc_sizeof_type(_arguments[index].first.c_str());
 }
 
 /**
