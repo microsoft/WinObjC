@@ -112,6 +112,12 @@ static XIBObject* GetButtonContentStoryboard(NIBWriter* writer, XIBObject* obj, 
         buttonContent->AddOutputMember(writer, "UIImage", image);
     }
 
+    if (obj->getAttrib("backgroundImage") != NULL) {
+        UICustomResource* image = new UICustomResource();
+        image->_imageName = obj->getAttrAndHandle("backgroundImage");
+        buttonContent->AddOutputMember(writer, "UIBackgroundImage", image);
+    }
+
     if (obj->getAttrib("title") != NULL) {
         buttonContent->AddOutputMember(writer, "UITitle", new XIBObjectString(obj->getAttrAndHandle("title")));
     }
@@ -208,6 +214,9 @@ static PropertyMapper propertyMappings[] = {
     NULL,
     "IBUIImage",
     "UIImage",
+    NULL,
+    "IBUIBackgroundImage",
+    "UIBackgroundImage",
     NULL,
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
