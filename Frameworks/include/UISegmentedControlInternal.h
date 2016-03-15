@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,15 +13,12 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <UIKit/UINavigationItem.h>
+#import <UIKit/UISegmentedControl.h>
 
-@protocol UINavigationItemDelegate
-- (void)navigationItemChanged:(UINavigationItem*)item;
-@end
-
-@interface UINavigationItem ()
-- (void)_setDelegate:(id<UINavigationItemDelegate>)delegate;
+@interface UISegmentedControl ()
+- (id)_segmentSelectedDown:(id)segment;
+- (id)_segmentSelectedUp:(id)segment;
+- (id)_segmentSelectedCancelled:(id)segment;
 @end

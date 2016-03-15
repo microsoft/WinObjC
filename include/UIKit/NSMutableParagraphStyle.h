@@ -24,7 +24,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface NSMutableParagraphStyle : NSParagraphStyle <NSCopying, NSMutableCopying, NSObject, NSSecureCoding>
+@interface NSMutableParagraphStyle : NSParagraphStyle
 - (void)setParagraphStyle:(NSParagraphStyle*)obj STUB_METHOD;
 @property (nonatomic) NSTextAlignment alignment STUB_PROPERTY;
 @property (nonatomic) CGFloat firstLineHeadIndent STUB_PROPERTY;

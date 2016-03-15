@@ -16,12 +16,9 @@
 
 #pragma once
 
-#import <UIKit/UINavigationItem.h>
+#import <UIKit/UITabBarController.h>
 
-@protocol UINavigationItemDelegate
-- (void)navigationItemChanged:(UINavigationItem*)item;
-@end
-
-@interface UINavigationItem ()
-- (void)_setDelegate:(id<UINavigationItemDelegate>)delegate;
+@interface UITabBarController ()
+- (void)_showTabBar:(BOOL)show;
+- (void)_tabBar:(UITabBar*)tabBar didSelectItem:(UITabBarItem*)item;
 @end

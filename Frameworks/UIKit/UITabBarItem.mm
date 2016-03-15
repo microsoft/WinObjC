@@ -150,7 +150,7 @@ static const wchar_t* TAG = L"UITabBarItem";
 /**
  @Status Stub
 */
-- (void)setTitlePositionAdjustment:(CGPoint)adjustment {
+- (void)setTitlePositionAdjustment:(UIOffset)adjustment {
     UNIMPLEMENTED_WITH_MSG("setTitlePositionAdjustment not supported");
 }
 

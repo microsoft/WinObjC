@@ -62,7 +62,7 @@ struct UIAlertViewPriv {
 
     UIAlertViewStyle _style;
 
-    BOOL _delegateSupportsDidDismiss, _delegateSupportsModalDismiss, _delegateSupportsModalCancel;
+    BOOL _delegateSupportsDidDismiss;
 };
 
 @implementation UIAlertView {
@@ -191,8 +191,6 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
 - (void)setDelegate:(id)delegate {
     objc_storeWeak(&alertPriv->_delegate, delegate);
     alertPriv->_delegateSupportsDidDismiss = [alertPriv->_delegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)];
-    alertPriv->_delegateSupportsModalDismiss = [alertPriv->_delegate respondsToSelector:@selector(modalView:didDismissWithButtonIndex:)];
-    alertPriv->_delegateSupportsModalCancel = [alertPriv->_delegate respondsToSelector:@selector(modalViewCancel:)];
 }
 
 /**
@@ -318,16 +316,6 @@ static id createButton(UIAlertView* self, int index, id text, float x, float y, 
     if (alertPriv->_delegateSupportsDidDismiss) {
         [weakDelegate alertView:self didDismissWithButtonIndex:alertPriv->_hideIndex];
     }
-    if (alertPriv->_delegateSupportsModalDismiss) {
-        if (alertPriv->_hideIndex != alertPriv->_cancelButtonIndex) {
-            [weakDelegate modalView:self didDismissWithButtonIndex:alertPriv->_hideIndex];
-        }
-    }
-    if (alertPriv->_delegateSupportsModalCancel) {
-        if (alertPriv->_hideIndex == alertPriv->_cancelButtonIndex) {
-            [weakDelegate modalViewCancel:self];
-        }
-    }
     return self;
 }
 
@@ -350,16 +338,6 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         id weakDelegate = objc_loadWeak(&self->alertPriv->_delegate);
         if ([weakDelegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)]) {
             [weakDelegate alertView:self didDismissWithButtonIndex:index];
-        }
-        if (self->alertPriv->_delegateSupportsModalDismiss) {
-            if (index != self->alertPriv->_cancelButtonIndex) {
-                [weakDelegate modalView:self didDismissWithButtonIndex:index];
-            }
-        }
-        if (self->alertPriv->_delegateSupportsModalCancel) {
-            if (index == self->alertPriv->_cancelButtonIndex) {
-                [weakDelegate modalViewCancel:self];
-            }
         }
     }
 }

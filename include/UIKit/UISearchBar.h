@@ -105,4 +105,13 @@ UIKIT_EXPORT_CLASS
 - (void)setSearchFieldBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state STUB_METHOD;
 @property (nonatomic) UIOffset searchFieldBackgroundPositionAdjustment STUB_PROPERTY;
 @property (nonatomic) UIOffset searchTextPositionAdjustment STUB_PROPERTY;
+
+@property (nonatomic) UITextAutocapitalizationType autocapitalizationType STUB_PROPERTY;
+@property (nonatomic) UITextAutocorrectionType autocorrectionType STUB_PROPERTY;
+@property (nonatomic) BOOL enablesReturnKeyAutomatically STUB_PROPERTY;
+@property (nonatomic) UIKeyboardAppearance keyboardAppearance STUB_PROPERTY;
+@property (nonatomic) UIKeyboardType keyboardType STUB_PROPERTY;
+@property (nonatomic, getter=isSecureTextEntry) BOOL secureTextEntry STUB_PROPERTY;
+@property (nonatomic) UITextSpellCheckingType spellCheckingType STUB_PROPERTY;
+@property (nonatomic) UIReturnKeyType returnKeyType STUB_PROPERTY;
 @end

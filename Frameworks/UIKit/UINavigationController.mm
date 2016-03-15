@@ -20,6 +20,8 @@
 #import <UIKit/UIView.h>
 #include "LoggingNative.h"
 
+#import "UITabBarControllerInternal.h"
+
 static const wchar_t* TAG = L"UINavigationController";
 
 const CGFloat UINavigationControllerHideShowBarDuration = .25f;
@@ -243,8 +245,8 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     if (priv->_visibility != controllerNotVisible) {
         if (animated) {
             [controller view];
-            [_curController notifyViewWillDisappear:animated];
-            [controller notifyViewWillAppear:animated];
+            [_curController _notifyViewWillDisappear:animated];
+            [controller _notifyViewWillAppear:animated];
         }
         _pushingView = true;
         [self _showController:[_viewControllers lastObject] animated:animated];
@@ -271,7 +273,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     }
 
     UIViewController* controller = [_viewControllers lastObject];
-    [controller notifyViewWillDisappear:animated];
+    [controller _notifyViewWillDisappear:animated];
     controller->priv->_parentViewController = nil;
 
     [_viewControllers removeLastObject];
@@ -297,7 +299,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
             break;
 
         if (cur->priv->_visibility == controllerVisible) {
-            [cur notifyViewWillDisappear:animated];
+            [cur _notifyViewWillDisappear:animated];
             cur->priv->_parentViewController = nil;
         }
 
@@ -440,30 +442,30 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [super presentModalViewController:controller animated:animated];
 }
 
-- (void)notifyViewWillAppear:(BOOL)animated {
+- (void)_notifyViewWillAppear:(BOOL)animated {
     if (_newController == nil)
         [self _showController:[_viewControllers lastObject] animated:FALSE];
 
-    [super notifyViewWillAppear:animated];
-    [_curController notifyViewWillAppear:animated];
+    [super _notifyViewWillAppear:animated];
+    [_curController _notifyViewWillAppear:animated];
 }
 
-- (void)notifyViewDidAppear:(BOOL)isAnimated {
-    [super notifyViewDidAppear:isAnimated];
+- (void)_notifyViewDidAppear:(BOOL)isAnimated {
+    [super _notifyViewDidAppear:isAnimated];
 
-    [_curController notifyViewDidAppear:isAnimated];
+    [_curController _notifyViewDidAppear:isAnimated];
 }
 
-- (void)notifyViewWillDisappear:(BOOL)isAnimated {
-    [super notifyViewWillDisappear:isAnimated];
+- (void)_notifyViewWillDisappear:(BOOL)isAnimated {
+    [super _notifyViewWillDisappear:isAnimated];
 
-    [_curController notifyViewWillDisappear:isAnimated];
+    [_curController _notifyViewWillDisappear:isAnimated];
 }
 
-- (void)notifyViewDidDisappear:(BOOL)isAnimated {
-    [super notifyViewDidDisappear:isAnimated];
+- (void)_notifyViewDidDisappear:(BOOL)isAnimated {
+    [super _notifyViewDidDisappear:isAnimated];
 
-    [_curController notifyViewDidDisappear:isAnimated];
+    [_curController _notifyViewDidDisappear:isAnimated];
 }
 
 /**
@@ -605,12 +607,12 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     AnimationNotificationParams* params = (AnimationNotificationParams*)context;
     if (params->_disappearingController) {
         [[params->_disappearingController view] setHidden:TRUE];
-        [params->_disappearingController notifyViewDidDisappear:_showAnimated];
+        [params->_disappearingController _notifyViewDidDisappear:_showAnimated];
     }
     if (params->_appearingController) {
         //  Make sure that the navigation controller is visible
         if (priv->_visibility != controllerNotVisible) {
-            [params->_appearingController notifyViewDidAppear:_showAnimated];
+            [params->_appearingController _notifyViewDidAppear:_showAnimated];
 
             if ([_delegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
                 [_delegate navigationController:self didShowViewController:params->_appearingController animated:_showAnimated];
@@ -822,7 +824,7 @@ static void rotateViewController(UINavigationController* self) {
             UIView* oldControllerView;
 
             //  Remove the current controller we're displaying
-            [oldController notifyViewWillDisappear:_showAnimated];
+            [oldController _notifyViewWillDisappear:_showAnimated];
 
             oldControllerView = [oldController view];
             if (_destroyOld) {
@@ -853,7 +855,7 @@ static void rotateViewController(UINavigationController* self) {
     [_curControllerView setFrame:bounds];
 
     if (isNotifying) {
-        [_curController notifyViewWillAppear:_showAnimated];
+        [_curController _notifyViewWillAppear:_showAnimated];
 
         if (_showAnimated) {
             // Check if the delagate is using custom animations.
@@ -920,9 +922,9 @@ static void rotateViewController(UINavigationController* self) {
             [UIView commitAnimations];
         } else {
             if (oldController != nil) {
-                [oldController notifyViewDidDisappear:_showAnimated];
+                [oldController _notifyViewDidDisappear:_showAnimated];
             }
-            [_curController notifyViewDidAppear:_showAnimated];
+            [_curController _notifyViewDidAppear:_showAnimated];
         }
 
         if ([_delegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {

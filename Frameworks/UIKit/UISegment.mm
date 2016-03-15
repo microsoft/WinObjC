@@ -21,7 +21,9 @@
 #include "UIKit/UIFont.h"
 #include "Foundation/NSString.h"
 #include "CoreGraphics/CGContext.h"
-#include "UISegment.h"
+
+#import "UISegment.h"
+#import <UISegmentedControlInternal.h>
 
 static idretain _buttonLeft[2];
 static idretain _buttonRight[2];
@@ -316,19 +318,19 @@ static idretain _buttonFill[2];
 }
 
 - (id)touchesBegan:(id)touchSet withEvent:(id)event {
-    [[self superview] segmentSelectedDown:self];
+    [[self superview] _segmentSelectedDown:self];
 
     return self;
 }
 
 - (id)touchesEnded:(id)touchSet withEvent:(id)event {
-    [[self superview] segmentSelectedUp:self];
+    [[self superview] _segmentSelectedUp:self];
 
     return self;
 }
 
 - (id)touchesCancelled:(id)touchSet withEvent:(id)event {
-    [[self superview] segmentSelectedCancelled:self];
+    [[self superview] _segmentSelectedCancelled:self];
 
     return self;
 }

@@ -32,7 +32,7 @@ static const wchar_t* TAG = L"UITabBarController";
 /**
  @Status Interoperable
 */
-- (unsigned)numberOfSectionsInTableView:(UITableView*)tableview {
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableview {
     return 0;
 }
 
@@ -349,48 +349,36 @@ static const wchar_t* TAG = L"UITabBarController";
     }
 }
 
-/**
- @Status Interoperable
-*/
-- (void)notifyViewWillAppear:(BOOL)animated {
+- (void)_notifyViewWillAppear:(BOOL)animated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewWillAppear:animated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewWillAppear:animated];
     }
 
-    [super notifyViewWillAppear:animated];
+    [super _notifyViewWillAppear:animated];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)notifyViewDidAppear:(BOOL)isAnimated {
+- (void)_notifyViewDidAppear:(BOOL)isAnimated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewDidAppear:isAnimated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewDidAppear:isAnimated];
     }
 
-    [super notifyViewDidAppear:isAnimated];
+    [super _notifyViewDidAppear:isAnimated];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)notifyViewWillDisappear:(BOOL)isAnimated {
+- (void)_notifyViewWillDisappear:(BOOL)isAnimated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewWillDisappear:isAnimated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewWillDisappear:isAnimated];
     }
 
-    [super notifyViewWillDisappear:isAnimated];
+    [super _notifyViewWillDisappear:isAnimated];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)notifyViewDidDisappear:(BOOL)isAnimated {
+- (void)_notifyViewDidDisappear:(BOOL)isAnimated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewDidDisappear:isAnimated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewDidDisappear:isAnimated];
     }
 
-    [super notifyViewDidDisappear:isAnimated];
+    [super _notifyViewDidDisappear:isAnimated];
 }
 
 /**

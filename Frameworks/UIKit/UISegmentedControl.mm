@@ -26,6 +26,8 @@
 #include <math.h>
 #include "StubReturn.h"
 
+#include "UISegmentedControlInternal.h"
+
 @implementation UISegmentedControl {
     StrongId<NSMutableArray> _segments;
     id _tintColor;
@@ -446,7 +448,7 @@ static void positionSegments(UISegmentedControl* self) {
     _isMomentary = isMomentary;
 }
 
-- (id)segmentSelectedDown:(id)segment {
+- (id)_segmentSelectedDown:(id)segment {
     if (_curState & UIControlStateDisabled || ![segment isEnabled]) {
         return self;
     }
@@ -468,7 +470,7 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
-- (id)segmentSelectedUp:(id)segment {
+- (id)_segmentSelectedUp:(id)segment {
     if (!_isMomentary) {
         return self;
     }
@@ -482,7 +484,7 @@ static void positionSegments(UISegmentedControl* self) {
     return self;
 }
 
-- (id)segmentSelectedCancelled:(id)segment {
+- (id)_segmentSelectedCancelled:(id)segment {
     if (!_isMomentary) {
         return self;
     }

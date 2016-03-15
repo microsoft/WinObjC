@@ -312,7 +312,7 @@
     return _hidesBackButton;
 }
 
-- (void)setDelegate:(id<UINavigationItemDelegate>)delegate {
+- (void)_setDelegate:(id<UINavigationItemDelegate>)delegate {
     _delegate = delegate;
 }
 

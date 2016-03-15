@@ -225,7 +225,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 /**
  @Status Interoperable
 */
-- (CGRect)caretRectForPosition:(CGPoint)position {
+- (CGRect)caretRectForPosition:(UITextPosition*)position {
     return _cursorRect;
 }
 

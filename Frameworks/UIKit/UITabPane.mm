@@ -58,7 +58,7 @@ extern float statusBarHeight;
                 id oldControllerView;
 
                 //  Remove the current controller we're displaying
-                [_oldController notifyViewWillDisappear:FALSE];
+                [_oldController _notifyViewWillDisappear:FALSE];
 
                 oldControllerView = [_oldController view];
                 //[oldControllerView setHidden:TRUE];
@@ -120,16 +120,16 @@ extern float statusBarHeight;
         if ([_curControllerView superview] != self) {
             [_containerView addSubview:_curControllerView];
         }
-        [_curController notifyViewWillAppear:FALSE];
+        [_curController _notifyViewWillAppear:FALSE];
 
         [_curControllerView setHidden:FALSE];
         [_curControllerView setClipsToBounds:1];
         // if ( _tabBar != nil ) [self bringSubviewToFront:(id) _tabBar];
 
         if (_oldController != nil) {
-            [_oldController notifyViewDidDisappear:FALSE];
+            [_oldController _notifyViewDidDisappear:FALSE];
         }
-        [_curController notifyViewDidAppear:FALSE];
+        [_curController _notifyViewDidAppear:FALSE];
     }
 
     [super layoutSubviews];

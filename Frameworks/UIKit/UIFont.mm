@@ -299,7 +299,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     if (self == [UIFont class]) {
         g_fontCache = [NSMutableDictionary new];
         _fontDataCache = [NSMutableDictionary new];
-        _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
+        _fontList = [[NSMutableDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
         if (!_fontList) {
             _fontList = [NSMutableDictionary new];
         }

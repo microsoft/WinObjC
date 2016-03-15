@@ -379,7 +379,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     if (_newItem != nil) {
         bool backButtonHandler = false;
         if (_curItem != nil) {
-            [_curItem setDelegate:nil];
+            [_curItem _setDelegate:nil];
         }
 
         if (_leftButton != nil) {
@@ -394,7 +394,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         _curItem = _newItem;
-        [_curItem setDelegate:self];
+        [_curItem _setDelegate:self];
         _newItem = nil;
 
         _leftButton = [_curItem leftBarButtonItem];
@@ -569,7 +569,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
 */
 - (void)dealloc {
     if (_curItem != nil) {
-        [_curItem setDelegate:nil];
+        [_curItem _setDelegate:nil];
     }
 
     _items = nil;

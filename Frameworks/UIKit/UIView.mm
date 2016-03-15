@@ -760,13 +760,13 @@ static float doRound(float f) {
 
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || g_alwaysSendViewEvents)
-            [controller notifyViewWillAppear:g_presentingAnimated]; /*** should we do this? ****/
+            [controller _notifyViewWillAppear:g_presentingAnimated]; /*** should we do this? ****/
     }
     if (controller != nil && window == nil) {
         UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || g_alwaysSendViewEvents)
-            [controller notifyViewWillDisappear:g_presentingAnimated]; /*** should we do this? ****/
+            [controller _notifyViewWillDisappear:g_presentingAnimated]; /*** should we do this? ****/
     }
 
     if (window == nil) {
@@ -804,8 +804,8 @@ static float doRound(float f) {
             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
             g_alwaysSendViewEvents) {
             if (stackLevel == 0) {
-                [controller notifyViewWillAppear:FALSE];
-                [controller notifyViewDidAppear:FALSE];
+                [controller _notifyViewWillAppear:FALSE];
+                [controller _notifyViewDidAppear:FALSE];
             }
         }
     }
@@ -819,7 +819,7 @@ static float doRound(float f) {
         if (rootController == controller || [controller parentViewController] != nil ||
             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
             g_alwaysSendViewEvents)
-            [controller notifyViewDidDisappear:FALSE];
+            [controller _notifyViewDidDisappear:FALSE];
     }
 
     if (window == nil) {

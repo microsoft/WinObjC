@@ -27,7 +27,7 @@
 @class NSTextTab;
 
 UIKIT_EXPORT_CLASS
-@interface NSParagraphStyle : NSObject
+@interface NSParagraphStyle : NSObject <NSCopying, NSMutableCopying, NSSecureCoding>
 
 + (NSParagraphStyle*)defaultParagraphStyle;
 + (NSWritingDirection)defaultWritingDirectionForLanguage:(NSString*)languageName;

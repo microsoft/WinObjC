@@ -779,7 +779,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
 /**
  @Status Interoperable
 */
-- (unsigned)accessoryType {
+- (UITableViewCellAccessoryType)accessoryType {
     return _accessoryType;
 }
 

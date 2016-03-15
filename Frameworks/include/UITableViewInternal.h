@@ -131,7 +131,7 @@ struct UITableViewPriv {
 
     BOOL _isSelected, _isHighlighted, _currentlyHighlighted;
     BOOL _isEditing;
-    unsigned _accessoryType;
+    UITableViewCellAccessoryType _accessoryType;
     float _indentationWidth;
     UITableViewCellStyle _style;
     UITableViewCellSelectionStyle _selectionStyle;
@@ -140,7 +140,7 @@ struct UITableViewPriv {
     StrongId<UILabel> _secondaryLabel;
     StrongId<UIImageView> _imageView;
     StrongId<UIView> _backgroundView, _selectedbackgroundView;
-    idretain _deferredIndexPath, _indexPath;
+    StrongId<NSIndexPath> _deferredIndexPath, _indexPath;
     UIView *_accessoryView, *_editingAccessoryView;
     idretain _internalAccessoryView, _internalAccessoryButton;
     int _internalAccessoryType;
@@ -162,4 +162,9 @@ struct UITableViewPriv {
 }
 
 - (void)_setEditingMode:(BOOL)editingMode animated:(BOOL)animated;
+
+// TODO: these ought to be _names, but it's too difficult to locate all usages of indexPath currently
+- (void)setIndexPath:(NSIndexPath*)path;
+- (NSIndexPath*)indexPath;
+
 @end

@@ -79,10 +79,10 @@ UIKIT_EXPORT_CLASS
 
 - (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow STUB_METHOD;
 - (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow STUB_METHOD;
-- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow STUB_METHOD;
+- (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow;
 - (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow STUB_METHOD;
 - (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView STUB_METHOD;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView toView:(UIView*)toView STUB_METHOD;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView toView:(UIView*)toView;
 - (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView STUB_METHOD;
 
 - (void)makeKeyWindow;

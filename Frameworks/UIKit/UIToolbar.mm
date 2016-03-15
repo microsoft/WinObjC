@@ -128,7 +128,7 @@ void initInternal(UIToolbar* self) {
 /**
  @Status Stub
 */
-- (id)viewWithTag:(NSUInteger)tag {
+- (__kindof UIView*)viewWithTag:(NSInteger)tag {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -481,7 +481,7 @@ void layoutItems(UIToolbar* self) {
  @Status Caveat
  @Notes position and metrics parameters not supported
 */
-- (void)setBackgroundImage:(UIImage*)image forToolbarPosition:(unsigned int)position barMetrics:(UIBarMetrics)metrics {
+- (void)setBackgroundImage:(UIImage*)image forToolbarPosition:(UIToolbarPosition)position barMetrics:(UIBarMetrics)metrics {
     _backgroundGradient = image;
     UIImageSetLayerContents([self layer], _backgroundGradient);
 }
