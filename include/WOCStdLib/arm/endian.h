@@ -98,9 +98,7 @@ __bswap16_var(__uint16_t v)
      (((v) & 0x00ff) << 8));
 }       
 
-#if defined(__OPTIMIZE__) && !defined(WINOBJC)
-// Disable the optimized version of the macros until they compile correctly.
-// Tracked by MicrosoftVso:6163392.
+#ifdef __OPTIMIZE__
 
 #define __bswap32_constant(x)   \
     ((((x) & 0xff000000U) >> 24) |  \
