@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StepFilter xmlns="http://schemas.microsoft.com/vstudio/debugger/natstepfilter/2010">
+    <!-- ARC (Compiler Contract) -->
+    <Function>
+        <Name>objc_store(Weak|Strong)</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_load(Weak|WeakRetained)</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_initWeak</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_(copy|destroy|move)Weak</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_retain.*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_release.*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_autorelease.*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+
+    <!-- Message Dispatch (Compiler Contract) -->
+    <Function>
+        <Name>objc_(msg|slot)_lookup(_(stret|super|sender))?</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+
+    <!-- Property Manipulation (Compiler Contract) -->
+    <Function>
+        <Name>objc_(g|s)etProperty.*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+    <Function>
+        <Name>objc_(get|set|copy)CppObject.*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+
+    <!-- Blocks (Compiler Contract) -->
+    <Function>
+        <Name>_Block_(copy|release|object).*</Name>
+        <Action>NoStepInto</Action>
+    </Function>
+</StepFilter>
