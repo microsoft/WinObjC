@@ -14,23 +14,27 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "CACompositor.h"
-#include "CACompositorClient.h"
-#include "QuartzCore\CALayer.h"
-#include "CGContextInternal.h"
-#include "UIInterface.h"
-#include "QuartzCore\CATransform3D.h"
-#include "Quaternion.h"
-#include <deque>
-#include <map>
-#include <memory>
-#include "CompositorInterface.h"
-#include "CAAnimationInternal.h"
-#include "CALayerInternal.h"
-#include "UWP/interopBase.h"
-#include "UIApplicationInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "CACompositor.h"
+#import "CACompositorClient.h"
+#import "QuartzCore\CALayer.h"
+#import "CGContextInternal.h"
+#import "UIInterface.h"
+#import "UIColorInternal.h"
+#import "QuartzCore\CATransform3D.h"
+#import "Quaternion.h"
+#import <deque>
+#import <map>
+#import <memory>
+#import "CompositorInterface.h"
+#import "CAAnimationInternal.h"
+#import "CALayerInternal.h"
+#import "UWP/interopBase.h"
+#import "UIApplicationInternal.h"
+#import "LoggingNative.h"
+
+#import <UWP/WindowsUIViewManagement.h>
+#import <UWP/WindowsDevicesInput.h>
 
 static const wchar_t* TAG = L"CompositorInterface";
 
@@ -67,7 +71,7 @@ void OnRenderedFrame() {
     CASignalDisplayLink();
 }
 
-#include <mutex>
+#import <mutex>
 
 std::mutex _displayTextureCacheLock;
 std::map<CGImageRef, DisplayTextureRef> _displayTextureCache;
@@ -1587,21 +1591,62 @@ public:
         float scale = ::screenMagnification;
 
         if ([[UIApplication displayMode] useHostScaleFactor]) {
-            scale *= [[UIApplication displayMode] hostScreenScale];
+            scale *= [UIApplication displayMode].hostScreenScale;
         }
 
         // On an iOS device, the only expected values for UIScreen.scale is 1, or 2 for retina displays.
         // Some code paths rely on this.
         if ([[UIApplication displayMode] clampScaleToClosestExpected]) {
-            // Round to nearest int
-            scale = static_cast<float>(static_cast<int>(scale + 0.5f));
+            // If we've set a fixed width or height, we're also expecting a fixed screenScale.
+            if ([UIApplication displayMode].autoMagnification &&
+                (([UIApplication displayMode].fixedWidth != 0) || ([UIApplication displayMode].fixedHeight != 0))) {
+                static float fixedScreenScale = 0;
+                static float prevWidth = 0;
+                static float prevHeight = 0;
 
-            // Clamp
-            if (scale > 2.0f) {
-                scale = 2.0f;
-            }
-            if (scale < 1.0f) {
-                scale = 1.0f;
+                if (fixedScreenScale &&
+                    (([UIApplication displayMode].fixedWidth == prevWidth) && ([UIApplication displayMode].fixedHeight == prevHeight))) {
+                    return fixedScreenScale;
+                }
+
+                prevWidth = [UIApplication displayMode].fixedWidth;
+                prevHeight = [UIApplication displayMode].fixedHeight;
+
+                float maxDimension = 0;
+                NSArray* pointerDevices = [WDIPointerDevice getPointerDevices];
+
+                for (int i = 0; i < [pointerDevices count]; i++) {
+                    WFRect* screenRect = [(WDIPointerDevice*)[pointerDevices objectAtIndex:i] screenRect];
+                    float hostScreenScale = [UIApplication displayMode].hostScreenScale;
+                    maxDimension = max(maxDimension, max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
+                }
+
+                // We can't know whether the app will be rotated, or moved from screen to screen. We have to take the
+                // worst case scenario, and set the scale using the maximum possible dimension.
+
+                float maxScreenDimension = max([UIApplication displayMode].fixedWidth, [UIApplication displayMode].fixedHeight);
+
+                if (maxDimension == 0) {
+                    TraceWarning(TAG, L"Could not determine screen size, defaulting to a screenScale of 2!");
+                    fixedScreenScale = 2.0f;
+                } else if (maxDimension > maxScreenDimension) {
+                    fixedScreenScale = 2.0f;
+                } else {
+                    fixedScreenScale = 1.0f;
+                }
+
+                return fixedScreenScale;
+            } else {
+                // Round to nearest int
+                scale = static_cast<float>(static_cast<int>(scale + 0.5f));
+
+                // Clamp
+                if (scale > 2.0f) {
+                    scale = 2.0f;
+                }
+                if (scale < 1.0f) {
+                    scale = 1.0f;
+                }
             }
         }
 

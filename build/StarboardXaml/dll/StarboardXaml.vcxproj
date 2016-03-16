@@ -63,7 +63,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -76,7 +76,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -89,7 +89,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
@@ -102,7 +102,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
