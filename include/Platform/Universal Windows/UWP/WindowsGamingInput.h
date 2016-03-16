@@ -114,7 +114,7 @@ WINRT_EXPORT
 @property (readonly) WGIHeadset* headset;
 @property (readonly) BOOL isWireless;
 @property (readonly) WSUser* user;
-@property (copy) WGIGamepadVibration* vibration;
+@property (retain) WGIGamepadVibration* vibration;
 + (NSArray*)gamepads;
 - (EventRegistrationToken)addHeadsetConnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
 - (void)removeHeadsetConnectedEvent:(EventRegistrationToken)tok;

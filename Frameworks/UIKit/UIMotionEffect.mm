@@ -14,8 +14,41 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include <UIKit/UIMotionEffect.h>
+#import "Starboard.h"
+#import <UIKit/UIMotionEffect.h>
+#import <StubReturn.h>
 
 @implementation UIMotionEffect
+
+/**
+ @Status Stub
+*/
+- (NSDictionary*)keyPathsAndRelativeValuesForViewerOffset:(UIOffset)viewerOffset {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

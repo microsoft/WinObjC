@@ -23,6 +23,13 @@ const float NSURLSessionTaskPriorityHigh = 1.0f;
 const float NSURLSessionTaskPriorityDefault = 0.5f;
 const float NSURLSessionTaskPriorityLow = 0.0f;
 
+#pragma region HTTP Status Codes
+enum HttpStatus : int {
+    PartialContent = 206,
+    RangeNotSatisfiableError = 416,
+};
+#pragma endregion
+
 @interface NSURLSessionTask () {
     NSURLProtocol* _protocolConnection;
     NSURLSessionConfiguration* _configuration;
@@ -95,7 +102,37 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 
 - (void)_updateWithURLResponse:(NSURLResponse*)response {
     self.response = response;
-    self.countOfBytesExpectedToReceive = _response.expectedContentLength;
+
+    unsigned long long expected = _response.expectedContentLength;
+    unsigned long long received = 0;
+
+    // For a ranged HTTP response, the expected content length tells only half the story.
+    // If we have resumed a download, we *actually* care about the number of bytes that the
+    // ranged response can give us, and no more.
+    if ([_response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse* httpResponse = static_cast<NSHTTPURLResponse*>(_response);
+        NSString* rangeResponse = [[httpResponse allHeaderFields] objectForKey:@"Content-Range"];
+        if ((httpResponse.statusCode == HttpStatus::PartialContent || httpResponse.statusCode == HttpStatus::RangeNotSatisfiableError) &&
+            rangeResponse) {
+            // Per RFC 7233 section 4.2, a byte-content-range header will always contain FIRST-LAST, and may optionally contain
+            // /COMPLETE_LENGTH, but only on 206 (Partial Content) or 416 (Range Not Satisfiable) responses.
+            unsigned long long first = 0, last = 0, completeLength = 0;
+            int tokens = sscanf_s([rangeResponse UTF8String], "bytes %llu-%llu/%llu", &first, &last, &completeLength);
+            if (tokens >= 2) { // "bytes" $FIRST "-" $LAST
+                received = first;
+                if (tokens >= 3) { // "/" $COMPLETE_LENGTH
+                    expected = completeLength;
+                } else {
+                    // last is the zero-based index of the last byte the server is including in the response;
+                    // here we add 1 to compensate.
+                    expected = last + 1;
+                }
+            }
+        }
+    }
+
+    self.countOfBytesReceived = received;
+    self.countOfBytesExpectedToReceive = expected;
 }
 
 - (void)_signalCompletionInState:(NSURLSessionTaskState)state withError:(NSError*)error {
@@ -195,10 +232,6 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 - (void)URLProtocol:(NSURLProtocol*)connection
  didReceiveResponse:(NSURLResponse*)response
  cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
-    // TODO: Some of our URL machinery will leak data before a redirect
-    // we don't want to count that data.
-
-    self.countOfBytesReceived = 0;
     [self _updateWithURLResponse:response];
 }
 

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,8 +17,13 @@
 #import <StubReturn.h>
 #import <CoreImage/CIColor.h>
 
+#import "CIImageInternal.h"
+
 @implementation CIColor
 
+/**
+ @Status Interoperable
+*/
 - (CIColor*)init {
     if (self = [super init]) {
         self->_red = 0.0f;
@@ -32,32 +37,18 @@
 
 /**
  @Status Stub
+ @Notes
 */
-+ (CIColor*)colorWithCGColor:(CGColorRef)cgColor {
+- (instancetype)initWithCGColor:(CGColorRef)c {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (CGColorSpaceRef)colorSpace {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (const CGFloat*)components {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
-- (instancetype)initWithCGColor:(CGColorRef)cgColor {
+- (instancetype)initWithColor:(UIColor*)color {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -65,41 +56,50 @@
 /**
  @Status Interoperable
 */
-- (instancetype)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue {
-    return [self initWithRed:red green:green blue:blue alpha:1.0f];
+- (instancetype)initWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b {
+    return [self initWithRed:r green:g blue:b alpha:1.0f];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha {
-    self->_red = red;
-    self->_green = green;
-    self->_blue = blue;
-    self->_alpha = alpha;
+- (instancetype)initWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b alpha:(CGFloat)a {
+    self->_red = r;
+    self->_green = g;
+    self->_blue = b;
+    self->_alpha = a;
     return self;
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
-+ (instancetype)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue {
-    return [CIColor colorWithRed:red green:green blue:blue alpha:1.0f];
++ (instancetype)colorWithCGColor:(CGColorRef)c {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Interoperable
 */
-+ (instancetype)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha {
-    CIColor* ret = [[self alloc] initWithRed:red green:green blue:blue alpha:alpha];
++ (instancetype)colorWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b {
+    return [CIColor colorWithRed:r green:g blue:b alpha:1.0f];
+}
 
+/**
+ @Status Interoperable
+*/
++ (instancetype)colorWithRed:(CGFloat)r green:(CGFloat)g blue:(CGFloat)b alpha:(CGFloat)a {
+    CIColor* ret = [[self alloc] initWithRed:r green:g blue:b alpha:a];
     return [ret autorelease];
 }
 
 /**
  @Status Stub
+ @Notes
 */
-- (size_t)numberOfComponents {
++ (instancetype)colorWithString:(NSString*)representation {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -115,14 +115,7 @@
 
 /**
  @Status Stub
-*/
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
+ @Notes
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
@@ -131,9 +124,19 @@
 
 /**
  @Status Stub
+ @Notes
 */
 - (void)encodeWithCoder:(NSCoder*)encoder {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

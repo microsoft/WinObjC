@@ -183,12 +183,19 @@ static id _cachedColorsDict;
     float _r, _g, _b, _a;
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+/**
+ @Status Stub
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _type = solidBrush;
 
     NSString* pattern = [coder decodeObjectForKey:@"UIPatternSelector"];
@@ -218,6 +225,9 @@ static id _cachedColorsDict;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     assert(_type == solidBrush);
 
@@ -591,20 +601,40 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [self colorWithRed:197.f / 255.f green:204.f / 255.f blue:210.f / 255.f alpha:1.0f];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)viewFlipsideBackgroundColor {
     return [self whiteColor];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)windowsControlFocusedColor {
     return [self colorWithRed:0.19f green:0.46f blue:0.73f alpha:1.0f];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)windowsControlDefaultBackgroundColor {
     return [self colorWithRed:0.95f green:0.95f blue:0.95f alpha:1.0f];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)windowsTableViewCellSelectionBackgroundColor {
     return [self colorWithRed:0.63 green:0.79 blue:0.89 alpha:1.0];
+}
+
+/**
+ @Status Stub
+*/
++ (UIColor*)windowsTableViewSelectionBackgroundColor {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -656,6 +686,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(UIColor*)other {
     if (![other isKindOfClass:[UIColor class]]) {
         return FALSE;
@@ -669,12 +702,18 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_image release];
     [_pattern release];
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     _cachedColorsDict = [NSMutableDictionary new];
 }

@@ -37,25 +37,42 @@
 #pragma once
 
 #import "UIView.h"
+#import "UIInterface.h"
 
 @class UITabBar, UITabBarItem, UIImage;
 @protocol UITabBarDelegate;
 
+typedef enum : NSInteger {
+    UITabBarItemPositioningAutomatic,
+    UITabBarItemPositioningFill,
+    UITabBarItemPositioningCentered,
+} UITabBarItemPositioning;
+
 UIKIT_EXPORT_CLASS
-@interface UITabBar : UIView
-@property (nonatomic, assign) id<UITabBarDelegate> delegate;
-@property (nonatomic, copy) NSArray* items;
-@property (nonatomic, assign) UITabBarItem* selectedItem;
-@property (nonatomic, retain) UIColor* tintColor;
-@property (nonatomic, retain) UIColor* selectedImageTintColor;
-@property (nonatomic, retain) UIImage* selectionIndicatorImage;
-@property (nonatomic, retain) UIImage* backgroundImage;
-
-- (void)setItems:(NSArray*)items animated:(BOOL)animated;
-
-// stub
-- (void)beginCustomizingItems:(NSArray*)items;
-- (BOOL)endCustomizingAnimated:(BOOL)animated;
-- (BOOL)isCustomizing;
-
+@interface UITabBar : UIView <NSCoding,
+                              NSObject,
+                              UIAppearance,
+                              UIAppearanceContainer,
+                              UICoordinateSpace,
+                              UIDynamicItem,
+                              UIFocusEnvironment,
+                              UITraitEnvironment>
+@property (assign, nonatomic) id<UITabBarDelegate> delegate;
+@property (copy, nonatomic) NSArray* items;
+@property (assign, nonatomic) UITabBarItem* selectedItem;
+- (void)setItems:(NSArray*)items animated:(BOOL)animated STUB_METHOD;
+- (void)beginCustomizingItems:(NSArray*)items STUB_METHOD;
+- (BOOL)endCustomizingAnimated:(BOOL)animated STUB_METHOD;
+- (BOOL)isCustomizing STUB_METHOD;
+@property (nonatomic) UIBarStyle barStyle STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* barTintColor STUB_PROPERTY;
+@property (nonatomic) UITabBarItemPositioning itemPositioning STUB_PROPERTY;
+@property (nonatomic) CGFloat itemSpacing STUB_PROPERTY;
+@property (nonatomic) CGFloat itemWidth STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* tintColor STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* selectedImageTintColor STUB_PROPERTY;
+@property (getter=isTranslucent, nonatomic) BOOL translucent STUB_PROPERTY;
+@property (nonatomic, strong) UIImage* backgroundImage;
+@property (nonatomic, strong) UIImage* shadowImage STUB_PROPERTY;
+@property (nonatomic, strong) UIImage* selectionIndicatorImage;
 @end

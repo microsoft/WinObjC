@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKDiscoverAllContactsOperation.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKDiscoverAllContactsOperation
 @end

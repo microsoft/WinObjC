@@ -510,9 +510,9 @@ WINRT_EXPORT
 @interface WMDFocusSettings : RTObject
 + (instancetype)make ACTIVATOR;
 @property BOOL waitForFocus;
-@property (copy) id value;
+@property (retain) id value;
 @property WMDFocusMode mode;
-@property (copy) id distance;
+@property (retain) id distance;
 @property BOOL disableDriverFallback;
 @property WMDAutoFocusRange autoFocusRange;
 @end
@@ -557,7 +557,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDRegionOfInterest : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WFRect* bounds;
+@property (retain) WFRect* bounds;
 @property BOOL autoWhiteBalanceEnabled;
 @property BOOL autoFocusEnabled;
 @property BOOL autoExposureEnabled;

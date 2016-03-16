@@ -34,7 +34,6 @@ typedef struct {
     CGPoint startPosition;
 } TrackedTouch;
 
-
 @implementation UILongPressGestureRecognizer {
     // tracking a list of tracked touch
     std::vector<TrackedTouch> _trackedTouches;
@@ -71,31 +70,32 @@ typedef struct {
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes May not be fully implemented
 */
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         [self _commonInit];
 
-        NSString* minimumPressDuration = @"UILongPressGestureRecognizer.minimumPressDuration";
-        NSString* allowableMovement = @"UILongPressGestureRecognizer.allowableMovement";
-        NSString* numberOfTapsRequired = @"UILongPressGestureRecognizer.numberOfTapsRequired";
-        NSString* numberOfTouchesRequired = @"UILongPressGestureRecognizer.numberOfTouchesRequired";
+        NSString* minimumPressDurationKey = @"UILongPressGestureRecognizer.minimumPressDuration";
+        NSString* allowableMovementKey = @"UILongPressGestureRecognizer.allowableMovement";
+        NSString* numberOfTapsRequiredKey = @"UILongPressGestureRecognizer.numberOfTapsRequired";
+        NSString* numberOfTouchesRequiredKey = @"UILongPressGestureRecognizer.numberOfTouchesRequired";
 
-        if ([coder containsValueForKey:minimumPressDuration]) {
-            self->minimumPressDuration = [coder decodeIntForKey:minimumPressDuration];
+        if ([coder containsValueForKey:minimumPressDurationKey]) {
+            self->minimumPressDuration = [coder decodeIntForKey:minimumPressDurationKey];
         }
 
-        if ([coder containsValueForKey:allowableMovement]) {
-            self->allowableMovement = [coder decodeIntForKey:allowableMovement];
+        if ([coder containsValueForKey:allowableMovementKey]) {
+            self->allowableMovement = [coder decodeIntForKey:allowableMovementKey];
         }
 
-        if ([coder containsValueForKey:numberOfTapsRequired]) {
-            self->numberOfTapsRequired = [coder decodeIntForKey:numberOfTapsRequired];
+        if ([coder containsValueForKey:numberOfTapsRequiredKey]) {
+            self->numberOfTapsRequired = [coder decodeIntForKey:numberOfTapsRequiredKey];
         }
 
-        if ([coder containsValueForKey:numberOfTouchesRequired]) {
-            self->numberOfTouchesRequired = [coder decodeIntForKey:numberOfTouchesRequired];
+        if ([coder containsValueForKey:numberOfTouchesRequiredKey]) {
+            self->numberOfTouchesRequired = [coder decodeIntForKey:numberOfTouchesRequiredKey];
         }
     }
 

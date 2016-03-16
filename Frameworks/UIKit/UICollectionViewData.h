@@ -26,7 +26,7 @@
 @interface UICollectionViewData : NSObject
 
 // Designated initializer.
-- (id)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout;
+- (instancetype)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout;
 
 // Ensure data is valid. may fetches items from dataSource and layout.
 - (void)validateLayoutInRect:(CGRect)rect;

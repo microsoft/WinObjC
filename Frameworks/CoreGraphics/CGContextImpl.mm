@@ -546,8 +546,8 @@ void CGContextImpl::CGContextStrokeEllipseInRect(CGRect rct) {
 void CGContextImpl::CGContextFillEllipseInRect(CGRect rct) {
 }
 
-void CGContextImpl::CGContextAddPath(id path) {
-    [(CGPath*)path _applyPath:_rootContext];
+void CGContextImpl::CGContextAddPath(CGPathRef path) {
+    _CGPathApplyPath(path, _rootContext);
 }
 
 void CGContextImpl::CGContextStrokePath() {

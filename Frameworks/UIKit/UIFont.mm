@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 #include "CGFontInternal.h"
 #include "Foundation/NSString.h"
@@ -78,6 +79,12 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
 
     //  Look it up in our cache
     FT_Face val;
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([] () {
+        _CGFontUnlock();
+    });
+
     if (!sizing) {
         val = (FT_Face)CFDictionaryGetValue(_fontInstance, (void*)faceName);
         if (val != 0) {
@@ -139,17 +146,8 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     char* pFont = (char*)[cachedData bytes];
     DWORD fontLen = [cachedData length];
 
-    _CGFontLock();
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &ret);
-    _CGFontUnlock();
     assert(err == 0);
-
-//  Adjust the line height up by 20% for system fonts to be consistent
-#if 0 // defined( USE_ROBOTO_FONT )
-int ascenderDelta = (int) (ret->ascender * 0.2);
-ret->ascender += ascenderDelta;
-ret->height += ascenderDelta;
-#endif
 
     if (!sizing) {
         CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)ret);
@@ -164,8 +162,10 @@ ret->height += ascenderDelta;
  @Status Stub
 */
 + (NSArray*)familyNames {
+    // The actual implementation may need a lock here if it
+    // does end up accessing the global font lists or caches.
     UNIMPLEMENTED();
-    return [_fontList allKeys];
+    return StubReturn();
 }
 
 + (UIFont*)fontWithData:(NSData*)data {
@@ -185,9 +185,12 @@ ret->height += ascenderDelta;
     memcpy(pCopy, pFont, fontLen);
 
     _CGFontLock();
+    auto unlock = wil::ScopeExit([] () {
+        _CGFontUnlock();
+    });
+
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pCopy, fontLen, 0, (FT_Face*)&ret->_font);
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pCopy, fontLen, 0, (FT_Face*)&ret->_sizingFont);
-    _CGFontUnlock();
 
     if (err != 0) {
         TraceError(g_logTag, L"Error loading font");
@@ -220,6 +223,11 @@ ret->height += ascenderDelta;
     ret->_name = name;
     ret->_size = size;
     ret->_horizontalScale = 1.0f;
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([] () {
+        _CGFontUnlock();
+    });
 
     id cached = [g_fontCache objectForKey:(id)ret];
     if (cached != nil) {
@@ -257,42 +265,22 @@ ret->height += ascenderDelta;
 }
 
 + (UIFont*)messageFont {
-    static id mFont;
-
-    if (mFont == nil) {
-        mFont = [[self systemFontOfSize:15.0f] retain];
-    }
-
+    static id mFont = [[self systemFontOfSize:15.0f] retain];
     return mFont;
 }
 
 + (UIFont*)titleFont {
-    static id tFont;
-
-    if (tFont == nil) {
-        tFont = [[self systemFontOfSize:20.0f] retain];
-    }
-
+    static id tFont = [[self systemFontOfSize:20.0f] retain];
     return tFont;
 }
 
 + (UIFont*)defaultFont {
-    static id dFont;
-
-    if (dFont == nil) {
-        dFont = [[self systemFontOfSize:10.0f] retain];
-    }
-
+    static id dFont = [[self systemFontOfSize:10.0f] retain];
     return dFont;
 }
 
 + (UIFont*)buttonFont {
-    static id dFont;
-
-    if (dFont == nil) {
-        dFont = [[self systemFontOfSize:17.0f] retain];
-    }
-
+    static id dFont = [[self systemFontOfSize:17.0f] retain];
     return dFont;
 }
 
@@ -307,6 +295,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     if (self == [UIFont class]) {
         g_fontCache = [NSMutableDictionary new];
@@ -343,6 +334,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIFont*)italicSystemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
@@ -373,8 +367,10 @@ void loadFont(UIFont* self) {
 
     loadFont(self);
 
-    if (_font == nil)
+    if (_font == nil) {
         return nil;
+    }
+
     return self;
 }
 
@@ -389,6 +385,11 @@ void loadFont(UIFont* self) {
     ret->_name = _name;
     ret->_size = size;
     ret->_horizontalScale = _horizontalScale;
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([] () {
+        _CGFontUnlock();
+    });
 
     id cached = [g_fontCache objectForKey:(id)ret];
     if (cached != nil) {
@@ -568,7 +569,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -578,7 +578,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -588,7 +587,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -598,7 +596,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -608,7 +605,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -640,6 +636,9 @@ void loadFont(UIFont* self) {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _fileName = nil;
     _name = nil;
@@ -677,6 +676,12 @@ void loadFont(UIFont* self) {
     id faceName = [NSString stringWithCString:((FT_Face)fnt->_font)->family_name];
 
     [font retain];
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([] () {
+        _CGFontUnlock();
+    });
+
     CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)fnt->_font);
     CFDictionarySetValue(_fontSizingInstance, (const void*)faceName, (void*)fnt->_sizingFont);
     if (fnt->_fileName) {
@@ -700,6 +705,12 @@ void loadFont(UIFont* self) {
     }
 
     NSString* fileName = [url path];
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([] () {
+        _CGFontUnlock();
+    });
+
     if ([[_fontList allValues] containsObject:fileName]) {
         // this font is already registered
         return true;
@@ -710,9 +721,7 @@ void loadFont(UIFont* self) {
     char* pFont = (char*)[data bytes];
     DWORD fontLen = [data length];
 
-    _CGFontLock();
     FT_Error err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &face);
-    _CGFontUnlock();
 
     if (err) {
         if (!error) {

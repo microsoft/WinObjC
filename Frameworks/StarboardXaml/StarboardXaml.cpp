@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,17 +16,22 @@
 // clang-format does not seem to like C++/CX
 // clang-format off
 
+#include "ApplicationMain.h"
 #include "LayerRegistration.h"
 #include "StringConversion.h"
 
-#include "winobjc\winobjc.h"
+#include "ApplicationCompositor.h"
 #include "LoggingNative.h"
+#include "XamlCompositor.h"
 
-using namespace Windows::UI;
 using namespace Windows::ApplicationModel::Activation;
+using namespace Windows::UI;
+using namespace Windows::System;
 
 static Platform::String^ g_principalClassName;
 static Platform::String^ g_delegateClassName;
+
+static const wchar_t* TAG = L"StarboardXaml";
 
 ref class App : public Xaml::Application, Xaml::Markup::IXamlMetadataProvider {
     XamlTypeInfo::InfoProvider::XamlTypeInfoProvider ^ _provider;
@@ -74,19 +79,47 @@ public:
         auto rootFrame = ref new Xaml::Controls::Frame();
         rootFrame->Content = uiElem;
 
-        IWSetXamlRoot(uiElem);
+        SetXamlRoot(uiElem);
 
         Xaml::Window::Current->Content = rootFrame;
         Xaml::Window::Current->Activate();
 
         auto startupRect = Xaml::Window::Current->Bounds;
-        IWRunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
+        RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
+
+        _RegisterEventHandlers();
+    }
+
+private:
+    void _RegisterEventHandlers() {
+        // Register for Window Visibility change event.
+        // TODO::
+        // todo-nithishm-03072016 - Move this out of the Windows Visibility event in future.
+        Xaml::Window::Current->VisibilityChanged += ref new Xaml::WindowVisibilityChangedEventHandler(this, &App::_OnAppVisibilityChanged);
+        // Register for Application Memory Usage Increase event.
+        MemoryManager::AppMemoryUsageIncreased += ref new Windows::Foundation::EventHandler<Platform::Object^>(this, &App::_OnAppMemoryUsageChanged);
+    }
+
+    void _OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
+    {
+        TraceVerbose(TAG, L"VisibilityChanged event received - %d", args->Visible);
+        ApplicationMainHandleWindowVisibilityChangeEvent(args->Visible);
+    }
+
+    void _OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args)
+    {
+        auto level = MemoryManager::AppMemoryUsageLevel;
+
+        TraceVerbose(TAG, L"AppMemoryUsageIncreased event received - %d", level);
+        if (level == AppMemoryUsageLevel::High) {
+            ApplicationMainHandleHighMemoryUsageEvent();
+        }
     }
 };
 
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.
-extern "C" __declspec(dllexport) int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
+extern "C" int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 

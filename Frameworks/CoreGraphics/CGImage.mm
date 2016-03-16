@@ -268,7 +268,6 @@ CGImageRef CGImageCreateWithMask(CGImageRef image, CGImageRef mask) {
     CGImageRef newImage;
 
     {
-        TimingFunction f("CGImageCreateWithMask");
         DWORD* newImageData = (DWORD*)IwMalloc(image->Backing()->Width() * image->Backing()->Height() * 4);
         DWORD* src = (DWORD*)image->Backing()->LockImageData();
         BYTE* maskData = (BYTE*)mask->Backing()->LockImageData();

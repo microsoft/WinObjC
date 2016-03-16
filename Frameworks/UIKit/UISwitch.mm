@@ -22,6 +22,9 @@
 #include "UIKit/UIImageView.h"
 #include "UIKit/UIGestureRecognizer.h"
 #include "UIKit/UISwitch.h"
+
+#include "UIGestureRecognizerInternal.h"
+
 #include <math.h>
 
 const float minX = 0.0f, maxX = 50.0f;
@@ -131,6 +134,10 @@ static void adjustImages(UISwitch* self, float pos, bool animated) {
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     _on = [coder decodeBoolForKey:@"UISwitchOn"] ? true : false;
     [super initWithCoder:coder];

@@ -91,10 +91,10 @@ WINRT_EXPORT
 @interface WWHFHttpBaseProtocolFilter : RTObject <WWHFIHttpFilter, WFIClosable>
 + (instancetype)make ACTIVATOR;
 @property BOOL useProxy;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int maxConnectionsPerServer;
-@property (copy) WSCCCertificate* clientCertificate;
+@property (retain) WSCCCertificate* clientCertificate;
 @property BOOL automaticDecompression;
 @property BOOL allowUI;
 @property BOOL allowAutoRedirect;

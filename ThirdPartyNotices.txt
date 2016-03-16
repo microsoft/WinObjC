@@ -2973,4 +2973,22 @@ HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
 END OF TERMS AND CONDITIONS
 
+// Ogg Vorbis audio decoder - v1.07 - public domain
+// http://nothings.org/stb_vorbis/
+//
+// Original version written by Sean Barrett in 2007.
+//
+// Originally sponsored by RAD Game Tools. Seeking sponsored
+// by Phillip Bennefall, Marc Andersen, Aaron Baker, Elias Software,
+// Aras Pranckevicius, and Sean Barrett.
+//
+// LICENSE
+//
+//   This software is in the public domain. Where that dedication is not
+//   recognized, you are granted a perpetual, irrevocable license to copy,
+//   distribute, and modify this file as you see fit.
+//
+// No warranty for any purpose is expressed or implied by the author (nor
+// by RAD Game Tools). Report bugs and send enhancements to the author.
+
 ----------------------------------------------- END OF THIRD PARTY NOTICES ----------------------------------------

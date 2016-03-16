@@ -214,11 +214,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWSWiFiDirectServiceAdvertiser : RTObject
-+ (WDWSWiFiDirectServiceAdvertiser*)createWiFiDirectServiceAdvertiser:(NSString*)serviceName ACTIVATOR;
++ (WDWSWiFiDirectServiceAdvertiser*)makeWiFiDirectServiceAdvertiser:(NSString*)serviceName ACTIVATOR;
 @property WDWSWiFiDirectServiceStatus serviceStatus;
-@property (copy) RTObject<WSSIBuffer>* serviceInfo;
+@property (retain) RTObject<WSSIBuffer>* serviceInfo;
 @property BOOL preferGroupOwnerMode;
-@property (copy) RTObject<WSSIBuffer>* deferredSessionInfo;
+@property (retain) RTObject<WSSIBuffer>* deferredSessionInfo;
 @property unsigned int customServiceStatusCode;
 @property BOOL autoAcceptSession;
 @property (readonly) WDWSWiFiDirectServiceError serviceError;
@@ -256,7 +256,7 @@ WINRT_EXPORT
 + (NSString*)getSelector:(NSString*)serviceName;
 + (NSString*)getSelectorWithFilter:(NSString*)serviceName serviceInfoFilter:(RTObject<WSSIBuffer>*)serviceInfoFilter;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWSWiFiDirectService*))success failure:(void (^)(NSError*))failure;
-@property (copy) RTObject<WSSIBuffer>* sessionInfo;
+@property (retain) RTObject<WSSIBuffer>* sessionInfo;
 @property BOOL preferGroupOwnerMode;
 @property (readonly) RTObject<WSSIBuffer>* remoteServiceInfo;
 @property (readonly) WDWSWiFiDirectServiceError serviceError;

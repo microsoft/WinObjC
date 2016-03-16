@@ -496,7 +496,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDuration : NSObject
 + (instancetype) new;
-@property (copy) WFTimeSpan* timeSpan;
+@property (retain) WFTimeSpan* timeSpan;
 @property WXDurationType type;
 @end
 
@@ -706,7 +706,7 @@ typedef void (^WXBindingFailedEventHandler)(RTObject* sender, WXBindingFailedEve
 WINRT_EXPORT
 @interface WXDispatcherTimer : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WFTimeSpan* interval;
+@property (retain) WFTimeSpan* interval;
 @property (readonly) BOOL isEnabled;
 - (EventRegistrationToken)addTickEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeTickEvent:(EventRegistrationToken)tok;
@@ -869,9 +869,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualStateChangedEventArgs : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WXVisualState* oldState;
-@property (copy) WXVisualState* newState;
-@property (copy) WXCControl* control;
+@property (retain) WXVisualState* oldState;
+@property (retain) WXVisualState* newState;
+@property (retain) WXCControl* control;
 @end
 
 #endif // __WXVisualStateChangedEventArgs_DEFINED__
@@ -895,7 +895,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDataTemplateKey : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject* dataType;
+@property (retain) RTObject* dataType;
 @end
 
 #endif // __WXDataTemplateKey_DEFINED__
@@ -953,7 +953,7 @@ WINRT_EXPORT
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
 @property BOOL isCaptionVisible;
-@property (copy) NSString* caption;
+@property (retain) NSString* caption;
 - (void)clear;
 - (void)setContentFromBitmapImage:(WUXMIBitmapImage*)bitmapImage;
 - (void)setContentFromBitmapImageWithAnchorPoint:(WUXMIBitmapImage*)bitmapImage anchorPoint:(WFPoint*)anchorPoint;
@@ -968,9 +968,9 @@ WINRT_EXPORT
 #define __WACIFrameworkView_DEFINED__
 
 @protocol WACIFrameworkView
-- (void)initialize:(WACCoreApplicationView*)applicationView;
+- (void)Initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
-- (void)load:(NSString*)entryPoint;
+- (void)Load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
 @end
@@ -984,9 +984,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkView : RTObject <WACIFrameworkView>
 + (instancetype)make ACTIVATOR;
-- (void)initialize:(WACCoreApplicationView*)applicationView;
+- (void)Initialize:(WACCoreApplicationView*)applicationView;
 - (void)setWindow:(WUCCoreWindow*)window;
-- (void)load:(NSString*)entryPoint;
+- (void)Load:(NSString*)entryPoint;
 - (void)run;
 - (void)uninitialize;
 @end
@@ -1032,10 +1032,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXTargetPropertyPath : RTObject
-+ (WXTargetPropertyPath*)createInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
++ (WXTargetPropertyPath*)makeInstance:(WXDependencyProperty*)targetProperty ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject* target;
-@property (copy) WXPropertyPath* path;
+@property (retain) RTObject* target;
+@property (retain) WXPropertyPath* path;
 @end
 
 #endif // __WXTargetPropertyPath_DEFINED__
@@ -1089,7 +1089,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXWindow : RTObject
-@property (copy) WXUIElement* content;
+@property (retain) WXUIElement* content;
 @property (readonly) WFRect* bounds;
 @property (readonly) WUCCoreWindow* coreWindow;
 @property (readonly) WUCCoreDispatcher* dispatcher;
@@ -1155,7 +1155,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXDragEventArgs : WXRoutedEventArgs
 @property BOOL handled;
-@property (copy) WADDataPackage* data;
+@property (retain) WADDataPackage* data;
 @property WADDataPackageOperation acceptedOperation;
 @property (readonly) WADDataPackageView* dataView;
 @property (readonly) WXDragUIOverride* dragUIOverride;
@@ -1235,7 +1235,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXPropertyPath : WXDependencyObject
-+ (WXPropertyPath*)createInstance:(NSString*)path ACTIVATOR;
++ (WXPropertyPath*)makeInstance:(NSString*)path ACTIVATOR;
 @property (readonly) NSString* path;
 @end
 
@@ -1249,7 +1249,7 @@ WINRT_EXPORT
 @interface WXResourceDictionary : WXDependencyObject
 + (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
-@property (copy) WFUri* source;
+@property (retain) WFUri* source;
 @property (readonly) NSMutableArray* mergedDictionaries;
 @property (readonly) NSMutableDictionary* themeDictionaries;
 - (id)objectForKey:(id)key;
@@ -1312,10 +1312,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXStyle : WXDependencyObject
-+ (WXStyle*)createInstance:(WUXITypeName*)targetType ACTIVATOR;
++ (WXStyle*)makeInstance:(WUXITypeName*)targetType ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXITypeName* targetType;
-@property (copy) WXStyle* basedOn;
+@property (retain) WUXITypeName* targetType;
+@property (retain) WXStyle* basedOn;
 @property (readonly) BOOL isSealed;
 @property (readonly) WXSetterBaseCollection* setters;
 - (void)seal;
@@ -1351,26 +1351,26 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 @property BOOL isRightTapEnabled;
-@property (copy) WUXMProjection* projection;
+@property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
 @property BOOL isHitTestVisible;
 @property double opacity;
-@property (copy) WUXMCacheMode* cacheMode;
+@property (retain) WUXMCacheMode* cacheMode;
 @property BOOL isDoubleTapEnabled;
 @property BOOL isTapEnabled;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (copy) WUXMRectangleGeometry* clip;
-@property (copy) WUXMATransitionCollection* transitions;
-@property (copy) WFPoint* renderTransformOrigin;
-@property (copy) WUXMTransform* renderTransform;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMATransitionCollection* transitions;
+@property (retain) WFPoint* renderTransformOrigin;
+@property (retain) WUXMTransform* renderTransform;
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
 @property (readonly) NSArray* pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
-@property (copy) WUXMMTransform3D* transform3D;
+@property (retain) WUXMMTransform3D* transform3D;
 @property BOOL canDrag;
 + (WXRoutedEvent*)dropEvent;
 + (WXDependencyProperty*)allowDropProperty;
@@ -1498,7 +1498,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualState : WXDependencyObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXMAStoryboard* storyboard;
+@property (retain) WUXMAStoryboard* storyboard;
 @property (readonly) NSString* name;
 @property (readonly) WXSetterBaseCollection* setters;
 @property (readonly) NSMutableArray* stateTriggers;
@@ -1562,11 +1562,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXVisualTransition : WXDependencyObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* to;
-@property (copy) WUXMAStoryboard* storyboard;
-@property (copy) WUXMAEasingFunctionBase* generatedEasingFunction;
-@property (copy) WXDuration* generatedDuration;
-@property (copy) NSString* from;
+@property (retain) NSString* to;
+@property (retain) WUXMAStoryboard* storyboard;
+@property (retain) WUXMAEasingFunctionBase* generatedEasingFunction;
+@property (retain) WXDuration* generatedDuration;
+@property (retain) NSString* from;
 @end
 
 #endif // __WXVisualTransition_DEFINED__
@@ -1593,7 +1593,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXEventTrigger : WXTriggerBase
 + (instancetype)make ACTIVATOR;
-@property (copy) WXRoutedEvent* routedEvent;
+@property (retain) WXRoutedEvent* routedEvent;
 @property (readonly) WXTriggerActionCollection* actions;
 @end
 
@@ -1606,21 +1606,21 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
 + (instancetype)make ACTIVATOR;
-@property (copy) WXThickness* margin;
-@property (copy) NSString* language;
+@property (retain) WXThickness* margin;
+@property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
-@property (copy) RTObject* dataContext;
+@property (retain) RTObject* dataContext;
 @property WXVerticalAlignment verticalAlignment;
 @property double maxWidth;
 @property double maxHeight;
 @property double minHeight;
 @property double width;
-@property (copy) RTObject* tag;
-@property (copy) WXStyle* style;
-@property (copy) WXResourceDictionary* resources;
-@property (copy) NSString* name;
+@property (retain) RTObject* tag;
+@property (retain) WXStyle* style;
+@property (retain) WXResourceDictionary* resources;
+@property (retain) NSString* name;
 @property double minWidth;
 @property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
@@ -1686,11 +1686,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXSetter : WXSetterBase
-+ (WXSetter*)createInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
++ (WXSetter*)makeInstance:(WXDependencyProperty*)targetProperty value:(RTObject*)value ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) RTObject* value;
-@property (copy) WXDependencyProperty* property ;
-@property (copy) WXTargetPropertyPath* target;
+@property (retain) RTObject* value;
+@property (retain) WXDependencyProperty* property ;
+@property (retain) WXTargetPropertyPath* target;
 @end
 
 #endif // __WXSetter_DEFINED__
@@ -1748,7 +1748,7 @@ WINRT_EXPORT
                           resourceLocator:(WFUri*)resourceLocator
                 componentResourceLocation:(WUXCPComponentResourceLocation)componentResourceLocation;
 + (instancetype)make ACTIVATOR;
-@property (copy) WXResourceDictionary* resources;
+@property (retain) WXResourceDictionary* resources;
 @property WXApplicationTheme requestedTheme;
 @property (readonly) WXDebugSettings* debugSettings;
 + (WXApplication*)current;

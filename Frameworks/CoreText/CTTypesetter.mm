@@ -36,7 +36,7 @@ extern "C" {
 #include <ttnameid.h>
 }
 
-#include "LoggingNative.h";
+#include "LoggingNative.h"
 
 static const wchar_t* TAG = L"CTTypesetter";
 

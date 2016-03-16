@@ -68,7 +68,7 @@ WINRT_EXPORT
 @property int width;
 @property int height;
 @property WGDDirectXPixelFormat format;
-@property (copy) WGDDDirect3DMultisampleDescription* multisampleDescription;
+@property (retain) WGDDDirect3DMultisampleDescription* multisampleDescription;
 @end
 
 // Windows.Foundation.IClosable
@@ -97,7 +97,7 @@ WINRT_EXPORT
 #define __WGDDIDirect3DSurface_DEFINED__
 
 @protocol WGDDIDirect3DSurface <WFIClosable>
-@property (readonly) WGDDDirect3DSurfaceDescription* description;
+@property (readonly) WGDDDirect3DSurfaceDescription* Description;
 - (void)close;
 @end
 

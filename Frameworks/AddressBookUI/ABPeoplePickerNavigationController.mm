@@ -17,6 +17,7 @@
 #import <AddressBookUI/ABPeoplePickerNavigationController.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const ABPersonNamePrefixProperty = @"ABPersonNamePrefixProperty";
 NSString* const ABPersonGivenNameProperty = @"ABPersonGivenNameProperty";

@@ -47,8 +47,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMXmlnsDefinition : NSObject
 + (instancetype) new;
-@property (copy) NSString* xmlNamespace;
-@property (copy) NSString* Namespace;
+@property (retain) NSString* xmlNamespace;
+@property (retain) NSString* Namespace;
 @end
 
 // Windows.UI.Xaml.Markup.IComponentConnector
@@ -157,7 +157,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMXamlReader : RTObject
-+ (RTObject*)load:(NSString*)xaml;
++ (RTObject*)Load:(NSString*)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
 @end
 

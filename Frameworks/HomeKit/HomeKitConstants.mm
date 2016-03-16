@@ -17,5 +17,6 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HomeKitConstants.h>
+#import "AssertARCEnabled.h"
 
 NSString* const HMErrorDomain = @"HMErrorDomain";

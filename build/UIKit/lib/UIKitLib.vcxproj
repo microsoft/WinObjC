@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -30,6 +30,7 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActionSheet.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAlertView.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAnimationNotification.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAppearanceSetter.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplication.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivity.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivityViewController.mm" />
@@ -64,6 +65,7 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationItem.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINib.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINibUnarchiver.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPasteboard.mm" />

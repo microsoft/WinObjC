@@ -47,8 +47,6 @@ UIKIT_EXPORT_CLASS
 
 - (id)initWithOldIndexPath:(NSIndexPath*)arg1 newIndexPath:(NSIndexPath*)arg2;
 
-- (UICollectionUpdateAction)updateAction;
-
 - (NSComparisonResult)compareIndexPaths:(UICollectionViewUpdateItem*)otherItem;
 
 - (NSComparisonResult)inverseCompareIndexPaths:(UICollectionViewUpdateItem*)otherItem;

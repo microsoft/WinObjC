@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <Starboard.h>
+#import <StubReturn.h>
 
 #import "CoreGraphics/CGContext.h"
 #import "CGContextInternal.h"
@@ -101,6 +102,10 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _font;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     _font = [coder decodeObjectForKey:@"UIFont"];
@@ -129,6 +134,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
     _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
@@ -174,7 +182,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEditingDelegate:(id)delegate {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -214,18 +226,32 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _borderStyle;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAutocapitalizationType:(UITextAutocapitalizationType)type {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setKeyboardType:(UIKeyboardType)type {
     _keyboardType = type;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIKeyboardType)keyboardType {
     return _keyboardType;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setKeyboardAppearance:(UIKeyboardAppearance)appearance {
+    UNIMPLEMENTED();
 }
 
 - (void)setReturnKeyType:(UIReturnKeyType)type {
@@ -236,7 +262,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return (UIReturnKeyType)_returnKeyType;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setSpellCheckingType:(UITextSpellCheckingType)type {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -253,7 +283,11 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _placeholder;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setEnablesReturnKeyAutomatically:(BOOL)type {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -263,9 +297,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAutocorrectionType:(UITextAutocorrectionType)type {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setSecureTextEntry:(BOOL)secure {
     _secureTextMode = secure;
 }
@@ -285,6 +326,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _background;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)rect {
     id text = _text;
     id textColor = __textColor;
@@ -406,6 +450,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [_cursorBlink setFrame:rect];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
         return;
@@ -414,6 +461,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [self becomeFirstResponder];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)deleteBackward {
     NSRange range;
     bool proceed = false;
@@ -460,6 +510,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)keyPressed:(unsigned short)key {
     _showLastCharLen = 0;
 
@@ -611,6 +664,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _text = nil;
     _font = nil;
@@ -629,6 +685,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     [self setNeedsDisplay];
     if (_leftView != nil) {
@@ -661,6 +720,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)becomeFirstResponder {
     if (_curState & UIControlStateDisabled) {
         return FALSE;
@@ -701,6 +763,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)resignFirstResponder {
     if (![self isFirstResponder]) {
         return TRUE;
@@ -736,6 +801,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUndoManager*)undoManager {
     return _undoManager;
 }
@@ -747,14 +815,23 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _isEditing;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTintColor:(UIColor*)color {
     _tintColor = color;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)tintColor {
     return _tintColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 0, 0 };
 
@@ -785,4 +862,122 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     return ret;
 }
+
+/**
+ @Status Stub
+*/
+- (void)drawPlaceholderInRect:(CGRect)rect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawTextInRect:(CGRect)rect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)borderRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)clearButtonRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)leftViewRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)placeholderRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)rightViewRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)insertText:(NSString*)text {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)hasText {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UITextRange*)textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UITextPosition*)positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)firstRectForRange:(UITextRange*)range {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)caretRectForPosition:(UITextPosition*)position {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

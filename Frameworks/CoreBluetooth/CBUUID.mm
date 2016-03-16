@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBUUID.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CBUUIDCharacteristicExtendedPropertiesString = @"CBUUIDCharacteristicExtendedPropertiesString";
 NSString* const CBUUIDCharacteristicUserDescriptionString = @"CBUUIDCharacteristicUserDescriptionString";

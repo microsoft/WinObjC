@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKContainer.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CKOwnerDefaultName = @"CKOwnerDefaultName";
 NSString* const CKAccountChangedNotification = @"CKAccountChangedNotification";

@@ -15,10 +15,6 @@
 //******************************************************************************
 
 #include "Starboard.h"
-@interface UIKeyboardRotationView : UIView
-@end
-@class _UISettings;
-
 #import <StubReturn.h>
 
 #include "Platform/EbrPlatform.h"
@@ -37,7 +33,15 @@
 #include "UIKit/UIColor.h"
 #include "UIViewInternal.h"
 #include "UIApplicationInternal.h"
-typedef wchar_t WCHAR;
+#include "UIKit/UIGestureRecognizerSubclass.h"
+#include "UIGestureRecognizerInternal.h"
+#include "UIWindowInternal.h"
+#include "UILocalNotificationInternal.h"
+#include "CALayerInternal.h"
+#include "CATransactionInternal.h"
+#include "UIResponderInternal.h"
+#include "UITouchInternal.h"
+#include "UIEventInternal.h"
 #include "UWP/WindowsGraphicsDisplay.h"
 #include "UWP/WindowsSystemDisplay.h"
 #include "UrlLauncher.h"
@@ -54,6 +58,21 @@ typedef wchar_t WCHAR;
 #include "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIApplication";
+
+@interface UIKeyboardRotationView : UIView
+@end
+
+@implementation UIKeyboardRotationView
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
+    UIView* ret = [super hitTest:point withEvent:event];
+
+    if (ret == self) {
+        return nil;
+    }
+
+    return ret;
+}
+@end
 
 const NSTimeInterval UIMinimumKeepAliveTimeout = StubConstant();
 const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid = NSUIntegerMax;
@@ -162,8 +181,11 @@ id currentlyTrackingGesturesList;
 BOOL resetAllTrackingGestures = TRUE;
 
 BOOL refreshPending = FALSE;
-id newMouseEvent, shutdownEvent;
-id statusBar, statusBarRotationLayer, popupRotationLayer;
+NSRunLoopSource* newMouseEvent;
+NSRunLoopSource* shutdownEvent;
+UIImageView* statusBar;
+UIView* statusBarRotationLayer;
+UIView* popupRotationLayer;
 BOOL statusBarHidden = FALSE;
 unsigned ignoringInteractionEvents = 0;
 BOOL idleDisabled = FALSE;
@@ -171,13 +193,7 @@ extern BOOL _doShutdown;
 EbrEvent g_NewMouseEvent, g_shutdownEvent;
 extern id _curFirstResponder;
 
-extern pthread_t renderTid;
-extern pthread_mutex_t g_ChangeOrientationLock;
-extern pthread_cond_t g_ChangeOrientationCond;
-
-UIApplicationState _applicationState;
-extern EbrEvent _applicationStateChanged;
-bool _drawingAllowed = true;
+UIApplicationState _applicationState = UIApplicationStateInactive;
 
 NSMutableDictionary* g_curGesturesDict;
 
@@ -242,8 +258,6 @@ static int GetTouchCount(float x, float y, double timeStamp) {
     return 0;
 }
 
-extern int glDrawContext;
-
 int GetMouseEvents(EbrInputEvent* pDest, int max);
 
 static UIView *_curKeyboardAccessory, *_curKeyboardInputView;
@@ -258,6 +272,9 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 
 @synthesize applicationIconBadgeNumber = _applicationIconBadgeNumber;
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)alloc {
     if (sharedApplication != nil) {
         return sharedApplication;
@@ -280,7 +297,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
 
     [[NSRunLoop mainRunLoop] _addInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
     [[NSRunLoop mainRunLoop] _addInputSource:shutdownEvent forMode:@"kCFRunLoopDefaultMode"];
-    [[NSRunLoop mainRunLoop] addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _addObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
     currentlyTrackingGesturesList = [NSMutableArray new];
 
     return sharedApplication;
@@ -292,7 +309,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     sharedApplication = nil;
 
     [[NSRunLoop mainRunLoop] _removeInputSource:newMouseEvent forMode:@"kCFRunLoopDefaultMode"];
-    [[NSRunLoop mainRunLoop] removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
+    [[NSRunLoop mainRunLoop] _removeObserver:sharedApplication forMode:@"kCFRunLoopDefaultMode"];
 }
 
 - (void)notify:(unsigned)activity {
@@ -358,7 +375,7 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     }
 }
 
-static id findTopActionButtons(NSArray* arr, NSArray* windows, UIView* root) {
+static id findTopActionButtons(NSMutableArray* arr, NSArray* windows, UIView* root) {
     id subviews = [root subviews];
     int count = [subviews count];
 
@@ -454,7 +471,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
         // Not handled by any of the windows, try sending a message about it:
         id appDelegate = [[self sharedApplication] delegate];
         if ([appDelegate respondsToSelector:@selector(applicationBackButtonPressed:)]) {
-            [appDelegate applicationBackButtonPressed:nil];
+            [appDelegate performSelector:@selector(applicationBackButtonPressed:) withObject:nil];
         }
     }
 }
@@ -670,47 +687,6 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
             assert(0);
             break;
     }
-
-#if defined(ANDROID) || defined(QNX)
-    pthread_mutex_lock(&g_ChangeOrientationLock);
-    requestDeviceOrientation = changeHostOrientation;
-    pthread_cond_wait(&g_ChangeOrientationCond, &g_ChangeOrientationLock);
-    if (!statusBarHidden) {
-#ifdef NO_STATUSBAR
-        windowInsetLeft = _statusBarInsets.left;
-        windowInsetRight = _statusBarInsets.right;
-        windowInsetTop = _statusBarInsets.top;
-        windowInsetBottom = _statusBarInsets.bottom;
-        g_bDidChangeView = true;
-#endif
-    }
-
-#ifdef RUN_NATIVE_RESOLUTION
-    //  Resize base windows to screen size
-    id windows = [self windows];
-    int count = [windows count];
-
-    CGRect frame;
-    frame.origin.x = 0;
-    frame.origin.y = 0;
-    frame.size.width = GetCACompositor()->screenWidth();
-    frame.size.height = GetCACompositor()->screenHeight();
-
-    CGPoint center;
-    center.x = frame.origin.x + frame.size.width / 2.0f;
-    center.y = frame.origin.y + frame.size.height / 2.0f;
-
-    int i;
-    for (i = 0; i < count; i++) {
-        id window = [windows objectAtIndex:i];
-        id windowLayer = [window layer];
-
-        [windowLayer setBounds:frame];
-        [windowLayer setPosition:center];
-    }
-#endif
-    pthread_mutex_unlock(&g_ChangeOrientationLock);
-#endif
 }
 
 - (void)_setInternalOrientation:(UIInterfaceOrientation)orientation {
@@ -837,8 +813,8 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     WDXDXmlElement* badgeElement = rt_dynamic_cast<WDXDXmlElement>(badgeObject);
     [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
 
-    WUNBadgeNotification* notification = [WUNBadgeNotification createBadgeNotification:doc];
-    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
+    WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
+    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager makeBadgeUpdaterForApplication];
 
     [updater update:notification];
 }
@@ -904,7 +880,7 @@ static void printViews(id curView, int level) {
                 [UIApplication _doBackAction];
                 return;
             }
-            [UIResponder keyPressed:evt->type];
+            [UIResponder _keyPressed:evt->type];
             return;
         }
 
@@ -1026,7 +1002,7 @@ static void printViews(id curView, int level) {
         }
 
         UIEvent* touchEvent = [[UIEvent createWithTouches:allTouches touchEvent:newTouchEvent] autorelease];
-        [touchEvent setTimestamp:evt->touchTime];
+        [touchEvent _setTimestamp:evt->touchTime];
 
         //  Send off the UIEvent
         [self sendEvent:touchEvent];
@@ -1350,6 +1326,9 @@ static void printViews(id curView, int level) {
     return _curKeyWindow;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     windows = (id)CFArrayCreateMutable(NULL, 32, NULL);
 
@@ -1421,7 +1400,11 @@ static void printViews(id curView, int level) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)endReceivingRemoteControlEvents {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1489,6 +1472,9 @@ static void printViews(id curView, int level) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIWindow*)_popupWindow {
     static BOOL building = false;
     if (popupWindow == nil && building == FALSE) {
@@ -1501,7 +1487,7 @@ static void printViews(id curView, int level) {
         popupRect.size.width = GetCACompositor()->screenWidth();
         popupRect.size.height = GetCACompositor()->screenHeight();
 
-        popupWindow = [[UIWindow alloc] initWithContentRect:popupRect];
+        popupWindow = [[UIWindow alloc] _initWithContentRect:popupRect];
         [popupWindow setWindowLevel:100000.0f];
         [popupWindow addSubview:popupRotationLayer];
         building = false;
@@ -1544,7 +1530,7 @@ static void printViews(id curView, int level) {
     UNIMPLEMENTED();
     int count = [_curNotifications count];
     while (count > 0) {
-        id object = [_curNotifications objectAtIndex:count - 1];
+        UILocalNotification* object = [_curNotifications objectAtIndex:count - 1];
         [object _cancelAlarm];
         [_curNotifications removeLastObject];
         --count;
@@ -1577,7 +1563,7 @@ static void printViews(id curView, int level) {
     return _applicationState;
 }
 
-static void WarnViewControllers(UIView* subview) {
+static void _sendMemoryWarningToViewControllers(UIView* subview) {
     id controller = [UIViewController controllerForView:subview];
     if ([controller respondsToSelector:@selector(didReceiveMemoryWarning)]) {
         [controller didReceiveMemoryWarning];
@@ -1585,72 +1571,69 @@ static void WarnViewControllers(UIView* subview) {
 
     NSArray* subviews = [subview subviews];
     for (UIView* curSubview in subviews) {
-        WarnViewControllers(curSubview);
+        _sendMemoryWarningToViewControllers(curSubview);
     }
 }
 
-- (void)_sendToBackground {
-    id delegate = [self delegate];
+- (void)_sendActiveStatus:(BOOL)isActive {
+    if (isActive) {
+        [self _sendEnteringForegroundEvents];
 
-    //  For devices with <= 512mb of memory, send a memory warning
-    //  so that the app will release as much memory as possible
-    uint64_t totalMemory = [UIDevice _deviceTotalMemory];
-    if (totalMemory <= 512 * 1024 * 1024) {
-        if ([delegate respondsToSelector:@selector(applicationDidReceiveMemoryWarning:)]) {
-            [delegate applicationDidReceiveMemoryWarning:self];
+        if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
+            [self.delegate applicationDidBecomeActive:self];
         }
-        if ([windows count] > 0) {
-            int windowCount = [windows count];
-
-            for (int i = 0; i < windowCount; i++) {
-                id window = [windows objectAtIndex:i];
-                WarnViewControllers(window);
-            }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:self];
+    } else {
+        if ([self.delegate respondsToSelector:@selector(applicationWillResignActive:)]) {
+            [self.delegate applicationWillResignActive:self];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification" object:self];
+
+        [self _sendEnteringBackgroundEvents];
     }
+}
 
-    if ([delegate respondsToSelector:@selector(applicationWillResignActive:)]) {
-        [delegate applicationWillResignActive:self];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillResignActiveNotification" object:self];
-
-    if ([windows count] > 0) {
-        int windowCount = [windows count];
-
-        for (int i = 0; i < windowCount; i++) {
-            id window = [windows objectAtIndex:i];
-            id windowLayer = [window layer];
-            [windowLayer discardDisplayHierarchy];
-        }
-
-        GetCACompositor()->ProcessTransactions();
-    }
-    _applicationState = UIApplicationStateBackground;
-    _drawingAllowed = false;
-    if ([delegate respondsToSelector:@selector(applicationDidEnterBackground:)]) {
-        [delegate applicationDidEnterBackground:self];
+- (void)_sendEnteringBackgroundEvents {
+    if ([self.delegate respondsToSelector:@selector(applicationDidEnterBackground:)]) {
+        [self.delegate applicationDidEnterBackground:self];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidEnterBackgroundNotification" object:self];
-    EbrEventSignal(_applicationStateChanged);
+
+    _applicationState = UIApplicationStateBackground;
 }
 
-- (void)_bringToForeground:(NSURL*)url {
-    id delegate = [self delegate];
-    if ([delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
-        [delegate applicationWillEnterForeground:self];
+- (void)_sendEnteringForegroundEvents {
+    if (_applicationState == UIApplicationStateBackground) {
+        // Note: *applicationWillEnterForeground* events should only be sent when the app is coming to Foreground from Background.
+        if ([self.delegate respondsToSelector:@selector(applicationWillEnterForeground:)]) {
+            [self.delegate applicationWillEnterForeground:self];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification" object:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillEnterForegroundNotification" object:self];
 
     _applicationState = UIApplicationStateActive;
-    TraceVerbose(TAG, L"Bringing to foreground with: %x", url);
+}
+
+- (void)_launchToForeground:(NSURL*)url {
+    [self _sendEnteringForegroundEvents];
+
+    TraceVerbose(TAG, L"Launching to foreground with: %@", url);
     if (url != nil) {
         [UIApplication _launchedWithURL:url];
     }
+}
 
-    if ([delegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-        [delegate applicationDidBecomeActive:self];
+- (void)_sendHighMemoryWarning {
+    if ([self.delegate respondsToSelector:@selector(applicationDidReceiveMemoryWarning:)]) {
+        [self.delegate applicationDidReceiveMemoryWarning:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidReceiveMemoryWarningNotification" object:self];
+
+    int windowCount = [windows count];
+    for (int i = 0; i < windowCount; i++) {
+        UIView* window = [windows objectAtIndex:i];
+        _sendMemoryWarningToViewControllers(window);
+    }
 }
 
 static void layoutBlankView(UIView* inputView, UIView* accessoryView, float totalHeight) {
@@ -1854,7 +1837,8 @@ static void evaluateKeyboard(id self) {
     }
 
     // Figure out what's going on with our first responder:
-    id keyboardAccessory = nil, inputView = nil;
+    UIView* keyboardAccessory = nil;
+    UIView* inputView = nil;
     id curResponder = _curFirstResponder;
     showKeyboardType = 0;
 
@@ -1938,7 +1922,7 @@ static void evaluateKeyboard(id self) {
     [text getCharacters:chars range:NSMakeRange(0, len)];
 
     for (int i = 0; i < len; i++) {
-        [UIResponder keyPressed:chars[i]];
+        [UIResponder _keyPressed:chars[i]];
     }
     IwFree(chars);
 }
@@ -1954,8 +1938,8 @@ static void evaluateKeyboard(id self) {
     NSString* str = [[NSString alloc] initWithData:tokenData encoding:NSUTF8StringEncoding];
     TraceVerbose(TAG, L"Received token: %hs", [str UTF8String]);
 
-    if ([_delegate respondsToSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)]) {
-        [_delegate application:self didRegisterForRemoteNotificationsWithDeviceToken:tokenData];
+    if ([self.delegate respondsToSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)]) {
+        [self.delegate application:self didRegisterForRemoteNotificationsWithDeviceToken:tokenData];
     }
 
     /*
@@ -1996,26 +1980,25 @@ static void evaluateKeyboard(id self) {
     [str release];
     */
 
-    id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSDictionary* obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
 
     TraceVerbose(TAG, L"Type is: %hs", object_getClassName(obj));
     TraceVerbose(TAG, L"Received notification: %hs", [[obj description] UTF8String]);
 
-    if ([_delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
-        [_delegate application:self didReceiveRemoteNotification:obj];
+    if ([self.delegate respondsToSelector:@selector(application:didReceiveRemoteNotification:)]) {
+        [self.delegate application:self didReceiveRemoteNotification:obj];
     }
 }
 
+/**
+ @Public No
+*/
 + (void)setStarboardInternalLoggingLevel:(int)level {
     if (level > 0) {
         g_logErrors = true;
     } else {
         g_logErrors = false;
     }
-}
-
-- (void)__showOptions {
-    [_UISettings showSettings];
 }
 
 /**
@@ -2429,6 +2412,9 @@ void UIShutdown() {
     [[NSRunLoop mainRunLoop] _wakeUp];
 }
 
+/**
+ @Public No
+*/
 @implementation WOCDisplayMode {
     float _magnification;
     float _fixedWidth, _fixedHeight;

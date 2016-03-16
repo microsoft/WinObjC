@@ -29,6 +29,7 @@
 @property (nonatomic, copy, readonly) NSDictionary* decorationViewClassDict;
 @property (nonatomic, copy, readonly) NSDictionary* decorationViewNibDict;
 @property (nonatomic, copy, readonly) NSDictionary* decorationViewExternalObjectsTables;
+@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
 
 @end
 

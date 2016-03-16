@@ -61,10 +61,10 @@ CORELOCATION_EXPORT_CLASS
 - (void)stopUpdatingLocation;
 - (void)requestLocation;
 @property (assign, nonatomic) BOOL pausesLocationUpdatesAutomatically STUB_PROPERTY;
-@property (assign, nonatomic) BOOL allowsBackgroundLocationUpdates STUB_PROPERTY;
+@property (assign, nonatomic) BOOL allowsBackgroundLocationUpdates;
 @property (assign, nonatomic) CLLocationDistance distanceFilter;
 @property (assign, nonatomic) CLLocationAccuracy desiredAccuracy;
-@property (assign, nonatomic) CLActivityType activityType STUB_PROPERTY;
+@property (assign, nonatomic) CLActivityType activityType;
 - (void)startMonitoringSignificantLocationChanges STUB_METHOD;
 - (void)stopMonitoringSignificantLocationChanges STUB_METHOD;
 - (void)startUpdatingHeading STUB_METHOD;

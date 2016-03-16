@@ -56,7 +56,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithObjects:(NSObject*)first, ... {
++ (instancetype)arrayWithObjects:(NSObject*)first, ... {
     va_list argList;
     va_start(argList, first);
     std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
@@ -67,14 +67,14 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithObject:(NSObject*)obj {
++ (instancetype)arrayWithObject:(NSObject*)obj {
     NSArray* ret = [self new];
     CFArrayAppendValue((CFMutableArrayRef)ret, (const void*)obj);
 
     return [ret autorelease];
 }
 
-- (NSArray*)initWithObject:(NSObject*)obj {
+- (instancetype)initWithObject:(NSObject*)obj {
     [self init];
 
     CFArrayAppendValue((CFMutableArrayRef)self, (const void*)obj);
@@ -85,7 +85,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-+ (NSArray*)array {
++ (instancetype)array {
     NSArray* ret = [self new];
 
     return [ret autorelease];
@@ -94,7 +94,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithObjects:(id*)objs count:(NSUInteger)count {
++ (instancetype)arrayWithObjects:(id*)objs count:(NSUInteger)count {
     NSArray* ret = [self alloc];
 
     _CFArrayInitInternalWithObjects((CFArrayRef)ret, (const void**)objs, count, true);
@@ -105,7 +105,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithArray:(NSArray*)arrayToCopy {
++ (instancetype)arrayWithArray:(NSArray*)arrayToCopy {
     NSArray* ret = [[self alloc] initWithArray:arrayToCopy];
     return [ret autorelease];
 }
@@ -122,7 +122,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithObjects:(NSObject*)first, ... {
+- (instancetype)initWithObjects:(NSObject*)first, ... {
     va_list argList;
     va_start(argList, first);
     std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
@@ -133,13 +133,13 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithObjects:(id*)objs count:(NSUInteger)count {
+- (instancetype)initWithObjects:(id*)objs count:(NSUInteger)count {
     _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, count, true);
 
     return self;
 }
 
-- (NSArray*)initWithObjectsTakeOwnership:(NSObject**)objs count:(NSUInteger)count {
+- (instancetype)initWithObjectsTakeOwnership:(NSObject**)objs count:(NSUInteger)count {
     _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, count, false);
 
     return self;
@@ -154,17 +154,20 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
     NSData* data = [NSData dataWithContentsOfFile:filename];
 
     if (data == nil) {
+        [self release];
         return nil;
     }
 
     char* pData = (char*)[data bytes];
 
-    id arrayData = [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0];
+    id arrayData =
+        [NSPropertyListSerialization propertyListFromData:data mutabilityOption:NSPropertyListImmutable format:0 errorDescription:0];
     if (![arrayData isKindOfClass:[NSArray class]]) {
         arrayData = [arrayData objectForKey:@"$objects"];
         if (![(id)arrayData isKindOfClass:[NSArray class]]) {
             TraceWarning(TAG, L"object %hs is not an array", [[arrayData description] UTF8String]);
-            return self;
+            [self release];
+            return nil;
         }
     }
 
@@ -183,7 +186,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-- (NSObject*)init {
+- (instancetype)init {
     _CFArrayInitInternal((CFArrayRef)self);
     return self;
 }
@@ -336,7 +339,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
  @Status Caveat
  @Notes Only supports NSKeyedArchiver NSCoder type.
 */
-- (NSArray*)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
         id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
@@ -352,7 +355,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithArray:(NSArray*)arrayToCopy {
+- (instancetype)initWithArray:(NSArray*)arrayToCopy {
     if (arrayToCopy != nil &&
         (object_getClass(arrayToCopy) == [NSArrayConcrete class] || object_getClass(arrayToCopy) == [NSMutableArrayConcrete class])) {
         int objCount = CFArrayGetCount((CFArrayRef)arrayToCopy);
@@ -384,7 +387,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithArray:(id)arrayToCopy copyItems:(BOOL)copyFlag {
+- (instancetype)initWithArray:(id)arrayToCopy copyItems:(BOOL)copyFlag {
     [self init];
 
     int count = [arrayToCopy count];

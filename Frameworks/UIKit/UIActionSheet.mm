@@ -23,6 +23,7 @@
 #include "UIKit/UIColor.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UIActionSheet.h"
+#include "UIApplicationInternal.h"
 #include "UIBarButtonItem+Internals.h"
 #include "LoggingNative.h"
 
@@ -45,6 +46,7 @@ static const wchar_t* TAG = L"UIActionSheet";
     int _destructiveIndex;
     int _otherButtonIndex;
 }
+
 static int addButton(UIActionSheet* self, id text) {
     CGRect frame;
 
@@ -68,7 +70,10 @@ static int addButton(UIActionSheet* self, id text) {
     return self->_numButtons++;
 }
 
-- (id)init {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     _cancelButtonIndex = _cancelCustomIndex = -1;
     _otherButtonIndex = -1;
     _destructiveIndex = -1;
@@ -86,7 +91,7 @@ static int addButton(UIActionSheet* self, id text) {
 /**
  @Status Interoperable
 */
-- (id)initWithTitle:(id)title
+- (instancetype)initWithTitle:(id)title
                   delegate:(id)delegate
          cancelButtonTitle:(id)cancelButtonTitle
     destructiveButtonTitle:(id)destructiveButtonTitle
@@ -244,6 +249,13 @@ static int addButton(UIActionSheet* self, id text) {
 }
 
 /**
+ @Status Stub
+*/
+- (void)showFromRect:(CGRect)rect inView:(UIView*)view animated:(BOOL)animated {
+    UNIMPLEMENTED();
+}
+
+/**
  @Status Interoperable
 */
 - (void)showFromToolbar:(id)toolbar {
@@ -264,6 +276,9 @@ static int addButton(UIActionSheet* self, id text) {
     [self showInView:[[[item view] superview] superview]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void) /* use typed version */ layoutSubviews {
     CGRect bounds;
 
@@ -371,8 +386,6 @@ static void dismissView(UIActionSheet* self, int index) {
 
     if ([_delegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)]) {
         [_delegate actionSheet:self clickedButtonAtIndex:index];
-    } else if ([_delegate respondsToSelector:@selector(alertSheet:buttonClicked:)]) {
-        [_delegate alertSheet:self buttonClicked:index];
     }
 
     if ([_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)]) {
@@ -382,23 +395,11 @@ static void dismissView(UIActionSheet* self, int index) {
     dismissView(self, index);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(id)touches withEvent:(id)event {
-    /*
-    [[self retain] autorelease];
-    [_delegate retain];
-    [_delegate autorelease];
-    int index = -1;
-
-    if ( [_delegate respondsToSelector:@selector(actionSheet:willDismissWithButtonIndex:)] ) {
-    [_delegate actionSheet:self willDismissWithButtonIndex:index];
-    }
-
-    dismissView(self, index);
-
-    if ( [_delegate respondsToSelector:@selector(actionSheet:didDismissWithButtonIndex:)] ) {
-    [_delegate actionSheet:self didDismissWithButtonIndex:index];
-    }
-    */
+    // No-op
 }
 
 /**

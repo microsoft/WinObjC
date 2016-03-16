@@ -1507,9 +1507,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPCashDrawerCloseAlarm : RTObject
 @property unsigned int beepFrequency;
-@property (copy) WFTimeSpan* beepDuration;
-@property (copy) WFTimeSpan* beepDelay;
-@property (copy) WFTimeSpan* alarmTimeout;
+@property (retain) WFTimeSpan* beepDuration;
+@property (retain) WFTimeSpan* beepDelay;
+@property (retain) WFTimeSpan* alarmTimeout;
 - (EventRegistrationToken)addAlarmTimeoutExpiredEvent:(void (^)(WDPCashDrawerCloseAlarm*, RTObject*))del;
 - (void)removeAlarmTimeoutExpiredEvent:(EventRegistrationToken)tok;
 - (void)startAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;

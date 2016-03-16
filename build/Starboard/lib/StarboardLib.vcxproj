@@ -29,7 +29,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\UTSName.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonDigest.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\mach.cpp" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\MurmurHash3.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\Starboard\MurmurHash3.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\pevents.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\String.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\TaskInfo.cpp" />
@@ -38,6 +38,11 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\PlatformSupport.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\CommonCryptor.cpp" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\sched.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\Starboard\inet.cpp" />
+    <ClangCompile Include="..\..\..\Frameworks\Starboard\random.cpp" />
+    <ClangCompile Include="..\..\..\Frameworks\Starboard\time.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A00FC26-2ECF-4DF7-8ECF-2D18C5AC61C9}</ProjectGuid>

@@ -16,14 +16,46 @@
 
 #include <Windows.h>
 #include <mach/mach.h>
+#include <StubReturn.h>
 
+extern "C" {
 /**
 @Status Caveat
 @Notes Parameter port will be ignored.
 */
-extern "C" kern_return_t host_page_size(host_t host, vm_size_t* pageSize) {
+kern_return_t host_page_size(host_t host, vm_size_t* pageSize) {
     SYSTEM_INFO systemInfo = {};
     ::GetNativeSystemInfo(&systemInfo);
     *pageSize = static_cast<vm_size_t>(systemInfo.dwPageSize);
     return KERN_SUCCESS;
+}
+
+/**
+@Status Stub
+*/
+mach_port_t mach_host_self(void) {
+    UNIMPLEMENTED();
+    return 0;
+}
+
+int vm_page_size = 65536;
+
+/**
+@Status Stub
+*/
+int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_type_number_t* dataOutSize) {
+    if (type == HOST_VM_INFO && *dataOutSize >= sizeof(vm_statistics)) {
+        *dataOutSize = sizeof(vm_statistics);
+
+        vm_statistics* ret = (vm_statistics*)dataOut;
+        memset(ret, 0, sizeof(vm_statistics));
+
+        ret->free_count = 512 * 1024 * 1024 / 65536;
+    } else {
+        UNIMPLEMENTED();
+    }
+
+    return 0;
+}
+
 }

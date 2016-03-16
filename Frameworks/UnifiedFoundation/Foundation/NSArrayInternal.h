@@ -21,6 +21,6 @@ NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnum
 @interface NSArray (Internal) {
 }
 
-- (NSArray*)initWithObject:(NSObject*)obj;
+- (instancetype)initWithObject:(NSObject*)obj;
 
 @end

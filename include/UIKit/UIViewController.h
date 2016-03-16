@@ -87,7 +87,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) CGSize preferredContentSize;
 @property (nonatomic, assign) BOOL wantsFullScreenLayout;
 @property (nonatomic, assign) UIModalPresentationStyle modalPresentationStyle;
-@property (nonatomic, assign) UIModalTransitionStyle modalTransitionStyle;
+@property (nonatomic, assign) UIModalTransitionStyle modalTransitionStyle STUB_PROPERTY;
 @property (nonatomic, assign) UIRectEdge edgesForExtendedLayout;
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, getter=isEditing) BOOL editing;
@@ -138,7 +138,7 @@ UIKIT_EXPORT_CLASS
 - (BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers STUB_METHOD;
 - (BOOL)canPerformUnwindSegueAction:(SEL)action fromViewController:(UIViewController*)fromViewController withSender:(id)sender STUB_METHOD;
 - (BOOL)disablesAutomaticKeyboardDismissal STUB_METHOD;
-- (BOOL)isBeingDismissed;
+- (BOOL)isBeingDismissed STUB_METHOD;
 - (BOOL)isBeingPresented STUB_METHOD;
 - (BOOL)isMovingFromParentViewController STUB_METHOD;
 - (BOOL)isMovingToParentViewController STUB_METHOD;
@@ -199,7 +199,7 @@ UIKIT_EXPORT_CLASS
 - (void)removeFromParentViewController;
 - (void)removeKeyCommand:(UIKeyCommand*)keyCommand STUB_METHOD;
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated;
-- (void)setNeedsStatusBarAppearanceUpdate;
+- (void)setNeedsStatusBarAppearanceUpdate STUB_METHOD;
 - (void)setOverrideTraitCollection:(UITraitCollection*)collection forChildViewController:(UIViewController*)childViewController STUB_METHOD;
 - (void)setToolbarItems:(NSArray*)toolbarItems animated:(BOOL)animated;
 - (void)showDetailViewController:(UIViewController*)vc sender:(id)sender STUB_METHOD;
@@ -221,7 +221,7 @@ UIKIT_EXPORT_CLASS
 - (void)viewWillAppear:(BOOL)animated;
 - (void)viewWillDisappear:(BOOL)animated;
 - (void)viewWillLayoutSubviews;
-- (void)viewWillUnload STUB_METHOD;
+- (void)viewWillUnload;
 - (void)willAnimateFirstHalfOfRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                                     duration:(NSTimeInterval)duration;
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration;

@@ -76,28 +76,28 @@ static ComPtr<IHttpClient> _getHttpClient() {
     }
 
     ComPtr<IHttpClientFactory> httpClientFactory;
-    THROW_IF_FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Web_Http_HttpClient).Get(), &httpClientFactory));
+    THROW_NS_IF_FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Web_Http_HttpClient).Get(), &httpClientFactory));
 
     ComPtr<IHttpFilter> httpFilter;
     ComPtr<IHttpBaseProtocolFilter> filter;
     ActivateInstance(Wrappers::HStringReference(RuntimeClass_Windows_Web_Http_Filters_HttpBaseProtocolFilter).Get(), &filter);
-    THROW_IF_FAILED(filter.As(&httpFilter));
+    THROW_NS_IF_FAILED(filter.As(&httpFilter));
 
-    THROW_IF_FAILED(filter->put_AllowUI(false));
-    THROW_IF_FAILED(filter->put_AllowAutoRedirect(false));
+    THROW_NS_IF_FAILED(filter->put_AllowUI(false));
+    THROW_NS_IF_FAILED(filter->put_AllowAutoRedirect(false));
 
     ComPtr<IHttpCacheControl> cacheControl;
-    THROW_IF_FAILED(filter->get_CacheControl(&cacheControl));
+    THROW_NS_IF_FAILED(filter->get_CacheControl(&cacheControl));
 
     // VSO 6693027: Update this to use NoCache so that we get full control.
-    THROW_IF_FAILED(cacheControl->put_ReadBehavior(HttpCacheReadBehavior::HttpCacheReadBehavior_MostRecent));
+    THROW_NS_IF_FAILED(cacheControl->put_ReadBehavior(HttpCacheReadBehavior::HttpCacheReadBehavior_MostRecent));
 
     // IHttpBaseProtocolFilter3: because the vtable of IHttpBaseProtocolFilter could not be extended.
     ComPtr<IHttpBaseProtocolFilter3> filter3;
-    THROW_IF_FAILED(filter.As(&filter3));
-    THROW_IF_FAILED(filter3->put_CookieUsageBehavior(HttpCookieUsageBehavior::HttpCookieUsageBehavior_NoCookies));
+    THROW_NS_IF_FAILED(filter.As(&filter3));
+    THROW_NS_IF_FAILED(filter3->put_CookieUsageBehavior(HttpCookieUsageBehavior::HttpCookieUsageBehavior_NoCookies));
 
-    THROW_IF_FAILED(httpClientFactory->Create(httpFilter.Get(), &httpClient));
+    THROW_NS_IF_FAILED(httpClientFactory->Create(httpFilter.Get(), &httpClient));
     httpClient.AsWeak(&weakHttpClient);
     return httpClient;
 }

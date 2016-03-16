@@ -18,6 +18,7 @@
 #include <UIKit/UIKit.h>
 #import <libxml/HTMLparser.h>
 #import <map>
+#import "UIFontInternal.h"
 
 NSString* const NSFontAttributeName = @"NSFont";
 NSString* const NSParagraphStyleAttributeName = @"NSParagraphStyle";

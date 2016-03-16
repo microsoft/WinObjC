@@ -126,8 +126,8 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) NSString* settingsIdentifier;
-@property (copy) NSString* commitButtonText;
+@property (retain) NSString* settingsIdentifier;
+@property (retain) NSString* commitButtonText;
 @property (readonly) NSMutableArray* fileTypeFilter;
 @property (readonly) WFCValueSet* continuationData;
 - (void)pickSingleFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
@@ -147,14 +147,14 @@ WINRT_EXPORT
 @interface WSPFileSavePicker : RTObject
 + (instancetype)make ACTIVATOR;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) WSStorageFile* suggestedSaveFile;
-@property (copy) NSString* suggestedFileName;
-@property (copy) NSString* settingsIdentifier;
-@property (copy) NSString* defaultFileExtension;
-@property (copy) NSString* commitButtonText;
+@property (retain) WSStorageFile* suggestedSaveFile;
+@property (retain) NSString* suggestedFileName;
+@property (retain) NSString* settingsIdentifier;
+@property (retain) NSString* defaultFileExtension;
+@property (retain) NSString* commitButtonText;
 @property (readonly) NSMutableDictionary* fileTypeChoices;
 @property (readonly) WFCValueSet* continuationData;
-@property (copy) NSString* enterpriseId;
+@property (retain) NSString* enterpriseId;
 - (void)pickSaveFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)pickSaveFileAndContinue;
 @end
@@ -170,8 +170,8 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property WSPPickerViewMode viewMode;
 @property WSPPickerLocationId suggestedStartLocation;
-@property (copy) NSString* settingsIdentifier;
-@property (copy) NSString* commitButtonText;
+@property (retain) NSString* settingsIdentifier;
+@property (retain) NSString* commitButtonText;
 @property (readonly) NSMutableArray* fileTypeFilter;
 @property (readonly) WFCValueSet* continuationData;
 - (void)pickSingleFolderAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;

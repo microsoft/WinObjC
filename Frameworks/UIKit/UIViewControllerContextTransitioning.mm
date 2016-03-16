@@ -62,21 +62,21 @@ NSString* const UITransitionContextToViewKey = @"UITransitionContextToViewKey";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UIView*)containerView {
     return _superView;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (CGRect)initialFrameForViewController:(UIViewController*)viewController {
     return [[viewController view] frame];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (CGRect)finalFrameForViewController:(UIViewController*)viewController {
     return [[viewController view] frame];
@@ -106,14 +106,14 @@ NSString* const UITransitionContextToViewKey = @"UITransitionContextToViewKey";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)completeTransition:(BOOL)didComplete {
     isComplete = didComplete;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (BOOL)transitionWasCancelled {
     return isCanceled;
@@ -136,21 +136,21 @@ NSString* const UITransitionContextToViewKey = @"UITransitionContextToViewKey";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (CGAffineTransform)targetTransform {
     return [_superView transform];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UIView*)viewForKey:(NSString*)key {
     return [_views objectForKey:key];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UIViewController*)viewControllerForKey:(NSString*)key {
     return [_viewControllers objectForKey:key];

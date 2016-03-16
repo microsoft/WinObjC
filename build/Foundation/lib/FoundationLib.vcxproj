@@ -98,8 +98,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSMutableDictionary.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSMutableSet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSMutableURLRequest.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSNib.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSNIBUnarchiver.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSNotificationCenter.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSNotificationQueue.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSNull.mm" />

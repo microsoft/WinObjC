@@ -21,7 +21,7 @@
     idretaintype(NSString) _headerTitle;
     idretaintype(NSArray) _rows;
 }
-- (id)initWithCoder:(NSCoder*)coder;
+- (instancetype)initWithCoder:(NSCoder*)coder;
 - (unsigned)numberOfRows;
 - (NSString*)title;
 - (void)dealloc;

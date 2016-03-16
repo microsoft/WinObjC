@@ -57,16 +57,13 @@ public:
     }
 };
 
-@implementation CGPath : NSObject
-- (void)dealloc {
+__CGPath::~__CGPath() {
     if (_components) {
         IwFree(_components);
     }
-
-    [super dealloc];
 }
 
-- (void)_applyPath:(CGContextRef)context {
+void __CGPath::_applyPath(CGContextRef context) {
     for (unsigned i = 0; i < _count; i++) {
         switch (_components[i].type) {
             case pathComponentRectangle:
@@ -135,47 +132,7 @@ public:
     }
 }
 
-- (void)_measurePath:(CGSize*)sizeOut {
-    sizeOut->width = 0;
-    sizeOut->height = 0;
-
-    for (unsigned i = 0; i < _count; i++) {
-        switch (_components[i].type) {
-            case pathComponentRectangle:
-                if (_components[i].rect.origin.x + _components[i].rect.size.width > sizeOut->width) {
-                    sizeOut->width = _components[i].rect.origin.x + _components[i].rect.size.width;
-                }
-                if (_components[i].rect.origin.y + _components[i].rect.size.height > sizeOut->height) {
-                    sizeOut->height = _components[i].rect.origin.y + _components[i].rect.size.height;
-                }
-                break;
-
-            case pathComponentMove:
-                if (_components[i].point.x > sizeOut->width) {
-                    sizeOut->width = _components[i].point.x;
-                }
-                if (_components[i].point.y > sizeOut->height) {
-                    sizeOut->height = _components[i].point.y;
-                }
-                break;
-
-            case pathComponentLineTo:
-                if (_components[i].point.x > sizeOut->width) {
-                    sizeOut->width = _components[i].point.x;
-                }
-                if (_components[i].point.y > sizeOut->height) {
-                    sizeOut->height = _components[i].point.y;
-                }
-                break;
-
-            default:
-                assert(0);
-                break;
-        }
-    }
-}
-
-- (void)_getBoundingBox:(CGRect*)rectOut {
+void __CGPath::_getBoundingBox(CGRect* rectOut) {
     BBox bbox;
 
     for (unsigned i = 0; i < _count; i++) {
@@ -226,27 +183,20 @@ public:
     rectOut->size.height = bbox.y1 - bbox.y;
 }
 
-- (instancetype)copyWithZone:(NSZone*)zone {
-    return [self mutableCopyWithZone:zone];
+void _CGPathApplyPath(CGPathRef pathref, CGContextRef context) {
+    pathref->_applyPath(context);
 }
 
-- (instancetype)mutableCopyWithZone:(NSZone*)zone {
-    CGPath* ret = [CGPath alloc];
-    ret->_max = _max;
-    ret->_count = _count;
-    ret->_components = (pathComponent*)IwRealloc(ret->_components, ret->_max * sizeof(pathComponent));
-    memcpy(ret->_components, _components, _count * sizeof(pathComponent));
-
-    return ret;
+// Not sure why this is necessary in addition to the public version, need to dig further
+void _CGPathGetBoundingBoxInternal(CGPathRef pathref, CGRect* rectOut) {
+    pathref->_getBoundingBox(rectOut);
 }
-
-@end
 
 /**
  @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutable() {
-    return [CGPath new];
+    return __CGPath::alloc(nil);
 }
 
 /**
@@ -254,14 +204,19 @@ CGMutablePathRef CGPathCreateMutable() {
  @Notes Creates a mutable copy
 */
 CGPathRef CGPathCreateCopy(CGPathRef path) {
-    return [path mutableCopy];
+    return CGPathCreateMutableCopy(path);
 }
 
 /**
  @Status Interoperable
 */
 CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
-    return [path mutableCopy];
+    auto ret = __CGPath::alloc(nil);
+    ret->_max = path->_max;
+    ret->_count = path->_count;
+    ret->_components = (pathComponent*)IwRealloc(ret->_components, ret->_max * sizeof(pathComponent));
+    memcpy(ret->_components, path->_components, path->_count * sizeof(pathComponent));
+    return ret;
 }
 
 /**
@@ -280,7 +235,7 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, flo
         y = pt.y;
     }
 
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -303,7 +258,7 @@ void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, floa
         assert(0);
     }
 
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -334,7 +289,7 @@ void CGPathAddArc(CGMutablePathRef path,
                   bool clockwise) {
     assert(!m);
 
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -368,7 +323,7 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
         y = pt.y;
     }
 
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -405,7 +360,7 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rec
     }
 
     /*
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if ( pathObj->_count + 1 >= pathObj->_max ) {
     pathObj->_max += 32;
@@ -430,8 +385,8 @@ void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rec
  @Status Interoperable
 */
 void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef toAdd) {
-    CGPath* pathObj = path;
-    CGPath* copyObj = toAdd;
+    CGPathRef pathObj = path;
+    CGPathRef copyObj = toAdd;
 
     if (pathObj->_count + copyObj->_count >= pathObj->_max) {
         pathObj->_max += copyObj->_count;
@@ -469,7 +424,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
         assert(0);
     }
 
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -489,7 +444,7 @@ void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, C
  @Status Interoperable
 */
 void CGPathCloseSubpath(CGMutablePathRef path) {
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -508,7 +463,7 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
     CGRect ret;
 
     auto context = CGBitmapContextCreate(0, 1, 1, 1, 1, 0, 0);
-    [path _applyPath:context];
+    path->_applyPath(context);
     ret = CGContextGetPathBoundingBox(context);
     CGContextRelease(context);
 
@@ -519,7 +474,7 @@ CGRect CGPathGetBoundingBox(CGPathRef path) {
  @Status Interoperable
 */
 bool CGPathIsEmpty(CGPathRef path) {
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
     return pathObj->_count == 0;
 }
 
@@ -545,7 +500,7 @@ CGPathRef CGPathRetain(CGPathRef path) {
 */
 void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m, CGFloat cpx, CGFloat cpy, CGFloat x, CGFloat y) {
     assert(!m);
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     CGPoint p = { x, y };
     CGPoint cp = { cpx, cpy };
@@ -572,7 +527,7 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 */
 void CGPathAddCurveToPoint(
     CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
-    CGPath* pathObj = path;
+    CGPathRef pathObj = path;
 
     assert(!m);
 
@@ -598,7 +553,7 @@ void CGPathAddCurveToPoint(
  @Status Interoperable
 */
 CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTransform* trans) {
-    CGMutablePathRef ret = (CGMutablePathRef)[CGPath new];
+    CGMutablePathRef ret = CGPathCreateMutable();
     CGPathAddRect(ret, trans, rect);
 
     return (CGPathRef)ret;
@@ -610,7 +565,7 @@ CGPathRef CGPathCreateWithRect(CGRect rect, const CGAffineTransform* trans) {
 CGPathRef CGPathCreateWithEllipseInRect(CGRect rect, const CGAffineTransform* transform) {
     printf("Tried to create an ellipse, not implemented, creating rect..\n");
 
-    CGMutablePathRef ret = (CGMutablePathRef)[CGPath new];
+    CGMutablePathRef ret = CGPathCreateMutable();
     CGPathAddRect(ret, 0, rect);
 
     return (CGPathRef)ret;
@@ -883,7 +838,7 @@ public:
 };
 
 CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding) {
-    CGPath* path = pathref;
+    CGPathRef path = pathref;
 
     ScanlineCalculator s;
     s.SetExtents(rect.origin.y, maxSize.width, rect.size.height, padding);

@@ -14,19 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGContext.h"
+#import "Starboard.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGContext.h"
 
-#include "UIKit/UIView.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UILabel.h"
-#include "UIKit/UIAccessibility.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIFont.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UILabel.h"
+#import "UIKit/UIAccessibility.h"
+#import "UIFontInternal.h"
 
-#include "CGContextInternal.h"
+#import "CGContextInternal.h"
 
-#include "QuartzCore/CATextLayer.h"
+#import "QuartzCore/CATextLayer.h"
 #define USE_TEXT_LAYER 1
 
 @implementation UILabel {
@@ -49,7 +50,7 @@
 }
 
 - (void)adjustFontSizeToFit {
-    if (_numberOfLines != 1) {
+    if (_numberOfLines == 0) {
         [self adjustTextLayerSize];
         return;
     }
@@ -63,13 +64,18 @@
         return;
     }
 
-    while (curFontSize > _minimumFontSize) {
-        CGSize size;
+    while (curFontSize > _minimumFontSize && curFontSize > 0.0f) {
+        CGSize size = CGSizeZero;
 
-        size = rect.size;
-        size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
+        //  A single line of text should be clipped
+        if (_numberOfLines == 1) {
+            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeClip];
+        } else {
+            //  Multiple lines of text should be wrapped
+            size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(rect.size.width, 0.0f) lineBreakMode:UILineBreakModeWordWrap];
+        }
 
-        if (size.width <= rect.size.width && size.height <= rect.size.height) {
+        if (size.width < rect.size.width && size.height <= rect.size.height) {
             break;
         }
 
@@ -79,6 +85,9 @@
 
     if (curFontSize < _minimumFontSize) {
         curFontSize = _minimumFontSize;
+    }
+    if (curFontSize < 0.0f) {
+        curFontSize = 1.0f;
     }
 
     _font = [_font fontWithSize:curFontSize];
@@ -102,12 +111,19 @@
 }
 
 #if USE_TEXT_LAYER
-+ (id)layerClass {
+/**
+ @Status Interoperable
+*/
++ (Class)layerClass {
     return [CATextLayer class];
 }
 #endif
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
     _text = [coder decodeObjectForKey:@"UIText"];
@@ -158,6 +174,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -179,13 +198,16 @@
     return self;
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     [super initAccessibility];
     self.accessibilityTraits = UIAccessibilityTraitStaticText;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
     if (![_font isEqual:font]) {
@@ -290,6 +312,7 @@
 */
 - (void)setTextColor:(UIColor*)color {
     if (![_textColor isEqual:color]) {
+        [[_textColor retain] autorelease];
         _textColor = color;
         [self adjustTextLayerSize];
     }
@@ -330,6 +353,9 @@
     return _shadowOffset;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundColor:(UIColor*)colorref {
     if (_textLayer != nil) {
         [_textLayer setBackgroundColor:(CGColorRef)colorref];
@@ -433,6 +459,9 @@
     return _highlightedTextColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)rect {
     CGRect bounds = self.bounds;
     CGRect drawArea = CGRectMake(0, 0, bounds.size.width, bounds.size.height);
@@ -448,7 +477,10 @@
             [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
         }
 
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
+        CGContextRef currentCtx = UIGraphicsGetCurrentContext();
+
+        CGContextSetFillColorWithColor(currentCtx, [_textColor CGColor]);
+        CGContextSetStrokeColorWithColor(currentCtx, [_textColor CGColor]);
 
         CGSize size = rect.size;
         if (_numberOfLines == 1) {
@@ -457,6 +489,7 @@
             fontHeight = [@" " sizeWithFont:_font];
             size.height = fontHeight.height;
         }
+
         size = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:_lineBreakMode];
 
         EbrCenterTextInRectVertically(&rect, &size, _font);
@@ -481,11 +514,13 @@
                     break;
             }
 
-            CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_shadowColor CGColor]);
+            CGContextSetFillColorWithColor(currentCtx, [_shadowColor CGColor]);
+            CGContextSetStrokeColorWithColor(currentCtx, [_shadowColor CGColor]);
             size = [_text drawInRect:shadowRect withFont:_font lineBreakMode:_lineBreakMode alignment:_alignment];
         }
 
-        CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
+        CGContextSetFillColorWithColor(currentCtx, [_textColor CGColor]);
+        CGContextSetStrokeColorWithColor(currentCtx, [_textColor CGColor]);
         size = [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_alignment];
     }
 }
@@ -502,7 +537,7 @@
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (void)setMinimumScaleFactor:(float)scale {
 }
@@ -514,20 +549,44 @@
     return _adjustFontSize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 0 };
 
     if (_text != nil) {
+        UIFont* measurementFont = nil;
         if (_font == nil) {
             [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
         }
 
-        ret = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:_lineBreakMode];
+        //  Grab the font at the original point size set in setFont:
+        measurementFont = [_font fontWithSize:_originalFontSize];
 
-        if (_numberOfLines == 1) {
-            CGSize fontHeight;
+        //  Measure the height of a single line of text of this font
+        CGSize fontHeight = [@" " sizeWithFont:measurementFont];
 
-            fontHeight = [@" " sizeWithFont:_font];
+        //  If we have to fit everything on one line, or if the current width
+        //  is incalculable (we can't wrap to a width of 0), set the
+        //  fit width to inifinite
+        if (curSize.width == 0 || self.numberOfLines == 1) {
+            curSize.width = FLT_MAX;
+        }
+
+        if ((self.numberOfLines == 0) || (self.numberOfLines == 1)) {
+            curSize.height = FLT_MAX;
+        } else {
+            curSize.height = fontHeight.height * self.numberOfLines;
+        }
+
+        //  Calculate the size of the text set in our label
+        ret = [_text sizeWithFont:measurementFont
+                constrainedToSize:CGSizeMake(curSize.width, curSize.height)
+                    lineBreakMode:self.lineBreakMode];
+
+        //  The returned height to 1 line if the number of lines is 1
+        if (self.numberOfLines == 1) {
             ret.height = fontHeight.height;
         }
     }
@@ -561,35 +620,10 @@
     return ret;
 }
 
-- (void)sizeToFit {
-    CGRect idealSize;
 
-    idealSize = [self frame];
-
-    if (idealSize.size.width == 0.0f) {
-        idealSize.size.width = GetCACompositor()->screenWidth();
-        idealSize.size = [self sizeThatFits:idealSize.size];
-    } else {
-        idealSize.size = [self sizeThatFits:idealSize.size];
-
-        CGRect superSize = CGRectMake(0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight());
-        UIView* superview = [self superview];
-
-        if (superview != nil) {
-            superSize = [superview bounds];
-        }
-
-        if (idealSize.size.width > superSize.size.width && superSize.size.width > 0.0f) {
-            idealSize.size.width = superSize.size.width;
-        }
-        if (idealSize.size.height > superSize.size.height && superSize.size.height > 0.0f) {
-            idealSize.size.height = superSize.size.height;
-        }
-    }
-
-    [self setFrame:idealSize];
-}
-
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _text = nil;
     _font = nil;
@@ -603,6 +637,9 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (_adjustFontSize) {
         [self adjustFontSizeToFit];
@@ -612,6 +649,9 @@
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
 

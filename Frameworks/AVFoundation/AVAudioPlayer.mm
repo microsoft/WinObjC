@@ -29,6 +29,7 @@
 #import <RawBuffer.h>
 #import <windows.storage.streams.h>
 #import <COMIncludes_End.h>
+#import "AssertARCEnabled.h"
 
 // 100 nanoseconds per tick
 static const double c_durationCoef = 10000000.0;
@@ -130,9 +131,9 @@ using namespace Microsoft::WRL;
             TraceInfo(TAG, L"Loading media at file URL: %hs\n", [appxurl.absoluteString UTF8String]);
 
             // TODO: Implement internal NSURL function to return a valid ms-appx from the bundle path
-            mediaUri = [WFUri createUri:[NSString stringWithFormat:@"ms-appx://%@", appxurl.path]];
+            mediaUri = [WFUri makeUri:[NSString stringWithFormat:@"ms-appx://%@", appxurl.path]];
         } else {
-            mediaUri = [WFUri createUri:_url.absoluteString];
+            mediaUri = [WFUri makeUri:_url.absoluteString];
         }
 
         TraceInfo(TAG, L"Loading media at URI: %hs\n", [mediaUri.absoluteUri UTF8String]);
@@ -163,7 +164,7 @@ using namespace Microsoft::WRL;
         _data = data;
 
         WSSInMemoryRandomAccessStream* stream = [WSSInMemoryRandomAccessStream make];
-        WSSDataWriter* rw = [WSSDataWriter createDataWriter:[stream getOutputStreamAt:0]];
+        WSSDataWriter* rw = [WSSDataWriter makeDataWriter:[stream getOutputStreamAt:0]];
         ComPtr<IBuffer> buffer;
         IBuffer* rawBuffer = nullptr;
         HRESULT result;

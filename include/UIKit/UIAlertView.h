@@ -50,7 +50,7 @@ UIKIT_EXPORT_CLASS
 @interface UIAlertView : UIView
 
 @property (nonatomic) NSInteger cancelButtonIndex;
-@property (nonatomic, assign) UIAlertViewStyle alertViewStyle;
+@property (nonatomic, assign) UIAlertViewStyle alertViewStyle STUB_PROPERTY;
 @property (nonatomic, assign) id<UIAlertViewDelegate> delegate;
 @property (nonatomic, copy) NSString* message;
 @property (nonatomic, copy) NSString* title;
@@ -60,7 +60,7 @@ UIKIT_EXPORT_CLASS
 
 - (NSInteger)addButtonWithTitle:(NSString*)title;
 - (NSString*)buttonTitleAtIndex:(NSInteger)buttonIndex;
-- (UITextField*)textFieldAtIndex:(NSInteger)textFieldIndex;
+- (UITextField*)textFieldAtIndex:(NSInteger)textFieldIndex STUB_METHOD;
 - (instancetype)initWithTitle:(NSString*)title
                       message:(NSString*)message
                      delegate:(id)delegate

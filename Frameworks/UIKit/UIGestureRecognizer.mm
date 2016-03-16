@@ -40,6 +40,9 @@ static void commonInit(UIGestureRecognizer* self) {
     self->_delaysTouchesEnded = YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         commonInit(self);
@@ -48,7 +51,7 @@ static void commonInit(UIGestureRecognizer* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
         commonInit(self);
 
@@ -75,6 +78,10 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
 }
 
 - (void)addEventConnection:(UIRuntimeEventConnection*)connection {
@@ -197,12 +204,7 @@ static void commonInit(UIGestureRecognizer* self) {
         id target = _targets[i]._target;
         SEL sel = _targets[i]._selector;
 
-        {
-            TimingFunction t("Gesture");
-            // TraceVerbose(TAG, L"Gesture %hs detected - calling %hs::%hs", object_getClassName(self),
-            // object_getClassName(target), sel);
-            [target performSelector:sel withObject:self];
-        }
+        [target performSelector:sel withObject:self];
     }
 }
 
@@ -254,14 +256,14 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
-- (void)cancelIfActive {
+- (void)_cancelIfActive {
     id curList = [g_curGesturesDict objectForKey:[self class]];
     if ([curList containsObject:self]) {
         [self cancel];
     }
 }
 
-+ (void)cancelActiveExcept:(UIGestureRecognizer*)gesture {
++ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture {
     id curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
@@ -271,7 +273,7 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
-+ (void)failActiveExcept:(UIGestureRecognizer*)gesture {
++ (void)_failActiveExcept:(UIGestureRecognizer*)gesture {
     NSArray* curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {

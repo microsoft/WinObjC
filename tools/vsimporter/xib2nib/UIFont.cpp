@@ -17,9 +17,16 @@
 #include "UIFont.h"
 #include <assert.h>
 
+// Pulled from UIFontDescriptor.mm
+const float c_smallSystemFontSize = 12.0f;
+const float c_systemFontSize = 14.0f;
+const float c_labelFontSize = 17.0f;
+const float c_buttonFontSize = 14.0f;
+
 UIFont::UIFont() {
     _fontName = NULL;
     _fontSize = 0.0f;
+    _systemFont = false;
 }
 
 void UIFont::InitFromXIB(XIBObject* obj) {
@@ -43,6 +50,30 @@ void UIFont::InitFromXIB(XIBObject* obj) {
         }
     }
 
+    XIBObject* nsFontDescriptor = obj->_parent->FindMember("IBUIFontDescription");
+
+    // This overrides "pointSize" and parent->"NSSize"
+    if (nsFontDescriptor && nsFontDescriptor->FindMember("size")) {
+        switch (nsFontDescriptor->FindMember("size")->intValue()) {
+        case 1: // Label size
+            _fontSize = c_labelFontSize;
+            break;
+        case 2: // Button size
+            _fontSize = c_buttonFontSize;
+            break;
+        case 3: // Small size
+            _fontSize = c_smallSystemFontSize;
+            break;
+        case 4: // System size
+            _fontSize = c_systemFontSize;
+            break;
+        default:
+            printf("Unhandled symbolic font size type: %s\n", nsFontDescriptor->FindMember("size")->stringValue());
+            assert(0);
+            break;
+        }
+    }
+
     obj->_outputClassName = "UIFont";
 }
 
@@ -52,18 +83,19 @@ void UIFont::InitFromStory(XIBObject* obj) {
     _fontSize = 12.0;
     auto attribute = getAttrAndHandle("pointSize");
     if (attribute) {
-        _fontSize = strtod(attribute, NULL);
+        _fontSize = (float)strtod(attribute, NULL);
     }
 
-    const char* fontType = getAttrib("type");
-
-    if (fontType) {
+    if (getAttrib("type")) {
+        const char* fontType = getAttrib("type");
         bool isHandled = true;
 
         if (strcmp(fontType, "system") == 0) {
             _fontName = "Helvetica";
+            _systemFont = true;
         } else if (strcmp(fontType, "boldSystem") == 0) {
             _fontName = "Helvetica-Bold";
+            _systemFont = true;
         } else {
             isHandled = false;
         }
@@ -75,12 +107,33 @@ void UIFont::InitFromStory(XIBObject* obj) {
         _fontName = getAttrAndHandle("name");
     }
 
+    if (getAttrib("size")) {
+        const char* symbolicSize = getAttrAndHandle("size");
+
+        if (strcmp(symbolicSize, "system") == 0) {
+            _fontSize = c_systemFontSize;
+        } else if (strcmp(symbolicSize, "button") == 0) {
+            _fontSize = c_buttonFontSize;
+        } else if (strcmp(symbolicSize, "small") == 0) {
+            _fontSize = c_smallSystemFontSize;
+        } else if (strcmp(symbolicSize, "label") == 0) {
+            _fontSize = c_labelFontSize;
+        } else {
+            printf("Unhandled symbolic font size type: %s\n", symbolicSize);
+            assert(0);
+        }
+    }
+
     obj->_outputClassName = "UIFont";
 }
 
 void UIFont::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     ObjectConverter::ConvertStaticMappings(writer, obj);
-
+    
     AddString(writer, "UIFontName", _fontName);
     AddOutputMember(writer, "UIFontPointSize", new XIBObjectDouble(_fontSize));
+
+    if (_systemFont) {
+        AddBool(writer, "UISystemFont", _systemFont);
+    }
 }

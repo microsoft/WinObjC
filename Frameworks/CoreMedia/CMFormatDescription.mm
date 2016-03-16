@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMFormatDescription.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CFStringRef kCMFormatDescriptionConformsToMPEG2VideoProfile = static_cast<CFStringRef>(@"ConformsToMPEG2VideoProfile");
 const CFStringRef kCMFormatDescriptionExtension_TemporalQuality = static_cast<CFStringRef>(@"TemporalQuality");

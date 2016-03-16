@@ -178,8 +178,8 @@ WINRT_EXPORT
 
 @protocol WNSIWebSocketControl
 @property unsigned int outboundBufferSizeInBytes;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
 @property (readonly) NSMutableArray* supportedProtocols;
 @end
 
@@ -229,7 +229,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSSocketActivityContext : RTObject
-+ (WNSSocketActivityContext*)create:(RTObject<WSSIBuffer>*)data ACTIVATOR;
++ (WNSSocketActivityContext*)make:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* data;
 @end
 
@@ -425,7 +425,7 @@ WINRT_EXPORT
 @property BOOL keepAlive;
 @property (readonly) NSMutableArray* ignorableServerCertificateErrors;
 @property BOOL serializeConnectionAttempts;
-@property (copy) WSCCCertificate* clientCertificate;
+@property (retain) WSCCCertificate* clientCertificate;
 @end
 
 #endif // __WNSStreamSocketControl_DEFINED__
@@ -511,8 +511,8 @@ WINRT_EXPORT
 @interface WNSMessageWebSocketControl : RTObject <WNSIWebSocketControl>
 @property WNSSocketMessageType messageType;
 @property unsigned int maxMessageSize;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
 @property (readonly) NSMutableArray* supportedProtocols;
 @end
@@ -574,8 +574,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamWebSocketControl : RTObject <WNSIWebSocketControl>
 @property BOOL noDelay;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
 @property (readonly) NSMutableArray* supportedProtocols;
 @end

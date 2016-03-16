@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBConstants.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CBErrorDomain = @"CBErrorDomain";
 NSString* const CBATTErrorDomain = @"CBATTErrorDomain";

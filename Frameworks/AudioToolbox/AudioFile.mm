@@ -74,8 +74,9 @@ public:
 
 class AudioFileOGG : public OpaqueAudioFileID {
     stb_vorbis* _handle;
+    EbrFile* _file;
 
-    AudioFileOGG(stb_vorbis* handle) : _handle(handle) {
+    AudioFileOGG(stb_vorbis* handle, EbrFile* file) : _handle(handle), _file(file) {
     }
 
 public:
@@ -84,26 +85,44 @@ public:
             stb_vorbis_close(_handle);
             _handle = 0;
         }
+        if (_file) {
+            EbrFclose(_file);
+            _file = 0;
+        }
     }
 
     static OpaqueAudioFileID* openURL(char* url) {
-        int err = 0;
-        stb_vorbis* handle = stb_vorbis_open_filename(url, &err, 0);
+        //  Open the file using EbrFopen so that path mapping is applied
+        //  (since the url will often reference / as the root of the app directory)
+        EbrFile* file = EbrFopen(url, "rb");
+        if (file) {
+            int err = 0;
 
-        if (handle && err == 0) {
-            return new AudioFileOGG(handle);
+            //  Pass the FILE* handle directly to stb_vorbis
+            stb_vorbis* handle = stb_vorbis_open_file(EbrNativeFILE(file), 0, &err, 0);
+
+            if (handle && err == 0) {
+                return new AudioFileOGG(handle, file);
+            }
+
+            TraceError(TAG, L"[OGG] OGG open error: %d", err);
         }
         return 0;
     }
 
     virtual int read(u32* outFrameCount, AudioBufferList* buffers) {
         // Right now we only support reading into one buffer
-        assert(buffers->mNumberBuffers == 1);
+        if (buffers->mNumberBuffers != 1) {
+            UNIMPLEMENTED_WITH_MSG("OGG decoding only supported with 1 AudioBuffer");
+            *outFrameCount = 0;
+            return 0;
+        }
 
-        short* data = (short*)buffers->mBuffers[0].mData;
-        *outFrameCount = buffers->mBuffers[0].mDataByteSize / 2;
+        u32 numBytes = buffers->mBuffers[0].mDataByteSize;
+        int ret = readBytes(0, &numBytes, buffers->mBuffers[0].mData);
+        *outFrameCount = numBytes / 2;
 
-        return readBytes(0, outFrameCount, buffers->mBuffers[0].mData);
+        return ret;
     }
 
     int readBytes(i64 start, u32* numBytes, void* buffer) {

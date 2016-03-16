@@ -103,7 +103,7 @@ CTFramesetterRef CTFramesetterCreateWithAttributedString(CFAttributedStringRef s
 */
 CTFrameRef CTFramesetterCreateFrame(CTFramesetterRef framesetter, CFRange stringRange, CGPathRef path, CFDictionaryRef frameAttributes) {
     CGRect frameSize;
-    [path _getBoundingBox:&frameSize];
+    _CGPathGetBoundingBoxInternal(path, &frameSize);
 
     CGSize sizeOut;
     id ret = _createFrame((_CTFrameSetter*)framesetter, frameSize, &sizeOut, true);

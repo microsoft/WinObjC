@@ -30,4 +30,10 @@ NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefau
 
 @implementation UILocalNotification
 
+- (void)_setReceiver:(id)receiver {
+}
+
+- (void)_cancelAlarm {
+}
+
 @end

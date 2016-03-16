@@ -30,12 +30,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 static NSNumberFormatterBehavior _defaultFormatterBehavior = NSNumberFormatterBehavior10_4;
 
-#if 0
-id kCFNumberNaN;
-id kCFNumberPositiveInfinity;
-id kCFNumberNegativeInfinity;
-#endif
-
 const CFNumberRef kCFNumberNaN = nullptr; // = (CFNumberRef)&_kCFNumberNaN;
 const CFNumberRef kCFNumberNegativeInfinity = nullptr; // = (CFNumberRef)&_kCFNumberNegInf;
 const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNumberPosInf;

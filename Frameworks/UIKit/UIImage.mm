@@ -39,6 +39,10 @@
 #include "BMPDecode.h"
 #include "LoggingNative.h"
 
+@interface UIImage ()
+- (CGRect)_imageStretch;
+@end
+
 static const wchar_t* TAG = L"UIImage";
 
 struct insetInfo {
@@ -49,6 +53,9 @@ struct insetInfo {
 CFMutableDictionaryRef g_imageCache;
 static EbrLock imageCacheLock;
 
+/**
+ @Status Interoperable
+*/
 void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     CGImageRef cgImage = (CGImageRef)[image CGImage];
     CGImageRef curImage = (CGImageRef)[layer contents];
@@ -139,7 +146,7 @@ imageCacheInfo imageInfo;
     bool _isFromCache;
     uint8_t* out;
     uint8_t** row_pointers;
-    idretaintype(NSData) _deferredImageData;
+    StrongId<NSData> _deferredImageData;
 }
 
 /**
@@ -501,8 +508,10 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         EbrLockInit(&imageCacheLock);
     }
 
-    UIImageCachedObject* cachedImage = [g_imageCache objectForKey:[NSString stringWithCString:pathStr]];
-    if (cachedImage != nil) {
+    const UIImageCachedObject* cachedImage =
+        reinterpret_cast<const UIImageCachedObject*>(CFDictionaryGetValue(g_imageCache, [NSString stringWithCString:pathStr]));
+
+    if (cachedImage) {
         if (pathStr)
             IwFree(pathStr);
         m_pImage = cachedImage->m_pImage;
@@ -1194,6 +1203,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)_imageStretch {
     return _imageStretch;
 }
@@ -1315,6 +1327,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _cacheImage = nil;
     _deferredImageData = nil;
@@ -1338,7 +1353,7 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
 - (void)setAccessibilityLabel:(UILabel*)label {
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
@@ -1423,7 +1438,7 @@ static CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 NSData* UIImagePNGRepresentation(UIImage* img) {
-   return _CGImagePNGRepresentation(img);
+    return _CGImagePNGRepresentation(img);
 }
 
 /**
@@ -1448,9 +1463,7 @@ NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
 /**
  @Status Stub
 */
-+ (UIImage*)imageNamed:(NSString*)name
-                         inBundle:(NSBundle*)bundle
-    compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
++ (UIImage*)imageNamed:(NSString*)name inBundle:(NSBundle*)bundle compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
     UNIMPLEMENTED();
     return StubReturn();
 }

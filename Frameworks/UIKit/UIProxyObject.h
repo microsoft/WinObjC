@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 @interface UIProxyObject : NSObject {
 @public

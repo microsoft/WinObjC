@@ -80,6 +80,9 @@ struct UIViewControllerPriv {
 - (void)notifyViewDidAppear:(BOOL)isAnimated;
 - (void)notifyViewWillDisappear:(BOOL)isAnimated;
 - (void)notifyViewDidDisappear:(BOOL)isAnimated;
+
+- (void)_setResizeToScreen:(BOOL)resize;
+- (void)_doResizeToScreen;
 @end
 
 #endif

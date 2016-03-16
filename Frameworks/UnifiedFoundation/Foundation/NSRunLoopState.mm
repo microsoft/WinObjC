@@ -442,10 +442,6 @@ bool GetMainDispatchTimerTimeout(double* val) {
         [self _notifyObservers:kCFRunLoopBeforeWaiting];
     }
 
-#ifdef USE_KHR_RENDERBUFFERS
-    EbrSignalsSafe();
-#endif
-
     int signaled = 0;
     if ([NSThread currentThread] == [NSThread mainThread]) {
         //  If we're blocking on the UI thread, call UIEventTimedMultipleWait,

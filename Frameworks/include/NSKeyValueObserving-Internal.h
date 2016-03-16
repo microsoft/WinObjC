@@ -67,8 +67,8 @@ struct NSKVOClass {
 private:
     std::recursive_mutex _mutex;
     std::unordered_map<std::string, std::unordered_set<std::string>> _valueDependingKeys;
-    std::unordered_map<std::tuple<id, std::string>, std::vector<std::weak_ptr<NSKVONotifier>>> _notifiersByInstance;
-    std::unordered_map<std::tuple<id, std::string>, std::unordered_set<std::shared_ptr<NSKVONotifier>>> _keypathNotifiersByInstance;
+    std::unordered_map<id, std::unordered_map<std::string, std::vector<std::weak_ptr<NSKVONotifier>>>> _notifiersByInstance;
+    std::unordered_map<id, std::unordered_map<std::string, std::unordered_set<std::shared_ptr<NSKVONotifier>>>> _keypathNotifiersByInstance;
 
     std::unordered_set<std::string> _currentlyManipulatingKeys;
 

@@ -132,8 +132,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height);
         return;
     }
 
-    path = [path copy];
-    [_path release];
+    path = CGPathCreateCopy(path);
+    CFRelease(_path);
     _path = path;
     _needsRender = TRUE;
     [self setNeedsLayout];

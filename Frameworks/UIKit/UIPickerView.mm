@@ -14,22 +14,24 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIScrollView.h"
-#include "Foundation/NSString.h"
-#include "UIKit/UILabel.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UITableViewCell.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIImageView.h"
-#include "UIKit/UIImage.h"
-#include "UIKit/UIPickerView.h"
+#import <StubReturn.h>
+#import <Starboard.h>
+#import <Foundation/NSString.h>
+#import <UIKit/UIColor.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UIImageView.h>
+#import <UIKit/UIImage.h>
+#import <UIKit/UILabel.h>
+#import <UIKit/UIPickerView.h>
+#import <UIKit/UIScrollView.h>
+#import <UIKit/UITableViewCell.h>
+#import <UIKit/UIView.h>
+
+#import <UIViewInternal.h>
 
 struct RowData {
     float _yPos;
-    idretaintype(UITableViewCell) _rowCell;
+    StrongId<UITableViewCell> _rowCell;
     idretain _rowString;
     bool _invalid;
 };
@@ -51,7 +53,7 @@ struct RowData {
 @end
 
 @implementation UIPickerSubView
-- (id)initWithFrame:(CGRect)pos {
+- (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
     [super setDelegate:(id<UIScrollViewDelegate>)self];
     [self setShowsVerticalScrollIndicator:FALSE];
@@ -348,7 +350,10 @@ static void notifySetSelected(UIPickerSubView* self, int idx) {
     UITextAlignment _componentAlignments[16];
 }
 
-+ (id)allocWithZone:(NSZone*)zone {
+/**
+ @Status Interoperable
+*/
++ (instancetype)allocWithZone:(NSZone*)zone {
     UIPickerView* ret = [super allocWithZone:zone];
 
     ret->_defaultRowHeight = 50.0f;
@@ -372,14 +377,21 @@ static void setupImages(UIPickerView* self) {
     [self addSubview:self->_background];
 }
 
-- (id)initWithCoder:(id)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     setupImages(self);
 
     return self;
 }
 
-- (id)initWithFrame:(CGRect)pos {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)pos {
     if (pos.size.height == 0.0f) {
         pos.size.height = 216.0f;
     }
@@ -427,6 +439,9 @@ static void setupImages(UIPickerView* self) {
     return _selectedRowInComponents[component];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     [super layoutSubviews];
 
@@ -557,7 +572,7 @@ static void layoutSubSections(UIPickerView* self) {
     layoutSubSections(self);
 }
 
-- (void)invalidateAllComponents {
+- (void)_invalidateAllComponents {
     for (int i = 0; i < _numSections; i++) {
         [_subSections[i] invalidateComponents];
     }
@@ -601,6 +616,9 @@ static void layoutSubSections(UIPickerView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     DestroySections(self);
 
@@ -637,6 +655,9 @@ static void layoutSubSections(UIPickerView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 320.f, 215.f };
     return ret;

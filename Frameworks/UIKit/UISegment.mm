@@ -28,7 +28,7 @@ static idretain _buttonRight[2];
 static idretain _buttonFill[2];
 
 @implementation UISegment
-+ (id)initialize {
++ (instancetype)initialize {
     _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
     _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
     _buttonRight[0] =
@@ -40,7 +40,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)initWithCoder:(id)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     id result = [super initWithCoder:coder];
     id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
     _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
@@ -63,7 +63,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)initWithTitle:(id)title {
+- (instancetype)initWithTitle:(id)title {
     _title.attach([title copy]);
     _position = 0;
 
@@ -77,7 +77,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)initWithImage:(id)image {
+- (instancetype)initWithImage:(id)image {
     _image = image;
     _position = 0;
 

@@ -14,18 +14,17 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UITableViewContentView.h"
-#include "UIKit/UILabel.h"
-#include "UIViewInternal.h"
-#include "_UIGroupEdgeView.h"
-#include "UITableViewInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UITableViewContentView.h"
+#import "UIKit/UILabel.h"
+#import "UIViewInternal.h"
+#import "_UIGroupEdgeView.h"
+#import "UITableViewInternal.h"
+#import "LoggingNative.h"
+
+#import <algorithm>
 
 static const wchar_t* TAG = L"UITableViewCell";
-
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 @implementation UITableViewCell
 
@@ -295,7 +294,11 @@ static void initInternal(UITableViewCell* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     id ret = [super initWithCoder:coder];
 
     if ([coder containsValueForKey:@"UISelectionStyle"]) {
@@ -321,6 +324,9 @@ static void initInternal(UITableViewCell* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     return [self initWithFrame:pos reuseIdentifier:nil];
 }
@@ -592,19 +598,32 @@ static void initInternal(UITableViewCell* self) {
     return getSecondaryLabel(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([priv->superview respondsToSelector:@selector(_cellSelectedDown:)])
         [priv->superview _cellSelectedDown:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    // Intentional no-op
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([priv->superview respondsToSelector:@selector(_cellSelectedCancelled:)])
         [priv->superview _cellSelectedCancelled:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([priv->superview respondsToSelector:@selector(_cellSelectedUp:)])
         [priv->superview _cellSelectedUp:self];
@@ -625,7 +644,7 @@ static float getMarginWidth(UITableViewCell* self) {
         if (tableViewWidth < 400 || !GetCACompositor()->isTablet()) {
             marginWidth = 10.0f;
         } else {
-            marginWidth = MAX(31.0f, MIN(45.0f, tableViewWidth * 0.06f));
+            marginWidth = std::max(31.0f, std::min(45.0f, tableViewWidth * 0.06f));
         }
     } else {
         marginWidth = tableViewWidth - 10.0f;
@@ -968,6 +987,9 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
     return _indexPath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundColor:(UIColor*)color {
     _cellBackgroundColor = color;
     _cellBackgroundColorSet = TRUE;
@@ -977,10 +999,16 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
         [super setBackgroundColor:color];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)backgroundColor {
     return _cellBackgroundColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _textLabel = nil;
     _secondaryLabel = nil;
@@ -1060,6 +1088,9 @@ static void setupGroupView(UITableViewCell* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     CGRect ourBounds = { 0 };
 
@@ -1389,7 +1420,11 @@ static void setupGroupView(UITableViewCell* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 static void removeAllAnimationsFromLayers(CALayer* layer) {
@@ -1445,6 +1480,27 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
     }
     */
     [self setNeedsLayout];
+}
+
+/**
+ @Status Stub
+*/
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)willTransitionToState:(UITableViewCellStateMask)state {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didTransitionToState:(UITableViewCellStateMask)state {
+    UNIMPLEMENTED();
 }
 
 @end

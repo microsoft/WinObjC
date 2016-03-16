@@ -69,8 +69,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMTMediaTranscoder : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WFTimeSpan* trimStopTime;
-@property (copy) WFTimeSpan* trimStartTime;
+@property (retain) WFTimeSpan* trimStopTime;
+@property (retain) WFTimeSpan* trimStartTime;
 @property BOOL hardwareAccelerationEnabled;
 @property BOOL alwaysReencode;
 @property WMTMediaVideoProcessingAlgorithm videoProcessingAlgorithm;

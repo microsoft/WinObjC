@@ -28,6 +28,9 @@
 #include <TraceLoggingProvider.h>
 #include "LoggingTesting.h"
 
+// Init for WinObjCTraceLoggingProvider with GUID {E4BABC11-825E-4D44-8104-D6CFAC39AE13}
+TRACELOGGING_DECLARE_PROVIDER(s_traceLoggingProvider);
+
 // These must be pre-processor because of the TraceLogging macros.
 #define FIELD_NAME_TAG "Tag"
 #define FIELD_NAME_MESSAGE "Message"

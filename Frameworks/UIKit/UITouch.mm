@@ -124,7 +124,7 @@
     return ret;
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UITouch* ret = [[self class] allocWithZone:zone];
 
     _timestamp = self.timestamp;

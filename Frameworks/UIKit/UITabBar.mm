@@ -14,32 +14,37 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "UIKit/UITabBar.h"
+#import "UITabBarButton.h"
+#import "UIKit/UIColor.h"
+#import "CoreGraphics/CGContext.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSString.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UITabBar.h"
 
-#include "UIKit/UITabBar.h"
-#include "UITabBarButton.h"
-
-#include "UIKit/UIColor.h"
-#include "CoreGraphics/CGContext.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "LoggingNative.h"
-
-#if 0
-#include "UIAppearanceSetter.h"
-#endif
+#import "LoggingNative.h"
+#import "UIAppearanceSetter.h"
+#import "UITabBarButton.h"
+#import "UIViewInternal.h"
 
 static const wchar_t* TAG = L"UITabBar";
 
 @implementation UITabBar {
     idretain _items;
     bool _layoutDirty;
-    idretaintype(NSArray) _buttons;
+    StrongId<NSMutableArray> _buttons;
     idretain _backgroundImage, _selectionIndicatorImage;
     id _delegate;
     id _selectedItem;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     _items = [coder decodeObjectForKey:@"UIItems"];
@@ -61,6 +66,9 @@ static const wchar_t* TAG = L"UITabBar";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
     _items.attach([NSMutableArray new]);
@@ -80,6 +88,9 @@ static const wchar_t* TAG = L"UITabBar";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _buttons = nil;
     _backgroundImage = nil;
@@ -106,6 +117,36 @@ static const wchar_t* TAG = L"UITabBar";
 }
 
 /**
+ @Status Stub
+*/
+- (void)setItems:(NSArray*)items animated:(BOOL)animated {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)beginCustomizingItems:(NSArray*)items {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)endCustomizingAnimated:(BOOL)animated {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)isCustomizing {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
  @Status Interoperable
 */
 - (void)setSelectedItem:(id)item {
@@ -129,6 +170,9 @@ static const wchar_t* TAG = L"UITabBar";
     return _selectedItem;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (!_layoutDirty) {
         return;
@@ -179,6 +223,9 @@ static const wchar_t* TAG = L"UITabBar";
     [super layoutSubviews];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)pos {
     if (_backgroundImage != nil) {
         CGRect bounds;
@@ -222,8 +269,7 @@ static const wchar_t* TAG = L"UITabBar";
  @Status Stub
 */
 - (void)setSelectedImageTintColor:(UIColor*)color {
-    UNIMPLEMENTED();
-    TraceVerbose(TAG, L"UITabBar setSelectedImageTintColor not supported");
+    UNIMPLEMENTED_WITH_MSG("UITabBar setSelectedImageTintColor not supported\n");
 }
 
 /**
@@ -239,5 +285,4 @@ static const wchar_t* TAG = L"UITabBar";
     [self setNeedsLayout];
 }
 
-//
 @end

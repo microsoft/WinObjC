@@ -14,13 +14,13 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
 #import <StubReturn.h>
-#include <UIKit/UIKit.h>
-#include <UIViewInternal.h>
-
-#include <Foundation/NSMutableDictionary.h>
-#include "CoreGraphics/CGContext.h"
+#import <UIKit/UIKit.h>
+#import <UIViewInternal.h>
+#import <UIFontInternal.h>
+#import <Foundation/NSMutableDictionary.h>
+#import "CoreGraphics/CGContext.h"
 
 #include "CGFontInternal.h"
 

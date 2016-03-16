@@ -40,28 +40,28 @@
 
 @interface UIBarItem : NSObject <NSCoding, UIAppearance, UIAccessibility>
 
-@property (nonatomic, getter=isEnabled) BOOL enabled;
+@property (nonatomic, getter=isEnabled) BOOL enabled STUB_PROPERTY;
 @property (nonatomic, retain) UIImage* image;
-@property (nonatomic, assign) UIEdgeInsets imageInsets;
-@property (nonatomic, copy) NSString* title;
-@property (nonatomic) NSInteger tag;
+@property (nonatomic, assign) UIEdgeInsets imageInsets STUB_PROPERTY;
+@property (nonatomic, copy) NSString* title STUB_PROPERTY;
+@property (nonatomic) NSInteger tag STUB_PROPERTY;
 
 // UIAccessibility properties.
 @property BOOL isAccessibilityElement;
-@property (copy) NSString* accessibilityLabel;
+@property (copy) NSString* accessibilityLabel STUB_PROPERTY;
 @property (copy) NSString* accessibilityHint;
-@property (copy) NSString* accessibilityValue;
-@property UIAccessibilityTraits accessibilityTraits;
-@property UIAccessibilityNavigationStyle accessibilityNavigationStyle;
-@property (nonatomic) CGRect accessibilityFrame;
-@property (copy) UIBezierPath* accessibilityPath;
-@property CGPoint accessibilityActivationPoint;
-@property (retain) NSString* accessibilityLanguage;
-@property BOOL accessibilityElementsHidden;
-@property BOOL shouldGroupAccessibilityChildren;
-@property BOOL accessibilityViewIsModal;
-@property (copy) NSString* accessibilityIdentifier;
+@property (copy) NSString* accessibilityValue STUB_PROPERTY;
+@property UIAccessibilityTraits accessibilityTraits STUB_PROPERTY;
+@property UIAccessibilityNavigationStyle accessibilityNavigationStyle STUB_PROPERTY;
+@property (nonatomic) CGRect accessibilityFrame STUB_PROPERTY;
+@property (copy) UIBezierPath* accessibilityPath STUB_PROPERTY;
+@property CGPoint accessibilityActivationPoint STUB_PROPERTY;
+@property (retain) NSString* accessibilityLanguage STUB_PROPERTY;
+@property BOOL accessibilityElementsHidden STUB_PROPERTY;
+@property BOOL shouldGroupAccessibilityChildren STUB_PROPERTY;
+@property BOOL accessibilityViewIsModal STUB_PROPERTY;
+@property (copy) NSString* accessibilityIdentifier STUB_PROPERTY;
 
-- (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state;
+- (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state STUB_METHOD;
 
 @end

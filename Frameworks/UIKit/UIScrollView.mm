@@ -14,26 +14,33 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSString.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSSet.h"
-#include "UIKit/UITouch.h"
-#include "UIKit/UIEvent.h"
-#include "CoreGraphics/CGGeometry.h"
-#include "QuartzCore/CADisplayLink.h"
-#include "UIKit/UIGestureRecognizer.h"
-#include "UIKit/UIPanGestureRecognizer.h"
-#include "QuartzCore/CALayer.h"
-#include "UIKit/UIColor.h"
-#include "QuartzCore/CABasicAnimation.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSTimer.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSTimer.h"
+#import "Foundation/NSRunLoop.h"
+#import "Foundation/NSSet.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "CoreGraphics/CGGeometry.h"
+#import "QuartzCore/CABasicAnimation.h"
+#import "QuartzCore/CADisplayLink.h"
+#import "QuartzCore/CALayer.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UIEvent.h"
+#import "UIKit/UITouch.h"
+#import "UIKit/UIGestureRecognizer.h"
+#import "UIKit/UIPanGestureRecognizer.h"
 
-#include <cmath>
+#import "CAAnimationInternal.h"
+#import "CALayerInternal.h"
+#import "UIEventInternal.h"
+#import "UIGestureRecognizerInternal.h"
+#import "UITouchInternal.h"
+#import "UIViewInternal.h"
+
+#import <cmath>
 
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
@@ -42,11 +49,11 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 @interface __UIScrollerPosition : CALayer {
 @public
-    idretaintype(CAAnimation) _fadeAnimation;
+    idretaintype(CABasicAnimation) _fadeAnimation;
 }
 @end
 
-#include "UIKit/UIScrollView.h"
+#import "UIKit/UIScrollView.h"
 
 @implementation __UIScrollerPosition
 
@@ -90,7 +97,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
 @end
 
-#include "Etc.h"
+#import "Etc.h"
 
 @implementation UIScrollView {
     id _delegate;
@@ -237,7 +244,11 @@ static void positionScrollers(UIScrollView* self) {
     }
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     commonInit(self);
 
     [super initWithCoder:coder];
@@ -285,6 +296,9 @@ static void positionScrollers(UIScrollView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
     [self setClipsToBounds:1];
@@ -488,7 +502,7 @@ static void clipPoint(UIScrollView* o, CGPoint& p, bool bounce = true) {
 
     boundsVal.y = boundsVal.y;
 
-    [self setBoundsOrigin:boundsVal];
+    [self _setBoundsOrigin:boundsVal];
     positionScrollers(self);
     [self setNeedsLayout];
 
@@ -621,7 +635,11 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
     }
 }
 
-- (void)touchesMoved:(id)touches withEvent:(id)event {
+/**
+ @Status Stub
+*/
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
 }
 
 #define returntobaseconst 7.0f
@@ -994,7 +1012,7 @@ static void setZoomTo(UIScrollView* self, float scale, BOOL animated) {
     [self->_displayLink invalidate];
     self->_displayLink = nil;
 
-    id view = self;
+    UIView* view = self;
     if ([self->_delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {
         view = [self->_delegate viewForZoomingInScrollView:self];
         self->_zoomView = view;
@@ -1185,7 +1203,7 @@ static void setContentOffsetKVOed(UIScrollView* self, CGPoint offs) {
 /**
  @Status Stub
 */
-- (void)setIndicatorStyle:(unsigned)style {
+- (void)setIndicatorStyle:(UIScrollViewIndicatorStyle)style {
     UNIMPLEMENTED();
 }
 
@@ -1220,6 +1238,9 @@ static void cancelScrolling(UIScrollView* self) {
     self->_displayLink = self->_pressTimer = self->_savedTouch = self->_savedEvent = nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     cancelScrolling(self);
 
@@ -1232,6 +1253,9 @@ static void cancelScrolling(UIScrollView* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(id)newWindow {
     cancelScrolling(self);
     [super willMoveToWindow:newWindow];
@@ -1442,7 +1466,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     return float(destScrollPage) * pageSize;
 }
 
-- (id)_panGestureCallback:(id)gesture {
+- (id)_panGestureCallback:(UIPanGestureRecognizer*)gesture {
     if (!_scrollEnabled) {
         return self;
     }
@@ -1499,7 +1523,6 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 
     if (state >= UIGestureRecognizerStateBegan && state <= UIGestureRecognizerStateEnded) {
         if (delta.x || delta.y) {
-            UIScrollView* touchedView = [gesture _touchedView];
             [self _doPan:gesture];
         }
     }
@@ -1606,7 +1629,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     }
     if (state == UIGestureRecognizerStateBegan) {
         //  Cancel any other pans
-        [UIPanGestureRecognizer cancelActiveExcept:(id)_panGesture];
+        [UIPanGestureRecognizer _cancelActiveExcept:(id)_panGesture];
         [_pinchGesture setScale:_zoomScale];
         _isZooming = true;
         [self setNeedsLayout];
@@ -1653,6 +1676,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if (self.scrollEnabled) {
         // If we get a touch down, cancel any scrolling we were doing:
@@ -1661,6 +1687,25 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     [super touchesBegan:touches withEvent:event];
 }
 
+/**
+ @Status Stub
+*/
+- (BOOL)touchesShouldBegin:(NSSet*)touches withEvent:(UIEvent*)event inContentView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)touchesShouldCancelInContentView:(UIView*)view {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     [super layoutSubviews];
     //  Make sure we stay within our bounds
@@ -1676,6 +1721,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     positionScrollers(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<CAAction>)actionForLayer:(CALayer*)layer forKey:(NSString*)key {
     if (_isZoomingToRect) {
         return [super actionForLayer:layer forKey:key];
@@ -1692,6 +1740,9 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     return [super actionForLayer:layer forKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIPinchGestureRecognizer*)pinchGestureRecognizer {
     return _pinchGesture;
 }

@@ -14,28 +14,32 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "NSStringInternal.h"
+#import "Starboard.h"
+#import "NSStringInternal.h"
 
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGContext.h"
-#include "CoreGraphics/CGGradient.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGContext.h"
+#import "CoreGraphics/CGGradient.h"
 
-#include "UIKit/UIView.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UIDevice.h"
-#include "UIKit/UIImage.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIFont.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UIDevice.h"
+#import "UIKit/UIImage.h"
 
-#include "UIKit/UIButton.h"
-#include "UIKit/UILabel.h"
-#include "UIKit/UINavigationBar.h"
-#include "UIKit/UIBarButtonItem.h"
-#include "UIBarButtonItem+Internals.h"
-#include "LoggingNative.h"
+#import "UIKit/UIButton.h"
+#import "UIKit/UILabel.h"
+#import "UIKit/UINavigationBar.h"
+#import "UIKit/UIBarButtonItem.h"
+#import "UIBarButtonItem+Internals.h"
+#import "UINavigationItemInternal.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UINavigationBar";
+
+@interface UINavigationBar () <UINavigationItemDelegate>
+@end
 
 @implementation UINavigationBar {
     idretaintype(NSMutableArray) _items;
@@ -67,6 +71,10 @@ static void setBackground(UINavigationBar* self) {
     return NULL;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     NSArray* items = [coder decodeObjectForKey:@"UIItems"];
 
@@ -122,6 +130,9 @@ static void setBackground(UINavigationBar* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     (_items).attach([NSMutableArray new]);
 
@@ -201,6 +212,9 @@ static void setBackground(UINavigationBar* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)pushNavigationItem:(UINavigationItem*)item {
     [_items addObject:item];
     [self setNeedsDisplay];
@@ -358,6 +372,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     [self->_titleLabel setShadowOffset:textShadowOffset];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (_newItem != nil) {
         bool backButtonHandler = false;
@@ -547,6 +564,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     return _leftButton;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_curItem != nil) {
         [_curItem setDelegate:nil];
@@ -573,6 +593,9 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret = { 320.0f, 44.0f };
     return ret;

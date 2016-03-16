@@ -54,7 +54,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UIBaselineAdjustment baselineAdjustment STUB_PROPERTY;
 @property (nonatomic) UILineBreakMode lineBreakMode;
 @property (nonatomic) UITextAlignment textAlignment;
-@property (nonatomic, copy) NSAttributedString* attributedText;
+@property (nonatomic, copy) NSAttributedString* attributedText STUB_PROPERTY;
 @property (nonatomic, copy) NSString* text;
 @property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;

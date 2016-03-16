@@ -2800,18 +2800,6 @@ static unichar PickWord(unichar c) {
     return [ret autorelease];
 }
 
-#if 0
--(id) propertyList {
-NSPropertyListReader* reader = [NSPropertyListReader alloc];
-
-[reader initWithData:[self dataUsingEncoding:1]];
-[reader autorelease];
-
-id ret = [reader read];
-return ret;
-}
-#endif
-
 /**
  @Status Interoperable
 */

@@ -248,7 +248,7 @@ WINRT_EXPORT
 @property WGIBitmapRotation rotation;
 @property WGIBitmapInterpolationMode interpolationMode;
 @property WGIBitmapFlip flip;
-@property (copy) WGIBitmapBounds* bounds;
+@property (retain) WGIBitmapBounds* bounds;
 @end
 
 #endif // __WGIBitmapTransform_DEFINED__
@@ -259,7 +259,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapTypedValue : RTObject
-+ (WGIBitmapTypedValue*)create:(RTObject*)value type:(WFPropertyType)type ACTIVATOR;
++ (WGIBitmapTypedValue*)make:(RTObject*)value type:(WFPropertyType)type ACTIVATOR;
 @property (readonly) WFPropertyType type;
 @property (readonly) RTObject* value;
 @end
@@ -688,11 +688,11 @@ WINRT_EXPORT
                                       alpha:(WGIBitmapAlphaMode)alpha
                                     success:(void (^)(WGISoftwareBitmap*))success
                                     failure:(void (^)(NSError*))failure;
-+ (WGISoftwareBitmap*)create:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
-+ (WGISoftwareBitmap*)createWithAlpha:(WGIBitmapPixelFormat)format
-                                width:(int)width
-                               height:(int)height
-                                alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
++ (WGISoftwareBitmap*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
++ (WGISoftwareBitmap*)makeWithAlpha:(WGIBitmapPixelFormat)format
+                              width:(int)width
+                             height:(int)height
+                              alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 @property double dpiY;
 @property double dpiX;
 @property (readonly) WGIBitmapAlphaMode bitmapAlphaMode;

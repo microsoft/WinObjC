@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NSLogging.h"
+#import "AssertARCEnabled.h"
 
 static const wchar_t* TAG = L"UICollectionViewCell";
 
@@ -47,9 +48,9 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 #pragma mark - NSObject
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
         _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
         _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -65,9 +66,9 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)aDecoder {
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
         _contentView = [aDecoder decodeObjectForKey:@"UIContentView"];
         if (_contentView) {
@@ -95,7 +96,7 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 #pragma mark - Public
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)prepareForReuse {
     self.layoutAttributes = nil;
@@ -105,7 +106,7 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 // Selection highlights underlying contents
 - (void)setSelected:(BOOL)selected {
@@ -115,7 +116,7 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 // Cell highlighting only highlights the cell itself
 - (void)setHighlighted:(BOOL)highlighted {
@@ -145,7 +146,7 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setBackgroundView:(UIView*)backgroundView {
     if (_backgroundView != backgroundView) {
@@ -158,7 +159,7 @@ static const wchar_t* TAG = L"UICollectionViewCell";
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setSelectedBackgroundView:(UIView*)selectedBackgroundView {
     if (_selectedBackgroundView != selectedBackgroundView) {

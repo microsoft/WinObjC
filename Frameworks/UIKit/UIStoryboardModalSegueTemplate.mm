@@ -28,6 +28,10 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     id _viewController;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     _identifier = [coder decodeObjectForKey:@"UIIdentifier"];
     _destination = [coder decodeObjectForKey:@"UIDestinationViewControllerIdentifier"];
@@ -35,22 +39,37 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setViewController:(UIViewController*)controller {
     _viewController = controller;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)viewController {
     return _viewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)identifier {
     return _identifier;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)destination {
     return _destination;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)perform:(id)arg {
     if (_identifier == nil) {
         TraceVerbose(TAG, L"performSegue: identifier = nil!  dest = %hs", [_destination UTF8String]);
@@ -62,6 +81,9 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _identifier = nil;
     _destination = nil;
@@ -75,29 +97,48 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     id _viewController;
 }
 
-- (id)initWithCoder:(id)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _identifier = [coder decodeObjectForKey:@"UIIdentifier"];
     _destination = [coder decodeObjectForKey:@"UIDestinationViewControllerIdentifier"];
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setViewController:(UIViewController*)controller {
     _viewController = controller;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIViewController*)viewController {
     return _viewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)identifier {
     return _identifier;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)destination {
     return _destination;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)perform:(id)arg {
     if (_identifier == nil) {
         TraceVerbose(TAG, L"performSegue: identifier = nil!  dest = %hs", [_destination UTF8String]);
@@ -108,6 +149,9 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     [_viewController performSegueWithIdentifier:(id)_identifier sender:arg];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _identifier = nil;
     _destination = nil;
@@ -122,6 +166,10 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     id _viewController;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     _identifier = [coder decodeObjectForKey:@"UIIdentifier"];
     _destination = [coder decodeObjectForKey:@"UIDestinationViewControllerIdentifier"];
@@ -129,22 +177,37 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setViewController:(id)controller {
     _viewController = controller;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)viewController {
     return _viewController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)identifier {
     return _identifier;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)destination {
     return _destination;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)perform:(id)arg {
     if (_identifier == nil) {
         TraceVerbose(TAG, L"performSegue: identifier = nil!  dest = %hs", [_destination UTF8String]);
@@ -155,6 +218,9 @@ static const wchar_t* TAG = L"UIStoryboardModalSegueTemplate";
     [_viewController performSegueWithIdentifier:_identifier sender:arg];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _identifier = nil;
     _destination = nil;

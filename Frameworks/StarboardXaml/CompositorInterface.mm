@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -17,7 +17,6 @@
 #include "Starboard.h"
 #include "CACompositor.h"
 #include "CACompositorClient.h"
-#include "winobjc\winobjc.h"
 #include "QuartzCore\CALayer.h"
 #include "CGContextInternal.h"
 #include "UIInterface.h"
@@ -1067,7 +1066,7 @@ public:
             //  [TODO: Update contents scale in Xaml node]
             // contentScale = [(NSNumber *) newValue floatValue];
         } else if (strcmp(name, "contentsOrientation") == 0) {
-            int position = [(NSNumber*) newValue intValue];
+            int position = [(NSNumber*)newValue intValue];
             float toPosition = 0;
             if (position == UIImageOrientationUp) {
                 toPosition = 0;
@@ -1081,7 +1080,7 @@ public:
             SetProperty(L"transform.rotation", toPosition);
         } else if (strcmp(name, "contentsSize") == 0) {
         } else if (strcmp(name, "gravity") == 0) {
-            SetPropertyInt(L"gravity", [(NSNumber*) newValue intValue]);
+            SetPropertyInt(L"gravity", [(NSNumber*)newValue intValue]);
         } else if (strcmp(name, "zPosition") == 0) {
         } else if (strcmp(name, "contentColor") == 0) {
         } else if (strcmp(name, "sublayerTransform") == 0) {
@@ -1397,8 +1396,11 @@ public:
     void CommitDisplayTransaction(DisplayTransaction* transaction) {
     }
 
-    virtual void addNode(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayNode* superNode, DisplayNode* beforeNode, DisplayNode* afterNode) override {
+    virtual void addNode(DisplayTransaction* transaction,
+                         DisplayNode* node,
+                         DisplayNode* superNode,
+                         DisplayNode* beforeNode,
+                         DisplayNode* afterNode) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode);
         transaction->QueueNodeMovement(newNode);
     }
@@ -1450,7 +1452,10 @@ public:
     virtual void setNewPatternBackground(id layer) {
     }
 
-    virtual void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) override {
+    virtual void setDisplayProperty(DisplayTransaction* transaction,
+                                    DisplayNode* node,
+                                    const char* propertyName,
+                                    NSObject* newValue) override {
         QueuedProperty* newPropChange = new QueuedProperty(node, propertyName, newValue);
 
         transaction->QueueProperty(newPropChange);

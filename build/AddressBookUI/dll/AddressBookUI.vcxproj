@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AddressBook\dll\AddressBook.vcxproj">
-      <Project>{9E8B1145-A308-4091-A1C5-D1FF01367893}</Project>
+      <Project>{5F537067-96B8-4D84-A5D2-BF32AAB7A454}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\AddressBookUI\lib\AddressBookUILib.vcxproj">
       <Project>{A4875499-9854-42AA-8B61-35BAD1084B6E}</Project>

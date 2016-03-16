@@ -263,6 +263,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFUUIDTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFURLTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CoreFoundationTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ErrorHandlingTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSArrayTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSAttributedStringTests.mm" />

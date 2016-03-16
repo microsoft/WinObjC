@@ -196,7 +196,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaProtectionPMPServer : RTObject
-+ (WMPMediaProtectionPMPServer*)createPMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
++ (WMPMediaProtectionPMPServer*)makePMPServer:(RTObject<WFCIPropertySet>*)pProperties ACTIVATOR;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
 

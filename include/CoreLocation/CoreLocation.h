@@ -16,7 +16,7 @@
 
 #pragma once
 
-#import <stubincludes.h>
+#import <StubIncludes.h>
 #import <CoreLocation/CLBeacon.h>
 #import <CoreLocation/CLBeaconRegion.h>
 #import <CoreLocation/CLCircularRegion.h>

@@ -17,6 +17,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const AVURLAssetPreferPreciseDurationAndTimingKey = @"AVURLAssetPreferPreciseDurationAndTimingKey";
 NSString* const AVURLAssetReferenceRestrictionsKey = @"AVURLAssetReferenceRestrictionsKey";

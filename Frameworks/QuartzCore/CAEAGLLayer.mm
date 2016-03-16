@@ -16,7 +16,6 @@
 
 #include "Starboard.h"
 
-typedef wchar_t WCHAR;
 #include "UWP/WindowsUIXamlControls.h"
 #include "UWP/WindowsUIXamlMedia.h"
 #include "QuartzCore/CALayer.h"

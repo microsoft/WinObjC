@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKRecordZone.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CKRecordZoneDefaultName = @"CKRecordZoneDefaultName";
 

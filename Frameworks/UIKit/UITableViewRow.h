@@ -20,7 +20,7 @@
     idretaintype(UITableViewCell) _cell;
 }
 - (float)rowHeight;
-- (id)initWithCoder:(NSCoder*)coder;
+- (instancetype)initWithCoder:(NSCoder*)coder;
 - (UITableViewCell*)cell;
 - (void)dealloc;
 @end

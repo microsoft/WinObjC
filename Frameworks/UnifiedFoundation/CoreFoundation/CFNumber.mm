@@ -31,6 +31,9 @@ CFNumberType CFNumberGetType(CFNumberRef self) {
 
 extern "C" id _OBJC_CLASS_NSCFBoolean;
 
+// This needs to be bitwise identical to the layout of NSNumber and all its superclasses
+// Static initialization order makes it so that we cannot create NSNumber instances at this time
+// TODO: 5403859 - this struct can be removed at that time
 struct CFStaticNumber {
     id* isa;
     NSValueType _valueType;
@@ -38,9 +41,8 @@ struct CFStaticNumber {
         uint64_t i;
         double f;
     } val;
-    NSNumberType type;
-    const char* objCType;
-    bool isBool;
+    const char* _objCType;
+    BOOL _isBool;
 };
 
 static CFStaticNumber cftrue = { NULL,
@@ -48,18 +50,16 @@ static CFStaticNumber cftrue = { NULL,
                                  {
                                      1,
                                  },
-                                 integerType,
                                  "c",
-                                 true };
+                                 YES };
 
 static CFStaticNumber cffalse = { NULL,
                                   NSValueTypeUnknown,
                                   {
                                       0,
                                   },
-                                  integerType,
                                   "c",
-                                  true };
+                                  YES };
 
 const CFBooleanRef kCFBooleanTrue = (const CFBooleanRef)&cftrue;
 const CFBooleanRef kCFBooleanFalse = (const CFBooleanRef)&cffalse;

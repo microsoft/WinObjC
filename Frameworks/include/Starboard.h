@@ -38,7 +38,6 @@ extern "C" void dbg_printf(const char* fmt, ...);
 #include <stdio.h>
 #ifdef __OBJC__
 #include "UIKit/UIKit.h"
-@class UIAppearanceSetter, UIRuntimeEventConnection;
 
 static inline id m_assert(const char* file, int line) {
     printf("_m sent @ %s:%d\n", file, line);

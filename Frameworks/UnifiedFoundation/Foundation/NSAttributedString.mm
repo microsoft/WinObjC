@@ -21,6 +21,8 @@
 
 #import <algorithm>
 
+@class NSMutableAttributedStringConcrete;
+
 @implementation NSAttributedString
 
 /**
@@ -46,7 +48,7 @@
 
 // Override allocWithZone to create the concrete subclass if not subclassed
 + (instancetype)allocWithZone:(NSZone*)zone {
-    if ((self == [NSAttributedString class]) || (self == [NSMutableAttributedString class])) {
+    if ((self == [NSAttributedString class]) || (self == [NSMutableAttributedString class]) || (self == [NSMutableAttributedStringConcrete class])) {
         return (__bridge NSAttributedString*)_CFAttributedStringCreateEmpty();
     }
 

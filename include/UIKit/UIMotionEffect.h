@@ -18,10 +18,11 @@
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+#import <UIKit/UIGeometry.h>
 
-@class NSArray;
+@class NSDictionary;
 
 UIKIT_EXPORT_CLASS
 @interface UIMotionEffect : NSObject <NSCopying, NSCoding>
-
+- (NSDictionary*)keyPathsAndRelativeValuesForViewerOffset:(UIOffset)viewerOffset STUB_METHOD;
 @end

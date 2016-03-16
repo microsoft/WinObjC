@@ -43,22 +43,22 @@ UIKIT_EXPORT_CLASS
 - (void)setItems:(NSArray*)items animated:(BOOL)animated;
 - (void)pushNavigationItem:(UINavigationItem*)item animated:(BOOL)animated;
 - (void)popNavigationItemAnimated:(BOOL)animated;
-- (void)setBackgroundImage:(UIImage*)backgroundImage forBarMetrics:(UIBarMetrics)barMetrics;
+- (void)setBackgroundImage:(UIImage*)backgroundImage forBarMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
 - (void)setBackgroundImage:(UIImage*)backgroundImage forBarPosition:(NSInteger)position barMetrics:(UIBarMetrics)barMetrics;
-- (void)setTitleVerticalPositionAdjustment:(CGFloat)adjustment forBarMetrics:(UIBarMetrics)barMetrics;
-- (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics;
+- (void)setTitleVerticalPositionAdjustment:(CGFloat)adjustment forBarMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
+- (CGFloat)titleVerticalPositionAdjustmentForBarMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
 
 @property (nonatomic, retain) UIColor* barTintColor;
 @property (nonatomic, assign) UIBarStyle barStyle;
-@property (nonatomic, retain) UIColor* tintColor;
+@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
 @property (nonatomic, readonly, retain) UINavigationItem* topItem;
 @property (nonatomic, readonly, retain) UINavigationItem* backItem;
 @property (nonatomic, copy) NSArray* items;
 @property (nonatomic, assign) id delegate;
-@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
+@property (nonatomic, assign, getter=isTranslucent) BOOL translucent STUB_PROPERTY;
 @property (nonatomic, retain) UIImage* shadowImage;
-@property (nonatomic, copy) NSDictionary* titleTextAttributes;
-@property (nonatomic, retain) UIImage* backIndicatorImage;
+@property (nonatomic, copy) NSDictionary* titleTextAttributes STUB_PROPERTY;
+@property (nonatomic, retain) UIImage* backIndicatorImage STUB_PROPERTY;
 @property (nonatomic, retain) UIImage* backIndicatorTransitionMaskImage;
 
 @end

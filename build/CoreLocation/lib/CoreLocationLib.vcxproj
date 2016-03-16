@@ -55,6 +55,7 @@
     <ClangCompile>
       <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -66,6 +67,7 @@
       <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <OptimizationLevel>Full</OptimizationLevel>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -76,6 +78,7 @@
     <ClangCompile>
       <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -87,6 +90,7 @@
       <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCORELOCATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <OptimizationLevel>Full</OptimizationLevel>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

@@ -35,9 +35,10 @@ struct CAMediaTimingProperties {
 }
 
 - (void)setDelay:(double)delay;
+- (void)_setFinishedSelector:(SEL)selector;
 @end
 
-@interface NSObject(CAAnimationInternal)
+@interface NSObject (CAAnimationInternal)
 - (void)_removeAnimationsFromLayer;
 - (BOOL)wasRemoved;
 - (BOOL)wasAborted;

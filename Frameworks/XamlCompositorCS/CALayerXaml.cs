@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Composition;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
@@ -50,8 +51,6 @@ namespace XamlCompositorCS
         public sealed class CALayerXaml : Panel, CacheableObject
         {
             internal static double screenScale = 1.0;
-            static bool RoundInitialized = false;
-            static double RoundPixelsPerPoint;
             static SolidColorBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
 
             FrameworkElement content;
@@ -70,7 +69,6 @@ namespace XamlCompositorCS
             private bool _createdTransforms = false;
             private Point _anchorPoint;
             private bool _masksToBounds;
-            private bool _topMost = false;
             double _Opacity;
             bool _hidden = false;
 
@@ -144,7 +142,12 @@ namespace XamlCompositorCS
                     return (CALayerXaml)ret;
                 }
 
-                return new CALayerXaml();
+                CALayerXaml newLayer = new CALayerXaml();
+
+                var layerVisual = Windows.UI.Xaml.Hosting.ElementCompositionPreview.GetElementVisual(newLayer);
+                layerVisual.BorderMode = CompositionBorderMode.Hard;
+
+                return newLayer;
             }
 
             static public void DestroyLayer(CALayerXaml layer)
@@ -176,17 +179,6 @@ namespace XamlCompositorCS
 
                 windowContainer.RenderTransform = globalTransform;
                 screenScale = (double)scale;
-            }
-
-            static public double RoundCoordinate(Object coord)
-            {
-
-                if (!RoundInitialized)
-                {
-                    RoundInitialized = true;
-                    RoundPixelsPerPoint = ((int)Windows.Graphics.Display.DisplayInformation.GetForCurrentView().ResolutionScale) / 100.0;
-                }
-                return Math.Floor((double)coord * screenScale * RoundPixelsPerPoint) / (screenScale * RoundPixelsPerPoint);
             }
 
             internal static void AddAnimation(String propertyName, UIElement target, Storyboard storyboard, DoubleAnimation copyProperties, Object fromValue, Object toValue, bool dependent = false)
@@ -372,7 +364,6 @@ namespace XamlCompositorCS
                             target.SetupBackground();
                             double targetValue = (double) toValue;
 
-                            targetValue = RoundCoordinate(targetValue);
                             target._origin.X = targetValue;
 
                             if (target._createdTransforms)
@@ -413,7 +404,6 @@ namespace XamlCompositorCS
                             target.SetupBackground();
                             double targetValue = (double) toValue;
 
-                            targetValue = RoundCoordinate(targetValue);
                             target._origin.Y = targetValue;
 
                             if (target._createdTransforms) {
@@ -545,7 +535,6 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             if (toValue != null) if ((double)toValue < 0) toValue = 0.0;
-                            toValue = RoundCoordinate(toValue);
 
                             if (target._size.Width == (double) toValue) return;
                             target._size.Width = (double)toValue;
@@ -585,7 +574,6 @@ namespace XamlCompositorCS
                         (target, toValue) =>
                         {
                             if (toValue != null) if ((double)toValue < 0) toValue = 0.0;
-                            toValue = RoundCoordinate(toValue);
                             if (target._size.Height == (double)toValue) return;
                             target._size.Height = (double)toValue;
                             target.Height = (double)toValue;
@@ -1093,7 +1081,6 @@ namespace XamlCompositorCS
 
             public void SetTopMost()
             {
-                _topMost = true;
                 SetContent(null);
                 this.Background = null;
             }
@@ -1188,7 +1175,6 @@ namespace XamlCompositorCS
             Storyboard _container = new Storyboard();
             AnimationMethod _Completed;
             AnimationMethod _Started;
-            bool aborted = false;
 
             public EventedStoryboard()
             {
@@ -1198,11 +1184,11 @@ namespace XamlCompositorCS
 
             class Animation
             {
-                internal string propertyName;
-                internal Object toValue;
+                internal string propertyName = null;
+                internal Object toValue = null;
             }
             List<Animation> Animations = new List<Animation>();
-            CALayerXaml AnimatedLayer;
+            CALayerXaml AnimatedLayer = null;
 
             public AnimationMethod Completed
             {
@@ -1234,7 +1220,6 @@ namespace XamlCompositorCS
 
             public void Abort()
             {
-                aborted = true;
                 foreach (Animation curAnim in Animations)
                 {
                     Object curValue = CALayerXaml.animatableProperties[curAnim.propertyName].GetValue(AnimatedLayer);
@@ -1506,7 +1491,7 @@ namespace XamlCompositorCS
                 Windows.System.Threading.ThreadPoolTimer beginTimer = Windows.System.Threading.ThreadPoolTimer.CreateTimer(
                     (handler) =>
                     {
-                        _container.Dispatcher.RunAsync(
+                        IAsyncAction ret = _container.Dispatcher.RunAsync(
                             Windows.UI.Core.CoreDispatcherPriority.High,
                                 () =>
                                 {
@@ -1544,7 +1529,7 @@ namespace XamlCompositorCS
                     if (!_updating)
                     {
                         _updating = true;
-                        CAXamlDebugCounters._singleton.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
+                        IAsyncAction ret = CAXamlDebugCounters._singleton.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
                                 {
                                     if (textOutput == null)
                                     {
@@ -1563,7 +1548,7 @@ namespace XamlCompositorCS
                     }
                 }
             }
-            static internal CAXamlDebugCounters _singleton;
+            static internal CAXamlDebugCounters _singleton = null;
 
             Dictionary<String, Counter> _Counters = new Dictionary<string, Counter>();
 
@@ -1618,7 +1603,6 @@ namespace XamlCompositorCS
 
         public sealed class CALayerInputHandler
         {
-            internal static UIElement rootPane;
             static CALayerXamlInputEvents InputEventHandler;
             static Control DummyFocus;
 

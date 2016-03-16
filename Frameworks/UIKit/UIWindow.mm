@@ -28,6 +28,7 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UITouch.h"
 #include "LoggingNative.h"
+#include "UIApplicationInternal.h"
 
 static const wchar_t* TAG = L"UIWindow";
 
@@ -84,10 +85,26 @@ const UIWindowLevel UIWindowLevelStatusBar = StubConstant();
 }
 
 /**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
  @Status Interoperable
 */
 - (CGPoint)convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
     return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 static void initInternal(UIWindow* self, CGRect pos) {
@@ -115,6 +132,9 @@ static void initInternal(UIWindow* self, CGRect pos) {
     [self resignKeyWindow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIWindow*)initWithFrame:(CGRect)pos {
     [[[UIApplication sharedApplication] windows] addObject:self];
 
@@ -130,12 +150,16 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return self;
 }
 
-- (UIWindow*)initWithContentRect:(CGRect)pos {
+- (UIWindow*)_initWithContentRect:(CGRect)pos {
     [self initWithFrame:pos];
 
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (NSObject*)initWithCoder:(NSCoder*)coder {
     [[[UIApplication sharedApplication] windows] addObject:self];
 
@@ -164,6 +188,9 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIWindow*)mainWindow {
     return (UIWindow*)m_pMainWindow;
 }
@@ -211,6 +238,9 @@ static void initInternal(UIWindow* self, CGRect pos) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)nextResponder {
     return [UIApplication sharedApplication];
 }
@@ -302,15 +332,48 @@ static void initInternal(UIWindow* self, CGRect pos) {
 */
 - (void)setScreen:(UIScreen*)screen {
     UNIMPLEMENTED();
-    return;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
     [[[UIApplication sharedApplication] windows] removeObject:self];
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point toWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point fromWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)rect toWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)sendEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
 }
 
 @end

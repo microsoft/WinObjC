@@ -23,6 +23,7 @@
 #import "UICollectionViewData.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
 #include "IwMalloc.h"
+#import "AssertARCEnabled.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;
@@ -72,7 +73,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout {
+- (instancetype)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout {
     if ((self = [super init])) {
         _collectionView = collectionView;
         _layout = layout;

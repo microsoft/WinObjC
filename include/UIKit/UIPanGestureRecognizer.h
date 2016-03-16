@@ -46,8 +46,4 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) NSUInteger maximumNumberOfTouches;
 @property (nonatomic) NSUInteger minimumNumberOfTouches;
 
-// Internal ---------------
-- (void)_setDragSlack:(float)slack;
-// -----------------------
-
 @end

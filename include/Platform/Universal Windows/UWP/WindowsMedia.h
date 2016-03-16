@@ -130,12 +130,12 @@ typedef unsigned WMAudioProcessing;
 #define __WMIMediaFrame_DEFINED__
 
 @protocol WMIMediaFrame <WFIClosable>
-@property (copy) id duration;
+@property (retain) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property BOOL isDiscontinuous;
 @property (readonly) BOOL isReadOnly;
-@property (copy) id relativeTime;
-@property (copy) id systemRelativeTime;
+@property (retain) id relativeTime;
+@property (retain) id systemRelativeTime;
 @property (readonly) NSString* type;
 - (void)close;
 @end
@@ -191,12 +191,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMVideoFrame : RTObject <WMIMediaFrame, WFIClosable>
-+ (WMVideoFrame*)create:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
-+ (WMVideoFrame*)createWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
-@property (copy) id systemRelativeTime;
-@property (copy) id relativeTime;
++ (WMVideoFrame*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
++ (WMVideoFrame*)makeWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
+@property (retain) id systemRelativeTime;
+@property (retain) id relativeTime;
 @property BOOL isDiscontinuous;
-@property (copy) id duration;
+@property (retain) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* type;
@@ -239,11 +239,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAudioFrame : RTObject <WMIMediaFrame, WFIClosable>
-+ (WMAudioFrame*)create:(unsigned int)capacity ACTIVATOR;
-@property (copy) id systemRelativeTime;
-@property (copy) id relativeTime;
++ (WMAudioFrame*)make:(unsigned int)capacity ACTIVATOR;
+@property (retain) id systemRelativeTime;
+@property (retain) id relativeTime;
 @property BOOL isDiscontinuous;
-@property (copy) id duration;
+@property (retain) id duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* type;
@@ -271,11 +271,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSystemMediaTransportControlsTimelineProperties : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WFTimeSpan* startTime;
-@property (copy) WFTimeSpan* position;
-@property (copy) WFTimeSpan* minSeekTime;
-@property (copy) WFTimeSpan* maxSeekTime;
-@property (copy) WFTimeSpan* endTime;
+@property (retain) WFTimeSpan* startTime;
+@property (retain) WFTimeSpan* position;
+@property (retain) WFTimeSpan* minSeekTime;
+@property (retain) WFTimeSpan* maxSeekTime;
+@property (retain) WFTimeSpan* endTime;
 @end
 
 #endif // __WMSystemMediaTransportControlsTimelineProperties_DEFINED__
@@ -286,11 +286,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMMusicDisplayProperties : RTObject
-@property (copy) NSString* title;
-@property (copy) NSString* artist;
-@property (copy) NSString* albumArtist;
+@property (retain) NSString* title;
+@property (retain) NSString* artist;
+@property (retain) NSString* albumArtist;
 @property unsigned int trackNumber;
-@property (copy) NSString* albumTitle;
+@property (retain) NSString* albumTitle;
 @property (readonly) NSMutableArray* genres;
 @end
 
@@ -302,8 +302,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMVideoDisplayProperties : RTObject
-@property (copy) NSString* title;
-@property (copy) NSString* subtitle;
+@property (retain) NSString* title;
+@property (retain) NSString* subtitle;
 @property (readonly) NSMutableArray* genres;
 @end
 
@@ -315,8 +315,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMImageDisplayProperties : RTObject
-@property (copy) NSString* title;
-@property (copy) NSString* subtitle;
+@property (retain) NSString* title;
+@property (retain) NSString* subtitle;
 @end
 
 #endif // __WMImageDisplayProperties_DEFINED__
@@ -328,8 +328,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSystemMediaTransportControlsDisplayUpdater : RTObject
 @property WMMediaPlaybackType type;
-@property (copy) WSSRandomAccessStreamReference* thumbnail;
-@property (copy) NSString* appMediaId;
+@property (retain) WSSRandomAccessStreamReference* thumbnail;
+@property (retain) NSString* appMediaId;
 @property (readonly) WMImageDisplayProperties* imageProperties;
 @property (readonly) WMMusicDisplayProperties* musicProperties;
 @property (readonly) WMVideoDisplayProperties* videoProperties;

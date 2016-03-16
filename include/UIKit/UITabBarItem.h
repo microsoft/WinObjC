@@ -59,11 +59,13 @@ typedef uint32_t UITabBarSystemItem;
 
 UIKIT_EXPORT_CLASS
 @interface UITabBarItem : UIBarItem
-
-- (id)initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag;
-- (id)initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag;
-- (void)setFinishedSelectedImage:(UIImage*)selectedImage withFinishedUnselectedImage:(UIImage*)unselectedImage;
-
-@property (nonatomic, copy) NSString* badgeValue;
-
+- (instancetype)initWithTabBarSystemItem:(UITabBarSystemItem)systemItem tag:(NSInteger)tag STUB_METHOD;
+- (instancetype)initWithTitle:(NSString*)title image:(UIImage*)image tag:(NSInteger)tag;
+- (instancetype)initWithTitle:(NSString*)title image:(UIImage*)image selectedImage:(UIImage*)selectedImage STUB_METHOD;
+- (UIImage*)finishedSelectedImage STUB_METHOD;
+- (UIImage*)finishedUnselectedImage STUB_METHOD;
+- (void)setFinishedSelectedImage:(UIImage*)selectedImage withFinishedUnselectedImage:(UIImage*)unselectedImage STUB_METHOD;
+@property (copy, nonatomic) NSString* badgeValue STUB_PROPERTY;
+@property (nonatomic, strong) UIImage* selectedImage STUB_PROPERTY;
+@property (assign, readwrite, nonatomic) UIOffset titlePositionAdjustment STUB_PROPERTY;
 @end

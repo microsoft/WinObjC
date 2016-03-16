@@ -291,7 +291,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
             IwFree(vals);
         }
     } else {
-        [self init];
+        self = [self init];
     }
 
     return self;
@@ -346,6 +346,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 - (NSDictionary*)initWithContentsOfFile:(NSString*)filename {
     if (filename == nil) {
         TraceVerbose(TAG, L"initWithContentsOfFile: nil!");
+        [self release];
         return nil;
     }
 
@@ -360,16 +361,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
                                                                                     NSPropertyListImmutable
                           format:0
                 errorDescription:0];
-        if (deserializedDict == nil) {
-            TraceError(TAG, L"Error deserializing NSDictionary");
-            return nil;
-        }
     }
 
-    if (deserializedDict) {
+    if (deserializedDict && [deserializedDict isKindOfClass:[NSDictionary class]]) {
         //  Steal its dictionary
         return [self initWithDictionary:deserializedDict];
     } else {
+        TraceError(TAG, L"Error deserializing NSDictionary");
+        [self release];
         return nil;
     }
     return self;

@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,27 +13,116 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#import <stubincludes.h>
-#import <Foundation/NSObject.h>
-#import <CoreGraphics/CoreGraphics.h>
 #import <CoreImage/CoreImageExport.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <CoreVideo/CVPixelBuffer.h>
+#import <CoreVideo/CVImageBuffer.h>
 
+#import <Foundation/NSObject.h>
+
+@class NSString;
 @class CIColor;
 @class CIFilter;
+@class NSData;
+@class NSDictionary;
+@class NSURL;
+@protocol MTLTexture;
+@class UIImage;
+@class NSArray;
 
+typedef int CIFormat;
+COREIMAGE_EXPORT const CIFormat kCIFormatARGB8;
+COREIMAGE_EXPORT const CIFormat kCIFormatBGRA8;
+COREIMAGE_EXPORT const CIFormat kCIFormatRGBA8;
+COREIMAGE_EXPORT const CIFormat kCIFormatABGR8;
+COREIMAGE_EXPORT const CIFormat kCIFormatRGBAf;
+COREIMAGE_EXPORT const CIFormat kCIFormatRGBAh;
+COREIMAGE_EXPORT const CIFormat kCIFormatA8;
+COREIMAGE_EXPORT const CIFormat kCIFormatA16;
+COREIMAGE_EXPORT const CIFormat kCIFormatAh;
+COREIMAGE_EXPORT const CIFormat kCIFormatAf;
+COREIMAGE_EXPORT const CIFormat kCIFormatR8;
+COREIMAGE_EXPORT const CIFormat kCIFormatR16;
+COREIMAGE_EXPORT const CIFormat kCIFormatRh;
+COREIMAGE_EXPORT const CIFormat kCIFormatRf;
+COREIMAGE_EXPORT const CIFormat kCIFormatRG8;
+COREIMAGE_EXPORT const CIFormat kCIFormatRG16;
+COREIMAGE_EXPORT const CIFormat kCIFormatRGh;
+COREIMAGE_EXPORT const CIFormat kCIFormatRGf;
+COREIMAGE_EXPORT NSString* const kCIImageColorSpace;
+COREIMAGE_EXPORT NSString* const kCIImageProperties;
+COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustEnhance;
+COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustRedEye;
+COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustFeatures;
+COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustCrop;
+COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustLevel;
 COREIMAGE_EXPORT_CLASS
 @interface CIImage : NSObject <NSCopying, NSSecureCoding>
-
-@property(readonly, nonatomic) CGRect extent;
-
 + (CIImage*)emptyImage STUB_METHOD;
-+ (CIImage*)imageWithColor:(CIColor*)color;
-+ (CIImage*)imageWithCGImage:(CGImageRef)image;
-
-- (CIImage*)imageByCroppingToRect:(CGRect)rect;
-- (instancetype)initWithCGImage:(CGImageRef)cgImage;
-
++ (CIImage*)imageWithColor:(CIColor*)color STUB_METHOD;
++ (CIImage*)imageWithBitmapData:(NSData*)d
+                    bytesPerRow:(size_t)bpr
+                           size:(CGSize)size
+                         format:(CIFormat)f
+                     colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
++ (CIImage*)imageWithCGImage:(CGImageRef)image STUB_METHOD;
++ (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithContentsOfURL:(NSURL*)url STUB_METHOD;
++ (CIImage*)imageWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithCVImageBuffer:(CVImageBufferRef)imageBuffer STUB_METHOD;
++ (CIImage*)imageWithCVImageBuffer:(CVImageBufferRef)imageBuffer options:(NSDictionary*)dict STUB_METHOD;
++ (CIImage*)imageWithCVPixelBuffer:(CVPixelBufferRef)buffer STUB_METHOD;
++ (CIImage*)imageWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict STUB_METHOD;
++ (CIImage*)imageWithData:(NSData*)data STUB_METHOD;
++ (CIImage*)imageWithData:(NSData*)data options:(NSDictionary*)d STUB_METHOD;
++ (CIImage*)imageWithImageProvider:(id)p
+                              size:(size_t)
+                             width:(size_t)height
+                            format:(CIFormat)f
+                        colorSpace:(CGColorSpaceRef)cs
+                           options:(NSDictionary*)dict STUB_METHOD;
++ (CIImage*)imageWithTexture:(unsigned int)name size:(CGSize)size flipped:(BOOL)flag colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
++ (CIImage*)imageWithMTLTexture:(id<MTLTexture>)texture options:(NSDictionary*)options STUB_METHOD;
+- (CIImage*)imageByApplyingFilter:(NSString*)filterName withInputParameters:(NSDictionary*)params STUB_METHOD;
+- (CIImage*)imageByApplyingTransform:(CGAffineTransform)matrix STUB_METHOD;
+- (CIImage*)imageByCroppingToRect:(CGRect)rect STUB_METHOD;
+- (CIImage*)imageByApplyingOrientation:(int)orientation STUB_METHOD;
+- (CIImage*)imageByClampingToExtent STUB_METHOD;
+- (CIImage*)imageByCompositingOverImage:(CIImage*)dest STUB_METHOD;
+- (instancetype)initWithColor:(CIColor*)color STUB_METHOD;
+- (instancetype)initWithBitmapData:(NSData*)d
+                       bytesPerRow:(size_t)bpr
+                              size:(CGSize)size
+                            format:(CIFormat)f
+                        colorSpace:(CGColorSpaceRef)c STUB_METHOD;
+- (instancetype)initWithCGImage:(CGImageRef)image STUB_METHOD;
+- (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
+- (instancetype)initWithImage:(UIImage*)image STUB_METHOD;
+- (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options STUB_METHOD;
+- (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
+- (instancetype)initWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
+- (instancetype)initWithCVImageBuffer:(CVImageBufferRef)imageBuffer STUB_METHOD;
+- (instancetype)initWithCVImageBuffer:(CVImageBufferRef)imageBuffer options:(NSDictionary*)dict STUB_METHOD;
+- (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer STUB_METHOD;
+- (instancetype)initWithCVPixelBuffer:(CVPixelBufferRef)buffer options:(NSDictionary*)dict STUB_METHOD;
+- (instancetype)initWithData:(NSData*)data STUB_METHOD;
+- (instancetype)initWithData:(NSData*)data options:(NSDictionary*)d STUB_METHOD;
+- (instancetype)initWithImageProvider:(id)p
+                                 size:(size_t)
+                                width:(size_t)height
+                               format:(CIFormat)f
+                           colorSpace:(CGColorSpaceRef)cs
+                              options:(NSDictionary*)dict STUB_METHOD;
+- (instancetype)initWithTexture:(unsigned int)name size:(CGSize)size flipped:(BOOL)flag colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
+- (instancetype)initWithMTLTexture:(id<MTLTexture>)texture options:(NSDictionary*)options STUB_METHOD;
+@property (readonly, nonatomic) CGRect extent STUB_PROPERTY;
+@property (readonly, atomic) NSDictionary* properties STUB_PROPERTY;
+@property (readonly, atomic) NSURL* url STUB_PROPERTY;
+@property (readonly, atomic) CGColorSpaceRef colorSpace STUB_PROPERTY;
+- (CGAffineTransform)imageTransformForOrientation:(int)orientation STUB_METHOD;
+- (NSArray*)autoAdjustmentFilters STUB_METHOD;
+- (NSArray*)autoAdjustmentFiltersWithOptions:(NSDictionary*)options STUB_METHOD;
+- (CGRect)regionOfInterestForImage:(CIImage*)im inRect:(CGRect)r STUB_METHOD;
 @end

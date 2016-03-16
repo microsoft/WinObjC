@@ -70,6 +70,7 @@
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DADDRESSBOOKUI_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -80,6 +81,7 @@
     <ClangCompile>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DADDRESSBOOKUI_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <ObjectiveCARC>true</ObjectiveCARC>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

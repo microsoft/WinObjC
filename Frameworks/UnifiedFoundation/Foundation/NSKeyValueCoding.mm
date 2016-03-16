@@ -475,9 +475,7 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
  @Status Interoperable
 */
 - (void)performSelectorOnMainThread:(SEL)selector withObject:(id)obj1 waitUntilDone:(BOOL)wait {
-    id modes = [[NSArray alloc] initWithObject:@"kCFRunLoopDefaultMode"];
-    [self performSelectorOnMainThread:selector withObject:obj1 waitUntilDone:wait modes:modes];
-    selector, [modes release];
+    [self performSelectorOnMainThread:selector withObject:obj1 waitUntilDone:wait modes:@[@"kCFRunLoopDefaultMode"]];
 }
 
 /**
