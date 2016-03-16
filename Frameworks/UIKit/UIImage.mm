@@ -36,7 +36,6 @@
 #include "Wincodec.h"
 #include "COMIncludes_End.h"
 
-#include "BMPDecode.h"
 #include "LoggingNative.h"
 
 @interface UIImage ()

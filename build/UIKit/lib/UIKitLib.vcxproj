@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\Frameworks\UIKit\art.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\Stubs.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString_Additions.mm" />

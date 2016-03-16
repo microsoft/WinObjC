@@ -1170,10 +1170,3 @@ LIBRARY UIKit
         UIDeviceOrientationDidChangeNotification
         UIDeviceProximityStateDidChangeNotification
 
-        ; Stub that should really be elsewhere:
-        DNSServiceGetAddrInfo
-        DNSServiceResolve
-        DNSServiceRegister
-        DNSServiceRefDeallocate
-        DNSServiceSetDispatchQueue
-        DNSServiceBrowse

@@ -87,6 +87,14 @@ LIBRARY Starboard
         host_page_size
         mach_task_self
 
+        ; DNS Service:
+        DNSServiceGetAddrInfo
+        DNSServiceResolve
+        DNSServiceRegister
+        DNSServiceRefDeallocate
+        DNSServiceSetDispatchQueue
+        DNSServiceBrowse
+
         ; This was being exported as a stub from UIKit before but mincore has this symbol, reexport that:
         if_indextoname
 
