@@ -575,7 +575,6 @@ TEST(NSAttributedString, EnumerateAttribute) {
     ASSERT_EQ(testAttributes.size(), index);
 
     // 2) test with holes, limit the range
-    [aStr release];
     aStr = [[[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"] autorelease]; // 10 characters
 
     testAttributes.clear();
@@ -598,7 +597,6 @@ TEST(NSAttributedString, EnumerateAttribute) {
     ASSERT_EQ(testAttributes.size(), index);
 
     // 3) iterate in reverse, use longestEffectiveRange
-    [aStr release];
     aStr = [[[NSMutableAttributedString alloc] initWithString:@"AAAAAAAAAA"] autorelease]; // 10 characters
 
     testAttributes.clear();

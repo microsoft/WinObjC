@@ -85,7 +85,6 @@ TEST(CFAttributedString, SetGetRemoveAttributes) {
     assertAttributeAt(aStr, key1, value2, 5, 1);
 
     CFRelease(aStr);
-    CFRelease(dict);
 }
 
 TEST(CFAttributedString, ReplaceAttributedString) {
@@ -142,7 +141,6 @@ TEST(CFAttributedString, GetAttribute_s_AndLongestEffectiveRange) {
     ASSERT_EQ(1, outRange.length);
 
     CFRelease(aStr);
-    CFRelease(expectedDict);
 }
 
 TEST(CFAttributedString, CreateWithSubstring) {

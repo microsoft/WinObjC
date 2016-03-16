@@ -82,10 +82,6 @@ TEST(NSPredicate, PredicateWithBlock) {
             ASSERT_EQ_MSG(YES, [filteredArray containsObject:object], "FAILED: even filter did not work as expected, value not found.");
         }
     }
-
-    [evenNumbersPredicate release];
-    [filteredArray release];
-    [array release];
 }
 
 // Used for testing keys and custom block.
@@ -134,7 +130,6 @@ TEST(NSPredicate, PredicateWithBlockSub) {
     ASSERT_EQ_MSG(1, [filteredArray count], "FAILED: failed to filter the coins.");
     ASSERT_EQ_MSG(specialValue, [[filteredArray firstObject] coinValue], "FAILED: Unable to obtain the correct coin value.");
 
-    [specialCoinPredicate release];
     [filteredArray release];
     [array release];
 }

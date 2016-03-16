@@ -51,8 +51,6 @@ TEST(NSEnumerator, EnumeratorWithArray) {
             ASSERT_OBJCEQ([testArray objectAtIndex:i++], obj);
         }
         ASSERT_EQ([testArray count], i);
-
-        [enumerator release];
     }
 
     // allObjects backwards
@@ -85,8 +83,6 @@ TEST(NSEnumerator, EnumeratorWithArray) {
             ASSERT_OBJCEQ([testArray objectAtIndex:--i], obj);
         }
         ASSERT_EQ(0, i);
-
-        [enumerator release];
     }
 }
 
@@ -129,7 +125,5 @@ TEST(NSEnumerator, EnumeratorWithIterator) {
             ASSERT_OBJCEQ([testArray objectAtIndex:i++], obj);
         }
         ASSERT_EQ([testArray count], i);
-
-        [enumerator release];
     }
 }

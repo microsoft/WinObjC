@@ -36,7 +36,6 @@ TEST(NSIndexSet, AddIndexesInRange) {
     }];
 
     ASSERT_EQ(callCount, [expected count]);
-    [expected release];
 
     // add in a left overlap.
     LOG_INFO("Left overlap addIndexesInRange operation tests of NSIndexSet");
@@ -49,7 +48,6 @@ TEST(NSIndexSet, AddIndexesInRange) {
     }];
 
     ASSERT_EQ(callCount, [expected count]);
-    [expected release];
 
     // add in a right overlap.
     LOG_INFO("Right overlap addIndexesInRange operation tests of NSIndexSet");
@@ -62,7 +60,6 @@ TEST(NSIndexSet, AddIndexesInRange) {
     }];
 
     ASSERT_EQ(callCount, [expected count]);
-    [expected release];
 
     // add in a subset
     LOG_INFO("Subset addIndexesInRange operation tests of NSIndexSet");
@@ -75,7 +72,6 @@ TEST(NSIndexSet, AddIndexesInRange) {
     }];
 
     ASSERT_EQ(callCount, [expected count]);
-    [expected release];
 
     // add in a candidate that spans multiple ranges. (super set of [1-8] and left overlap of [11-15])
     LOG_INFO("Superset addIndexesInRange operation tests of NSIndexSet");
@@ -88,7 +84,6 @@ TEST(NSIndexSet, AddIndexesInRange) {
     }];
 
     ASSERT_EQ(callCount, [expected count]);
-    [expected release];
 
     // add in an adjacent candidate.
     LOG_INFO("Adjacent addIndexesInRange operation tests of NSIndexSet");
@@ -101,7 +96,6 @@ TEST(NSIndexSet, AddIndexesInRange) {
     }];
 
     ASSERT_EQ(callCount, [expected count]);
-    [expected release];
     [indexSet release];
 }
 

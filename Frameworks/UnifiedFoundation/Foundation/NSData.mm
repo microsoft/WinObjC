@@ -139,7 +139,6 @@ using namespace Windows::Foundation;
             NSString* buf;
             if ([scanner scanCharactersFromSet:base64AllowedCharacters intoString:&buf]) {
                 [cleanedString appendString:buf];
-                [buf release];
             } else {
                 [scanner setScanLocation:[scanner scanLocation] + 1];
             }
