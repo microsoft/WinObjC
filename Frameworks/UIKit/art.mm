@@ -1,8 +1,24 @@
-#include "Starboard.h"
-#include <Foundation/NSData.h>
-#include <Foundation/NSString.h>
+//******************************************************************************
+//
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 
-unsigned char img_activity_at_2x_png[] = {
+#import <Starboard.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSString.h>
+
+const unsigned char img_activity_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   64,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   170, 105, 113, 222, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  36,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -566,7 +582,7 @@ unsigned char img_activity_at_2x_png[] = {
     96,  130,
 };
 
-unsigned char img_add_png[] = {
+const unsigned char img_add_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   25,  0,   0,   0,   25,  8,   6,   0,
     0,   0,   196, 233, 133, 99,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  194, 0,   0,
@@ -598,7 +614,7 @@ unsigned char img_add_png[] = {
     251, 137, 30,  101, 54,  3,   130, 80,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_alert_background_at_2x_png[] = {
+const unsigned char img_alert_background_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   1,   37,  0,   0,   0,   193, 8,   6,   0,
     0,   0,   137, 197, 166, 87,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   24,  155, 0,   0,   24,  155, 1,   73,  117, 131, 148,
     0,   0,   56,  40,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -1162,7 +1178,7 @@ unsigned char img_alert_background_at_2x_png[] = {
     96,  130,
 };
 
-unsigned char img_alertsheet_background_at_2x_png[] = {
+const unsigned char img_alertsheet_background_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   1,   24,  0,   0,   0,   48,  8,   6,   0,
     0,   0,   202, 6,   101, 99,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   24,  155, 0,   0,   24,  155, 1,   73,  117, 131, 148,
     0,   0,   56,  39,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -1711,7 +1727,7 @@ unsigned char img_alertsheet_background_at_2x_png[] = {
     73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_barbutton_compose_png[] = {
+const unsigned char img_barbutton_compose_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   28,  0,   0,   0,   29,  8,   6,   0,
     0,   0,   185, 81,  12,  49,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,
@@ -1758,7 +1774,7 @@ unsigned char img_barbutton_compose_png[] = {
     96,  130,
 };
 
-unsigned char img_blackbutton_normal_at_2x_png[] = {
+const unsigned char img_blackbutton_normal_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   30,  0,   0,   0,   59,  8,   6,   0,
     0,   0,   108, 81,  58,  39,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   13,  213, 0,   0,   13,  213, 1,   61,  214, 88,  241,
     0,   0,   59,  166, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -2338,7 +2354,7 @@ unsigned char img_blackbutton_normal_at_2x_png[] = {
     66,  96,  130,
 };
 
-unsigned char img_blackbutton_pressed_at_2x_png[] = {
+const unsigned char img_blackbutton_pressed_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   30,  0,   0,   0,   59,  8,   6,   0,
     0,   0,   108, 81,  58,  39,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   13,  213, 0,   0,   13,  213, 1,   61,  214, 88,  241,
     0,   0,   56,  36,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -2884,7 +2900,7 @@ unsigned char img_blackbutton_pressed_at_2x_png[] = {
     0,   255, 255, 3,   0,   55,  151, 31,  100, 169, 28,  183, 87,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_bluebutton_normal_at_2x_png[] = {
+const unsigned char img_bluebutton_normal_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   30,  0,   0,   0,   59,  8,   6,
     0,   0,   0,   108, 81,  58,  39,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,
     6,   98,  75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   13,
@@ -2898,7 +2914,7 @@ unsigned char img_bluebutton_normal_at_2x_png[] = {
     73,  27,  162, 38,  19,  228, 20,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_ButtonBarFillNoSelect_at_2x_png[] = {
+const unsigned char img_ButtonBarFillNoSelect_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   24,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   0,   170, 183, 98,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  193, 0,   0,   14,  193, 1,   184, 145, 107, 237,
     0,   0,   60,  174, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -3486,7 +3502,7 @@ unsigned char img_ButtonBarFillNoSelect_at_2x_png[] = {
     72,  113, 17,  240, 22,  185, 4,   104, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_ButtonBarFillSelect_at_2x_png[] = {
+const unsigned char img_ButtonBarFillSelect_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   24,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   0,   170, 183, 98,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  193, 0,   0,   14,  193, 1,   184, 145, 107, 237,
     0,   0,   60,  174, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -4075,7 +4091,7 @@ unsigned char img_ButtonBarFillSelect_at_2x_png[] = {
     130,
 };
 
-unsigned char img_ButtonBarLeftNoSelect_at_2x_png[] = {
+const unsigned char img_ButtonBarLeftNoSelect_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   36,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   114, 101, 213, 212, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   60,  97,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -4662,7 +4678,7 @@ unsigned char img_ButtonBarLeftNoSelect_at_2x_png[] = {
     0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_ButtonBarLeftSelect_at_2x_png[] = {
+const unsigned char img_ButtonBarLeftSelect_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   36,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   114, 101, 213, 212, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   60,  97,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -5249,7 +5265,7 @@ unsigned char img_ButtonBarLeftSelect_at_2x_png[] = {
     255, 3,   0,   76,  207, 18,  146, 125, 88,  122, 130, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_ButtonBarRightNoSelect_at_2x_png[] = {
+const unsigned char img_ButtonBarRightNoSelect_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   36,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   114, 101, 213, 212, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   59,  166, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -5830,7 +5846,7 @@ unsigned char img_ButtonBarRightNoSelect_at_2x_png[] = {
     69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_ButtonBarRightSelect_at_2x_png[] = {
+const unsigned char img_ButtonBarRightSelect_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   36,  0,   0,   0,   64,  8,   6,   0,
     0,   0,   114, 101, 213, 212, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   59,  166, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -6411,7 +6427,7 @@ unsigned char img_ButtonBarRightSelect_at_2x_png[] = {
     174, 66,  96,  130,
 };
 
-unsigned char img_checkmark_at_2x_png[] = {
+const unsigned char img_checkmark_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   47,  0,   0,   0,   49,  8,   6,   0,
     0,   0,   74,  251, 240, 71,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   111, 70,  70,  115, 0,   0,   0,   3,   0,   0,
@@ -6463,7 +6479,7 @@ unsigned char img_checkmark_at_2x_png[] = {
     142, 131, 214, 248, 13,  95,  132, 25,  62,  11,  194, 79,  97,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_detail_png[] = {
+const unsigned char img_detail_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   25,  0,   0,   0,   25,  8,   6,   0,
     0,   0,   196, 233, 133, 99,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  195, 0,   0,
@@ -6495,7 +6511,7 @@ unsigned char img_detail_png[] = {
     0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_disclosure_btn_at_2x_png[] = {
+const unsigned char img_disclosure_btn_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   52,  0,   0,   0,   52,  8,   6,   0,
     0,   0,   197, 120, 27,  235, 0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   111, 70,  70,  115, 0,   0,   0,   3,   0,   0,
@@ -6552,7 +6568,7 @@ unsigned char img_disclosure_btn_at_2x_png[] = {
     191, 62,  215, 240, 176, 209, 33,  104, 236, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_disclosure_at_2x_png[] = {
+const unsigned char img_disclosure_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   50,  0,   0,   0,   50,  8,   6,   0,
     0,   0,   30,  63,  136, 177, 0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  195, 0,   0,
@@ -6593,7 +6609,7 @@ unsigned char img_disclosure_at_2x_png[] = {
     234, 47,  233, 55,  253, 139, 120, 102, 249, 93,  165, 245, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_info_png[] = {
+const unsigned char img_info_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   25,  0,   0,   0,   25,  8,   6,   0,
     0,   0,   196, 233, 133, 99,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  194, 0,   0,
@@ -6626,7 +6642,7 @@ unsigned char img_info_png[] = {
     153, 252, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_more_png[] = {
+const unsigned char img_more_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   28,  0,   0,   0,   28,  8,   6,   0,
     0,   0,   114, 13,  223, 148, 0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  195, 0,   0,
@@ -6648,7 +6664,7 @@ unsigned char img_more_png[] = {
     239, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_navgradient_blackopaque_png[] = {
+const unsigned char img_navgradient_blackopaque_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   1,   0,   0,   0,   44,  8,   6,   0,
     0,   0,   164, 39,  210, 97,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  35,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -7190,7 +7206,7 @@ unsigned char img_navgradient_blackopaque_png[] = {
     78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_navgradient_blacktranslucent_png[] = {
+const unsigned char img_navgradient_blacktranslucent_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   1,   0,   0,   0,   44,  8,   6,   0,
     0,   0,   164, 39,  210, 97,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  35,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -7732,7 +7748,7 @@ unsigned char img_navgradient_blacktranslucent_png[] = {
     0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_navgradient_default_png[] = {
+const unsigned char img_navgradient_default_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   1,   0,   0,   0,   44,  8,   6,   0,
     0,   0,   164, 39,  210, 97,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  35,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -8274,7 +8290,7 @@ unsigned char img_navgradient_default_png[] = {
     78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_navgradient_png[] = {
+const unsigned char img_navgradient_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   5,   0,   0,   0,   45,  8,   6,   0,
     0,   0,   102, 144, 161, 190, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  35,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -8816,7 +8832,7 @@ unsigned char img_navgradient_png[] = {
     103, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_picker_left_at_2x_png[] = {
+const unsigned char img_picker_left_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   8,   0,   0,   1,   136, 8,   6,   0,
     0,   0,   124, 200, 161, 231, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   59,  152, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -9392,7 +9408,7 @@ unsigned char img_picker_left_at_2x_png[] = {
     26,  127, 42,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_picker_right_at_2x_png[] = {
+const unsigned char img_picker_right_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   8,   0,   0,   1,   136, 8,   6,   0,
     0,   0,   124, 200, 161, 231, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   59,  152, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -9968,7 +9984,7 @@ unsigned char img_picker_right_at_2x_png[] = {
     26,  127, 42,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_picker_selection_at_2x_png[] = {
+const unsigned char img_picker_selection_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   32,  0,   0,   0,   104, 8,   6,   0,
     0,   0,   144, 113, 242, 245, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  37,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -10512,7 +10528,7 @@ unsigned char img_picker_selection_at_2x_png[] = {
     133, 160, 216, 43,  152, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_popover_background_at_2x_png[] = {
+const unsigned char img_popover_background_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   92,  0,   0,   0,   92,  8,   6,   0,
     0,   0,   227, 239, 210, 88,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   10,  58,  105,
     67,  67,  80,  80,  104, 111, 116, 111, 115, 104, 111, 112, 32,  73,  67,  67,  32,  112, 114, 111, 102, 105, 108, 101, 0,   0,   72,
@@ -10633,7 +10649,7 @@ unsigned char img_popover_background_at_2x_png[] = {
     58,  86,  127, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_progress_background_at_2x_png[] = {
+const unsigned char img_progress_background_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   21,  0,   0,   0,   18,  8,   6,   0,
     0,   0,   180, 18,  149, 46,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   59,  166, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -11209,7 +11225,7 @@ unsigned char img_progress_background_at_2x_png[] = {
     223, 10,  31,  100, 181, 85,  208, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_progress_foreground_at_2x_png[] = {
+const unsigned char img_progress_foreground_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   21,  0,   0,   0,   18,  8,   6,   0,
     0,   0,   180, 18,  149, 46,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   57,  222, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -11768,7 +11784,7 @@ unsigned char img_progress_foreground_at_2x_png[] = {
     10,  31,  106, 235, 178, 139, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_redbutton_png[] = {
+const unsigned char img_redbutton_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   30,  0,   0,   0,   59,  8,   6,
     0,   0,   0,   108, 81,  58,  39,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,
     6,   98,  75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   13,
@@ -11782,7 +11798,7 @@ unsigned char img_redbutton_png[] = {
     255, 10,  76,  37,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_refresh_png[] = {
+const unsigned char img_refresh_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   32,  0,   0,   0,   34,  8,   6,   0,
     0,   0,   62,  178, 219, 255, 0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   13,  213, 0,   0,
@@ -11831,7 +11847,7 @@ unsigned char img_refresh_png[] = {
     214, 67,  253, 204, 130, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_rounded_button_pressed_at_2x_png[] = {
+const unsigned char img_rounded_button_pressed_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   44,  0,   0,   0,   44,  8,   6,   0,
     0,   0,   30,  132, 90,  1,   0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  193, 0,   0,   14,  193, 1,   184, 145, 107, 237,
     0,   0,   56,  36,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -12374,7 +12390,7 @@ unsigned char img_rounded_button_pressed_at_2x_png[] = {
     0,   245, 220, 3,   91,  143, 249, 112, 222, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_rounded_button_at_2x_png[] = {
+const unsigned char img_rounded_button_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   44,  0,   0,   0,   44,  8,   6,   0,
     0,   0,   30,  132, 90,  1,   0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  193, 0,   0,   14,  193, 1,   184, 145, 107, 237,
     0,   0,   56,  36,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -12917,7 +12933,7 @@ unsigned char img_rounded_button_at_2x_png[] = {
     0,   74,  54,  3,   220, 151, 98,  25,  90,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_slider_handle_highlighted_at_2x_png[] = {
+const unsigned char img_slider_handle_highlighted_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   17,  0,   0,   0,   49,  8,   6,
     0,   0,   0,   60,  193, 66,  204, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154,
     156, 24,  0,   0,   0,   25,  116, 69,  88,  116, 83,  111, 102, 116, 119, 97,  114, 101, 0,   65,  100, 111, 98,  101, 32,  73,
@@ -12934,7 +12950,7 @@ unsigned char img_slider_handle_highlighted_at_2x_png[] = {
     92,  97,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_slider_handle_at_2x_png[] = {
+const unsigned char img_slider_handle_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   17,  0,   0,   0,   49,  8,   6,
     0,   0,   0,   60,  193, 66,  204, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154,
     156, 24,  0,   0,   0,   25,  116, 69,  88,  116, 83,  111, 102, 116, 119, 97,  114, 101, 0,   65,  100, 111, 98,  101, 32,  73,
@@ -12951,7 +12967,7 @@ unsigned char img_slider_handle_at_2x_png[] = {
     29,  98,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_StatusBar_png[] = {
+const unsigned char img_StatusBar_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68, 82, 0,   0,   1,   64,  0,   0,   0,   20,  8,   6,   0,
     0,   0,   252, 248, 228, 255, 0,   0,   0,   4,   103, 65,  77,  65,  0,  0,  177, 143, 11,  252, 97,  5,   0,   0,   0,   6,   98,
     75,  71,  68,  0,   255, 0,   255, 0,   255, 160, 189, 167, 147, 0,   0,  0,  9,   112, 72,  89,  115, 0,   0,   14,  193, 0,   0,
@@ -12962,7 +12978,7 @@ unsigned char img_StatusBar_png[] = {
     1,   231, 217, 1,   39,  5,   224, 102, 10,  0,   0,   0,   0,   73,  69, 78, 68,  174, 66,  96,  130,
 };
 
-unsigned char img_switch_off_at_2x_png[] = {
+const unsigned char img_switch_off_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   88,  0,   0,   0,   40,  8,   6,   0,
     0,   0,   122, 183, 61,  245, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   0,   25,  116, 69,  88,  116, 83,  111, 102, 116, 119, 97,  114, 101, 0,   65,  100, 111, 98,  101, 32,  73,  109, 97,  103,
@@ -12998,7 +13014,7 @@ unsigned char img_switch_off_at_2x_png[] = {
     135, 151, 177, 191, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_switch_on_at_2x_png[] = {
+const unsigned char img_switch_on_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   88,  0,   0,   0,   40,  8,   6,   0,
     0,   0,   122, 183, 61,  245, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   0,   25,  116, 69,  88,  116, 83,  111, 102, 116, 119, 97,  114, 101, 0,   65,  100, 111, 98,  101, 32,  73,  109, 97,  103,
@@ -13035,7 +13051,7 @@ unsigned char img_switch_on_at_2x_png[] = {
     122, 232, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_switch_selector_at_2x_png[] = {
+const unsigned char img_switch_selector_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   22,  0,   0,   0,   22,  8,   6,   0,
     0,   0,   196, 180, 108, 59,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   57,  222, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -13594,22 +13610,7 @@ unsigned char img_switch_selector_at_2x_png[] = {
     68,  174, 66,  96,  130,
 };
 
-unsigned char img_switch_selector_at_2xx_png[] = {
-    137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   22,  0,   0,   0,   22,  8,   6,
-    0,   0,   0,   196, 180, 108, 59,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154,
-    156, 24,  0,   0,   0,   25,  116, 69,  88,  116, 83,  111, 102, 116, 119, 97,  114, 101, 0,   65,  100, 111, 98,  101, 32,  73,
-    109, 97,  103, 101, 82,  101, 97,  100, 121, 113, 201, 101, 60,  0,   0,   0,   189, 73,  68,  65,  84,  120, 218, 188, 149, 129,
-    13,  194, 32,  16,  69,  75,  23,  144, 17,  220, 192, 142, 192, 8,   29,  129, 17,  28,  193, 17,  58,  26,  110, 208, 17,  206,
-    9,   206, 251, 6,   12,  38,  165, 53,  114, 231, 75,  126, 218, 164, 225, 113, 41,  7,   56,  102, 30,  14,  152, 36,  231, 252,
-    4,   41,  103, 221, 29,  5,   241, 70,  188, 228, 38,  89,  185, 13,  190, 197, 198, 248, 77,  241, 44,  33,  254, 30,  76,  48,
-    29,  137, 35,  255, 6,   10,  9,   45,  241, 204, 125, 80,  93,  121, 253, 79,  137, 251, 73,  69,  60,  230, 53,  188, 74,  78,
-    67,  63,  23,  73,  196, 139, 203, 237, 70,  74,  98,  112, 71,  107, 162, 226, 160, 40,  45,  85,  251, 177, 106, 124, 77,  94,
-    21,  123, 3,   241, 123, 241, 76,  196, 100, 37,  78,  6,   222, 100, 218, 110, 96,  81,  172, 118, 169, 143, 77,  179, 45,  77,
-    101, 43,  118, 240, 248, 112, 252, 227, 216, 44,  9,   22,  7,   189, 218, 213, 228, 172, 46,  211, 167, 0,   3,   0,   251, 243,
-    232, 235, 235, 34,  165, 224, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
-};
-
-unsigned char img_tabbar_background_png[] = {
+const unsigned char img_tabbar_background_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   10,  0,   0,   0,   50,  8,   2,
     0,   0,   0,   234, 121, 221, 42,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   0,
     32,  99,  72,  82,  77,  0,   0,   122, 38,  0,   0,   128, 132, 0,   0,   250, 0,   0,   0,   128, 232, 0,   0,   117, 48,  0,
@@ -13632,7 +13633,7 @@ unsigned char img_tabbar_background_png[] = {
     82,  121, 147, 165, 120, 158, 153, 87,  0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_tabbar_button_deselected_png[] = {
+const unsigned char img_tabbar_button_deselected_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   24,  0,   0,   0,   24,  8,   3,   0,
     0,   0,   215, 169, 205, 202, 0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   3,   0,   80,
     76,  84,  69,  66,  66,  66,  69,  69,  69,  72,  72,  72,  74,  74,  74,  77,  77,  77,  80,  80,  80,  82,  82,  82,  85,  85,  85,
@@ -13670,7 +13671,7 @@ unsigned char img_tabbar_button_deselected_png[] = {
     69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_tabbar_button_disabled_png[] = {
+const unsigned char img_tabbar_button_disabled_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10, 0,  0,   0,  13,  73,  72,  68,  82,  0,   0,  0,   24,  0,   0,   0,   24,  8,  3,   0,   0,
     0,   215, 169, 205, 202, 0,   0,   0,  4,  103, 65, 77,  65,  0,   0,   177, 143, 11, 252, 97,  5,   0,   0,   3,   0,  80,  76,  84,
     69,  25,  25,  25,  29,  29,  29,  34, 34, 34,  39, 39,  39,  44,  44,  44,  49,  49, 49,  54,  54,  54,  59,  59,  59, 64,  64,  64,
@@ -13707,7 +13708,7 @@ unsigned char img_tabbar_button_disabled_png[] = {
     130,
 };
 
-unsigned char img_tabbar_button_highlight_png[] = {
+const unsigned char img_tabbar_button_highlight_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   24,  0,   0,   0,   24,  8,   6,   0,
     0,   0,   224, 119, 61,  248, 0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   10,  58,  105,
     67,  67,  80,  80,  104, 111, 116, 111, 115, 104, 111, 112, 32,  73,  67,  67,  32,  112, 114, 111, 102, 105, 108, 101, 0,   0,   72,
@@ -13834,7 +13835,7 @@ unsigned char img_tabbar_button_highlight_png[] = {
     119, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_tabbar_button_selected_png[] = {
+const unsigned char img_tabbar_button_selected_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   16,  0,   0,   0,   50,  8,   6,   0,
     0,   0,   85,  151, 91,  92,  0,   0,   0,   4,   103, 65,  77,  65,  0,   0,   177, 143, 11,  252, 97,  5,   0,   0,   10,  58,  105,
     67,  67,  80,  80,  104, 111, 116, 111, 115, 104, 111, 112, 32,  73,  67,  67,  32,  112, 114, 111, 102, 105, 108, 101, 0,   0,   72,
@@ -13947,7 +13948,7 @@ unsigned char img_tabbar_button_selected_png[] = {
     96,  130,
 };
 
-unsigned char img_TextFieldBezel_at_2x_png[] = {
+const unsigned char img_TextFieldBezel_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   34,  0,   0,   0,   62,  8,   6,   0,
     0,   0,   78,  83,  201, 34,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  30,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -14491,7 +14492,7 @@ unsigned char img_TextFieldBezel_at_2x_png[] = {
     0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_TextFieldCursor_at_2x_png[] = {
+const unsigned char img_TextFieldCursor_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   4,   0,   0,   0,   30,  8,   6,   0,
     0,   0,   11,  188, 191, 131, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   56,  35,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -15033,7 +15034,7 @@ unsigned char img_TextFieldCursor_at_2x_png[] = {
     64,  7,   55,  101, 38,  128, 212, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_TextFieldRounded_at_2x_png[] = {
+const unsigned char img_TextFieldRounded_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   34,  0,   0,   0,   62,  8,   6,   0,
     0,   0,   78,  83,  201, 34,  0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  36,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -15614,7 +15615,7 @@ unsigned char img_TextFieldRounded_at_2x_png[] = {
     239, 235, 195, 81,  80,  134, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_wheel_bg_at_2x_png[] = {
+const unsigned char img_wheel_bg_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   18,  0,   0,   1,   176, 8,   6,   0,
     0,   0,   164, 109, 53,  6,   0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   14,  196, 0,   0,   14,  196, 1,   149, 43,  14,  27,
     0,   0,   57,  223, 105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -16176,7 +16177,7 @@ unsigned char img_wheel_bg_at_2x_png[] = {
     167, 232, 13,  0,   243, 140, 3,   147, 145, 110, 126, 104, 0,   0,   0,   0,   73,  69,  78,  68,  174, 66,  96,  130,
 };
 
-unsigned char img_wheel_shadow_at_2x_png[] = {
+const unsigned char img_wheel_shadow_at_2x_png[] = {
     137, 80,  78,  71,  13,  10,  26,  10,  0,   0,   0,   13,  73,  72,  68,  82,  0,   0,   0,   2,   0,   0,   1,   176, 8,   6,   0,
     0,   0,   131, 195, 180, 238, 0,   0,   0,   9,   112, 72,  89,  115, 0,   0,   11,  19,  0,   0,   11,  19,  1,   0,   154, 156, 24,
     0,   0,   56,  36,  105, 84,  88,  116, 88,  77,  76,  58,  99,  111, 109, 46,  97,  100, 111, 98,  101, 46,  120, 109, 112, 0,   0,
@@ -16720,106 +16721,189 @@ unsigned char img_wheel_shadow_at_2x_png[] = {
 
 NSData* loadPackagedImage(NSString* name) {
     if ([name isEqualToString:@"/img/activity@2x.png"])
-        return [NSData dataWithBytes:img_activity_at_2x_png length:15122];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_activity_at_2x_png)
+                                    length:sizeof(img_activity_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/add.png"])
-        return [NSData dataWithBytes:img_add_png length:776];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_add_png) length:sizeof(img_add_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/alert-background@2x.png"])
-        return [NSData dataWithBytes:img_alert_background_at_2x_png length:15122];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_alert_background_at_2x_png)
+                                    length:sizeof(img_alert_background_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/alertsheet-background@2x.png"])
-        return [NSData dataWithBytes:img_alertsheet_background_at_2x_png length:14723];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_alertsheet_background_at_2x_png)
+                                    length:sizeof(img_alertsheet_background_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/barbutton-compose.png"])
-        return [NSData dataWithBytes:img_barbutton_compose_png length:1163];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_barbutton_compose_png)
+                                    length:sizeof(img_barbutton_compose_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/blackbutton-normal@2x.png"])
-        return [NSData dataWithBytes:img_blackbutton_normal_at_2x_png length:15555];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_blackbutton_normal_at_2x_png)
+                                    length:sizeof(img_blackbutton_normal_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/blackbutton-pressed@2x.png"])
-        return [NSData dataWithBytes:img_blackbutton_pressed_at_2x_png length:14659];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_blackbutton_pressed_at_2x_png)
+                                    length:sizeof(img_blackbutton_pressed_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/bluebutton-normal@2x.png"])
-        return [NSData dataWithBytes:img_bluebutton_normal_at_2x_png length:279];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_bluebutton_normal_at_2x_png)
+                                    length:sizeof(img_bluebutton_normal_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/ButtonBarFillNoSelect@2x.png"])
-        return [NSData dataWithBytes:img_ButtonBarFillNoSelect_at_2x_png length:15788];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_ButtonBarFillNoSelect_at_2x_png)
+                                    length:sizeof(img_ButtonBarFillNoSelect_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/ButtonBarFillSelect@2x.png"])
-        return [NSData dataWithBytes:img_ButtonBarFillSelect_at_2x_png length:15796];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_ButtonBarFillSelect_at_2x_png)
+                                    length:sizeof(img_ButtonBarFillSelect_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/ButtonBarLeftNoSelect@2x.png"])
-        return [NSData dataWithBytes:img_ButtonBarLeftNoSelect_at_2x_png length:15751];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_ButtonBarLeftNoSelect_at_2x_png)
+                                    length:sizeof(img_ButtonBarLeftNoSelect_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/ButtonBarLeftSelect@2x.png"])
-        return [NSData dataWithBytes:img_ButtonBarLeftSelect_at_2x_png length:15764];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_ButtonBarLeftSelect_at_2x_png)
+                                    length:sizeof(img_ButtonBarLeftSelect_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/ButtonBarRightNoSelect@2x.png"])
-        return [NSData dataWithBytes:img_ButtonBarRightNoSelect_at_2x_png length:15586];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_ButtonBarRightNoSelect_at_2x_png)
+                                    length:sizeof(img_ButtonBarRightNoSelect_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/ButtonBarRightSelect@2x.png"])
-        return [NSData dataWithBytes:img_ButtonBarRightSelect_at_2x_png length:15583];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_ButtonBarRightSelect_at_2x_png)
+                                    length:sizeof(img_ButtonBarRightSelect_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/checkmark@2x.png"])
-        return [NSData dataWithBytes:img_checkmark_at_2x_png length:1321];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_checkmark_at_2x_png)
+                                    length:sizeof(img_checkmark_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/detail.png"])
-        return [NSData dataWithBytes:img_detail_png length:768];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_detail_png) length:sizeof(img_detail_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/disclosure-btn@2x.png"])
-        return [NSData dataWithBytes:img_disclosure_btn_at_2x_png length:1452];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_disclosure_btn_at_2x_png)
+                                    length:sizeof(img_disclosure_btn_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/disclosure@2x.png"])
-        return [NSData dataWithBytes:img_disclosure_at_2x_png length:1023];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_disclosure_at_2x_png)
+                                    length:sizeof(img_disclosure_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/info.png"])
-        return [NSData dataWithBytes:img_info_png length:797];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_info_png) length:sizeof(img_info_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/more.png"])
-        return [NSData dataWithBytes:img_more_png length:499];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_more_png) length:sizeof(img_more_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/navgradient-blackopaque.png"])
-        return [NSData dataWithBytes:img_navgradient_blackopaque_png length:14532];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_navgradient_blackopaque_png)
+                                    length:sizeof(img_navgradient_blackopaque_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/navgradient-blacktranslucent.png"])
-        return [NSData dataWithBytes:img_navgradient_blacktranslucent_png length:14538];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_navgradient_blacktranslucent_png)
+                                    length:sizeof(img_navgradient_blacktranslucent_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/navgradient-default.png"])
-        return [NSData dataWithBytes:img_navgradient_default_png length:14532];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_navgradient_default_png)
+                                    length:sizeof(img_navgradient_default_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/navgradient.png"])
-        return [NSData dataWithBytes:img_navgradient_png length:14539];
+        return
+            [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_navgradient_png) length:sizeof(img_navgradient_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/picker-left@2x.png"])
-        return [NSData dataWithBytes:img_picker_left_at_2x_png length:15459];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_picker_left_at_2x_png)
+                                    length:sizeof(img_picker_left_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/picker-right@2x.png"])
-        return [NSData dataWithBytes:img_picker_right_at_2x_png length:15459];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_picker_right_at_2x_png)
+                                    length:sizeof(img_picker_right_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/picker-selection@2x.png"])
-        return [NSData dataWithBytes:img_picker_selection_at_2x_png length:14597];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_picker_selection_at_2x_png)
+                                    length:sizeof(img_picker_selection_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/popover-background@2x.png"])
-        return [NSData dataWithBytes:img_popover_background_at_2x_png length:3174];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_popover_background_at_2x_png)
+                                    length:sizeof(img_popover_background_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/progress-background@2x.png"])
-        return [NSData dataWithBytes:img_progress_background_at_2x_png length:15463];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_progress_background_at_2x_png)
+                                    length:sizeof(img_progress_background_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/progress-foreground@2x.png"])
-        return [NSData dataWithBytes:img_progress_foreground_at_2x_png length:15003];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_progress_foreground_at_2x_png)
+                                    length:sizeof(img_progress_foreground_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/redbutton.png"])
-        return [NSData dataWithBytes:img_redbutton_png length:276];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_redbutton_png) length:sizeof(img_redbutton_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/refresh.png"])
-        return [NSData dataWithBytes:img_refresh_png length:1232];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_refresh_png) length:sizeof(img_refresh_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/rounded-button-pressed@2x.png"])
-        return [NSData dataWithBytes:img_rounded_button_pressed_at_2x_png length:14574];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_rounded_button_pressed_at_2x_png)
+                                    length:sizeof(img_rounded_button_pressed_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/rounded-button@2x.png"])
-        return [NSData dataWithBytes:img_rounded_button_at_2x_png length:14574];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_rounded_button_at_2x_png)
+                                    length:sizeof(img_rounded_button_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/slider-handle-highlighted@2x.png"])
-        return [NSData dataWithBytes:img_slider_handle_highlighted_at_2x_png length:352];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_slider_handle_highlighted_at_2x_png)
+                                    length:sizeof(img_slider_handle_highlighted_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/slider-handle@2x.png"])
-        return [NSData dataWithBytes:img_slider_handle_at_2x_png length:352];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_slider_handle_at_2x_png)
+                                    length:sizeof(img_slider_handle_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/StatusBar.png"])
-        return [NSData dataWithBytes:img_StatusBar_png length:210];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_StatusBar_png) length:sizeof(img_StatusBar_png) freeWhenDone:NO];
     if ([name isEqualToString:@"/img/switch-off@2x.png"])
-        return [NSData dataWithBytes:img_switch_off_at_2x_png length:880];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_switch_off_at_2x_png)
+                                    length:sizeof(img_switch_off_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/switch-on@2x.png"])
-        return [NSData dataWithBytes:img_switch_on_at_2x_png length:905];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_switch_on_at_2x_png)
+                                    length:sizeof(img_switch_on_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/switch-selector@2x.png"])
-        return [NSData dataWithBytes:img_switch_selector_at_2x_png length:14990];
-    if ([name isEqualToString:@"/img/switch-selector@2xx.png"])
-        return [NSData dataWithBytes:img_switch_selector_at_2xx_png length:304];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_switch_selector_at_2x_png)
+                                    length:sizeof(img_switch_selector_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/tabbar-background.png"])
-        return [NSData dataWithBytes:img_tabbar_background_png length:514];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_tabbar_background_png)
+                                    length:sizeof(img_tabbar_background_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/tabbar-button-deselected.png"])
-        return [NSData dataWithBytes:img_tabbar_button_deselected_png length:925];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_tabbar_button_deselected_png)
+                                    length:sizeof(img_tabbar_button_deselected_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/tabbar-button-disabled.png"])
-        return [NSData dataWithBytes:img_tabbar_button_disabled_png length:925];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_tabbar_button_disabled_png)
+                                    length:sizeof(img_tabbar_button_disabled_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/tabbar-button-highlight.png"])
-        return [NSData dataWithBytes:img_tabbar_button_highlight_png length:3334];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_tabbar_button_highlight_png)
+                                    length:sizeof(img_tabbar_button_highlight_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/tabbar-button-selected.png"])
-        return [NSData dataWithBytes:img_tabbar_button_selected_png length:2945];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_tabbar_button_selected_png)
+                                    length:sizeof(img_tabbar_button_selected_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/TextFieldBezel@2x.png"])
-        return [NSData dataWithBytes:img_TextFieldBezel_at_2x_png length:14592];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_TextFieldBezel_at_2x_png)
+                                    length:sizeof(img_TextFieldBezel_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/TextFieldCursor@2x.png"])
-        return [NSData dataWithBytes:img_TextFieldCursor_at_2x_png length:14545];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_TextFieldCursor_at_2x_png)
+                                    length:sizeof(img_TextFieldCursor_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/TextFieldRounded@2x.png"])
-        return [NSData dataWithBytes:img_TextFieldRounded_at_2x_png length:15597];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_TextFieldRounded_at_2x_png)
+                                    length:sizeof(img_TextFieldRounded_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/wheel_bg@2x.png"])
-        return [NSData dataWithBytes:img_wheel_bg_at_2x_png length:15090];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_wheel_bg_at_2x_png)
+                                    length:sizeof(img_wheel_bg_at_2x_png)
+                              freeWhenDone:NO];
     if ([name isEqualToString:@"/img/wheel_shadow@2x.png"])
-        return [NSData dataWithBytes:img_wheel_shadow_at_2x_png length:14543];
+        return [NSData dataWithBytesNoCopy:const_cast<unsigned char*>(img_wheel_shadow_at_2x_png)
+                                    length:sizeof(img_wheel_shadow_at_2x_png)
+                              freeWhenDone:NO];
     return nil;
 }
