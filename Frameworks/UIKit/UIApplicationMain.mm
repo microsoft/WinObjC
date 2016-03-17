@@ -255,6 +255,13 @@ int UIApplicationMainInit(
         rootController = nil;
     }
 
+    // TODO::
+    // bug-nithishm-03172016 -  Sending applicationDidBecomeActive as part of application launch until 6910008 is root caused.
+    if ([curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
+        [curDelegate applicationDidBecomeActive:uiApplication];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:uiApplication];
+
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(setOrientation:) withObject:0 waitUntilDone:FALSE];
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
     g_uiMainRunning = true;
