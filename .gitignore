@@ -29,4 +29,7 @@ files.eld
 Documents/
 Library/
 build/package/package.log
-build/build.VC.db
+*.VC.db
+tools/vsimporter/build/
+tools/vsimporter/include/version.h
+msvc/ClangCompileTask.pdb
