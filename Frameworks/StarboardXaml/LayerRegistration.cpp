@@ -18,6 +18,7 @@
 #include <ppltasks.h>
 #include <wrl/client.h>
 
+#include "CALayerXaml.h"
 #include "LayerRegistration.h"
 
 // XamlTypeInfoProvider
@@ -470,7 +471,7 @@ void ::XamlTypeInfo::InfoProvider::XamlMember::SetValue(::Platform::Object ^ ins
         ::XamlTypeInfo::InfoProvider::XamlUserType ^ userType =
             ref new ::XamlTypeInfo::InfoProvider::XamlUserType(this, typeName, GetXamlTypeByName(L"Windows.UI.Xaml.Controls.Page"));
         userType->KindOfType = ::Windows::UI::Xaml::Interop::TypeKind::Custom;
-        userType->Activator = []() -> Platform::Object ^ { return ref new ::XamlCompositorCS::Controls::CALayerXaml(); };
+        userType->Activator = []() -> Platform::Object ^ { return ref new ::XamlCompositor::Controls::CALayerXaml(); };
         userType->SetIsLocalType();
         return userType;
     }

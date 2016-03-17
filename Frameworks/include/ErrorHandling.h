@@ -200,12 +200,12 @@ SB_EXPORT unsigned long starboardGetLastError();
 SB_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
 SB_EXPORT void starboardZeroMemory(void* destination, size_t length);
 SB_EXPORT unsigned long starboardFormatMessageW(unsigned long flags,
-                                                        const void* source,
-                                                        unsigned long messageId,
-                                                        unsigned long languageId,
-                                                        wchar_t* buffer,
-                                                        unsigned long size,
-                                                        va_list* arguments);
+                                                const void* source,
+                                                unsigned long messageId,
+                                                unsigned long languageId,
+                                                wchar_t* buffer,
+                                                unsigned long size,
+                                                va_list* arguments);
 SB_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
 SB_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
 SB_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
@@ -213,13 +213,28 @@ SB_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* desti
 __END_DECLS
 
 #define GetCurrentThreadId starboardGetCurrentThreadId
+#ifdef InterlockedIncrementNoFence
+#undef InterlockedIncrementNoFence
+#endif
 #define InterlockedIncrementNoFence starboardInterlockedIncrementNoFence
 #define GetLastError starboardGetLastError
+#ifdef CopyMemory
+#undef CopyMemory
+#endif
 #define CopyMemory starboardCopyMemory
+#ifdef ZeroMemory
+#undef ZeroMemory
+#endif
 #define ZeroMemory starboardZeroMemory
 #define FormatMessageW starboardFormatMessageW
 #define OutputDebugStringW starboardOutputDebugStringW
+#ifdef InterlockedDecrementRelease
+#undef InterlockedDecrementRelease
+#endif
 #define InterlockedDecrementRelease starboardInterlockedDecrementRelease
+#ifdef InterlockedCompareExchangePointer
+#undef InterlockedCompareExchangePointer
+#endif
 #define InterlockedCompareExchangePointer starboardInterlockedCompareExchangePointer
 
 // Ignore some warnings in result.h
