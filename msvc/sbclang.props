@@ -33,6 +33,7 @@
       <ExceptionHandling Condition="'%(ClangCompile.ExceptionHandling)' == ''">true</ExceptionHandling>
       <HeaderMap Condition="'%(ClangCompile.HeaderMap)' == ''">Disabled</HeaderMap>
       <HeaderMapAddFrameworkEntries Condition="'%(ClangCompile.HeaderMapAddFrameworkEntries)' == ''">true</HeaderMapAddFrameworkEntries>
+      <ExcludedSearchPathSubdirectories Condition="'%(ClangCompile.ExcludedSearchPathsSubdirectories)' == ''">*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <ObjectFileName Condition="'%(ClangCompile.ObjectFileName)' == ''">$(IntDir)</ObjectFileName>
       <ObjectiveCARC Condition="'%(ClangCompile.ObjectiveCARC)' == ''">false</ObjectiveCARC>
       <ObjectiveCModules Condition="'%(ClangCompile.ObjectiveCModules)' == ''">false</ObjectiveCModules>

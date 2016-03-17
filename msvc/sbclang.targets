@@ -164,6 +164,7 @@
     <Clang
       Condition="'@(ClangCompile)' != '' and '%(ClangCompile.ExcludedFromBuild)' != 'true'"
       InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
+      ExcludedSearchPathSubdirectories="%(ClangCompile.ExcludedSearchPathSubdirectories)"
       Autocomplete="$(ClangAutocomplete)"
       AutocompleteCommandLineTemplate="%(ClangCompile.AutocompleteCommandLineTemplate)"
       CommandLineTemplate="%(ClangCompile.WOCStdlibOptions) %(ClangCompile.CommandLineTemplate)"
