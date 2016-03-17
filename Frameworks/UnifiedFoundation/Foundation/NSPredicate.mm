@@ -16,6 +16,7 @@
 
 #import <Starboard.h>
 #import <Foundation/NSPredicate.h>
+#import "NSBooleanPredicate.h"
 
 @implementation NSPredicate {
     BOOL (^_evaluationBlock)(id evaluatedObject, NSDictionary* bindings);
@@ -25,8 +26,12 @@
  @Status Stub
 */
 + (NSPredicate*)predicateWithFormat:(NSString*)format, ... {
-    UNIMPLEMENTED();
-    return nil;
+    va_list args;
+    va_start(args, format);
+    NSPredicate* predicate = [self predicateWithFormat:format arguments:args];
+    va_end(args);
+
+    return predicate;
 }
 
 /**
@@ -46,11 +51,10 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSPredicate*)predicateWithValue:(BOOL)value {
-    UNIMPLEMENTED();
-    return nil;
+	return [[[NSBooleanPredicate alloc] initWithValue:value] autorelease];
 }
 
 /**

@@ -17,6 +17,7 @@
 #import <Starboard.h>
 #import "StubReturn.h"
 #import <Foundation/NSExpression.h>
+#import "ExpressionHelpers.h"
 
 @implementation NSExpression
 
@@ -24,8 +25,10 @@
  @Status Stub
 */
 - (instancetype)initWithExpressionType:(NSExpressionType)type {
-    UNIMPLEMENTED();
-    return nil;
+    if (self = [super init]) {
+        _expressionType = type;
+    }
+    return self;
 }
 
 /**
@@ -34,6 +37,13 @@
 + (NSExpression*)expressionWithFormat:(NSString*)expressionFormat, ... {
     UNIMPLEMENTED();
     return nil;
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSExpression*)expressionForKeyPath:(NSString*)keyPath {
+    return [[[NSExpressionKeyPath alloc] initWithKeyPath:keyPath] autorelease];
 }
 
 /**
@@ -53,35 +63,24 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSExpression*)expressionForConstantValue:(id)obj {
-    UNIMPLEMENTED();
-    return nil;
+    return [[[NSExpressionConstantValue alloc] initWithConstValue:obj] autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSExpression*)expressionForEvaluatedObject {
-    UNIMPLEMENTED();
-    return nil;
+    return [[[NSExpressionEvaluatedObject alloc] init] autorelease];
 }
 
 /**
- @Status Stub
-*/
-+ (NSExpression*)expressionForKeyPath:(NSString*)keyPath {
-    UNIMPLEMENTED();
-    return nil;
-}
-
-/**
- @Status Stub
+ @Status Interoperable
 */
 + (NSExpression*)expressionForVariable:(NSString*)string {
-    UNIMPLEMENTED();
-    return nil;
+    return [[[NSExpressionVariable alloc] initWithVariableName:string] autorelease];
 }
 
 /**
@@ -142,19 +141,17 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSExpression*)expressionForFunction:(NSString*)name arguments:(NSArray*)parameters {
-    UNIMPLEMENTED();
-    return nil;
+    return [[[NSExpressionFunction alloc] initWithFunctionName:name arguments:parameters] autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSExpression*)expressionForFunction:(NSExpression*)target selectorName:(NSString*)name arguments:(NSArray*)parameters {
-    UNIMPLEMENTED();
-    return nil;
+    return [[[NSExpressionFunction alloc] initWithExpressionTarget:target selectorName:name arguments:parameters] autorelease];
 }
 
 /**
@@ -173,38 +170,38 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self retain];
 }
 
 /**
- @Status Stub
+ @Status Cavet
  @Notes
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Cavet
+ @Notes Only supported types are encoded by the derived classes.
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (self = [super initWithCoder:decoder]) {
+        _expressionType = (NSExpressionType)[decoder decodeInt64ForKey:@"expressionType"];
+    }
+
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Cavet
+ @Notes Only supported types are encoded by the derived classes.
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeInt64:_expressionType forKey:@"expressionType"];
 }
 
 @end
