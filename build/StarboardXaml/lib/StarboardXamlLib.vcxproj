@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -19,15 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\XamlCompositorCS\XamlCompositorCS.Universal\XamlCompositorCS.Universal.csproj">
-      <Project>{004e2c18-3bd8-436e-b3c2-d2fe64bc3c76}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\XamlCompositor.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\StarboardXaml.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\LayerRegistration.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\ApplicationCompositor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CALayerXaml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CompositorInterface.mm" />
@@ -42,6 +38,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\StringConversion.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\ApplicationMain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\ApplicationCompositor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\StarboardXaml\CALayerXaml.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FBE5FFE4-A9D3-40E3-B9AB-75841D3F8CDD}</ProjectGuid>
