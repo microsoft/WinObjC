@@ -84,6 +84,7 @@ LIBRARY Starboard
         gettimeofday
         strnstr
         __inet_ntoa
+        if_indextoname
         host_page_size
         mach_task_self
 
@@ -94,9 +95,6 @@ LIBRARY Starboard
         DNSServiceRefDeallocate
         DNSServiceSetDispatchQueue
         DNSServiceBrowse
-
-        ; This was being exported as a stub from UIKit before but mincore has this symbol, reexport that:
-        if_indextoname
 
         ; Error Handling Internal
         dbg_printf

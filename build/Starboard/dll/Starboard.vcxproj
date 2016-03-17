@@ -50,7 +50,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
-      <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsApp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceSymbolReferences>%(ForceSymbolReferences);_EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
@@ -64,7 +64,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
-      <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsApp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceSymbolReferences>%(ForceSymbolReferences);_EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
@@ -78,7 +78,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
-      <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsApp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceSymbolReferences>%(ForceSymbolReferences);EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>
@@ -92,7 +92,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>Starboard.def</ModuleDefinitionFile>
-      <AdditionalDependencies>MinCore.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WindowsApp.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceSymbolReferences>%(ForceSymbolReferences);EbrAssert</ForceSymbolReferences>
     </Link>
     <ClangCompile>

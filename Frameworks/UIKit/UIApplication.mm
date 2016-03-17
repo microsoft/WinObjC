@@ -52,7 +52,6 @@
 #include "UIInterface.h"
 
 #include "RingBuffer.h"
-#include <math.h>
 
 #include "UWP/WindowsUINotifications.h"
 #include "LoggingNative.h"

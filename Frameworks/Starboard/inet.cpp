@@ -28,4 +28,12 @@ char* __inet_ntoa(struct in_addr addr) {
     return nullptr;
 }
 
+/**
+ @Status Stub
+*/
+char *if_indextoname(unsigned ifindex, char *ifname) {
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
 }
