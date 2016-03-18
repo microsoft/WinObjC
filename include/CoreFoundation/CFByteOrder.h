@@ -11,6 +11,7 @@ THE SOFTWARE IS PROVIDED "AS IS",WITHOUT WARRANTY OF ANY KIND,EXPRESS OR IMPLIED
 #import <libkern/OSByteOrder.h>
 #import <CoreFoundation/CFBase.h>
 #import <stdlib.h>
+#import <StarboardExport.h>
 
 
 COREFOUNDATION_EXTERNC_BEGIN

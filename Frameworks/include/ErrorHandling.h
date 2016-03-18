@@ -20,6 +20,7 @@
 #include <sys/cdefs.h>
 #include <winerror.h>
 #include <stdarg.h>
+#include <StarboardExport.h>
 
 namespace wil {
 struct FailureInfo;
@@ -189,29 +190,25 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 
 __BEGIN_DECLS
 
-#ifndef IWPLATFORM_EXPORT
-#define IWPLATFORM_EXPORT
-#endif
-
 // Should hitting the UNIMPLEMENTED macro cause a fast fail? If this returns false, we still log unimplemented calls but they are not fatal.
-IWPLATFORM_EXPORT bool failFastOnUnimplemented();
+SB_EXPORT bool failFastOnUnimplemented();
 
 // Error-handling exports
-IWPLATFORM_EXPORT unsigned long starboardGetCurrentThreadId();
-IWPLATFORM_EXPORT long starboardInterlockedIncrementNoFence(long volatile* addend);
-IWPLATFORM_EXPORT unsigned long starboardGetLastError();
-IWPLATFORM_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
-IWPLATFORM_EXPORT void starboardZeroMemory(void* destination, size_t length);
-IWPLATFORM_EXPORT unsigned long starboardFormatMessageW(unsigned long flags,
+SB_EXPORT unsigned long starboardGetCurrentThreadId();
+SB_EXPORT long starboardInterlockedIncrementNoFence(long volatile* addend);
+SB_EXPORT unsigned long starboardGetLastError();
+SB_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
+SB_EXPORT void starboardZeroMemory(void* destination, size_t length);
+SB_EXPORT unsigned long starboardFormatMessageW(unsigned long flags,
                                                         const void* source,
                                                         unsigned long messageId,
                                                         unsigned long languageId,
                                                         wchar_t* buffer,
                                                         unsigned long size,
                                                         va_list* arguments);
-IWPLATFORM_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
-IWPLATFORM_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
-IWPLATFORM_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
+SB_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
+SB_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
+SB_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
 
 __END_DECLS
 

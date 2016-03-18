@@ -21,19 +21,16 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <MacTypes.h>
+#include <StarboardExport.h>
 
 struct EbrTimeval {
     unsigned __int64 tv_sec; /* seconds since Jan. 1, 1970 */
     unsigned int tv_usec; /* and microseconds */
 };
 
-#ifndef IWPLATFORM_EXPORT
-#define IWPLATFORM_EXPORT __declspec(dllimport)
-#endif
-
 enum EbrFileType { EbrFileTypeUnknown, EbrFileTypeIO, EbrFileTypeSocket, EbrFileTypeVirtual, EbrFileTypeZipAsset };
 
-class IWPLATFORM_EXPORT EbrFile {
+class SB_EXPORT_CLASS EbrFile {
 public:
     int idx;
     EbrFileType type;
@@ -71,59 +68,58 @@ public:
     virtual int Munmap(void* addr, size_t size);
 };
 
-IWPLATFORM_EXPORT EbrFile* EbrAllocFile(EbrFile* ioInterface);
-IWPLATFORM_EXPORT void EbrFreeFile(EbrFile* pFile);
-IWPLATFORM_EXPORT EbrFile* EbrFileFromFd(int fd);
-IWPLATFORM_EXPORT EbrFileType EbrFileGetType(EbrFile* pFile);
+SB_EXPORT EbrFile* EbrAllocFile(EbrFile* ioInterface);
+SB_EXPORT void EbrFreeFile(EbrFile* pFile);
+SB_EXPORT EbrFile* EbrFileFromFd(int fd);
+SB_EXPORT EbrFileType EbrFileGetType(EbrFile* pFile);
 
 struct stat;
 
-IWPLATFORM_EXPORT EbrFile* EbrFmake(FILE* fp);
-IWPLATFORM_EXPORT EbrFile* EbrFopen(const char* filename, const char* mode);
-IWPLATFORM_EXPORT EbrFile* EbrFdopen(int handle, const char* mode);
-IWPLATFORM_EXPORT int EbrFclose(EbrFile* file);
-IWPLATFORM_EXPORT size_t EbrFread(void* dest, size_t elem, size_t count, EbrFile* file);
-IWPLATFORM_EXPORT size_t EbrFwrite(void* dest, size_t elem, size_t count, EbrFile* file);
-IWPLATFORM_EXPORT int EbrFseek(EbrFile* fp, long offset, int origin);
-IWPLATFORM_EXPORT size_t EbrFtell(EbrFile* fp);
-IWPLATFORM_EXPORT int EbrFeof(EbrFile* fp);
-IWPLATFORM_EXPORT int EbrStat(const char* filename, struct stat* ret);
-IWPLATFORM_EXPORT int EbrFputc(int c, EbrFile* fp);
-IWPLATFORM_EXPORT int EbrAccess(const char* file, int mode);
-IWPLATFORM_EXPORT int EbrRewind(EbrFile* fp);
-IWPLATFORM_EXPORT int EbrFerror(EbrFile* fp);
-IWPLATFORM_EXPORT int EbrFgetc(EbrFile* fp);
-IWPLATFORM_EXPORT int EbrUngetc(int val, EbrFile* fp);
-IWPLATFORM_EXPORT char* EbrFgets(char* dest, size_t size, EbrFile* fp);
-IWPLATFORM_EXPORT int EbrFputs(const char* str, EbrFile* fp);
-IWPLATFORM_EXPORT int EbrFileno(EbrFile* fp);
-IWPLATFORM_EXPORT FILE* EbrNativeFILE(EbrFile* fp);
-IWPLATFORM_EXPORT void EbrClearerr(EbrFile* fp);
-IWPLATFORM_EXPORT EbrFile* EbrFreopen(const char* filename, const char* mode, EbrFile* cur);
-IWPLATFORM_EXPORT int EbrFflush(EbrFile* fp);
-IWPLATFORM_EXPORT int EbrFsetpos(EbrFile* fp, __int64* pos);
-IWPLATFORM_EXPORT int EbrFgetpos(EbrFile* fp, __int64* pos);
+SB_EXPORT EbrFile* EbrFmake(FILE* fp);
+SB_EXPORT EbrFile* EbrFopen(const char* filename, const char* mode);
+SB_EXPORT EbrFile* EbrFdopen(int handle, const char* mode);
+SB_EXPORT int EbrFclose(EbrFile* file);
+SB_EXPORT size_t EbrFread(void* dest, size_t elem, size_t count, EbrFile* file);
+SB_EXPORT size_t EbrFwrite(void* dest, size_t elem, size_t count, EbrFile* file);
+SB_EXPORT int EbrFseek(EbrFile* fp, long offset, int origin);
+SB_EXPORT size_t EbrFtell(EbrFile* fp);
+SB_EXPORT int EbrFeof(EbrFile* fp);
+SB_EXPORT int EbrStat(const char* filename, struct stat* ret);
+SB_EXPORT int EbrFputc(int c, EbrFile* fp);
+SB_EXPORT int EbrAccess(const char* file, int mode);
+SB_EXPORT int EbrRewind(EbrFile* fp);
+SB_EXPORT int EbrFerror(EbrFile* fp);
+SB_EXPORT int EbrFgetc(EbrFile* fp);
+SB_EXPORT int EbrUngetc(int val, EbrFile* fp);
+SB_EXPORT char* EbrFgets(char* dest, size_t size, EbrFile* fp);
+SB_EXPORT int EbrFputs(const char* str, EbrFile* fp);
+SB_EXPORT int EbrFileno(EbrFile* fp);
+SB_EXPORT FILE* EbrNativeFILE(EbrFile* fp);
+SB_EXPORT void EbrClearerr(EbrFile* fp);
+SB_EXPORT EbrFile* EbrFreopen(const char* filename, const char* mode, EbrFile* cur);
+SB_EXPORT int EbrFflush(EbrFile* fp);
+SB_EXPORT int EbrFsetpos(EbrFile* fp, __int64* pos);
+SB_EXPORT int EbrFgetpos(EbrFile* fp, __int64* pos);
 
-IWPLATFORM_EXPORT int EbrOpen(const char* file, int mode, int share);
-IWPLATFORM_EXPORT int EbrClose(int fd);
-IWPLATFORM_EXPORT int EbrFd2Host(int fd);
-IWPLATFORM_EXPORT int EbrFstat(int fd, struct stat* ret);
-IWPLATFORM_EXPORT int EbrRead(int fd, void* dest, size_t count);
-IWPLATFORM_EXPORT int EbrWrite(int fd, const void* src, size_t count);
-IWPLATFORM_EXPORT int EbrLseek(int fd, off_t pos, int whence);
-IWPLATFORM_EXPORT int EbrTruncate(int fd, off_t size);
-IWPLATFORM_EXPORT int EbrDup(int fd);
+SB_EXPORT int EbrOpen(const char* file, int mode, int share);
+SB_EXPORT int EbrClose(int fd);
+SB_EXPORT int EbrFd2Host(int fd);
+SB_EXPORT int EbrFstat(int fd, struct stat* ret);
+SB_EXPORT int EbrRead(int fd, void* dest, size_t count);
+SB_EXPORT int EbrWrite(int fd, const void* src, size_t count);
+SB_EXPORT int EbrLseek(int fd, off_t pos, int whence);
+SB_EXPORT int EbrTruncate(int fd, off_t size);
+SB_EXPORT int EbrDup(int fd);
 
-IWPLATFORM_EXPORT bool EbrRename(const char* path1, const char* path2);
-IWPLATFORM_EXPORT bool EbrUnlink(const char* path);
-IWPLATFORM_EXPORT bool EbrMkdir(const char* path);
-
-IWPLATFORM_EXPORT char* EbrGetcwd(char* buf, size_t len);
-IWPLATFORM_EXPORT int EbrChdir(const char* path);
+SB_EXPORT bool EbrRename(const char* path1, const char* path2);
+SB_EXPORT bool EbrUnlink(const char* path);
+SB_EXPORT bool EbrMkdir(const char* path);
+SB_EXPORT char* EbrGetcwd(char* buf, size_t len);
+SB_EXPORT int EbrChdir(const char* path);
 
 // Remove an item at this path, be it a file or directory:
-IWPLATFORM_EXPORT bool EbrRemove(const char* path);
-IWPLATFORM_EXPORT bool EbrRemoveEmptyDir(const char* path);
+SB_EXPORT bool EbrRemove(const char* path);
+SB_EXPORT bool EbrRemoveEmptyDir(const char* path);
 
 struct _EbrDirEnt {
     char fileName[4096];
@@ -141,29 +137,29 @@ public:
     }
 };
 
-IWPLATFORM_EXPORT bool EbrIsDir(const char* path);
-IWPLATFORM_EXPORT EbrDir* EbrOpenDir(const char* path);
-IWPLATFORM_EXPORT bool EbrReadDir(EbrDir* pDir, EbrDirEnt* ent);
-IWPLATFORM_EXPORT void EbrCloseDir(EbrDir* pDir);
+SB_EXPORT bool EbrIsDir(const char* path);
+SB_EXPORT EbrDir* EbrOpenDir(const char* path);
+SB_EXPORT bool EbrReadDir(EbrDir* pDir, EbrDirEnt* ent);
+SB_EXPORT void EbrCloseDir(EbrDir* pDir);
 
-IWPLATFORM_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
-IWPLATFORM_EXPORT double EbrGetMediaTime();
-IWPLATFORM_EXPORT int EbrGetWantedOrientation();
+SB_EXPORT int EbrGetTimeOfDay(struct EbrTimeval* curtime);
+SB_EXPORT double EbrGetMediaTime();
+SB_EXPORT int EbrGetWantedOrientation();
 
 //  maxLen should be MAX_PATH.  Sorry Jordan.
-IWPLATFORM_EXPORT bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen);
-IWPLATFORM_EXPORT const char* EbrGetWritableFolder();
-IWPLATFORM_EXPORT void EbrSetWritableFolder(const char* folder);
+SB_EXPORT bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen);
+SB_EXPORT const char* EbrGetWritableFolder();
+SB_EXPORT void EbrSetWritableFolder(const char* folder);
 
-IWPLATFORM_EXPORT void EbrBlockIfBackground();
+SB_EXPORT void EbrBlockIfBackground();
 
 typedef void* EbrEvent;
 
-IWPLATFORM_EXPORT void EbrEventInit(EbrEvent* pEvent);
-IWPLATFORM_EXPORT void EbrEventSignal(EbrEvent event);
-IWPLATFORM_EXPORT void EbrEventWait(EbrEvent event);
-IWPLATFORM_EXPORT bool EbrEventTryWait(EbrEvent event);
-IWPLATFORM_EXPORT bool EbrEventTimedWait(EbrEvent event, double seconds);
+SB_EXPORT void EbrEventInit(EbrEvent* pEvent);
+SB_EXPORT void EbrEventSignal(EbrEvent event);
+SB_EXPORT void EbrEventWait(EbrEvent event);
+SB_EXPORT bool EbrEventTryWait(EbrEvent event);
+SB_EXPORT bool EbrEventTimedWait(EbrEvent event, double seconds);
 
 typedef struct {
     int WakeupSocketRead, WakeupSocketWrite;
@@ -171,7 +167,7 @@ typedef struct {
     int max, result;
 } SocketWait;
 
-IWPLATFORM_EXPORT int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
-IWPLATFORM_EXPORT void EbrEventDestroy(EbrEvent event);
+SB_EXPORT int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
+SB_EXPORT void EbrEventDestroy(EbrEvent event);
 
 #endif

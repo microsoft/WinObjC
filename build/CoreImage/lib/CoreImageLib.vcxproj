@@ -34,9 +34,6 @@
     <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\WinObjCRT\lib\WinObjCRTLib.vcxproj">
-      <Project>{faebdba2-dff7-4944-9b13-bcc4da340804}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIColor.mm" />

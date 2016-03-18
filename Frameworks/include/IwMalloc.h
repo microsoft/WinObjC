@@ -18,24 +18,17 @@
 #define __IWMALLOC_H
 
 #include <string.h>
+#include <WinObjCRTExport.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// These allocation functions are intended to match the malloc/free used by
+// client code in the application. Framework code must use these allocators
+// when freeing buffers allocated by the client or allocating buffers to be
+// freed by the client.
 
-    // These allocation functions are intended to match the malloc/free used by
-    // client code in the application. Framework code must use these allocators
-    // when freeing buffers allocated by the client or allocating buffers to be
-    // freed by the client.
-
-    __declspec(dllimport) void* IwMalloc(size_t size);
-    __declspec(dllimport) void* IwRealloc(void* ptr, size_t size);
-    __declspec(dllimport) void IwFree(void* ptr);
-    __declspec(dllimport) void* IwCalloc(size_t num, size_t size);
-
-#ifdef __cplusplus
-} // extern "C"
-#endif
+WINOBJCRT_EXPORT void* IwMalloc(size_t size);
+WINOBJCRT_EXPORT void* IwRealloc(void* ptr, size_t size);
+WINOBJCRT_EXPORT void IwFree(void* ptr);
+WINOBJCRT_EXPORT void* IwCalloc(size_t num, size_t size);
 
 inline char* IwStrDup(const char* str) {
     size_t len = strlen(str);

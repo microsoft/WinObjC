@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,14 +13,28 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include <StarboardExport.h>
-#include <string>
+#ifndef WINOBJCRT_IMPEXP
+#define WINOBJCRT_IMPEXP __declspec(dllimport)
+#endif
 
-namespace woc {
-namespace string {
+#ifndef WINOBJCRT_EXPORT
+#ifdef __cplusplus
+#define WINOBJCRT_EXPORT extern "C" WINOBJCRT_IMPEXP
+#define WINOBJCRT_EXPORT_CLASS WINOBJCRT_IMPEXP
+#else
+#define WINOBJCRT_EXPORT extern WINOBJCRT_IMPEXP
+#define WINOBJCRT_EXPORT_CLASS WINOBJCRT_IMPEXP
+#endif
+#endif
 
-// Returns a string formatted in accordance with the provided specifier string and values.
-SB_IMPEXP std::string format[[gnu::format(printf, 1, 2)]](const char* fmt, ...);
-}
-}
+#ifndef WINOBJCRT_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define WINOBJCRT_EXTERNC_BEGIN extern "C" {
+#define WINOBJCRT_EXTERNC_END }
+#else
+#define WINOBJCRT_EXTERNC_BEGIN
+#define WINOBJCRT_EXTERNC_END
+#endif
+#endif

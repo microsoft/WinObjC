@@ -27,14 +27,9 @@ using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
 using namespace Windows::System::Threading;
 
-void EbrSetWritableFolder(const char* folder);
 void IWSetTemporaryFolder(const char* folder);
 void ApplicationMainHandleWindowVisibilityChangeEvent(bool visible);
 void ApplicationMainHandleHighMemoryUsageEvent();
-
-typedef void* EbrEvent;
-
-int EbrEventTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
 
 void* g_XamlUIFiber = nullptr;
 void* g_WinObjcUIFiber = nullptr;

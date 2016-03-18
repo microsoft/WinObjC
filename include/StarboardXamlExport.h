@@ -13,14 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include <StarboardExport.h>
-#include <string>
+#ifndef SBXAML_IMPEXP
+#define SBXAML_IMPEXP __declspec(dllimport)
+#endif
 
-namespace woc {
-namespace string {
+#ifndef SBXAML_EXPORT
+#ifdef __cplusplus
+#define SBXAML_EXPORT extern "C" SBXAML_IMPEXP
+#define SBXAML_EXPORT_CLASS SBXAML_IMPEXP
+#else
+#define SBXAML_EXPORT extern SBXAML_IMPEXP
+#define SBXAML_EXPORT_CLASS SBXAML_IMPEXP
+#endif
+#endif
 
-// Returns a string formatted in accordance with the provided specifier string and values.
-SB_IMPEXP std::string format[[gnu::format(printf, 1, 2)]](const char* fmt, ...);
-}
-}
+#ifndef SBXAML_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define SBXAML_EXTERNC_BEGIN extern "C" {
+#define SBXAML_EXTERNC_END }
+#else
+#define SBXAML_EXTERNC_BEGIN
+#define SBXAML_EXTERNC_END
+#endif
+#endif
+
+#define SBXAML_INLINE static __inline
+
+#if defined(__GNUC__)
+#define SBXAML_ALWAYS_INLINE static __inline __always_inline
+#else
+#define SBXAML_ALWAYS_INLINE static __inline
+#endif

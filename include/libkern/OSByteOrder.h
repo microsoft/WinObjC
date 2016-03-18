@@ -26,6 +26,7 @@
 #endif
 #include <assert.h>
 #include <inttypes.h>
+#include <sys/cdefs.h>
 
 //#warning "***This header contains placeholder function declarations that lack an actual implementation***"
 

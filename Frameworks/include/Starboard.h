@@ -13,20 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef __STARBOARD_H
-#define __STARBOARD_H
+#pragma once
 
 #include "LoggingNative.h"
 #include "IwMalloc.h"
+#include <StarboardExport.h>
 
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface
-#endif
-
-#ifndef IWPLATFORM_EXPORT
-#define IWPLATFORM_EXPORT
 #endif
 
 extern "C" void dbg_printf(const char* fmt, ...);
@@ -118,11 +113,11 @@ typedef unsigned int EbrLock;
 #define EBRLOCK_INITIALIZE 0xFAADEEEE
 #define EBRLOCK_INITIALIZING 0xFAAAEEEE
 
-IWPLATFORM_EXPORT void EbrLockInit(EbrLock* pLock);
-IWPLATFORM_EXPORT void EbrLockDestroy(EbrLock pLock);
-IWPLATFORM_EXPORT void EbrLockEnter(EbrLock& pLock);
-IWPLATFORM_EXPORT bool EbrLockTryEnter(EbrLock& pLock);
-IWPLATFORM_EXPORT void EbrLockLeave(EbrLock pLock);
+SB_EXPORT void EbrLockInit(EbrLock* pLock);
+SB_EXPORT void EbrLockDestroy(EbrLock pLock);
+SB_EXPORT void EbrLockEnter(EbrLock& pLock);
+SB_EXPORT bool EbrLockTryEnter(EbrLock& pLock);
+SB_EXPORT void EbrLockLeave(EbrLock pLock);
 
 enum surfaceFormat { _Color565, _ColorARGB, _ColorRGBA, _ColorRGB32, _ColorRGB32HE, _ColorGrayscale, _ColorRGB, _ColorA8, _ColorIndexed };
 
@@ -143,10 +138,10 @@ class EbrFile;
 #define kGravityRight 10
 #define kGravityBottomRight 11
 
-IWPLATFORM_EXPORT int EbrIncrement(int volatile* var);
-IWPLATFORM_EXPORT int EbrDecrement(int volatile* var);
-IWPLATFORM_EXPORT int EbrCompareExchange(int volatile* Destination, int Exchange, int Comperand);
-IWPLATFORM_EXPORT void EbrSleep(__int64 nanoseconds);
+SB_EXPORT int EbrIncrement(int volatile* var);
+SB_EXPORT int EbrDecrement(int volatile* var);
+SB_EXPORT int EbrCompareExchange(int volatile* Destination, int Exchange, int Comperand);
+SB_EXPORT void EbrSleep(__int64 nanoseconds);
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -291,5 +286,3 @@ inline CAPoint3D operator*(float f, const CAPoint3D& v) {
 }
 
 #include "Starboard/SmartTypes.h"
-
-#endif // __STARBOARD_H
