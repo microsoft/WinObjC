@@ -46,9 +46,7 @@ TEST(NSPredicate, predicateWithValue) {
     ASSERT_TRUE_MSG(predicateFalse != nil, "FAILED: predicateFalse should be non-null!");
 
     ASSERT_TRUE_MSG([predicateTrue evaluateWithObject:nil], "FAILED: predicate should be YES.");
-	ASSERT_TRUE_MSG(![predicateFalse evaluateWithObject:nil], "FAILED: predicate should be NO.");
-    [predicateFalse release];
-	[predicateTrue release];
+    ASSERT_TRUE_MSG(![predicateFalse evaluateWithObject:nil], "FAILED: predicate should be NO.");
 }
 
 TEST(NSPredicate, NSBooleanPredicate_ArchiveAndUnarchiveObject) {

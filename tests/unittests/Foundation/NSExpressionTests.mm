@@ -58,7 +58,6 @@ void validateNSExpressionFunction(NSExpression* obj, NSArray* args, NSExpression
 }
 
 - (void)dealloc {
-    [_coinValue release];
     [super dealloc];
 }
 @end

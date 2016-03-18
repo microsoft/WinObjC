@@ -26,7 +26,7 @@ TEST(NSComparisonPredicate, Init) {
 @interface TestAnimal : NSObject <NSCopying>
 @property (assign) NSNumber* age;
 @property (assign) NSNumber* speed;
-@property (assign) NSString* name;
+@property (retain) NSString* name;
 - (instancetype)initWithName:(NSString*)name age:(NSInteger)age speed:(NSInteger)speed;
 @end
 
@@ -46,8 +46,6 @@ TEST(NSComparisonPredicate, Init) {
 
 - (void)dealloc {
     [_name release];
-    [_age release];
-    [_speed release];
     [super dealloc];
 }
 @end
@@ -110,7 +108,7 @@ TEST(NSComparisonPredicate, Complex_Expression) {
         [NSCompoundPredicate orPredicateWithSubpredicates:@[ NotAgecomparisonPredicate, ContainscomparisonPredicate ]];
 
     // $SPEED BETWEEN { 0, 120 }
-    NSArray* validSpeedRange = [@[ @(0), @(120) ] autorelease];
+    NSArray* validSpeedRange = @[ @(0), @(120) ];
     ASSERT_TRUE_MSG(validSpeedRange != nil, "FAILED: validSpeedRange should be non-null!");
 
     NSExpression* leftExpSpeedLimit = [NSExpression expressionForKeyPath:@"speed"];
@@ -399,7 +397,6 @@ TEST(NSComparisonPredicate, NSNotEqualToPredicateOperatorType) {
 }
 
 - (void)dealloc {
-    [_coinValue release];
     [super dealloc];
 }
 @end
@@ -515,7 +512,7 @@ TEST(NSComparisonPredicate, NSInPredicateOperatorType) {
     NSExpression* leftExp = [NSExpression expressionForConstantValue:@(10)];
     ASSERT_TRUE_MSG(leftExp != nil, "FAILED: leftExp should be non-null!");
 
-    NSArray* exampleVals = [@[ @(20), @(10), @(18) ] autorelease];
+    NSArray* exampleVals = @[ @(20), @(10), @(18) ];
     ASSERT_TRUE_MSG(exampleVals != nil, "FAILED: exampleVals should be non-null!");
 
     NSExpression* rightExp = [NSExpression expressionForConstantValue:exampleVals];
@@ -541,7 +538,7 @@ TEST(NSComparisonPredicate, NSInPredicateOperatorType_NSKeyPath) {
     NSExpression* leftExp = [NSExpression expressionForKeyPath:@"coinValue"];
     ASSERT_TRUE_MSG(leftExp != nil, "FAILED: leftExp should be non-null!");
 
-    NSArray* exampleVals = [@[ @(20), @(10), @(18) ] autorelease];
+    NSArray* exampleVals = @[ @(20), @(10), @(18) ];
     ASSERT_TRUE_MSG(exampleVals != nil, "FAILED: exampleVals should be non-null!");
 
     NSExpression* rightExp = [NSExpression expressionForConstantValue:exampleVals];
@@ -567,7 +564,7 @@ TEST(NSComparisonPredicate, NSInPredicateOperatorType_Set) {
     NSExpression* leftExp = [NSExpression expressionForKeyPath:@"name"];
     ASSERT_TRUE_MSG(leftExp != nil, "FAILED: leftExp should be non-null!");
 
-    NSSet* exampleSet = [[NSSet setWithObjects:@"Gold", @"Silver", @"Copper", nil] autorelease];
+    NSSet* exampleSet = [NSSet setWithObjects:@"Gold", @"Silver", @"Copper", nil];
     ASSERT_TRUE_MSG(exampleSet != nil, "FAILED: exampleSet should be non-null!");
 
     NSExpression* rightExp = [NSExpression expressionForConstantValue:exampleSet];
@@ -600,8 +597,6 @@ TEST(NSComparisonPredicate, NSInPredicateOperatorType_NSDictionary) {
     };
 
     ASSERT_TRUE_MSG(sampleDict != nil, "FAILED: sampleDict should be non-null!");
-
-    [sampleDict autorelease];
 
     NSExpression* rightExp = [NSExpression expressionForConstantValue:sampleDict];
     ASSERT_TRUE_MSG(rightExp != nil, "FAILED: rightExp should be non-null!");
@@ -662,7 +657,7 @@ TEST(NSComparisonPredicate, NSContainsPredicateOperatorType_NSCaseInsensitivePre
 TEST(NSComparisonPredicate, NSBetweenPredicateOperatorType) {
     // "$INPUT BETWEEN { $LOWER, $UPPER }."
 
-    NSArray* exampleVals = [@[ @(0), @(33) ] autorelease];
+    NSArray* exampleVals = @[ @(0), @(33) ];
     ASSERT_TRUE_MSG(exampleVals != nil, "FAILED: exampleVals should be non-null!");
 
     NSExpression* leftExp = [NSExpression expressionForConstantValue:@(15)];
