@@ -177,27 +177,25 @@
 }
 
 /**
- @Status Cavet
- @Notes
+ @Status Caveat
+ @Notes Only supported types are encoded by the derived classes.
 */
 + (BOOL)supportsSecureCoding {
     return YES;
 }
 
 /**
- @Status Cavet
+ @Status Caveat
  @Notes Only supported types are encoded by the derived classes.
 */
 - (id)initWithCoder:(NSCoder*)decoder {
-    if (self = [super initWithCoder:decoder]) {
-        _expressionType = (NSExpressionType)[decoder decodeInt64ForKey:@"expressionType"];
-    }
+    _expressionType = (NSExpressionType)[decoder decodeInt64ForKey:@"expressionType"];
 
     return self;
 }
 
 /**
- @Status Cavet
+ @Status Caveat
  @Notes Only supported types are encoded by the derived classes.
 */
 - (void)encodeWithCoder:(NSCoder*)coder {

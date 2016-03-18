@@ -25,7 +25,7 @@ TEST(NSTimer, Init) {
 
 @interface NSTimerTestObj : NSObject {
     NSCondition* _calledCondition;
-	StrongId<id> _dummyVal;
+    StrongId<id> _dummyVal;
 }
 @property (assign) BOOL called;
 @property (assign) NSUInteger count;
@@ -69,14 +69,14 @@ TEST(NSTimer, Init) {
 }
 
 - (void)reset {
-	//reset call count.
+    // reset call count.
     _maxCalls = 0;
     _count = 0;
     _called = NO;
 }
 
--(id) dummyVal {
-	return _dummyVal;
+- (id)dummyVal {
+    return _dummyVal;
 }
 
 - (BOOL)waitOnCalledConditionForInterval:(NSTimeInterval)interval {
