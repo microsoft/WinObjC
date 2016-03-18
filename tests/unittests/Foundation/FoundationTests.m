@@ -940,3 +940,13 @@ TEST(Foundation, NSSearchPathForDirectoriesInDomains) {
         ASSERT_OBJCEQ(nil, error);
     }
 }
+
+TEST(Foundation, NSSet_PerformSelector) {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:1];
+    [array addObject:@1];
+    NSSet* set = [NSSet setWithObject:array];
+
+    EXPECT_EQ(1, [array count]);
+    [set makeObjectsPerformSelector:@selector(removeAllObjects)];
+    EXPECT_EQ(0, [array count]);
+}

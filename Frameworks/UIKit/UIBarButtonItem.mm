@@ -596,7 +596,7 @@ static void initControls(UIBarButtonItem* self) {
 
         while (nextResponder != nil) {
             if ([nextResponder respondsToSelector:_targetSel]) {
-                _m(nextResponder, _targetSel, self, event);
+                [nextResponder performSelector:_targetSel withObject:self withObject:event];
                 break;
             }
 

@@ -409,7 +409,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (void)makeObjectsPerformSelector:(SEL)selector {
     for (id curObj in self) {
-        _m(curObj, selector);
+        [curObj performSelector:selector];
     }
 }
 

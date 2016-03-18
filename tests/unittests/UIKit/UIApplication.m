@@ -316,3 +316,49 @@ TEST(UIKit, UIApplicationCanOpenURLDoubleCall) {
 
     [MockWSLauncher cleanUp];
 }
+
+@interface MockResponder : UIResponder {
+@public
+    BOOL didAction;
+    BOOL didActionFromSender;
+    BOOL didActionFromSenderForEvent;
+}
+
+- (void)doAction;
+- (void)doAction:(id)sender;
+- (void)doAction:(id)sender forEvent:(UIEvent*)event;
+@end
+
+@implementation MockResponder
+- (void)doAction {
+    didAction = YES;
+}
+
+- (void)doAction:(id)sender {
+    didActionFromSender = YES;
+}
+
+- (void)doAction:(id)sender forEvent:(UIEvent*)event {
+    didActionFromSenderForEvent = YES;
+}
+@end
+
+TEST(UIKit, UIApplicationSendAction) {
+    [MockWSLauncher setup];
+    UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
+
+    MockResponder* responder = [MockResponder new];
+    EXPECT_TRUE([testApplication sendAction:@selector(doAction) to:responder from:nil forEvent:nil]);
+    EXPECT_TRUE(responder->didAction);
+
+    EXPECT_TRUE([testApplication sendAction:@selector(doAction:) to:responder from:nil forEvent:nil]);
+    EXPECT_TRUE(responder->didActionFromSender);
+
+    EXPECT_TRUE([testApplication sendAction:@selector(doAction:forEvent:) to:responder from:nil forEvent:nil]);
+    EXPECT_TRUE(responder->didActionFromSenderForEvent);
+
+    EXPECT_FALSE([testApplication sendAction:@selector(nonexistent) to:responder from:nil forEvent:nil]);
+
+    [responder release];
+    [MockWSLauncher cleanUp];
+}

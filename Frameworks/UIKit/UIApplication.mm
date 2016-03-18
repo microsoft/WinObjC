@@ -1264,7 +1264,7 @@ static void printViews(id curView, int level) {
 
     while (curTarget != nil) {
         if ([curTarget respondsToSelector:action]) {
-            _m(curTarget, action, sender, forEvent);
+            [curTarget performSelector:action withObject:sender withObject:forEvent];
             return TRUE;
         }
         curTarget = [curTarget nextResponder];

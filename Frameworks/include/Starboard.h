@@ -35,33 +35,13 @@ extern "C" void dbg_printf(const char* fmt, ...);
 #define idp(protocol) id<protocol>
 
 #include <assert.h>
-#include <stdio.h>
-#ifdef __OBJC__
-#include "UIKit/UIKit.h"
 
-static inline id m_assert(const char* file, int line) {
-    printf("_m sent @ %s:%d\n", file, line);
-    return nil;
-}
-static inline float m_assert_float() {
-    printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return 0.0;
-}
-#else
-static inline unsigned int m_assert(const char* file, int line) {
-    printf("_m sent @ %s:%d\n", file, line);
-    return 0;
-}
-static inline float m_assert_float() {
-    printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return 0;
-}
-#endif
-#define _m(...) m_assert(__FILE__, __LINE__)
-#define _m_float(...) m_assert_float()
 #define logPerf(...)
 
 #ifdef __OBJC__
+
+#include "UIKit/UIKit.h"
+
 static const float kPi = 3.14159265358979323846f;
 static const double kPi_d = 3.14159265358979323846;
 
