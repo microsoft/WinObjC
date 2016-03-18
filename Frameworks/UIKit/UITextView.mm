@@ -23,6 +23,7 @@
 #import "LoggingNative.h"
 #import "UIFontInternal.h"
 #import "StubReturn.h"
+#import "UIResponderInternal.h"
 
 static const wchar_t* TAG = L"UITextView";
 
@@ -485,10 +486,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     UNIMPLEMENTED_WITH_MSG("scrollRangeToVisible not implemented");
 }
 
-/**
- @Status Interoperable
-*/
-- (void)keyPressed:(uint32_t)key {
+- (void)_keyPressed:(unsigned short)key {
     NSRange range;
     bool proceed = false;
 
