@@ -22,7 +22,7 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\art.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString_Additions.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString+UIKitAdditions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSValue_Additions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAccessibility.mm" />

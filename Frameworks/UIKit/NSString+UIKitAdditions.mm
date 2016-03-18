@@ -27,7 +27,7 @@
 #include <assert.h>
 #include "LoggingNative.h"
 
-static const wchar_t* TAG = L"NSString_Additions";
+static const wchar_t* TAG = L"NSString+UIKitAdditions";
 
 void NSStringForceinclude() {
     [NSString class];
@@ -795,57 +795,6 @@ static NSDictionary* _getDefaultUITextAttributes() {
           attributes:(NSDictionary*)attributes
              context:(NSStringDrawingContext*)context {
     UNIMPLEMENTED();
-}
-
-@end
-
-@implementation NSAttributedString (NSExtendedStringDrawing)
-
-/**
- @Status Stub
-*/
-- (CGRect)boundingRectWithSize:(CGSize)size
-                       options:(NSStringDrawingOptions)options
-                    attributes:(NSDictionary*)attributes
-                       context:(NSStringDrawingContext*)context {
-    return { { 0, 0 }, 20, 20 };
-}
-
-/**
- @Status Stub
-*/
-- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
-    UNIMPLEMENTED();
-    return { { 0, 0 }, 20, 20 };
-}
-
-/**
- @Status Stub
-*/
-- (void)drawAtPoint:(CGPoint)point {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)drawInRect:(CGRect)rect {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (CGSize)size {
-    UNIMPLEMENTED();
-    return { 0, 0 };
 }
 
 @end

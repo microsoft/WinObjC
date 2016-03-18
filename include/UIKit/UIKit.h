@@ -37,7 +37,7 @@
 #import <UIKit/NSObject+UIKitAdditions.h>
 #import <UIKit/NSParagraphStyle.h>
 #import <UIKit/NSShadow.h>
-#import <UIKit/NSStringDrawing.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import <UIKit/NSStringDrawingContext.h>
 #import <UIKit/NSTextAttachment.h>
 #import <UIKit/NSTextAttachmentContainer.h>
