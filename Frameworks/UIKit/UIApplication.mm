@@ -1576,6 +1576,9 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 }
 
 - (void)_sendActiveStatus:(BOOL)isActive {
+    // TODO::
+    // bug-nithishm-03172016 - Disabling PLM until bug 6910008 is root caused.
+    /*
     if (isActive) {
         [self _sendEnteringForegroundEvents];
 
@@ -1591,6 +1594,7 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 
         [self _sendEnteringBackgroundEvents];
     }
+    */
 }
 
 - (void)_sendEnteringBackgroundEvents {
