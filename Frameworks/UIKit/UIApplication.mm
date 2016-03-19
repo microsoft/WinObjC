@@ -813,7 +813,7 @@ static int __EbrSortViewPriorities(id val1, id val2, void* context) {
     [badgeElement setAttribute:@"value" attributeValue:[NSString stringWithFormat:@"%i", num]];
 
     WUNBadgeNotification* notification = [WUNBadgeNotification makeBadgeNotification:doc];
-    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager makeBadgeUpdaterForApplication];
+    WUNBadgeUpdater* updater = [WUNBadgeUpdateManager createBadgeUpdaterForApplication];
 
     [updater update:notification];
 }

@@ -32,6 +32,7 @@
 #import <UIKit/UIImageView.h>
 #import <UIKit/UITableViewCell.h>
 #import "NSMutableString+Internal.h"
+#import "UIResponderInternal.h"
 
 NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
 NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
@@ -510,10 +511,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 }
 
-/**
- @Status Interoperable
-*/
-- (void)keyPressed:(unsigned short)key {
+- (void)_keyPressed:(unsigned short)key {
     _showLastCharLen = 0;
 
     if (key != 13) {

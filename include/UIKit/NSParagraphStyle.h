@@ -17,7 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
-#import <UIKit/NSStringDrawing.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import <Foundation/NSObject.h>
 
 @class NSDictionary;

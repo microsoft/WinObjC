@@ -327,7 +327,7 @@ namespace ClangCompile
                     fileModDate = GetModDate(file);
                     newestModDate = GetNewestInTree(file);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // FileNotFoundException is never thrown, it just returns 00:00/1/1/1601 UTC
                     needsRebuilding[file] = true;
@@ -682,6 +682,40 @@ namespace ClangCompile
         [ResolvePath()]
         public string[] InternalSystemIncludePaths { get; set; }
 
+        [PropertyPage(
+            Category = "Paths",
+            DisplayName = "Excluded Search Path Subdirectories",
+            Description = "Wildcard pattern for subdirectories to exclude from recursive search",
+            IncludeInCommandLine = false)]
+        public string[] ExcludedSearchPathSubdirectories
+        {
+            get { return ExcludedSearchPathSubdirectoriesValues; }
+            set { ExcludedSearchPathSubdirectoriesValues = convertWildcardToRegEx(value); }
+        }
+
+        string[] ExcludedSearchPathSubdirectoriesValues;
+
+        private static string[] convertWildcardToRegEx(string[] wildcardPaths)
+        {
+            List<string> patterns = new List<string>();
+
+            foreach (string wildcard in wildcardPaths)
+            {
+                string pattern = Regex.Escape(wildcard);
+                pattern = pattern.Replace("/", "\\\\");
+
+                // Convert "*" to ".*", i.e. match any character except the path separator, zero or more times.
+                pattern = pattern.Replace("\\*", "[^\\\\]*");
+
+                // Convert "?" to ".", i.e. match exactly one character except the path separator.
+                pattern = pattern.Replace("\\?", "[^\\\\]");
+
+                patterns.Add(pattern + "$");
+            }
+
+            return patterns.ToArray();
+        }
+
         private void dirSearch(string dirPath, ref List<string> outPaths)
         {
             int maxCount = outPaths.Count + 2048;
@@ -692,10 +726,26 @@ namespace ClangCompile
                 {
                     foreach (string d in Directory.GetDirectories(outPaths[i]))
                     {
-                        outPaths.Add(d);
+                        bool excluded = false;
+                        if (ExcludedSearchPathSubdirectories != null)
+                        {
+                            foreach (string pattern in ExcludedSearchPathSubdirectories)
+                            {
+                                if (Regex.IsMatch(d, pattern, RegexOptions.None))
+                                {
+                                    excluded = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!excluded)
+                        {
+                            outPaths.Add(d);
+                        }
                     }
                 }
-                catch (System.Exception e) { }
+                catch (System.Exception) { }
             }
         }
 

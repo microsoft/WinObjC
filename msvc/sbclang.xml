@@ -194,6 +194,12 @@
       Switch="-internal-isystem "
       Name="InternalSystemIncludePaths" />
     <StringListProperty
+      IncludeInCommandLine="False"
+      Category="Paths"
+      DisplayName="Excluded Search Path Subdirectories"
+      Description="Wildcard pattern for subdirectories to exclude from recursive search"
+      Name="ExcludedSearchPathSubdirectories" />
+    <StringListProperty
       Category="Paths"
       DisplayName="User Include Paths"
       Description="User header search paths."

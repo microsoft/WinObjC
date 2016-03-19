@@ -33,7 +33,7 @@ UIKIT_EXPORT NSString* const UITextAttributeTextColor;
 UIKIT_EXPORT NSString* const UITextAttributeTextShadowColor;
 UIKIT_EXPORT NSString* const UITextAttributeTextShadowOffset;
 
-@interface NSString (UIKit)
+@interface NSString (UIKitAdditions)
 - (CGSize)sizeWithFont:(UIFont*)font;
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(CGFloat)width lineBreakMode:(NSLineBreakMode)lineBreakMode;
 - (CGSize)sizeWithFont:(UIFont*)font

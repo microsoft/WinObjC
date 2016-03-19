@@ -16,7 +16,7 @@
 
 #include "Starboard.h"
 #include <UIKit/UIKit.h>
-#include <UIKit/NSStringDrawing.h>
+#include <UIKit/NSString+UIKitAdditions.h>
 #include <CoreGraphics/CGContext.h>
 
 @implementation NSStringDrawingContext {

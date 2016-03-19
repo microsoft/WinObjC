@@ -16,6 +16,7 @@
 
 #include "Starboard.h"
 #include "LoggingNative.h"
+#import "UIResponderInternal.h"
 
 static const wchar_t* TAG = L"UIResponder";
 
@@ -100,7 +101,7 @@ static int _changingResponder = 0;
     return TRUE;
 }
 
-+ (void)_keyPressed:(unsigned)key {
++ (void)_keyPressed:(unsigned short)key {
     if (_curFirstResponder != nil) {
         [_curFirstResponder _keyPressed:key];
     }
@@ -116,7 +117,7 @@ static int _changingResponder = 0;
     return self;
 }
 
-- (void)_keyPressed:(unsigned)key {
+- (void)_keyPressed:(unsigned short)key {
 }
 
 /**
