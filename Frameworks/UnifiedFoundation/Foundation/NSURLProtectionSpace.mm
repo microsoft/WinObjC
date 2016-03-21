@@ -214,7 +214,7 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
  @Notes Does not support encoding/decoding of SecTrustRef.
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _authenticationMethod = [[coder decodeObjectForKey:@"authenticationMethod"] retain];
         _distinguishedNames = [[coder decodeObjectForKey:@"distinguishedNames"] retain];
         _host = [[coder decodeObjectForKey:@"host"] retain];

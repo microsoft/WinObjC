@@ -143,7 +143,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _name = [[coder decodeObjectOfClass:[NSString class] forKey:@"name"] retain];
         _reason = [[coder decodeObjectOfClass:[NSString class] forKey:@"reason"] retain];
         _userInfo = [[coder decodeObjectOfClass:[NSDictionary class] forKey:@"userInfo"] retain];

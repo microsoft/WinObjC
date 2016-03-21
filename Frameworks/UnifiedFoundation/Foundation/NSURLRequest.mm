@@ -158,7 +158,7 @@
  @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _URL = [[coder decodeObjectOfClass:[NSURL class] forKey:@"URL"] retain];
         _mainDocumentURL = [[coder decodeObjectOfClass:[NSURL class] forKey:@"mainDocumentURL"] retain];
         _HTTPMethod = [[coder decodeObjectOfClass:[NSString class] forKey:@"HTTPMethod"] retain];

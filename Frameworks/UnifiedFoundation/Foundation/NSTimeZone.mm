@@ -279,7 +279,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         // Can't encode/decode ICU object. Potentially recreate system TZ?
         _nextDaylightSavingTimeTransition = [[coder decodeObjectOfClass:[NSDate class] forKey:@"nextDaylightSavingTimeTransition"] retain];
         _abbreviation = [[coder decodeObjectForKey:@"abbreviation"] retain];
