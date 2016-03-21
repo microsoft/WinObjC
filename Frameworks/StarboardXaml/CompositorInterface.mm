@@ -175,7 +175,7 @@ public:
                         EbrFile* fpIn;
                         fpIn = EbrFopen(pngImg->_fileName, "rb");
                         if (!fpIn) {
-                            assert(0);
+                            FAIL_FAST();
                         }
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
@@ -199,7 +199,7 @@ public:
                         EbrFile* fpIn;
                         fpIn = EbrFopen(jpgImg->_fileName, "rb");
                         if (!fpIn) {
-                            assert(0);
+                            FAIL_FAST();
                         }
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
@@ -418,8 +418,7 @@ private:
                 float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _toValue = [[NSNumber numberWithFloat:(fromValue + byValue)] retain];
             } else {
-                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-                assert(0);
+                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
             }
         } else if (_toValue != nil) {
             if (_byValue != nil) {
@@ -428,12 +427,10 @@ private:
                 float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _fromValue = [[NSNumber numberWithFloat:(toValue - byValue)] retain];
             } else {
-                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-                assert(0);
+                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
             }
         } else if (_byValue != nil) {
-            // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-            assert(0);
+            FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
         } else {
             UNIMPLEMENTED_WITH_MSG("Unsupported when all CABasicAnimation properties are nil");
         }
@@ -701,7 +698,7 @@ private:
                 performOperation(translationFrom, translationBy, translationTo, dimensions, add);
             } else {
                 // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-                assert(0);
+                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
                 isValid = false;
             }
         } else if (_toValue != nil) {
@@ -720,13 +717,11 @@ private:
                 performOperation(scaleTo, scaleBy, scaleFrom, dimensions, divide);
                 performOperation(translationTo, translationBy, translationFrom, dimensions, subtract);
             } else {
-                // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-                assert(0);
+                FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
                 isValid = false;
             }
         } else if (_byValue != nil) {
-            // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
-            assert(0);
+            FAIL_FAST_MSG(E_UNEXPECTED, "Guaranteed to be taken care of by _createAnimation in CABasicAnimation.");
             isValid = false;
         } else {
             UNIMPLEMENTED_WITH_MSG("Unsupported when all interpolation values are nil");
@@ -921,6 +916,7 @@ public:
             AddAnimation(node, L"transform.translation.x", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "contents") == 0) {
+            UNIMPLEMENTED_WITH_MSG("Contents property not supported");
         } else {
             UNIMPLEMENTED_WITH_MSG("Stubbed function called! Unsupported property name: %hs", propName);
         }
@@ -1008,7 +1004,7 @@ public:
 
             ret = [NSValue valueWithCATransform3D:trans];
         } else {
-            assert(0);
+            FAIL_FAST_HR(E_NOTIMPL);
         }
 
         return ret;
@@ -1073,6 +1069,7 @@ public:
         } else if (strcmp(name, "contentsScale") == 0) {
             //  [TODO: Update contents scale in Xaml node]
             // contentScale = [(NSNumber *) newValue floatValue];
+            UNIMPLEMENTED_WITH_MSG("contentsScale not implemented");
         } else if (strcmp(name, "contentsOrientation") == 0) {
             int position = [(NSNumber*)newValue intValue];
             float toPosition = 0;
@@ -1087,17 +1084,21 @@ public:
             }
             SetProperty(L"transform.rotation", toPosition);
         } else if (strcmp(name, "contentsSize") == 0) {
+            UNIMPLEMENTED_WITH_MSG("contentsSize not implemented");
         } else if (strcmp(name, "gravity") == 0) {
             SetPropertyInt(L"gravity", [(NSNumber*)newValue intValue]);
         } else if (strcmp(name, "zPosition") == 0) {
+            UNIMPLEMENTED_WITH_MSG("zPosition not implemented");
         } else if (strcmp(name, "contentColor") == 0) {
+            UNIMPLEMENTED_WITH_MSG("contentColor not implemented");
         } else if (strcmp(name, "sublayerTransform") == 0) {
+            UNIMPLEMENTED_WITH_MSG("sublayerTransform not implemented");
         } else if (strcmp(name, "backgroundColor") == 0) {
             ColorQuad color{};
             [(UIColor*)newValue getColors:&color];
             SetBackgroundColor(color.r, color.g, color.b, color.a);
         } else {
-            assert(0);
+            FAIL_FAST_HR(E_NOTIMPL);
         }
 
         if (isRoot)
