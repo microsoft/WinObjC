@@ -40,17 +40,19 @@ namespace BuildMonitor
         /// Match for local paths and files.
         /// </summary>
         /// <example>
-        /// matches:  "C:\Path", "D:\Path\To\File3.txt", "Z:\Path\With Embedded Spaces\And In the File.name"
+        /// matches:  "C:\Path", "D:\Path\To\File3.txt", "Z:\Path\With Embedded Spaces\And In the File.name", 
+        /// "c:/root/path/to/file.txt", "c:/root/path with spaces/to file/file with spaces.txt"
         /// </example>
-        private const string LocalPathsPattern = @"(([a-zA-Z]:)(\{path separator}[\sa-zA-Z0-9_.-]+)+)";
+        private const string LocalPathsPattern = @"((([a-zA-Z]:)?(/[\sa-zA-Z0-9._\-]+)+/?)|(([a-zA-Z]:)?(\{path separator}[\sa-zA-Z0-9._\-]+)+\{path separator}?))";
 
         /// <summary>
         /// Match for network share paths and files.
         /// </summary>
         /// <example>
-        /// matches:  "\\share\path", "\\share\path wi7h embedded spaces\And In the File2.name" 
+        /// matches:  "\\share\path", "\\share\path wi7h embedded spaces\And In the File2.name",
+        /// "//root/path/to/file", "//~", "//root/pa7h with spaces/to f1le/file with sp4ces.txt"
         /// </example>
-        private const string NetworkPathsPattern = @"((\{path separator})(\{path separator}[\sa-zA-Z0-9_.-]+)+)";
+        private const string NetworkPathsPattern = @"(/(/([\sa-zA-Z0-9_.\-~])*)+)|((\{path separator})(\{path separator}[\sa-zA-Z0-9_.\-]+)+)";
 
         /// <summary>
         /// Match for potocol handlers with path and file text.
@@ -58,7 +60,7 @@ namespace BuildMonitor
         /// <example>
         /// matches:  "file://Path/To/File.name", "https://some/public/web/api23.htm"
         /// </example>
-        private const string ProtocolsPattern = @"(([a-zA-Z])+://(([a-zA-Z0-9_.-/])+)+)";
+        private const string ProtocolsPattern = @"(([a-zA-Z])+://(([a-zA-Z0-9_.\-/])+)+)";
 
         /// <summary>
         /// Match for user ID patterns, e.g. domain and username, UNC, et alia.
