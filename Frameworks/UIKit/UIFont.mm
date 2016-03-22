@@ -35,7 +35,6 @@ extern "C" {
 #include <ftadvanc.h>
 #include <ftsizes.h>
 #include <ftmodapi.h>
-
 }
 
 #include "LoggingNative.h"
@@ -81,9 +80,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     FT_Face val;
 
     _CGFontLock();
-    auto unlock = wil::ScopeExit([] () {
-        _CGFontUnlock();
-    });
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     if (!sizing) {
         val = (FT_Face)CFDictionaryGetValue(_fontInstance, (void*)faceName);
@@ -185,9 +182,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     memcpy(pCopy, pFont, fontLen);
 
     _CGFontLock();
-    auto unlock = wil::ScopeExit([] () {
-        _CGFontUnlock();
-    });
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pCopy, fontLen, 0, (FT_Face*)&ret->_font);
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pCopy, fontLen, 0, (FT_Face*)&ret->_sizingFont);
@@ -225,9 +220,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     ret->_horizontalScale = 1.0f;
 
     _CGFontLock();
-    auto unlock = wil::ScopeExit([] () {
-        _CGFontUnlock();
-    });
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     id cached = [g_fontCache objectForKey:(id)ret];
     if (cached != nil) {
@@ -259,6 +252,10 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
  @Public        Yes
 */
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
+    if (fontSize <= 0.0f) {
+        fontSize = descriptor.pointSize;
+    }
+
     UIFont* font = [UIFont fontWithName:[descriptor _getFontName] size:fontSize];
     font->_descriptor = [descriptor retain];
     return font;
@@ -387,9 +384,7 @@ void loadFont(UIFont* self) {
     ret->_horizontalScale = _horizontalScale;
 
     _CGFontLock();
-    auto unlock = wil::ScopeExit([] () {
-        _CGFontUnlock();
-    });
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     id cached = [g_fontCache objectForKey:(id)ret];
     if (cached != nil) {
@@ -678,9 +673,7 @@ void loadFont(UIFont* self) {
     [font retain];
 
     _CGFontLock();
-    auto unlock = wil::ScopeExit([] () {
-        _CGFontUnlock();
-    });
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)fnt->_font);
     CFDictionarySetValue(_fontSizingInstance, (const void*)faceName, (void*)fnt->_sizingFont);
@@ -707,9 +700,7 @@ void loadFont(UIFont* self) {
     NSString* fileName = [url path];
 
     _CGFontLock();
-    auto unlock = wil::ScopeExit([] () {
-        _CGFontUnlock();
-    });
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     if ([[_fontList allValues] containsObject:fileName]) {
         // this font is already registered

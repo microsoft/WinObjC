@@ -111,7 +111,7 @@ UIKIT_EXPORT_CLASS
 - (NSDictionary*)fontAttributes STUB_METHOD;
 @property (readonly, nonatomic) CGAffineTransform matrix STUB_PROPERTY;
 - (id)objectForKey:(NSString*)anAttribute STUB_METHOD;
-@property (readonly, nonatomic) CGFloat pointSize STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat pointSize;
 @property (readonly, nonatomic) NSString* postscriptName STUB_PROPERTY;
 @property (readonly, nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits;
 @end

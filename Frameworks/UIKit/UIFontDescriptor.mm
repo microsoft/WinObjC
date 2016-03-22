@@ -278,6 +278,13 @@ const float c_buttonFontSize = 14.0f;
 }
 
 /**
+  @Status Interoperable
+*/
+- (CGFloat)pointSize {
+    return self->_size;
+}
+
+/**
  @Status Stub
 */
 - (instancetype)initWithCoder:(NSCoder*)decoder {
