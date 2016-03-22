@@ -48,8 +48,6 @@ TEST(Foundation, NSSortDescriptor_SortDescriptorWithNilKey) {
     ASSERT_OBJCEQ_MSG(@"A", sortedValue[0], "FAILED: Failed to sort the data in correct order.");
     ASSERT_OBJCEQ_MSG(@"D", sortedValue[3], "FAILED: Failed to sort the data in correct order.");
     ASSERT_OBJCEQ_MSG(@"F", sortedValue[5], "FAILED: Failed to sort the data in correct order.");
-
-    [data release];
 }
 
 // Used for testing keys and custom comparators.
@@ -194,7 +192,7 @@ TEST(Foundation, NSSortDescriptor_copy) {
     ASSERT_OBJCEQ_MSG([sortCopy key], [sortDesc key], "FAILED: key do not match.");
     ASSERT_EQ_MSG([sortCopy ascending], [sortDesc ascending], "FAILED: ascending property do not match.");
     ASSERT_EQ_MSG([sortCopy selector], [sortDesc selector], "FAILED: selector property do not match.");
-    [key release];
+
     [sortCopy release];
 }
 
@@ -209,7 +207,6 @@ TEST(Foundation, NSSortDescriptor_ReversedSortDescriptor) {
     ASSERT_TRUE_MSG([reverseSortDesc selector] != nullptr, "FAILED: selector should be non-null!");
     ASSERT_EQ_MSG(nullptr, (void*)[reverseSortDesc comparator], "FAILED: comparator should be null.");
     ASSERT_OBJCEQ_MSG(key, [reverseSortDesc key], "FAILED: key does not match the supplied key.");
-    [key release];
 }
 
 TEST(Foundation, NSSortDescriptor_ArchiveAndUnarchiveObject) {
@@ -237,6 +234,4 @@ TEST(Foundation, NSSortDescriptor_ArchiveAndUnarchiveObject) {
     ASSERT_OBJCEQ_MSG(NSStringFromSelector([unArchivedSortDesc selector]),
                       NSStringFromSelector([sortDesc selector]),
                       "FAILED: selector property do not match.");
-
-    [key release];
 }

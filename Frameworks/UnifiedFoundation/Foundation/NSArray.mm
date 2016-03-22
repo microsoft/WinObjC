@@ -791,16 +791,6 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 /**
- @Status Interoperable
-*/
-- (void)dealloc {
-    CFArrayRemoveAllValues((CFArrayRef)self);
-    _CFArrayDestroyInternal((CFArrayRef)self);
-
-    [super dealloc];
-}
-
-/**
  @Status Caveat
  @Notes atomically parameter not supported
 */
@@ -1149,5 +1139,12 @@ NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnum
 */
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     return _NSArrayConcreteCountByEnumeratingWithState(self, state);
+}
+
+- (void)dealloc {
+    CFArrayRemoveAllValues((CFArrayRef)self);
+    _CFArrayDestroyInternal((CFArrayRef)self);
+
+    [super dealloc];
 }
 @end
