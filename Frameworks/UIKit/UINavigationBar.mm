@@ -420,8 +420,8 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
                     [_backButton setImage:image];
                 } else {
                     _leftButton = _backButton;
-                    [_backButton setTitle:@"Back"];
-                    [_backButton setImage:nil];
+                    [_backButton setTitle:@"       "]; // Space needed to secure the space for back button image
+                    [_backButton setImage:[UIImage imageNamed : @"/img/backbutton@2x.png"]];
                     backButtonHandler = true;
                 }
             }

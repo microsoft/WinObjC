@@ -386,7 +386,7 @@ public:
         autoReverse = false;
         repeatCount = 0;
         repeatDuration = 0;
-        speed = 1.0;
+        speed = 1.5;
         timeOffset = 0;
     }
 
