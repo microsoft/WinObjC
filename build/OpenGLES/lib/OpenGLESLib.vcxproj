@@ -113,7 +113,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;GL_APIENTRY=</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -125,7 +125,7 @@
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(angle-BinPath)\..\..\..\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 "-DEAGL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
-      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GL_GLEXT_PROTOTYPES;GL_APIENTRY=</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
