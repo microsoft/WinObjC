@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -25,6 +25,7 @@
 #include "SBNativeTarget.h"
 #include "SBBuildPhase.h"
 #include "xc2vs.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 void SBBuildPhase::create(const BuildPhaseList& buildPhaseList, SBTarget& parentTarget, SBBuildPhaseList& ret)
 {
@@ -43,8 +44,10 @@ void SBBuildPhase::create(const BuildPhaseList& buildPhaseList, SBTarget& parent
     else if (isa == "PBXSourcesBuildPhase")
       sourcesPhase = phase = SBSourcesBuildPhase::create(buildPhaseList[i], parentTarget);
     else
-      SBLog::warning() << "Ignoring unsupported " << isa << " in \"" << parentTarget.getName() << "\" target." << std::endl;
-
+    {
+        SBLog::warning() << "Ignoring unsupported " << isa << " in \"" << parentTarget.getName() << "\" target." << std::endl;
+        TELEMETRY_EVENT_DATA(L"VSImporterUnsupportedBuildPhase", isa.c_str());
+    }
     if (phase)
       ret.push_back(phase);
   }
