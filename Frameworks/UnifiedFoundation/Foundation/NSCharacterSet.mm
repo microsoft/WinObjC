@@ -386,7 +386,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 
     [copy setBitmapRepresentation:[_bitmapRepresentation mutableCopyWithZone:zone]];
 
-    return [copy autorelease];
+    return copy;
 }
 
 /**
