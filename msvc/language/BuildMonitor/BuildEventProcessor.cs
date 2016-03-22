@@ -184,11 +184,11 @@ namespace BuildMonitor
 
         public void BeginIslandWoodBuild()
         {
-            Dictionary<string, string> beginBuildProperties = new Dictionary<string, string>();
+            Dictionary<string, string> beginBuildProperties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             _currentBuildGuid = Guid.NewGuid();
             beginBuildProperties.Add("BuildId", _currentBuildGuid.ToString());
             beginBuildProperties.Add("ProjectId", _firstIslandwoodProjectGuid.ToString());
-            beginBuildProperties.Add("IsMsftInteral", _microsoftInternalUser.ToString());
+            beginBuildProperties.Add("IsMsftInternal", _microsoftInternalUser.ToString());
             beginBuildProperties.Add("UICulture", CultureInfo.CurrentUICulture.Name);
             beginBuildProperties.Add("WindowsLanguage", CultureInfo.CurrentUICulture.ThreeLetterWindowsLanguageName);
             beginBuildProperties.Add("IsoLanguage", CultureInfo.CurrentUICulture.ThreeLetterISOLanguageName);
@@ -210,32 +210,45 @@ namespace BuildMonitor
                 
                 if (errorList != null)
                 {
-                    errorList.EnumTaskItems(out taskEnum);
+                    try { 
+                        errorList.EnumTaskItems(out taskEnum);
 
-                    if (taskEnum != null)
-                    {
-                        int maxItems = 10000;
-                        Int32.TryParse(Properties.Resources.MaxErrorsToProcess, out maxItems);
-
-                        taskEnum.Next(1, oneItem, null);
-                        for (int i = 0; (i < maxItems) && (oneItem[0] != null); ++i)
+                        if (taskEnum != null)
                         {
-                            ProcessTaskListItem(oneItem[0]);
-                            taskEnum.Next(1, oneItem, null);
-                        }
+                            int maxItems = 10000;
+                            Int32.TryParse(Properties.Resources.MaxErrorsToProcess, out maxItems);
 
-                        // send all events in case the Visual Studio instance is closed or solution unloaded
-                        BuildTelemetryClient.FlushEvents();
+                            taskEnum.Next(1, oneItem, null);
+                            for (int i = 0; (i < maxItems) && (oneItem[0] != null); ++i)
+                            {
+                                ProcessTaskListItem(oneItem[0]);
+                                taskEnum.Next(1, oneItem, null);
+                            }
+
+                            // send all events in case the Visual Studio instance is closed or solution unloaded
+                            BuildTelemetryClient.FlushEvents();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Dictionary<string, string> exceptionDetails = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                        exceptionDetails.Add("BuildId", _currentBuildGuid.ToString());
+                        exceptionDetails.Add("ProjectId", _firstIslandwoodProjectGuid.ToString());
+                        exceptionDetails.Add("Exception", e.GetType().ToString());
+                        exceptionDetails.Add("Message", e.Message);
+                        exceptionDetails.Add("InnerException", (e.InnerException == null ? "null" : e.InnerException.GetType().ToString()));
+                        exceptionDetails.Add("InnerMessage", (e.InnerException == null ? "null" : e.InnerException.Message));
+                        BuildTelemetryClient.TrackEvent("IslandwoodBuildMonitorException", exceptionDetails, null);
                     }
                 }
 
                 _processorStopwatch.Stop();
 
-                Dictionary<string, string> perfProperties = new Dictionary<string, string>();
+                Dictionary<string, string> perfProperties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 perfProperties.Add("BuildId", _currentBuildGuid.ToString());
                 perfProperties.Add("ProjectId", _firstIslandwoodProjectGuid.ToString());
 
-                Dictionary<string, double> perfMetrics = new Dictionary<string, double>();
+                Dictionary<string, double> perfMetrics = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
                 perfMetrics.Add("ProcessTasks", _processorStopwatch.ElapsedMilliseconds);
 
                 BuildTelemetryClient.TrackEvent("IslandwoodBuildMonitorPerformance", perfProperties, perfMetrics);
@@ -272,7 +285,7 @@ namespace BuildMonitor
                         (sourceFile.EndsWith(".m") || sourceFile.EndsWith(".mm") || sourceFile.EndsWith(".h")))
                     {
 
-                        Dictionary<string, string> errorDetails = new Dictionary<string, string>();
+                        Dictionary<string, string> errorDetails = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                         errorDetails.Add("BuildId", _currentBuildGuid.ToString());
 
                         Guid errorProjectGuid = _firstIslandwoodProjectGuid;
