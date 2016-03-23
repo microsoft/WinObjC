@@ -35,6 +35,22 @@
 #include <direct.h>
 #define getcwd _NS_getcwd
 
+// WINOBJC: includes for App Data folder.
+#include <COMIncludes.h>
+#include <wrl\client.h>
+#include <wrl\wrappers\corewrappers.h>
+#include <windows.storage.h>
+#include <COMIncludes_End.h>
+
+using namespace ABI::Windows::Storage;
+using namespace Microsoft::WRL;
+using namespace Windows::Foundation;
+
+// WINOBJC: File not available to appcontainer apps // #include <shfolder.h>
+#define CSIDL_APPDATA 0x001a
+#define CSIDL_LOCAL_APPDATA 0x001c
+
+
 #endif
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_WINDOWS
@@ -60,8 +76,6 @@ CF_PRIVATE Boolean _CFGetCurrentDirectory(char *path, int maxlen) {
 // Returns the path to the CF DLL, which we can then use to find resources like char sets
 bool bDllPathCached = false;
 CF_PRIVATE const wchar_t *_CFDLLPath(void) {
-    // HACKHACK: Can't lookup dll paths in an app container.
- /*
     static wchar_t cachedPath[MAX_PATH+1];
 
     if (!bDllPathCached) {
@@ -71,7 +85,8 @@ CF_PRIVATE const wchar_t *_CFDLLPath(void) {
 #else
         wchar_t *DLLFileName = L"CoreFoundation.dll";
 #endif
-        HMODULE ourModule = GetModuleHandleW(DLLFileName);
+
+        HMODULE ourModule = GetModuleHandle(DLLFileName);
         
         CFAssert(ourModule, __kCFLogAssertion, "GetModuleHandle failed");
 
@@ -90,8 +105,6 @@ CF_PRIVATE const wchar_t *_CFDLLPath(void) {
         bDllPathCached = true;
     }
     return cachedPath;
-    */
-    return nullptr;
 }
 #endif
 
@@ -239,6 +252,10 @@ CF_EXPORT CFStringRef CFGetUserName(void) {
     return CFCopyUserName();
 }
 
+/**
+ @Status Caveat
+ @Notes Returns "" as UserName
+*/
 CF_EXPORT CFStringRef CFCopyUserName(void) {
     CFStringRef result = NULL;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_FREEBSD
@@ -257,7 +274,7 @@ CF_EXPORT CFStringRef CFCopyUserName(void) {
     wchar_t username[1040];
     DWORD size = 1040;
     username[0] = 0;
-    if (false) { // HACKHACK: Can't get username in appcontainer. // if (GetUserNameW(username, &size)) {
+    if (false) { // WINOBJC: Can't get username in appcontainer. // if (GetUserNameW(username, &size)) {
         // discount the extra NULL by decrementing the size
         result = CFStringCreateWithCharacters(kCFAllocatorSystemDefault, (const UniChar *)username, size - 1);
     } else {
@@ -274,6 +291,48 @@ CF_EXPORT CFStringRef CFCopyUserName(void) {
     return result;
 }
 
+// WINOBJC: helper to get path for Storage Folder.
+Wrappers::HString GetAppDataPath(bool localAppData) {
+    Wrappers::HString toReturn;
+    ComPtr<IStorageFolder> folder;
+    ComPtr<IApplicationDataStatics> applicationDataStatics;
+    ComPtr<IApplicationData> applicationData;
+    ComPtr<IStorageItem> storageItem;
+
+    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Storage_ApplicationData).Get(),
+        &applicationDataStatics))) {
+        return toReturn;
+    }
+
+    if (FAILED(applicationDataStatics->get_Current(&applicationData))) {
+        return toReturn;
+    }
+
+    if (localAppData)
+    {
+        if (FAILED(applicationData->get_LocalFolder(&folder))) {
+            return toReturn;
+        }
+    }
+    else
+    {
+        if (FAILED(applicationData->get_RoamingFolder(&folder))) {
+            return toReturn;
+        }
+    }
+
+    if (FAILED(folder.As<IStorageItem>(&storageItem))) {
+        return toReturn;
+    }
+
+    if (FAILED(storageItem->get_Path(toReturn.GetAddressOf())))
+    {
+        return toReturn;
+    }
+
+    return toReturn;
+}
+
 CFURLRef CFCopyHomeDirectoryURL(void) {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_FREEBSD
     uid_t euid;
@@ -286,9 +345,22 @@ CFURLRef CFCopyHomeDirectoryURL(void) {
     CFStringRef str = NULL;
    
     UniChar pathChars[MAX_PATH];
-    if (false) {// HACKHACK: Shell apis not useable from app container. // if (S_OK == SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, (wchar_t *)pathChars)) {
+    // WINOBJC: App container applications cannot acces the "Home Directory" normally. Instead default to return the App Data folder.
+    /*
+    if (S_OK == SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, (wchar_t *)pathChars)) {        
         len = (CFIndex)wcslen((wchar_t *)pathChars);
         str = CFStringCreateWithCharacters(kCFAllocatorSystemDefault, pathChars, len);
+        retVal = CFURLCreateWithFileSystemPath(kCFAllocatorSystemDefault, str, kCFURLWindowsPathStyle, true);
+        CFRelease(str);
+    }
+    */
+
+    Wrappers::HString path = GetAppDataPath(true);
+
+    if(path.IsValid()) {
+        unsigned int rawLength;
+        const wchar_t* rawPath = WindowsGetStringRawBuffer(path.Get(), &rawLength);
+        str = CFStringCreateWithBytes(kCFAllocatorSystemDefault, reinterpret_cast<const uint8_t *>(rawPath), rawLength * sizeof(wchar_t), kCFStringEncodingUTF16, NO);
         retVal = CFURLCreateWithFileSystemPath(kCFAllocatorSystemDefault, str, kCFURLWindowsPathStyle, true);
         CFRelease(str);
     }
@@ -340,9 +412,9 @@ CF_EXPORT CFURLRef CFCopyHomeDirectoryURLForUser(CFStringRef uName) {
         static dispatch_once_t once = 0;
         
         dispatch_once(&once, ^{
-            const char *env = nullptr; // HACKHACK: can't get env variables in appcontainer. // getenv("CFFIXED_USER_HOME");
+            const char *env = getenv("CFFIXED_USER_HOME");
             if (!env) {
-                env = nullptr; // HACKHACK: can't get env variables in appcontainer. // getenv("HOME");
+                env = getenv("HOME");
             }
             if (env) {
                 CFStringRef str = CFStringCreateWithFileSystemRepresentation(kCFAllocatorSystemDefault, env);
@@ -426,10 +498,25 @@ CF_INLINE CFIndex strlen_UniChar(const UniChar* p) {
  */
 CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef alloc, int nFolder) {
     CFMutableStringRef result = NULL;
-    UniChar szPath[MAX_PATH];
-    
+    CFStringRef str = NULL;
+
+    // WINOBJC: make sure that nFolder is CSIDL_APPDATA or CSIDL_LOCAL_APPDATA and return the app data folder for the app.
+    Wrappers::HString path = GetAppDataPath(nFolder == CSIDL_LOCAL_APPDATA);
+    if (path.IsValid()) {
+        unsigned int rawLength;
+        const wchar_t* rawPath = WindowsGetStringRawBuffer(path.Get(), &rawLength);
+        str = CFStringCreateWithBytes(kCFAllocatorSystemDefault, reinterpret_cast<const uint8_t *>(rawPath), rawLength * sizeof(wchar_t), kCFStringEncodingUTF16, NO);
+        result = CFStringCreateMutableCopy(kCFAllocatorSystemDefault, 0, str);
+        CFRelease(str);
+    }
+
+    /*
+    // UniChar szPath[MAX_PATH];
+
+
     // get the current path to the data repository: CSIDL_APPDATA (roaming) or CSIDL_LOCAL_APPDATA (nonroaming)
-    if (false) { // HACKHACK: no shell apis. // if (S_OK == SHGetFolderPathW(NULL, nFolder, NULL, 0, (wchar_t *) szPath)) {
+    
+    if (S_OK == SHGetFolderPathW(NULL, nFolder, NULL, 0, (wchar_t *) szPath)) {
     CFStringRef directoryPath;
     
     // make it a CFString
@@ -466,8 +553,10 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
         }
     }
     }
+    */
 
     return ( result );
+
 }
 #endif
 
@@ -797,7 +886,7 @@ CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size) {
 CF_EXPORT char *_NS_getenv(const char *name) {
     // todo: wide getenv
     // We have to be careful what happens here, because getenv is called during cf initialization, and things like cfstring may not be working yet
-    // HACKHACK: can't get env variables in an appcontainer. // return getenv(name);
+    // WINOBJC: can't get env variables in an appcontainer. // return getenv(name);
     return nullptr;
 }
 
@@ -953,13 +1042,13 @@ Boolean _isAFloppy(char driveLetter)
         CloseHandle(h);
     }
     */
-    // HACKHACK: Was trying to use desktop only apis. Just assume no one uses / has a floppy drive anymore.
+    // WINOBJC: Was trying to use desktop only apis. Just assume no one uses / has a floppy drive anymore.
     return false;
 }
 
 
 extern CFStringRef CFCreateWindowsDrivePathFromVolumeName(CFStringRef volNameStr) {
-    // HACKHACK: can't use a lot of these desktop APIS. return nullptr for now.
+    // WINOBJC: can't use a lot of these desktop APIS. return nullptr as File System is locked down much more in app.
     /*
     if (!volNameStr) return NULL;
     

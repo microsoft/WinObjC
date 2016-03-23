@@ -708,7 +708,7 @@ CF_PRIVATE Boolean _CFBundleDLLLoad(CFBundleRef bundle, CFErrorRef *error) {
         wchar_t buff[CFMaxPathSize];
 
         if (executableURL && _CFURLGetWideFileSystemRepresentation(executableURL, true, (wchar_t *)buff, CFMaxPathSize)) {
-            bundle->_hModule = nullptr; // LoadLibraryW(buff); // HACKAHCK: Can't use LoadLibrary in an app container. 
+            bundle->_hModule = nullptr; // LoadLibraryW(buff); // HACKHACK: Can't use LoadLibrary in an app container. 
             if (bundle->_hModule) {
                 bundle->_isLoaded = true;
             } else {

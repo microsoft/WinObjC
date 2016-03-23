@@ -47,7 +47,7 @@
 
 #endif
 
-// HACKHACK: add in things from WinObjC that we apparently still need but weren't there.
+// WINOBJC: add in a few things that WinObjC added. Some may not really belong here but dependencies still expect them here. 
 #ifndef MAXFLOAT
 #define MAXFLOAT ((float)3.40282346638528860e+38)
 #endif

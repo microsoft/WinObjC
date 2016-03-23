@@ -146,7 +146,7 @@ _CFXMLInterfaceParserInput _CFXMLInterfaceNoNetExternalEntityLoader(const char *
 
 static void _errorCallback(void *ctx, const char *msg, ...) {
     xmlParserCtxtPtr context = nullptr; // __CFSwiftBridge.NSXMLParser.getContext((_CFXMLInterface)ctx);
-    // HACKAHCK: no swift
+    // HACKHACK: no swift
     xmlErrorPtr error = xmlCtxtGetLastError(context);
 // TODO: reporting
 //    _reportError(error, (_CFXMLInterface)ctx);
@@ -179,7 +179,7 @@ _CFXMLInterfaceSAXHandler _CFXMLInterfaceCreateSAXHandler() {
     
     saxHandler->externalSubset = (externalSubsetSAXFunc)__CFSwiftBridge.NSXMLParser.externalSubset;
     */
-    // HACKAHCK: no swift
+    // HACKHACK: no swift
     saxHandler->initialized = XML_SAX2_MAGIC; // make sure start/endElementNS are used
     saxHandler->error = _errorCallback;
     return saxHandler;

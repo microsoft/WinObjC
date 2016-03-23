@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <!--HACKHACK: adding in Foundation project reference for CF UTs. This could pose problems down the road (like duplicated symbols since Foundation depends on real CF). Needed for NSException + NSString which get auto dep'ed from WIL -->
+    <!--WINOBJC: adding in Foundation project reference for CF UTs. This could pose problems down the road (like duplicated symbols since Foundation depends on real CF). Needed for NSException + NSString which get auto dep'ed from WIL -->
     <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>

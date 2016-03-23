@@ -23,7 +23,7 @@
 #include <dispatch/private.h>
 #endif
 #include <mach/mach.h>
-// #include <dlfcn.h> // HACKAHCK: commented out since we don't have this.
+// #include <dlfcn.h> // HACKHACK: commented out since we don't have this.
 #include <stdio.h>
 #include "CFInternal.h"
 

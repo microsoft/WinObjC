@@ -675,7 +675,7 @@ CF_INLINE uintptr_t __CFISAForTypeID(CFTypeID typeID) {
     return (typeID < __CFRuntimeClassTableSize) ? __CFRuntimeObjCClassTable[typeID] : 0;
 }
 
-// HACKHACK: helper function to determine if a cf object is a bridged CF object.
+// WINOBJC: helper function to determine if a cf object is a bridged CF object.
 CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
     if (!object || (object->_cfisa == 0) || (object->_cfisa == (uintptr_t)(__CFConstantStringClassReferencePtr))) {
@@ -694,7 +694,7 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
 }
 
 
-// HACKHACK: helper function to determine if an object is actually a CF object.
+// WINOBJC: helper function to determine if an object is actually a CF object.
 // Logically this is basically !CF_IS_OBJC except that the expected type is not known ahead of time.
 CF_INLINE bool __CF_IsCFObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
@@ -931,6 +931,8 @@ CF_INLINE dispatch_queue_t __CFDispatchQueueGetGenericBackground(void) {
     return dispatch_get_global_queue(QOS_CLASS_UTILITY, DISPATCH_QUEUE_OVERCOMMIT);
 }
 
+// WINOBJC: Add in two libdispatch calls that are avilalbe but weren't exposed in public headers.
+// These are useful for working around other libdispatch differences.
 /*!
  * @function dispatch_queue_attr_create
  *
@@ -970,6 +972,30 @@ extern "C" dispatch_queue_attr_t dispatch_queue_attr_create(void);
 __OSX_AVAILABLE_STARTING(__MAC_10_6,__IPHONE_NA)
 DISPATCH_NONNULL1 DISPATCH_NOTHROW 
 extern "C" void dispatch_queue_attr_set_priority(dispatch_queue_attr_t attr, int priority);
+
+// WINOBJC: Add a new helper for getting the module handle of an already loaded module.
+// This allows GetProcAddress and friends to be used for modules that are already loaded in the process
+// which by definition are allowed to run in an appcontainer.
+static inline HMODULE GetModuleHandle(const wchar_t* moduleName)
+{
+    MEMORY_BASIC_INFORMATION mbi = { 0 };
+    if (VirtualQuery(VirtualQuery, &mbi, sizeof(mbi)) == 0) {
+        return nullptr;
+    }
+
+    HMODULE kernelModule = reinterpret_cast<HMODULE>(mbi.AllocationBase);
+    if (!kernelModule) {
+        return nullptr;
+    }
+
+    typedef HMODULE(WINAPI * GetModuleHandleFunction)(LPCTSTR);
+    GetModuleHandleFunction pGetModuleHandle = reinterpret_cast<GetModuleHandleFunction>(GetProcAddress(kernelModule, "GetModuleHandleW"));
+    if (!pGetModuleHandle) {
+        return nullptr;
+    }
+
+    return pGetModuleHandle(moduleName);
+}
 
 
 #endif

@@ -163,33 +163,33 @@ CF_PRIVATE CFStringRef _CFPreferencesGetByHostIdentifierString(void) {
 static unsigned long __CFSafeLaunchLevel = 0;
 
 #if DEPLOYMENT_TARGET_WINDOWS
-//#include <shfolder.h>
+// WINOBJC: File not available to appcontainer apps // #include <shfolder.h>
+#define CSIDL_APPDATA 0x001a
 
 #endif
 
 static CFURLRef _preferencesDirectoryForUserHostSafetyLevel(CFStringRef userName, CFStringRef hostName, unsigned long safeLevel) {
     CFAllocatorRef alloc = __CFPreferencesAllocator();
 #if DEPLOYMENT_TARGET_WINDOWS
-// HACKHACK: Using desktop filesystem apis. just return null for now and hope for the best
-/*
-    CFURLRef url = NULL;
 
-    CFMutableStringRef completePath = _CFCreateApplicationRepositoryPath(alloc, CSIDL_APPDATA);
-    if (completePath) {
-        // append "Preferences\" and make the CFURL
-        CFStringAppend(completePath, CFSTR("Preferences\\"));
-        url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
-        CFRelease(completePath);
-    }
+CFURLRef url = NULL;
+
+CFMutableStringRef completePath = _CFCreateApplicationRepositoryPath(alloc, CSIDL_APPDATA);
+if (completePath) {
+    // append "Preferences\" and make the CFURL
+    CFStringAppend(completePath, CFSTR("Preferences\\"));
+    url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
+    CFRelease(completePath);
+}
 
 
-    // Can't find a better place?  Home directory then?
-    if (url == NULL)
-        url = CFCopyHomeDirectoryURLForUser((userName == kCFPreferencesCurrentUser) ? NULL : userName);
+// Can't find a better place?  Home directory then?
+if (url == NULL)
+    url = CFCopyHomeDirectoryURLForUser((userName == kCFPreferencesCurrentUser) ? NULL : userName);
 
-    return url;
- */
- return nullptr;
+return url;
+
+
 #else
     CFURLRef  home = NULL;
     CFURLRef  url;

@@ -881,7 +881,7 @@ extern void __HALT() {
 }
 
 
-// HACKHACK: claim to be iOS6.0
-CF_EXPORT double kCFCoreFoundationVersionNumber = kCFCoreFoundationVersionNumber_iOS_6_0;
+// WINOBJC: claim to be iOS8.3. This matches what the stubs conform to regardless of actual functionality.
+CF_EXPORT double kCFCoreFoundationVersionNumber = kCFCoreFoundationVersionNumber_iOS_8_3;
 
 // clang-format on

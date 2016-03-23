@@ -87,9 +87,9 @@
 #include <stdbool.h>
 #endif
 
-  #if ((TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) && !DEPLOYMENT_RUNTIME_SWIFT
-    // HACKHACK: don't have this. // #include <libkern/OSTypes.h>
-  #endif
+#if ((TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)) && !DEPLOYMENT_RUNTIME_SWIFT
+#include <libkern/OSTypes.h>
+#endif
 
 #if !defined(__MACTYPES__)
 #if !defined(_OS_OSTYPES_H)
@@ -678,7 +678,7 @@ CFTypeRef CFMakeCollectable(CFTypeRef cf) CF_AUTOMATED_REFCOUNT_UNAVAILABLE;
 #endif
 
 
-//HACKHACK: Start. Adding in CGPoint/CGRect definitions. Shouldn't really be defined here but the Foundation headers expect this.
+// WINOBJC: Start. Include old WinObjC additions to CFBase.h. Some might not really belong here but are still needed by other dependencies.
 #import <math.h>
 #ifdef __LP64__
 typedef double CGFloat;
@@ -822,12 +822,11 @@ typedef struct CGRect {
     CGSize size;
 } CGRect;
 
-// HACKHACK: End. Adding in CGPoint/CGRect definitions. Shouldn't really be defined here but the Foundation headers expect this.
-
-// HACKHACK: include old WinObjC things for people that need it.
 #import <CoreFoundation/CoreFoundationExport.h>
 #import <MacTypes.h>
 #import <Block.h>
+
+// WINOBJC: End. Include old WinObjC additions to CFBase.h. Some might not really belong here but are still needed by other dependencies.
 
 CF_EXTERN_C_END
 

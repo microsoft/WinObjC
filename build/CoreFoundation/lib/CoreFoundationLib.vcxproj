@@ -119,7 +119,7 @@
     <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLPriv.h" />
   </ItemGroup>
   <ItemGroup>
-    <!-- HACKHACK ClangCompile Include="..\..\..\Frameworks\CoreFoundation\AppServices.subproj\CFUserNotification.c" /-->
+    <!-- WINOBJC ClangCompile Include="..\..\..\Frameworks\CoreFoundation\AppServices.subproj\CFUserNotification.c" /-->
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBase.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFFileUtilities.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFPlatform.c" />
@@ -170,8 +170,8 @@
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn_PlugIn.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Preferences.subproj\CFApplicationPreferences.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Preferences.subproj\CFPreferences.c" />
-    <!-- HACKHACK ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFMachPort.c" / -->
-    <!-- HACKHACK ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFMessagePort.c" / -->
+    <!-- WINOBJC ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFMachPort.c" / -->
+    <!-- WINOBJC ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFMessagePort.c" / -->
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFRunLoop.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFSocket.c" />
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFConcreteStreams.c" />

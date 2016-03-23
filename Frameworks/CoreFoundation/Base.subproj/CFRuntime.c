@@ -39,7 +39,7 @@
 #include <CoreFoundation/CFCalendar.h>
 #include <CoreFoundation/CFURLComponents.h>
 
-// HACKHACK: Add in CFFoundationInternal so that internal stuff here is correctly externed
+// WINOBJC: Add in CFFoundationInternal so that internal stuff here is correctly externed
 #include "CFFoundationInternal.h" 
 #include <objc/objc-arc.h>
 #include <Foundation/NSObject.h>
@@ -70,7 +70,7 @@ __kCFReleaseEvent = 29
 #include <malloc/malloc.h>
 #endif
 
-// HACKHACK: add in ICU deps so that we can initialize ICU with correct data when we
+// WINOBJC: add in ICU deps so that we can initialize ICU with correct data when we
 // initialize CoreFoundation. Really this should be in the "normal" loading path but
 // that requires rebuilding ICU.
 #include <unicode/coll.h>
@@ -238,7 +238,7 @@ bool (*__CFObjCIsCollectable)(void *) = NULL;
 #if DEPLOYMENT_RUNTIME_SWIFT
 // The constant string class reference is set at link time to _NSCFConstantString
 #else
-// HACKHACK: section makes no sense, since the same is done just below.
+// WINOBJC: The below section seems unneeded, since the same is done just below.
 /*
 #if !__CONSTANT_CFSTRINGS__ || DEPLOYMENT_TARGET_EMBEDDED_MINI
 // Compiler uses this symbol name; must match compiler built-in decl, so we use 'int'
@@ -502,8 +502,8 @@ CF_PRIVATE void _CFRuntimeSetInstanceTypeIDAndIsa(CFTypeRef cf, CFTypeID newType
         ((CFSwiftRef)cf)->isa = (uintptr_t)__CFISAForTypeID(newTypeID);
     }
 #else
-    // HACKHACK: Looks like this needed for CF types that masquerade as other CF types that are bridged.
-    // It appears that CFBasicHash does this for dictionary so this section is needed if the bridge for it is to work.
+    // WINOBJC: Needed for CF types that masquerade as other CF types that are bridged.
+    // (i.e. CFBasicHash masquerades as CFDictionary)
     if (((CFRuntimeBase *)cf)->_cfisa != __CFISAForTypeID(newTypeID)) {
         ((CFRuntimeBase *)cf)->_cfisa = (uintptr_t)__CFISAForTypeID(newTypeID);
     }
@@ -607,7 +607,7 @@ CF_INLINE Boolean CFTYPE_IS_SWIFT(const void *obj) {
     CFTypeID typeID = __CFGenericTypeID_inline(obj);
     return CF_IS_SWIFT(typeID, obj);
 }
-// HACKHACK: we don't support Swift yet.
+// WINOBJC: WinObjC project has no swift support.
 // #define CF_SWIFT_FUNCDISPATCH0(rettype, obj, fn) \
 //    if (CFTYPE_IS_SWIFT(obj)) return (rettype)__CFSwiftBridge.fn((CFSwiftRef)obj);
 // #define CF_SWIFT_FUNCDISPATCH1(rettype, obj, fn, a1) \
@@ -636,7 +636,7 @@ CFStringRef CFCopyTypeIDDescription(CFTypeID type) {
 static CFTypeRef _CFRetain(CFTypeRef cf, Boolean tryR);
 
 CFTypeRef CFRetain(CFTypeRef cf) {
-    // HACKHACK: Add in handling for calling CFRetain and friends on a generic objective c object.
+    // WINOBJC: Add in handling for calling CFRetain and friends on a generic objective c object.
     if (!cf || !__CF_IsCFObject(cf)) {
         return (CFTypeRef)objc_retain((id)cf);
     }
@@ -648,7 +648,7 @@ CFTypeRef CFRetain(CFTypeRef cf) {
 }
 
 CFTypeRef CFAutorelease(CFTypeRef __attribute__((cf_consumed)) cf) {
-    // HACKHACK: Add in handling for calling CFRetain and friends on a generic objective c object.
+    // WINOBJC: Add in handling for calling CFRetain and friends on a generic objective c object.
     if (!cf || !__CF_IsCFObject(cf)) {
         return (CFTypeRef)objc_autorelease((id)cf);
     }
@@ -661,7 +661,7 @@ CFTypeRef CFAutorelease(CFTypeRef __attribute__((cf_consumed)) cf) {
 static void _CFRelease(CFTypeRef CF_RELEASES_ARGUMENT cf);
 
 void CFRelease(CFTypeRef cf) {
-    // HACKHACK: Add in handling for calling CFRetain and friends on a generic objective c object.
+    // WINOBJC: Add in handling for calling CFRetain and friends on a generic objective c object.
     if (!cf || !__CF_IsCFObject(cf)) {
         return objc_release((id)cf);
     }
@@ -702,7 +702,9 @@ CF_PRIVATE const void *__CFTypeCollectionRetain(CFAllocatorRef allocator, const 
 #if DEPLOYMENT_RUNTIME_SWIFT
     return CFRetain((CFTypeRef)ptr);
 #else
-    // HACKHACK: don't really need this. CFRetain handles anyway and this allows a nil objC object to go through this path. // if (NULL == ptr) { CRSetCrashLogMessage("*** __CFTypeCollectionRetain() called with NULL; likely a collection has been corrupted ***"); HALT; }
+    // WINOBJC: don't really need below NULL check. CFRetain handles anyway and this allows a nil objC object to go through this path 
+    // (For example when added to a CFDictionary).
+    // if (NULL == ptr) { CRSetCrashLogMessage("*** __CFTypeCollectionRetain() called with NULL; likely a collection has been corrupted ***"); HALT; }
     CFTypeRef cf = (CFTypeRef)ptr;
     // only collections allocated in the GC zone can opt-out of reference counting.
     if (CF_IS_COLLECTABLE_ALLOCATOR(allocator)) {
@@ -741,7 +743,9 @@ CF_PRIVATE void __CFTypeCollectionRelease(CFAllocatorRef allocator, const void *
 #if DEPLOYMENT_RUNTIME_SWIFT
     CFRelease((CFTypeRef)ptr);
 #else
-    // HACKHACK: don't really need this. CFRelease handles anyway and this allows a nil objC object to go through this path. // if (NULL == ptr) { CRSetCrashLogMessage("*** __CFTypeCollectionRelease() called with NULL; likely a collection has been corrupted ***"); HALT; }
+    // WINOBJC: don't really need below NULL check. CFRetain handles anyway and this allows a nil objC object to go through this path
+    // (For example when added to a CFDictionary).
+    // if (NULL == ptr) { CRSetCrashLogMessage("*** __CFTypeCollectionRelease() called with NULL; likely a collection has been corrupted ***"); HALT; }
     CFTypeRef cf = (CFTypeRef)ptr;
     // only collections allocated in the GC zone can opt-out of reference counting.
     if (CF_IS_COLLECTABLE_ALLOCATOR(allocator)) {
@@ -804,7 +808,7 @@ static uint64_t __CFGetFullRetainCount(CFTypeRef cf) {
 }
 
 CFIndex CFGetRetainCount(CFTypeRef cf) {
-    // HACKHACK: Add in handling for calling CFRetain and friends on a generic objective c object.
+    // WINOBJC: Add in handling for calling CFRetain and friends on a generic objective c object.
     if (!cf || !__CF_IsCFObject(cf)) {
         return (CFIndex)[(NSObject*)(cf) retainCount];
     }
@@ -1017,7 +1021,7 @@ CF_PRIVATE const char *__CFgetenv(const char *n) {
     for (CFIndex idx = 0; idx < sizeof(__CFEnv) / sizeof(__CFEnv[0]); idx++) {
     if (__CFEnv[idx].name && 0 == strcmp(n, __CFEnv[idx].name)) return __CFEnv[idx].value;
     }
-    // HACKHACK: can't getenv in an app container. nullptr for now.
+    // WINOBJC: can't getenv in an app container. nullptr for now.
     return nullptr; // getenv(n);
 }
 
@@ -1086,7 +1090,7 @@ void __CFInitialize(void) {
         __CFProphylacticAutofsAccess = true;
 
         for (CFIndex idx = 0; idx < sizeof(__CFEnv) / sizeof(__CFEnv[0]); idx++) {
-            __CFEnv[idx].value = NULL; // HACKHACK: no env variables in an appcontainer. // __CFEnv[idx].name ? getenv(__CFEnv[idx].name) : NULL;
+            __CFEnv[idx].value = NULL; // WINOBJC: no env variables in an appcontainer. // __CFEnv[idx].name ? getenv(__CFEnv[idx].name) : NULL;
         }
         
 #if !defined(kCFUseCollectableAllocator)
@@ -1193,18 +1197,17 @@ void __CFInitialize(void) {
 #endif
         CFUUIDGetTypeID();
 #if (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_WINDOWS) && !DEPLOYMENT_RUNTIME_SWIFT
-    // HACKHACK: not included for now.
+    // WINOBJC: WinObjC project does not include Message Ports.
     // CFMessagePortGetTypeID();
 #endif
 #if (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI) && !DEPLOYMENT_RUNTIME_SWIFT
-        // HACKHACK: not included for now.
-        // CFMachPortGetTypeID();
+        CFMachPortGetTypeID();
 #endif
 #if (DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS) && !DEPLOYMENT_RUNTIME_SWIFT
         __CFStreamInitialize();
 #endif
 #if DEPLOYMENT_TARGET_WINDOWS
-        // HACKHACK: not included for now.
+        // WINOBJC: WinObjC project does not include Named Pipes.
         // CFWindowsNamedPipeGetTypeID();
 #endif
         
@@ -1248,7 +1251,8 @@ void __CFInitialize(void) {
             // result is actually pointer to wchar_t *, make sure to account for that below
             args = (char **)CommandLineToArgvW(commandLine, (int *)&cnt);
 */
-// HACKHACK: Can't get commandline args in an appcontainer (doesn't really make sense). assume none for now.
+// WINOBJC: TODO 6968202 Can't get commandline args in an appcontainer. Should be handled correctly when other launch args are plumbed though.
+// The __CFArgStuff object that they are put into appears private and unused.
 #endif
             CFIndex count;
             CFStringRef *list, buffer[256];
@@ -1275,7 +1279,7 @@ void __CFInitialize(void) {
             if (list != buffer) free(list);
 #if DEPLOYMENT_TARGET_WINDOWS
             // LocalFree(args);
-            // HACKHACK: Can't get commandline args in an appcontainer (doesn't really make sense). assume none for now.
+            // WINOBJC: Can't get commandline args in an appcontainer.
 #endif
         }
 
@@ -1298,7 +1302,7 @@ void __CFInitialize(void) {
         // CFLog(kCFLogLevelWarning, CFSTR("Assertions enabled"));
 #endif
 
-        // HACKHACK: add in ICU deps so that we can initialize ICU with correct data when we
+        // WINOBJC: add in ICU deps so that we can initialize ICU with correct data when we
         // initialize CoreFoundation. Really this should be in the "normal" loading path but
         // that requires rebuilding ICU.
         UErrorCode status = U_ZERO_ERROR;
@@ -1320,7 +1324,6 @@ CF_PRIVATE void __CFSocketCleanup(void);
 CF_PRIVATE void __CFStreamCleanup(void);
 
 static CFBundleRef RegisterCoreFoundationBundle(void) {
-/*
 #ifdef _DEBUG
     // might be nice to get this from the project file at some point
     wchar_t *DLLFileName = (wchar_t *)L"CoreFoundation_debug.dll";
@@ -1331,7 +1334,8 @@ static CFBundleRef RegisterCoreFoundationBundle(void) {
     path[0] = path[1] = 0;
     DWORD wResult;
     CFIndex idx;
-    HMODULE ourModule = GetModuleHandleW(DLLFileName);
+
+    HMODULE ourModule = GetModuleHandle(DLLFileName);
 
     CFAssert(ourModule, __kCFLogAssertion, "GetModuleHandle failed");
 
@@ -1358,9 +1362,6 @@ static CFBundleRef RegisterCoreFoundationBundle(void) {
     CFRelease(bundleURL);
 
     return bundle;
-    */
-    // HACKAHCK: requires ability to get path of dll which is a little weird. Maybe use app install location but not sure. For now use nullptr.
-    return nullptr;
 }
 
 
@@ -1548,7 +1549,7 @@ Boolean _CFIsDeallocating(CFTypeRef cf) {
 
 static void _CFRelease(CFTypeRef CF_RELEASES_ARGUMENT cf) {
 
-    // HACKHACK: add in a check to see if the object c dealloc should be called if this object is really freed.
+    // WINOBJC: add in a check to see if the object c dealloc should be called if this object is really freed.
     // This is needed for objects that derive from a bridged class that may have special dealloc logic that needs to run.
     bool shouldCFDealloc = __CF_IsBridgedObject(cf);
 
@@ -1822,7 +1823,7 @@ static void _CFRelease(CFTypeRef CF_RELEASES_ARGUMENT cf) {
     __CFRecordAllocationEvent(__kCFReleaseEvent, (void *)cf, 0, 0, NULL);
     }
 
-    // HACKHACK: if this cf object was a bridged class, it could have gotten weak refs in objective C land.
+    // WINOBJC: if this cf object was a bridged class, it could have gotten weak refs in objective C land.
     // this call will invalidate all of those now that the cf object is truly dead. Placing this call *above*
     // the actual deallocate calls so that there is no chance that a weak ref could slip in and be used before
     // the object is toast.
@@ -1873,7 +1874,7 @@ CF_SWIFT_EXPORT void _CFDeinit(CFTypeRef cf) {
 #endif
 
 #define _CFIsSwift(a,b) false;
-// HACKHACK: no swift support.
+// WINOBJC: WinObjC project has no swift support.
 /*
 bool _CFIsSwift(CFTypeID type, CFSwiftRef obj) {
     if (type == _kCFRuntimeNotATypeID) {

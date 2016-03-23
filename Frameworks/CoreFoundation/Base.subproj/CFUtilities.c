@@ -31,11 +31,15 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS
-// #include <asl.h>
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED // WINOBJC: no asl.h file so take the #def levels // || DEPLOYMENT_TARGET_WINDOWS
+#include <asl.h>
 #else
 #define ASL_LEVEL_EMERG 0
 #define ASL_LEVEL_DEBUG 7
+
+// WINOBJC: for logging
+#include <string>
+#include "LoggingNative.h"
 #endif
 
 
@@ -210,6 +214,27 @@ static CFStringRef _CFCopyLocalizedVersionKey(CFBundleRef *bundlePtr, CFStringRe
 }
 #endif
 
+static inline OSVERSIONINFO winOsVersion() {
+    OSVERSIONINFO result = { sizeof(OSVERSIONINFO), 0, 0, 0, 0, { '\0' } };
+
+    HMODULE ntdll = GetModuleHandle(TEXT("ntdll.dll"));
+    if (!ntdll) {
+        return result;
+    }
+
+    // NTSTATUS is not defined on WinRT
+    typedef LONG /* NTSTATUS */ (NTAPI * RtlGetVersionFunction)(LPOSVERSIONINFO);
+    RtlGetVersionFunction pRtlGetVersion = reinterpret_cast<RtlGetVersionFunction>(GetProcAddress(ntdll, "RtlGetVersion"));
+    if (!pRtlGetVersion) {
+        return result;
+    }
+
+    // GetVersionEx() has been deprecated in Windows 8.1 and will return
+    // only Windows 8 from that version on, so use the kernel API function.
+    pRtlGetVersion(&result); // always returns STATUS_SUCCESS
+    return result;
+}
+
 static CFDictionaryRef _CFCopyVersionDictionary(CFStringRef path) {
     CFPropertyListRef plist = NULL;
     
@@ -263,17 +288,14 @@ static CFDictionaryRef _CFCopyVersionDictionary(CFStringRef path) {
         CFRelease(fullVersion);
     }
 #elif DEPLOYMENT_TARGET_WINDOWS
-    OSVERSIONINFOEX osvi;
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-    BOOL result = false; //GetVersionEx((OSVERSIONINFO *)&osvi);
-    // HACKAHCK: desktop api
-    if (!result) return NULL;
+    OSVERSIONINFO osvi = winOsVersion();
 
     plist = CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 10, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     
     // e.g. 10.7
-    CFStringRef versionString = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("%ld.%ld(%ld,%ld)"), osvi.dwMajorVersion, osvi.dwMinorVersion, osvi.wServicePackMajor, osvi.wServicePackMinor);
+    // WINOBJC: OSVERSIONINFO doesn't include service pack values. 
+    // CFStringRef versionString = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("%ld.%ld(%ld,%ld)"), osvi.dwMajorVersion, osvi.dwMinorVersion, osvi.wServicePackMajor, osvi.wServicePackMinor);
+    CFStringRef versionString = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("%ld.%ld"), osvi.dwMajorVersion, osvi.dwMinorVersion);
     
     // e.g. 11A508
     CFStringRef buildString = CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("%ld"), osvi.dwBuildNumber);
@@ -307,10 +329,10 @@ CFStringRef CFCopySystemVersionString(void) {
 
 static CFStringRef copySystemVersionPath(CFStringRef suffix) {
 #if TARGET_IPHONE_SIMULATOR
-    const char *simulatorRoot = nullptr; // getenv("IPHONE_SIMULATOR_ROOT");
-    // HACKAHCK: desktop api
-    if (!simulatorRoot) simulatorRoot = nullptr; // getenv("CFFIXED_USER_HOME");
-    // HACKAHCK: desktop api
+    const char *simulatorRoot = nullptr; // WINOBJC: desktop api // getenv("IPHONE_SIMULATOR_ROOT");
+    
+    if (!simulatorRoot) simulatorRoot = nullptr; // WINOBJC: desktop api // getenv("CFFIXED_USER_HOME");
+
     if (!simulatorRoot) simulatorRoot = "/";
     return CFStringCreateWithFormat(kCFAllocatorSystemDefault, NULL, CFSTR("%s%@"), simulatorRoot, suffix);
 #else
@@ -632,7 +654,8 @@ static void __CFLogCString(int32_t lev, const char *message, size_t length, char
         asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%llu] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), getpid(), tid);
     asprintf(&thread, "%x", pthread_mach_thread_np(pthread_self()));
 #elif DEPLOYMENT_TARGET_WINDOWS
-    bannerLen = asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%x] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), 0, (unsigned int)GetCurrentThreadId()); // HACKAHCK: desktop API getpid()
+    // WINOBJC: use GetCurrentProcessId() instead of getpid() for Windows
+    bannerLen = asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%x] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), GetCurrentProcessId(), (unsigned int)GetCurrentThreadId());
     asprintf(&thread, "%x", (unsigned int)GetCurrentThreadId());
 #else
     bannerLen = asprintf(&banner, "%04d-%02d-%02d %02d:%02d:%02d.%03d %s[%d:%x] ", year, month, day, hour, minute, second, ms, *_CFGetProgname(), getpid(), (unsigned int)pthread_self());
@@ -641,8 +664,7 @@ static void __CFLogCString(int32_t lev, const char *message, size_t length, char
     asprintf(&time, "%04d-%02d-%02d %02d:%02d:%02d.%03d", year, month, day, hour, minute, second, ms);
 
     }
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS
-    /*
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED // WINOBJC: no asl. Instead log with WinObjC log methods. // || DEPLOYMENT_TARGET_WINDOWS
     uid_t euid;
     __CFGetUGIDs(&euid, NULL);
     asprintf(&uid, "%d", euid);
@@ -657,8 +679,6 @@ static void __CFLogCString(int32_t lev, const char *message, size_t length, char
     asl_send(asl, msg);
     asl_free(msg);
     asl_close(asl);
-    */
-    // HACKHACK: no asl. Not even sure what this is supposed to be doing
 #endif
 #endif // DEPLOYMENT_TARGET
 
@@ -692,6 +712,21 @@ static void __CFLogCString(int32_t lev, const char *message, size_t length, char
     fprintf_s(stderr, "%s\n", buf);
     // This Win32 API call only prints when a debugger is active
     // OutputDebugStringA(buf);
+    // WINOBJC: use WinObjC Logging
+
+    // First get the converted length
+    int convertedLength = ::MultiByteToWideChar(CP_UTF8, 0, buf, bufLen, nullptr, 0);
+    if (convertedLength > 0)
+    {
+        // Allocate a string to receive the conversion
+        std::wstring result(convertedLength, '\0');
+
+        // Perform the conversion, writing directly into the std::wstring buffer
+        convertedLength = ::MultiByteToWideChar(CP_UTF8, 0, buf, bufLen, &result[0], length);
+        TraceInfo(L"CFLog", result.c_str());
+    }
+
+    
         free(buf);
 #else
         size_t bufLen = bannerLen + length + 1;
@@ -731,8 +766,7 @@ CF_EXPORT void _CFLogvEx2(CFLogFunc logit, CFStringRef (*copyDescFunc)(void *, c
     Boolean converted = CFStringGetCString(str, buf, blen, kCFStringEncodingUTF8);
     size_t len = strlen(buf);
     // silently ignore 0-length or really large messages, and levels outside the valid range
-    if (converted && !(len <= 0 || (1 << 24) < len) && true) { // !(lev < ASL_LEVEL_EMERG || ASL_LEVEL_DEBUG < lev)) {
-        // HACKHACK: assume levels are ok since there is no asl.
+    if (converted && !(len <= 0 || (1 << 24) < len) && !(lev < ASL_LEVEL_EMERG || ASL_LEVEL_DEBUG < lev)) {
         (logit ? logit : __CFLogCString)(lev, buf, len, 1);
     }
     }

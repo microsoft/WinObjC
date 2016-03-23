@@ -60,18 +60,17 @@ CF_EXPORT void _CFRunLoopSetCurrent(CFRunLoopRef rl);
 #endif
 
 #if (TARGET_OS_MAC && !(TARGET_OS_EMBEDDED || TARGET_OS_IPHONE || TARGET_OS_LINUX)) || (TARGET_OS_EMBEDDED || TARGET_OS_IPHONE)
-// HACKHACK: no private runloop support 
-/*
+
+
 CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
 CF_EXPORT SInt32 CFRunLoopRunSpecific(CFRunLoopRef rl, CFStringRef modeName, CFTimeInterval seconds, Boolean returnAfterSourceHandled);
 
 
 CF_EXPORT void _CFRunLoopStopMode(CFRunLoopRef rl, CFStringRef modeName);
 
+// WINOBJC: no support for MachPort
 CF_EXPORT CFIndex CFMachPortGetQueuedMessageCount(CFMachPortRef mp);
 
-CF_EXPORT CFPropertyListRef _CFURLCopyPropertyListRepresentation(CFURLRef url);
-*/
 #endif
 CF_EXPORT CFPropertyListRef _CFURLCopyPropertyListRepresentation(CFURLRef url);
 CF_EXPORT CFURLRef _CFURLCreateFromPropertyListRepresentation(CFAllocatorRef alloc, CFPropertyListRef pListRepresentation);
@@ -617,14 +616,14 @@ CF_EXPORT CFPropertyListRef _CFBundleCreateFilteredLocalizedInfoPlist(CFBundleRe
 #endif
 
 #if TARGET_OS_WIN32
-// HACKHACK: no notifiation center support // #include <CoreFoundation/CFNotificationCenter.h>
+#include <CoreFoundation/CFNotificationCenter.h>
 
 CF_EXPORT CFStringRef _CFGetWindowsAppleAppDataDirectory(void);
 CF_EXPORT CFArrayRef _CFGetWindowsBinaryDirectories(void);
 CF_EXPORT CFStringRef _CFGetWindowsAppleSystemLibraryDirectory(void);
 
 // If your Windows application does not use a CFRunLoop on the main thread (perhaps because it is reserved for handling UI events via Windows API), then call this function to make distributed notifications arrive using a different run loop.
-// HACKHACK: no notifiation center support // CF_EXPORT void _CFNotificationCenterSetRunLoop(CFNotificationCenterRef nc, CFRunLoopRef rl);
+// WINOBJC: no notifiation center support // CF_EXPORT void _CFNotificationCenterSetRunLoop(CFNotificationCenterRef nc, CFRunLoopRef rl);
 
 CF_EXPORT uint32_t /*DWORD*/ _CFRunLoopGetWindowsMessageQueueMask(CFRunLoopRef rl, CFStringRef modeName);
 CF_EXPORT void _CFRunLoopSetWindowsMessageQueueMask(CFRunLoopRef rl, uint32_t /*DWORD*/ mask, CFStringRef modeName);
