@@ -278,7 +278,7 @@ struct NSOperationPriv;
 */
 - (void)waitUntilFinished {
     pthread_mutex_lock(&priv->finishLock);
-    if (![self isFinished]) {
+    while (![self isFinished]) {
         pthread_cond_wait(&priv->finishCondition, &priv->finishLock);
     }
     pthread_mutex_unlock(&priv->finishLock);
