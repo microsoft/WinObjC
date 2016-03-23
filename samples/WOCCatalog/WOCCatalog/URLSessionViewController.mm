@@ -30,7 +30,7 @@
 
     NSURLSessionTask* _lastTask;
     NSData* _lastResumeData;
-    UITableView* tableView;
+    UITableView* _tableView;
     NSMutableArray* _tasks;
     NSOperationQueue* _delegateQueue;
 
@@ -122,11 +122,10 @@
     [legacyDownloadButton addTarget:self action:@selector(legacyDownloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:legacyDownloadButton];
 
-
-    tableView = [[UITableView alloc] initWithFrame:CGRectZero];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [self.view addSubview:tableView];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero];
+    _tableView.dataSource = self;
+    _tableView.delegate = self;
+    [self.view addSubview:_tableView];
 
     _delegateOutputTextView = [[UITextView alloc] initWithFrame:CGRectZero];
     _delegateOutputTextView.editable = NO;
@@ -142,23 +141,23 @@
     CGFloat contentOrigin = BUTTON_ROW_HEIGHT + 4 + URL_BAR_HEIGHT + 4;
     _delegateOutputTextView.frame =
         (CGRect){ 0, floorf(bounds.size.height - .25f * bounds.size.height), bounds.size.width, floorf(.25f * bounds.size.height) };
-    tableView.frame = (CGRect){ 0,
-                                contentOrigin,
-                                bounds.size.width,
-                                bounds.size.height - (contentOrigin + _delegateOutputTextView.frame.size.height + 4) };
+    _tableView.frame = (CGRect){ 0,
+                                 contentOrigin,
+                                 bounds.size.width,
+                                 bounds.size.height - (contentOrigin + _delegateOutputTextView.frame.size.height + 4) };
 }
 
 - (void)_reloadData {
     dispatch_async(dispatch_get_main_queue(),
                    ^{
-                       [tableView reloadData];
+                       [_tableView reloadData];
                    });
 }
 - (void)_redrawCellForTask:(NSURLSessionTask*)task {
     dispatch_async(dispatch_get_main_queue(),
                    ^{
                        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:[_tasks indexOfObject:task] inSection:0];
-                       URLDownloadCell* downloadCell = [tableView cellForRowAtIndexPath:indexPath];
+                       URLDownloadCell* downloadCell = (URLDownloadCell*)[_tableView cellForRowAtIndexPath:indexPath];
                        [downloadCell updateDisplay];
                    });
 }
@@ -167,7 +166,7 @@
     dispatch_async(dispatch_get_main_queue(),
                    ^{
                        NSIndexPath* indexPath = [NSIndexPath indexPathForRow:[_tasks indexOfObject:task] inSection:0];
-                       URLDownloadCell* downloadCell = [tableView cellForRowAtIndexPath:indexPath];
+                       URLDownloadCell* downloadCell = (URLDownloadCell*)[_tableView cellForRowAtIndexPath:indexPath];
                        [downloadCell updateProgress];
                    });
 }
@@ -420,7 +419,7 @@ expectedTotalBytes:(int64_t)expectedTotalBytes {
 
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     NSURLSessionTask* task = [_tasks objectAtIndex:indexPath.row];
-    URLDownloadCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DownloadCell"];
+    URLDownloadCell* cell = (URLDownloadCell*)[tableView dequeueReusableCellWithIdentifier:@"DownloadCell"];
     if (nil == cell) {
         cell = [[URLDownloadCell alloc] initWithReuseIdentifier:@"DownloadCell"];
     }

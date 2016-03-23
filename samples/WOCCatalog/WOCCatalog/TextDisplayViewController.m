@@ -333,6 +333,14 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     return [rows objectAtIndex:indexPath.row];
 }
 
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView*)pickerView {
+    return 0;
+}
+
+- (NSInteger)pickerView:(UIPickerView*)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return 0;
+}
+
 @end
 
 @implementation TextDrawer {
@@ -398,9 +406,9 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     UIFont* font = [UIFont fontWithDescriptor:descriptor size:24];
     NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
     NSRange range = NSMakeRange(0, 11);
-    [string addAttribute:kCTFontAttributeName value:font range:range];
+    [string addAttribute:(NSString*)kCTFontAttributeName value:font range:range];
     range = NSMakeRange(5, 6);
-    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor redColor] range:range];
+    [string addAttribute:(NSString*)kCTForegroundColorAttributeName value:[UIColor redColor] range:range];
     CFAttributedStringRef str = (__bridge CFAttributedStringRef)string;
     CTTypesetterRef ts = CTTypesetterCreateWithAttributedString(str);
     CFRange range2 = { 0, 11 };
@@ -496,8 +504,8 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 - (NSAttributedString*)getAttributedStringForFont:(UIFont*)font {
     NSRange wholeRange = NSMakeRange(0, 11);
     NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
-    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
-    [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
+    [string addAttribute:(NSString*)kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:(NSString*)kCTFontAttributeName value:font range:wholeRange];
 
     return string;
 }
@@ -532,8 +540,8 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 
     NSRange wholeRange = NSMakeRange(0, 11);
     NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
-    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
-    [string addAttribute:kCTFontAttributeName value:font range:wholeRange];
+    [string addAttribute:(NSString*)kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:(NSString*)kCTFontAttributeName value:font range:wholeRange];
 
     return string;
 }
@@ -559,8 +567,8 @@ CTLineRef getTruncationToken() {
     CTFontRef fontref = CTFontCreateCopyWithSymbolicTraits((__bridge CTFontRef)font, fontsize, NULL, kCTFontTraitBold, kCTFontTraitBold);
     NSRange wholeRange = NSMakeRange(0, 11);
     NSMutableAttributedString* string = [[NSMutableAttributedString alloc] initWithString:@"hello world"];
-    [string addAttribute:kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
-    [string addAttribute:kCTFontAttributeName value:(__bridge UIFont*)fontref range:wholeRange];
+    [string addAttribute:(NSString*)kCTForegroundColorAttributeName value:[UIColor blueColor] range:wholeRange];
+    [string addAttribute:(NSString*)kCTFontAttributeName value:(__bridge UIFont*)fontref range:wholeRange];
 
     return string;
 }

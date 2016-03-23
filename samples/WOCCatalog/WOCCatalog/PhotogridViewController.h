@@ -20,7 +20,7 @@
 
 @property (nonatomic, strong) UIImageView* imageView;
 
--(void)setImage:(UIImage *)image;
+- (void)setImage:(UIImage*)image;
 
 @end
 
@@ -29,7 +29,4 @@
     NSArray* images;
 }
 
-- (id) initWithPlaceName: (NSString*)placeName;
-
 @end
-
