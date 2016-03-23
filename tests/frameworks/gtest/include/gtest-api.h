@@ -16,6 +16,11 @@
 
 #pragma once
 
+#ifdef __OBJC__
+// For Objective-C, we want control over the test fixture's setup/teardown.
+#define GTEST_DONT_DEFINE_TEST 1
+#endif
+
 // Ignore SCL warnings in gtest
 #if defined __clang__
 #pragma clang diagnostic push
@@ -28,7 +33,14 @@
 
 #ifdef __OBJC__
 #include <objc/objc.h>
+#include <Foundation/NSObject.h>
+#include <Foundation/NSAutoreleasePool.h>
 #include <Foundation/NSString.h>
+
+// We are free to redefine TEST() since we set GTEST_DONT_DEFINE_TEST earlier.
+#define TEST(test_case_name, test_name)\
+  GTEST_TEST_(test_case_name, test_name, \
+              ::woc::testing::ObjCTest, ::testing::internal::GetTestTypeId())
 #endif
 
 namespace GTestLogPrivate
@@ -92,6 +104,7 @@ inline std::ostream& operator<<(std::ostream& os, const id& object) {
 
 namespace woc {
 namespace testing {
+
 inline ::testing::AssertionResult CompareObjectsEqual(
     const char* expectedExpression,
     const char* actualExpression,
@@ -115,6 +128,20 @@ inline ::testing::AssertionResult CompareObjectsNotEqual(
 
     return ::testing::internal::CmpHelperOpFailure(expectedExpression, actualExpression, expected, actual, "!=");
 }
+
+class ObjCTest : public ::testing::Test {
+protected:
+    id _autoreleasePool;
+    virtual void SetUp() {
+        _autoreleasePool = [[NSAutoreleasePool alloc] init];
+    }
+    virtual void TearDown() {
+#if !__has_feature(objc_arc)
+        [_autoreleasePool release];
+#endif
+        _autoreleasePool = nil;
+    }
+};
 }
 }
 
