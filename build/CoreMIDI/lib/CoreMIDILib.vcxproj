@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -46,7 +46,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -55,7 +55,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -65,7 +65,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -74,7 +74,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREMIDI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

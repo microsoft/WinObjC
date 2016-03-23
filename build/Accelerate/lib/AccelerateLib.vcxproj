@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -176,7 +176,6 @@
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(StarboardBasePath)\deps\3rdparty;%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>EIGEN_MPL2_ONLY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
@@ -184,7 +183,7 @@
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DACCELERATE_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -193,14 +192,13 @@
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(StarboardBasePath)\deps\3rdparty;%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>EIGEN_MPL2_ONLY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DACCELERATE_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -209,14 +207,13 @@
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(StarboardBasePath)\deps\3rdparty;%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>EIGEN_MPL2_ONLY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DACCELERATE_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -225,14 +222,13 @@
       <AdditionalIncludeDirectories>$(StarboardBasePath)\include;$(StarboardBasePath)\deps\3rdparty;%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>EIGEN_MPL2_ONLY;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
-      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\deps\prebuilt\$(TargetOSAndVersion)\$(PlatformTarget);$(StarboardBasePath)\deps;$(AdditionalLibraryDirectories);$(StarboardLibDirs)</AdditionalLibraryDirectories>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DACCELERATE_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DACCELERATE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

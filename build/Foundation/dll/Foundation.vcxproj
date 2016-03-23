@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -56,10 +56,11 @@
       <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -72,10 +73,11 @@
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
@@ -88,10 +90,11 @@
       <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -104,10 +107,11 @@
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>

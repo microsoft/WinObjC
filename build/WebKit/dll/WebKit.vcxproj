@@ -59,7 +59,7 @@
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +73,7 @@
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -87,7 +87,7 @@
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -101,7 +101,7 @@
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

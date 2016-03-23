@@ -45,5 +45,6 @@ struct CAMediaTimingProperties {
 - (BOOL)wasRemoved;
 - (BOOL)wasAborted;
 - (DisplayAnimation*)_createAnimation:(CALayer*)layer forKey:(id)forKey;
+- (void)animationDidStart;
 - (id)animationHasStarted;
 @end

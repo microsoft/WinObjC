@@ -57,7 +57,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -67,7 +67,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -78,7 +78,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -88,7 +88,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\3rdparty\libdispatch;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREBLUETOOTH_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>

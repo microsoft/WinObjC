@@ -42,7 +42,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DAVKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DAVKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -52,7 +52,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DAVKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DAVKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -63,7 +63,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DAVKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DAVKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -73,7 +73,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DAVKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DAVKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>

@@ -42,7 +42,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -53,7 +53,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
       <OptimizationLevel>Full</OptimizationLevel>
@@ -65,7 +65,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -76,7 +76,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <ClangCompile>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DTWITTER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>

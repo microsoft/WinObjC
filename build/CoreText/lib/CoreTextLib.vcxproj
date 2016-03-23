@@ -55,7 +55,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;</IncludePaths>
-      <AdditionalOptions>"-DCORETEXT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCORETEXT_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,7 +64,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;</IncludePaths>
-      <AdditionalOptions>"-DCORETEXT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCORETEXT_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -74,7 +74,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;</IncludePaths>
-      <AdditionalOptions>"-DCORETEXT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCORETEXT_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -83,7 +83,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;</IncludePaths>
-      <AdditionalOptions>"-DCORETEXT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCORETEXT_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

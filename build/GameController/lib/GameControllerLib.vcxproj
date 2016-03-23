@@ -51,7 +51,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -60,7 +60,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -70,7 +70,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -79,7 +79,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DGAMECONTROLLER_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

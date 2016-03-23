@@ -161,8 +161,11 @@
 #define __const     const       /* define reserved names to standard */
 #define __signed    signed
 
+// __volatile conflicts with definition in Windows headers
+#ifndef _WIN32
 #ifndef __volatile
 #define __volatile  volatile
+#endif
 #endif
 
 #if defined(__cplusplus)

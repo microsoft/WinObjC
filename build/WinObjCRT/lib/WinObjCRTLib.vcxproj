@@ -31,6 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
+    <LinkWithIwNew>false</LinkWithIwNew>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />
@@ -39,46 +40,46 @@
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINOBJCRT_IMPEXP= %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WINOBJCRT_IMPEXP= </PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINOBJCRT_IMPEXP=  %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
-      <PreprocessorDefinitions>WINOBJCRT_IMPEXP= </PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINOBJCRT_IMPEXP=  %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WINOBJCRT_IMPEXP= </PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WINOBJCRT_IMPEXP=  %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\include;$(StarboardBasePath)\..\wp\deps\icu\include;$(StarboardBasePath)\..\wp\deps\freetype2\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
-      <PreprocessorDefinitions>WINOBJCRT_IMPEXP= </PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

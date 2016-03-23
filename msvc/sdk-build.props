@@ -66,13 +66,15 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4087 /ignore:4001 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
 
       <!-- Ensure we pick up operator new from our project rather than the C runtime -->
       <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
@@ -81,7 +83,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
-      <AdditionalOptions>-Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror -Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
 

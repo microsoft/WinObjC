@@ -42,6 +42,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -52,6 +53,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <OptimizationLevel>Full</OptimizationLevel>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -61,6 +63,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -71,6 +74,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <OptimizationLevel>Full</OptimizationLevel>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

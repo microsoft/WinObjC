@@ -49,7 +49,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -58,7 +58,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -68,7 +68,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -77,7 +77,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DSECURITY_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
