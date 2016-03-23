@@ -28,7 +28,9 @@
 #include "NSIndexSetInternal.h"
 #include "Etc.h"
 
-@implementation NSMutableIndexSet
+@implementation NSMutableIndexSet {
+    std::vector<NSRange> _ranges;
+}
 
 /**
  @Status Interoperable
@@ -45,8 +47,8 @@
     // index (all removed indices should be contiguous and by definition everything non overlapping was not removed.)
 
     NSRange removalRange = { 0, 0 }; // The set of ranges to remove during cleanup. Start with removing at index 0 with a length of 0.
-    for (unsigned int i = 0; i < (raCount(self)); i++) {
-        NSRange cur = raItemAtIndex(self, i);
+    for (unsigned int i = 0; i < [self _count]; i++) {
+        NSRange cur = [self _itemAtIndex:i];
 
         // There are six ways two ranges can be arranged relative to each other.
         //                   |================|
@@ -79,86 +81,78 @@
     // Since all ranges to be removed are contiguous, simply shift the ranges beyond the removed chunk
     // down into vacated spots.
     if (removalRange.length > 0) {
-        memmove(&_ranges[removalRange.location], // dest
-                &_ranges[removalRange.location + removalRange.length], // src
-                sizeof(NSRange) * ((_length) - (removalRange.location + removalRange.length))); // numbytes
-        _length -= removalRange.length;
+        [self _removeRanges:removalRange];
     }
 
     // Now insert the candidate range
-    raInsertItem(self, candidateRange, removalRange.location);
+    [self _insertItem:candidateRange AtIndex:removalRange.location];
 }
 
 /**
  @Status Interoperable
 */
-- (id)removeIndexesInRange:(NSRange)range {
-    unsigned pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, range.location);
+- (void)removeIndexesInRange:(NSRange)range {
+    unsigned pos = [self _positionOfRangeLessThanOrEqualToLocation:range.location];
 
     if (pos == NSNotFound) {
         pos = 0;
     }
 
-    while (range.length > 0 && pos < _length) {
-        if (_ranges[pos].location >= NSMaxRange(range)) {
+    while (range.length > 0 && pos < [self _count]) {
+        NSRange& rangeAtPos = [self _itemReferenceAtIndex:pos];
+        unsigned max = NSMaxRange(rangeAtPos);
+        if (rangeAtPos.location >= NSMaxRange(range)) {
             break;
         }
 
-        if (NSMaxRange(_ranges[pos]) == NSMaxRange(range)) {
-            if (_ranges[pos].location == range.location) {
-                removeRangeAtPosition(_ranges, _length, pos);
-                _length--;
+        if (max == NSMaxRange(range)) {
+            if (rangeAtPos.location == range.location) {
+                [self _removeItemAtIndex:pos];
             } else {
-                _ranges[pos].length = range.location - _ranges[pos].location;
+                rangeAtPos.length = range.location - rangeAtPos.location;
             }
             break;
         }
 
-        if (NSMaxRange(_ranges[pos]) > NSMaxRange(range)) {
-            if (_ranges[pos].location == range.location) {
-                unsigned max = NSMaxRange(_ranges[pos]);
-
-                _ranges[pos].location = NSMaxRange(range);
-                _ranges[pos].length = max - _ranges[pos].location;
+        if (max > NSMaxRange(range)) {
+            if (rangeAtPos.location == range.location) {
+                rangeAtPos.location = NSMaxRange(range);
+                rangeAtPos.length = max - rangeAtPos.location;
             } else {
                 NSRange iceberg;
 
                 iceberg.location = NSMaxRange(range);
-                iceberg.length = NSMaxRange(_ranges[pos]) - iceberg.location;
+                iceberg.length = max - iceberg.location;
 
-                _ranges[pos].length = range.location - _ranges[pos].location;
+                rangeAtPos.length = range.location - rangeAtPos.location;
 
-                raInsertItem(self, iceberg, pos + 1);
+                [self _insertItem:iceberg AtIndex:pos + 1];
             }
             break;
         }
 
-        if (range.location >= NSMaxRange(_ranges[pos])) {
+        if (range.location >= max) {
             pos++;
         } else {
             unsigned max = NSMaxRange(range);
-            NSRange temp = _ranges[pos];
+            NSRange temp = rangeAtPos;
 
-            if (_ranges[pos].location >= range.location) {
-                removeRangeAtPosition(_ranges, _length, pos);
-                _length--;
+            if (rangeAtPos.location >= range.location) {
+                [self _removeItemAtIndex:pos];
             } else {
-                _ranges[pos].length = range.location - _ranges[pos].location;
+                rangeAtPos.length = range.location - rangeAtPos.location;
                 pos++;
             }
             range.location = NSMaxRange(temp);
             range.length = max - range.location;
         }
     }
-
-    return self;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)addIndex:(NSUInteger)index {
-    UNIMPLEMENTED();
     NSRange r;
 
     r.location = index;
@@ -168,12 +162,11 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)addIndexes:(NSIndexSet*)other {
-    UNIMPLEMENTED();
-    for (unsigned i = 0; i < other->_length; ++i) {
-        [self addIndexesInRange:other->_ranges[i]];
+    for (unsigned i = 0; i < [other _count]; ++i) {
+        [self addIndexesInRange:[other _itemAtIndex:i]];
     }
 }
 
@@ -193,94 +186,92 @@
  @Status Interoperable
 */
 - (void)removeIndexes:(NSIndexSet*)other {
-    for (unsigned i = 0; i < other->_length; i++) {
-        [self removeIndexesInRange:other->_ranges[i]];
+    for (unsigned i = 0; i < [other _count]; i++) {
+        [self removeIndexesInRange:[other _itemAtIndex:i]];
     }
 }
 
 /**
  @Status Interoperable
 */
-- (id)shiftIndexesStartingAtIndex:(NSUInteger)index by:(NSInteger)delta {
+- (void)shiftIndexesStartingAtIndex:(NSUInteger)index by:(NSInteger)delta {
     if (delta < 0) {
         delta = -delta;
-        NSUInteger pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, index - delta);
+        NSUInteger pos = [self _positionOfRangeLessThanOrEqualToLocation:index - delta];
 
         if (pos == NSNotFound) {
-            return self; // raise?
+            return;
         }
 
-        NSUInteger count = _length;
+        NSUInteger count = [self _count];
 
         while (--count >= pos) {
-            if (_ranges[count].location >= index) { // if above index just move it down
-                _ranges[count].location -= (unsigned)delta;
-            } else if (NSMaxRange(_ranges[count]) <= index - (unsigned)delta) { // below area, ignore
+            NSRange& rangeAtCount = [self _itemReferenceAtIndex:count];
+
+            if (rangeAtCount.location >= index) { // if above index just move it down
+                rangeAtCount.location -= (unsigned)delta;
+            } else if (NSMaxRange(rangeAtCount) <= index - (unsigned)delta) { // below area, ignore
                 ;
-            } else if (_ranges[count].length > (unsigned)delta) { // if below, shorten
-                if (NSMaxRange(_ranges[count]) - index >= (unsigned)delta) { // if deletion entirely inside
-                    _ranges[count].length -= delta;
+            } else if (rangeAtCount.location < index - (unsigned)delta) { // if below, shorten
+                if (NSMaxRange(rangeAtCount) >= (unsigned)delta + index) { // if deletion entirely inside
+                    rangeAtCount.length -= delta;
                 } else {
-                    _ranges[count].length = NSMaxRange(_ranges[count]) - (index - delta);
+                    rangeAtCount.length = NSMaxRange(rangeAtCount) - (index - delta);
                 }
             } else { // if below and shorter than the delta, remove
-                _length--;
-                for (unsigned i = count; i < _length; i++) {
-                    _ranges[i] = _ranges[i + 1];
-                }
+                [self _removeItemAtIndex:count];
             }
         }
     } else {
-        NSInteger pos = positionOfRangeLessThanOrEqualToLocation(_ranges, _length, index);
+        NSInteger pos = [self _positionOfRangeLessThanOrEqualToLocation:index];
 
         if (pos == NSNotFound) {
-            return self; // raise?
+            return; // raise?
         }
 
+        NSRange& rangeAtPos = [self _itemReferenceAtIndex:pos];
         // if index is inside a range, split it
-        if (_ranges[pos].location < index && index < NSMaxRange(_ranges[pos])) {
-            NSRange below = _ranges[pos];
+        if (rangeAtPos.location < index && index < NSMaxRange(rangeAtPos)) {
+            NSRange below = rangeAtPos;
 
             below.length = index - below.location;
-            _ranges[pos].length = NSMaxRange(_ranges[pos]) - index;
-            _ranges[pos].location = index;
+            rangeAtPos.length = NSMaxRange(rangeAtPos) - index;
+            rangeAtPos.location = index;
 
-            raInsertItem(self, below, pos);
+            [self _insertItem:below AtIndex:pos];
         }
 
         // move all ranges at or above index by delta
-        NSInteger count = _length;
+        NSInteger count = [self _count];
 
         while (--count >= pos) {
-            if (_ranges[count].location >= index) {
-                _ranges[count].location += delta;
+            NSRange& rangeAtCount = [self _itemReferenceAtIndex:count];
+            if (rangeAtCount.location >= index) {
+                rangeAtCount.location += delta;
             }
         }
     }
-
-    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (id)removeAllIndexes {
-    _length = 0;
-    return self;
+- (void)removeAllIndexes {
+    [self _removeRanges:{ 0, [self _count] }];
 }
 
 /**
  @Status Interoperable
 */
-+ (id)indexSet {
++ (instancetype)indexSet {
     return [[self new] autorelease];
 }
 
 - (id)_removeFromArray:(id)array {
     int i;
 
-    for (i = raCount(self) - 1; i >= 0; i--) {
-        NSRange rself = raItemAtIndex(self, i);
+    for (i = [self _count] - 1; i >= 0; i--) {
+        NSRange rself = [self _itemAtIndex:i];
 
         for (int k = rself.location + rself.length - 1; k >= 0 && k >= int64_t(rself.location); k--) {
             [array removeObjectAtIndex:k];
@@ -292,8 +283,74 @@
 /**
  @Status Interoperable
 */
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     return [[NSIndexSet allocWithZone:zone] initWithIndexSet:self];
+}
+
+- (unsigned)_positionOfRangeGreaterThanOrEqualToLocation:(NSUInteger)location {
+    unsigned length = self->_ranges.size();
+    for (unsigned i = 0; i < length; i++) {
+        if (location < NSMaxRange(self->_ranges[i])) {
+            return i;
+        }
+    }
+
+    return NSNotFound;
+}
+
+- (unsigned)_positionOfRangeLessThanOrEqualToLocation:(NSUInteger)location {
+    unsigned i = self->_ranges.size();
+    while (i-- >= 1) {
+        if (self->_ranges[i].location <= location) {
+            return i;
+        }
+    }
+
+    return NSNotFound;
+}
+
+- (unsigned)_count {
+    return self->_ranges.size();
+}
+
+- (NSRange)_itemAtIndex:(unsigned)index {
+    return self->_ranges[index];
+}
+
+- (NSRange&)_itemReferenceAtIndex:(unsigned)index {
+    return self->_ranges[index];
+}
+
+- (void)_insertItem:(NSRange)range AtIndex:(unsigned)position {
+    // range exceeds NSNotFound
+    if (NSNotFound - range.location < range.length) {
+        THROW_NS_HR(E_BOUNDS);
+    }
+
+    // insert index exceeds range vector size
+    if (position > self->_ranges.size()) {
+        THROW_NS_HR(E_BOUNDS);
+    }
+
+    self->_ranges.insert(self->_ranges.begin() + position, range);
+}
+
+- (void)_addItem:(NSRange)range {
+    [self _insertItem:range AtIndex:self->_ranges.size()];
+}
+
+- (void)_removeItemAtIndex:(unsigned)position {
+    // remove index exceeds range vector size
+    if (position >= self->_ranges.size()) {
+        THROW_NS_HR(E_BOUNDS);
+    }
+
+    self->_ranges.erase(self->_ranges.begin() + position);
+}
+
+- (void)_removeRanges:(NSRange)ranges {
+    // begin removing from _ranges at ranges.location, remove through ranges.length
+    self->_ranges.erase(self->_ranges.begin() + ranges.location, self->_ranges.begin() + ranges.location + ranges.length);
 }
 
 @end

@@ -34,71 +34,50 @@
 /**
  @Status Interoperable
 */
-+ (id)indexSetWithIndexesInRange:(NSRange)range {
-    id ret = [NSMutableIndexSet new];
-    [ret addIndexesInRange:range];
-
-    return [ret autorelease];
++ (instancetype)indexSet {
+    return [[NSIndexSet new] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (id)indexSet {
-    id ret = [NSIndexSet new];
-
-    return [ret autorelease];
++ (instancetype)indexSetWithIndex:(NSUInteger)index {
+    return [[[self alloc] initWithIndex:index] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (id)indexSetWithIndex:(NSUInteger)index {
-    NSRange range;
-    range.location = index;
-    range.length = 1;
-
-    id ret = [NSMutableIndexSet new];
-    [ret addIndexesInRange:range];
-
-    return [ret autorelease];
++ (instancetype)indexSetWithIndexesInRange:(NSRange)range {
+    return [[[self alloc] initWithIndexesInRange:range] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (id)init {
-    return self;
+- (instancetype)initWithIndex:(NSUInteger)index {
+    return [self initWithIndexesInRange:{index, 1}];
 }
 
 /**
  @Status Interoperable
-*/
-- (id)initWithIndex:(unsigned)index {
-    NSRange range;
-
-    range.location = index;
-    range.length = 1;
-
-    raAddItem(self, range);
-    return self;
-}
-
-/**
- @Status Interoperable
- @Notes
 */
 - (instancetype)initWithIndexesInRange:(NSRange)indexRange {
-    raAddItem(self, indexRange);
+    if (self = [super init]) {
+        [(NSMutableIndexSet*)self _addItem:indexRange];
+    }
     return self;
 }
 
 /**
  @Status Interoperable
 */
-- (id)initWithIndexSet:(NSIndexSet*)other {
-    for (unsigned i = 0; i < other->_length; i++) {
-        raAddItem(self, other->_ranges[i]);
+- (instancetype)initWithIndexSet:(NSIndexSet*)other {
+    if (self = [super init]) {
+        unsigned numRanges = [(NSMutableIndexSet*)other _count];
+        for (unsigned i = 0; i < numRanges; i++) {
+            [(NSMutableIndexSet*)self _addItem:[(NSMutableIndexSet*)other _itemAtIndex:i]];
+        }
     }
 
     return self;
@@ -107,11 +86,85 @@
 /**
  @Status Interoperable
 */
-- (unsigned)count {
-    unsigned ret = 0;
+- (BOOL)containsIndex:(NSUInteger)anIndex {
+    unsigned rangePos = [(NSMutableIndexSet*)self _positionOfRangeGreaterThanOrEqualToLocation:anIndex];
 
-    for (unsigned i = 0; i < _length; i++) {
-        ret += _ranges[i].length;
+    if (rangePos == NSNotFound) {
+        return NO;
+    }
+
+    return [(NSMutableIndexSet*)self _itemAtIndex:rangePos].location <= anIndex;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)containsIndexes:(NSIndexSet*)other {
+    unsigned selfIndex = 0;
+    unsigned selfSize = [(NSMutableIndexSet*)self _count];
+    unsigned otherIndex = 0;
+    unsigned otherSize = [(NSMutableIndexSet*)other _count];
+
+    while (selfIndex < selfSize && otherIndex < otherSize) {
+        NSRange currSelf = [(NSMutableIndexSet*)self _itemAtIndex:selfIndex];
+        NSRange currOther = [(NSMutableIndexSet*)other _itemAtIndex:otherIndex];
+        if (NSEqualRanges(currOther, NSIntersectionRange(currSelf, currOther))) {
+            // current range from other a subset of current range from self
+            otherIndex++;
+        } else {
+            selfIndex++;
+        }
+    }
+
+    if (otherIndex == otherSize) {
+        return YES;
+    }
+
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)containsIndexesInRange:(NSRange)indexRange {
+    unsigned selfIndex = 0;
+    unsigned selfSize = [(NSMutableIndexSet*)self _count];
+
+    while (selfIndex < selfSize) {
+        NSRange currSelf = [(NSMutableIndexSet*)self _itemAtIndex:selfIndex];
+        if (NSEqualRanges(indexRange, NSIntersectionRange(currSelf, indexRange))) {
+            // indexRange a subset of current range from self
+            return YES;
+        }
+
+        selfIndex++;
+    }
+
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)intersectsIndexesInRange:(NSRange)range {
+    unsigned first = [(NSMutableIndexSet*)self _positionOfRangeGreaterThanOrEqualToLocation:range.location];
+
+    if (first == NSNotFound) {
+        return NO;
+    }
+
+    return ([(NSMutableIndexSet*)self _itemAtIndex:first].location < NSMaxRange(range)) ? YES : NO;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)count {
+    unsigned ret = 0;
+    unsigned numRanges = [(NSMutableIndexSet*)self _count];
+
+    for (unsigned i = 0; i < numRanges; i++) {
+        ret += [(NSMutableIndexSet*)self _itemAtIndex:i].length;
     }
     return ret;
 }
@@ -119,25 +172,24 @@
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    if (_ranges) {
-        IwFree(_ranges);
-    }
-    [super dealloc];
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    // Note: NSIndexSet is not intended to be subclassable
+    return NSAllocateObject((Class)[NSMutableIndexSet class], 0, zone);
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)indexGreaterThanIndex:(unsigned)anIndex {
-    unsigned rangePos = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, anIndex + 1);
+- (NSUInteger)indexGreaterThanIndex:(NSUInteger)anIndex {
+    unsigned rangePos = [(NSMutableIndexSet*)self _positionOfRangeGreaterThanOrEqualToLocation:anIndex + 1];
 
     if (rangePos == NSNotFound) {
         return NSNotFound;
     }
 
-    if (_ranges[rangePos].location > anIndex) {
-        return _ranges[rangePos].location;
+    NSUInteger locationAtRangePos = [(NSMutableIndexSet*)self _itemAtIndex:rangePos].location;
+    if (locationAtRangePos > anIndex) {
+        return locationAtRangePos;
     }
 
     return anIndex + 1;
@@ -146,11 +198,11 @@
 /**
  @Status Interoperable
 */
-- (unsigned)countOfIndexesInRange:(NSRange)range {
+- (NSUInteger)countOfIndexesInRange:(NSRange)range {
     unsigned ret = 0;
 
-    for (unsigned i = 0; i < raCount(self); i++) {
-        NSRange cur = raItemAtIndex(self, i);
+    for (unsigned i = 0; i < [(NSMutableIndexSet*)self _count]; i++) {
+        NSRange cur = [(NSMutableIndexSet*)self _itemAtIndex:i];
 
         if (cur.location > range.location + range.length) {
             break;
@@ -187,9 +239,9 @@
         group = dispatch_group_create();
     }
 
-    __block BOOL stop = FALSE;
-    for (unsigned long i = 0; i < raCount(self) && !stop; i++) {
-        NSRange cur = raItemAtIndex(self, i);
+    __block BOOL stop = NO;
+    for (unsigned long i = 0; i < [(NSMutableIndexSet*)self _count] && !stop; i++) {
+        NSRange cur = [(NSMutableIndexSet*)self _itemAtIndex:i];
 
         for (__block unsigned long j = cur.location; j < cur.location + cur.length && !stop; j++) {
             if (options & NSEnumerationConcurrent) {
@@ -220,86 +272,64 @@
 /**
  @Status Interoperable
 */
-- (BOOL)intersectsIndexesInRange:(NSRange)range {
-    unsigned first = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, range.location);
-
-    if (first == NSNotFound) {
-        return NO;
-    }
-
-    return (_ranges[first].location < NSMaxRange(range)) ? YES : NO;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)mutableCopyWithZone:(NSZone*)zone {
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableIndexSet allocWithZone:zone] initWithIndexSet:self];
 }
 
 /**
  @Status Interoperable
 */
-- (id)copyWithZone:(NSZone*)zone {
-    return [self retain];
+- (instancetype)copyWithZone:(NSZone*)zone {
+    // requires a deep copy because our implementation is mutable
+    return [self mutableCopyWithZone:zone];
 }
 
 /**
  @Status Interoperable
 */
-- (BOOL)containsIndex:(unsigned)anIndex {
-    unsigned rangePos = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, anIndex);
+- (NSUInteger)firstIndex {
+    if ([(NSMutableIndexSet*)self _count] == 0) {
+        return NSNotFound;
+    }
+    unsigned ret = [(NSMutableIndexSet*)self _itemAtIndex:0].location;
 
-    if (rangePos == NSNotFound) {
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)lastIndex {
+    if ([(NSMutableIndexSet*)self _count] == 0) {
+        return NSNotFound;
+    }
+
+    unsigned ret = NSMaxRange([(NSMutableIndexSet*)self _itemAtIndex:([(NSMutableIndexSet*)self _count] - 1)]) - 1;
+
+    return ret;
+}
+
+/**
+ @Status Caveat
+ @Notes Has known issues - does not detect equality in cases where the sets are logically equal but the ranges differ (VSO 6979799)
+*/
+- (BOOL)isEqualToIndexSet:(NSIndexSet*)otherSet {
+    // : NSIndexSet isEqualToIndexSet relies on invariants that aren't kept by the implementation
+    if (![otherSet isKindOfClass:[NSIndexSet class]]) {
         return NO;
     }
 
-    return _ranges[rangePos].location <= anIndex;
-}
+    NSUInteger count = otherSet ? [(NSMutableIndexSet*)otherSet _count] : 0;
 
-/**
- @Status Interoperable
-*/
-- (unsigned)firstIndex {
-    if (raCount(self) == 0) {
-        return NSNotFound;
-    }
-    unsigned ret = raItemAtIndex(self, 0).location;
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (unsigned)lastIndex {
-    if (raCount(self) == 0) {
-        return NSNotFound;
-    }
-    unsigned ret = NSMaxRange(raItemAtIndex(self, raCount(self) - 1)) - 1;
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isEqualToIndexSet:(NSIndexSet*)otherSet {
-    if (![otherSet isKindOfClass:[NSIndexSet class]]) {
-        return FALSE;
-    }
-
-    NSUInteger count = otherSet ? raCount(otherSet) : 0;
-
-    if (count != raCount(self)) {
+    if (count != [(NSMutableIndexSet*)self _count]) {
         return NO;
     }
     if (count > 0) {
         NSUInteger i;
 
         for (i = 0; i < count; i++) {
-            NSRange rself = raItemAtIndex(self, i);
-            NSRange rother = raItemAtIndex(otherSet, i);
+            NSRange rself = [(NSMutableIndexSet*)self _itemAtIndex:i];
+            NSRange rother = [(NSMutableIndexSet*)otherSet _itemAtIndex:i];
 
             if (rself.location != rother.location || rself.length != rother.length) {
                 return NO;
@@ -311,25 +341,6 @@
 
 /**
  @Status Stub
- @Notes
-*/
-- (BOOL)containsIndexes:(NSIndexSet*)indexSet {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (BOOL)containsIndexesInRange:(NSRange)indexRange {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
 */
 - (NSUInteger)indexPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
     UNIMPLEMENTED();
@@ -338,7 +349,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSIndexSet*)indexesPassingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
     UNIMPLEMENTED();
@@ -347,7 +357,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)indexWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
     UNIMPLEMENTED();
@@ -356,7 +365,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSIndexSet*)indexesWithOptions:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
     UNIMPLEMENTED();
@@ -365,7 +373,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)indexInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
     UNIMPLEMENTED();
@@ -374,7 +381,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSIndexSet*)indexesInRange:(NSRange)range options:(NSEnumerationOptions)opts passingTest:(BOOL (^)(NSUInteger, BOOL*))predicate {
     UNIMPLEMENTED();
@@ -383,7 +389,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateRangesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block {
     UNIMPLEMENTED();
@@ -391,7 +396,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateRangesUsingBlock:(void (^)(NSRange, BOOL*))block {
     UNIMPLEMENTED();
@@ -399,7 +403,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateRangesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSRange, BOOL*))block {
     UNIMPLEMENTED();
@@ -407,7 +410,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)indexLessThanIndex:(NSUInteger)index {
     UNIMPLEMENTED();
@@ -416,7 +418,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)indexLessThanOrEqualToIndex:(NSUInteger)index {
     UNIMPLEMENTED();
@@ -425,7 +426,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)indexGreaterThanOrEqualToIndex:(NSUInteger)index {
     UNIMPLEMENTED();
@@ -434,7 +434,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange {
     UNIMPLEMENTED();
@@ -443,7 +442,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block {
     UNIMPLEMENTED();
@@ -451,7 +449,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 + (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();
@@ -460,7 +457,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (id)initWithCoder:(NSCoder*)decoder {
     UNIMPLEMENTED();
@@ -469,7 +465,6 @@
 
 /**
  @Status Stub
- @Notes
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     UNIMPLEMENTED();

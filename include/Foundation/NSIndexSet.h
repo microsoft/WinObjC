@@ -21,22 +21,17 @@
 #import <Foundation/NSRange.h>
 
 FOUNDATION_EXPORT_CLASS
-@interface NSIndexSet : NSObject <NSCopying, NSMutableCopying, NSSecureCoding> {
-@public
-    NSRange* _ranges;
-    unsigned _length, _maxLength;
-}
+@interface NSIndexSet : NSObject <NSCopying, NSMutableCopying, NSSecureCoding>
 
 + (instancetype)indexSet;
 + (instancetype)indexSetWithIndex:(NSUInteger)index;
 + (instancetype)indexSetWithIndexesInRange:(NSRange)indexRange;
-- (instancetype)init;
 - (instancetype)initWithIndex:(NSUInteger)index;
 - (instancetype)initWithIndexesInRange:(NSRange)indexRange;
 - (instancetype)initWithIndexSet:(NSIndexSet*)indexSet;
 - (BOOL)containsIndex:(NSUInteger)index;
-- (BOOL)containsIndexes:(NSIndexSet*)indexSet STUB_METHOD;
-- (BOOL)containsIndexesInRange:(NSRange)indexRange STUB_METHOD;
+- (BOOL)containsIndexes:(NSIndexSet*)indexSet;
+- (BOOL)containsIndexesInRange:(NSRange)indexRange;
 - (BOOL)intersectsIndexesInRange:(NSRange)indexRange;
 @property (readonly) NSUInteger count;
 - (NSUInteger)countOfIndexesInRange:(NSRange)indexRange;

@@ -15,80 +15,18 @@
 //******************************************************************************
 #pragma once
 
-static inline unsigned positionOfRangeGreaterThanOrEqualToLocation(NSRange* ranges, unsigned length, unsigned location) {
-    for (unsigned i = 0; i < length; i++) {
-        if (location < NSMaxRange(ranges[i])) {
-            return i;
-        }
-    }
+#import <vector>
+#import "Foundation/NSMutableIndexSet.h"
 
-    return NSNotFound;
-}
+@interface NSMutableIndexSet(Internal)
 
-static inline unsigned positionOfRangeLessThanOrEqualToLocation(NSRange* ranges, unsigned length, unsigned location) {
-    int i = length;
-
-    while (--i >= 0) {
-        if (ranges[i].location <= location) {
-            return i;
-        }
-    }
-
-    return NSNotFound;
-}
-
-static inline void removeRangeAtPosition(NSRange* ranges, unsigned length, unsigned position) {
-    for (unsigned i = position; i + 1 < length; i++) {
-        ranges[i] = ranges[i + 1];
-    }
-}
-
-static inline unsigned raCount(NSIndexSet* set) {
-    return set->_length;
-}
-
-static inline NSRange raItemAtIndex(NSIndexSet* set, unsigned i) {
-    return set->_ranges[i];
-}
-
-static inline void raInsertItem(NSIndexSet* set, NSRange r, NSUInteger idx) {
-    if (NSNotFound - r.location < r.length) {
-        THROW_NS_HR(E_BOUNDS);
-    }
-
-    if (idx > set->_length) {
-        assert(0);
-    }
-
-    if (idx + 1 >= set->_maxLength) {
-        set->_maxLength += 64;
-        set->_ranges = (NSRange*)IwRealloc(set->_ranges, set->_maxLength * sizeof(NSRange));
-    }
-
-    //  Shift ranges up
-    memmove(&set->_ranges[idx + 1], &set->_ranges[idx], sizeof(NSRange) * (set->_length - idx));
-    set->_ranges[idx] = r;
-    set->_length++;
-}
-
-static inline void raAddItem(NSIndexSet* set, NSRange r) {
-    raInsertItem(set, r, set->_length);
-}
-
-static inline void raSetItemAtIndex(NSIndexSet* set, NSRange r, NSUInteger idx) {
-    if (idx >= set->_length) {
-        assert(0);
-    }
-
-    set->_ranges[idx] = r;
-}
-
-static inline void raRemoveItemAtIndex(NSIndexSet* set, NSUInteger idx) {
-    if (idx >= set->_length) {
-        assert(0);
-    }
-
-    //  Shift ranges down
-    memmove(&set->_ranges[idx], &set->_ranges[idx + 1], sizeof(NSRange) * (set->_length - (idx + 1)));
-    set->_length--;
-}
+- (unsigned)_positionOfRangeGreaterThanOrEqualToLocation:(NSUInteger)location;
+- (unsigned)_positionOfRangeLessThanOrEqualToLocation:(NSUInteger)location;
+- (unsigned)_count;
+- (NSRange)_itemAtIndex:(unsigned)index;
+- (NSRange&)_itemReferenceAtIndex:(unsigned)index;
+- (void)_insertItem:(NSRange)range AtIndex:(unsigned)position;
+- (void)_addItem:(NSRange)range;
+- (void)_removeItemAtIndex:(unsigned)position;
+- (void)_removeRanges:(NSRange)ranges;
+@end
