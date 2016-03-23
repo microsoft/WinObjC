@@ -378,6 +378,13 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     return priv;
 }
 
+- (bool)_isVisibleOrHitable {
+    if (priv->hidden || priv->opacity <= 0.01f) {
+        return NO;
+    }
+    return YES;
+}
+
 /**
  @Status Interoperable
 */
@@ -404,7 +411,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
  @Notes transform properties not supported
 */
 - (void)renderInContext:(CGContextRef)ctx {
-    if (priv->hidden) {
+    // if calayer is hidden or opacity is 0 do not render it.
+    if (![self _isVisibleOrHitable]) {
         return;
     }
 
@@ -2053,7 +2061,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Interoperable
 */
 - (CALayer*)hitTest:(CGPoint)point {
-    if (priv->opacity <= 0.01f || priv->hidden == 1) {
+    if (![self _isVisibleOrHitable]) {
         return nil;
     }
 
