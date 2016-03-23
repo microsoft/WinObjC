@@ -37,6 +37,16 @@ namespace WBITelemetry
         conf->SetIKey(m_iKey);
     }
 
+    void WBITelemetryManager::EnableTracking()
+    {
+        WBITelemetryManager::m_tc.EnableTracking();
+    }
+
+    void WBITelemetryManager::DisableTracking()
+    {
+        WBITelemetryManager::m_tc.DisableTracking();
+    }
+
     // Flush the queued events.
     void WBITelemetryManager::Flush()
     {
