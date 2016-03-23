@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016, Intel Corporation.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -17,10 +18,9 @@
 
 #import <CoreMotion/CMAttitude.h>
 #import <CoreMotion/CoreMotionExport.h>
-
 #import <Foundation/NSObject.h>
-
 #import <objc/runtime.h>
+
 
 @class CMAccelerometerData;
 @class NSError;
@@ -50,13 +50,14 @@ COREMOTION_EXPORT NSString* const CMErrorDomain;
 
 COREMOTION_EXPORT_CLASS
 @interface CMMotionManager : NSObject
-@property (assign, nonatomic) NSTimeInterval accelerometerUpdateInterval STUB_PROPERTY;
-- (void)startAccelerometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMAccelerometerHandler)handler STUB_METHOD;
-- (void)startAccelerometerUpdates STUB_METHOD;
-- (void)stopAccelerometerUpdates STUB_METHOD;
-@property (readonly, nonatomic, getter=isAccelerometerActive) BOOL accelerometerActive STUB_PROPERTY;
-@property (readonly, nonatomic, getter=isAccelerometerAvailable) BOOL accelerometerAvailable STUB_PROPERTY;
-@property (readonly) CMAccelerometerData* accelerometerData STUB_PROPERTY;
+@property (assign, nonatomic) NSTimeInterval accelerometerUpdateInterval;
+- (void)startAccelerometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMAccelerometerHandler)handler;
+- (void)startAccelerometerUpdates;
+- (void)stopAccelerometerUpdates;
+@property (readonly, nonatomic, getter=isAccelerometerActive) BOOL accelerometerActive;
+@property (readonly, nonatomic, getter=isAccelerometerAvailable) BOOL accelerometerAvailable;
+@property (readonly) CMAccelerometerData* accelerometerData;
+
 @property (assign, nonatomic) NSTimeInterval gyroUpdateInterval STUB_PROPERTY;
 - (void)startGyroUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMGyroHandler)handler STUB_METHOD;
 - (void)startGyroUpdates STUB_METHOD;

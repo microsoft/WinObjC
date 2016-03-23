@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016, Intel Corporation.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -13,30 +14,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-#import <CoreMotion/CMLogItem.h>
-#import <CoreMotion/CoreMotionExport.h>
 
-#import <Foundation/NSObject.h>
+// Calling into C++/CX to determine if the default accelerometer device is available
+// This step is necessary for now as this call using projections [WDSAccelerometer getDefault] does not return NULL
+// as expected for the case where no accelerometer device is available.
+bool checkDefaultAccelerometer() {
+    auto accelerometer = Windows::Devices::Sensors::Accelerometer::GetDefault();
 
-#import <objc\runtime.h>
-
-typedef enum {
-    CMMagneticFieldCalibrationAccuracyUncalibrated = -1,
-    CMMagneticFieldCalibrationAccuracyLow,
-    CMMagneticFieldCalibrationAccuracyMedium,
-    CMMagneticFieldCalibrationAccuracyHigh
-} CMMagneticFieldCalibrationAccuracy;
-
-typedef struct { double x, y, z; } CMMagneticField;
-
-typedef struct {
-    CMMagneticField field;
-    CMMagneticFieldCalibrationAccuracy accuracy;
-} CMCalibratedMagneticField;
-
-COREMOTION_EXPORT_CLASS
-@interface CMMagnetometerData : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMMagneticField magneticField STUB_PROPERTY;
-@end
+    if (accelerometer) {
+        return true;
+    } else {
+        return false;
+    }
+}

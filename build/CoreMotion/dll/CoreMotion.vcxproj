@@ -47,10 +47,10 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -61,10 +61,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -75,10 +75,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>
@@ -89,10 +89,10 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
+      <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreMotion.def</ModuleDefinitionFile>
     </Link>
     <ClangCompile>

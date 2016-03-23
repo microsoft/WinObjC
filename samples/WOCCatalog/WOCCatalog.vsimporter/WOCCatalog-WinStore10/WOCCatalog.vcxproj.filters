@@ -2,22 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{1567d142-5fbf-4776-a7d3-b4abe59fa011}</UniqueIdentifier>
+      <UniqueIdentifier>{d719507a-8ad2-49ad-af65-6c4945fd1126}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{0aacdb63-f52f-443a-9f3c-874c96e73823}</UniqueIdentifier>
+      <UniqueIdentifier>{5674ec61-6031-45e6-a522-fbdc1f2e1898}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{BDADC132-BB81-4590-A5AB-41077A855D59}</UniqueIdentifier>
+      <UniqueIdentifier>{B7219ADF-CBF4-4BFA-AC8F-BB96357F7259}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{5C0413A9-63B8-4284-B0D2-17F8F42B1AC2}</UniqueIdentifier>
+      <UniqueIdentifier>{0AD7A509-8945-49B8-A93D-2CFFA2B8AD32}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{C928C0ED-D750-4B98-8BAF-4833E09C1833}</UniqueIdentifier>
+      <UniqueIdentifier>{640ABC82-9206-4FBB-9392-FC339E5CB76B}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{4B384EFB-A1AE-4CC2-8BB5-7873041750D9}</UniqueIdentifier>
+      <UniqueIdentifier>{69A10FFC-B610-4CCC-AB0E-E5A71784145F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +106,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ControlsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\CoreMotionViewController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\MenuTableViewController.m">
