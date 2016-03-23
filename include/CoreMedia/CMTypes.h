@@ -17,7 +17,7 @@
 #pragma once
 
 #import <CoreMedia/CoreMediaExport.h>
-#import <CoreFoundation/CFBase.h>
+#import <Foundation/NSObject.h>
 
 typedef signed long CMItemCount;
 typedef signed long CMItemIndex;

@@ -54,19 +54,22 @@ struct MIDITransform {
     MIDITransformType transform;
     SInt16 param;
 };
+typedef struct MIDITransform MIDITransform;
 
-struct MIDIControlTransform {
+typedef struct MIDIControlTransform {
     MIDITransformControlType controlType;
     MIDITransformControlType remappedControlType;
     UInt16 controlNumber;
     MIDITransformType transform;
     SInt16 param;
-};
+} MIDIControlTransform;
+typedef struct MIDIControlTransform MIDIControlTransform;
 
 struct MIDIThruConnectionEndpoint {
     MIDIEndpointRef endpointRef;
     MIDIUniqueID uniqueID;
 };
+typedef struct MIDIThruConnectionEndpoint MIDIThruConnectionEndpoint;
 
 struct MIDIThruConnectionParams {
     UInt32 version;
@@ -93,15 +96,11 @@ struct MIDIThruConnectionParams {
     UInt16 numMaps;
     UInt16 reserved3[4]; // remainder of structure is variable -length: MIDIControlTransform controls[]; MIDIValueMap maps[];
 };
+typedef struct MIDIThruConnectionParams MIDIThruConnectionParams;
 
 struct MIDIValueMap {
     UInt8 value[128];
 };
-
-typedef struct MIDIControlTransform MIDIControlTransform;
-typedef struct MIDIThruConnectionEndpoint MIDIThruConnectionEndpoint;
-typedef struct MIDIThruConnectionParams MIDIThruConnectionParams;
-typedef struct MIDITransform MIDITransform;
 typedef struct MIDIValueMap MIDIValueMap;
 
 #define MIDIThruConnectionParamsSize                                                                           \

@@ -17,6 +17,7 @@
 #pragma once
 
 #import <StubIncludes.h>
+#import <Foundation/NSObject.h>
 #import <AVFoundation/AVFoundationExport.h>
 #import <AVFoundation/AVFoundationTypes.h>
 #import <AVFoundation/AVFoundationConstants.h>
