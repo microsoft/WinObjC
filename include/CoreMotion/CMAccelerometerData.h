@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016, Intel Corporation.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -28,5 +29,6 @@ typedef struct {
 
 COREMOTION_EXPORT_CLASS
 @interface CMAccelerometerData : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMAcceleration acceleration STUB_PROPERTY;
+@property (readonly, nonatomic) CMAcceleration acceleration;
+
 @end
