@@ -96,6 +96,79 @@ LIBRARY Starboard
         DNSServiceSetDispatchQueue
         DNSServiceBrowse
 
+        EbrLockInit
+        EbrLockDestroy
+        EbrLockEnter
+        EbrLockTryEnter
+        EbrLockLeave
+        EbrIncrement
+        EbrDecrement
+        EbrCompareExchange
+        EbrSleep
+        EbrAllocFile
+        EbrFreeFile
+        EbrFileFromFd
+        EbrFileGetType
+        EbrFmake
+        EbrFopen
+        EbrFdopen
+        EbrFclose
+        EbrFread
+        EbrFwrite
+        EbrFseek
+        EbrFtell
+        EbrFeof
+        EbrStat
+        EbrFputc
+        EbrAccess
+        EbrRewind
+        EbrFerror
+        EbrFgetc
+        EbrUngetc
+        EbrFputs
+        EbrFputs
+        EbrFileno
+        EbrNativeFILE
+        EbrClearerr
+        EbrFreopen
+        EbrFflush
+        EbrFsetpos
+        EbrFgetpos
+        EbrOpen
+        EbrClose
+        EbrFd2Host
+        EbrFstat
+        EbrRead
+        EbrWrite
+        EbrLseek
+        EbrTruncate
+        EbrDup
+        EbrRename
+        EbrUnlink
+        EbrMkdir
+        EbrGetcwd
+        EbrChdir
+        EbrRemove
+        EbrRemoveEmptyDir
+        EbrIsDir
+        EbrOpenDir
+        EbrReadDir
+        EbrCloseDir
+        EbrGetTimeOfDay
+        EbrGetMediaTime
+        EbrGetWantedOrientation
+        EbrGetRootMapping
+        EbrGetWritableFolder
+        EbrSetWritableFolder
+        EbrBlockIfBackground
+        EbrEventInit
+        EbrEventSignal
+        EbrEventWait
+        EbrEventTryWait
+        EbrEventTimedWait
+        EbrEventTimedMultipleWait
+        EbrEventDestroy
+
         ; Error Handling Internal
         dbg_printf
         failFastOnUnimplemented
