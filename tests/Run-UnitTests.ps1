@@ -80,6 +80,12 @@ function DeployTests($testList)
               # This is awkward.
           }
 
+          putd -recurse $testDirectory\*.gif $testOutputDirectory
+          putd -recurse $testDirectory\*.tif $testOutputDirectory
+          putd -recurse $testDirectory\*.tiff $testOutputDirectory
+          putd -recurse $testDirectory\*.bmp $testOutputDirectory
+          putd -recurse $testDirectory\*.ico $testOutputDirectory
+          putd -recurse $testDirectory\*.png $testOutputDirectory
           putd -recurse $testDirectory\*.jpg $testOutputDirectory
           putd -recurse $testDirectory\*.dll $testOutputDirectory
           putd -recurse $testDirectory\*.exe $testOutputDirectory
