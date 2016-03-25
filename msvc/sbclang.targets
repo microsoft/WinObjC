@@ -153,7 +153,21 @@
       <ClangCompile Remove="@(ClangCompile)" Condition="'%(Identity)' != '@(SelectedFiles)'" />
     </ItemGroup>
 
-      <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
+    <Message
+      Condition="('%(ClangCompile.MaxClangProcesses)' != '1') and '%(ClangCompile.ObjectiveCModules)' == 'true'"
+      Importance="High"
+      Text="Note: Setting MaxClangProcesses to 1 because Modules are enabled." />
+
+    <ItemGroup>
+      <ClangCompile>
+        <MaxClangProcesses Condition="('%(ClangCompile.MaxClangProcesses)' != '1') and '%(ClangCompile.ObjectiveCModules)' == 'true'">1</MaxClangProcesses>
+      </ClangCompile>
+    </ItemGroup>
+
+    <Error Condition="('%(ClangCompile.MaxClangProcesses)' &lt; '-1') or ('%(ClangCompile.MaxClangProcesses)' == '0')"
+      Text="%(ClangCompile.MaxClangProcesses) is an invalid value for MaxClangProcesses. MaxClangProcesses must be -1, or a postive integer." />
+
+    <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
     <Clang
       Condition="'@(ClangCompile)' != '' and '%(ClangCompile.ExcludedFromBuild)' != 'true'"
       InternalSystemIncludePaths="%(ClangCompile.InternalSystemIncludePaths)"
@@ -183,6 +197,7 @@
       SystemHeaderDeps="%(ClangCompile.SystemHeaderDeps)"
       UserIncludePaths="%(ClangCompile.UserIncludePaths)"
       ReadTLogFile="%(ClangCompile.ReadTLogFile)"
+      MaxClangProcesses="%(ClangCompile.MaxClangProcesses)"
       AdditionalOptions="%(ClangCompile.OtherFlags) %(ClangCompile.AdditionalOptions)">
       <Output TaskParameter="Outputs" ItemName="ClangOutputs" />
     </Clang>

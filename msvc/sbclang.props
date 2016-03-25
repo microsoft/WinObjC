@@ -43,6 +43,7 @@
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
       <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
       <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">$(IncludePath);$(StarboardSdkRoot)\include;$(StarboardSdkRoot)\include\VCInclude</InternalSystemIncludePaths>
+      <MaxClangProcesses Condition="'%(ClangCompile.MaxClangProcesses)' == ''">-1</MaxClangProcesses>
     </ClangCompile>
   </ItemDefinitionGroup>
 

@@ -274,6 +274,12 @@
       Description="Specifies prefix header file to be included when compiling all source files."
       Switch="-include "
       Name="PrefixHeader" />
+    <IntProperty
+      IncludeInCommandLine="False"
+      Category="General"
+      DisplayName="Maximum Clang Processes"
+      Description="Specifies the maximum number of clang processes to run in parallel. The argument can be -1 or any positive integer. A positive property value limits the number of concurrent operations to the set value. If it is -1, there is no limit on the number of concurrently running operations."
+      Name="MaxClangProcesses" />
     <StringProperty
       IncludeInCommandLine="False"
       Category="Language"
