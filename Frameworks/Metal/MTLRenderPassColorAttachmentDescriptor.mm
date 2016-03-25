@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLRenderPassColorAttachmentDescriptor.h>
 
 @implementation MTLRenderPassColorAttachmentDescriptor
 @end

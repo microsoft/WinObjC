@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLComputePipelineDescriptor.h>
 
 @implementation MTLComputePipelineDescriptor
 /**

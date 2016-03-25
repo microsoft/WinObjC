@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLVertexAttribute.h>
 
 @implementation MTLVertexAttribute
 @end

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLRenderPipelineColorAttachmentDescriptor.h>
 
 @implementation MTLRenderPipelineColorAttachmentDescriptor
 /**

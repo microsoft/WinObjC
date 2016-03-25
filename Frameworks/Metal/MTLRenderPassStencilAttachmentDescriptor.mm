@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLRenderPassStencilAttachmentDescriptor.h>
 
 @implementation MTLRenderPassStencilAttachmentDescriptor
 @end

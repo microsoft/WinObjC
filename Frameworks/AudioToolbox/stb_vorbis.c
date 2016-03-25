@@ -1104,7 +1104,7 @@ static void compute_accelerated_huffman(Codebook *c)
     }
 }
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && defined(_M_IX86)
 #define STBV_CDECL __cdecl
 #else
 #define STBV_CDECL

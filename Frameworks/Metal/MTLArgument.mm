@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLArgument.h>
 
 @implementation MTLArgument
 @end

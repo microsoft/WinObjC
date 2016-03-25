@@ -22,6 +22,67 @@
  @Status Stub
  @Notes
 */
+- (BOOL)canDisplayBannerAds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setCanDisplayBannerAds:(BOOL)canDisplayBannerAds {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (UIView*)originalContentView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isPresentingFullScreenAd {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isDisplayingBannerAd {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (ADInterstitialPresentationPolicy)interstitialPresentationPolicy {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setInterstitialPresentationPolicy:(ADInterstitialPresentationPolicy)interstitialPresentationPolicy {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
 + (void)prepareInterstitialAds {
     UNIMPLEMENTED();
 }
@@ -33,6 +94,23 @@
 - (BOOL)requestInterstitialAdPresentation {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (BOOL)shouldPresentInterstitialAd {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)setShouldPresentInterstitialAd:(BOOL)shouldPresentInterstitialAd {
+    UNIMPLEMENTED();
 }
 
 @end

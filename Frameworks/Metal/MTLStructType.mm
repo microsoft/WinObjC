@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#import <Metal/MTLStructMember.h>
+#import <Metal/MTLStructType.h>
 
 @implementation MTLStructType
 /**

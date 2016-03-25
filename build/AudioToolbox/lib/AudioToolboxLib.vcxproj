@@ -79,7 +79,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
+      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -89,7 +89,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
+      <AdditionalOptions>"-DAUDIOTOOLBOX_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

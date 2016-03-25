@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLDepthStencilDescriptor.h>
 
 @implementation MTLDepthStencilDescriptor
 /**
