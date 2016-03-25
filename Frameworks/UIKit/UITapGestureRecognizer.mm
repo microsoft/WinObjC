@@ -159,6 +159,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
  @Status Interoperable
 */
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    TraceVerbose(TAG, L"Touch Began");
     id curTouch = [touches anyObject];
     _tapTime = EbrGetMediaTime();
 
@@ -185,6 +186,8 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
 
         id curList = [g_curGesturesDict objectForKey:[UITapGestureRecognizer class]];
         for (id curGesture in curList) {
+            // check if in current gesture list, any gesture required more than one tap
+            // if so, we should delay firing current tap, to make sure multiple-tap get fired first.
             if ([curGesture numberOfTapsRequired] > 1) {
                 shouldDelay = true;
             }
@@ -210,6 +213,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    TraceVerbose(TAG, L"Touch Moved");
     id curTouch = [touches anyObject];
     CGPoint curPos;
     curPos = [curTouch locationInView:nil];
@@ -219,7 +223,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         CGPoint startPos = save->_savedPos;
 
         if (startPos.distGr(curPos, 10.0f)) {
-            TraceVerbose(TAG, L"UITapGestureRecognizer: touch moved too far");
+            TraceVerbose(TAG, L"touch moved too far");
             _state = UIGestureRecognizerStateFailed;
             [_pendingTaps removeObject:self];
             [_recognizeTimer invalidate];
@@ -227,7 +231,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             _wasRecognized = false;
         }
     } else {
-        TraceVerbose(TAG, L"UITapGestureRecognizer: touch %x not found - count=%d", curTouch, _numSavedTouches);
+        TraceVerbose(TAG, L"touch %x not found - count=%d", curTouch, _numSavedTouches);
     }
 }
 
@@ -235,6 +239,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
  @Status Interoperable
 */
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    TraceVerbose(TAG, L"Touch Ended");
     id curTouch = [touches anyObject];
     CGPoint curPos;
     curPos = [curTouch locationInView:nil];
@@ -243,27 +248,34 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
         CGPoint startPos = save->_savedPos;
 
         if (startPos.distGr(curPos, TAP_SLACK_AREA)) {
-            TraceVerbose(TAG, L"UITapGestureRecognizer: touch moved too far on end");
+            TraceVerbose(TAG, L"touch moved too far on end");
             _state = UIGestureRecognizerStateFailed;
         }
     } else {
-        TraceVerbose(TAG, L"UITapGestureRecognizer: touch not found");
+        TraceVerbose(TAG, L"touch not found");
     }
 
     id allTouches = [event allTouches];
     unsigned count = [touches count];
 
-    if (count > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.2f) {
-        TraceVerbose(TAG, L"UITapGestureRecognizer: too many touches");
+    if (count > _numberOfTouchesRequired || EbrGetMediaTime() - _tapTime > 0.75f) {
+        TraceVerbose(TAG, L"too many touches, numberOfTouchesRequired=%d, count=%d", _numberOfTouchesRequired, count);
         _state = UIGestureRecognizerStateFailed;
-
     } else if (count == _numberOfTouchesRequired) {
         bool success = true;
+
+        // get max numberofTapsRequired in current Tap gesture list.
+        unsigned maxNumberOfTapsRequired = 0;
+        for (id curGesture in [g_curGesturesDict objectForKey:[UITapGestureRecognizer class]]) {
+            if ([curGesture numberOfTapsRequired] > maxNumberOfTapsRequired) {
+                maxNumberOfTapsRequired = [curGesture numberOfTapsRequired];
+            }
+        }
+
         for (id curTouch in allTouches) {
             unsigned tapCount = [curTouch tapCount];
-
-            if (tapCount > _numberOfTapsRequired) {
-                TraceVerbose(TAG, L"UITapGestureRecognizer: too many taps");
+            if ((maxNumberOfTapsRequired > _numberOfTapsRequired) && (tapCount > _numberOfTapsRequired)) {
+                TraceVerbose(TAG, L"too many taps, tapCount=%d, numberOfTapsRequired=%d", tapCount, _numberOfTapsRequired);
                 _state = UIGestureRecognizerStateFailed;
                 success = false;
             } else if (tapCount < _numberOfTapsRequired) {
@@ -277,6 +289,7 @@ static void resetSavedTouches(UITapGestureRecognizer* self) {
             } else {
                 _state = UIGestureRecognizerStateRecognized;
                 [[self class] _failActiveExcept:self];
+                TraceVerbose(TAG, L"recognized.");
             }
         } else {
             [_pendingTaps removeObject:self];
