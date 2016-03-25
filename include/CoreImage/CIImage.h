@@ -61,13 +61,13 @@ COREIMAGE_EXPORT NSString* const kCIImageAutoAdjustLevel;
 COREIMAGE_EXPORT_CLASS
 @interface CIImage : NSObject <NSCopying, NSSecureCoding>
 + (CIImage*)emptyImage STUB_METHOD;
-+ (CIImage*)imageWithColor:(CIColor*)color STUB_METHOD;
++ (CIImage*)imageWithColor:(CIColor*)color;
 + (CIImage*)imageWithBitmapData:(NSData*)d
                     bytesPerRow:(size_t)bpr
                            size:(CGSize)size
                          format:(CIFormat)f
                      colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
-+ (CIImage*)imageWithCGImage:(CGImageRef)image STUB_METHOD;
++ (CIImage*)imageWithCGImage:(CGImageRef)image;
 + (CIImage*)imageWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
 + (CIImage*)imageWithContentsOfURL:(NSURL*)url STUB_METHOD;
 + (CIImage*)imageWithContentsOfURL:(NSURL*)url options:(NSDictionary*)d STUB_METHOD;
@@ -87,7 +87,7 @@ COREIMAGE_EXPORT_CLASS
 + (CIImage*)imageWithMTLTexture:(id<MTLTexture>)texture options:(NSDictionary*)options STUB_METHOD;
 - (CIImage*)imageByApplyingFilter:(NSString*)filterName withInputParameters:(NSDictionary*)params STUB_METHOD;
 - (CIImage*)imageByApplyingTransform:(CGAffineTransform)matrix STUB_METHOD;
-- (CIImage*)imageByCroppingToRect:(CGRect)rect STUB_METHOD;
+- (CIImage*)imageByCroppingToRect:(CGRect)rect;
 - (CIImage*)imageByApplyingOrientation:(int)orientation STUB_METHOD;
 - (CIImage*)imageByClampingToExtent STUB_METHOD;
 - (CIImage*)imageByCompositingOverImage:(CIImage*)dest STUB_METHOD;
@@ -97,7 +97,7 @@ COREIMAGE_EXPORT_CLASS
                               size:(CGSize)size
                             format:(CIFormat)f
                         colorSpace:(CGColorSpaceRef)c STUB_METHOD;
-- (instancetype)initWithCGImage:(CGImageRef)image STUB_METHOD;
+- (instancetype)initWithCGImage:(CGImageRef)image;
 - (instancetype)initWithCGImage:(CGImageRef)image options:(NSDictionary*)d STUB_METHOD;
 - (instancetype)initWithImage:(UIImage*)image STUB_METHOD;
 - (instancetype)initWithImage:(UIImage*)image options:(NSDictionary*)options STUB_METHOD;

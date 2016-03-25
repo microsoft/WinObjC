@@ -206,19 +206,22 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
     return StubReturn();
 }
 
+// clang-format off
+// clang format doesn't approve of unlabeled parameters
 /**
  @Status Stub
  @Notes
 */
 + (CIImage*)imageWithImageProvider:(id)p
-                              size:(size_t)
-                             width:(size_t)height
+                              size:(size_t)width
+                                  :(size_t)height
                             format:(CIFormat)f
                         colorSpace:(CGColorSpaceRef)cs
                            options:(NSDictionary*)dict {
     UNIMPLEMENTED();
     return StubReturn();
 }
+// clang-format on
 
 /**
  @Status Stub
@@ -437,19 +440,22 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
     return StubReturn();
 }
 
+// clang-format off
+// clang format doesn't approve of unlabeled parameters
 /**
  @Status Stub
  @Notes
 */
 - (instancetype)initWithImageProvider:(id)p
-                                 size:(size_t)
-                                width:(size_t)height
+                                 size:(size_t)width
+                                     :(size_t)height
                                format:(CIFormat)f
                            colorSpace:(CGColorSpaceRef)cs
                               options:(NSDictionary*)dict {
     UNIMPLEMENTED();
     return StubReturn();
 }
+// clang-format on
 
 /**
  @Status Stub

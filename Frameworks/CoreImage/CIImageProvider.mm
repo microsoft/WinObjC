@@ -21,19 +21,23 @@ NSString* const kCIImageProviderTileSize = @"kCIImageProviderTileSize";
 NSString* const kCIImageProviderUserInfo = @"kCIImageProviderUserInfo";
 
 @implementation NSObject (CoreImage)
+
+// clang-format off
+// clang format doesn't approve of unlabeled parameters
 /**
  @Status Stub
  @Notes
 */
 - (void)provideImageData:(void*)data
              bytesPerRow:(size_t)rowbytes
-                  origin:(size_t)
-                       x:(size_t)y
-                    size:(size_t)
-                   width:(size_t)height
+                  origin:(size_t)x
+                        :(size_t)y
+                    size:(size_t)width
+                        :(size_t)height
                 userInfo:(id)info {
     UNIMPLEMENTED();
 }
+// clang-format on
 
 @end
 @implementation CIImage (CIImageProvider)
