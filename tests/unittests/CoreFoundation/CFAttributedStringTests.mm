@@ -164,7 +164,8 @@ TEST(CFAttributedString, CreateWithSubstring) {
 
     CFAttributedStringRef subStr = CFAttributedStringCreateWithSubstring(NULL, aStr, { 0, 3 });
     assertAttributeAt(subStr, key1, value1, 0, 2);
-    assertAttributeAt(subStr, key2, value2, 0, 3);
+    assertAttributeAt(subStr, key2, value2, 0, 2);
+    assertAttributeAt(subStr, key2, value2, 2, 1);
     ASSERT_EQ(YES, CFEqual(CFSTR("CFA"), CFAttributedStringGetString(subStr)));
 
     CFRelease(aStr);

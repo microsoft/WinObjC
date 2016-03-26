@@ -35,8 +35,6 @@
 #include "LoggingNative.h"
 #include "NSRaise.h"
 #include "NSArrayConcrete.h"
-#include "BridgeHelpers.h"
-#include <objc/runtime.h>
 
 static const wchar_t* TAG = L"NSArray";
 

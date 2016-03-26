@@ -24,6 +24,7 @@
 #include <CoreFoundation/CFCharacterSet.h>
 #include <CoreFoundation/CFLocale.h>
 #include <stdarg.h>
+#include <objc/runtime.h>
 
 CF_IMPLICIT_BRIDGING_ENABLED
 CF_EXTERN_C_BEGIN
@@ -176,8 +177,9 @@ struct __CFConstStr {
 #define CONST_STRING_LITERAL_SECTION
 #endif
 
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReference
 #define CFSTR(cStr)  ({ \
-static struct __CFConstStr str CONST_STRING_LITERAL_SECTION = {{(uintptr_t)&__CFConstantStringClassReference, _CF_CONSTANT_OBJECT_STRONG_RC, 0, {0xc8, 0x07, 0x00, 0x00}, {0x00, 0x00, 0x00, 0x00}}, (uint8_t *)(cStr), sizeof(cStr) - 1}; \
+static struct __CFConstStr str CONST_STRING_LITERAL_SECTION = {{(uintptr_t)&_OBJC_CLASS__NSCFString, _CF_CONSTANT_OBJECT_STRONG_RC, 0, {0xc8, 0x07, 0x00, 0x00}, {0x00, 0x00, 0x00, 0x00}}, (uint8_t *)(cStr), sizeof(cStr) - 1}; \
 (CFStringRef)&str; \
 })
 

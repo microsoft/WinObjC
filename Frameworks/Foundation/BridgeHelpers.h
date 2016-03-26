@@ -18,14 +18,15 @@
 #include "NSRaise.h"
 
 // Helper macro for toll-free bridged classes - all must override the following set of functions
-#define BRIDGED_CLASS_REQUIRED_DECLS     \
-    +(void)load;                         \
-    -(_Nonnull instancetype)retain;      \
-    -(oneway void)release;               \
-    -(_Nonnull instancetype)autorelease; \
-    -(NSUInteger)retainCount;            \
-    -(void)dealloc;                      \
-    +(NSObject * _Nonnull)allocWithZone : (NSZone * _Nullable)zone;
+#define BRIDGED_CLASS_REQUIRED_DECLS                                  \
+    +(void)load;                                                      \
+    -(_Nonnull instancetype)retain;                                   \
+    -(oneway void)release;                                            \
+    -(_Nonnull instancetype)autorelease;                              \
+    -(NSUInteger)retainCount;                                         \
+    -(void)dealloc;                                                   \
+    +(_Nonnull instancetype)allocWithZone : (NSZone * _Nullable)zone; \
+    -(_Nonnull Class)classForCoder;
 
 // Helper macro for toll-free bridged classes - all must override the following set of functions
 // Provide our own implementations of retain and release so that the bridging works out.
@@ -72,6 +73,10 @@ __pragma(clang diagnostic pop) \
 + (NSBridgedConcreteType*)allocWithZone:(NSZone*)zone { \
     FAIL_FAST(); \
     return nullptr; \
+} \
+ \
+-(Class)classForCoder { \
+  return [NSBridgedType class];\
 }
 // clang-format on
 
@@ -102,41 +107,6 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
     return false;
 }
 
-// Helper macro for bridging an init function from the abstract base class to the correct init function on the concrete implementation
-// NSBridgedTypeBase:       Name of NS version of most "base" bridged class,                    ie:  NSString
-// NSBridgedTypeDerived:    Name of NS version of most "derived" bridged class,                 ie:  NSMutableString
-// NSBridgedConcreteType:   Name of concrete version of NSBridgedTypeBase,                      ie:  NSStringConcrete
-// ...                      args for init function                                              ie:  encoding, buffer, bufferLength
-#define BRIDGED_INIT_ABSTRACT(NSBridgedTypeBase, NSBridgedTypeDerived, NSBridgedConcreteType, ...)       \
-    if (shouldUseConcreteClass([self class], [NSBridgedTypeBase class], [NSBridgedTypeDerived class])) { \
-        /* Called from one of the base "abstract" classes    */                                          \
-        /* Manually walk down to concrete class and call it. */                                          \
-        /* This means the concrete impl usually will free self.    */                                    \
-        auto methodImp = (id (*)(id, SEL, ...))[NSBridgedConcreteType instanceMethodForSelector:_cmd];   \
-        FAIL_FAST_IF_NULL(methodImp);                                                                    \
-        self = methodImp(self, _cmd, __VA_ARGS__);                                                       \
-        return self;                                                                                     \
-    } else {                                                                                             \
-        /* Called by a derived class. This means it should be abstract */                                \
-        return NSInvalidAbstractInvocationReturn();                                                      \
-    }
-
-// Helper macro for bridging an init function from the abstract base class to the correct init function on the concrete implementation
-// Same as above but does not use NSInvalidAbstractInvocationReturn. Instead returns self.
-#define BRIDGED_INIT(NSBridgedTypeBase, NSBridgedTypeDerived, NSBridgedConcreteType, ...)                            \
-    if (shouldUseConcreteClass([self class], [NSBridgedTypeBase class], [NSBridgedTypeDerived class])) {             \
-        /* Called from one of the base "abstract" classes    */                                                      \
-        /* Manually walk down to concrete class and call it. */                                                      \
-        /* This means the concrete impl usually will free self.    */                                                \
-        auto methodImp = (id (*)(id, SEL, ...))[NSBridgedConcreteType instanceMethodForSelector:_cmd];               \
-        FAIL_FAST_IF_NULL(methodImp);                                                                                \
-        self = methodImp(self, _cmd, __VA_ARGS__);                                                                   \
-        return self;                                                                                                 \
-    } else {                                                                                                         \
-        /* Called by a derived class. This means it should return self in case a derived class calls [super init] */ \
-        return self;                                                                                                 \
-    }
-
 // Helper macro to stamp out calling through to inner class
 #define INNER_BRIDGE_CALL(InnerObject, ReturnValue, ...) \
     (ReturnValue) __VA_ARGS__ {                          \
@@ -151,4 +121,15 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
         }                                                                       \
                                                                                 \
         return [super allocWithZone:zone];                                      \
+    }
+
+// Helper macro for implementing allocWithZone
+#define ALLOC_PLACEHOLDER_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPlaceholderType)                              \
+    (NSObject*) allocWithZone : (NSZone*)zone {                                                                    \
+        if (self == [NSBridgedType class]) {                                                                       \
+            static StrongId<NSBridgedPlaceholderType> placeholder = [NSBridgedPlaceholderType allocWithZone:zone]; \
+            return placeholder;                                                                                    \
+        }                                                                                                          \
+                                                                                                                   \
+        return [super allocWithZone:zone];                                                                         \
     }

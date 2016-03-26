@@ -377,12 +377,15 @@ CF_INLINE size_t malloc_size(void *memblock) {
     return _msize(memblock);
 }
 
+// WINOBJC: we have our own.
+#ifndef HAVE_MACH_ABSOLUTE_TIME
 CF_INLINE uint64_t mach_absolute_time() {
     LARGE_INTEGER count;
     QueryPerformanceCounter(&count);
     // mach_absolute_time is unsigned, but this function returns a signed value.
     return (uint64_t)count.QuadPart;
 }
+#endif
 
 CF_INLINE long long llabs(long long v) {
     if (v < 0) return -v;

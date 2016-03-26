@@ -431,7 +431,10 @@ static NSLocale* _currentLocale;
         UnicodeString retStr;
         displayLocale.getDisplayName(_locale, retStr);
 
-        return NSStringFromICU(retStr);
+        std::string realStr;
+        retStr.toUTF8String(realStr);
+        return [NSString stringWithUTF8String:realStr.c_str()];
+
     } else {
         [NSException raiseWithLogging:@"NSLocaleException" format:@"displayNameForKey: Unknown key %@", key];
         return nil;

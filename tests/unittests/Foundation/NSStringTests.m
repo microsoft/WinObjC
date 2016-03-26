@@ -19,7 +19,6 @@
 
 void testUrlCharacterSetEncoding(NSString* decodedString, NSString* encodedString, NSCharacterSet* allowedCharacterSet) {
     NSString* testString = [decodedString stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
-
     ASSERT_OBJCEQ(encodedString, testString);
 }
 

@@ -10,10 +10,10 @@
 //
 
 
-/*	CFDictionary.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Michael LeHew
-	Machine generated from Notes/HashingCode.template
+/*  CFDictionary.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Michael LeHew
+    Machine generated from Notes/HashingCode.template
 */
 
 
@@ -134,47 +134,47 @@ static CFBasicHashRef __CFDictionaryCreateGeneric(CFAllocatorRef allocator, cons
         const_any_pointer_t (*value_retain)(CFAllocatorRef, const_any_pointer_t) = NULL;
         void (*value_release)(CFAllocatorRef, const_any_pointer_t) = NULL;
 
-	if ((NULL == keyCallBacks || 0 == keyCallBacks->version) && (!useValueCB || NULL == valueCallBacks || 0 == valueCallBacks->version)) {
-	    Boolean keyRetainNull = NULL == keyCallBacks || NULL == keyCallBacks->retain;
-	    Boolean keyReleaseNull = NULL == keyCallBacks || NULL == keyCallBacks->release;
-	    Boolean keyEquateNull = NULL == keyCallBacks || NULL == keyCallBacks->equal;
-	    Boolean keyHashNull = NULL == keyCallBacks || NULL == keyCallBacks->hash;
-	    Boolean keyDescribeNull = NULL == keyCallBacks || NULL == keyCallBacks->copyDescription;
+    if ((NULL == keyCallBacks || 0 == keyCallBacks->version) && (!useValueCB || NULL == valueCallBacks || 0 == valueCallBacks->version)) {
+        Boolean keyRetainNull = NULL == keyCallBacks || NULL == keyCallBacks->retain;
+        Boolean keyReleaseNull = NULL == keyCallBacks || NULL == keyCallBacks->release;
+        Boolean keyEquateNull = NULL == keyCallBacks || NULL == keyCallBacks->equal;
+        Boolean keyHashNull = NULL == keyCallBacks || NULL == keyCallBacks->hash;
+        Boolean keyDescribeNull = NULL == keyCallBacks || NULL == keyCallBacks->copyDescription;
 
-	    Boolean valueRetainNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->retain)) || (!useValueCB && keyRetainNull);
-	    Boolean valueReleaseNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->release)) || (!useValueCB && keyReleaseNull);
-	    Boolean valueEquateNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->equal)) || (!useValueCB && keyEquateNull);
-	    Boolean valueDescribeNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeNull);
+        Boolean valueRetainNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->retain)) || (!useValueCB && keyRetainNull);
+        Boolean valueReleaseNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->release)) || (!useValueCB && keyReleaseNull);
+        Boolean valueEquateNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->equal)) || (!useValueCB && keyEquateNull);
+        Boolean valueDescribeNull = (useValueCB && (NULL == valueCallBacks || NULL == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeNull);
 
-	    Boolean keyRetainStd = keyRetainNull || __CFTypeCollectionRetain == keyCallBacks->retain;
-	    Boolean keyReleaseStd = keyReleaseNull || __CFTypeCollectionRelease == keyCallBacks->release;
-	    Boolean keyEquateStd = keyEquateNull || CFEqual == keyCallBacks->equal;
-	    Boolean keyHashStd = keyHashNull || CFHash == keyCallBacks->hash;
-	    Boolean keyDescribeStd = keyDescribeNull || CFCopyDescription == keyCallBacks->copyDescription;
+        Boolean keyRetainStd = keyRetainNull || __CFTypeCollectionRetain == keyCallBacks->retain;
+        Boolean keyReleaseStd = keyReleaseNull || __CFTypeCollectionRelease == keyCallBacks->release;
+        Boolean keyEquateStd = keyEquateNull || CFEqual == keyCallBacks->equal;
+        Boolean keyHashStd = keyHashNull || CFHash == keyCallBacks->hash;
+        Boolean keyDescribeStd = keyDescribeNull || CFCopyDescription == keyCallBacks->copyDescription;
 
-	    Boolean valueRetainStd = (useValueCB && (valueRetainNull || __CFTypeCollectionRetain == valueCallBacks->retain)) || (!useValueCB && keyRetainStd);
-	    Boolean valueReleaseStd = (useValueCB && (valueReleaseNull || __CFTypeCollectionRelease == valueCallBacks->release)) || (!useValueCB && keyReleaseStd);
-	    Boolean valueEquateStd = (useValueCB && (valueEquateNull || CFEqual == valueCallBacks->equal)) || (!useValueCB && keyEquateStd);
-	    Boolean valueDescribeStd = (useValueCB && (valueDescribeNull || CFCopyDescription == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeStd);
+        Boolean valueRetainStd = (useValueCB && (valueRetainNull || __CFTypeCollectionRetain == valueCallBacks->retain)) || (!useValueCB && keyRetainStd);
+        Boolean valueReleaseStd = (useValueCB && (valueReleaseNull || __CFTypeCollectionRelease == valueCallBacks->release)) || (!useValueCB && keyReleaseStd);
+        Boolean valueEquateStd = (useValueCB && (valueEquateNull || CFEqual == valueCallBacks->equal)) || (!useValueCB && keyEquateStd);
+        Boolean valueDescribeStd = (useValueCB && (valueDescribeNull || CFCopyDescription == valueCallBacks->copyDescription)) || (!useValueCB && keyDescribeStd);
 
-	    if (keyRetainStd && keyReleaseStd && keyEquateStd && keyHashStd && keyDescribeStd && valueRetainStd && valueReleaseStd && valueEquateStd && valueDescribeStd) {
-		set_cb = true;
-		if (!(keyRetainNull || keyReleaseNull || keyEquateNull || keyHashNull || keyDescribeNull || valueRetainNull || valueReleaseNull || valueEquateNull || valueDescribeNull)) {
-		    std_cb = true;
-		} else {
-		    // just set these to tickle the GC Strong logic below in a way that mimics past practice
-		    key_retain = keyCallBacks ? keyCallBacks->retain : NULL;
-		    key_release = keyCallBacks ? keyCallBacks->release : NULL;
-		    if (useValueCB) {
-			value_retain = valueCallBacks ? valueCallBacks->retain : NULL;
-			value_release = valueCallBacks ? valueCallBacks->release : NULL;
-		    } else {
-			value_retain = key_retain;
-			value_release = key_release;
-		    }
-		}
-	    }
-	}
+        if (keyRetainStd && keyReleaseStd && keyEquateStd && keyHashStd && keyDescribeStd && valueRetainStd && valueReleaseStd && valueEquateStd && valueDescribeStd) {
+        set_cb = true;
+        if (!(keyRetainNull || keyReleaseNull || keyEquateNull || keyHashNull || keyDescribeNull || valueRetainNull || valueReleaseNull || valueEquateNull || valueDescribeNull)) {
+            std_cb = true;
+        } else {
+            // just set these to tickle the GC Strong logic below in a way that mimics past practice
+            key_retain = keyCallBacks ? keyCallBacks->retain : NULL;
+            key_release = keyCallBacks ? keyCallBacks->release : NULL;
+            if (useValueCB) {
+            value_retain = valueCallBacks ? valueCallBacks->retain : NULL;
+            value_release = valueCallBacks ? valueCallBacks->release : NULL;
+            } else {
+            value_retain = key_retain;
+            value_release = key_release;
+            }
+        }
+        }
+    }
 
         if (!set_cb) {
             key_retain = keyCallBacks ? keyCallBacks->retain : NULL;
@@ -420,7 +420,10 @@ Boolean CFDictionaryContainsValue(CFHashRef hc, const_any_pointer_t key) {
 #endif
 #if CFDictionary
     if (CFDictionary) // CF_SWIFT_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (CFSwiftRef)hc, NSDictionary.containsKey, key);
-    if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (NSDictionary *)hc, containsKey:(id)key);
+// WINOBJC: This doesn't exist on NSDictionary //    if (CFDictionary) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (NSDictionary *)hc, containsKey:(id)key);
+    if (CFDictionary && CF_IS_OBJC(CFDictionaryGetTypeID(), hc)) {
+        return nil != CF_OBJC_CALLV((NSDictionary *)hc, objectForKey:(id)key);
+    }
 #endif
 #if CFSet
     if (CFSet) CF_OBJC_FUNCDISPATCHV(CFDictionaryGetTypeID(), char, (NSSet *)hc, containsObject:(id)key);

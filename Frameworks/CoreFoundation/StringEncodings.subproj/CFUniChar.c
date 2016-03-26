@@ -35,9 +35,10 @@
 #endif
 
 #if DEPLOYMENT_TARGET_WINDOWS
-// extern void _CFGetFrameworkPath(wchar_t *path, int maxLength);
-// HACKHACK: not sure where this is supposed to come from / what its supposed to do.
+// WINOBJC: This path is used to load resource files from. For now assume that the current directory will be enough.
 void _CFGetFrameworkPath(wchar_t *path, int maxLength) {
+
+    DWORD ignoredResult = GetCurrentDirectoryW(maxLength, path);
     return;
 }
 #endif
@@ -132,7 +133,9 @@ CF_INLINE void __CFUniCharCharacterSetPath(wchar_t *wpath) {
     wchar_t frameworkPath[MAXPATHLEN];
     _CFGetFrameworkPath(frameworkPath, MAXPATHLEN);
     wcsncpy(wpath, frameworkPath, MAXPATHLEN);
-    wcsncat(wpath, L"\\CoreFoundation.resources\\", MAXPATHLEN - wcslen(wpath));
+    // WINOBJC: WinObjC projects keeps everything flat. Do append a trailing \\ though.
+    // wcsncat(wpath, L"\\CoreFoundation.resources\\", MAXPATHLEN - wcslen(wpath));
+    wcsncat(wpath, L"\\", MAXPATHLEN - wcslen(wpath));
 #else
     strlcpy(cpath, __kCFCharacterSetDir, MAXPATHLEN);
     strlcat(cpath, "/CharacterSets/", MAXPATHLEN);
@@ -189,7 +192,6 @@ static bool __CFUniCharLoadBytesFromFile(const wchar_t *fileName, const void **b
 #error Unknown or unspecified DEPLOYMENT_TARGET
 #endif
 #if DEPLOYMENT_TARGET_WINDOWS
-/*
     HANDLE bitmapFileHandle = NULL;
     HANDLE mappingHandle = NULL;
     
@@ -199,25 +201,53 @@ static bool __CFUniCharLoadBytesFromFile(const wchar_t *fileName, const void **b
         *bytes = NULL;
         return false;
     }
-    mappingHandle = OpenFileMappingW(FILE_MAP_READ, TRUE, fileName);
+
+    HMODULE kernel32 = GetModuleHandle(TEXT("kernelbase.dll"));
+    if (!kernel32) {
+        return false;
+    }
+
+    // WINOBJC: use "interesting" workarounds for being inside an appcontainer.
+    // TODO 7201714: use appcontianer approved apis.
+
+    typedef HANDLE (WINAPI* OpenFileMappingWFunction)( DWORD, BOOL, LPCWSTR);
+    OpenFileMappingWFunction pOpenFileMappingW = reinterpret_cast<OpenFileMappingWFunction>(GetProcAddress(kernel32, "OpenFileMappingW"));
+
+    typedef LPVOID(WINAPI* MapViewOfFileExFunction)(HANDLE, DWORD, DWORD, DWORD, SIZE_T, LPVOID);
+    MapViewOfFileExFunction pMapViewOfFileEx = reinterpret_cast<MapViewOfFileExFunction>(GetProcAddress(kernel32, "MapViewOfFileEx"));
+
+    typedef SIZE_T (WINAPI* VirtualQueryExFunction)(HANDLE, LPCVOID, PMEMORY_BASIC_INFORMATION, SIZE_T);
+    VirtualQueryExFunction pVirtualQueryEx = reinterpret_cast<VirtualQueryExFunction>(GetProcAddress(kernel32, "VirtualQueryEx"));
+
+    typedef HANDLE (WINAPI* CreateFileWFunction)(LPCWSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
+    CreateFileWFunction pCreateFileW = reinterpret_cast<CreateFileWFunction>(GetProcAddress(kernel32, "CreateFileW"));
+
+    typedef HANDLE (WINAPI* CreateFileMappingWFunction)( HANDLE, LPSECURITY_ATTRIBUTES, DWORD, DWORD, DWORD, LPCWSTR);
+    CreateFileMappingWFunction pCreateFileMapping = reinterpret_cast<CreateFileMappingWFunction>(GetProcAddress(kernel32, "CreateFileMappingW"));
+
+    if( pOpenFileMappingW == nullptr || pMapViewOfFileEx == nullptr || pVirtualQueryEx == nullptr || pCreateFileW == nullptr || pCreateFileMapping == nullptr) {
+        return false;
+    }
+
+    mappingHandle = pOpenFileMappingW(FILE_MAP_READ, TRUE, fileName);
     if (NULL == mappingHandle) {
-        if ((bitmapFileHandle = CreateFileW(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE) {
+        if ((bitmapFileHandle = pCreateFileW(fileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL)) == INVALID_HANDLE_VALUE) {
             // We tried to get the bitmap file for mapping, but it's not there.  Add to list of non-existant bitmap-files so
             // we don't have to try this again in the future.
             __AddBitmapStateForName(fileName);
             return false;
         }
-        mappingHandle = CreateFileMapping(bitmapFileHandle, NULL, PAGE_READONLY, 0, 0, NULL);
+        mappingHandle = pCreateFileMapping(bitmapFileHandle, NULL, PAGE_READONLY, 0, 0, NULL);
         CloseHandle(bitmapFileHandle);
         if (!mappingHandle) return false;
     }
 
-    *bytes = MapViewOfFileEx(mappingHandle, FILE_MAP_READ, 0, 0, 0, 0);
+    *bytes = pMapViewOfFileEx(mappingHandle, FILE_MAP_READ, 0, 0, 0, 0);
 
     if (NULL != fileSize) {
     MEMORY_BASIC_INFORMATION memoryInfo;
 
-    if (0 == VirtualQueryEx(mappingHandle, *bytes, &memoryInfo, sizeof(memoryInfo))) {
+    if (0 == pVirtualQueryEx(mappingHandle, *bytes, &memoryInfo, sizeof(memoryInfo))) {
         *fileSize = 0; // This indicates no checking. Is it right ?
     } else {
         *fileSize = memoryInfo.RegionSize;
@@ -227,10 +257,6 @@ static bool __CFUniCharLoadBytesFromFile(const wchar_t *fileName, const void **b
     CloseHandle(mappingHandle);
 
     return (*bytes ? true : false);
-    */
-    // HACKHACK: Trying to memory map a file which maybe can be done from an app container but needs more investigation.
-    // for now return false.
-    return false;
 #else
     struct stat statBuf;
     int fd = -1;

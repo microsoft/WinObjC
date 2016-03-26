@@ -25,6 +25,7 @@
  *
  * $FreeBSD$
  */
+#pragma once
 
 #ifndef _SYS__TIMEVAL_H_
 #define _SYS__TIMEVAL_H_
@@ -44,10 +45,8 @@ typedef __time_t    time_t;
 #endif
 
 /*
- * Structure returned by gettimeofday(2) system call, and used in other calls.
+ * Structure returned by gettimeofday(2) system call, and used in other calls. defined in winsock2.h
  */
-#ifndef _WINSOCK2API_ // HACKAHCK: symbol also in winsock2.h so guard against it a bit.
-
 #ifndef WIN32
 #define __SHOULD_UNDEF_WIN32
 #endif
@@ -63,8 +62,6 @@ typedef __time_t    time_t;
 #ifdef __SHOULD_UNDEF_WIN32
 #undef __SHOULD_UNDEF_WIN32
 #undef WIN32
-#endif
-
 #endif
 
 #endif /* !_SYS__TIMEVAL_H_ */

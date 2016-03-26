@@ -222,7 +222,9 @@ CFAttributedStringRef CFAttributedStringCreateWithSubstring(CFAllocatorRef alloc
 */
 CFAttributedStringRef CFAttributedStringCreateCopy(CFAllocatorRef alloc, CFAttributedStringRef attrStr) {
 //  CF_OBJC_FUNCDISPATCHV(CFAttributedStringGetTypeID(), CFAttributedStringRef, (NSAttributedString *)attrStr, copy);
-    
+// WINOBJC: still needed
+    CF_OBJC_FUNCDISPATCHV(CFAttributedStringGetTypeID(), CFAttributedStringRef, (NSAttributedString *)attrStr, copy);
+
     __CFAssertIsAttributedString(attrStr);
     if (!__CFAttributedStringIsMutable(attrStr) &&                                      // If the string is not mutable
         ((alloc ? alloc : __CFGetDefaultAllocator()) == __CFGetAllocator(attrStr))) {   //  and it has the same allocator as the one we're using
@@ -285,6 +287,8 @@ CFMutableAttributedStringRef CFAttributedStringCreateMutable(CFAllocatorRef allo
 
 CFMutableAttributedStringRef CFAttributedStringCreateMutableCopy(CFAllocatorRef alloc, CFIndex maxLength, CFAttributedStringRef attrStr) {
 //  CF_OBJC_FUNCDISPATCHV(CFAttributedStringGetTypeID(), CFMutableAttributedStringRef, (NSAttributedString *)attrStr, mutableCopy);
+//  WINOBJC: still needed
+    CF_OBJC_FUNCDISPATCHV(CFAttributedStringGetTypeID(), CFMutableAttributedStringRef, (NSAttributedString *)attrStr, mutableCopy);
     
     __CFAssertIsAttributedString(attrStr);
 

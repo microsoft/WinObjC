@@ -631,7 +631,10 @@ CFIndex __CFStringEncodeByteStream(CFStringRef string, CFIndex rangeLoc, CFIndex
 
         if (!CFStringEncodingIsValidEncoding(encoding)) return 0;
 
-        if (!CF_IS_OBJC(CFStringGetTypeID(), string) && isASCIISuperset) { // Checking for NSString to avoid infinite recursion
+        // WINOBJC: Don't check for OBJC. The check isn't needed because the bridging strategy for WinObjC ensures eventually
+        // the real CF object is used, ending any recursion.
+        // if (!CF_IS_OBJC(CFStringGetTypeID(), string) && isASCIISuperset) { // Checking for NSString to avoid infinite recursion
+        if (isASCIISuperset) {
             const unsigned char *ptr;
             if ((cString = (const unsigned char *)CFStringGetCStringPtr(string, __CFStringGetEightBitStringEncoding()))) {
                 ptr = (cString += rangeLoc);

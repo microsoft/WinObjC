@@ -13,20 +13,28 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import "Starboard.h"
-#import "CFConstantString.h"
+#ifdef _ARM_
 
-@implementation CFConstantString
-- (instancetype)retain {
-    return self;
-}
+// winnt.h includes some ARM intrinsics that aren't supported in
+// clang and cause front end compilation breaks. Because of this,
+// def a flag for /clr:pure which removes a lot of MS specific
+// compiler intrinsic usage.
+#ifndef _M_CEE_PURE
+#define __SHOULD_UNDEF_M_CEE_PURE
+#define _M_CEE_PURE
+#endif
 
-- (oneway void)release {
-}
+#include_next <winnt.h>
 
-- (instancetype)autorelease {
-    return self;
-}
+#ifdef __SHOULD_UNDEF_M_CEE_PURE
+#undef __SHOULD_UNDEF_M_CEE_PURE
+#undef _M_CEE_PURE
+#endif
 
-@end
+#else
+
+#include_next <winnt.h>
+
+#endif

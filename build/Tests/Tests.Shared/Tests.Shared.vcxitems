@@ -18,6 +18,9 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\Frameworks\CoreFoundation\CharacterSets\*">
+      <FileType>Document</FileType>
+    </SBResourceCopy>
     <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140d_app.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>

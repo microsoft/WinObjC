@@ -39,7 +39,9 @@
 #include <unistd.h>
 #endif
 
+// WINOBJC: extra includes for bridging
 #include <Foundation/NSMutableString.h>
+#include "CFFoundationInternal.h"
 
 #if defined(__GNUC__)
 #define LONG_DOUBLE_SUPPORT 1
@@ -119,6 +121,7 @@ static Boolean __CFConstantStringTableBeingFreed = false;
 
 
 // Two constant strings used by CFString; these are initialized in CFStringInitialize
+
 CONST_STRING_DECL(kCFEmptyString, "")
 
 // This is separate for C++
@@ -408,7 +411,8 @@ CFStringEncoding __CFDefaultEightBitStringEncoding = kCFStringEncodingInvalidId;
 #elif DEPLOYMENT_TARGET_LINUX
 #define __defaultEncoding kCFStringEncodingUTF8
 #elif DEPLOYMENT_TARGET_WINDOWS
-#define __defaultEncoding kCFStringEncodingWindowsLatin1
+// WINOBJC: default to UTF8 // #define __defaultEncoding kCFStringEncodingWindowsLatin1
+#define __defaultEncoding kCFStringEncodingUTF8
 #else
 #warning This value must match __CFGetConverter condition in CFStringEncodingConverter.c
 #define __defaultEncoding kCFStringEncodingISOLatin1
@@ -1206,7 +1210,10 @@ static const CFRuntimeClass __CFStringClass = {
 
 CF_PRIVATE void __CFStringInitialize(void) {
     static dispatch_once_t initOnce = 0;
-    dispatch_once(&initOnce, ^{ __kCFStringTypeID = _CFRuntimeRegisterClass(&__CFStringClass); });
+    dispatch_once(&initOnce, ^{ __kCFStringTypeID = _CFRuntimeRegisterClass(&__CFStringClass);
+    //WINOBJC: Also bridge string class here so that all strings get the is set properly.
+        _CFRuntimeBridgeTypeToClass(__kCFStringTypeID, &_OBJC_CLASS__NSCFString);
+    });
 }
 
 
@@ -1642,7 +1649,9 @@ CFStringRef  CFStringCreateWithFormat(CFAllocatorRef alloc, CFDictionaryRef form
 CFStringRef CFStringCreateWithSubstring(CFAllocatorRef alloc, CFStringRef str, CFRange range) {
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef, (CFSwiftRef)str, NSString._createSubstringWithRange, range);
 //      CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef , (NSString *)str, _createSubstringWithRange:NSMakeRange(range.location, range.length));
-
+    // WINOBJC: Still needed for classes that aren't actually CF (derived NSStrings)
+    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef , (NSString *)str, _createSubstringWithRange:NSMakeRange(range.location, range.length));
+    
     __CFAssertIsString(str);
     __CFAssertRangeIsInStringBounds(str, range.location, range.length);
 
@@ -1659,7 +1668,8 @@ CFStringRef CFStringCreateWithSubstring(CFAllocatorRef alloc, CFStringRef str, C
 
 CFStringRef CFStringCreateCopy(CFAllocatorRef alloc, CFStringRef str) {
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef, (CFSwiftRef)str, NSString.copy);
-//  CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef, (NSString *)str, copy);
+    // WINOBJC: This is still necessary as some string may be derived types.  //  CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef, (NSString *)str, copy);
+    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, CFStringRef, (NSString *)str, copy);
 
     __CFAssertIsString(str);
     if (!__CFStrIsMutable((CFStringRef)str) &&                              // If the string is not mutable
@@ -1714,13 +1724,11 @@ static CFHashCode __cStrHash(const void *ptr) {
 
 #if DEPLOYMENT_RUNTIME_SWIFT
 #else
-// HACKHACK: The compiler doesn't currently support __builtin____CFStringMakeConstantString which means that this function gets called
+// WINOBJC: The compiler doesn't currently support __builtin____CFStringMakeConstantString which means that this function gets called
 // regardless of the -fconstant-cfstrings compiler flag.
 // Additionally, this function uses a big dictionary to make its strings (a lot of which are static init).
 // This creates a strange ordering issue with DllMain where the dictionary steals the wrong typeId. The workaround
 // is to init CF here as well.
-CF_EXPORT void __CFInitialize(void);
-
 CFStringRef __CFStringMakeConstantString(const char *cStr) {
     __CFInitialize();
     CFStringRef result;
@@ -1757,18 +1765,23 @@ CFStringRef __CFStringMakeConstantString(const char *cStr) {
                     break;
                 }
             }
-            if (!isASCII) {
-                CFMutableStringRef ms = CFStringCreateMutable(kCFAllocatorSystemDefault, 0);
-                tmp = cStr;
-                while (*tmp) {
-                    CFStringAppendFormat(ms, NULL, (*tmp & 0x80) ? CFSTR("\\%3o") : CFSTR("%1c"), *tmp);
-                    tmp++;
-                }
-                CFLog(kCFLogLevelWarning, CFSTR("WARNING: CFSTR(\"%@\") has non-7 bit chars, interpreting using MacOS Roman encoding for now, but this will change. Please eliminate usages of non-7 bit chars (including escaped characters above \\177 octal) in CFSTR()."), ms);
-                CFRelease(ms);
-            }
+
+            // WINOBJC: non ASCII string literals are in UTF-8 not MacOS Roman. Don't warn 
+            // and use UTF-8 encoding.
+            // if (!isASCII) {
+            //     CFMutableStringRef ms = CFStringCreateMutable(kCFAllocatorSystemDefault, 0);
+            //     tmp = cStr;
+            //     while (*tmp) {
+            //         CFStringAppendFormat(ms, NULL, (*tmp & 0x80) ? CFSTR("\\%3o") : CFSTR("%1c"), *tmp);
+            //         tmp++;
+            //     }
+            //     CFLog(kCFLogLevelWarning, CFSTR("WARNING: CFSTR(\"%@\") has non-7 bit chars, interpreting using MacOS Roman encoding for now, but this will change. Please eliminate usages of non-7 bit chars (including escaped characters above \\177 octal) in CFSTR()."), ms);
+            //     CFRelease(ms);
+            // }
             // Treat non-7 bit chars in CFSTR() as MacOSRoman, for compatibility
-            result = CFStringCreateWithCString(kCFAllocatorSystemDefault, cStr, kCFStringEncodingMacRoman);
+            // WINOBJC: as UTF-8 not MacOSRoman for compat.
+            // result = CFStringCreateWithCString(kCFAllocatorSystemDefault, cStr, kCFStringEncodingMacRoman);
+            result = CFStringCreateWithCString(kCFAllocatorSystemDefault, cStr, kCFStringEncodingUTF8);
             if (result == NULL) {
                 CFLog(__kCFLogAssertion, CFSTR("Can't interpret CFSTR() as MacOS Roman, crashing"));
                 HALT;
@@ -2056,9 +2069,25 @@ int _CFStringCheckAndGetCharacters(CFStringRef str, CFRange range, UniChar *buff
 
 
 CFIndex CFStringGetBytes(CFStringRef str, CFRange range, CFStringEncoding encoding, uint8_t lossByte, Boolean isExternalRepresentation, uint8_t *buffer, CFIndex maxBufLen, CFIndex *usedBufLen) {
-    if (CF_IS_SWIFT(CFStringGetTypeID(), str) && false) { // __CFSwiftBridge.NSString.__getBytes != NULL) {
-        // return __CFSwiftBridge.NSString.__getBytes(str, encoding, range, buffer, maxBufLen, usedBufLen);
+    // if (CF_IS_SWIFT(CFStringGetTypeID(), str) && __CFSwiftBridge.NSString.__getBytes != NULL) {
+    //    return __CFSwiftBridge.NSString.__getBytes(str, encoding, range, buffer, maxBufLen, usedBufLen);
+    // }
+    // WINOBJC: No swift support. Curiously missing ObjC support so add that back in.
+    if (CF_IS_OBJC(__kCFStringTypeID, str)) { 
+        NSStringEncodingConversionOptions options = static_cast<NSStringEncodingConversionOptions>(lossByte ? NSStringEncodingConversionAllowLossy : 0 );
+        options = static_cast<NSStringEncodingConversionOptions>(options | (isExternalRepresentation ? NSStringEncodingConversionExternalRepresentation : 0 ));
+        NSRange leftover;
+        NSUInteger usedLength;
+        BOOL converted = CF_OBJC_CALLV((NSString*)str, getBytes:buffer maxLength:maxBufLen usedLength:&usedLength encoding:static_cast<NSStringEncoding>(CFStringConvertEncodingToNSStringEncoding(encoding)) options:options range:NSMakeRange(range.location, range.length) remainingRange:&leftover);
+
+        if (usedBufLen) {
+            *usedBufLen = usedLength;
+        }
+
+        return converted ? (leftover.location - range.location) : 0;
+
     }
+
     __CFAssertIsNotNegative(maxBufLen);
     
     {
@@ -2106,7 +2135,8 @@ const char * CFStringGetCStringPtr(CFStringRef str, CFStringEncoding encoding) {
     if (str == NULL) return NULL;   // Should really just crash, but for compatibility... see <rdar://problem/12340248>
     
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, const char *, (CFSwiftRef)str, NSString._fastCStringContents);
-    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, const char *, (NSString *)str, _fastCStringContents:true);
+    // WINOBJC: pass along encoding instead of hardcoded bool.
+    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, const char *, (NSString *)str, _fastCStringContents:encoding);
 
     __CFAssertIsString(str);
 
@@ -4370,7 +4400,13 @@ void CFStringAppendCharacters(CFMutableStringRef str, const UniChar *chars, CFIn
 
     __CFAssertIsNotNegative(appendedLength);
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, void, (CFSwiftRef)str, NSMutableString.appendCharacters, chars, appendedLength);
-    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, void, (NSMutableString *)str, appendCharacters:chars length:(NSUInteger)appendedLength);
+    // WINOBJC: appendCharacters doesn't exist // CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, void, (NSMutableString *)str, appendCharacters:chars length:(NSUInteger)appendedLength);
+    if (CF_IS_OBJC(__kCFStringTypeID, str)) {
+        CFStringRef toAppend = CFStringCreateWithCharacters(nullptr, chars, appendedLength);
+        CF_OBJC_CALLV((NSString*)str, appendString:static_cast<NSString*>(toAppend));
+        return;
+    }
+
 
     __CFAssertIsStringAndMutable(str);
 

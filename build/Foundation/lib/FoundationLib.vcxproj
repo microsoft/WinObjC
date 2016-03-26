@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFBridgeBase.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFHelpers.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArray.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSAssertionHandler.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSAttributedString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSBlockOperation.mm" />
@@ -27,19 +30,23 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSByteOrder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCalendar.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCharacterSet.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCharacterSetConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCoder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSColor.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSComparisonPredicate.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCompoundPredicate.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCondition.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCountedSet.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCountedSetConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSData.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDataConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDate.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDateComponents.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDateFormatter.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDecimalNumber.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDelayedPerform.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionary.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSEnumerator.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSError.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSException.mm" />
@@ -104,6 +111,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSelectSet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSScanner.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSet.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSetConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSocket.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSortDescriptor.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSSLHandler.mm" />
@@ -127,7 +135,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSXMLPropertyList.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\Utils.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\_NSURLSessionDownloadResumeInfo.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFConstantString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSConstantString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\FormatPrintf.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\IcuHelper.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableString.mm" />
@@ -209,43 +217,36 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSValueTransformer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSZone.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFHelpers.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayConcrete.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryConcrete.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSStringPlaceholder.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableStringPlaceholder.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableAttributedStringConcrete.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionaryInternal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCharacterSetConcrete.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSColor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSConstantString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDate.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDelayedPerform.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryInternal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDirectoryEnumeratorInternal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSHTTPCookieInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSInputStream_socket.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSKeyedArchiverInternal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableArrayInternal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableIndexSetInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOrderedPerform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSOutputStream_socket.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPersistentDomain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPropertyListReader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSPropertyListWriter_binary.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSTimerInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSelectInputSource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSelectSet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSocket.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSSLHandler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLConnectionState.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtocol_file.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSXMLPropertyList.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\BridgeHelpers.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSStringPlaceholder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCountedSetConcrete.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDataConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableStringPlaceholder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSStringAdditionsForCF.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSetConcrete.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

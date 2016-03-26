@@ -9,11 +9,11 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
-/*	CFRegularExpression.c
-	Copyright (c) 2015 Apple Inc. and the Swift project authors
+/*  CFRegularExpression.c
+    Copyright (c) 2015 Apple Inc. and the Swift project authors
  */
 
-#include "CFRegularExpression.h""
+#include "CFRegularExpression.h"
 #include "CFInternal.h"
 #define U_SHOW_DRAFT_API 1
 #define U_SHOW_INTERNAL_API 1

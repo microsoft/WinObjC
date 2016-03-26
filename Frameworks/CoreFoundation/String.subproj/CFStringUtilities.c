@@ -18,7 +18,7 @@
 #include "CFInternal.h"
 #include "CFStringEncodingConverterExt.h"
 #include "CFUniChar.h"
-#include "CFStringEncodingExt.h""
+#include "CFStringEncodingExt.h"
 #include "CFStringEncodingDatabase.h"
 #include "CFICUConverters.h"
 #include <limits.h>

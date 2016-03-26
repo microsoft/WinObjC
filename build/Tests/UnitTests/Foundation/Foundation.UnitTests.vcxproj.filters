@@ -8,10 +8,9 @@
     <ClInclude Include="$(StarboardBasePath)\tests\unittests\Foundation\RuntimeTestHelpers.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSObject_NSCoding.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSKeyValueCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSStringInternal.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringInternalTests.mm" />
@@ -82,6 +81,12 @@
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSSet.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSString.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSCharacterSet.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
   </ItemGroup>

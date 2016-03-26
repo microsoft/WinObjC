@@ -18,13 +18,12 @@
 #include "Foundation/NSRegularExpression.h"
 #include <unicode/regex.h>
 #include <memory>
-#include <stdlib.h>
-#include <vector>
 
 #import "LoggingNative.h"
 
 @interface NSRegularExpression () {
     std::unique_ptr<RegexPattern> _icuRegex;
+    NSMatchingOptions _replacementOptions;
 }
 @property (readwrite, copy) NSString* pattern;
 @property (readwrite) NSRegularExpressionOptions options;
@@ -99,11 +98,11 @@ static bool _U_LogIfError(UErrorCode status) {
         }
 
         // Create backing ICU regex handle:
-        UStringHolder unicodePattern(_pattern);
         UErrorCode status = U_ZERO_ERROR;
         UParseError parseStatus;
 
-        _icuRegex.reset(RegexPattern::compile(unicodePattern.string(), icuRegexOptions, parseStatus, status));
+        // no clue if this is correct.
+        _icuRegex.reset(RegexPattern::compile(UnicodeString([_pattern UTF8String]), icuRegexOptions, parseStatus, status));
 
         if (_U_LogIfError(status)) {
             if (error) {
@@ -225,6 +224,40 @@ static void _setMatcherOptions(RegexMatcher& icuRegex, int options) {
     return result;
 }
 
+static NSUInteger _replaceAll(
+    NSMutableString* string, NSRegularExpression* regex, RegexMatcher& icuRegex, NSString* replacement, UErrorCode status) {
+    if (_U_LogIfError(status)) {
+        return 0;
+    }
+
+    NSUInteger count = 0;
+    int offset = 0;
+
+    while (icuRegex.find() && status == U_ZERO_ERROR) {
+        NSString* replacedText = nil;
+        NSTextCheckingResult* result = nil;
+
+        NSRange foundRange = NSMakeRange(icuRegex.start(status), icuRegex.end(status));
+        if (_U_LogIfError(status)) {
+            return count;
+        }
+
+        result = [NSTextCheckingResult regularExpressionCheckingResultWithRanges:&foundRange count:1 regularExpression:regex];
+
+        replacedText = [regex replacementStringForResult:result inString:string offset:offset template:replacement];
+
+        if (replacedText == nil) {
+            return count;
+        }
+
+        [string replaceCharactersInRange:foundRange withString:replacedText];
+
+        offset += replacedText.length - foundRange.length;
+        count++;
+    }
+    return count;
+}
+
 /**
  @Status Interoperable
 */
@@ -232,24 +265,30 @@ static void _setMatcherOptions(RegexMatcher& icuRegex, int options) {
                              options:(NSMatchingOptions)options
                                range:(NSRange)range
                         withTemplate:(NSString*)templateStr {
-    NSArray* matches = [self matchesInString:string options:options range:range];
-
-    int offset = 0;
-
-    for (NSTextCheckingResult* result in matches) {
-        NSString* replacedText = [self replacementStringForResult:result inString:string offset:offset template:templateStr];
-
-        if (replacedText == nil) {
-            break;
-        }
-
-        NSRange foundRange = result.range;
-        foundRange.location += offset;
-        [string replaceCharactersInRange:foundRange withString:replacedText];
-
-        offset += replacedText.length - foundRange.length;
+    if (string == nil) {
+        return 0;
     }
-    return [matches count];
+
+    UErrorCode status = U_ZERO_ERROR;
+    // HACKHACK: no clue if this is correct. Should be fixed to bridge with CFRegularExpression anyway.
+    RegexMatcher* matcher = _icuRegex->matcher(UnicodeString([string UTF8String]), status);
+    if (_U_LogIfError(status)) {
+        return 0;
+    }
+
+    matcher->region(range.location, range.location + range.length, status);
+    if (_U_LogIfError(status)) {
+        return 0;
+    }
+
+    _setMatcherOptions(*matcher, options);
+
+    @synchronized(self) {
+        _replacementOptions = options;
+        NSUInteger returnval = _replaceAll(string, self, *matcher, templateStr, status);
+        _replacementOptions = 0;
+        return returnval;
+    }
 }
 
 /**
@@ -266,38 +305,47 @@ static void _setMatcherOptions(RegexMatcher& icuRegex, int options) {
 }
 
 static NSString* _escapeStringForCharacterSet(NSString* string, NSCharacterSet* set) {
-    NSData* dataOfString = [string dataUsingEncoding:NSUTF8StringEncoding];
-    const char* buffer = (const char*)dataOfString.bytes;
-    NSUInteger length = [dataOfString length];
-
+    NSUInteger length = string.length;
     NSMutableString* returnVal = [NSMutableString stringWithCapacity:length * 2];
 
-    int lastTouchedByteIndex = -1;
-    int i = 0;
-    UChar32 currentCharacter = 0;
+    const char* buffer = string.UTF8String;
 
-    while (i < length) {
-        // Use U8_NEXT to step over code points
-        U8_NEXT(buffer, i, length, currentCharacter);
-        if ([set characterIsMember:currentCharacter]) {
-            if (lastTouchedByteIndex < i - 1) {
+    int lastTouchedCharacterIndex = -1;
+
+    // For each character in buffer, check if it's a metacharacter that needs to be escaped.
+    for (int i = 0; i < length; i++) {
+        if ([set characterIsMember:buffer[i]]) {
+            if (lastTouchedCharacterIndex != (i - 1)) {
                 // Get substring that we can append now up to this point.
-                _appendBufferToNSString(buffer, (lastTouchedByteIndex + 1), (i - lastTouchedByteIndex - 2), returnVal);
+                NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(buffer + (lastTouchedCharacterIndex + 1))
+                                                                length:(i - (lastTouchedCharacterIndex + 1))
+                                                              encoding:NSUTF8StringEncoding
+                                                          freeWhenDone:false];
+
+                [returnVal appendString:part];
+                [part release];
             }
-            lastTouchedByteIndex = i - 1;
+            lastTouchedCharacterIndex = i;
 
             // Append escaped metacharacter
-            [returnVal appendFormat:@"\\%c", currentCharacter];
+            [returnVal appendFormat:@"\\%c", buffer[i]];
         }
     }
 
     // If nothing was escaped return original string
-    if (lastTouchedByteIndex == -1) {
+    if (lastTouchedCharacterIndex == -1) {
         return string;
-    } else if (lastTouchedByteIndex < length) {
+    } else if (lastTouchedCharacterIndex != length - 1) {
         // Get the rest of the characters that weren't escaped.
         // Length is the length everything between i and the last encoded character exclusively.
-        _appendBufferToNSString(buffer, (lastTouchedByteIndex + 1), (length - (lastTouchedByteIndex + 1)), returnVal);
+
+        NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(buffer + (lastTouchedCharacterIndex + 1))
+                                                        length:(length - (lastTouchedCharacterIndex + 1))
+                                                      encoding:NSUTF8StringEncoding
+                                                  freeWhenDone:false];
+
+        [returnVal appendString:part];
+        [part release];
     }
 
     return returnVal;
@@ -345,9 +393,8 @@ struct CallBackContext {
                       usingBlock:(void (^)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop))block {
     UErrorCode status = U_ZERO_ERROR;
 
-    UStringHolder matchStr(string);
-
-    RegexMatcher* matcher = _icuRegex->matcher(matchStr.string(), status);
+    // HACKHACK: change to be bridged.
+    RegexMatcher* matcher = _icuRegex->matcher(UnicodeString([string UTF8String]), status);
     if (_U_LogIfError(status)) {
         return;
     }
@@ -368,6 +415,7 @@ struct CallBackContext {
         }
     }
 
+    NSTextCheckingResult* result;
     NSMatchingFlags flags = 0;
 
     matcher->region(range.location, range.location + range.length, status);
@@ -387,43 +435,24 @@ struct CallBackContext {
         // TODO: ICU 48 does not support find(status) implemented in ICU 55. This is required for accurate NSMatchingInternalError flagging
         if (_U_LogIfError(status)) {
             flags |= NSMatchingInternalError;
-            block(nil, flags, &stop);
+            block(result, flags, &stop);
         } else {
             // Create NSTextCheckingResult
             int startpos = matcher->start(status);
             if (_U_LogIfError(status)) {
-                block(nil, NSMatchingInternalError, &stop);
+                block(result, NSMatchingInternalError, &stop);
                 break;
             }
 
             int endpos = matcher->end(status);
             if (_U_LogIfError(status)) {
-                block(nil, NSMatchingInternalError, &stop);
+                block(result, NSMatchingInternalError, &stop);
                 break;
             }
 
             NSRange foundRange = NSMakeRange(startpos, endpos - startpos);
-            if (!anchorMatch || (anchorMatch && startpos == range.location)) {
-                NSTextCheckingResult* result = nil;
-
-                std::vector<NSRange> ranges(matcher->groupCount() + 1);
-                for (int i = 0; i <= matcher->groupCount(); i++) {
-                    int start = matcher->start(i, status);
-                    if (_U_LogIfError(status)) {
-                        return;
-                    }
-                    int length = matcher->end(i, status) - start;
-                    if (_U_LogIfError(status)) {
-                        return;
-                    }
-
-                    ranges[i].location = start;
-                    ranges[i].length = length;
-                }
-
-                result = [NSTextCheckingResult regularExpressionCheckingResultWithRanges:ranges.data()
-                                                                                   count:ranges.size()
-                                                                       regularExpression:self];
+            if (!anchorMatch || (anchorMatch && foundRange.location == range.location)) {
+                result = [NSTextCheckingResult regularExpressionCheckingResultWithRanges:&foundRange count:1 regularExpression:self];
 
                 if (matcher->requireEnd()) {
                     flags |= NSMatchingRequiredEnd;
@@ -441,81 +470,56 @@ struct CallBackContext {
 
     if (_evaluateOptionOrFlag(NSMatchingCompleted, options)) {
         flags |= NSMatchingCompleted;
-        block(nil, flags, &stop);
+        block(result, flags, &stop);
     }
 }
 
-// Internal method for string building in replace calls.
-static void _appendBufferToNSString(const char* string, int start, int length, NSMutableString* appendString) {
-    NSString* part =
-        [[NSString alloc] initWithBytesNoCopy:(void*)(string + start) length:length encoding:NSUTF8StringEncoding freeWhenDone:false];
-    [appendString appendString:part];
-    [part release];
-}
-
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Uses ICU's formatting to make replacements.
 */
 - (NSString*)replacementStringForResult:(NSTextCheckingResult*)result
                                inString:(NSString*)string
                                  offset:(NSInteger)offset
                                template:(NSString*)templateStr {
-    NSData* dataOfString = [templateStr dataUsingEncoding:NSUTF8StringEncoding];
-    const char* bytesOfString = (const char*)dataOfString.bytes;
+    // get range from result
+    NSRange range = result.range;
 
-    int lastByteIndex = -1;
-    int lengthOfBytes = [dataOfString length];
-    NSMutableString* returnString = [NSMutableString stringWithCapacity:lengthOfBytes];
-    UChar32 currentCharacter = 0;
-    int i = 0;
+    // HACKHACK: probably not right. make bridged.
+    UnicodeString replacedString;
+    const UnicodeString unicodeTemplate([templateStr UTF8String]);
+    UErrorCode status = U_ZERO_ERROR;
 
-    while (i < lengthOfBytes) {
-        // Use U8_NEXT to step over code points
-        U8_NEXT(bytesOfString, i, lengthOfBytes, currentCharacter);
-        if (currentCharacter == '$') {
-            const char nextCharacter = bytesOfString[i];
-            if (nextCharacter >= '0' && nextCharacter <= '9') {
-                // Optimized append step to avoid single character string building.
-                if (lastByteIndex != (i - 1)) {
-                    // Append characters from last touched character up to but excluding this capture group
-                    _appendBufferToNSString(bytesOfString, (lastByteIndex + 1), ((i - 1) - (lastByteIndex + 1)), returnString);
-                }
-                char* final = nullptr;
-                unsigned long matchIdx = strtoul(&bytesOfString[i], &final, 10);
-
-                // We want i to represent that we stepped over these decimal characters.
-                i = final - bytesOfString - 1;
-                if (matchIdx <= _numberOfCaptureGroups) {
-                    NSRange range = [result rangeAtIndex:matchIdx];
-                    range.location += offset;
-                    [returnString appendString:[string substringWithRange:range]];
-                }
-
-                lastByteIndex = i;
-            }
-        } else if (currentCharacter == '\\') {
-            // Append characters up to and excluding the '\'
-            if (lastByteIndex != (i - 1)) {
-                // Get a substring based on the bytes offset by the last touched index to the current index
-                // Length is the length everything between i and the last encoded character exclusively.
-                _appendBufferToNSString(bytesOfString, (lastByteIndex + 1), ((i - 1) - (lastByteIndex + 1)), returnString);
-            }
-
-            // Ignore the escaped '\'
-            lastByteIndex = i - 1;
-            i++;
-        }
+    // TODO 6620456: replacementStringForResult Should Format and Build String Itself
+    // Create a new RegexMatcher by re-using the ivar pattern.
+    RegexMatcher* matcher = _icuRegex->matcher(UnicodeString([string UTF8String]), status);
+    if (_U_LogIfError(status)) {
+        return nil;
     }
 
-    if (lastByteIndex == -1) {
-        return [[templateStr copy] autorelease];
-    } else if (lastByteIndex < lengthOfBytes) {
-        // Get the rest of the characters that weren't already appended
-        // Length is the length everything between i and the last modified character.
-        _appendBufferToNSString(bytesOfString, (lastByteIndex + 1), (lengthOfBytes - (lastByteIndex + 1)), returnString);
+    // Set its region to the result's range
+    matcher->region(range.location + offset, range.location + range.length + offset, status);
+    if (_U_LogIfError(status)) {
+        return nil;
     }
 
-    return returnString;
+    _setMatcherOptions(*matcher, _replacementOptions);
+
+    // Find the match
+    matcher->find();
+
+    // Replace the match
+    matcher->appendReplacement(replacedString, unicodeTemplate, status);
+
+    if (_U_LogIfError(status)) {
+        return nil;
+    }
+
+    // Return only the replaced string
+    std::string str;
+    replacedString.toUTF8String(str);
+
+    return [NSString stringWithUTF8String:str.c_str()];
 }
 
 /**

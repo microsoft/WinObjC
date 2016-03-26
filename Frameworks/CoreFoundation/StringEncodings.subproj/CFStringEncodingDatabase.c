@@ -10,9 +10,9 @@
 //
 
 
-/*	CFStringEncodingDatabase.c
-	Copyright (c) 2005 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Foundation Team
+/*  CFStringEncodingDatabase.c
+    Copyright (c) 2005 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Foundation Team
 */
 
 #include "CFInternal.h"
@@ -575,7 +575,9 @@ CF_PRIVATE CFStringEncoding __CFStringEncodingGetFromCanonicalName(const char *c
 }
 #undef LENGTH_LIMIT
 
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_LINUX
+// WINOBJC: also include windows here. 
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_LINUX
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_WINDOWS
 // This list indexes from DOS range
 static uint16_t __CFISO8859SimilarScriptList[] = {
     kCFStringEncodingMacRoman,
@@ -824,7 +826,9 @@ CF_PRIVATE const char *__CFStringEncodingGetName(CFStringEncoding encoding) {
         case kCFStringEncodingUTF7: return "Unicode (UTF-7)"; break;
     }
 
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_LINUX
+// WINOBJC: also include windows here. 
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_LINUX
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_WINDOWS
     if (0x0200 == (encoding & 0x0F00)) {
         encoding &= 0x00FF;
 

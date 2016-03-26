@@ -11,4 +11,11 @@
         ContinueOnError="true" 
         SkipUnchangedFiles="true"/>
   </Target>
+  <Target Name="CopyCoreFoundationPrivateHeadersToIncludes" BeforeTargets="Build">
+    <Copy
+        SourceFiles="@(CoreFoundationPrivateHeader)" 
+        DestinationFolder="$(MSBuildThisFileDirectory)..\Frameworks\include\" 
+        ContinueOnError="true" 
+        SkipUnchangedFiles="true"/>
+  </Target>
 </Project>

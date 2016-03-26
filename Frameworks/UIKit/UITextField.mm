@@ -29,7 +29,6 @@
 #import <UIKit/UIImage.h>
 #import <UIKit/UIImageView.h>
 #import <UIKit/UITableViewCell.h>
-#import "NSMutableString+Internal.h"
 #import "UIResponderInternal.h"
 #import "UIApplicationInternal.h"
 

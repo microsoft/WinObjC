@@ -1,5 +1,3 @@
-#pragma once
-
 //******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
@@ -15,8 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-//#ifndef __TIMEVAL_REDEFINED
+// WINOBJC: Don't redfine timeval // #ifndef __TIMEVAL_REDEFINED
 #if 0
 #define __TIMEVAL_REDEFINED
 #define timeval __ws2_timeval

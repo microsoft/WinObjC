@@ -33,6 +33,7 @@
 #import "UWP/interopBase.h"
 #import "UIApplicationInternal.h"
 #import "LoggingNative.h"
+#import "StringHelpers.h"
 
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
@@ -357,7 +358,8 @@ public:
         int mask = [font fontDescriptor].symbolicTraits;
         _isBold = (mask & UIFontDescriptorTraitBold) > 0;
         _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
-        ConstructGlyphs([[font fontName] UTF8String], (const wchar_t*)[text rawCharacters], [text length]);
+        std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
+        ConstructGlyphs([[font fontName] UTF8String], wideBuffer.c_str(), wideBuffer.length());
     }
 };
 

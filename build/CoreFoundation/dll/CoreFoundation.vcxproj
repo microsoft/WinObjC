@@ -25,6 +25,9 @@
     <ProjectReference Include="..\lib\CoreFoundationLib.vcxproj">
       <Project>{DC123A21-ECF5-4C43-9E69-25CEA438EE94}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj">
+      <Project>{BC8C5D49-060C-4375-904C-FE472C757E58}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.c" />
@@ -49,7 +52,6 @@
     <OutputName>CoreFoundation</OutputName>
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10240.0</WindowsTargetPlatformMinVersion>
-    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
@@ -122,6 +124,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
@@ -148,6 +151,7 @@
       <ModuleDefinitionFile>CoreFoundation.def</ModuleDefinitionFile>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
@@ -176,6 +180,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
@@ -202,6 +207,7 @@
       <ModuleDefinitionFile>CoreFoundation.def</ModuleDefinitionFile>
       <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include\WOCStdLib;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
@@ -215,4 +221,10 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.targets" />
   </ImportGroup>
+  <Target Name="CopyCoreFoundationResourcesToOutput" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <CoreFoundationResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CharacterSets\*"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(CoreFoundationResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
+  </Target>
 </Project>

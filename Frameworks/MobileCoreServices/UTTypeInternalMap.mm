@@ -313,9 +313,13 @@ void _UTInitializeSystemUTIMaps() {
  * @return UTI
  */
 CFArrayRef _UTGetUTIsForFileNameExtension(CFStringRef fileNameExtension) {
+    if (fileNameExtension == NULL) {
+        return NULL;
+    }
+
     CFArrayRef UTIs =
         static_cast<CFArrayRef>(const_cast<void*>(CFDictionaryGetValue(s_fileExtensionToSystemUTIMap, (const void*)fileNameExtension)));
-    return CFArrayCreateCopy(kCFAllocatorDefault, UTIs);
+    return UTIs ? CFArrayCreateCopy(kCFAllocatorDefault, UTIs) : NULL;
 }
 
 /**

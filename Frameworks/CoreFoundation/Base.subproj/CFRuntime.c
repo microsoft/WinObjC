@@ -238,25 +238,23 @@ bool (*__CFObjCIsCollectable)(void *) = NULL;
 #if DEPLOYMENT_RUNTIME_SWIFT
 // The constant string class reference is set at link time to _NSCFConstantString
 #else
-// WINOBJC: The below section seems unneeded, since the same is done just below.
-/*
-#if !__CONSTANT_CFSTRINGS__ || DEPLOYMENT_TARGET_EMBEDDED_MINI
+// WINOBJC: Winobjc project uses &_OBJC_CLASS__NSCFString instead of any mention of __CFConstantStringClassReference(Ptr)
+// #if !__CONSTANT_CFSTRINGS__ || DEPLOYMENT_TARGET_EMBEDDED_MINI
 // Compiler uses this symbol name; must match compiler built-in decl, so we use 'int'
-#if __LP64__
-void*  __CFConstantStringClassReference[24] = {0};
-#else
-void* __CFConstantStringClassReference[12] = {0};
-#endif
-#endif
-*/
-#if __LP64__
-void*  __CFConstantStringClassReference[24] = {0};
-#else
-void*  __CFConstantStringClassReference[12] = {0};
-#endif
+// #if __LP64__
+// void*  __CFConstantStringClassReference[24] = {0};
+// #else
+// void* __CFConstantStringClassReference[12] = {0};
+// #endif
+// #endif
+// #if __LP64__
+// void*  __CFConstantStringClassReference[24] = {0};
+// #else
+// void*  __CFConstantStringClassReference[12] = {0};
+// #endif
 #endif
 
-void *__CFConstantStringClassReferencePtr = &__CFConstantStringClassReference;
+// void *__CFConstantStringClassReferencePtr = &__CFConstantStringClassReference; // WINOBJC: uses NSConstantString instead.
 
 Boolean _CFIsObjC(CFTypeID typeID, void *obj) {
     return CF_IS_OBJC(typeID, obj);
@@ -887,6 +885,12 @@ CFHashCode CFHash(CFTypeRef cf) {
 CFStringRef CFCopyDescription(CFTypeRef cf) {
     if (NULL == cf) return NULL;
     // CFTYPE_OBJC_FUNCDISPATCH0(CFStringRef, cf, _copyDescription);  // XXX returns 0 refcounted item under GC
+    // WINOBJC: still needed but using description instead.
+    if (!__CF_IsCFObject(cf)) { 
+        CFStringRef stringRef = static_cast<CFStringRef>(CF_OBJC_CALLV(cf, description));
+        CFRetain(stringRef);
+        return stringRef;
+    } 
     __CFGenericAssertIsCF(cf);
     if (NULL != __CFRuntimeClassTable[__CFGenericTypeID_inline(cf)]->copyDebugDesc) {
     CFStringRef result = __CFRuntimeClassTable[__CFGenericTypeID_inline(cf)]->copyDebugDesc(cf);
@@ -897,10 +901,12 @@ CFStringRef CFCopyDescription(CFTypeRef cf) {
 
 // Definition: if type produces a formatting description, return that string, otherwise NULL
 CF_PRIVATE CFStringRef __CFCopyFormattingDescription(CFTypeRef cf, CFDictionaryRef formatOptions) {
-    if (NULL == cf) return NULL;
+    // WINOBJC: add check for class being cf. This is a slow check maybe just just that the entry isn't null?
+    if (NULL == cf || !__CF_IsCFObject(cf)) return NULL;
     __CFGenericAssertIsCF(cf);
+    
     if (NULL != __CFRuntimeClassTable[__CFGenericTypeID_inline(cf)]->copyFormattingDesc) {
-    return __CFRuntimeClassTable[__CFGenericTypeID_inline(cf)]->copyFormattingDesc(cf, formatOptions);
+        return __CFRuntimeClassTable[__CFGenericTypeID_inline(cf)]->copyFormattingDesc(cf, formatOptions);
     }
     return NULL;
 }
@@ -1326,7 +1332,8 @@ CF_PRIVATE void __CFStreamCleanup(void);
 static CFBundleRef RegisterCoreFoundationBundle(void) {
 #ifdef _DEBUG
     // might be nice to get this from the project file at some point
-    wchar_t *DLLFileName = (wchar_t *)L"CoreFoundation_debug.dll";
+    // WINOBJC: WinobjC uses same dll name for both configurations. // wchar_t *DLLFileName = L"CoreFoundation_debug.dll";
+    wchar_t *DLLFileName = L"CoreFoundation.dll";
 #else
     wchar_t *DLLFileName = (wchar_t *)L"CoreFoundation.dll";
 #endif
@@ -1875,15 +1882,13 @@ CF_SWIFT_EXPORT void _CFDeinit(CFTypeRef cf) {
 
 #define _CFIsSwift(a,b) false;
 // WINOBJC: WinObjC project has no swift support.
-/*
-bool _CFIsSwift(CFTypeID type, CFSwiftRef obj) {
-    if (type == _kCFRuntimeNotATypeID) {
-        return false;
-    }
-    if (obj->isa == (uintptr_t)__CFConstantStringClassReferencePtr) return false;
-    return obj->isa != __CFRuntimeObjCClassTable[type];
-}
-*/
+// bool _CFIsSwift(CFTypeID type, CFSwiftRef obj) {
+//     if (type == _kCFRuntimeNotATypeID) {
+//         return false;
+//     }
+//     if (obj->isa == (uintptr_t)__CFConstantStringClassReferencePtr) return false;
+//     return obj->isa != __CFRuntimeObjCClassTable[type];
+// }
 
 const char *_NSPrintForDebugger(void *cf) {
     if (CF_IS_SWIFT(_kCFRuntimeNotATypeID, cf)) {

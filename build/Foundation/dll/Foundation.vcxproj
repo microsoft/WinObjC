@@ -21,11 +21,6 @@
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSObject_NSCoding.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSKeyValueCoding.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayConcrete.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCountedSetConcrete.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDataConcrete.mm" /> 
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryConcrete.mm" /> 
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSetConcrete.mm" /> 
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
@@ -33,9 +28,6 @@
     </ProjectReference>
     <ProjectReference Include="..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj">
-      <Project>{BC8C5D49-060C-4375-904C-FE472C757E58}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

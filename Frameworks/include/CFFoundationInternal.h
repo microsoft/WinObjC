@@ -23,3 +23,22 @@
 #include <CoreFoundation/CoreFoundation.h>
 
 CF_PRIVATE CF_EXPORT void _CFRuntimeBridgeTypeToClass(CFTypeID type, const void* isa);
+CF_PRIVATE CF_EXPORT void _CFAppendPathComponent2(CFMutableStringRef path, CFStringRef component);
+CF_PRIVATE CF_EXPORT Boolean _CFAppendPathExtension2(CFMutableStringRef path, CFStringRef extension);
+CF_PRIVATE CF_EXPORT CFIndex _CFStartOfPathExtension2(CFStringRef path);
+CF_PRIVATE CF_EXPORT CFIndex _CFStartOfLastPathComponent2(CFStringRef path);
+CF_EXPORT UniChar _CFGetSlash();
+CF_PRIVATE CF_EXPORT CFStringRef _CFGetSlashStr();
+
+// Copied from CFFileUtilities.c
+#if DEPLOYMENT_TARGET_WINDOWS
+#define WINDOWS_PATH_SEMANTICS
+#else
+#define UNIX_PATH_SEMANTICS
+#endif
+
+#if defined(WINDOWS_PATH_SEMANTICS)
+#define IS_SLASH(C) ((C) == '\\' || (C) == '/')
+#elif defined(UNIX_PATH_SEMANTICS)
+#define IS_SLASH(C) ((C) == '/')
+#endif

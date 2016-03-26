@@ -1,8 +1,12 @@
 LIBRARY Foundation
     EXPORTS
-        ; CF ObjC classes
-        _OBJC_CLASS_CFConstantString CONSTANT ; This needs to be CONSTANT because CFConstantString is special for @"" syntax
-        __objc_class_name_CFConstantString CONSTANT
+        ; Constant String class
+        _OBJC_CLASS_NSConstantString CONSTANT ; This needs to be CONSTANT because NSConstantString is special for @"" syntax
+        __objc_class_name_NSConstantString CONSTANT
+
+        ; TODO 7143070: Remove temporary exports for projections interop
+        _OBJC_CLASS_CFConstantString=_OBJC_CLASS_NSConstantString CONSTANT
+        __objc_class_name_CFConstantString=__objc_class_name_NSConstantString CONSTANT
 
         ; Foundation ObjC classes
         _OBJC_CLASS_NSArray DATA
@@ -296,18 +300,6 @@ LIBRARY Foundation
         isOSTarget
         NSAllocateObject
         NSDeallocateObject
-        OSHostByteOrder
-        OSReadBigInt16
-        OSReadBigInt32
-        OSSwapBigToHostInt16
-        OSSwapBigToHostInt32
-        OSSwapInt16
-        OSSwapInt32
-        OSSwapLittleToHostInt32
-        arc4random
-        mach_absolute_time
-        mach_timebase_info
-        sysctlbyname
         NSClassFromString
         NSEqualRanges
         NSHomeDirectory

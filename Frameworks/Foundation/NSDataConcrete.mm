@@ -73,7 +73,8 @@
 
 - (instancetype)initWithCapacity:(NSUInteger)capacity {
     if (self = [super init]) {
-        _nscf.attach(reinterpret_cast<NSCFData*>(static_cast<NSData*>((CFDataCreateMutable(NULL, capacity)))));
+        _nscf.attach(reinterpret_cast<NSCFData*>(static_cast<NSData*>((CFDataCreateMutable(NULL, 0)))));
+        [_nscf setLength:capacity];
     }
     return self;
 }

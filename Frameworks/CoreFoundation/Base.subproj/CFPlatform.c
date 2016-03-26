@@ -81,7 +81,8 @@ CF_PRIVATE const wchar_t *_CFDLLPath(void) {
     if (!bDllPathCached) {
 #ifdef _DEBUG
         // might be nice to get this from the project file at some point
-        wchar_t *DLLFileName = L"CoreFoundation_debug.dll";
+        // WINOBJC: WinobjC uses same dll name for both configurations. // wchar_t *DLLFileName = L"CoreFoundation_debug.dll";
+        wchar_t *DLLFileName = L"CoreFoundation.dll";
 #else
         wchar_t *DLLFileName = L"CoreFoundation.dll";
 #endif

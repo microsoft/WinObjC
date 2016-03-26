@@ -13,20 +13,33 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See http://swift.org/LICENSE.txt for license information
+// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
 
-#import "Starboard.h"
-#import "StubReturn.h"
+#include "Starboard.h"
+#include "StubReturn.h"
+
+#import <CoreFoundation/CFDateFormatter.h>
 #import <Foundation/Foundation.h>
 #import <NSLocaleInternal.h>
 #import <NSCalendarInternal.h>
 #import <NSTimeZoneInternal.h>
-#import <unicode/datefmt.h>
-#import <unicode/dtfmtsym.h>
-#import <unicode/smpdtfmt.h>
-#import <unicode/dtptngen.h>
-#import <functional>
-#import <map>
-#import "LoggingNative.h"
+#include <unicode/datefmt.h>
+#include <unicode/dtfmtsym.h>
+#include <unicode/smpdtfmt.h>
+#include <unicode/dtptngen.h>
+
+#include <functional>
+#include <string>
+#include <map>
+#include "LoggingNative.h"
+#include "StringHelpers.h"
 
 static const wchar_t* TAG = L"NSDateFormatter";
 
@@ -137,19 +150,20 @@ static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbol
 }
 
 static void SetSymbolFromNSString(icu::DateFormat* formatter, NSString* value, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
-    udat_setSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, (UChar*)[value rawCharacters], [value length], &error);
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(value);
+    udat_setSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, &(wideBuffer[0]), wideBuffer.length(), &error);
 }
 
 static void SetSymbolsFromNSArray(
     icu::DateFormat* formatter, NSArray* values, UDateFormatSymbolType symbol, int startIdx, UErrorCode& error) {
     for (int i = 0; i < [values count]; i++) {
         NSString* symbolStr = [values objectAtIndex:i];
-
+        std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(symbolStr);
         udat_setSymbols((UDateFormat*)formatter,
                         (UDateFormatSymbolType)symbol,
                         i + startIdx,
-                        (UChar*)[symbolStr rawCharacters],
-                        [symbolStr length],
+                        &(wideBuffer[0]),
+                        wideBuffer.length(),
                         &error);
     }
 }
@@ -274,29 +288,10 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
  @Notes options parameter not supported
 */
 + (NSString*)dateFormatFromTemplate:(NSString*)dateTemplate options:(NSUInteger)options locale:(NSLocale*)locale {
-    UErrorCode error = U_ZERO_ERROR;
-    icu::Locale* icuLocale = [locale _createICULocale];
-    DateTimePatternGenerator* pg = DateTimePatternGenerator::createInstance(*icuLocale, error);
-    delete icuLocale;
-    UStringHolder strTemplate(dateTemplate);
-
-    UnicodeString strSkeleton = pg->getSkeleton(strTemplate.string(), error);
-    if (U_FAILURE(error)) {
-        delete pg;
-        return nil;
-    }
-
-    UnicodeString pattern = pg->getBestPattern(strSkeleton, error);
-    if (U_FAILURE(error)) {
-        delete pg;
-        return nil;
-    }
-
-    NSString* ret = NSStringFromICU(pattern);
-
-    delete pg;
-
-    return ret;
+    return static_cast<NSString*>(CFDateFormatterCreateDateFormatFromTemplate(kCFAllocatorSystemDefault,
+                                                                              static_cast<CFStringRef>(dateTemplate),
+                                                                              options,
+                                                                              static_cast<CFLocaleRef>(locale)));
 }
 
 - (ICUPropertyValue)_getFormatterProperty:(ICUPropertyMapper::PropertyTypes)type {
@@ -345,9 +340,8 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
         icu::Locale* icuLocale = [_locale _createICULocale];
 
         if ([_dateFormat length] > 0) {
-            UStringHolder fmtString(static_cast<NSString*>(_dateFormat));
-
-            _formatter = new SimpleDateFormat(fmtString.string(), *icuLocale, status);
+            // HACKHACK: no clue if this is correct.
+            _formatter = new SimpleDateFormat(UnicodeString([_dateFormat UTF8String]), *icuLocale, status);
         } else {
             // Don't instantiate a date/time formatter if only date or time are expected individually.
             if (_timeStyle == NSDateFormatterNoStyle && _dateStyle == NSDateFormatterNoStyle) {
@@ -507,18 +501,14 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (void)setLenient:(BOOL)lenient {
-    @synchronized(self) {
-        [self _setFormatterProperty:ICUPropertyMapper::lenient withValue:ICUPropertyValue(lenient)];
-    }
+    [self _setFormatterProperty:ICUPropertyMapper::lenient withValue:ICUPropertyValue(lenient)];
 }
 
 /**
  @Status Interoperable
 */
-- (BOOL)isLenient {
-    @synchronized(self) {
-        return [self _getFormatterProperty:ICUPropertyMapper::lenient]._boolValue;
-    }
+- (BOOL)lenient {
+    return [self _getFormatterProperty:ICUPropertyMapper::lenient]._boolValue;
 }
 
 /**
@@ -584,7 +574,9 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 
     [self _getFormatter]->format([date timeIntervalSince1970] * 1000.0, str);
 
-    return NSStringFromICU(str);
+    std::string realStr;
+    str.toUTF8String(realStr);
+    return [NSString stringWithUTF8String:realStr.c_str()];
 }
 
 /**
@@ -626,13 +618,10 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSDate*)dateFromString:(NSString*)str {
-    UStringHolder uStr(str);
-    UErrorCode status = U_ZERO_ERROR;
-    UDate date = [self _getFormatter]->parse(uStr.string(), status);
-
-    if (!U_SUCCESS(status))
-        return nil;
-    return [NSDate dateWithTimeIntervalSince1970:date / 1000.0];
+    CFRange range = CFRange{ 0, [str length] };
+    // HACKHACK: This needs to be filled in with actual impl once NSDateFormatter is rewritten to contain a CFDateFormatter.
+    return static_cast<NSDate*>(
+        CFDateFormatterCreateDateFromString(kCFAllocatorSystemDefault, nullptr, static_cast<CFStringRef>(str), &range));
 }
 
 /**

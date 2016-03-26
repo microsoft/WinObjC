@@ -348,12 +348,9 @@ CFStringRef CTFontCopyName(CTFontRef font, CFStringRef nameKey) {
             continue;
         }
 
-        NSStringEncoding stringEncoding = 0;
-        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id &&
-            charMap->encoding_id == fontNameInfo.encoding_id &&
-            languageId == fontNameInfo.language_id &&
-            nameId == fontNameInfo.name_id) {
-
+        NSStringEncoding stringEncoding{};
+        if (TT_PLATFORM_MICROSOFT == fontNameInfo.platform_id && charMap->encoding_id == fontNameInfo.encoding_id &&
+            languageId == fontNameInfo.language_id && nameId == fontNameInfo.name_id) {
             // FreeType thinks we are running on Mac and returns the bytes in big endian format even when
             // we are on Microsoft platform so we adjust the encoding id accordingly.
             switch (charMap->encoding_id) {

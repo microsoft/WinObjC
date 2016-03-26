@@ -18,8 +18,8 @@
 #include "CFXMLInputStream.h"
 #include <CoreFoundation/CFCharacterSet.h>
 #include <string.h>
-#include "CFStringEncodingConverter.h""
-#include "CFUniChar.h""
+#include "CFStringEncodingConverter.h"
+#include "CFUniChar.h"
 
 
 /* Utility functions used in parsing */

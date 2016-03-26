@@ -136,7 +136,7 @@ CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass, CFStri
     result = CFStringCompare(inTagClass, kUTTagClassFilenameExtension, 0);
     if (result == kCFCompareEqualTo) {
         CFArrayRef fileNameExtensions = _UTGetUTIsForFileNameExtension(inTag);
-        return static_cast<CFStringRef>(CFArrayGetValueAtIndex(fileNameExtensions, 0));
+        return fileNameExtensions ? static_cast<CFStringRef>(CFArrayGetValueAtIndex(fileNameExtensions, 0)) : NULL;
     }
 
     result = CFStringCompare(inTagClass, kUTTagClassMIMEType, 0);

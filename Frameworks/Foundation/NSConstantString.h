@@ -13,7 +13,29 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+#import <Foundation/NSString.h>
+#import "NSStringAdditionsForCF.h"
 
-@interface CFConstantString : NSString {
+@interface NSConstantString : NSString <NSStringAdditionsForCF> {
+    // NOTE: these two ivars *must* be present to match the compiler expected
+    // layout for constant strings.
+    char* c_string;
+    unsigned int len;
 }
+
+- (instancetype)retain;
+- (void)release;
+- (instancetype)autorelease;
+- (void)dealloc;
+
+// NSString overrides
+@property (readonly) NSUInteger length;
+- (unichar)characterAtIndex:(NSUInteger)index;
+
+// Private function for CF
+- (const char*)_fastCStringContents:(CFStringEncoding)encoding;
+- (const UniChar*)_fastCharacterContents;
+- (Boolean)_encodingCantBeStoredInEightBitCFString;
+
 @end

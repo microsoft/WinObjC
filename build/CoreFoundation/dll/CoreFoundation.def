@@ -1,5 +1,32 @@
 LIBRARY CoreFoundation
     EXPORTS
+        ; WINOBJC: Bridged String class. Exported from CF so that both static CFSTR and 
+        ; NSString instances can make uses of it.
+        _OBJC_CLASS__NSCFString DATA
+        __objc_class_name__NSCFString CONSTANT
+
+        ; WINOBJC: Additional items added to CF
+        OSHostByteOrder
+        OSReadBigInt16
+        OSReadBigInt32
+        OSSwapBigToHostInt16
+        OSSwapBigToHostInt32
+        OSSwapInt16
+        OSSwapInt32
+        OSSwapLittleToHostInt32
+        arc4random
+        mach_timebase_info
+        sysctlbyname
+
+        ; WINOBJC: Expose a few private CF Helpers
+        _CFAppendPathComponent2
+        _CFAppendPathExtension2
+        _CFRuntimeBridgeTypeToClass
+        _CFStartOfLastPathComponent2
+        _CFStartOfPathExtension2
+        _CFGetSlash
+        _CFGetSlashStr
+
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA
         ; CFRangeMake ; inlined / #defined
@@ -878,7 +905,7 @@ LIBRARY CoreFoundation
         ; CFStringGetSurrogatePairForLongCharacter ; inline
         ; CFStringIsSurrogateHighCharacter ; inline
         ; CFStringIsSurrogateLowCharacter ; inline
-        __CFConstantStringClassReference
+        ; __CFConstantStringClassReference ; WINOBJC: Use above _NSCFString export instead.
 
         ; CFStringTokenizer.mm
         ; HACKHACK: Reference Platform doesn't have an impl of this class.
@@ -1192,7 +1219,4 @@ LIBRARY CoreFoundation
         CFAbsoluteTimeGetWeekOfYear
         CFGregorianDateGetAbsoluteTime
         CFGregorianDateIsValid
-
-        ; Internal
-        _CFRuntimeBridgeTypeToClass
 

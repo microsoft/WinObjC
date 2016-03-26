@@ -25,6 +25,8 @@
 
 @implementation NSAttributedString
 
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSAttributedString, NSAttributedStringConcrete);
+
 /**
  @Status Interoperable
 */
@@ -49,13 +51,6 @@
 /**
  @Status Interoperable
 */
-- (NSObject*)init {
-    BRIDGED_INIT(NSAttributedString, NSMutableAttributedString, NSMutableAttributedStringConcrete);
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)initWithString:(NSString*)string {
     return [self initWithString:string attributes:[[NSDictionary new] autorelease]];
 }
@@ -64,14 +59,14 @@
  @Status Interoperable
 */
 - (instancetype)initWithAttributedString:(NSAttributedString*)string {
-    BRIDGED_INIT_ABSTRACT(NSAttributedString, NSMutableAttributedString, NSMutableAttributedStringConcrete, string);
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
-    BRIDGED_INIT_ABSTRACT(NSAttributedString, NSMutableAttributedString, NSMutableAttributedStringConcrete, string, attributes);
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

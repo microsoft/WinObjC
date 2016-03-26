@@ -138,4 +138,12 @@
     <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFAttributedString.h"/>
     <CoreFoundationPublicHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\module.modulemap"/>
   </ItemGroup>
+    <ItemGroup>
+    <!-- Since Core Foundation has been forked and its directory structure does not match WinObjC's, copy all shared private headers into the right spot. -->
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\ForFoundationOnly.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFPriv.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundlePriv.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Stream.subproj\CFStreamPriv.h"/>
+  </ItemGroup>
 </Project>

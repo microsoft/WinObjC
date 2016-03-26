@@ -23,23 +23,10 @@
 @class NSString;
 @class NSData;
 
-#ifdef __cplusplus
-namespace icu_48 {
-class UnicodeSet;
-}
-typedef icu_48::UnicodeSet CharacterSet;
-#else
-typedef void* CharacterSet;
-#endif
-
 enum { NSOpenStepUnicodeReservedBase = 0xF400 };
 
 FOUNDATION_EXPORT_CLASS
-@interface NSCharacterSet : NSObject <NSCoding, NSCopying, NSMutableCopying> {
-@public
-    CharacterSet* _icuSet;
-}
-
+@interface NSCharacterSet : NSObject <NSCoding, NSCopying, NSMutableCopying>
 + (instancetype)alphanumericCharacterSet;
 + (instancetype)capitalizedLetterCharacterSet;
 + (instancetype)controlCharacterSet;
@@ -72,6 +59,4 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly, copy) NSCharacterSet* invertedSet;
 @property (readonly, copy) NSData* bitmapRepresentation;
 
-// WinObjC Addition:
-- (NSUInteger)count;
 @end

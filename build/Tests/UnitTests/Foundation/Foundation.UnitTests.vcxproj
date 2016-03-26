@@ -28,9 +28,6 @@
     <ProjectReference Include="..\..\..\Foundation\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj">
-      <Project>{BC8C5D49-060C-4375-904C-FE472C757E58}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Logging\lib\LoggingLib.vcxproj">
       <Project>{D3500720-CF56-43AB-A9D6-9DC119A411B8}</Project>
     </ProjectReference>
@@ -248,11 +245,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSArrayConcrete.mm" /> 
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSCountedSetConcrete.mm" /> 
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSDataConcrete.mm" /> 
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSDictionaryConcrete.mm" /> 
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSSetConcrete.mm" /> 
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
   </ItemGroup>
   <ItemGroup>
@@ -321,6 +313,8 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSData.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDictionary.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSSet.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSCharacterSet.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSString.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">

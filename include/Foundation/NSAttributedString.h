@@ -48,7 +48,6 @@ typedef NS_OPTIONS(NSUInteger, NSAttributedStringEnumerationOptions) {
 FOUNDATION_EXPORT_CLASS
 @interface NSAttributedString : NSObject <NSCopying, NSSecureCoding, NSMutableCopying>
 
-- (instancetype)init;
 - (instancetype)initWithString:(NSString*)string;
 - (instancetype)initWithAttributedString:(NSAttributedString*)attributedString;
 - (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes;

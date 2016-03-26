@@ -13,8 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#include <Starboard.h>
+#include <CoreFoundation/CFBase.h>
+#include "CFInternal.h"
 
 #include <COMIncludes.h>
 #include <wrl\client.h>
@@ -38,9 +38,11 @@ using namespace Microsoft::WRL::Wrappers;
 
 ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> GetBufferStatics() {
     ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics;
-    RETURN_NULL_IF_FAILED(
-        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
-                             &bufferStatics));
+    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                                    &bufferStatics))) {
+        return nullptr;
+    }
+
     return bufferStatics;
 }
 
@@ -48,7 +50,7 @@ extern "C" uint32_t arc4random() {
     static ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics(GetBufferStatics());
 
     UINT32 randResult = 0;
-    if (!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult))) {
+    if (FAILED(bufferStatics->GenerateRandomNumber(&randResult))) {
         TraceVerbose(TAG, L"Unable to get random number!");
     }
     return randResult;
@@ -78,18 +80,11 @@ extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const 
 
 static int64_t _mach_get_timebase() {
     LARGE_INTEGER performanceFrequency;
-    FAIL_FAST_IF(0 == QueryPerformanceFrequency(&performanceFrequency));
+    CFAssert(0 == QueryPerformanceFrequency(&performanceFrequency), __kCFLogAssertion, "QueryPerformanceFrequency failed");
     return performanceFrequency.QuadPart;
 }
 
 static int64_t _mach_frequency = _mach_get_timebase();
-
-extern "C" uint64_t mach_absolute_time() {
-    LARGE_INTEGER current;
-    FAIL_FAST_IF(0 == QueryPerformanceCounter(&current));
-
-    return static_cast<uint64_t>(current.QuadPart);
-}
 
 extern "C" kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
     //  mach_absolute_time uses QueryPerformanceCounter which returns

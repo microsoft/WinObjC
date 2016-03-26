@@ -356,9 +356,12 @@ CF_PRIVATE Boolean __CFProcessIsRestricted();
 #define STACK_BUFFER_DECL(T, N, C) T N[C]
 #endif
 
-
-CF_EXPORT void * __CFConstantStringClassReferencePtr;
-CF_EXPORT void *__CFConstantStringClassReference[];
+// WINOBJC: The reference platform uses a special compiler option not available to us to 
+// get __CFConstantStringClassReferencePtr filled out with the correct "Class". Since this isn't
+// an option here, use &_OBJC_CLASS__NSCFString instead.
+// CF_EXPORT void * __CFConstantStringClassReferencePtrPtr;
+// CF_EXPORT void *__CFConstantStringClassReferencePtr[];
+extern "C" Class _OBJC_CLASS__NSCFString;
 
 #ifdef __CONSTANT_CFSTRINGS__
 
@@ -369,24 +372,27 @@ CF_EXPORT void *__CFConstantStringClassReference[];
 #else
 #define CONST_STRING_SECTION
 #endif
-
 // TODO: Pinned retain count for constants?
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define CONST_STRING_DECL(S, V) \
-const struct __CFConstStr __##S CONST_STRING_SECTION = {{(uintptr_t)&__CFConstantStringClassReference, _CF_CONSTANT_OBJECT_STRONG_RC, 0, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
+const struct __CFConstStr __##S CONST_STRING_SECTION = {{(uintptr_t)&_OBJC_CLASS__NSCFString, _CF_CONSTANT_OBJECT_STRONG_RC, 0, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
 CF_EXPORT const CFStringRef const S = (CFStringRef)&__##S;
 
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define PE_CONST_STRING_DECL(S, V) \
-const static struct __CFConstStr __##S CONST_STRING_SECTION = {{(uintptr_t)&__CFConstantStringClassReference, _CF_CONSTANT_OBJECT_STRONG_RC, 0, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
+const static struct __CFConstStr __##S CONST_STRING_SECTION = {{(uintptr_t)&_OBJC_CLASS__NSCFString, _CF_CONSTANT_OBJECT_STRONG_RC, 0, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
 CF_PRIVATE const CFStringRef S = (CFStringRef)&__##S;
 
 #else
 
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define CONST_STRING_DECL(S, V) \
-const struct __CFConstStr __##S = {{(uintptr_t)&__CFConstantStringClassReference, _CFSWIFT_RC_INIT {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
+const struct __CFConstStr __##S = {{(uintptr_t)&_OBJC_CLASS__NSCFString, _CFSWIFT_RC_INIT {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
 CF_EXPORT const CFStringRef const S = (CFStringRef)&__##S;
 
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define PE_CONST_STRING_DECL(S, V) \
-const static struct __CFConstStr __##S = {{(uintptr_t)&__CFConstantStringClassReference, _CFSWIFT_RC_INIT {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
+const static struct __CFConstStr __##S = {{(uintptr_t)&_OBJC_CLASS__NSCFString, _CFSWIFT_RC_INIT {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
 CF_PRIVATE const CFStringRef S = (CFStringRef)&__##S;
 
 #endif
@@ -399,26 +405,31 @@ struct CF_CONST_STRING {
     uint32_t _length;
 };
 
-CF_EXPORT void* __CFConstantStringClassReference[];
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
+// CF_EXPORT void* __CFConstantStringClassReferencePtr[];
 
 /* CFNetwork also has a copy of the CONST_STRING_DECL macro (for use on platforms without constant string support in cc); please warn cfnetwork-core@group.apple.com of any necessary changes to this macro. -- REW, 1/28/2002 */
 
 #if __CF_BIG_ENDIAN__
 
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define CONST_STRING_DECL(S, V)         \
-static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&__CFConstantStringClassReference, {0x00, 0x00, 0x07, 0xc8}}, (uint8_t *)V, sizeof(V) - 1}; \
+static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&_OBJC_CLASS__NSCFString, {0x00, 0x00, 0x07, 0xc8}}, (uint8_t *)V, sizeof(V) - 1}; \
 CF_EXPORT const CFStringRef const S = (CFStringRef) & __ ## S ## __;
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define PE_CONST_STRING_DECL(S, V)          \
-static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&__CFConstantStringClassReference, {0x00, 0x00, 0x07, 0xc8}}, (uint8_t *)V, sizeof(V) - 1}; \
+static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&_OBJC_CLASS__NSCFString, {0x00, 0x00, 0x07, 0xc8}}, (uint8_t *)V, sizeof(V) - 1}; \
 CF_PRIVATE const CFStringRef S = (CFStringRef) & __ ## S ## __;
 
 #elif __CF_LITTLE_ENDIAN__
 
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define CONST_STRING_DECL(S, V)         \
-static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&__CFConstantStringClassReference, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
+static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&_OBJC_CLASS__NSCFString, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
 CF_EXPORT const CFStringRef const S = (CFStringRef) & __ ## S ## __;
+// WINOBJC: use &_OBJC_CLASS__NSCFString instead of __CFConstantStringClassReferencePtr
 #define PE_CONST_STRING_DECL(S, V)          \
-static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&__CFConstantStringClassReference, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
+static struct CF_CONST_STRING __ ## S ## __ = {{(uintptr_t)&_OBJC_CLASS__NSCFString, {0xc8, 0x07, 0x00, 0x00}}, (uint8_t *)(V), sizeof(V) - 1}; \
 CF_PRIVATE const CFStringRef S = (CFStringRef) & __ ## S ## __;
 
 #endif
@@ -663,7 +674,7 @@ extern void _CFRuntimeSetInstanceTypeIDAndIsa(CFTypeRef cf, CFTypeID newTypeID);
 #define CF_IS_OBJC(typeID, obj) ( \
     (obj) && \
     (((CFRuntimeBase*)(obj))->_cfisa != 0) && \
-    (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(__CFConstantStringClassReferencePtr)) && \
+    (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFString)) && \
     (__CFISAForTypeID(typeID) != ((CFRuntimeBase*)(obj))->_cfisa) && \
     (![(id)(((CFRuntimeBase*)(obj)))->_cfisa isSubclassOfClass:(Class)__CFISAForTypeID(typeID)]))
 
@@ -678,7 +689,7 @@ CF_INLINE uintptr_t __CFISAForTypeID(CFTypeID typeID) {
 // WINOBJC: helper function to determine if a cf object is a bridged CF object.
 CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
-    if (!object || (object->_cfisa == 0) || (object->_cfisa == (uintptr_t)(__CFConstantStringClassReferencePtr))) {
+    if (!object || (object->_cfisa == 0) || (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString))) {
         return false;
     }
 
@@ -699,7 +710,7 @@ CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
 CF_INLINE bool __CF_IsCFObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
     if ((object->_cfisa == 0) || 
-        (object->_cfisa == (uintptr_t)(__CFConstantStringClassReferencePtr)) ||
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) ||
         __CF_IsBridgedObject(obj)) {
         return true;
     }
@@ -1000,6 +1011,11 @@ static inline HMODULE GetModuleHandle(const wchar_t* moduleName)
 
 #endif
 #endif
+
+// WINOBJC: There exists strange ordering issues with DllMain and static init where there may be a need to ensure CF is initialized
+// in one or the other first. Extern the method here to allow for this.
+CF_PRIVATE void __CFInitialize(void);
+
 
 CF_EXTERN_C_END
 

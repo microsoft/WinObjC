@@ -249,8 +249,7 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    return NSInvalidAbstractInvocationReturn();
+    return [self initWithData:[coder decodeObjectForKey:@"NS.data"]];
 }
 
 /**
@@ -679,12 +678,10 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 @end

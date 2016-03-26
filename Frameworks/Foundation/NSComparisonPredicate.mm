@@ -121,7 +121,7 @@
     if ([self _areResultsStrings:leftResult rightResult:rightResult]) {
         // Ensure NSComparisonPredicateOptions options are met. _comparisonPredicateModifier
         NSComparisonPredicateOptions option = [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
-        return [rightResult rangeOfString:leftResult options:option].location != NSNotFound;
+        return [rightResult rangeOfString:leftResult options:static_cast<NSStringCompareOptions>(option)].location != NSNotFound;
     }
 
     return NO;
@@ -189,12 +189,14 @@
         case NSBeginsWithPredicateOperatorType: {
             NSStringCompareOptions compareOption =
                 [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
-            return ([leftResult rangeOfString:rightResult options:(NSAnchoredSearch | compareOption)].location != NSNotFound);
+            return ([leftResult rangeOfString:rightResult options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | compareOption)]
+                        .location != NSNotFound);
         }
         case NSEndsWithPredicateOperatorType: {
             NSStringCompareOptions compareOption =
                 [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
-            return ([leftResult rangeOfString:rightResult options:(NSBackwardsSearch | compareOption)].location != NSNotFound);
+            return ([leftResult rangeOfString:rightResult options:static_cast<NSStringCompareOptions>(NSBackwardsSearch | compareOption)]
+                        .location != NSNotFound);
         }
         case NSInPredicateOperatorType:
             // check if right contains left

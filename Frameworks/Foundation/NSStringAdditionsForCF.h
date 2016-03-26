@@ -16,11 +16,8 @@
 
 #pragma once
 
-#include "NSArrayInternal.h"
-
-@interface NSMutableArray (Internal)
-- (void)sortUsingFunction:(NSInteger (*)(id, id, void*))compare context:(void*)context range:(NSRange)range;
-@end
-
-@interface NSMutableArrayConcrete : NSMutableArray
+@protocol NSStringAdditionsForCF
+- (const char*)_fastCStringContents:(CFStringEncoding)encoding;
+- (const UniChar*)_fastCharacterContents;
+- (Boolean)_encodingCantBeStoredInEightBitCFString;
 @end
