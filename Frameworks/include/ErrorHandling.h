@@ -179,14 +179,23 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 
 // Override Win32 function calls
 #pragma push_macro("GetCurrentThreadId")
+#undef GetCurrentThreadId
 #pragma push_macro("InterlockedIncrementNoFence")
+#undef InterlockedIncrementNoFence
 #pragma push_macro("GetLastError")
+#undef GetLastError
 #pragma push_macro("CopyMemory")
+#undef CopyMemory
 #pragma push_macro("ZeroMemory")
+#undef ZeroMemory
 #pragma push_macro("FormatMessageW")
+#undef FormatMessageW
 #pragma push_macro("OutputDebugStringW")
+#undef OutputDebugStringW
 #pragma push_macro("InterlockedDecrementRelease")
+#undef InterlockedDecrementRelease
 #pragma push_macro("InterlockedCompareExchangePointer")
+#undef InterlockedCompareExchangePointer
 
 __BEGIN_DECLS
 
@@ -260,14 +269,23 @@ __END_DECLS
 #endif
 
 // Pop all the temp Win32 function defines
+#undef GetCurrentThreadId
 #pragma pop_macro("GetCurrentThreadId")
+#undef InterlockedIncrementNoFence
 #pragma pop_macro("InterlockedIncrementNoFence")
+#undef GetLastError
 #pragma pop_macro("GetLastError")
+#undef CopyMemory
 #pragma pop_macro("CopyMemory")
+#undef ZeroMemory
 #pragma pop_macro("ZeroMemory")
+#undef FormatMessageW
 #pragma pop_macro("FormatMessageW")
+#undef OutputDebugStringW
 #pragma pop_macro("OutputDebugStringW")
+#undef InterlockedDecrementRelease
 #pragma pop_macro("InterlockedDecrementRelease")
+#undef InterlockedCompareExchangePointer
 #pragma pop_macro("InterlockedCompareExchangePointer")
 
 // Pop all the temp Win32 defines

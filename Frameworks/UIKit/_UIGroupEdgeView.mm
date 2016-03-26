@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "_UIGroupEdgeView.h"
-#include "CoreGraphics/CGContext.h"
-#include "UIKit/UIColor.h"
+#import "Starboard.h"
+#import "_UIGroupEdgeView.h"
+#import "CoreGraphics/CGContext.h"
+#import "UIKit/UIColor.h"
+#import "UIViewInternal.h"
 
 struct GroupBackgroundTexture {
     idretain _image;
@@ -32,7 +33,8 @@ static int _numGroupBackgroundTextures;
 static UIImage* findGroupBackgroundTexture(DWORD style, UIColor* color) {
     for (int i = 0; i < _numGroupBackgroundTextures; i++) {
         if (_backgroundTextures[i]._style == style &&
-            (_backgroundTextures[i]._backgroundColor == color || [_backgroundTextures[i]._backgroundColor isEqual:color])) {
+            (static_cast<UIColor*>(_backgroundTextures[i]._backgroundColor) == color ||
+             [static_cast<UIColor*>(_backgroundTextures[i]._backgroundColor) isEqual:color])) {
             return _backgroundTextures[i]._image;
         }
     }

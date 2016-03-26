@@ -14,10 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
 
 #define U_STATIC_IMPLEMENTATION 1
-#include <unicode/unistr.h>
+#import <unicode/unistr.h>
 #import "NSMutableString+Internal.h"
 
 void setToUnicode(NSString* inst, UnicodeString& str);
@@ -162,7 +162,7 @@ void setToUnicode(NSString* inst, UnicodeString& str);
 /**
  @Status Interoperable
 */
-- (NSUInteger)replaceOccurrencesOfString:(id)target withString:(id)replacement options:(DWORD)options range:(NSRange)range {
+- (NSUInteger)replaceOccurrencesOfString:(id)target withString:(id)replacement options:(NSStringCompareOptions)options range:(NSRange)range {
     if (target == nil) {
         // NSRaiseException(NSInvalidArgumentException,self,_cmd,@"nil target object");
         assert(0);

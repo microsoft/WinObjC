@@ -38,6 +38,8 @@
 @interface UIApplication ()
 - (UIView*)_popupLayer;
 - (void)_setInternalOrientation:(UIInterfaceOrientation)orientation;
+- (id)_keyboardChanged;
+- (id)_evaluateKeyboard;
 @end
 
 #endif /* _UIAPPLICATIONINTERNAL_H_ */

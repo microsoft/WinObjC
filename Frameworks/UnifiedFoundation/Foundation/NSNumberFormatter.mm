@@ -20,10 +20,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSAttributedString.h"
 #import "Etc.h"
-
 #import <stdarg.h>
 #import <cmath>
-
 #import <unicode/numfmt.h>
 #import <unicode/decimfmt.h>
 #import <unicode/unum.h>
@@ -37,69 +35,35 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 @implementation NSNumberFormatter {
     icu::DecimalFormat* _formatter;
 
-    NSNumberFormatterBehavior _behavior;
     // 10.4
     NSNumberFormatterStyle _numberStyle;
-    NSUInteger _formatWidth;
+
     id _locale;
     id _multiplier;
 
-    BOOL _allowsFloats;
     BOOL _alwaysShowsDecimalSeparator;
     BOOL _isLenient;
     BOOL _isPartialStringValidationEnabled;
-    BOOL _generatesDecimalNumbers;
     BOOL _usesGroupingSeparator;
-    BOOL _usesSignificantDigits;
 
     NSUInteger _minimumIntegerDigits;
-    NSUInteger _minimumFractionDigits;
-    NSUInteger _minimumSignificantDigits;
-    NSUInteger _maximumIntegerDigits;
     BOOL _customMaximumFractionDigits;
     NSUInteger _maximumFractionDigits;
-    NSUInteger _maximumSignificantDigits;
-
-    id _minimum;
-    id _maximum;
 
     id _nilSymbol;
     id _notANumberSymbol;
-    id _zeroSymbol;
-    id _plusSign;
-    id _minusSign;
     id _negativePrefix;
     id _negativeSuffix;
     id _positivePrefix;
     id _positiveSuffix;
-    id _negativeInfinitySymbol;
-    id _positiveInfinitySymbol;
 
     id _decimalSeparator;
-    id _exponentSymbol;
     id _currencyCode;
     id _currencySymbol;
-    id _internationalCurrencySymbol;
-    id _currencyDecimalSeparator;
-    id _currencyGroupingSeparator;
     id _groupingSeparator;
     NSUInteger _groupingSize;
-    NSUInteger _secondaryGroupingSize;
     id _paddingCharacter;
-    // NSNumberFormatterPadPosition _paddingPosition;
     id _percentSymbol;
-    id _perMillSymbol;
-    id _roundingIncrement;
-    NSNumberFormatterRoundingMode _roundingMode;
-    id _positiveFormat;
-    id _negativeFormat;
-    id _textAttributesForPositiveValues;
-    id _textAttributesForNegativeValues;
-    id _textAttributesForNegativeInfinity;
-    id _textAttributesForNil;
-    id _textAttributesForNotANumber;
-    id _textAttributesForPositiveInfinity;
-    id _textAttributesForZero;
 
     // 10.0
     id _attributedStringForNil;
@@ -122,24 +86,24 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 /**
  @Status Interoperable
 */
-- (id)init {
-    [super init];
-    _behavior = _defaultFormatterBehavior;
-    _numberStyle = NSNumberFormatterNoStyle;
+- (instancetype)init {
+    if (self = [super init]) {
+        _formatterBehavior = _defaultFormatterBehavior;
+        _numberStyle = NSNumberFormatterNoStyle;
 
-    _thousandSeparator = @",";
-    _decimalSeparator = @".";
-    _currencyDecimalSeparator = @"";
-    /*
-    _attributedStringForNil=[[NSAttributedString allocWithZone:nil] initWithString:@"(null)"];
-    _attributedStringForNotANumber=[[NSAttributedString allocWithZone:nil] initWithString:@"NaN"];
-    _attributedStringForZero=[[NSAttributedString allocWithZone:nil] initWithString:@"0.0"];
-    */
-    _allowsFloats = YES;
+        _thousandSeparator = @",";
+        _decimalSeparator = @".";
+        _currencyDecimalSeparator = @"";
+        /*
+        _attributedStringForNil=[[NSAttributedString allocWithZone:nil] initWithString:@"(null)"];
+        _attributedStringForNotANumber=[[NSAttributedString allocWithZone:nil] initWithString:@"NaN"];
+        _attributedStringForZero=[[NSAttributedString allocWithZone:nil] initWithString:@"0.0"];
+        */
+        _allowsFloats = YES;
 
-    UErrorCode status = U_ZERO_ERROR;
-    _formatter = new icu::DecimalFormat(status);
-    // assert(status == U_ZERO_ERROR);
+        UErrorCode status = U_ZERO_ERROR;
+        _formatter = new icu::DecimalFormat(status);
+    }
 
     return self;
 }
@@ -153,21 +117,6 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     [_attributedStringForZero release];
     delete _formatter;
     [super dealloc];
-}
-
-/**
- @Status Caveat
- @Notes Not thoroughly implemented.
-*/
-- (void)setNumberStyle:(NSNumberFormatterStyle)value {
-    _numberStyle = value;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setFormatWidth:(NSUInteger)value {
-    _formatWidth = value;
 }
 
 /**
@@ -186,68 +135,43 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 */
 - (id)currencyCode {
     if (_currencyCode == nil) {
-        _currencyCode = @"CAD";
+        _currencyCode = @"USD";
     }
     return _currencyCode;
-}
-
-/**
- @Status Stub
-*/
-- (void)setNegativeFormat:(id)value {
-    UNIMPLEMENTED();
-    value = [value copy];
-    [_negativeFormat release];
-    _negativeFormat = value;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setNotANumberSymbol:(id)value {
-    value = [value copy];
-    [_notANumberSymbol release];
-    _notANumberSymbol = value;
-}
-
-/**
- @Status Stub
-*/
-- (void)setPositiveFormat:(id)value {
-    UNIMPLEMENTED();
-    value = [value copy];
-    [_positiveFormat release];
-    _positiveFormat = value;
+    @synchronized(self) {
+        if (_notANumberSymbol != value) {
+            [_notANumberSymbol autorelease];
+            _notANumberSymbol = [value copy];
+        }
+    }
 }
 
 /**
  @Status Interoperable
 */
-- (void)setDecimalSeparator:(id)value {
+- (NSString*)notANumberSymbol {
+    @synchronized(self) {
+        if (_notANumberSymbol == nil) {
+            return @"NaN";
+        }
+
+        return [[_notANumberSymbol retain] autorelease];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setDecimalSeparator:(NSString*)value {
     value = [value copy];
     [_decimalSeparator release];
     _decimalSeparator = value;
-}
-
-/**
- @Status Stub
-*/
-- (void)setUsesSignificantDigits:(BOOL)uses {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)setMinimumSignificantDigits:(NSUInteger)min {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)setMaximumSignificantDigits:(NSUInteger)min {
-    UNIMPLEMENTED();
 }
 
 /**
@@ -288,25 +212,29 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)setPerMillSymbol:(id)value {
-    UNIMPLEMENTED();
-    value = [value copy];
-    [_perMillSymbol release];
-    _perMillSymbol = value;
+- (void)setMultiplier:(NSNumber*)number {
+    @synchronized(self) {
+        if (_multiplier != number) {
+            [_multiplier autorelease];
+            _multiplier = [number copy];
+        }
+    }
 }
 
 /**
  @Status Caveat
  @Notes Does not respect division when NSNumber derived from string?
 */
-- (id)multiplier {
-    if (_multiplier == nil && _numberStyle == NSNumberFormatterPercentStyle) {
-        return [NSNumber numberWithInt:100];
-    }
+- (NSNumber*)multiplier {
+    @synchronized(self) {
+        if (_multiplier == nil && self.numberStyle == NSNumberFormatterPercentStyle) {
+            return [NSNumber numberWithInt:100];
+        }
 
-    return _multiplier;
+        return [[_multiplier retain] autorelease];
+    }
 }
 
 /**
@@ -316,7 +244,7 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     if (_customMaximumFractionDigits)
         return _maximumFractionDigits;
 
-    if (_numberStyle == NSNumberFormatterDecimalStyle)
+    if (self.numberStyle == NSNumberFormatterDecimalStyle)
         return 3;
 
     return 0;
@@ -325,101 +253,155 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 /**
  @Status Interoperable
 */
-- (id)positivePrefix {
-    if (_positivePrefix == nil)
-        return @"";
-
-    return _positivePrefix;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)negativePrefix {
-    if (_negativePrefix == nil)
-        return @"-";
-
-    return _negativePrefix;
-}
-
-/**
- @Status Stub
-*/
-- (id)currencyDecimalSeparator {
-    UNIMPLEMENTED();
-    return _currencyDecimalSeparator;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)positiveSuffix {
-    // Suffixes return the percent symbol if specified
-
-    if (_positiveSuffix == nil) {
-        if (_numberStyle == NSNumberFormatterPercentStyle)
-            return [self percentSymbol];
-
-        return @"";
+- (void)setPositivePrefix:(NSString*)prefix {
+    @synchronized(self) {
+        if (_positivePrefix != prefix) {
+            [_positivePrefix autorelease];
+            _positivePrefix = [prefix copy];
+        }
     }
-
-    return _positiveSuffix;
 }
 
 /**
  @Status Interoperable
 */
-- (id)negativeSuffix {
-    // Suffixes return the percent symbol if specified
+- (NSString*)positivePrefix {
+    @synchronized(self) {
+        if (_positivePrefix == nil) {
+            return @"";
+        }
 
-    if (_negativeSuffix == nil) {
-        if (_numberStyle == NSNumberFormatterPercentStyle)
-            return [self percentSymbol];
-
-        return @"";
+        return [[_positivePrefix retain] autorelease];
     }
-
-    return _negativeSuffix;
 }
 
 /**
  @Status Interoperable
 */
-- (id)percentSymbol {
-    if (_percentSymbol == nil)
-        return @"%";
-
-    return _percentSymbol;
+- (void)setNegativePrefix:(NSString*)prefix {
+    @synchronized(self) {
+        if (_negativePrefix != prefix) {
+            [_negativePrefix autorelease];
+            _negativePrefix = [prefix copy];
+        }
+    }
 }
 
 /**
  @Status Interoperable
 */
-- (id)positiveFormat {
-    return _positiveFormat;
+- (NSString*)negativePrefix {
+    @synchronized(self) {
+        if (_negativePrefix == nil) {
+            return @"-";
+        }
+
+        return [[_negativePrefix retain] autorelease];
+    }
 }
 
 /**
  @Status Interoperable
 */
-- (id)negativeFormat {
-    return _negativeFormat;
+- (void)setPositiveSuffix:(NSString*)suffix {
+    @synchronized(self) {
+        if (_positiveSuffix != suffix) {
+            [_positiveSuffix autorelease];
+            _positiveSuffix = [suffix copy];
+        }
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)setMinimumFractionDigits:(NSUInteger)value {
-    UNIMPLEMENTED();
-    _minimumFractionDigits = value;
+- (NSString*)positiveSuffix {
+    // Suffixes return the percent symbol if specified
+    @synchronized(self) {
+        if (_positiveSuffix == nil) {
+            if (self.numberStyle == NSNumberFormatterPercentStyle) {
+                return self.percentSymbol;
+            }
+
+            return @"";
+        }
+
+        return [[_positiveSuffix retain] autorelease];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setNegativeSuffix:(NSString*)suffix {
+    @synchronized(self) {
+        if (_negativeSuffix != suffix) {
+            [_negativeSuffix autorelease];
+            _negativeSuffix = [suffix copy];
+        }
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)negativeSuffix {
+    // Suffixes return the percent symbol if specified
+    @synchronized(self) {
+        if (_negativeSuffix == nil) {
+            if (self.numberStyle == NSNumberFormatterPercentStyle) {
+                return self.percentSymbol;
+            }
+
+            return @"";
+        }
+
+        return [[_negativeSuffix retain] autorelease];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentSymbol:(NSString*)symbol {
+    @synchronized(self) {
+        if (_percentSymbol != symbol) {
+            [_percentSymbol autorelease];
+            _percentSymbol = [symbol copy];
+        }
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentSymbol {
+    @synchronized(self) {
+        if (_percentSymbol == nil) {
+            return @"%";
+        }
+
+        return [[_percentSymbol retain] autorelease];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)setUsesGroupingSeparator:(BOOL)value {
-    _formatter->setGroupingUsed(value);
-    _usesGroupingSeparator = value;
+    @synchronized(self) {
+        _formatter->setGroupingUsed(value);
+        _usesGroupingSeparator = value;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)usesGroupingSeparator {
+    @synchronized(self) {
+        return _usesGroupingSeparator;
+    }
 }
 
 /**
@@ -432,19 +414,11 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 }
 
 /**
- @Status Caveat
- @Notes NSNumberFormatterBehavior10_0 likely crashes.
-*/
-- (void)setFormatterBehavior:(NSNumberFormatterBehavior)value {
-    _behavior = (NSNumberFormatterBehavior)value;
-}
-
-/**
  @Status Interoperable
 */
 - (id)groupingSeparator {
     if (_groupingSeparator == nil) {
-        id check = [_locale objectForKey:NSLocaleGroupingSeparator];
+        id check = [self.locale objectForKey:NSLocaleGroupingSeparator];
 
         if (check != nil)
             return check;
@@ -470,11 +444,28 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 }
 
 /**
- @Status Caveat
- @Notes Just returns nil.
+ @Status Interoperable
 */
-- (id)nilSymbol {
-    return _nilSymbol;
+- (void)setNilSymbol:(NSString*)symbol {
+    @synchronized(self) {
+        if (_nilSymbol != symbol) {
+            [_nilSymbol autorelease];
+            _nilSymbol = [symbol copy];
+        }
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)nilSymbol {
+    @synchronized(self) {
+        if (_nilSymbol == nil) {
+            return @"";
+        }
+
+        return [[_nilSymbol retain] autorelease];
+    }
 }
 
 /**
@@ -497,27 +488,46 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 /**
  @Status Interoperable
 */
-- (void)setPaddingCharacter:(id)value {
-    value = [value copy];
-    [_paddingCharacter release];
-    _paddingCharacter = value;
-    _formatter->setPadCharacter([value UTF8String]);
+- (void)setPaddingCharacter:(NSString*)value {
+    @synchronized(self) {
+        if (_paddingCharacter != value) {
+            _formatter->setPadCharacter([value UTF8String]);
+            [_paddingCharacter autorelease];
+            _paddingCharacter = [value copy];
+        }
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-- (void)setRoundingMode:(NSNumberFormatterRoundingMode)value {
-    UNIMPLEMENTED();
-    _roundingMode = (NSNumberFormatterRoundingMode)value;
+- (NSString*)paddingCharacter {
+    @synchronized(self) {
+        if (_paddingCharacter == nil) {
+            return @"*";
+        }
+
+        return [[_paddingCharacter retain] autorelease];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMinimumIntegerDigits:(NSUInteger)value {
-    _formatter->setMinimumIntegerDigits(value);
-    _minimumIntegerDigits = value;
+    @synchronized(self) {
+        _formatter->setMinimumIntegerDigits(value);
+        _minimumIntegerDigits = value;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)minimumIntegerDigits {
+    @synchronized(self) {
+        return _minimumIntegerDigits;
+    }
 }
 
 /**
@@ -528,21 +538,17 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 
     id prefix;
     id suffix;
-    id format;
 
     if (numberIsNegative(number)) {
         /*
         prefix = [self negativePrefix];
         suffix = [self negativeSuffix];
-        format = [self negativeFormat];
         */
         prefix = @"";
         suffix = @"";
-        format = @"";
     } else {
         prefix = [self positivePrefix];
         suffix = [self positiveSuffix];
-        format = [self positiveFormat];
     }
 
     id result;
@@ -558,7 +564,7 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
  @Status Interoperable
 */
 - (id)stringFromNumber10_4:(id)number {
-    switch (_numberStyle) {
+    switch (self.numberStyle) {
         case NSNumberFormatterNoStyle:
             return [self stringFromNumberNoStyle:number];
 
@@ -589,40 +595,60 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
  @Notes NSNumberFormatterBehavior10_0 likely crashes.
 */
 - (id)stringFromNumber:(id)number {
-    NSNumberFormatterBehavior check = _behavior;
+    NSNumberFormatterBehavior check = self.formatterBehavior;
 
     if (check == NSNumberFormatterBehaviorDefault)
         check = NSNumberFormatterBehavior10_4;
 
-    if (check == NSNumberFormatterBehavior10_0)
+    // VSO 7016320: Method stringFromNumber10_0 does not exist on NSString.
+    if (check == NSNumberFormatterBehavior10_0) {
         return [self stringFromNumber10_0:number];
-    else
+    } else {
         return [self stringFromNumber10_4:number];
+    }
 }
 
 /**
  @Status Caveat
  @Notes Not thoroughly implemented.
 */
-- (void)setLocale:(id)value {
-    value = [value copy];
-    [_locale release];
-    _locale = value;
+- (void)setLocale:(NSLocale*)value {
+    @synchronized(self) {
+        if (_locale != value) {
+            [_locale autorelease];
+            _locale = [value copy];
+        }
+    }
+}
+
+/**
+ @Status Caveat
+*/
+- (NSLocale*)locale {
+    @synchronized(self) {
+        if (_locale == nil) {
+            UNIMPLEMENTED();
+            return StubReturn();
+        }
+
+        return [[_locale retain] autorelease];
+    }
 }
 
 - (id)_stringFromNumber:(id)number {
     static const WORD kUnicodeInfinity = 0x221E;
+    CFNumberRef num = static_cast<CFNumberRef>(number);
 
-    if (number == nil)
+    if (num == nil)
         return [self nilSymbol];
-    else if (number == kCFNumberNaN)
+    else if (num == kCFNumberNaN)
         return [self notANumberSymbol];
-    else if (number == kCFNumberPositiveInfinity) {
+    else if (num == kCFNumberPositiveInfinity) {
         id check = [self positiveInfinitySymbol];
         if (check == nil)
             check = [NSString stringWithCharacters:&kUnicodeInfinity length:1];
         return check;
-    } else if (number == kCFNumberNegativeInfinity) {
+    } else if (num == kCFNumberNegativeInfinity) {
         id check = [self negativeInfinitySymbol];
         if (check == nil) {
             const WORD codes[2] = { '-', kUnicodeInfinity };
@@ -702,11 +728,11 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
     return NSStringFromICU(formatted);
 }
 
-static id multipliedNumber(id number, id multiplier) {
-    if (multiplier == nil)
+static id multipliedNumber(id number, id multiplierNumber) {
+    if (multiplierNumber == nil)
         return number;
 
-    return [NSNumber numberWithDouble:[number doubleValue] * [multiplier doubleValue]];
+    return [NSNumber numberWithDouble:[number doubleValue] * [multiplierNumber doubleValue]];
 }
 
 static BOOL numberIsNegative(id number) {
@@ -725,7 +751,7 @@ static BOOL numberIsNegative(id number) {
         return nil;
 
     // Do special currency formatting for numbers:
-    if (_numberStyle == NSNumberFormatterCurrencyStyle) {
+    if (self.numberStyle == NSNumberFormatterCurrencyStyle) {
         UErrorCode status = U_ZERO_ERROR;
         UNumberFormat* nf = unum_open(UNUM_CURRENCY, NULL, -1, NULL, NULL, &status);
         int offset = 0;

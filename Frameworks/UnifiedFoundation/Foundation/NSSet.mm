@@ -14,14 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSSet.h"
-#include "Foundation/NSMutableSet.h"
-#include "Foundation/NSCountedSet.h"
-#include "Foundation/NSEnumerator.h"
-#include "NSEnumeratorInternal.h"
-#include "Foundation/NSKeyedArchiver.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSSet.h"
+#import "Foundation/NSMutableSet.h"
+#import "Foundation/NSCountedSet.h"
+#import "Foundation/NSEnumerator.h"
+#import "NSEnumeratorInternal.h"
+#import "Foundation/NSKeyedArchiver.h"
+#import "NSKeyedArchiverInternal.h"
 
 void NSSetTableInit(NSSet* set, NSUInteger capacity) {
     if (object_getClass(set) != [NSSet class] && object_getClass(set) != [NSMutableSet class] &&
@@ -86,7 +87,7 @@ void NSSetTableAddObject(NSSet* set, id object) {
     }
 }
 
-void NSSetTableInitWithObjects(NSSet* set, id* objects, int count) {
+void NSSetTableInitWithObjects(NSSet* set, id _Nonnull const* objects, int count) {
     NSSetTableInit(set, count);
     while (count--) {
         NSSetTableAddObject(set, *objects);
@@ -225,7 +226,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 /**
  @Status Interoperable
 */
-+ (instancetype)setWithObjects:(id*)objects count:(NSUInteger)count {
++ (instancetype)setWithObjects:(id _Nonnull const[])objects count:(NSUInteger)count {
     return [[[self alloc] initWithObjects:objects count:count] autorelease];
 }
 
@@ -254,7 +255,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
+- (instancetype)initWithObjects:(id _Nonnull const[])objects count:(unsigned)count {
     NSSetTableInitWithObjects(self, objects, count);
     return self;
 }
@@ -352,7 +353,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
-        [coder _encodeArrayOfObjects:[self allObjects] forKey:@"NS.objects"];
+        [static_cast<NSKeyedArchiver*>(coder) _encodeArrayOfObjects:[self allObjects] forKey:@"NS.objects"];
     } else {
         UNIMPLEMENTED();
     }

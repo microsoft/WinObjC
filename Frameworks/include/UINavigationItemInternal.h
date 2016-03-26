@@ -24,4 +24,5 @@
 
 @interface UINavigationItem ()
 - (void)_setDelegate:(id<UINavigationItemDelegate>)delegate;
+- (UIBarButtonItem*)_rightBarButtonOrControl;
 @end

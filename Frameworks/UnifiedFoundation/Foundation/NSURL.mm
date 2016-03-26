@@ -14,16 +14,17 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSMutableString.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSURL.h"
-#include "libxml/uri.h"
-#include "HashFn.h"
-#include "Etc.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSMutableString.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSURL.h"
+#import "libxml/uri.h"
+#import "HashFn.h"
+#import "Etc.h"
+#import "LoggingNative.h"
+#import "NSURLInternal.h"
 
 static const wchar_t* TAG = L"NSURL";
 
@@ -1241,7 +1242,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
  @Status Caveat
  @Notes there is no property key validitiy check yet
 */
-- (BOOL)setProperty:(id)propertyValue forKey:(NSString*)propertyKey {
+- (BOOL)_setProperty:(id)propertyValue forKey:(NSString*)propertyKey {
     // TODO: do a check if propertyKey is a valid key
     [_properties setObject:propertyValue forKey:propertyKey];
 

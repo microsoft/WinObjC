@@ -16,10 +16,8 @@
 
 #import <Starboard.h>
 #import <StubReturn.h>
-
 #import "CoreGraphics/CGContext.h"
 #import "CGContextInternal.h"
-
 #import <UIKit/UIView.h>
 #import <UIKit/UIControl.h>
 #import <Foundation/NSTimer.h>
@@ -33,6 +31,9 @@
 #import <UIKit/UITableViewCell.h>
 #import "NSMutableString+Internal.h"
 #import "UIResponderInternal.h"
+#import "UIApplicationInternal.h"
+
+static const wchar_t* TAG = L"UITextField";
 
 NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDidBeginEditingNotification";
 NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
@@ -400,7 +401,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
                         [[UIImage imageNamed:@"/img/TextFieldBezel@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)];
                     rect = [self bounds];
                     [image drawInRect:rect];
-                } break;
+                    break;
+                }
+
+                case UITextBorderStyleNone:
+                    // Required to suppress warning.
+                    // Execution never reaches here because of the outer if condition.
+                    break;
+
+                default:
+                    TraceWarning(TAG, L"Invalid border style specified: %u", _borderStyle);
             }
         }
     }
@@ -741,7 +751,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 
     if (_inputView && [_inputView respondsToSelector:@selector(sendActionsForControlEvents:)]) {
-        [_inputView sendActionsForControlEvents:UIControlEventValueChanged];
+        [static_cast<UIControl*>(_inputView) sendActionsForControlEvents:UIControlEventValueChanged];
     }
 
     [[UIApplication sharedApplication] _keyboardChanged];

@@ -18,10 +18,8 @@
 #import <Foundation/NSMutableAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
 #import <NSRaise.h>
-
 #import <algorithm>
-
-@class NSMutableAttributedStringConcrete;
+#import "CFAttributedStringInternal.h"
 
 @implementation NSAttributedString
 

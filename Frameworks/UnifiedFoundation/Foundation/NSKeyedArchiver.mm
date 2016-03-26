@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #import "Starboard.h"
-
 #import "Foundation/NSMutableDictionary.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSMutableData.h"
@@ -29,7 +28,6 @@
 #import "Foundation/NSAutoreleasePool.h"
 #import "Etc.h"
 #import "NSLogging.h"
-
 #import "Hash.h"
 
 static const wchar_t* TAG = L"NSKeyedArchiver";
@@ -173,7 +171,7 @@ static id makeReference(unsigned ref) {
 /**
  @Status Interoperable
 */
-- (void)encodeBytes:(const void*)aPointer length:(NSUInteger)length forKey:(NSString*)aKey {
+- (void)encodeBytes:(const uint8_t*)aPointer length:(NSUInteger)length forKey:(NSString*)aKey {
     _checkKey(aKey, _enc);
     [_enc setObject:[NSData dataWithBytes:aPointer length:length] forKey:aKey];
 }

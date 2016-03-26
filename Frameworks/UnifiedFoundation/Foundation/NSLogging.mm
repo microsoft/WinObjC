@@ -14,9 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "NSLogging.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "NSLogging.h"
+#import "LoggingNative.h"
+#import "NSStringInternal.h"
 
 static const wchar_t* g_TraceFormat = L"%ws";
 

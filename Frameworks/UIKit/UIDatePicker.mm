@@ -16,8 +16,9 @@
 
 #import "Starboard.h"
 #import <UIKit/UIKit.h>
-
 #import "UIPickerViewInternal.h"
+
+static const wchar_t* TAG = L"UIDatePicker";
 
 static const int MAX_DATEPICKER_COMPONENTS = 4;
 
@@ -797,6 +798,14 @@ static void resetPickerPositions(UIDatePicker* self) {
         case UIDatePickerModeDate:
             setDate(self, clampDate(self, self->_date));
             break;
+
+        case UIDatePickerModeDateAndTime:
+        case UIDatePickerModeCountDownTimer:
+            UNIMPLEMENTED_WITH_MSG("Date picker mode %u not handled", self->_mode);
+            break;
+
+        default:
+            TraceWarning(TAG, L"Invalid date picker mode: %u", self->_mode);
     }
 }
 

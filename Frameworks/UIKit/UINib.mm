@@ -25,6 +25,8 @@
 #import "UIProxyObject.h"
 #import <UIKit/UIWindow.h>
 #import "UINibUnarchiver.h"
+#import "UIRuntimeOutletCollectionConnection.h"
+#import "UIRuntimeOutletConnection.h"
 
 NSString* const UINibExternalObjects = @"UINibExternalObjects";
 
@@ -116,7 +118,7 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
         [curobject setHidden:FALSE];
 
         if ([curobject isKindOfClass:[UIWindow class]]) {
-            [curobject makeKeyAndVisible];
+            [static_cast<UIWindow*>(curobject) makeKeyAndVisible];
         }
     };
 

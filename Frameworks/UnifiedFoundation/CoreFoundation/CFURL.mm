@@ -18,6 +18,7 @@
 #import "Starboard.h"
 #import <algorithm>
 #import <memory>
+#import "StubReturn.h"
 
 const CFStringRef kCFURLNameKey = CFSTR("");
 const CFStringRef kCFURLLocalizedNameKey = CFSTR("");
@@ -131,7 +132,7 @@ static bool charInNSString(CFStringRef str, short ch) {
 */
 CFURLRef CFURLCopyAbsoluteURL(CFURLRef relativeURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -145,7 +146,7 @@ CFURLRef CFURLCreateAbsoluteURLWithBytes(CFAllocatorRef alloc,
                                          CFURLRef baseURL,
                                          Boolean useCompatibilityMode) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -160,7 +161,7 @@ CFURLRef CFURLCreateByResolvingBookmarkData(CFAllocatorRef allocator,
                                             Boolean* isStale,
                                             CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -169,7 +170,7 @@ CFURLRef CFURLCreateByResolvingBookmarkData(CFAllocatorRef allocator,
 */
 CFURLRef CFURLCreateCopyAppendingPathComponent(CFAllocatorRef allocator, CFURLRef url, CFStringRef pathComponent, Boolean isDirectory) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -178,7 +179,7 @@ CFURLRef CFURLCreateCopyAppendingPathComponent(CFAllocatorRef allocator, CFURLRe
 */
 CFURLRef CFURLCreateCopyAppendingPathExtension(CFAllocatorRef allocator, CFURLRef url, CFStringRef extension) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -187,7 +188,7 @@ CFURLRef CFURLCreateCopyAppendingPathExtension(CFAllocatorRef allocator, CFURLRe
 */
 CFURLRef CFURLCreateCopyDeletingLastPathComponent(CFAllocatorRef allocator, CFURLRef url) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -196,7 +197,7 @@ CFURLRef CFURLCreateCopyDeletingLastPathComponent(CFAllocatorRef allocator, CFUR
 */
 CFURLRef CFURLCreateCopyDeletingPathExtension(CFAllocatorRef allocator, CFURLRef url) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -205,7 +206,7 @@ CFURLRef CFURLCreateCopyDeletingPathExtension(CFAllocatorRef allocator, CFURLRef
 */
 CFURLRef CFURLCreateFilePathURL(CFAllocatorRef allocator, CFURLRef url, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -214,7 +215,7 @@ CFURLRef CFURLCreateFilePathURL(CFAllocatorRef allocator, CFURLRef url, CFErrorR
 */
 CFURLRef CFURLCreateFileReferenceURL(CFAllocatorRef allocator, CFURLRef url, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -223,7 +224,7 @@ CFURLRef CFURLCreateFileReferenceURL(CFAllocatorRef allocator, CFURLRef url, CFE
 */
 CFURLRef CFURLCreateFromFileSystemRepresentation(CFAllocatorRef allocator, const UInt8* buffer, CFIndex bufLen, Boolean isDirectory) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -233,7 +234,7 @@ CFURLRef CFURLCreateFromFileSystemRepresentation(CFAllocatorRef allocator, const
 CFURLRef CFURLCreateFromFileSystemRepresentationRelativeToBase(
     CFAllocatorRef allocator, const UInt8* buffer, CFIndex bufLen, Boolean isDirectory, CFURLRef baseURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -242,7 +243,7 @@ CFURLRef CFURLCreateFromFileSystemRepresentationRelativeToBase(
 */
 CFURLRef CFURLCreateFromFSRef(CFAllocatorRef allocator, const struct FSRef* fsRef) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -252,7 +253,7 @@ CFURLRef CFURLCreateFromFSRef(CFAllocatorRef allocator, const struct FSRef* fsRe
 CFURLRef CFURLCreateWithBytes(
     CFAllocatorRef allocator, const UInt8* URLBytes, CFIndex length, CFStringEncoding encoding, CFURLRef baseURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -261,7 +262,7 @@ CFURLRef CFURLCreateWithBytes(
 */
 CFURLRef CFURLCreateWithFileSystemPath(CFAllocatorRef allocator, CFStringRef filePath, CFURLPathStyle pathStyle, Boolean isDirectory) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -271,7 +272,7 @@ CFURLRef CFURLCreateWithFileSystemPath(CFAllocatorRef allocator, CFStringRef fil
 CFURLRef CFURLCreateWithFileSystemPathRelativeToBase(
     CFAllocatorRef allocator, CFStringRef filePath, CFURLPathStyle pathStyle, Boolean isDirectory, CFURLRef baseURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -280,7 +281,7 @@ CFURLRef CFURLCreateWithFileSystemPathRelativeToBase(
 */
 CFURLRef CFURLCreateWithString(CFAllocatorRef allocator, CFStringRef URLString, CFURLRef baseURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -289,7 +290,7 @@ CFURLRef CFURLCreateWithString(CFAllocatorRef allocator, CFStringRef URLString, 
 */
 Boolean CFURLCanBeDecomposed(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -298,7 +299,7 @@ Boolean CFURLCanBeDecomposed(CFURLRef anURL) {
 */
 CFStringRef CFURLCopyFileSystemPath(CFURLRef anURL, CFURLPathStyle pathStyle) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -307,7 +308,7 @@ CFStringRef CFURLCopyFileSystemPath(CFURLRef anURL, CFURLPathStyle pathStyle) {
 */
 CFStringRef CFURLCopyFragment(CFURLRef anURL, CFStringRef charactersToLeaveEscaped) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -316,7 +317,7 @@ CFStringRef CFURLCopyFragment(CFURLRef anURL, CFStringRef charactersToLeaveEscap
 */
 CFStringRef CFURLCopyHostName(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -325,7 +326,7 @@ CFStringRef CFURLCopyHostName(CFURLRef anURL) {
 */
 CFStringRef CFURLCopyLastPathComponent(CFURLRef url) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -334,7 +335,7 @@ CFStringRef CFURLCopyLastPathComponent(CFURLRef url) {
 */
 CFStringRef CFURLCopyNetLocation(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -343,7 +344,7 @@ CFStringRef CFURLCopyNetLocation(CFURLRef anURL) {
 */
 CFStringRef CFURLCopyParameterString(CFURLRef anURL, CFStringRef charactersToLeaveEscaped) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -352,7 +353,7 @@ CFStringRef CFURLCopyParameterString(CFURLRef anURL, CFStringRef charactersToLea
 */
 CFStringRef CFURLCopyPassword(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -375,7 +376,7 @@ CFStringRef CFURLCopyPathExtension(CFURLRef url) {
 */
 CFStringRef CFURLCopyQueryString(CFURLRef anURL, CFStringRef charactersToLeaveEscaped) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -384,7 +385,7 @@ CFStringRef CFURLCopyQueryString(CFURLRef anURL, CFStringRef charactersToLeaveEs
 */
 CFStringRef CFURLCopyResourceSpecifier(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -393,7 +394,7 @@ CFStringRef CFURLCopyResourceSpecifier(CFURLRef anURL) {
 */
 CFStringRef CFURLCopyScheme(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -402,7 +403,7 @@ CFStringRef CFURLCopyScheme(CFURLRef anURL) {
 */
 CFStringRef CFURLCopyStrictPath(CFURLRef anURL, Boolean* isAbsolute) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -411,7 +412,7 @@ CFStringRef CFURLCopyStrictPath(CFURLRef anURL, Boolean* isAbsolute) {
 */
 CFStringRef CFURLCopyUserName(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -420,7 +421,7 @@ CFStringRef CFURLCopyUserName(CFURLRef anURL) {
 */
 SInt32 CFURLGetPortNumber(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -429,7 +430,7 @@ SInt32 CFURLGetPortNumber(CFURLRef anURL) {
 */
 Boolean CFURLHasDirectoryPath(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -438,7 +439,7 @@ Boolean CFURLHasDirectoryPath(CFURLRef anURL) {
 */
 CFDataRef CFURLCreateData(CFAllocatorRef allocator, CFURLRef url, CFStringEncoding encoding, Boolean escapeWhitespace) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -513,7 +514,7 @@ CFStringRef CFURLCreateStringByReplacingPercentEscapesUsingEncoding(CFAllocatorR
                                                                     CFStringEncoding encoding) {
     if (encoding != kCFStringEncodingUTF8) {
         UNIMPLEMENTED_WITH_MSG("Only UTF-8 is supported.");
-        return { 0 };
+        return StubReturn();
     }
 
     NSUInteger length = [(NSString*)string length];
@@ -621,7 +622,7 @@ CFStringRef CFURLCreateStringByReplacingPercentEscapesUsingEncoding(CFAllocatorR
 */
 Boolean CFURLGetFileSystemRepresentation(CFURLRef url, Boolean resolveAgainstBase, UInt8* buffer, CFIndex maxBufLen) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -630,7 +631,7 @@ Boolean CFURLGetFileSystemRepresentation(CFURLRef url, Boolean resolveAgainstBas
 */
 Boolean CFURLGetFSRef(CFURLRef url, struct FSRef* fsRef) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -639,7 +640,7 @@ Boolean CFURLGetFSRef(CFURLRef url, struct FSRef* fsRef) {
 */
 CFStringRef CFURLGetString(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -648,7 +649,7 @@ CFStringRef CFURLGetString(CFURLRef anURL) {
 */
 CFURLRef CFURLGetBaseURL(CFURLRef anURL) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -657,7 +658,7 @@ CFURLRef CFURLGetBaseURL(CFURLRef anURL) {
 */
 CFIndex CFURLGetBytes(CFURLRef url, UInt8* buffer, CFIndex bufferLength) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -666,7 +667,7 @@ CFIndex CFURLGetBytes(CFURLRef url, UInt8* buffer, CFIndex bufferLength) {
 */
 CFRange CFURLGetByteRangeForComponent(CFURLRef url, CFURLComponentType component, CFRange* rangeIncludingSeparators) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -675,7 +676,7 @@ CFRange CFURLGetByteRangeForComponent(CFURLRef url, CFURLComponentType component
 */
 CFTypeID CFURLGetTypeID() {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -684,7 +685,7 @@ CFTypeID CFURLGetTypeID() {
 */
 Boolean CFURLResourceIsReachable(CFURLRef url, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -709,7 +710,7 @@ void CFURLClearResourcePropertyCacheForKey(CFURLRef url, CFStringRef key) {
 */
 CFDictionaryRef CFURLCopyResourcePropertiesForKeys(CFURLRef url, CFArrayRef keys, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -718,7 +719,7 @@ CFDictionaryRef CFURLCopyResourcePropertiesForKeys(CFURLRef url, CFArrayRef keys
 */
 Boolean CFURLCopyResourcePropertyForKey(CFURLRef url, CFStringRef key, void* propertyValueTypeRefPtr, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -729,7 +730,7 @@ CFDictionaryRef CFURLCreateResourcePropertiesForKeysFromBookmarkData(CFAllocator
                                                                      CFArrayRef resourcePropertiesToReturn,
                                                                      CFDataRef bookmark) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -738,7 +739,7 @@ CFDictionaryRef CFURLCreateResourcePropertiesForKeysFromBookmarkData(CFAllocator
 */
 CFTypeRef CFURLCreateResourcePropertyForKeyFromBookmarkData(CFAllocatorRef allocator, CFStringRef resourcePropertyKey, CFDataRef bookmark) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -747,7 +748,7 @@ CFTypeRef CFURLCreateResourcePropertyForKeyFromBookmarkData(CFAllocatorRef alloc
 */
 Boolean CFURLSetResourcePropertiesForKeys(CFURLRef url, CFDictionaryRef keyedPropertyValues, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -756,7 +757,7 @@ Boolean CFURLSetResourcePropertiesForKeys(CFURLRef url, CFDictionaryRef keyedPro
 */
 Boolean CFURLSetResourcePropertyForKey(CFURLRef url, CFStringRef key, CFTypeRef propertyValue, CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -778,7 +779,7 @@ CFDataRef CFURLCreateBookmarkData(CFAllocatorRef allocator,
                                   CFURLRef relativeToURL,
                                   CFErrorRef* error) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -787,7 +788,7 @@ CFDataRef CFURLCreateBookmarkData(CFAllocatorRef allocator,
 */
 CFDataRef CFURLCreateBookmarkDataFromFile(CFAllocatorRef allocator, CFURLRef fileURL, CFErrorRef* errorRef) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -799,7 +800,7 @@ Boolean CFURLWriteBookmarkDataToFile(CFDataRef bookmarkRef,
                                      CFURLBookmarkFileCreationOptions options,
                                      CFErrorRef* errorRef) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**
@@ -808,7 +809,7 @@ Boolean CFURLWriteBookmarkDataToFile(CFDataRef bookmarkRef,
 */
 Boolean CFURLStartAccessingSecurityScopedResource(CFURLRef url) {
     UNIMPLEMENTED();
-    return { 0 };
+    return StubReturn();
 }
 
 /**

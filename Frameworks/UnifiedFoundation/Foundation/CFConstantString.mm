@@ -14,7 +14,7 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
 #import "CFConstantString.h"
 
 @implementation CFConstantString
@@ -22,13 +22,11 @@
     return self;
 }
 
-- (void)release {
+- (oneway void)release {
 }
 
 - (instancetype)autorelease {
     return self;
 }
 
-- (void)dealloc {
-}
 @end

@@ -14,21 +14,19 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-
+#import "Starboard.h"
+#import "StubReturn.h"
 #import <Foundation/Foundation.h>
 #import <NSLocaleInternal.h>
 #import <NSCalendarInternal.h>
 #import <NSTimeZoneInternal.h>
-#include <unicode/datefmt.h>
-#include <unicode/dtfmtsym.h>
-#include <unicode/smpdtfmt.h>
-#include <unicode/dtptngen.h>
-
-#include <functional>
-#include <map>
-#include "LoggingNative.h"
+#import <unicode/datefmt.h>
+#import <unicode/dtfmtsym.h>
+#import <unicode/smpdtfmt.h>
+#import <unicode/dtptngen.h>
+#import <functional>
+#import <map>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSDateFormatter";
 
@@ -509,14 +507,18 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (void)setLenient:(BOOL)lenient {
-    [self _setFormatterProperty:ICUPropertyMapper::lenient withValue:ICUPropertyValue(lenient)];
+    @synchronized(self) {
+        [self _setFormatterProperty:ICUPropertyMapper::lenient withValue:ICUPropertyValue(lenient)];
+    }
 }
 
 /**
  @Status Interoperable
 */
-- (BOOL)lenient {
-    return [self _getFormatterProperty:ICUPropertyMapper::lenient]._boolValue;
+- (BOOL)isLenient {
+    @synchronized(self) {
+        return [self _getFormatterProperty:ICUPropertyMapper::lenient]._boolValue;
+    }
 }
 
 /**

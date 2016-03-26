@@ -24,4 +24,7 @@
     StrongId<NSCachedURLResponse> _cachedResponse;
     StrongId<id<NSURLProtocolClient>> _client;
 }
+
++(id)_URLProtocolClassForRequest:(id)request;
+
 @end

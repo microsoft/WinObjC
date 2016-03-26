@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#include <UIKit/UIKit.h>
+#import <UIKit/UIKit.h>
 #import <libxml/HTMLparser.h>
 #import <map>
 #import "UIFontInternal.h"
@@ -218,7 +218,7 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
 */
 - (NSAttributedString*)initWithData:(NSData*)data
                             options:(NSDictionary*)options
-                 documentAttributes:(NSDictionary*)docAttrs // TODO: not sure what docAttrs is used for
+                 documentAttributes:(NSDictionary* _Nullable*)docAttrs // TODO: not sure what docAttrs is used for
                               error:(NSError**)error {
     if (!data) {
         return nil;

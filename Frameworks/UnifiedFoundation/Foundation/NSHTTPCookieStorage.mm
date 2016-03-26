@@ -14,14 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSHTTPCookieStorage.h"
-#include "Foundation/NSHTTPCookie.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSHTTPCookieStorage.h"
+#import "Foundation/NSHTTPCookie.h"
+#import "LoggingNative.h"
+#import "NSHTTPCookieInternal.h"
 
 static const wchar_t* TAG = L"NSHTTPCookieStorage";
 
@@ -192,13 +193,6 @@ id EbrGetExternalCookies(id url) {
     while ((cookie = [c nextObject])) {
         [self setCookie:cookie];
     }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setCookieAcceptPolicy:(int)policy {
-    _cookieAcceptPolicy = (NSHTTPCookieAcceptPolicy)policy;
 }
 
 /**

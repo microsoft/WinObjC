@@ -14,16 +14,16 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UIFont.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGContext.h"
-
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UIFont.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGContext.h"
 #import "UISegment.h"
-#import <UISegmentedControlInternal.h>
+#import "UIViewInternal.h"
+#import "UISegmentedControlInternal.h"
 
 static idretain _buttonLeft[2];
 static idretain _buttonRight[2];
@@ -181,8 +181,8 @@ static idretain _buttonFill[2];
 
     bool isDisabled = false;
 
-    if ([[self superview] respondsToSelector:@selector(isEnabled)]) {
-        if (![[self superview] isEnabled]) {
+    if ([[self superview] respondsToSelector:@selector(_isEnabled)]) {
+        if (![[self superview] _isEnabled]) {
             isDisabled = true;
         }
     }

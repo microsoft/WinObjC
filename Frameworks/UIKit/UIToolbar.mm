@@ -14,13 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include <UIKit/UIKit.h>
-#include <vector>
-#include "UIBarButtonItem+Internals.h"
-
-@class UIAppearanceSetter;
+#import "Starboard.h"
+#import "StubReturn.h"
+#import <UIKit/UIKit.h>
+#import <vector>
+#import "UIBarButtonItem+Internals.h"
+#import "UIAppearanceSetter.h"
+#import "UIViewInternal.h"
+#import "UIBarButtonItem+Internals.h"
 
 @implementation UIToolbar {
     id _delegate;
@@ -50,13 +51,12 @@ void initInternal(UIToolbar* self) {
     _style = (UIBarStyle)[coder decodeInt32ForKey:@"UIBarStyle"];
 
     switch (_style) {
-        case 1:
+        case UIBarStyleBlack:
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
-        case 2:
-        case 3:
+        case UIBarStyleBlackTranslucent: // deprecated
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
@@ -103,13 +103,12 @@ void initInternal(UIToolbar* self) {
     _style = style;
 
     switch (_style) {
-        case 1:
+        case UIBarStyleBlack:
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
-        case 2:
-        case 3:
+        case UIBarStyleBlackTranslucent: // deprecated
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
@@ -265,7 +264,7 @@ void layoutItems(UIToolbar* self) {
         }
         [UIAppearanceSetter _applyAppearance:curButton withAppearanceClass:[UIBarButtonItem class] withBaseView:self];
 
-        if ([curButton isFlexibleWidth]) {
+        if ([curButton _isFlexibleWidth]) {
             if (curContainer) {
                 lastContainer = curContainer;
 
@@ -447,7 +446,7 @@ void layoutItems(UIToolbar* self) {
     for (i = 0; i < count; i++) {
         UIBarButtonItem* curButton = [_items objectAtIndex:i];
 
-        if (![curButton isFlexibleWidth]) {
+        if (![curButton _isFlexibleWidth]) {
             CGSize idealSize = [curButton idealSize];
             totalWidth += idealSize.width + curButton.margin * 2.0f;
         }

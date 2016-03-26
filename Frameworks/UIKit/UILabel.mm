@@ -17,18 +17,16 @@
 #import "Starboard.h"
 #import "Foundation/NSString.h"
 #import "CoreGraphics/CGContext.h"
-
 #import "UIKit/UIView.h"
 #import "UIKit/UIFont.h"
 #import "UIKit/UIColor.h"
 #import "UIKit/UILabel.h"
 #import "UIKit/UIAccessibility.h"
 #import "UIFontInternal.h"
-
 #import "CGContextInternal.h"
 #import "CATextLayerInternal.h"
-
 #import "QuartzCore/CATextLayer.h"
+
 #define USE_TEXT_LAYER 1
 
 @implementation UILabel {
@@ -105,14 +103,14 @@
     if (_isHighlighted && _highlightedTextColor != nil) {
         color = _highlightedTextColor;
     }
-    [[self layer] _setDisplayParams:(id)_font
-                               text:(id)_text
-                              color:color
-                          alignment:_alignment
-                          lineBreak:_lineBreakMode
-                        shadowColor:(id)_shadowColor
-                       shadowOffset:_shadowOffset
-                           numLines:_numberOfLines];
+    [static_cast<CATextLayer*>([self layer]) _setDisplayParams:(id)_font
+                                                          text:(id)_text
+                                                         color:color
+                                                     alignment:_alignment
+                                                     lineBreak:_lineBreakMode
+                                                   shadowColor:(id)_shadowColor
+                                                  shadowOffset:_shadowOffset
+                                                      numLines:_numberOfLines];
 #endif
     [self invalidateIntrinsicContentSize];
     [self setNeedsDisplay];

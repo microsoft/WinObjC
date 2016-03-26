@@ -14,23 +14,22 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableData.h"
-#include "NSSSLHandler.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableData.h"
+#import "NSSSLHandler.h"
 
 #define NOMINMAX
 
 #if defined(WIN32) || defined(ANDROID)
-#include <pthread.h>
+#import <pthread.h>
 
-#include <openssl/err.h>
-#include <openssl/ssl.h>
-
-#include <cmath>
-#include <algorithm>
-#include "LoggingNative.h"
+#import <openssl/err.h>
+#import <openssl/ssl.h>
+#import <cmath>
+#import <algorithm>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSSSLHandler";
 
@@ -48,7 +47,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 
 @implementation NSSSLHandler
 #if defined(WIN32) || defined(ANDROID)
-+ (id)initialize {
++ (void)initialize {
     if (self == [NSSSLHandler class]) {
         kCFStreamSSLLevel = [@"kCFStreamSSLLevel" retain];
         kCFStreamSocketSecurityLevelSSLv3 = [@"kCFStreamSocketSecurityLevelSSLv3" retain];
@@ -70,8 +69,6 @@ static void locking_function(int mode, int idx, const char* file, int line) {
         CRYPTO_set_locking_callback(locking_function);
         pthread_mutex_unlock(&initLock);
     }
-
-    return self;
 }
 
 - (id)initWithProperties:(id)properties {
@@ -115,22 +112,14 @@ static void locking_function(int mode, int idx, const char* file, int line) {
     return self;
 }
 
-- (id)dealloc {
+- (void)dealloc {
     [_properties release];
     SSL_free(_connection);
     IwFree(_stableBuffer);
     [super dealloc];
-
-    return self;
 }
 
-id close__unused() {
-    SSL_shutdown(_connection);
-
-    return self;
-}
-
-- (id)isHandshaking {
+- (BOOL)isHandshaking {
     return SSL_in_init(_connection) ? YES : NO;
 }
 
@@ -167,15 +156,15 @@ id close__unused() {
     return result;
 }
 
-- (id)writeBytesAvailable {
+- (NSInteger)writeBytesAvailable {
     return BIO_ctrl_pending(_outgoing);
 }
 
-- (id)wantsMoreIncoming {
+- (BOOL)wantsMoreIncoming {
     return SSL_want_read(_connection);
 }
 
-- (id)readEncrypted:(uint8_t*)buffer maxLength:(int)length {
+- (NSInteger)readEncrypted:(uint8_t*)buffer maxLength:(int)length {
     int check = BIO_read(_outgoing, buffer, length);
 
     if (check <= 0) {
@@ -186,7 +175,7 @@ id close__unused() {
     return check;
 }
 
-- (id)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length {
+- (NSInteger)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length {
     size_t check = BIO_write(_incoming, buffer, length);
 
     if (check <= 0) {
@@ -197,7 +186,7 @@ id close__unused() {
     return check;
 }
 
-- (id)_readPostSSL:(uint8_t*)buffer maxLength:(int)length {
+- (NSInteger)_readPostSSL:(uint8_t*)buffer maxLength:(int)length {
     int numRead = 0;
 
     while (numRead < length) {
@@ -238,7 +227,7 @@ id close__unused() {
     return numRead;
 }
 
-- (id)readBytesAvailable {
+- (NSInteger)readBytesAvailable {
     /* SSL_pending() is useless here because it doesn't actually process anything, it will return 0 when there are bytes
     available post-processing.
     */
@@ -280,7 +269,7 @@ id close__unused() {
     return ret;
 }
 
-- (id)transferOneBufferFromSSLToSocket:(id)socket {
+- (NSInteger)transferOneBufferFromSSLToSocket:(id)socket {
     NSInteger available = [self readEncrypted:_stableBuffer maxLength:_stableBufferCapacity];
 
     if (available <= 0)
@@ -296,7 +285,7 @@ id close__unused() {
     return self;
 }
 
-- (id)transferOneBufferFromSocketToSSL:(id)socket {
+- (NSInteger)transferOneBufferFromSocketToSSL:(id)socket {
     if ([socket hasBytesAvailable]) {
         NSInteger result = [socket read:_stableBuffer maxLength:_stableBufferCapacity];
         TraceVerbose(TAG, L"Got %d bytes for SSL", result);
@@ -316,7 +305,7 @@ id close__unused() {
     }
 }
 
-- (id)runHandshakeIfNeeded:(id)socket {
+- (void)runHandshakeIfNeeded:(id)socket {
     while ([self isHandshaking]) {
         int check = SSL_do_handshake(_connection);
 
@@ -340,11 +329,9 @@ id close__unused() {
             }
         }
     }
-
-    return self;
 }
 
-- (id)runWithSocket:(id)socket {
+- (void)runWithSocket:(id)socket {
     while ([self writeBytesAvailable] || [self wantsMoreIncoming]) {
         NSInteger check;
 
@@ -358,16 +345,14 @@ id close__unused() {
                 break;
         }
     }
-
-    return self;
 }
 
-- (id)setOutputStream:(id)stream {
+- (void)setOutputStream:(id)stream {
     _outputStream = stream;
-
-    return self;
 }
+
 #else
+
 /*
  @Status Stub
  @Notes
@@ -399,7 +384,16 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)dealloc {
+- (void)dealloc {
+    UNIMPLEMENTED()
+    [super dealloc];
+}
+
+/*
+ @Status Stub
+ @Notes
+*/
+- (BOOL)isHandshaking {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -408,7 +402,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)isHandshaking {
+- (NSInteger)writeBytesAvailable {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -417,7 +411,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)writeBytesAvailable {
+- (BOOL)wantsMoreIncoming {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -426,7 +420,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)wantsMoreIncoming {
+- (NSInteger)readEncrypted:(uint8_t*)buffer maxLength:(int)length {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -435,7 +429,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)readEncrypted:(uint8_t*)buffer maxLength:(int)length {
+- (NSInteger)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -444,7 +438,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)writeEncrypted:(const uint8_t*)buffer maxLength:(int)length {
+- (NSInteger)_readPostSSL:(uint8_t*)buffer maxLength:(int)length {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -453,7 +447,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)_readPostSSL:(uint8_t*)buffer maxLength:(int)length {
+- (NSInteger)readBytesAvailable {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -462,7 +456,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)readBytesAvailable {
+- (NSInteger)transferOneBufferFromSSLToSocket:(id)socket {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -471,7 +465,7 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)transferOneBufferFromSSLToSocket:(id)socket {
+- (NSInteger)transferOneBufferFromSocketToSSL:(id)socket {
     UNIMPLEMENTED()
     return StubReturn();
 }
@@ -480,45 +474,32 @@ id close__unused() {
  @Status Stub
  @Notes
 */
-- (id)transferOneBufferFromSocketToSSL:(id)socket {
+- (void)runHandshakeIfNeeded:(id)socket {
     UNIMPLEMENTED()
-    return StubReturn();
 }
 
 /*
  @Status Stub
  @Notes
 */
-- (id)runHandshakeIfNeeded:(id)socket {
+- (void)runWithSocket:(id)socket {
     UNIMPLEMENTED()
-    return StubReturn();
 }
 
 /*
  @Status Stub
  @Notes
 */
-- (id)runWithSocket:(id)socket {
+- (void)setOutputStream:(id)stream {
     UNIMPLEMENTED()
-    return StubReturn();
 }
 
 /*
  @Status Stub
  @Notes
 */
-- (id)setOutputStream:(id)stream {
++ (void)initialize {
     UNIMPLEMENTED()
-    return StubReturn();
-}
-
-/*
- @Status Stub
- @Notes
-*/
-+ (id)initialize {
-    UNIMPLEMENTED()
-    return StubReturn();
 }
 
 #endif

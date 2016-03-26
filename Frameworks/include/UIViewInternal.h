@@ -14,13 +14,14 @@
 //
 //******************************************************************************
 
-#ifndef _UIVIEWPRIVATE_H_
-#define _UIVIEWPRIVATE_H_
+#pragma once
 
-#include "LinkedList.h"
+#import "LinkedList.h"
 
 class AutoLayoutProperties;
 class ConstraintProperties;
+
+@class UIWindow;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
 public:
@@ -101,6 +102,8 @@ public:
 + (void)_setNestedAnimationsEnabled:(BOOL)enable;
 - (void)_setBoundsOrigin:(CGPoint)origin;
 - (void)__setContentsImage:(id)image;
+- (UIWindow*)_getWindowInternal;
+- (BOOL)_isEnabled;
 @end
 
 @interface NSLayoutConstraint () {
@@ -117,4 +120,3 @@ public:
 @interface NSStringDrawingContext ()
 - (void)_setInternalTotalBounds:(CGRect)rect;
 @end
-#endif /* _UIVIEWPRIVATE_H_ */

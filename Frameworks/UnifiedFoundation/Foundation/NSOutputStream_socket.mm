@@ -13,16 +13,17 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "Foundation/NSStream.h"
-#include "Foundation/NSDate.h"
-#include "NSSSLHandler.h"
-#include "NSOutputStream_socket.h"
-#include "NSSelectInputSource.h"
-#include "NSSelectSet.h"
-#include "NSStreamInternal.h"
-#include "NSRunLoop+Internal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSStream.h"
+#import "Foundation/NSDate.h"
+#import "NSSSLHandler.h"
+#import "NSOutputStream_socket.h"
+#import "NSSelectInputSource.h"
+#import "NSSelectSet.h"
+#import "NSStreamInternal.h"
+#import "NSRunLoop+Internal.h"
+#import "LoggingNative.h"
+#import "NSSocket.h"
 
 static const wchar_t* TAG = L"NSOutputStream_socket";
 
@@ -39,7 +40,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
 }
 
 @implementation NSOutputStream_socket
-- (id)initWithSocket:(id)socket streamStatus:(DWORD)status {
+- (instancetype)initWithSocket:(NSSocket*)socket streamStatus:(DWORD)status {
     _delegate = self;
     _error = nil;
     _status = status;
@@ -48,13 +49,11 @@ static BOOL socketHasSpaceAvailable(id socket) {
     return self;
 }
 
-- (id)setDelegate:(id)delegate {
+- (void)setDelegate:(id)delegate {
     _delegate = delegate;
     if (_delegate == nil) {
         _delegate = self;
     }
-
-    return self;
 }
 
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
@@ -184,7 +183,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
     }
 }
 
-- (id)setProperty:(id)prop forKey:(id)key {
+- (BOOL)setProperty:(id)prop forKey:(id)key {
     if ([key isEqualToString:(NSString*)kCFStreamPropertySSLSettings]) {
         return [_socket setSSLProperties:prop];
     }

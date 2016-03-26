@@ -119,6 +119,14 @@ struct UITableViewPriv {
         unsigned int doneFirstLayout : 1;
     } _collectionViewFlags;
 }
+
+- (void)_forwardCellRemoval:(UITableViewCell*)cell;
+- (void)_cellSelectedUp:(UITableViewCell*)cell;
+- (void)_cellSelectedDown:(UITableViewCell*)cell;
+- (void)_cellSelectedCancelled:(UITableViewCell*)cell;
+- (void)_cellAccessoryTapped:(UITableViewCell*)cell;
+- (BOOL)_canEditCell:(UITableViewCell*)cell;
+
 @end
 
 @class _UIGroupEdgeView;

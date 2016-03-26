@@ -102,15 +102,6 @@
 /**
  @Status Interoperable
 */
-- (void)setAllHTTPHeaderFields:(NSDictionary*)allHTTPHeaderFields {
-    id oldValue = _allHTTPHeaderFields;
-    _allHTTPHeaderFields = [allHTTPHeaderFields mutableCopy];
-    [oldValue release];
-}
-
-/**
- @Status Interoperable
-*/
 - (NSDictionary*)getAllHTTPHeaderFields {
     return _allHTTPHeaderFields;
 }

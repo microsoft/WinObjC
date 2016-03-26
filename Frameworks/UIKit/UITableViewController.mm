@@ -14,11 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UITableViewController.h"
-#include "UIKit/UITableView.h"
-#include "UITableViewDataSource.h"
-#include "UIViewControllerInternal.h"
+#import "Starboard.h"
+#import "UIKit/UITableViewController.h"
+#import "UIKit/UITableView.h"
+#import "UITableViewDataSource.h"
+#import "UIViewControllerInternal.h"
 
 @implementation UITableViewController {
     UITableViewStyle _style;
@@ -79,8 +79,8 @@
     if ([self nibName] != nil) {
         [super loadView];
         if ([priv->view isKindOfClass:[UITableView class]]) {
-            [priv->view setDelegate:self];
-            [priv->view setDataSource:self];
+            [static_cast<UITableView*>(priv->view) setDelegate:self];
+            [static_cast<UITableView*>(priv->view) setDataSource:self];
         }
         return;
     }
@@ -223,9 +223,12 @@
  @Status Interoperable
 */
 - (void)dealloc {
-    [priv->view setDelegate:nil];
-    [priv->view setDataSource:nil];
-    [priv->view removeFromSuperview];
+    if ([priv->view isKindOfClass:[UITableView class]]) {
+        UITableView* view = static_cast<UITableView*>(priv->view);
+        [view setDelegate:nil];
+        [view setDataSource:nil];
+        [view removeFromSuperview];
+    }
     _staticSource = nil;
     _keyboardCropper = nil;
     [super dealloc];

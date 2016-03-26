@@ -165,8 +165,8 @@
  @Status Interoperable
 */
 - (void)addIndexes:(NSIndexSet*)other {
-    for (unsigned i = 0; i < [other _count]; ++i) {
-        [self addIndexesInRange:[other _itemAtIndex:i]];
+    for (unsigned i = 0; i < [static_cast<NSMutableIndexSet*>(other) _count]; ++i) {
+        [self addIndexesInRange:[static_cast<NSMutableIndexSet*>(other) _itemAtIndex:i]];
     }
 }
 
@@ -186,8 +186,8 @@
  @Status Interoperable
 */
 - (void)removeIndexes:(NSIndexSet*)other {
-    for (unsigned i = 0; i < [other _count]; i++) {
-        [self removeIndexesInRange:[other _itemAtIndex:i]];
+    for (unsigned i = 0; i < [static_cast<NSMutableIndexSet*>(other) _count]; i++) {
+        [self removeIndexesInRange:[static_cast<NSMutableIndexSet*>(other) _itemAtIndex:i]];
     }
 }
 
@@ -284,7 +284,7 @@
  @Status Interoperable
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
-    return [[NSIndexSet allocWithZone:zone] initWithIndexSet:self];
+    return [[NSMutableIndexSet allocWithZone:zone] initWithIndexSet:self];
 }
 
 - (unsigned)_positionOfRangeGreaterThanOrEqualToLocation:(NSUInteger)location {

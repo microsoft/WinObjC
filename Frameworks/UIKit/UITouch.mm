@@ -14,11 +14,11 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-
-#include "UIKit/UITouch.h"
-#include "UIKit/UIView.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "UIKit/UITouch.h"
+#import "UIKit/UIView.h"
+#import "UIViewInternal.h"
 
 @implementation UITouch
 

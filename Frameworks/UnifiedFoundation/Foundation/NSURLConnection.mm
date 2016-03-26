@@ -13,15 +13,16 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "Foundation/NSURLProtocol.h"
-#include "Foundation/NSURLCache.h"
-#include "Foundation/NSMutableData.h"
-#include "Foundation/NSError.h"
-#include "Foundation/NSRunLoop.h"
-#include "NSURLConnectionState.h"
-#include "Foundation/NSURLConnection.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSURLProtocol.h"
+#import "Foundation/NSURLCache.h"
+#import "Foundation/NSMutableData.h"
+#import "Foundation/NSError.h"
+#import "Foundation/NSRunLoop.h"
+#import "NSURLConnectionState.h"
+#import "Foundation/NSURLConnection.h"
+#import "LoggingNative.h"
+#import "NSURLProtocolInternal.h"
 
 static const wchar_t* TAG = L"NSURLConnection";
 

@@ -492,7 +492,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [[ret initWithPatternImage:image] autorelease];
 }
 
-+ (UIColor*)colorWithCGPattern:(CGPatternRef)pattern {
++ (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern {
     UIColor* ret = [self alloc];
 
     ret->_type = cgPatternBrush;
@@ -627,7 +627,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
 /**
  @Status Stub
 */
-+ (UIColor*)windowsTableViewCellSelectionBackgroundColor {
++ (UIColor*)_windowsTableViewCellSelectionBackgroundColor {
     return [self colorWithRed:0.63 green:0.79 blue:0.89 alpha:1.0];
 }
 

@@ -14,16 +14,18 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UITabBarController.h"
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "UIKit/UINavigationController.h"
-#include "UIViewControllerInternal.h"
-#include "UITabPane.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UIKit/UITabBarController.h"
+#import "UIKit/UIViewController.h"
+#import "UIKit/UIApplication.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "UIKit/UINavigationController.h"
+#import "UIViewControllerInternal.h"
+#import "UITabPane.h"
+#import "LoggingNative.h"
+#import "UITabBarControllerInternal.h"
+#import "UITabBarInternal.h"
 
 static const wchar_t* TAG = L"UITabBarController";
 
@@ -343,7 +345,7 @@ static const wchar_t* TAG = L"UITabBarController";
             [_delegate tabBarController:self didSelectViewController:controller];
         }
     } else {
-        if (_selectedIndex >= 0 && _selectedIndex < [[_tabBar items] count]) {
+        if (_selectedIndex < [[_tabBar items] count]) {
             [tabBar setSelectedItem:[[tabBar items] objectAtIndex:_selectedIndex]];
         }
     }

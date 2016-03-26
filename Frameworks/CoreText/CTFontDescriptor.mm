@@ -58,7 +58,7 @@ CTFontDescriptorRef CTFontDescriptorCreateWithNameAndSize(CFStringRef name, CGFl
  @Notes
 */
 CTFontDescriptorRef CTFontDescriptorCreateWithAttributes(CFDictionaryRef attributes) {
-    return (CTFontDescriptorRef)[attributes copy];
+    return (CTFontDescriptorRef)[(__bridge NSDictionary*)attributes copy];
 }
 
 /**

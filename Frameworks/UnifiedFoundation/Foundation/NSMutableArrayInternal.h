@@ -14,39 +14,13 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #include "NSArrayInternal.h"
 
 @interface NSMutableArray (Internal)
 - (void)sortUsingFunction:(NSInteger (*)(id, id, void*))compare context:(void*)context range:(NSRange)range;
 @end
 
-@interface NSMutableArrayConcrete : NSMutableArray {
-@public
-}
-- (NSMutableArray*)initWithCapacity:(NSUInteger)numElements;
-- (void)removeAllObjects;
-- (void)addObject:(NSObject*)objAddr;
-- (void)addObjectsFromArray:(NSArray*)fromArray;
-- (void)setArray:(NSArray*)fromArray;
-- (void)removeObjectsInArray:(NSArray*)fromArray;
-- (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index;
-- (void)insertObjects:(NSArray*)objects atIndexes:(NSIndexSet*)indexes;
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj;
-- (void)setObject:(NSObject*)obj atIndexedSubscript:(NSUInteger)index;
-- (void)exchangeObjectAtIndex:(NSUInteger)atIndex withObjectAtIndex:(NSUInteger)withIndex;
-- (void)removeObject:(NSObject*)objAddr;
-- (void)removeObject:(NSObject*)objAddr inRange:(NSRange)range;
-- (void)removeObjectsInRange:(NSRange)range;
-- (void)removeObjectIdenticalTo:(NSObject*)objAddr;
-- (void)removeObjectAtIndex:(NSUInteger)index;
-- (void)removeObjectsAtIndexes:(NSIndexSet*)index;
-- (void)removeLastObject;
-- (void)sortUsingComparator:(NSComparator*)comparator;
-- (void)sortUsingSelector:(SEL)selector;
-- (void)sortUsingDescriptors:(NSArray*)descriptors;
-- (NSObject*)copyWithZone:(NSZone*)zone;
-- (void)filterUsingPredicate:(NSPredicate*)predicate;
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(DWORD)maxCount;
-+ (NSMutableArray*)arrayWithCapacity:(NSUInteger)numElements;
-+ (NSObject*)allocWithZone:(NSZone*)zone;
+@interface NSMutableArrayConcrete : NSMutableArray
 @end

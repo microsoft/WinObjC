@@ -14,12 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIViewControllerInternal.h"
+#import "Starboard.h"
+#import "UIViewControllerInternal.h"
+#import "UITabBarControllerInternal.h"
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIView.h>
-#include "LoggingNative.h"
-
+#import "LoggingNative.h"
 #import "UITabBarControllerInternal.h"
 
 static const wchar_t* TAG = L"UINavigationController";
@@ -539,7 +539,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
 */
 - (UITabBarItem*)tabBarItem {
     UIViewController* topViewController = [self topViewController];
-    UITabBarItem* ret = [topViewController _tabBarItem];
+    UITabBarItem* ret = topViewController.tabBarItem;
 
     if ([ret image] != nil) {
         return ret;
@@ -654,7 +654,7 @@ static void rotateViewController(UINavigationController* self) {
             }
 
             if (i < 4) {
-                [parent setRotation:curOrientation animated:0];
+                [parent _setRotation:curOrientation animated:0];
             }
         } else {
             int subRotation = [self->_curController interfaceOrientation];

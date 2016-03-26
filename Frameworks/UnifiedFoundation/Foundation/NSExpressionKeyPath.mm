@@ -16,10 +16,14 @@
 
 #import "NSExpressionKeyPath.h"
 #import <Foundation/NSCoder.h>
+#import <Foundation/NSKeyValueCoding.h>
 
 @implementation NSExpressionKeyPath {
     NSString* _keyPath;
 }
+
+// Prevent compiler from auto synthesizing this property.
+@dynamic keyPath;
 
 /**
  @Status Interoperable

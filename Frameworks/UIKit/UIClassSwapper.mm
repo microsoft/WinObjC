@@ -16,8 +16,8 @@
 
 #import "Starboard.h"
 #import "UIClassSwapper.h"
-#import "NSUnarchiverInternal.h"
-#include "LoggingNative.h"
+#import "NSCoderInternal.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UIClassSwapper";
 

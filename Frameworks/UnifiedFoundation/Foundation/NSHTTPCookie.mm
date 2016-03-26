@@ -17,17 +17,17 @@
 // This code is an adaptation of CURL's cookie parsing. It is redone in a more modern style
 // but ultimately I tried to stay close to the spirit.
 
-#include "Starboard.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSHTTPCookie.h"
-#include "Etc.h"
-#include <cctype>
-#include <ctype.h>
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSDate.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSHTTPCookie.h"
+#import "Etc.h"
+#import <cctype>
+#import <ctype.h>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSHTTPCookie";
 
@@ -202,7 +202,7 @@ void parseCookies(const char* lineptr, id dict) {
         if ([cookieDict objectForKey:NSHTTPCookieDomain] == nil)
             [cookieDict setObject:[url host] forKey:NSHTTPCookieDomain];
 
-        id cookie = [NSHTTPCookie cookieWithProperties:cookieDict];
+        NSHTTPCookie* cookie = [NSHTTPCookie cookieWithProperties:cookieDict];
 
         if (cookie) {
             TraceVerbose(TAG, L"Added cookie with name=%hs value=%hs domain=%hs",
@@ -232,19 +232,19 @@ void parseCookies(const char* lineptr, id dict) {
 /**
  @Status Interoperable
 */
-+ (id)cookieWithProperties:(id)properties {
++ (NSHTTPCookie*)cookieWithProperties:(id)properties {
     return [[[self alloc] initWithProperties:properties] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (id)requestHeaderFieldsWithCookies:(id)cookies {
++ (NSDictionary*)requestHeaderFieldsWithCookies:(NSArray*)cookies {
     // redo me using FOREACH_BEGIN for DD
     id s = nil;
     id e = [cookies objectEnumerator];
 
-    id c;
+    NSHTTPCookie* c;
     while ((c = [e nextObject])) {
         id ss = [NSString stringWithFormat:@"%@=%@", [c name], [c value]]; // On MacOS this method is not protected
         // against = and ; characters in cookie name
@@ -306,7 +306,7 @@ void parseCookies(const char* lineptr, id dict) {
 /**
  @Status Interoperable
 */
-- (id)value {
+- (NSString*)value {
     return [_properties objectForKey:NSHTTPCookieValue];
 }
 

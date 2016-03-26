@@ -15,14 +15,11 @@
 //******************************************************************************
 
 #import <CoreText/CTFont.h>
-
 #import <CGFontInternal.h>
 #import <LoggingNative.h>
 #import <Starboard.h>
 #import <StubReturn.h>
-
 #import <CoreFoundation/CFString.h>
-
 #import "UIFontInternal.h"
 
 extern "C" {
@@ -657,7 +654,7 @@ CFIndex CTFontGetLigatureCaretPositions(CTFontRef font, CGGlyph glyph, CGFloat* 
  @Notes Attributes parameter is not supported
 */
 CGFontRef CTFontCopyGraphicsFont(CTFontRef font, CTFontDescriptorRef _Nullable* attributes) {
-    return (CGFontRef)[font retain];
+    return (CGFontRef)[static_cast<UIFont*>(font) retain];
 }
 
 /**

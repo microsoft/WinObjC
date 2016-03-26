@@ -32,14 +32,12 @@
 #import "UIKit/UITouch.h"
 #import "UIKit/UIGestureRecognizer.h"
 #import "UIKit/UIPanGestureRecognizer.h"
-
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
 #import "UIEventInternal.h"
 #import "UIGestureRecognizerInternal.h"
 #import "UITouchInternal.h"
 #import "UIViewInternal.h"
-
 #import <cmath>
 
 /** @Status Stub */
@@ -1643,7 +1641,7 @@ static float clipToPage(float start, float curOffset, float velocity, float page
             }
         }
     } else if (state == UIGestureRecognizerStateChanged) {
-        CGFloat scale = [gesture scale];
+        CGFloat scale = [static_cast<UIPinchGestureRecognizer*>(gesture) scale];
         clamp(scale, _minimumZoomScale, _maximumZoomScale);
         if (scale == _zoomScale) {
             return;

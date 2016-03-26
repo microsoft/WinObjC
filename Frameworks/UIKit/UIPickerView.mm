@@ -26,7 +26,6 @@
 #import <UIKit/UIScrollView.h>
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/UIView.h>
-
 #import <UIViewInternal.h>
 
 struct RowData {
@@ -35,6 +34,10 @@ struct RowData {
     idretain _rowString;
     bool _invalid;
 };
+
+@interface UIPickerView ()
+- (id)_subCellSelected:(int)row fromPicker:(id)fromPicker;
+@end
 
 @interface UIPickerSubView : UIScrollView {
 @public
@@ -150,7 +153,7 @@ static void showVisibleCells(UIPickerSubView* self) {
 
                     if ([self->_dataSource respondsToSelector:@selector(pickerView:titleForRow:forComponent:withColor:)]) {
                         rowString =
-                            [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum withColor:&rowColor]
+                            [[static_cast<UIDatePicker*>(self->_dataSource) pickerView:self->_parent titleForRow:j forComponent:self->_componentNum withColor:&rowColor]
                                 retain];
                     } else {
                         rowString = [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum] retain];

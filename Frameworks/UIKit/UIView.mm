@@ -14,14 +14,12 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-
-#include "Starboard.h"
-#include "UIAnimationNotification.h"
-#include "QuartzCore/CABasicAnimation.h"
-#include "QuartzCore/CALayer.h"
-#include "UIAppearanceSetter.h"
-
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "UIAnimationNotification.h"
+#import "QuartzCore/CABasicAnimation.h"
+#import "QuartzCore/CALayer.h"
+#import "UIAppearanceSetter.h"
 #import "UIViewInternal.h"
 #import "UIWindowInternal.h"
 #import "UIViewControllerInternal.h"
@@ -29,14 +27,12 @@
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
 #import "AutoLayout.h"
+#import <math.h>
+#import <Windows.h>
+#import <LoggingNative.h>
+#import <NSLogging.h>
 
 @class UIAppearanceSetter;
-
-#include <math.h>
-
-#include <Windows.h>
-#include <LoggingNative.h>
-#include <NSLogging.h>
 
 static const wchar_t* TAG = L"UIView";
 const CGFloat UIViewNoIntrinsicMetric = -1.0f;
@@ -2675,16 +2671,16 @@ static float doRound(float f) {
 }
 
 /**
- @Status Interoperable
+ @Public No
 */
 - (void)setEnabled:(BOOL)enabled {
     [self setUserInteractionEnabled:enabled];
 }
 
 /**
- @Status Interoperable
+ @Public No
 */
-- (BOOL)isEnabled {
+- (BOOL)_isEnabled {
     return [self isUserInteractionEnabled];
 }
 

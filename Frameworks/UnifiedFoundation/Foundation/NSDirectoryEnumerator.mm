@@ -18,14 +18,12 @@
 #import <Starboard.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSDirectoryEnumerator.h>
-
-#include <string>
-#include <vector>
-
-#include <sys/stat.h>
-#include <errno.h>
-
-#include "LoggingNative.h"
+#import "NSURLInternal.h"
+#import <string>
+#import <vector>
+#import <sys/stat.h>
+#import <errno.h>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSDirectoryEnumerator";
 
@@ -103,7 +101,7 @@ static void searchRecursive(const char* rootpath,
                         NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithCString:fileFullPath.c_str()]];
                         for (NSString* key in keys) {
                             if ([key isEqualToString:NSURLContentModificationDateKey]) {
-                                BOOL ret = [newURL setProperty:[fileAttributes objectForKey:NSFileModificationDate]
+                                BOOL ret = [newURL _setProperty:[fileAttributes objectForKey:NSFileModificationDate]
                                                         forKey:NSURLContentModificationDateKey];
 
                                 assert(ret);
@@ -135,8 +133,9 @@ static void searchRecursive(const char* rootpath,
 
 /**
  @Status Interoperable
+ @Public No
 */
-- (instancetype)initWithPath:(const char*)path
+- (instancetype)_initWithPath:(const char*)path
                      shallow:(BOOL)shallow
   includingPropertiesForKeys:(NSArray*)keys
                      options:(NSDirectoryEnumerationOptions)mask

@@ -19,6 +19,15 @@
 #import "NSParagraphStyleInternal.h"
 
 @implementation NSMutableParagraphStyle
+
+/**
+ @Status Stub
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 /**
  @Status Stub
  @Notes
@@ -65,6 +74,15 @@
 @Notes
 */
 + (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (id)mutableCopyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }

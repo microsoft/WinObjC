@@ -16,23 +16,26 @@
 
 #pragma once
 
+@class NSSelectInputSource;
+@class NSSocket;
+
 @interface NSOutputStream_socket : NSStream {
 @public
     id _delegate;
     id _error;
-    id _socket;
-    id _inputSource;
+    NSSocket* _socket;
+    NSSelectInputSource* _inputSource;
 }
 - (BOOL)hasSpaceAvailable;
 - (int)write:(uint8_t*)buffer maxLength:(unsigned)length;
 - (void)dealloc;
-- (id)initWithSocket:(id)socket streamStatus:(DWORD)status;
-- (id)setDelegate:(id)delegate;
+- (instancetype)initWithSocket:(NSSocket*)socket streamStatus:(DWORD)status;
+- (void)setDelegate:(id)delegate;
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode;
 - (id)open;
-- (id)close;
+- (NSOutputStream_socket*)close;
 - (id)_triggerWrite;
 - (id)selectInputSource:(id)inputSource selectEvent:(DWORD)selectEvent;
 - (id)removeFromRunLoop:(id)runLoop forMode:(id)mode;
-- (id)setProperty:(id)prop forKey:(id)key;
+- (BOOL)setProperty:(id)prop forKey:(id)key;
 @end

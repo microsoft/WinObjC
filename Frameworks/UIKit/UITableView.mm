@@ -14,28 +14,25 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "_TableCellAnimationHelper.h"
-
-#include <UIKit/UIKit.h>
-
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSRunLoop.h"
-
-#include "LinkedList.h"
-
-#include "UIViewInternal.h"
-
-#include <algorithm>
-#include <memory>
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "_TableCellAnimationHelper.h"
+#import <UIKit/UIKit.h>
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSRunLoop.h"
+#import "LinkedList.h"
+#import "UIViewInternal.h"
+#import <algorithm>
+#import <memory>
+#import <UIKit/UINib.h>
+#import "UITableViewInternal.h"
+#import "LoggingNative.h"
+#import "UITableViewCellInternal.h"
+#import "UIScrollViewInternal.h"
+#import <UIKit/UITableViewDataSource.h>
 
 typedef id idweak;
-#import <UIKit/UINib.h>
-
-#include "UITableViewInternal.h"
-#include "LoggingNative.h"
 
 static const wchar_t* TAG = L"UITableView";
 
@@ -526,7 +523,7 @@ TableViewSection* UITableViewPriv::sectionAtIndex(int idx) {
 }
 
 void UITableViewPriv::addReusableCell(TableViewRow* row) {
-    NSString* reuse = [row->_view reuseIdentifier];
+    NSString* reuse = [static_cast<UITableViewCell*>(row->_view) reuseIdentifier];
     assert(reuse != nil);
 
     auto& arr = _reusableCells[[reuse UTF8String]];
@@ -1036,7 +1033,7 @@ static void calcCellPositions(UITableView* self) {
             if (curRow->_yPos + curRow->_height < scrollPoint.y || curRow->_yPos > scrollPoint.y + bounds.size.height) {
             } else {
                 if (curRow->_view != nil) {
-                    id indexPath = [curRow->_view indexPath];
+                    id indexPath = [static_cast<UITableViewCell*>(curRow->_view) indexPath];
                     if (indexPath != nil)
                         [ret addObject:indexPath];
                 }
@@ -1770,7 +1767,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
         return nil;
     }
 
-    return tablePriv->sectionAtIndex(section)->rowAtIndex(row)->_view;
+    return static_cast<UITableViewCell*>(tablePriv->sectionAtIndex(section)->rowAtIndex(row)->_view);
 }
 
 /**

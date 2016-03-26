@@ -244,7 +244,6 @@
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSObject_NSCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSKeyValueCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSStringInternal.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
   </ItemGroup>

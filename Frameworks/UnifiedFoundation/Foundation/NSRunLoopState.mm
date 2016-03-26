@@ -13,20 +13,21 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include <WinSock2.h>
+#import <WinSock2.h>
 #undef WIN32
 
-#include "Starboard.h"
-#include "CoreFoundation/CFRunLoop.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSDate.h"
-#include "NSRunLoopState.h"
-#include "NSRunLoopSource.h"
-#include "NSDelayedPerform.h"
-#include "NSSelectInputSource.h"
-#include "dispatch/dispatch.h"
-#include "sys/timespec.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "CoreFoundation/CFRunLoop.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSDate.h"
+#import "NSRunLoopState.h"
+#import "NSRunLoopSource.h"
+#import "NSDelayedPerform.h"
+#import "NSSelectInputSource.h"
+#import "dispatch/dispatch.h"
+#import "sys/timespec.h"
+#import "LoggingNative.h"
+#import "NSTimerInternal.h"
 
 static const wchar_t* TAG = L"NSRunLoopState";
 
@@ -123,7 +124,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
 - (NSObject*)init {
     _timers = [NSMutableArray new];
     _observers = [NSMutableArray new];
-    _cancelSource = (NSInputSource*)[NSRunLoopSource new];
+    _cancelSource = [NSRunLoopSource new];
     [self addInputSource:_cancelSource];
 
     return self;
@@ -285,7 +286,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
                 return;
             }
         }
-        _waitSignalPriority[_numWaitSignals] = [source priority];
+        _waitSignalPriority[_numWaitSignals] = [static_cast<NSRunLoopSource*>(source) priority];
         _waitSignalObjects[_numWaitSignals] = [source retain];
         _waitSignals[_numWaitSignals] = ((NSRunLoopSource*)source)->_signaledEvent;
         _numWaitSignals++;
@@ -297,7 +298,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
             *((char*)0xBAAFF00D) = 0;
         }
         _waitSocketObjects[_numWaitSockets] = [source retain];
-        _waitSockets[_numWaitSockets] = (int)[source descriptor];
+        _waitSockets[_numWaitSockets] = (int)[static_cast<NSSelectInputSource*>(source) descriptor];
         _numWaitSockets++;
 
         return;
@@ -355,7 +356,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
         NSObject* check = [timer userInfo];
 
         if ([check isKindOfClass:[NSDelayedPerform class]]) {
-            if ([check isEqualToPerform:delayed]) {
+            if ([static_cast<NSDelayedPerform*>(check) isEqualToPerform:delayed]) {
                 [timer invalidate];
             }
         }

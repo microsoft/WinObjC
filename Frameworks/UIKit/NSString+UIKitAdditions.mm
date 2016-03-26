@@ -21,11 +21,9 @@
 #import <UIFontInternal.h>
 #import <Foundation/NSMutableDictionary.h>
 #import "CoreGraphics/CGContext.h"
-
-#include "CGFontInternal.h"
-
-#include <assert.h>
-#include "LoggingNative.h"
+#import "CGFontInternal.h"
+#import <assert.h>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSString+UIKitAdditions";
 
@@ -527,7 +525,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
           minFontSize:(float)minFontSize
        actualFontSize:(float*)actualFontSize
         lineBreakMode:(UILineBreakMode)lineBreak
-   baselineAdjustment:(DWORD)baseline {
+   baselineAdjustment:(UIBaselineAdjustment)baseline {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
 
@@ -554,7 +552,7 @@ static NSDictionary* _getDefaultUITextAttributes() {
              withFont:(UIFont*)font
              fontSize:(float)fontSize
         lineBreakMode:(UILineBreakMode)lineBreak
-   baselineAdjustment:(DWORD)baseline {
+   baselineAdjustment:(UIBaselineAdjustment)baseline {
     CGSize fontExtent;
     WORD* str = (WORD*)[self rawCharacters];
 

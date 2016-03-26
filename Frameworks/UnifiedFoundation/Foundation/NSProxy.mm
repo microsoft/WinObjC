@@ -199,7 +199,7 @@
  @Status Stub
  @Notes
 */
-- (void)release {
+- (oneway void)release {
     UNIMPLEMENTED();
 }
 
@@ -225,7 +225,7 @@
  @Status Stub
  @Notes
 */
-- (struct _NSZone*)zone {
+- (NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }

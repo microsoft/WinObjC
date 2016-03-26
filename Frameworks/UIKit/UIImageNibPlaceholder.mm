@@ -14,11 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIImageNibPlaceholder.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIImage.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UIImageNibPlaceholder.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIImage.h"
+#import "LoggingNative.h"
+#import "UINibUnarchiver.h"
 
 static const wchar_t* TAG = L"UIImageNibPlaceholder";
 

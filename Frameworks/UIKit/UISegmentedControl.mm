@@ -14,19 +14,19 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSBundle.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "UIKit/UISegmentedControl.h"
-#include "UIKit/UIColor.h"
-#include "UISegment.h"
-#include <math.h>
-#include "StubReturn.h"
-
-#include "UISegmentedControlInternal.h"
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSBundle.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "UIKit/UISegmentedControl.h"
+#import "UIKit/UIColor.h"
+#import "UISegment.h"
+#import <math.h>
+#import "StubReturn.h"
+#import "UIViewInternal.h"
+#import "UISegmentedControlInternal.h"
 
 @implementation UISegmentedControl {
     StrongId<NSMutableArray> _segments;

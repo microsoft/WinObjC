@@ -14,32 +14,29 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-
-#include <string>
-#include "Foundation/NSMutableData.h"
-#include "Foundation/NSError.h"
-#include "Foundation/NSScanner.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSValue.h"
-#include <UWP/WindowsStorageStreams.h>
-#include <UWP/WindowsSecurityCryptography.h>
-
-#include <COMIncludes.h>
-#include "ErrorHandling.h"
-#include "RawBuffer.h"
-#include <wrl\wrappers\corewrappers.h>
-#include <windows.security.cryptography.h>
-#include <windows.storage.streams.h>
-#include <COMIncludes_End.h>
-#include <string>
-#include <sstream>
-#include <iomanip>
-
-#include "StringHelpers.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import <string>
+#import "Foundation/NSMutableData.h"
+#import "Foundation/NSError.h"
+#import "Foundation/NSScanner.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSValue.h"
+#import <UWP/WindowsStorageStreams.h>
+#import <UWP/WindowsSecurityCryptography.h>
+#import <COMIncludes.h>
+#import "ErrorHandling.h"
+#import "RawBuffer.h"
+#import <wrl\wrappers\corewrappers.h>
+#import <windows.security.cryptography.h>
+#import <windows.storage.streams.h>
+#import <COMIncludes_End.h>
+#import <string>
+#import <sstream>
+#import <iomanip>
+#import "StringHelpers.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSData";
 
@@ -585,7 +582,7 @@ using namespace Windows::Foundation;
 /**
  @Status Interoperable
 */
-- (NSMutableData*)mutableCopyWithZone:(void**)zone {
+- (NSMutableData*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableData alloc] initWithData:self];
 }
 

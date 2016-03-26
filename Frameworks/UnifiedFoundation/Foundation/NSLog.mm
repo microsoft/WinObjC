@@ -14,13 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "LoggingNative.h"
-
-#include <Foundation/NSString.h>
-#include <Windows.h>
-
-#include "NSLogInternal.h"
+#import "Starboard.h"
+#import "LoggingNative.h"
+#import <Foundation/NSString.h>
+#import <Windows.h>
+#import "NSLogInternal.h"
+#import "NSStringInternal.h"
 
 // Only used in Foundation unit tests.
 bool g_isNSLogTestHookEnabled = false;

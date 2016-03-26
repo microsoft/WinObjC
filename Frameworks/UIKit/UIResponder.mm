@@ -14,9 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "LoggingNative.h"
 #import "UIResponderInternal.h"
+#import "UIApplicationInternal.h"
 
 static const wchar_t* TAG = L"UIResponder";
 

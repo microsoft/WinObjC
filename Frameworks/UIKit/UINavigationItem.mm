@@ -16,7 +16,6 @@
 
 #import "Starboard.h"
 #import "UIKit/UINavigationItem.h"
-
 #import "UIAppearanceSetter.h"
 #import "UIBarButtonItem+Internals.h"
 #import "UINavigationItemInternal.h"
@@ -151,20 +150,6 @@
     [self setRightBarButtonItems:rightBarItems animated:FALSE];
 }
 
-/**
- @Status Interoperable
-*/
-- (UIBarButtonItem*)rightBarButtonItem {
-    return _rightBarButtonItem;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSArray*)rightBarButtonItems {
-    return _rightBarButtonItems;
-}
-
 - (UIBarButtonItem*)_rightBarButtonOrControl {
     if ([_rightBarButtonItems count] > 1) {
         if (_rightSegmentedControlItem == nil) {
@@ -192,6 +177,20 @@
         return [self rightBarButtonItem];
     }
     return nil;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIBarButtonItem*)rightBarButtonItem {
+    return _rightBarButtonItem;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray*)rightBarButtonItems {
+    return _rightBarButtonItems;
 }
 
 /**

@@ -21,7 +21,9 @@
 
 @interface UIColor (Internal) {
 }
-+ (UIColor*)colorWithCGPattern:(CGPatternRef)pattern;
++ (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern;
++ (UIColor*)_windowsTableViewCellSelectionBackgroundColor;
+
 - (void)getColors:(ColorQuad*)colors;
 - (BrushType)_type;
 @end

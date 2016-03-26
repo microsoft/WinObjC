@@ -19,15 +19,12 @@
 #import "Foundation/NSCharacterSet.h"
 #import "Foundation/NSMutableCharacterSet.h"
 #import "Foundation/NSMutableString.h"
-
 #import "unicode/uniset.h"
 
-@interface NSCharacterSet ()
-@property (readwrite, copy) NSData* bitmapRepresentation;
-@property (readwrite, copy) NSCharacterSet* invertedSet;
-@end
-
 @implementation NSCharacterSet
+
+// We provide our own accessors so we also have to synthesize the ivar backing our property.
+@synthesize invertedSet = _invertedSet;
 
 /**
  @Status Interoperable
@@ -268,6 +265,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 - (void)dealloc {
     assert(_icuSet != NULL);
     delete _icuSet;
+    [_invertedSet release];
     [super dealloc];
 }
 
@@ -312,7 +310,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
     UNIMPLEMENTED();
 
     NSCharacterSet* ret = [[self alloc] init];
-    [ret setBitmapRepresentation:data];
+    ret->_bitmapRepresentation = data;
     return [ret autorelease];
 }
 
@@ -384,7 +382,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
     NSMutableCharacterSet* copy = [[NSMutableCharacterSet class] allocWithZone:zone];
     copy->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
 
-    [copy setBitmapRepresentation:[_bitmapRepresentation mutableCopyWithZone:zone]];
+    static_cast<NSCharacterSet*>(copy)->_bitmapRepresentation = [_bitmapRepresentation mutableCopyWithZone:zone];
 
     return copy;
 }
@@ -448,14 +446,20 @@ static UnicodeSet* setWithCharacters(const char* chars) {
  @Status Interoperable
  */
 - (NSCharacterSet*)invertedSet {
-    if (_invertedSet == nil) {
-        _invertedSet = [[NSCharacterSet alloc] init];
-        _invertedSet->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
-        _invertedSet->_icuSet->complement();
-        _invertedSet->_icuSet->freeze();
-        _invertedSet->_invertedSet = self;
+    @synchronized(self) {
+        if (_invertedSet == nil) {
+            _invertedSet = [[NSCharacterSet alloc] init];
+            _invertedSet->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
+            _invertedSet->_icuSet->complement();
+            _invertedSet->_icuSet->freeze();
+            
+            // This will prevent a retain cycle: 
+            // If the invertedSet property of this invertedSet object is requested then we 
+            // simply create a new NSCharacterSet object to hold the inverse and return that.
+            _invertedSet->_invertedSet = nil;
+        }
+        return [[_invertedSet retain] autorelease];
     }
-    return _invertedSet;
 }
 
 @end

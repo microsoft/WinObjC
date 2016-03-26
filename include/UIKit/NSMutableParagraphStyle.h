@@ -24,7 +24,7 @@
 @class NSArray;
 
 UIKIT_EXPORT_CLASS
-@interface NSMutableParagraphStyle : NSParagraphStyle
+@interface NSMutableParagraphStyle : NSParagraphStyle <NSCopying, NSMutableCopying, NSSecureCoding>
 - (void)setParagraphStyle:(NSParagraphStyle*)obj STUB_METHOD;
 @property (nonatomic) NSTextAlignment alignment STUB_PROPERTY;
 @property (nonatomic) CGFloat firstLineHeadIndent STUB_PROPERTY;
@@ -43,4 +43,5 @@ UIKIT_EXPORT_CLASS
 @property (copy, nonatomic) NSArray* tabStops STUB_PROPERTY;
 @property (nonatomic) CGFloat defaultTabInterval STUB_PROPERTY;
 @property (nonatomic) float hyphenationFactor STUB_PROPERTY;
+
 @end

@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #import <vector>
-
 #import "Starboard.h"
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSValue.h>
@@ -24,9 +23,9 @@
 #import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <UIKit/UITouch.h>
-
 #import "UIGestureRecognizerInternal.h"
-#include "LoggingNative.h"
+#import "LoggingNative.h"
+#import "UIScrollViewInternal.h"
 
 static const wchar_t* TAG = L"UIPanGestureRecognizer";
 

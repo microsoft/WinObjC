@@ -16,9 +16,8 @@
 
 #import <CoreText/CTFrameSetter.h>
 #import <StubReturn.h>
-
-#include "CoreTextInternal.h"
-#include "CGPathInternal.h"
+#import "CoreTextInternal.h"
+#import "CGPathInternal.h"
 
 @implementation _CTFrameSetter : NSObject
 - (void)dealloc {
@@ -70,7 +69,7 @@ static id _createFrame(_CTFrameSetter* frameSetter, CGRect frameSize, CGSize* si
             [ret->_lines addObject:(id)line];
             ret->_lineOrigins.push_back(lineOrigin);
         }
-        [line release];
+        [static_cast<_CTLine*>(line) release];
 
         curIdx = pos;
         if (width > sizeOut->width) {

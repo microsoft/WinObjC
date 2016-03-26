@@ -16,9 +16,10 @@
 
 #pragma once
 
-#import <UIKit/UITabBarController.h>
+@class UITabBar;
+@class UITabBarItem;
 
 @interface UITabBarController ()
-- (void)_showTabBar:(BOOL)show;
 - (void)_tabBar:(UITabBar*)tabBar didSelectItem:(UITabBarItem*)item;
+- (void)_showTabBar:(BOOL)show;
 @end

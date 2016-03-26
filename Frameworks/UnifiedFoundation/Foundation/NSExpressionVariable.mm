@@ -16,6 +16,9 @@
 
 #import "NSExpressionVariable.h"
 #import <Foundation/NSCoder.h>
+#import <Foundation/NSDictionary.h>
+#import <Foundation/NSExpression.h>
+#import <Foundation/NSMutableDictionary.h>
 
 @implementation NSExpressionVariable
 
@@ -49,7 +52,7 @@
 
     // ensure basic non-expression type is returned.
     if ([result isKindOfClass:[NSExpression class]]) {
-        return [result expressionValueWithObject:object contex:context];
+        return [static_cast<NSExpression*>(result) expressionValueWithObject:object context:context];
     }
 
     return result;

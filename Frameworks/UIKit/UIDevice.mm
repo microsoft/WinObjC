@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "Foundation/NSString.h"
-#include "Foundation/NSUserDefaults.h"
-#include "UIKit/UIDevice.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIView.h"
-#include "UWP/WindowsApplicationModel.h"
+#import "Starboard.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSUserDefaults.h"
+#import "UIKit/UIDevice.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIViewController.h"
+#import "UIKit/UIView.h"
+#import "UWP/WindowsApplicationModel.h"
+#import "UIViewControllerInternal.h"
 
 NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
 NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";
@@ -110,11 +110,11 @@ DWORD uuid_generate(BYTE* uuid);
     return _batteryMonitoringEnabled;
 }
 
-- (id)setOrientation:(UIDeviceOrientation)orientation {
-    return [self setOrientation:orientation animated:TRUE];
+- (id)_setOrientation:(UIDeviceOrientation)orientation {
+    return [self _setOrientation:orientation animated:TRUE];
 }
 
-- (id)setOrientation:(UIDeviceOrientation)orientation animated:(BOOL)animated {
+- (id)_setOrientation:(UIDeviceOrientation)orientation animated:(BOOL)animated {
     _curOrientation = orientation;
 
     if (_curOrientation != UIDeviceOrientationUnknown) {
@@ -142,10 +142,10 @@ DWORD uuid_generate(BYTE* uuid);
                     id modal = [controller modalViewController];
 
                     if (modal != nil) {
-                        [modal setRotation:orientation animated:animated];
+                        [modal _setRotation:orientation animated:animated];
                         didRotate = true;
                     } else {
-                        [controller setRotation:orientation animated:animated];
+                        [controller _setRotation:orientation animated:animated];
                     }
                 }
                 if (didRotate) {
@@ -161,7 +161,7 @@ if ( (unsigned int)j >= [subviews count] ) continue;
 id curView = [subviews objectAtIndex:j];
 
 if ( [curView isKindOfClass:popoverClass] ) {
-[curView setRotation:orientation animated:animated];
+[curView _setRotation:orientation animated:animated];
 }
 }
 #endif
@@ -303,11 +303,11 @@ if ( [curView isKindOfClass:popoverClass] ) {
 }
 
 - (void)_setInitialOrientation {
-    [self setOrientation:UIDeviceOrientationPortrait animated:FALSE];
+    [self _setOrientation:UIDeviceOrientationPortrait animated:FALSE];
 }
 
 - (id)submitRotation {
-    return [self setOrientation:newDeviceOrientation];
+    return [self _setOrientation:newDeviceOrientation];
 }
 
 @end

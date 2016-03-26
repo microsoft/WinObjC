@@ -443,9 +443,9 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 // clang-format off
 // clang format doesn't approve of unlabeled parameters
 /**
- @Status Stub
- @Notes
-*/
+  @Status Stub
+  @Notes
+ */
 - (instancetype)initWithImageProvider:(id)p
                                  size:(size_t)width
                                      :(size_t)height

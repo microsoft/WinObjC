@@ -14,26 +14,25 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSFileManager.h"
-#include "Foundation/NSError.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSURL.h"
-#include "Foundation/NSDirectoryEnumerator.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSFileManager.h"
+#import "Foundation/NSError.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSDate.h"
+#import "Foundation/NSData.h"
+#import "Foundation/NSURL.h"
+#import "Foundation/NSDirectoryEnumerator.h"
 #import <Foundation/NSDictionary.h>
-
-#include <string>
-#include <vector>
-
-#include <sys/stat.h>
-#include <errno.h>
-#include "LoggingNative.h"
+#import <string>
+#import <vector>
+#import <sys/stat.h>
+#import <errno.h>
+#import "LoggingNative.h"
+#import "NSDirectoryEnumeratorInternal.h"
 
 static const wchar_t* TAG = L"NSFileManager";
 
@@ -201,7 +200,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
         return nil;
     }
 
-    id enumerator = [[NSDirectoryEnumerator alloc] initWithPath:[[url path] UTF8String]
+    id enumerator = [[NSDirectoryEnumerator alloc] _initWithPath:[[url path] UTF8String]
                                                         shallow:YES
                                      includingPropertiesForKeys:keys
                                                         options:mask
@@ -219,7 +218,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 */
 - (NSArray*)contentsOfDirectoryAtPath:(NSString*)pathAddr error:(NSError**)error {
     id enumerator = [NSDirectoryEnumerator new];
-    enumerator = [enumerator initWithPath:[pathAddr UTF8String]
+    enumerator = [enumerator _initWithPath:[pathAddr UTF8String]
                                   shallow:YES
                includingPropertiesForKeys:nil
                                   options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
@@ -248,7 +247,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     const char* path = [pathAddr UTF8String];
 
     NSDirectoryEnumerator* directoryEnum = [NSDirectoryEnumerator new];
-    [directoryEnum initWithPath:path
+    [directoryEnum _initWithPath:path
                            shallow:FALSE
         includingPropertiesForKeys:nil
                            options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
@@ -260,7 +259,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 /**
  @Status Stub
 */
-- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray**)propertyKeys options:(NSVolumeEnumerationOptions)options {
+- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray*)propertyKeys options:(NSVolumeEnumerationOptions)options {
     UNIMPLEMENTED();
     return nil;
 }
@@ -960,7 +959,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Status Interoperable
 */
 - (NSArray*)directoryContentsAtPath:(NSString*)pathAddr {
-    id enumerator = [[[NSDirectoryEnumerator alloc] initWithPath:[pathAddr UTF8String]
+    id enumerator = [[[NSDirectoryEnumerator alloc] _initWithPath:[pathAddr UTF8String]
                                                          shallow:YES
                                       includingPropertiesForKeys:nil
                                                          options:NSDirectoryEnumerationSkipsSubdirectoryDescendants

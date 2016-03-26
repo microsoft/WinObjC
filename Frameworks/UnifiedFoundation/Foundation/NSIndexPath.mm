@@ -14,30 +14,30 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSIndexPath.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSIndexPath.h"
 
 @implementation NSIndexPath
 
 /**
  @Status Interoperable
 */
-+ (NSIndexPath*)indexPathWithIndex:(unsigned)index {
++ (NSIndexPath*)indexPathWithIndex:(NSUInteger)index {
     return [[[self alloc] initWithIndexes:&index length:1] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (NSIndexPath*)indexPathWithIndexes:(unsigned*)indexes length:(unsigned)length {
++ (NSIndexPath*)indexPathWithIndexes:(const NSUInteger*)indexes length:(NSUInteger)length {
     return [[[self alloc] initWithIndexes:indexes length:length] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (NSIndexPath*)indexPathForRow:(unsigned)row inSection:(unsigned)section {
++ (NSIndexPath*)indexPathForRow:(NSInteger)row inSection:(NSInteger)section {
     unsigned indexes[] = { section, row };
 
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
@@ -46,7 +46,7 @@
 /**
  @Status Interoperable
 */
-+ (NSIndexPath*)indexPathForItem:(unsigned)row inSection:(unsigned)section {
++ (NSIndexPath*)indexPathForItem:(NSInteger)row inSection:(NSInteger)section {
     NSUInteger indexes[] = { section, row };
     return [[[self alloc] initWithIndexes:indexes length:2] autorelease];
 }
@@ -54,14 +54,14 @@
 /**
  @Status Interoperable
 */
-- (instancetype)initWithIndex:(unsigned)index {
+- (instancetype)initWithIndex:(NSUInteger)index {
     return [self initWithIndexes:&index length:1];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithIndexes:(unsigned*)indexes length:(unsigned)length {
+- (instancetype)initWithIndexes:(const NSUInteger*)indexes length:(NSUInteger)length {
     _length = length;
     _indexes = (unsigned*)IwMalloc(length * sizeof(unsigned));
     if (_indexes == nil) {
@@ -130,7 +130,7 @@
 /**
  @Status Interoperable
 */
-- (NSIndexPath*)indexPathByAddingIndex:(int)newIndex {
+- (NSIndexPath*)indexPathByAddingIndex:(NSUInteger)newIndex {
     id ret = [[self class] alloc];
 
     NSUInteger* indexCopy = (NSUInteger*)IwMalloc((_length + 1) * sizeof(DWORD));
@@ -147,14 +147,14 @@
 /**
  @Status Interoperable
 */
-- (unsigned)length {
+- (NSUInteger)length {
     return _length;
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)hash {
+- (NSUInteger)hash {
     unsigned ret = 0;
 
     for (unsigned int i = 0; i < _length; i++) {
@@ -196,21 +196,21 @@
 /**
  @Status Interoperable
 */
-- (unsigned)item {
+- (NSInteger)item {
     return [self row];
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)row {
+- (NSInteger)row {
     return [self indexAtPosition:1];
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)section {
+- (NSInteger)section {
     return [self indexAtPosition:0];
 }
 

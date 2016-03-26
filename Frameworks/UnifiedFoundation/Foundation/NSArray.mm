@@ -14,27 +14,29 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "CFArrayInternal.h"
-#include "../CoreFoundation/CFDictionaryInternal.h"
-#include "NSPropertyListReader.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableData.h"
-#include "Foundation/NSEnumerator.h"
-#include "Foundation/NSKeyedArchiver.h"
-#include "Foundation/NSArray.h"
-#include "../Foundation/NSXMLPropertyList.h"
-#include "NSEnumeratorInternal.h"
-#include "../Foundation/NSPropertyListWriter_binary.h"
-#include "CoreFoundation/CFArray.h"
-#include "Foundation/NSMutableString.h"
-#include "CoreFoundation/CFType.h"
-#include "Foundation/NSIndexSet.h"
-#include "Foundation/NSNull.h"
-#include "NSArrayInternal.h"
-#include "VAListHelper.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "CFArrayInternal.h"
+#import "../CoreFoundation/CFDictionaryInternal.h"
+#import "NSPropertyListReader.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableData.h"
+#import "Foundation/NSEnumerator.h"
+#import "Foundation/NSKeyedArchiver.h"
+#import "Foundation/NSArray.h"
+#import "../Foundation/NSXMLPropertyList.h"
+#import "NSEnumeratorInternal.h"
+#import "../Foundation/NSPropertyListWriter_binary.h"
+#import "CoreFoundation/CFArray.h"
+#import "Foundation/NSMutableString.h"
+#import "CoreFoundation/CFType.h"
+#import "Foundation/NSIndexSet.h"
+#import "Foundation/NSNull.h"
+#import "NSArrayInternal.h"
+#import "VAListHelper.h"
+#import "LoggingNative.h"
+#import "NSMutableArrayInternal.h"
+#import "NSKeyedArchiverInternal.h"
 
 static const wchar_t* TAG = L"NSArray";
 
@@ -94,7 +96,7 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-+ (instancetype)arrayWithObjects:(id*)objs count:(NSUInteger)count {
++ (instancetype)arrayWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
     NSArray* ret = [self alloc];
 
     _CFArrayInitInternalWithObjects((CFArrayRef)ret, (const void**)objs, count, true);
@@ -133,13 +135,13 @@ static NSArray* _initWithObjects(NSArray* array, const std::vector<id>& flatArgs
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjects:(id*)objs count:(NSUInteger)count {
+- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
     _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, count, true);
 
     return self;
 }
 
-- (instancetype)initWithObjectsTakeOwnership:(NSObject**)objs count:(NSUInteger)count {
+- (instancetype)_initWithObjectsTakeOwnership:(NSObject**)objs count:(NSUInteger)count {
     _CFArrayInitInternalWithObjects((CFArrayRef)self, (const void**)objs, count, false);
 
     return self;
@@ -672,10 +674,10 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (NSArray*)arrayByAddingObjectsFromArray:(NSArray*)arr {
+- (NSArray*)arrayByAddingObjectsFromArray:(NSArray*)array {
     NSArray* newArray = [[[self class] alloc] initWithArray:self];
 
-    id arrEnum = [arr objectEnumerator];
+    id arrEnum = [array objectEnumerator];
     id curObj = [arrEnum nextObject];
 
     while (curObj != nil) {
@@ -807,7 +809,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
-        [coder _encodeArrayOfObjects:self forKey:@"NS.objects"];
+        [static_cast<NSKeyedArchiver*>(coder) _encodeArrayOfObjects:self forKey:@"NS.objects"];
     } else {
         int i, count = [self count];
 
@@ -914,7 +916,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
         return NO;
     }
 
-    return [self isEqualToArray:other];
+    return [self isEqualToArray:static_cast<NSArray*>(other)];
 }
 
 /**

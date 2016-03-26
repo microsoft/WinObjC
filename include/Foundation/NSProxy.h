@@ -22,8 +22,9 @@
 @class NSMethodSignature;
 @class NSString;
 
+__attribute__((objc_root_class))
 FOUNDATION_EXPORT_CLASS
-@interface NSProxy : NSObject
+@interface NSProxy <NSObject>
 + (id)alloc;
 + (id)allocWithZone:(NSZone*)zone;
 - (void)dealloc;
@@ -34,4 +35,6 @@ FOUNDATION_EXPORT_CLASS
 + (Class) class;
 @property (readonly, copy) NSString* description;
 @property (readonly, copy) NSString* debugDescription;
+@property(readonly) NSUInteger hash;
+@property(readonly) Class superclass;
 @end

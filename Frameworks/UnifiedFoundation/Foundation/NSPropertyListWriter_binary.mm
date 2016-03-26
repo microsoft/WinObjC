@@ -25,11 +25,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "CoreFoundation/CFDictionary.h"
 #import "Foundation/NSMutableArray.h"
 #import <limits>
-#include "LoggingNative.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSPropertyListWriter_binary";
-
-#define NSNotFound 0x7fffffff
 
 #define RELEASE(object) [object release]
 #define RETAIN(object) [object retain]

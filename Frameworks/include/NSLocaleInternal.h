@@ -18,6 +18,9 @@
 
 #import <unicode/locid.h>
 
+@class NSString;
+
 @interface NSLocale (Internal)
 - (icu::Locale*)_createICULocale;
++ (NSString*)_currentNSLocaleCountryCode;
 @end

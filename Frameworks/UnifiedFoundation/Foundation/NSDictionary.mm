@@ -14,24 +14,25 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "../CoreFoundation/CFDictionaryInternal.h"
-#include "NSEnumeratorInternal.h"
-#include "CoreFoundation/CFDictionary.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSEnumerator.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSKeyedArchiver.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "../CoreFoundation/CFDictionaryInternal.h"
+#import "NSEnumeratorInternal.h"
+#import "CoreFoundation/CFDictionary.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSData.h"
+#import "Foundation/NSEnumerator.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSKeyedArchiver.h"
+#import "LoggingNative.h"
+#import "NSPropertyListWriter_binary.h"
+#import "NSKeyedArchiverInternal.h"
 
 static const wchar_t* TAG = L"NSDictionary";
 
 @class NSPropertyListReader;
 @class NSPropertyListSerialization;
-@class NSPropertyListWriter_Binary;
 
 struct SortedKeysHelperCtx {
     id dict;
@@ -92,7 +93,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-+ (instancetype)dictionaryWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
++ (instancetype)dictionaryWithObjects:(id _Nonnull const[])vals forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count {
     NSDictionary* ret = [[self alloc] initWithObjects:vals forKeys:keys count:count];
 
     return [ret autorelease];
@@ -101,11 +102,11 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
+- (instancetype)initWithObjects:(id _Nonnull const[])vals forKeys:(id<NSCopying> _Nonnull const[])keys count:(unsigned)count {
     [self init];
 
     for (unsigned i = 0; i < count; i++) {
-        id key = [keys[i] copy];
+        id key = [static_cast<NSObject*>(keys[i]) copy];
         CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)vals[i]);
         [key release];
     }
@@ -116,7 +117,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjectsTakeOwnership:(id*)vals forKeys:(id*)keys count:(unsigned)count {
+- (instancetype)_initWithObjectsTakeOwnership:(id*)vals forKeys:(id*)keys count:(unsigned)count {
     [self init];
 
     for (unsigned i = 0; i < count; i++) {
@@ -206,19 +207,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObject:(id)val forKey:(id)key {
-    [self init];
-
-    key = [key copy];
-    CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)val);
-    [key release];
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
 + (BOOL)supportsSecureCoding {
     return YES;
 }
@@ -300,18 +288,18 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-- (NSDictionary*)initWithDictionary:(NSDictionary*)dict copyItems:(BOOL)copyItems {
-    unsigned count = [dict count];
+- (NSDictionary*)initWithDictionary:(NSDictionary*)dictionary copyItems:(BOOL)copyItems {
+    NSUInteger count = [dictionary count];
 
     id* keys = (id*)IwCalloc(count, sizeof(id));
     id* vals = (id*)IwCalloc(count, sizeof(id));
     unsigned numPairs = 0;
 
-    NSEnumerator* enumerator = [dict keyEnumerator];
+    NSEnumerator* enumerator = [dictionary keyEnumerator];
     id curKey = [enumerator nextObject];
 
     while (curKey != nil) {
-        id curObj = [dict objectForKey:curKey];
+        id curObj = [dictionary objectForKey:curKey];
 
         assert(numPairs <= count);
         keys[numPairs] = curKey;
@@ -408,9 +396,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     const char* file = (char*)[[url path] UTF8String];
     NSData* data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
 
-    NSDictionary* dict = nil;
+    NSDictionary* dictionary = nil;
     if (data) {
-        dict = [NSPropertyListSerialization
+        dictionary = [NSPropertyListSerialization
             propertyListFromData:data
                 mutabilityOption:[self isKindOfClass:[NSMutableDictionary class]] ? NSPropertyListMutableContainersAndLeaves :
                                                                                     NSPropertyListImmutable
@@ -418,7 +406,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
                 errorDescription:0];
     }
 
-    return [self initWithDictionary:dict];
+    return [self initWithDictionary:dictionary];
 }
 
 /**
@@ -560,14 +548,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-- (unsigned)count {
+- (NSUInteger)count {
     return CFDictionaryGetCount((CFDictionaryRef)self);
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
     Class ours = [self class];
 
     if (ours == [NSDictionary class] || ours == [NSMutableDictionary class]) {
@@ -681,8 +669,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
-        [coder _encodeArrayOfObjects:[self allKeys] forKey:@"NS.keys"];
-        [coder _encodeArrayOfObjects:[self allValues] forKey:@"NS.objects"];
+        [static_cast<NSKeyedArchiver*>(coder) _encodeArrayOfObjects:[self allKeys] forKey:@"NS.keys"];
+        [static_cast<NSKeyedArchiver*>(coder) _encodeArrayOfObjects:[self allValues] forKey:@"NS.objects"];
     } else {
         NSEnumerator* state = [self keyEnumerator];
         unsigned count = [self count];

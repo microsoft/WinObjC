@@ -14,22 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-
-#include "../CoreFoundation/CFDictionaryInternal.h"
-#include "CoreFoundation/CFArray.h"
-#include "CoreFoundation/CFType.h"
-#include "Foundation/NSMutableArray.h"
-#include "NSArrayInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "../CoreFoundation/CFDictionaryInternal.h"
+#import "CoreFoundation/CFArray.h"
+#import "CoreFoundation/CFType.h"
+#import "Foundation/NSMutableArray.h"
+#import "NSArrayInternal.h"
+#import "LoggingNative.h"
+#import "NSMutableArrayInternal.h"
+#import "NSMutableIndexSetInternal.h"
 
 static const wchar_t* TAG = L"NSMutableArray";
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
-
-@interface NSMutableArrayConcrete : NSMutableArray
-@end
 
 @implementation NSMutableArray
 

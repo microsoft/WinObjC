@@ -20,7 +20,11 @@
 #import "UIViewInternal.h"
 #import "_UIGroupEdgeView.h"
 #import "UITableViewInternal.h"
+#import "UITableViewCellInternal.h"
 #import "LoggingNative.h"
+#import "CALayerInternal.h"
+#import "UITableViewInternal.h"
+#import "UIColorInternal.h"
 
 #import <algorithm>
 
@@ -151,6 +155,13 @@ static UILabel* getTextLabel(UITableViewCell* self) {
             case UITableViewCellStyleValue2:
                 [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont smallSystemFontSize]]];
                 break;
+
+            case UITableViewCellStyleDefault:
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", self->_style);
+                break;
+
+            default:
+                TraceWarning(TAG, L"Invalid UITableViewCell style specified: %u", self->_style);
         }
     }
 
@@ -246,6 +257,13 @@ static id getSecondaryLabel(UITableViewCell* self) {
             case UITableViewCellStyleValue2:
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
                 break;
+
+            case UITableViewCellStyleDefault:
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", self->_style);
+                break;
+
+            default:
+                TraceWarning(TAG, L"Invalid UITableViewCell style specified: %u", self->_style);
         }
     }
 
@@ -381,7 +399,7 @@ static void initInternal(UITableViewCell* self) {
 - (void)_removeButtonCallback:(id)button {
     _removeButton = nil;
     [button removeFromSuperview];
-    [[self superview] _forwardCellRemoval:self];
+    [static_cast<UITableView*>([self superview]) _forwardCellRemoval:self];
 }
 
 /**
@@ -480,13 +498,21 @@ static void initInternal(UITableViewCell* self) {
         _cellOldBackgroundColor = _cellBackgroundColor;
         switch (_selectionStyle) {
             case UITableViewCellSelectionStyleBlue:
-                [self setBackgroundColor:[UIColor windowsTableViewCellSelectionBackgroundColor]];
+                [self setBackgroundColor:[UIColor _windowsTableViewCellSelectionBackgroundColor]];
                 break;
 
             case UITableViewCellSelectionStyleGray:
                 [self setBackgroundColor:[UIColor grayColor]];
                 break;
+
+            case UITableViewCellSelectionStyleNone:
+               UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", _selectionStyle);
+               break;
+
+            default:
+                TraceWarning(TAG, L"Invalid UITableViewCell selection style specified: %u", _selectionStyle);
         }
+
         if (_selectionStyle != UITableViewCellSelectionStyleNone)
             [self setHighlighted:highlight forViews:[_contentView subviews]];
         updateBackgroundView(self);
@@ -497,7 +523,15 @@ static void initInternal(UITableViewCell* self) {
                 case UITableViewCellSelectionStyleGray:
                     [self setBackgroundColor:_cellOldBackgroundColor];
                     break;
+
+                case UITableViewCellSelectionStyleNone:
+                    UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", _selectionStyle);
+                    break;
+
+                default:
+                    TraceWarning(TAG, L"Invalid selection style: %u", _selectionStyle);
             }
+
             [self setHighlighted:highlight forViews:[_contentView subviews]];
             updateBackgroundView(self);
         }
@@ -510,7 +544,7 @@ static void initInternal(UITableViewCell* self) {
         // Ignore the events if view wants to
         if (![view isUserInteractionEnabled] && [view respondsToSelector:@selector(setHighlighted:)] &&
             ![view isKindOfClass:[UIControl class]]) {
-            [view setHighlighted:highlighted];
+            [static_cast<UIControl*>(view) setHighlighted:highlighted];
 
             [self setHighlighted:highlighted forViews:[view subviews]];
         }
@@ -780,7 +814,7 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
  @Status Interoperable
 */
 - (UITableViewCellAccessoryType)accessoryType {
-    return _accessoryType;
+    return static_cast<UITableViewCellAccessoryType>(_accessoryType);
 }
 
 static void setInternalAccessoryColor(UITableViewCell* self) {
@@ -799,11 +833,19 @@ static void setInternalAccessoryColor(UITableViewCell* self) {
                     contentColor.g = 1.0f;
                     contentColor.b = 1.0f;
                     break;
+
+                case UITableViewCellSelectionStyleNone:
+                    UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", self->_selectionStyle);
+                    break;
+
+                default:
+                    TraceWarning(TAG, L"Invalid selection style: %u", self->_selectionStyle);
             }
         }
 
-        [[self->_internalAccessoryView layer]
-            _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
+        CGColorRef color = 
+            static_cast<CGColorRef>([UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]);
+        [[self->_internalAccessoryView layer] _setContentColor:color];
     }
 }
 
@@ -874,6 +916,12 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
             case UITableViewCellAccessoryDetailButton:
                 ret = buildInternalAccessory(self, self->_accessoryType);
                 break;
+
+            case UITableViewCellAccessoryNone:
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell accessory type: %u is unhandled", self->_accessoryType);
+
+            default:
+                TraceWarning(TAG, L"Invalid accessory style: %u", self->_selectionStyle);
         }
     }
 
@@ -1036,13 +1084,13 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
 
 - (void)addBottomBorder:(UITableView*)parentTable {
     if (_borderView == nil) {
-        float tableBackground[4] = { 0 };
+        ColorQuad color = {0};
 
-        [[parentTable backgroundColor] getColors:tableBackground];
+        [[parentTable backgroundColor] getColors:&color];
         UIColor* backgroundColor = nil;
 
-        if ((tableBackground[3] == 0.0f) ||
-            (tableBackground[0] == 1.0f && tableBackground[1] == 1.0f && tableBackground[2] == 1.0f && tableBackground[3] == 1.0f)) {
+        if ((color.a == 0.0f) ||
+            (color.r == 1.0f && color.g == 1.0f && color.b == 1.0f && color.a == 1.0f)) {
             backgroundColor = [UIColor grayColor];
         } else {
             backgroundColor = [UIColor whiteColor];

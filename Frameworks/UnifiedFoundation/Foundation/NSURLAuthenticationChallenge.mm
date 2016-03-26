@@ -14,11 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSURLAuthenticationChallenge.h"
-#include "Foundation/NSURLProtectionSpace.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSURLAuthenticationChallenge.h"
+#import "Foundation/NSURLProtectionSpace.h"
 
 @interface NSURLAuthenticationChallenge () {
     id _protectionSpace;
@@ -31,7 +31,7 @@
 /**
  @Status Stub
 */
-- (NSUInteger)previousFailureCount {
+- (NSInteger)previousFailureCount {
     UNIMPLEMENTED();
     return 0;
 }

@@ -83,6 +83,8 @@ struct UIViewControllerPriv {
 
 - (void)_setResizeToScreen:(BOOL)resize;
 - (void)_doResizeToScreen;
+- (int)_edgesForExtendedLayout;
+- (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 @end
 
 #endif

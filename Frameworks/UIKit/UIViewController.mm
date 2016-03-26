@@ -16,7 +16,6 @@
 
 #import <StubReturn.h>
 #import "Starboard.h"
-
 #import "Foundation/NSBundle.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSMutableDictionary.h"
@@ -39,6 +38,7 @@
 #import "UIEmptyController.h"
 #import "UIViewInternal.h"
 #import "UIViewControllerInternal.h"
+#import "UIStoryboardInternal.h"
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";
@@ -519,7 +519,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     }
 }
 
-- (void)setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+- (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
     if (([priv->view superview] == nil || [priv->view window] != [priv->view superview]) && !priv->_isRootView) {
         return;
     }
@@ -1389,8 +1389,8 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
 
             UIInterfaceOrientation toOrientation = findOrientation(self);
 
-            [self setRotation:toOrientation animated:FALSE];
-            [parent setRotation:toOrientation animated:FALSE];
+            [self _setRotation:toOrientation animated:FALSE];
+            [parent _setRotation:toOrientation animated:FALSE];
 
             if (isAnimated) {
                 priv->_visibility = controllerWillAppearAnimated;
@@ -1554,6 +1554,14 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
         case controllerWillDisappearAnimated:
             [self _notifyViewDidDisappear:TRUE];
             break;
+
+        case controllerNotVisible:
+        case controllerVisible:
+            UNIMPLEMENTED_WITH_MSG("Visibility mode %u not handled", priv->_visibility);
+            break;
+
+        default:
+            TraceWarning(TAG, L"Invalid visibility mode: %u", priv->_visibility);
     }
 }
 
@@ -1742,7 +1750,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
     while (cur != nil) {
         TraceVerbose(TAG, L"Class is %hs", object_getClassName(cur));
         if ([cur isKindOfClass:[UITabBarController class]]) {
-            return cur;
+            return static_cast<UITabBarController*>(cur);
         }
 
         cur = [cur parentViewController];

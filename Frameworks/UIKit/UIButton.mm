@@ -17,7 +17,6 @@
 #import <StubReturn.h>
 #import "Starboard.h"
 #import "LoggingNative.h"
-
 #import "CALayerInternal.h"
 
 static const wchar_t* TAG = L"UIButton";
@@ -670,6 +669,16 @@ static UIImage* imageForButtonType(UIButtonType type) {
         case UIButtonTypeContactAdd: //  add
             image = [UIImage imageNamed:@"/img/add.png"];
             break;
+
+        case UIButtonTypeCustom:
+        case UIButtonTypeSystem:
+        case UIButtonTypeRoundedRect:
+        case UIButtonTypeRoundedRectLegacy:
+            UNIMPLEMENTED_WITH_MSG("Button type: %u is not handled", type);
+            break;
+
+        default:
+            TraceWarning(TAG, L"Unknown button type");
     }
 
     return image;
@@ -687,6 +696,18 @@ static UIImage* backgroundImageForButtonType(UIButtonType type) {
         case UIButtonTypeRoundedRectLegacy:
             background = [[UIImage imageNamed:@"/img/rounded-button@2x.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:11];
             break;
+
+        case UIButtonTypeCustom:
+        case UIButtonTypeSystem:
+        case UIButtonTypeDetailDisclosure:
+        case UIButtonTypeInfoLight:
+        case UIButtonTypeInfoDark:
+        case UIButtonTypeContactAdd:
+            UNIMPLEMENTED_WITH_MSG("Button type: %u is not handled", type);
+            break;
+
+        default:
+            TraceWarning(TAG, L"Unknown button type");
     }
 
     return background;
@@ -700,6 +721,18 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
         case UIButtonTypeRoundedRectLegacy:
             background = [[UIImage imageNamed:@"/img/rounded-button-pressed@2x.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:11];
             break;
+
+        case UIButtonTypeCustom:
+        case UIButtonTypeSystem:
+        case UIButtonTypeDetailDisclosure:
+        case UIButtonTypeInfoLight:
+        case UIButtonTypeInfoDark:
+        case UIButtonTypeContactAdd:
+            UNIMPLEMENTED_WITH_MSG("Button type: %u is not handled", type);
+            break;
+
+        default:
+            TraceWarning(TAG, L"Unknown button type");
     }
 
     return background;

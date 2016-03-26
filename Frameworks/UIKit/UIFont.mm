@@ -15,17 +15,17 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include "Starboard.h"
-#include "CGFontInternal.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSArray.h"
-#include "Foundation/NSFileManager.h"
-#include "UIKit/UIFont.h"
-#include "UIKit/UIFontDescriptor.h"
-#include "UIFontDescriptorInternal.h"
-#include "CoreText/CTFont.h"
+#import "Starboard.h"
+#import "CGFontInternal.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSData.h"
+#import "Foundation/NSArray.h"
+#import "Foundation/NSFileManager.h"
+#import "UIKit/UIFont.h"
+#import "UIKit/UIFontDescriptor.h"
+#import "UIFontDescriptorInternal.h"
+#import "CoreText/CTFont.h"
 
 extern "C" {
 #include <ft2build.h>
@@ -37,7 +37,7 @@ extern "C" {
 #include <ftmodapi.h>
 }
 
-#include "LoggingNative.h"
+#import "LoggingNative.h"
 
 static const wchar_t* g_logTag = L"UIFont";
 
@@ -299,10 +299,12 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     if (self == [UIFont class]) {
         g_fontCache = [NSMutableDictionary new];
         _fontDataCache = [NSMutableDictionary new];
-        _fontList = [[NSMutableDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
+        _fontList = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/fonts/fontmap.xml"];
+
         if (!_fontList) {
             _fontList = [NSMutableDictionary new];
         }
+
         _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
         _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
         _fontMemory.user = nullptr;

@@ -16,11 +16,9 @@
 
 #import <CoreText/CTLine.h>
 #import <StubReturn.h>
-
-#include "NSStringInternal.h"
-#include "CoreTextInternal.h"
-#include "CGContextInternal.h"
-
+#import "NSStringInternal.h"
+#import "CoreTextInternal.h"
+#import "CGContextInternal.h"
 #import <CoreText/CTTypesetter.h>
 
 static NSMutableAttributedString* _getTruncatedStringFromSourceLine(CTLineRef line,
@@ -84,7 +82,7 @@ CTLineRef CTLineCreateTruncatedLine(CTLineRef sourceLine, double width, CTLineTr
     CGFloat sourceLineWidth = static_cast<_CTLine*>(sourceLine)->_width;
     if (width >= sourceLineWidth || sourceLineWidth == truncationTokenWidth) {
         // return a copy of sourceLine
-        return static_cast<CTLineRef>([sourceLine copy]);
+        return static_cast<CTLineRef>([static_cast<_CTLine*>(sourceLine) copy]);
     }
 
     // widthToExtract is the width that will be extracted from the sourceLine and merged with truncationToken finally

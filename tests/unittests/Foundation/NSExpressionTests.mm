@@ -49,10 +49,6 @@ void validateNSExpressionFunction(NSExpression* obj, NSArray* args, NSExpression
     return self;
 }
 
-- (NSNumber*)coinValue {
-    return _coinValue;
-}
-
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }

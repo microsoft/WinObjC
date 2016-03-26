@@ -26,7 +26,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSUserDefaults.h"
 #import "Foundation/NSThread.h"
 #import "NSPersistentDomain.h"
-#include "LoggingNative.h"
+#import "NSStringInternal.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSUserDefaults";
 
@@ -186,11 +187,11 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     */
 
     _willSave = FALSE;
-    [[self persistantDomain] synchronize];
+    [[self _persistentDomain] synchronize];
     return TRUE;
 }
 
-- (NSDictionary*)persistantDomain {
+- (NSPersistentDomain*)_persistentDomain {
     return [_domains objectForKey:[[NSProcessInfo processInfo] processName]];
 }
 
@@ -277,7 +278,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 
     __int64 ret = 0;
     if ([number isKindOfClass:[NSString class]]) {
-        [number longLongValuePtr:&ret];
+        [static_cast<NSString*>(number) _longLongValuePtr:&ret];
     } else {
         if ([number isKindOfClass:[NSNumber class]]) {
             ret = [number longLongValue];
@@ -374,7 +375,7 @@ static id deepCopyValue(id obj) {
 
     value = deepCopyValue(value);
 
-    [(NSMutableDictionary*)[self persistantDomain] setObject:value forKey:key];
+    [(NSMutableDictionary*)[self _persistentDomain] setObject:value forKey:key];
     [value release];
     [_dictionaryRep autorelease];
     _dictionaryRep = nil;
@@ -488,7 +489,7 @@ static id deepCopyValue(id obj) {
  @Status Interoperable
 */
 - (void)removeObjectForKey:(NSString*)key {
-    [(NSMutableDictionary*)[self persistantDomain] removeObjectForKey:key];
+    [(NSMutableDictionary*)[self _persistentDomain] removeObjectForKey:key];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
 }

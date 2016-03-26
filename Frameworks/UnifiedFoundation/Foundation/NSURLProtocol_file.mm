@@ -13,28 +13,25 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "Foundation/NSMutableString.h"
-#include "Foundation/NSURLProtocol.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSMutableData.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSTimer.h"
-#include "Foundation/NSStream.h"
-#include "NSInputStream_socket.h"
-#include "NSOutputStream_socket.h"
-#include "Foundation/NSError.h"
-
-#include "Foundation/NSHTTPURLResponse.h"
-#include "NSURLProtocol_file.h"
-#include "NSURLProtocolInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSMutableString.h"
+#import "Foundation/NSURLProtocol.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSMutableData.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSRunLoop.h"
+#import "Foundation/NSTimer.h"
+#import "Foundation/NSStream.h"
+#import "NSInputStream_socket.h"
+#import "NSOutputStream_socket.h"
+#import "Foundation/NSError.h"
+#import "Foundation/NSHTTPURLResponse.h"
+#import "NSURLProtocol_file.h"
+#import "NSURLProtocolInternal.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSURLProtocol_file";
-
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 @implementation NSURLProtocol_file
 + (void)load {

@@ -13,19 +13,20 @@ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEM
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-#include "Starboard.h"
-#include "Foundation/NSStream.h"
-#include "NSInputStream_socket.h"
-#include "NSSelectInputSource.h"
-#include "NSSSLHandler.h"
-#include "NSStreamInternal.h"
-#include "NSRunLoop+Internal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSStream.h"
+#import "NSInputStream_socket.h"
+#import "NSSelectInputSource.h"
+#import "NSSSLHandler.h"
+#import "NSStreamInternal.h"
+#import "NSRunLoop+Internal.h"
+#import "LoggingNative.h"
+#import "NSSocket.h"
 
 static const wchar_t* TAG = L"NSInputStream_socket";
 
 @implementation NSInputStream_socket
-- (id)initWithSocket:(id)socket streamStatus:(DWORD)status {
+- (instancetype)initWithSocket:(id)socket streamStatus:(DWORD)status {
     _delegate = self;
     _error = nil;
     _status = status;
@@ -175,7 +176,7 @@ static const wchar_t* TAG = L"NSInputStream_socket";
     return result;
 }
 
-- (id)setProperty:(id)prop forKey:(id)key {
+- (BOOL)setProperty:(id)prop forKey:(id)key {
     if ([key isEqualToString:(NSString*)kCFStreamPropertySSLSettings]) {
         return [_socket setSSLProperties:prop];
     }

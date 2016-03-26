@@ -113,7 +113,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UITabBarItem* tabBarItem;
 @property (nonatomic, retain) UIView* view;
 @property (nonatomic) id<UIViewControllerTransitioningDelegate> transitioningDelegate STUB_PROPERTY;
-@property (readonly, copy, nonatomic) NSString* nibName STUB_PROPERTY;
+@property (readonly, copy, nonatomic) NSString* nibName;
 @property (readonly, nonatomic, strong) NSExtensionContext* extensionContext STUB_PROPERTY;
 @property (readonly, nonatomic, strong) UISearchDisplayController* searchDisplayController STUB_PROPERTY;
 @property (readonly, nonatomic, strong) UIView* viewIfLoaded STUB_PROPERTY;

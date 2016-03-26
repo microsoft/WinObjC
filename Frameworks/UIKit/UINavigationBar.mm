@@ -16,18 +16,15 @@
 
 #import "Starboard.h"
 #import "NSStringInternal.h"
-
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSString.h"
 #import "CoreGraphics/CGContext.h"
 #import "CoreGraphics/CGGradient.h"
-
 #import "UIKit/UIView.h"
 #import "UIKit/UIFont.h"
 #import "UIKit/UIColor.h"
 #import "UIKit/UIDevice.h"
 #import "UIKit/UIImage.h"
-
 #import "UIKit/UIButton.h"
 #import "UIKit/UILabel.h"
 #import "UIKit/UINavigationBar.h"
@@ -35,6 +32,8 @@
 #import "UIBarButtonItem+Internals.h"
 #import "UINavigationItemInternal.h"
 #import "LoggingNative.h"
+#import "UINavigationControllerInternal.h"
+#import "UIBarButtonItem+Internals.h"
 
 static const wchar_t* TAG = L"UINavigationBar";
 
@@ -99,12 +98,11 @@ static void setBackground(UINavigationBar* self) {
     _style = (UIBarStyle)[coder decodeInt32ForKey:@"UIBarStyle"];
 
     switch (_style) {
-        case 1:
+        case UIBarStyleBlack:
             _navGradient = [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
-        case 2:
-        case 3:
+        case UIBarStyleBlackTranslucent: // deprecated
             _navGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;

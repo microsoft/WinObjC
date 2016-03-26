@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIRuntimeEventConnection.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableSet.h"
-#include "LoggingNative.h"
-#include "StubReturn.h"
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIRuntimeEventConnection.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableSet.h"
+#import "LoggingNative.h"
+#import "StubReturn.h"
 
 static const wchar_t* TAG = L"UIControl";
 

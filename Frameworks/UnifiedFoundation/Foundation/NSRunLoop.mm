@@ -32,7 +32,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "NSOrderedPerform.h"
 #import "NSRunLoop+Internal.h"
 #import "dispatch/dispatch.h"
-#include "LoggingNative.h"
+#import "LoggingNative.h"
+#import "NSThread-Internal.h"
+#import "NSOperationQueueInternal.h"
 
 static const wchar_t* TAG = L"NSRunLoop";
 
@@ -363,7 +365,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 /**
  @Status Interoperable
 */
-- (void)performSelector:(SEL)selector target:(NSObject*)target argument:(NSObject*)argument order:(int)order modes:(NSArray*)modes {
+- (void)performSelector:(SEL)selector target:(id)target argument:(id)argument order:(NSUInteger)order modes:(NSArray*)modes {
     NSArray* performModes = [self resolveCommonModes:modes];
     NSOrderedPerform* perform =
         [[NSOrderedPerform alloc] initWithSelector:selector target:target argument:argument order:order modes:performModes];
@@ -395,7 +397,7 @@ static void DispatchMainRunLoopWakeup(void* arg) {
     while (--count >= 0) {
         NSOrderedPerform* check = [_orderedPerforms objectAtIndex:count];
 
-        if (strcmp((char*)[check selector], selector) == 0 && [check target] == target && [check argument] == argument) {
+        if (strcmp(sel_getName([check selector]), selector) == 0 && [check target] == target && [check argument] == argument) {
             [_orderedPerforms removeObjectAtIndex:count];
         }
     }
@@ -423,8 +425,8 @@ static void DispatchMainRunLoopWakeup(void* arg) {
  @Status Interoperable
  @Notes CFRunLoop and NSRunLoop are the same object.  Returns self.
 */
-- (NSRunLoop*)getCFRunLoop {
-    return self;
+- (CFRunLoopRef)getCFRunLoop {
+    return static_cast<CFRunLoopRef>(self);
 }
 
 + (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {

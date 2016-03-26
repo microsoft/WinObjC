@@ -14,13 +14,13 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSStream.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSInputStream.h"
-#include "NSStreamInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSStream.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSInputStream.h"
+#import "NSStreamInternal.h"
+#import "LoggingNative.h"
 
 #ifdef WIN32
 #include <io.h>
@@ -88,7 +88,7 @@ static const wchar_t* TAG = L"NSInputStream";
 /**
  @Status Interoperable
 */
-- (int)read:(char*)buf maxLength:(unsigned)maxLength {
+- (int)read:(uint8_t*)buf maxLength:(NSUInteger)maxLength {
     if (_data == nil) {
         int ret = EbrFread(buf, 1, maxLength, fp);
 
@@ -139,7 +139,7 @@ static const wchar_t* TAG = L"NSInputStream";
 /**
  @Status Interoperable
 */
-- (id) /* use typed version */ open {
+- (void) open {
     if (_data == nil) {
         TraceVerbose(TAG, L"Opening %hs", [filename UTF8String]);
         fp = EbrFopen([filename UTF8String], "rb");
@@ -152,17 +152,14 @@ static const wchar_t* TAG = L"NSInputStream";
     } else {
         _status = NSStreamStatusOpen;
     }
-
-    return self;
 }
 
 /**
  @Status Stub
  @Notes
 */
-- (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
+- (void)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
     UNIMPLEMENTED();
-    return 0;
 }
 
 /**

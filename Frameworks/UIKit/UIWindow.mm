@@ -14,21 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
+#import "Starboard.h"
 #import <StubReturn.h>
-
-#include "CoreGraphics/CGGeometry.h"
-#include "CoreGraphics/CGAffineTransform.h"
-
-#include "Foundation/NSNotificationCenter.h"
-#include "QuartzCore/CALayer.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIWindow.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UITouch.h"
-#include "LoggingNative.h"
-#include "UIApplicationInternal.h"
+#import "CoreGraphics/CGGeometry.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "Foundation/NSNotificationCenter.h"
+#import "QuartzCore/CALayer.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIWindow.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UITouch.h"
+#import "LoggingNative.h"
+#import "UIApplicationInternal.h"
+#import "CALayerInternal.h"
+#import "UIDeviceInternal.h"
 
 static const wchar_t* TAG = L"UIWindow";
 
@@ -128,7 +127,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
 - (void)_destroy {
     m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
-    [[[UIApplication sharedApplication] windows] removeObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
     [self resignKeyWindow];
 }
 
@@ -136,7 +135,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Status Interoperable
 */
 - (UIWindow*)initWithFrame:(CGRect)pos {
-    [[[UIApplication sharedApplication] windows] addObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
 
     if (![[UIApplication sharedApplication] keyWindow]) {
         [self makeKeyWindow];
@@ -161,7 +160,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
  @Notes May not be fully implemented
 */
 - (NSObject*)initWithCoder:(NSCoder*)coder {
-    [[[UIApplication sharedApplication] windows] addObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
 
     id ret = [super initWithCoder:coder];
 
@@ -263,18 +262,18 @@ static void initInternal(UIWindow* self, CGRect pos) {
     if (controllerView != nil) {
         [self addSubview:controllerView];
         CGRect screenFrame;
-        if ([_rootViewController wantsFullScreenLayout]) {
+        if ([static_cast<UIViewController*>(_rootViewController) wantsFullScreenLayout]) {
             screenFrame = [[UIScreen mainScreen] bounds];
         } else {
             screenFrame = [[UIScreen mainScreen] applicationFrame];
         }
 
-        [[_rootViewController view] setFrame:screenFrame];
+        [[static_cast<UIViewController*>(_rootViewController) view] setFrame:screenFrame];
     }
 
     if (controller && [controller respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]) {
-        int ourOrientation = [controller preferredInterfaceOrientationForPresentation];
-        [[UIDevice currentDevice] setOrientation:ourOrientation animated:FALSE];
+        UIDeviceOrientation ourOrientation = static_cast<UIDeviceOrientation>([controller preferredInterfaceOrientationForPresentation]);
+        [[UIDevice currentDevice] _setOrientation:ourOrientation animated:FALSE];
     }
 }
 
@@ -316,7 +315,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
     CALayer* ourLayer = [self layer];
     GetCACompositor()->setNodeTopWindowLevel((DisplayNode*)[ourLayer _presentationNode], level);
     GetCACompositor()->SortWindowLevels();
-    [[[UIApplication sharedApplication] windows] sortUsingSelector:@selector(_compareWindowLevel:)];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) sortUsingSelector:@selector(_compareWindowLevel:)];
 }
 
 /**
@@ -340,7 +339,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
 - (void)dealloc {
     m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
-    [[[UIApplication sharedApplication] windows] removeObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
 
     [super dealloc];
 }

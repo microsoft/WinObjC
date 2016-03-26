@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Foundation/NSMetadataQuery.h>
 
 FOUNDATION_EXPORT NSString* const NSMetadataQueryUbiquitousDocumentsScope = @"NSMetadataQueryUbiquitousDocumentsScope";
 FOUNDATION_EXPORT NSString* const NSMetadataQueryUbiquitousDataScope = @"NSMetadataQueryUbiquitousDataScope";

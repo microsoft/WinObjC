@@ -120,6 +120,7 @@ public:
 - (DisplayTexture*)_getDisplayTexture;
 
 - (CAPrivateInfo*)_priv;
+- (void)_setRootLayer:(BOOL)isRootLayer;
 
 @end
 

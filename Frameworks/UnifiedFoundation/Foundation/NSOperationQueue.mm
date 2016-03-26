@@ -17,18 +17,17 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 */
 
-#include "Starboard.h"
-#include "Foundation/NSOperation.h"
-#include "Foundation/NSMutableArray.h"
-#include "Platform/EbrPlatform.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSOperationQueue.h"
-#include "Foundation/NSThread.h"
-#include "Foundation/NSAutoreleasePool.h"
-#include "Foundation/NSLock.h"
-
-#include <time.h>
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSOperation.h"
+#import "Foundation/NSMutableArray.h"
+#import "Platform/EbrPlatform.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSOperationQueue.h"
+#import "Foundation/NSThread.h"
+#import "Foundation/NSAutoreleasePool.h"
+#import "Foundation/NSLock.h"
+#import <time.h>
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"NSOperationQueue";
 
@@ -145,7 +144,7 @@ static void ClearList(NSAtomicListRef* listPtr) {
 }
 
 static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sourceListPtr, id* curOperation) {
-    StrongId<NSObject> op = NSAtomicListPop(listPtr);
+    StrongId<NSOperation> op = NSAtomicListPop(listPtr);
     if (op == nil) {
         *listPtr = NSAtomicListSteal(sourceListPtr);
         // source lists are in LIFO order, but we want to execute operations in the order they were enqueued
@@ -185,7 +184,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     return self;
 }
 
-- (id)_doMainWork {
+- (NSOperationQueue*)_doMainWork {
     memset(priv->myQueues, 0, sizeof(priv->myQueues));
 
     BOOL didWork;
@@ -547,7 +546,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 /**
  @Status Interoperable
 */
-- (void)release {
+- (oneway void)release {
     [super release];
 }
 

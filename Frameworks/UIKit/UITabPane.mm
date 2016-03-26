@@ -14,15 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UITabBarController.h"
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "UIKit/UINavigationController.h"
-
-#include "UITabPane.h"
+#import "Starboard.h"
+#import "UIKit/UITabBarController.h"
+#import "UIKit/UIViewController.h"
+#import "UIKit/UIApplication.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "UIKit/UINavigationController.h"
+#import "UITabPane.h"
+#import "UIViewControllerInternal.h"
 
 extern float statusBarHeight;
 

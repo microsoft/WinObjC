@@ -16,22 +16,25 @@
 
 #pragma once
 
+@class NSSocket;
+@class NSSelectInputSource;
+
 @interface NSInputStream_socket : NSStream {
 @public
     id _delegate;
     id _error;
-    id _socket;
-    id _inputSource;
+    NSSocket* _socket;
+    NSSelectInputSource* _inputSource;
 }
 - (int)read:(uint8_t*)buffer maxLength:(DWORD)maxLength;
 - (BOOL)hasBytesAvailable;
 - (void)dealloc;
-- (id)initWithSocket:(id)socket streamStatus:(DWORD)status;
-- (id)setDelegate:(id)delegate;
+- (instancetype)initWithSocket:(NSSocket*)socket streamStatus:(DWORD)status;
+- (void)setDelegate:(id)delegate;
 - (id)open;
 - (id)close;
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode;
 - (id)removeFromRunLoop:(id)runLoop forMode:(id)mode;
 - (id)selectInputSource:(id)inputSource selectEvent:(DWORD)selectEvent;
-- (id)setProperty:(id)prop forKey:(id)key;
+- (BOOL)setProperty:(id)prop forKey:(id)key;
 @end

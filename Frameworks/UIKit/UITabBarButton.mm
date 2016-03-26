@@ -19,6 +19,7 @@
 #import "UITabBarButton.h"
 #import "UIKit/UIColor.h"
 #import "CGContextInternal.h"
+#import "UITabBarControllerInternal.h"
 
 @implementation UITabBarButton : UIView
 - (instancetype)initWithFrame:(CGRect)frame item:(UITabBarItem*)item delegate:(id<UITabBarDelegate>)delegate {
@@ -126,14 +127,14 @@
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     UIView* parent = [self superview];
-    if ([_item enabled] && [parent selectedItem] != _item) {
+    if ([_item enabled] && [static_cast<UITabBar*>(parent) selectedItem] != _item) {
         [parent setSelectedItem:_item];
 
         if ([_delegate respondsToSelector:@selector(_tabBar:didSelectItem:)]) {
-            [_delegate _tabBar:parent didSelectItem:_item];
+            [static_cast<UITabBarController*>(_delegate) _tabBar:static_cast<UITabBar*>(parent) didSelectItem:_item];
         }
         if ([_delegate respondsToSelector:@selector(tabBar:didSelectItem:)]) {
-            [_delegate tabBar:parent didSelectItem:_item];
+            [_delegate tabBar:static_cast<UITabBar*>(parent) didSelectItem:_item];
         }
     }
 }

@@ -15,15 +15,17 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Starboard.h"
-#include "NSPropertyListReader.h"
-
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSNull.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSMutableArray.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "NSPropertyListReader.h"
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSNull.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSMutableArray.h>
+#import "LoggingNative.h"
+#import <Foundation/NSDictionary.h>
+#import "NSDictionaryInternal.h"
+#import "NSArrayInternal.h"
 
 static const wchar_t* TAG = L"NSPropertyListReader";
 
@@ -70,7 +72,7 @@ NSDictionary* NSPropertyListReaderA::ExtractUID(const uint8_t* ptr, unsigned len
     }
 
     NSNumber* num = [[NSNumber alloc] initWithLongLong:value];
-    NSDictionary* ret = [[NSDictionary alloc] initWithObject:num forKey:@"CF$UID"];
+    NSDictionary* ret = [[NSDictionary alloc] initWithObjectsAndKeys:num, @"CF$UID", nil];
     [num release];
 
     return ret;
@@ -190,9 +192,9 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
             }
 
             if ((_flags & kCFPropertyListMutableContainers) || (_flags & kCFPropertyListMutableContainersAndLeaves)) {
-                result = [[NSMutableArray alloc] initWithObjectsTakeOwnership:objs count:length];
+                result = [[NSMutableArray alloc] _initWithObjectsTakeOwnership:objs count:length];
             } else {
-                result = [[NSArray alloc] initWithObjectsTakeOwnership:objs count:length];
+                result = [[NSArray alloc] _initWithObjectsTakeOwnership:objs count:length];
             }
 
             IwFree(objs);
@@ -212,9 +214,9 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
             }
 
             if ((_flags & kCFPropertyListMutableContainers) || (_flags & kCFPropertyListMutableContainersAndLeaves)) {
-                result = [[NSMutableDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];
+                result = [[NSMutableDictionary alloc] _initWithObjectsTakeOwnership:objs forKeys:keys count:length];
             } else {
-                result = [[NSDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];
+                result = [[NSDictionary alloc] _initWithObjectsTakeOwnership:objs forKeys:keys count:length];
             }
 
             IwFree(keys);

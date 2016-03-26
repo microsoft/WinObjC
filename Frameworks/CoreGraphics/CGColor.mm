@@ -71,7 +71,7 @@ CGColorRef CGColorCreateCopyWithAlpha(CGColorRef color, float alpha) {
  @Status Interoperable
 */
 CGColorRef CGColorCreateWithPattern(CGColorSpaceRef colorSpace, id pattern, float components[]) {
-    CGColorRef ret = (CGColorRef)[[_LazyUIColor colorWithCGPattern:(CGPatternRef)pattern] retain];
+    CGColorRef ret = (CGColorRef)[[_LazyUIColor _colorWithCGPattern:(CGPatternRef)pattern] retain];
 
     return ret;
 }

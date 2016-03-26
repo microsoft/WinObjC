@@ -14,22 +14,24 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
+#import "Starboard.h"
+#import "StubReturn.h"
 #import "CFConstantString.h"
+
 #define U_STATIC_IMPLEMENTATION 1
-#include "unicode/coll.h"
-#include "unicode/ucnv.h"
-#include "unicode/uniset.h"
-#include "unicode/brkiter.h"
-#include "unicode/unistr.h"
-#include <new>
-#include <assert.h>
+#import "unicode/coll.h"
+#import "unicode/ucnv.h"
+#import "unicode/uniset.h"
+#import "unicode/brkiter.h"
+#import "unicode/unistr.h"
+#import <new>
+#import <assert.h>
 
-#include "IcuHelper.h"
-
-#include <Starboard/String.h>
-#include "LoggingNative.h"
+#import "IcuHelper.h"
+#import <Starboard/String.h>
+#import "LoggingNative.h"
+#import "NSStringInternal.h"
+#import "NSArrayInternal.h"
 
 static const wchar_t* TAG = L"NSString";
 
@@ -188,7 +190,7 @@ UStringHolder::~UStringHolder() {
 UnicodeString& UStringHolder::string() {
     if (_str == NULL) {
         //  Very bad!
-        *((char*)0) = 0;
+        FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSString in invalid state");
     }
 
     return *_str;
@@ -247,8 +249,8 @@ void setToUnicode(NSString* inst, UnicodeString& str) {
             break;
 
         default:
-            *((char*)0) = 0; //  Very bad!
-            assert(0);
+            // very bad
+            FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unexpected string type: %u", inst->strType);
             break;
     }
 }
@@ -340,7 +342,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (instancetype)initWithCString:(const char*)cStr length:(DWORD)length {
+- (instancetype)initWithCString:(const char*)cStr length:(NSUInteger)length {
     UnicodeString str(cStr, length, US_INV);
 
     setToUnicode(self, str);
@@ -470,7 +472,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-+ (instancetype)stringWithCString:(char*)str {
++ (instancetype)stringWithCString:(const char*)str {
     NSString* ret = [[self alloc] initWithCString:str];
 
     return [ret autorelease];
@@ -480,7 +482,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Limited encodings available
 */
-+ (instancetype)stringWithCString:(char*)str encoding:(int)encoding {
++ (instancetype)stringWithCString:(const char*)str encoding:(NSStringEncoding)encoding {
     NSString* ret = [[self alloc] initWithCString:str encoding:encoding];
 
     return [ret autorelease];
@@ -489,7 +491,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-+ (instancetype)stringWithUTF8String:(char*)str {
++ (instancetype)stringWithUTF8String:(const char*)str {
     NSString* ret = [[self alloc] initWithUTF8String:str];
 
     return [ret autorelease];
@@ -498,7 +500,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-+ (instancetype)stringWithCString:(char*)str length:(DWORD)length {
++ (instancetype)stringWithCString:(const char*)str length:(NSUInteger)length {
     NSString* ret = [[self alloc] initWithCString:str length:length];
 
     return [ret autorelease];
@@ -608,13 +610,13 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Limited encodings available
 */
-- (instancetype)initWithBytes:(const char*)bytes length:(unsigned)length encoding:(NSStringEncoding)encoding {
+- (instancetype)initWithBytes:(const void*)bytes length:(NSUInteger)length encoding:(NSStringEncoding)encoding {
     switch (encoding) {
         case NSWindowsCP1251StringEncoding:
         case NSWindowsCP1252StringEncoding:
         case NSISOLatin1StringEncoding:
         case NSASCIIStringEncoding: {
-            UnicodeString str(bytes, length, US_INV);
+            UnicodeString str(static_cast<const char*>(bytes), length, US_INV);
 
             setToUnicode(self, str);
             break;
@@ -668,8 +670,8 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Limited encodings available.  CRT types must match when freeWhenDone=YES
 */
-- (instancetype)initWithBytesNoCopy:(const char*)bytes
-                             length:(unsigned)length
+- (instancetype)initWithBytesNoCopy:(void*)bytes
+                             length:(NSUInteger)length
                            encoding:(NSStringEncoding)encoding
                        freeWhenDone:(BOOL)freeWhenDone {
     strType = NSConstructedString_NoOwn;
@@ -692,7 +694,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (instancetype)initWithCharacters:(const WORD*)bytes length:(DWORD)length {
+- (instancetype)initWithCharacters:(const WORD*)bytes length:(NSUInteger)length {
     UnicodeString str((UChar*)bytes, length);
 
     setToUnicode(self, str);
@@ -703,7 +705,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes CRT types must match when freeWhenDone=YES
 */
-- (instancetype)initWithCharactersNoCopy:(const WORD*)bytes length:(DWORD)length freeWhenDone:(BOOL)freeWhenDone {
+- (instancetype)initWithCharactersNoCopy:(unichar*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
     strType = NSConstructedString_NoOwn;
     u = new stringData();
     u->NoOwnString._address = (void*)bytes;
@@ -718,7 +720,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Limited encodings available
 */
-- (instancetype)initWithCString:(char*)bytes encoding:(NSStringEncoding)encoding {
+- (instancetype)initWithCString:(const char*)bytes encoding:(NSStringEncoding)encoding {
     int len = 0;
 
     switch (encoding) {
@@ -744,7 +746,8 @@ typedef NSUInteger NSStringCompareOptions;
             assert(0);
     }
 
-    NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:len freeWhenDone:FALSE];
+    void* characters = const_cast<char*>(bytes);
+    NSData* data = [[NSData alloc] initWithBytesNoCopy:characters length:len freeWhenDone:FALSE];
     NSString* ret = [self initWithData:data encoding:encoding];
     [data release];
 
@@ -919,7 +922,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Limited encodings supported
 */
-- (unsigned)lengthOfBytesUsingEncoding:(NSStringEncoding)encoding {
+- (NSUInteger)lengthOfBytesUsingEncoding:(NSStringEncoding)encoding {
     unsigned ret;
 
     switch (encoding) {
@@ -1027,7 +1030,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Limited encodings supported
 */
-- (const char*)cStringUsingEncoding:(DWORD)encoding {
+- (const char*)cStringUsingEncoding:(NSStringEncoding)encoding {
     switch (encoding) {
         case NSASCIIStringEncoding:
         case NSNonLossyASCIIStringEncoding:
@@ -1149,11 +1152,11 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes options not supported.  Limited encodings supported.
 */
-- (BOOL)getBytes:(BYTE*)buffer
-       maxLength:(unsigned)maxBuf
-      usedLength:(unsigned*)usedLength
+- (BOOL)getBytes:(void*)buffer
+       maxLength:(NSUInteger)maxBuf
+      usedLength:(NSUInteger*)usedLength
         encoding:(NSStringEncoding)encoding
-         options:(unsigned)options
+         options:(NSStringEncodingConversionOptions)options
            range:(NSRange)range
   remainingRange:(NSRange*)left {
     unsigned offset = range.location, length = range.length;
@@ -1303,7 +1306,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (void)getCharacters:(unsigned short*)dest range:(NSRange)range {
+- (void)getCharacters:(unichar*)dest range:(NSRange)range {
     UStringHolder s1(self, range.location, range.length);
 
     assert(range.length <= (DWORD)s1.string().length());
@@ -1315,7 +1318,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (void)getCharacters:(unsigned short*)dest {
+- (void)getCharacters:(unichar*)dest {
     UStringHolder s1(self);
 
     [self getCharacters:dest range:NSMakeRange(0, s1.string().length())];
@@ -1437,7 +1440,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (UChar)characterAtIndex:(unsigned)index {
+- (unichar)characterAtIndex:(unsigned)index {
     UStringHolder s1(self);
     DWORD len = s1.string().length();
     const UChar* chars = s1.string().getBuffer();
@@ -1636,7 +1639,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (instancetype)substringToIndex:(DWORD)anIndex {
+- (instancetype)substringToIndex:(NSUInteger)anIndex {
     UStringHolder s1(self);
 
     UnicodeString piece = UnicodeString(s1.string(), 0, anIndex);
@@ -1648,7 +1651,7 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (instancetype)substringFromIndex:(DWORD)anIndex {
+- (instancetype)substringFromIndex:(NSUInteger)anIndex {
     UStringHolder s1(self);
 
     UnicodeString piece = UnicodeString(s1.string(), anIndex);
@@ -1880,7 +1883,7 @@ typedef NSUInteger NSStringCompareOptions;
     return ret;
 }
 
-- (void)longLongValuePtr:(__int64*)ret {
+- (void)_longLongValuePtr:(__int64*)ret {
     char* str = (char*)[self UTF8String];
 
 #if defined(WIN32) || defined(WINPHONE)
@@ -1958,7 +1961,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
 */
-- (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(DWORD)options {
+- (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(NSStringCompareOptions)options {
     UStringHolder s1(self);
 
     NSRange range;
@@ -1971,7 +1974,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
 */
-- (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(DWORD)options range:(NSRange)range {
+- (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(NSStringCompareOptions)options range:(NSRange)range {
     NSRange ret;
 
     UStringHolder s1(self);
@@ -2012,22 +2015,22 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (BOOL)getCString:(char*)buf maxLength:(DWORD)maxLength {
-    return [self getCString:buf maxLength:maxLength encoding:NSASCIIStringEncoding];
+- (void)getCString:(char*)buf maxLength:(NSUInteger)maxLength {
+    [self getCString:buf maxLength:maxLength encoding:NSASCIIStringEncoding];
 }
 
 /**
  @Status Interoperable
 */
-- (BOOL)getCString:(char*)buf {
-    return [self getCString:buf maxLength:0x7FFFFFFF encoding:NSASCIIStringEncoding];
+- (void)getCString:(char*)buf {
+    [self getCString:buf maxLength:0x7FFFFFFF encoding:NSASCIIStringEncoding];
 }
 
 /**
  @Status Caveat
  @Notes Limited encodings supported
 */
-- (BOOL)getCString:(char*)buf maxLength:(DWORD)maxLength encoding:(DWORD)encoding {
+- (BOOL)getCString:(char*)buf maxLength:(NSUInteger)maxLength encoding:(NSStringEncoding)encoding {
     UStringHolder s1(self);
     int len = s1.string().length();
     NSRange usedRange;
@@ -2113,7 +2116,7 @@ typedef NSUInteger NSStringCompareOptions;
     }
 
     NSArray* ret = [NSArray alloc];
-    [ret initWithObjectsTakeOwnership:objects count:objOut];
+    [ret _initWithObjectsTakeOwnership:objects count:objOut];
 
     IwFree(objects);
 
@@ -2150,7 +2153,7 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (NSString*)stringByReplacingCharactersInRange:(NSRange)range withString:(NSString*)replacement {
     NSString* ret = [self mutableCopy];
-    [ret replaceCharactersInRange:range withString:replacement];
+    [static_cast<NSMutableString*>(ret) replaceCharactersInRange:range withString:replacement];
     object_setClass(ret, [NSString class]);
 
     return [ret autorelease];
@@ -2172,7 +2175,7 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (NSString*)stringByReplacingOccurrencesOfString:(NSString*)target
                                        withString:(NSString*)replacement
-                                          options:(DWORD)options
+                                          options:(NSStringCompareOptions)options
                                             range:(NSRange)range {
     //  Fastpath - make sure there's something to replace
     if ((options & NSRegularExpressionSearch) == 0) {
@@ -2190,7 +2193,7 @@ typedef NSUInteger NSStringCompareOptions;
     }
 
     NSString* s = [self mutableCopy];
-    [s replaceOccurrencesOfString:target withString:replacement options:options range:range];
+    [static_cast<NSMutableString*>(s) replaceOccurrencesOfString:target withString:replacement options:options range:range];
 
     NSString* ret = [[s copy] autorelease];
     [s release];
@@ -2249,7 +2252,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
         and NSRegularExpression are supported.
 */
-- (NSRange)rangeOfString:(NSString*)subStr options:(DWORD)options {
+- (NSRange)rangeOfString:(NSString*)subStr options:(NSStringCompareOptions)options {
     UStringHolder s1(self);
 
     NSRange checkRange;
@@ -2268,7 +2271,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
         and NSRegularExpression are supported.
 */
-- (NSRange)rangeOfString:(NSString*)subStr options:(DWORD)options range:(NSRange)range {
+- (NSRange)rangeOfString:(NSString*)subStr options:(NSStringCompareOptions)options range:(NSRange)range {
     NSRange ret;
 
     UStringHolder s1(self);
@@ -2373,8 +2376,8 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 - (NSArray*)pathComponents {
-    NSMutableArray* ret = [self componentsSeparatedByString:@"/"];
-    ret = [[ret mutableCopy] autorelease];
+    NSArray* array = [self componentsSeparatedByString:@"/"];
+    NSMutableArray* ret = [[array mutableCopy] autorelease];
 
     int count = [ret count];
     for (int i = 0; i < count; i++) {
@@ -2407,7 +2410,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Caveat
  @Notes Simply returns UTF8 converison
 */
-- (BOOL)getFileSystemRepresentation:(char*)dest maxLength:(DWORD)destMax {
+- (BOOL)getFileSystemRepresentation:(char*)dest maxLength:(NSUInteger)destMax {
     strncpy_s(dest, destMax, [self UTF8String], destMax);
 
     return TRUE;
@@ -2456,7 +2459,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Stub
  @Notes Forwards to dataUsingEncoding:
 */
-- (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(DWORD)lossy {
+- (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(BOOL)lossy {
     UNIMPLEMENTED();
     assert(encoding == NSASCIIStringEncoding || encoding == NSUTF8StringEncoding);
 
@@ -2527,7 +2530,7 @@ typedef NSUInteger NSStringCompareOptions;
     return [[NSMutableString alloc] initWithString:self];
 }
 
-id error(id obj, char* buf, char* error, ...) {
+id error(id obj, const char* buf, const char* error, ...) {
     TraceError(TAG, L"propertyListFromStrings error: %hs", buf);
     // assert(0);
 
@@ -2822,7 +2825,7 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-- (NSString*)stringByPaddingToLength:(int)length withString:(NSString*)withString startingAtIndex:(int)atIndex {
+- (NSString*)stringByPaddingToLength:(NSUInteger)length withString:(NSString*)withString startingAtIndex:(NSUInteger)atIndex {
     UStringHolder s1(self);
 
     NSString* ret = [NSString alloc];
@@ -2854,7 +2857,7 @@ static unichar PickWord(unichar c) {
  @Status Caveat
  @Notes encoding parameter not supported
 */
-- (NSString*)stringByAddingPercentEscapesUsingEncoding:(DWORD)encoding {
+- (NSString*)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
     unichar* unicode = (unichar*)IwMalloc(length * 2);
     unichar* result = (unichar*)IwMalloc(length * 3 * 2);
@@ -2948,11 +2951,11 @@ const int s_oneByte = 16;
  @Status Caveat
  @Notes Only UTF-8 is supported
 */
-- (NSString*)stringByReplacingPercentEscapesUsingEncoding:(DWORD)encoding {
-    return (NSString*)[CFURLCreateStringByReplacingPercentEscapesUsingEncoding(nullptr,
+- (NSString*)stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
+    return [static_cast<NSString*>(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(nullptr,
                                                                                reinterpret_cast<CFStringRef>(self),
                                                                                nullptr,
-                                                                               CFStringConvertNSStringEncodingToEncoding(encoding))
+                                                                               CFStringConvertNSStringEncodingToEncoding(encoding)))
         autorelease];
 }
 
@@ -2969,7 +2972,7 @@ const int s_oneByte = 16;
 /**
  @Status Stub
 */
-- (BOOL)canBeConvertedToEncoding:(DWORD)encoding {
+- (BOOL)canBeConvertedToEncoding:(NSStringEncoding)encoding {
     UNIMPLEMENTED();
     return TRUE; //  [BUG: Blatant lie]
 }
@@ -3032,7 +3035,7 @@ const int s_oneByte = 16;
 /**
  @Status Interoperable
 */
-- (void)getParagraphStart:(DWORD*)startp end:(DWORD*)endp contentsEnd:(DWORD*)contentsEndp forRange:(NSRange)range {
+- (void)getParagraphStart:(NSUInteger*)startp end:(NSUInteger*)endp contentsEnd:(NSUInteger*)contentsEndp forRange:(NSRange)range {
     UStringHolder s1(self);
     /*
     Documentation does not specify exact getParagraphStart: behavior, only mentioning it is similar to getLineStart:
@@ -3101,7 +3104,9 @@ const int s_oneByte = 16;
  @Status Caveat
  @Notes Only NSStringEnumerationByWords supported
 */
-- (void)enumerateSubstringsInRange:(NSRange)range options:(DWORD)options usingBlock:(id)usingBlock {
+- (void)enumerateSubstringsInRange:(NSRange)range 
+                           options:(NSStringEnumerationOptions)options 
+                        usingBlock:(void (^)(NSString*, NSRange, NSRange, BOOL*))usingBlock {
     switch (options) {
         case NSStringEnumerationByWords: {
             UErrorCode status = U_ZERO_ERROR;
@@ -3274,7 +3279,7 @@ const int s_oneByte = 16;
  @Status Stub
  @Notes
 */
-- (instancetype)initWithFormat:(NSString*)format locale:(id)locale {
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ... {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -3581,7 +3586,7 @@ const int s_oneByte = 16;
  @Status Stub
  @Notes
 */
-+ (instancetype)localizedStringWithFormat:(NSString*)format {
++ (instancetype)localizedStringWithFormat:(NSString*)format, ... {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -3628,6 +3633,51 @@ const int s_oneByte = 16;
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     UNIMPLEMENTED();
+}
+
+- (int)_versionStringCompare:(NSString*)compStrAddr {
+    TraceWarning(TAG, L"Warning: versionStringCompare not implemented");
+    char* str = (char*)[self UTF8String];
+
+    if (compStrAddr == nil) {
+        TraceVerbose(TAG, L"Compare to nil?");
+        return strcmp(str, "");
+    }
+
+    const char* compStr = (const char*)[compStrAddr UTF8String];
+
+    int result = strcmp(str, compStr);
+    if (result < 0) {
+        result = -1;
+    }
+    if (result > 0) {
+        result = 1;
+    }
+
+    return result;
+}
+
+- (NSString*)_reverseString {
+    NSUInteger length = [self length];
+    if (length < 2) {
+        return self;
+    }
+
+    char* characters = (char*)malloc(sizeof(char) * (length + 1));
+    [self getCString:characters maxLength:length];
+    for (int i = 0; i < length / 2; ++i) {
+        char character = characters[length - i - 1];
+        characters[length - i - 1] = characters[i];
+        characters[i] = character;
+    }
+    characters[length] = '\0';
+
+    NSString* ret = [[[NSString alloc] initWithCString:characters] autorelease];
+
+    free(characters);
+    characters = nullptr;
+
+    return ret;
 }
 
 @end

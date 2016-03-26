@@ -23,4 +23,7 @@
 @property (nonatomic, readonly) float margin;
 @property (nonatomic, readonly) CGSize idealSize;
 
+- (BOOL)_isFlexibleWidth;
+- (UIImage*)backButtonBackgroundImage;
+
 @end

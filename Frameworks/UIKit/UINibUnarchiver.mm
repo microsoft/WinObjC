@@ -14,18 +14,18 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSDictionary.h"
-#include "Foundation/NSMutableString.h"
-#include "Foundation/NSNumber.h"
-#include "Foundation/NSKeyedUnarchiver.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableDictionary.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSNull.h"
-#include "UINibUnarchiver.h"
-#include "NSUnarchiverInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSDictionary.h"
+#import "Foundation/NSMutableString.h"
+#import "Foundation/NSNumber.h"
+#import "Foundation/NSKeyedUnarchiver.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "Foundation/NSData.h"
+#import "Foundation/NSNull.h"
+#import "UINibUnarchiver.h"
+#import "NSCoderInternal.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UINibUnarchiver";
 

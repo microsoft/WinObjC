@@ -491,10 +491,6 @@ static void initControls(UIBarButtonItem* self) {
     _backImage = image;
 }
 
-- (UIImage*)backButtonBackgroundImage {
-    return _backImage;
-}
-
 /**
  @Status Interoperable
 */
@@ -650,7 +646,7 @@ static void initControls(UIBarButtonItem* self) {
 /**
  @Status Interoperable
 */
-- (BOOL)isFlexibleWidth {
+- (BOOL)_isFlexibleWidth {
     if (_systemItem == UIBarButtonSystemItemFlexibleSpace) {
         return TRUE;
     } else {
@@ -743,6 +739,10 @@ static void initControls(UIBarButtonItem* self) {
         }
     }
     return sizeOut;
+}
+
+- (UIImage*)backButtonBackgroundImage {
+    return _backImage;
 }
 
 @end

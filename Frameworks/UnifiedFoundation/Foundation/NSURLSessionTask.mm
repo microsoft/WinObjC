@@ -18,6 +18,7 @@
 #import <Starboard.h>
 #import "NSURLSession-Internal.h"
 #import "NSURLSessionTask-Internal.h"
+#import "NSURLProtocolInternal.h"
 
 const float NSURLSessionTaskPriorityHigh = 1.0f;
 const float NSURLSessionTaskPriorityDefault = 0.5f;

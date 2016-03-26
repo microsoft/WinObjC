@@ -17,13 +17,14 @@
 #import "UIKit/UIKit.h"
 #import "UIKit/UITextInputTraits.h"
 #import "QuartzCore/CATextLayer.h"
-
 #import "CGContextInternal.h"
 #import "NSTextStorageInternal.h"
 #import "LoggingNative.h"
 #import "UIFontInternal.h"
 #import "StubReturn.h"
 #import "UIResponderInternal.h"
+#import "UIApplicationInternal.h"
+#import <UIKit/UITextViewDelegate.h>
 
 static const wchar_t* TAG = L"UITextView";
 
@@ -745,14 +746,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
 /**
  @Status Stub
- @Notes Returns an inoperable UITextRange with stub UITextPositions, referring to the caret position only.
-*/
-- (UITextRange*)selectedTextRange {
-    return [UITextRange textRangeWithPositon:[[self _text] length] length:0];
-}
-
-/**
- @Status Stub
 */
 - (void)insertText:(NSString*)text {
     UNIMPLEMENTED();
@@ -777,6 +770,15 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (UITextRange*)textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+ @Notes Method from UITextInput protocol.
+*/
+- (CGRect)firstRectForRange:(UITextRange*)range {
     UNIMPLEMENTED();
     return StubReturn();
 }

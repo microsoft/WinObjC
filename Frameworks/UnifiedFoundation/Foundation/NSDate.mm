@@ -14,12 +14,12 @@
 //
 //******************************************************************************
 
-#include <time.h>
-
-#include "Starboard.h"
-#include "StubReturn.h"
-#include "Foundation/NSDate.h"
-#include "LoggingNative.h"
+#import <time.h>
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "Foundation/NSDate.h"
+#import "LoggingNative.h"
+#import "NSTimeZoneInternal.h"
 
 static const wchar_t* TAG = L"NSDate";
 

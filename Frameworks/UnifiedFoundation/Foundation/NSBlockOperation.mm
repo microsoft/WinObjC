@@ -16,12 +16,12 @@
 
 #include "Starboard.h"
 
-#include "Foundation/NSError.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMethodSignature.h"
-#include "Foundation/NSInvocation.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSOperation.h"
+#import "Foundation/NSError.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMethodSignature.h"
+#import "Foundation/NSInvocation.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSOperation.h"
 
 @implementation NSBlockOperation {
     idretaintype(NSMutableArray) _executionBlocks;
@@ -56,7 +56,7 @@
 /**
  @Status Interoperable
 */
-- (void)addExecutionBlock:(id)block {
+- (void)addExecutionBlock:(void (^)(void))block {
     [_executionBlocks addObject:[[block copy] autorelease]];
 }
 

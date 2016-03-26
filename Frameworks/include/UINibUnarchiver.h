@@ -18,7 +18,7 @@
 class Object;
 class Item;
 
-@interface UINibUnarchiver : NSObject {
+@interface UINibUnarchiver : NSCoder {
 @public
     char* _nibData;
     DWORD _nibLen;

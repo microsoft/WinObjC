@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Foundation/NSMetadataItem.h>
 
 FOUNDATION_EXPORT NSString* const NSMetadataItemFSNameKey = @"NSMetadataItemFSNameKey";
 FOUNDATION_EXPORT NSString* const NSMetadataItemDisplayNameKey = @"NSMetadataItemDisplayNameKey";

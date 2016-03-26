@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
+#import "Starboard.h"
 #import <Foundation/NSMutableArray.h>
 #import <Foundation/NSData.h>
 #import <Foundation/NSBundle.h>
@@ -23,20 +22,18 @@
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSRunLoop.h>
 #import <Foundation/NSAutoReleasePool.h>
-
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIDevice.h>
 #import <UIKit/UIFont.h>
 #import <UIKit/UINib.h>
-
 #import <UIKit/UIApplicationDelegate.h>
-
 #import "NSThread-Internal.h"
 #import "UIApplicationInternal.h"
 #import "UIFontInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIInterface.h"
 #import "LoggingNative.h"
+#import "UIDeviceInternal.h"
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -232,7 +229,7 @@ int UIApplicationMainInit(
 
     id<UIApplicationDelegate> curDelegate = [uiApplication delegate];
     if (curDelegate == nil) {
-        [uiApplication setDelegate:uiApplication];
+        [uiApplication setDelegate:static_cast<id<UIApplicationDelegate>>(uiApplication)];
     }
 
     // VSO 5762132: Temporarily call -application:willFinishLaunchingWithOptions: here (before did(...):)
@@ -262,7 +259,7 @@ int UIApplicationMainInit(
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:uiApplication];
 
-    [[UIDevice currentDevice] performSelectorOnMainThread:@selector(setOrientation:) withObject:0 waitUntilDone:FALSE];
+    [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setOrientation:) withObject:0 waitUntilDone:FALSE];
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
     g_uiMainRunning = true;
 

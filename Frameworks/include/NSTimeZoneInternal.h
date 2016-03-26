@@ -20,4 +20,5 @@
 
 @interface NSTimeZone (Internal)
 - (icu::TimeZone*)_createICUTimeZone;
++ (instancetype)_gmtTimeZone;
 @end

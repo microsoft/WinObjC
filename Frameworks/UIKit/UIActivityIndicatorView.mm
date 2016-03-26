@@ -14,8 +14,8 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIKit.h"
+#import "Starboard.h"
+#import "UIKit/UIKit.h"
 
 @implementation UIActivityIndicatorView {
     BOOL hidesWhenStopped, isAnimating;
@@ -89,13 +89,6 @@
     [[self layer] setContentsGravity:kCAGravityCenter];
 
     return self;
-}
-
-/**
- @Status Stub
-*/
-- (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
-    UNIMPLEMENTED();
 }
 
 /**

@@ -37,7 +37,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
+#import "NSStringInternal.h"
+
+#pragma clang diagnostic ignored "-Wdeprecated-register"
 
 typedef struct PrintOutput {
     int type;
@@ -1048,7 +1051,7 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
     PrintType *s1, buf[1025];
     char *cs = NULL, *cs1 = NULL;
 
-    while (c = *fmt++) {
+    while ((c = *fmt++)) {
         if (c != '%') {
 #ifdef CPM
             if (c == '\n') {

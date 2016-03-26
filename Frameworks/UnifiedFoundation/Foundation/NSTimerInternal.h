@@ -14,8 +14,11 @@
 //
 //******************************************************************************
 
-@interface NSUnarchiver () 
+#pragma once
 
-- (void)_swapActiveObject:(id)object;
+@class NSRunLoopState;
 
+@interface NSTimer()
+- (void)_removedFromMode:(NSRunLoopState*)runLoopState;
+- (void)_addedToMode:(NSRunLoopState*)runLoopState;
 @end

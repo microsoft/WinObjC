@@ -14,11 +14,12 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSInvocation.h"
-#include <ctype.h>
-#include "LoggingNative.h"
-#include <objc/encoding.h>
+#import "Starboard.h"
+#import "Foundation/NSInvocation.h"
+#import <ctype.h>
+#import "LoggingNative.h"
+#import <objc/encoding.h>
+#import "ErrorHandling.h"
 
 static const wchar_t* TAG = L"NSInvocation";
 
@@ -314,7 +315,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
 - (void)invoke {
     const char* type = [_methodSignature methodReturnType];
     int returnSize = objc_sizeof_type(type);
-    char* pMsgFunc = "_objc_msgSend";
+    const char* pMsgFunc = "_objc_msgSend";
 
     unsigned totalLength = 0;
     unsigned numArgs = [_methodSignature numberOfArguments];
@@ -433,9 +434,7 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                 } break;
 
                 default:
-                    TraceVerbose(TAG, L"Unhandled # of args: %d", stackParamsLen);
-                    assert(0);
-                    *((char*)0) = 0;
+                    FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unhandled # of args: %d", stackParamsLen);
                     break;
             }
         }
