@@ -140,6 +140,13 @@
         <AdditionalOptions Condition="'$(ConfigurationType)' == 'Application'">$(AdditionalOptions) -D_WOC_APP</AdditionalOptions>
       </ClCompile>
     </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="XamlCompositorCS" Condition="'$(AppContainerApplication)' == 'true' And '$(IslandwoodDRT)' == 'true'">
+        <HintPath>$(StarboardLibDirs)\XamlCompositorCS.winmd</HintPath>
+        <IsWinMDFile>true</IsWinMDFile>
+      </Reference>
+    </ItemGroup>
   </Target>
 
   <Target
