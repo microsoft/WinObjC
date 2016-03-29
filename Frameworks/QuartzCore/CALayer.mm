@@ -1557,9 +1557,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     CAAnimation* animCopy = [anim copy];
     animCopy->_keyName = [key copy];
     [priv->_animations setObject:(id)animCopy forKey:(id)animCopy->_keyName];
-    [animCopy release];
 
     [CATransaction _addAnimationToLayer:self animation:animCopy forKey:key];
+    [animCopy release];
 }
 
 - (void)_removeAnimation:(CAAnimation*)animation {

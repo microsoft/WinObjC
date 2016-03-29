@@ -83,6 +83,7 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
     [_fadeAnimation setFromValue:[NSNumber numberWithFloat:0.8f]];
     [_fadeAnimation setToValue:[NSNumber numberWithFloat:0.0f]];
     [_fadeAnimation setDuration:0.5f];
+    [_fadeAnimation setBeginTime:CACurrentMediaTime()];
     [_fadeAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionLinear"]];
     [_fadeAnimation setDelegate:self];
     [_fadeAnimation _setFinishedSelector:@selector(_fadeEnded:)];

@@ -80,6 +80,7 @@ static const wchar_t* TAG = L"CABasicAnimation";
     CABasicAnimation* ret = [self alloc];
     ret->_timingProperties._duration = 1.0;
     ret->_timingProperties._speed = 1.0;
+    ret->_timingProperties._beginTime = CACurrentMediaTime();
     ret->_timingProperties._removedOnCompletion = TRUE;
     [ret setKeyPath:path];
 

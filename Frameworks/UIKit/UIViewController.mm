@@ -1182,6 +1182,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         [animation setToValue:[NSValue valueWithCGPoint:curPos]];
         [animation setDuration:0.2f];
+        [animation setBeginTime:CACurrentMediaTime()];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"]];
         [animation
             setDelegate:[_TransitionNotifier _transitionTrampoline:self withSelector:@selector(_dismissTransitionStopped:finished:)]];
@@ -1322,6 +1323,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
             [animation setToValue:[NSValue valueWithCGPoint:curPos]];
             [animation setDuration:0.2f];
+            [animation setBeginTime:CACurrentMediaTime()];
             [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionEaseInEaseOut"]];
             [animation setDelegate:[_TransitionNotifier _transitionTrampoline:self withSelector:@selector(_transitionStopped:)]];
             [layer addAnimation:animation forKey:@"ModalPresent"];

@@ -119,6 +119,7 @@ static void addAnimation(UIActivityIndicatorView* self) {
         [animation setToValue:[NSNumber numberWithFloat:M_PI * 2]];
         [animation setFromValue:[NSNumber numberWithFloat:0.0f]];
         [animation setDuration:1.0f];
+        [animation setBeginTime:CACurrentMediaTime()];
         [animation setRepeatCount:300000.0f];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionLinear"]];
         [[self layer] addAnimation:animation forKey:@"RotateAnim"];
