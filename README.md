@@ -23,7 +23,7 @@ If you'd like to support the project, please consider [submitting your app](http
 
 ## Getting started with the bridge
 To get started using the bridge to bring your iOS app to Windows, you'll need:
-- Windows 10
+- Windows 10, build 10586 or higher. (Validate your version number [here](http://windows.microsoft.com/en-US/windows/which-operating-system)).
 - Visual Studio 2015 with Windows developer tools. Visual Studio 2015 Community is available for free [here](https://dev.windows.com/downloads). Select (at least) the following components during installation:
 
     1. Programming Languages -> Visual C++
