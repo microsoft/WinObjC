@@ -29,15 +29,6 @@ typedef struct CC_Digest_State* CC_SHA256_CTX;
 typedef struct CC_Digest_State* CC_SHA384_CTX;
 typedef struct CC_Digest_State* CC_SHA512_CTX;
 
-#define CC_MD2_DIGEST_LENGTH 16
-#define CC_MD4_DIGEST_LENGTH 16
-#define CC_MD5_DIGEST_LENGTH 16
-#define CC_SHA1_DIGEST_LENGTH 20
-#define CC_SHA224_DIGEST_LENGTH 28
-#define CC_SHA256_DIGEST_LENGTH 32
-#define CC_SHA384_DIGEST_LENGTH 48
-#define CC_SHA512_DIGEST_LENGTH 64
-
 typedef unsigned long CC_LONG;
 
 SB_EXTERNC_BEGIN

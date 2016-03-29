@@ -16,7 +16,7 @@
 
 #include "gtest-api.h"
 #include <windows.h>
-#include <CommonCrypto\CommonDigest.h>
+#include <CommonCrypto\CommonCrypto.h>
 #include <string>
 #include "ByteUtils.h"
 
@@ -24,6 +24,10 @@ static const char singleLine[] = "Hello Project Islandwood,  a.k.a. Windows Brid
 static const char multiLine1[] = "Hello ";
 static const char multiLine2[] = "Project Islandwood,  ";
 static const char multiLine3[] = "a.k.a. Windows Bridge for iOS!";
+
+static const char secret[] = "secret!";
+
+/* CommonDigest test helpers */
 
 void _sanity(int (*init)(CC_Digest_State**),
             int (*update)(CC_Digest_State** ctx, const void* data, CC_LONG len),
@@ -39,7 +43,7 @@ void _sanity(int (*init)(CC_Digest_State**),
     delete [] digest;
 }
 
-void _sameDataYieldsSameResult(int (*init)(CC_Digest_State**),
+void _sameDataYieldsSameDigest(int (*init)(CC_Digest_State**),
             int (*update)(CC_Digest_State** ctx, const void* data, CC_LONG len),
             int (*final)(unsigned char* digest, CC_Digest_State** ctx),
             unsigned digestLength) {
@@ -62,7 +66,7 @@ void _sameDataYieldsSameResult(int (*init)(CC_Digest_State**),
     delete [] digest2;
 }
 
-void _multipleUpdatesYieldsSameResult(int (*init)(CC_Digest_State**),
+void _multipleUpdatesYieldsSameDigest(int (*init)(CC_Digest_State**),
             int (*update)(CC_Digest_State** ctx, const void* data, CC_LONG len),
             int (*final)(unsigned char* digest, CC_Digest_State** ctx),
             unsigned digestLength) {
@@ -87,7 +91,7 @@ void _multipleUpdatesYieldsSameResult(int (*init)(CC_Digest_State**),
     delete [] digest2;
 }
 
-void _oneShotYieldsSameResultAsUpdate(int (*init)(CC_Digest_State**),
+void _oneShotYieldsSameDigestAsUpdate(int (*init)(CC_Digest_State**),
             int (*update)(CC_Digest_State** ctx, const void* data, CC_LONG len),
             int (*final)(unsigned char* digest, CC_Digest_State** ctx),
             unsigned char* (*oneShot)(const void* data, CC_LONG len, unsigned char* md),
@@ -109,7 +113,9 @@ void _oneShotYieldsSameResultAsUpdate(int (*init)(CC_Digest_State**),
     delete [] digest2;
 }
 
-TEST(CommonCrypto, Sanity) {
+/* CommonDigest tests */
+
+TEST(CommonDigest, Sanity) {
     _sanity(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH);
     _sanity(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH);
     _sanity(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH);
@@ -119,32 +125,104 @@ TEST(CommonCrypto, Sanity) {
     _sanity(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH);
 }
 
-TEST(CommonCrypto, SameDataYieldsSameResult) {
-    _sameDataYieldsSameResult(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH);
-    _sameDataYieldsSameResult(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH);
-    _sameDataYieldsSameResult(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH);
-    _sameDataYieldsSameResult(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1_DIGEST_LENGTH);
-    _sameDataYieldsSameResult(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256_DIGEST_LENGTH);
-    _sameDataYieldsSameResult(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384_DIGEST_LENGTH);
-    _sameDataYieldsSameResult(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH);
+TEST(CommonDigest, SameDataYieldsSameResult) {
+    _sameDataYieldsSameDigest(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH);
+    _sameDataYieldsSameDigest(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH);
+    _sameDataYieldsSameDigest(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH);
+    _sameDataYieldsSameDigest(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1_DIGEST_LENGTH);
+    _sameDataYieldsSameDigest(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256_DIGEST_LENGTH);
+    _sameDataYieldsSameDigest(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384_DIGEST_LENGTH);
+    _sameDataYieldsSameDigest(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH);
 }
 
-TEST(CommonCrypto, MultipleUpdatesYieldsSameResult) {
-    _multipleUpdatesYieldsSameResult(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH);
-    _multipleUpdatesYieldsSameResult(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH);
-    _multipleUpdatesYieldsSameResult(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH);
-    _multipleUpdatesYieldsSameResult(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1_DIGEST_LENGTH);
-    _multipleUpdatesYieldsSameResult(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256_DIGEST_LENGTH);
-    _multipleUpdatesYieldsSameResult(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384_DIGEST_LENGTH);
-    _multipleUpdatesYieldsSameResult(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH);
+TEST(CommonDigest, MultipleUpdatesYieldsSameResult) {
+    _multipleUpdatesYieldsSameDigest(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512_DIGEST_LENGTH);
 }
 
-TEST(CommonCrypto, OneShotDigest) {
-    _oneShotYieldsSameResultAsUpdate(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2, CC_MD2_DIGEST_LENGTH);
-    _oneShotYieldsSameResultAsUpdate(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4, CC_MD4_DIGEST_LENGTH);
-    _oneShotYieldsSameResultAsUpdate(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5, CC_MD5_DIGEST_LENGTH);
-    _oneShotYieldsSameResultAsUpdate(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1, CC_SHA1_DIGEST_LENGTH);
-    _oneShotYieldsSameResultAsUpdate(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256, CC_SHA256_DIGEST_LENGTH);
-    _oneShotYieldsSameResultAsUpdate(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384, CC_SHA384_DIGEST_LENGTH);
-    _oneShotYieldsSameResultAsUpdate(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512, CC_SHA512_DIGEST_LENGTH);
+TEST(CommonDigest, OneShotDigest) {
+    _oneShotYieldsSameDigestAsUpdate(CC_MD2_Init, CC_MD2_Update, CC_MD2_Final, CC_MD2, CC_MD2_DIGEST_LENGTH);
+    _oneShotYieldsSameDigestAsUpdate(CC_MD4_Init, CC_MD4_Update, CC_MD4_Final, CC_MD4, CC_MD4_DIGEST_LENGTH);
+    _oneShotYieldsSameDigestAsUpdate(CC_MD5_Init, CC_MD5_Update, CC_MD5_Final, CC_MD5, CC_MD5_DIGEST_LENGTH);
+    _oneShotYieldsSameDigestAsUpdate(CC_SHA1_Init, CC_SHA1_Update, CC_SHA1_Final, CC_SHA1, CC_SHA1_DIGEST_LENGTH);
+    _oneShotYieldsSameDigestAsUpdate(CC_SHA256_Init, CC_SHA256_Update, CC_SHA256_Final, CC_SHA256, CC_SHA256_DIGEST_LENGTH);
+    _oneShotYieldsSameDigestAsUpdate(CC_SHA384_Init, CC_SHA384_Update, CC_SHA384_Final, CC_SHA384, CC_SHA384_DIGEST_LENGTH);
+    _oneShotYieldsSameDigestAsUpdate(CC_SHA512_Init, CC_SHA512_Update, CC_SHA512_Final, CC_SHA512, CC_SHA512_DIGEST_LENGTH);
+}
+
+/* CommonHMAC helpers */
+
+void _sameDataYieldsSameHash(CCHmacAlgorithm algorithm, unsigned outputLength) {
+    CC_Hmac_State* ctx;
+    BYTE* hash1 = new BYTE[outputLength];
+    BYTE* hash2 = new BYTE[outputLength];
+
+    CCHmacInit(&ctx, algorithm, secret, _countof(secret) - 1);
+    CCHmacUpdate(&ctx, singleLine, _countof(singleLine) - 1);
+    CCHmacFinal(&ctx, hash1);
+    logBytes(singleLine, hash1, outputLength);
+
+    CCHmacInit(&ctx, algorithm, secret, _countof(secret) - 1);
+    CCHmacUpdate(&ctx, singleLine, _countof(singleLine) - 1);
+    CCHmacFinal(&ctx, hash2);
+    logBytes(singleLine, hash2, outputLength);
+
+    ASSERT_TRUE_MSG(equalsBytes(hash1, hash2, outputLength), "FAILED: same data should yield same result");
+    delete [] hash1;
+    delete [] hash2;
+}
+
+void _multipleUpdatesYieldsSameDigest(CCHmacAlgorithm algorithm, unsigned digestLength) {
+    CC_Hmac_State* ctx;
+    BYTE* hash1 = new BYTE[digestLength];
+    BYTE* hash2 = new BYTE[digestLength];
+
+    CCHmacInit(&ctx, algorithm, secret, _countof(secret) - 1);
+    CCHmacUpdate(&ctx, singleLine, _countof(singleLine) - 1);
+    CCHmacFinal(&ctx, hash1);
+    logBytes(singleLine, hash1, digestLength);
+
+    CCHmacInit(&ctx, algorithm, secret, _countof(secret) - 1);
+    CCHmacUpdate(&ctx, multiLine1, _countof(multiLine1) - 1);
+    CCHmacUpdate(&ctx, multiLine2, _countof(multiLine2) - 1);
+    CCHmacUpdate(&ctx, multiLine3, _countof(multiLine3) - 1);
+    CCHmacFinal(&ctx, hash2);
+    logBytes(singleLine, hash2, digestLength);
+
+    ASSERT_TRUE_MSG(equalsBytes(hash1, hash2, digestLength), "FAILED: multiple updates using same data should yield same result");
+    delete [] hash1;
+    delete [] hash2;
+}
+
+/* CommonHMAC tests */
+
+TEST(CommonHMAC, OneShotSanity) {
+    unsigned hashLength = CC_SHA256_DIGEST_LENGTH;
+    CC_Hmac_State* ctx;
+    BYTE* digest1 = new BYTE[hashLength];
+    CCHmac(kCCHmacAlgSHA256, secret, _countof(secret) - 1, singleLine, _countof(singleLine) - 1, digest1);
+    logBytes(singleLine, digest1, hashLength);
+
+    delete [] digest1;
+}
+
+TEST(CommonHMAC, SameDataYieldsSameResult) {
+    _sameDataYieldsSameHash(kCCHmacAlgSHA1, CC_SHA1_DIGEST_LENGTH);
+    _sameDataYieldsSameHash(kCCHmacAlgMD5, CC_MD5_DIGEST_LENGTH);
+    _sameDataYieldsSameHash(kCCHmacAlgSHA256, CC_SHA256_DIGEST_LENGTH);
+    _sameDataYieldsSameHash(kCCHmacAlgSHA384, CC_SHA384_DIGEST_LENGTH);
+    _sameDataYieldsSameHash(kCCHmacAlgSHA512, CC_SHA512_DIGEST_LENGTH);
+}
+
+TEST(CommonHMAC, MultipleUpdatesYieldsSameResult) {
+    _multipleUpdatesYieldsSameDigest(kCCHmacAlgSHA1, CC_SHA1_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(kCCHmacAlgMD5, CC_MD5_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(kCCHmacAlgSHA256, CC_SHA256_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(kCCHmacAlgSHA384, CC_SHA384_DIGEST_LENGTH);
+    _multipleUpdatesYieldsSameDigest(kCCHmacAlgSHA512, CC_SHA512_DIGEST_LENGTH);
 }

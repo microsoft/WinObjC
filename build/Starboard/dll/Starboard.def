@@ -1,5 +1,8 @@
 LIBRARY Starboard
     EXPORTS
+        ; Utility exports
+        BufferFromRawData
+
         ; Common Crypto:
         CC_MD2
         CC_MD2_Final
@@ -33,6 +36,10 @@ LIBRARY Starboard
         CC_SHA512_Final
         CC_SHA512_Init
         CC_SHA512_Update
+        CCHmacInit
+        CCHmacUpdate
+        CCHmacFinal
+        CCHmac
 
         ; pthread:
         pthread_attr_destroy

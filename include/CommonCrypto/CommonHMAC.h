@@ -13,5 +13,29 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-// This header file is not yet implemented
+#include <StarboardExport.h>
+#include <stdint.h>
+
+enum {
+    kCCHmacAlgSHA1,
+    kCCHmacAlgMD5,
+    kCCHmacAlgSHA256,
+    kCCHmacAlgSHA384,
+    kCCHmacAlgSHA512,
+    kCCHmacAlgSHA224
+};
+
+struct CC_Hmac_State;
+typedef CC_Hmac_State* CCHmacContext;
+typedef int32_t CCHmacAlgorithm;
+
+SB_EXTERNC_BEGIN
+
+void CCHmacInit(CCHmacContext* ctx, CCHmacAlgorithm algorithm, const void* key, size_t keyLength);
+void CCHmacUpdate(CCHmacContext* ctx, const void* data, size_t dataLength);
+void CCHmacFinal(CCHmacContext* ctx, void* macOut);
+void CCHmac(CCHmacAlgorithm algorithm, const void* key, size_t keyLength, const void* data, size_t dataLength, void* macOut);
+
+SB_EXTERNC_END

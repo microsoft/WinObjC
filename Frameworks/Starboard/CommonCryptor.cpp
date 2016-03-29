@@ -20,13 +20,6 @@
 /**
 @Status Stub
 */
-void CCHmac(uint32_t alg, uint8_t* key, uint32_t keylength, uint8_t* msg, int msglength, void* out) {
-    UNIMPLEMENTED();
-}
-
-/**
-@Status Stub
-*/
 int32_t CCCrypt(uint32_t op, /* kCCEncrypt, etc. */
     uint32_t alg, /* kCCAlgorithmAES128, etc. */
     uint32_t options, /* kCCOptionPKCS7Padding, etc. */

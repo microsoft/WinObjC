@@ -30,9 +30,14 @@ enum {
     kCCKeySizeAES256 = 32,
 };
 
+#define CC_MD2_DIGEST_LENGTH 16
+#define CC_MD4_DIGEST_LENGTH 16
+#define CC_MD5_DIGEST_LENGTH 16
+#define CC_SHA1_DIGEST_LENGTH 20
+#define CC_SHA224_DIGEST_LENGTH 28
 #define CC_SHA256_DIGEST_LENGTH 32
-
-void CCHmac(uint32_t alg, uint8_t* key, uint32_t keylength, uint8_t* msg, int msglength, void* out) STUB_METHOD;
+#define CC_SHA384_DIGEST_LENGTH 48
+#define CC_SHA512_DIGEST_LENGTH 64
 
 enum {
     kCCAlgorithmAES128 = 0,
@@ -42,15 +47,6 @@ enum {
     kCCAlgorithmRC4,
     kCCAlgorithmRC2,
     kCCAlgorithmBlowfish
-};
-
-enum {
-    kCCHmacAlgSHA1,
-    kCCHmacAlgMD5,
-    kCCHmacAlgSHA256,
-    kCCHmacAlgSHA384,
-    kCCHmacAlgSHA512,
-    kCCHmacAlgSHA224,
 };
 
 typedef int32_t CCCryptorStatus;
