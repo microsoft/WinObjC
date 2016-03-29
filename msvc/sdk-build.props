@@ -27,7 +27,7 @@
     <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)'==''">true</UseStarboardSourceSdk>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)'==''">false</IslandwoodDRT>
     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.10586.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
   </PropertyGroup>
 
