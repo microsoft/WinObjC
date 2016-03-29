@@ -1129,6 +1129,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 - (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     if (priv->_modalViewController == nil) {
         if (priv->_parentViewController) {
+            [priv->_parentViewController dismissViewControllerAnimated:animated completion:completion];
             return;
         }
         TraceWarning(TAG, L"dismissModalViewController invalid!");

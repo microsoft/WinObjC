@@ -51,6 +51,7 @@
 		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
+		8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
 		AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */; };
 		AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */; };
@@ -152,6 +153,8 @@
 		7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES20Controller.h; sourceTree = "<group>"; };
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		8252DB771CA9EDDE00A202B6 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
+		8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverViewController.m; sourceTree = "<group>"; };
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLDownloadCell.mm; sourceTree = "<group>"; };
 		AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLSessionViewController.mm; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 				77D71D9F1C8F5AA000ED26A3 /* CoreMotionViewController.h */,
 				77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */,
 				C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */,
+				8252DB771CA9EDDE00A202B6 /* PopoverViewController.h */,
+				8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */,
 				C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */,
 				D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */,
 				D2AC202E1C69729C00D54717 /* BasicAnimationViewController.h */,
@@ -471,6 +476,7 @@
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
 				7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */,
 				4EE861CF1B5997A500682BDB /* AlertsViewController.m in Sources */,
+				8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */,
 				F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */,
 				7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */,
 				49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */,

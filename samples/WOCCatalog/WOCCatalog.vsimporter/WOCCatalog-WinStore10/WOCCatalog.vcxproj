@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -179,6 +179,7 @@
     <ClangCompile Include="..\..\WOCCatalog\CoreMotionViewController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\ApplicationViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\BasicAnimationViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\PopoverViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextDisplayViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm" />
     <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm" />
