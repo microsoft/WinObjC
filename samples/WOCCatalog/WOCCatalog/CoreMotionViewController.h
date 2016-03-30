@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016, Intel Corporation
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -26,8 +26,21 @@
     UIButton* accStartButton;
     UIButton* accUpdateButton;
     UISegmentedControl* accHandlerSegment;
-    CMMotionManager* motionManager;
     NSOperationQueue* accQueue;
     UIActivityIndicatorView* progressInd;
+    int accHeight;
+
+    UILabel* gyroLabel;
+    UILabel* gyroVal;
+    UIButton* gyroStopButton;
+    UIButton* gyroStartButton;
+    UIButton* gyroUpdateButton;
+    UISegmentedControl* gyroHandlerSegment;
+    NSOperationQueue* gyroQueue;
+    int gyroHeight;
+
+    CMMotionManager* motionManager;
+    UIScrollView* scrollView;
+    int buttonLength;
 }
 @end

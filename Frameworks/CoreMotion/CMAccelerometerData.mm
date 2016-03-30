@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016, Intel Corporation. 
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -17,11 +17,11 @@
 
 #import <CoreMotion/CMAccelerometerData.h>
 #import <StubReturn.h>
-#import "CMAccelerometerDataInternal.h"
 
 @implementation CMAccelerometerData
 
 - (instancetype)initWithValues:(double)x y:(double)y z:(double)z {
+
     if (self = [super init]) {
         _acceleration.x = x;
         _acceleration.y = y;

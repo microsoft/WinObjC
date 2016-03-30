@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016, Intel Corporation.
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -58,13 +58,14 @@ COREMOTION_EXPORT_CLASS
 @property (readonly, nonatomic, getter=isAccelerometerAvailable) BOOL accelerometerAvailable;
 @property (readonly) CMAccelerometerData* accelerometerData;
 
-@property (assign, nonatomic) NSTimeInterval gyroUpdateInterval STUB_PROPERTY;
-- (void)startGyroUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMGyroHandler)handler STUB_METHOD;
-- (void)startGyroUpdates STUB_METHOD;
-- (void)stopGyroUpdates STUB_METHOD;
-@property (readonly, nonatomic, getter=isGyroActive) BOOL gyroActive STUB_PROPERTY;
-@property (readonly, nonatomic, getter=isGyroAvailable) BOOL gyroAvailable STUB_PROPERTY;
-@property (readonly) CMGyroData* gyroData STUB_PROPERTY;
+@property (assign, nonatomic) NSTimeInterval gyroUpdateInterval;
+- (void)startGyroUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMGyroHandler)handler;
+- (void)startGyroUpdates;
+- (void)stopGyroUpdates;
+@property (readonly, nonatomic, getter=isGyroActive) BOOL gyroActive;
+@property (readonly, nonatomic, getter=isGyroAvailable) BOOL gyroAvailable;
+@property (readonly) CMGyroData* gyroData;
+
 @property (assign, nonatomic) NSTimeInterval magnetometerUpdateInterval STUB_PROPERTY;
 - (void)startMagnetometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMMagnetometerHandler)handler STUB_METHOD;
 - (void)startMagnetometerUpdates STUB_METHOD;
