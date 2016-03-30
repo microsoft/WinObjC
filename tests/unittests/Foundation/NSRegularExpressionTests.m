@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
@@ -17,6 +17,55 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #import "Starboard.h"
+
+TEST(NSRegularExpression, CaptureGroupReplacementTest) {
+    NSString* result = [@"ab  cd e    spaces" stringByReplacingOccurrencesOfString:@"\\s+"
+                                                                        withString:@"($0)"
+                                                                           options:NSRegularExpressionSearch
+                                                                             range:NSMakeRange(0, 18)];
+
+    ASSERT_OBJCEQ(@"ab(  )cd( )e(    )spaces", result);
+
+    result = [@"cat hat bat chunk" stringByReplacingOccurrencesOfString:@"(.)at"
+                                                             withString:@"($1)runk"
+                                                                options:NSRegularExpressionSearch
+                                                                  range:NSMakeRange(0, 17)];
+
+    ASSERT_OBJCEQ(@"(c)runk (h)runk (b)runk chunk", result);
+
+    // Place escaped $ which could have been a capture group
+    result = [@"I have x.yy dollars." stringByReplacingOccurrencesOfString:@"((x)\.(yy))"
+                                                                withString:@"\\$1$2.$3"
+                                                                   options:NSRegularExpressionSearch
+                                                                     range:NSMakeRange(0, 20)];
+    ASSERT_OBJCEQ(@"I have $1x.yy dollars.", result);
+
+    // Don't stomp spaces after $ for capture groups
+    result = [@"cat hat bat" stringByReplacingOccurrencesOfString:@"(.)at"
+                                                       withString:@"$ 1$1"
+                                                          options:NSRegularExpressionSearch
+                                                            range:NSMakeRange(0, 11)];
+    ASSERT_OBJCEQ(@"$ 1c $ 1h $ 1b", result);
+
+    // Ignore hex
+    result = [@"cat hat bat" stringByReplacingOccurrencesOfString:@"(.)at"
+                                                       withString:@"$0x0"
+                                                          options:NSRegularExpressionSearch
+                                                            range:NSMakeRange(0, 11)];
+    ASSERT_OBJCEQ(@"catx0 hatx0 batx0", result);
+
+    result = [@"ネコ hat bat" stringByReplacingOccurrencesOfString:@"ネコ"
+                                                          withString:@"Japanese四Cat"
+                                                             options:NSRegularExpressionSearch
+                                                               range:NSMakeRange(0, 10)];
+    ASSERT_OBJCEQ(@"Japanese四Cat hat bat", result);
+
+    result = [@"I like cats" stringByReplacingOccurrencesOfString:@"(.)at"
+                                                       withString:@"$1ar"
+                                                          options:NSRegularExpressionSearch
+                                                            range:NSMakeRange(0, 11)];
+    ASSERT_OBJCEQ(@"I like cars", result);
+}
 
 TEST(NSRegularExpression, ReplacementTests) {
     StrongId<NSRegularExpression> regex =
