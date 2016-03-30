@@ -365,12 +365,12 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
         unsigned (*imp)(id, SEL, ...) = (unsigned (*)(id, SEL, ...))[target methodForSelector:sel];
 
         if (strcmp(type, "f") == 0) {
-            float (*impFloat)(id, SEL, ...) = (float (*)(id, SEL, ...))[target methodForSelector:sel];
+            float (*impFloat)(id, SEL) = (float (*)(id, SEL))[target methodForSelector:sel];
             returnValue = IwMalloc(sizeof(float));
             assert(stackParamsLen == 2);
             *(float*)returnValue = impFloat(target, sel);
         } else if (strcmp(type, "d") == 0) {
-            double (*impDouble)(id, SEL, ...) = (double (*)(id, SEL, ...))[target methodForSelector:sel];
+            double (*impDouble)(id, SEL) = (double (*)(id, SEL))[target methodForSelector:sel];
             returnValue = IwMalloc(sizeof(double));
             assert(stackParamsLen == 2);
             *(double*)returnValue = impDouble(target, sel);
