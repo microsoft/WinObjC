@@ -203,10 +203,6 @@ private:
 };
 
 
-static inline CC_Hmac_State* _getState(CC_Hmac_State** ctx) {
-    return (ctx ? *ctx : nullptr);
-}
-
 /**
 @Status Interoperable
 */
