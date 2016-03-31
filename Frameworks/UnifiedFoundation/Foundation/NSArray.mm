@@ -1054,34 +1054,3 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 
 @end
 
-NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state) {
-    auto count = CFArrayGetCount((CFArrayRef)self);
-
-    if (state->state >= count) {
-        return 0;
-    }
-
-    auto internalPointer = reinterpret_cast<id*>(_CFArrayGetPtr(static_cast<CFArrayRef>(self)));
-    state->itemsPtr = internalPointer;
-    state->state = count;
-    state->mutationsPtr = reinterpret_cast<unsigned long*>(self);
-
-    return count;
-}
-
-@implementation NSArrayConcrete
-/**
- @Status Interoperable
- Note: NSArrayConcrete ignores the passed-in stackbuf+size, as it has its own contiguous storage for its internal object pointers.
-*/
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
-    return _NSArrayConcreteCountByEnumeratingWithState(self, state);
-}
-
-- (void)dealloc {
-    CFArrayRemoveAllValues((CFArrayRef)self);
-    _CFArrayDestroyInternal((CFArrayRef)self);
-
-    [super dealloc];
-}
-@end

@@ -53,10 +53,12 @@ static const wchar_t* TAG = L"CGDataProvider";
  @Notes Only supports file:/// URLs
 */
 CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
-    CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:[url path]];
-    ret->filename = [url path];
+    // needs to be fixed up as part of 6669990
+    //NSURLFIX CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:[url path]];
+    //NSURLFIX ret->filename = [url path];
 
-    return ret;
+    //NSURLFIX return ret;
+    return nullptr;
 }
 
 /**
