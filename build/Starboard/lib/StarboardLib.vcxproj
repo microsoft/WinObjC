@@ -77,7 +77,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SB_IMPEXP=;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
