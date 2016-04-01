@@ -15,23 +15,19 @@
 //******************************************************************************
 #pragma once
 #include <Foundation/NSMutableDictionary.h>
+#import "BridgeHelpers.h"
 
 @interface NSDictionaryConcrete : NSMutableDictionary
 
-+ (void)load;
+BRIDGED_CLASS_REQUIRED_DECLS
 
-+ (NSObject*)allocWithZone:(NSZone*)zone;
-- (id)retain;
-- (oneway void)release;
-- (id)autorelease;
-- (NSUInteger)retainCount;
-- (void)dealloc;
-
-- (NSArray*)initWithObjects:(id*)objs forKeys:(id*)keys count:(NSUInteger)count;
+- (instancetype)init;
+- (instancetype)initWithObjects:(id*)objs forKeys:(id*)keys count:(NSUInteger)count;
 - (NSUInteger)count;
 - (id)objectForKey:(id)key;
 - (NSEnumerator*)keyEnumerator;
 
+- (instancetype)initWithCapacity:(NSUInteger)numItems;
 - (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey;
 - (void)removeObjectForKey:(id)key;
 

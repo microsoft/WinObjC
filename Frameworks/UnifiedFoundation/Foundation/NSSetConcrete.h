@@ -15,23 +15,19 @@
 //******************************************************************************
 #pragma once
 #include <Foundation/NSMutableSet.h>
+#import "BridgeHelpers.h"
 
 @interface NSSetConcrete : NSMutableSet
 
-+ (void)load;
+BRIDGED_CLASS_REQUIRED_DECLS
 
-+ (NSObject*)allocWithZone:(NSZone*)zone;
-- (id)retain;
-- (oneway void)release;
-- (id)autorelease;
-- (NSUInteger)retainCount;
-- (void)dealloc;
-
+- (instancetype)init;
 - (instancetype)initWithObjects:(id*)objects count:(unsigned)count;
 @property (readonly) NSUInteger count;
 - (id)member:(id)object;
 - (NSEnumerator*)objectEnumerator;
 
+- (instancetype)initWithCapacity:(NSUInteger)numItems;
 - (void)addObject:(id)object;
 - (void)removeObject:(id)object;
 - (void)removeAllObjects;

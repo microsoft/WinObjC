@@ -29,6 +29,7 @@
 #include "NSDictionaryConcrete.h"
 #include "LoggingNative.h"
 #include "NSRaise.h"
+#include "BridgeHelpers.h"
 
 static const wchar_t* TAG = L"NSDictionary";
 
@@ -146,18 +147,22 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-+ (instancetype)dictionaryWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
++ (instancetype)dictionaryWithObjects:(id _Nonnull const*)vals forKeys:(id<NSCopying> _Nonnull const*)keys count:(unsigned)count {
     return [[[self alloc] initWithObjects:vals forKeys:keys count:count] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    return self;
-    /**
-     @Status Interoperable
-    */
+- (NSObject*)init {
+    BRIDGED_INIT(NSDictionary, NSMutableDictionary, NSDictionaryConcrete);
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithObjects:(id _Nonnull const*)vals forKeys:(id<NSCopying> _Nonnull const*)keys count:(unsigned)count {
+    BRIDGED_INIT_ABSTRACT(NSDictionary, NSMutableDictionary, NSDictionaryConcrete, vals, keys, count);
 }
 
 /**
@@ -171,10 +176,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 + (instancetype)dictionaryWithDictionary:(NSDictionary*)dictionary {
-    NSDictionary* ret = [self alloc];
-    [ret initWithDictionary:dictionary];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithDictionary:dictionary] autorelease];
 }
 
 /**
@@ -212,8 +214,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (instancetype)initWithObjects:(id)vals forKeys:(id)keys {
-    [self init];
-
     int count = [vals count];
 
     std::vector<id> flatValues(count);
@@ -231,13 +231,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (instancetype)initWithObject:(id)val forKey:(id)key {
-    [self init];
-
-    key = [key copy];
-    CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)val);
-    [key release];
-
-    return self;
+    return [self initWithObjects:&val forKeys:&key count:1];
 }
 
 /**
@@ -254,9 +248,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     NSArray* keys = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.keys"];
     NSArray* values = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
-    [self initWithObjects:values forKeys:keys];
-
-    return self;
+    return [self initWithObjects:values forKeys:keys];
 }
 
 /**
@@ -362,7 +354,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         [self release];
         return nil;
     }
-    return self;
 }
 
 /**
@@ -419,13 +410,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     NSDictionary* ret = [NSDictionary new];
 
     return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)init {
-    return self;
 }
 
 /**
@@ -636,17 +620,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         }
         */
     }
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSDictionary class] || self == [NSMutableDictionary class]) {
-        return [NSDictionaryConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
 }
 
 /**

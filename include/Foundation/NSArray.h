@@ -46,7 +46,6 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)arrayWithObject:(id)anObject;
 + (instancetype)arrayWithObjects:(id)firstObj, ...;
 + (instancetype)arrayWithObjects:(id _Nonnull const[])objects count:(NSUInteger)count;
-- (instancetype)init;
 - (instancetype)initWithArray:(NSArray*)anArray;
 - (instancetype)initWithArray:(NSArray*)array copyItems:(BOOL)flag;
 - (NSArray*)initWithContentsOfFile:(NSString*)aPath;

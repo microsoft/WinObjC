@@ -24,51 +24,58 @@
 
 @implementation NSMutableAttributedStringConcrete
 
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)retain {
-    CFRetain(static_cast<CFAttributedStringRef>(self));
+BRIDGED_CLASS_REQUIRED_IMPLS(CFAttributedStringRef, CFAttributedStringGetTypeID, NSAttributedString, NSMutableAttributedStringConcrete)
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithAttributedString:(NSAttributedString*)string {
+    NSMutableAttributedStringConcrete* newSelf = nullptr;
+    // need to figure out if this is a mutable init or not.
+    if ([self isMemberOfClass:[NSMutableAttributedString class]]) {
+        newSelf = reinterpret_cast<NSMutableAttributedStringConcrete*>(static_cast<NSMutableAttributedString*>(
+            CFAttributedStringCreateMutableCopy(NULL, [string length], static_cast<CFAttributedStringRef>(string))));
+    } else {
+        newSelf = reinterpret_cast<NSMutableAttributedStringConcrete*>(static_cast<NSAttributedString*>(
+            CFAttributedStringCreateWithSubstring(NULL, static_cast<CFAttributedStringRef>(string), CFRange{ 0, [string length] })));
+    }
+
+    [self release];
+    self = newSelf;
     return self;
 }
 
-// Provide our own implementations of retain and release so that the bridging works out.
-- (oneway void)release {
-    CFRelease(static_cast<CFAttributedStringRef>(self));
-}
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
+    NSMutableAttributedStringConcrete* newSelf = nullptr;
+    // need to figure out if this is a mutable init or not.
+    if ([self isMemberOfClass:[NSMutableAttributedString class]]) {
+        newSelf = reinterpret_cast<NSMutableAttributedStringConcrete*>(
+            static_cast<NSMutableAttributedString*>(CFAttributedStringCreateMutable(NULL, 0)));
+        CFAttributedStringReplaceString(static_cast<CFMutableAttributedStringRef>(newSelf),
+                                        CFRange{ 0, 0 },
+                                        static_cast<CFStringRef>(string));
+        CFAttributedStringSetAttributes(static_cast<CFMutableAttributedStringRef>(newSelf),
+                                        CFRange{ 0, [string length] },
+                                        static_cast<CFDictionaryRef>(attributes),
+                                        YES);
+    } else {
+        newSelf = reinterpret_cast<NSMutableAttributedStringConcrete*>(static_cast<NSAttributedString*>(
+            CFAttributedStringCreate(NULL, static_cast<CFStringRef>(string), static_cast<CFDictionaryRef>(attributes))));
+    }
 
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)autorelease {
-    return (id)(CFAutorelease(static_cast<CFAttributedStringRef>(self)));
+    [self release];
+    self = newSelf;
+    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (NSUInteger)retainCount {
-    return CFGetRetainCount(static_cast<CFAttributedStringRef>(self));
-}
-
-+ (NSMutableAttributedStringConcrete*)allocWithZone:(NSZone*)zone {
-    return static_cast<NSMutableAttributedStringConcrete*>(CFAttributedStringCreate(nullptr, CFSTR(""), nullptr));
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    // No-op for bridged classes. This is because the CF system is responsible for the allocation and dealloc of the backing memory.
-    // This is all handled via the CFRelease calls. When its CF ref count drops to 0 the CF version of dealloc is invoked so by the time
-    // the NSObject dealloc is called, there is nothing left to do.
-}
-#pragma clang diagnostic pop
-
-/**
- @Status Interoperable
-*/
-+ (void)load {
-    // self here is referring to the Class object since its a + method.
-    _CFRuntimeBridgeTypeToClass(CFAttributedStringGetTypeID(), self);
+- (instancetype)init {
+    return [self initWithString:static_cast<NSString*>(CFSTR("")) count:nullptr];
 }
 
 - (NSString*)string {

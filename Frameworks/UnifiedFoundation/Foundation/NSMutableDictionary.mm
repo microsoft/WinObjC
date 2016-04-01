@@ -20,6 +20,8 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "CoreFoundation/CFDictionary.h"
 #include "NSRaise.h"
+#include "NSDictionaryConcrete.h"
+#include "BridgeHelpers.h"
 
 @implementation NSMutableDictionary
 /**
@@ -46,15 +48,8 @@
 /**
  @Status Interoperable
 */
-- (instancetype)init {
-    return [super init];
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)initWithCapacity:(unsigned)capacity {
-    return [self init];
+    BRIDGED_INIT_ABSTRACT(NSMutableDictionary, NSMutableDictionary, NSDictionaryConcrete, capacity);
 }
 
 /**

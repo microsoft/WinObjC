@@ -35,16 +35,16 @@ FOUNDATION_EXPORT_CLASS
 }
 
 + (instancetype)dictionary;
-+ (NSDictionary*)dictionaryWithContentsOfFile:(NSString*)path;
-+ (NSDictionary*)dictionaryWithContentsOfURL:(NSURL*)aURL;
++ (instancetype)dictionaryWithContentsOfFile:(NSString*)path;
++ (instancetype)dictionaryWithContentsOfURL:(NSURL*)aURL;
 + (instancetype)dictionaryWithDictionary:(NSDictionary*)otherDictionary;
 + (instancetype)dictionaryWithObject:(id)anObject forKey:(id<NSCopying>)aKey;
 + (instancetype)dictionaryWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
 + (instancetype)dictionaryWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObject, ...;
 - (instancetype)init;
-- (NSDictionary*)initWithContentsOfFile:(NSString*)path;
-- (NSDictionary*)initWithContentsOfURL:(NSURL*)aURL;
+- (instancetype)initWithContentsOfFile:(NSString*)path;
+- (instancetype)initWithContentsOfURL:(NSURL*)aURL;
 - (instancetype)initWithDictionary:(NSDictionary*)otherDictionary;
 - (instancetype)initWithDictionary:(NSDictionary*)otherDictionary copyItems:(BOOL)flag;
 - (instancetype)initWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;

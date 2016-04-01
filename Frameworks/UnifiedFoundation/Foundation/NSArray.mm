@@ -35,6 +35,9 @@
 #include "LoggingNative.h"
 #include "NSRaise.h"
 #include "NSArrayConcrete.h"
+#include "BridgeHelpers.h"
+#include "NSCFArray.h"
+#include <objc/runtime.h>
 
 static const wchar_t* TAG = L"NSArray";
 
@@ -45,7 +48,18 @@ static const wchar_t* TAG = L"NSArray";
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithObjects:(NSObject*)first, ... {
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    if (self == [NSArray class]) {
+        return [NSArrayConcrete allocWithZone:zone];
+    }
+
+    return [super allocWithZone:zone];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)arrayWithObjects:(NSObject*)first, ... {
     va_list argList;
     va_start(argList, first);
     std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
@@ -57,47 +71,42 @@ static const wchar_t* TAG = L"NSArray";
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithObject:(NSObject*)obj {
++ (instancetype)arrayWithObject:(NSObject*)obj {
     return [[[self alloc] initWithObjects:&obj count:1] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (NSArray*)array {
-    NSArray* ret = [self new];
-
-    return [ret autorelease];
++ (instancetype)array {
+    return [[self new] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithObjects:(id*)objs count:(NSUInteger)count {
++ (instancetype)arrayWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
     return [[[self alloc] initWithObjects:objs count:count] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-+ (NSArray*)arrayWithArray:(NSArray*)arrayToCopy {
-    NSArray* ret = [[self alloc] initWithArray:arrayToCopy];
-    return [ret autorelease];
++ (instancetype)arrayWithArray:(NSArray*)arrayToCopy {
+    return [[[self alloc] initWithArray:arrayToCopy] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (NSArray*)arrayWithContentsOfFile:(NSString*)filename {
-    id ret = [[self alloc] initWithContentsOfFile:filename];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithContentsOfFile:filename] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithObjects:(NSObject*)first, ... {
+- (instancetype)initWithObjects:(NSObject*)first, ... {
     va_list argList;
     va_start(argList, first);
     std::vector<id> flatArgs = ConvertVAListToVector((id)first, argList);
@@ -131,9 +140,7 @@ static const wchar_t* TAG = L"NSArray";
         }
     }
 
-    [self initWithArray:arrayData];
-
-    return self;
+    return [self initWithArray:arrayData];
 }
 
 /**
@@ -147,15 +154,9 @@ static const wchar_t* TAG = L"NSArray";
 /**
  @Status Interoperable
 */
-- (NSObject*)init {
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSArray*)initWithObjects:(id*)objs count:(NSUInteger)count {
-    return self;
+- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -303,12 +304,11 @@ static const wchar_t* TAG = L"NSArray";
  @Status Caveat
  @Notes Only supports NSKeyedArchiver NSCoder type.
 */
-- (NSArray*)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
         id array = [coder decodeObjectOfClasses:coder.allowedClasses forKey:@"NS.objects"];
 
-        [self initWithArray:array];
-        return self;
+        return [self initWithArray:array];
     } else {
         UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
         [self release];
@@ -319,16 +319,14 @@ static const wchar_t* TAG = L"NSArray";
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithArray:(NSArray*)arrayToCopy {
+- (instancetype)initWithArray:(NSArray*)arrayToCopy {
     return [self initWithArray:arrayToCopy copyItems:NO];
 }
 
 /**
  @Status Interoperable
 */
-- (NSArray*)initWithArray:(id)arrayToCopy copyItems:(BOOL)copyFlag {
-    [self init];
-
+- (instancetype)initWithArray:(NSArray*)arrayToCopy copyItems:(BOOL)copyFlag {
     int count = [arrayToCopy count];
     std::vector<id> objects(count);
 
@@ -766,17 +764,6 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 /**
  @Status Interoperable
 */
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSArray class] || self == [NSMutableArray class]) {
-        return [NSArrayConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)getObjects:(id*)objects {
     NSUInteger i, count = [self count];
 
@@ -851,7 +838,7 @@ typedef NSInteger (*compFuncType)(id, id, void*);
         return NO;
     }
 
-    return [self isEqualToArray:other];
+    return [self isEqualToArray:reinterpret_cast<NSArray*>(other)];
 }
 
 /**

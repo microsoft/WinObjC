@@ -17,11 +17,23 @@
 #include <Foundation/NSMutableArray.h>
 #import "BridgeHelpers.h"
 
-@interface NSArrayConcrete : NSArray
+@interface NSCFArray : NSMutableArray
+
+BRIDGED_CLASS_REQUIRED_DECLS
 
 - (instancetype)init;
 - (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count;
 - (NSUInteger)count;
 - (id)objectAtIndex:(NSUInteger)index;
+
+- (instancetype)initWithCapacity:(NSUInteger)numItems;
+- (void)removeObjectAtIndex:(NSUInteger)index;
+- (void)removeLastObject;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj;
+- (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index;
+- (void)addObject:(NSObject*)objAddr;
+
+// Not actually necessary. Optimization here for CF backed array.
+- (void)removeAllObjects;
 
 @end

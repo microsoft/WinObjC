@@ -15,17 +15,11 @@
 //******************************************************************************
 #pragma once
 #include <Foundation/NSMutableAttributedString.h>
+#import "BridgeHelpers.h"
 
 @interface NSMutableAttributedStringConcrete : NSMutableAttributedString
 
-+ (void)load;
-
-+ (NSObject*)allocWithZone:(NSZone*)zone;
-- (id)retain;
-- (oneway void)release;
-- (id)autorelease;
-- (NSUInteger)retainCount;
-- (void)dealloc;
+BRIDGED_CLASS_REQUIRED_DECLS
 
 - (NSString*)string;
 - (id)attribute:(NSString*)name atIndex:(NSUInteger)location effectiveRange:(NSRange*)range;

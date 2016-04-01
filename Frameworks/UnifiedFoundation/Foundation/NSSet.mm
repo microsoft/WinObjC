@@ -25,6 +25,7 @@
 #include "NSSetConcrete.h"
 #include "VAListHelper.h"
 #include "NSRaise.h"
+#include "BridgeHelpers.h"
 
 @implementation NSSet
 
@@ -93,15 +94,15 @@
 /**
  @Status Interoperable
 */
-- (instancetype)init {
-    return self;
+- (NSObject*)init {
+    BRIDGED_INIT(NSSet, NSMutableSet, NSSetConcrete);
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
-    return self;
+    BRIDGED_INIT_ABSTRACT(NSSet, NSMutableSet, NSSetConcrete, objects, count);
 }
 
 /**
@@ -403,14 +404,6 @@
 */
 - (void)dealloc {
     [super dealloc];
-}
-
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSMutableSet class] || self == [NSSet class]) {
-        return [NSSetConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
 }
 
 /**

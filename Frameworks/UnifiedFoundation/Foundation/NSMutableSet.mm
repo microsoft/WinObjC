@@ -19,6 +19,8 @@
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSMutableArray.h"
 #include "NSRaise.h"
+#include "NSSetConcrete.h"
+#include "BridgeHelpers.h"
 
 @implementation NSMutableSet
 
@@ -114,8 +116,7 @@
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(unsigned)capacity {
-    // HACKHACK: this is isn't quite correct but for now just ignore the capacity. It will grow appropriately.
-    return self;
+    BRIDGED_INIT_ABSTRACT(NSMutableSet, NSMutableSet, NSSetConcrete, capacity);
 }
 
 /**

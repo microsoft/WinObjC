@@ -24,61 +24,44 @@
 
 @implementation NSSetConcrete
 
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)retain {
-    CFRetain(static_cast<CFSetRef>(self));
+BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSSetConcrete)
+
+/**
+@Status Interoperable
+*/
+- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    NSSetConcrete* newSelf = nullptr;
+    // need to figure out if this is a mutable init or not.
+    if ([self isMemberOfClass:[NSMutableSet class]]) {
+        newSelf = reinterpret_cast<NSSetConcrete*>(static_cast<NSMutableSet*>(CFSetCreateMutable(NULL, 0, &kCFTypeSetCallBacks)));
+        for (unsigned int i = 0; i < count; i++) {
+            CFSetAddValue(static_cast<CFMutableSetRef>(newSelf), objs[i]);
+        }
+    } else {
+        newSelf =
+            reinterpret_cast<NSSetConcrete*>(static_cast<NSSet*>(CFSetCreate(NULL, (const void**)(objs), count, &kCFTypeSetCallBacks)));
+    }
+
+    [self release];
+    self = newSelf;
     return self;
 }
 
-// Provide our own implementations of retain and release so that the bridging works out.
-- (oneway void)release {
-    CFRelease(static_cast<CFSetRef>(self));
-}
-
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)autorelease {
-    return (id)(CFAutorelease(static_cast<CFSetRef>(self)));
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
+    return [self initWithObjects:nullptr count:0];
 }
 
 /**
  @Status Interoperable
 */
-- (NSUInteger)retainCount {
-    return CFGetRetainCount(static_cast<CFSetRef>(self));
-}
-
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    return static_cast<NSObject*>(CFSetCreateMutable(NULL, 0, &kCFTypeSetCallBacks));
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    // No-op for bridged classes. This is because the CF system is responsible for the allocation and dealloc of the backing memory.
-    // This is all handled via the CFRelease calls. When its CF ref count drops to 0 the CF version of dealloc is invoked so by the time
-    // the NSObject dealloc is called, there is nothing left to do.
-}
-#pragma clang diagnostic pop
-
-/**
- @Status Interoperable
-*/
-+ (void)load {
-    // self here is referring to the Class object since its a + method.
-    _CFRuntimeBridgeTypeToClass(CFSetGetTypeID(), self);
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
-    for (unsigned int i = 0; i < count; i++) {
-        CFSetAddValue(static_cast<CFMutableSetRef>(self), objects[i]);
-    }
-
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    NSSetConcrete* newSelf =
+        reinterpret_cast<NSSetConcrete*>(static_cast<NSMutableSet*>(CFSetCreateMutable(NULL, numElements, &kCFTypeSetCallBacks)));
+    [self release];
+    self = newSelf;
     return self;
 }
 
@@ -126,6 +109,9 @@
     CFSetRemoveValue(static_cast<CFMutableSetRef>(self), object);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllObjects {
     CFSetRemoveAllValues(static_cast<CFMutableSetRef>(self));
 }

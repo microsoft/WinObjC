@@ -26,63 +26,61 @@ static const wchar_t* TAG = L"NSDictionary";
 
 @implementation NSDictionaryConcrete
 
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)retain {
-    CFRetain(static_cast<CFDictionaryRef>(self));
-    return self;
-}
-
-// Provide our own implementations of retain and release so that the bridging works out.
-- (oneway void)release {
-    CFRelease(static_cast<CFDictionaryRef>(self));
-}
-
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)autorelease {
-    return (id)(CFAutorelease(static_cast<CFDictionaryRef>(self)));
-}
-
-/**
- @Status Interoperable
-*/
-- (NSUInteger)retainCount {
-    return CFGetRetainCount(static_cast<CFDictionaryRef>(self));
-}
-
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    return static_cast<NSObject*>(CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    // No-op for bridged classes. This is because the CF system is responsible for the allocation and dealloc of the backing memory.
-    // This is all handled via the CFRelease calls. When its CF ref count drops to 0 the CF version of dealloc is invoked so by the time
-    // the NSObject dealloc is called, there is nothing left to do.
-}
-#pragma clang diagnostic pop
-
-/**
- @Status Interoperable
-*/
-+ (void)load {
-    // self here is referring to the Class object since its a + method.
-    _CFRuntimeBridgeTypeToClass(CFDictionaryGetTypeID(), self);
-}
+BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionary, NSDictionaryConcrete)
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    for (unsigned i = 0; i < count; i++) {
-        id key = [keys[i] copy];
-        CFDictionarySetValue(static_cast<CFMutableDictionaryRef>(self), (const void*)key, (void*)vals[i]);
-        [key release];
+    NSDictionaryConcrete* newSelf = nullptr;
+    // need to figure out if this is a mutable init or not.
+    if ([self isMemberOfClass:[NSMutableDictionary class]]) {
+        newSelf = reinterpret_cast<NSDictionaryConcrete*>(static_cast<NSMutableDictionary*>(
+            CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks)));
+
+        for (unsigned i = 0; i < count; i++) {
+            id key = [keys[i] copy];
+            CFDictionarySetValue(static_cast<CFMutableDictionaryRef>(newSelf), (const void*)key, (void*)vals[i]);
+            [key release];
+        }
+    } else {
+        std::vector<id> keyCopies(count);
+        for (unsigned i = 0; i < count; i++) {
+            keyCopies[i] = [keys[i] copy];
+        }
+
+        newSelf = reinterpret_cast<NSDictionaryConcrete*>(static_cast<NSDictionary*>(CFDictionaryCreate(NULL,
+                                                                                                        (const void**)(keyCopies.data()),
+                                                                                                        (const void**)(vals),
+                                                                                                        count,
+                                                                                                        &kCFTypeDictionaryKeyCallBacks,
+                                                                                                        &kCFTypeDictionaryValueCallBacks)));
+
+        for (unsigned i = 0; i < count; i++) {
+            [keyCopies[i] release];
+        }
     }
 
+    [self release];
+    self = newSelf;
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
+    return [self initWithObjects:nullptr forKeys:nullptr count:0];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    NSDictionaryConcrete* newSelf = reinterpret_cast<NSDictionaryConcrete*>(static_cast<NSMutableDictionary*>(
+        CFDictionaryCreateMutable(NULL, numElements, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks)));
+    [self release];
+    self = newSelf;
     return self;
 }
 

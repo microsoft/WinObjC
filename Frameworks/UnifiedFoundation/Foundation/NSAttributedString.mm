@@ -19,6 +19,7 @@
 #import <CoreFoundation/CFAttributedString.h>
 #import "NSRaise.h"
 #import "NSMutableAttributedStringConcrete.h"
+#import "BridgeHelpers.h"
 
 #import <algorithm>
 
@@ -48,36 +49,29 @@
 /**
  @Status Interoperable
 */
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSAttributedString class] || self == [NSMutableAttributedString class]) {
-        return [NSMutableAttributedStringConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
+- (NSObject*)init {
+    BRIDGED_INIT(NSAttributedString, NSMutableAttributedString, NSMutableAttributedStringConcrete);
 }
+
 /**
  @Status Interoperable
 */
 - (instancetype)initWithString:(NSString*)string {
-    [reinterpret_cast<NSMutableAttributedString*>(self) replaceCharactersInRange:NSMakeRange(0, 0) withString:string];
-    return self;
+    return [self initWithString:string attributes:[[NSDictionary new] autorelease]];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithAttributedString:(NSAttributedString*)string {
-    [reinterpret_cast<NSMutableAttributedString*>(self) setAttributedString:string];
-    return self;
+    BRIDGED_INIT_ABSTRACT(NSAttributedString, NSMutableAttributedString, NSMutableAttributedStringConcrete, string);
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
-    [reinterpret_cast<NSMutableAttributedString*>(self) replaceCharactersInRange:NSMakeRange(0, 0) withString:string];
-    [reinterpret_cast<NSMutableAttributedString*>(self) setAttributes:attributes range:NSMakeRange(0, [self length])];
-    return self;
+    BRIDGED_INIT_ABSTRACT(NSAttributedString, NSMutableAttributedString, NSMutableAttributedStringConcrete, string, attributes);
 }
 
 /**

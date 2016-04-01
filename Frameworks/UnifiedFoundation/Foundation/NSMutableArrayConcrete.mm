@@ -18,21 +18,29 @@
 #include "StubReturn.h"
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
-#include "NSArrayConcrete.h"
+#include "NSMutableArrayConcrete.h"
 #include "NSCFArray.h"
 #include "BridgeHelpers.h"
 #include <CoreFoundation/CFArray.h>
 
-static const wchar_t* TAG = L"NSArray";
-
-@implementation NSArrayConcrete {
+@implementation NSMutableArrayConcrete {
 @private
     StrongId<NSCFArray> _nscf;
 }
 
 - (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
     if (self = [super init]) {
-        _nscf.attach(static_cast<NSCFArray*>(CFArrayCreate(NULL, (const void**)(objs), count, &kCFTypeArrayCallBacks)));
+        _nscf.attach(static_cast<NSCFArray*>(CFArrayCreateMutable(NULL, 0, &kCFTypeArrayCallBacks)));
+        for (unsigned int i = 0; i < count; i++) {
+            [_nscf addObject:objs[i]];
+        }
+    }
+    return self;
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    if (self = [super init]) {
+        _nscf.attach(static_cast<NSCFArray*>(CFArrayCreateMutable(NULL, numElements, &kCFTypeArrayCallBacks)));
     }
     return self;
 }
@@ -43,5 +51,11 @@ static const wchar_t* TAG = L"NSArray";
 
 - INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
 - INNER_BRIDGE_CALL(_nscf, id, objectAtIndex:(NSUInteger)index);
+- INNER_BRIDGE_CALL(_nscf, void, removeObjectAtIndex:(NSUInteger)index);
+- INNER_BRIDGE_CALL(_nscf, void, removeLastObject);
+- INNER_BRIDGE_CALL(_nscf, void, replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj);
+- INNER_BRIDGE_CALL(_nscf, void, insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index);
+- INNER_BRIDGE_CALL(_nscf, void, removeAllObjects);
+- INNER_BRIDGE_CALL(_nscf, void, addObject:(NSObject*)objAddr);
 
 @end

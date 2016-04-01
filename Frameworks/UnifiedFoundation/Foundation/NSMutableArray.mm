@@ -23,6 +23,8 @@
 #include "Foundation/NSMutableArray.h"
 #include "LoggingNative.h"
 #include "NSRaise.h"
+#include "NSMutableArrayConcrete.h"
+#include "BridgeHelpers.h"
 
 static const wchar_t* TAG = L"NSMutableArray";
 
@@ -33,19 +35,26 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 /**
  @Status Interoperable
 */
-+ (NSMutableArray*)arrayWithCapacity:(NSUInteger)numElements {
-    NSMutableArray* newArray = [self new];
++ (NSObject*)allocWithZone:(NSZone*)zone {
+    if (self == [NSMutableArray class]) {
+        return [NSMutableArrayConcrete allocWithZone:zone];
+    }
 
-    return [newArray autorelease];
+    return [super allocWithZone:zone];
 }
 
 /**
  @Status Interoperable
 */
-- (NSMutableArray*)initWithCapacity:(NSUInteger)numElements {
-    [self init];
++ (instancetype)arrayWithCapacity:(NSUInteger)numElements {
+    return [[[self alloc] initWithCapacity:numElements] autorelease];
+}
 
-    return self;
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
