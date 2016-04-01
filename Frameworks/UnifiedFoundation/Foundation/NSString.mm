@@ -95,7 +95,6 @@ void UStringHolder::initWithString(NSString* str, int location, int length) {
                 str->u->ConstructedString.constructedStr = new _ConstructedStringData();
                 str->u->ConstructedString.constructedStr->str = _str;
                 str->u->ConstructedString._hashIsCached = FALSE;
-                str->u->ConstructedString._placementAllocated = FALSE;
                 str->strType = NSConstructedString_Unicode;
                 EbrLockLeave(_upgradeLock);
             }
@@ -234,17 +233,9 @@ void setToUnicode(NSString* inst, UnicodeString& str) {
 
         case NSUninitializedString:
             inst->u = new stringData();
-            if ([inst class] == [NSString class] || [inst class] == [NSMutableString class]) {
-                inst->u->ConstructedString.constructedStr = new _ConstructedStringData();
-                inst->u->ConstructedString.constructedStr->str = new UnicodeString(str);
-                inst->u->ConstructedString._hashIsCached = FALSE;
-                inst->u->ConstructedString._placementAllocated = TRUE;
-            } else {
-                inst->u->ConstructedString.constructedStr = new _ConstructedStringData();
-                inst->u->ConstructedString.constructedStr->str = new UnicodeString(str);
-                inst->u->ConstructedString._hashIsCached = FALSE;
-                inst->u->ConstructedString._placementAllocated = FALSE;
-            }
+            inst->u->ConstructedString.constructedStr = new _ConstructedStringData();
+            inst->u->ConstructedString.constructedStr->str = new UnicodeString(str);
+            inst->u->ConstructedString._hashIsCached = FALSE;
             inst->strType = NSConstructedString_Unicode;
             break;
 
@@ -3221,16 +3212,12 @@ const int s_oneByte = 16;
             break;
 
         case NSConstructedString_Unicode:
-            if (u->ConstructedString._placementAllocated) {
-                u->ConstructedString.constructedStr->str->~UnicodeString();
-                u->ConstructedString.constructedStr->~_ConstructedStringData();
-            } else {
-                delete u->ConstructedString.constructedStr->str;
-                delete u->ConstructedString.constructedStr;
-                u->ConstructedString.constructedStr = NULL;
-            }
+            delete u->ConstructedString.constructedStr->str;
+            delete u->ConstructedString.constructedStr;
             break;
     }
+
+    delete u;
 
     [super dealloc];
 }
