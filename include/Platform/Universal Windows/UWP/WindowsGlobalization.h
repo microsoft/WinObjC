@@ -309,8 +309,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGGeographicRegion : RTObject
 + (BOOL)isSupported:(NSString*)geographicRegionCode;
-+ (WGGeographicRegion*)createGeographicRegion:(NSString*)geographicRegionCode ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (WGGeographicRegion*)makeGeographicRegion:(NSString*)geographicRegionCode ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSString* code;
 @property (readonly) NSString* codeThreeDigit;
 @property (readonly) NSString* codeThreeLetter;
@@ -330,7 +330,7 @@ WINRT_EXPORT
 @interface WGLanguage : RTObject
 + (BOOL)trySetInputMethodLanguageTag:(NSString*)languageTag;
 + (BOOL)isWellFormed:(NSString*)languageTag;
-+ (WGLanguage*)createLanguage:(NSString*)languageTag ACTIVATOR;
++ (WGLanguage*)makeLanguage:(NSString*)languageTag ACTIVATOR;
 @property (readonly) NSString* displayName;
 @property (readonly) NSString* languageTag;
 @property (readonly) NSString* nativeName;
@@ -347,22 +347,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGCalendar : RTObject
-+ (WGCalendar*)createCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages
-                                 calendar:(NSString*)calendar
-                                    clock:(NSString*)clock
-                               timeZoneId:(NSString*)timeZoneId ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-+ (WGCalendar*)createCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
-+ (WGCalendar*)createCalendar:(id<NSFastEnumeration> /* NSString * */)languages
-                     calendar:(NSString*)calendar
-                        clock:(NSString*)clock ACTIVATOR;
++ (WGCalendar*)makeCalendarWithTimeZone:(id<NSFastEnumeration> /* NSString * */)languages
+                               calendar:(NSString*)calendar
+                                  clock:(NSString*)clock
+                             timeZoneId:(NSString*)timeZoneId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WGCalendar*)makeCalendarDefaultCalendarAndClock:(id<NSFastEnumeration> /* NSString * */)languages ACTIVATOR;
++ (WGCalendar*)makeCalendar:(id<NSFastEnumeration> /* NSString * */)languages calendar:(NSString*)calendar clock:(NSString*)clock ACTIVATOR;
 @property int year;
 @property int second;
 @property int period;
 @property int nanosecond;
 @property int month;
 @property int minute;
-@property (copy) NSString* numeralSystem;
+@property (retain) NSString* numeralSystem;
 @property int era;
 @property int hour;
 @property int day;

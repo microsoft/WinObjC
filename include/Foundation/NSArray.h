@@ -99,7 +99,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray*)filteredArrayUsingPredicate:(NSPredicate*)predicate;
 - (NSArray*)subarrayWithRange:(NSRange)range;
 @property (readonly, copy) NSData* sortedArrayHint;
-- (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context STUB_METHOD;
+- (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context;
 - (NSArray*)sortedArrayUsingFunction:(NSInteger (*)(id, id, void*))comparator context:(void*)context hint:(NSData*)hint;
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)sortDescriptors;
 - (NSArray*)sortedArrayUsingSelector:(SEL)comparator;

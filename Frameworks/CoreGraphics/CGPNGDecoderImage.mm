@@ -44,6 +44,10 @@ extern "C" {
 #import <png.h>
 };
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGPNGDecoderImage";
+
 CGPNGDecoderImage::CGPNGDecoderImage(const char* filename) {
     _img = new CGPNGImageBacking(filename);
     _img->_parent = this;
@@ -157,13 +161,13 @@ void CGPNGImageBacking::DiscardIfPossible() {
         return;
     }
     if (_forward) {
-        EbrDebugLog("Discarding %s\n", _fileName);
+        TraceVerbose(TAG, L"Discarding %hs", _fileName);
     }
     CGDiscardableImageBacking::DiscardIfPossible();
 }
 
 CGImageBacking* CGPNGImageBacking::ConstructBacking() {
-    EbrDebugLog("Delay-loading image %s\n", _fileName ? _fileName : "NIL");
+    TraceVerbose(TAG, L"Delay-loading image %hs", _fileName ? _fileName : "NIL");
     if (!_hasCachedInfo) {
         Decode(NULL, 0);
     }
@@ -217,14 +221,14 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
 
     png = png_create_read_struct_2(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL, NULL, NULL, NULL);
     if (png == NULL) {
-        EbrDebugLog("PNG load Error\n");
+        TraceError(TAG, L"PNG load Error");
         errorCode = 1;
         goto error;
     }
 
     info = png_create_info_struct(png);
     if (info == NULL) {
-        EbrDebugLog("PNG load Error\n");
+        TraceError(TAG, L"PNG load Error");
         errorCode = 1;
         goto error;
     }
@@ -234,7 +238,7 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
 
 #ifdef PNG_SETJMP_SUPPORTED
     if (setjmp(png_jmpbuf(png))) {
-        EbrDebugLog("PNG load Error\n");
+        TraceError(TAG, L"PNG load Error");
         errorCode = 1;
         goto error;
     }
@@ -303,7 +307,7 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
         if (depth != 8 ||
             !(color_type == PNG_COLOR_TYPE_RGB || color_type == PNG_COLOR_TYPE_RGB_ALPHA || color_type == PNG_COLOR_TYPE_GRAY ||
               color_type == PNG_COLOR_TYPE_GRAY_ALPHA)) {
-            EbrDebugLog("PNG load Error\n");
+            TraceError(TAG, L"PNG load Error");
             errorCode = 1;
             goto error;
         }
@@ -322,7 +326,7 @@ void CGPNGImageBacking::Decode(void* imgDest, int stride) {
 
         out = (BYTE*)imgDest;
 
-        row_pointers = (BYTE**)EbrMalloc(png_height * sizeof(char*));
+        row_pointers = (BYTE**)IwMalloc(png_height * sizeof(char*));
 
         for (i = 0; i < png_height; i++) {
             row_pointers[i] = (BYTE*)&out[i * stride];
@@ -339,7 +343,7 @@ error:
         int curRow = png_get_current_row_number(png);
         if (curRow == 0) {
             if (row_pointers != NULL) {
-                EbrFree(row_pointers);
+                IwFree(row_pointers);
             }
             if (png != NULL) {
                 png_destroy_read_struct(&png, &info, NULL);
@@ -347,9 +351,9 @@ error:
             row_pointers = NULL;
             png = NULL;
 
-            EbrDebugLog("Fatal error loading PNG\n");
+            TraceError(TAG, L"Fatal error loading PNG");
         } else {
-            EbrDebugLog("Warning: Broken PNG\n");
+            TraceWarning(TAG, L"Warning: Broken PNG");
             //  Clear remaining rows
             for (int i = curRow; i < png_height; i++) {
                 memset(row_pointers[i], 0, stride);
@@ -358,7 +362,7 @@ error:
     }
 
     if (row_pointers != NULL) {
-        EbrFree(row_pointers);
+        IwFree(row_pointers);
     }
     if (png != NULL) {
         png_destroy_read_struct(&png, &info, NULL);
@@ -399,7 +403,7 @@ bool CGPNGImageBacking::DrawDirectlyToContext(CGContextImpl* ctx, CGRect src, CG
 
 CGPNGImageBacking::CGPNGImageBacking(const char* filename) {
     size_t fileNameSize = strlen(filename) + 1;
-    _fileName = (char*)malloc(fileNameSize);
+    _fileName = (char*)IwMalloc(fileNameSize);
     strcpy_s(_fileName, fileNameSize, filename);
     Decode(NULL, 0);
 }
@@ -413,6 +417,6 @@ CGPNGImageBacking::CGPNGImageBacking(id data) {
 CGPNGImageBacking::~CGPNGImageBacking() {
     _data = nil;
     if (_fileName) {
-        free(_fileName);
+        IwFree(_fileName);
     }
 }

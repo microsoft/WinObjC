@@ -77,10 +77,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEExtendedExecutionSession : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WAEExtendedExecutionReason reason;
 @property unsigned int percentProgress;
-@property (copy) NSString* description;
+@property (retain) NSString* Description;
 - (EventRegistrationToken)addRevokedEvent:(void (^)(RTObject*, WAEExtendedExecutionRevokedEventArgs*))del;
 - (void)removeRevokedEvent:(EventRegistrationToken)tok;
 - (void)requestExtensionAsyncWithSuccess:(void (^)(WAEExtendedExecutionResult))success failure:(void (^)(NSError*))failure;

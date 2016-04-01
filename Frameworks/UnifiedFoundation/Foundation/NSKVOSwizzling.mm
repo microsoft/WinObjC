@@ -137,12 +137,11 @@ void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     auto& obMethod(trailer.swizzledMethod(_cmd));
     auto argSz = obMethod.valueSize;
     auto nStackArgs = argSz / sizeof(unsigned);
-    unsigned* raw = static_cast<unsigned*>(calloc(sizeof(unsigned), nStackArgs));
+    unsigned* raw = static_cast<unsigned*>(IwCalloc(sizeof(unsigned), nStackArgs));
     va_list ap;
     va_start(ap, _cmd);
     for (unsigned int i = 0; i < nStackArgs; ++i) {
-        unsigned val = va_arg(ap, unsigned);
-        memcpy(raw + i, &val, sizeof(unsigned));
+        raw[i] = va_arg(ap, unsigned);
     }
     va_end(ap);
 
@@ -172,6 +171,8 @@ void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
     }
 
     [self didChangeValueForKey:key];
+
+    IwFree(raw);
 }
 
 void NSKVOSwizzledClass::swizzleMethod(SEL sel, IMP newImp) {

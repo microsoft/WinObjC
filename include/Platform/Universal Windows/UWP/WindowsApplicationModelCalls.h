@@ -82,13 +82,13 @@ typedef unsigned WACPhoneCallHistorySourceIdKind;
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryAddress : RTObject
-+ (WACPhoneCallHistoryEntryAddress*)create:(NSString*)rawAddress
-                            rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (WACPhoneCallHistoryEntryAddress*)make:(NSString*)rawAddress
+                          rawAddressKind:(WACPhoneCallHistoryEntryRawAddressKind)rawAddressKind ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACPhoneCallHistoryEntryRawAddressKind rawAddressKind;
-@property (copy) NSString* rawAddress;
-@property (copy) NSString* displayName;
-@property (copy) NSString* contactId;
+@property (retain) NSString* rawAddress;
+@property (retain) NSString* displayName;
+@property (retain) NSString* contactId;
 @end
 
 #endif // __WACPhoneCallHistoryEntryAddress_DEFINED__
@@ -99,20 +99,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntry : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACPhoneCallHistoryEntryMedia media;
 @property BOOL isMissed;
 @property BOOL isIncoming;
 @property BOOL isCallerIdBlocked;
 @property BOOL isSeen;
-@property (copy) id duration;
+@property (retain) id duration;
 @property BOOL isEmergency;
 @property BOOL isSuppressed;
-@property (copy) WFDateTime* startTime;
+@property (retain) WFDateTime* startTime;
 @property WACPhoneCallHistorySourceIdKind sourceIdKind;
-@property (copy) WACPhoneCallHistoryEntryAddress* address;
-@property (copy) NSString* sourceId;
-@property (copy) NSString* remoteId;
+@property (retain) WACPhoneCallHistoryEntryAddress* address;
+@property (retain) NSString* sourceId;
+@property (retain) NSString* remoteId;
 @property WACPhoneCallHistoryEntryOtherAppReadAccess otherAppReadAccess;
 @property BOOL isRinging;
 @property BOOL isVoicemail;
@@ -139,7 +139,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACPhoneCallHistoryEntryQueryOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WACPhoneCallHistoryEntryQueryDesiredMedia desiredMedia;
 @property (readonly) NSMutableArray* sourceIds;
 @end

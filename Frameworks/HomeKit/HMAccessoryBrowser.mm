@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMAccessoryBrowser.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMAccessoryBrowser
 

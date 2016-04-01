@@ -17,6 +17,7 @@
 #include <Starboard.h>
 
 #include <COMIncludes.h>
+#include <wrl\client.h>
 #include <Windows.Foundation.h>
 #include <Windows.Security.Cryptography.h>
 #include <wrl\wrappers\corewrappers.h>
@@ -24,40 +25,34 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#include <unistd.h>
 #include <mach/mach_time.h>
 
 #include <algorithm>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CFMisc";
 
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
 using namespace Microsoft::WRL::Wrappers;
 
-static ABI::Windows::Security::Cryptography::ICryptographicBufferStatics* bufferStatics = nullptr;
+ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> GetBufferStatics()
+{
+    ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics;
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                             &bufferStatics));
+    return bufferStatics;
+}
 
 extern "C" uint32_t arc4random() {
-    if (bufferStatics == nullptr) {
-        if (!SUCCEEDED(
-                GetActivationFactory(HStringReference(L"Windows.Security.Cryptography.CryptographicBuffer").Get(), &bufferStatics))) {
-            EbrDebugLog("Unable to get CryptographicBuffer interface!\n");
-        }
-    }
+    static ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics(GetBufferStatics());
 
     UINT32 randResult = 0;
     if (!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult))) {
-        EbrDebugLog("Unable to get random number!\n");
+        TraceVerbose(TAG, L"Unable to get random number!");
     }
     return randResult;
-}
-
-extern "C" int usleep(useconds_t secs) {
-    Sleep(secs * 1000);
-    return 0;
-}
-
-extern "C" unsigned int sleep(useconds_t secs) {
-    Sleep(secs * 1000);
-    return 0;
 }
 
 extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {
@@ -80,15 +75,6 @@ extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const 
         return *outSize < required ? ENOMEM : 0;
     }
     return -1;
-}
-
-/**
- @Status Stub
- @Notes Returns the CFString "Desc"
-*/
-CFStringRef CFCopyDescription(CFTypeRef ref) {
-    UNIMPLEMENTED();
-    return (CFStringRef) @"Desc";
 }
 
 static int64_t _mach_get_timebase() {

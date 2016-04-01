@@ -362,7 +362,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -381,11 +381,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDTextElement : WXDependencyObject
-@property (copy) NSString* language;
-@property (copy) WUXMBrush* foreground;
-@property (copy) WUTFontWeight* fontWeight;
+@property (retain) NSString* language;
+@property (retain) WUXMBrush* foreground;
+@property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
-@property (copy) WUXMFontFamily* fontFamily;
+@property (retain) WUXMFontFamily* fontFamily;
 @property double fontSize;
 @property WUTFontStretch fontStretch;
 @property int characterSpacing;
@@ -416,9 +416,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBlock : WUXDTextElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXTextAlignment textAlignment;
-@property (copy) WXThickness* margin;
+@property (retain) WXThickness* margin;
 @property WXLineStackingStrategy lineStackingStrategy;
 @property double lineHeight;
 + (WXDependencyProperty*)lineHeightProperty;
@@ -435,7 +435,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDInline : WUXDTextElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDInline_DEFINED__
@@ -446,8 +446,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDInlineUIContainer : WUXDInline
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXUIElement* child;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXUIElement* child;
 @end
 
 #endif // __WUXDInlineUIContainer_DEFINED__
@@ -458,7 +458,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDLineBreak : WUXDInline
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDLineBreak_DEFINED__
@@ -469,7 +469,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDParagraph : WUXDBlock
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double textIndent;
 @property (readonly) WUXDInlineCollection* inlines;
 + (WXDependencyProperty*)textIndentProperty;
@@ -483,8 +483,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDRun : WUXDInline
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* text;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* text;
 @property WXFlowDirection flowDirection;
 + (WXDependencyProperty*)flowDirectionProperty;
 @end
@@ -497,8 +497,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDSpan : WUXDInline
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXDInlineCollection* inlines;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXDInlineCollection* inlines;
 @end
 
 #endif // __WUXDSpan_DEFINED__
@@ -509,7 +509,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBold : WUXDSpan
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDBold_DEFINED__
@@ -520,7 +520,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDItalic : WUXDSpan
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDItalic_DEFINED__
@@ -531,7 +531,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDUnderline : WUXDSpan
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDUnderline_DEFINED__
@@ -542,8 +542,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDHyperlink : WUXDSpan
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* navigateUri;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* navigateUri;
 @property WUXDUnderlineStyle underlineStyle;
 + (WXDependencyProperty*)navigateUriProperty;
 + (WXDependencyProperty*)underlineStyleProperty;
@@ -559,7 +559,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* originalSource;
 @end
 
@@ -617,26 +617,26 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 @property BOOL isRightTapEnabled;
-@property (copy) WUXMProjection* projection;
+@property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
 @property BOOL isHitTestVisible;
 @property double opacity;
-@property (copy) WUXMCacheMode* cacheMode;
+@property (retain) WUXMCacheMode* cacheMode;
 @property BOOL isDoubleTapEnabled;
 @property BOOL isTapEnabled;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (copy) WUXMRectangleGeometry* clip;
-@property (copy) WUXMATransitionCollection* transitions;
-@property (copy) WFPoint* renderTransformOrigin;
-@property (copy) WUXMTransform* renderTransform;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMATransitionCollection* transitions;
+@property (retain) WFPoint* renderTransformOrigin;
+@property (retain) WUXMTransform* renderTransform;
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
 @property (readonly) NSArray* pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
-@property (copy) WUXMMTransform3D* transform3D;
+@property (retain) WUXMMTransform3D* transform3D;
 @property BOOL canDrag;
 + (WXRoutedEvent*)dropEvent;
 + (WXDependencyProperty*)allowDropProperty;
@@ -763,22 +763,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* margin;
-@property (copy) NSString* language;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* margin;
+@property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
-@property (copy) RTObject* dataContext;
+@property (retain) RTObject* dataContext;
 @property WXVerticalAlignment verticalAlignment;
 @property double maxWidth;
 @property double maxHeight;
 @property double minHeight;
 @property double width;
-@property (copy) RTObject* tag;
-@property (copy) WXStyle* style;
-@property (copy) WXResourceDictionary* resources;
-@property (copy) NSString* name;
+@property (retain) RTObject* tag;
+@property (retain) WXStyle* style;
+@property (retain) WXResourceDictionary* resources;
+@property (retain) NSString* name;
 @property double minWidth;
 @property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
@@ -833,15 +833,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDGlyphs : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* unicodeString;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* unicodeString;
 @property WUXMStyleSimulations styleSimulations;
 @property double originY;
 @property double originX;
-@property (copy) NSString* indices;
-@property (copy) WFUri* fontUri;
+@property (retain) NSString* indices;
+@property (retain) WFUri* fontUri;
 @property double fontRenderingEmSize;
-@property (copy) WUXMBrush* fill;
+@property (retain) WUXMBrush* fill;
 @property BOOL isColorFontEnabled;
 @property int colorFontPaletteIndex;
 + (WXDependencyProperty*)fillProperty;

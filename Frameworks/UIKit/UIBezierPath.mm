@@ -18,6 +18,8 @@
 #import "CoreGraphics/CGPath.h"
 #import "CoreGraphics/CGGeometry.h"
 #import "CoreGraphics/CGContext.h"
+#import "IwMalloc.h"
+#import "StubReturn.h"
 
 static CGAffineTransform* getTransform(UIBezierPath* path);
 
@@ -249,6 +251,9 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     _hasTransform = true;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     _path = CGPathCreateMutable();
     _lineWidth = 1.0f;
@@ -306,9 +311,12 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
     CGContextRestoreGState(ctx);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_pattern) {
-        free(_pattern);
+        IwFree(_pattern);
         _pattern = NULL;
     }
 
@@ -349,7 +357,7 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
 */
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase {
     if (_pattern) {
-        free(_pattern);
+        IwFree(_pattern);
         _pattern = NULL;
     }
 
@@ -358,9 +366,45 @@ CGAffineTransform* getTransform(UIBezierPath* path) {
 
     assert(sizeof(float) == sizeof(CGFloat));
     if (count > 0) {
-        _pattern = (float*)malloc(sizeof(float) * count);
+        _pattern = (float*)IwMalloc(sizeof(float) * count);
         memcpy(_pattern, pattern, sizeof(float) * count);
     }
+}
+
+/**
+ @Status Stub
+*/
+- (void)removeAllPoints {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)containsPoint:(CGPoint)point {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

@@ -31,7 +31,7 @@
 
 #pragma once
 
-#import "UIGestureRecognizer.h"
+#import <UIKit/UIGestureRecognizer.h>
 
 UIKIT_EXPORT_CLASS
 @interface UIPanGestureRecognizer : UIGestureRecognizer
@@ -45,9 +45,5 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic) NSUInteger maximumNumberOfTouches;
 @property (nonatomic) NSUInteger minimumNumberOfTouches;
-
-// Internal ---------------
-- (void)_setDragSlack:(float)slack;
-// -----------------------
 
 @end

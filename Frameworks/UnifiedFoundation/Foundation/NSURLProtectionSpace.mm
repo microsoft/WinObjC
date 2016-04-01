@@ -125,6 +125,9 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeObject:_authenticationMethod forKey:@"authenticationMethod"];
     [coder encodeObject:_distinguishedNames forKey:@"distinguishedNames"];
@@ -134,6 +137,10 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     [coder encodeObject:_realm forKey:@"realm"];
     [coder encodeObject:_proxyType forKey:@"proxyType"];
     [coder encodeBool:_receivesCredentialSecurely forKey:@"receivesCredentialSecurely"];
+}
+
+- (BOOL)_bothEqual:(id)first second:(id)second {
+    return ((first && [first isEqual:second]) || (!first && !second));
 }
 
 /**
@@ -149,23 +156,23 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
 
     NSURLProtectionSpace* object = (NSURLProtectionSpace*)anObject;
 
-    if (![_authenticationMethod isEqual:object.authenticationMethod]) {
+    if (![self _bothEqual:_authenticationMethod second:object.authenticationMethod]) {
         return NO;
     }
 
-    if (![_protocol isEqualToString:object.protocol]) {
+    if (![self _bothEqual:_protocol second:object.protocol]) {
         return NO;
     }
 
-    if (![_distinguishedNames isEqualToArray:object.distinguishedNames]) {
+    if (![self _bothEqual:_distinguishedNames second:object.distinguishedNames]) {
         return NO;
     }
 
-    if (![_realm isEqualToString:object.realm]) {
+    if (![self _bothEqual:_realm second:object.realm]) {
         return NO;
     }
 
-    if (![_proxyType isEqualToString:object.proxyType]) {
+    if (![self _bothEqual:_proxyType second:object.proxyType]) {
         return NO;
     }
 
@@ -180,6 +187,9 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)hash {
     NSUInteger result = _hashCode;
     if (result == 0) {
@@ -204,7 +214,7 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
  @Notes Does not support encoding/decoding of SecTrustRef.
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _authenticationMethod = [[coder decodeObjectForKey:@"authenticationMethod"] retain];
         _distinguishedNames = [[coder decodeObjectForKey:@"distinguishedNames"] retain];
         _host = [[coder decodeObjectForKey:@"host"] retain];
@@ -218,6 +228,9 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_authenticationMethod release];
     [_distinguishedNames release];

@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <Foundation/NSUserActivity.h>
+#import "AssertARCEnabled.h"
 
 @implementation NSUserActivity
 /**

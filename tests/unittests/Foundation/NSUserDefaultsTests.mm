@@ -44,7 +44,5 @@ TEST(Foundation, NSUserDefaultsBasic) {
     ASSERT_OBJCEQ_MSG(url3, url4, "url should be equal");
 
     [url1 release];
-    [url2 release];
     [url3 release];
-    [url4 release];
 }

@@ -1,11 +1,26 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{6C513927-611F-4A04-ACA2-893303ABF0CA}</UniqueIdentifier>
+      <UniqueIdentifier>{D6C9F8E4-7785-4863-B880-A1A4B2D13076}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreMotionViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BasicAnimationViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ApplicationViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextDisplayViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\GLKitExampleController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -78,9 +93,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BezierViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextDisplayViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\MainViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -88,9 +100,6 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TaskInfoViewController.h">
-      <Filter>WOCCatalog</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BasicAnimationViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
   </ItemGroup>

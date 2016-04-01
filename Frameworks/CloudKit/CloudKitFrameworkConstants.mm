@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CloudKitFrameworkConstants.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CKErrorDomain = @"CKErrorDomain";
 NSString* const CKPartialErrorsByItemIDKey = @"CKPartialErrorsByItemIDKey";

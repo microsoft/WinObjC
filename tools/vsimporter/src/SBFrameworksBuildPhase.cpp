@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -28,6 +28,7 @@
 
 #include "VCProject.h"
 #include "VCProjectConfiguration.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 std::map<String, String, SBFrameworksBuildPhase::CaseInsensitiveComparator> SBFrameworksBuildPhase::s_blockedLibraries;
 
@@ -117,9 +118,11 @@ void SBFrameworksBuildPhase::writeVCProjectFiles(VCProject& proj) const
   // We don't support linking with frameworks when building bundles
   TargetProductType productType = m_parentTarget.getProductType();
   if (productType == TargetBundle) {
-    if (!m_phase->getBuildFileList().empty()) {
-      SBLog::warning() << "Ignoring all frameworkss in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
-    }
+      if (!m_phase->getBuildFileList().empty()) {
+          SBLog::warning() << "Ignoring all frameworks in \"" << m_parentTarget.getName() << "\" bundle target." << std::endl;
+          TELEMETRY_EVENT(L"VSImporterLinkingFrameworksWithBundles");
+
+      }
     return;
   }
 

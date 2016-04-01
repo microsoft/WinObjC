@@ -23,6 +23,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSArray.h"
 #include "Foundation/NSData.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSPersistentDomain";
 
 void printContents(int level, id obj) {
     char szLevel[100];
@@ -31,21 +34,21 @@ void printContents(int level, id obj) {
     szLevel[level * 2] = 0;
 
     if ([obj isKindOfClass:[NSString class]]) {
-        EbrDebugLog("%s%s \"%s\"\n", szLevel, object_getClassName(obj), [obj UTF8String]);
+        TraceVerbose(TAG, L"%hs%hs \"%hs\"", szLevel, object_getClassName(obj), [obj UTF8String]);
     } else if ([obj isKindOfClass:[NSData class]]) {
-        EbrDebugLog("%s%s ", szLevel, object_getClassName(obj));
+        TraceVerbose(TAG, L"%hs%hs ", szLevel, object_getClassName(obj));
 
         int len = [obj length];
         char* bytes = (char*)[obj bytes];
 
         while (len--) {
-            EbrDebugLog("%02X", *bytes);
+            TraceVerbose(TAG, L"%02X", *bytes);
             bytes++;
         }
 
-        EbrDebugLog("\n");
+        TraceVerbose(TAG, L"");
     } else {
-        EbrDebugLog("%s%s\n", szLevel, object_getClassName(obj));
+        TraceVerbose(TAG, L"%hs%hs", szLevel, object_getClassName(obj));
     }
 
     if ([obj isKindOfClass:[NSDictionary class]]) {
@@ -61,7 +64,7 @@ void printContents(int level, id obj) {
         szLevel[level * 2] = 0;
 
         while (curKey != nil) {
-            EbrDebugLog("%sKey=\"%s\"\n", szLevel, [curKey UTF8String]);
+            TraceVerbose(TAG, L"%hsKey=\"%hs\"", szLevel, [curKey UTF8String]);
             printContents(level + 1, curVal);
 
             curKey = [keyEnum nextObject];
@@ -85,7 +88,7 @@ void printContents(int level, id obj) {
     }
 }
 
-@implementation NSPersistentDomain : NSObject
+@implementation NSPersistentDomain
 - (instancetype)initWithName:(NSString*)name {
     NSKeyedArchiver* serializedDictionary = nil;
 
@@ -158,7 +161,7 @@ void printContents(int level, id obj) {
     if (_isDirty) {
         // printContents(0, _mutableDomain);
         if ([NSKeyedArchiver archiveRootObject:_mutableDomain toFile:_path] == NO) {
-            EbrDebugLog("***** Couldn't write user defaults to %s *****\n", [_path UTF8String]);
+            TraceVerbose(TAG, L"***** Couldn't write user defaults to %hs *****", [_path UTF8String]);
             // assert(0);
         }
         _isDirty = FALSE;

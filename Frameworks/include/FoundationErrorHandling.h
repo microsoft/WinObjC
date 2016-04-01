@@ -17,21 +17,11 @@
 #pragma once
 
 #import <Foundation/FoundationExport.h>
-
 #import <Foundation/NSException.h>
-#import <Foundation/NSDictionary.h>
-#import <Foundation/NSNumber.h>
-#import <Foundation/NSString.h>
-#import <Foundation/NSError.h>
-
-// Objective-C support functions for ErrorHandling.h
-// Not intended to be used directly!
-FOUNDATION_EXPORT const NSString* _NSHResultErrorDictKey;
-FOUNDATION_EXPORT NSString* _NSStringFromHResult(HRESULT hr);
-FOUNDATION_EXPORT NSError* _NSErrorFromFailureInfo(const wil::FailureInfo& fi);
-FOUNDATION_EXPORT NSException* _NSExceptionFromFailureInfo(const wil::FailureInfo& fi);
 
 @interface NSException (errorHandlingInternal)
 + (NSString*)_exceptionNameForHRESULT:(int)errorCode;
 + (instancetype)_exceptionWithHRESULT:(int)errorCode reason:(NSString*)reason userInfo:(NSDictionary*)userInfo;
+
+- (HRESULT)_hresult;
 @end

@@ -107,5 +107,5 @@ TEST(Dispatch, DispatchCascade) {
         cascade(&indices[i].index);
     }
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

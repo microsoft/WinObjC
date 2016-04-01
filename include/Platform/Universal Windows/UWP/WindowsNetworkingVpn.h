@@ -177,7 +177,7 @@ typedef unsigned WNVVpnManagementErrorStatus;
 @protocol WNVIVpnCustomPrompt
 @property BOOL bordered;
 @property BOOL compulsory;
-@property (copy) NSString* label;
+@property (retain) NSString* label;
 @end
 
 #endif // __WNVIVpnCustomPrompt_DEFINED__
@@ -233,7 +233,7 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 @protocol WNVIVpnCustomPromptElement
 @property BOOL compulsory;
-@property (copy) NSString* displayName;
+@property (retain) NSString* displayName;
 @property BOOL emphasized;
 @end
 
@@ -280,7 +280,7 @@ typedef unsigned WNVVpnManagementErrorStatus;
 @property BOOL alwaysOn;
 @property (readonly) NSMutableArray* appTriggers;
 @property (readonly) NSMutableArray* domainNameInfoList;
-@property (copy) NSString* profileName;
+@property (retain) NSString* profileName;
 @property BOOL rememberCredentials;
 @property (readonly) NSMutableArray* routes;
 @property (readonly) NSMutableArray* trafficFilters;
@@ -294,9 +294,9 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 WINRT_EXPORT
 @interface WNVVpnRoute : RTObject
-+ (WNVVpnRoute*)createVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize ACTIVATOR;
++ (WNVVpnRoute*)makeVpnRoute:(WNHostName*)address prefixSize:(uint8_t)prefixSize ACTIVATOR;
 @property uint8_t prefixSize;
-@property (copy) WNHostName* address;
+@property (retain) WNHostName* address;
 @end
 
 #endif // __WNVVpnRoute_DEFINED__
@@ -307,12 +307,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnNamespaceInfo : RTObject
-+ (WNVVpnNamespaceInfo*)createVpnNamespaceInfo:(NSString*)name
-                                 dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
-                               proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
-@property (copy) NSMutableArray* webProxyServers;
-@property (copy) NSString* Namespace;
-@property (copy) NSMutableArray* dnsServers;
++ (WNVVpnNamespaceInfo*)makeVpnNamespaceInfo:(NSString*)name
+                               dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
+                             proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
+@property (retain) NSMutableArray* webProxyServers;
+@property (retain) NSString* Namespace;
+@property (retain) NSMutableArray* dnsServers;
 @end
 
 #endif // __WNVVpnNamespaceInfo_DEFINED__
@@ -323,7 +323,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnInterfaceId : RTObject
-+ (WNVVpnInterfaceId*)createVpnInterfaceId:(id<NSFastEnumeration> /* uint8_t */)address ACTIVATOR;
++ (WNVVpnInterfaceId*)makeVpnInterfaceId:(id<NSFastEnumeration> /* uint8_t */)address ACTIVATOR;
 - (void)getAddressInfo:(id<NSFastEnumeration> /* uint8_t */*)id;
 @end
 
@@ -335,11 +335,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnRouteAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSMutableArray* ipv6InclusionRoutes;
-@property (copy) NSMutableArray* ipv6ExclusionRoutes;
-@property (copy) NSMutableArray* ipv4InclusionRoutes;
-@property (copy) NSMutableArray* ipv4ExclusionRoutes;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSMutableArray* ipv6InclusionRoutes;
+@property (retain) NSMutableArray* ipv6ExclusionRoutes;
+@property (retain) NSMutableArray* ipv4InclusionRoutes;
+@property (retain) NSMutableArray* ipv4ExclusionRoutes;
 @property BOOL excludeLocalSubnets;
 @end
 
@@ -351,9 +351,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnNamespaceAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* proxyAutoConfigUri;
-@property (copy) NSMutableArray* namespaceList;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* proxyAutoConfigUri;
+@property (retain) NSMutableArray* namespaceList;
 @end
 
 #endif // __WNVVpnNamespaceAssignment_DEFINED__
@@ -377,9 +377,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnPacketBuffer : RTObject
-+ (WNVVpnPacketBuffer*)createVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer
-                                      offset:(unsigned int)offset
-                                      length:(unsigned int)length ACTIVATOR;
++ (WNVVpnPacketBuffer*)makeVpnPacketBuffer:(WNVVpnPacketBuffer*)parentBuffer
+                                    offset:(unsigned int)offset
+                                    length:(unsigned int)length ACTIVATOR;
 @property unsigned int transportAffinity;
 @property WNVVpnPacketBufferStatus status;
 @property (readonly) WSSBuffer* buffer;
@@ -409,7 +409,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnChannel : RTObject
 + (void)processEventAsync:(RTObject*)thirdPartyPlugIn event:(RTObject*)event;
-@property (copy) RTObject* plugInContext;
+@property (retain) RTObject* plugInContext;
 @property (readonly) WNVVpnChannelConfiguration* configuration;
 @property (readonly) unsigned int id;
 @property (readonly) WNVVpnSystemHealth* systemHealth;
@@ -515,8 +515,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnDomainNameAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* proxyAutoConfigurationUri;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* proxyAutoConfigurationUri;
 @property (readonly) NSMutableArray* domainNameList;
 @end
 
@@ -553,7 +553,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnTrafficFilterAssignment : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL allowOutbound;
 @property BOOL allowInbound;
 @property (readonly) NSMutableArray* trafficFilterList;
@@ -567,8 +567,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnAppId : RTObject
-+ (WNVVpnAppId*)create:(WNVVpnAppIdType)type value:(NSString*)value ACTIVATOR;
-@property (copy) NSString* value;
++ (WNVVpnAppId*)make:(WNVVpnAppIdType)type value:(NSString*)value ACTIVATOR;
+@property (retain) NSString* value;
 @property WNVVpnAppIdType type;
 @end
 
@@ -580,12 +580,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnDomainNameInfo : RTObject
-+ (WNVVpnDomainNameInfo*)createVpnDomainNameInfo:(NSString*)name
-                                        nameType:(WNVVpnDomainNameType)nameType
-                                   dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
-                                 proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
++ (WNVVpnDomainNameInfo*)makeVpnDomainNameInfo:(NSString*)name
+                                      nameType:(WNVVpnDomainNameType)nameType
+                                 dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
+                               proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
 @property WNVVpnDomainNameType domainNameType;
-@property (copy) WNHostName* domainName;
+@property (retain) WNHostName* domainName;
 @property (readonly) NSMutableArray* dnsServers;
 @property (readonly) NSMutableArray* webProxyServers;
 @end
@@ -598,10 +598,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnTrafficFilter : RTObject
-+ (WNVVpnTrafficFilter*)create:(WNVVpnAppId*)appId ACTIVATOR;
++ (WNVVpnTrafficFilter*)make:(WNVVpnAppId*)appId ACTIVATOR;
 @property WNVVpnRoutingPolicyType routingPolicyType;
 @property WNVVpnIPProtocol protocol;
-@property (copy) WNVVpnAppId* appId;
+@property (retain) WNVVpnAppId* appId;
 @property (readonly) NSMutableArray* appClaims;
 @property (readonly) NSMutableArray* localAddressRanges;
 @property (readonly) NSMutableArray* localPortRanges;
@@ -634,11 +634,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomEditBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL noEcho;
-@property (copy) NSString* defaultText;
+@property (retain) NSString* defaultText;
 @property (readonly) NSString* text;
-@property (copy) NSString* label;
+@property (retain) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @end
@@ -651,11 +651,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptTextInput : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL emphasized;
-@property (copy) NSString* displayName;
+@property (retain) NSString* displayName;
 @property BOOL compulsory;
-@property (copy) NSString* placeholderText;
+@property (retain) NSString* placeholderText;
 @property BOOL isTextHidden;
 @property (readonly) NSString* text;
 @end
@@ -668,10 +668,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomComboBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSArray* optionsText;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSArray* optionsText;
 @property (readonly) unsigned int selected;
-@property (copy) NSString* label;
+@property (retain) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @end
@@ -684,9 +684,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptOptionSelector : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL emphasized;
-@property (copy) NSString* displayName;
+@property (retain) NSString* displayName;
 @property BOOL compulsory;
 @property (readonly) NSMutableArray* options;
 @property (readonly) unsigned int selectedIndex;
@@ -700,11 +700,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomTextBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* label;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
-@property (copy) NSString* displayText;
+@property (retain) NSString* displayText;
 @end
 
 #endif // __WNVVpnCustomTextBox_DEFINED__
@@ -715,11 +715,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptText : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL emphasized;
-@property (copy) NSString* displayName;
+@property (retain) NSString* displayName;
 @property BOOL compulsory;
-@property (copy) NSString* text;
+@property (retain) NSString* text;
 @end
 
 #endif // __WNVVpnCustomPromptText_DEFINED__
@@ -730,10 +730,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomCheckBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL initialCheckState;
 @property (readonly) BOOL checked;
-@property (copy) NSString* label;
+@property (retain) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @end
@@ -746,11 +746,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomPromptBooleanInput : RTObject <WNVIVpnCustomPromptElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL initialValue;
 @property (readonly) BOOL value;
 @property BOOL emphasized;
-@property (copy) NSString* displayName;
+@property (retain) NSString* displayName;
 @property BOOL compulsory;
 @end
 
@@ -762,8 +762,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnCustomErrorBox : RTObject <WNVIVpnCustomPrompt>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* label;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* label;
 @property BOOL compulsory;
 @property BOOL bordered;
 @end
@@ -776,12 +776,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnPlugInProfile : RTObject <WNVIVpnProfile>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* vpnPluginPackageFamilyName;
-@property (copy) NSString* customConfiguration;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* vpnPluginPackageFamilyName;
+@property (retain) NSString* customConfiguration;
 @property (readonly) NSMutableArray* serverUris;
 @property BOOL rememberCredentials;
-@property (copy) NSString* profileName;
+@property (retain) NSString* profileName;
 @property BOOL alwaysOn;
 @property (readonly) NSMutableArray* appTriggers;
 @property (readonly) NSMutableArray* domainNameInfoList;
@@ -797,16 +797,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnNativeProfile : RTObject <WNVIVpnProfile>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WNVVpnAuthenticationMethod userAuthenticationMethod;
 @property WNVVpnAuthenticationMethod tunnelAuthenticationMethod;
 @property WNVVpnRoutingPolicyType routingPolicyType;
 @property WNVVpnNativeProtocolType nativeProtocolType;
-@property (copy) NSString* eapConfiguration;
+@property (retain) NSString* eapConfiguration;
 @property (readonly) NSMutableArray* servers;
 @property BOOL alwaysOn;
 @property BOOL rememberCredentials;
-@property (copy) NSString* profileName;
+@property (retain) NSString* profileName;
 @property (readonly) NSMutableArray* appTriggers;
 @property (readonly) NSMutableArray* domainNameInfoList;
 @property (readonly) NSMutableArray* routes;
@@ -821,7 +821,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnManagementAgent : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)addProfileFromXmlAsync:(NSString*)xml success:(void (^)(WNVVpnManagementErrorStatus))success failure:(void (^)(NSError*))failure;
 - (void)addProfileFromObjectAsync:(RTObject<WNVIVpnProfile>*)profile
                           success:(void (^)(WNVVpnManagementErrorStatus))success

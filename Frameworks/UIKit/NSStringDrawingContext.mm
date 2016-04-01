@@ -16,12 +16,15 @@
 
 #include "Starboard.h"
 #include <UIKit/UIKit.h>
-#include <UIKit/NSStringDrawing.h>
+#include <UIKit/NSString+UIKitAdditions.h>
 #include <CoreGraphics/CGContext.h>
 
 @implementation NSStringDrawingContext {
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         _actualScaleFactor = 1.0f;

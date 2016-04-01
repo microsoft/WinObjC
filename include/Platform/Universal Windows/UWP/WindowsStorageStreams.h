@@ -299,7 +299,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSSDataReader : RTObject <WSSIDataReader, WFIClosable>
 + (WSSDataReader*)fromBuffer:(RTObject<WSSIBuffer>*)buffer;
-+ (WSSDataReader*)createDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
++ (WSSDataReader*)makeDataReader:(RTObject<WSSIInputStream>*)inputStream ACTIVATOR;
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSInputStreamOptions inputStreamOptions;
 @property WSSByteOrder byteOrder;
@@ -351,8 +351,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSDataWriter : RTObject <WSSIDataWriter, WFIClosable>
-+ (WSSDataWriter*)createDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (WSSDataWriter*)makeDataWriter:(RTObject<WSSIOutputStream>*)outputStream ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSSUnicodeEncoding unicodeEncoding;
 @property WSSByteOrder byteOrder;
 @property (readonly) unsigned int unstoredBufferLength;
@@ -417,7 +417,7 @@ WINRT_EXPORT
 @interface WSSBuffer : RTObject <WSSIBuffer>
 + (WSSBuffer*)createCopyFromMemoryBuffer:(RTObject<WFIMemoryBuffer>*)input;
 + (WFMemoryBuffer*)createMemoryBufferOverIBuffer:(RTObject<WSSIBuffer>*)input;
-+ (WSSBuffer*)create:(unsigned int)capacity ACTIVATOR;
++ (WSSBuffer*)make:(unsigned int)capacity ACTIVATOR;
 @property unsigned int length;
 @property (readonly) unsigned int capacity;
 @end
@@ -570,7 +570,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSSInMemoryRandomAccessStream : RTObject <WSSIRandomAccessStream, WSSIOutputStream, WFIClosable, WSSIInputStream>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
 @property (readonly) BOOL canWrite;

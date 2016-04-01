@@ -27,6 +27,9 @@
 #include <string>
 
 #import "UIKit/NSLayoutConstraint.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSLayoutConstraint";
 
 using namespace std;
 
@@ -56,7 +59,7 @@ bool parsePredicates(string line, PredicateList& predicates) {
     // Trim parens
     if (line.length() > 2 && line[0] == '(') {
         if (*line.rbegin() != ')') {
-            EbrDebugLog("Syntax error! %s\n", line.c_str());
+            TraceError(TAG, L"Syntax error! %hs", line.c_str());
             return false;
         }
         line = line.substr(1, line.length() - 2);
@@ -74,11 +77,11 @@ bool parsePredicates(string line, PredicateList& predicates) {
         regex rex = regex::basic_regex("^\\s*(==|>=|<=)?([\\w.]+)(@([\\w]+))?\\s*$");
         smatch m;
         if (!regex_search(predStr[i], m, rex)) {
-            EbrDebugLog("Syntax Error! %s\n", predStr[i].c_str());
+            TraceError(TAG, L"Syntax Error! %hs", predStr[i].c_str());
             return false;
         } else {
 #ifdef DEBUG_VISUAL_FORMAT
-            EbrDebugLog("Relation: %s, Constant: %s, priority: %s\n", m[1].str().c_str(), m[2].str().c_str(), m[4].str().c_str());
+            TraceVerbose(TAG, L"Relation: %hs, Constant: %hs, priority: %hs", m[1].str().c_str(), m[2].str().c_str(), m[4].str().c_str());
 #endif
             predicates.push_back(Predicate(m[2].str(), m[1].str(), m[4].str()));
         }
@@ -113,7 +116,7 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
             item2Attribute = NSLayoutAttributeRight;
             break;
         default:
-            EbrDebugLog("Unknown format direction: %d\n", direction);
+            TraceVerbose(TAG, L"Unknown format direction: %d", direction);
             return nil;
     }
 
@@ -131,14 +134,14 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
 
             // If item2 is nil, this is a size constraint
             if (target && item2) {
-                EbrDebugLog("Connectors cannot have targets.\n");
+                TraceVerbose(TAG, L"Connectors cannot have targets.");
                 [ret release];
                 return nil;
             }
 
             if ([targStr isEqual:@"default"]) { // Should this just be ""?
                 if (!item2) {
-                    EbrDebugLog("Default connector value requires a second target\n");
+                    TraceVerbose(TAG, L"Default connector value requires a second target");
                     [ret release];
                     return nil;
                 } else {
@@ -155,7 +158,7 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
                     NSNumber* num = [formatter numberFromString:targStr];
                     if (!num) {
                         if (!target) {
-                            EbrDebugLog("Cannot parse number from target string: %s\n", predicates[i].target.c_str());
+                            TraceVerbose(TAG, L"Cannot parse number from target string: %hs", predicates[i].target.c_str());
                             [ret release];
                             return nil;
                         }
@@ -175,14 +178,14 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
             } else {
                 NSNumber* num = [formatter numberFromString:prioStr];
                 if (!num) {
-                    EbrDebugLog("Cannot parse number from priority string: %s\n", predicates[i].priority.c_str());
+                    TraceVerbose(TAG, L"Cannot parse number from priority string: %hs", predicates[i].priority.c_str());
                     [ret release];
                     return nil;
                 }
                 priority = num.floatValue;
             }
             if (priority < 0.0f || priority > 1000.0f) {
-                EbrDebugLog("Priority out of range: %f\n", priority);
+                TraceVerbose(TAG, L"Priority out of range: %f", priority);
                 [ret release];
                 return nil;
             }
@@ -195,7 +198,7 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
         } else if (predicates[i].relation == ">=") {
             relation = NSLayoutRelationGreaterThanOrEqual;
         } else {
-            EbrDebugLog("Unknown relation string: \"%s\"\n", predicates[i].relation.c_str());
+            TraceVerbose(TAG, L"Unknown relation string: \"%hs\"", predicates[i].relation.c_str());
             [ret release];
             return nil;
         }
@@ -318,27 +321,27 @@ const char* constraintType(NSLayoutAttribute attribute) {
 void printConstraint(NSLayoutConstraint* constraint) {
     if (constraint.firstItem != nil) {
         CGRect itmBounds;
-        EbrDebugLog("%s from (%s) Type: %s\n",
+        TraceVerbose(TAG, L"%hs from (%hs) Type: %hs",
                     [[[constraint class] description] UTF8String],
                     [[constraint.firstItem description] UTF8String],
                     constraintType(constraint.firstAttribute));
         itmBounds = [constraint.firstItem bounds];
-        EbrDebugLog("Bounds (%f)(%f), (%f)(%f)\n", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
+        TraceVerbose(TAG, L"Bounds (%f)(%f), (%f)(%f)", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
     } else {
-        EbrDebugLog("%s from (NONE) Type: %s\n", [[[constraint class] description] UTF8String], constraintType(constraint.firstAttribute));
+        TraceVerbose(TAG, L"%hs from (NONE) Type: %hs", [[[constraint class] description] UTF8String], constraintType(constraint.firstAttribute));
     }
     if (constraint.secondItem != nil) {
         CGRect itmBounds;
-        EbrDebugLog("%s to   (%s) Type: %s\n",
+        TraceVerbose(TAG, L"%hs to   (%hs) Type: %hs",
                     [[[constraint class] description] UTF8String],
                     [[constraint.secondItem description] UTF8String],
                     constraintType(constraint.secondAttribute));
         itmBounds = [constraint.secondItem bounds];
-        EbrDebugLog("Bounds (%f)(%f), (%f)(%f)\n", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
+        TraceVerbose(TAG, L"Bounds (%f)(%f), (%f)(%f)", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
     } else {
-        EbrDebugLog("%s to   (NONE) Type: %s\n", [[[constraint class] description] UTF8String], constraintType(constraint.secondAttribute));
+        TraceVerbose(TAG, L"%hs to   (NONE) Type: %hs", [[[constraint class] description] UTF8String], constraintType(constraint.secondAttribute));
     }
-    EbrDebugLog("Details: mult(%f) const(%f), priority(%f)\n", constraint.multiplier, constraint.constant, constraint.priority);
+    TraceVerbose(TAG, L"Details: mult(%f) const(%f), priority(%f)", constraint.multiplier, constraint.constant, constraint.priority);
 }
 
 void printConstraints(id constraints) {
@@ -356,7 +359,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 
     if (target == "|") {
         if (!superview) {
-            EbrDebugLog("No item has a superview in view map.\n");
+            TraceVerbose(TAG, L"No item has a superview in view map.");
             return nil;
         } else {
             item = superview;
@@ -366,7 +369,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     }
 
     if (!item) {
-        EbrDebugLog("No target matching \"%s\" in map.\n", target.c_str());
+        TraceVerbose(TAG, L"No target matching \"%hs\" in map.", target.c_str());
     }
 
     return item;
@@ -395,7 +398,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
         if (!superview) {
             superview = lSuper;
         } else if (lSuper && lSuper != superview) {
-            EbrDebugLog("All views must share the same superview.\n");
+            TraceVerbose(TAG, L"All views must share the same superview.");
         }
     }
 
@@ -423,7 +426,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     while (connectorIt != end) {
         string conStr = (*connectorIt)[2].str();
 #ifdef DEBUG_VISUAL_FORMAT
-        EbrDebugLog("Connector: %s\n", conStr.c_str());
+        TraceVerbose(TAG, L"Connector: %hs", conStr.c_str());
 #endif
         if (conStr == "") {
             PredicateList predList;
@@ -435,7 +438,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             predicates.push_back(predList);
         } else {
             if (*conStr.begin() != '-' || *conStr.rbegin() != '-' || conStr.length() < 3) {
-                EbrDebugLog("Syntax error! %s\n", conStr.c_str());
+                TraceError(TAG, L"Syntax error! %hs", conStr.c_str());
             } else {
                 PredicateList predList;
                 if (!parsePredicates(conStr.substr(1, conStr.length() - 2), predList)) {
@@ -453,14 +456,14 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     size_t matchEnd = 0;
 
     if (constraintIt->position() != 0) {
-        EbrDebugLog("Syntax error! %s\n", line.substr(0, constraintIt->position()).c_str());
+        TraceError(TAG, L"Syntax error! %hs", line.substr(0, constraintIt->position()).c_str());
         return nil;
     }
 
     while (constraintIt != end) {
         string conStr = constraintIt->str();
 #ifdef DEBUG_VISUAL_FORMAT
-        EbrDebugLog("Constraint: %s\n", conStr.c_str());
+        TraceVerbose(TAG, L"Constraint: %hs", conStr.c_str());
 #endif
         regex rex = regex::basic_regex("^\\[([\\w]+)(\\(.*\\))?\\]$");
         smatch m;
@@ -468,7 +471,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             if (conStr == "|") {
                 constraints.push_back(Constraint(PredicateList(), conStr));
             } else {
-                EbrDebugLog("Syntax Error! %s\n", conStr.c_str());
+                TraceError(TAG, L"Syntax Error! %hs", conStr.c_str());
                 return nil;
             }
         } else {
@@ -476,15 +479,15 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             string predStr = m[2].str();
             PredicateList localPredicates;
 #ifdef DEBUG_VISUAL_FORMAT
-            EbrDebugLog("Target: %s, Predicates: %s\n", m[1].str().c_str(), predStr.c_str());
+            TraceVerbose(TAG, L"Target: %hs, Predicates: %hs", m[1].str().c_str(), predStr.c_str());
 #endif
             if (targStr == "") {
-                EbrDebugLog("Syntax error! No target item specified.\n");
+                TraceError(TAG, L"Syntax error! No target item specified.");
                 return nil;
             }
             if (predStr.length()) {
                 if (*predStr.begin() != '(' || *predStr.rbegin() != ')' || predStr.length() < 3) {
-                    EbrDebugLog("Syntax error! %s\n", predStr.c_str());
+                    TraceError(TAG, L"Syntax error! %hs", predStr.c_str());
                     return nil;
                 }
                 if (!parsePredicates(predStr, localPredicates)) {
@@ -498,18 +501,18 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     }
 
     if (matchEnd != line.length()) {
-        EbrDebugLog("Syntax error! %s\n", line.substr(matchEnd).c_str());
+        TraceError(TAG, L"Syntax error! %hs", line.substr(matchEnd).c_str());
         return nil;
     }
 
     // Now add all constraints
     if (predicates.size() != constraints.size() - 1) {
-        EbrDebugLog("Dangling connector, ensure your format string is complete.\n");
+        TraceVerbose(TAG, L"Dangling connector, ensure your format string is complete.");
         return nil;
     }
 
     if (!constraints.size()) {
-        EbrDebugLog("No constraints specified in visual format.\n");
+        TraceVerbose(TAG, L"No constraints specified in visual format.");
         return nil;
     }
 
@@ -572,7 +575,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             case NSLayoutFormatAlignAllTrailing:
             case NSLayoutFormatAlignAllCenterX:
                 if (!vertical) {
-                    EbrDebugLog("Horizontal alignment option should not be specified with horizontal visual format!\n");
+                    TraceVerbose(TAG, L"Horizontal alignment option should not be specified with horizontal visual format!");
                     [nsConstraints release];
                     return nil;
                 }
@@ -582,13 +585,13 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
             case NSLayoutFormatAlignAllCenterY:
             case NSLayoutFormatAlignAllBaseline:
                 if (vertical) {
-                    EbrDebugLog("Vertical alignment option should not be specified with vertical visual format!\n");
+                    TraceVerbose(TAG, L"Vertical alignment option should not be specified with vertical visual format!");
                     [nsConstraints release];
                     return nil;
                 }
                 break;
             default:
-                EbrDebugLog("Unknown NSLayoutFormat option: %d\n", opts & NSLayoutFormatAlignmentMask);
+                TraceVerbose(TAG, L"Unknown NSLayoutFormat option: %d", opts & NSLayoutFormatAlignmentMask);
                 [nsConstraints release];
                 return nil;
         }
@@ -610,6 +613,9 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return [nsConstraints autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     NSLayoutConstraint* ret = [super allocWithZone:zone];
     ret->priv = new NSLayoutConstraintPrivateState();
@@ -644,6 +650,9 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return [constraint autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     // Eg, <<NSLayoutConstraint: 0x1234>: <UIView: 0x9876>-(NSLayoutAttributeTop>=NSLayoutAttributeTop*1.0+30@1000)-<_UILayoutGuide:
     // 0xABCD>>
@@ -659,15 +668,23 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
                                       [self.secondItem description]];
 }
 
+/**
+ @Status Stub
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
-    EbrDebugLog("Unsupported attempt to encode an NSLayoutConstraint\n");
+    UNIMPLEMENTED_WITH_MSG("Unsupported attempt to encode an NSLayoutConstraint");
+    THROW_NS_HR(E_NOTIMPL);
 }
 
 - (NSLayoutConstraintPrivateState*)_privateState {
     return priv;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     bool autoSpacing = false;
 
     _priority = UILayoutPriorityRequired;
@@ -693,14 +710,14 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     if ([coder containsValueForKey:@"NSFirstAttributeV2"]) {
         NSLayoutAttribute v2 = (NSLayoutAttribute)[coder decodeIntForKey:@"NSFirstAttributeV2"];
         if (_firstAttribute != NSLayoutAttributeNotAnAttribute && _firstAttribute != v2) {
-            EbrDebugLog("Overwriting attribute: %s\n", constraintType(_firstAttribute));
+            TraceVerbose(TAG, L"Overwriting attribute: %hs", constraintType(_firstAttribute));
         }
         _firstAttribute = v2;
     }
     if ([coder containsValueForKey:@"NSSecondAttributeV2"]) {
         NSLayoutAttribute v2 = (NSLayoutAttribute)[coder decodeIntForKey:@"NSSecondAttributeV2"];
         if (_secondAttribute != NSLayoutAttributeNotAnAttribute && _secondAttribute != v2) {
-            EbrDebugLog("Overwriting attribute: %s\n", constraintType(_secondAttribute));
+            TraceVerbose(TAG, L"Overwriting attribute: %hs", constraintType(_secondAttribute));
         }
         _secondAttribute = v2;
     }
@@ -720,7 +737,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     // TODO: These V2 options need to be investigated further.
     if ([coder containsValueForKey:@"NSConstantV2"]) {
         if (autoSpacing || _constant) {
-            EbrDebugLog("Overwriting constant\n");
+            TraceVerbose(TAG, L"Overwriting constant");
             autoSpacing = false;
         }
         _constant = [coder decodeFloatForKey:@"NSConstantV2"];
@@ -740,8 +757,11 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
-    EbrDebugLog("Deallocing NSLayoutConstraint\n");
+    TraceVerbose(TAG, L"Deallocing NSLayoutConstraint");
     if ([self conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
         [self autoLayoutDealloc];
     }

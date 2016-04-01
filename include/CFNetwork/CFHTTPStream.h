@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,31 +13,29 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _CFHTTPSTREAM_H_
-#define _CFHTTPSTREAM_H_
+#pragma once
 
 #import <CFNetwork/CFNetworkExport.h>
-#import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFStream.h>
 #import <CFNetwork/CFHTTPMessage.h>
+#import <CoreFoundation/CoreFoundation.h>
+
+typedef CF_ENUM(CFIndex, CFStreamErrorHTTP) {
+    kCFStreamErrorHTTPParseFailure = -1,
+    kCFStreamErrorHTTPRedirectionLoop = -2,
+    kCFStreamErrorHTTPBadURL = -3
+};
+
+CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForHTTPRequest(CFAllocatorRef alloc, CFHTTPMessageRef request) STUB_METHOD;
+CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForStreamedHTTPRequest(CFAllocatorRef alloc,
+                                                                          CFHTTPMessageRef requestHeaders,
+                                                                          CFReadStreamRef requestBody) STUB_METHOD;
 
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPAttemptPersistentConnection;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPFinalURL;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPFinalRequest;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPProxy;
-CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPProxyHost;
-CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPProxyPort;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPRequestBytesWrittenCount;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPResponseHeader;
-CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPSProxyHost;
-CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPSProxyPort;
 CFNETWORK_EXPORT const CFStringRef kCFStreamPropertyHTTPShouldAutoredirect;
+
 CFNETWORK_EXPORT const SInt32 kCFStreamErrorDomainHTTP;
-
-CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForStreamedHTTPRequest(CFAllocatorRef alloc,
-                                                                          CFHTTPMessageRef rqstHeaders,
-                                                                          CFReadStreamRef rqstBody);
-CFNETWORK_EXPORT CFReadStreamRef CFReadStreamCreateForHTTPRequest(CFAllocatorRef alloc, CFHTTPMessageRef rqst);
-
-#endif // _CFHTTPSTREAM_H_

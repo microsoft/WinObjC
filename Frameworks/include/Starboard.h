@@ -17,7 +17,8 @@
 #ifndef __STARBOARD_H
 #define __STARBOARD_H
 
-#include "Logging.h"
+#include "LoggingNative.h"
+#include "IwMalloc.h"
 
 // Interface should not be defined for Objective-C code
 #ifdef interface
@@ -28,53 +29,19 @@
 #define IWPLATFORM_EXPORT
 #endif
 
-//
-// Helper macros for NSLog
-//
-// DLog displays output only when with DEBUG setting.
-#if (defined(DEBUG) || defined(_DEBUG))
-#define DLog(fmt, ...) NSLog((@"%s [Line \"%d\"] : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define DLog(...)
-#endif
-// VLog always displays output regardless of the DEBUG setting.
-#define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
-
 extern "C" void dbg_printf(const char* fmt, ...);
-#define EbrDebugLog(...) EbrDebugLogShim(__VA_ARGS__)
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
 
 #include <assert.h>
-#include <stdio.h>
-#ifdef __OBJC__
-#include "UIKit/UIKit.h"
-@class UIAppearanceSetter, UIRuntimeEventConnection;
 
-static inline id m_assert(const char* file, int line) {
-    printf("_m sent @ %s:%d\n", file, line);
-    return nil;
-}
-static inline float m_assert_float() {
-    printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return 0.0;
-}
-#else
-static inline unsigned int m_assert(const char* file, int line) {
-    printf("_m sent @ %s:%d\n", file, line);
-    return 0;
-}
-static inline float m_assert_float() {
-    printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return 0;
-}
-#endif
-#define _m(...) m_assert(__FILE__, __LINE__)
-#define _m_float(...) m_assert_float()
 #define logPerf(...)
 
 #ifdef __OBJC__
+
+#include "UIKit/UIKit.h"
+
 static const float kPi = 3.14159265358979323846f;
 static const double kPi_d = 3.14159265358979323846;
 
@@ -105,7 +72,7 @@ private:
         if (!_initialized) {
             Ivar var = class_getInstanceVariable(_cls, _ivarName);
             if (!var) {
-                EbrDebugLog("Couldn't lazy lookup offset of ivar %s\n", _ivarName);
+                TraceCritical(L"Starboard", L"Couldn't lazy lookup offset of ivar %hs", _ivarName);
                 assert(var);
             }
             _offset = ivar_getOffset(var);
@@ -262,10 +229,6 @@ public:
 };
 #endif
 
-#define EbrMalloc malloc
-#define EbrRealloc realloc
-#define EbrFree free
-#define EbrCalloc calloc
 #define idt(type) type *
 
 #ifdef __OBJC__

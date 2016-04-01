@@ -29,12 +29,12 @@ typedef enum {
     CMMagneticFieldCalibrationAccuracyHigh
 } CMMagneticFieldCalibrationAccuracy;
 
-typedef struct CMMagneticField { double x, y, z; };
+typedef struct { double x, y, z; } CMMagneticField;
 
-typedef struct CMCalibratedMagneticField {
+typedef struct {
     CMMagneticField field;
     CMMagneticFieldCalibrationAccuracy accuracy;
-};
+} CMCalibratedMagneticField;
 
 COREMOTION_EXPORT_CLASS
 @interface CMMagnetometerData : CMLogItem <NSCopying, NSSecureCoding>

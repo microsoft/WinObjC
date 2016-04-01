@@ -17,7 +17,9 @@
 #ifndef __CGPATHINTERNAL_H
 #define __CGPATHINTERNAL_H
 
+#include "CoreGraphics/CGContext.h"
 #include "CoreGraphics/CGPath.h"
+#include "CFBridgeBase.h"
 
 enum pathComponentType {
     pathComponentRectangle,
@@ -72,16 +74,18 @@ typedef struct {
     };
 } pathComponent;
 
-@interface CGPath : NSObject {
-@public
+struct __CGPath : public CFBridgeBase<__CGPath> {
     pathComponent* _components;
     NSUInteger _count;
     NSUInteger _max;
-}
 
-- (void)_getBoundingBox:(CGRect*)rectOut;
-
-@end
+    ~__CGPath();
+    void _getBoundingBox(CGRect* rectOut);
+    void _applyPath(CGContextRef context);
+};
 
 COREGRAPHICS_EXPORT CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding);
+COREGRAPHICS_EXPORT void _CGPathApplyPath(CGPathRef pathref, CGContextRef context);
+COREGRAPHICS_EXPORT void _CGPathGetBoundingBoxInternal(CGPathRef pathref, CGRect* rectOut);
+
 #endif

@@ -29,7 +29,7 @@
 #include "NSIndexSetInternal.h"
 #include "Etc.h"
 
-@implementation NSIndexSet : NSObject
+@implementation NSIndexSet
 
 /**
  @Status Interoperable
@@ -78,9 +78,18 @@
     NSRange range;
 
     range.location = index;
-    range.length = 0;
+    range.length = 1;
 
     raAddItem(self, range);
+    return self;
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithIndexesInRange:(NSRange)indexRange {
+    raAddItem(self, indexRange);
     return self;
 }
 
@@ -107,19 +116,31 @@
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_ranges) {
-        EbrFree(_ranges);
+        IwFree(_ranges);
     }
     [super dealloc];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (unsigned)indexGreaterThanIndex:(unsigned)anIndex {
-    UNIMPLEMENTED();
-    return -1;
+    unsigned rangePos = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, anIndex + 1);
+
+    if (rangePos == NSNotFound) {
+        return NSNotFound;
+    }
+
+    if (_ranges[rangePos].location > anIndex) {
+        return _ranges[rangePos].location;
+    }
+
+    return anIndex + 1;
 }
 
 /**
@@ -148,17 +169,52 @@
 }
 
 /**
+ @Status Caveat
+ @Notes NSEnumerationReverse not implemented.
+*/
+- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block {
+    if (options & NSEnumerationReverse) {
+        UNIMPLEMENTED();
+        return;
+    }
+
+    dispatch_queue_t queue;
+    dispatch_group_t group;
+
+    // Initialize dispatch queue for concurrent enumeration
+    if (options & NSEnumerationConcurrent) {
+        queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        group = dispatch_group_create();
+    }
+
+    __block BOOL stop = FALSE;
+    for (unsigned long i = 0; i < raCount(self) && !stop; i++) {
+        NSRange cur = raItemAtIndex(self, i);
+
+        for (__block unsigned long j = cur.location; j < cur.location + cur.length && !stop; j++) {
+            if (options & NSEnumerationConcurrent) {
+                dispatch_group_async(group,
+                                     queue,
+                                     ^() {
+                                         block(j, &stop);
+                                     });
+            } else {
+                block(j, &stop);
+            }
+        }
+    }
+
+    if (options & NSEnumerationConcurrent) {
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+        dispatch_release(group);
+    }
+}
+
+/**
  @Status Interoperable
 */
 - (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger idx, BOOL* stop))block {
-    BOOL stop = FALSE;
-    for (unsigned int i = 0; i < raCount(self) && !stop; i++) {
-        NSRange cur = raItemAtIndex(self, i);
-
-        for (unsigned int j = cur.location; j < cur.location + cur.length && !stop; j++) {
-            block(j, &stop);
-        }
-    }
+    [self enumerateIndexesWithOptions:0 usingBlock:block];
 }
 
 /**
@@ -174,20 +230,31 @@
     return (_ranges[first].location < NSMaxRange(range)) ? YES : NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableIndexSet allocWithZone:zone] initWithIndexSet:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (BOOL)containsIndex:(unsigned)anIndex {
-    UNIMPLEMENTED();
-    return YES;
+    unsigned rangePos = positionOfRangeGreaterThanOrEqualToLocation(_ranges, _length, anIndex);
+
+    if (rangePos == NSNotFound) {
+        return NO;
+    }
+
+    return _ranges[rangePos].location <= anIndex;
 }
 
 /**
@@ -240,15 +307,6 @@
         }
     }
     return YES;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithIndexesInRange:(NSRange)indexRange {
-    UNIMPLEMENTED();
-    return StubReturn();
 }
 
 /**
@@ -381,14 +439,6 @@
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block {
-    UNIMPLEMENTED();
 }
 
 /**

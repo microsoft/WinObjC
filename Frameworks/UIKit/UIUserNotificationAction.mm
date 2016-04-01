@@ -23,25 +23,37 @@ NSString* const UIUserNotificationActionResponseTypedTextKey = @"UIUserNotificat
 @implementation UIUserNotificationAction
 /**
  @Status Stub
- @Notes
 */
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
  @Status Stub
- @Notes
 */
-- (id)mutableCopyWithZone:(NSZone*)zone {
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
 /**
  @Status Stub
- @Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
 */
 + (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();

@@ -15,6 +15,10 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "LoggingNative.h"
+#import "UIResponderInternal.h"
+
+static const wchar_t* TAG = L"UIResponder";
 
 id _curFirstResponder;
 static int _changingResponder = 0;
@@ -97,9 +101,9 @@ static int _changingResponder = 0;
     return TRUE;
 }
 
-+ (void)keyPressed:(unsigned)key {
++ (void)_keyPressed:(unsigned short)key {
     if (_curFirstResponder != nil) {
-        [_curFirstResponder keyPressed:key];
+        [_curFirstResponder _keyPressed:key];
     }
 }
 
@@ -113,7 +117,7 @@ static int _changingResponder = 0;
     return self;
 }
 
-- (void)keyPressed:(unsigned)key {
+- (void)_keyPressed:(unsigned short)key {
 }
 
 /**
@@ -131,6 +135,9 @@ static int _changingResponder = 0;
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_curFirstResponder == self) {
         _curFirstResponder = nil;
@@ -150,14 +157,14 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesBegan!\n");
+    TraceVerbose(TAG, L"Unhandled touchesBegan!");
 }
 
 /**
  @Status Interoperable
 */
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    EbrDebugLog("Clicked: %s\n", object_getClassName(self));
+    TraceVerbose(TAG, L"Clicked: %hs", object_getClassName(self));
     id nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -165,7 +172,7 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesMoved!\n");
+    TraceVerbose(TAG, L"Unhandled touchesMoved!");
 }
 
 /**
@@ -179,7 +186,7 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesEnded!\n");
+    TraceVerbose(TAG, L"Unhandled touchesEnded!");
 }
 
 /**
@@ -193,7 +200,7 @@ static int _changingResponder = 0;
         return;
     }
 
-    EbrDebugLog("Unhandled touchesCancelled!\n");
+    TraceVerbose(TAG, L"Unhandled touchesCancelled!");
 }
 
 /**
@@ -211,6 +218,9 @@ static int _changingResponder = 0;
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didMoveToWindow {
     if (_curFirstResponder == self && [self window] == nil) {
         [self resignFirstResponder];
@@ -218,24 +228,68 @@ static int _changingResponder = 0;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)_resignCurResponder {
     [_curFirstResponder resignFirstResponder];
     _curFirstResponder = nil;
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(NSString*)label {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityHint:(NSString*)hint {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityTraits:(unsigned)traits {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setIsAccessibilityElement:(BOOL)enabled {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setShouldGroupAccessibilityChildren:(BOOL)group {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
 }
 
 @end

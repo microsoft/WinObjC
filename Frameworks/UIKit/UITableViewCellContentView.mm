@@ -16,7 +16,7 @@
 #include "UITableViewCellContentView.h"
 
 @implementation UITableViewCellContentView
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     return [super initWithCoder:coder];
 }
 @end

@@ -110,7 +110,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIMouseCapabilities : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int horizontalWheelPresent;
 @property (readonly) int mousePresent;
 @property (readonly) unsigned int numberOfButtons;
@@ -126,7 +126,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDIKeyboardCapabilities : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int keyboardPresent;
 @end
 
@@ -138,7 +138,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDITouchCapabilities : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int contacts;
 @property (readonly) int touchPresent;
 @end

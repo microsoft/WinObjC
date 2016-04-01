@@ -26,6 +26,7 @@
 #import "UIGridLayoutRow.h"
 #import "UIGridLayoutSection.h"
 #import "UICollectionViewLayout+Internal.h"
+#import "AssertARCEnabled.h"
 
 NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
@@ -78,7 +79,7 @@ NSString* const UIFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 #pragma mark - NSObject
 
 /**
-   @Public No
+ @Public No
 */
 - (void)commonInit {
     _itemSize = CGSizeMake(50.f, 50.f);
@@ -91,9 +92,9 @@ NSString* const UIFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)init {
+- (instancetype)init {
     if ((self = [super init])) {
         [self commonInit];
 
@@ -109,9 +110,9 @@ NSString* const UIFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)decoder {
+- (instancetype)initWithCoder:(NSCoder*)decoder {
     if ((self = [super initWithCoder:decoder])) {
         [self commonInit];
 
@@ -135,7 +136,7 @@ NSString* const UIFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     [super encodeWithCoder:coder];
@@ -154,7 +155,7 @@ NSString* const UIFlowLayoutRowVerticalAlignmentKey = @"UIFlowLayoutRowVerticalA
 static char kUICachedItemRectsKey;
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
     // Apple calls _layoutAttributesForItemsInRect
@@ -281,7 +282,7 @@ static char kUICachedItemRectsKey;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath {
     if (!_data)
@@ -318,7 +319,7 @@ static char kUICachedItemRectsKey;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
     if (!_data)
@@ -359,7 +360,7 @@ static char kUICachedItemRectsKey;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (CGSize)collectionViewContentSize {
     if (!_data)
@@ -379,7 +380,7 @@ static char kUICachedItemRectsKey;
 #pragma mark - Invalidating the Layout
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)invalidateLayout {
     [super invalidateLayout];
@@ -388,7 +389,7 @@ static char kUICachedItemRectsKey;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
     // we need to recalculate on width changes
@@ -401,12 +402,15 @@ static char kUICachedItemRectsKey;
 }
 
 // return a point at which to rest after scrolling - for layouts that want snap-to-point scrolling behavior
+/**
+ @Status Interoperable
+*/
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity {
     return proposedContentOffset;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)prepareLayout {
     // custom ivars
@@ -425,7 +429,7 @@ static char kUICachedItemRectsKey;
 #pragma mark - Private
 
 /**
-   @Public No
+ @Public No
 */
 - (void)fetchItemsInfo {
     [self getSizingInfos];
@@ -434,7 +438,7 @@ static char kUICachedItemRectsKey;
 
 // get size of all items (if delegate is implemented)
 /**
-   @Public No
+ @Public No
 */
 - (void)getSizingInfos {
     NSAssert(_data.sections.count == 0, @"Grid layout is already populated?");
@@ -518,7 +522,7 @@ static char kUICachedItemRectsKey;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)updateItemsLayout {
     CGSize contentSize = CGSizeZero;

@@ -83,5 +83,5 @@ TEST(Dispatch, DispatchAfter) {
                                       });
                    });
 
-    UIApplicationMainLoop();
+    test_block_until_stopped();
 }

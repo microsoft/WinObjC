@@ -38,20 +38,13 @@ NSString* const NSURLErrorBackgroundTaskCancelledReasonKey = @"NSURLErrorBackgro
 template <typename... Args>
 static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd, Args... args) {
     if (object && [object respondsToSelector:cmd]) {
-        // does not currently support forwarding implementations
-        // just like our objective-c runtime :(
-        auto imp = class_getMethodImplementation(object_getClass(object), cmd);
         [queue addOperationWithBlock:^{
-            reinterpret_cast<void (*)(id, SEL, Args...)>(imp)(object, cmd, args...);
+            reinterpret_cast<void (*)(id, SEL, Args...)>(objc_msgSend)(object, cmd, args...);
         }];
         return true;
     }
     return false;
 }
-
-// LINKER STUB
-@implementation NSURLSessionUploadTask
-@end
 
 @interface _NSURLSessionInflightTaskInfo : NSObject {
     NSURLSessionTask* _task;
@@ -192,6 +185,9 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_configuration release];
     [_delegate release];
@@ -202,6 +198,9 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }

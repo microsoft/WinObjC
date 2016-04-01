@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMSync.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CFStringRef kCMTimebaseNotification_EffectiveRateChanged = static_cast<CFStringRef>(@"CMTimebaseEffectiveRateChanged");
 const CFStringRef kCMTimebaseNotification_TimeJumped = static_cast<CFStringRef>(@"CMTimebaseTimeJumped");

@@ -44,8 +44,25 @@
 }
 
 /**
- @Status Stub
- @Notes
+@Status Stub
+@Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+@Status Stub
+@Notes
 */
 + (BOOL)supportsSecureCoding {
     UNIMPLEMENTED();

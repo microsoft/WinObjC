@@ -120,6 +120,12 @@ cf_attrlist::const_iterator _CFAttrListResolveOverlap(cf_attrlist& attrList,
 void _CFAttrListReplaceRange(cf_attrlist& attrList, CFRange originalRange, CFIndex newRangeLength);
 
 /**
+ * Concrete subclass for NS[Mutable]AttributedString
+ */
+@interface NSMutableAttributedStringConcrete : NSMutableAttributedString
+@end
+
+/**
  * Internal struct that actually backs and implements [NS|CF][Mutable]AttributedString
  */
 struct __CFMutableAttributedString : CFBridgeBase<__CFMutableAttributedString> {

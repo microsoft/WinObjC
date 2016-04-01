@@ -22,6 +22,8 @@
 #import <UIKit/UIKit.h>
 #import "UICollectionViewData.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
+#include "IwMalloc.h"
+#import "AssertARCEnabled.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;
@@ -71,7 +73,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout {
+- (instancetype)initWithCollectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout*)layout {
     if ((self = [super init])) {
         _collectionView = collectionView;
         _layout = layout;
@@ -80,7 +82,7 @@
 }
 
 - (void)dealloc {
-    free(_sectionItemCounts);
+    IwFree(_sectionItemCounts);
 }
 
 - (NSString*)description {
@@ -248,16 +250,16 @@
     }
     if (_numSections <= 0) { // early bail-out
         _numItems = 0;
-        free(_sectionItemCounts);
+        IwFree(_sectionItemCounts);
         _sectionItemCounts = 0;
         _collectionViewDataFlags.itemCountsAreValid = YES;
         return;
     }
     // allocate space
     if (!_sectionItemCounts) {
-        _sectionItemCounts = (NSInteger*)malloc((size_t)_numSections * sizeof(NSInteger));
+        _sectionItemCounts = (NSInteger*)IwMalloc((size_t)_numSections * sizeof(NSInteger));
     } else {
-        _sectionItemCounts = (NSInteger*)realloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
+        _sectionItemCounts = (NSInteger*)IwRealloc(_sectionItemCounts, (size_t)_numSections * sizeof(NSInteger));
     }
 
     // query cells per section

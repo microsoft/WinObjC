@@ -293,7 +293,6 @@ LIBRARY Foundation
         __objc_class_name_NSUUID CONSTANT
         __objc_class_name_NSValueTransformer CONSTANT
         __objc_class_name_NSXMLParser CONSTANT
-
         isOSTarget
         CFAbsoluteTimeGetCurrent
         CFArrayAppendArray
@@ -308,7 +307,6 @@ LIBRARY Foundation
         CFArrayGetValueAtIndex
         CFArrayGetValueEnumerator
         CFArrayInsertValueAtIndex
-        CFArrayMoveValueAtIndexToEnd
         CFArrayRemoveAllValues
         CFArrayRemoveValueAtIndex
         CFArrayReplaceValues
@@ -344,6 +342,7 @@ LIBRARY Foundation
         CFBooleanGetValue
         CFCopyDescription
         CFDataGetBytePtr
+        CFDictionaryAddValue
         CFDictionaryApplyFunction
         CFDictionaryContainsKey
         CFDictionaryCreateMutable
@@ -373,8 +372,11 @@ LIBRARY Foundation
         CFStringAppend
         CFStringAppendCharacters
         CFStringCompare
+        CFStringTransform
         CFStringConvertEncodingToIANACharSetName
+        CFStringConvertIANACharSetNameToEncoding
         CFStringConvertNSStringEncodingToEncoding
+        CFStringConvertEncodingToNSStringEncoding
         CFStringGetCStringPtr
         CFStringGetFastestEncoding
         CFStringGetLength
@@ -407,6 +409,11 @@ LIBRARY Foundation
         kCFBooleanTrue DATA
         kCFBundleNameKey DATA
         kCFBundleVersionKey DATA
+        kCFBundleIdentifierKey DATA
+        kCFBundleInfoDictionaryVersionKey DATA
+        kCFBundleLocalizationsKey DATA
+        kCFBundleExecutableKey DATA
+        kCFBundleDevelopmentRegionKey DATA
         kCFCoreFoundationVersionNumber DATA
         kCFRunLoopCommonModes DATA
         kCFRunLoopDefaultMode DATA
@@ -416,9 +423,7 @@ LIBRARY Foundation
         kCFTypeDictionaryValueCallBacks DATA
         mach_absolute_time
         mach_timebase_info
-        sleep
         sysctlbyname
-        usleep
         NSClassFromString
         NSEqualRanges
         NSHomeDirectory
@@ -444,6 +449,7 @@ LIBRARY Foundation
         NSTemporaryDirectory
         NSUnionRange
         WinObjC_SetMissingSelectorFatal
+        WinObjC_SetZombiesEnabled
         NSAMPMDesignation DATA
         NSArgumentDomain DATA
         NSAssertionHandlerKey DATA
@@ -649,16 +655,12 @@ LIBRARY Foundation
         NSWINSOCKErrorDomain DATA
         NSWeekDayNameArray DATA
         NSWin32ErrorDomain DATA
-        UINibExternalObjects DATA
 
         ; Private Dictionary function
         _NSDictionaryOfVariableBindings
 
-        ; Error Handling Exports
-        _NSHResultErrorDictKey DATA
-        _NSStringFromHResult
-        _NSErrorFromFailureInfo
-        _NSExceptionFromFailureInfo
+        ; Utility exports
+        BufferFromRawData
 
         ; Private
         _OBJC_CLASS__NSBlockAdapter DATA ; Ensure that this gets included in the .dll
@@ -666,16 +668,23 @@ LIBRARY Foundation
         _OBJC_CLASS_NSColor DATA
         _OBJC_CLASS_NSComparisonPredicate DATA
         _OBJC_CLASS_NSCompoundPredicate DATA
-        _OBJC_CLASS_NSNib DATA
         _OBJC_CLASS_NSRunLoopSource DATA
+        _OBJC_CLASS_NSURLProtocol_file DATA
+        _OBJC_CLASS_NSURLProtocol_WinHTTP DATA
         _OBJC_CLASS_NSValue DATA
         __objc_class_name_NSCFBridgeBase CONSTANT
         __objc_class_name_NSColor CONSTANT
         __objc_class_name_NSComparisonPredicate CONSTANT
         __objc_class_name_NSCompoundPredicate CONSTANT
-        __objc_class_name_NSNib CONSTANT
         __objc_class_name_NSRunLoopSource CONSTANT
+        __objc_class_name_NSURLProtocol_file CONSTANT
+        __objc_class_name_NSURLProtocol_WinHTTP CONSTANT
         __objc_class_name_NSValue CONSTANT
+        NSTraceVerbose
+        NSTraceInfo
+        NSTraceWarning
+        NSTraceError
+        NSTraceCritical
 
         ; Foundation Stubs
         NSMallocException DATA

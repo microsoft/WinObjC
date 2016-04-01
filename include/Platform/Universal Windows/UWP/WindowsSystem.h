@@ -515,9 +515,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncherUIOptions : RTObject
-@property (copy) id selectionRect;
+@property (retain) id selectionRect;
 @property WUPPlacement preferredPlacement;
-@property (copy) id invocationPoint;
+@property (retain) id invocationPoint;
 @end
 
 #endif // __WSLauncherUIOptions_DEFINED__
@@ -528,16 +528,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncherOptions : RTObject <WSILauncherViewOptions>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL treatAsUntrusted;
-@property (copy) NSString* preferredApplicationPackageFamilyName;
-@property (copy) NSString* preferredApplicationDisplayName;
-@property (copy) WFUri* fallbackUri;
+@property (retain) NSString* preferredApplicationPackageFamilyName;
+@property (retain) NSString* preferredApplicationDisplayName;
+@property (retain) WFUri* fallbackUri;
 @property BOOL displayApplicationPicker;
-@property (copy) NSString* contentType;
+@property (retain) NSString* contentType;
 @property (readonly) WSLauncherUIOptions* uI;
-@property (copy) NSString* targetApplicationPackageFamilyName;
-@property (copy) WSSStorageFileQueryResult* neighboringFilesQuery;
+@property (retain) NSString* targetApplicationPackageFamilyName;
+@property (retain) WSSStorageFileQueryResult* neighboringFilesQuery;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
@@ -549,7 +549,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray* itemsToSelect;
 @property WUVViewSizePreference desiredRemainingView;
 @end

@@ -92,7 +92,7 @@ WINRT_EXPORT
                                       partyVInfo:(RTObject<WSSIBuffer>*)partyVInfo
                                      suppPubInfo:(RTObject<WSSIBuffer>*)suppPubInfo
                                     suppPrivInfo:(RTObject<WSSIBuffer>*)suppPrivInfo;
-@property (copy) RTObject<WSSIBuffer>* kdfGenericBinary;
+@property (retain) RTObject<WSSIBuffer>* kdfGenericBinary;
 @property (readonly) unsigned int iterationCount;
 @property WSCCCapi1KdfTargetAlgorithm capi1KdfTargetAlgorithm;
 @end

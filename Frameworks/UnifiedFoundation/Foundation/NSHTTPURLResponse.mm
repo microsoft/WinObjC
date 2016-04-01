@@ -30,7 +30,7 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
 
 @implementation NSHTTPURLResponse {
     NSInteger _statusCode;
-    NSDictionary* _allHeaderFields;
+    NSMutableDictionary* _allHeaderFields;
 
     idretain _statusLine, _statusVersion;
 }
@@ -54,7 +54,7 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
             caseInsensitiveKeyChecker.equal = CFHTTPHeaderEqual;
             caseInsensitiveKeyChecker.hash = CFHTTPHeaderHash;
 
-            _allHeaderFields = (NSDictionary*)
+            _allHeaderFields = (NSMutableDictionary*)
                 CFDictionaryCreateMutable(NULL, [headerFields count], &caseInsensitiveKeyChecker, &kCFTypeDictionaryValueCallBacks);
 
             //  Case insensitive dictionary
@@ -71,6 +71,9 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithURL:(NSURL*)url statusCode:(NSInteger)statusCode HTTPVersion:(NSString*)HTTPVersion headerFields:(NSDictionary*)headerFields {
     if (self = [self _initCommon:url statusCode:statusCode headerFields:headerFields expectedContentLength:-1]) {
         _HTTPVersion = HTTPVersion;
@@ -78,6 +81,9 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)initWithURL:(NSURL*)url statusCode:(NSInteger)statusCode headers:(id)headers expectedContentLength:(int)expectedContentLength {
     self = [self _initCommon:url statusCode:statusCode headerFields:headers expectedContentLength:expectedContentLength];
     return self;
@@ -90,11 +96,17 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     return _statusCode;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)MIMEType {
     id ret = [[[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@";"] objectAtIndex:0];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)textEncodingName {
     id contentTypeFields = [[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@"; "];
     if ([contentTypeFields count] > 1) {
@@ -104,6 +116,9 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSStringEncoding)encoding {
     id encodingList = [[_allHeaderFields objectForKey:@"content-type"] componentsSeparatedByString:@"; "];
 
@@ -119,28 +134,44 @@ CFHashCode CFHTTPHeaderHash(const void* obj1) {
 /**
  @Status Interoperable
 */
-- (id)allHeaderFields {
-    return _allHeaderFields;
+- (NSDictionary*)allHeaderFields {
+    // consumers are not allowed to modify our internal state.
+    return [[_allHeaderFields copy] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setStatusLine:(id)status {
     _statusLine = status;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)statusLine {
     return _statusLine;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)setStatusVersion:(id)version {
     _statusVersion = version;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)statusVersion {
     return _statusVersion;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _statusLine = nil;
     _statusVersion = nil;

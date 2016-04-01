@@ -158,7 +158,7 @@ WINRT_EXPORT
 @property (readonly) NSString* connectionProtocol;
 @property (readonly) WMIPhotoImportConnectionTransport connectionTransport;
 @property (readonly) id dateTime;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 @property (readonly) NSString* id;
 @property (readonly) id isLocked;
@@ -220,8 +220,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportSession : RTObject <WFIClosable>
 @property WMIPhotoImportSubfolderCreationMode subfolderCreationMode;
-@property (copy) RTObject<WSIStorageFolder>* destinationFolder;
-@property (copy) NSString* destinationFileNamePrefix;
+@property (retain) RTObject<WSIStorageFolder>* destinationFolder;
+@property (retain) NSString* destinationFileNamePrefix;
 @property BOOL appendSessionDateToDestinationFolder;
 @property (readonly) WFGUID* sessionId;
 @property (readonly) WMIPhotoImportSource* source;
@@ -337,7 +337,7 @@ WINRT_EXPORT
 @interface WMIPhotoImportStorageMedium : RTObject
 @property (readonly) uint64_t availableSpaceInBytes;
 @property (readonly) uint64_t capacityInBytes;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* name;
 @property (readonly) NSString* serialNumber;
 @property (readonly) WMIPhotoImportStorageMediumType storageMediumType;

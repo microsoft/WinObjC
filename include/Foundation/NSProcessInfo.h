@@ -28,6 +28,7 @@ typedef struct {
     NSInteger minorVersion;
     NSInteger patchVersion;
 } NSOperatingSystemVersion;
+
 typedef enum : uint64_t {
     NSActivityIdleDisplaySleepDisabled = (1ULL << 40),
     NSActivityIdleSystemSleepDisabled = (1ULL << 20),
@@ -38,6 +39,7 @@ typedef enum : uint64_t {
     NSActivityBackground = 0x000000FFULL,
     NSActivityLatencyCritical = 0xFF00000000ULL,
 } NSActivityOptions;
+
 enum {
     NSWindowsNTOperatingSystem = 1,
     NSWindows95OperatingSystem,
@@ -50,22 +52,23 @@ enum {
 
 FOUNDATION_EXPORT_CLASS
 @interface NSProcessInfo : NSObject
-+ (NSProcessInfo*)processInfo STUB_METHOD;
-@property (readonly, copy) NSArray* arguments STUB_PROPERTY;
-@property (readonly, copy) NSDictionary* environment STUB_PROPERTY;
-@property (readonly, copy) NSString* globallyUniqueString STUB_PROPERTY;
-@property (readonly) int processIdentifier STUB_PROPERTY;
-@property (copy) NSString* processName STUB_PROPERTY;
-@property (readonly, copy) NSString* hostName STUB_PROPERTY;
-- (NSUInteger)operatingSystem STUB_METHOD;
-- (NSString*)operatingSystemName STUB_METHOD;
-@property (readonly, copy) NSString* operatingSystemVersionString STUB_PROPERTY;
-@property (readonly) NSOperatingSystemVersion operatingSystemVersion STUB_PROPERTY;
-- (BOOL)isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version STUB_METHOD;
-@property (readonly) NSUInteger processorCount STUB_PROPERTY;
-@property (readonly) NSUInteger activeProcessorCount STUB_PROPERTY;
++ (NSProcessInfo*)processInfo;
+@property (readonly, copy) NSArray* arguments;
+@property (readonly, copy) NSDictionary* environment;
+@property (readonly, copy) NSString* globallyUniqueString;
+@property (readonly) int processIdentifier;
+@property (copy) NSString* processName;
+@property (readonly, copy) NSString* hostName;
+- (NSUInteger)operatingSystem;
+- (NSString*)operatingSystemName;
+@property (readonly, copy) NSString* operatingSystemVersionString;
+@property (readonly) NSOperatingSystemVersion operatingSystemVersion;
+- (BOOL)isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version;
+@property (readonly) NSUInteger processorCount;
+@property (readonly) NSUInteger activeProcessorCount;
 @property (readonly) unsigned long long physicalMemory STUB_PROPERTY;
-@property (readonly) NSTimeInterval systemUptime STUB_PROPERTY;
+@property (readonly) NSTimeInterval systemUptime;
+
 - (id<NSObject>)beginActivityWithOptions:(NSActivityOptions)options reason:(NSString*)reason STUB_METHOD;
 - (void)endActivity:(id<NSObject>)activity STUB_METHOD;
 - (void)performActivityWithOptions:(NSActivityOptions)options reason:(NSString*)reason usingBlock:(void (^)(void))block STUB_METHOD;

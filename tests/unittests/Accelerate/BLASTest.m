@@ -198,13 +198,13 @@ static void resetVectors(void) {
     }
 }
 
-static void checkArraySingle(float* res, float* expected, int size, char* name) {
+static void checkArraySingle(float* res, float* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         ASSERT_NEAR_MSG(res[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %f\nFOUND: %f", name, i, expected[i], res[i]);
     }
 }
 
-static void checkArrayDouble(double* res, double* expected, int size, char* name) {
+static void checkArrayDouble(double* res, double* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         ASSERT_NEAR_MSG(res[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %f\nFOUND: %f", name, i, expected[i], res[i]);
     }

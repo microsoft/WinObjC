@@ -46,6 +46,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 #endif
 
+#import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFAttributedString.h>
 #import <CoreFoundation/CFBag.h>
 #import <CoreFoundation/CFBinaryHeap.h>

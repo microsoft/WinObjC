@@ -20,11 +20,13 @@
 
 typedef const struct __CTParagraphStyle* CTParagraphStyleRef;
 typedef uint32_t CTParagraphStyleSpecifier;
+
 typedef struct CTParagraphStyleSetting {
     CTParagraphStyleSpecifier spec;
     size_t valueSize;
     const void* value;
 } CTParagraphStyleSetting;
+
 typedef uint8_t CTTextAlignment;
 typedef uint8_t CTLineBreakMode;
 typedef int8_t CTWritingDirection;
@@ -66,10 +68,10 @@ enum {
     kCTParagraphStyleSpecifierCount = 17
 };
 
-CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, size_t settingCount) STUB_METHOD;
-CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreateCopy(CTParagraphStyleRef paragraphStyle) STUB_METHOD;
+CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreate(const CTParagraphStyleSetting* settings, size_t settingCount);
+CORETEXT_EXPORT CTParagraphStyleRef CTParagraphStyleCreateCopy(CTParagraphStyleRef paragraphStyle);
 CORETEXT_EXPORT bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
                                                           CTParagraphStyleSpecifier spec,
                                                           size_t valueBufferSize,
-                                                          void* valueBuffer) STUB_METHOD;
+                                                          void* valueBuffer);
 CORETEXT_EXPORT CFTypeID CTParagraphStyleGetTypeID() STUB_METHOD;

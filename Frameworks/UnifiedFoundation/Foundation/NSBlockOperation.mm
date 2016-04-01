@@ -27,6 +27,9 @@
     idretaintype(NSMutableArray) _executionBlocks;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _executionBlocks = nil;
     [super dealloc];
@@ -42,15 +45,24 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     _executionBlocks.attach([NSMutableArray new]);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)addExecutionBlock:(id)block {
     [_executionBlocks addObject:[[block copy] autorelease]];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)main {
     for (void (^curblock)() in(NSArray*)_executionBlocks) {
         curblock();

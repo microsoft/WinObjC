@@ -19,11 +19,16 @@
 #import <Foundation/NSException.h>
 #import <Foundation/NSThread.h>
 #import <Foundation/NSString.h>
+#import "NSLogging.h"
 
 const NSString* NSAssertionHandlerKey = @"NSAssertionHandlerKey";
+static const wchar_t* TAG = L"NSAssertionHandler";
 
 @implementation NSAssertionHandler
 
+/**
+ @Status Interoperable
+*/
 + (NSAssertionHandler*)currentHandler {
     id currentHandlerForThread = [[[NSThread currentThread] threadDictionary] objectForKey:NSAssertionHandlerKey];
 
@@ -36,17 +41,21 @@ const NSString* NSAssertionHandlerKey = @"NSAssertionHandlerKey";
     return currentHandlerForThread;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)handleFailureInMethod:(SEL)selector
                        object:(id)object
                          file:(NSString*)fileName
                    lineNumber:(NSInteger)line
                   description:(NSString*)format, ... {
-    NSLog(@"*** Assertion failure in %c[%@ %@], %@:%ld",
-          (object == [object class]) ? '+' : '-',
-          NSStringFromClass([object class]),
-          NSStringFromSelector(selector),
-          fileName,
-          (long)line);
+    NSTraceError(TAG,
+                       @"*** Assertion failure in %c[%@ %@], %@:%ld",
+                       (object == [object class]) ? '+' : '-',
+                       NSStringFromClass([object class]),
+                       NSStringFromSelector(selector),
+                       fileName,
+                       (long)line);
 
     va_list arguments;
     va_start(arguments, format);
@@ -54,11 +63,14 @@ const NSString* NSAssertionHandlerKey = @"NSAssertionHandlerKey";
     va_end(arguments);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)handleFailureInFunction:(NSString*)functionName
                            file:(NSString*)fileName
                      lineNumber:(NSInteger)line
                     description:(NSString*)format, ... {
-    NSLog(@"*** Assertion failure in %@, %@:%ld", functionName, fileName, (long)line);
+    NSTraceError(TAG, @"*** Assertion failure in %@, %@:%ld", functionName, fileName, (long)line);
 
     va_list arguments;
     va_start(arguments, format);

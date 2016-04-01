@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @interface UICollectionReusableView () {
     UICollectionViewLayoutAttributes* _layoutAttributes;
@@ -41,19 +42,29 @@
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSObject
 
-- (id)initWithFrame:(CGRect)frame {
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
     }
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)aDecoder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
     if ((self = [super initWithCoder:aDecoder])) {
         self.reuseIdentifier = [aDecoder decodeObjectForKey:@"UIReuseIdentifier"];
     }
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)awakeFromNib {
     self.reuseIdentifier = [self valueForKeyPath:@"reuseIdentifier"];
 }
@@ -62,14 +73,14 @@
 #pragma mark - Public
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)prepareForReuse {
     self.layoutAttributes = nil;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)applyLayoutAttributes:(UICollectionViewLayoutAttributes*)layoutAttributes {
     if (layoutAttributes != _layoutAttributes) {
@@ -85,14 +96,14 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)willTransitionFromLayout:(UICollectionViewLayout*)oldLayout toLayout:(UICollectionViewLayout*)newLayout {
     _reusableViewFlags.inUpdateAnimation = YES;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)didTransitionFromLayout:(UICollectionViewLayout*)oldLayout toLayout:(UICollectionViewLayout*)newLayout {
     _reusableViewFlags.inUpdateAnimation = NO;

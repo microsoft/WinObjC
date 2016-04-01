@@ -18,6 +18,7 @@
 #include <UIKit/UIKit.h>
 #import <libxml/HTMLparser.h>
 #import <map>
+#import "UIFontInternal.h"
 
 NSString* const NSFontAttributeName = @"NSFont";
 NSString* const NSParagraphStyleAttributeName = @"NSParagraphStyle";
@@ -190,7 +191,26 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
     }
 }
 
-@implementation NSAttributedString (NSAttributedStringUIKitAdditions)
+@implementation NSAttributedString (UIKitAdditions)
+
+/**
+ @Status Stub
+*/
++ (NSAttributedString*)attributedStringWithAttachment:(NSTextAttachment*)attachment {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithFileURL:(NSURL*)url
+                        options:(NSDictionary*)options
+             documentAttributes:(NSDictionary* _Nullable*)dict
+                          error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return nil;
+}
 
 /**
  @Status Caveat
@@ -259,9 +279,54 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
 /**
  @Status Stub
 */
+- (NSFileWrapper*)fileWrapperFromRange:(NSRange)range documentAttributes:(NSDictionary*)dict error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return nil;
+}
+
+/**
+ @Status Stub
+*/
 - (NSData*)dataFromRange:(NSRange)range documentAttributes:(NSDictionary*)dict error:(NSError**)error {
     UNIMPLEMENTED();
     return nil;
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)boundingRectWithSize:(CGSize)size options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
+    UNIMPLEMENTED();
+    return { { 0, 0 }, 20, 20 };
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawAtPoint:(CGPoint)point {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawInRect:(CGRect)rect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawWithRect:(CGRect)rect options:(NSStringDrawingOptions)options context:(NSStringDrawingContext*)context {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGSize)size {
+    UNIMPLEMENTED();
+    return { 0, 0 };
 }
 
 @end

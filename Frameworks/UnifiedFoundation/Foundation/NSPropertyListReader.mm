@@ -23,6 +23,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSData.h"
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSMutableArray.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSPropertyListReader";
 
 void NSPropertyListReaderA::_readHeader() {
     uint64_t trailerStart = (uint64_t)([_data length] - TRAILER_SIZE);
@@ -180,7 +183,7 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
 
         if (topNibble == 0xA) {
             NSArray* result;
-            id* objs = (id*)EbrMalloc(length * sizeof(id));
+            id* objs = (id*)IwMalloc(length * sizeof(id));
             uint64_t i;
             for (i = 0; i < length; i++) {
                 objs[i] = _readInlineObjectAtOffset(offset);
@@ -192,14 +195,14 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
                 result = [[NSArray alloc] initWithObjectsTakeOwnership:objs count:length];
             }
 
-            EbrFree(objs);
+            IwFree(objs);
             return result;
         }
 
         if (topNibble == 0xD) {
             id result;
-            id* keys = (id*)EbrMalloc(length * sizeof(id));
-            id* objs = (id*)EbrMalloc(length * sizeof(id));
+            id* keys = (id*)IwMalloc(length * sizeof(id));
+            id* objs = (id*)IwMalloc(length * sizeof(id));
             uint64_t i;
             for (i = 0; i < length; i++) {
                 keys[i] = _readInlineObjectAtOffset(offset);
@@ -214,8 +217,8 @@ id NSPropertyListReaderA::_readObjectAtOffset(uint64_t* offset) {
                 result = [[NSDictionary alloc] initWithObjectsTakeOwnership:objs forKeys:keys count:length];
             }
 
-            EbrFree(keys);
-            EbrFree(objs);
+            IwFree(keys);
+            IwFree(objs);
             return result;
         }
     }
@@ -248,11 +251,11 @@ id NSPropertyListReaderA::read() {
         return nil;
     }
     if (memcmp((void*)[_data bytes], "bplist", 6) != 0) {
-        EbrDebugLog("Not a plist file\n");
+        TraceVerbose(TAG, L"Not a plist file");
         return nil;
     }
 
-    EbrDebugLog("got %d bytes\n", _length);
+    TraceVerbose(TAG, L"got %d bytes", _length);
 
     //@try
     _readHeader();

@@ -80,13 +80,18 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSStream : NSObject
-- (id)propertyForKey:(NSString*)key STUB_METHOD;
-- (BOOL)setProperty:(id)property forKey:(NSString*)key STUB_METHOD;
-@property (assign) id<NSStreamDelegate> delegate;
-- (void)open STUB_METHOD;
+/* Abstract */
+- (void)open;
 - (void)close;
-- (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode STUB_METHOD;
-- (void)removeFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode STUB_METHOD;
+
+- (id)propertyForKey:(NSString*)key;
+- (BOOL)setProperty:(id)property forKey:(NSString*)key;
+
+- (void)scheduleInRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
+- (void)removeFromRunLoop:(NSRunLoop*)aRunLoop forMode:(NSString*)mode;
+
+@property (assign) id<NSStreamDelegate> delegate;
+
 @property (readonly) NSStreamStatus streamStatus;
 @property (readonly, copy) NSError* streamError;
 @end
@@ -94,5 +99,4 @@ FOUNDATION_EXPORT_CLASS
 @protocol NSStreamDelegate <NSObject>
 @optional
 - (void)stream:(NSStream*)theStream handleEvent:(NSStreamEvent)streamEvent;
-
 @end

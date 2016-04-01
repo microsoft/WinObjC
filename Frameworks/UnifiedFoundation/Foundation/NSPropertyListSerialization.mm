@@ -32,10 +32,13 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSPropertyListWriter_binary.h"
 
 #import "NSXMLPropertyList.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSPropertyListSerialization";
 
 void printContents(int level, id obj);
 
-@implementation NSPropertyListSerialization : NSObject
+@implementation NSPropertyListSerialization
 
 /**
  @Status Caveat
@@ -46,30 +49,33 @@ void printContents(int level, id obj);
                     format:(NSPropertyListFormat*)formatOut
           errorDescription:(NSString**)error {
     if (data == nil) {
-        EbrDebugLog("propertyListFromData: data is nil!\n");
-        if (error)
+        TraceVerbose(TAG, L"propertyListFromData: data is nil!");
+        if (error) {
             *error = @"Data was null.";
+        }
 
         return nil;
     }
 
     unsigned len = [data length];
     if (len == 0) {
-        EbrDebugLog("propertyListFromData: data is too short!\n");
-        if (error)
+        TraceVerbose(TAG, L"propertyListFromData: data is too short!");
+        if (error) {
             *error = @"Data is too short.";
+        }
 
         return nil;
     }
 
     char* bytes = (char*)[data bytes];
-    if (len >= 4 && memcmp(bytes, "<?xml", 4) == 0) {
+    if (len >= 5 && memcmp(bytes, "<?xml", 5) == 0) {
         id ret = [NSXMLPropertyList propertyListFromData:data];
 
         if (ret == nil) {
-            EbrDebugLog("propertyListFromData: return is nil!\n");
-            if (error)
+            TraceVerbose(TAG, L"propertyListFromData: return is nil!");
+            if (error) {
                 *error = @"No objects.";
+            }
 
             return nil;
         }
@@ -91,15 +97,17 @@ void printContents(int level, id obj);
         id ret = read.read();
 
         if (ret == nil) {
-            EbrDebugLog("propertyListFromData: return is nil!\n");
-            if (error)
+            TraceVerbose(TAG, L"propertyListFromData: return is nil!");
+            if (error) {
                 *error = @"No objects.";
+            }
 
             return nil;
         }
 
-        if (formatOut)
+        if (formatOut) {
             *formatOut = NSPropertyListBinaryFormat_v1_0;
+        }
 
         return ret;
     } else if (len >= 2 && memcmp(bytes, "\xfe\xff", 2) == 0) {
@@ -144,7 +152,7 @@ return [NSPropertyListWriter_xml dataWithPropertyList:plist];
 
         default:
 #if 0
-EbrDebugLog("Couldn't serialize to this format, defaulting to XML!\n");
+TraceVerbose(TAG, L"Couldn't serialize to this format, defaulting to XML!");
 return [NSPropertyListWriter_xml dataWithPropertyList:plist];
 #endif
             break;

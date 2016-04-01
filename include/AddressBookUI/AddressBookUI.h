@@ -16,7 +16,7 @@
 
 #pragma once
 
-#import <stubincludes.h>
+#import <StubIncludes.h>
 
 #import <AddressBookUI/AddressBookUIFunctions.h>
 #import <AddressBookUI/ABNewPersonViewController.h>

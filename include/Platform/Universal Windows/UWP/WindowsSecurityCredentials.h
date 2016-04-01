@@ -98,7 +98,7 @@ typedef unsigned WSCKeyCredentialCreationOption;
 
 WINRT_EXPORT
 @interface WSCWebAccountProvider : RTObject
-+ (WSCWebAccountProvider*)createWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
++ (WSCWebAccountProvider*)makeWebAccountProvider:(NSString*)id displayName:(NSString*)displayName iconUri:(WFUri*)iconUri ACTIVATOR;
 @property (readonly) NSString* displayName;
 @property (readonly) WFUri* iconUri;
 @property (readonly) NSString* id;
@@ -115,9 +115,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCWebAccount : RTObject <WSCIWebAccount>
-+ (WSCWebAccount*)createWebAccount:(WSCWebAccountProvider*)webAccountProvider
-                          userName:(NSString*)userName
-                             state:(WSCWebAccountState)state ACTIVATOR;
++ (WSCWebAccount*)makeWebAccount:(WSCWebAccountProvider*)webAccountProvider
+                        userName:(NSString*)userName
+                           state:(WSCWebAccountState)state ACTIVATOR;
 @property (readonly) WSCWebAccountState state;
 @property (readonly) NSString* userName;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
@@ -209,11 +209,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCPasswordCredential : RTObject
-+ (instancetype)create ACTIVATOR;
-+ (WSCPasswordCredential*)createPasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
-@property (copy) NSString* userName;
-@property (copy) NSString* resource;
-@property (copy) NSString* password;
++ (instancetype)make ACTIVATOR;
++ (WSCPasswordCredential*)makePasswordCredential:(NSString*)resource userName:(NSString*)userName password:(NSString*)password ACTIVATOR;
+@property (retain) NSString* userName;
+@property (retain) NSString* resource;
+@property (retain) NSString* password;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (void)retrievePassword;
 @end
@@ -226,7 +226,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCPasswordVault : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)add:(WSCPasswordCredential*)credential;
 - (void)remove:(WSCPasswordCredential*)credential;
 - (WSCPasswordCredential*)retrieve:(NSString*)resource userName:(NSString*)userName;
@@ -269,7 +269,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCPasswordCredentialPropertyStore : RTObject <WFCIPropertySet>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;

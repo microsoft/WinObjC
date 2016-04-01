@@ -13,6 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// clang-format does not play well with C++/CX
+// clang-format off
 
 #pragma once
 
@@ -31,36 +33,23 @@
 #include <COMIncludes_End.h>
 #endif
 
-#ifndef IWEXPORT
-#ifndef OBJCRT_EXPORT
-#define IWEXPORT __declspec(dllimport)
-#else
-#define IWEXPORT OBJCRT_EXPORT
-#endif
-#endif
-
-#ifdef __cplusplus_winrt
-IWEXPORT extern "C" void IWRunApplicationMain(Platform::String ^ principalClassName,
-                                              Platform::String ^ delegateClassName,
-                                              float windowWidth,
-                                              float windowHeight);
-IWEXPORT extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid);
-IWEXPORT extern "C" Windows::UI::Xaml::Controls::SwapChainPanel ^ IWSetSwapChainTarget(Windows::UI::Xaml::Controls::SwapChainPanel ^ panel);
-#endif
-
 namespace winobjc {
 
 class Id {
 public:
     Microsoft::WRL::ComPtr<IUnknown> _comPtr;
 
-    Id() { }
+    Id() {
+    }
 
-    Id(IUnknown* ptr) : _comPtr(ptr) { }
+    Id(IUnknown* ptr) : _comPtr(ptr) {
+    }
 
-    Id(Id&& copy) : _comPtr(copy._comPtr) { }
+    Id(Id&& copy) : _comPtr(copy._comPtr) {
+    }
 
-    Id(const decltype(_comPtr)& other) : _comPtr(other) { }
+    Id(const decltype(_comPtr)& other) : _comPtr(other) {
+    }
 
     Id& operator=(const decltype(_comPtr)& other) {
         _comPtr = other;
@@ -90,16 +79,15 @@ public:
 #ifdef __cplusplus_winrt
     typedef Platform::Object^ ObjPtr;
 
-    inline Id(Platform::Object^ obj) : _comPtr(reinterpret_cast<IUnknown*>(obj)) { }
+    inline Id(Platform::Object^ obj) : _comPtr(reinterpret_cast<IUnknown*>(obj)) {
+    }
 
     inline Id& operator=(Platform::Object^ obj) {
         _comPtr = reinterpret_cast<IUnknown*>(obj);
         return *this;
     }
 
-    inline operator Platform::Object^ () {
-        return reinterpret_cast<Platform::Object^>(_comPtr.Get());
-    }
+    inline operator Platform::Object^() { return reinterpret_cast<Platform::Object^>(_comPtr.Get()); }
 #endif
 
     inline operator IUnknown*() {
@@ -107,3 +95,5 @@ public:
     }
 };
 }
+
+// clang-format on

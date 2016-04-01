@@ -54,14 +54,14 @@ public:
 
   const VCProjectSet& getSharedProjects() const;
   const VCProjectSet& getProjectReferences() const;
-  const StringMap& getGlobalProperties() const;
-  const StringMap& getUserMacros() const;
+  const ConditionalValueListMap& getGlobalProperties() const;
+  const ConditionalValueListMap& getUserMacros() const;
   const void getPlatforms(StringSet& ret) const;
 
   bool write() const;
 
-  virtual void setGlobalProperty(const std::string& name, const std::string& value);
-  virtual void setUserMacro(const std::string& name, const std::string& value);
+  virtual void addGlobalProperty(const std::string& name, const std::string& value, const std::string& condition = "");
+  virtual void addUserMacro(const std::string& name, const std::string& value, const std::string& condition = "");
   virtual void addProjectReference(const VCProject* refProj);
   virtual void addSharedProject(const VCProject* sharedProj);
   virtual VCProjectConfiguration* addConfiguration(const std::string& name);
@@ -97,8 +97,8 @@ protected:
   std::string m_id;
   VCProjectSet m_projectRefs;
   VCProjectSet m_sharedProjects;
-  StringMap m_globalProps;
-  StringMap m_userMacros;
+  ConditionalValueListMap m_globalProps;
+  ConditionalValueListMap m_userMacros;
   StringVec m_buildExtensions;
   ConfigurationMap m_configurations;
   ItemList m_items;

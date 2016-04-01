@@ -91,6 +91,12 @@
         Description="User a header map containing all headers in the VS project, as well as any headers found in the same directory as the source files being compiled."
         Name="Combined" />
     </EnumProperty>
+    <BoolProperty
+      IncludeInCommandLine="False"
+      Category="General"
+      DisplayName="Framework-style header map entries"
+      Description="Add framework-style entries to header map."
+      Name="HeaderMapAddFrameworkEntries" />
     <StringProperty
       Visible="False"
       Category="General"
@@ -171,8 +177,15 @@
       Category="General"
       DisplayName="Enable C and Objective-C Modules"
       Description="Specifies whether to use Clang modules."
-      Switch="-fmodules"
+      Switch="-fmodules -fimplicit-module-maps"
       Name="ObjectiveCModules" />
+    <StringProperty
+      Visible="False"
+      Category="General"
+      DisplayName="Path to Objective-C modules"
+      Description="Path to the directory where the modules will be cached"
+      Switch="-fmodules-cache-path="
+      Name="ObjectiveCModulesCachePath" />
     <StringListProperty
       Visible="False"
       Category="Paths"
@@ -180,6 +193,12 @@
       Description="Hidden include Paths"
       Switch="-internal-isystem "
       Name="InternalSystemIncludePaths" />
+    <StringListProperty
+      IncludeInCommandLine="False"
+      Category="Paths"
+      DisplayName="Excluded Search Path Subdirectories"
+      Description="Wildcard pattern for subdirectories to exclude from recursive search"
+      Name="ExcludedSearchPathSubdirectories" />
     <StringListProperty
       Category="Paths"
       DisplayName="User Include Paths"

@@ -47,7 +47,7 @@ UIKIT_EXPORT_CLASS
 - (BOOL)isAnimating;
 
 @property BOOL hidesWhenStopped;
-@property UIActivityIndicatorViewStyle activityIndicatorViewStyle;
-@property (readwrite, nonatomic, retain) UIColor* color;
+@property UIActivityIndicatorViewStyle activityIndicatorViewStyle STUB_PROPERTY;
+@property (readwrite, nonatomic, retain) UIColor* color STUB_PROPERTY;
 
 @end

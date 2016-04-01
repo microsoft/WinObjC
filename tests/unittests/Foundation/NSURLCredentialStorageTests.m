@@ -37,20 +37,19 @@ TEST(Foundation, NSURLCredentialStorage_DefaultSharedSession) {
                   "FAILED defaultCredentialForProtectionSpace should be nil");
     [storage setDefaultCredential:credential forProtectionSpace:protectionSpace];
 
-    /* NSURLCredential* defaultCred = [storage defaultCredentialForProtectionSpace:protectionSpace];
-     ASSERT_TRUE_MSG(defaultCred != NULL, "FAILED: defaultCred should be non-null!");
-     ASSERT_OBJCEQ_MSG(@"user", [defaultCred user], "FAILED: Invalid username.");
-         */
+    NSURLCredential* defaultCred = [storage defaultCredentialForProtectionSpace:protectionSpace];
+    ASSERT_TRUE_MSG(defaultCred != NULL, "FAILED: defaultCred should be non-null!");
+    ASSERT_OBJCEQ_MSG(@"user", [defaultCred user], "FAILED: Invalid username.");
     [protectionSpace release];
 }
 
 TEST(Foundation, NSURLCredentialStorage_NonDefaultSession) {
     NSURLCredential* credential =
-        [NSURLCredential credentialWithUser:@"user" password:@"pass" persistence:NSURLCredentialPersistenceForSession];
+        [NSURLCredential credentialWithUser:@"user" password:@"word" persistence:NSURLCredentialPersistenceForSession];
     ASSERT_TRUE_MSG(credential != NULL, "FAILED: credential should be non-null!");
 
     NSURLProtectionSpace* protectionSpace =
-        [[NSURLProtectionSpace alloc] initWithHost:@"microsoft" port:8080 protocol:nil realm:nil authenticationMethod:nil];
+        [[NSURLProtectionSpace alloc] initWithHost:@"windows" port:8080 protocol:nil realm:nil authenticationMethod:nil];
     ASSERT_TRUE_MSG(protectionSpace != NULL, "FAILED: protectionSpace should be non-null!");
 
     NSURLCredentialStorage* storage = [NSURLCredentialStorage sharedCredentialStorage];
@@ -64,14 +63,13 @@ TEST(Foundation, NSURLCredentialStorage_NonDefaultSession) {
 
     [storage setCredential:credential forProtectionSpace:protectionSpace];
 
-    /*NSDictionary* creden = [storage credentialsForProtectionSpace:protectionSpace];
+    NSDictionary* creden = [storage credentialsForProtectionSpace:protectionSpace];
     ASSERT_TRUE_MSG(creden != NULL, "FAILED: creden should be non-null!");
-    ASSERT_OBJCEQ_MSG(@"user", [creden user], "FAILED: Invalid username.");
+    ASSERT_OBJCEQ_MSG(@"user", [[creden objectForKey:@"user"] user], "FAILED: Invalid username.");
 
     [storage removeCredential:credential forProtectionSpace:protectionSpace];
-    ASSERT_EQ_MSG(nil, [storage credentialsForProtectionSpace:protectionSpace], "FAILED credentialsForProtectionSpace should be nil");
-        */
+    ASSERT_EQ_MSG(YES, [[storage credentialsForProtectionSpace:protectionSpace] count] == 0, "FAILED credentialsForProtectionSpace should be empty");
     [protectionSpace release];
     [storage release];
-    //  [creden release];
+    [creden release];
 }

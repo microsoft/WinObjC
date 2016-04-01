@@ -291,7 +291,7 @@ typedef void (^WSApplicationDataSetVersionHandler)(WSSetVersionRequest* setVersi
 
 @protocol WSIStorageItem2 <WSIStorageItem>
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isEqual:(RTObject<WSIStorageItem>*)item;
+- (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
 - (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
 - (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
@@ -582,7 +582,7 @@ WINRT_EXPORT
                                success:(void (^)(WSFStorageItemThumbnail*))success
                                failure:(void (^)(NSError*))failure;
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isEqual:(RTObject<WSIStorageItem>*)item;
+- (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
 - (void)tryGetItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -717,7 +717,7 @@ WINRT_EXPORT
                                success:(void (^)(WSFStorageItemThumbnail*))success
                                failure:(void (^)(NSError*))failure;
 - (void)getParentAsyncWithSuccess:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
-- (BOOL)isEqual:(RTObject<WSIStorageItem>*)item;
+- (BOOL)IsEqual:(RTObject<WSIStorageItem>*)item;
 - (void)openWithOptionsAsync:(WSFileAccessMode)accessMode
                      options:(WSStorageOpenOptions)options
                      success:(void (^)(RTObject<WSSIRandomAccessStream>*))success
@@ -1045,7 +1045,7 @@ WINRT_EXPORT
 @property (readonly) WSApplicationDataContainer* roamingSettings;
 @property (readonly) uint64_t roamingStorageQuota;
 @property (readonly) WSStorageFolder* temporaryFolder;
-@property (readonly) unsigned int version;
+@property (readonly) unsigned int Version;
 @property (readonly) WSStorageFolder* localCacheFolder;
 @property (readonly) WSStorageFolder* sharedLocalFolder;
 + (WSApplicationData*)current;
@@ -1163,7 +1163,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSApplicationDataCompositeValue : RTObject <WFCIPropertySet>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 // Could not generate add_MapChanged (Can't marshal Windows.Foundation.Collections.MapChangedEventHandler`2<String,System.Object>)
 - (void)removeMapChangedEvent:(EventRegistrationToken)tok;

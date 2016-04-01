@@ -1,14 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <HasSharedItems>true</HasSharedItems>
     <ItemsRootNamespace>WOCCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <ItemsProjectGuid>{A74AAE3B-53F9-42FE-B857-87153273DA20}</ItemsProjectGuid>
-    <SharedGUID>{5E80FFAE-2B69-41C9-AA65-9B9570C93C27}</SharedGUID>
+    <ItemsProjectGuid>{F36FF2F2-7CC8-47AF-B4E2-8EB665225AFF}</ItemsProjectGuid>
+    <SharedGUID>{98EE3142-5F8F-47BC-89CE-EB3019046034}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreMotionViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BasicAnimationViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ApplicationViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextDisplayViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\GLKitExampleController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\DisplayModeViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\OpenGLES11Controller.h" />
@@ -24,7 +28,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PickersViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\SearchBarViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\SegmentsViewController.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextDisplayViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextFieldsViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ToolbarsViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TransitionsViewController.h" />

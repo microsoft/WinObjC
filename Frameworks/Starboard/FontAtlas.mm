@@ -40,6 +40,9 @@ extern "C" {
 
 #include <vector>
 #include <algorithm>
+#include "LoggingNative"
+
+static const wchar_t* TAG = L"FontAtlas";
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
@@ -159,7 +162,7 @@ public:
             delete[] glyphsToBeRendered;
         [font release];
 
-        EbrFree(fontName);
+        IwFree(fontName);
     }
 
     bool renderNewGlyphs(ID3D11Device1* device, ID3D11DeviceContext* context);
@@ -517,7 +520,7 @@ void FontCacheInfo::setFont(id newFont) {
     if (bitmapHeight < MIN_BITMAP_HEIGHT)
         bitmapHeight = MIN_BITMAP_HEIGHT;
 
-    fontName = (char*)EbrMalloc(255);
+    fontName = (char*)IwMalloc(255);
     getFontName(font, face, fontName);
 
     buildCharAreas();
@@ -656,7 +659,7 @@ bool FontCacheInfo::renderNewGlyphs(ID3D11Device1* device, ID3D11DeviceContext* 
     totalOps++;
     totalMS += ms;
 
-    EbrDebugLog("------ %d glyphs added in %dms. Total %d ops, %d ms.  Atlas chars: %d, size: %dK\n",
+    TraceNarrowVerbose(TAG, "------ %d glyphs added in %dms. Total %d ops, %d ms.  Atlas chars: %d, size: %dK",
                 glyphsToBeRenderedCount,
                 ms,
                 totalOps,
@@ -814,17 +817,17 @@ DisplayTextureFontAtlas::~DisplayTextureFontAtlas() {
     _shadowColor = nil;
 
     if (_outputLines)
-        EbrFree(_outputLines);
+        IwFree(_outputLines);
     if (_atlasGlyphs)
-        EbrFree(_atlasGlyphs);
+        IwFree(_atlasGlyphs);
     if (_quadOut)
-        EbrFree(_quadOut);
+        IwFree(_quadOut);
     if (_shadowQuadOut)
-        EbrFree(_shadowQuadOut);
+        IwFree(_shadowQuadOut);
     if (_texQuadOut)
-        EbrFree(_texQuadOut);
+        IwFree(_texQuadOut);
     if (_texPtrs)
-        EbrFree(_texPtrs);
+        IwFree(_texPtrs);
     delete _ellipsis;
 }
 
@@ -867,7 +870,7 @@ float DisplayTextureFontAtlas::measureWidth(int glyphStart, int numGlyphs) {
 CATextLayerLine* DisplayTextureFontAtlas::createNewLine() {
     if (_numOutputLines + 1 > _maxOutputLines) {
         _maxOutputLines += 16;
-        _outputLines = (CATextLayerLine*)EbrRealloc(_outputLines, _maxOutputLines * sizeof(CATextLayerLine));
+        _outputLines = (CATextLayerLine*)IwRealloc(_outputLines, _maxOutputLines * sizeof(CATextLayerLine));
     }
     CATextLayerLine* ret = &_outputLines[_numOutputLines];
     _numOutputLines++;
@@ -1204,21 +1207,26 @@ void DisplayTextureFontAtlas::addOperation(CADisplayProperties* presentationProp
     }
 
     if (_glyphsDirty) {
-        if (_atlasGlyphs)
-            EbrFree(_atlasGlyphs);
-        _atlasGlyphs = (FontAtlasOutputGlyph*)EbrMalloc(len * sizeof(FontAtlasOutputGlyph));
-        if (_quadOut)
-            EbrFree(_quadOut);
-        _quadOut = (CAPoint3D*)EbrMalloc(4 * (len + 16) * sizeof(CAPoint3D));
-        if (_shadowQuadOut)
-            EbrFree(_shadowQuadOut);
-        _shadowQuadOut = (CAPoint3D*)EbrMalloc(4 * (len + 16) * sizeof(CAPoint3D));
-        if (_texQuadOut)
-            EbrFree(_texQuadOut);
-        _texQuadOut = (CGPoint*)EbrMalloc(4 * (len + 16) * sizeof(CGPoint));
-        if (_texPtrs)
-            EbrFree(_texPtrs);
-        _texPtrs = (EbrTexture**)EbrMalloc(4 * (len + 16) * sizeof(EbrTexture*));
+        if (_atlasGlyphs) {
+            IwFree(_atlasGlyphs);
+        }
+        _atlasGlyphs = (FontAtlasOutputGlyph*)IwMalloc(len * sizeof(FontAtlasOutputGlyph));
+        if (_quadOut) {
+            IwFree(_quadOut);
+        }
+        _quadOut = (CAPoint3D*)IwMalloc(4 * (len + 16) * sizeof(CAPoint3D));
+        if (_shadowQuadOut) {
+            IwFree(_shadowQuadOut);
+        }
+        _shadowQuadOut = (CAPoint3D*)IwMalloc(4 * (len + 16) * sizeof(CAPoint3D));
+        if (_texQuadOut) {
+            IwFree(_texQuadOut);
+        }
+        _texQuadOut = (CGPoint*)IwMalloc(4 * (len + 16) * sizeof(CGPoint));
+        if (_texPtrs) {
+            IwFree(_texPtrs);
+        }
+        _texPtrs = (EbrTexture**)IwMalloc(4 * (len + 16) * sizeof(EbrTexture*));
 
         _numAtlasGlyphs = len;
 

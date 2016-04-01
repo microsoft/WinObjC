@@ -197,15 +197,15 @@ double CTRunGetTypographicBounds(CTRunRef run, CFRange range, CGFloat* ascent, C
     }
 
     UIFont* font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
-    if (ascent != nullptr) {
+    if (ascent) {
         *ascent = [font ascender];
     }
 
-    if (descent != nullptr) {
+    if (descent) {
         *descent = [font descender];
     }
 
-    if (leading != nullptr) {
+    if (leading) {
         *leading = [font leading];
     }
 
@@ -239,6 +239,10 @@ CGRect CTRunGetImageBounds(CTRunRef run, CGContextRef context, CFRange range) {
  @Notes textRange parameter not supported
 */
 void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
+    if (!run) {
+        return;
+    }
+
     _CTRun* curRun = (_CTRun*)run;
 
     NSString* string = curRun->_stringFragment;
@@ -253,7 +257,7 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
     }
 
     int numGlyphs = curRun->_characters.size();
-    WORD* glyphs = (WORD*)malloc(sizeof(WORD) * numGlyphs);
+    WORD* glyphs = (WORD*)IwMalloc(sizeof(WORD) * numGlyphs);
 
     id font = [curRun->_attributes objectForKey:(id)kCTFontAttributeName];
     CGFontGetGlyphsForUnichars(font, curRun->_characters.data(), glyphs, numGlyphs);
@@ -269,7 +273,7 @@ void CTRunDraw(CTRunRef run, CGContextRef ctx, CFRange textRange) {
 
     CGPoint curTextPos = CGContextGetTextPosition(ctx);
     CGContextShowGlyphsAtPoint(ctx, curTextPos.x, curTextPos.y, glyphs, numGlyphs);
-    free(glyphs);
+    IwFree(glyphs);
 }
 
 /**

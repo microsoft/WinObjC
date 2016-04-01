@@ -50,9 +50,9 @@ UIKIT_EXPORT_CLASS
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event;
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event;
 
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event;
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event;
-- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event;
+- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent*)event STUB_METHOD;
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent*)event STUB_METHOD;
+- (void)motionCancelled:(UIEventSubtype)motion withEvent:(UIEvent*)event STUB_METHOD;
 - (void)reloadInputViews;
 
 @property (readonly) NSUndoManager* undoManager;

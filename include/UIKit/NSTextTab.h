@@ -18,6 +18,7 @@
 
 #import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
+#import <UIKit/UIKitTypes.h>
 
 @class NSString;
 @class NSDictionary;

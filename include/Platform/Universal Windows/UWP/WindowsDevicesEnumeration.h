@@ -478,13 +478,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePickerAppearance : RTObject
-@property (copy) NSString* title;
-@property (copy) WUColor* selectedForegroundColor;
-@property (copy) WUColor* selectedBackgroundColor;
-@property (copy) WUColor* selectedAccentColor;
-@property (copy) WUColor* foregroundColor;
-@property (copy) WUColor* backgroundColor;
-@property (copy) WUColor* accentColor;
+@property (retain) NSString* title;
+@property (retain) WUColor* selectedForegroundColor;
+@property (retain) WUColor* selectedBackgroundColor;
+@property (retain) WUColor* selectedAccentColor;
+@property (retain) WUColor* foregroundColor;
+@property (retain) WUColor* backgroundColor;
+@property (retain) WUColor* accentColor;
 @end
 
 #endif // __WDEDevicePickerAppearance_DEFINED__
@@ -529,7 +529,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WDEDevicePickerFilter* filter;
 @property (readonly) NSMutableArray* requestedProperties;

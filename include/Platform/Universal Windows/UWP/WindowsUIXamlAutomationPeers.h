@@ -361,7 +361,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -382,8 +382,8 @@ WINRT_EXPORT
 @interface WUXAPAutomationPeer : WXDependencyObject
 + (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
 + (BOOL)listenerExists:(WUXAPAutomationEvents)eventId;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXAPAutomationPeer* eventsSource;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXAPAutomationPeer* eventsSource;
 - (RTObject*)getPattern:(WUXAPPatternInterface)patternInterface;
 - (void)raiseAutomationEvent:(WUXAPAutomationEvents)eventId;
 - (void)raisePropertyChangedEvent:(WUXAAutomationProperty*)automationProperty oldValue:(RTObject*)oldValue newValue:(RTObject*)newValue;
@@ -476,11 +476,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAutomationPeerAnnotation : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-+ (WUXAPAutomationPeerAnnotation*)createInstance:(WUXAAnnotationType)type ACTIVATOR;
-+ (WUXAPAutomationPeerAnnotation*)createWithPeerParameter:(WUXAAnnotationType)type peer:(WUXAPAutomationPeer*)peer ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WUXAPAutomationPeerAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;
++ (WUXAPAutomationPeerAnnotation*)makeWithPeerParameter:(WUXAAnnotationType)type peer:(WUXAPAutomationPeer*)peer ACTIVATOR;
 @property WUXAAnnotationType type;
-@property (copy) WUXAPAutomationPeer* peer;
+@property (retain) WUXAPAutomationPeer* peer;
 + (WXDependencyProperty*)peerProperty;
 + (WXDependencyProperty*)typeProperty;
 @end
@@ -676,7 +676,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAutoSuggestBoxAutomationPeer : WUXAPFrameworkElementAutomationPeer
-+ (WUXAPAutoSuggestBoxAutomationPeer*)createInstanceWithOwner:(WXCAutoSuggestBox*)owner ACTIVATOR;
++ (WUXAPAutoSuggestBoxAutomationPeer*)makeInstanceWithOwner:(WXCAutoSuggestBox*)owner ACTIVATOR;
 @end
 
 #endif // __WUXAPAutoSuggestBoxAutomationPeer_DEFINED__
@@ -1459,7 +1459,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPPivotItemAutomationPeer : WUXAPFrameworkElementAutomationPeer
-+ (WUXAPPivotItemAutomationPeer*)createInstanceWithOwner:(WXCPivotItem*)owner ACTIVATOR;
++ (WUXAPPivotItemAutomationPeer*)makeInstanceWithOwner:(WXCPivotItem*)owner ACTIVATOR;
 @end
 
 #endif // __WUXAPPivotItemAutomationPeer_DEFINED__
@@ -1471,7 +1471,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXAPPivotItemDataAutomationPeer
     : WUXAPItemAutomationPeer <WUXAPIScrollItemProvider, WUXAPISelectionItemProvider, WUXAPIVirtualizedItemProvider>
-+ (WUXAPPivotItemDataAutomationPeer*)createInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPPivotAutomationPeer*)parent ACTIVATOR;
++ (WUXAPPivotItemDataAutomationPeer*)makeInstanceWithParentAndItem:(RTObject*)item parent:(WUXAPPivotAutomationPeer*)parent ACTIVATOR;
 @property (readonly) BOOL isSelected;
 @property (readonly) WUXAPIRawElementProviderSimple* selectionContainer;
 - (void)scrollIntoView;
@@ -1499,7 +1499,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPPivotAutomationPeer : WUXAPItemsControlAutomationPeer <WUXAPIScrollProvider, WUXAPISelectionProvider>
-+ (WUXAPPivotAutomationPeer*)createInstanceWithOwner:(WXCPivot*)owner ACTIVATOR;
++ (WUXAPPivotAutomationPeer*)makeInstanceWithOwner:(WXCPivot*)owner ACTIVATOR;
 @property (readonly) double horizontalScrollPercent;
 @property (readonly) double horizontalViewSize;
 @property (readonly) BOOL horizontallyScrollable;

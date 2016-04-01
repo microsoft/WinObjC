@@ -201,7 +201,7 @@ UIKIT_EXPORT_CLASS
       initialSpringVelocity:(CGFloat)velocity
                     options:(UIViewAnimationOptions)options
                  animations:(void (^)(void))animations
-                 completion:(void (^)(BOOL finished))completion;
+                 completion:(void (^)(BOOL finished))completion STUB_METHOD;
 + (void)beginAnimations:(NSString*)animationID context:(void*)context;
 + (void)commitAnimations;
 + (void)performSystemAnimation:(UISystemAnimation)animation
@@ -269,7 +269,7 @@ UIKIT_EXPORT_CLASS
 - (void)addConstraints:(NSArray*)constraints;
 - (void)addGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer;
 - (void)addLayoutGuide:(UILayoutGuide*)layoutGuide STUB_METHOD;
-- (void)addMotionEffect:(UIMotionEffect*)effect;
+- (void)addMotionEffect:(UIMotionEffect*)effect STUB_METHOD;
 - (void)addSubview:(UIView*)subview;
 - (void)bringSubviewToFront:(UIView*)subview;
 - (void)decodeRestorableStateWithCoder:(NSCoder*)coder STUB_METHOD;
@@ -291,9 +291,9 @@ UIKIT_EXPORT_CLASS
 - (void)removeConstraint:(NSLayoutConstraint*)constraint;
 - (void)removeConstraints:(NSArray*)constraints;
 - (void)removeFromSuperview;
-- (void)removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer STUB_METHOD;
+- (void)removeGestureRecognizer:(UIGestureRecognizer*)gestureRecognizer;
 - (void)removeLayoutGuide:(UILayoutGuide*)layoutGuide STUB_METHOD;
-- (void)removeMotionEffect:(UIMotionEffect*)effect;
+- (void)removeMotionEffect:(UIMotionEffect*)effect STUB_METHOD;
 - (void)sendSubviewToBack:(UIView*)subview;
 - (void)setContentCompressionResistancePriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
 - (void)setContentHuggingPriority:(UILayoutPriority)priority forAxis:(UILayoutConstraintAxis)axis;
@@ -313,7 +313,7 @@ UIKIT_EXPORT_CLASS
 @property (copy, nonatomic) NSArray* motionEffects;
 @property (copy, nonatomic) NSString* restorationIdentifier STUB_PROPERTY;
 @property (nonatomic) BOOL autoresizesSubviews;
-@property (nonatomic) BOOL clearsContextBeforeDrawing;
+@property (nonatomic) BOOL clearsContextBeforeDrawing STUB_PROPERTY;
 @property (nonatomic) BOOL clipsToBounds;
 @property (nonatomic) BOOL preservesSuperviewLayoutMargins STUB_PROPERTY;
 @property (nonatomic) BOOL translatesAutoresizingMaskIntoConstraints;
@@ -332,9 +332,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UIViewTintAdjustmentMode tintAdjustmentMode STUB_PROPERTY;
 @property (nonatomic, copy) NSArray* gestureRecognizers;
 @property (nonatomic, copy) UIColor* backgroundColor;
-@property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch; // state is maintained, but it has no effect
+@property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch STUB_PROPERTY;
 @property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled; // state is maintained, but it has no effect
+@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled STUB_PROPERTY;
 @property (nonatomic, getter=isOpaque) BOOL opaque;
 @property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 @property (nonatomic, readonly) CALayer* layer;

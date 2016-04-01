@@ -17,6 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIScrollViewDelegate.h>
 
 @class UICollectionView;
 @class NSIndexPath;

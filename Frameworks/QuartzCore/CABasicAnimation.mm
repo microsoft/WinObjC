@@ -21,6 +21,9 @@
 #include "QuartzCore/CABasicAnimation.h"
 #include "CACompositor.h"
 #include "CAAnimationInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CABasicAnimation";
 
 @implementation CABasicAnimation {
     idretain _from;
@@ -70,6 +73,9 @@
     return _by;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)animationWithKeyPath:(NSString*)path {
     CABasicAnimation* ret = [self alloc];
     ret->_timingProperties._duration = 1.0;
@@ -80,6 +86,9 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)runActionForKey:(NSString*)key object:(id)object arguments:(NSDictionary*)dict {
     if (_to == nil) {
         _to = [object valueForKey:_keyPath];
@@ -115,6 +124,10 @@
     return _runningAnimation;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)copyWithZone:(NSZone*)zone {
     CABasicAnimation* ret = [super copyWithZone:zone];
 

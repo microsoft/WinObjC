@@ -30,6 +30,9 @@
 
 #include <cmath>
 #include <algorithm>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSSSLHandler";
 
 static pthread_mutex_t initLock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t* lockTable;
@@ -43,7 +46,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 }
 #endif
 
-@implementation NSSSLHandler : NSObject
+@implementation NSSSLHandler
 #if defined(WIN32) || defined(ANDROID)
 + (id)initialize {
     if (self == [NSSSLHandler class]) {
@@ -106,7 +109,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
     chance it and just maintain a buffer for this purpose. */
 
     _stableBufferCapacity = 8192;
-    _stableBuffer = (uint8_t*)EbrMalloc(_stableBufferCapacity);
+    _stableBuffer = (uint8_t*)IwMalloc(_stableBufferCapacity);
     _readBuffer = [[NSMutableData alloc] init];
 
     return self;
@@ -115,7 +118,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 - (id)dealloc {
     [_properties release];
     SSL_free(_connection);
-    EbrFree(_stableBuffer);
+    IwFree(_stableBuffer);
     [super dealloc];
 
     return self;
@@ -153,7 +156,7 @@ id close__unused() {
                 while (error != 0) {
                     ERR_error_string_n(error, errorCString, sizeof(errorCString));
 
-                    EbrDebugLog("SSL_write(%d) returned error %d - %s", length, error, errorCString);
+                    TraceError(TAG, L"SSL_write(%d) returned error %d - %hs", length, error, errorCString);
 
                     error = ERR_get_error();
                 }
@@ -177,7 +180,7 @@ id close__unused() {
 
     if (check <= 0) {
         // This shouldn't happen unless we read when not ready
-        EbrDebugLog("BIO_read(_outgoing,buffer,%d) returned %d ", length, check);
+        TraceVerbose(TAG, L"BIO_read(_outgoing,buffer,%d) returned %d ", length, check);
     }
 
     return check;
@@ -188,7 +191,7 @@ id close__unused() {
 
     if (check <= 0) {
         // This shouldn't happen unless we are out of memory?
-        EbrDebugLog("BIO_write(_incoming,buffer,%d) returned %d ", length, check);
+        TraceVerbose(TAG, L"BIO_write(_incoming,buffer,%d) returned %d ", length, check);
     }
 
     return check;
@@ -219,7 +222,7 @@ id close__unused() {
                     while (error != 0) {
                         ERR_error_string_n(error, errorCString, sizeof(errorCString));
 
-                        EbrDebugLog("SSL_read(%d) returned error %d - %s", length, error, errorCString);
+                        TraceError(TAG, L"SSL_read(%d) returned error %d - %hs", length, error, errorCString);
 
                         error = ERR_get_error();
                     }
@@ -228,8 +231,8 @@ id close__unused() {
         }
 
         numRead += check;
-        EbrDebugLog("Got %d bytes from SSL\n", check);
-        EbrDebugLog("Pending=%d\n", BIO_ctrl_pending(_outgoing));
+        TraceVerbose(TAG, L"Got %d bytes from SSL", check);
+        TraceVerbose(TAG, L"Pending=%d", BIO_ctrl_pending(_outgoing));
     }
 
     return numRead;
@@ -286,7 +289,7 @@ id close__unused() {
         NSInteger check = [socket write:_stableBuffer maxLength:available];
 
         if (check != available)
-            EbrDebugLog("failure socket write:%d=%d", available, check);
+            TraceError(TAG, L"failure socket write:%d=%d", available, check);
 
         return check;
     }
@@ -296,7 +299,7 @@ id close__unused() {
 - (id)transferOneBufferFromSocketToSSL:(id)socket {
     if ([socket hasBytesAvailable]) {
         NSInteger result = [socket read:_stableBuffer maxLength:_stableBufferCapacity];
-        EbrDebugLog("Got %d bytes for SSL\n", result);
+        TraceVerbose(TAG, L"Got %d bytes for SSL", result);
 
         if (result <= 0)
             return result;
@@ -304,7 +307,7 @@ id close__unused() {
         NSInteger check;
 
         if ((check = [self writeEncrypted:_stableBuffer maxLength:result]) != result) {
-            EbrDebugLog("[sslHandler writeEncrypted:socketBuffer maxLength:%d] failed %d", result, check);
+            TraceError(TAG, L"[sslHandler writeEncrypted:socketBuffer maxLength:%d] failed %d", result, check);
         }
 
         return result;

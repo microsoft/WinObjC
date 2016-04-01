@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="'$(ConfigurationType)'=='DynamicLibrary'">
+    <ProjectReference Condition="'$(LinkWithFoundation)' != 'false'" Include="$(StarboardBasePath)\build\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
+    </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithStarboard)' != 'false'" Include="$(StarboardBasePath)\build\Starboard\dll\Starboard.vcxproj">
+      <Project>{0ac27ecf-e2ab-420b-9359-4843fff4cbfa}</Project>
+    </ProjectReference>
+    <ProjectReference Condition="'$(LinkWithWinObjCRT)' != 'false'" Include="$(StarboardBasePath)\build\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Project>{585b4870-0d6b-43a6-8e7e-ad08f7f507b6}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(ConfigurationType)'=='StaticLibrary'">
+    <ProjectReference Condition="'$(LinkWithIwNew)' != 'false'" Include="$(StarboardBasePath)\build\IwNew\lib\IwNewLib.vcxproj">
+      <Project>{b16c8766-1d05-46c0-b231-10c3aa43c19b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <DefaultLanguage Condition="'$(DefaultLanguage)'==''">en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)'==''">14.0</MinimumVisualStudioVersion>
+    <AppContainerApplication Condition="'$(AppContainerApplication)'==''">true</AppContainerApplication>
+    <ApplicationType Condition="'$(ApplicationType)'==''">Windows Store</ApplicationType>
+    <ApplicationTypeRevision Condition="'$(ApplicationTypeRevision)'==''">10.0</ApplicationTypeRevision>
+    <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)'==''">true</UseStarboardSourceSdk>
+    <IslandwoodDRT Condition="'$(IslandwoodDRT)'==''">false</IslandwoodDRT>
+    <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries Condition="'$(Configuration)'=='Debug'">true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization Condition="'$(Configuration)'=='Release'">true</WholeProgramOptimization>
+    <UseDotNetNativeToolchain Condition="'$(Configuration)'=='Release'">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <ImportGroup>
+    <Import Project="$(MSBuildThisFileDirectory)starboard.props" />
+  </ImportGroup>
+
+  <PropertyGroup>
+    <GenerateManifest>false</GenerateManifest>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\$(TargetOsAndVersion)\</OutDir>
+    <TargetName>$(OutputName)</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
+
+      <!-- Ensure we pick up operator new from our project rather than the C runtime -->
+      <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
+    </Link>
+    <ClangCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <SystemHeaderDeps>true</SystemHeaderDeps>
+      <AdditionalOptions>-Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+  </ItemDefinitionGroup>
+
+</Project>

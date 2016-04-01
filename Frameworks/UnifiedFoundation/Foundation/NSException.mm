@@ -17,7 +17,9 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #import "Foundation/NSException.h"
+#import "NSLogging.h"
 
+static const wchar_t* TAG = L"NSException";
 NSString* const NSRangeException = @"NSRangeExcepton";
 NSString* const NSGenericException = @"NSGenericException";
 NSString* const NSInvalidArgumentException = @"NSInvalidArgumentException";
@@ -56,8 +58,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
         _name = [name copy];
         _reason = [reason copy];
         _userInfo = [userInfo copy];
-        _callStackReturnAddresses = [NSThread callStackReturnAddresses];
-        _callStackSymbols = [NSThread callStackSymbols];
+        // VSO 6794375: Implement NSThread callStackReturnAddresses, callStackSymbols
+        //_callStackReturnAddresses = [NSThread callStackReturnAddresses];
+        //_callStackSymbols = [NSThread callStackSymbols];
     }
 
     return self;
@@ -97,7 +100,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     NSString* reason = [[NSString alloc] initWithFormat:format arguments:reader];
     va_end(reader);
 
-    NSLog(@"Exception %@ raised!\nReason: %@\n", name, reason);
+    NSTraceError(TAG, @"Exception %@ raised!\nReason: %@\n", name, reason);
 
     NSException* exception = [self exceptionWithName:name reason:reason userInfo:nil];
     [reason release];
@@ -140,7 +143,7 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _name = [[coder decodeObjectOfClass:[NSString class] forKey:@"name"] retain];
         _reason = [[coder decodeObjectOfClass:[NSString class] forKey:@"reason"] retain];
         _userInfo = [[coder decodeObjectOfClass:[NSDictionary class] forKey:@"userInfo"] retain];
@@ -161,6 +164,9 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     [coder encodeObject:_callStackSymbols forKey:@"callStackSymbols"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_name release];
     [_reason release];
@@ -201,5 +207,16 @@ NSUncaughtExceptionHandler* NSGetUncaughtExceptionHandler() {
     NSException* ret = [[self alloc] initWithName:[self _exceptionNameForHRESULT:errorCode] reason:reason userInfo:userInfo];
 
     return [ret autorelease];
+}
+
+- (HRESULT)_hresult {
+    // If we have an hresult in our user dict, use that, otherwise this was unexpected:
+    NSNumber* hresultValue = [self.userInfo objectForKey:g_NSHResultErrorDictKey];
+    if (hresultValue) {
+        return [hresultValue unsignedIntValue];
+    }
+
+    TraceWarning(L"NSException", L"Called -hresult on an NSException without an HRESULT!");
+    return E_UNEXPECTED;
 }
 @end

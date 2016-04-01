@@ -141,8 +141,8 @@ typedef unsigned WMPTimedMetadataTrackPresentationMode;
 
 WINRT_EXPORT
 @interface WMPPlaybackMediaMarker : RTObject
-+ (WMPPlaybackMediaMarker*)createFromTime:(WFTimeSpan*)value ACTIVATOR;
-+ (WMPPlaybackMediaMarker*)create:(WFTimeSpan*)value mediaMarketType:(NSString*)mediaMarketType text:(NSString*)text ACTIVATOR;
++ (WMPPlaybackMediaMarker*)makeFromTime:(WFTimeSpan*)value ACTIVATOR;
++ (WMPPlaybackMediaMarker*)make:(WFTimeSpan*)value mediaMarketType:(NSString*)mediaMarketType text:(NSString*)text ACTIVATOR;
 @property (readonly) NSString* mediaMarkerType;
 @property (readonly) NSString* text;
 @property (readonly) WFTimeSpan* time;
@@ -216,7 +216,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPMediaPlayer : RTObject
 @property double volume;
-@property (copy) WFTimeSpan* position;
+@property (retain) WFTimeSpan* position;
 @property double playbackRate;
 @property BOOL isLoopingEnabled;
 @property BOOL isMuted;
@@ -231,8 +231,8 @@ WINRT_EXPORT
 @property WMPMediaPlayerAudioDeviceType audioDeviceType;
 @property WMPMediaPlayerAudioCategory audioCategory;
 @property (readonly) WMSystemMediaTransportControls* systemMediaTransportControls;
-@property (copy) WMPMediaProtectionManager* protectionManager;
-@property (copy) RTObject<WMPIMediaPlaybackSource>* source;
+@property (retain) WMPMediaProtectionManager* protectionManager;
+@property (retain) RTObject<WMPIMediaPlaybackSource>* source;
 - (EventRegistrationToken)addBufferingEndedEvent:(void (^)(WMPMediaPlayer*, RTObject*))del;
 - (void)removeBufferingEndedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addBufferingStartedEvent:(void (^)(WMPMediaPlayer*, RTObject*))del;
@@ -288,7 +288,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackItem : RTObject <WMPIMediaPlaybackSource>
-+ (WMPMediaPlaybackItem*)create:(WMCMediaSource*)source ACTIVATOR;
++ (WMPMediaPlaybackItem*)make:(WMCMediaSource*)source ACTIVATOR;
 @property (readonly) WMPMediaPlaybackAudioTrackList* audioTracks;
 @property (readonly) WMCMediaSource* source;
 @property (readonly) WMPMediaPlaybackTimedMetadataTrackList* timedMetadataTracks;
@@ -389,7 +389,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPMediaPlaybackList : RTObject <WMPIMediaPlaybackSource>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL shuffleEnabled;
 @property BOOL autoRepeatEnabled;
 @property (readonly) WMPMediaPlaybackItem* currentItem;

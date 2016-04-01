@@ -185,7 +185,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattPresentationFormat : RTObject
-@property (readonly) unsigned short description;
+@property (readonly) unsigned short Description;
 @property (readonly) int exponent;
 @property (readonly) uint8_t formatType;
 @property (readonly) uint8_t Namespace;
@@ -376,7 +376,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattReliableWriteTransaction : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)writeValue:(WDBGGattCharacteristic*)characteristic value:(RTObject<WSSIBuffer>*)value;
 - (void)commitAsyncWithSuccess:(void (^)(WDBGGattCommunicationStatus))success failure:(void (^)(NSError*))failure;
 @end

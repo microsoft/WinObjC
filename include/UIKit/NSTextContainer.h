@@ -18,7 +18,7 @@
 
 #import <Foundation/NSObject.h>
 #import <Foundation/NSRange.h>
-#import <UIKit/NSStringDrawing.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import <UIKit/NSParagraphStyle.h>
 
 @class NSArray;

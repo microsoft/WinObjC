@@ -44,7 +44,7 @@ VCProject::VCProject(VSTemplateProject* projTemplate, const std::string& id)
   else
     m_id = sole::uuid4().str();
 
-  m_globalProps["ProjectGuid"] = formatVSGUID(m_id);
+  addGlobalProperty("ProjectGuid", formatVSGUID(m_id));
 }
 
 VCProject::~VCProject() {}
@@ -89,26 +89,26 @@ const VCProjectSet& VCProject::getProjectReferences() const
   return m_projectRefs;
 }
 
-const StringMap& VCProject::getGlobalProperties() const
+const ConditionalValueListMap& VCProject::getGlobalProperties() const
 {
   return m_globalProps;
 }
 
-const StringMap& VCProject::getUserMacros() const
+const ConditionalValueListMap& VCProject::getUserMacros() const
 {
   return m_userMacros;
 }
 
-void VCProject::setGlobalProperty(const std::string& name, const std::string& value)
+void VCProject::addGlobalProperty(const std::string& name, const std::string& value, const std::string& condition)
 {
   if (!name.empty())
-    m_globalProps[name] = value;
+    m_globalProps[name].push_back(ConditionalValue(value, condition));
 }
 
-void VCProject::setUserMacro(const std::string& name, const std::string& value)
+void VCProject::addUserMacro(const std::string& name, const std::string& value, const std::string& condition)
 {
   if (!name.empty())
-    m_userMacros[name] = value;
+    m_userMacros[name].push_back(ConditionalValue(value, condition));
 }
 
 const void VCProject::getPlatforms(StringSet& ret) const

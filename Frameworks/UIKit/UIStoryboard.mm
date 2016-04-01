@@ -19,10 +19,13 @@
 #import <Foundation/NSString.h>
 #import <Foundation/NSDictionary.h>
 #import <Foundation/NSBundle.h>
-#import <Foundation/NSNib.h>
+#import <UIKit/UINib.h>
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIApplication.h>
 #import <UIKit/UIStoryboard.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIStoryboard";
 
 @implementation UIStoryboard {
     idretaintype(NSString) _entryPoint;
@@ -73,12 +76,12 @@
     NSString* runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:@".nib"];
 
-    EbrDebugLog("Searching = %s\n", [runtimePath UTF8String]);
+    TraceVerbose(TAG, L"Searching = %hs", [runtimePath UTF8String]);
     pathToNib = [_bundle pathForResource:@"runtime" ofType:@"nib" inDirectory:runtimePath];
     if (pathToNib == nil) {
         pathToNib = [_bundle pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
     }
-    EbrDebugLog("Found %s\n", [pathToNib UTF8String]);
+    TraceVerbose(TAG, L"Found %hs", [pathToNib UTF8String]);
 
     id proxyObjects[2];
     id proxyNames[2];
@@ -89,7 +92,7 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib* nib = [NSNib nibWithNibName:pathToNib bundle:_bundle];
+    UINib* nib = [UINib nibWithNibName:pathToNib bundle:_bundle];
     id obj = [nib instantiateWithOwner:uiApplication options:@{ UINibExternalObjects : proxyObjectsDict }];
     int count = [obj count];
 
@@ -108,7 +111,7 @@
  @Status Interoperable
 */
 - (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
-    EbrDebugLog("instantiateViewControllerWithIdentifier %s\n", [identifier UTF8String]);
+    TraceVerbose(TAG, L"instantiateViewControllerWithIdentifier %hs", [identifier UTF8String]);
     NSString* fileName = [_fileMap objectForKey:(id)identifier];
 
     UIApplication* uiApplication = [UIApplication sharedApplication];
@@ -118,7 +121,7 @@
     id runtimePath = [_path stringByAppendingPathComponent:(id)fileName];
     runtimePath = [runtimePath stringByAppendingString:(id) @".nib"];
 
-    EbrDebugLog("Searching = %s\n", [runtimePath UTF8String]);
+    TraceVerbose(TAG, L"Searching = %hs", [runtimePath UTF8String]);
     pathToNib = [_bundle pathForResource:(id) @"runtime" ofType:@"nib" inDirectory:runtimePath];
     if (pathToNib == nil) {
         pathToNib = [_bundle pathForResource:fileName ofType:@"nib" inDirectory:(id)_path];
@@ -133,7 +136,7 @@
     proxyNames[1] = @"UIStoryboardPlaceholder";
     id proxyObjectsDict = [NSDictionary dictionaryWithObjects:proxyObjects forKeys:proxyNames count:2];
 
-    NSNib* nib = [NSNib nibWithNibName:pathToNib bundle:_bundle];
+    UINib* nib = [UINib nibWithNibName:pathToNib bundle:_bundle];
     id obj = [nib instantiateWithOwner:uiApplication options:@{ UINibExternalObjects : proxyObjectsDict }];
     int count = [obj count];
 

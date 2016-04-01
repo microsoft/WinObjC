@@ -60,11 +60,11 @@ typedef unsigned WMEMediaTrimmingPreference;
 
 WINRT_EXPORT
 @interface WMEMediaOverlay : RTObject
-+ (WMEMediaOverlay*)create:(WMEMediaClip*)clip ACTIVATOR;
-+ (WMEMediaOverlay*)createWithPositionAndOpacity:(WMEMediaClip*)clip position:(WFRect*)position opacity:(double)opacity ACTIVATOR;
-@property (copy) WFRect* position;
++ (WMEMediaOverlay*)make:(WMEMediaClip*)clip ACTIVATOR;
++ (WMEMediaOverlay*)makeWithPositionAndOpacity:(WMEMediaClip*)clip position:(WFRect*)position opacity:(double)opacity ACTIVATOR;
+@property (retain) WFRect* position;
 @property double opacity;
-@property (copy) WFTimeSpan* delay;
+@property (retain) WFTimeSpan* delay;
 @property BOOL audioEnabled;
 @property (readonly) WMEMediaClip* clip;
 - (WMEMediaOverlay*)clone;
@@ -86,9 +86,9 @@ WINRT_EXPORT
                          failure:(void (^)(NSError*))failure;
 + (WMEMediaClip*)createFromSurface:(RTObject<WGDDIDirect3DSurface>*)surface originalDuration:(WFTimeSpan*)originalDuration;
 @property unsigned int selectedEmbeddedAudioTrackIndex;
-@property (copy) WFTimeSpan* trimTimeFromEnd;
+@property (retain) WFTimeSpan* trimTimeFromEnd;
 @property double volume;
-@property (copy) WFTimeSpan* trimTimeFromStart;
+@property (retain) WFTimeSpan* trimTimeFromStart;
 @property (readonly) NSArray* embeddedAudioTracks;
 @property (readonly) WFTimeSpan* endTimeInComposition;
 @property (readonly) WFTimeSpan* originalDuration;
@@ -125,9 +125,9 @@ WINRT_EXPORT
                     success:(void (^)(WMEBackgroundAudioTrack*))success
                     failure:(void (^)(NSError*))failure;
 @property double volume;
-@property (copy) WFTimeSpan* trimTimeFromStart;
-@property (copy) WFTimeSpan* trimTimeFromEnd;
-@property (copy) WFTimeSpan* delay;
+@property (retain) WFTimeSpan* trimTimeFromStart;
+@property (retain) WFTimeSpan* trimTimeFromEnd;
+@property (retain) WFTimeSpan* delay;
 @property (readonly) NSMutableArray* audioEffectDefinitions;
 @property (readonly) WFTimeSpan* originalDuration;
 @property (readonly) WFTimeSpan* trimmedDuration;
@@ -145,7 +145,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMEMediaComposition : RTObject
 + (void)loadAsync:(WSStorageFile*)file success:(void (^)(WMEMediaComposition*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray* backgroundAudioTracks;
 @property (readonly) NSMutableArray* clips;
 @property (readonly) WFTimeSpan* duration;
@@ -194,8 +194,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEMediaOverlayLayer : RTObject
-+ (WMEMediaOverlayLayer*)createWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (WMEMediaOverlayLayer*)makeWithCompositorDefinition:(RTObject<WMEIVideoCompositorDefinition>*)compositorDefinition ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WMEIVideoCompositorDefinition>* customCompositorDefinition;
 @property (readonly) NSMutableArray* overlays;
 - (WMEMediaOverlayLayer*)clone;

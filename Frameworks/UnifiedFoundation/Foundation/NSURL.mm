@@ -23,6 +23,9 @@
 #include "libxml/uri.h"
 #include "HashFn.h"
 #include "Etc.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSURL";
 
 #define NSURLMAXLEN SIZE_MAX
 
@@ -187,18 +190,18 @@ struct EbrURL {
 
     void ProcessURI() {
         if (_path) {
-            free(_path);
+            IwFree(_path);
             _path = NULL;
         }
         if (_parameters) {
-            free(_parameters);
+            IwFree(_parameters);
             _parameters = NULL;
         }
 
         //  Remove parameters and any trailing / from the path we report to the app
         if (_uri->path) {
             size_t newSize = strnlen_s(_uri->path, NSURLMAXLEN) + 1;
-            _path = (char*)malloc(newSize);
+            _path = (char*)IwMalloc(newSize);
             FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, newSize, _uri->path) != 0);
 
             char* params = strstr(_path, ";");
@@ -207,7 +210,7 @@ struct EbrURL {
                 params++;
 
                 size_t newParamSize = strnlen_s(params, NSURLMAXLEN) + 1;
-                _parameters = (char*)malloc(newParamSize);
+                _parameters = (char*)IwMalloc(newParamSize);
                 FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, newParamSize, params) != 0);
             }
 
@@ -239,11 +242,11 @@ struct EbrURL {
         }
 
         if (_parameters) {
-            free(_parameters);
+            IwFree(_parameters);
         }
 
         if (_path) {
-            free(_path);
+            IwFree(_path);
         }
     }
 
@@ -286,7 +289,7 @@ struct EbrURL {
     }
 
     static char* escape(const char* in, const char* escapeChars) {
-        char* ret = (char*)malloc(strnlen_s(in, NSURLMAXLEN) * 3 + 1);
+        char* ret = (char*)IwMalloc(strnlen_s(in, NSURLMAXLEN) * 3 + 1);
         int retLen = 0;
         int inLen = strnlen_s(in, NSURLMAXLEN);
         const char* hex = "0123456789ABCDEF";
@@ -329,7 +332,7 @@ struct EbrURL {
             xmlFree(str);
         }
 
-        free(escaped);
+        IwFree(escaped);
         if (_uri) {
             ProcessURI();
         }
@@ -362,12 +365,12 @@ struct EbrURL {
         int newLen = 16;
 
         if (path) {
-            _path = (char*)malloc(strnlen_s(path, NSURLMAXLEN) + 1);
+            _path = (char*)IwMalloc(strnlen_s(path, NSURLMAXLEN) + 1);
             FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, NSURLMAXLEN, path) != 0);
             newLen += strnlen_s(_path, NSURLMAXLEN);
         }
         if (params) {
-            _parameters = (char*)malloc(strnlen_s(params, NSURLMAXLEN) + 1);
+            _parameters = (char*)IwMalloc(strnlen_s(params, NSURLMAXLEN) + 1);
             FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, NSURLMAXLEN, params) != 0);
             newLen += strnlen_s(params, NSURLMAXLEN);
         }
@@ -388,11 +391,11 @@ struct EbrURL {
         _uri->path = newPath;
 
         if (oldPath) {
-            free(oldPath);
+            IwFree(oldPath);
         }
 
         if (oldParams) {
-            free(oldParams);
+            IwFree(oldParams);
         }
     }
 
@@ -408,8 +411,8 @@ struct EbrURL {
         }
 
         //  Strip out parameter
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -434,8 +437,8 @@ struct EbrURL {
             newLen += strnlen_s(pPath, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -457,8 +460,8 @@ struct EbrURL {
             newLen += strnlen_s(_path, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -492,8 +495,8 @@ struct EbrURL {
             newLen += strnlen_s(_path, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
         if (_path) {
@@ -535,8 +538,8 @@ struct EbrURL {
             newLen += strnlen_s(standardizedPath, NSURLMAXLEN);
         }
 
-        char* newPath = (char*)malloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { free(newPath); });
+        char* newPath = (char*)IwMalloc(newLen);
+        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
 
         FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
 
@@ -617,7 +620,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
 
     //  Strip trailing /'s
@@ -630,7 +633,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         isDirectory = TRUE;
     }
 
-    free(szPath);
+    IwFree(szPath);
 
     return [self initFileURLWithPath:path isDirectory:isDirectory];
 }
@@ -656,7 +659,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
 
     //  Strip trailing /'s
@@ -676,7 +679,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         initPath(self, NULL, NULL, szPath);
     }
 
-    free(szPath);
+    IwFree(szPath);
 
     buildFullURI(self, baseURL);
 
@@ -712,13 +715,13 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 */
 - (NSURL*)URLByAppendingPathComponent:(id)path isDirectory:(BOOL)isDirectory {
     if (path == nil) {
-        EbrDebugLog("URLByAppendingPathComponent: path is nil!\n");
+        TraceVerbose(TAG, L"URLByAppendingPathComponent: path is nil!");
         return nil;
     }
 
     NSURL* ret = [[[self class] alloc] init];
     const char* pPath = [path UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
     StripSlashes(szPath);
     if (isDirectory) {
@@ -727,7 +730,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
     ret->_uri = _uri->Clone();
     ret->_uri->AppendPath(szPath);
-    free(szPath);
+    IwFree(szPath);
     buildFullURI(ret, _baseURL);
 
     return [ret autorelease];
@@ -811,7 +814,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     const char* pURL = [string UTF8String];
-    char* szPath = (char*)malloc(strnlen_s(pURL, NSURLMAXLEN) + 16);
+    char* szPath = (char*)IwMalloc(strnlen_s(pURL, NSURLMAXLEN) + 16);
     FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pURL) != 0);
     StripSlashes(szPath);
     if (isDirectory) {
@@ -819,7 +822,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     }
 
     buildURIs(self, szPath, parent);
-    free(szPath);
+    IwFree(szPath);
     _baseURL = [parent retain];
     if (_uri == NULL) {
         return nil;
@@ -856,6 +859,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return [[[self alloc] initWithString:string relativeToURL:parent] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_baseURL release];
     if (_uri) {
@@ -872,10 +878,16 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder allowsKeyedCoding]) {
         id path = [coder decodeObjectForKey:@"NS.path"];
@@ -885,12 +897,15 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         return self;
     } else {
         assert(0);
-        // NSLog(@"NSURL only supports keyed unarchiving");
         [self release];
         return nil;
     }
 }
 
+/**
+ @Status Caveat
+ @ Notes Only supports NSKeyedArchiver coder type.
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         /* [TODO: Encode baseURL as well] */
@@ -898,10 +913,12 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
         [coder encodeObject:fullURL forKey:@"NS.path"];
     } else {
         assert(0);
-        // NSLog(@"NSURL only supports keyed archiving");
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     if (_fullUri->_path) {
         return murmurHash3(_fullUri->_path, strnlen_s(_fullUri->_path, NSURLMAXLEN), 0x834cba12);
@@ -909,6 +926,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     NSURL* otherURL;
 
@@ -1157,6 +1177,9 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
     return [[self scheme] isEqualToString:@"file"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)description {
     return [self absoluteString];
 }
@@ -1177,7 +1200,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 */
 - (id)standardizedURL {
     UNIMPLEMENTED();
-    EbrDebugLog("standardizedURL needs attention\n");
+    TraceVerbose(TAG, L"standardizedURL needs attention");
     return [self copy];
 }
 

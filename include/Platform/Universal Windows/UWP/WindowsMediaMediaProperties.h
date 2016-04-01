@@ -94,7 +94,7 @@ typedef unsigned WMMMediaMirroringOptions;
 
 @protocol WMMIMediaEncodingProperties
 @property (readonly) WMMMediaPropertySet* properties;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) NSString* type;
 @end
 
@@ -118,7 +118,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMMMediaPropertySet : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
@@ -152,12 +152,12 @@ WINRT_EXPORT
                             channelCount:(unsigned int)channelCount
                            bitsPerSample:(unsigned int)bitsPerSample;
 + (WMMAudioEncodingProperties*)createWma:(unsigned int)sampleRate channelCount:(unsigned int)channelCount bitrate:(unsigned int)bitrate;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int sampleRate;
 @property unsigned int channelCount;
 @property unsigned int bitsPerSample;
 @property unsigned int bitrate;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 - (void)setFormatUserData:(id<NSFastEnumeration> /* uint8_t */)value;
@@ -260,8 +260,8 @@ WINRT_EXPORT
 + (WMMVideoEncodingProperties*)createH264;
 + (WMMVideoEncodingProperties*)createMpeg2;
 + (WMMVideoEncodingProperties*)createUncompressed:(NSString*)subtype width:(unsigned int)width height:(unsigned int)height;
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* subtype;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 @property unsigned int width;
@@ -287,10 +287,10 @@ WINRT_EXPORT
 + (WMMImageEncodingProperties*)createJpegXR;
 + (WMMImageEncodingProperties*)createUncompressed:(WMMMediaPixelFormat)format;
 + (WMMImageEncodingProperties*)createBmp;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property unsigned int width;
 @property unsigned int height;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 @end
@@ -303,8 +303,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMMContainerEncodingProperties : RTObject <WMMIMediaEncodingProperties>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* subtype;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 @end
@@ -330,10 +330,10 @@ WINRT_EXPORT
                       failure:(void (^)(NSError*))failure;
 + (WMMMediaEncodingProfile*)createWav:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createAvi:(WMMVideoEncodingQuality)quality;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WMMVideoEncodingProperties* video;
-@property (copy) WMMContainerEncodingProperties* container;
-@property (copy) WMMAudioEncodingProperties* audio;
++ (instancetype)make ACTIVATOR;
+@property (retain) WMMVideoEncodingProperties* video;
+@property (retain) WMMContainerEncodingProperties* container;
+@property (retain) WMMAudioEncodingProperties* audio;
 @end
 
 #endif // __WMMMediaEncodingProfile_DEFINED__

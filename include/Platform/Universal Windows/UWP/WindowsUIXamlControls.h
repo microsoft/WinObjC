@@ -993,7 +993,7 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 @protocol WXCISemanticZoomInformation
 @property BOOL isActiveView;
 @property BOOL isZoomedInView;
-@property (copy) WXCSemanticZoom* semanticZoomOwner;
+@property (retain) WXCSemanticZoom* semanticZoomOwner;
 - (void)initializeViewChange;
 - (void)completeViewChange;
 - (void)makeVisible:(WXCSemanticZoomLocation*)item;
@@ -1222,7 +1222,7 @@ typedef void (^WXCWebViewNavigationFailedEventHandler)(RTObject* sender, WXCWebV
 
 WINRT_EXPORT
 @interface WXCBackClickEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL handled;
 @end
 
@@ -1234,7 +1234,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCDragItemsStartingEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL cancel;
 @property (readonly) WADDataPackage* data;
 @property (readonly) NSMutableArray* items;
@@ -1260,10 +1260,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSemanticZoomViewChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXCSemanticZoomLocation* sourceItem;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXCSemanticZoomLocation* sourceItem;
 @property BOOL isSourceZoomedInView;
-@property (copy) WXCSemanticZoomLocation* destinationItem;
+@property (retain) WXCSemanticZoomLocation* destinationItem;
 @end
 
 #endif // __WXCSemanticZoomViewChangedEventArgs_DEFINED__
@@ -1285,7 +1285,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCContainerContentChangingEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL handled;
 @property (readonly) BOOL inRecycleQueue;
 @property (readonly) RTObject* item;
@@ -1305,9 +1305,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSemanticZoomLocation : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* item;
-@property (copy) WFRect* bounds;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* item;
+@property (retain) WFRect* bounds;
 @end
 
 #endif // __WXCSemanticZoomLocation_DEFINED__
@@ -1329,8 +1329,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCChoosingGroupHeaderContainerEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXCListViewBaseHeaderItem* groupHeaderContainer;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXCListViewBaseHeaderItem* groupHeaderContainer;
 @property (readonly) RTObject* group;
 @property (readonly) int groupIndex;
 @end
@@ -1343,8 +1343,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCChoosingItemContainerEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXCPSelectorItem* itemContainer;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXCPSelectorItem* itemContainer;
 @property BOOL isContainerPrepared;
 @property (readonly) RTObject* item;
 @property (readonly) int itemIndex;
@@ -1379,7 +1379,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCDataTemplateSelector : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (WXDataTemplate*)selectTemplate:(RTObject*)item container:(WXDependencyObject*)container;
 - (WXDataTemplate*)selectTemplateCore:(RTObject*)item container:(WXDependencyObject*)container;
 - (WXDataTemplate*)selectTemplateForItem:(RTObject*)item;
@@ -1406,7 +1406,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCStyleSelector : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (WXStyle*)selectStyle:(RTObject*)item container:(WXDependencyObject*)container;
 - (WXStyle*)selectStyleCore:(RTObject*)item container:(WXDependencyObject*)container;
 @end
@@ -1430,14 +1430,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCGroupStyle : RTObject <WUXDINotifyPropertyChanged>
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXCItemsPanelTemplate* panel;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXCItemsPanelTemplate* panel;
 @property BOOL hidesIfEmpty;
-@property (copy) WXCDataTemplateSelector* headerTemplateSelector;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) WXCStyleSelector* containerStyleSelector;
-@property (copy) WXStyle* containerStyle;
-@property (copy) WXStyle* headerContainerStyle;
+@property (retain) WXCDataTemplateSelector* headerTemplateSelector;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) WXCStyleSelector* containerStyleSelector;
+@property (retain) WXStyle* containerStyle;
+@property (retain) WXStyle* headerContainerStyle;
 - (EventRegistrationToken)addPropertyChangedEvent:(WUXDPropertyChangedEventHandler)del;
 - (void)removePropertyChangedEvent:(EventRegistrationToken)tok;
 @end
@@ -1450,7 +1450,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCGroupStyleSelector : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (WXCGroupStyle*)selectGroupStyle:(RTObject*)group level:(unsigned int)level;
 - (WXCGroupStyle*)selectGroupStyleCore:(RTObject*)group level:(unsigned int)level;
 @end
@@ -1663,7 +1663,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCHubSectionHeaderClickEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WXCHubSection* section;
 @end
 
@@ -1849,7 +1849,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCScrollViewerViewChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL isIntermediate;
 @end
 
@@ -1901,7 +1901,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSearchBoxResultSuggestionChosenEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
 @property (readonly) NSString* tag;
 @end
@@ -2103,7 +2103,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -2122,8 +2122,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCColumnDefinition : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXGridLength* width;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXGridLength* width;
 @property double minWidth;
 @property double maxWidth;
 @property (readonly) double actualWidth;
@@ -2140,10 +2140,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCRowDefinition : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double minHeight;
 @property double maxHeight;
-@property (copy) WXGridLength* height;
+@property (retain) WXGridLength* height;
 @property (readonly) double actualHeight;
 + (WXDependencyProperty*)heightProperty;
 + (WXDependencyProperty*)maxHeightProperty;
@@ -2158,7 +2158,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAutoSuggestBoxQuerySubmittedEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* chosenSuggestion;
 @property (readonly) NSString* queryText;
 @end
@@ -2171,7 +2171,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAutoSuggestBoxSuggestionChosenEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* selectedItem;
 @end
 
@@ -2183,7 +2183,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAutoSuggestBoxTextChangedEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCAutoSuggestionBoxTextChangeReason reason;
 + (WXDependencyProperty*)reasonProperty;
 - (BOOL)checkCurrent;
@@ -2210,7 +2210,7 @@ WINRT_EXPORT
 + (WUXCPFlyoutBase*)getAttachedFlyout:(WXFrameworkElement*)element;
 + (void)setAttachedFlyout:(WXFrameworkElement*)element value:(WUXCPFlyoutBase*)value;
 + (void)showAttachedFlyout:(WXFrameworkElement*)flyoutOwner;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXCPFlyoutPlacementMode placement;
 + (WXDependencyProperty*)attachedFlyoutProperty;
 + (WXDependencyProperty*)placementProperty;
@@ -2233,9 +2233,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCFlyout : WUXCPFlyoutBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXStyle* flyoutPresenterStyle;
-@property (copy) WXUIElement* content;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXStyle* flyoutPresenterStyle;
+@property (retain) WXUIElement* content;
 + (WXDependencyProperty*)contentProperty;
 + (WXDependencyProperty*)flyoutPresenterStyleProperty;
 @end
@@ -2248,8 +2248,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMenuFlyout : WUXCPFlyoutBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXStyle* menuFlyoutPresenterStyle;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXStyle* menuFlyoutPresenterStyle;
 @property (readonly) NSMutableArray* items;
 + (WXDependencyProperty*)menuFlyoutPresenterStyleProperty;
 - (void)showAt:(WXUIElement*)targetElement point:(WFPoint*)point;
@@ -2263,7 +2263,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* originalSource;
 @end
 
@@ -2301,7 +2301,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCItemClickEventArgs : WXRoutedEventArgs
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* clickedItem;
 @end
 
@@ -2335,7 +2335,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkTemplate : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXFrameworkTemplate_DEFINED__
@@ -2346,7 +2346,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCItemsPanelTemplate : WXFrameworkTemplate
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCItemsPanelTemplate_DEFINED__
@@ -2393,26 +2393,26 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 @property BOOL isRightTapEnabled;
-@property (copy) WUXMProjection* projection;
+@property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
 @property BOOL isHitTestVisible;
 @property double opacity;
-@property (copy) WUXMCacheMode* cacheMode;
+@property (retain) WUXMCacheMode* cacheMode;
 @property BOOL isDoubleTapEnabled;
 @property BOOL isTapEnabled;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (copy) WUXMRectangleGeometry* clip;
-@property (copy) WUXMATransitionCollection* transitions;
-@property (copy) WFPoint* renderTransformOrigin;
-@property (copy) WUXMTransform* renderTransform;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMATransitionCollection* transitions;
+@property (retain) WFPoint* renderTransformOrigin;
+@property (retain) WUXMTransform* renderTransform;
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
 @property (readonly) NSArray* pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
-@property (copy) WUXMMTransform3D* transform3D;
+@property (retain) WUXMMTransform3D* transform3D;
 @property BOOL canDrag;
 + (WXRoutedEvent*)dropEvent;
 + (WXDependencyProperty*)allowDropProperty;
@@ -2539,22 +2539,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* margin;
-@property (copy) NSString* language;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* margin;
+@property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
-@property (copy) RTObject* dataContext;
+@property (retain) RTObject* dataContext;
 @property WXVerticalAlignment verticalAlignment;
 @property double maxWidth;
 @property double maxHeight;
 @property double minHeight;
 @property double width;
-@property (copy) RTObject* tag;
-@property (copy) WXStyle* style;
-@property (copy) WXResourceDictionary* resources;
-@property (copy) NSString* name;
+@property (retain) RTObject* tag;
+@property (retain) WXStyle* style;
+@property (retain) WXResourceDictionary* resources;
+@property (retain) NSString* name;
 @property double minWidth;
 @property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
@@ -2609,9 +2609,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPanel : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMATransitionCollection* childrenTransitions;
-@property (copy) WUXMBrush* background;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMATransitionCollection* childrenTransitions;
+@property (retain) WUXMBrush* background;
 @property (readonly) WXCUIElementCollection* children;
 @property (readonly) BOOL isItemsHost;
 + (WXDependencyProperty*)backgroundProperty;
@@ -2627,14 +2627,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCBorder : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* padding;
-@property (copy) WXCornerRadius* cornerRadius;
-@property (copy) WUXMATransitionCollection* childTransitions;
-@property (copy) WXUIElement* child;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
-@property (copy) WUXMBrush* background;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* padding;
+@property (retain) WXCornerRadius* cornerRadius;
+@property (retain) WUXMATransitionCollection* childTransitions;
+@property (retain) WXUIElement* child;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
+@property (retain) WUXMBrush* background;
 + (WXDependencyProperty*)backgroundProperty;
 + (WXDependencyProperty*)borderBrushProperty;
 + (WXDependencyProperty*)borderThicknessProperty;
@@ -2651,9 +2651,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCaptureElement : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMStretch stretch;
-@property (copy) WMCMediaCapture* source;
+@property (retain) WMCMediaCapture* source;
 + (WXDependencyProperty*)sourceProperty;
 + (WXDependencyProperty*)stretchProperty;
 @end
@@ -2666,29 +2666,29 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCContentPresenter : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMFontFamily* fontFamily;
-@property (copy) WUXMATransitionCollection* contentTransitions;
-@property (copy) WXCDataTemplateSelector* contentTemplateSelector;
-@property (copy) WXDataTemplate* contentTemplate;
-@property (copy) RTObject* content;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMFontFamily* fontFamily;
+@property (retain) WUXMATransitionCollection* contentTransitions;
+@property (retain) WXCDataTemplateSelector* contentTemplateSelector;
+@property (retain) WXDataTemplate* contentTemplate;
+@property (retain) RTObject* content;
 @property double fontSize;
 @property int characterSpacing;
-@property (copy) WUXMBrush* foreground;
-@property (copy) WUTFontWeight* fontWeight;
+@property (retain) WUXMBrush* foreground;
+@property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
 @property WUTFontStretch fontStretch;
 @property WXOpticalMarginAlignment opticalMarginAlignment;
 @property WXTextLineBounds textLineBounds;
 @property BOOL isTextScaleFactorEnabled;
-@property (copy) WXCornerRadius* cornerRadius;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
-@property (copy) WUXMBrush* background;
+@property (retain) WXCornerRadius* cornerRadius;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
+@property (retain) WUXMBrush* background;
 @property WXHorizontalAlignment horizontalContentAlignment;
 @property WXVerticalAlignment verticalContentAlignment;
 @property WXTextWrapping textWrapping;
-@property (copy) WXThickness* padding;
+@property (retain) WXThickness* padding;
 @property int maxLines;
 @property WXLineStackingStrategy lineStackingStrategy;
 @property double lineHeight;
@@ -2730,10 +2730,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCImage : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMStretch stretch;
-@property (copy) WUXMImageSource* source;
-@property (copy) WXThickness* nineGrid;
+@property (retain) WUXMImageSource* source;
+@property (retain) WXThickness* nineGrid;
 @property (readonly) WMPPlayToSource* playToSource;
 + (WXDependencyProperty*)nineGridProperty;
 + (WXDependencyProperty*)playToSourceProperty;
@@ -2771,14 +2771,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCItemsPresenter : WXFrameworkElement <WUXCPIScrollSnapPointsInfo>
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* padding;
-@property (copy) WUXMATransitionCollection* headerTransitions;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
-@property (copy) WUXMATransitionCollection* footerTransitions;
-@property (copy) WXDataTemplate* footerTemplate;
-@property (copy) RTObject* footer;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* padding;
+@property (retain) WUXMATransitionCollection* headerTransitions;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
+@property (retain) WUXMATransitionCollection* footerTransitions;
+@property (retain) WXDataTemplate* footerTemplate;
+@property (retain) RTObject* footer;
 @property (readonly) BOOL areHorizontalSnapPointsRegular;
 @property (readonly) BOOL areVerticalSnapPointsRegular;
 + (WXDependencyProperty*)headerProperty;
@@ -2804,9 +2804,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCRichTextBlockOverflow : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* padding;
-@property (copy) WXCRichTextBlockOverflow* overflowContentTarget;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* padding;
+@property (retain) WXCRichTextBlockOverflow* overflowContentTarget;
 @property (readonly) double baselineOffset;
 @property (readonly) WUXDTextPointer* contentEnd;
 @property (readonly) WXCRichTextBlock* contentSource;
@@ -2829,23 +2829,23 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCRichTextBlock : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUTFontStretch fontStretch;
-@property (copy) WUXMBrush* foreground;
-@property (copy) WUXMFontFamily* fontFamily;
+@property (retain) WUXMBrush* foreground;
+@property (retain) WUXMFontFamily* fontFamily;
 @property WXLineStackingStrategy lineStackingStrategy;
 @property double lineHeight;
 @property BOOL isTextSelectionEnabled;
-@property (copy) WXCRichTextBlockOverflow* overflowContentTarget;
+@property (retain) WXCRichTextBlockOverflow* overflowContentTarget;
 @property WUTFontStyle fontStyle;
 @property WXTextWrapping textWrapping;
 @property WXTextTrimming textTrimming;
 @property int characterSpacing;
 @property double textIndent;
 @property WXTextAlignment textAlignment;
-@property (copy) WXThickness* padding;
+@property (retain) WXThickness* padding;
 @property double fontSize;
-@property (copy) WUTFontWeight* fontWeight;
+@property (retain) WUTFontWeight* fontWeight;
 @property (readonly) WUXDBlockCollection* blocks;
 @property (readonly) NSString* selectedText;
 @property (readonly) WUXDTextPointer* selectionEnd;
@@ -2856,7 +2856,7 @@ WINRT_EXPORT
 @property (readonly) BOOL hasOverflowContent;
 @property WXTextReadingOrder textReadingOrder;
 @property WXTextLineBounds textLineBounds;
-@property (copy) WUXMSolidColorBrush* selectionHighlightColor;
+@property (retain) WUXMSolidColorBrush* selectionHighlightColor;
 @property WXOpticalMarginAlignment opticalMarginAlignment;
 @property int maxLines;
 @property BOOL isColorFontEnabled;
@@ -2904,22 +2904,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCTextBlock : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUTFontStyle fontStyle;
 @property WXLineStackingStrategy lineStackingStrategy;
 @property WUTFontStretch fontStretch;
-@property (copy) WUXMBrush* foreground;
+@property (retain) WUXMBrush* foreground;
 @property double fontSize;
-@property (copy) WUXMFontFamily* fontFamily;
+@property (retain) WUXMFontFamily* fontFamily;
 @property double lineHeight;
 @property WXTextTrimming textTrimming;
 @property int characterSpacing;
 @property BOOL isTextSelectionEnabled;
-@property (copy) WXThickness* padding;
+@property (retain) WXThickness* padding;
 @property WXTextWrapping textWrapping;
 @property WXTextAlignment textAlignment;
-@property (copy) NSString* text;
-@property (copy) WUTFontWeight* fontWeight;
+@property (retain) NSString* text;
+@property (retain) WUTFontWeight* fontWeight;
 @property (readonly) NSString* selectedText;
 @property (readonly) WUXDTextPointer* selectionEnd;
 @property (readonly) WUXDTextPointer* selectionStart;
@@ -2929,7 +2929,7 @@ WINRT_EXPORT
 @property (readonly) double baselineOffset;
 @property WXTextReadingOrder textReadingOrder;
 @property WXTextLineBounds textLineBounds;
-@property (copy) WUXMSolidColorBrush* selectionHighlightColor;
+@property (retain) WUXMSolidColorBrush* selectionHighlightColor;
 @property WXOpticalMarginAlignment opticalMarginAlignment;
 @property int maxLines;
 @property BOOL isColorFontEnabled;
@@ -2974,10 +2974,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCViewbox : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCStretchDirection stretchDirection;
 @property WUXMStretch stretch;
-@property (copy) WXUIElement* child;
+@property (retain) WXUIElement* child;
 + (WXDependencyProperty*)stretchDirectionProperty;
 + (WXDependencyProperty*)stretchProperty;
 @end
@@ -2996,7 +2996,7 @@ WINRT_EXPORT
 + (void)setTop:(WXUIElement*)element length:(double)length;
 + (int)getZIndex:(WXUIElement*)element;
 + (void)setZIndex:(WXUIElement*)element value:(int)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WXDependencyProperty*)leftProperty;
 + (WXDependencyProperty*)topProperty;
 + (WXDependencyProperty*)zIndexProperty;
@@ -3018,13 +3018,13 @@ WINRT_EXPORT
 + (void)setRowSpan:(WXFrameworkElement*)element value:(int)value;
 + (int)getColumnSpan:(WXFrameworkElement*)element;
 + (void)setColumnSpan:(WXFrameworkElement*)element value:(int)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WXCColumnDefinitionCollection* columnDefinitions;
 @property (readonly) WXCRowDefinitionCollection* rowDefinitions;
-@property (copy) WXThickness* padding;
-@property (copy) WXCornerRadius* cornerRadius;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
+@property (retain) WXThickness* padding;
+@property (retain) WXCornerRadius* cornerRadius;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
 + (WXDependencyProperty*)columnProperty;
 + (WXDependencyProperty*)columnSpanProperty;
 + (WXDependencyProperty*)rowProperty;
@@ -3075,11 +3075,11 @@ WINRT_EXPORT
 + (void)setAlignHorizontalCenterWithPanel:(WXUIElement*)element value:(BOOL)value;
 + (BOOL)getAlignVerticalCenterWithPanel:(WXUIElement*)element;
 + (void)setAlignVerticalCenterWithPanel:(WXUIElement*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* padding;
-@property (copy) WXCornerRadius* cornerRadius;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* padding;
+@property (retain) WXCornerRadius* cornerRadius;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
 + (WXDependencyProperty*)aboveProperty;
 + (WXDependencyProperty*)alignBottomWithPanelProperty;
 + (WXDependencyProperty*)alignBottomWithProperty;
@@ -3110,13 +3110,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCStackPanel : WXCPanel <WUXCPIScrollSnapPointsInfo>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCOrientation orientation;
 @property BOOL areScrollSnapPointsRegular;
-@property (copy) WXThickness* padding;
-@property (copy) WXCornerRadius* cornerRadius;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
+@property (retain) WXThickness* padding;
+@property (retain) WXCornerRadius* cornerRadius;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
 @property (readonly) BOOL areHorizontalSnapPointsRegular;
 @property (readonly) BOOL areVerticalSnapPointsRegular;
 + (WXDependencyProperty*)areScrollSnapPointsRegularProperty;
@@ -3145,7 +3145,7 @@ WINRT_EXPORT
 + (void)setRowSpan:(WXUIElement*)element value:(int)value;
 + (int)getColumnSpan:(WXUIElement*)element;
 + (void)setColumnSpan:(WXUIElement*)element value:(int)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXVerticalAlignment verticalChildrenAlignment;
 @property WXCOrientation orientation;
 @property int maximumRowsOrColumns;
@@ -3187,7 +3187,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPOrientedVirtualizingPanel : WXCVirtualizingPanel <WUXCPIScrollSnapPointsInfo>
-@property (copy) RTObject* scrollOwner;
+@property (retain) RTObject* scrollOwner;
 @property BOOL canVerticallyScroll;
 @property BOOL canHorizontallyScroll;
 @property (readonly) double extentHeight;
@@ -3232,7 +3232,7 @@ WINRT_EXPORT
 + (WXCVirtualizationMode)getVirtualizationMode:(WXDependencyObject*)element;
 + (void)setVirtualizationMode:(WXDependencyObject*)element value:(WXCVirtualizationMode)value;
 + (BOOL)getIsVirtualizing:(WXDependencyObject*)o;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCOrientation orientation;
 @property BOOL areScrollSnapPointsRegular;
 + (WXDependencyProperty*)areScrollSnapPointsRegularProperty;
@@ -3252,7 +3252,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCIconElement : WXFrameworkElement
-@property (copy) WUXMBrush* foreground;
+@property (retain) WUXMBrush* foreground;
 + (WXDependencyProperty*)foregroundProperty;
 @end
 
@@ -3264,7 +3264,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCInkCanvas : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUIIInkPresenter* inkPresenter;
 @end
 
@@ -3276,10 +3276,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMediaElement : WXFrameworkElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double playbackRate;
 @property BOOL autoPlay;
-@property (copy) id audioStreamIndex;
+@property (retain) id audioStreamIndex;
 @property BOOL isMuted;
 @property WUXMAudioCategory audioCategory;
 @property double defaultPlaybackRate;
@@ -3289,11 +3289,11 @@ WINRT_EXPORT
 @property double volume;
 @property WUXMStereo3DVideoRenderMode stereo3DVideoRenderMode;
 @property WUXMStereo3DVideoPackingMode stereo3DVideoPackingMode;
-@property (copy) WFUri* source;
+@property (retain) WFUri* source;
 @property BOOL realTimePlayback;
-@property (copy) WMPMediaProtectionManager* protectionManager;
-@property (copy) WUXMImageSource* posterSource;
-@property (copy) WFTimeSpan* position;
+@property (retain) WMPMediaProtectionManager* protectionManager;
+@property (retain) WUXMImageSource* posterSource;
+@property (retain) WFTimeSpan* position;
 @property (readonly) double downloadProgressOffset;
 @property (readonly) BOOL isAudioOnly;
 @property (readonly) BOOL isStereo3DVideo;
@@ -3312,10 +3312,10 @@ WINRT_EXPORT
 @property (readonly) WUXMMediaElementState currentState;
 @property (readonly) double downloadProgress;
 @property WUXMStretch stretch;
-@property (copy) WFUri* playToPreferredSourceUri;
+@property (retain) WFUri* playToPreferredSourceUri;
 @property BOOL isFullWindow;
 @property BOOL areTransportControlsEnabled;
-@property (copy) WXCMediaTransportControls* transportControls;
+@property (retain) WXCMediaTransportControls* transportControls;
 + (WXDependencyProperty*)aspectRatioHeightProperty;
 + (WXDependencyProperty*)actualStereo3DVideoPackingModeProperty;
 + (WXDependencyProperty*)downloadProgressOffsetProperty;
@@ -3402,12 +3402,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXCWebView : WXFrameworkElement
 + (RTObject<WFIAsyncAction>*)clearTemporaryWebDataAsync;
-+ (WXCWebView*)createInstanceWithExecutionMode:(WXCWebViewExecutionMode)executionMode ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* source;
-@property (copy) NSMutableArray* allowedScriptNotifyUris;
++ (WXCWebView*)makeInstanceWithExecutionMode:(WXCWebViewExecutionMode)executionMode ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* source;
+@property (retain) NSMutableArray* allowedScriptNotifyUris;
 @property (readonly) WADDataPackage* dataTransferPackage;
-@property (copy) WUColor* defaultBackgroundColor;
+@property (retain) WUColor* defaultBackgroundColor;
 @property (readonly) BOOL canGoBack;
 @property (readonly) BOOL canGoForward;
 @property (readonly) NSString* documentTitle;
@@ -3491,8 +3491,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCBitmapIcon : WXCIconElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* uriSource;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* uriSource;
 + (WXDependencyProperty*)uriSourceProperty;
 @end
 
@@ -3504,12 +3504,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCFontIcon : WXCIconElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* glyph;
-@property (copy) WUTFontWeight* fontWeight;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* glyph;
+@property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
 @property double fontSize;
-@property (copy) WUXMFontFamily* fontFamily;
+@property (retain) WUXMFontFamily* fontFamily;
 @property BOOL isTextScaleFactorEnabled;
 @property BOOL mirroredWhenRightToLeft;
 + (WXDependencyProperty*)fontFamilyProperty;
@@ -3529,10 +3529,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCItemsStackPanel : WXCPanel
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXCPGroupHeaderPlacement groupHeaderPlacement;
 @property WXCItemsUpdatingScrollMode itemsUpdatingScrollMode;
-@property (copy) WXThickness* groupPadding;
+@property (retain) WXThickness* groupPadding;
 @property double cacheLength;
 @property WXCOrientation orientation;
 @property (readonly) int firstCacheIndex;
@@ -3556,8 +3556,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCItemsWrapGrid : WXCPanel
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* groupPadding;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* groupPadding;
 @property WUXCPGroupHeaderPlacement groupHeaderPlacement;
 @property double itemWidth;
 @property double itemHeight;
@@ -3588,8 +3588,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPathIcon : WXCIconElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMGeometry* data;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMGeometry* data;
 + (WXDependencyProperty*)dataProperty;
 @end
 
@@ -3601,8 +3601,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCScrollContentPresenter : WXCContentPresenter
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* scrollOwner;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* scrollOwner;
 @property BOOL canVerticallyScroll;
 @property BOOL canHorizontallyScroll;
 @property (readonly) double extentHeight;
@@ -3636,8 +3636,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSymbolIcon : WXCIconElement
-+ (instancetype)create ACTIVATOR;
-+ (WXCSymbolIcon*)createInstanceWithSymbol:(WXCSymbol)symbol ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WXCSymbolIcon*)makeInstanceWithSymbol:(WXCSymbol)symbol ACTIVATOR;
 @property WXCSymbol symbol;
 + (WXDependencyProperty*)symbolProperty;
 @end
@@ -3650,7 +3650,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSwapChainBackgroundPanel : WXCGrid
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (WUCCoreIndependentInputSource*)createCoreIndependentInputSource:(WUCCoreInputDeviceTypes)deviceTypes;
 @end
 
@@ -3662,7 +3662,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSwapChainPanel : WXCGrid
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) float compositionScaleX;
 @property (readonly) float compositionScaleY;
 + (WXDependencyProperty*)compositionScaleXProperty;
@@ -3680,7 +3680,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCWrapGrid : WUXCPOrientedVirtualizingPanel
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXVerticalAlignment verticalChildrenAlignment;
 @property WXCOrientation orientation;
 @property int maximumRowsOrColumns;
@@ -3703,9 +3703,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMBrush : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMTransform* transform;
-@property (copy) WUXMTransform* relativeTransform;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMTransform* transform;
+@property (retain) WUXMTransform* relativeTransform;
 @property double opacity;
 + (WXDependencyProperty*)opacityProperty;
 + (WXDependencyProperty*)relativeTransformProperty;
@@ -3720,7 +3720,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTileBrush : WUXMBrush
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
 @property WUXMAlignmentX alignmentX;
@@ -3737,8 +3737,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCWebViewBrush : WUXMTileBrush
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* sourceName;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* sourceName;
 + (WXDependencyProperty*)sourceNameProperty;
 - (void)redraw;
 - (void)setSource:(WXCWebView*)source;
@@ -3752,8 +3752,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCControlTemplate : WXFrameworkTemplate
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXITypeName* targetType;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXITypeName* targetType;
 @end
 
 #endif // __WXCControlTemplate_DEFINED__
@@ -3766,29 +3766,29 @@ WINRT_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUTFontWeight* fontWeight;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
 @property WUTFontStretch fontStretch;
 @property double fontSize;
-@property (copy) WUXMBrush* background;
-@property (copy) WUXMFontFamily* fontFamily;
-@property (copy) WUXMBrush* foreground;
+@property (retain) WUXMBrush* background;
+@property (retain) WUXMFontFamily* fontFamily;
+@property (retain) WUXMBrush* foreground;
 @property int characterSpacing;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
 @property WXHorizontalAlignment horizontalContentAlignment;
 @property WXVerticalAlignment verticalContentAlignment;
-@property (copy) WXCControlTemplate* Template;
+@property (retain) WXCControlTemplate* Template;
 @property int tabIndex;
-@property (copy) WXThickness* padding;
+@property (retain) WXThickness* padding;
 @property BOOL isTabStop;
 @property BOOL isEnabled;
 @property WUXIKeyboardNavigationMode tabNavigation;
 @property (readonly) WXFocusState focusState;
 @property BOOL isTextScaleFactorEnabled;
 @property BOOL useSystemFocusVisuals;
-@property (copy) RTObject* defaultStyleKey;
+@property (retain) RTObject* defaultStyleKey;
 + (WXDependencyProperty*)fontSizeProperty;
 + (WXDependencyProperty*)backgroundProperty;
 + (WXDependencyProperty*)borderBrushProperty;
@@ -3852,9 +3852,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSemanticZoom : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject<WXCISemanticZoomInformation>* zoomedOutView;
-@property (copy) RTObject<WXCISemanticZoomInformation>* zoomedInView;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject<WXCISemanticZoomInformation>* zoomedOutView;
+@property (retain) RTObject<WXCISemanticZoomInformation>* zoomedInView;
 @property BOOL isZoomedInViewActive;
 @property BOOL isZoomOutButtonEnabled;
 @property BOOL canChangeViews;
@@ -3878,11 +3878,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCContentControl : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMATransitionCollection* contentTransitions;
-@property (copy) WXCDataTemplateSelector* contentTemplateSelector;
-@property (copy) WXDataTemplate* contentTemplate;
-@property (copy) RTObject* content;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMATransitionCollection* contentTransitions;
+@property (retain) WXCDataTemplateSelector* contentTemplateSelector;
+@property (retain) WXDataTemplate* contentTemplate;
+@property (retain) RTObject* content;
 @property (readonly) WXUIElement* contentTemplateRoot;
 + (WXDependencyProperty*)contentProperty;
 + (WXDependencyProperty*)contentTemplateProperty;
@@ -3914,16 +3914,16 @@ WINRT_EXPORT
 @interface WXCItemsControl : WXCControl <WXCIItemContainerMapping>
 + (WXCItemsControl*)getItemsOwner:(WXDependencyObject*)element;
 + (WXCItemsControl*)itemsControlFromItemContainer:(WXDependencyObject*)container;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXCItemsPanelTemplate* itemsPanel;
-@property (copy) RTObject* itemsSource;
-@property (copy) WXCDataTemplateSelector* itemTemplateSelector;
-@property (copy) WXDataTemplate* itemTemplate;
-@property (copy) WXCStyleSelector* itemContainerStyleSelector;
-@property (copy) WXStyle* itemContainerStyle;
-@property (copy) WXCGroupStyleSelector* groupStyleSelector;
-@property (copy) WUXMATransitionCollection* itemContainerTransitions;
-@property (copy) NSString* displayMemberPath;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXCItemsPanelTemplate* itemsPanel;
+@property (retain) RTObject* itemsSource;
+@property (retain) WXCDataTemplateSelector* itemTemplateSelector;
+@property (retain) WXDataTemplate* itemTemplate;
+@property (retain) WXCStyleSelector* itemContainerStyleSelector;
+@property (retain) WXStyle* itemContainerStyle;
+@property (retain) WXCGroupStyleSelector* groupStyleSelector;
+@property (retain) WUXMATransitionCollection* itemContainerTransitions;
+@property (retain) NSString* displayMemberPath;
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
 @property (readonly) WXCItemCollection* items;
 @property (readonly) NSMutableArray<RTObservableCollection>* groupStyle;
@@ -3967,7 +3967,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMediaTransportControls : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isPlaybackRateEnabled;
 @property BOOL isPlaybackRateButtonVisible;
 @property BOOL isFullWindowEnabled;
@@ -4012,19 +4012,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPasswordBox : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* passwordChar;
-@property (copy) NSString* password;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* passwordChar;
+@property (retain) NSString* password;
 @property int maxLength;
 @property BOOL isPasswordRevealButtonEnabled;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
-@property (copy) WUXMSolidColorBrush* selectionHighlightColor;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
+@property (retain) WUXMSolidColorBrush* selectionHighlightColor;
 @property BOOL preventKeyboardDisplayOnProgrammaticFocus;
-@property (copy) NSString* placeholderText;
+@property (retain) NSString* placeholderText;
 @property WXTextReadingOrder textReadingOrder;
 @property WXCPasswordRevealMode passwordRevealMode;
-@property (copy) WUXIInputScope* inputScope;
+@property (retain) WUXIInputScope* inputScope;
 + (WXDependencyProperty*)passwordProperty;
 + (WXDependencyProperty*)passwordCharProperty;
 + (WXDependencyProperty*)maxLengthProperty;
@@ -4054,7 +4054,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCProgressRing : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isActive;
 @property (readonly) WUXCPProgressRingTemplateSettings* templateSettings;
 + (WXDependencyProperty*)isActiveProperty;
@@ -4068,21 +4068,21 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCRichEditBox : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXTextWrapping textWrapping;
 @property WXTextAlignment textAlignment;
 @property BOOL isTextPredictionEnabled;
 @property BOOL acceptsReturn;
 @property BOOL isReadOnly;
-@property (copy) WUXIInputScope* inputScope;
+@property (retain) WUXIInputScope* inputScope;
 @property BOOL isSpellCheckEnabled;
 @property (readonly) RTObject<WUTITextDocument>* document;
-@property (copy) WUXMSolidColorBrush* selectionHighlightColor;
+@property (retain) WUXMSolidColorBrush* selectionHighlightColor;
 @property BOOL preventKeyboardDisplayOnProgrammaticFocus;
-@property (copy) NSString* placeholderText;
+@property (retain) NSString* placeholderText;
 @property BOOL isColorFontEnabled;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 @property WXTextReadingOrder textReadingOrder;
 @property WXCCandidateWindowAlignment desiredCandidateWindowAlignment;
 + (WXDependencyProperty*)isSpellCheckEnabledProperty;
@@ -4128,25 +4128,25 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCTextBox : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* text;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* text;
 @property int selectionStart;
 @property int selectionLength;
-@property (copy) NSString* selectedText;
+@property (retain) NSString* selectedText;
 @property int maxLength;
 @property BOOL acceptsReturn;
 @property BOOL isTextPredictionEnabled;
 @property BOOL isSpellCheckEnabled;
 @property BOOL isReadOnly;
-@property (copy) WUXIInputScope* inputScope;
+@property (retain) WUXIInputScope* inputScope;
 @property WXTextAlignment textAlignment;
 @property WXTextWrapping textWrapping;
-@property (copy) WUXMSolidColorBrush* selectionHighlightColor;
+@property (retain) WUXMSolidColorBrush* selectionHighlightColor;
 @property BOOL preventKeyboardDisplayOnProgrammaticFocus;
-@property (copy) NSString* placeholderText;
+@property (retain) NSString* placeholderText;
 @property BOOL isColorFontEnabled;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 @property WXTextReadingOrder textReadingOrder;
 @property WXCCandidateWindowAlignment desiredCandidateWindowAlignment;
 + (WXDependencyProperty*)isSpellCheckEnabledProperty;
@@ -4197,14 +4197,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCToggleSwitch : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXDataTemplate* onContentTemplate;
-@property (copy) RTObject* onContent;
-@property (copy) WXDataTemplate* offContentTemplate;
-@property (copy) RTObject* offContent;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXDataTemplate* onContentTemplate;
+@property (retain) RTObject* onContent;
+@property (retain) WXDataTemplate* offContentTemplate;
+@property (retain) RTObject* offContent;
 @property BOOL isOn;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 @property (readonly) WUXCPToggleSwitchTemplateSettings* templateSettings;
 + (WXDependencyProperty*)headerProperty;
 + (WXDependencyProperty*)headerTemplateProperty;
@@ -4229,8 +4229,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCUserControl : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXUIElement* content;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXUIElement* content;
 + (WXDependencyProperty*)contentProperty;
 @end
 
@@ -4242,7 +4242,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCGroupItem : WXCContentControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCGroupItem_DEFINED__
@@ -4253,11 +4253,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSettingsFlyout : WXCContentControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* title;
-@property (copy) WUXMImageSource* iconSource;
-@property (copy) WUXMBrush* headerForeground;
-@property (copy) WUXMBrush* headerBackground;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* title;
+@property (retain) WUXMImageSource* iconSource;
+@property (retain) WUXMBrush* headerForeground;
+@property (retain) WUXMBrush* headerBackground;
 @property (readonly) WUXCPSettingsFlyoutTemplateSettings* templateSettings;
 + (WXDependencyProperty*)headerBackgroundProperty;
 + (WXDependencyProperty*)headerForegroundProperty;
@@ -4278,9 +4278,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCToolTip : WXCContentControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double verticalOffset;
-@property (copy) WXUIElement* placementTarget;
+@property (retain) WXUIElement* placementTarget;
 @property WUXCPPlacementMode placement;
 @property BOOL isOpen;
 @property double horizontalOffset;
@@ -4304,7 +4304,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPSelectorItem : WXCContentControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isSelected;
 + (WXDependencyProperty*)isSelectedProperty;
 @end
@@ -4317,7 +4317,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCComboBoxItem : WUXCPSelectorItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCComboBoxItem_DEFINED__
@@ -4328,7 +4328,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCFlipViewItem : WUXCPSelectorItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCFlipViewItem_DEFINED__
@@ -4339,7 +4339,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListBoxItem : WUXCPSelectorItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCListBoxItem_DEFINED__
@@ -4362,7 +4362,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPRangeBase : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double value;
 @property double smallChange;
 @property double minimum;
@@ -4388,7 +4388,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCProgressBar : WUXCPRangeBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL showPaused;
 @property BOOL showError;
 @property BOOL isIndeterminate;
@@ -4406,7 +4406,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSlider : WUXCPRangeBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double stepFrequency;
 @property WUXCPSliderSnapsTo snapsTo;
 @property WXCOrientation orientation;
@@ -4415,9 +4415,9 @@ WINRT_EXPORT
 @property double intermediateValue;
 @property WUXCPTickPlacement tickPlacement;
 @property double tickFrequency;
-@property (copy) RTObject<WUXDIValueConverter>* thumbToolTipValueConverter;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) RTObject<WUXDIValueConverter>* thumbToolTipValueConverter;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 + (WXDependencyProperty*)intermediateValueProperty;
 + (WXDependencyProperty*)isDirectionReversedProperty;
 + (WXDependencyProperty*)isThumbToolTipEnabledProperty;
@@ -4439,9 +4439,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPButtonBase : WXCContentControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* commandParameter;
-@property (copy) RTObject<WUXIICommand>* command;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* commandParameter;
+@property (retain) RTObject<WUXIICommand>* command;
 @property WXCClickMode clickMode;
 @property (readonly) BOOL isPointerOver;
 @property (readonly) BOOL isPressed;
@@ -4462,8 +4462,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCButton : WUXCPButtonBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXCPFlyoutBase* flyout;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXCPFlyoutBase* flyout;
 + (WXDependencyProperty*)flyoutProperty;
 @end
 
@@ -4475,8 +4475,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCHyperlinkButton : WUXCPButtonBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* navigateUri;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* navigateUri;
 + (WXDependencyProperty*)navigateUriProperty;
 @end
 
@@ -4489,11 +4489,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXCPSelector : WXCItemsControl
 + (BOOL)getIsSelectionActive:(WXDependencyObject*)element;
-@property (copy) NSString* selectedValuePath;
-@property (copy) RTObject* selectedValue;
-@property (copy) RTObject* selectedItem;
+@property (retain) NSString* selectedValuePath;
+@property (retain) RTObject* selectedValue;
+@property (retain) RTObject* selectedItem;
 @property int selectedIndex;
-@property (copy) id isSynchronizedWithCurrentItem;
+@property (retain) id isSynchronizedWithCurrentItem;
 + (WXDependencyProperty*)isSynchronizedWithCurrentItemProperty;
 + (WXDependencyProperty*)selectedIndexProperty;
 + (WXDependencyProperty*)selectedItemProperty;
@@ -4511,27 +4511,27 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListViewBase : WUXCPSelector <WXCISemanticZoomInformation>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isSwipeEnabled;
 @property BOOL isItemClickEnabled;
 @property WXCIncrementalLoadingTrigger incrementalLoadingTrigger;
 @property double incrementalLoadingThreshold;
 @property BOOL canDragItems;
-@property (copy) WUXMATransitionCollection* headerTransitions;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) WUXMATransitionCollection* headerTransitions;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 @property double dataFetchSize;
 @property BOOL canReorderItems;
 @property WXCListViewSelectionMode selectionMode;
 @property (readonly) NSMutableArray* selectedItems;
-@property (copy) RTObject* footer;
+@property (retain) RTObject* footer;
 @property BOOL showsScrollingPlaceholders;
-@property (copy) WUXMATransitionCollection* footerTransitions;
-@property (copy) WXDataTemplate* footerTemplate;
+@property (retain) WUXMATransitionCollection* footerTransitions;
+@property (retain) WXDataTemplate* footerTemplate;
 @property WXCListViewReorderMode reorderMode;
 @property BOOL isMultiSelectCheckBoxEnabled;
 @property (readonly) NSArray* selectedRanges;
-@property (copy) WXCSemanticZoom* semanticZoomOwner;
+@property (retain) WXCSemanticZoom* semanticZoomOwner;
 @property BOOL isZoomedInView;
 @property BOOL isActiveView;
 + (WXDependencyProperty*)selectionModeProperty;
@@ -4590,7 +4590,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCComboBox : WUXCPSelector
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double maxDropDownHeight;
 @property BOOL isDropDownOpen;
 @property (readonly) BOOL isEditable;
@@ -4598,9 +4598,9 @@ WINRT_EXPORT
 @property (readonly) RTObject* selectionBoxItem;
 @property (readonly) WXDataTemplate* selectionBoxItemTemplate;
 @property (readonly) WUXCPComboBoxTemplateSettings* templateSettings;
-@property (copy) NSString* placeholderText;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) NSString* placeholderText;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 + (WXDependencyProperty*)isDropDownOpenProperty;
 + (WXDependencyProperty*)maxDropDownHeightProperty;
 + (WXDependencyProperty*)headerProperty;
@@ -4622,7 +4622,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCFlipView : WUXCPSelector
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL useTouchAnimationsForAllNavigation;
 + (WXDependencyProperty*)useTouchAnimationsForAllNavigationProperty;
 @end
@@ -4635,7 +4635,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListBox : WUXCPSelector
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCSelectionMode selectionMode;
 @property (readonly) NSMutableArray* selectedItems;
 + (WXDependencyProperty*)selectionModeProperty;
@@ -4661,9 +4661,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isThreeState;
-@property (copy) id isChecked;
+@property (retain) id isChecked;
 + (WXDependencyProperty*)isCheckedProperty;
 + (WXDependencyProperty*)isThreeStateProperty;
 - (EventRegistrationToken)addCheckedEvent:(WXRoutedEventHandler)del;
@@ -4683,7 +4683,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCheckBox : WUXCPToggleButton
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCCheckBox_DEFINED__
@@ -4694,8 +4694,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCRadioButton : WUXCPToggleButton
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* groupName;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* groupName;
 + (WXDependencyProperty*)groupNameProperty;
 @end
 
@@ -4707,55 +4707,55 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCalendarView : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMBrush* calendarItemForeground;
-@property (copy) WXThickness* calendarItemBorderThickness;
-@property (copy) WUXMBrush* focusBorderBrush;
-@property (copy) WUXMBrush* calendarItemBackground;
-@property (copy) NSString* calendarIdentifier;
-@property (copy) WXStyle* calendarViewDayItemStyle;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMBrush* calendarItemForeground;
+@property (retain) WXThickness* calendarItemBorderThickness;
+@property (retain) WUXMBrush* focusBorderBrush;
+@property (retain) WUXMBrush* calendarItemBackground;
+@property (retain) NSString* calendarIdentifier;
+@property (retain) WXStyle* calendarViewDayItemStyle;
 @property WXCCalendarViewDisplayMode displayMode;
-@property (copy) NSString* dayOfWeekFormat;
-@property (copy) WUTFontWeight* dayItemFontWeight;
+@property (retain) NSString* dayOfWeekFormat;
+@property (retain) WUTFontWeight* dayItemFontWeight;
 @property WUTFontStyle dayItemFontStyle;
 @property double dayItemFontSize;
-@property (copy) WUXMFontFamily* dayItemFontFamily;
-@property (copy) WUXMBrush* blackoutForeground;
-@property (copy) WUXMFontFamily* firstOfYearDecadeLabelFontFamily;
-@property (copy) WUTFontWeight* firstOfMonthLabelFontWeight;
+@property (retain) WUXMFontFamily* dayItemFontFamily;
+@property (retain) WUXMBrush* blackoutForeground;
+@property (retain) WUXMFontFamily* firstOfYearDecadeLabelFontFamily;
+@property (retain) WUTFontWeight* firstOfMonthLabelFontWeight;
 @property WUTFontStyle firstOfMonthLabelFontStyle;
 @property double firstOfMonthLabelFontSize;
-@property (copy) WUXMFontFamily* firstOfMonthLabelFontFamily;
-@property (copy) WUXMBrush* hoverBorderBrush;
+@property (retain) WUXMFontFamily* firstOfMonthLabelFontFamily;
+@property (retain) WUXMBrush* hoverBorderBrush;
 @property WGDayOfWeek firstDayOfWeek;
 @property WXHorizontalAlignment horizontalFirstOfMonthLabelAlignment;
 @property WXHorizontalAlignment horizontalDayItemAlignment;
-@property (copy) WUXMBrush* calendarItemBorderBrush;
-@property (copy) WUTFontWeight* firstOfYearDecadeLabelFontWeight;
+@property (retain) WUXMBrush* calendarItemBorderBrush;
+@property (retain) WUTFontWeight* firstOfYearDecadeLabelFontWeight;
 @property WUTFontStyle firstOfYearDecadeLabelFontStyle;
-@property (copy) WUXMFontFamily* monthYearItemFontFamily;
-@property (copy) WFDateTime* minDate;
-@property (copy) WFDateTime* maxDate;
+@property (retain) WUXMFontFamily* monthYearItemFontFamily;
+@property (retain) WFDateTime* minDate;
+@property (retain) WFDateTime* maxDate;
 @property BOOL isTodayHighlighted;
 @property BOOL isOutOfScopeEnabled;
 @property BOOL isGroupLabelVisible;
 @property double monthYearItemFontSize;
 @property double firstOfYearDecadeLabelFontSize;
-@property (copy) WUXMBrush* outOfScopeForeground;
-@property (copy) WUXMBrush* outOfScopeBackground;
+@property (retain) WUXMBrush* outOfScopeForeground;
+@property (retain) WUXMBrush* outOfScopeBackground;
 @property int numberOfWeeksInView;
-@property (copy) WUTFontWeight* monthYearItemFontWeight;
+@property (retain) WUTFontWeight* monthYearItemFontWeight;
 @property WUTFontStyle monthYearItemFontStyle;
-@property (copy) WUXMBrush* selectedHoverBorderBrush;
-@property (copy) WUXMBrush* selectedForeground;
-@property (copy) WUXMBrush* selectedPressedBorderBrush;
-@property (copy) WUXMBrush* selectedBorderBrush;
-@property (copy) WUXMBrush* pressedForeground;
-@property (copy) WUXMBrush* pressedBorderBrush;
+@property (retain) WUXMBrush* selectedHoverBorderBrush;
+@property (retain) WUXMBrush* selectedForeground;
+@property (retain) WUXMBrush* selectedPressedBorderBrush;
+@property (retain) WUXMBrush* selectedBorderBrush;
+@property (retain) WUXMBrush* pressedForeground;
+@property (retain) WUXMBrush* pressedBorderBrush;
 @property WXVerticalAlignment verticalFirstOfMonthLabelAlignment;
 @property WXVerticalAlignment verticalDayItemAlignment;
-@property (copy) WUXMBrush* todayForeground;
-@property (copy) WUTFontWeight* todayFontWeight;
+@property (retain) WUXMBrush* todayForeground;
+@property (retain) WUTFontWeight* todayFontWeight;
 @property WXCCalendarViewSelectionMode selectionMode;
 @property (readonly) NSMutableArray* selectedDates;
 @property (readonly) WUXCPCalendarViewTemplateSettings* templateSettings;
@@ -4826,7 +4826,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCalendarViewDayItem : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isBlackout;
 @property (readonly) WFDateTime* date;
 + (WXDependencyProperty*)dateProperty;
@@ -4842,11 +4842,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCHubSection : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isHeaderInteractive;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
-@property (copy) WXDataTemplate* contentTemplate;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
+@property (retain) WXDataTemplate* contentTemplate;
 + (WXDependencyProperty*)contentTemplateProperty;
 + (WXDependencyProperty*)headerProperty;
 + (WXDependencyProperty*)headerTemplateProperty;
@@ -4871,7 +4871,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAppBarSeparator : WXCControl <WXCICommandBarElement>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isCompact;
 + (WXDependencyProperty*)isCompactProperty;
 @end
@@ -4884,19 +4884,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCalendarDatePicker : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* header;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* header;
 @property BOOL isGroupLabelVisible;
 @property WXCCalendarViewDisplayMode displayMode;
-@property (copy) NSString* calendarIdentifier;
-@property (copy) NSString* dateFormat;
-@property (copy) WXStyle* calendarViewStyle;
-@property (copy) NSString* dayOfWeekFormat;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) NSString* placeholderText;
-@property (copy) WFDateTime* minDate;
-@property (copy) id date;
-@property (copy) WFDateTime* maxDate;
+@property (retain) NSString* calendarIdentifier;
+@property (retain) NSString* dateFormat;
+@property (retain) WXStyle* calendarViewStyle;
+@property (retain) NSString* dayOfWeekFormat;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) NSString* placeholderText;
+@property (retain) WFDateTime* minDate;
+@property (retain) id date;
+@property (retain) WFDateTime* maxDate;
 @property BOOL isTodayHighlighted;
 @property BOOL isOutOfScopeEnabled;
 @property WGDayOfWeek firstDayOfWeek;
@@ -4937,20 +4937,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCDatePicker : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFDateTime* maxYear;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFDateTime* maxYear;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 @property BOOL dayVisible;
-@property (copy) NSString* dayFormat;
-@property (copy) WFDateTime* date;
-@property (copy) NSString* calendarIdentifier;
+@property (retain) NSString* dayFormat;
+@property (retain) WFDateTime* date;
+@property (retain) NSString* calendarIdentifier;
 @property BOOL yearVisible;
-@property (copy) NSString* yearFormat;
+@property (retain) NSString* yearFormat;
 @property WXCOrientation orientation;
 @property BOOL monthVisible;
-@property (copy) NSString* monthFormat;
-@property (copy) WFDateTime* minYear;
+@property (retain) NSString* monthFormat;
+@property (retain) WFDateTime* minYear;
 + (WXDependencyProperty*)calendarIdentifierProperty;
 + (WXDependencyProperty*)dateProperty;
 + (WXDependencyProperty*)dayFormatProperty;
@@ -4976,15 +4976,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCHub : WXCControl <WXCISemanticZoomInformation>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCOrientation orientation;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
 @property int defaultSectionIndex;
 @property (readonly) NSMutableArray<RTObservableCollection>* sectionHeaders;
 @property (readonly) NSMutableArray* sections;
 @property (readonly) NSMutableArray* sectionsInView;
-@property (copy) WXCSemanticZoom* semanticZoomOwner;
+@property (retain) WXCSemanticZoom* semanticZoomOwner;
 @property BOOL isZoomedInView;
 @property BOOL isActiveView;
 + (WXDependencyProperty*)defaultSectionIndexProperty;
@@ -5016,11 +5016,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSearchBox : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL searchHistoryEnabled;
-@property (copy) NSString* searchHistoryContext;
-@property (copy) NSString* queryText;
-@property (copy) NSString* placeholderText;
+@property (retain) NSString* searchHistoryContext;
+@property (retain) NSString* queryText;
+@property (retain) NSString* placeholderText;
 @property BOOL focusOnKeyboardInput;
 @property BOOL chooseSuggestionOnEnter;
 + (WXDependencyProperty*)chooseSuggestionOnEnterProperty;
@@ -5050,14 +5050,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSplitView : WXCControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCSplitViewPanePlacement panePlacement;
-@property (copy) WUXMBrush* paneBackground;
-@property (copy) WXUIElement* pane;
+@property (retain) WUXMBrush* paneBackground;
+@property (retain) WXUIElement* pane;
 @property double openPaneLength;
 @property BOOL isPaneOpen;
 @property WXCSplitViewDisplayMode displayMode;
-@property (copy) WXUIElement* content;
+@property (retain) WXUIElement* content;
 @property double compactPaneLength;
 @property (readonly) WUXCPSplitViewTemplateSettings* templateSettings;
 + (WXDependencyProperty*)compactPaneLengthProperty;
@@ -5083,12 +5083,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCTimePicker : WXCControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFTimeSpan* time;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFTimeSpan* time;
 @property int minuteIncrement;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) RTObject* header;
-@property (copy) NSString* clockIdentifier;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) RTObject* header;
+@property (retain) NSString* clockIdentifier;
 + (WXDependencyProperty*)clockIdentifierProperty;
 + (WXDependencyProperty*)headerProperty;
 + (WXDependencyProperty*)headerTemplateProperty;
@@ -5106,7 +5106,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAppBar : WXCContentControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isSticky;
 @property BOOL isOpen;
 @property WXCAppBarClosedDisplayMode closedDisplayMode;
@@ -5136,17 +5136,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAutoSuggestBox : WXCItemsControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL updateTextOnSelect;
-@property (copy) NSString* textMemberPath;
-@property (copy) WXStyle* textBoxStyle;
-@property (copy) NSString* text;
-@property (copy) NSString* placeholderText;
+@property (retain) NSString* textMemberPath;
+@property (retain) WXStyle* textBoxStyle;
+@property (retain) NSString* text;
+@property (retain) NSString* placeholderText;
 @property double maxSuggestionListHeight;
 @property BOOL isSuggestionListOpen;
-@property (copy) RTObject* header;
+@property (retain) RTObject* header;
 @property BOOL autoMaximizeSuggestionArea;
-@property (copy) WXCIconElement* queryIcon;
+@property (retain) WXCIconElement* queryIcon;
 + (WXDependencyProperty*)autoMaximizeSuggestionAreaProperty;
 + (WXDependencyProperty*)headerProperty;
 + (WXDependencyProperty*)isSuggestionListOpenProperty;
@@ -5173,7 +5173,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCommandBarOverflowPresenter : WXCItemsControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCCommandBarOverflowPresenter_DEFINED__
@@ -5184,18 +5184,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCContentDialog : WXCContentControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* primaryButtonText;
-@property (copy) RTObject* primaryButtonCommandParameter;
-@property (copy) RTObject<WUXIICommand>* primaryButtonCommand;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* primaryButtonText;
+@property (retain) RTObject* primaryButtonCommandParameter;
+@property (retain) RTObject<WUXIICommand>* primaryButtonCommand;
 @property BOOL isSecondaryButtonEnabled;
 @property BOOL isPrimaryButtonEnabled;
 @property BOOL fullSizeDesired;
-@property (copy) WXDataTemplate* titleTemplate;
-@property (copy) RTObject* title;
-@property (copy) NSString* secondaryButtonText;
-@property (copy) RTObject* secondaryButtonCommandParameter;
-@property (copy) RTObject<WUXIICommand>* secondaryButtonCommand;
+@property (retain) WXDataTemplate* titleTemplate;
+@property (retain) RTObject* title;
+@property (retain) NSString* secondaryButtonText;
+@property (retain) RTObject* secondaryButtonCommandParameter;
+@property (retain) RTObject<WUXIICommand>* secondaryButtonCommand;
 + (WXDependencyProperty*)fullSizeDesiredProperty;
 + (WXDependencyProperty*)isPrimaryButtonEnabledProperty;
 + (WXDependencyProperty*)isSecondaryButtonEnabledProperty;
@@ -5229,7 +5229,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCFlyoutPresenter : WXCContentControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCFlyoutPresenter_DEFINED__
@@ -5240,8 +5240,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCFrame : WXCContentControl <WXCINavigate>
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXITypeName* sourcePageType;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXITypeName* sourcePageType;
 @property int cacheSize;
 @property (readonly) int backStackDepth;
 @property (readonly) BOOL canGoBack;
@@ -5283,10 +5283,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMenuFlyoutItem : WXCMenuFlyoutItemBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* text;
-@property (copy) RTObject* commandParameter;
-@property (copy) RTObject<WUXIICommand>* command;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* text;
+@property (retain) RTObject* commandParameter;
+@property (retain) RTObject<WUXIICommand>* command;
 + (WXDependencyProperty*)commandParameterProperty;
 + (WXDependencyProperty*)commandProperty;
 + (WXDependencyProperty*)textProperty;
@@ -5302,7 +5302,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMenuFlyoutPresenter : WXCItemsControl
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCMenuFlyoutPresenter_DEFINED__
@@ -5313,7 +5313,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMenuFlyoutSeparator : WXCMenuFlyoutItemBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCMenuFlyoutSeparator_DEFINED__
@@ -5324,8 +5324,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMenuFlyoutSubItem : WXCMenuFlyoutItemBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* text;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* text;
 @property (readonly) NSMutableArray* items;
 + (WXDependencyProperty*)textProperty;
 @end
@@ -5338,10 +5338,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPage : WXCUserControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXCAppBar* topAppBar;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXCAppBar* topAppBar;
 @property WUXNNavigationCacheMode navigationCacheMode;
-@property (copy) WXCAppBar* bottomAppBar;
+@property (retain) WXCAppBar* bottomAppBar;
 @property (readonly) WXCFrame* frame;
 + (WXDependencyProperty*)bottomAppBarProperty;
 + (WXDependencyProperty*)frameProperty;
@@ -5391,7 +5391,7 @@ WINRT_EXPORT
 + (void)setIsDeferredScrollingEnabled:(WXDependencyObject*)element isDeferredScrollingEnabled:(BOOL)isDeferredScrollingEnabled;
 + (BOOL)getBringIntoViewOnFocusChange:(WXDependencyObject*)element;
 + (void)setBringIntoViewOnFocusChange:(WXDependencyObject*)element bringIntoViewOnFocusChange:(BOOL)bringIntoViewOnFocusChange;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCScrollBarVisibility horizontalScrollBarVisibility;
 @property BOOL isZoomInertiaEnabled;
 @property BOOL bringIntoViewOnFocusChange;
@@ -5425,9 +5425,9 @@ WINRT_EXPORT
 @property (readonly) double extentWidth;
 @property (readonly) NSMutableArray* zoomSnapPoints;
 @property (readonly) double horizontalOffset;
-@property (copy) WXUIElement* topHeader;
-@property (copy) WXUIElement* leftHeader;
-@property (copy) WXUIElement* topLeftHeader;
+@property (retain) WXUIElement* topHeader;
+@property (retain) WXUIElement* leftHeader;
+@property (retain) WXUIElement* topLeftHeader;
 + (WXDependencyProperty*)extentWidthProperty;
 + (WXDependencyProperty*)bringIntoViewOnFocusChangeProperty;
 + (WXDependencyProperty*)computedHorizontalScrollBarVisibilityProperty;
@@ -5491,10 +5491,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCommandBar : WXCAppBar
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray<RTObservableCollection>* primaryCommands;
 @property (readonly) NSMutableArray<RTObservableCollection>* secondaryCommands;
-@property (copy) WXStyle* commandBarOverflowPresenterStyle;
+@property (retain) WXStyle* commandBarOverflowPresenterStyle;
 @property (readonly) WUXCPCommandBarTemplateSettings* commandBarTemplateSettings;
 + (WXDependencyProperty*)primaryCommandsProperty;
 + (WXDependencyProperty*)secondaryCommandsProperty;
@@ -5509,7 +5509,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCGridViewHeaderItem : WXCListViewBaseHeaderItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCGridViewHeaderItem_DEFINED__
@@ -5520,7 +5520,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCGridViewItem : WUXCPSelectorItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCPGridViewItemTemplateSettings* templateSettings;
 @end
 
@@ -5532,7 +5532,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListViewHeaderItem : WXCListViewBaseHeaderItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCListViewHeaderItem_DEFINED__
@@ -5543,7 +5543,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListViewItem : WUXCPSelectorItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCPListViewItemTemplateSettings* templateSettings;
 @end
 
@@ -5555,7 +5555,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCToggleMenuFlyoutItem : WXCMenuFlyoutItem
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isChecked;
 + (WXDependencyProperty*)isCheckedProperty;
 @end
@@ -5568,9 +5568,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAppBarButton : WXCButton <WXCICommandBarElement>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* label;
-@property (copy) WXCIconElement* icon;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* label;
+@property (retain) WXCIconElement* icon;
 @property BOOL isCompact;
 + (WXDependencyProperty*)iconProperty;
 + (WXDependencyProperty*)isCompactProperty;
@@ -5585,9 +5585,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCAppBarToggleButton : WUXCPToggleButton <WXCICommandBarElement>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* label;
-@property (copy) WXCIconElement* icon;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* label;
+@property (retain) WXCIconElement* icon;
 @property BOOL isCompact;
 + (WXDependencyProperty*)iconProperty;
 + (WXDependencyProperty*)isCompactProperty;
@@ -5602,7 +5602,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCGridView : WXCListViewBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCGridView_DEFINED__
@@ -5613,7 +5613,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListView : WXCListViewBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCListView_DEFINED__
@@ -5624,8 +5624,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPivotItemEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXCPivotItem* item;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXCPivotItem* item;
 @end
 
 #endif // __WXCPivotItemEventArgs_DEFINED__
@@ -5636,7 +5636,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCDatePickedEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFDateTime* newDate;
 @property (readonly) WFDateTime* oldDate;
 @end
@@ -5662,8 +5662,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCDatePickerFlyoutItem : WXDependencyObject <WUXDICustomPropertyProvider>
-@property (copy) NSString* secondaryText;
-@property (copy) NSString* primaryText;
+@property (retain) NSString* secondaryText;
+@property (retain) NSString* primaryText;
 @property (readonly) WUXITypeName* type;
 + (WXDependencyProperty*)primaryTextProperty;
 + (WXDependencyProperty*)secondaryTextProperty;
@@ -5680,7 +5680,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCItemsPickedEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) NSMutableArray* addedItems;
 @property (readonly) NSMutableArray* removedItems;
 @end
@@ -5693,7 +5693,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPickerConfirmedEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WXCPickerConfirmedEventArgs_DEFINED__
@@ -5704,7 +5704,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCTimePickedEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFTimeSpan* newTime;
 @property (readonly) WFTimeSpan* oldTime;
 @end
@@ -5759,17 +5759,17 @@ WINRT_EXPORT
 @interface WXCPivot : WXCItemsControl
 + (WXCPivotSlideInAnimationGroup)getSlideInAnimationGroup:(WXFrameworkElement*)element;
 + (void)setSlideInAnimationGroup:(WXFrameworkElement*)element value:(WXCPivotSlideInAnimationGroup)value;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXDataTemplate* titleTemplate;
-@property (copy) RTObject* title;
-@property (copy) RTObject* selectedItem;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXDataTemplate* titleTemplate;
+@property (retain) RTObject* title;
+@property (retain) RTObject* selectedItem;
 @property int selectedIndex;
 @property BOOL isLocked;
-@property (copy) WXDataTemplate* headerTemplate;
-@property (copy) WXDataTemplate* rightHeaderTemplate;
-@property (copy) RTObject* rightHeader;
-@property (copy) WXDataTemplate* leftHeaderTemplate;
-@property (copy) RTObject* leftHeader;
+@property (retain) WXDataTemplate* headerTemplate;
+@property (retain) WXDataTemplate* rightHeaderTemplate;
+@property (retain) RTObject* rightHeader;
+@property (retain) WXDataTemplate* leftHeaderTemplate;
+@property (retain) RTObject* leftHeader;
 + (WXDependencyProperty*)slideInAnimationGroupProperty;
 + (WXDependencyProperty*)headerTemplateProperty;
 + (WXDependencyProperty*)isLockedProperty;
@@ -5801,8 +5801,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPivotItem : WXCContentControl
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* header;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* header;
 + (WXDependencyProperty*)headerProperty;
 @end
 
@@ -5827,7 +5827,7 @@ WINRT_EXPORT
 @interface WUXCPPickerFlyoutBase : WUXCPFlyoutBase
 + (NSString*)getTitle:(WXDependencyObject*)element;
 + (void)setTitle:(WXDependencyObject*)element value:(NSString*)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 + (WXDependencyProperty*)titleProperty;
 - (void)onConfirmed;
 - (BOOL)shouldShowConfirmationButtons;
@@ -5841,17 +5841,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCDatePickerFlyout : WUXCPPickerFlyoutBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL yearVisible;
 @property BOOL monthVisible;
-@property (copy) WFDateTime* minYear;
-@property (copy) WFDateTime* maxYear;
+@property (retain) WFDateTime* minYear;
+@property (retain) WFDateTime* maxYear;
 @property BOOL dayVisible;
-@property (copy) WFDateTime* date;
-@property (copy) NSString* calendarIdentifier;
-@property (copy) NSString* yearFormat;
-@property (copy) NSString* monthFormat;
-@property (copy) NSString* dayFormat;
+@property (retain) WFDateTime* date;
+@property (retain) NSString* calendarIdentifier;
+@property (retain) NSString* yearFormat;
+@property (retain) NSString* monthFormat;
+@property (retain) NSString* dayFormat;
 + (WXDependencyProperty*)calendarIdentifierProperty;
 + (WXDependencyProperty*)dateProperty;
 + (WXDependencyProperty*)dayVisibleProperty;
@@ -5875,15 +5875,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCListPickerFlyout : WUXCPPickerFlyoutBase
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WXCListPickerFlyoutSelectionMode selectionMode;
-@property (copy) NSString* selectedValuePath;
-@property (copy) RTObject* selectedValue;
-@property (copy) RTObject* selectedItem;
+@property (retain) NSString* selectedValuePath;
+@property (retain) RTObject* selectedValue;
+@property (retain) RTObject* selectedItem;
 @property int selectedIndex;
-@property (copy) RTObject* itemsSource;
-@property (copy) WXDataTemplate* itemTemplate;
-@property (copy) NSString* displayMemberPath;
+@property (retain) RTObject* itemsSource;
+@property (retain) WXDataTemplate* itemTemplate;
+@property (retain) NSString* displayMemberPath;
 @property (readonly) NSMutableArray* selectedItems;
 + (WXDependencyProperty*)displayMemberPathProperty;
 + (WXDependencyProperty*)itemTemplateProperty;
@@ -5906,8 +5906,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCPickerFlyout : WUXCPPickerFlyoutBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXUIElement* content;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXUIElement* content;
 @property BOOL confirmationButtonsVisible;
 + (WXDependencyProperty*)confirmationButtonsVisibleProperty;
 + (WXDependencyProperty*)contentProperty;
@@ -5924,10 +5924,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCTimePickerFlyout : WUXCPPickerFlyoutBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFTimeSpan* time;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFTimeSpan* time;
 @property int minuteIncrement;
-@property (copy) NSString* clockIdentifier;
+@property (retain) NSString* clockIdentifier;
 + (WXDependencyProperty*)clockIdentifierProperty;
 + (WXDependencyProperty*)minuteIncrementProperty;
 + (WXDependencyProperty*)timeProperty;

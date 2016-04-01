@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMCharacteristicWriteAction.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMCharacteristicWriteAction
 

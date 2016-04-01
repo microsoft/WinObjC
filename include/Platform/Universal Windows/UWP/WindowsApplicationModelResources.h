@@ -39,8 +39,8 @@ WINRT_EXPORT
 + (WARResourceLoader*)getForViewIndependentUse;
 + (WARResourceLoader*)getForViewIndependentUseWithName:(NSString*)name;
 + (NSString*)getStringForReference:(WFUri*)uri;
-+ (WARResourceLoader*)createResourceLoaderByName:(NSString*)name ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (WARResourceLoader*)makeResourceLoaderByName:(NSString*)name ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (NSString*)getString:(NSString*)resource;
 - (NSString*)getStringForUri:(WFUri*)uri;
 @end

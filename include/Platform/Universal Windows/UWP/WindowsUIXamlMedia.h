@@ -301,7 +301,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPartialMediaFailureDetectedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WMPFailedMediaStreamKind streamKind;
 @end
 
@@ -341,7 +341,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMDoubleCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -374,7 +374,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGeometryCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -396,7 +396,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGradientStopCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -418,7 +418,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPathFigureCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -440,7 +440,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPathSegmentCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -462,7 +462,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPointCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -495,7 +495,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTimelineMarkerCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -517,7 +517,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTransformCollection : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -539,7 +539,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -558,9 +558,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMBrush : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMTransform* transform;
-@property (copy) WUXMTransform* relativeTransform;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMTransform* transform;
+@property (retain) WUXMTransform* relativeTransform;
 @property double opacity;
 + (WXDependencyProperty*)opacityProperty;
 + (WXDependencyProperty*)relativeTransformProperty;
@@ -575,7 +575,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMCacheMode : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMCacheMode_DEFINED__
@@ -586,7 +586,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGeneralTransform : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXMGeneralTransform* inverse;
 @property (readonly) WUXMGeneralTransform* inverseCore;
 - (WFPoint*)transformPoint:(WFPoint*)point;
@@ -604,7 +604,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGeometry : WXDependencyObject
-@property (copy) WUXMTransform* transform;
+@property (retain) WUXMTransform* transform;
 @property (readonly) WFRect* bounds;
 + (WUXMGeometry*)empty;
 + (double)standardFlatteningTolerance;
@@ -619,9 +619,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGradientStop : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double offset;
-@property (copy) WUColor* color;
+@property (retain) WUColor* color;
 + (WXDependencyProperty*)colorProperty;
 + (WXDependencyProperty*)offsetProperty;
 @end
@@ -644,9 +644,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPathFigure : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFPoint* startPoint;
-@property (copy) WUXMPathSegmentCollection* segments;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFPoint* startPoint;
+@property (retain) WUXMPathSegmentCollection* segments;
 @property BOOL isFilled;
 @property BOOL isClosed;
 + (WXDependencyProperty*)isClosedProperty;
@@ -673,7 +673,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMProjection : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMProjection_DEFINED__
@@ -684,7 +684,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXRoutedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject* originalSource;
 @end
 
@@ -696,7 +696,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMRateChangedRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMRateChangedRoutedEventArgs_DEFINED__
@@ -707,10 +707,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTimelineMarker : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* type;
-@property (copy) WFTimeSpan* time;
-@property (copy) NSString* text;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* type;
+@property (retain) WFTimeSpan* time;
+@property (retain) NSString* text;
 + (WXDependencyProperty*)textProperty;
 + (WXDependencyProperty*)timeProperty;
 + (WXDependencyProperty*)typeProperty;
@@ -724,8 +724,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTimelineMarkerRoutedEventArgs : WXRoutedEventArgs
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMTimelineMarker* marker;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMTimelineMarker* marker;
 @end
 
 #endif // __WUXMTimelineMarkerRoutedEventArgs_DEFINED__
@@ -736,11 +736,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMArcSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMSweepDirection sweepDirection;
-@property (copy) WFSize* size;
+@property (retain) WFSize* size;
 @property double rotationAngle;
-@property (copy) WFPoint* point;
+@property (retain) WFPoint* point;
 @property BOOL isLargeArc;
 + (WXDependencyProperty*)isLargeArcProperty;
 + (WXDependencyProperty*)pointProperty;
@@ -757,10 +757,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMBezierSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFPoint* point3;
-@property (copy) WFPoint* point2;
-@property (copy) WFPoint* point1;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFPoint* point3;
+@property (retain) WFPoint* point2;
+@property (retain) WFPoint* point1;
 + (WXDependencyProperty*)point1Property;
 + (WXDependencyProperty*)point2Property;
 + (WXDependencyProperty*)point3Property;
@@ -774,7 +774,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMBitmapCache : WUXMCacheMode
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXMBitmapCache_DEFINED__
@@ -785,10 +785,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMEllipseGeometry : WUXMGeometry
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double radiusY;
 @property double radiusX;
-@property (copy) WFPoint* center;
+@property (retain) WFPoint* center;
 + (WXDependencyProperty*)centerProperty;
 + (WXDependencyProperty*)radiusXProperty;
 + (WXDependencyProperty*)radiusYProperty;
@@ -802,9 +802,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGeometryGroup : WUXMGeometry
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMFillRule fillRule;
-@property (copy) WUXMGeometryCollection* children;
+@property (retain) WUXMGeometryCollection* children;
 + (WXDependencyProperty*)childrenProperty;
 + (WXDependencyProperty*)fillRuleProperty;
 @end
@@ -817,10 +817,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMGradientBrush : WUXMBrush
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMGradientSpreadMethod spreadMethod;
 @property WUXMBrushMappingMode mappingMode;
-@property (copy) WUXMGradientStopCollection* gradientStops;
+@property (retain) WUXMGradientStopCollection* gradientStops;
 @property WUXMColorInterpolationMode colorInterpolationMode;
 + (WXDependencyProperty*)colorInterpolationModeProperty;
 + (WXDependencyProperty*)gradientStopsProperty;
@@ -836,9 +836,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMLineGeometry : WUXMGeometry
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFPoint* startPoint;
-@property (copy) WFPoint* endPoint;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFPoint* startPoint;
+@property (retain) WFPoint* endPoint;
 + (WXDependencyProperty*)endPointProperty;
 + (WXDependencyProperty*)startPointProperty;
 @end
@@ -851,8 +851,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMLineSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFPoint* point;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFPoint* point;
 + (WXDependencyProperty*)pointProperty;
 @end
 
@@ -864,8 +864,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMatrix3DProjection : WUXMProjection
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMMMatrix3D* projectionMatrix;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMMMatrix3D* projectionMatrix;
 + (WXDependencyProperty*)projectionMatrixProperty;
 @end
 
@@ -877,9 +877,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPathGeometry : WUXMGeometry
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMFillRule fillRule;
-@property (copy) WUXMPathFigureCollection* figures;
+@property (retain) WUXMPathFigureCollection* figures;
 + (WXDependencyProperty*)figuresProperty;
 + (WXDependencyProperty*)fillRuleProperty;
 @end
@@ -892,7 +892,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPlaneProjection : WUXMProjection
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double localOffsetX;
 @property double globalOffsetZ;
 @property double globalOffsetY;
@@ -929,8 +929,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPolyBezierSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMPointCollection* points;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
 @end
 
@@ -942,8 +942,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPolyLineSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMPointCollection* points;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
 @end
 
@@ -955,8 +955,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMPolyQuadraticBezierSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMPointCollection* points;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMPointCollection* points;
 + (WXDependencyProperty*)pointsProperty;
 @end
 
@@ -968,9 +968,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMQuadraticBezierSegment : WUXMPathSegment
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFPoint* point2;
-@property (copy) WFPoint* point1;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFPoint* point2;
+@property (retain) WFPoint* point1;
 + (WXDependencyProperty*)point1Property;
 + (WXDependencyProperty*)point2Property;
 @end
@@ -983,8 +983,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMRectangleGeometry : WUXMGeometry
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFRect* rect;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFRect* rect;
 + (WXDependencyProperty*)rectProperty;
 @end
 
@@ -996,9 +996,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMSolidColorBrush : WUXMBrush
-+ (WUXMSolidColorBrush*)createInstanceWithColor:(WUColor*)color ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUColor* color;
++ (WUXMSolidColorBrush*)makeInstanceWithColor:(WUColor*)color ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUColor* color;
 + (WXDependencyProperty*)colorProperty;
 @end
 
@@ -1010,7 +1010,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTileBrush : WUXMBrush
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXMStretch stretch;
 @property WUXMAlignmentY alignmentY;
 @property WUXMAlignmentX alignmentX;
@@ -1037,7 +1037,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMCompositeTransform : WUXMTransform
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double translateY;
 @property double translateX;
 @property double skewY;
@@ -1066,8 +1066,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMImageBrush : WUXMTileBrush
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMImageSource* imageSource;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMImageSource* imageSource;
 + (WXDependencyProperty*)imageSourceProperty;
 - (EventRegistrationToken)addImageFailedEvent:(WXExceptionRoutedEventHandler)del;
 - (void)removeImageFailedEvent:(EventRegistrationToken)tok;
@@ -1083,11 +1083,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMLinearGradientBrush : WUXMGradientBrush
-+ (instancetype)create ACTIVATOR;
-+ (WUXMLinearGradientBrush*)createInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection
-                                                                       angle:(double)angle ACTIVATOR;
-@property (copy) WFPoint* startPoint;
-@property (copy) WFPoint* endPoint;
++ (instancetype)make ACTIVATOR;
++ (WUXMLinearGradientBrush*)makeInstanceWithGradientStopCollectionAndAngle:(WUXMGradientStopCollection*)gradientStopCollection
+                                                                     angle:(double)angle ACTIVATOR;
+@property (retain) WFPoint* startPoint;
+@property (retain) WFPoint* endPoint;
 + (WXDependencyProperty*)endPointProperty;
 + (WXDependencyProperty*)startPointProperty;
 @end
@@ -1100,8 +1100,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMMatrixTransform : WUXMTransform
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMMatrix* matrix;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMMatrix* matrix;
 + (WXDependencyProperty*)matrixProperty;
 @end
 
@@ -1113,7 +1113,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMRotateTransform : WUXMTransform
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double centerY;
 @property double centerX;
 @property double angle;
@@ -1130,7 +1130,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMScaleTransform : WUXMTransform
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double scaleY;
 @property double scaleX;
 @property double centerY;
@@ -1149,7 +1149,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMSkewTransform : WUXMTransform
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double centerY;
 @property double centerX;
 @property double angleY;
@@ -1168,8 +1168,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTransformGroup : WUXMTransform
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUXMTransformCollection* children;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUXMTransformCollection* children;
 @property (readonly) WUXMMatrix* value;
 + (WXDependencyProperty*)childrenProperty;
 @end
@@ -1182,7 +1182,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMTranslateTransform : WUXMTransform
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double y;
 @property double x;
 + (WXDependencyProperty*)xProperty;

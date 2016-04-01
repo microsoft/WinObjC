@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMServiceGroup.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMServiceGroup
 

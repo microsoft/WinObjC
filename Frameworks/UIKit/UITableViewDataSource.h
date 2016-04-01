@@ -20,7 +20,7 @@
 @public
     idretaintype(NSArray) _tableSections;
 }
-- (id)initWithCoder:(NSCoder*)coder;
+- (instancetype)initWithCoder:(NSCoder*)coder;
 - (void)dealloc;
 - (unsigned)numberOfSections;
 - (UITableViewSection*)sectionForIndex:(unsigned)idx;

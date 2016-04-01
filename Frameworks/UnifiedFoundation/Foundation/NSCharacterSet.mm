@@ -82,6 +82,9 @@ static UnicodeSet* setWithCharacters(const char* chars) {
     return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     _icuSet = new UnicodeSet();
 
@@ -259,6 +262,9 @@ static UnicodeSet* setWithCharacters(const char* chars) {
     return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     assert(_icuSet != NULL);
     delete _icuSet;
@@ -380,7 +386,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 
     [copy setBitmapRepresentation:[_bitmapRepresentation mutableCopyWithZone:zone]];
 
-    return [copy autorelease];
+    return copy;
 }
 
 /**

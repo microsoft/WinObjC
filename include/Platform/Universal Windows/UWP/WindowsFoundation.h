@@ -183,7 +183,7 @@ typedef void (^WFDeferralCompletedHandler)();
 - (uint64_t)getUInt64;
 - (float)getSingle;
 - (double)getDouble;
-- (WCHAR)getChar16;
+- (wchar_t)getChar16;
 - (BOOL)getBoolean;
 - (NSString*)getString;
 - (WFGUID*)getGuid;
@@ -201,7 +201,7 @@ typedef void (^WFDeferralCompletedHandler)();
 - (void)getUInt64Array:(id<NSFastEnumeration> /* uint64_t */*)value;
 - (void)getSingleArray:(id<NSFastEnumeration> /* float */*)value;
 - (void)getDoubleArray:(id<NSFastEnumeration> /* double */*)value;
-- (void)getChar16Array:(id<NSFastEnumeration> /* WCHAR */*)value;
+- (void)getChar16Array:(id<NSFastEnumeration> /* wchar_t */*)value;
 - (void)getBooleanArray:(id<NSFastEnumeration> /* BOOL */*)value;
 - (void)getStringArray:(id<NSFastEnumeration> /* NSString * */*)value;
 - (void)getInspectableArray:(id<NSFastEnumeration> /* RTObject* */*)value;
@@ -313,7 +313,7 @@ WINRT_EXPORT
 + (RTObject*)createUInt64:(uint64_t)value;
 + (RTObject*)createSingle:(float)value;
 + (RTObject*)createDouble:(double)value;
-+ (RTObject*)createChar16:(WCHAR)value;
++ (RTObject*)createChar16:(wchar_t)value;
 + (RTObject*)createBoolean:(BOOL)value;
 + (RTObject*)createString:(NSString*)value;
 + (RTObject*)createInspectable:(RTObject*)value;
@@ -332,7 +332,7 @@ WINRT_EXPORT
 + (RTObject*)createUInt64Array:(id<NSFastEnumeration> /* uint64_t */)value;
 + (RTObject*)createSingleArray:(id<NSFastEnumeration> /* float */)value;
 + (RTObject*)createDoubleArray:(id<NSFastEnumeration> /* double */)value;
-+ (RTObject*)createChar16Array:(id<NSFastEnumeration> /* WCHAR */)value;
++ (RTObject*)createChar16Array:(id<NSFastEnumeration> /* wchar_t */)value;
 + (RTObject*)createBooleanArray:(id<NSFastEnumeration> /* BOOL */)value;
 + (RTObject*)createStringArray:(id<NSFastEnumeration> /* NSString * */)value;
 + (RTObject*)createInspectableArray:(id<NSFastEnumeration> /* RTObject* */)value;
@@ -352,7 +352,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDeferral : RTObject <WFIClosable>
-+ (WFDeferral*)create:(WFDeferralCompletedHandler)handler ACTIVATOR;
++ (WFDeferral*)make:(WFDeferralCompletedHandler)handler ACTIVATOR;
 - (void)complete;
 - (void)close;
 @end
@@ -365,7 +365,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFWwwFormUrlDecoder : RTObject
-+ (WFWwwFormUrlDecoder*)createWwwFormUrlDecoder:(NSString*)query ACTIVATOR;
++ (WFWwwFormUrlDecoder*)makeWwwFormUrlDecoder:(NSString*)query ACTIVATOR;
 @property (readonly) unsigned int size;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
@@ -384,8 +384,8 @@ WINRT_EXPORT
 @interface WFUri : RTObject <WFIStringable>
 + (NSString*)unescapeComponent:(NSString*)toUnescape;
 + (NSString*)escapeComponent:(NSString*)toEscape;
-+ (WFUri*)createUri:(NSString*)uri ACTIVATOR;
-+ (WFUri*)createWithRelativeUri:(NSString*)baseUri relativeUri:(NSString*)relativeUri ACTIVATOR;
++ (WFUri*)makeUri:(NSString*)uri ACTIVATOR;
++ (WFUri*)makeWithRelativeUri:(NSString*)baseUri relativeUri:(NSString*)relativeUri ACTIVATOR;
 @property (readonly) NSString* absoluteUri;
 @property (readonly) NSString* displayUri;
 @property (readonly) NSString* domain;
@@ -428,7 +428,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFMemoryBuffer : RTObject <WFIMemoryBuffer, WFIClosable>
-+ (WFMemoryBuffer*)create:(unsigned int)capacity ACTIVATOR;
++ (WFMemoryBuffer*)make:(unsigned int)capacity ACTIVATOR;
 - (RTObject<WFIMemoryBufferReference>*)createReference;
 - (void)close;
 @end

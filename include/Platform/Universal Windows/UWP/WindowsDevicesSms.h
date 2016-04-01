@@ -191,18 +191,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsTextMessage2 : RTObject <WDSISmsMessageBase>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDSSmsMessageType messageType;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) WDSSmsMessageClass messageClass;
 @property (readonly) NSString* simIccId;
 @property int retryAttemptCount;
-@property (copy) NSString* to;
+@property (retain) NSString* to;
 @property BOOL isDeliveryNotificationEnabled;
 @property WDSSmsEncoding encoding;
-@property (copy) NSString* callbackNumber;
-@property (copy) NSString* body;
+@property (retain) NSString* callbackNumber;
+@property (retain) NSString* body;
 @property (readonly) int protocolId;
 @property (readonly) NSString* from;
 @property (readonly) WFDateTime* timestamp;
@@ -239,16 +239,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsAppMessage : RTObject <WDSISmsMessageBase>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property int protocolId;
 @property int portNumber;
 @property BOOL isDeliveryNotificationEnabled;
 @property int retryAttemptCount;
 @property WDSSmsEncoding encoding;
-@property (copy) NSString* callbackNumber;
-@property (copy) NSString* body;
-@property (copy) RTObject<WSSIBuffer>* binaryBody;
-@property (copy) NSString* to;
+@property (retain) NSString* callbackNumber;
+@property (retain) NSString* body;
+@property (retain) RTObject<WSSIBuffer>* binaryBody;
+@property (retain) NSString* to;
 @property int teleserviceId;
 @property (readonly) NSString* from;
 @property (readonly) WFDateTime* timestamp;
@@ -354,7 +354,7 @@ WINRT_EXPORT
 + (WDSSmsDevice2*)fromId:(NSString*)deviceId;
 + (WDSSmsDevice2*)getDefault;
 + (WDSSmsDevice2*)fromParentId:(NSString*)parentDeviceId;
-@property (copy) NSString* smscAddress;
+@property (retain) NSString* smscAddress;
 @property (readonly) NSString* accountPhoneNumber;
 @property (readonly) WDSCellularClass cellularClass;
 @property (readonly) NSString* deviceId;
@@ -395,7 +395,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsFilterRule : RTObject
-+ (WDSSmsFilterRule*)createFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
++ (WDSSmsFilterRule*)makeFilterRule:(WDSSmsMessageType)messageType ACTIVATOR;
 @property WDSCellularClass cellularClass;
 @property (readonly) NSMutableArray* broadcastChannels;
 @property (readonly) NSMutableArray* broadcastTypes;
@@ -419,7 +419,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmsFilterRules : RTObject
-+ (WDSSmsFilterRules*)createFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
++ (WDSSmsFilterRules*)makeFilterRules:(WDSSmsFilterActionType)actionType ACTIVATOR;
 @property (readonly) WDSSmsFilterActionType actionType;
 @property (readonly) NSMutableArray* rules;
 @end

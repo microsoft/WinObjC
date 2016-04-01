@@ -81,7 +81,7 @@ WINRT_EXPORT
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
 @property BOOL isCaptionVisible;
-@property (copy) NSString* caption;
+@property (retain) NSString* caption;
 - (void)setContentFromSoftwareBitmap:(WGISoftwareBitmap*)softwareBitmap;
 - (void)setContentFromSoftwareBitmapWithAnchorPoint:(WGISoftwareBitmap*)softwareBitmap anchorPoint:(WFPoint*)anchorPoint;
 - (void)clear;
@@ -120,7 +120,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDCCoreDragOperation : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WADDCCoreDragUIContentMode dragUIContentMode;
 @property (readonly) WADDataPackage* data;
 - (void)setPointerId:(unsigned int)pointerId;

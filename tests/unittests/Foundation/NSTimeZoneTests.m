@@ -22,14 +22,19 @@ const static int s_mountainBias = -25200;
 const static int s_centralBias = -21600;
 const static int s_easternBias = -18000;
 
-TEST(Foundation, NSTimeZone) {
+TEST(NSTimeZone, SystemTimeZoneTests) {
     // Do the [NSTimeZone systemTimeZone] test if we're in a particular locale.
     NSLocale* currentLocale = [NSLocale currentLocale];
 
     if ([currentLocale.localeIdentifier isEqualToString:@"en_US"]) {
         NSTimeZone* systemTZ = [NSTimeZone systemTimeZone];
         NSTimeZone* expectedTZ = nil;
-        switch (systemTZ.secondsFromGMT) {
+        NSInteger timeZoneBias = systemTZ.secondsFromGMT;
+        if ([systemTZ isDaylightSavingTime]) {
+            timeZoneBias -= systemTZ.daylightSavingTimeOffset;
+        }
+
+        switch (timeZoneBias) {
             case s_pacificBias:
                 expectedTZ = [NSTimeZone timeZoneWithName:@"America/Los_Angeles"];
                 break;
@@ -46,7 +51,9 @@ TEST(Foundation, NSTimeZone) {
                 expectedTZ = [NSTimeZone timeZoneWithName:@"GMT"];
                 break;
         }
-        ASSERT_OBJCEQ([systemTZ abbreviation], [expectedTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ abbreviation], [systemTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ name], [systemTZ name]);
+        ASSERT_EQ([expectedTZ secondsFromGMT], [systemTZ secondsFromGMT]);
     } else if ([currentLocale.localeIdentifier isEqualToString:@"es_MX"]) {
         NSTimeZone* systemTZ = [NSTimeZone systemTimeZone];
         NSTimeZone* expectedTZ = nil;
@@ -61,7 +68,9 @@ TEST(Foundation, NSTimeZone) {
                 expectedTZ = [NSTimeZone timeZoneWithName:@"GMT"];
                 break;
         }
-        ASSERT_OBJCEQ([systemTZ abbreviation], [expectedTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ abbreviation], [systemTZ abbreviation]);
+        ASSERT_OBJCEQ([expectedTZ name], [systemTZ name]);
+        ASSERT_EQ([expectedTZ secondsFromGMT], [systemTZ secondsFromGMT]);
     } else {
         LOG_INFO("[NSTimeZone localizedStringFromDate] not tested. Current locale is not covered by test.\n");
     }
@@ -98,11 +107,14 @@ TEST(Foundation, NSTimeZone) {
     ASSERT_TRUE_MSG([knownTimeZoneNames count] == 168,
                     "FAILED - [NSTimeZone knownTimeZoneNames] != 168. There should be exactly 168 time zones in ICU. Was ICU updated?");
 
+#ifndef WINOBJC_DISABLE_TESTS
+    // TODO 6678996: disabled check for ARM since we use a different version of icu data. Can be re-enabled if we get matching icu data.
     // Test for method timeZoneDataVersion. The value is based on the ICU version.
     NSString* timeZoneDataVersion = [NSTimeZone timeZoneDataVersion];
     ASSERT_OBJCEQ_MSG(@"2011k",
                       timeZoneDataVersion,
                       "FAILED - [NSTimeZone timeZoneDataVersion] != 2011k. The version should be 2011k. Was ICU updated?");
+#endif
 
     // Verify localizedName
     NSTimeZone* aDSTTz = [NSTimeZone timeZoneWithName:@"Pacific/Auckland"];

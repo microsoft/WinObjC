@@ -23,6 +23,7 @@
 #import "UICollectionViewItemKey.h"
 #import "UICollectionViewData.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
+#import "AssertARCEnabled.h"
 
 @interface UICollectionView ()
 - (id)currentUpdate;
@@ -65,9 +66,9 @@
 #pragma mark - NSObject
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)init {
+- (instancetype)init {
     if ((self = [super init])) {
         _decorationViewClassDict = [NSMutableDictionary new];
         _decorationViewNibDict = [NSMutableDictionary new];
@@ -81,14 +82,14 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)awakeFromNib {
     [super awakeFromNib];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setCollectionView:(UICollectionView*)collectionView {
     if (collectionView != _collectionView) {
@@ -100,7 +101,7 @@
 #pragma mark - Invalidating the Layout
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)invalidateLayout {
     [[_collectionView collectionViewData] invalidate];
@@ -123,41 +124,41 @@
 #pragma mark - Providing Layout Attributes
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 + (Class)layoutAttributesClass {
     return UICollectionViewLayoutAttributes.class;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)prepareLayout {
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSArray*)layoutAttributesForElementsInRect:(CGRect)rect {
     return nil;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath {
     return nil;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
     return nil;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForDecorationViewOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
     return nil;
@@ -165,14 +166,14 @@
 
 // return a point at which to rest after scrolling - for layouts that want snap-to-point scrolling behavior
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity {
     return proposedContentOffset;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (CGSize)collectionViewContentSize {
     return CGSizeZero;
@@ -182,7 +183,7 @@
 #pragma mark - Responding to Collection View Updates
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)prepareForCollectionViewUpdates:(NSArray*)updateItems {
     NSDictionary* update = [_collectionView currentUpdate];
@@ -207,8 +208,8 @@
     for (UICollectionViewLayoutAttributes* attr in [collectionViewData layoutAttributesForElementsInRect:bounds]) {
         if (attr.isCell) {
             NSInteger index = (NSInteger)[collectionViewData globalIndexForItemAtIndexPath:attr.indexPath];
-
-            index = [update[@"newToOldIndexMap"][(NSUInteger)index] integerValue];
+            NSArray* newToOldIndexMap = update[@"newToOldIndexMap"];
+            index = [newToOldIndexMap[(NSUInteger)index] integerValue];
             if (index != NSNotFound) {
                 UICollectionViewLayoutAttributes* finalAttrs = [attr copy];
                 [finalAttrs setIndexPath:[update[@"oldModel"] indexPathForItemAtGlobalIndex:index]];
@@ -255,7 +256,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath*)itemIndexPath {
     UICollectionViewLayoutAttributes* attrs =
@@ -269,7 +270,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath*)itemIndexPath {
     UICollectionViewLayoutAttributes* attrs =
@@ -283,7 +284,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)initialLayoutAttributesForInsertedSupplementaryElementOfKind:(NSString*)elementKind
                                                                                       atIndexPath:(NSIndexPath*)elementIndexPath {
@@ -298,7 +299,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)finalLayoutAttributesForDeletedSupplementaryElementOfKind:(NSString*)elementKind
                                                                                    atIndexPath:(NSIndexPath*)elementIndexPath {
@@ -306,7 +307,7 @@
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)finalizeCollectionViewUpdates {
     [_initialAnimationLayoutAttributesDict removeAllObjects];
@@ -319,14 +320,14 @@
 #pragma mark - Registering Decoration Views
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)registerClass:(Class)viewClass forDecorationViewOfKind:(NSString*)kind {
     _decorationViewClassDict[kind] = viewClass;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)registerNib:(UINib*)nib forDecorationViewOfKind:(NSString*)kind {
     _decorationViewNibDict[kind] = nib;
@@ -336,7 +337,7 @@
 #pragma mark - Private
 
 /**
-   @Public No
+ @Public No
 */
 - (void)setCollectionViewBoundsSize:(CGSize)size {
     _collectionViewBoundsSize = size;
@@ -346,16 +347,16 @@
 #pragma mark - NSCoding
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if ((self = [self init])) {
     }
     return self;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
 }

@@ -53,6 +53,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithURL:nil];
 }
@@ -155,7 +158,7 @@
  @Status Interoperable
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _URL = [[coder decodeObjectOfClass:[NSURL class] forKey:@"URL"] retain];
         _mainDocumentURL = [[coder decodeObjectOfClass:[NSURL class] forKey:@"mainDocumentURL"] retain];
         _HTTPMethod = [[coder decodeObjectOfClass:[NSString class] forKey:@"HTTPMethod"] retain];
@@ -180,7 +183,8 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Only limited header fields are supported.
 */
 - (NSString*)valueForHTTPHeaderField:(NSString*)field {
     id ret = [_allHTTPHeaderFields objectForKey:field];
@@ -198,7 +202,8 @@
         if (strcmp(pName, "User-Agent") == 0) {
             return nil;
         }
-        assert(0);
+
+        UNIMPLEMENTED_WITH_MSG("%s HTTP header field is not supported in valueForHTTPHeaderField", pName);
     }
 
     return nil;

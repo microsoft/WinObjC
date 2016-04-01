@@ -31,6 +31,7 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGGeometry.h>
 
 typedef enum {
     UIForceTouchCapabilityUnknown = 0,

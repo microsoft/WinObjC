@@ -346,6 +346,7 @@ LIBRARY CoreGraphics
         CGPNGImageCreateFromData
         CGJPEGImageCreateFromFile
         CGPNGImageCreateFromFile
+        _CGImagePNGRepresentation
 
         ; CGLayer.mm
         CGLayerCreateWithContext
@@ -396,6 +397,8 @@ LIBRARY CoreGraphics
 
         ;private export below
         _CGPathFitRect
+        _CGPathApplyPath
+        _CGPathGetBoundingBoxInternal
 
         ; CGPattern.mm
         CGPatternCreate
@@ -537,8 +540,3 @@ LIBRARY CoreGraphics
         CGShadingRetain
         CGShadingRelease
         CGShadingGetTypeID
-
-        ; These should be in UIKit but we don't link against libjpeg and libpng inside of UIKit
-        ; so they'll stay here for now
-        UIImagePNGRepresentation
-        UIImageJPEGRepresentation

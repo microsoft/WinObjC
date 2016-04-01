@@ -477,7 +477,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDZoomSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property float value;
 @property WMDZoomTransitionMode mode;
 @end
@@ -508,11 +508,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDFocusSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL waitForFocus;
-@property (copy) id value;
+@property (retain) id value;
 @property WMDFocusMode mode;
-@property (copy) id distance;
+@property (retain) id distance;
 @property BOOL disableDriverFallback;
 @property WMDAutoFocusRange autoFocusRange;
 @end
@@ -556,8 +556,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDRegionOfInterest : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFRect* bounds;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFRect* bounds;
 @property BOOL autoWhiteBalanceEnabled;
 @property BOOL autoFocusEnabled;
 @property BOOL autoExposureEnabled;
@@ -616,7 +616,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDAdvancedPhotoCaptureSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WMDAdvancedPhotoMode mode;
 @end
 

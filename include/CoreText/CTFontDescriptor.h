@@ -15,8 +15,9 @@
 //******************************************************************************
 #pragma once
 
-#import <CoreText/CoreTextExport.h>
+#include <stdint.h>
 
+#import <CoreText/CoreTextExport.h>
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFNumber.h>

@@ -36,6 +36,10 @@ extern "C" {
 #include <ttnameid.h>
 }
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CTTypesetter";
+
 const CFStringRef kCTTypesetterOptionDisableBidiProcessing = static_cast<CFStringRef>(@"kCTTypesetterOptionDisableBidiProcessing");
 const CFStringRef kCTTypesetterOptionForcedEmbeddingLevel = static_cast<CFStringRef>(@"kCTTypesetterOptionForcedEmbeddingLevel");
 
@@ -51,7 +55,7 @@ static const float default_system_font_size = 15.0f;
 
     //  Measure the string
     _charactersLen = [_string length];
-    _characters = (WORD*)malloc(sizeof(WORD) * _charactersLen);
+    _characters = (WORD*)IwMalloc(sizeof(WORD) * _charactersLen);
     [_string getCharacters:_characters];
 
     return self;
@@ -59,7 +63,7 @@ static const float default_system_font_size = 15.0f;
 
 - (void)dealloc {
     if (_characters) {
-        free(_characters);
+        IwFree(_characters);
     }
     [_string release];
     [_attributedString release];
@@ -168,7 +172,7 @@ static CFIndex _DoWrap(CTTypesetterRef ts, CFRange range, WidthFinderFunc widthF
             if (error == 0) {
                 advance.x = slot->advance.x;
             } else {
-                EbrDebugLog("Glyph %d not found\n", curChar);
+                TraceWarning(TAG, L"Glyph %d not found", curChar);
             }
 
             if (curChar == ' ') {

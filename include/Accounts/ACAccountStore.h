@@ -45,17 +45,16 @@ typedef void(^ACAccountStoreCredentialRenewalHandler)(ACAccountCredentialRenewRe
 
 ACCOUNTS_EXPORT_CLASS
 @interface ACAccountStore : NSObject
-@property (readonly, weak, nonatomic) NSArray* accounts;
+@property (readonly, weak, nonatomic) NSArray* accounts STUB_PROPERTY;
 
-- (ACAccount*)accountWithIdentifier:(NSString*)identifier;
-- (NSArray*)accountsWithAccountType:(ACAccountType*)accountType;
-- (ACAccountType*)accountTypeWithAccountTypeIdentifier:(NSString*)typeIdentifier;
-- (void)saveAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreSaveCompletionHandler)completionHandler;
+- (ACAccount*)accountWithIdentifier:(NSString*)identifier STUB_METHOD;
+- (NSArray*)accountsWithAccountType:(ACAccountType*)accountType STUB_METHOD;
+- (ACAccountType*)accountTypeWithAccountTypeIdentifier:(NSString*)typeIdentifier STUB_METHOD;
+- (void)saveAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreSaveCompletionHandler)completionHandler STUB_METHOD;
 - (void)requestAccessToAccountsWithType:(ACAccountType*)accountType
         options:(NSDictionary*)options
-        completion:(ACAccountStoreRequestAccessCompletionHandler)completion;
-- (void)renewCredentialsForAccount:(ACAccount*)account completion:(ACAccountStoreCredentialRenewalHandler)completionHandler;
-- (void)removeAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreRemoveCompletionHandler)completionHandler;
-
+        completion:(ACAccountStoreRequestAccessCompletionHandler)completion STUB_METHOD;
+- (void)renewCredentialsForAccount:(ACAccount*)account completion:(ACAccountStoreCredentialRenewalHandler)completionHandler STUB_METHOD;
+- (void)removeAccount:(ACAccount*)account withCompletionHandler:(ACAccountStoreRemoveCompletionHandler)completionHandler STUB_METHOD;
 
 @end

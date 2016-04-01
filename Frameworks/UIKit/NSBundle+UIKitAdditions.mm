@@ -13,13 +13,15 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#import <Foundation/NSNib.h>
+#import <UIKit/UINib.h>
 #import <UIKit/NSBundle+UIKitAdditions.h>
 #import <StubReturn.h>
 #include "Starboard.h"
+#include "NSLogging.h"
+
+static const wchar_t* TAG = L"NSBundle+UIKitAdditions";
 
 NSString* const UINibProxiedObjectsKey = @"UINibProxiedObjectsKey";
-NSString* const UINibExternalObjects = @"UINibExternalObjects";
 
 @implementation NSBundle (UIKit)
 /**
@@ -33,10 +35,10 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
 
     NSString* nibFile = [self pathForResource:name ofType:@"nib"];
     if (!nibFile) {
-        EbrDebugLog("NIB [%hs] not found!", [name UTF8String]);
+        NSTraceWarning(TAG, @"NIB [%@] not found!", name);
         return nil;
     } else {
-        NSNib* nib = [NSNib nibWithNibName:nibFile bundle:self];
+        UINib* nib = [UINib nibWithNibName:nibFile bundle:self];
         NSArray* topLevelObjects = [nib instantiateWithOwner:owner options:options];
         return topLevelObjects;
     }

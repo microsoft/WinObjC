@@ -24,6 +24,9 @@
 #import <GLKit/GLKShaderDefs.h>
 
 #import "ShaderInfo.h"
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"GLKShader";
 
 using namespace GLKitShader;
 
@@ -56,6 +59,9 @@ static GLKShaderVarType getShaderType(GLenum type) {
 
 static GLKShaderCache* imp = nil;
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)get {
     if (imp == nil) {
         imp = [[GLKShaderCache alloc] init];
@@ -63,6 +69,9 @@ static GLKShaderCache* imp = nil;
     return imp;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKShader*)addShaderNamed:(NSString*)name source:(GLKShaderPair*)src {
     GLKShader* s = [_shaders objectForKey:name];
     if (s)
@@ -79,7 +88,7 @@ static GLKShaderCache* imp = nil;
     glCompileShader(vsh);
     glGetShaderiv(vsh, GL_COMPILE_STATUS, &compileStatus);
     if (compileStatus == GL_FALSE) {
-        NSLog(@"WARNING: vertex shader compilation failed!");
+        NSTraceWarning(TAG, @"WARNING: vertex shader compilation failed!");
         return nil;
     }
 
@@ -89,7 +98,7 @@ static GLKShaderCache* imp = nil;
     glCompileShader(psh);
     glGetShaderiv(psh, GL_COMPILE_STATUS, &compileStatus);
     if (compileStatus == GL_FALSE) {
-        NSLog(@"WARNING: pixel shader compilation failed!");
+        NSTraceWarning(TAG, @"WARNING: pixel shader compilation failed!");
         return nil;
     }
 
@@ -110,7 +119,7 @@ static GLKShaderCache* imp = nil;
         GLsizei len = 0;
         char buf[1024];
         glGetProgramInfoLog(program, sizeof(buf), &len, buf);
-        NSLog(@"Shader Link failure: %s", buf);
+        NSTraceWarning(TAG, @"Shader Link failure: %s", buf);
         return nil;
     }
 
@@ -120,55 +129,72 @@ static GLKShaderCache* imp = nil;
     return s;
 }
 
+/**
+ @Status Interoperable
+*/
 - (GLKShader*)shaderNamed:(NSString*)name {
     return [_shaders objectForKey:name];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
-    _shaders = [[NSMutableDictionary alloc] init];
+    if (self = [super init]) {
+        _shaders = [[NSMutableDictionary alloc] init];
+    }
     return self;
 }
 
 @end
 
+// This class is an implementation detail.
 @implementation GLKShader {
     ShaderLayout _vars;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)initWith:(GLuint)prog {
-    [self init];
-    _program = prog;
+    if (self = [super init]) {
+        _program = prog;
 
-    GLint numAttrs = 0, numUniforms = 0;
-    glGetProgramiv(prog, GL_ACTIVE_ATTRIBUTES, &numAttrs);
-    glGetProgramiv(prog, GL_ACTIVE_UNIFORMS, &numUniforms);
+        GLint numAttrs = 0, numUniforms = 0;
+        glGetProgramiv(prog, GL_ACTIVE_ATTRIBUTES, &numAttrs);
+        glGetProgramiv(prog, GL_ACTIVE_UNIFORMS, &numUniforms);
 
-    GLsizei len = 0;
-    char buf[1024];
-    GLint size;
-    GLenum type;
+        GLsizei len = 0;
+        char buf[1024];
+        GLint size;
+        GLenum type;
 
-    // Build shader layout.
+        // Build shader layout.
 
-    for (int i = 0; i < numAttrs; i++) {
-        glGetActiveAttrib(prog, i, sizeof(buf), &len, &size, &type, buf);
-        GLint loc = glGetAttribLocation(prog, buf);
-        _vars.defVariable(buf, getShaderType(type), loc, true);
-    }
+        for (int i = 0; i < numAttrs; i++) {
+            glGetActiveAttrib(prog, i, sizeof(buf), &len, &size, &type, buf);
+            GLint loc = glGetAttribLocation(prog, buf);
+            _vars.defVariable(buf, getShaderType(type), loc, true);
+        }
 
-    for (int i = 0; i < numUniforms; i++) {
-        glGetActiveUniform(prog, i, sizeof(buf), &len, &size, &type, buf);
-        GLint loc = glGetUniformLocation(prog, buf);
-        if (strcmp(buf, GLKSH_MVP_NAME) == 0) {
-            _mvploc = loc;
-        } else {
-            _vars.defVariable(buf, getShaderType(type), loc);
+        for (int i = 0; i < numUniforms; i++) {
+            glGetActiveUniform(prog, i, sizeof(buf), &len, &size, &type, buf);
+            GLint loc = glGetUniformLocation(prog, buf);
+            if (strcmp(buf, GLKSH_MVP_NAME) == 0) {
+                _mvploc = loc;
+            } else {
+                _vars.defVariable(buf, getShaderType(type), loc);
+            }
         }
     }
-
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (GLKShaderLayoutPtr)layout {
     return &_vars;
 }
@@ -179,32 +205,60 @@ static GLKShaderCache* imp = nil;
     ShaderMaterial* _mat;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)initWith:(GLKShaderMaterialPtr)ptr {
     [super init];
     _mat = (ShaderMaterial*)ptr;
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)reset {
     _mat->reset();
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)addVec2:(GLKVector2)val named:(NSString*)name {
     _mat->addMaterialVar([name UTF8String], val);
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)addVec3:(GLKVector3)val named:(NSString*)name {
     _mat->addMaterialVar([name UTF8String], val);
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)addVec4:(GLKVector4)val named:(NSString*)name {
     _mat->addMaterialVar([name UTF8String], val);
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)addTexture:(GLuint)texHandle named:(NSString*)name {
     _mat->addTexture([name UTF8String], texHandle);
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)addTexCube:(GLuint)texHandle named:(NSString*)name {
     _mat->addTexCube([name UTF8String], texHandle);
 }
@@ -215,12 +269,20 @@ static GLKShaderCache* imp = nil;
     ShaderLayout* _layout;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)initWith:(GLKShaderLayoutPtr)ptr {
     [super init];
     _layout = (ShaderLayout*)ptr;
     return self;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (NSArray*)variables {
     NSMutableArray* res = [[NSMutableArray alloc] init];
     for (const auto p : _layout->vars) {
@@ -229,6 +291,10 @@ static GLKShaderCache* imp = nil;
     return res;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (int)getLocationOf:(NSString*)var {
     auto it = _layout->vars.find([var UTF8String]);
     if (it == _layout->vars.end())
@@ -237,6 +303,10 @@ static GLKShaderCache* imp = nil;
     return it->second.loc;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (GLKShaderVarType)getTypeOf:(NSString*)var {
     auto it = _layout->vars.find([var UTF8String]);
     if (it == _layout->vars.end())

@@ -29,8 +29,7 @@ HRESULT catchReturnHrTest() {
 }
 }
 
-#ifndef WINOBJC_DISABLE_EH_TESTS
-TEST(Core, ErrorHandling) {
+ARM_DISABLED_TEST(Core, ErrorHandling) {
     NSError* error = nil;
 
     try {
@@ -73,4 +72,3 @@ TEST(Core, ErrorHandling) {
 
     ASSERT_OBJCEQ(actualExceptionName, NSInvalidArgumentException);
 }
-#endif

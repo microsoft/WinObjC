@@ -49,7 +49,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGFLanguageFontGroup : RTObject
-+ (WGFLanguageFontGroup*)createLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
++ (WGFLanguageFontGroup*)makeLanguageFontGroup:(NSString*)languageTag ACTIVATOR;
 @property (readonly) WGFLanguageFont* documentAlternate1Font;
 @property (readonly) WGFLanguageFont* documentAlternate2Font;
 @property (readonly) WGFLanguageFont* documentHeadingFont;

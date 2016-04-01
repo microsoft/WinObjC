@@ -372,8 +372,8 @@ void EbrDictionary::removeKey(const void* key) {
 
 void EbrDictionary::removeAllValues() {
     int count = getCount();
-    const void** values = (const void**)EbrMalloc(sizeof(void*) * count);
-    const void** keys = (const void**)EbrMalloc(sizeof(const void*) * count);
+    const void** values = (const void**)IwMalloc(sizeof(void*) * count);
+    const void** keys = (const void**)IwMalloc(sizeof(const void*) * count);
 
     getKeysAndValues(keys, values);
     khiter_t k;
@@ -391,8 +391,8 @@ void EbrDictionary::removeAllValues() {
         releaseVal(values[i]);
     }
 
-    EbrFree(keys);
-    EbrFree(values);
+    IwFree(keys);
+    IwFree(values);
 }
 
 void EbrDictionary::initIterator(struct dictIterator* iter) {
@@ -816,7 +816,7 @@ CFDictionaryRef CFDictionaryCreate(void* allocator,
 /**
  @Status Interoperable
 */
-void CFDictionaryAddValue(CFDictionaryRef dict, const void* key, void* value) {
+void CFDictionaryAddValue(CFMutableDictionaryRef dict, const void* key, const void* value) {
     const void* ret;
 
     if (!((NSDictionary*)(dict))->dict->objectForKey(key, ret)) {
@@ -892,16 +892,16 @@ Boolean CFDictionaryGetValueIfPresent(CFDictionaryRef dict, const void* key, con
 void CFDictionaryApplyFunction(CFDictionaryRef dict, CFDictionaryApplierFunction function, void* context) {
     CFIndex count = CFDictionaryGetCount(dict);
 
-    const void** keys = (const void**)EbrMalloc(count * sizeof(const void*));
-    const void** vals = (const void**)EbrMalloc(count * sizeof(const void*));
+    const void** keys = (const void**)IwMalloc(count * sizeof(const void*));
+    const void** vals = (const void**)IwMalloc(count * sizeof(const void*));
     CFDictionaryGetKeysAndValues(dict, (const void**)keys, (const void**)vals);
 
     for (unsigned i = 0; i < count; i++) {
         function(keys[i], vals[i], context);
     }
 
-    EbrFree(keys);
-    EbrFree(vals);
+    IwFree(keys);
+    IwFree(vals);
 }
 
 /**

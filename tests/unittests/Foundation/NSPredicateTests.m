@@ -16,14 +16,54 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import "NSBooleanPredicate.h"
 
-TEST(Foundation, NSPredicate_Init) {
+TEST(NSPredicate, Init) {
     NSPredicate* predicate = [[NSPredicate alloc] init];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
     [predicate release];
 }
 
-TEST(Foundation, NSPredicate_PredicateWithBlock) {
+TEST(NSPredicate, NSBooleanPredicateYES) {
+    NSBooleanPredicate* predicate = [[NSBooleanPredicate alloc] initWithValue:YES];
+    ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
+    ASSERT_TRUE_MSG([predicate value], "FAILED: predicate should be YES.");
+    [predicate release];
+}
+
+TEST(NSPredicate, NSBooleanPredicateNO) {
+    NSBooleanPredicate* predicate = [[NSBooleanPredicate alloc] initWithValue:NO];
+    ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
+    ASSERT_TRUE_MSG(![predicate value], "FAILED: predicate should be NO.");
+    [predicate release];
+}
+
+TEST(NSPredicate, predicateWithValue) {
+    NSPredicate* predicateTrue = [NSPredicate predicateWithValue:YES];
+    ASSERT_TRUE_MSG(predicateTrue != nil, "FAILED: predicateTrue should be non-null!");
+
+    NSPredicate* predicateFalse = [NSPredicate predicateWithValue:NO];
+    ASSERT_TRUE_MSG(predicateFalse != nil, "FAILED: predicateFalse should be non-null!");
+
+    ASSERT_TRUE_MSG([predicateTrue evaluateWithObject:nil], "FAILED: predicate should be YES.");
+    ASSERT_TRUE_MSG(![predicateFalse evaluateWithObject:nil], "FAILED: predicate should be NO.");
+}
+
+TEST(NSPredicate, NSBooleanPredicate_ArchiveAndUnarchiveObject) {
+    NSBooleanPredicate* predicate = [[NSBooleanPredicate alloc] initWithValue:NO];
+    ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
+
+    // archive the object
+    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:predicate];
+    ASSERT_TRUE_MSG(data != nil, "FAILED: archived data should be non-null!");
+
+    NSPredicate* unArchivedPredicate = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    ASSERT_TRUE_MSG(unArchivedPredicate != nil, "FAILED: unArchivedPredicate should be non-null!");
+
+    [predicate release];
+}
+
+TEST(NSPredicate, PredicateWithBlock) {
     NSArray* array = @[ @1, @2, @3, @7, @8, @11, @14, @19, @20 ];
 
     NSPredicate* evenNumbersPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -40,10 +80,6 @@ TEST(Foundation, NSPredicate_PredicateWithBlock) {
             ASSERT_EQ_MSG(YES, [filteredArray containsObject:object], "FAILED: even filter did not work as expected, value not found.");
         }
     }
-
-    [evenNumbersPredicate release];
-    [filteredArray release];
-    [array release];
 }
 
 // Used for testing keys and custom block.
@@ -60,7 +96,7 @@ TEST(Foundation, NSPredicate_PredicateWithBlock) {
 }
 @end
 
-TEST(Foundation, NSPredicate_PredicateWithBlockSub) {
+TEST(NSPredicate, PredicateWithBlockSub) {
     NSMutableArray* array = [[NSMutableArray alloc] init];
 
     int specialValue = 10;
@@ -92,12 +128,11 @@ TEST(Foundation, NSPredicate_PredicateWithBlockSub) {
     ASSERT_EQ_MSG(1, [filteredArray count], "FAILED: failed to filter the coins.");
     ASSERT_EQ_MSG(specialValue, [[filteredArray firstObject] coinValue], "FAILED: Unable to obtain the correct coin value.");
 
-    [specialCoinPredicate release];
     [filteredArray release];
     [array release];
 }
 
-TEST(Foundation, NSPredicate_ArchiveAndUnarchiveObject) {
+TEST(NSPredicate, ArchiveAndUnarchiveObject) {
     NSPredicate* predicate = [[NSPredicate alloc] init];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
 
@@ -111,7 +146,7 @@ TEST(Foundation, NSPredicate_ArchiveAndUnarchiveObject) {
     [predicate release];
 }
 
-TEST(Foundation, NSPredicate_copy) {
+TEST(NSPredicate, copy) {
     NSPredicate* predicate = [[NSPredicate alloc] init];
     ASSERT_TRUE_MSG(predicate != nil, "FAILED: predicate should be non-null!");
 

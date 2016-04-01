@@ -62,7 +62,7 @@ UIKIT_EXPORT_CLASS
 - (id)showInView:(UIView*)view; // menu will appear wherever the mouse cursor is
 - (void)showFromRect:(CGRect)rect
               inView:(UIView*)view
-            animated:(BOOL)animated; // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
+            animated:(BOOL)animated STUB_METHOD; // if rect is CGRectNull, the menu will appear wherever the mouse cursor is
 - (id)dismissWithClickedButtonIndex:(NSInteger)buttonIndex animated:(BOOL)animated;
 
 // these are not yet implemented:
@@ -74,8 +74,8 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, assign) id<UIActionSheetDelegate> delegate;
-@property (nonatomic, assign) UIActionSheetStyle actionSheetStyle;
-@property (nonatomic, readonly, getter=isVisible) BOOL visible;
+@property (nonatomic, assign) UIActionSheetStyle actionSheetStyle STUB_PROPERTY;
+@property (nonatomic, readonly, getter=isVisible) BOOL visible STUB_PROPERTY;
 @property (nonatomic) NSInteger destructiveButtonIndex;
 @property (nonatomic) NSInteger cancelButtonIndex;
 @property (nonatomic, readonly) NSInteger firstOtherButtonIndex;

@@ -111,9 +111,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceConnection : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* packageFamilyName;
-@property (copy) NSString* appServiceName;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* packageFamilyName;
+@property (retain) NSString* appServiceName;
 - (EventRegistrationToken)addRequestReceivedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceRequestReceivedEventArgs*))del;
 - (void)removeRequestReceivedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addServiceClosedEvent:(void (^)(WAAAppServiceConnection*, WAAAppServiceClosedEventArgs*))del;

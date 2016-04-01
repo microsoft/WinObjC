@@ -31,7 +31,7 @@
  @Status Stub
  @Notes
 */
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }

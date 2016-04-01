@@ -28,16 +28,29 @@
 
 #ifdef __cplusplus
 class IInspectable;
+#define WINRT_EXPORT_FN extern "C" WINRT_EXPORT
 #else
 struct IInspectable;
 typedef struct IInspectable IInspectable;
+#define WINRT_EXPORT_FN WINRT_EXPORT
 #endif
 
-WINRT_EXPORT
+WINRT_EXPORT_FN
 @interface RTObject : NSObject
 - (id)internalObject;
 - (void)setComObj:(IInspectable*)obj;
 @end
+
+// Does a safe cast of rtObject into a derived projected class type. Throws if it is an invalid cast.
+WINRT_EXPORT_FN
+id rt_dynamic_cast(Class classType, RTObject* rtObject);
+
+#ifdef __cplusplus
+template <typename ClassType>
+ClassType* rt_dynamic_cast(RTObject* rtObject) {
+    return rt_dynamic_cast([ClassType class], rtObject);
+}
+#endif
 
 #ifndef GUID_DEFINED
 #define GUID_DEFINED
@@ -58,7 +71,7 @@ typedef struct _GUID {
 #endif
 #endif
 
-@interface WFGUID : RTObject
+@interface WFGUID : NSObject
 @property unsigned long Data1;
 @property unsigned short Data2;
 @property unsigned short Data3;

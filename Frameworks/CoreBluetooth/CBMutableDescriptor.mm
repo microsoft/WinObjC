@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBMutableDescriptor.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @implementation CBMutableDescriptor
 /**

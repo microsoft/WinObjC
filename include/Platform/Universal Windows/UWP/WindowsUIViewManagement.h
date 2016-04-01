@@ -154,7 +154,7 @@ WINRT_EXPORT
 + (int)getApplicationViewIdForWindow:(RTObject<WUCICoreWindow>*)window;
 + (WUVApplicationView*)getForCurrentView;
 @property BOOL isScreenCaptureEnabled;
-@property (copy) NSString* title;
+@property (retain) NSString* title;
 @property (readonly) BOOL adjacentToRightDisplayEdge;
 @property (readonly) int id;
 @property (readonly) BOOL isFullScreen;
@@ -205,18 +205,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVApplicationViewTitleBar : RTObject
-@property (copy) id buttonInactiveBackgroundColor;
-@property (copy) id buttonHoverForegroundColor;
-@property (copy) id buttonHoverBackgroundColor;
-@property (copy) id buttonForegroundColor;
-@property (copy) id buttonBackgroundColor;
-@property (copy) id buttonInactiveForegroundColor;
-@property (copy) id backgroundColor;
-@property (copy) id inactiveForegroundColor;
-@property (copy) id inactiveBackgroundColor;
-@property (copy) id foregroundColor;
-@property (copy) id buttonPressedForegroundColor;
-@property (copy) id buttonPressedBackgroundColor;
+@property (retain) id buttonInactiveBackgroundColor;
+@property (retain) id buttonHoverForegroundColor;
+@property (retain) id buttonHoverBackgroundColor;
+@property (retain) id buttonForegroundColor;
+@property (retain) id buttonBackgroundColor;
+@property (retain) id buttonInactiveForegroundColor;
+@property (retain) id backgroundColor;
+@property (retain) id inactiveForegroundColor;
+@property (retain) id inactiveBackgroundColor;
+@property (retain) id foregroundColor;
+@property (retain) id buttonPressedForegroundColor;
+@property (retain) id buttonPressedBackgroundColor;
 @end
 
 #endif // __WUVApplicationViewTitleBar_DEFINED__
@@ -347,7 +347,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVAccessibilitySettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL highContrast;
 @property (readonly) NSString* highContrastScheme;
 - (EventRegistrationToken)addHighContrastChangedEvent:(void (^)(WUVAccessibilitySettings*, RTObject*))del;
@@ -362,7 +362,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVUISettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL animationsEnabled;
 @property (readonly) unsigned int caretBlinkRate;
 @property (readonly) BOOL caretBrowsingEnabled;

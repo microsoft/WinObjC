@@ -40,15 +40,4 @@ OBJCRT_EXPORT void objc_outputDebugStringW(wchar_t* outputString);
 OBJCRT_EXPORT long objc_interlockedDecrementRelease(long volatile* addend);
 OBJCRT_EXPORT void* objc_interlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
 
-#ifdef __OBJC__
-
-// objcrt-level support functions that must exist at the bottom of the stack so they're usable everywhere:
-// Not intended to be used directly!
-OBJCRT_EXPORT NSString* _hresultErrorDictKey();
-OBJCRT_EXPORT NSException* _exceptionFromFailureInfo(const wil::FailureInfo& fi);
-OBJCRT_EXPORT NSString* _stringFromHresult(HRESULT hr);
-OBJCRT_EXPORT NSError* _errorFromFailureInfo(const wil::FailureInfo& fi);
-
-#endif // __OBJC__
-
 __END_DECLS

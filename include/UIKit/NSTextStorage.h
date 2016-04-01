@@ -33,6 +33,16 @@ UIKIT_EXPORT NSString* const NSTextStorageWillProcessEditingNotification;
 UIKIT_EXPORT_CLASS
 @interface NSTextStorage : NSMutableAttributedString
 @property (nonatomic) CGSize size;
-
+@property (assign, nonatomic) id delegate STUB_PROPERTY;
+@property (readonly, nonatomic) NSTextStorageEditActions editedMask STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger changeInLength STUB_PROPERTY;
+@property (readonly, nonatomic) NSRange editedRange STUB_PROPERTY;
+- (void)edited:(NSTextStorageEditActions)editedMask range:(NSRange)editedRange changeInLength:(NSInteger)delta STUB_METHOD;
+- (void)ensureAttributesAreFixedInRange:(NSRange)range STUB_METHOD;
+@property (readonly, nonatomic) BOOL fixesAttributesLazily STUB_PROPERTY;
+- (void)invalidateAttributesInRange:(NSRange)range STUB_METHOD;
+- (void)processEditing STUB_METHOD;
 - (void)addLayoutManager:(NSLayoutManager*)manager;
+- (void)removeLayoutManager:(NSLayoutManager*)aLayoutManager STUB_METHOD;
+@property (readonly, copy, nonatomic) NSArray* layoutManagers STUB_PROPERTY;
 @end

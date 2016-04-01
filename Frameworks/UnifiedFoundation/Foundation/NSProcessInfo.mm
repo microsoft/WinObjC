@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include <math.h>
 #include <windows.h>
 #include <string>
@@ -23,8 +24,6 @@
 #include "Foundation/NSProcessInfo.h"
 
 static id _processInfo;
-
-static IWLazyClassLookup _LazyUIDevice("UIDevice");
 
 static inline OSVERSIONINFO winOsVersion() {
     OSVERSIONINFO result = { sizeof(OSVERSIONINFO), 0, 0, 0, 0, { '\0' } };
@@ -67,15 +66,21 @@ static inline OSVERSIONINFO winOsVersion() {
     return _processInfo;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     _processInfo = [self new];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     // set up environment, currently only HOME and TMPDIR
     _environment = [NSMutableDictionary new];
-    [_environment setObject:[[NSBundle mainBundle] bundlePath] forKey:@"HOME"];
-    [_environment setObject:@"/tmp" forKey:@"TMPDIR"];
+    [(NSMutableDictionary*)_environment setObject:[[NSBundle mainBundle] bundlePath] forKey:@"HOME"];
+    [(NSMutableDictionary*)_environment setObject:@"/tmp" forKey:@"TMPDIR"];
 
     // get process id
     _processIdentifier = static_cast<int>(GetCurrentProcessId());
@@ -232,20 +237,16 @@ static inline OSVERSIONINFO winOsVersion() {
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (uint64_t)physicalMemory {
-    @try {
-        return [_LazyUIDevice _deviceTotalMemory];
-    } @catch (NSException* exception) {
-        if (![[exception name] isEqualToString:NSObjectNotAvailableException]) {
-            @throw exception;
-        }
-
-        return 0;
-    }
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_processName release];
     [_environment release];

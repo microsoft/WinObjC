@@ -51,13 +51,21 @@
 #define __IPHONE_6_1 60100
 #define __IPHONE_7_0 70000
 #define __IPHONE_7_1 70100
+#define __IPHONE_8_0 80000
+#define __IPHONE_8_1 80100
+#define __IPHONE_8_2 80200
+#define __IPHONE_8_3 80300
+#define __IPHONE_8_4 80400
+#define __IPHONE_9_0 90000
+#define __IPHONE_9_1 90100
+#define __IPHONE_9_2 90200
 
 #define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_3_2
-#define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_6_0
+#define __IPHONE_OS_VERSION_MAX_ALLOWED __IPHONE_9_1
 #define __AVAILABILITY_INTERNAL_DEPRECATED
 #define DEPRECATED_ATTRIBUTE
 
-// __IPHONE_8_0 and later is not yet supported
+// __IPHONE_9_2 and later is not yet supported
 
 // Empty macro definitions
 #define __OSX_AVAILABLE_STARTING(__MAC_VERSION, __IPHONE_VERSION)

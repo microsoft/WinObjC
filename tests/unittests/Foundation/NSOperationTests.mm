@@ -21,19 +21,17 @@ TEST(Foundation, NSOperation) {
     NSOperationQueue* queue = [[NSOperationQueue alloc] init];
 
     NSOperation* operation = [[NSOperation alloc] init];
-    __block bool completed = false;
 
     [operation setCompletionBlock:^{
         [operation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        completed = [operation isFinished];
+        ASSERT_TRUE([operation isFinished]);
     }];
 
     [queue addOperation:operation];
 
     [operation waitUntilFinished];
 
-    ASSERT_TRUE(completed);
-    ASSERT_EQ(completed, [operation isFinished]);
+    ASSERT_TRUE([operation isFinished]);
     ASSERT_FALSE([operation isExecuting]);
 }
 
@@ -41,11 +39,10 @@ TEST(Foundation, NSOperationCancellation) {
     NSOperationQueue* queue = [[NSOperationQueue alloc] init];
 
     NSOperation* cancelledOperation = [[NSOperation alloc] init];
-    __block bool cancelledOperationCompleted = false;
 
     [cancelledOperation setCompletionBlock:^{
         [cancelledOperation waitUntilFinished]; // Should not deadlock, but we cannot test this
-        cancelledOperationCompleted = [cancelledOperation isFinished];
+        ASSERT_TRUE([cancelledOperation isFinished]);
     }];
 
     [cancelledOperation cancel];
@@ -54,7 +51,6 @@ TEST(Foundation, NSOperationCancellation) {
 
     [cancelledOperation waitUntilFinished];
 
-    ASSERT_TRUE(cancelledOperationCompleted);
     ASSERT_FALSE([cancelledOperation isExecuting]);
     ASSERT_TRUE([cancelledOperation isCancelled]);
 }

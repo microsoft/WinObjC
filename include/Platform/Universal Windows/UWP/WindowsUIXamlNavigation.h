@@ -91,7 +91,7 @@ typedef void (^WUXNNavigationStoppedEventHandler)(RTObject* sender, WUXNNavigati
 
 WINRT_EXPORT
 @interface WUXNNavigationEventArgs : RTObject
-@property (copy) WFUri* uri;
+@property (retain) WFUri* uri;
 @property (readonly) RTObject* content;
 @property (readonly) WUXNNavigationMode navigationMode;
 @property (readonly) RTObject* parameter;
@@ -135,7 +135,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -154,9 +154,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXNPageStackEntry : WXDependencyObject
-+ (WUXNPageStackEntry*)createInstance:(WUXITypeName*)sourcePageType
-                            parameter:(RTObject*)parameter
-             navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
++ (WUXNPageStackEntry*)makeInstance:(WUXITypeName*)sourcePageType
+                          parameter:(RTObject*)parameter
+           navigationTransitionInfo:(WUXMANavigationTransitionInfo*)navigationTransitionInfo ACTIVATOR;
 @property (readonly) WUXMANavigationTransitionInfo* navigationTransitionInfo;
 @property (readonly) RTObject* parameter;
 @property (readonly) WUXITypeName* sourcePageType;

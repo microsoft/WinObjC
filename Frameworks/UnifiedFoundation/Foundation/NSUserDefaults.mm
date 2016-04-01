@@ -26,6 +26,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSUserDefaults.h"
 #import "Foundation/NSThread.h"
 #import "NSPersistentDomain.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSUserDefaults";
 
 FOUNDATION_EXPORT NSString* const NSGlobalDomain = @"NSGlobalDomain";
 FOUNDATION_EXPORT NSString* const NSArgumentDomain = @"NSArgumentDomain";
@@ -82,6 +85,9 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class uses setObject:forKey: as a setter, and has no key-specific setters.
     return NO;
@@ -165,7 +171,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
  @Status Interoperable
 */
 - (void)setPersistentDomain:(id)domain forName:(NSString*)name {
-    EbrDebugLog("Setting domain for %s\n", [name UTF8String]);
+    TraceVerbose(TAG, L"Setting domain for %hs", [name UTF8String]);
     [_domains setObject:domain forKey:name];
 }
 
@@ -305,7 +311,7 @@ static id deepCopyValue(id obj) {
     if ([obj isKindOfClass:[NSArray class]]) {
         int count = [obj count];
         int i = 0;
-        id* objs = (id*)EbrMalloc(count * sizeof(id));
+        id* objs = (id*)IwMalloc(count * sizeof(id));
         for (id curObj in obj) {
             objs[i] = deepCopyValue(curObj);
             i++;
@@ -323,14 +329,14 @@ static id deepCopyValue(id obj) {
             [objs[i] release];
         }
 
-        EbrFree(objs);
+        IwFree(objs);
 
         return ret;
     } else if ([obj isKindOfClass:[NSDictionary class]]) {
         int count = [obj count];
         int i = 0;
-        id* objs = (id*)EbrMalloc(count * sizeof(id));
-        id* keys = (id*)EbrMalloc(count * sizeof(id));
+        id* objs = (id*)IwMalloc(count * sizeof(id));
+        id* keys = (id*)IwMalloc(count * sizeof(id));
 
         for (id curObj in obj) {
             keys[i] = curObj;
@@ -349,8 +355,8 @@ static id deepCopyValue(id obj) {
             [objs[i] release];
         }
 
-        EbrFree(objs);
-        EbrFree(keys);
+        IwFree(objs);
+        IwFree(keys);
 
         return ret;
     }
@@ -368,7 +374,7 @@ static id deepCopyValue(id obj) {
 
     value = deepCopyValue(value);
 
-    [[self persistantDomain] setObject:value forKey:key];
+    [(NSMutableDictionary*)[self persistantDomain] setObject:value forKey:key];
     [value release];
     [_dictionaryRep autorelease];
     _dictionaryRep = nil;
@@ -378,7 +384,7 @@ static id deepCopyValue(id obj) {
     if (!_willSave) {
         _willSave = TRUE;
         if (![NSThread isMainThread]) {
-            EbrDebugLog("Warning: NSUserDefaults accessed from non-main thread\n");
+            TraceWarning(TAG, L"Warning: NSUserDefaults accessed from non-main thread");
             [self performSelectorOnMainThread:@selector(_scheduleSync) withObject:nil waitUntilDone:FALSE];
         } else {
             [self performSelector:@selector(synchronize) withObject:nil afterDelay:1.0];
@@ -482,7 +488,7 @@ static id deepCopyValue(id obj) {
  @Status Interoperable
 */
 - (void)removeObjectForKey:(NSString*)key {
-    [[self persistantDomain] removeObjectForKey:key];
+    [(NSMutableDictionary*)[self persistantDomain] removeObjectForKey:key];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSUserDefaultsDidChangeNotification object:self];
 }
@@ -505,10 +511,16 @@ static id deepCopyValue(id obj) {
     return array;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)valueForKey:(NSString*)key {
     return [self objectForKey:key];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setValue:(id)value forKey:(NSString*)key {
     [self setObject:value forKey:key];
 }
@@ -518,7 +530,7 @@ static id deepCopyValue(id obj) {
 */
 + (void)resetStandardUserDefaults {
     UNIMPLEMENTED();
-    EbrDebugLog("Warning: resetStandardUserDefaults not implemented\n");
+    TraceWarning(TAG, L"Warning: resetStandardUserDefaults not implemented");
 }
 
 /**

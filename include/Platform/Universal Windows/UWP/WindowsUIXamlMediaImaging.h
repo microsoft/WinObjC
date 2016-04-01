@@ -109,7 +109,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIXamlRenderingBackgroundTask : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)onRun:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 
@@ -121,7 +121,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -150,7 +150,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIBitmapSource : WUXMImageSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
 + (WXDependencyProperty*)pixelHeightProperty;
@@ -167,7 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIRenderTargetBitmap : WUXMImageSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) int pixelHeight;
 @property (readonly) int pixelWidth;
 + (WXDependencyProperty*)pixelHeightProperty;
@@ -195,9 +195,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
-+ (WUXMIBitmapImage*)createInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* uriSource;
++ (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* uriSource;
 @property int decodePixelWidth;
 @property int decodePixelHeight;
 @property WUXMIBitmapCreateOptions createOptions;
@@ -223,10 +223,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIVirtualSurfaceImageSource : WUXMISurfaceImageSource
-+ (WUXMIVirtualSurfaceImageSource*)createInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
-+ (WUXMIVirtualSurfaceImageSource*)createInstanceWithDimensionsAndOpacity:(int)pixelWidth
-                                                              pixelHeight:(int)pixelHeight
-                                                                 isOpaque:(BOOL)isOpaque ACTIVATOR;
++ (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
++ (WUXMIVirtualSurfaceImageSource*)makeInstanceWithDimensionsAndOpacity:(int)pixelWidth
+                                                            pixelHeight:(int)pixelHeight
+                                                               isOpaque:(BOOL)isOpaque ACTIVATOR;
 @end
 
 #endif // __WUXMIVirtualSurfaceImageSource_DEFINED__
@@ -237,7 +237,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIWriteableBitmap : WUXMIBitmapSource
-+ (WUXMIWriteableBitmap*)createInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
++ (WUXMIWriteableBitmap*)makeInstanceWithDimensions:(int)pixelWidth pixelHeight:(int)pixelHeight ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* pixelBuffer;
 - (void)invalidate;
 @end
@@ -260,7 +260,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMISoftwareBitmapSource : WUXMImageSource <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (RTObject<WFIAsyncAction>*)setBitmapAsync:(WGISoftwareBitmap*)softwareBitmap;
 - (void)close;
 @end

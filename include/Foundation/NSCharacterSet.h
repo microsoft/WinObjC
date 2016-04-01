@@ -41,7 +41,7 @@ FOUNDATION_EXPORT_CLASS
 }
 
 + (instancetype)alphanumericCharacterSet;
-+ (instancetype)capitalizedLetterCharacterSet STUB_METHOD;
++ (instancetype)capitalizedLetterCharacterSet;
 + (instancetype)controlCharacterSet;
 + (instancetype)decimalDigitCharacterSet;
 + (instancetype)decomposableCharacterSet;
@@ -69,6 +69,9 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)hasMemberInPlane:(uint8_t)thePlane;
 - (BOOL)isSupersetOfSet:(NSCharacterSet*)theOtherSet;
 - (BOOL)longCharacterIsMember:(UTF32Char)theLongChar;
-@property (readonly, copy) NSCharacterSet* invertedSet STUB_PROPERTY;
-@property (readonly, copy) NSData* bitmapRepresentation STUB_PROPERTY;
+@property (readonly, copy) NSCharacterSet* invertedSet;
+@property (readonly, copy) NSData* bitmapRepresentation;
+
+// WinObjC Addition:
+- (NSUInteger)count;
 @end

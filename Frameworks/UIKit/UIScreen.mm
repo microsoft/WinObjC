@@ -35,6 +35,10 @@ NSString* const UIScreenModeDidChangeNotification = @"UIScreenModeDidChangeNotif
 NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDidChangeNotification";
 
 @implementation UIScreen : NSObject
+
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     if (self == [UIScreen self]) {
         mainScreen = [self alloc];

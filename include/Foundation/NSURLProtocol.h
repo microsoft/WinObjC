@@ -17,29 +17,46 @@
 
 #import <Foundation/FoundationExport.h>
 #import <Foundation/NSObject.h>
+#import <Foundation/NSCachedURLResponse.h>
 
 @class NSURLRequest;
-@class NSCachedURLResponse;
-@protocol NSURLProtocolClient;
 @class NSString;
+@class NSData;
+@class NSError;
 @class NSMutableURLRequest;
+@class NSURLAuthenticationChallenge;
+
+@protocol NSURLProtocolClient;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLProtocol : NSObject
 - (instancetype)initWithRequest:(NSURLRequest*)request
                  cachedResponse:(NSCachedURLResponse*)cachedResponse
                          client:(id<NSURLProtocolClient>)client;
-+ (BOOL)registerClass:(Class)protocolClass STUB_METHOD;
-+ (void)unregisterClass:(Class)protocolClass STUB_METHOD;
-+ (BOOL)canInitWithRequest:(NSURLRequest*)request STUB_METHOD;
++ (BOOL)registerClass:(Class)protocolClass;
++ (void)unregisterClass:(Class)protocolClass;
++ (BOOL)canInitWithRequest:(NSURLRequest*)request;
 + (id)propertyForKey:(NSString*)key inRequest:(NSURLRequest*)request STUB_METHOD;
 + (void)setProperty:(id)value forKey:(NSString*)key inRequest:(NSMutableURLRequest*)request STUB_METHOD;
 + (void)removePropertyForKey:(NSString*)key inRequest:(NSMutableURLRequest*)request STUB_METHOD;
 + (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request STUB_METHOD;
 + (BOOL)requestIsCacheEquivalent:(NSURLRequest*)aRequest toRequest:(NSURLRequest*)bRequest STUB_METHOD;
-- (void)startLoading STUB_METHOD;
-- (void)stopLoading STUB_METHOD;
+- (void)startLoading;
+- (void)stopLoading;
 @property (readonly, copy) NSCachedURLResponse* cachedResponse;
 @property (readonly, retain) id<NSURLProtocolClient> client;
 @property (readonly, copy) NSURLRequest* request;
+@end
+
+@protocol NSURLProtocolClient <NSObject>
+- (void)URLProtocol:(NSURLProtocol*)protocol cachedResponseIsValid:(NSCachedURLResponse*)cachedResponse;
+- (void)URLProtocol:(NSURLProtocol*)protocol didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)URLProtocol:(NSURLProtocol*)protocol didFailWithError:(NSError*)error;
+- (void)URLProtocol:(NSURLProtocol*)protocol didLoadData:(NSData*)data;
+- (void)URLProtocol:(NSURLProtocol*)protocol didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge;
+- (void)URLProtocol:(NSURLProtocol*)protocol didReceiveResponse:(NSURLResponse*)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy;
+- (void)URLProtocol:(NSURLProtocol*)protocol
+    wasRedirectedToRequest:(NSURLRequest*)request
+          redirectResponse:(NSURLResponse*)redirectResponse;
+- (void)URLProtocolDidFinishLoading:(NSURLProtocol*)protocol;
 @end

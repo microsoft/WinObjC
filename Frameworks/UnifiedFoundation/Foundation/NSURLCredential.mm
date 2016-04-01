@@ -101,6 +101,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     NSURLCredential* copy = [[self class] allocWithZone:zone];
     if (copy != nil) {
@@ -122,6 +125,9 @@
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeObject:_user forKey:@"user"];
     [coder encodeObject:_password forKey:@"password"];
@@ -134,7 +140,7 @@
  @Notes Does not support encoding/decoding of SecTrustRef and SecIdentityRef.
 */
 - (id)initWithCoder:(NSCoder*)coder {
-    if (self = [super initWithCoder:coder]) {
+    if (self = [super init]) {
         _user = [[coder decodeObjectForKey:@"user"] retain];
         _password = [[coder decodeObjectForKey:@"password"] retain];
         _persistence = (NSURLCredentialPersistence)[coder decodeInt64ForKey:@"persistence"];
@@ -144,6 +150,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_user release];
     [_password release];

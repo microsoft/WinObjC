@@ -19,16 +19,18 @@
 #import <Foundation/NSObject.h>
 #import <UIKit/UIKitExport.h>
 
+UIKIT_EXPORT NSString* const UINibExternalObjects;
+
 @class NSBundle;
-@class UINib;
 @class NSArray;
 @class NSDictionary;
+@class NSData;
 
 UIKIT_EXPORT_CLASS
 @interface UINib : NSObject
+@property (nonatomic, readonly) NSBundle* bundle;
 
-+ (UINib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundleOrNil;
-
-- (NSArray*)instantiateWithOwner:(id)ownerOrNil options:(NSDictionary*)optionsOrNil;
-
++ (UINib*)nibWithNibName:(NSString*)name bundle:(NSBundle*)bundle;
++ (UINib*)nibWithData:(NSData*)data bundle:(NSBundle*)bundle;
+- (NSArray*)instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options;
 @end

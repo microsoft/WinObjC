@@ -51,12 +51,19 @@ struct _mach_timeval {
     pthread_cond_t _cond;
     idretaintype(NSString) _name;
 }
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     pthread_mutex_init(&_mutex, NULL);
     pthread_cond_init(&_cond, NULL);
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     int ret = pthread_mutex_destroy(&_mutex);
     assert(ret == 0);
@@ -65,10 +72,16 @@ struct _mach_timeval {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)lock {
     pthread_mutex_lock(&_mutex);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unlock {
     pthread_mutex_unlock(&_mutex);
 }

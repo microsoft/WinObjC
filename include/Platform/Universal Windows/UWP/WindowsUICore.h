@@ -168,7 +168,7 @@ WINRT_EXPORT
 @interface WUCCoreProximityEvaluation : NSObject
 + (instancetype) new;
 @property int score;
-@property (copy) WFPoint* adjustedPoint;
+@property (retain) WFPoint* adjustedPoint;
 @end
 
 // Windows.UI.Core.DispatchedHandler
@@ -204,7 +204,7 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 @property (readonly) WUCCoreDispatcher* dispatcher;
 @property WUCCoreWindowFlowDirection flowDirection;
 @property BOOL isInputEnabled;
-@property (copy) WUCCoreCursor* pointerCursor;
+@property (retain) WUCCoreCursor* pointerCursor;
 @property (readonly) WFPoint* pointerPosition;
 @property (readonly) BOOL visible;
 - (EventRegistrationToken)addActivatedEvent:(void (^)(WUCCoreWindow*, WUCWindowActivatedEventArgs*))del;
@@ -267,7 +267,7 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 #define __WUCIInitializeWithCoreWindow_DEFINED__
 
 @protocol WUCIInitializeWithCoreWindow
-- (void)initialize:(WUCCoreWindow*)window;
+- (void)Initialize:(WUCCoreWindow*)window;
 @end
 
 #endif // __WUCIInitializeWithCoreWindow_DEFINED__
@@ -291,7 +291,7 @@ typedef void (^WUCIdleDispatchedHandler)(WUCIdleDispatchedHandlerArgs* e);
 
 @protocol WUCICorePointerInputSource
 @property (readonly) BOOL hasCapture;
-@property (copy) WUCCoreCursor* pointerCursor;
+@property (retain) WUCCoreCursor* pointerCursor;
 @property (readonly) WFPoint* pointerPosition;
 - (EventRegistrationToken)addPointerCaptureLostEvent:(void (^)(RTObject*, WUCPointerEventArgs*))del;
 - (void)removePointerCaptureLostEvent:(EventRegistrationToken)tok;
@@ -344,7 +344,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCCoreCursor : RTObject
-+ (WUCCoreCursor*)createCursor:(WUCCoreCursorType)type id:(unsigned int)id ACTIVATOR;
++ (WUCCoreCursor*)makeCursor:(WUCCoreCursorType)type id:(unsigned int)id ACTIVATOR;
 @property (readonly) unsigned int id;
 @property (readonly) WUCCoreCursorType type;
 @end
@@ -358,8 +358,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCCoreWindow : RTObject <WUCICoreWindow>
 + (WUCCoreWindow*)getForCurrentThread;
-@property (copy) WFPoint* pointerPosition;
-@property (copy) WUCCoreCursor* pointerCursor;
+@property (retain) WFPoint* pointerPosition;
+@property (retain) WUCCoreCursor* pointerCursor;
 @property BOOL isInputEnabled;
 @property WUCCoreWindowFlowDirection flowDirection;
 @property (readonly) RTObject* automationHostProvider;
@@ -429,7 +429,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUCAutomationProviderRequestedEventArgs : RTObject <WUCICoreWindowEventArgs>
-@property (copy) RTObject* automationProvider;
+@property (retain) RTObject* automationProvider;
 @property BOOL handled;
 @end
 
@@ -505,7 +505,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUCTouchHitTestingEventArgs : RTObject <WUCICoreWindowEventArgs>
 @property BOOL handled;
-@property (copy) WUCCoreProximityEvaluation* proximityEvaluation;
+@property (retain) WUCCoreProximityEvaluation* proximityEvaluation;
 @property (readonly) WFRect* boundingBox;
 @property (readonly) WFPoint* point;
 - (WUCCoreProximityEvaluation*)evaluateProximityToRect:(WFRect*)controlBoundingBox;
@@ -596,7 +596,7 @@ WINRT_EXPORT
 @interface WUCCoreIndependentInputSource : RTObject <WUCICoreInputSourceBase, WUCICorePointerInputSource>
 @property BOOL isInputEnabled;
 @property (readonly) WUCCoreDispatcher* dispatcher;
-@property (copy) WUCCoreCursor* pointerCursor;
+@property (retain) WUCCoreCursor* pointerCursor;
 @property (readonly) BOOL hasCapture;
 @property (readonly) WFPoint* pointerPosition;
 - (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;
@@ -630,7 +630,7 @@ WINRT_EXPORT
 @property (readonly) BOOL hasFocus;
 @property BOOL isInputEnabled;
 @property (readonly) WUCCoreDispatcher* dispatcher;
-@property (copy) WUCCoreCursor* pointerCursor;
+@property (retain) WUCCoreCursor* pointerCursor;
 @property (readonly) BOOL hasCapture;
 @property (readonly) WFPoint* pointerPosition;
 - (EventRegistrationToken)addInputEnabledEvent:(void (^)(RTObject*, WUCInputEnabledEventArgs*))del;

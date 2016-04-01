@@ -17,11 +17,10 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 
-using WCHAR = wchar_t;
-
 #include <string>
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSError.h"
+#include "Foundation/NSScanner.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSValue.h"
@@ -40,25 +39,34 @@ using WCHAR = wchar_t;
 #include <iomanip>
 
 #include "StringHelpers.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSData";
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::Security::Cryptography;
 using namespace ABI::Windows::Storage::Streams;
 using namespace Windows::Foundation;
 
+// TODO: BUG 192601: Enable ARC on this file once the code gen error is fixed
+
 @implementation NSData
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 - (NSString*)base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)options {
-    // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
-    // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
+    ComPtr<IBuffer> wrlBuffer;
+    IBuffer* rawBuffer = nullptr;
+    HRESULT result;
 
-    ComPtr<IBuffer> wrlBuffer = BufferFromRawData(_bytes, _length);
-    if (!wrlBuffer) {
+    result = BufferFromRawData(&rawBuffer, _bytes, _length);
+
+    if (FAILED(result)) {
         return nil;
     }
+
+    wrlBuffer.Attach(rawBuffer);
 
     ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
     RETURN_NULL_IF_FAILED(
@@ -71,23 +79,84 @@ using namespace Windows::Foundation;
     unsigned int rawLength;
     const wchar_t* rawEncodedString = WindowsGetStringRawBuffer(encodedString.Get(), &rawLength);
 
-    return [[[NSString alloc] initWithBytes:rawEncodedString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding]
-        autorelease];
+    NSString* nsEncodedString =
+        [[NSString alloc] initWithBytes:rawEncodedString length:(rawLength * sizeof(wchar_t)) encoding:NSUnicodeStringEncoding];
+
+    // Do any necessary post-processing for options
+    // If line length specified, place a newline character (/r, /n, or /r/n every (specified number) characters)
+    if ((options & NSDataBase64Encoding64CharacterLineLength) || (options & NSDataBase64Encoding76CharacterLineLength)) {
+        size_t lineLength = (options & NSDataBase64Encoding64CharacterLineLength) ? 64 : 76;
+        // Calculate number of times to insert newlines
+        // Since no newline is needed at the end if stringLength is evenly divisible by lineLength,
+        // subtract 1 from stringLength when dividing
+        size_t stringLength = [nsEncodedString length];
+        size_t newLineCount = (stringLength != 0) ? ((stringLength - 1) / lineLength) : 0;
+
+        if (newLineCount > 0) {
+            NSDataBase64EncodingOptions useCR = options & NSDataBase64EncodingEndLineWithCarriageReturn;
+            NSDataBase64EncodingOptions useLF = options & NSDataBase64EncodingEndLineWithLineFeed;
+
+            StrongId<NSString> newLineChar;
+            if (useCR && !useLF) {
+                newLineChar = @"\r";
+            } else if (!useCR && useLF) {
+                newLineChar = @"\n";
+            } else {
+                // Use CRLF by default, but can also be manually specified
+                newLineChar = @"\r\n";
+            }
+
+            NSMutableString* mutableEncodedString = [NSMutableString stringWithString:nsEncodedString];
+
+            // Add new line every (lineLength) chars
+            // Iterate backwards to avoid compensating for changes in length
+            for (size_t i = newLineCount; i > 0; i--) {
+                [mutableEncodedString insertString:newLineChar atIndex:(i * lineLength)];
+            }
+
+            return [NSString stringWithString:mutableEncodedString];
+        }
+    }
+
+    // If line length not specified, or newLineCount <= 0, none of the other options matter, just return nsEncodedString
+    return [nsEncodedString autorelease];
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 - (instancetype)initWithBase64EncodedString:(NSString*)base64String options:(NSDataBase64DecodingOptions)options {
-    // TODO: support the different options. Mostly these around ignoring unknown characters / new lines etc.
-    // Windows has no notion of this so we either need to manually decode or process after the fact wehre possible.
+    StrongId<NSString> stringToUse = base64String;
+
+    // Create a clean version of the string if IgnoreUnknownCharacters is specified
+    if (options & NSDataBase64DecodingIgnoreUnknownCharacters) {
+        NSMutableString* cleanedString = [NSMutableString stringWithCapacity:[base64String length]];
+        StrongId<NSScanner> scanner = [NSScanner scannerWithString:base64String];
+        StrongId<NSCharacterSet> base64AllowedCharacters =
+            [NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="];
+
+        while (![scanner isAtEnd]) {
+            NSString* buf;
+            if ([scanner scanCharactersFromSet:base64AllowedCharacters intoString:&buf]) {
+                [cleanedString appendString:buf];
+            } else {
+                [scanner setScanLocation:[scanner scanLocation] + 1];
+            }
+        }
+
+        stringToUse = cleanedString;
+    }
+
+    if ([stringToUse length] == 0) {
+        return [self initWithBytes:"" length:0];
+    }
 
     ComPtr<ICryptographicBufferStatics> cryptographicBufferStatics;
     RETURN_NULL_IF_FAILED(
         GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
                              &cryptographicBufferStatics));
 
-    Wrappers::HString wrlBase64String = Strings::NarrowToWide<HSTRING>(base64String);
+    Wrappers::HString wrlBase64String = Strings::NarrowToWide<HSTRING>(stringToUse);
 
     ComPtr<IBuffer> wrlBuffer;
     RETURN_NULL_IF_FAILED(cryptographicBufferStatics->DecodeFromBase64String(wrlBase64String.Get(), wrlBuffer.GetAddressOf()));
@@ -140,6 +209,9 @@ using namespace Windows::Foundation;
     return [[[self alloc] initWithBytesNoCopy:(void*)bytes length:length freeWhenDone:free] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithBytes:"" length:0];
 }
@@ -160,7 +232,7 @@ using namespace Windows::Foundation;
     _length = length;
 
     if (_length) {
-        _bytes = (uint8_t*)EbrMalloc(_length);
+        _bytes = (uint8_t*)IwMalloc(_length);
         if (!_bytes) {
             [self release];
             return nil;
@@ -174,10 +246,16 @@ using namespace Windows::Foundation;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     [coder encodeBytes:_bytes length:_length forKey:@"NS.data"];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     NSData* nsData = [coder decodeObjectForKey:@"NS.data"];
 
@@ -238,7 +316,7 @@ using namespace Windows::Foundation;
  @Notes File is not mapped; defers to initWithContentsOfFile:
 */
 - (instancetype)initWithContentsOfMappedFile:(NSString*)filename {
-    EbrDebugLog("Not actually mapping file ...\n");
+    TraceVerbose(TAG, L"Not actually mapping file ...");
     return [self initWithContentsOfFile:filename];
 }
 
@@ -256,9 +334,9 @@ using namespace Windows::Foundation;
 - (BOOL)writeToFile:(NSString*)filename atomically:(BOOL)atomically {
     char* fname = (char*)[filename UTF8String];
 
-    EbrDebugLog("NSData writing %s (%d bytes)\n", fname, _length);
+    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, _length);
     if (!fname) {
-        EbrDebugLog("Filename is null!\n");
+        TraceVerbose(TAG, L"Filename is null!");
         return FALSE;
     }
     EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
@@ -268,7 +346,7 @@ using namespace Windows::Foundation;
 
         return TRUE;
     } else {
-        EbrDebugLog("NSData couldn't open %s for write\n", fname);
+        TraceVerbose(TAG, L"NSData couldn't open %hs for write", fname);
         return FALSE;
     }
 }
@@ -279,7 +357,7 @@ using namespace Windows::Foundation;
 */
 - (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
     if (![url isFileURL]) {
-        EbrDebugLog("-[NSData::writeToURL]: Only file: URLs are supported. (%s)", [[url absoluteString] UTF8String]);
+        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
         return NO;
     }
     return [self writeToFile:[url path] atomically:atomically];
@@ -292,7 +370,7 @@ using namespace Windows::Foundation;
 - (BOOL)writeToFile:(NSString*)filename options:(NSDataWritingOptions)options error:(NSError**)error {
     char* fname = (char*)[filename UTF8String];
 
-    EbrDebugLog("NSData writing %s (%d bytes)\n", fname, _length);
+    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, _length);
     EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
     if (fpOut) {
         EbrFwrite(_bytes, 1, _length, fpOut);
@@ -300,7 +378,7 @@ using namespace Windows::Foundation;
 
         return TRUE;
     } else {
-        EbrDebugLog("NSData couldn't open %s for write (with options)\n", fname);
+        TraceVerbose(TAG, L"NSData couldn't open %hs for write (with options)", fname);
         return FALSE;
     }
 }
@@ -311,7 +389,7 @@ using namespace Windows::Foundation;
 */
 - (BOOL)writeToURL:(NSURL*)url options:(NSDataWritingOptions)options error:(NSError**)errorp {
     if (![url isFileURL]) {
-        EbrDebugLog("-[NSData::writeToURL]: Only file: URLs are supported. (%s)", [[url absoluteString] UTF8String]);
+        TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
         return NO;
     }
 
@@ -351,7 +429,7 @@ using namespace Windows::Foundation;
 
     char* fname = (char*)[filename UTF8String];
 
-    EbrDebugLog("NSData extended-opening %s\n", fname);
+    TraceVerbose(TAG, L"NSData extended-opening %hs", fname);
     EbrFile* fpIn = EbrFopen(fname, "rb");
     if (fpIn) {
         auto closeFile = wil::ScopeExit([&]() { EbrFclose(fpIn); });
@@ -361,7 +439,7 @@ using namespace Windows::Foundation;
         EbrFseek(fpIn, 0, SEEK_SET);
 
         if (length) {
-            _bytes = (uint8_t*)EbrMalloc(length);
+            _bytes = (uint8_t*)IwMalloc(length);
             if (!_bytes) {
                 if (error) {
                     *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
@@ -374,7 +452,7 @@ using namespace Windows::Foundation;
             _length = EbrFread(_bytes, 1, length, fpIn);
         }
     } else {
-        EbrDebugLog("NSData couldn't open %s for read (extended)\n", fname);
+        TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", fname);
         if (error) {
             *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
         }
@@ -386,19 +464,19 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initWithBase64EncodedData:(NSData*)base64Data options:(NSDataBase64DecodingOptions)options {
-    UNIMPLEMENTED();
-    return nil;
+    StrongId<NSString> base64String = [[[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding] autorelease];
+    auto ret = [self initWithBase64EncodedString:base64String options:options];
+    return ret;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initWithBase64Encoding:(NSString*)base64String {
-    UNIMPLEMENTED();
-    return nil;
+    return [self initWithBase64EncodedString:base64String options:0];
 }
 
 /**
@@ -427,19 +505,17 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSData*)base64EncodedDataWithOptions:(NSDataBase64EncodingOptions)options {
-    UNIMPLEMENTED();
-    return nil;
+    return [[self base64EncodedStringWithOptions:options] dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)base64Encoding {
-    UNIMPLEMENTED();
-    return nil;
+    return [self base64EncodedStringWithOptions:0];
 }
 
 /**
@@ -479,7 +555,7 @@ using namespace Windows::Foundation;
  @Notes options parameter not supported
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url options:(NSDataReadingOptions)options error:(NSError**)error {
-    EbrDebugLog("initWithContentsOfURL: %s\n", [[url absoluteString] UTF8String]);
+    TraceVerbose(TAG, L"initWithContentsOfURL: %hs", [[url absoluteString] UTF8String]);
 
     if ([url isFileURL]) {
         return [self initWithContentsOfFile:[url path] options:options error:error];
@@ -499,10 +575,16 @@ using namespace Windows::Foundation;
     return [NSData dataWithBytes:_bytes + range.location length:range.length];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableData*)mutableCopyWithZone:(void**)zone {
     return [[NSMutableData alloc] initWithData:self];
 }
@@ -518,6 +600,9 @@ using namespace Windows::Foundation;
     return memcmp(_bytes, other->_bytes, _length) == 0;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)objAddr {
     if (objAddr == self) {
         return TRUE;
@@ -585,9 +670,12 @@ using namespace Windows::Foundation;
     return _length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_freeWhenDone && _bytes) {
-        free(_bytes);
+        IwFree(_bytes);
         _bytes = nullptr;
     }
 

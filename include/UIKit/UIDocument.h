@@ -97,4 +97,9 @@ completionHandler:(void (^)(BOOL))completionHandler STUB_METHOD;
 - (void)handleError:(NSError*)error userInteractionPermitted:(BOOL)userInteractionPermitted STUB_METHOD;
 - (void)finishedHandlingError:(NSError*)error recovered:(BOOL)recovered STUB_METHOD;
 - (void)userInteractionNoLongerPermittedForError:(NSError*)error STUB_METHOD;
+
+@property (readonly, copy) NSURL* presentedItemURL STUB_PROPERTY;
+@property (readonly, retain) NSOperationQueue* presentedItemOperationQueue STUB_PROPERTY;
+@property (readonly) NSProgress* progress STUB_PROPERTY;
+
 @end

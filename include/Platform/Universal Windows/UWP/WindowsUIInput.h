@@ -117,7 +117,7 @@ typedef unsigned WUIPointerUpdateKind;
 WINRT_EXPORT
 @interface WUIManipulationDelta : NSObject
 + (instancetype) new;
-@property (copy) WFPoint* translation;
+@property (retain) WFPoint* translation;
 @property float scale;
 @property float rotation;
 @property float expansion;
@@ -127,7 +127,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIManipulationVelocities : NSObject
 + (instancetype) new;
-@property (copy) WFPoint* linear;
+@property (retain) WFPoint* linear;
 @property float angular;
 @property float expansion;
 @end
@@ -188,10 +188,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIMouseWheelParameters : RTObject
-@property (copy) WFPoint* pageTranslation;
+@property (retain) WFPoint* pageTranslation;
 @property float deltaScale;
 @property float deltaRotationAngle;
-@property (copy) WFPoint* charTranslation;
+@property (retain) WFPoint* charTranslation;
 @end
 
 #endif // __WUIMouseWheelParameters_DEFINED__
@@ -202,20 +202,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIGestureRecognizer : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property float inertiaRotationDeceleration;
 @property float inertiaRotationAngle;
 @property float inertiaExpansionDeceleration;
 @property float inertiaExpansion;
 @property BOOL autoProcessInertia;
-@property (copy) WUICrossSlideThresholds* crossSlideThresholds;
+@property (retain) WUICrossSlideThresholds* crossSlideThresholds;
 @property BOOL crossSlideExact;
 @property WUIGestureSettings gestureSettings;
 @property float inertiaTranslationDeceleration;
 @property BOOL showGestureFeedback;
 @property float pivotRadius;
 @property BOOL crossSlideHorizontally;
-@property (copy) WFPoint* pivotCenter;
+@property (retain) WFPoint* pivotCenter;
 @property BOOL manipulationExact;
 @property float inertiaTranslationDisplacement;
 @property (readonly) BOOL isActive;

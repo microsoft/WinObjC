@@ -18,12 +18,15 @@
 #include "UIViewControllerInternal.h"
 #import <UIKit/UIViewController.h>
 #import <UIKit/UIView.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UINavigationController";
 
 const CGFloat UINavigationControllerHideShowBarDuration = .25f;
 const CGFloat UINavigationBarHeight = 45.0f;
 
 extern float statusBarHeight;
-bool isSupportedControllerOrientation(id controller, UIInterfaceOrientation orientation);
+bool isSupportedControllerOrientation(UIViewController* controller, UIInterfaceOrientation orientation);
 
 class AnimationNotificationParams {
 public:
@@ -65,6 +68,7 @@ public:
     BOOL _setNavBarHiddenAnimated, _setToolBarHiddenAnimated;
     BOOL _didSlideNavBar, _didSlideToolBar;
 }
+
 static void createMainView(UINavigationController* self, CGRect frame) {
     if (self->_mainView != nil)
         return;
@@ -84,7 +88,11 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     self->_mainView = view;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _navigationBar = [coder decodeObjectForKey:@"UINavigationBar"];
     [_navigationBar setDelegate:self];
     _viewControllers.attach([NSMutableArray new]);
@@ -185,6 +193,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithNibName:(id)name bundle:(id)bundle {
     [super initWithNibName:name bundle:bundle];
 
@@ -204,7 +215,10 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return self;
 }
 
-- (id)init {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     [super init];
 
     _navBarHidden = FALSE;
@@ -252,7 +266,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
         animated = 1;
 
     if ([_viewControllers count] <= 1) {
-        EbrDebugLog("attempted to pop root view controller\n");
+        TraceVerbose(TAG, L"attempted to pop root view controller");
         return nil;
     }
 
@@ -419,6 +433,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [self setViewControllers:controllers animated:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)presentModalViewController:(UIViewController*)controller animated:(BOOL)animated {
     [super presentModalViewController:controller animated:animated];
 }
@@ -449,6 +466,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [_curController notifyViewDidDisappear:isAnimated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)loadView {
     CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight() };
     createMainView(self, frame);
@@ -467,20 +487,32 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     // if ( [_viewControllers count] > 0 ) [self _showController:[_viewControllers lastObject] animated:FALSE];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
     return [_newController ? _newController : _curController shouldAutorotateToInterfaceOrientation:orientation];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     [[_curController view] setNeedsLayout];
 
     [_newController ? _newController : _curController willRotateToInterfaceOrientation:orientation duration:duration];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     [_newController ? _newController : _curController willAnimateRotationToInterfaceOrientation:orientation duration:duration];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
     [_newController ? _newController : _curController didRotateFromInterfaceOrientation:orientation];
 }
@@ -500,6 +532,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     _destroyOld = true;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UITabBarItem*)tabBarItem {
     UIViewController* topViewController = [self topViewController];
     UITabBarItem* ret = [topViewController _tabBarItem];
@@ -518,6 +553,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dismissModalViewControllerAnimated:(BOOL)animated {
     if ([_curController modalViewController] != nil) {
         [_curController dismissModalViewControllerAnimated:animated];
@@ -534,6 +572,9 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     return _toolBar;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     //  Go through all controllers and remove the parent relationship
     int count = [_viewControllers count];
@@ -992,6 +1033,9 @@ static void rotateViewController(UINavigationController* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)contentSizeForViewInPopover {
     id controller = _newController ? _newController : _curController;
 

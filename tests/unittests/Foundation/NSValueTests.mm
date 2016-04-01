@@ -19,6 +19,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #include <objc/runtime.h>
 #include <exception>
+#include "IwMalloc.h"
 
 #if defined(ANSI_COLOR)
 #define SGR_RED "\033[1;31m"
@@ -34,15 +35,15 @@ static bool globalFailure = false;
 
 static void perform(const char* what, bool (^block)(), bool flipbit = false) {
     bool b = false;
-    const char* xcp = NULL;
+    char* xcp = NULL;
     char msgStr[BUFSIZ];
     try {
         b = block();
     } catch (const std::exception& e) {
-        xcp = _strdup(e.what());
+        xcp = IwStrDup(e.what());
         b = false;
     } catch (...) {
-        xcp = "unknown?";
+        xcp = IwStrDup("unknown?");
         b = false;
     }
     snprintf(msgStr, sizeof(msgStr), "%s", " - ");
@@ -57,6 +58,7 @@ static void perform(const char* what, bool (^block)(), bool flipbit = false) {
     }
     snprintf(msgStr, sizeof(msgStr), "%s: %s", msgStr, what);
     LOG_INFO(msgStr);
+    IwFree(xcp);
 }
 
 struct ArbitrarilyComplexStruct {

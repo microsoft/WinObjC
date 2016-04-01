@@ -246,7 +246,7 @@ typedef unsigned WMPPNDStartAsyncOptions;
 @protocol WMPPINDLicenseFetchDescriptor
 @property (readonly) NSArray* contentID;
 @property (readonly) WMPPNDContentIDType contentIDType;
-@property (copy) RTObject<WMPPINDCustomData>* licenseFetchChallengeCustomData;
+@property (retain) RTObject<WMPPINDCustomData>* licenseFetchChallengeCustomData;
 @end
 
 #endif // __WMPPINDLicenseFetchDescriptor_DEFINED__
@@ -446,9 +446,9 @@ typedef unsigned WMPPNDStartAsyncOptions;
 #define __WMPPIPlayReadyServiceRequest_DEFINED__
 
 @protocol WMPPIPlayReadyServiceRequest <WMPIMediaProtectionServiceRequest>
-@property (copy) NSString* challengeCustomData;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
-@property (copy) WFUri* uri;
+@property (retain) WFUri* uri;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
 - (WMPPPlayReadySoapMessage*)generateManualEnablingChallenge;
@@ -462,7 +462,7 @@ typedef unsigned WMPPNDStartAsyncOptions;
 #define __WMPPIPlayReadyLicenseAcquisitionServiceRequest_DEFINED__
 
 @protocol WMPPIPlayReadyLicenseAcquisitionServiceRequest <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-@property (copy) WMPPPlayReadyContentHeader* contentHeader;
+@property (retain) WMPPPlayReadyContentHeader* contentHeader;
 @property WFGUID* domainServiceId;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -496,27 +496,27 @@ typedef unsigned WMPPNDStartAsyncOptions;
 
 WINRT_EXPORT
 @interface WMPPPlayReadyContentHeader : RTObject
-+ (WMPPPlayReadyContentHeader*)createInstanceFromComponents2:(unsigned int)dwFlags
-                                               contentKeyIds:(id<NSFastEnumeration> /* WFGUID* */)contentKeyIds
-                                         contentKeyIdStrings:(id<NSFastEnumeration> /* NSString * */)contentKeyIdStrings
-                                  contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm
-                                       licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl
-                          licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl
-                                            customAttributes:(NSString*)customAttributes
-                                             domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
-+ (WMPPPlayReadyContentHeader*)createInstanceFromWindowsMediaDrmHeader:(id<NSFastEnumeration> /* uint8_t */)headerBytes
-                                                 licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl
-                                    licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl
-                                                      customAttributes:(NSString*)customAttributes
-                                                       domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
-+ (WMPPPlayReadyContentHeader*)createInstanceFromComponents:(WFGUID*)contentKeyId
-                                         contentKeyIdString:(NSString*)contentKeyIdString
-                                 contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm
-                                      licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl
-                         licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl
-                                           customAttributes:(NSString*)customAttributes
-                                            domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
-+ (WMPPPlayReadyContentHeader*)createInstanceFromPlayReadyHeader:(id<NSFastEnumeration> /* uint8_t */)headerBytes ACTIVATOR;
++ (WMPPPlayReadyContentHeader*)makeInstanceFromComponents2:(unsigned int)dwFlags
+                                             contentKeyIds:(id<NSFastEnumeration> /* WFGUID* */)contentKeyIds
+                                       contentKeyIdStrings:(id<NSFastEnumeration> /* NSString * */)contentKeyIdStrings
+                                contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm
+                                     licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl
+                        licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl
+                                          customAttributes:(NSString*)customAttributes
+                                           domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
++ (WMPPPlayReadyContentHeader*)makeInstanceFromWindowsMediaDrmHeader:(id<NSFastEnumeration> /* uint8_t */)headerBytes
+                                               licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl
+                                  licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl
+                                                    customAttributes:(NSString*)customAttributes
+                                                     domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
++ (WMPPPlayReadyContentHeader*)makeInstanceFromComponents:(WFGUID*)contentKeyId
+                                       contentKeyIdString:(NSString*)contentKeyIdString
+                               contentEncryptionAlgorithm:(WMPPPlayReadyEncryptionAlgorithm)contentEncryptionAlgorithm
+                                    licenseAcquisitionUrl:(WFUri*)licenseAcquisitionUrl
+                       licenseAcquisitionUserInterfaceUrl:(WFUri*)licenseAcquisitionUserInterfaceUrl
+                                         customAttributes:(NSString*)customAttributes
+                                          domainServiceId:(WFGUID*)domainServiceId ACTIVATOR;
++ (WMPPPlayReadyContentHeader*)makeInstanceFromPlayReadyHeader:(id<NSFastEnumeration> /* uint8_t */)headerBytes ACTIVATOR;
 @property (readonly) NSString* customAttributes;
 @property (readonly) WMPPPlayReadyDecryptorSetup decryptorSetup;
 @property (readonly) WFGUID* domainServiceId;
@@ -563,11 +563,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyIndividualizationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -583,14 +583,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainJoinServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
-@property (copy) NSString* domainFriendlyName;
+@property (retain) NSString* domainFriendlyName;
 @property WFGUID* domainAccountId;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -606,13 +606,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainLeaveServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
 @property WFGUID* domainAccountId;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -629,13 +629,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseAcquisitionServiceRequest
     : RTObject <WMPPIPlayReadyLicenseAcquisitionServiceRequest, WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property WFGUID* domainServiceId;
-@property (copy) WMPPPlayReadyContentHeader* contentHeader;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) WMPPPlayReadyContentHeader* contentHeader;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -651,12 +651,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyMeteringReportServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
-@property (copy) NSArray* meteringCertificate;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) NSArray* meteringCertificate;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -672,11 +672,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyRevocationServiceRequest : RTObject <WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -720,8 +720,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseIterable : RTObject
-+ (instancetype)create ACTIVATOR;
-+ (WMPPPlayReadyLicenseIterable*)createInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WMPPPlayReadyLicenseIterable*)makeInstance:(WMPPPlayReadyContentHeader*)contentHeader fullyEvaluated:(BOOL)fullyEvaluated ACTIVATOR;
 @end
 
 #endif // __WMPPPlayReadyLicenseIterable_DEFINED__
@@ -761,7 +761,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyDomainIterable : RTObject
-+ (WMPPPlayReadyDomainIterable*)createInstance:(WFGUID*)domainAccountId ACTIVATOR;
++ (WMPPPlayReadyDomainIterable*)makeInstance:(WFGUID*)domainAccountId ACTIVATOR;
 @end
 
 #endif // __WMPPPlayReadyDomainIterable_DEFINED__
@@ -808,9 +808,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMPPPlayReadySecureStopServiceRequest
     : RTObject <WMPPIPlayReadySecureStopServiceRequest, WMPPIPlayReadyServiceRequest, WMPIMediaProtectionServiceRequest>
-+ (WMPPPlayReadySecureStopServiceRequest*)createInstance:(id<NSFastEnumeration> /* uint8_t */)publisherCertBytes ACTIVATOR;
-+ (WMPPPlayReadySecureStopServiceRequest*)createInstanceFromSessionID:(WFGUID*)sessionID
-                                                   publisherCertBytes:(id<NSFastEnumeration> /* uint8_t */)publisherCertBytes ACTIVATOR;
++ (WMPPPlayReadySecureStopServiceRequest*)makeInstance:(id<NSFastEnumeration> /* uint8_t */)publisherCertBytes ACTIVATOR;
++ (WMPPPlayReadySecureStopServiceRequest*)makeInstanceFromSessionID:(WFGUID*)sessionID
+                                                 publisherCertBytes:(id<NSFastEnumeration> /* uint8_t */)publisherCertBytes ACTIVATOR;
 @property (readonly) WFGUID* protectionSystem;
 @property (readonly) WFGUID* type;
 @property (readonly) NSArray* publisherCertificate;
@@ -818,8 +818,8 @@ WINRT_EXPORT
 @property (readonly) WFDateTime* startTime;
 @property (readonly) BOOL stopped;
 @property (readonly) WFDateTime* updateTime;
-@property (copy) WFUri* uri;
-@property (copy) NSString* challengeCustomData;
+@property (retain) WFUri* uri;
+@property (retain) NSString* challengeCustomData;
 @property (readonly) NSString* responseCustomData;
 - (RTObject<WFIAsyncAction>*)beginServiceRequest;
 - (RTObject<WMPPIPlayReadyServiceRequest>*)nextServiceRequest;
@@ -835,7 +835,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadySecureStopIterable : RTObject
-+ (WMPPPlayReadySecureStopIterable*)createInstance:(id<NSFastEnumeration> /* uint8_t */)publisherCertBytes ACTIVATOR;
++ (WMPPPlayReadySecureStopIterable*)makeInstance:(id<NSFastEnumeration> /* uint8_t */)publisherCertBytes ACTIVATOR;
 @end
 
 #endif // __WMPPPlayReadySecureStopIterable_DEFINED__
@@ -860,7 +860,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyITADataGenerator : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (NSArray*)generateData:(WFGUID*)guidCPSystemId
           countOfStreams:(unsigned int)countOfStreams
            configuration:(RTObject<WFCIPropertySet>*)configuration
@@ -875,7 +875,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPPlayReadyLicenseSession : RTObject <WMPPIPlayReadyLicenseSession>
-+ (WMPPPlayReadyLicenseSession*)createInstance:(RTObject<WFCIPropertySet>*)configuration ACTIVATOR;
++ (WMPPPlayReadyLicenseSession*)makeInstance:(RTObject<WFCIPropertySet>*)configuration ACTIVATOR;
 - (RTObject<WMPPIPlayReadyLicenseAcquisitionServiceRequest>*)createLAServiceRequest;
 - (void)configureMediaProtectionManager:(WMPMediaProtectionManager*)mpm;
 @end
@@ -888,7 +888,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDDownloadEngineNotifier : RTObject <WMPPINDDownloadEngineNotifier>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)onStreamOpened;
 - (void)onPlayReadyObjectReceived:(id<NSFastEnumeration> /* uint8_t */)dataBytes;
 - (void)onContentIDReceived:(RTObject<WMPPINDLicenseFetchDescriptor>*)licenseFetchDescriptor;
@@ -905,7 +905,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDStreamParserNotifier : RTObject <WMPPINDStreamParserNotifier>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)onContentIDReceived:(RTObject<WMPPINDLicenseFetchDescriptor>*)licenseFetchDescriptor;
 - (void)onMediaStreamDescriptorCreated:(id<NSFastEnumeration> /* WMCAudioStreamDescriptor* */)audioStreamDescriptors
                 videoStreamDescriptors:(id<NSFastEnumeration> /* WMCVideoStreamDescriptor* */)videoStreamDescriptors;
@@ -928,7 +928,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDTCPMessenger : RTObject <WMPPINDMessenger>
-+ (WMPPNDTCPMessenger*)createInstance:(NSString*)remoteHostName remoteHostPort:(unsigned int)remoteHostPort ACTIVATOR;
++ (WMPPNDTCPMessenger*)makeInstance:(NSString*)remoteHostName remoteHostPort:(unsigned int)remoteHostPort ACTIVATOR;
 - (void)sendRegistrationRequestAsync:(id<NSFastEnumeration> /* uint8_t */)sessionIDBytes
                   challengeDataBytes:(id<NSFastEnumeration> /* uint8_t */)challengeDataBytes
                              success:(void (^)(RTObject<WMPPINDSendResult>*))success
@@ -959,10 +959,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDLicenseFetchDescriptor : RTObject <WMPPINDLicenseFetchDescriptor>
-+ (WMPPNDLicenseFetchDescriptor*)createInstance:(WMPPNDContentIDType)contentIDType
-                                 contentIDBytes:(id<NSFastEnumeration> /* uint8_t */)contentIDBytes
-                licenseFetchChallengeCustomData:(RTObject<WMPPINDCustomData>*)licenseFetchChallengeCustomData ACTIVATOR;
-@property (copy) RTObject<WMPPINDCustomData>* licenseFetchChallengeCustomData;
++ (WMPPNDLicenseFetchDescriptor*)makeInstance:(WMPPNDContentIDType)contentIDType
+                               contentIDBytes:(id<NSFastEnumeration> /* uint8_t */)contentIDBytes
+              licenseFetchChallengeCustomData:(RTObject<WMPPINDCustomData>*)licenseFetchChallengeCustomData ACTIVATOR;
+@property (retain) RTObject<WMPPINDCustomData>* licenseFetchChallengeCustomData;
 @property (readonly) NSArray* contentID;
 @property (readonly) WMPPNDContentIDType contentIDType;
 @end
@@ -975,8 +975,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDCustomData : RTObject <WMPPINDCustomData>
-+ (WMPPNDCustomData*)createInstance:(id<NSFastEnumeration> /* uint8_t */)customDataTypeIDBytes
-                    customDataBytes:(id<NSFastEnumeration> /* uint8_t */)customDataBytes ACTIVATOR;
++ (WMPPNDCustomData*)makeInstance:(id<NSFastEnumeration> /* uint8_t */)customDataTypeIDBytes
+                  customDataBytes:(id<NSFastEnumeration> /* uint8_t */)customDataBytes ACTIVATOR;
 @property (readonly) NSArray* customData;
 @property (readonly) NSArray* customDataTypeID;
 @end
@@ -989,9 +989,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDClient : RTObject
-+ (WMPPNDClient*)createInstance:(RTObject<WMPPINDDownloadEngine>*)downloadEngine
-                   streamParser:(RTObject<WMPPINDStreamParser>*)streamParser
-                     pMessenger:(RTObject<WMPPINDMessenger>*)pMessenger ACTIVATOR;
++ (WMPPNDClient*)makeInstance:(RTObject<WMPPINDDownloadEngine>*)downloadEngine
+                 streamParser:(RTObject<WMPPINDStreamParser>*)streamParser
+                   pMessenger:(RTObject<WMPPINDMessenger>*)pMessenger ACTIVATOR;
 - (EventRegistrationToken)addClosedCaptionDataReceivedEvent:(void (^)(WMPPNDClient*,
                                                                       RTObject<WMPPINDClosedCaptionDataReceivedEventArgs>*))del;
 - (void)removeClosedCaptionDataReceivedEvent:(EventRegistrationToken)tok;
@@ -1025,7 +1025,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPNDStorageFileHelper : RTObject <WMPPINDStorageFileHelper>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (NSMutableArray*)getFileURLs:(RTObject<WSIStorageFile>*)file;
 @end
 

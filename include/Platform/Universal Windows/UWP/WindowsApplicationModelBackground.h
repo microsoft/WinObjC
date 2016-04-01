@@ -302,7 +302,7 @@ typedef void (^WABBackgroundTaskCompletedEventHandler)(WABBackgroundTaskRegistra
 
 WINRT_EXPORT
 @interface WABAppointmentStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABAppointmentStoreNotificationTrigger_DEFINED__
@@ -313,7 +313,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABApplicationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)requestAsyncWithSuccess:(void (^)(WABApplicationTriggerResult))success failure:(void (^)(NSError*))failure;
 - (void)requestAsyncWithArguments:(WFCValueSet*)arguments
                           success:(void (^)(WABApplicationTriggerResult))success
@@ -357,7 +357,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMediaProcessingTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)requestAsyncWithSuccess:(void (^)(WABMediaProcessingTriggerResult))success failure:(void (^)(NSError*))failure;
 - (void)requestAsyncWithArguments:(WFCValueSet*)arguments
                           success:(void (^)(WABMediaProcessingTriggerResult))success
@@ -426,9 +426,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABBackgroundTaskBuilder : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* taskEntryPoint;
-@property (copy) NSString* name;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* taskEntryPoint;
+@property (retain) NSString* name;
 @property BOOL cancelOnConditionLoss;
 @property BOOL isNetworkRequested;
 - (void)setTrigger:(RTObject<WABIBackgroundTrigger>*)trigger;
@@ -455,7 +455,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABChatMessageNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABChatMessageNotificationTrigger_DEFINED__
@@ -466,7 +466,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABChatMessageReceivedNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABChatMessageReceivedNotificationTrigger_DEFINED__
@@ -477,7 +477,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABRcsEndUserMessageAvailableTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABRcsEndUserMessageAvailableTrigger_DEFINED__
@@ -488,7 +488,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABContactStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABContactStoreNotificationTrigger_DEFINED__
@@ -499,8 +499,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABContentPrefetchTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
-+ (WABContentPrefetchTrigger*)create:(WFTimeSpan*)waitInterval ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WABContentPrefetchTrigger*)make:(WFTimeSpan*)waitInterval ACTIVATOR;
 @property (readonly) WFTimeSpan* waitInterval;
 @end
 
@@ -512,7 +512,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABEmailStoreNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABEmailStoreNotificationTrigger_DEFINED__
@@ -523,7 +523,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMobileBroadbandRegistrationStateChangeTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABMobileBroadbandRegistrationStateChangeTrigger_DEFINED__
@@ -534,7 +534,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMobileBroadbandRadioStateChangeTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABMobileBroadbandRadioStateChangeTrigger_DEFINED__
@@ -545,7 +545,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMobileBroadbandPinLockStateChangeTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABMobileBroadbandPinLockStateChangeTrigger_DEFINED__
@@ -556,7 +556,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMobileBroadbandDeviceServiceNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABMobileBroadbandDeviceServiceNotificationTrigger_DEFINED__
@@ -567,7 +567,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABSmsMessageReceivedTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABSmsMessageReceivedTrigger*)create:(WDSSmsFilterRules*)filterRules ACTIVATOR;
++ (WABSmsMessageReceivedTrigger*)make:(WDSSmsFilterRules*)filterRules ACTIVATOR;
 @end
 
 #endif // __WABSmsMessageReceivedTrigger_DEFINED__
@@ -590,7 +590,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABSystemTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABSystemTrigger*)create:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABSystemTrigger*)make:(WABSystemTriggerType)triggerType oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) BOOL oneShot;
 @property (readonly) WABSystemTriggerType triggerType;
 @end
@@ -603,7 +603,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABSystemCondition : RTObject <WABIBackgroundCondition>
-+ (WABSystemCondition*)create:(WABSystemConditionType)conditionType ACTIVATOR;
++ (WABSystemCondition*)make:(WABSystemConditionType)conditionType ACTIVATOR;
 @property (readonly) WABSystemConditionType conditionType;
 @end
 
@@ -615,7 +615,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABNetworkOperatorNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABNetworkOperatorNotificationTrigger*)create:(NSString*)networkAccountId ACTIVATOR;
++ (WABNetworkOperatorNotificationTrigger*)make:(NSString*)networkAccountId ACTIVATOR;
 @property (readonly) NSString* networkAccountId;
 @end
 
@@ -627,7 +627,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABDeviceManufacturerNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABDeviceManufacturerNotificationTrigger*)create:(NSString*)triggerQualifier oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABDeviceManufacturerNotificationTrigger*)make:(NSString*)triggerQualifier oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) BOOL oneShot;
 @property (readonly) NSString* triggerQualifier;
 @end
@@ -653,7 +653,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABCachedFileUpdaterTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABCachedFileUpdaterTrigger_DEFINED__
@@ -664,7 +664,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABTimeTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABTimeTrigger*)create:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABTimeTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) unsigned int freshnessTime;
 @property (readonly) BOOL oneShot;
 @end
@@ -677,7 +677,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABMaintenanceTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABMaintenanceTrigger*)create:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
++ (WABMaintenanceTrigger*)make:(unsigned int)freshnessTime oneShot:(BOOL)oneShot ACTIVATOR;
 @property (readonly) unsigned int freshnessTime;
 @property (readonly) BOOL oneShot;
 @end
@@ -690,7 +690,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABDeviceUseTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)requestAsyncSimple:(NSString*)deviceId success:(void (^)(WABDeviceTriggerResult))success failure:(void (^)(NSError*))failure;
 - (void)requestAsyncWithArguments:(NSString*)deviceId
                         arguments:(NSString*)arguments
@@ -706,7 +706,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABDeviceServicingTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)requestAsyncSimple:(NSString*)deviceId
           expectedDuration:(WFTimeSpan*)expectedDuration
                    success:(void (^)(WABDeviceTriggerResult))success
@@ -726,8 +726,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABRfcommConnectionTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
-@property (copy) WNHostName* remoteHostName;
++ (instancetype)make ACTIVATOR;
+@property (retain) WNHostName* remoteHostName;
 @property WNSSocketProtectionLevel protectionLevel;
 @property BOOL allowMultipleConnections;
 @property (readonly) WDBBRfcommInboundConnectionInformation* inboundConnection;
@@ -756,7 +756,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABGattCharacteristicNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABGattCharacteristicNotificationTrigger*)create:(WDBGGattCharacteristic*)characteristic ACTIVATOR;
++ (WABGattCharacteristicNotificationTrigger*)make:(WDBGGattCharacteristic*)characteristic ACTIVATOR;
 @property (readonly) WDBGGattCharacteristic* characteristic;
 @end
 
@@ -768,9 +768,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABBluetoothLEAdvertisementWatcherTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
-@property (copy) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
-@property (copy) WDBABluetoothLEAdvertisementFilter* advertisementFilter;
++ (instancetype)make ACTIVATOR;
+@property (retain) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
+@property (retain) WDBABluetoothLEAdvertisementFilter* advertisementFilter;
 @property (readonly) WFTimeSpan* maxOutOfRangeTimeout;
 @property (readonly) WFTimeSpan* maxSamplingInterval;
 @property (readonly) WFTimeSpan* minOutOfRangeTimeout;
@@ -785,7 +785,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABBluetoothLEAdvertisementPublisherTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDBABluetoothLEAdvertisement* advertisement;
 @end
 
@@ -807,7 +807,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABLocationTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABLocationTrigger*)create:(WABLocationTriggerType)triggerType ACTIVATOR;
++ (WABLocationTrigger*)make:(WABLocationTriggerType)triggerType ACTIVATOR;
 @property (readonly) WABLocationTriggerType triggerType;
 @end
 
@@ -819,7 +819,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABActivitySensorTrigger : RTObject <WABIBackgroundTrigger>
-+ (WABActivitySensorTrigger*)create:(unsigned int)reportIntervalInMilliseconds ACTIVATOR;
++ (WABActivitySensorTrigger*)make:(unsigned int)reportIntervalInMilliseconds ACTIVATOR;
 @property (readonly) unsigned int minimumReportInterval;
 @property (readonly) unsigned int reportInterval;
 @property (readonly) NSMutableArray* subscribedActivities;
@@ -834,7 +834,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABNetworkOperatorHotspotAuthenticationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABNetworkOperatorHotspotAuthenticationTrigger_DEFINED__
@@ -845,7 +845,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABSocketActivityTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABSocketActivityTrigger_DEFINED__
@@ -856,8 +856,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABPushNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
-+ (WABPushNotificationTrigger*)create:(NSString*)applicationId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WABPushNotificationTrigger*)make:(NSString*)applicationId ACTIVATOR;
 @end
 
 #endif // __WABPushNotificationTrigger_DEFINED__
@@ -868,8 +868,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABToastNotificationHistoryChangedTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
-+ (WABToastNotificationHistoryChangedTrigger*)create:(NSString*)applicationId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WABToastNotificationHistoryChangedTrigger*)make:(NSString*)applicationId ACTIVATOR;
 @end
 
 #endif // __WABToastNotificationHistoryChangedTrigger_DEFINED__
@@ -880,8 +880,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABToastNotificationActionTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)create ACTIVATOR;
-+ (WABToastNotificationActionTrigger*)create:(NSString*)applicationId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WABToastNotificationActionTrigger*)make:(NSString*)applicationId ACTIVATOR;
 @end
 
 #endif // __WABToastNotificationActionTrigger_DEFINED__

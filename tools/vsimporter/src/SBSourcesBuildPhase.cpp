@@ -130,6 +130,13 @@ void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
       config->setItemDefinition("ClangCompile", "UserIncludePaths", joinStrings(userIncludePaths, ";"));
     }
 
+    // Exclude search path subdirectories
+    StringVec excludeSubDirectories;
+    bs.second->getValue("EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", excludeSubDirectories);
+    if (!excludeSubDirectories.empty()) {
+        config->setItemDefinition("ClangCompile", "ExcludedSearchPathSubdirectories", joinStrings(excludeSubDirectories, ";"));
+    }
+
     // Header map
     if (bs.second->getValue("USE_HEADERMAP") == "YES") {
       if (bs.second->getValue("ALWAYS_SEARCH_USER_PATHS") == "YES") {
@@ -151,6 +158,12 @@ void SBSourcesBuildPhase::writeVCProjectFiles(VCProject& proj) const
     processClangFlags(otherCPlusPlusFlags, xcProjectDir, vsProjectDir);
     if (!otherCPlusPlusFlags.empty()) {
       config->setItemDefinition("ClangCompile", "OtherCPlusPlusFlags", otherCPlusPlusFlags);
+    }
+
+    // CRT
+    String configNameUpper = strToUpper(bs.first);
+    if (configNameUpper.find("DEBUG") != String::npos) {
+      config->setItemDefinition("ClangCompile", "RuntimeLibrary", "MultiThreadedDebugDLL");
     }
   }
 }

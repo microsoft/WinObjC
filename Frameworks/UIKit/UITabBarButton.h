@@ -16,10 +16,15 @@
 
 #include "UIKit/UIView.h"
 
+@class UITabTabItem;
+@protocol UITabBarDelegate;
+
 @interface UITabBarButton : UIView {
 @public
-    id _item, _delegate;
+    UITabBarItem* _item;
+    id<UITabBarDelegate> _delegate;
 }
+
 - (instancetype)initWithFrame:(CGRect)frame item:(UITabBarItem*)item delegate:(id<UITabBarDelegate>)delegate;
 - (void)drawRect:(CGRect)pos;
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;

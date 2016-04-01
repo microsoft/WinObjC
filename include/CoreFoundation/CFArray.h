@@ -70,6 +70,5 @@ COREFOUNDATION_EXPORT void CFArraySortValues(CFMutableArrayRef self,CFRange rang
 
 COREFOUNDATION_EXPORT void CFArrayGetValueEnumerator(CFArrayRef arr, void *enumeratorHolder);
 COREFOUNDATION_EXPORT int CFArrayGetNextValue(CFArrayRef arr, void *enumeratorHolder, id *ret, int count);
-COREFOUNDATION_EXPORT void CFArrayMoveValueAtIndexToEnd(CFMutableArrayRef array, CFIndex idx);
 
 COREFOUNDATION_EXTERNC_END

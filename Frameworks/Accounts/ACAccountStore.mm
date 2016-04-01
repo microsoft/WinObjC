@@ -16,6 +16,7 @@
 
 #import "Accounts/Accounts.h"
 #include "Starboard.h"
+#import "AssertARCEnabled.h"
 
 NSString* const ACFacebookAppIdKey = @"ACFacebookAppIdKey";
 NSString* const ACFacebookPermissionsKey = @"ACFacebookPermissionsKey";
@@ -63,7 +64,7 @@ NSString* const ACAccountStoreDidChangeNotification = @"ACAccountStoreDidChangeN
 /**
  @Status Stub
 */
-- (void)requestAccewssToAccountsWithType:(ACAccountType*)accountType
+- (void)requestAccessToAccountsWithType:(ACAccountType*)accountType
         options:(NSDictionary*)options
         completion:(ACAccountStoreRequestAccessCompletionHandler)completion {
     UNIMPLEMENTED();

@@ -17,6 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @protocol UIInputViewAudioFeedback
 @optional

@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKDiscoveredUserInfo.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKDiscoveredUserInfo
 @end

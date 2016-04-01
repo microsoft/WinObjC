@@ -45,11 +45,11 @@ UIKIT_EXPORT_CLASS
 - (id)initWithProgressViewStyle:(UIProgressViewStyle)style;
 - (void)setProgress:(float)progress animated:(BOOL)animated;
 
-@property (nonatomic) UIProgressViewStyle progressViewStyle;
+@property (nonatomic) UIProgressViewStyle progressViewStyle STUB_PROPERTY;
 @property (nonatomic) float progress;
 @property (nonatomic, retain) UIImage* progressImage;
 @property (nonatomic, retain) UIImage* trackImage;
-@property (nonatomic, retain) UIColor* progressTintColor;
+@property (nonatomic, retain) UIColor* progressTintColor STUB_PROPERTY;
 @property (nonatomic, retain) UIColor* trackTintColor;
 
 @end

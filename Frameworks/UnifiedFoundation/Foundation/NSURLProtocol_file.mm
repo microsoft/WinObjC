@@ -29,12 +29,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #include "Foundation/NSHTTPURLResponse.h"
 #include "NSURLProtocol_file.h"
-#include "NSURLProtocol_http.h"
 #include "NSURLProtocolInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSURLProtocol_file";
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 @implementation NSURLProtocol_file
++ (void)load {
+    [NSURLProtocol registerClass:self];
+}
+
 + (BOOL)canInitWithRequest:(id)request {
     id scheme = [[request URL] scheme];
 
@@ -50,7 +56,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     _modes = [[NSMutableArray arrayWithObject:@"kCFRunLoopDefaultMode"] retain];
 
     id url = [_request URL];
-    EbrDebugLog("Loading %s\n", [[url absoluteString] UTF8String]);
+    TraceVerbose(TAG, L"Loading %hs", [[url absoluteString] UTF8String]);
 
     _path = [[url path] copy];
     // id host = [NSHost hostWithName:hostName];
@@ -63,9 +69,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
     fpIn = EbrFopen(pFilePath, "rb");
     if (!fpIn) {
-        EbrDebugLog("Couldn't open %s\n", pFilePath);
+        TraceVerbose(TAG, L"Couldn't open %hs", pFilePath);
     } else {
-        EbrDebugLog("Opened %s\n", pFilePath);
+        TraceVerbose(TAG, L"Opened %hs", pFilePath);
     }
     return self;
 }
@@ -87,7 +93,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     id url = [_request URL];
 
     if (fpIn == NULL) {
-        EbrDebugLog("doFileLoad: fpIn = NULL! self=%x\n", self);
+        TraceVerbose(TAG, L"doFileLoad: fpIn = NULL! self=%x", self);
         id error = [NSError errorWithDomain:@"Couldn't open file" code:100 userInfo:nil];
         [_client URLProtocol:self didFailWithError:error];
         return self;
@@ -97,10 +103,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     int len = EbrFtell(fpIn);
     EbrFseek(fpIn, 0, SEEK_SET);
 
-    char* pData = (char*)EbrMalloc(len);
+    char* pData = (char*)IwMalloc(len);
     len = EbrFread(pData, 1, len, fpIn);
     id dataReceived = [NSData dataWithBytes:pData length:len];
-    EbrFree(pData);
+    IwFree(pData);
 
     EbrFclose(fpIn);
 

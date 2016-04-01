@@ -20,12 +20,95 @@
 #import <CoreLocation/CLLocation.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
-typedef wchar_t WCHAR;
+#import "NSLogging.h"
 #import <UWP/WindowsDevicesGeolocation.h>
+#import <UWP/WindowsApplicationModelExtendedExecution.h>
 #import <limits>
+#import <mutex>
 
 const CLLocationDistance CLLocationDistanceMax = std::numeric_limits<double>::max();
 const NSTimeInterval CLTimeIntervalMax = std::numeric_limits<double>::max();
+
+static const wchar_t* TAG = L"CLLocationManager";
+
+static std::mutex s_extendedExecutionMutex;
+static WAEExtendedExecutionSession* s_uwpExecutionSession;
+static EventRegistrationToken s_uwpEventRegistrationToken;
+static uint32_t s_extendedExecutionRequestCount;
+
+/**
+ * Helper method to request for an extended execution asynchronously.
+ */
+static void _requestExtendedExecutionAsync() {
+    void (^onSucess)(WAEExtendedExecutionResult result);
+    void (^onFailure)(NSError* error);
+
+    onSucess = ^void(WAEExtendedExecutionResult result) {
+        if (result == WAEExtendedExecutionResultAllowed) {
+            NSTraceInfo(TAG, @"Requesting extended execution succeeded.");
+        } else {
+            NSTraceError(TAG, @"Requesting extended execution failed with result %ld!", result);
+        }
+    };
+
+    onFailure = ^void(NSError* error) {
+        NSTraceError(TAG, @"Requesting extended execution failed with error: %@(%d)", error, [error code]);
+    };
+
+    [s_uwpExecutionSession requestExtensionAsyncWithSuccess:onSucess failure:onFailure];
+}
+
+/**
+ * Helper method to handle the revoked event from extended execution.
+ * @param {WAEExtendedExecutionRevokedReason} Extended execution revoked reason.
+ */
+static void _handleExtendedExecutionRevokedEvent(WAEExtendedExecutionRevokedReason reason) {
+    std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
+    NSTraceInfo(TAG, @"Requesting extended execution revoked with reason %ld!", reason);
+    if (s_extendedExecutionRequestCount != 0) {
+        // Request back again for extended execution.
+        // WAEExtendedExecutionRevokedReasonResumed will happen everytime the app is resumed to the foreground during an active
+        // execution sessions. Only log a warning when the revoke reason is not WAEExtendedExecutionRevokedReasonResumed.
+        if (reason != WAEExtendedExecutionRevokedReasonResumed) {
+            NSTraceWarning(TAG, @"Requesting extended execution revoked when request count was %ld!", s_extendedExecutionRequestCount);
+        }
+        _requestExtendedExecutionAsync();
+    }
+}
+
+/**
+ * Helper method to create an extended executions session and request for extended execution.
+ */
+static void _requestExtendedExecutionSession() {
+    std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
+    // Only request for an extended execution session if it is does not already exist.
+    if (++s_extendedExecutionRequestCount == 1) {
+        NSTraceInfo(TAG, @"Requesting extended execution.");
+        s_uwpExecutionSession = [WAEExtendedExecutionSession make];
+        s_uwpExecutionSession.reason = WAEExtendedExecutionReasonLocationTracking;
+        s_uwpExecutionSession.Description = @"CoreLocation Periodic Location Update request";
+        s_uwpEventRegistrationToken =
+            [s_uwpExecutionSession addRevokedEvent:^void(RTObject* obj, WAEExtendedExecutionRevokedEventArgs* args) {
+                _handleExtendedExecutionRevokedEvent(args.reason);
+            }];
+        _requestExtendedExecutionAsync();
+    }
+}
+
+/**
+ * Helper method to remove extended execution session.
+ */
+static void _removeExtendedExecutionSession() {
+    std::lock_guard<std::mutex> lock(s_extendedExecutionMutex);
+    // Remove the extended execution session only when there are no more pending requests.
+    FAIL_FAST_IF_MSG(E_UNEXPECTED, (s_extendedExecutionRequestCount == 0), "There is no extended execution session active!");
+    if (--s_extendedExecutionRequestCount == 0) {
+        NSTraceInfo(TAG, @"Removing extended execution.");
+        [s_uwpExecutionSession removeRevokedEvent:s_uwpEventRegistrationToken];
+        [s_uwpExecutionSession close];
+        s_uwpExecutionSession = nullptr;
+    }
+}
 
 /**
  * CLLocationManager class extension.
@@ -40,6 +123,7 @@ const NSTimeInterval CLTimeIntervalMax = std::numeric_limits<double>::max();
     BOOL _statusUpdateRequested;
     // Ensures atleast one ongoing periodic location update request.
     BOOL _periodicLocationUpdateRequested;
+    BOOL _extendedExecutionSessionRequested;
 }
 
 @property (readwrite, copy, nonatomic) CLLocation* location;
@@ -71,7 +155,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
         _uwpGeolocator.desiredAccuracy = WDGPositionAccuracyHigh;
     }
 
-    DLog(@"desiredAccuracyInMeters set to %f ", accuracy);
+    NSTraceVerbose(TAG, @"desiredAccuracyInMeters set to %f ", accuracy);
 }
 
 /**
@@ -82,7 +166,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
 - (void)setDistanceFilter:(CLLocationDistance)filter {
     _distanceFilter = filter;
     _uwpGeolocator.movementThreshold = filter;
-    DLog(@"movementThreshold set to %f", filter);
+    NSTraceVerbose(TAG, @"movementThreshold set to %f", filter);
 }
 
 /**
@@ -94,8 +178,9 @@ static const int64_t c_timeoutInSeconds = 15LL;
 }
 
 /**
- * @return {BOOL} indicates whether location services are enabled on the device.
- */
+ @Status Interoperable
+ @return {BOOL} indicates whether location services are enabled on the device.
+*/
 + (BOOL)locationServicesEnabled {
     return (g_authorizationStatus == kCLAuthorizationStatusAuthorized) ? YES : NO;
 }
@@ -105,6 +190,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
  * initialize the location manager instance.
  */
 - (void)_callauthorizationStatusDelegate {
+    assert([[NSThread currentThread] isEqual:_callerThread]);
     if ([self.delegate respondsToSelector:@selector(locationManager:didChangeAuthorizationStatus:)]) {
         [self.delegate locationManager:self didChangeAuthorizationStatus:g_authorizationStatus];
     }
@@ -118,27 +204,34 @@ static const int64_t c_timeoutInSeconds = 15LL;
  * initialize the location manager instance.
  */
 - (void)_callUpdateLocationsDelegate {
+    assert([[NSThread currentThread] isEqual:_callerThread]);
     NSArray* locationArray = [[NSArray alloc] initWithObjects:_location, nil];
 
     if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)]) {
         [self.delegate locationManager:self didUpdateLocations:locationArray];
     }
+}
 
-    [locationArray release];
+/**
+ * Delivers location update to the location manager delegate. This method needs to be called on the thread that was used to
+ * initialize the location manager instance.
+ */
+- (void)_didUpdateToLocationsDelegate:(CLLocation*)previousLocation {
+    assert([[NSThread currentThread] isEqual:_callerThread]);
+    if ([self.delegate respondsToSelector:@selector(locationManager:didUpdateToLocation:fromLocation:)]) {
+        [self.delegate locationManager:self didUpdateToLocation:self.location fromLocation:previousLocation];
+    }
 }
 
 /**
  * Delivers location errors to the location manager delegate. This method needs to be called on the thread that was used to
  * initialize the location manager instance.
- *
- *  Note: This method assumed caller has retained the NSError object before calling.
  */
 - (void)_callLocationFailedDelegate:(NSError*)error {
+    assert([[NSThread currentThread] isEqual:_callerThread]);
     if ([self.delegate respondsToSelector:@selector(locationManager:didFailWithError:)]) {
         [self.delegate locationManager:self didFailWithError:error];
     }
-
-    [error release];
 }
 
 - (void)_handleAuthorizationStateChange {
@@ -179,17 +272,18 @@ static const int64_t c_timeoutInSeconds = 15LL;
                         g_authorizationStatus = kCLAuthorizationStatusDenied;
                         break;
                     default:
-                        VLog(@"CLLocationManager: Unexpected location authorization status %d: ", status);
+                        NSTraceInfo(TAG, @"CLLocationManager: Unexpected location authorization status %d: ", status);
                         g_authorizationStatus = kCLAuthorizationStatusDenied;
                 }
 
                 // Register for status change events from Windows.
                 // We do not do this in init because this can pop up an UI and we do not want that to happen until the app has requested
                 // for authorization.
+                __weak CLLocationManager* weakSelf = self;
                 if (!_statusUpdateRequested) {
                     _uwpStatusToken =
                         [_uwpGeolocator addStatusChangedEvent:^void(WDGGeolocator* geolocator, WDGStatusChangedEventArgs* event) {
-                            [self _handleStatusChangedEvent:geolocator statusEvent:event];
+                            [weakSelf _handleStatusChangedEvent:geolocator statusEvent:event];
                         }];
                     _statusUpdateRequested = YES;
                 }
@@ -208,9 +302,8 @@ static const int64_t c_timeoutInSeconds = 15LL;
         };
 
         accessFailure = ^void(NSError* error) {
-            VLog(@"Location authorization error: %@", error);
-            // TODO: switch to failfast call.
-            assert(!"Unexpected failure while authorizing location.");
+            NSTraceInfo(TAG, @"Location authorization error: %@", error);
+            FAIL_FAST_MSG(E_UNEXPECTED, "Unexpected failure while authorizing location.");
         };
 
         [WDGGeolocator requestAccessAsyncWithSuccess:accessSucess failure:accessFailure];
@@ -224,22 +317,22 @@ static const int64_t c_timeoutInSeconds = 15LL;
  */
 - (void)_handleStatusChangedEvent:(WDGGeolocator*)geolocator statusEvent:(WDGStatusChangedEventArgs*)event {
     @synchronized(self) {
-        DLog(@"Received status change event.");
+        NSTraceVerbose(TAG, @"Received status change event.");
         CLAuthorizationStatus authorizationStatus = g_authorizationStatus;
         BOOL positionStatusNoData = NO;
         switch (event.status) {
             case WDGPositionStatusDisabled:
-                DLog(@"Received status change event with status denied (%d).", event.status);
+                NSTraceVerbose(TAG, @"Received status change event with status denied (%d).", event.status);
                 authorizationStatus = kCLAuthorizationStatusDenied;
                 break;
             case WDGPositionStatusNoData:
-                DLog(@"Received status change event with status no-data (%d).", event.status);
+                NSTraceVerbose(TAG, @"Received status change event with status no-data (%d).", event.status);
                 positionStatusNoData = YES;
                 break;
             default:
                 // For all other status events WDGPositionStatusReady, WDGPositionStatusInitializing, WDGPositionStatusNotAvailable and
                 // WDGPositionStatusNotInitialized.
-                DLog(@"Received status change event with status %d.", event.status);
+                NSTraceVerbose(TAG, @"Received status change event with status %d.", event.status);
                 authorizationStatus = kCLAuthorizationStatusAuthorized;
         }
 
@@ -266,7 +359,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
  * @param {WDGPositionChangedEventArgs*} event PositionChangedEventArgs received from Windows.
  */
 - (void)_handlePositionChangedEvent:(WDGGeolocator*)geolocator statusEvent:(WDGPositionChangedEventArgs*)event {
-    DLog(@"Received position changed event.");
+    NSTraceVerbose(TAG, @"Received position changed event.");
     [self _handleLocationUpdate:event.position];
 }
 
@@ -279,22 +372,32 @@ static const int64_t c_timeoutInSeconds = 15LL;
         WDGGeocoordinate* geocoordinator = geoposition.coordinate;
         CLLocationCoordinate2D coordinate = { geocoordinator.latitude, geocoordinator.longitude };
 
+        CLLocation* previousLocation = self.location;
+
         // TODO::
         // todo-nithishm-11062015 -
         //     1. Bug 5381942 prevents us from fetching the speed value from IReference<double>. Harcoding for now as a workaround.
         //     2. How to obtain course?
         //
-        self.location =
-            [[[CLLocation alloc] initWithCoordinate:coordinate
-                                           altitude:[geocoordinator.altitude doubleValue]
-                                 horizontalAccuracy:geocoordinator.accuracy
-                                   verticalAccuracy:[geocoordinator.altitudeAccuracy doubleValue]
-                                             course:0
-                                              speed:0
-                                          timestamp:[NSDate _dateWithWindowsGPSTime:geocoordinator.timestamp.universalTime]] autorelease];
+        self.location = [[CLLocation alloc] initWithCoordinate:coordinate
+                                                      altitude:[geocoordinator.altitude doubleValue]
+                                            horizontalAccuracy:geocoordinator.accuracy
+                                              verticalAccuracy:[geocoordinator.altitudeAccuracy doubleValue]
+                                                        course:0
+                                                         speed:0
+                                                     timestamp:[NSDate _dateWithWindowsGPSTime:geocoordinator.timestamp.universalTime]];
 
-        // Deliver location to the location manager delegate
-        [self performSelector:@selector(_callUpdateLocationsDelegate) onThread:_callerThread withObject:nil waitUntilDone:NO];
+        // Deliver location to the appropriate location manager delegate
+        if (_periodicLocationUpdateRequested) {
+            if (![self.location isEqual:previousLocation]) {
+                [self performSelector:@selector(_didUpdateToLocationsDelegate:)
+                             onThread:_callerThread
+                           withObject:previousLocation
+                        waitUntilDone:NO];
+            }
+        } else {
+            [self performSelector:@selector(_callUpdateLocationsDelegate) onThread:_callerThread withObject:nil waitUntilDone:NO];
+        }
     }
 }
 
@@ -304,8 +407,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
  */
 - (void)_handleLocationUpdateError:(NSError*)error {
     // Deliver location update failure to the location manager delegate.
-    // Note: We retain the NSError object before calling performSelector:onThread: as the method does not guarentee retaining it.
-    [self performSelector:@selector(_callLocationFailedDelegate:) onThread:_callerThread withObject:[error retain] waitUntilDone:NO];
+    [self performSelector:@selector(_callLocationFailedDelegate:) onThread:_callerThread withObject:error waitUntilDone:NO];
 }
 
 /**
@@ -316,13 +418,13 @@ static const int64_t c_timeoutInSeconds = 15LL;
     void (^onFailure)(NSError* error);
 
     onSucess = ^void(WDGGeoposition* position) {
-        VLog(@"Get geoposition update succeeded.");
+        NSTraceInfo(TAG, @"Get geoposition update succeeded.");
         // We purposely do not update the location from here as we already have a PositionChange event registered in this code path and
         // updating the location from here would just be a duplicate.
     };
 
     onFailure = ^void(NSError* error) {
-        VLog(@"Get geoposition update failed with error: %@(%d)", error, [error code]);
+        NSTraceInfo(TAG, @"Get geoposition update failed with error: %@(%d)", error, [error code]);
         [self _handleLocationUpdateError:[NSError errorWithDomain:(NSString*)c_CLLocationManagerErrorDomain
                                                              code:kCLErrorNetwork
                                                          userInfo:nil]];
@@ -340,12 +442,12 @@ static const int64_t c_timeoutInSeconds = 15LL;
     void (^onFailure)(NSError* error);
 
     onSucess = ^void(WDGGeoposition* position) {
-        VLog(@"Get single geoposition update succeeded.");
+        NSTraceInfo(TAG, @"Get single geoposition update succeeded.");
         [self _handleLocationUpdate:position];
     };
 
     onFailure = ^void(NSError* error) {
-        VLog(@"Get single geoposition update failed with error: %@(%d)", error, [error code]);
+        NSTraceInfo(TAG, @"Get single geoposition update failed with error: %@(%d)", error, [error code]);
         [self _handleLocationUpdateError:[NSError errorWithDomain:(NSString*)c_CLLocationManagerErrorDomain
                                                              code:kCLErrorNetwork
                                                          userInfo:nil]];
@@ -357,9 +459,6 @@ static const int64_t c_timeoutInSeconds = 15LL;
     timeout.duration = c_timeoutInSeconds * 1000LL * 10000LL;
 
     [_uwpGeolocator getGeopositionAsyncWithAgeAndTimeout:maximumAge timeout:timeout success:onSucess failure:onFailure];
-
-    [maximumAge release];
-    [timeout release];
 }
 
 /**
@@ -373,7 +472,8 @@ static const int64_t c_timeoutInSeconds = 15LL;
  @Status Caveat
 */
 - (void)requestAlwaysAuthorization {
-    // No differentiation is made for background location authorization. Thus this function calls through to requestWhenInUseAuthorization.
+    // No differentiation is made for background location authorization. Thus this function calls through to
+    // requestWhenInUseAuthorization.
     [self requestWhenInUseAuthorization];
 }
 
@@ -430,7 +530,8 @@ static const int64_t c_timeoutInSeconds = 15LL;
         _location = nullptr;
         // Cache the caller's thread object to use it to call delegates on.
         _callerThread = [NSThread currentThread];
-        _uwpGeolocator = [WDGGeolocator create];
+        // Initialize WDGGeolocator.
+        _uwpGeolocator = [WDGGeolocator make];
     }
 
     return self;
@@ -445,14 +546,15 @@ static const int64_t c_timeoutInSeconds = 15LL;
         [_uwpGeolocator removePositionChangedEvent:_uwpPeriodicPositionChangeToken];
         _periodicLocationUpdateRequested = NO;
     }
+    if (_extendedExecutionSessionRequested) {
+        _removeExtendedExecutionSession();
+        _extendedExecutionSessionRequested = NO;
+    }
     if (_statusUpdateRequested) {
         [_uwpGeolocator removeStatusChangedEvent:_uwpStatusToken];
         _statusUpdateRequested = NO;
     }
-    [_uwpGeolocator release];
-    _uwpGeolocator = NULL;
-
-    [super dealloc];
+    _uwpGeolocator = nullptr;
 }
 
 /**
@@ -461,10 +563,19 @@ static const int64_t c_timeoutInSeconds = 15LL;
 - (void)startUpdatingLocation {
     @synchronized(self) {
         if (!_periodicLocationUpdateRequested) {
+            NSTraceInfo(TAG, @"Started periodic location update");
+
+            if (self.allowsBackgroundLocationUpdates) {
+                // Request for a extended execution session so location updates can continue in the background.
+                _requestExtendedExecutionSession();
+                _extendedExecutionSessionRequested = YES;
+            }
+
             // Register for position change event only the first time location update is requested.
+            __weak CLLocationManager* weakSelf = self;
             _uwpPeriodicPositionChangeToken =
                 [_uwpGeolocator addPositionChangedEvent:^void(WDGGeolocator* geolocator, WDGPositionChangedEventArgs* event) {
-                    [self _handlePositionChangedEvent:geolocator statusEvent:event];
+                    [weakSelf _handlePositionChangedEvent:geolocator statusEvent:event];
                 }];
             _periodicLocationUpdateRequested = YES;
         }
@@ -479,7 +590,12 @@ static const int64_t c_timeoutInSeconds = 15LL;
 - (void)stopUpdatingLocation {
     @synchronized(self) {
         if (_periodicLocationUpdateRequested) {
+            NSTraceInfo(TAG, @"Stopped periodic location update");
             [_uwpGeolocator removePositionChangedEvent:_uwpPeriodicPositionChangeToken];
+            if (_extendedExecutionSessionRequested) {
+                _removeExtendedExecutionSession();
+                _extendedExecutionSessionRequested = NO;
+            }
             _periodicLocationUpdateRequested = NO;
         }
     }

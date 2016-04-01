@@ -19,9 +19,14 @@
     <Import Project="..\..\msvc\zip.tasks" />
   </ImportGroup>
   <PropertyGroup Label="PackageSDKDefaults">
-    <SBSDKDir>$(SolutionDir)SDKPackage\$(Configuration)\</SBSDKDir>
+    <SBSDKDir>$(MSBuildThisFileDirectory)\..\SDKPackage\$(Configuration)\</SBSDKDir>
     <SBSDKZipFile>$(SBSDKDir)winobjc.zip</SBSDKZipFile>
     <SBPackageDir>$(OutDir)package\</SBPackageDir>
+
+    <!-- OppositeConfiguration is whichever of the two configurations we're NOT currently building.
+         This assumes we have exactly two configurations. -->
+    <OppositeConfiguration Condition="'$(Configuration)' == 'Debug'">Release</OppositeConfiguration>
+    <OppositeConfiguration Condition="'$(Configuration)' == 'Release'">Debug</OppositeConfiguration>
   </PropertyGroup>
   <ItemDefinitionGroup Label="DefaultDirectories">
     <SBLibsWin10Win32>
@@ -46,6 +51,7 @@
       <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
       <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
       <SBDispatchIncludes Include="..\..\deps\prebuilt\include\dispatch\**" />
+      <SBOpenALIncludes Include="..\..\deps\prebuilt\include\openal\**" />
       <SBSamples Include="..\..\samples\**\*" />
       <SBBinaries Include="..\..\bin\*.exe" />
       <SBBinaries Include="..\..\bin\*.dll" />
@@ -56,6 +62,20 @@
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.lib" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.dll" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
+
+      <!-- Files in these directories ship both Debug and Release varieties -->
+      <SBLibsWin10Win32 Include="..\Win32\Debug\Universal Windows\Debug\*.lib">
+        <OutputDirectory>x86\Debug</OutputDirectory>
+      </SBLibsWin10Win32>
+      <SBLibsWin10Win32 Include="..\Win32\Debug\Universal Windows\Debug\*.dll">
+        <OutputDirectory>x86\Debug</OutputDirectory>
+      </SBLibsWin10Win32>
+      <SBLibsWin10Win32 Include="..\Win32\Release\Universal Windows\Release\*.lib">
+        <OutputDirectory>x86\Release</OutputDirectory>
+      </SBLibsWin10Win32>
+      <SBLibsWin10Win32 Include="..\Win32\Release\Universal Windows\Release\*.dll">
+        <OutputDirectory>x86\Release</OutputDirectory>
+      </SBLibsWin10Win32>
       
       <!-- These should go away; we should have debug/release for each -->
       <SBLibsWin10Win32 Include="..\..\deps\prebuilt\Universal Windows\x86\*.lib" />
@@ -78,7 +98,21 @@
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.lib" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.dll" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.winmd" />
-      
+
+      <!-- Files in these directories ship both Debug and Release varieties -->
+      <SBLibsWin10ARM Include="..\ARM\Debug\Universal Windows\Debug\*.lib">
+        <OutputDirectory>ARM\Debug</OutputDirectory>
+      </SBLibsWin10ARM>
+      <SBLibsWin10ARM Include="..\ARM\Debug\Universal Windows\Debug\*.dll">
+        <OutputDirectory>ARM\Debug</OutputDirectory>
+      </SBLibsWin10ARM>
+      <SBLibsWin10ARM Include="..\ARM\Release\Universal Windows\Release\*.lib">
+        <OutputDirectory>ARM\Release</OutputDirectory>
+      </SBLibsWin10ARM>
+      <SBLibsWin10ARM Include="..\ARM\Release\Universal Windows\Release\*.dll">
+        <OutputDirectory>ARM\Release</OutputDirectory>
+      </SBLibsWin10ARM>
+
       <!-- These should go away; we should have debug/release for each -->
       <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\*.lib" />
       <SBLibsWin10ARM Include="..\..\deps\prebuilt\Universal Windows\ARM\*.dll" />
@@ -97,18 +131,35 @@
       </SBLibsWin10ARM>
     </ItemGroup>  
   </Target>
-  <Target Name="CompileSDKs">
-    <Message Importance="high" Text="Building x86 SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=x86 /p:Configuration=$(Configuration)" />
-    <Message Importance="high" Text="Building ARM SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=ARM /p:Configuration=$(Configuration)" />
+
+
+  <ItemGroup>
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
+      <Properties>Configuration=$(Configuration);Platform=x86</Properties>
+    </ProjectToBuild>
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\build.sln">
+      <Properties>Configuration=$(Configuration);Platform=ARM</Properties>
+    </ProjectToBuild>
+
+    <!-- Build WinObjCRT for the opposite configuration. This is the only project that always needs to be built for all configurations to generate a package. -->
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Properties>Configuration=$(OppositeConfiguration);Platform=x86</Properties>
+    </ProjectToBuild>
+    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WinObjCRT\dll\WinObjCRT.vcxproj">
+      <Properties>Configuration=$(OppositeConfiguration);Platform=ARM</Properties>
+    </ProjectToBuild>
+  </ItemGroup>
+
+  <Target Name="CompileSDKs" DependsOnTargets="CheckSolution">
+    <Message Importance="high" Text="Building SDK" />
+    <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true"/>
   </Target>
+
   <Target Name="CleanSDKs">
-    <Message Importance="high" Text="Cleaning x86 SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=x86 /p:Configuration=$(Configuration) /t:Clean" />
-    <Message Importance="high" Text="Cleaning ARM SDK" />
-    <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(MSBuildThisFileDirectory)..\build.sln&quot;  /p:Platform=ARM /p:Configuration=$(Configuration) /t:Clean" />
+    <Message Importance="high" Text="Cleaning SDK" />
+    <MSBuild Projects="@(ProjectToBuild)" BuildInParallel="true" Targets="clean"/>
   </Target>
+  
   <Target Name="Build" DependsOnTargets="CompileSDKs;ComputeBuildTarget">
     <!-- We want to start from scratch each time, in case we remove a dependency we don't want in the package -->
     <Message Importance="high" Text="Removing old package" />
@@ -116,6 +167,8 @@
     <ItemGroup>
       <!-- We're replacing the starboard files included while building the SDK with the ones that will be released externally. -->
       <MSVCFiles Remove="@(MSVCFiles)" Condition="'%(MSVCFiles.Filename)' == 'starboard'" />
+      <!-- sdk-build files are needed only when building the SDK -->
+      <MSVCFiles Remove="@(MSVCFiles)" Condition="'%(MSVCFiles.Filename)' == 'sdk-build'" />
     </ItemGroup>
     <ItemGroup>
       <MSVCFiles>
@@ -137,6 +190,7 @@
     <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBDispatchIncludes)" DestinationFiles="@(SBDispatchIncludes->'$(SBPackageDir)include\dispatch\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBOpenALIncludes)" DestinationFiles="@(SBOpenALIncludes->'$(SBPackageDir)include\OpenAL\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying binaries to destination" />
     <Copy SourceFiles="@(SBBinaries)" DestinationFolder="$(SBPackageDir)bin\" />
     <Message Importance="high" Text="Copying samples to destination" />
@@ -161,6 +215,12 @@
     <CallTarget Targets="Clean" />
     <CallTarget Targets="Build" />
   </Target>
+
+  <Target Name="CheckSolution">
+    <Message Importance="high" Text="Building SDK" />
+    <Error Condition="'$(SolutionFileName)' != ''" Text="Building within VS or package.sln is not currently supported.  Please build using &quot;msbuild build\package\package.nativeproj /m /p:Configuration=Debug /p:Platform=All&quot; in VS2015 x86 Native Tools command prompt." />
+  </Target>
+
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

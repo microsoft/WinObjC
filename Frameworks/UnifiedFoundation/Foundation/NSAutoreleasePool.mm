@@ -46,6 +46,9 @@
     objc_autorelease(object);
 }
 
+/**
+ @Status Interoperable
+ */
 - (id)init {
     if (self = [super init]) {
         _opaqueAutoreleasePool = objc_autoreleasePoolPush();
@@ -53,6 +56,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+ */
 - (void)dealloc {
     objc_autoreleasePoolPop(_opaqueAutoreleasePool);
     [super dealloc];

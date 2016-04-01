@@ -71,7 +71,7 @@ typedef unsigned WMCCastingConnectionState;
 
 WINRT_EXPORT
 @interface WMCCastingSource : RTObject
-@property (copy) WFUri* preferredSourceUri;
+@property (retain) WFUri* preferredSourceUri;
 @end
 
 #endif // __WMCCastingSource_DEFINED__
@@ -125,7 +125,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingConnection : RTObject <WFIClosable>
-@property (copy) WMCCastingSource* source;
+@property (retain) WMCCastingSource* source;
 @property (readonly) WMCCastingDevice* device;
 @property (readonly) WMCCastingConnectionState state;
 - (EventRegistrationToken)addErrorOccurredEvent:(void (^)(WMCCastingConnection*, WMCCastingConnectionErrorOccurredEventArgs*))del;
@@ -172,7 +172,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCastingDevicePicker : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WMCCastingDevicePickerFilter* filter;
 - (EventRegistrationToken)addCastingDevicePickerDismissedEvent:(void (^)(WMCCastingDevicePicker*, RTObject*))del;

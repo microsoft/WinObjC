@@ -161,7 +161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextTextRequest : RTObject
-@property (copy) NSString* text;
+@property (retain) NSString* text;
 @property (readonly) BOOL isCanceled;
 @property (readonly) WUTCCoreTextRange* range;
 - (WFDeferral*)getDeferral;
@@ -175,7 +175,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextSelectionRequest : RTObject
-@property (copy) WUTCCoreTextRange* selection;
+@property (retain) WUTCCoreTextRange* selection;
 @property (readonly) BOOL isCanceled;
 - (WFDeferral*)getDeferral;
 @end
@@ -188,8 +188,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextLayoutBounds : RTObject
-@property (copy) WFRect* textBounds;
-@property (copy) WFRect* controlBounds;
+@property (retain) WFRect* textBounds;
+@property (retain) WFRect* controlBounds;
 @end
 
 #endif // __WUTCCoreTextLayoutBounds_DEFINED__
@@ -226,7 +226,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextEditContext : RTObject
-@property (copy) NSString* name;
+@property (retain) NSString* name;
 @property BOOL isReadOnly;
 @property WUTCCoreTextInputScope inputScope;
 @property WUTCCoreTextInputPaneDisplayPolicy inputPaneDisplayPolicy;
@@ -386,7 +386,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUTCCoreTextServicesConstants : RTObject
-+ (WCHAR)hiddenCharacter;
++ (wchar_t)hiddenCharacter;
 @end
 
 #endif // __WUTCCoreTextServicesConstants_DEFINED__

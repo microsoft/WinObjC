@@ -27,10 +27,10 @@ typedef void (^UIActivityViewControllerCompletionHandler)(NSString* activityType
 UIKIT_EXPORT_CLASS
 @interface UIActivityViewController : UIViewController
 
-- (id)initWithActivityItems:(NSArray*)activityItems applicationActivities:(NSArray*)applicationActivities;
+- (instancetype)initWithActivityItems:(NSArray*)activityItems applicationActivities:(NSArray*)applicationActivities STUB_METHOD;
 
-@property (nonatomic, copy) UIActivityViewControllerCompletionHandler completionHandler;
-@property (nonatomic, copy) NSArray* excludedActivityTypes;
-@property (nonatomic, retain) UIPopoverPresentationController* popoverPresentationController;
+@property (nonatomic, copy) UIActivityViewControllerCompletionHandler completionHandler STUB_PROPERTY;
+@property (nonatomic, copy) NSArray* excludedActivityTypes STUB_PROPERTY;
+@property (nonatomic, retain) UIPopoverPresentationController* popoverPresentationController STUB_PROPERTY;
 
 @end

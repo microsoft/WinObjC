@@ -47,8 +47,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMXmlnsDefinition : NSObject
 + (instancetype) new;
-@property (copy) NSString* xmlNamespace;
-@property (copy) NSString* Namespace;
+@property (retain) NSString* xmlNamespace;
+@property (retain) NSString* Namespace;
 @end
 
 // Windows.UI.Xaml.Markup.IComponentConnector
@@ -157,7 +157,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMXamlReader : RTObject
-+ (RTObject*)load:(NSString*)xaml;
++ (RTObject*)Load:(NSString*)xaml;
 + (RTObject*)loadWithInitialTemplateValidation:(NSString*)xaml;
 @end
 
@@ -176,7 +176,7 @@ WINRT_EXPORT
 + (RTObject*)convertValue:(WUXITypeName*)type value:(RTObject*)value;
 + (void)setPropertyFromString:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(NSString*)value;
 + (void)setPropertyFromBoolean:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(BOOL)value;
-+ (void)setPropertyFromChar16:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WCHAR)value;
++ (void)setPropertyFromChar16:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(wchar_t)value;
 + (void)setPropertyFromDateTime:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(WFDateTime*)value;
 + (void)setPropertyFromDouble:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(double)value;
 + (void)setPropertyFromInt32:(RTObject*)dependencyObject propertyToSet:(WXDependencyProperty*)propertyToSet value:(int)value;

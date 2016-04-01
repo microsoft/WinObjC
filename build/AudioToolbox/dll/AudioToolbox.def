@@ -2,6 +2,7 @@ LIBRARY AudioToolbox
     EXPORTS
           AudioFileClose
           AudioFileGetProperty
+          AudioFileGetPropertyInfo
           AudioFileOpenURL
           AudioFileReadBytes
           AudioServicesPlaySystemSound
@@ -14,3 +15,27 @@ LIBRARY AudioToolbox
           ExtAudioFileOpenURL
           ExtAudioFileRead
           ExtAudioFileSetProperty
+          kAudioSession_AudioRouteKey_Inputs DATA
+          kAudioSession_AudioRouteKey_Outputs DATA
+          kAudioSession_InputSourceKey_ID DATA
+          kAudioSession_InputSourceKey_Description DATA
+          kAudioSession_OutputDestinationKey_ID DATA
+          kAudioSession_OutputDestinationKey_Description DATA
+          kAudioSession_AudioRouteKey_Type DATA
+          kAudioSessionInputRoute_LineIn DATA
+          kAudioSessionInputRoute_BuiltInMic DATA
+          kAudioSessionInputRoute_HeadsetMic DATA
+          kAudioSessionInputRoute_BluetoothHFP DATA
+          kAudioSessionInputRoute_USBAudio DATA
+          kAudioSessionOutputRoute_LineOut DATA
+          kAudioSessionOutputRoute_Headphones DATA
+          kAudioSessionOutputRoute_BluetoothHFP DATA
+          kAudioSessionOutputRoute_BluetoothA2DP DATA
+          kAudioSessionOutputRoute_BuiltInReceiver DATA
+          kAudioSessionOutputRoute_BuiltInSpeaker DATA
+          kAudioSessionOutputRoute_USBAudio DATA
+          kAudioSessionOutputRoute_HDMI DATA
+          kAudioSessionOutputRoute_AirPlay DATA
+          kAudioSession_RouteChangeKey_Reason DATA
+          kAudioSession_AudioRouteChangeKey_PreviousRouteDescription DATA
+          kAudioSession_AudioRouteChangeKey_CurrentRouteDescription DATA

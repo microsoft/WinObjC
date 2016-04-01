@@ -14,9 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIBarItemInternal.h"
-#include "UIBarButtonItem+Internals.h"
+#import "Starboard.h"
+#import "UIBarItemInternal.h"
+#import "UIBarButtonItem+Internals.h"
+#import "UIAppearanceSetter.h"
+#import "LoggingNative.h"
+#import "StubReturn.h"
+
+static const wchar_t* TAG = L"UIBarButtonItem";
 
 @implementation UIBarButtonItem {
     idretaintype(NSString) _title;
@@ -34,12 +39,8 @@
 }
 
 static void initInternal(UIBarButtonItem* self) {
-    if (isOSTarget(@"7.0")) {
-        self->_font = [UIFont boldSystemFontOfSize:17];
-    } else {
-        self->_font = [UIFont boldSystemFontOfSize:14];
-    }
-    self->_systemItem = (UIBarButtonSystemItem)-1;
+	self->_font = [UIFont systemFontOfSize : 15];
+	self->_systemItem = (UIBarButtonSystemItem)-1;
 }
 
 static void initControls(UIBarButtonItem* self) {
@@ -49,20 +50,6 @@ static void initControls(UIBarButtonItem* self) {
 
         self->_buttonView.attach([[UIButton alloc] initWithFrame:frame]);
 
-        bool noBorder = false;
-
-        id infoDict = [[NSBundle mainBundle] infoDictionary];
-        if (isOSTarget(@"7.0")) {
-            noBorder = true;
-        }
-        if (self->_style != UIBarButtonItemStylePlain && noBorder == false) {
-            id image = [[UIImage imageNamed:@"/img/blackbutton-normal@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-            id pressedImage = [[UIImage imageNamed:@"/img/blackbutton-pressed@2x.png"] stretchableImageWithLeftCapWidth:9 topCapHeight:0];
-
-            [self->_buttonView setBackgroundImage:(id)image forState:0];
-            [self->_buttonView setBackgroundImage:(id)pressedImage forState:1];
-        }
-
         [self->_buttonView setTitle:(id)self->_title forState:0];
         [self->_buttonView setImage:(id)self->_image forState:0];
         [self->_buttonView setFont:(id)self->_font];
@@ -71,6 +58,10 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (NSObject*)initWithCoder:(NSCoder*)coder {
     id customView = [coder decodeObjectForKey:@"UICustomView"];
     if (customView != nil) {
@@ -95,6 +86,14 @@ static void initControls(UIBarButtonItem* self) {
     initControls(self);
 
     return self;
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)backgroundImageForState:(UIControlState)state barMetrics:(UIBarMetrics)barMetrics {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -265,7 +264,7 @@ static void initControls(UIBarButtonItem* self) {
             }
             break;
 
-        case 0x15:
+        case UIBarButtonSystemItemUndo:
             _title = @"Undo";
             {
                 CGSize size;
@@ -274,7 +273,7 @@ static void initControls(UIBarButtonItem* self) {
             }
             break;
 
-        case 0x16:
+        case UIBarButtonSystemItemRedo:
             _title = @"Redo";
             {
                 CGSize size;
@@ -283,7 +282,7 @@ static void initControls(UIBarButtonItem* self) {
             }
             break;
 
-        case 0x17:
+        case UIBarButtonSystemItemPageCurl:
             _title = @"Curl";
             {
                 CGSize size;
@@ -344,7 +343,10 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (id)init {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     initInternal(self);
     initControls(self);
 
@@ -384,11 +386,17 @@ static void initControls(UIBarButtonItem* self) {
     return _width;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)title {
     _title.attach([title copy]);
     [_buttonView setTitle:(id)_title forState:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)title {
     return _title;
 }
@@ -435,11 +443,17 @@ static void initControls(UIBarButtonItem* self) {
     _targetSel = pSel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)image {
     _image = image;
     [_buttonView setImage:(id)_image forState:0];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)image {
     return _image;
 }
@@ -449,12 +463,15 @@ static void initControls(UIBarButtonItem* self) {
  @Notes barMetrics parameter not supported
 */
 - (void)setBackgroundImage:(UIImage*)image forState:(UIControlState)state barMetrics:(UIBarMetrics)metrics {
-    EbrDebugLog("UIBarButtonItem setBackgroundImage not fully supported\n");
+    TraceVerbose(TAG, L"UIBarButtonItem setBackgroundImage not fully supported");
     [_buttonView setBackgroundImage:image forState:state];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTitlePositionAdjustment:(CGPoint)position forBarMetrics:(UIBarMetrics)metrics {
-    EbrDebugLog("UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported\n");
+    UNIMPLEMENTED_WITH_MSG("UIBarButtonItem setTitlePositionAdjustmentForBarMetrics not supported\n");
 }
 
 /**
@@ -462,7 +479,7 @@ static void initControls(UIBarButtonItem* self) {
 */
 - (void)setBackButtonTitlePositionAdjustment:(UIOffset)position forBarMetrics:(UIBarMetrics)metrics {
     UNIMPLEMENTED();
-    EbrDebugLog("setBackButtonTitlePositionAdjustment not supported\n");
+    TraceVerbose(TAG, L"setBackButtonTitlePositionAdjustment not supported");
 }
 
 /**
@@ -470,7 +487,7 @@ static void initControls(UIBarButtonItem* self) {
  @Notes barMetrics parameter not supported
 */
 - (void)setBackButtonBackgroundImage:(UIImage*)image forState:(UIControlState)state barMetrics:(UIBarMetrics)metrics {
-    EbrDebugLog("UIBarButtonItem setBackButtonBackgroundImage not supported\n");
+    TraceVerbose(TAG, L"UIBarButtonItem setBackButtonBackgroundImage not supported");
     _backImage = image;
 }
 
@@ -478,6 +495,9 @@ static void initControls(UIBarButtonItem* self) {
     return _backImage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state {
     id font = [attributes objectForKey:@"kCTFontAttributeName"];
     id textColor = [attributes objectForKey:@"UITextAttributeTextColor"];
@@ -520,6 +540,9 @@ static void initControls(UIBarButtonItem* self) {
     return [super tintColor];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enabled {
     bool update = false;
 
@@ -544,6 +567,9 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEnabled {
     if (_isDisabled) {
         return FALSE;
@@ -554,15 +580,15 @@ static void initControls(UIBarButtonItem* self) {
 
 - (void)_sendAction:(id)event {
     if (_isDisabled) {
-        EbrDebugLog("Bar item is disabled\n");
+        TraceVerbose(TAG, L"Bar item is disabled");
         return;
     }
     if (_targetSel == NULL) {
-        EbrDebugLog("No selector on Bar item\n");
+        TraceVerbose(TAG, L"No selector on Bar item");
         return;
     }
 
-    EbrDebugLog("sending message %s to %x\n", _targetSel ? sel_getName(_targetSel) : "(null)", _target);
+    TraceVerbose(TAG, L"sending message %hs to %x", _targetSel ? sel_getName(_targetSel) : "(null)", _target);
     if (_target != nil && _targetSel != NULL) {
         [_target performSelector:_targetSel withObject:self withObject:event];
     } else {
@@ -570,30 +596,47 @@ static void initControls(UIBarButtonItem* self) {
 
         while (nextResponder != nil) {
             if ([nextResponder respondsToSelector:_targetSel]) {
-                _m(nextResponder, _targetSel, self, event);
+                [nextResponder performSelector:_targetSel withObject:self withObject:event];
                 break;
             }
 
-            EbrDebugLog("Next responder is %s\n", object_getClassName(nextResponder));
+            TraceVerbose(TAG, L"Next responder is %hs", object_getClassName(nextResponder));
             nextResponder = [nextResponder nextResponder];
         }
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setImageInsets:(UIEdgeInsets)insets {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(NSString*)label {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTag:(NSInteger)tag {
     _tag = tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)tag {
     return _tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _title = nil;
     _font = nil;
@@ -604,6 +647,9 @@ static void initControls(UIBarButtonItem* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isFlexibleWidth {
     if (_systemItem == UIBarButtonSystemItemFlexibleSpace) {
         return TRUE;
@@ -612,11 +658,17 @@ static void initControls(UIBarButtonItem* self) {
     }
 }
 
-+ (id)appearance {
-    return [UIAppearanceSetter appearanceWhenContainedIn:nil forUIClass:self];
+/**
+ @Status Interoperable
+*/
++ (instancetype)appearance {
+    return [UIAppearanceSetter _appearanceWhenContainedIn:nil forUIClass:self];
 }
 
-+ (id)appearanceWhenContainedIn:(id)containedClass, ... {
+/**
+ @Status Interoperable
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
     id curClass = [self class];
 
     va_list pReader;
@@ -631,7 +683,7 @@ static void initControls(UIBarButtonItem* self) {
 
     va_end(pReader);
 
-    return [UIAppearanceSetter appearanceWhenContainedIn:containedClass forUIClass:self];
+    return [UIAppearanceSetter _appearanceWhenContainedIn:containedClass forUIClass:self];
 }
 
 @end

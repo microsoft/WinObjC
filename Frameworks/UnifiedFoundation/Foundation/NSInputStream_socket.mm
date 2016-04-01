@@ -20,8 +20,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "NSSSLHandler.h"
 #include "NSStreamInternal.h"
 #include "NSRunLoop+Internal.h"
+#include "LoggingNative.h"
 
-@implementation NSInputStream_socket : NSStream
+static const wchar_t* TAG = L"NSInputStream_socket";
+
+@implementation NSInputStream_socket
 - (id)initWithSocket:(id)socket streamStatus:(DWORD)status {
     _delegate = self;
     _error = nil;
@@ -134,7 +137,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         [sslHandler runWithSocket:_socket];
 
         result = [sslHandler readPlaintext:buffer maxLength:maxLength];
-        EbrDebugLog("Read %d result bytes\n", result);
+        TraceVerbose(TAG, L"Read %d result bytes", result);
 
         //[sslHandler runWithSocket:_socket];
     }

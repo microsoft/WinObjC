@@ -129,14 +129,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynAboutData : RTObject
-@property (copy) NSString* defaultDescription;
-@property (copy) NSString* defaultAppName;
-@property (copy) id dateOfManufacture;
-@property (copy) NSString* defaultManufacturer;
+@property (retain) NSString* defaultDescription;
+@property (retain) NSString* defaultAppName;
+@property (retain) id dateOfManufacture;
+@property (retain) NSString* defaultManufacturer;
 @property WFGUID* appId;
-@property (copy) WFUri* supportUrl;
-@property (copy) NSString* softwareVersion;
-@property (copy) NSString* modelNumber;
+@property (retain) WFUri* supportUrl;
+@property (retain) NSString* softwareVersion;
+@property (retain) NSString* modelNumber;
 @property BOOL isEnabled;
 @property (readonly) NSMutableDictionary* appNames;
 @property (readonly) NSMutableDictionary* manufacturers;
@@ -151,8 +151,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynBusAttachment : RTObject
-+ (WDAAllJoynBusAttachment*)create:(NSString*)connectionSpecification ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
++ (WDAAllJoynBusAttachment*)make:(NSString*)connectionSpecification ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDAAllJoynAboutData* aboutData;
 @property (readonly) NSMutableArray* authenticationMechanisms;
 @property (readonly) NSString* connectionSpecification;
@@ -239,9 +239,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynCredentials : RTObject
-@property (copy) WFTimeSpan* timeout;
-@property (copy) WSCPasswordCredential* passwordCredential;
-@property (copy) WSCCCertificate* certificate;
+@property (retain) WFTimeSpan* timeout;
+@property (retain) WSCPasswordCredential* passwordCredential;
+@property (retain) WSCCCertificate* certificate;
 @property (readonly) WDAAllJoynAuthenticationMechanism authenticationMechanism;
 @end
 
@@ -253,7 +253,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynServiceInfo : RTObject
-+ (WDAAllJoynServiceInfo*)create:(NSString*)uniqueName objectPath:(NSString*)objectPath sessionPort:(unsigned short)sessionPort ACTIVATOR;
++ (WDAAllJoynServiceInfo*)make:(NSString*)uniqueName objectPath:(NSString*)objectPath sessionPort:(unsigned short)sessionPort ACTIVATOR;
 @property (readonly) NSString* objectPath;
 @property (readonly) unsigned short sessionPort;
 @property (readonly) NSString* uniqueName;
@@ -283,7 +283,7 @@ WINRT_EXPORT
 @property (readonly) NSString* appName;
 @property (readonly) id dateOfManufacture;
 @property (readonly) WGLanguage* defaultLanguage;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* deviceId;
 @property (readonly) NSString* deviceName;
 @property (readonly) NSString* hardwareVersion;
@@ -304,11 +304,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynAcceptSessionJoinerEventArgs : RTObject
-+ (WDAAllJoynAcceptSessionJoinerEventArgs*)create:(NSString*)uniqueName
-                                      sessionPort:(unsigned short)sessionPort
-                                      trafficType:(WDAAllJoynTrafficType)trafficType
-                                        proximity:(uint8_t)proximity
-                              acceptSessionJoiner:(RTObject<WDAIAllJoynAcceptSessionJoiner>*)acceptSessionJoiner ACTIVATOR;
++ (WDAAllJoynAcceptSessionJoinerEventArgs*)make:(NSString*)uniqueName
+                                    sessionPort:(unsigned short)sessionPort
+                                    trafficType:(WDAAllJoynTrafficType)trafficType
+                                      proximity:(uint8_t)proximity
+                            acceptSessionJoiner:(RTObject<WDAIAllJoynAcceptSessionJoiner>*)acceptSessionJoiner ACTIVATOR;
 @property (readonly) BOOL sameNetwork;
 @property (readonly) BOOL samePhysicalNode;
 @property (readonly) unsigned short sessionPort;
@@ -325,7 +325,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynSessionMemberAddedEventArgs : RTObject
-+ (WDAAllJoynSessionMemberAddedEventArgs*)create:(NSString*)uniqueName ACTIVATOR;
++ (WDAAllJoynSessionMemberAddedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
 @property (readonly) NSString* uniqueName;
 @end
 
@@ -337,7 +337,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynSessionMemberRemovedEventArgs : RTObject
-+ (WDAAllJoynSessionMemberRemovedEventArgs*)create:(NSString*)uniqueName ACTIVATOR;
++ (WDAAllJoynSessionMemberRemovedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
 @property (readonly) NSString* uniqueName;
 @end
 
@@ -349,7 +349,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynSessionLostEventArgs : RTObject
-+ (WDAAllJoynSessionLostEventArgs*)create:(WDAAllJoynSessionLostReason)reason ACTIVATOR;
++ (WDAAllJoynSessionLostEventArgs*)make:(WDAAllJoynSessionLostReason)reason ACTIVATOR;
 @property (readonly) WDAAllJoynSessionLostReason reason;
 @end
 
@@ -361,7 +361,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynProducerStoppedEventArgs : RTObject
-+ (WDAAllJoynProducerStoppedEventArgs*)create:(int)status ACTIVATOR;
++ (WDAAllJoynProducerStoppedEventArgs*)make:(int)status ACTIVATOR;
 @property (readonly) int status;
 @end
 
@@ -373,7 +373,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynWatcherStoppedEventArgs : RTObject
-+ (WDAAllJoynWatcherStoppedEventArgs*)create:(int)status ACTIVATOR;
++ (WDAAllJoynWatcherStoppedEventArgs*)make:(int)status ACTIVATOR;
 @property (readonly) int status;
 @end
 
@@ -385,7 +385,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynServiceInfoRemovedEventArgs : RTObject
-+ (WDAAllJoynServiceInfoRemovedEventArgs*)create:(NSString*)uniqueName ACTIVATOR;
++ (WDAAllJoynServiceInfoRemovedEventArgs*)make:(NSString*)uniqueName ACTIVATOR;
 @property (readonly) NSString* uniqueName;
 @end
 
@@ -397,7 +397,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDAAllJoynMessageInfo : RTObject
-+ (WDAAllJoynMessageInfo*)create:(NSString*)senderUniqueName ACTIVATOR;
++ (WDAAllJoynMessageInfo*)make:(NSString*)senderUniqueName ACTIVATOR;
 @property (readonly) NSString* senderUniqueName;
 @end
 

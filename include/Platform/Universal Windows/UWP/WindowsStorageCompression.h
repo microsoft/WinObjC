@@ -71,10 +71,10 @@ typedef unsigned WSCCompressAlgorithm;
 
 WINRT_EXPORT
 @interface WSCCompressor : RTObject <WSSIOutputStream, WFIClosable>
-+ (WSCCompressor*)createCompressor:(RTObject<WSSIOutputStream>*)underlyingStream ACTIVATOR;
-+ (WSCCompressor*)createCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream
-                           algorithm:(WSCCompressAlgorithm)algorithm
-                           blockSize:(unsigned int)blockSize ACTIVATOR;
++ (WSCCompressor*)makeCompressor:(RTObject<WSSIOutputStream>*)underlyingStream ACTIVATOR;
++ (WSCCompressor*)makeCompressorEx:(RTObject<WSSIOutputStream>*)underlyingStream
+                         algorithm:(WSCCompressAlgorithm)algorithm
+                         blockSize:(unsigned int)blockSize ACTIVATOR;
 - (void)finishAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (RTObject<WSSIOutputStream>*)detachStream;
 - (void)writeAsync:(RTObject<WSSIBuffer>*)buffer
@@ -109,7 +109,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCDecompressor : RTObject <WSSIInputStream, WFIClosable>
-+ (WSCDecompressor*)createDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
++ (WSCDecompressor*)makeDecompressor:(RTObject<WSSIInputStream>*)underlyingStream ACTIVATOR;
 - (RTObject<WSSIInputStream>*)detachStream;
 - (void)readAsync:(RTObject<WSSIBuffer>*)buffer
             count:(unsigned int)count

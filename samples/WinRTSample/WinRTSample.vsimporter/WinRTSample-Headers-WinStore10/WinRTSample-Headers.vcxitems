@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>WinRTSample_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <ItemsProjectGuid>{05A8DC7F-9E04-45F9-8350-88A1D844B409}</ItemsProjectGuid>
+    <SharedGUID>{F33DE50D-A9FB-4ED1-BA1B-DD8DDFEC54C7}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\ButtonsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\MainViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\MenuTableViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\TilesViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WinRTSample\ToastsViewController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

@@ -26,7 +26,7 @@
 }
 @end
 
-@implementation NSURLAuthenticationChallenge : NSObject
+@implementation NSURLAuthenticationChallenge
 
 /**
  @Status Stub
@@ -44,6 +44,9 @@
     return _protectionSpace;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)init {
     _protectionSpace = [NSURLProtectionSpace new];
 

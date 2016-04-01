@@ -30,6 +30,7 @@
 
 #pragma once
 
+#import <UIKit/UIKitTypes.h>
 #import "UIControl.h"
 
 typedef enum {
@@ -78,9 +79,9 @@ UIKIT_EXPORT_CLASS
 - (void)setTitleColor:(UIColor*)color forState:(UIControlState)state;
 - (void)setTitleShadowColor:(UIColor*)color forState:(UIControlState)state;
 
-@property (nonatomic) BOOL adjustsImageWhenDisabled;
-@property (nonatomic) BOOL adjustsImageWhenHighlighted;
-@property (nonatomic) BOOL reversesTitleShadowWhenHighlighted;
+@property (nonatomic) BOOL adjustsImageWhenDisabled STUB_PROPERTY;
+@property (nonatomic) BOOL adjustsImageWhenHighlighted STUB_PROPERTY;
+@property (nonatomic) BOOL reversesTitleShadowWhenHighlighted STUB_PROPERTY;
 @property (nonatomic) BOOL showsTouchWhenHighlighted STUB_PROPERTY;
 @property (nonatomic) CGSize titleShadowOffset STUB_PROPERTY;
 @property (nonatomic) NSLineBreakMode lineBreakMode STUB_PROPERTY;

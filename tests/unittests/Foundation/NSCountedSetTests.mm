@@ -30,7 +30,6 @@ TEST(Foundation, NSCountedSet_SanityTest) {
     ASSERT_TRUE_MSG([countedSet1 isEqualToSet:countedSet2], "FAILED: countedSet1 and countedSet2 should be equal!\n");
 
     [countedSet1 release];
-    [countedSet2 release];
 
     LOG_INFO("Basic count test");
 
@@ -40,8 +39,6 @@ TEST(Foundation, NSCountedSet_SanityTest) {
 
     carCount = [carSet countForObject:@"AUDI Q5"];
     ASSERT_EQ_MSG(0, carCount, "FAILED: carCount should be 0!\n");
-
-    [carSet release];
 }
 
 TEST(Foundation, NSCountedSet_AddToSetTest) {

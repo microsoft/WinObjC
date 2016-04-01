@@ -17,7 +17,8 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
-#import <UIKit/UIKit.h>
+#import <UIKit/UIGeometry.h>
+#import <Foundation/NSObject.h>
 
 @protocol UIPopoverBackgroundViewMethods <NSObject>
 + (UIEdgeInsets)contentViewInsets;

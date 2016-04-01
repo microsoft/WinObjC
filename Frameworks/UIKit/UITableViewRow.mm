@@ -18,7 +18,7 @@
 #include "UITableViewRow.h"
 
 @implementation UITableViewRow : NSObject
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _height = [coder decodeFloatForKey:@"UITableRowHeight"];
     _cell = [coder decodeObjectForKey:@"UITableRowCell"];
     return self;

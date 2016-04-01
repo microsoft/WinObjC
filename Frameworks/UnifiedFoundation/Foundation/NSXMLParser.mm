@@ -27,7 +27,7 @@
 
 //#define LOG_PARSED
 
-@implementation NSXMLParser : NSObject
+@implementation NSXMLParser
 
 /**
  @Status Interoperable
@@ -58,6 +58,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_data release];
     [super dealloc];

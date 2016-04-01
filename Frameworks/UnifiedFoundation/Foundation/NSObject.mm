@@ -32,10 +32,13 @@
 #import <Starboard/String.h>
 #import <StringHelpers.h>
 #import <ErrorHandling.h>
-#import <Logging.h>
+#import <LoggingNative.h>
 #import <StubReturn.h>
 
+#import <mutex>
+
 static BOOL _NSSelectorNotFoundIsNonFatal;
+static const wchar_t* TAG = L"Objective-C";
 
 @class NSZone;
 
@@ -247,51 +250,28 @@ static id _NSWeakLoad(id obj) {
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector {
-    id (*imp)(id, SEL) = (id (*)(id, SEL))[self methodForSelector:selector];
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector);
+    return ((id (*)(id, SEL))objc_msgSend)(self, selector);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 {
-    id (*imp)(id, SEL, id) = (id (*)(id, SEL, id))[self methodForSelector:selector];
-
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector, obj1);
+    return ((id (*)(id, SEL, id))objc_msgSend)(self, selector, obj1);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 {
-    id (*imp)(id, SEL, id, id) = (id (*)(id, SEL, id, id))[self methodForSelector:selector];
-
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector, obj1, obj2);
+    return ((id (*)(id, SEL, id, id))objc_msgSend)(self, selector, obj1, obj2);
 }
 
 /**
  @Status Interoperable
 */
 - (id)performSelector:(SEL)selector withObject:(id)obj1 withObject:(id)obj2 withObject:(id)obj3 {
-    id (*imp)(id, SEL, id, id, id) = (id (*)(id, SEL, id, id, id))[self methodForSelector:selector];
-
-    if (imp == nullptr) {
-        [self doesNotRecognizeSelector:selector];
-    }
-
-    return imp(self, selector, obj1, obj2, obj3);
+    return ((id (*)(id, SEL, id, id, id))objc_msgSend)(self, selector, obj1, obj2, obj3);
 }
 
 /**
@@ -358,7 +338,7 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
     }
 
     if (_NSSelectorNotFoundIsNonFatal) {
-        TraceWarning(L"Objective-C", L"%hs", reason.c_str());
+        TraceWarning(TAG, L"%hs", reason.c_str());
     } else {
         THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_NOT_FOUND), "%hs", reason.c_str());
     }
@@ -396,7 +376,11 @@ static id _NSForwardingDestination(id object, SEL selector) {
 }
 
 static void _forwardThrow(id object, SEL selector) {
-    [object doesNotRecognizeSelector:selector];
+    if (class_respondsToSelector(object_getClass(object), @selector(doesNotRecognizeSelector:))) {
+        [object doesNotRecognizeSelector:selector];
+        return;
+    }
+    _throwUnrecognizedSelectorException(object, object_getClass(object), selector);
 }
 
 static IMP _NSIMPForward(id object, SEL selector) {
@@ -473,7 +457,7 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     /**
      @Status Interoperable
     */
-+ (Class)superclass {
+    + (Class)superclass {
     return class_getSuperclass(self);
 }
 
@@ -532,6 +516,9 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     return NSStringFromClass(self);
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)load {
     objc_proxy_lookup = _NSForwardingDestination;
     __objc_msg_forward2 = _NSIMPForward;
@@ -610,3 +597,66 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
 void WinObjC_SetMissingSelectorFatal(BOOL fatal) {
     _NSSelectorNotFoundIsNonFatal = !fatal;
 }
+
+#pragma region NSZombie Support
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-objc-isa-usage" // We are knowingly accessing ->isa directly.
+__attribute__((objc_root_class)) @interface NSZombie {
+    Class isa;
+}
+@end
+
+    @implementation NSZombie
+    /**
+     @Status Interoperable
+    */
+    - (void)doesNotRecognizeSelector : (SEL)selector {
+    // NSZombie subclasses store the original class as a class variable. Retrieve it here.
+    Class oldIsa = reinterpret_cast<Class*>(object_getIndexedIvars(isa))[0];
+    THROW_NS_HR_MSG(HRESULT_FROM_WIN32(ERROR_INVALID_HANDLE),
+                    "-[%hs %hs]: message sent to deallocated instance %p.",
+                    class_getName(oldIsa),
+                    sel_getName(selector),
+                    self);
+}
+@end
+
+    static void
+    _dealloc_dispose(id self, SEL _cmd) {
+    object_dispose(self);
+}
+
+static void _dealloc_zombify(id self, SEL _cmd) {
+    static Class zombieClass = objc_getClass("NSZombie");
+    static std::mutex s_zombieMutex;
+
+    // For every zombified class, we allocate a subclass of NSZombie that stores the
+    // original class pointer as a cvar. Zombie subclass creation is guarded by
+    // s_zombieMutex to ensure that we don't leak allocated subclasses in case
+    // we get here in multiple threads.
+    std::string className = woc::string::format("_NSZombie_%s", class_getName(self->isa));
+    Class zombieSubclass = Nil;
+    if (!(zombieSubclass = objc_getClass(className.c_str()))) {
+        std::lock_guard<std::mutex> lock(s_zombieMutex);
+        if (!(zombieSubclass = objc_getClass(className.c_str()))) {
+            zombieSubclass = objc_allocateClassPair(zombieClass, className.c_str(), sizeof(Class));
+            // Store the original isa in the sizeof(Class) extra bytes allocated at the end of the class.
+            reinterpret_cast<Class*>(object_getIndexedIvars(zombieSubclass))[0] = self->isa;
+            objc_registerClassPair(zombieSubclass);
+        }
+    }
+    self->isa = zombieSubclass;
+}
+#pragma clang diagnostic pop
+
+void WinObjC_SetZombiesEnabled(BOOL enabled) {
+    // We do these acrobatics here to avoid adding a branch and overhead to -dealloc.
+    // By switching out the implementation at runtime, we can keep the codepath for dealloc itself linear.
+    IMP targetDeallocIMP = enabled ? (IMP)_dealloc_zombify : (IMP)_dealloc_dispose;
+
+    Method dealloc = class_getInstanceMethod([NSObject class], @selector(dealloc));
+    if (dealloc) {
+        method_setImplementation(dealloc, targetDeallocIMP);
+    }
+}
+#pragma endregion

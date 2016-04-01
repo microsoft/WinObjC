@@ -87,12 +87,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdServiceInstance : RTObject <WFIStringable>
-+ (WNSDDnssdServiceInstance*)create:(NSString*)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
++ (WNSDDnssdServiceInstance*)make:(NSString*)dnssdServiceInstanceName hostName:(WNHostName*)hostName port:(unsigned short)port ACTIVATOR;
 @property unsigned short weight;
 @property unsigned short priority;
 @property unsigned short port;
-@property (copy) WNHostName* hostName;
-@property (copy) NSString* dnssdServiceInstanceName;
+@property (retain) WNHostName* hostName;
+@property (retain) NSString* dnssdServiceInstanceName;
 @property (readonly) NSMutableDictionary* textAttributes;
 - (void)registerStreamSocketListenerAsync1:(WNSStreamSocketListener*)socket
                                    success:(void (^)(WNSDDnssdRegistrationResult*))success
@@ -119,7 +119,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSDDnssdRegistrationResult : RTObject <WFIStringable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) BOOL hasInstanceNameChanged;
 @property (readonly) WNHostName* iPAddress;
 @property (readonly) WNSDDnssdRegistrationStatus status;

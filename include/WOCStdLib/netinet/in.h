@@ -107,7 +107,9 @@ struct sockaddr_in {
 
 #if !defined(_KERNEL) && __POSIX_VISIBLE >= 200112
 
-#ifndef WINOBJC     //  Defined by winsock2.h
+#ifdef WINOBJC     //  Defined by winsock2.h
+#define _BYTEORDER_PROTOTYPED
+#else
 #ifndef _BYTEORDER_PROTOTYPED
 #define _BYTEORDER_PROTOTYPED
 __BEGIN_DECLS

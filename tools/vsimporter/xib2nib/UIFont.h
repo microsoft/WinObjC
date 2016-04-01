@@ -16,12 +16,14 @@
 
 #pragma once
 #include "ObjectConverter.h"
+
 class UIFont :
     public ObjectConverter
 {
 public:
     const char *_fontName;
     float _fontSize;
+    bool _systemFont;
 
     UIFont();
     virtual void InitFromXIB(XIBObject *obj);

@@ -22,6 +22,10 @@ limitations under the License.
 #include "Attribute.h"
 #include "OpenGLESState.h"
 #include <string>
+#include "LoggingNative.h"
+#include <memory>
+
+static const wchar_t* TAG = L"ShaderProgram";
 
 using namespace OpenGLES::OpenGLES2;
 using namespace OpenGLES;
@@ -84,17 +88,17 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
 
         if (infoLength > 1) {
-            char* infoLog = (char*)malloc(sizeof(char) * infoLength);
+            char* infoLog = (char*)IwMalloc(sizeof(char) * infoLength);
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
-            EbrDebugLog("Error compiling %s\n", infoLog);
+            TraceError(TAG, L"Error compiling %hs", infoLog);
             if (linked) {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("WARNING: Linked program ") + name + " with warnings:\n" + infoLog);
             } else {
                 LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Linking program ") + name + " failed:\n" + infoLog);
             }
-            free(infoLog);
+            IwFree(infoLog);
         }
 
         if (linked != 0) {
@@ -119,7 +123,8 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
 
     LOG_DEBUG_MESSAGE("Attributes");
     for (int i = 0; i < activeAttributes; i++) {
-        char* attributeName = (char*)malloc(sizeof(char) * activeAttributesMaxLength);
+        auto attributeNameBuffer = std::make_unique<char[]>(activeAttributesMaxLength);
+        char* attributeName = attributeNameBuffer.get();
         GLint size;
         GLenum type;
 
@@ -183,7 +188,8 @@ GLuint ShaderProgram::createProgram(Shader* vertexShader, Shader* fragmentShader
 
     LOG_DEBUG_MESSAGE("Uniforms");
     for (int i = 0; i < activeUniforms; i++) {
-        char* uniformName = (char*)malloc(sizeof(char) * activeUniformsMaxLength);
+        auto uniformNameBuffer = std::make_unique<char[]>(activeUniformsMaxLength);
+        char* uniformName = uniformNameBuffer.get();
         GLint size;
         GLenum uniformType;
         glGetActiveUniform(program, i, activeUniformsMaxLength, NULL, &size, &uniformType, uniformName);
@@ -518,13 +524,13 @@ void ShaderProgram::validate() {
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLength);
 
         if (infoLength > 1) {
-            char* infoLog = (char*)malloc(sizeof(char) * infoLength);
+            char* infoLog = (char*)IwMalloc(sizeof(char) * infoLength);
 
             glGetProgramInfoLog(program, infoLength, NULL, infoLog);
 
             LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Validation error in program ") + name + ":\n" + infoLog);
 
-            free(infoLog);
+            IwFree(infoLog);
         }
     }
 }

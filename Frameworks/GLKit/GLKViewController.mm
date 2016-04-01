@@ -19,9 +19,12 @@
 #import <GLKit/GLKView.h>
 #import <GLKit/GLKViewController.h>
 
-typedef wchar_t WCHAR;
 #import <UWP/WindowsFoundation.h>
 #import <UWP/WindowsGlobalization.h>
+
+@protocol _GLKViewControllerInformal <NSObject>
+- (BOOL)_renderFrame;
+@end
 
 @implementation GLKViewController {
     CADisplayLink* _link;
@@ -29,11 +32,17 @@ typedef wchar_t WCHAR;
     int64_t _lastStart;
     int64_t _lastFrame;
     WGCalendar* _calendar;
+    BOOL _isGlkView;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)viewDidLoad {
     [super viewDidLoad];
     if ([self.view isKindOfClass:[GLKView class]]) {
+        _isGlkView = YES;
         GLKView* kv = (GLKView*)self.view;
         kv.enableSetNeedsDisplay = FALSE;
     }
@@ -41,7 +50,7 @@ typedef wchar_t WCHAR;
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(_renderFrame)];
     [_link retain];
 
-    _calendar = [WGCalendar create];
+    _calendar = [WGCalendar make];
     [_calendar setToNow];
     WFDateTime* dt = [_calendar getDateTime];
     _firstStart = dt.universalTime;
@@ -53,6 +62,10 @@ typedef wchar_t WCHAR;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.delegate glkViewController:self willPause:FALSE];
@@ -64,6 +77,10 @@ typedef wchar_t WCHAR;
     _lastStart = dt.universalTime;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.delegate glkViewController:self willPause:TRUE];
@@ -98,14 +115,14 @@ typedef wchar_t WCHAR;
 
     bool tryDirectRender = true;
     if ([self.view respondsToSelector:@selector(_renderFrame)]) {
-        if ([self.view _renderFrame]) {
+        if ([(id<_GLKViewControllerInformal>)self.view _renderFrame]) {
             tryDirectRender = false;
         }
     }
 
     if (tryDirectRender) {
-        if ([dest respondsToSelector:@selector(glkView:drawInRect:)]) {
-            [dest glkView:self.view drawInRect:self.view.frame];
+        if (_isGlkView && [dest respondsToSelector:@selector(glkView:drawInRect:)]) {
+            [dest glkView:(GLKView*)self.view drawInRect:self.view.frame];
         }
     }
 

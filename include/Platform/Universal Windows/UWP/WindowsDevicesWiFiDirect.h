@@ -116,7 +116,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionParameters : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property int16_t groupOwnerIntent;
 @end
 
@@ -130,10 +130,10 @@ WINRT_EXPORT
 @interface WDWWiFiDirectInformationElement : RTObject
 + (NSMutableArray*)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
 + (NSMutableArray*)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject<WSSIBuffer>* value;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject<WSSIBuffer>* value;
 @property uint8_t ouiType;
-@property (copy) RTObject<WSSIBuffer>* oui;
+@property (retain) RTObject<WSSIBuffer>* oui;
 @end
 
 #endif // __WDWWiFiDirectInformationElement_DEFINED__
@@ -144,8 +144,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectLegacySettings : RTObject
-@property (copy) NSString* ssid;
-@property (copy) WSCPasswordCredential* passphrase;
+@property (retain) NSString* ssid;
+@property (retain) WSCPasswordCredential* passphrase;
 @property BOOL isEnabled;
 @end
 
@@ -159,7 +159,7 @@ WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
 @property WDWWiFiDirectAdvertisementListenStateDiscoverability listenStateDiscoverability;
 @property BOOL isAutonomousGroupOwnerEnabled;
-@property (copy) NSMutableArray* informationElements;
+@property (retain) NSMutableArray* informationElements;
 @property (readonly) WDWWiFiDirectLegacySettings* legacySettings;
 @end
 
@@ -183,7 +183,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisementPublisher : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDWWiFiDirectAdvertisement* advertisement;
 @property (readonly) WDWWiFiDirectAdvertisementPublisherStatus status;
 - (EventRegistrationToken)addStatusChangedEvent:(void (^)(WDWWiFiDirectAdvertisementPublisher*,
@@ -224,7 +224,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectConnectionListener : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (EventRegistrationToken)addConnectionRequestedEvent:(void (^)(WDWWiFiDirectConnectionListener*,
                                                                 WDWWiFiDirectConnectionRequestedEventArgs*))del;
 - (void)removeConnectionRequestedEvent:(EventRegistrationToken)tok;

@@ -14,11 +14,18 @@
 //
 //******************************************************************************
 
-#include "UIKit/UIKit.h"
-#include "QuartzCore/CATextLayer.h"
-#include "UIKit/UITextInputTraits.h"
-#include "CGContextInternal.h"
-#include "NSTextStorageInternal.h"
+#import "UIKit/UIKit.h"
+#import "UIKit/UITextInputTraits.h"
+#import "QuartzCore/CATextLayer.h"
+
+#import "CGContextInternal.h"
+#import "NSTextStorageInternal.h"
+#import "LoggingNative.h"
+#import "UIFontInternal.h"
+#import "StubReturn.h"
+#import "UIResponderInternal.h"
+
+static const wchar_t* TAG = L"UITextView";
 
 const float textViewLeftPadding = 12.5f;
 const float textViewRightPadding = 12.5f;
@@ -81,6 +88,10 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -131,6 +142,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -284,6 +298,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [_layoutManager.textStorage endEditing];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSAttributedString*)attributedText {
     return _layoutManager.textStorage;
 }
@@ -348,6 +365,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (void)setSpellCheckingType:(UITextSpellCheckingType)spellType {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)rect {
     CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), [_textColor CGColor]);
 
@@ -361,11 +381,13 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 /**
  @Status Interoperable
 */
-
 - (NSTextStorage*)textStorage {
     return _layoutManager.textStorage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutManagerDidInvalidateLayout:(NSLayoutManager*)sender {
     [self _adjustTextLayerSize:FALSE];
     [self setNeedsDisplay];
@@ -445,8 +467,12 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)setReturnKeyType:(UIReturnKeyType)type {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     if (!_isReadOnly) {
         [self becomeFirstResponder];
@@ -457,11 +483,10 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Stub
 */
 - (void)scrollRangeToVisible:(NSRange)range {
-    UNIMPLEMENTED();
-    EbrDebugLog("scrollRangeToVisible not implemented\n");
+    UNIMPLEMENTED_WITH_MSG("scrollRangeToVisible not implemented");
 }
 
-- (void)keyPressed:(uint32_t)key {
+- (void)_keyPressed:(unsigned short)key {
     NSRange range;
     bool proceed = false;
 
@@ -519,12 +544,14 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)becomeFirstResponder {
     if (_isReadOnly) {
         return FALSE;
     }
     if ([self isFirstResponder]) {
-        EbrRefreshKeyboard();
         return TRUE;
     }
 
@@ -537,7 +564,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if ([super becomeFirstResponder] == FALSE) {
         return FALSE;
     }
-    EbrShowKeyboard();
+
     _isEditing = TRUE;
     _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
     [_cursorBlink setHidden:FALSE];
@@ -550,6 +577,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)resignFirstResponder {
     if (![self isFirstResponder]) {
         return TRUE;
@@ -562,7 +592,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     if (_isEditing) {
         [self _adjustTextLayerSize:FALSE];
 
-        EbrHideKeyboard();
         _isEditing = FALSE;
         if ([_delegate respondsToSelector:@selector(textViewDidEndEditing:)]) {
             [_delegate textViewDidEndEditing:self];
@@ -616,6 +645,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     return _inputView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_cursorTimer invalidate];
     _font = nil;
@@ -634,7 +666,6 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 /**
  @Status Interoperable
 */
-
 - (NSTextContainer*)textContainer {
     return _textContainer;
 }
@@ -643,10 +674,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Interoperable
 */
 
+/**
+ @Status Interoperable
+*/
 - (void)setDelegate:(id)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     if (self.bounds.size.width != _curSize.width) {
         _curSize = self.bounds.size;
@@ -658,6 +695,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [super layoutSubviews];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentOffset:(CGPoint)offset {
     if (offset.y < 0.0f) {
         offset.y = 0.0f;
@@ -666,6 +706,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     [super setContentOffset:offset];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)fitSize {
     CGSize ret;
 
@@ -706,6 +749,36 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 */
 - (UITextRange*)selectedTextRange {
     return [UITextRange textRangeWithPositon:[[self _text] length] length:0];
+}
+
+/**
+ @Status Stub
+*/
+- (void)insertText:(NSString*)text {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)deleteBackward {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UITextPosition*)positionFromPosition:(UITextPosition*)position offset:(NSInteger)offset {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UITextRange*)textRangeFromPosition:(UITextPosition*)fromPosition toPosition:(UITextPosition*)toPosition {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

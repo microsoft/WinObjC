@@ -4,6 +4,215 @@ LIBRARY CoreImage
         _OBJC_CLASS_CIColor DATA
         __objc_class_name_CIColor CONSTANT
 
+        ; CIColorKernel.mm
+        _OBJC_CLASS_CIColorKernel DATA
+        __objc_class_name_CIColorKernel CONSTANT
+
+        ; CIContext.mm
+        kCIContextOutputColorSpace DATA
+        kCIContextWorkingColorSpace DATA
+        kCIContextUseSoftwareRenderer DATA
+        kCIContextPriorityRequestLow DATA
+        kCIContextWorkingFormat DATA
+        _OBJC_CLASS_CIContext DATA
+        __objc_class_name_CIContext CONSTANT
+
+        ; CIDetector.mm
+        CIDetectorTypeFace DATA
+        CIDetectorTypeRectangle DATA
+        CIDetectorTypeQRCode DATA
+        CIDetectorTypeText DATA
+        CIDetectorAccuracy DATA
+        CIDetectorTracking DATA
+        CIDetectorMinFeatureSize DATA
+        CIDetectorNumberOfAngles DATA
+        CIDetectorAccuracyLow DATA
+        CIDetectorAccuracyHigh DATA
+        CIDetectorImageOrientation DATA
+        CIDetectorEyeBlink DATA
+        CIDetectorSmile DATA
+        CIDetectorFocalLength DATA
+        CIDetectorAspectRatio DATA
+        CIDetectorReturnSubFeatures DATA
+        _OBJC_CLASS_CIDetector DATA
+        __objc_class_name_CIDetector CONSTANT
+
+        ; CIFaceFeature.mm
+        _OBJC_CLASS_CIFaceFeature DATA
+        __objc_class_name_CIFaceFeature CONSTANT
+
+        ; CIFeature.mm
+        CIFeatureTypeFace DATA
+        CIFeatureTypeRectangle DATA
+        CIFeatureTypeQRCode DATA
+        CIFeatureTypeText DATA
+        _OBJC_CLASS_CIFeature DATA
+        __objc_class_name_CIFeature CONSTANT
+
+        ; CIFilter.mm
+        kCIAttributeFilterName DATA
+        kCIAttributeFilterDisplayName DATA
+        kCIAttributeDescription DATA
+        kCIAttributeFilterAvailable_Mac DATA
+        kCIAttributeFilterAvailable_iOS DATA
+        kCIAttributeReferenceDocumentation DATA
+        kCIAttributeFilterCategories DATA
+        kCIAttributeClass DATA
+        kCIAttributeType DATA
+        kCIAttributeMin DATA
+        kCIAttributeMax DATA
+        kCIAttributeSliderMin DATA
+        kCIAttributeSliderMax DATA
+        kCIAttributeDefault DATA
+        kCIAttributeIdentity DATA
+        kCIAttributeName DATA
+        kCIAttributeDisplayName DATA
+        kCIAttributeTypeTime DATA
+        kCIAttributeTypeScalar DATA
+        kCIAttributeTypeDistance DATA
+        kCIAttributeTypeAngle DATA
+        kCIAttributeTypeBoolean DATA
+        kCIAttributeTypeInteger DATA
+        kCIAttributeTypeCount DATA
+        kCIAttributeTypePosition DATA
+        kCIAttributeTypeOffset DATA
+        kCIAttributeTypePosition3 DATA
+        kCIAttributeTypeRectangle DATA
+        kCIAttributeTypeOpaqueColor DATA
+        kCIAttributeTypeGradient DATA
+        kCIAttributeTypeColor DATA
+        kCIAttributeTypeImage DATA
+        kCIAttributeTypeTransform DATA
+        kCICategoryDistortionEffect DATA
+        kCICategoryGeometryAdjustment DATA
+        kCICategoryCompositeOperation DATA
+        kCICategoryHalftoneEffect DATA
+        kCICategoryColorAdjustment DATA
+        kCICategoryColorEffect DATA
+        kCICategoryTransition DATA
+        kCICategoryTileEffect DATA
+        kCICategoryGenerator DATA
+        kCICategoryReduction DATA
+        kCICategoryGradient DATA
+        kCICategoryStylize DATA
+        kCICategorySharpen DATA
+        kCICategoryBlur DATA
+        kCICategoryVideo DATA
+        kCICategoryStillImage DATA
+        kCICategoryInterlaced DATA
+        kCICategoryNonSquarePixels DATA
+        kCICategoryHighDynamicRange DATA
+        kCICategoryBuiltIn DATA
+        kCICategoryFilterGenerator DATA
+        kCIUIParameterSet DATA
+        kCIUISetBasic DATA
+        kCIUISetIntermediate DATA
+        kCIUISetAdvanced DATA
+        kCIUISetDevelopment DATA
+        kCIOutputImageKey DATA
+        kCIInputBackgroundImageKey DATA
+        kCIInputImageKey DATA
+        kCIInputTimeKey DATA
+        kCIInputTransformKey DATA
+        kCIInputScaleKey DATA
+        kCIInputAspectRatioKey DATA
+        kCIInputCenterKey DATA
+        kCIInputRadiusKey DATA
+        kCIInputAngleKey DATA
+        kCIInputRefractionKey DATA
+        kCIInputWidthKey DATA
+        kCIInputSharpnessKey DATA
+        kCIInputIntensityKey DATA
+        kCIInputEVKey DATA
+        kCIInputSaturationKey DATA
+        kCIInputColorKey DATA
+        kCIInputBrightnessKey DATA
+        kCIInputContrastKey DATA
+        kCIInputGradientImageKey DATA
+        kCIInputMaskImageKey DATA
+        kCIInputShadingImageKey DATA
+        kCIInputTargetImageKey DATA
+        kCIInputExtentKey DATA
+        kCIInputVersionKey DATA
+        kCIInputNeutralLocation DATA
+        kCIInputBiasKey DATA
+        _OBJC_CLASS_CIFilter DATA
+        __objc_class_name_CIFilter CONSTANT
+
+        ; CIFilterShape.mm
+        _OBJC_CLASS_CIFilterShape DATA
+        __objc_class_name_CIFilterShape CONSTANT
+
         ; CIImage.mm
+        kCIFormatARGB8 DATA
+        kCIFormatBGRA8 DATA
+        kCIFormatRGBA8 DATA
+        kCIFormatABGR8 DATA
+        kCIFormatRGBAf DATA
+        kCIFormatRGBAh DATA
+        kCIFormatA8 DATA
+        kCIFormatA16 DATA
+        kCIFormatAh DATA
+        kCIFormatAf DATA
+        kCIFormatR8 DATA
+        kCIFormatR16 DATA
+        kCIFormatRh DATA
+        kCIFormatRf DATA
+        kCIFormatRG8 DATA
+        kCIFormatRG16 DATA
+        kCIFormatRGh DATA
+        kCIFormatRGf DATA
+        kCIImageColorSpace DATA
+        kCIImageProperties DATA
+        kCIImageAutoAdjustEnhance DATA
+        kCIImageAutoAdjustRedEye DATA
+        kCIImageAutoAdjustFeatures DATA
+        kCIImageAutoAdjustCrop DATA
+        kCIImageAutoAdjustLevel DATA
         _OBJC_CLASS_CIImage DATA
         __objc_class_name_CIImage CONSTANT
+
+        ; CIImageAccumulator.mm
+        _OBJC_CLASS_CIImageAccumulator DATA
+        __objc_class_name_CIImageAccumulator CONSTANT
+
+        ; CIImageProvider.mm
+        kCIImageProviderTileSize DATA
+        kCIImageProviderUserInfo DATA
+
+        ; CIKernel.mm
+        _OBJC_CLASS_CIKernel DATA
+        __objc_class_name_CIKernel CONSTANT
+
+        ; CIQRCodeFeature.mm
+        _OBJC_CLASS_CIQRCodeFeature DATA
+        __objc_class_name_CIQRCodeFeature CONSTANT
+
+        ; CIRectangleFeature.mm
+        _OBJC_CLASS_CIRectangleFeature DATA
+        __objc_class_name_CIRectangleFeature CONSTANT
+
+        ; CISampler.mm
+        kCISamplerAffineMatrix DATA
+        kCISamplerWrapMode DATA
+        kCISamplerFilterMode DATA
+        kCISamplerColorSpace DATA
+        kCISamplerWrapBlack DATA
+        kCISamplerWrapClamp DATA
+        kCISamplerFilterNearest DATA
+        kCISamplerFilterLinear DATA
+        _OBJC_CLASS_CISampler DATA
+        __objc_class_name_CISampler CONSTANT
+
+        ; CITextFeature.mm
+        _OBJC_CLASS_CITextFeature DATA
+        __objc_class_name_CITextFeature CONSTANT
+
+        ; CIVector.mm
+        _OBJC_CLASS_CIVector DATA
+        __objc_class_name_CIVector CONSTANT
+
+        ; CIWarpKernel.mm
+        _OBJC_CLASS_CIWarpKernel DATA
+        __objc_class_name_CIWarpKernel CONSTANT
+

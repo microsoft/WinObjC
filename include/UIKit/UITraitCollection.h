@@ -17,6 +17,8 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
+#import <UIKit/UIKitTypes.h>
+#import <UIKit/UITouch.h>
 #import <Foundation/NSObject.h>
 #import <UIKit/UIDevice.h>
 

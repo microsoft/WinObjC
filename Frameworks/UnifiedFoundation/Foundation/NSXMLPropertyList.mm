@@ -27,6 +27,9 @@ using namespace rapidxml;
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableData.h"
 #include "NSXMLPropertyList.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSXMLPropertyList";
 
 namespace rapidxml {
 // todo: setjump/longjump here O_O
@@ -35,7 +38,7 @@ void parse_error_handler(const char* what, void* where) {
 }
 }
 
-@implementation NSXMLPropertyList : NSObject
+@implementation NSXMLPropertyList
 static id arrayFromElement(xml_node<>* arrayNode) {
     id result = [NSMutableArray array];
 
@@ -58,7 +61,7 @@ static id dataFromElement(xml_node<>* element) {
 
 static id dataFromBase64(char* buffer, size_t length) {
     size_t resultLength = 0;
-    unsigned char* result = (unsigned char*)EbrMalloc(length);
+    unsigned char* result = (unsigned char*)IwMalloc(length);
     unsigned char partial = 0;
 
     enum { load6High, load2Low, load4Low, load6Low } state = load6High;
@@ -112,7 +115,7 @@ static id dataFromBase64(char* buffer, size_t length) {
     }
 
     id ret = [NSData dataWithBytes:result length:resultLength];
-    EbrFree(result);
+    IwFree(result);
 
     return ret;
 }
@@ -156,7 +159,7 @@ static id propertyListFromElement(xml_node<>* elem) {
         Str numStr(elem->value(), elem->value_size());
         return [NSDate dateWithTimeIntervalSinceReferenceDate:atof(numStr.cstr())];
     } else {
-        EbrDebugLog("Unrecognized element type!\n");
+        TraceVerbose(TAG, L"Unrecognized element type!");
     }
 
     return nil;

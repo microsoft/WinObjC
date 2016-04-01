@@ -21,6 +21,9 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "Foundation/NSHTTPCookieStorage.h"
 #include "Foundation/NSHTTPCookie.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSHTTPCookieStorage";
 
 void EbrDeleteExternalCookie(id cookie) {
 }
@@ -28,7 +31,7 @@ id EbrGetExternalCookies(id url) {
     return nil;
 }
 
-@implementation NSHTTPCookieStorage : NSObject
+@implementation NSHTTPCookieStorage
 
 /**
  @Status Caveat
@@ -105,15 +108,15 @@ id EbrGetExternalCookies(id url) {
     id urlPath = [url path];
     id urlPathWithSlash = [urlPath stringByAppendingString:@"/"];
 
-    EbrDebugLog("Called cookiesForURL!\n");
+    TraceVerbose(TAG, L"Called cookiesForURL!");
     while ((cookie = [c nextObject])) {
         id domain = [cookie domain];
         id path;
         id portList;
 
-        EbrDebugLog("domain is %s\n", [domain UTF8String]);
-        EbrDebugLog("host is %s\n", [[url host] UTF8String]);
-        EbrDebugLog("path is %s\n", [[url path] UTF8String]);
+        TraceVerbose(TAG, L"domain is %hs", [domain UTF8String]);
+        TraceVerbose(TAG, L"host is %hs", [[url host] UTF8String]);
+        TraceVerbose(TAG, L"path is %hs", [[url path] UTF8String]);
         if ([domain hasPrefix:@"."]) {
             if (![[url host] hasSuffix:domain]) {
                 continue; // does not match suffix

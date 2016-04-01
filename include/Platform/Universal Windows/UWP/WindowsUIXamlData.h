@@ -262,7 +262,7 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 
 WINRT_EXPORT
 @interface WUXDCurrentChangingEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL cancel;
 @property (readonly) BOOL isCancelable;
 @end
@@ -307,7 +307,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -326,7 +326,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBindingBase : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXDBindingBase_DEFINED__
@@ -350,9 +350,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDCollectionViewSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* source;
-@property (copy) WXPropertyPath* itemsPath;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* source;
+@property (retain) WXPropertyPath* itemsPath;
 @property BOOL isSourceGrouped;
 @property (readonly) RTObject<WUXDICollectionView>* view;
 + (WXDependencyProperty*)isSourceGroupedProperty;
@@ -369,7 +369,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDRelativeSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXDRelativeSourceMode mode;
 @end
 
@@ -381,18 +381,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXDBinding : WUXDBindingBase
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXPropertyPath* path;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXPropertyPath* path;
 @property WUXDBindingMode mode;
-@property (copy) NSString* elementName;
-@property (copy) RTObject* converterParameter;
-@property (copy) NSString* converterLanguage;
-@property (copy) RTObject<WUXDIValueConverter>* converter;
-@property (copy) RTObject* source;
-@property (copy) WUXDRelativeSource* relativeSource;
+@property (retain) NSString* elementName;
+@property (retain) RTObject* converterParameter;
+@property (retain) NSString* converterLanguage;
+@property (retain) RTObject<WUXDIValueConverter>* converter;
+@property (retain) RTObject* source;
+@property (retain) WUXDRelativeSource* relativeSource;
 @property WUXDUpdateSourceTrigger updateSourceTrigger;
-@property (copy) RTObject* targetNullValue;
-@property (copy) RTObject* fallbackValue;
+@property (retain) RTObject* targetNullValue;
+@property (retain) RTObject* fallbackValue;
 @end
 
 #endif // __WUXDBinding_DEFINED__

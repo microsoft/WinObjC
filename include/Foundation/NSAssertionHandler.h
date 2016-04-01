@@ -19,23 +19,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #define _NSAssertBody(condition, desc, ...)
 #define _NSCAssertBody(condition, desc, ...)
 #else // NS_BLOCK_ASSERTIONS not defined
-#define _NSAssertBody(condition, desc, ...)                                                                     \
-    do {                                                                                                        \
-        if (!(condition)) {                                                                                     \
-            [[NSAssertionHandler currentHandler] handleFailureInMethod:_cmd                                     \
-                                                                object:self                                     \
-                                                                  file:[NSString stringWithUTF8String:__FILE__] \
-                                                            lineNumber:__LINE__                                 \
-                                                           description:(desc), ##__VA_ARGS__];                  \
-        }                                                                                                       \
+#define _NSAssertBody(condition, desc, ...)                                                                            \
+    do {                                                                                                               \
+        if (!(condition)) {                                                                                            \
+            NSString* description = [NSString stringWithFormat:(desc), ##__VA_ARGS__];                                 \
+            NSString* reason = [NSString stringWithFormat:@"*** Assertion failed (%s) : %@", #condition, description]; \
+            NSLog(@"%@", reason);                                                                                      \
+            [[NSAssertionHandler currentHandler] handleFailureInMethod:_cmd                                            \
+                                                                object:self                                            \
+                                                                  file:[NSString stringWithUTF8String:__FILE__]        \
+                                                            lineNumber:__LINE__                                        \
+                                                           description:reason];                                        \
+        }                                                                                                              \
     } while (0)
 #define _NSCAssertBody(condition, desc, ...)                                                                                 \
     do {                                                                                                                     \
         if (!(condition)) {                                                                                                  \
+            NSString* description = [NSString stringWithFormat:(desc), ##__VA_ARGS__];                                       \
+            NSString* reason = [NSString stringWithFormat:@"*** Assertion failed (%s) : %@", #condition, description];       \
+            NSLog(@"%@", reason);                                                                                            \
             [[NSAssertionHandler currentHandler] handleFailureInFunction:[NSString stringWithUTF8String:__PRETTY_FUNCTION__] \
                                                                     file:[NSString stringWithUTF8String:__FILE__]            \
                                                               lineNumber:__LINE__                                            \
-                                                             description:(desc), ##__VA_ARGS__];                             \
+                                                             description:reason];                                            \
         }                                                                                                                    \
     } while (0)
 #endif // NS_BLOCK_ASSERTIONS
@@ -44,7 +50,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
  * Asserts to use in Objective-C methods:
  */
 
-#define NSAssert(condition, desc, ...) _NSAssertBody((condition), (desc), #condition, ##__VA_ARGS__)
+#define NSAssert(condition, desc, ...) _NSAssertBody((condition), (desc), ##__VA_ARGS__)
 #define NSAssert1(condition, desc, val1) NSAssert(condition, desc, val1)
 #define NSAssert2(condition, desc, val1, val2) NSAssert(condition, desc, val1, val2)
 #define NSAssert3(condition, desc, val1, val2, val3) NSAssert(condition, desc, val1, val2, val3)
@@ -57,7 +63,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
  * Asserts to use in C function calls:
  */
 
-#define NSCAssert(condition, desc, ...) _NSCAssertBody((condition), (desc), #condition, ##__VA_ARGS__)
+#define NSCAssert(condition, desc, ...) _NSCAssertBody((condition), (desc), ##__VA_ARGS__);
 #define NSCAssert1(condition, desc, val1) NSCAssert(condition, desc, val1)
 #define NSCAssert2(condition, desc, val1, val2) NSCAssert(condition, desc, val1, val2)
 #define NSCAssert3(condition, desc, val1, val2, val3) NSCAssert(condition, desc, val1, val2, val3)
@@ -76,10 +82,10 @@ FOUNDATION_EXPORT_CLASS
                        object:(id)object
                          file:(NSString*)fileName
                    lineNumber:(NSInteger)line
-                  description:(NSString*)format, ...;
+                  description:(NSString*)desc, ...;
 - (void)handleFailureInFunction:(NSString*)functionName
                            file:(NSString*)fileName
                      lineNumber:(NSInteger)line
-                    description:(NSString*)format, ...;
+                    description:(NSString*)desc, ...;
 
 @end

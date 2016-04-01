@@ -68,7 +68,7 @@ UIKIT_EXPORT_CLASS
 - (void)addCurveToPoint:(CGPoint)endPoint controlPoint1:(CGPoint)controlPoint1 controlPoint2:(CGPoint)controlPoint2;
 - (void)addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint;
 - (void)closePath;
-- (void)removeAllPoints;
+- (void)removeAllPoints STUB_METHOD;
 - (void)appendPath:(UIBezierPath*)bezierPath;
 
 @property (nonatomic) CGPathRef CGPath;
@@ -82,17 +82,17 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL usesEvenOddFillRule;
 
 - (void)setLineDash:(const CGFloat*)pattern count:(NSInteger)count phase:(CGFloat)phase;
-- (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase;
+- (void)getLineDash:(CGFloat*)pattern count:(NSInteger*)count phase:(CGFloat*)phase STUB_METHOD;
 
 - (void)fill;
-- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)fillWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha STUB_METHOD;
 
 - (void)stroke;
-- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha;
+- (void)strokeWithBlendMode:(CGBlendMode)blendMode alpha:(CGFloat)alpha STUB_METHOD;
 
 - (void)addClip;
 
-- (BOOL)containsPoint:(CGPoint)point;
+- (BOOL)containsPoint:(CGPoint)point STUB_METHOD;
 
 @property (readonly, getter=isEmpty) BOOL empty;
 @property (nonatomic, readonly) CGRect bounds;

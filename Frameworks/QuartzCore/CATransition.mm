@@ -31,6 +31,9 @@ NSString* const kCATransitionFromTop = @"kCATransitionFromTop";
 NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
 
 @implementation CATransition : CAAnimation
+/**
+ @Status Interoperable
+*/
 + (instancetype)animation {
     CATransition* ret = [self alloc];
     ret->_timingProperties._duration = 1.0f;
@@ -69,6 +72,11 @@ NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
     return _subtype;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+ @Notes CAAction Protocol
+*/
 - (void)runActionForKey:(NSString*)key object:(NSObject*)object arguments:(NSDictionary*)dict {
 }
 
@@ -76,7 +84,7 @@ NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
     _attachedLayer = layer;
     _runningAnimation = _globalCompositor->GetMoveDisplayAnimation(&_runningAnimation2,
                                                                    self,
-                                                                   layer->priv->_presentationNode,
+                                                                   [layer _priv]->_presentationNode,
                                                                    _type,
                                                                    _subtype,
                                                                    &_timingProperties);
@@ -84,6 +92,10 @@ NSString* const kCATransitionFromBottom = @"kCATransitionFromBottom";
     return _runningAnimation;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     CATransition* ret = [super copyWithZone:zone];
 

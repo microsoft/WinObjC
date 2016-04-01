@@ -21,7 +21,7 @@
 @implementation NSPortMessage {
 }
 
-/*
+/**
  @Status Stub
  @Notes
  */
@@ -30,7 +30,7 @@
     return StubReturn();
 }
 
-/*
+/**
  @Status Stub
  @Notes
  */

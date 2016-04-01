@@ -24,6 +24,8 @@
 #import "CGColorSpaceInternal.h"
 #import "CGContextCairo.h"
 #import "CGFontInternal.h"
+#import "CGPathInternal.h"
+#import "UIColorInternal.h"
 
 #define CAIRO_WIN32_STATIC_BUILD
 
@@ -37,6 +39,10 @@ extern "C" {
 #import <ftadvanc.h>
 #import <ftsizes.h>
 }
+
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGContextCairo";
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
@@ -110,7 +116,7 @@ void CGContextCairo::DrawImage(CGImageRef img, CGRect src, CGRect dest, bool til
         return;
     }
     if (src.size.width == 1 && dest.size.height == 1) { /* [BUG: Cairo doesn't like 1x1 source images] */
-        EbrDebugLog("1x1 source image\n");
+        TraceInfo(TAG, L"1x1 source image");
         cairo_path_t* curPath = cairo_copy_path(_drawContext);
         cairo_save(_drawContext);
 
@@ -251,7 +257,7 @@ CGBlendMode CGContextCairo::CGContextGetBlendMode() {
 }
 
 void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str, DWORD length) {
-    WORD* glyphs = (WORD*)EbrMalloc(length * sizeof(WORD));
+    WORD* glyphs = (WORD*)IwMalloc(length * sizeof(WORD));
     DWORD i;
 
     _isDirty = true;
@@ -263,7 +269,7 @@ void CGContextCairo::CGContextShowTextAtPoint(float x, float y, const char* str,
     CGFontGetGlyphs(curState->getCurFont(), glyphs, length, glyphs);
     CGContextShowGlyphsAtPoint(x, y, glyphs, length);
 
-    EbrFree(glyphs);
+    IwFree(glyphs);
 }
 
 void CGContextCairo::CGContextShowGlyphsAtPoint(float x, float y, WORD* glyphs, int count) {
@@ -442,7 +448,7 @@ void CGContextCairo::CGContextSetCTM(CGAffineTransform transform) {
 
 void CGContextCairo::CGContextDrawImage(CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -511,12 +517,12 @@ void CGContextCairo::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextCairo::CGContextSetStrokeColorWithColor(id color) {
-    [color getColors:&curState->curStrokeColor];
+    [(UIColor*)color getColors:&curState->curStrokeColor];
 }
 
 void CGContextCairo::CGContextSetFillColorWithColor(id color) {
-    if ((int)[color _type] == solidBrush) {
-        [color getColors:&curState->curFillColor];
+    if ((int)[(UIColor*)color _type] == solidBrush) {
+        [(UIColor*)color getColors:&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];
@@ -581,7 +587,7 @@ void CGContextCairo::CGContextRestoreGState() {
     ObtainLock();
 
     if (curStateNum == 0) {
-        EbrDebugLog("CGContextRestoreGState: no state to restore!\n");
+        TraceWarning(TAG, L"CGContextRestoreGState: no state to restore!");
         return;
     }
 
@@ -923,10 +929,10 @@ void CGContextCairo::CGContextFillEllipseInRect(CGRect rct) {
     UNLOCK_CAIRO();
 }
 
-void CGContextCairo::CGContextAddPath(id path) {
+void CGContextCairo::CGContextAddPath(CGPathRef path) {
     ObtainLock();
 
-    [path _applyPath:_rootContext];
+    _CGPathApplyPath(path, _rootContext);
 }
 
 void CGContextCairo::CGContextStrokePath() {
@@ -1071,7 +1077,7 @@ void CGContextCairo::CGContextEOFillPath() {
 void CGContextCairo::CGContextEOClip() {
     ObtainLock();
 
-    EbrDebugLog("CGContextEOClip not supported\n");
+    TraceWarning(TAG, L"CGContextEOClip not supported");
     LOCK_CAIRO();
     cairo_set_fill_rule(_drawContext, CAIRO_FILL_RULE_EVEN_ODD);
     cairo_clip(_drawContext);
@@ -1368,7 +1374,7 @@ void CGContextCairo::CGContextSetInterpolationQuality(CGInterpolationQuality qua
 void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD count) {
     ObtainLock();
 
-    double* dLengths = (double*)EbrMalloc(count * sizeof(double));
+    double* dLengths = (double*)IwMalloc(count * sizeof(double));
     for (unsigned i = 0; i < count; i++)
         dLengths[i] = lengths[i];
 
@@ -1376,7 +1382,7 @@ void CGContextCairo::CGContextSetLineDash(float phase, float* lengths, DWORD cou
     cairo_set_dash(_drawContext, dLengths, count, phase);
     UNLOCK_CAIRO();
 
-    EbrFree(dLengths);
+    IwFree(dLengths);
 }
 
 void CGContextCairo::CGContextSetMiterLimit(float limit) {
@@ -1541,7 +1547,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
 
     CGSize ret = { 0.0f, 0.0f };
 
-    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)EbrMalloc(sizeof(cairo_glyph_t) * length);
+    cairo_glyph_t* cairoGlyphs = (cairo_glyph_t*)IwMalloc(sizeof(cairo_glyph_t) * length);
 
     _CGFontLock();
 
@@ -1671,7 +1677,8 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
         case kCGTextFillClip:
         case kCGTextStrokeClip:
         case kCGTextFillStrokeClip:
-            assert(0);
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported text drawing mode %d", curState->textDrawingMode);
             break;
     }
 
@@ -1682,7 +1689,7 @@ CGSize CGContextCairo::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, flo
     cairo_append_path(_drawContext, curPath);
     cairo_path_destroy(curPath);
 
-    EbrFree(cairoGlyphs);
+    IwFree(cairoGlyphs);
     _CGFontUnlock();
     UNLOCK_CAIRO();
 

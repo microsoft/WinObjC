@@ -56,7 +56,7 @@ CORETEXT_EXPORT const CFStringRef kCTFontManagerErrorFontURLsKey;
 // TODO: Anything in the original CTFontManager.h that isn't here???
 
 CORETEXT_EXPORT CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) STUB_METHOD;
-CORETEXT_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error) STUB_METHOD;
+CORETEXT_EXPORT bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error);
 CORETEXT_EXPORT bool CTFontManagerUnregisterFontsForURL(CFURLRef fontURL,
                                                         CTFontManagerScope scope,
                                                         CFErrorRef _Nullable* error) STUB_METHOD;

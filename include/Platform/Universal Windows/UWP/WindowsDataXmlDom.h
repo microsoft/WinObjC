@@ -72,7 +72,7 @@ typedef unsigned WDXDNodeType;
 #define __WDXDIXmlNodeSerializer_DEFINED__
 
 @protocol WDXDIXmlNodeSerializer
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (NSString*)getXml;
 @end
 
@@ -92,10 +92,10 @@ typedef unsigned WDXDNodeType;
 @property (readonly) RTObject<WDXDIXmlNode>* nextSibling;
 @property (readonly) NSString* nodeName;
 @property (readonly) WDXDNodeType nodeType;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* nodeValue;
 @property (readonly) WDXDXmlDocument* ownerDocument;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
-@property (copy) RTObject* prefix;
+@property (retain) RTObject* prefix;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -118,7 +118,7 @@ typedef unsigned WDXDNodeType;
 #define __WDXDIXmlCharacterData_DEFINED__
 
 @protocol WDXDIXmlCharacterData <WDXDIXmlNode, WDXDIXmlNodeSelector, WDXDIXmlNodeSerializer>
-@property (copy) NSString* data;
+@property (retain) NSString* data;
 @property (readonly) unsigned int length;
 - (NSString*)substringData:(unsigned int)offset count:(unsigned int)count;
 - (void)appendData:(NSString*)data;
@@ -224,13 +224,13 @@ WINRT_EXPORT
                          loadSettings:(WDXDXmlLoadSettings*)loadSettings
                               success:(void (^)(WDXDXmlDocument*))success
                               failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDXDXmlDocumentType* doctype;
 @property (readonly) WDXDXmlElement* documentElement;
 @property (readonly) NSString* documentUri;
 @property (readonly) WDXDXmlDomImplementation* implementation;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -243,7 +243,7 @@ WINRT_EXPORT
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) WDXDXmlDocument* ownerDocument;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (WDXDXmlElement*)createElement:(NSString*)tagName;
 - (WDXDXmlDocumentFragment*)createDocumentFragment;
 - (WDXDXmlText*)createTextNode:(NSString*)data;
@@ -284,11 +284,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlAttribute : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) NSString* value;
+@property (retain) NSString* value;
 @property (readonly) BOOL specified;
 @property (readonly) NSString* name;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -301,7 +301,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
 - (RTObject<WDXDIXmlNode>*)replaceChild:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -327,8 +327,8 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNamedNodeMap* entities;
 @property (readonly) NSString* name;
 @property (readonly) WDXDXmlNamedNodeMap* notations;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -341,7 +341,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
 - (RTObject<WDXDIXmlNode>*)replaceChild:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -376,8 +376,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDXDXmlElement : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 @property (readonly) NSString* tagName;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -390,7 +390,7 @@ WINRT_EXPORT
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (NSString*)getAttribute:(NSString*)attributeName;
 - (void)setAttribute:(NSString*)attributeName attributeValue:(NSString*)attributeValue;
 - (void)removeAttribute:(NSString*)attributeName;
@@ -425,8 +425,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlDocumentFragment : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -439,7 +439,7 @@ WINRT_EXPORT
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
 - (RTObject<WDXDIXmlNode>*)replaceChild:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -462,10 +462,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlText : RTObject <WDXDIXmlText, WDXDIXmlCharacterData, WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) NSString* data;
+@property (retain) NSString* data;
 @property (readonly) unsigned int length;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -478,7 +478,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (RTObject<WDXDIXmlText>*)splitText:(unsigned int)offset;
 - (NSString*)substringData:(unsigned int)offset count:(unsigned int)count;
 - (void)appendData:(NSString*)data;
@@ -507,10 +507,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlComment : RTObject <WDXDIXmlCharacterData, WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) NSString* data;
+@property (retain) NSString* data;
 @property (readonly) unsigned int length;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -523,7 +523,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (NSString*)substringData:(unsigned int)offset count:(unsigned int)count;
 - (void)appendData:(NSString*)data;
 - (void)insertData:(unsigned int)offset data:(NSString*)data;
@@ -551,8 +551,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlProcessingInstruction : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) WDXDXmlNamedNodeMap* attributes;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) WDXDXmlNodeList* childNodes;
@@ -565,8 +565,8 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlDocument* ownerDocument;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
-@property (copy) NSString* data;
+@property (retain) NSString* innerText;
+@property (retain) NSString* data;
 @property (readonly) NSString* target;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -590,8 +590,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlEntityReference : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -604,7 +604,7 @@ WINRT_EXPORT
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
 - (RTObject<WDXDIXmlNode>*)replaceChild:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -627,10 +627,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlCDataSection : RTObject <WDXDIXmlText, WDXDIXmlCharacterData, WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
-@property (copy) NSString* data;
+@property (retain) NSString* data;
 @property (readonly) unsigned int length;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -643,7 +643,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (RTObject<WDXDIXmlText>*)splitText:(unsigned int)offset;
 - (NSString*)substringData:(unsigned int)offset count:(unsigned int)count;
 - (void)appendData:(NSString*)data;
@@ -672,7 +672,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDXDXmlLoadSettings : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL validateOnParse;
 @property BOOL resolveExternals;
 @property BOOL prohibitDtd;
@@ -690,8 +690,8 @@ WINRT_EXPORT
 @interface WDXDDtdNotation : RTObject <WDXDIXmlNode, WDXDIXmlNodeSerializer, WDXDIXmlNodeSelector>
 @property (readonly) RTObject* publicId;
 @property (readonly) RTObject* systemId;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -704,7 +704,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
 - (RTObject<WDXDIXmlNode>*)replaceChild:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
@@ -730,8 +730,8 @@ WINRT_EXPORT
 @property (readonly) RTObject* notationName;
 @property (readonly) RTObject* publicId;
 @property (readonly) RTObject* systemId;
-@property (copy) RTObject* prefix;
-@property (copy) RTObject* nodeValue;
+@property (retain) RTObject* prefix;
+@property (retain) RTObject* nodeValue;
 @property (readonly) RTObject<WDXDIXmlNode>* firstChild;
 @property (readonly) RTObject<WDXDIXmlNode>* lastChild;
 @property (readonly) RTObject* localName;
@@ -744,7 +744,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlNodeList* childNodes;
 @property (readonly) RTObject<WDXDIXmlNode>* parentNode;
 @property (readonly) RTObject<WDXDIXmlNode>* previousSibling;
-@property (copy) NSString* innerText;
+@property (retain) NSString* innerText;
 - (BOOL)hasChildNodes;
 - (RTObject<WDXDIXmlNode>*)insertBefore:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;
 - (RTObject<WDXDIXmlNode>*)replaceChild:(RTObject<WDXDIXmlNode>*)newChild referenceChild:(RTObject<WDXDIXmlNode>*)referenceChild;

@@ -22,6 +22,7 @@
 
 #pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/Foundation.h>
 
 enum _UICollectionUpdateAction {
@@ -45,8 +46,6 @@ UIKIT_EXPORT_CLASS
 - (id)initWithAction:(UICollectionUpdateAction)arg1 forIndexPath:(NSIndexPath*)indexPath;
 
 - (id)initWithOldIndexPath:(NSIndexPath*)arg1 newIndexPath:(NSIndexPath*)arg2;
-
-- (UICollectionUpdateAction)updateAction;
 
 - (NSComparisonResult)compareIndexPaths:(UICollectionViewUpdateItem*)otherItem;
 

@@ -18,6 +18,9 @@
 #include "UIImageNibPlaceholder.h"
 #include "UIKit/UIView.h"
 #include "UIKit/UIImage.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIImageNibPlaceholder";
 
 @implementation UIImageNibPlaceholder
 - (instancetype)initWithCoder:(NSCoder*)coder {
@@ -35,7 +38,7 @@
 
         id ret = [[UIImage imageNamed:resourcePath] retain];
         if (ret == nil) {
-            EbrDebugLog("**** Failed to initialize image ****\n");
+            TraceError(TAG, L"**** Failed to initialize image ****");
             ret = [[UIImage imageWithCGImage:NULL] retain];
         }
 

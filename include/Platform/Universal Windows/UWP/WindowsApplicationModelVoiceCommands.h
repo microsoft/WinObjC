@@ -93,15 +93,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandContentTile : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* title;
-@property (copy) NSString* textLine3;
-@property (copy) NSString* textLine2;
-@property (copy) NSString* textLine1;
-@property (copy) RTObject<WSIStorageFile>* image;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* title;
+@property (retain) NSString* textLine3;
+@property (retain) NSString* textLine2;
+@property (retain) NSString* textLine1;
+@property (retain) RTObject<WSIStorageFile>* image;
 @property WAVVoiceCommandContentTileType contentTileType;
-@property (copy) NSString* appLaunchArgument;
-@property (copy) RTObject* appContext;
+@property (retain) NSString* appLaunchArgument;
+@property (retain) RTObject* appContext;
 @end
 
 #endif // __WAVVoiceCommandContentTile_DEFINED__
@@ -112,9 +112,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAVVoiceCommandUserMessage : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* spokenMessage;
-@property (copy) NSString* displayMessage;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* spokenMessage;
+@property (retain) NSString* displayMessage;
 @end
 
 #endif // __WAVVoiceCommandUserMessage_DEFINED__
@@ -146,9 +146,9 @@ WINRT_EXPORT
 + (WAVVoiceCommandResponse*)createResponseForPromptWithTiles:(WAVVoiceCommandUserMessage*)message
                                                repeatMessage:(WAVVoiceCommandUserMessage*)repeatMessage
                                                 contentTiles:(id<NSFastEnumeration> /* WAVVoiceCommandContentTile* */)contentTiles;
-@property (copy) WAVVoiceCommandUserMessage* repeatMessage;
-@property (copy) WAVVoiceCommandUserMessage* message;
-@property (copy) NSString* appLaunchArgument;
+@property (retain) WAVVoiceCommandUserMessage* repeatMessage;
+@property (retain) WAVVoiceCommandUserMessage* message;
+@property (retain) NSString* appLaunchArgument;
 @property (readonly) NSMutableArray* voiceCommandContentTiles;
 + (unsigned int)maxSupportedVoiceCommandContentTiles;
 @end

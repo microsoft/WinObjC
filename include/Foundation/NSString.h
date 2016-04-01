@@ -143,7 +143,7 @@ FOUNDATION_EXPORT_CLASS
 + (id)stringWithCString:(const char*)bytes;
 - (id)initWithCString:(const char*)bytes;
 + (id)stringWithCString:(const char*)bytes length:(NSUInteger)length;
-- (id)initWithCString:(const char*)bytes length:(NSUInteger)length STUB_METHOD;
+- (id)initWithCString:(const char*)bytes length:(NSUInteger)length;
 - (id)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer STUB_METHOD;
 + (instancetype)stringWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
@@ -157,10 +157,7 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
 + (id)stringWithContentsOfURL:(NSURL*)url STUB_METHOD;
 - (id)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
-- (BOOL)writeToFile:(NSString*)path
-         atomically:(BOOL)useAuxiliaryFile
-           encoding:(NSStringEncoding)enc
-              error:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile STUB_METHOD;
 - (BOOL)writeToURL:(NSURL*)url
         atomically:(BOOL)useAuxiliaryFile

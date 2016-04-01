@@ -14,13 +14,18 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "LoggingNative.h"
+
+#import "CALayerInternal.h"
+
+static const wchar_t* TAG = L"UIButton";
 
 struct buttonState {
-    idretaintype(UIImage) image, backgroundImage;
-    idretaintype(UIColor) textColor, titleShadowColor;
-    idretaintype(NSString) title;
+    StrongId<UIImage> image, backgroundImage;
+    StrongId<UIColor> textColor, titleShadowColor;
+    StrongId<NSString> title;
 };
 
 @interface UIRoundedRectButton : UIButton {
@@ -32,12 +37,12 @@ struct buttonState {
 
 @implementation UIButton {
     ColorQuad _backgroundColor;
-    idretaintype(UIColor) _defaultColor;
+    StrongId<UIColor> _defaultColor;
     buttonState* _states;
     UIEdgeInsets titleInsets, imageInsets, contentInsets;
-    idretaintype(UIFont) _font;
-    idretaintype(UILabel) _label;
-    idretaintype(UIImageView) _imageView;
+    StrongId<UIFont> _font;
+    StrongId<UILabel> _label;
+    StrongId<UIImageView> _imageView;
     CGSize _shadowOffset;
     bool _showsTouchWhenHighlighted;
     bool _adjustsImageWhenHighlighted;
@@ -124,7 +129,7 @@ static void setImageProperties(UIButton* self) {
         contentColor.b = 0.5f;
     }
     [[self->_imageView layer]
-        _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
+        _setContentColor:[[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a] CGColor]];
 }
 
 static void createLabel(UIButton* self) {
@@ -142,13 +147,17 @@ static void createLabel(UIButton* self) {
     [self addSubview:(id)self->_imageView];
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _backgroundColor.r = 1.f;
     _backgroundColor.g = 1.f;
     _backgroundColor.b = 1.f;
     _backgroundColor.a = 1.f;
 
-    _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
+    _states = (buttonState*)IwCalloc(16, sizeof(buttonState));
     _font = [coder decodeObjectForKey:@"UIFont"];
 
     if (isOSTarget(@"7.0")) {
@@ -187,8 +196,8 @@ static void createLabel(UIButton* self) {
         UIButtonType type = (UIButtonType)[self buttonType];
         if (type == UIButtonTypeRoundedRect ||
             type == UIButtonTypeRoundedRectLegacy) { // We're not sure about roundedRect, feel free to delete if needed.
-            id color = [coder decodeObjectForKey:@"UIBackgroundColor"];
-            [[_imageView layer] _setContentColor:color];
+            UIColor* color = [coder decodeObjectOfClass:[UIColor class] forKey:@"UIBackgroundColor"];
+            [[_imageView layer] _setContentColor:[color CGColor]];
         }
     }
 
@@ -288,6 +297,9 @@ static void createLabel(UIButton* self) {
     return result;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
 
@@ -302,7 +314,7 @@ static void createLabel(UIButton* self) {
         _defaultColor = [UIColor blackColor];
     }
 
-    _states = (buttonState*)EbrCalloc(16, sizeof(buttonState));
+    _states = (buttonState*)IwCalloc(16, sizeof(buttonState));
     _font = [UIFont buttonFont];
     [self setOpaque:FALSE];
     _contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -331,20 +343,23 @@ static void createLabel(UIButton* self) {
 
 static bool validateState(UIControlState state) {
     if (state >= 16) {
-        EbrDebugLog("UIButton: bad control state %x\n", state);
+        TraceVerbose(TAG, L"UIButton: bad control state %x", state);
         return false;
     }
 
     return true;
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     [super initAccessibility];
     self.accessibilityTraits = UIAccessibilityTraitButton;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setImage:(UIImage*)image forState:(UIControlState)state {
     if (!validateState(state)) {
@@ -486,6 +501,9 @@ static bool validateState(UIControlState state) {
     return getTitleShadowColor(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
         return;
@@ -499,6 +517,9 @@ static bool validateState(UIControlState state) {
     [super touchesBegan:touchSet withEvent:event];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (!_isPressed) {
         return;
@@ -511,6 +532,9 @@ static bool validateState(UIControlState state) {
     [super touchesEnded:touchSet withEvent:event];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (!_isPressed) {
         return;
@@ -741,6 +765,9 @@ static UIImage* selectedBackgroundImageForButtonType(UIButtonType type) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sizeToFit {
     CGRect frame;
 
@@ -918,6 +945,9 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     id image = getBackgroundImage(self);
 
@@ -932,7 +962,8 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
         }
         //  TODO: I think this should always be the case?  Should UIButton always stretch its background?
         self.layer.contentsGravity = kCAGravityResize;
-        [[self layer] _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
+        [[self layer]
+            _setContentColor:[[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a] CGColor]];
         _didSetBackgroundImage = true;
     } else if (_didSetBackgroundImage) {
         [[self layer] setContents:nil];
@@ -973,6 +1004,9 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     [super layoutSubviews];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     for (int i = 0; i < 16; i++) {
         _states[i].backgroundImage = nil;
@@ -988,14 +1022,20 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     _label = nil;
     [_imageView removeFromSuperview];
     _imageView = nil;
-    EbrFree(_states);
+    IwFree(_states);
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIView*)viewForBaselineLayout {
     return _label;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
 

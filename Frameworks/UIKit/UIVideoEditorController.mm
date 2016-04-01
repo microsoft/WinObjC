@@ -18,4 +18,13 @@
 #import <StubReturn.h>
 
 @implementation UIVideoEditorController
+
+/**
+ @Status Stub
+*/
++ (BOOL)canEditVideoAtPath:(NSString*)videoPath {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

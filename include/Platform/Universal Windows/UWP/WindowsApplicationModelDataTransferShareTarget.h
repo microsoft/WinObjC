@@ -36,10 +36,10 @@
 
 WINRT_EXPORT
 @interface WADSQuickLink : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* title;
-@property (copy) WSSRandomAccessStreamReference* thumbnail;
-@property (copy) NSString* id;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* title;
+@property (retain) WSSRandomAccessStreamReference* thumbnail;
+@property (retain) NSString* id;
 @property (readonly) NSMutableArray* supportedDataFormats;
 @property (readonly) NSMutableArray* supportedFileTypes;
 @end

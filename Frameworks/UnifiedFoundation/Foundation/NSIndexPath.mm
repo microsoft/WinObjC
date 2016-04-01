@@ -18,7 +18,7 @@
 #include "StubReturn.h"
 #include "Foundation/NSIndexPath.h"
 
-@implementation NSIndexPath : NSObject
+@implementation NSIndexPath
 
 /**
  @Status Interoperable
@@ -63,7 +63,7 @@
 */
 - (instancetype)initWithIndexes:(unsigned*)indexes length:(unsigned)length {
     _length = length;
-    _indexes = (unsigned*)EbrMalloc(length * sizeof(unsigned));
+    _indexes = (unsigned*)IwMalloc(length * sizeof(unsigned));
     if (_indexes == nil) {
         [self release];
         return nil;
@@ -75,6 +75,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(id)other {
     if ([other isKindOfClass:[NSIndexPath class]]) {
         NSIndexPath* otherPath = other;
@@ -84,9 +87,12 @@
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_indexes) {
-        EbrFree(_indexes);
+        IwFree(_indexes);
     }
     [super dealloc];
 }
@@ -114,6 +120,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[[self class] alloc] initWithIndexes:_indexes length:_length];
 }
@@ -124,13 +133,13 @@
 - (NSIndexPath*)indexPathByAddingIndex:(int)newIndex {
     id ret = [[self class] alloc];
 
-    NSUInteger* indexCopy = (NSUInteger*)EbrMalloc((_length + 1) * sizeof(DWORD));
+    NSUInteger* indexCopy = (NSUInteger*)IwMalloc((_length + 1) * sizeof(DWORD));
     memcpy(indexCopy, _indexes, _length * sizeof(DWORD));
     indexCopy[_length] = newIndex;
 
     [ret initWithIndexes:indexCopy length:_length + 1];
 
-    EbrFree(indexCopy);
+    IwFree(indexCopy);
 
     return [ret autorelease];
 }
@@ -142,6 +151,9 @@
     return _length;
 }
 
+/**
+ @Status Interoperable
+*/
 - (unsigned)hash {
     unsigned ret = 0;
 

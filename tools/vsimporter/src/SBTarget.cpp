@@ -273,17 +273,15 @@ VCProject* SBTarget::constructVCProject(VSTemplateProject* projTemplate)
     String projectDir = sb_dirname(projTemplate->getPath());
     sdkDir = getRelativePath(projectDir, sdkDir);
   }
-  proj->setGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir));
+  proj->addGlobalProperty("WINOBJC_SDK_ROOT", platformPath(sdkDir), "'$(WINOBJC_SDK_ROOT)' == ''");
 
   // Set configuration properties
   for (auto configBS : m_buildSettings) {
     VCProjectConfiguration *projConfig = proj->addConfiguration(configBS.first);
-    String execName = configBS.second->getValue("EXECUTABLE_NAME");
-    if (getProductType() == TargetStaticLib)
-      execName = sb_fname(execName);
-
-    if (!execName.empty())
-      projConfig->setProperty("TargetName", execName);
+    String productName = configBS.second->getValue("PRODUCT_NAME");
+    if (!productName.empty()) {
+      projConfig->setProperty("TargetName", productName);
+    }
   }
 
   // Write files associated with each build phase

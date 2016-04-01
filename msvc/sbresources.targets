@@ -29,6 +29,9 @@
   <Import Project="$(MSBuildThisFileDirectory)zip.tasks" />
 
   <PropertyGroup>
+    <Xib2NibExe>$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe</Xib2NibExe>
+    <SbExpandVarsExe>$(MSBuildThisFileDirectory)..\bin\sb-expandvars.exe</SbExpandVarsExe>
+    <ACBuilderExe>$(MSBuildThisFileDirectory)..\bin\acbuilder.exe</ACBuilderExe>
     <SBResourceCompileDependsOn>_XibCompile;_StoryboardCompile;_DataModelCompile;_DataModelDirCompile;_AssetCatalogCompile;CopyInfoPlist</SBResourceCompileDependsOn>
     <SBResourceCompileBeforeTargets></SBResourceCompileBeforeTargets>
     <SBResourceCompileAfterTargets>Link</SBResourceCompileAfterTargets>
@@ -67,7 +70,7 @@
     DependsOnTargets="ComputePlistCopyOptions"
     Condition="'@(SBInfoPlistCopy)' != ''"
     Outputs="@(SBInfoPlistCopy->'%(IntermediateFile)')"
-    Inputs="@(SBInfoPlistCopy->'%(VariableFile)');@(SBInfoPlistCopy->'%(Identity)')">
+    Inputs="$(SbExpandVarsExe);@(SBInfoPlistCopy->'%(VariableFile)');@(SBInfoPlistCopy->'%(Identity)')">
 
     <Message
       Condition="'%(SBInfoPlistCopy.ExcludedFromBuild)' != 'true'"
@@ -76,7 +79,7 @@
 
    <Exec
       Condition="'%(SBInfoPlistCopy.ExcludedFromBuild)' != 'true'"
-      Command="&quot;$(MSBuildThisFileDirectory)..\bin\sb-expandvars.exe&quot; -i &quot;%(SBInfoPlistCopy.Identity)&quot; -o &quot;%(SBInfoPlistCopy.IntermediateFile)&quot; -x &quot;%(SBInfoPlistCopy.VariableFile)&quot;" />
+      Command="&quot;$(SbExpandVarsExe)&quot; -i &quot;%(SBInfoPlistCopy.Identity)&quot; -o &quot;%(SBInfoPlistCopy.IntermediateFile)&quot; -x &quot;%(SBInfoPlistCopy.VariableFile)&quot;" />
   </Target>
 
   <Target
@@ -104,12 +107,28 @@
   </Target>
 
   <Target
-    Name="_SBResourceCopy"
+    Name="ComputeResourceTLog"
     DependsOnTargets="ComputeResourceCopyOptions"
+    Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
+    <!-- Ensure out of date resources causes a rebuild in VS -->
+    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).read.res.tlog" Overwrite="true" Lines="^$(ProjectPath);@(SBResourceCopy->'%(FullPath)')" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>
+    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).write.res.tlog" Overwrite="true" Lines="^$(ProjectPath);@(SBResourceCopy->'%(OutputFile)')" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>   
+  </Target>
+
+  <Target
+    Name="ComputeToolsTLog"
+    AfterTargets="Link">
+    <!-- Ensure change to tool executables causes a rebuild in VS -->
+    <WriteLinesToFile File="$(TLogLocation)tools.read.res.tlog" Overwrite="true" Lines="^$(ProjectPath);$(Xib2NibExe);$(SbExpandVarsExe);$(ACBuilderExe)" Encoding="Unicode"/>
+  </Target>
+
+  <Target
+    Name="_SBResourceCopy"
+    DependsOnTargets="ComputeResourceCopyOptions;ComputeResourceTLog"
     Inputs="@(SBResourceCopy)"
     Outputs="@(SBResourceCopy->'%(OutputFile)')"
     Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
-
+    <!-- Currently, this target is only for unit tests since they set AppContainerApplication==false -->
     <Message Importance="high"
       Text="Copying assets" />
 
@@ -121,16 +140,17 @@
       Condition="'@(SBResourceCopy)' != '' and '%(SBResourceCopy.ExcludedFromBuild)' != 'true'"
       SourceFiles="@(SBResourceCopy)"
       DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
-    
-    <!-- Ensure out of date resources causes a rebuild in VS -->
-    <WriteLinesToFile File="$(TLogLocation)$(ProjectName).read.res.tlog" Lines="^$(ProjectPath);@(SBResourceCopy)" Condition="'@(SBResourceCopy)' != ''" Encoding="Unicode"/>
-    
+
+    <Exec
+      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
+      Command="Link.exe /EDIT /NOLOGO /APPCONTAINER:NO %(SBResourceCopy.OutputFile)" />
+
   </Target>
 
   <Target
     Name="_XibCompile"
     DependsOnTargets="ComputeXibCompileOptions"
-    Inputs="@(XibCompile)"
+    Inputs="$(Xib2NibExe);@(XibCompile)"
     Outputs="@(XibCompile->'%(IntermediateFile)')"
     Condition="'@(XibCompile)' != ''">
 
@@ -145,7 +165,7 @@
 
     <Exec
       Condition="'%(XibCompile.ExcludedFromBuild)' != 'true'"
-      Command="&quot;$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe&quot; &quot;%(XibCompile.Identity)&quot; &quot;%(XibCompile.IntermediateFile)&quot;" />
+      Command="&quot;$(Xib2NibExe)&quot; &quot;%(XibCompile.Identity)&quot; &quot;%(XibCompile.IntermediateFile)&quot;" />
   </Target>
 
   <Target
@@ -153,7 +173,7 @@
     DependsOnTargets="ComputeStoryboardCompileOptions"
     Condition="'@(StoryboardCompile)' != ''"
     Outputs="%(StoryboardCompile.IntermediateFile)"
-    Inputs="%(StoryboardCompile.Identity)">
+    Inputs="$(Xib2NibExe);%(StoryboardCompile.Identity)">
 
     <Message
       Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
@@ -166,7 +186,7 @@
 
     <Exec
       Condition="'%(StoryboardCompile.ExcludedFromBuild)' != 'true'"
-      Command="&quot;$(MSBuildThisFileDirectory)..\bin\Xib2Nib.exe&quot; &quot;%(StoryboardCompile.Identity)&quot; &quot;%(StoryboardCompile.IntermediateFile)&quot;" />
+      Command="&quot;$(Xib2NibExe)&quot; &quot;%(StoryboardCompile.Identity)&quot; &quot;%(StoryboardCompile.IntermediateFile)&quot;" />
   </Target>
 
   <Target
@@ -227,7 +247,7 @@
     DependsOnTargets="ComputeAssetCatalogCompileOptions"
     Condition="'@(AssetCatalogCompile)' != ''"
     Outputs="%(AssetCatalogCompileFile.OutputDir)"
-    Inputs="%(AssetCatalogCompileFile.SourceFile);%(AssetCatalogCompileFile.Identity)">
+    Inputs="$(ACBuilderExe);%(AssetCatalogCompileFile.SourceFile);%(AssetCatalogCompileFile.Identity)">
 
     <Message
       Condition="'%(AssetCatalogCompileFile.ExcludedFromBuild)' != 'true'"
@@ -244,7 +264,7 @@
 
     <Exec
       Condition="'%(AssetCatalogCompileFile.ExcludedFromBuild)' != 'true'"
-      Command="&quot;$(MSBuildThisFileDirectory)..\bin\acbuilder.exe&quot; --notices --target-device iphone --target-device ipad --compile &quot;%(AssetCatalogCompileFile.OutputDir)&quot; &quot;%(AssetCatalogCompileFile.SourceFile)&quot;" />
+      Command="&quot;$(ACBuilderExe)&quot; --notices --target-device iphone --target-device ipad --compile &quot;%(AssetCatalogCompileFile.OutputDir)&quot; &quot;%(AssetCatalogCompileFile.SourceFile)&quot;" />
 
     <ItemGroup>
       <SBResourceCopy Include="%(AssetCatalogCompileFile.OutputDir)\**\*" />

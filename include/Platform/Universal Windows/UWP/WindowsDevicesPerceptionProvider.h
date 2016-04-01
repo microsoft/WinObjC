@@ -105,12 +105,12 @@ typedef void (^WDPPPerceptionStopFaceAuthenticationHandler)(WDPPPerceptionFaceAu
 
 WINRT_EXPORT
 @interface WDPPPerceptionFrameProviderInfo : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* id;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* id;
 @property BOOL hidden;
-@property (copy) NSString* frameKind;
-@property (copy) NSString* displayName;
-@property (copy) NSString* deviceKind;
+@property (retain) NSString* frameKind;
+@property (retain) NSString* displayName;
+@property (retain) NSString* deviceKind;
 @end
 
 #endif // __WDPPPerceptionFrameProviderInfo_DEFINED__
@@ -135,9 +135,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPPerceptionFaceAuthenticationGroup : RTObject
-+ (WDPPPerceptionFaceAuthenticationGroup*)create:(id<NSFastEnumeration> /* NSString * */)ids
-                                    startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler
-                                     stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
++ (WDPPPerceptionFaceAuthenticationGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids
+                                  startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler
+                                   stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
 @property (readonly) NSArray* frameProviderIds;
 @end
 
@@ -149,7 +149,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPPerceptionControlGroup : RTObject
-+ (WDPPPerceptionControlGroup*)create:(id<NSFastEnumeration> /* NSString * */)ids ACTIVATOR;
++ (WDPPPerceptionControlGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids ACTIVATOR;
 @property (readonly) NSArray* frameProviderIds;
 @end
 
@@ -161,7 +161,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPPerceptionCorrelationGroup : RTObject
-+ (WDPPPerceptionCorrelationGroup*)create:(id<NSFastEnumeration> /* WDPPPerceptionCorrelation* */)relativeLocations ACTIVATOR;
++ (WDPPPerceptionCorrelationGroup*)make:(id<NSFastEnumeration> /* WDPPPerceptionCorrelation* */)relativeLocations ACTIVATOR;
 @property (readonly) NSArray* relativeLocations;
 @end
 
@@ -173,7 +173,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPPerceptionFrame : RTObject
-@property (copy) WFTimeSpan* relativeTime;
+@property (retain) WFTimeSpan* relativeTime;
 @property (readonly) RTObject<WFIMemoryBuffer>* frameData;
 @property (readonly) WFCValueSet* properties;
 @end
@@ -186,7 +186,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPPerceptionCorrelation : RTObject
-+ (WDPPPerceptionCorrelation*)create:(NSString*)targetId position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation ACTIVATOR;
++ (WDPPPerceptionCorrelation*)make:(NSString*)targetId position:(WFNVector3*)position orientation:(WFNQuaternion*)orientation ACTIVATOR;
 @property (readonly) WFNQuaternion* orientation;
 @property (readonly) WFNVector3* position;
 @property (readonly) NSString* targetId;
@@ -200,10 +200,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDPPPerceptionVideoFrameAllocator : RTObject <WFIClosable>
-+ (WDPPPerceptionVideoFrameAllocator*)create:(unsigned int)maxOutstandingFrameCountForWrite
-                                      format:(WGIBitmapPixelFormat)format
-                                  resolution:(WFSize*)resolution
-                                       alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
++ (WDPPPerceptionVideoFrameAllocator*)make:(unsigned int)maxOutstandingFrameCountForWrite
+                                    format:(WGIBitmapPixelFormat)format
+                                resolution:(WFSize*)resolution
+                                     alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
 - (WDPPPerceptionFrame*)allocateFrame;
 - (WDPPPerceptionFrame*)copyFromVideoFrame:(WMVideoFrame*)frame;
 - (void)close;

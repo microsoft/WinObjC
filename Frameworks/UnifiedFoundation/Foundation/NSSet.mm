@@ -20,6 +20,7 @@
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSCountedSet.h"
 #include "Foundation/NSEnumerator.h"
+#include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
 
 void NSSetTableInit(NSSet* set, NSUInteger capacity) {
@@ -173,7 +174,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
     if (count >= max) {
         max += 64;
-        objs = (id*)EbrRealloc(objs, max * sizeof(id));
+        objs = (id*)IwRealloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -183,7 +184,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)EbrRealloc(objs, max * sizeof(id));
+            objs = (id*)IwRealloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -194,7 +195,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     va_end(pReader);
 
     NSSet* ret = [[self alloc] initWithObjects:objs count:count];
-    EbrFree(objs);
+    IwFree(objs);
 
     return [ret autorelease];
 }
@@ -242,6 +243,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return [[[self alloc] initWithArray:array] autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     NSSetTableInit(self, 0);
     return self;
@@ -260,13 +264,13 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (instancetype)initWithArray:(NSArray*)array {
     NSUInteger count = [array count];
-    id* objects = (id*)EbrMalloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
 
     [array getObjects:objects];
 
     NSSet* ret = [self initWithObjects:objects count:count];
 
-    EbrFree(objects);
+    IwFree(objects);
     return ret;
 }
 
@@ -275,7 +279,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (instancetype)initWithSet:(NSSet*)set {
     NSUInteger count = [set count];
-    id* objects = (id*)EbrMalloc(count * sizeof(id));
+    id* objects = (id*)IwMalloc(count * sizeof(id));
     NSUInteger i = 0;
 
     for (id curObj in set) {
@@ -284,7 +288,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     }
 
     NSSet* ret = [self initWithObjects:objects count:count];
-    EbrFree(objects);
+    IwFree(objects);
 
     return ret;
 }
@@ -302,7 +306,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 
     if (count >= max) {
         max += 64;
-        objs = (id*)EbrRealloc(objs, max * sizeof(id));
+        objs = (id*)IwRealloc(objs, max * sizeof(id));
     }
 
     objs[count++] = first;
@@ -312,7 +316,7 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     while (curVal != NULL) {
         if (count >= max) {
             max += 64;
-            objs = (id*)EbrRealloc(objs, max * sizeof(id));
+            objs = (id*)IwRealloc(objs, max * sizeof(id));
         }
 
         objs[count++] = curVal;
@@ -323,20 +327,34 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     va_end(pReader);
 
     NSSet* ret = [self initWithObjects:objs count:count];
-    EbrFree(objs);
+    IwFree(objs);
 
     return ret;
 }
 
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    return [self initWithArray:[coder decodeObjectForKey:@"NS.objects"]];
+    if ([coder isKindOfClass:[NSKeyedUnarchiver class]]) {
+        return [self initWithArray:[coder decodeObjectForKey:@"NS.objects"]];
+    } else {
+        UNIMPLEMENTED_WITH_MSG("initWithCoder only supports NSKeyedUnarchiver coder type!");
+        [self release];
+        return nil;
+    }
 }
 
+/**
+ @Status Caveat
+ @Notes Only supports NSKeyedArchiver NSCoder type.
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         [coder _encodeArrayOfObjects:[self allObjects] forKey:@"NS.objects"];
     } else {
-        assert(0);
+        UNIMPLEMENTED();
     }
 }
 
@@ -372,10 +390,16 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return [[self objectEnumerator] allObjects];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSMutableSet*)mutableCopyWithZone:(NSZone*)zone {
     return [[NSMutableSet alloc] initWithSet:self];
 }
@@ -385,10 +409,13 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
 */
 - (void)makeObjectsPerformSelector:(SEL)selector {
     for (id curObj in self) {
-        _m(curObj, selector);
+        [curObj performSelector:selector];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
     if (state->state == 0) {
         state->state = 1;
@@ -508,6 +535,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
     return NSSetTableCount(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     NSSetTableFree(self);
     [super dealloc];
@@ -517,7 +547,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    return [NSEnumerator enumeratorWithIterator:NSSetGetEnumerator forObject:self nextFunction:NSSetEnumeratorGetNextObject];
+    return [NSEnumerator enumeratorWithIterator:(initIteratorFunc)NSSetGetEnumerator
+                                      forObject:self
+                                   nextFunction:(nextValueFunc)NSSetEnumeratorGetNextObject];
 }
 
 /**

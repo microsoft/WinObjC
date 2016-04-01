@@ -35,6 +35,10 @@ public:
 @implementation UIImageView {
     UIImageViewPrivData* imgPriv;
 }
+
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIImageView* ret = [super allocWithZone:zone];
     ret->imgPriv = new UIImageViewPrivData();
@@ -43,7 +47,11 @@ public:
     return ret;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     id result = [super initWithCoder:coder];
     id image = [coder decodeObjectForKey:@"UIImage"];
 
@@ -91,6 +99,9 @@ static void initInternal(UIImageView* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -258,6 +269,9 @@ static void updateContents(UIImageView* self) {
     return imgPriv->_isAnimating;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     imgPriv->_image = nil;
     imgPriv->_animatingImages = nil;
@@ -337,12 +351,18 @@ static void updateContents(UIImageView* self) {
     updateContents(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawRect:(CGRect)rect {
     if (imgPriv->_drawImage != nil) {
         [imgPriv->_drawImage drawInRect:rect];
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     if (imgPriv->_image != nil) {
         curSize = [imgPriv->_image size];
@@ -353,6 +373,9 @@ static void updateContents(UIImageView* self) {
     return curSize;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(UIWindow*)newWindow {
     if (newWindow == nil) {
         if (imgPriv->_isAnimating) {
@@ -375,6 +398,9 @@ static void updateContents(UIImageView* self) {
     [super willMoveToWindow:newWindow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)intrinsicContentSize {
     CGSize ret;
     if (imgPriv->_image) {
@@ -386,5 +412,4 @@ static void updateContents(UIImageView* self) {
     return ret;
 }
 
-//
 @end

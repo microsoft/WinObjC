@@ -29,6 +29,9 @@
 #import "CGContextInternal.h"
 #import "CGColorSpaceInternal.h"
 #import "_CGLifetimeBridgingType.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGContext";
 
 #define DEBUG_CONTEXT_COUNT
 
@@ -41,16 +44,19 @@ EbrLock _cairoLock = EBRLOCK_INITIALIZE;
 @end
 
 @implementation CGNSContext
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 - (void)dealloc {
     delete (__CGContext*)self;
 }
+#pragma clang diagnostic pop
 @end
 
 __CGContext::__CGContext(CGImageRef pDest) {
     contextCount++;
 
 #ifdef DEBUG_CONTEXT_COUNT
-    EbrDebugLog("contextCount: %d\n", contextCount);
+    TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
     object_setClass((id) this, [CGNSContext class]);
     scale = 1.0f;
@@ -90,7 +96,7 @@ void CGContextSetFillPattern(CGContextRef ctx, CGPatternRef pattern, const float
 */
 void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
     UNIMPLEMENTED();
-    EbrDebugLog("CGContextSetPatternPhase not implemented\n");
+    TraceWarning(TAG, L"CGContextSetPatternPhase not implemented");
 }
 
 /**
@@ -98,7 +104,7 @@ void CGContextSetPatternPhase(CGContextRef ctx, CGSize phase) {
 */
 void CGContextSetCharacterSpacing(CGContextRef ctx, float spacing) {
     UNIMPLEMENTED();
-    EbrDebugLog("CGContextSetCharacterSpacing not implemented\n");
+    TraceWarning(TAG, L"CGContextSetCharacterSpacing not implemented");
 }
 
 /**
@@ -222,7 +228,7 @@ void CGContextSetCTM(CGContextRef ctx, CGAffineTransform transform) {
 */
 void CGContextRelease(CGContextRef ctx) {
     if (!ctx) {
-        EbrDebugLog("CGCOntextRelease NULL!\n");
+        TraceWarning(TAG, L"CGCOntextRelease NULL!");
         return;
     }
 
@@ -234,11 +240,11 @@ void CGContextRelease(CGContextRef ctx) {
 */
 void CGContextDrawImage(CGContextRef ctx, CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
     if (ctx == NULL) {
-        EbrDebugLog("CGContextDrawImage: ctx == NULL!\n");
+        TraceWarning(TAG, L"CGContextDrawImage: ctx == NULL!");
         return;
     }
 
@@ -445,7 +451,7 @@ void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rct) {
  @Status Interoperable
 */
 void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
-    ctx->Backing()->CGContextAddPath((id)path);
+    ctx->Backing()->CGContextAddPath(path);
 }
 
 /**
@@ -572,10 +578,9 @@ void CGContextSetLineDash(CGContextRef ctx, float phase, const float* lengths, u
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetMiterLimit(CGContextRef ctx, float limit) {
-    UNIMPLEMENTED();
     ctx->Backing()->CGContextSetMiterLimit(limit);
 }
 
@@ -598,7 +603,7 @@ void CGContextSetLineCap(CGContextRef ctx, CGLineCap lineCap) {
 */
 void CGContextSetLineWidth(CGContextRef ctx, float width) {
     if (!ctx) {
-        EbrDebugLog("CGContextSetLineWidth: no context!\n");
+        TraceWarning(TAG, L"CGContextSetLineWidth: no context!");
         return;
     }
 
@@ -688,7 +693,7 @@ void CGContextSetShadow(CGContextRef context, CGSize offset, float blur) {
 */
 void CGContextReplacePathWithStrokedPath(CGContextRef context) {
     UNIMPLEMENTED();
-    EbrDebugLog("CGContextReplacePathWithStrokedPath not implemented\n");
+    TraceWarning(TAG, L"CGContextReplacePathWithStrokedPath not implemented");
 }
 
 /**
@@ -787,11 +792,11 @@ CGContextRef CGBitmapContextCreate(void* data,
     DWORD byteOrder = bitmapInfo & kCGBitmapByteOrderMask;
 
     if (byteOrder != 0) {
-        EbrDebugLog("CGBitmapContextCreate needs to process byte ordering\n");
+        TraceInfo(TAG, L"CGBitmapContextCreate needs to process byte ordering");
     }
 
     if (colorSpace == NULL) {
-        EbrDebugLog("Warning: colorSpace = NULL, assuming grayscale\n");
+        TraceWarning(TAG, L"Warning: colorSpace = NULL, assuming grayscale");
         newImage = new CGBitmapImage(width, height, _ColorGrayscale, data);
 
         CGContextRef ret = new __CGContext(newImage);
@@ -842,9 +847,9 @@ CGContextRef CGBitmapContextCreate(void* data,
                 break;
 
             case 0:
-                EbrDebugLog(
-                    "Warning: Invalid number of bits per component passed to "
-                    "CGBitmapContextCreate\n");
+                TraceWarning(TAG,
+                             L"Warning: Invalid number of bits per component passed to "
+                             "CGBitmapContextCreate");
                 return 0;
 
             default:
@@ -904,7 +909,6 @@ void CGContextSetGrayStrokeColor(CGContextRef ctx, float gray, float alpha) {
 */
 void CGContextSetStrokeColorSpace(CGContextRef pContext, CGColorSpaceRef colorSpace) {
     UNIMPLEMENTED();
-    [colorSpace retain];
 }
 
 /**
@@ -974,7 +978,7 @@ void CGContextSetRGBFillColor(CGContextRef ctx, float r, float g, float b, float
 */
 void CGContextSetRGBStrokeColor(CGContextRef ctx, float r, float g, float b, float a) {
     if (!ctx) {
-        EbrDebugLog("CGContextSetRGBStrokeColor: no context!\n");
+        TraceWarning(TAG, L"CGContextSetRGBStrokeColor: no context!");
         return;
     }
 
@@ -1030,7 +1034,7 @@ size_t CGBitmapContextGetBytesPerRow(CGContextRef ctx) {
 */
 CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef ctx) {
     if (!ctx) {
-        EbrDebugLog("CGBitmapContextGetAlphaInfo: nil!\n");
+        TraceWarning(TAG, L"CGBitmapContextGetAlphaInfo: nil!");
         return (CGImageAlphaInfo)0;
     }
 
@@ -1043,6 +1047,9 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef ctx) {
 
         case _ColorRGBA:
             ret |= kCGImageAlphaFirst;
+            break;
+        default:
+            UNIMPLEMENTED_WITH_MSG("Unsupported surface format %d.", ctx->Backing()->DestImage()->Backing()->SurfaceFormat());
             break;
     }
 
@@ -1063,7 +1070,7 @@ void* CGBitmapContextGetData(CGContextRef ctx) {
 */
 CGImageRef CGBitmapContextCreateImage(CGContextRef ctx) {
     if (!ctx) {
-        EbrDebugLog("CGBitmapContextCreateImage: NULL context provided!\n");
+        TraceWarning(TAG, L"CGBitmapContextCreateImage: NULL context provided!");
         return nullptr;
     }
 

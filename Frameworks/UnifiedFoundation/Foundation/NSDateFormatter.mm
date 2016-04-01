@@ -28,6 +28,9 @@
 
 #include <functional>
 #include <map>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSDateFormatter";
 
 static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
     switch (fmt) {
@@ -41,7 +44,7 @@ static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
             return icu::DateFormat::kFull;
 
         default:
-            EbrDebugLog("Unrecognized formatter style, defaulting to UDAT_NONE.\n");
+            TraceVerbose(TAG, L"Unrecognized formatter style, defaulting to UDAT_NONE.");
         case NSDateFormatterNoStyle:
             return icu::DateFormat::kNone;
     }
@@ -108,11 +111,11 @@ public:
 
 static NSString* NSStringFromSymbol(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
     uint32_t len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, NULL, 0, &error);
-    UChar* strValue = (UChar*)calloc(len + 1, sizeof(UChar));
+    UChar* strValue = (UChar*)IwCalloc(len + 1, sizeof(UChar));
     error = U_ZERO_ERROR;
     len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, strValue, len + 1, &error);
     NSString* ret = [NSString stringWithCharacters:(unichar*)strValue length:len];
-    free(strValue);
+    IwFree(strValue);
 
     return ret;
 }
@@ -124,7 +127,7 @@ static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbol
     for (int i = 0; i < count - startIdx; i++) {
         NSString* string = NSStringFromSymbol(formatter, symbol, i + startIdx, error);
         if (string == nil || error != U_ZERO_ERROR) {
-            EbrDebugLog("Error retrieving symbol 0x%x index %d\n", symbol, i);
+            TraceError(TAG, L"Error retrieving symbol 0x%x index %d", symbol, i);
             return nil;
         }
         [symbolList addObject:string];
@@ -383,10 +386,16 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return _formatter;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithDateFormat:@"" allowNaturalLanguage:NO];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     NSDateFormatter* copy = [super copyWithZone:zone];
 
@@ -428,6 +437,9 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _dateFormat = nil;
     _locale = nil;
@@ -621,14 +633,24 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     return [NSDate dateWithTimeIntervalSince1970:date / 1000.0];
 }
 
-- (BOOL)getObjectValue:(id*)outObj forString:(id)str errorDescription:(NSString**)err {
-    if (err)
+/**
+ @Status Interoperable
+*/
+- (BOOL)getObjectValue:(out id _Nullable*)outObj forString:(id)str errorDescription:(out NSString* _Nullable*)err {
+    if (err) {
         *err = nil;
+    }
 
-    *outObj = [self dateFromString:str];
+    if (outObj) {
+        *outObj = [self dateFromString:str];
+    }
+
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)stringForObjectValue:(NSObject*)object {
     if ([object isKindOfClass:[NSDate class]]) {
         return [self stringFromDate:(NSDate*)object];

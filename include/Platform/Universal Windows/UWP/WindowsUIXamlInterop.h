@@ -63,7 +63,7 @@ typedef void (^WUXINotifyCollectionChangedEventHandler)(RTObject* sender, WUXINo
 WINRT_EXPORT
 @interface WUXITypeName : NSObject
 + (instancetype) new;
-@property (copy) NSString* name;
+@property (retain) NSString* name;
 @property WUXITypeKind kind;
 @end
 

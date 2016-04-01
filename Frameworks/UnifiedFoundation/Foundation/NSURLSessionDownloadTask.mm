@@ -85,12 +85,18 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_temporaryFileURL release];
     [_outputStream release];
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)cancel {
     @synchronized(self) {
         bool shouldClose;
@@ -118,8 +124,8 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     [[NSFileManager defaultManager] removeItemAtURL:_temporaryFileURL error:NULL];
 }
 
-/*
-@Status Interoperable
+/**
+ @Status Interoperable
 */
 - (void)cancelByProducingResumeData:(void (^)(NSData* resumeData))completionHandler {
     [self cancel];
@@ -149,6 +155,9 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection
  didReceiveResponse:(NSURLResponse*)response
  cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
@@ -161,6 +170,9 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection didFailWithError:(NSError*)error {
     [self _finalizeOutputStream];
     NSData* resumeData = [self _generateResumeData];
@@ -177,6 +189,9 @@ dataTask:(NSURLSessionDataTask*)dataTask {
     [super URLProtocol:connection didFailWithError:error];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection didLoadData:(NSData*)data {
     [super URLProtocol:connection didLoadData:data];
 
@@ -204,6 +219,9 @@ dataTask:(NSURLSessionDataTask*)dataTask {
            totalBytesExpectedToWrite:self.countOfBytesExpectedToReceive];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocolDidFinishLoading:(NSURLProtocol*)connection {
     [self _finalizeOutputStream];
 

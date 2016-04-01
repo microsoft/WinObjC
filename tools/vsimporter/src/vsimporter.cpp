@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -26,6 +26,7 @@
 #include "BuildSettings.h"
 #include "VariableCollectionManager.h"
 #include "SBWorkspace.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 #define QUOTE(name) #name
 #define STR(macro) QUOTE(macro)
@@ -111,6 +112,7 @@ int main(int argc, char* argv[])
   int allSchemes = 0;
   int mode = GenerateMode;
 
+
   static struct option long_options[] = {
     {"version", no_argument, 0, 0},
     {"usage", no_argument, 0, 0},
@@ -182,12 +184,19 @@ int main(int argc, char* argv[])
     }
   }
 
+  // Set AI Telemetry_Init 
+  TELEMETRY_INIT(L"AIF-23c336e0-1e7e-43ba-a5ce-eb9dc8a06d34");
+
+  TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
+
   // Process non-option ARGV-elements
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
   while (optind < argc) {
     String arg = argv[optind];
     if (arg == "/?") {
-      printUsage(argv[0], true, EXIT_SUCCESS);
+        // Due to issue 6715724, flush before exiting
+        TELEMETRY_FLUSH();
+        printUsage(argv[0], true, EXIT_SUCCESS);
     } else if (arg.find_first_of('=') != String::npos) {
       settingsManager.processGlobalAssignment(arg);
     } else {
@@ -309,6 +318,9 @@ int main(int argc, char* argv[])
   } else {
     sbAssert(0); // non-reachable
   }
+
+  TELEMETRY_EVENT_DATA(L"VSImporterComplete", "WinStore10");
+  TELEMETRY_FLUSH();
 
   return EXIT_SUCCESS;
 }

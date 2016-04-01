@@ -23,6 +23,9 @@
 #include "objc/objc-arc.h"
 
 #include "Platform/EbrPlatform.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CFType";
 
 /**
  @Status Interoperable
@@ -79,6 +82,14 @@ void CFShow(CFTypeRef obj) {
 }
 
 /**
+ @Status Stub
+ @Notes Returns the CFString "Desc"
+*/
+CFStringRef CFCopyDescription(CFTypeRef ref) {
+    return (CFStringRef)[[(id)ref description] copy];
+}
+
+/**
  @Status Interoperable
  @Notes No-op; garbage collection is not supported in WinObjC
 */
@@ -90,20 +101,20 @@ CFTypeRef CFMakeCollectable(CFTypeRef obj) {
  @Status Interoperable
  @Notes As on the reference platform, NSZone is ignored.
 */
-__declspec(dllexport) id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
+id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
     return class_createInstance(classRef, extraBytes);
 }
 
 /**
  @Status Interoperable
 */
-__declspec(dllexport) void NSDeallocateObject(id obj) {
+void NSDeallocateObject(id obj) {
     objc_delete_weak_refs(obj);
     object_dispose(obj);
 }
 
 DWORD _NSSetLogCStringFunction(DWORD func) {
-    EbrDebugLog("NSSetLogCStringFunction not implemented\n");
+    TraceVerbose(TAG, L"NSSetLogCStringFunction not implemented");
 
     return 0;
 }

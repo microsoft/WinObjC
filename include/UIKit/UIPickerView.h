@@ -38,7 +38,8 @@
 
 #import "UIView.h"
 
-@protocol UIPickerViewDataSource, UIPickerViewDelegate;
+@protocol UIPickerViewDataSource
+, UIPickerViewDelegate;
 
 @class UIPickerSubView;
 
@@ -54,7 +55,7 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, assign) id<UIPickerViewDataSource> dataSource;
 @property (nonatomic, assign) id<UIPickerViewDelegate> delegate;
-@property (nonatomic, assign) BOOL showsSelectionIndicator;
+@property (nonatomic, assign) BOOL showsSelectionIndicator STUB_PROPERTY;
 @property (nonatomic, readonly) NSInteger numberOfComponents;
 
 - (void)reloadAllComponents;

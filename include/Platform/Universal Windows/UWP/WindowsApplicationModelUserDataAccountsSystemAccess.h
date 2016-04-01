@@ -43,21 +43,21 @@ typedef unsigned WAUSDeviceAccountServerType;
 
 WINRT_EXPORT
 @interface WAUSDeviceAccountConfiguration : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* incomingServerAddress;
-@property (copy) NSString* incomingServerUsername;
-@property (copy) NSString* emailAddress;
-@property (copy) NSString* accountName;
-@property (copy) NSString* deviceAccountTypeId;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* incomingServerAddress;
+@property (retain) NSString* incomingServerUsername;
+@property (retain) NSString* emailAddress;
+@property (retain) NSString* accountName;
+@property (retain) NSString* deviceAccountTypeId;
 @property BOOL calendarSyncEnabled;
-@property (copy) NSString* domain;
+@property (retain) NSString* domain;
 @property int incomingServerPort;
 @property WAUSDeviceAccountServerType serverType;
-@property (copy) NSString* outgoingServerUsername;
+@property (retain) NSString* outgoingServerUsername;
 @property BOOL contactsSyncEnabled;
 @property BOOL outgoingServerRequiresSsl;
 @property int outgoingServerPort;
-@property (copy) NSString* outgoingServerAddress;
+@property (retain) NSString* outgoingServerAddress;
 @property BOOL emailSyncEnabled;
 @property BOOL incomingServerRequiresSsl;
 @end

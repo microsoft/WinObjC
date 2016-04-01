@@ -151,7 +151,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSMMapLocation : RTObject
 @property (readonly) WSMMapAddress* address;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 @property (readonly) WDGGeopoint* point;
 @end
@@ -241,11 +241,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapRouteDrivingOptions : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WSMMapRouteRestrictions routeRestrictions;
 @property WSMMapRouteOptimization routeOptimization;
 @property unsigned int maxAlternateRouteCount;
-@property (copy) id initialHeading;
+@property (retain) id initialHeading;
 @end
 
 #endif // __WSMMapRouteDrivingOptions_DEFINED__

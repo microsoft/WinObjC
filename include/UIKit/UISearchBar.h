@@ -55,30 +55,54 @@ typedef enum {
 } UISearchBarStyle;
 
 UIKIT_EXPORT_CLASS
-@interface UISearchBar : UIView
-
-@property (nonatomic, copy) NSString* text;
-@property (nonatomic, assign) id<UISearchBarDelegate> delegate;
-@property (nonatomic) BOOL showsCancelButton;
-@property (nonatomic, copy) NSString* placeholder;
-@property (nonatomic, retain) UIColor* tintColor;
-@property (nonatomic, retain) UIColor* barTintColor;
-@property (nonatomic) UITextAutocorrectionType autocorrectionType;
-@property (nonatomic, copy) NSArray* scopeButtonTitles;
-@property (nonatomic) BOOL showsScopeBar;
-@property (nonatomic, getter=isSearchResultsButtonSelected) BOOL searchResultsButtonSelected;
-@property (nonatomic, retain) UIImage* backgroundImage;
-@property (nonatomic) BOOL showsBookmarkButton;
-@property (nonatomic) NSInteger selectedScopeButtonIndex;
-@property (nonatomic) UIBarStyle barStyle;
-@property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
-@property (nonatomic) UIKeyboardType keyboardType;
-@property (nonatomic) UIOffset searchTextPositionAdjustment;
-@property (nonatomic) UISearchBarStyle searchBarStyle;
-@property (nonatomic, copy) NSString* prompt;
-
-- (void)setShowsCancelButton:(BOOL)showsCancelButton animated:(BOOL)animated;
-- (void)setImage:(UIImage*)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state;
-- (void)setSearchFieldBackgroundImage:(UIImage*)iconImage forState:(UIControlState)state;
-
+@interface UISearchBar : UIView <NSCoding,
+                                 UIAppearance,
+                                 UIAppearanceContainer,
+                                 UIBarPositioning,
+                                 UICoordinateSpace,
+                                 UIDynamicItem,
+                                 UIFocusEnvironment,
+                                 UITextInputTraits,
+                                 UITraitEnvironment>
+@property (copy, nonatomic) NSString* placeholder;
+@property (copy, nonatomic) NSString* prompt;
+@property (copy, nonatomic) NSString* text;
+@property (nonatomic) UIBarStyle barStyle STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* barTintColor STUB_PROPERTY;
+@property (nonatomic) UISearchBarStyle searchBarStyle STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* tintColor STUB_PROPERTY;
+@property (getter=isTranslucent, assign, nonatomic) BOOL translucent STUB_PROPERTY;
+@property (nonatomic) BOOL showsBookmarkButton STUB_PROPERTY;
+@property (nonatomic) BOOL showsCancelButton STUB_PROPERTY;
+- (void)setShowsCancelButton:(BOOL)showsCancelButton animated:(BOOL)animated STUB_METHOD;
+@property (nonatomic) BOOL showsSearchResultsButton STUB_PROPERTY;
+@property (getter=isSearchResultsButtonSelected, nonatomic) BOOL searchResultsButtonSelected STUB_PROPERTY;
+@property (copy, nonatomic) NSArray* scopeButtonTitles STUB_PROPERTY;
+@property (nonatomic) NSInteger selectedScopeButtonIndex STUB_PROPERTY;
+@property (nonatomic) BOOL showsScopeBar STUB_PROPERTY;
+@property (nonatomic, weak) id<UISearchBarDelegate> delegate;
+@property (nonatomic, strong) UIImage* backgroundImage STUB_PROPERTY;
+- (UIImage*)backgroundImageForBarPosition:(UIBarPosition)barPosition barMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
+- (void)setBackgroundImage:(UIImage*)backgroundImage
+            forBarPosition:(UIBarPosition)barPosition
+                barMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
+- (UIImage*)imageForSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state STUB_METHOD;
+- (void)setImage:(UIImage*)iconImage forSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state STUB_METHOD;
+- (UIOffset)positionAdjustmentForSearchBarIcon:(UISearchBarIcon)icon STUB_METHOD;
+- (void)setPositionAdjustment:(UIOffset)adjustment forSearchBarIcon:(UISearchBarIcon)icon STUB_METHOD;
+@property (readwrite, nonatomic, strong) UIView* inputAccessoryView STUB_PROPERTY;
+@property (nonatomic, strong) UIImage* scopeBarBackgroundImage STUB_PROPERTY;
+- (UIImage*)scopeBarButtonBackgroundImageForState:(UIControlState)state STUB_METHOD;
+- (void)setScopeBarButtonBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state STUB_METHOD;
+- (UIImage*)scopeBarButtonDividerImageForLeftSegmentState:(UIControlState)leftState
+                                        rightSegmentState:(UIControlState)rightState STUB_METHOD;
+- (void)setScopeBarButtonDividerImage:(UIImage*)dividerImage
+                  forLeftSegmentState:(UIControlState)leftState
+                    rightSegmentState:(UIControlState)rightState STUB_METHOD;
+- (NSDictionary*)scopeBarButtonTitleTextAttributesForState:(UIControlState)state STUB_METHOD;
+- (void)setScopeBarButtonTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state STUB_METHOD;
+- (UIImage*)searchFieldBackgroundImageForState:(UIControlState)state STUB_METHOD;
+- (void)setSearchFieldBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state STUB_METHOD;
+@property (nonatomic) UIOffset searchFieldBackgroundPositionAdjustment STUB_PROPERTY;
+@property (nonatomic) UIOffset searchTextPositionAdjustment STUB_PROPERTY;
 @end

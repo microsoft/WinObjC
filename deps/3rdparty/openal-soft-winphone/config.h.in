@@ -1,0 +1,141 @@
+/* API declaration export attribute */
+#define AL_API  ${EXPORT_DECL}
+#define ALC_API ${EXPORT_DECL}
+
+/* Define to the library version */
+#define ALSOFT_VERSION "${LIB_VERSION}"
+
+/* Define if we have the ALSA backend */
+#cmakedefine HAVE_ALSA
+
+/* Define if we have the OSS backend */
+#cmakedefine HAVE_OSS
+
+/* Define if we have the Solaris backend */
+#cmakedefine HAVE_SOLARIS
+
+/* Define if we have the SndIO backend */
+#cmakedefine HAVE_SNDIO
+
+/* Define if we have the MMDevApi backend */
+#cmakedefine HAVE_MMDEVAPI
+
+/* Define if we have the DSound backend */
+#cmakedefine HAVE_DSOUND
+
+/* Define if we have the Windows Multimedia backend */
+#cmakedefine HAVE_WINMM
+
+/* Define if we have the PortAudio backend */
+#cmakedefine HAVE_PORTAUDIO
+
+/* Define if we have the PulseAudio backend */
+#cmakedefine HAVE_PULSEAUDIO
+
+/* Define if we have the CoreAudio backend */
+#cmakedefine HAVE_COREAUDIO
+
+/* Define if we have the OpenSL backend */
+#cmakedefine HAVE_OPENSL
+
+/* Define if we have the Wave Writer backend */
+#cmakedefine HAVE_WAVE
+
+/* Define if we have dlfcn.h */
+#cmakedefine HAVE_DLFCN_H
+
+/* Define if we have the stat function */
+#cmakedefine HAVE_STAT
+
+/* Define if we have the powf function */
+#cmakedefine HAVE_POWF
+
+/* Define if we have the sqrtf function */
+#cmakedefine HAVE_SQRTF
+
+/* Define if we have the cosf function */
+#cmakedefine HAVE_COSF
+
+/* Define if we have the sinf function */
+#cmakedefine HAVE_SINF
+
+/* Define if we have the acosf function */
+#cmakedefine HAVE_ACOSF
+
+/* Define if we have the asinf function */
+#cmakedefine HAVE_ASINF
+
+/* Define if we have the atanf function */
+#cmakedefine HAVE_ATANF
+
+/* Define if we have the atan2f function */
+#cmakedefine HAVE_ATAN2F
+
+/* Define if we have the fabsf function */
+#cmakedefine HAVE_FABSF
+
+/* Define if we have the log10f function */
+#cmakedefine HAVE_LOG10F
+
+/* Define if we have the floorf function */
+#cmakedefine HAVE_FLOORF
+
+/* Define if we have the strtof function */
+#cmakedefine HAVE_STRTOF
+
+/* Define if we have stdint.h */
+#cmakedefine HAVE_STDINT_H
+
+/* Define if we have the __int64 type */
+#cmakedefine HAVE___INT64
+
+/* Define to the size of a long int type */
+#cmakedefine SIZEOF_LONG ${SIZEOF_LONG}
+
+/* Define to the size of a long long int type */
+#cmakedefine SIZEOF_LONG_LONG ${SIZEOF_LONG_LONG}
+
+/* Define if we have GCC's destructor attribute */
+#cmakedefine HAVE_GCC_DESTRUCTOR
+
+/* Define if we have GCC's format attribute */
+#cmakedefine HAVE_GCC_FORMAT
+
+/* Define if we have pthread_np.h */
+#cmakedefine HAVE_PTHREAD_NP_H
+
+/* Define if we have arm_neon.h */
+#cmakedefine HAVE_ARM_NEON_H
+
+/* Define if we have guiddef.h */
+#cmakedefine HAVE_GUIDDEF_H
+
+/* Define if we have guiddef.h */
+#cmakedefine HAVE_INITGUID_H
+
+/* Define if we have ieeefp.h */
+#cmakedefine HAVE_IEEEFP_H
+
+/* Define if we have float.h */
+#cmakedefine HAVE_FLOAT_H
+
+/* Define if we have fpu_control.h */
+#cmakedefine HAVE_FPU_CONTROL_H
+
+/* Define if we have fenv.h */
+#cmakedefine HAVE_FENV_H
+
+/* Define if we have fesetround() */
+#cmakedefine HAVE_FESETROUND
+
+/* Define if we have _controlfp() */
+#cmakedefine HAVE__CONTROLFP
+
+/* Define if we have pthread_setschedparam() */
+#cmakedefine HAVE_PTHREAD_SETSCHEDPARAM
+
+/* Define if we have the restrict keyword */
+#cmakedefine HAVE_RESTRICT
+
+/* Define if we have the __restrict keyword */
+#cmakedefine HAVE___RESTRICT

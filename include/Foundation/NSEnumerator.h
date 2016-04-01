@@ -22,19 +22,8 @@
 
 @class NSArray;
 
-typedef void (*initIteratorFunc)(id obj, void* enumeratorHolder);
-typedef int (*nextValueFunc)(id obj, void* enumeratorHolder, id* ret, int count);
-
 FOUNDATION_EXPORT_CLASS
-@interface NSEnumerator : NSObject <NSFastEnumeration> {
-    NSArray* objArray;
-    int curIndex;
-    int dir;
-
-    nextValueFunc getNextValueFunction;
-    id iteratorObj;
-    NSUInteger iteratorState[5];
-}
+@interface NSEnumerator : NSObject <NSFastEnumeration>
 
 @property (readonly, copy) NSArray* allObjects;
 - (id)nextObject;

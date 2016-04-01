@@ -22,6 +22,8 @@
 #include "UIKit/UIGestureRecognizer.h"
 #include "UIKit/UISlider.h"
 
+#include "UIGestureRecognizerInternal.h"
+
 @implementation UISlider {
     idretaintype(UIImage) _sliderLeft, _sliderRight, _dot, _dotHighlighted;
     idretaintype(UIImageView) _sliderLeftView, _sliderRightView, _sliderThumbView;
@@ -116,6 +118,10 @@ static void initInternal(UISlider* self) {
     sizeViews(self, false);
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -137,6 +143,9 @@ static void initInternal(UISlider* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -255,6 +264,9 @@ static void initInternal(UISlider* self) {
     return _sliderLeft;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     sizeViews(self, false);
 }
@@ -284,6 +296,9 @@ static void initInternal(UISlider* self) {
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _sliderLeft = nil;
     _sliderRight = nil;
@@ -299,6 +314,9 @@ static void initInternal(UISlider* self) {
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setHidden:(BOOL)hide {
     [super setHidden:hide];
     [_sliderThumbView setHidden:hide];

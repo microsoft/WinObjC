@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
-
+#include "StubReturn.h"
 #include <UIKit/UIKit.h>
 #include <vector>
 #include "UIBarButtonItem+Internals.h"
@@ -33,10 +33,15 @@
     idretaintype(UIColor) _backgroundTintColor;
     idretaintype(UIColor) _itemTintColor;
 }
+
 void initInternal(UIToolbar* self) {
     self->_curAddedViews.attach([NSMutableArray new]);
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     initInternal(self);
@@ -74,6 +79,9 @@ void initInternal(UIToolbar* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     if (frame.size.height > 44.0f) {
         frame.size.height = 44.0f;
@@ -117,8 +125,12 @@ void initInternal(UIToolbar* self) {
 - (void)setButtonBarTrackingMode:(int)mode {
 }
 
+/**
+ @Status Stub
+*/
 - (id)viewWithTag:(NSUInteger)tag {
-    return nil;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 - (void)showSelectionForButton:(NSUInteger)button {
@@ -130,6 +142,9 @@ void initInternal(UIToolbar* self) {
 - (void)showButtonGroup:(int)group withDuration:(double)withDuration {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)buttonClicked:(NSUInteger)button {
     [_delegate buttonBarItemTapped:button];
 }
@@ -407,11 +422,17 @@ void layoutItems(UIToolbar* self) {
     layoutItems(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     [self _setShouldLayout];
     [super setFrame:frame];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret;
 
@@ -444,6 +465,9 @@ void layoutItems(UIToolbar* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _items = nil;
     _backgroundGradient = nil;

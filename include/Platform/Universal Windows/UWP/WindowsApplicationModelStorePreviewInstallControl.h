@@ -119,9 +119,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASPIAppInstallManager : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WASPIAutoUpdateSetting autoUpdateSetting;
-@property (copy) NSString* acquisitionIdentity;
+@property (retain) NSString* acquisitionIdentity;
 @property (readonly) NSArray* appInstallItems;
 - (EventRegistrationToken)addItemCompletedEvent:(void (^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
 - (void)removeItemCompletedEvent:(EventRegistrationToken)tok;

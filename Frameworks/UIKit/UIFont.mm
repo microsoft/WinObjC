@@ -14,6 +14,7 @@
 //
 //******************************************************************************
 
+#import <StubReturn.h>
 #include "Starboard.h"
 #include "CGFontInternal.h"
 #include "Foundation/NSString.h"
@@ -33,13 +34,31 @@ extern "C" {
 #include <tttables.h>
 #include <ftadvanc.h>
 #include <ftsizes.h>
+#include <ftmodapi.h>
 }
 
+#include "LoggingNative.h"
+
+static const wchar_t* g_logTag = L"UIFont";
+
 FT_Library _fontLib;
+FT_MemoryRec_ _fontMemory;
 NSMutableDictionary* _fontList;
 CFMutableDictionaryRef _fontInstance, _fontSizingInstance;
 NSMutableDictionary* g_fontCache;
 NSMutableDictionary* _fontDataCache;
+
+void* FTAllocFunc(FT_Memory memory, long size) {
+    return IwMalloc(size);
+}
+
+void FTFreeFunc(FT_Memory memory, void* ptr) {
+    IwFree(ptr);
+}
+
+void* FTReallocFunc(FT_Memory memory, long curSize, long newSize, void* ptr) {
+    return IwRealloc(ptr, newSize);
+}
 
 @implementation UIFont {
 @public
@@ -59,6 +78,10 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
 
     //  Look it up in our cache
     FT_Face val;
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
+
     if (!sizing) {
         val = (FT_Face)CFDictionaryGetValue(_fontInstance, (void*)faceName);
         if (val != 0) {
@@ -79,7 +102,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
 
     if (filename == nil) {
         if (strcmp(_faceName, "Helvetica")) {
-            EbrDebugLog("*** FONT NOT FOUND: %s -- falling back to Helvetica. ***\n", _faceName);
+            TraceVerbose(g_logTag, L"*** FONT NOT FOUND: %hs -- falling back to Helvetica. ***", _faceName);
             filename = [_fontList objectForKey:@"Helvetica"];
         }
 
@@ -102,14 +125,15 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
         filename = @"/fonts/Helvetica.ttf";
     }
     if (strstr(_faceName, "Condensed") != NULL) {
-        if (fontInfo != nil)
+        if (fontInfo != nil) {
             fontInfo->_horizontalScale = 0.85f;
+        }
     }
 #endif
 
     id cachedData = [_fontDataCache objectForKey:filename];
     if (!cachedData) {
-        EbrDebugLog("Loading font %s\n", [filename UTF8String]);
+        TraceVerbose(g_logTag, L"Loading font %hs", [filename UTF8String]);
 
         cachedData = [[NSData alloc] initWithContentsOfFile:filename];
         [_fontDataCache setObject:cachedData forKey:filename];
@@ -119,17 +143,8 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     char* pFont = (char*)[cachedData bytes];
     DWORD fontLen = [cachedData length];
 
-    _CGFontLock();
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &ret);
-    _CGFontUnlock();
     assert(err == 0);
-
-//  Adjust the line height up by 20% for system fonts to be consistent
-#if 0 // defined( USE_ROBOTO_FONT )
-int ascenderDelta = (int) (ret->ascender * 0.2);
-ret->ascender += ascenderDelta;
-ret->height += ascenderDelta;
-#endif
 
     if (!sizing) {
         CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)ret);
@@ -144,8 +159,10 @@ ret->height += ascenderDelta;
  @Status Stub
 */
 + (NSArray*)familyNames {
+    // The actual implementation may need a lock here if it
+    // does end up accessing the global font lists or caches.
     UNIMPLEMENTED();
-    return [_fontList allKeys];
+    return StubReturn();
 }
 
 + (UIFont*)fontWithData:(NSData*)data {
@@ -161,16 +178,17 @@ ret->height += ascenderDelta;
 
     FT_Error err;
 
-    char* pCopy = (char*)EbrMalloc(fontLen);
+    char* pCopy = (char*)IwMalloc(fontLen);
     memcpy(pCopy, pFont, fontLen);
 
     _CGFontLock();
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
+
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pCopy, fontLen, 0, (FT_Face*)&ret->_font);
     err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pCopy, fontLen, 0, (FT_Face*)&ret->_sizingFont);
-    _CGFontUnlock();
 
     if (err != 0) {
-        EbrDebugLog("Error loading font\n");
+        TraceError(g_logTag, L"Error loading font");
         ret->_font = getFace(@"Helvetica", false);
         ret->_sizingFont = getFace(@"Helvetica", true);
     }
@@ -201,6 +219,9 @@ ret->height += ascenderDelta;
     ret->_size = size;
     ret->_horizontalScale = 1.0f;
 
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
+
     id cached = [g_fontCache objectForKey:(id)ret];
     if (cached != nil) {
         [ret release];
@@ -208,7 +229,7 @@ ret->height += ascenderDelta;
     }
 
     if (name == nil) {
-        EbrDebugLog("Warning: Font name is nil!\n");
+        TraceWarning(g_logTag, L"Warning: Font name is nil!");
         ret->_font = getFace(@"Helvetica", false, ret);
         ret->_sizingFont = getFace(@"Helvetica", true, ret);
     } else {
@@ -231,48 +252,32 @@ ret->height += ascenderDelta;
  @Public        Yes
 */
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize {
+    if (fontSize <= 0.0f) {
+        fontSize = descriptor.pointSize;
+    }
+
     UIFont* font = [UIFont fontWithName:[descriptor _getFontName] size:fontSize];
     font->_descriptor = [descriptor retain];
     return font;
 }
 
 + (UIFont*)messageFont {
-    static id mFont;
-
-    if (mFont == nil) {
-        mFont = [[self systemFontOfSize:15.0f] retain];
-    }
-
+    static id mFont = [[self systemFontOfSize:15.0f] retain];
     return mFont;
 }
 
 + (UIFont*)titleFont {
-    static id tFont;
-
-    if (tFont == nil) {
-        tFont = [[self systemFontOfSize:20.0f] retain];
-    }
-
+    static id tFont = [[self systemFontOfSize:20.0f] retain];
     return tFont;
 }
 
 + (UIFont*)defaultFont {
-    static id dFont;
-
-    if (dFont == nil) {
-        dFont = [[self systemFontOfSize:10.0f] retain];
-    }
-
+    static id dFont = [[self systemFontOfSize:10.0f] retain];
     return dFont;
 }
 
 + (UIFont*)buttonFont {
-    static id dFont;
-
-    if (dFont == nil) {
-        dFont = [[self systemFontOfSize:17.0f] retain];
-    }
-
+    static id dFont = [[self systemFontOfSize:17.0f] retain];
     return dFont;
 }
 
@@ -287,15 +292,30 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
-    g_fontCache = [NSMutableDictionary new];
-    _fontDataCache = [NSMutableDictionary new];
-    FT_Error err = FT_Init_FreeType(&_fontLib);
-    _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
-    _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
-    _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
-
-    assert(err == 0);
+    if (self == [UIFont class]) {
+        g_fontCache = [NSMutableDictionary new];
+        _fontDataCache = [NSMutableDictionary new];
+        _fontList = [[NSDictionary dictionaryWithContentsOfFile:@"/fonts/fontmap.xml"] retain];
+        if (!_fontList) {
+            _fontList = [NSMutableDictionary new];
+        }
+        _fontInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
+        _fontSizingInstance = CFDictionaryCreateMutable(NULL, 128, &kCFTypeDictionaryKeyCallBacks, NULL);
+        _fontMemory.user = nullptr;
+        _fontMemory.alloc = FTAllocFunc;
+        _fontMemory.free = FTFreeFunc;
+        _fontMemory.realloc = FTReallocFunc;
+        FT_Error error = FT_New_Library(&_fontMemory, &(_fontLib));
+        if (!error) {
+            FT_Add_Default_Modules(_fontLib);
+        } else {
+            TraceWarning(g_logTag, L"Failed to instantiate FreeType library");
+        }
+    }
 }
 
 /**
@@ -311,6 +331,9 @@ ret->height += ascenderDelta;
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIFont*)italicSystemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
@@ -341,8 +364,10 @@ void loadFont(UIFont* self) {
 
     loadFont(self);
 
-    if (_font == nil)
+    if (_font == nil) {
         return nil;
+    }
+
     return self;
 }
 
@@ -357,6 +382,9 @@ void loadFont(UIFont* self) {
     ret->_name = _name;
     ret->_size = size;
     ret->_horizontalScale = _horizontalScale;
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
 
     id cached = [g_fontCache objectForKey:(id)ret];
     if (cached != nil) {
@@ -536,7 +564,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -546,7 +573,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -556,7 +582,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -566,7 +591,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -576,7 +600,6 @@ void loadFont(UIFont* self) {
 
 /**
  @Status Interoperable
- @Framework     Foundation
  @Tags          Font
  @Public        Yes
 */
@@ -608,6 +631,9 @@ void loadFont(UIFont* self) {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _fileName = nil;
     _name = nil;
@@ -641,15 +667,64 @@ void loadFont(UIFont* self) {
     }
 
     FT_Face fntFace = (FT_Face)fnt->_font;
+
     id faceName = [NSString stringWithCString:((FT_Face)fnt->_font)->family_name];
 
     [font retain];
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
+
     CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)fnt->_font);
     CFDictionarySetValue(_fontSizingInstance, (const void*)faceName, (void*)fnt->_sizingFont);
     if (fnt->_fileName) {
         CFDictionarySetValue(_fontInstance, (const void*)(id)fnt->_fileName, (void*)fnt->_font);
         CFDictionarySetValue(_fontSizingInstance, (const void*)(id)fnt->_fileName, (void*)fnt->_sizingFont);
     }
+
+    return true;
+}
+
+// Internal methods
+// Private message sent from CTFontManager for the implementation of CTFontManagerRegisterFontsForURL in CTFontManager
++ (bool)_CTFontManagerRegisterFontsForURL:(CFURLRef)fontURL withScope:(CTFontManagerScope)scope withError:(CFErrorRef*)error {
+    NSURL* url = static_cast<NSURL*>(fontURL);
+    if (![url isFileURL]) {
+        TraceInfo(g_logTag, L"Only file urls supported");
+        if (error) {
+            *error = nil;
+        }
+        return false;
+    }
+
+    NSString* fileName = [url path];
+
+    _CGFontLock();
+    auto unlock = wil::ScopeExit([]() { _CGFontUnlock(); });
+
+    if ([[_fontList allValues] containsObject:fileName]) {
+        // this font is already registered
+        return true;
+    }
+
+    NSData* data = [NSData dataWithContentsOfURL:url];
+    FT_Face face;
+    char* pFont = (char*)[data bytes];
+    DWORD fontLen = [data length];
+
+    FT_Error err = FT_New_Memory_Face(_fontLib, (const FT_Byte*)pFont, fontLen, 0, &face);
+
+    if (err) {
+        if (!error) {
+            error = nil;
+        }
+        return false;
+    }
+
+    NSString* faceName = [NSString stringWithCString:face->family_name];
+    [_fontList setObject:fileName forKey:faceName];
+    [_fontDataCache setObject:data forKey:fileName];
+    CFDictionarySetValue(_fontInstance, (const void*)faceName, (void*)face);
 
     return true;
 }

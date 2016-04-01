@@ -20,6 +20,7 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSInputStream.h"
 #include "NSStreamInternal.h"
+#include "LoggingNative.h"
 
 #ifdef WIN32
 #include <io.h>
@@ -28,7 +29,9 @@
 //#include <unistd.h>
 #endif
 
-@implementation NSInputStream : NSStream
+static const wchar_t* TAG = L"NSInputStream";
+
+@implementation NSInputStream
 
 /**
  @Status Interoperable
@@ -38,7 +41,7 @@
 
     ret->filename = file;
     if (EbrAccess([file UTF8String], 0) != 0) {
-        EbrDebugLog("Open failed\n");
+        TraceError(TAG, L"Open failed");
         return nil;
     }
 
@@ -68,14 +71,14 @@
 */
 - (id)initWithFileAtPath:(id)file {
     if (file == nil) {
-        EbrDebugLog("initWithFileAtPath: nil!\n");
+        TraceVerbose(TAG, L"initWithFileAtPath: nil!");
         return nil;
     }
 
     filename = file;
-    EbrDebugLog("NSInputStream opening %s\n", [file UTF8String]);
+    TraceVerbose(TAG, L"NSInputStream opening %hs", [file UTF8String]);
     if (EbrAccess([file UTF8String], 0) != 0) {
-        EbrDebugLog("Open failed\n");
+        TraceError(TAG, L"Open failed");
         return nil;
     }
 
@@ -133,12 +136,15 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (id) /* use typed version */ open {
     if (_data == nil) {
-        EbrDebugLog("Opening %s\n", [filename UTF8String]);
+        TraceVerbose(TAG, L"Opening %hs", [filename UTF8String]);
         fp = EbrFopen([filename UTF8String], "rb");
         if (!fp) {
-            EbrDebugLog("Open of %s failed\n", [filename UTF8String]);
+            TraceError(TAG, L"Open of %hs failed", [filename UTF8String]);
             _status = NSStreamStatusNotOpen;
         } else {
             _status = NSStreamStatusOpen;
@@ -150,7 +156,12 @@
     return self;
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
 - (id)scheduleInRunLoop:(id)runLoop forMode:(id)mode {
+    UNIMPLEMENTED();
     return 0;
 }
 

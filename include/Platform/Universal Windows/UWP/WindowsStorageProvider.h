@@ -87,7 +87,7 @@ typedef unsigned WSPWriteActivationMode;
 
 WINRT_EXPORT
 @interface WSPCachedFileUpdaterUI : RTObject
-@property (copy) NSString* title;
+@property (retain) NSString* title;
 @property (readonly) WSPUIStatus uIStatus;
 @property (readonly) WSPCachedFileTarget updateTarget;
 @property (readonly) WSPFileUpdateRequest* updateRequest;
@@ -120,7 +120,7 @@ WINRT_EXPORT
 @property WSPFileUpdateStatus status;
 @property (readonly) NSString* contentId;
 @property (readonly) WSStorageFile* file;
-@property (copy) NSString* userInputNeededMessage;
+@property (retain) NSString* userInputNeededMessage;
 - (WSPFileUpdateRequestDeferral*)getDeferral;
 - (void)updateLocalFile:(RTObject<WSIStorageFile>*)value;
 @end

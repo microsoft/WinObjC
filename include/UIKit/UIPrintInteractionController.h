@@ -16,6 +16,7 @@
 
 #pragma once
 
+#import <UIKit/UIKitExport.h>
 #import <Foundation/NSObject.h>
 
 @protocol UIPrintInteractionControllerDelegate;

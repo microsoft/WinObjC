@@ -22,6 +22,9 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Foundation/NSOperation.h"
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSOperation";
 
 #if __cplusplus
 #include <pthread.h>
@@ -66,11 +69,17 @@ struct NSOperationPriv;
 
 @implementation NSOperation
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     // This class dispatches its own notifications.
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 + (id)allocWithZone:(NSZone*)zone {
     NSOperation* ret = [super allocWithZone:zone];
 
@@ -103,9 +112,19 @@ struct NSOperationPriv;
     priv->priority = priority;
 }
 
-- (id)setThreadPriority:(double)priority {
-    EbrDebugLog("NSOperationQueue setThreadPriority not supported\n");
-    return self;
+/**
+ @Status Stub
+*/
+- (double)threadPriority {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setThreadPriority:(double)priority {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -272,6 +291,9 @@ struct NSOperationPriv;
     return priv->dependencies;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     assert(!priv->completionBlock);
     delete priv;

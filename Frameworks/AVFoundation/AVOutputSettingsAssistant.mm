@@ -17,6 +17,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const AVOutputSettingsPreset640x480 = @"AVOutputSettingsPreset640x480";
 NSString* const AVOutputSettingsPreset960x540 = @"AVOutputSettingsPreset960x540";

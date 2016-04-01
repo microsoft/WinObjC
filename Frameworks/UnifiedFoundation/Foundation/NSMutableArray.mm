@@ -22,6 +22,9 @@
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSMutableArray.h"
 #include "NSArrayInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSMutableArray";
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
 
@@ -117,7 +120,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj {
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)obj {
     if (object_getClass(self) == [NSMutableArrayConcrete class]) {
         //  Fastpath
         CFRange range;
@@ -132,6 +135,9 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setObject:(NSObject*)obj atIndexedSubscript:(NSUInteger)index {
     if (index == [self count]) {
         [self addObject:obj];
@@ -162,7 +168,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 */
 - (void)removeObject:(NSObject*)objAddr {
     if (objAddr == nil) {
-        EbrDebugLog("objAddr = nil!\n");
+        TraceVerbose(TAG, L"objAddr = nil!");
     }
 
     int idx = [self indexOfObject:objAddr];
@@ -217,10 +223,6 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     [index _removeFromArray:self];
 }
 
-- (void)_moveObjectAtIndexToEnd:(NSUInteger)index {
-    CFArrayMoveValueAtIndexToEnd((CFMutableArrayRef)self, index);
-}
-
 /**
  @Status Interoperable
 */
@@ -261,9 +263,8 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, NSCompareF
 }
 
 static signed int selComp(NSMutableArray* self, int i1, int i2, SEL selector) {
-    typedef int (*ftype)(id self, SEL sel, ...);
-    ftype f = (ftype)class_getMethodImplementation(object_getClass([self objectAtIndex:i1]), selector);
-    return f([self objectAtIndex:i1], selector, [self objectAtIndex:i2]);
+    typedef int (*ftype)(id, SEL, id);
+    return ((ftype)objc_msgSend)([self objectAtIndex:i1], selector, [self objectAtIndex:i2]);
 }
 
 static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL selector) {
@@ -299,6 +300,9 @@ static void shortsort(NSMutableArray* self, uint32_t lo, uint32_t hi, SEL select
     [self sortUsingFunction:compFunc context:context range:NSMakeRange(0, count)];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sortUsingFunction:(NSCompareFunc)compFunc context:(void*)context range:(NSRange)range {
     uint32_t base = range.location;
     uint32_t num = range.length;
@@ -467,12 +471,18 @@ recurse:
     [self sortUsingFunction:CFNSDescriptorCompare context:descriptors];
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSObject*)copyWithZone:(NSZone*)zone {
     NSArray* ret = [[NSArray alloc] initWithArray:self];
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 + (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSMutableArray class])
         return NSAllocateObject((Class)[NSMutableArrayConcrete class], 0, zone);
@@ -551,5 +561,12 @@ recurse:
 @implementation NSMutableArrayConcrete
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
     return _NSArrayConcreteCountByEnumeratingWithState(self, state);
+}
+
+- (void)dealloc {
+    CFArrayRemoveAllValues((CFArrayRef)self);
+    _CFArrayDestroyInternal((CFArrayRef)self);
+
+    [super dealloc];
 }
 @end

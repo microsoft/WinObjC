@@ -23,9 +23,11 @@
 #import <Starboard.h>
 #import <GLKit/GLKitExport.h>
 #import <GLKit/GLKTexture.h>
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"GLKTexture";
 
 // TODO: BK: reorg, lots of cut & paste here.
-
 NSString* const GLKTextureLoaderApplyPremultiplication = @"ApplyPremult";
 NSString* const GLKTextureLoaderGenerateMipmaps = @"Mips";
 NSString* const GLKTextureLoaderOriginBottomLeft = @"BottomLeft";
@@ -155,7 +157,7 @@ bool getBitmapFormat(GLint& fmt, GLint& type, GLKTextureInfoAlphaState& as, int 
             break;
 
         default:
-            NSLog(@"Unrecognized image format - %d bpp.", bpp);
+            NSTraceWarning(TAG, @"Unrecognized image format - %d bpp.", bpp);
             return false;
     }
 
@@ -213,7 +215,7 @@ void boxMipGen(GLenum targ, GLint fmt, GLint type, GLint level, size_t w, size_t
     glTexImage2D(targ, level, fmt, nw, nh, 0, fmt, type, output);
     GLint err = glGetError();
     if (err) {
-        NSLog(@"Problem %d generating mip.", err);
+        NSTraceError(TAG, @"Problem %d generating mip.", err);
     }
 
     boxMipGen<PIX, FC>(targ, fmt, type, level + 1, nw, nh, output);
@@ -302,7 +304,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     size_t rowSize = CGImageGetBytesPerRow(img);
     size_t expectedRowSize = (bpp / 8) * w;
     if (rowSize != expectedRowSize) {
-        NSLog(@"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
+        NSTraceWarning(TAG, @"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
     }
 
     CGDataProviderRef provider = CGImageGetDataProvider(img);
@@ -366,12 +368,12 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         type = GL_UNSIGNED_BYTE;
     }
 
-    NSLog(@"Creating %dx%d texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
+    NSTraceVerbose(TAG, @"Creating %dx%d texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
 
     glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, type, bytes);
     GLint i = glGetError();
     if (i != 0) {
-        NSLog(@"Error %d creating texture.", i);
+        NSTraceError(TAG, @"Error %d creating texture.", i);
     }
 
     if (genMips) {
@@ -406,11 +408,11 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     size_t rowSize = CGImageGetBytesPerRow(img);
     size_t expectedRowSize = (bpp / 8) * w;
     if (rowSize != expectedRowSize) {
-        NSLog(@"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
+        NSTraceWarning(TAG, @"WARNING - Image (%dx%d) - expected row size %d, got row size %d\n", w, h, expectedRowSize, rowSize);
     }
 
     if (h != 6 * w) {
-        NSLog(@"ERROR - Unexpected cube map format, expected 6 square textures aligned vertically.");
+        NSTraceError(TAG, @"ERROR - Unexpected cube map format, expected 6 square textures aligned vertically.");
         CGImageRelease(img);
         CGDataProviderRelease(provider);
         return nil;
@@ -482,14 +484,14 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         bpp = 1;
     }
 
-    NSLog(@"Creating %dx%d cube map texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
+    NSTraceVerbose(TAG, @"Creating %dx%d cube map texture, %d bpp, fmt 0x%x type 0x%x.", w, h, bpp, fmt, type);
 
     size_t sideh = h / 6;
     for (int i = 0; i < 6; i++) {
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, fmt, w, sideh, 0, fmt, type, bytes);
         GLint err = glGetError();
         if (err != 0) {
-            NSLog(@"Error %d creating cube face %d.", err, i);
+            NSTraceError(TAG, @"Error %d creating cube face %d.", err, i);
         }
 
         if (genMips) {
@@ -538,14 +540,14 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
     for (NSString* fn in fnames) {
         CGDataProviderRef provider = CGDataProviderCreateWithFilename([fn UTF8String]);
         if (!provider) {
-            NSLog(@"Unable to open cube side texture %@", fn);
+            NSTraceWarning(TAG, @"Unable to open cube side texture %@", fn);
             curSide++;
             continue;
         }
         CGImageRef img = CGImageCreateWithPNGDataProvider(provider, NULL, NO, kCGRenderingIntentDefault);
         if (!img) {
             CGDataProviderRelease(provider);
-            NSLog(@"Unable to create image from cube side texture %@", fn);
+            NSTraceWarning(TAG, @"Unable to create image from cube side texture %@", fn);
             curSide++;
             continue;
         }
@@ -562,7 +564,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         size_t rowSize = CGImageGetBytesPerRow(img);
         size_t expectedRowSize = (bpp / 8) * w;
         if (w != h || rowSize != expectedRowSize) {
-            NSLog(@"WARNING - Image %@ (%dx%d) - is in an invalid format.", fn, w, h);
+            NSTraceWarning(TAG, @"WARNING - Image %@ (%dx%d) - is in an invalid format.", fn, w, h);
             curSide++;
             CGDataProviderRelease(provider);
             CGImageRelease(img);
@@ -581,7 +583,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
             imgRowSize = rowSize;
         } else {
             if ((w != sideW) || (h != sideH) || (imgBpp != bpp)) {
-                NSLog(@"WARNING - Image %@ (%dx%d) - does not match existing format.", fn, w, h);
+                NSTraceWarning(TAG, @"WARNING - Image %@ (%dx%d) - does not match existing format.", fn, w, h);
                 curSide++;
                 CGDataProviderRelease(provider);
                 CGImageRelease(img);
@@ -631,7 +633,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + curSide, 0, fmt, w, h, 0, fmt, type, bytes);
         GLint err = glGetError();
         if (err != 0) {
-            NSLog(@"Error %d creating cube face %d.", err, curSide);
+            NSTraceError(TAG, @"Error %d creating cube face %d.", err, curSide);
         }
 
         if (genMips) {
@@ -646,7 +648,7 @@ void createMipmaps(GLenum targ, GLint fmt, GLint type, size_t w, size_t h, unsig
         curSide++;
     }
     if (!fmtInited) {
-        NSLog(@"Unable to create cube map.");
+        NSTraceWarning(TAG, @"Unable to create cube map.");
         return nil;
     }
 

@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import "Accounts/Accounts.h"
+#import "AssertARCEnabled.h"
 
 NSString* const ACAccountTypeIdentifierFacebook = @"com.apple.facebook";
 NSString* const ACAccountTypeIdentifierSinaWeibo = @"com.apple.sinaweibo";

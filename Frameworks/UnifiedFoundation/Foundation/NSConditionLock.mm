@@ -29,11 +29,17 @@
     NSInteger _value;
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)alloc {
     NSConditionLock* ret = [super alloc];
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     return [self initWithCondition:0];
 }
@@ -56,6 +62,9 @@
     return _value;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     int ret = pthread_mutex_destroy(&_mutex);
     assert(ret == 0);
@@ -64,22 +73,37 @@
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)lock {
     pthread_mutex_lock(&_mutex);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)unlock {
     pthread_mutex_unlock(&_mutex);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)signal {
     pthread_cond_signal(&_cond);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)broadcast {
     pthread_cond_broadcast(&_cond);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)wait {
     pthread_cond_wait(&_cond, &_mutex);
 }
@@ -99,6 +123,9 @@
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)lockWhenCondition:(NSInteger)condition {
     int rc;
 

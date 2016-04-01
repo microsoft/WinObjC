@@ -18,6 +18,6 @@
 
 #include "NSColor.h"
 
-@implementation NSColor : NSObject
+@implementation NSColor
 
 @end

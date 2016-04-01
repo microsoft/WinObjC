@@ -116,14 +116,6 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
     return self;
 }
 
-- (void)dealloc {
-    if (_timestamp != nil) {
-        [_timestamp release];
-    }
-
-    [super dealloc];
-}
-
 /**
  @Status Interoperable
 */
@@ -165,13 +157,6 @@ CORELOCATION_EXPORT BOOL CLLocationCoordinate2DIsValid(CLLocationCoordinate2D co
         return NO;
     }
     if (self.verticalAccuracy != aLocation.verticalAccuracy) {
-        return NO;
-    }
-    // Note: We do pointer comparison here before calling isEqual because timestamp can be nil.
-    if ((self.timestamp != aLocation.timestamp) && (![self.timestamp isEqual:aLocation.timestamp])) {
-        return NO;
-    }
-    if (![self.description isEqual:aLocation.description]) {
         return NO;
     }
     if (self.speed != aLocation.speed) {

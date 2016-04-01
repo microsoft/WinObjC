@@ -21,6 +21,9 @@
 #include "QuartzCore/CATransaction.h"
 #include "QuartzCore/CABasicAnimation.h"
 #include "CALayerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CATransaction";
 
 NSString* const kCATransactionAnimationDuration = @"kCATransactionAnimationDuration";
 NSString* const kCATransactionDisableActions = @"kCATransactionDisableActions";
@@ -47,18 +50,22 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
     return _curTransaction;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _disableActions = FALSE;
-    _duration = 0.25f;
+    if (self = [super init]) {
+        _disableActions = FALSE;
+        _duration = 0.25f;
 
-    _transactionQueue = GetCACompositor()->CreateDisplayTransaction();
+        _transactionQueue = GetCACompositor()->CreateDisplayTransaction();
 
-    if (_curTransaction != NULL) {
-        _parent = _curTransaction;
-    } else {
-        _parent = _rootTransaction;
+        if (_curTransaction != NULL) {
+            _parent = _curTransaction;
+        } else {
+            _parent = _rootTransaction;
+        }
     }
-
     return self;
 }
 
@@ -108,7 +115,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 */
 + (void)flush {
     UNIMPLEMENTED();
-    EbrDebugLog("CATransaction flush?\n");
+    TraceVerbose(TAG, L"CATransaction flush?");
 }
 
 /**
@@ -130,7 +137,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 */
 + (void)setCompletionBlock:(void (^)(void))block {
     UNIMPLEMENTED();
-    *((char*)0) = 0;
+    FAIL_FAST_MSG(E_UNEXPECTED, "setCompletionBlock not implemented!");
     [self _currentTransaction]->_completionBlock = [block copy];
 }
 
@@ -184,7 +191,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 
 + (void)_setPropertyForLayer:(CALayer*)layer name:(NSString*)propertyName value:(NSObject*)newValue {
     GetCACompositor()->setDisplayProperty([self _currentTransaction]->_transactionQueue,
-                                          layer->priv->_presentationNode,
+                                          [layer _priv]->_presentationNode,
                                           [propertyName UTF8String],
                                           newValue);
 }
@@ -194,58 +201,58 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 }
 
 + (void)_addSublayerToTop:(CALayer*)layer {
-    GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, NULL, NULL, NULL);
+    GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue, [layer _priv]->_presentationNode, NULL, NULL, NULL);
 }
 
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer {
     GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue,
-                               sublayer->priv->_presentationNode,
-                               layer->priv->_presentationNode,
+                               [sublayer _priv]->_presentationNode,
+                               [layer _priv]->_presentationNode,
                                NULL,
                                NULL);
 }
 
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer before:(CALayer*)before {
     GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue,
-                               sublayer->priv->_presentationNode,
-                               layer->priv->_presentationNode,
-                               before->priv->_presentationNode,
+                               [sublayer _priv]->_presentationNode,
+                               [layer _priv]->_presentationNode,
+                               [before _priv]->_presentationNode,
                                NULL);
 }
 
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer after:(CALayer*)after {
     GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue,
-                               sublayer->priv->_presentationNode,
-                               layer->priv->_presentationNode,
+                               [sublayer _priv]->_presentationNode,
+                               [layer _priv]->_presentationNode,
                                NULL,
-                               after->priv->_presentationNode);
+                               [after _priv]->_presentationNode);
 }
 
 + (void)_replaceInLayer:(CALayer*)layer sublayer:(CALayer*)sublayer withSublayer:(CALayer*)newlayer {
     GetCACompositor()->addNode([self _currentTransaction]->_transactionQueue,
-                               newlayer->priv->_presentationNode,
-                               layer->priv->_presentationNode,
-                               sublayer->priv->_presentationNode,
+                               [newlayer _priv]->_presentationNode,
+                               [layer _priv]->_presentationNode,
+                               [sublayer _priv]->_presentationNode,
                                NULL);
-    GetCACompositor()->removeNode([self _currentTransaction]->_transactionQueue, sublayer->priv->_presentationNode);
+    GetCACompositor()->removeNode([self _currentTransaction]->_transactionQueue, [sublayer _priv]->_presentationNode);
 }
 
 + (void)_moveLayer:(CALayer*)layer beforeLayer:(CALayer*)before afterLayer:(CALayer*)after {
     GetCACompositor()->moveNode([self _currentTransaction]->_transactionQueue,
-                                layer->priv->_presentationNode,
-                                before ? before->priv->_presentationNode : NULL,
-                                after ? after->priv->_presentationNode : NULL);
+                                [layer _priv]->_presentationNode,
+                                before ? [before _priv]->_presentationNode : NULL,
+                                after ? [after _priv]->_presentationNode : NULL);
 }
 
 + (void)_removeLayer:(CALayer*)layer {
-    GetCACompositor()->removeNode([self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode);
+    GetCACompositor()->removeNode([self _currentTransaction]->_transactionQueue, [layer _priv]->_presentationNode);
 }
 
 + (void)_addAnimationToLayer:(CALayer*)layer animation:(CAAnimation*)anim forKey:(NSString*)key;
 { GetCACompositor()->addAnimation([self _currentTransaction]->_transactionQueue, layer, anim, key); }
 
 + (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim {
-    GetCACompositor()->removeAnimationRaw([self _currentTransaction]->_transactionQueue, layer->priv->_presentationNode, anim);
+    GetCACompositor()->removeAnimationRaw([self _currentTransaction]->_transactionQueue, [layer _priv]->_presentationNode, anim);
 }
 
 /**

@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMSampleBuffer.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CFStringRef kCMSampleBufferNotification_DataBecameReady = static_cast<CFStringRef>(@"FigSampleBufferDataBecameReady");
 const CFStringRef kCMSampleBufferConduitNotification_InhibitOutputUntil = static_cast<CFStringRef>(@"InhibitOutputUntil");

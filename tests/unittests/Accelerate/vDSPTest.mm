@@ -187,9 +187,7 @@ static void vDSPInit(void) {
 // Template for checking NAN values in floating points, not included in tests for BLAS as not needed
 // Returns a true if either the expected value or the result are NAN, because we do not wish to compare NAN to anything
 // If one value is NAN but not the other, throw the issue but do not terminate the function
-template<class T>
-bool fail_nan_test(const T &result, const T &expected)
-{
+template<class T> bool fail_nan_test(const T &result, const T &expected) {
     if (isnan(expected)) {
         if (isnan(result)) {
             return true;
@@ -207,13 +205,13 @@ bool fail_nan_test(const T &result, const T &expected)
     }
 }
 
-static void checkArrayInt(int* result, int* expected, int size, char* name) {
+static void checkArrayInt(int* result, int* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         ASSERT_NEAR_MSG(result[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %i\nFOUND: %i", name, i, expected[i], result[i]);
     }
 }
 
-static void checkArraySingle(float* result, float* expected, int size, char* name) {
+static void checkArraySingle(float* result, float* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         if (!fail_nan_test(result[i], expected[i])) {
             ASSERT_NEAR_MSG(result[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %f\nFOUND: %f", name, i, expected[i], result[i]);
@@ -221,7 +219,7 @@ static void checkArraySingle(float* result, float* expected, int size, char* nam
     }
 }
 
-static void checkArrayDouble(double* result, double* expected, int size, char* name) {
+static void checkArrayDouble(double* result, double* expected, int size, const char* name) {
     for (int i = 0; i < size; i++) {
         if (!fail_nan_test(result[i], expected[i])) {
             ASSERT_NEAR_MSG(result[i], expected[i], 0.001, "TEST FAILED: %s AT INDEX %i\nEXPECTED: %f\nFOUND: %f", name, i, expected[i], result[i]);
@@ -764,4 +762,250 @@ TEST(Accelerate, vDSPComplexDouble) {  // See comments for Single Precision Test
     checkArrayDouble(zArrayC->imagp, zvmovD_exp_imag, lengthN, "zvmovD_imag");
 }
 
+//Test for validating the single-precision real-to-complex DFT for a vector
+TEST(Accelerate, vDSP_DFT_RealToComplex_Float) {  
+    vDSP_DFT_Setup zrop_Setup = vDSP_DFT_zrop_CreateSetup(NULL, 8, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zrop_Setup != nullptr, "FAILED: vDSP_zop_CreateSetup failed!\n");
+  
+    //Scenario 1
+    float RealIn1[] = {5, 10, 15, 20};
+    float RealIn2[] = {2, -4, 9, -12};
 
+    float RealOut1 [8] = {0};
+    float ImgOut1[8] = {0};
+
+    vDSP_DFT_Execute(zrop_Setup, RealIn1, RealIn2, RealOut1, ImgOut1);
+    
+    float DFT_exp_real1[] = {90.000000, -41.213204, -20.000000, 1.213204, 0.000000, 0.000000, 0.000000, 0.000000};
+    float DFT_exp_imag1[] = {110.000000, 18.585786, -54.000000, -21.414214, 0.000000, 0.000000, 0.000000, 0.000000};
+
+    checkArraySingle(RealOut1, DFT_exp_real1, 8, "DFT_RtoC_Real_S1");
+    checkArraySingle(ImgOut1, DFT_exp_imag1, 8, "DFT_RtoC_Imag_S1");
+
+    //Scenario 2
+    float RealIn3[] = {1, 3, 5, 7};
+    float RealIn4[] = {2, 4, 6, 8};
+
+    vDSP_DFT_Execute(zrop_Setup, RealIn3, RealIn4, RealOut1, ImgOut1);
+
+    float DFT_exp_real2[] = {72.000000, -8.000000, -8.000000, -8.000000, 0.000000, 0.000000, 0.000000, 0.000000};
+    float DFT_exp_imag2[] = {-8.000000, 19.313709, 8.000000, 3.313708, 0.000000, 0.000000, 0.000000, 0.000000};
+
+    checkArraySingle(RealOut1, DFT_exp_real2, 8, "DFT_RtoC_Real_S2");
+    checkArraySingle(ImgOut1, DFT_exp_imag2, 8, "DFT_RtoC_Imag_S2");
+
+    //Scenario 3
+    vDSP_DFT_Setup zrop_Setup_New = vDSP_DFT_zrop_CreateSetup(zrop_Setup, 8, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zrop_Setup != nullptr, "FAILED: vDSP_DFT_zrop_CreateSetup failed!\n");
+    
+    float RealIn5[4] = {1, 3, 5, 7};
+    float RealIn6[4] = {2, 4, 6, 8};
+  
+    vDSP_DFT_Execute(zrop_Setup_New, RealIn5, RealIn6, RealOut1, ImgOut1);
+    
+    float DFT_exp_real3[] = {72.000000, -8.000000, -8.000000, -8.000000, 0.000000, 0.000000, 0.000000, 0.000000};
+    float DFT_exp_imag3[] = {-8.000000, 19.313709, 8.000000, 3.313708, 0.000000, 0.000000, 0.000000, 0.000000};
+
+    checkArraySingle(RealOut1, DFT_exp_real3, 8, "DFT_RtoC_Real_S3");
+    checkArraySingle(ImgOut1, DFT_exp_imag3, 8, "DFT_RtoC_Imag_S3");
+
+    vDSP_DFT_DestroySetup(zrop_Setup);
+}
+
+//Test for validating the single-precision complex-to-real IDFT for a vector
+TEST(Accelerate, vDSP_IDFT_ComplexToReal_Float) {
+    vDSP_DFT_Setup zrop_Setup_Inverse = vDSP_DFT_zrop_CreateSetup(NULL, 8, vDSP_DFT_INVERSE);
+    ASSERT_TRUE_MSG(zrop_Setup_Inverse != nullptr, "FAILED: vDSP_DFT_zrop_CreateSetup failed!\n");
+
+    //Scenario 1
+    float RealIn1 [] = {45, -20.606602, -10, 0.606602, 55, 0.606602, -10, -20.606602}; 
+    float ImgIn1 [] = {0, 9.292893, -27, -10.707107, 0, 10.707107, 27, -9.292893};
+    
+    float RealOut1 [4] = {0};
+    float RealOut2 [4] = {0};
+    
+    vDSP_DFT_Execute(zrop_Setup_Inverse, RealIn1, ImgIn1, RealOut1, RealOut2);
+
+    float DFT_exp_real1[] = {-14.999998, 25, 65, 105};
+    float DFT_exp_real2[] = {71, 23, 127, -41};
+
+    checkArraySingle(RealOut1, DFT_exp_real1, 4, "IDFT_CtoR_Real1_S1");
+    checkArraySingle(RealOut2, DFT_exp_real2, 4, "IDFT_CtoR_Real2_S1");
+
+    //Scenario 2
+    float RealIn2 [] = {36, -4, -4, -4, -4, -4, -4, -4}; 
+    float ImgIn2 [] = {0, 9.66, 4, 1.66, 0, -1.66, -4, -9.66};
+   
+    vDSP_DFT_Execute(zrop_Setup_Inverse, RealIn2, ImgIn2, RealOut1, RealOut2);
+    
+    float DFT_exp_real3[] = {12, 28, 44, 60};
+    float DFT_exp_real4[] = {11.991104, 27.991104, 44.008896, 60.008896};
+
+    checkArraySingle(RealOut1, DFT_exp_real3, 4, "IDFT_CtoR_Real1_S2");
+    checkArraySingle(RealOut2, DFT_exp_real4, 4, "IDFT_CtoR_Real2_S2");
+
+    //Scenario 3
+    float RealIn3 [] = {60, -2, -2, -2, -40, -2, -2, -2}; 
+    float ImgIn3 [] = {0, 16.142136, 10, 12.142136, 0, -12.142136, -10, -16.142136};
+    
+    vDSP_DFT_Execute(zrop_Setup_Inverse, RealIn3, ImgIn3, RealOut1, RealOut2);
+    
+    float DFT_exp_real5[] = {48, 56, 64, 72};
+    float DFT_exp_real6[] = {0, 40, 80, 120};
+
+    checkArraySingle(RealOut1, DFT_exp_real5, 4, "IDFT_CtoR_Real1_S3");
+    checkArraySingle(RealOut2, DFT_exp_real6, 4, "IDFT_CtoR_Real2_S3");
+
+    vDSP_DFT_DestroySetup(zrop_Setup_Inverse);
+}
+
+//Test for validating the single-precision complex DFT for a vector
+TEST(Accelerate, vDSP_DFT_ComplexToComplex_Float) {
+    vDSP_DFT_Setup zop_Setup = vDSP_DFT_zop_CreateSetup(NULL, 8, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zop_Setup != nullptr, "FAILED: vDSP_DFT_zop_CreateSetup failed!\n");
+    
+    float RealIn1 [8] = {1, 3, 5, 7, 9, 11, 13, 15};
+    float ImgIn1 [8] = {2, 4, 6, 8, 10, 12, 14, 16};
+    float RealOut1 [8] = {0};
+    float ImgOut1[8] = {0};
+   
+    vDSP_DFT_Execute(zop_Setup, RealIn1, ImgIn1, RealOut1, ImgOut1);
+
+    float DFT_exp_real[] = {64.000000, -27.313709, -16.000000, -11.313708, -8.000000, -4.686292, 0.000000, 11.313708};
+    float DFT_exp_imag[] = {72.000000, 11.313708, 0.000000, -4.686292, -8.000000, -11.313708, -16.000000, -27.313709};
+
+    checkArraySingle(RealOut1, DFT_exp_real, 8, "DFT_CtoC_Real_S1");
+    checkArraySingle(ImgOut1, DFT_exp_imag, 8, "DFT_CtoC_Imag_S1");
+
+    vDSP_DFT_DestroySetup(zop_Setup);
+}
+
+//Test for validating the single-precision complex IDFT for a vector
+TEST(Accelerate, vDSP_IDFT_ComplexToComplex_Float) {    
+    vDSP_DFT_Setup zop_Setup_Inverse = vDSP_DFT_zop_CreateSetup(NULL, 8, vDSP_DFT_INVERSE);
+    ASSERT_TRUE_MSG(zop_Setup_Inverse != nullptr, "FAILED: vDSP_DFT_zop_CreateSetup failed!\n");
+    
+    float RealIn1 [8] = {1, 3, 5, 7, 9, 11, 13, 15};
+    float ImgIn1 [8] = {2, 4, 6, 8, 10, 12, 14, 16};
+    float RealOut1 [8] = {0};
+    float ImgOut1[8] = {0};
+    
+    vDSP_DFT_Execute(zop_Setup_Inverse, RealIn1, ImgIn1, RealOut1, ImgOut1);
+
+    float DFT_exp_real[] = {64.000000, 11.313708, 0.000000, -4.686292, -8.000000, -11.313708, -16.000000, -27.313709};
+    float DFT_exp_imag[] = {72.000000, -27.313709, -16.000000, -11.313708, -8.000000, -4.686292, 0.000000, 11.313708};
+
+    checkArraySingle(RealOut1, DFT_exp_real, 8, "IDFT_CtoC_Real_S1");
+    checkArraySingle(ImgOut1, DFT_exp_imag, 8, "IDFT_CtoC_Imag_S1");
+
+    vDSP_DFT_DestroySetup(zop_Setup_Inverse);
+}
+
+//Test for validating the double-precision real-to-complex DFT for a vector
+TEST(Accelerate, vDSP_DFT_RealToComplex_Double) {  
+    vDSP_DFT_SetupD zrop_Setup = vDSP_DFT_zrop_CreateSetupD(NULL, 8, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zrop_Setup != nullptr, "FAILED: vDSP_DFT_zrop_CreateSetupD failed!\n");
+    
+    double RealIn1 [4] = {1, 3, 5, 7};
+    double RealIn2 [4] = {2, 4, 6, 8};
+
+    double RealOut1 [8] = {0};
+    double ImgOut1[8] = {0};
+    
+    vDSP_DFT_ExecuteD(zrop_Setup, RealIn1, RealIn2, RealOut1, ImgOut1);
+
+    double DFT_exp_real[] = {72.000000, -8.000000, -8.000000, -8.000000, 0.000000, 0.000000, 0.000000, 0.000000};
+    double DFT_exp_imag[] = {-8.000000, 19.313708, 8.000000, 3.313708, 0.000000, 0.000000, 0.000000, 0.000000};
+
+    checkArrayDouble(RealOut1, DFT_exp_real, 8, "DFT_RtoC_Real_S1");
+    checkArrayDouble(ImgOut1, DFT_exp_imag, 8, "DFT_RtoC_Imag_S1");
+
+    vDSP_DFT_DestroySetupD(zrop_Setup);
+}
+
+//Test for validating the double-precision complex-to-real IDFT for a vector
+TEST(Accelerate, vDSP_IDFT_ComplexToReal_Double) {
+    vDSP_DFT_SetupD zrop_Setup_Inverse = vDSP_DFT_zrop_CreateSetupD(NULL, 8, vDSP_DFT_INVERSE);
+    ASSERT_TRUE_MSG(zrop_Setup_Inverse != nullptr, "FAILED: vDSP_DFT_zrop_CreateSetupD failed!\n");
+
+    double RealIn1 [8] = {36, -4, -4, -4, -4, -4, -4, -4}; 
+    double ImgIn1 [8] = {0, 9.66, 4, 1.66, 0, -1.66, -4, -9.66};
+
+    double RealOut1 [4] = {0};
+    double RealOut2 [4] = {0};
+    
+    vDSP_DFT_ExecuteD(zrop_Setup_Inverse, RealIn1, ImgIn1, RealOut1, RealOut2);
+
+    double DFT_exp_real1[] = {12, 28, 44, 60};
+    double DFT_exp_real2[] = {11.991102, 27.991102, 44.008898, 60.008898};
+
+    checkArrayDouble(RealOut1, DFT_exp_real1, 4, "IDFT_CtoR_Real_S1");
+    checkArrayDouble(RealOut2, DFT_exp_real2, 4, "IDFT_CtoR_Real_S1");
+
+    vDSP_DFT_DestroySetupD(zrop_Setup_Inverse);
+}
+
+//Test for validating the double-precision complex DFT for a vector
+TEST(Accelerate, vDSP_DFT_ComplexToComplex_Double) {
+    vDSP_DFT_SetupD zop_Setup = vDSP_DFT_zop_CreateSetupD(NULL, 8, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zop_Setup != nullptr, "FAILED: vDSP_DFT_zop_CreateSetupD failed!\n");
+
+    double RealIn1 [8] = {1, 3, 5, 7, 9, 11, 13, 15};
+    double ImgIn1 [8] = {2, 4, 6, 8, 10, 12, 14, 16};
+    double RealOut1 [8] = {0};
+    double ImgOut1[8] = {0};
+   
+    vDSP_DFT_ExecuteD(zop_Setup, RealIn1, ImgIn1, RealOut1, ImgOut1);
+
+    double DFT_exp_real[] = {64.000000, -27.313708, -16.000000, -11.313708, -8.000000, -4.686292, 0.000000, 11.313708};
+    double DFT_exp_imag[] = {72.000000, 11.313708, 0.000000, -4.686292, -8.000000, -11.313708, -16.000000, -27.313708};
+
+    checkArrayDouble(RealOut1, DFT_exp_real, 8, "DFT_CtoC_Real_S1");
+    checkArrayDouble(ImgOut1, DFT_exp_imag, 8, "DFT_CtoC_Imag_S1");
+
+    vDSP_DFT_DestroySetupD(zop_Setup);
+}
+
+//Test for validating the double-precision complex IDFT for a vector
+TEST(Accelerate, vDSP_IDFT_ComplexToComplexDoubleCase1) {    
+    vDSP_DFT_SetupD zop_Setup_Inverse = vDSP_DFT_zop_CreateSetupD(NULL, 8, vDSP_DFT_INVERSE);
+    ASSERT_TRUE_MSG(zop_Setup_Inverse != nullptr, "FAILED: vDSP_DFT_zop_CreateSetupD failed!\n");
+    
+    double RealIn1 [8] = {1, 3, 5, 7, 9, 11, 13, 15};
+    double ImgIn1 [8] = {2, 4, 6, 8, 10, 12, 14, 16};
+    double RealOut1 [8] = {0};
+    double ImgOut1[8] = {0};
+    
+    vDSP_DFT_ExecuteD(zop_Setup_Inverse, RealIn1, ImgIn1, RealOut1, ImgOut1);
+
+    double DFT_exp_real[] = {64.000000, 11.313708, 0.000000, -4.686292, -8.000000, -11.313708, -16.000000, -27.313708};
+    double DFT_exp_imag[] = {72.000000, -27.313709, -16.000000, -11.313708, -8.000000, -4.686292, 0.000000, 11.313708};
+
+    checkArrayDouble(RealOut1, DFT_exp_real, 8, "IDFT_CtoC_Real_S1");
+    checkArrayDouble(ImgOut1, DFT_exp_imag, 8, "IDFT_CtoC_Imag_S1");
+
+    vDSP_DFT_DestroySetupD(zop_Setup_Inverse);
+}
+
+//Test for validating the DFT length requirements
+TEST(Accelerate, vDSP_DFT_LengthCheck) {    
+    vDSP_DFT_Setup zop_Setup1 = vDSP_DFT_zop_CreateSetup(NULL, 16, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zop_Setup1 != nullptr, "FAILED: vDSP_DFT_zop_CreateSetup failed!\n");
+    vDSP_DFT_DestroySetup(zop_Setup1);
+
+    vDSP_DFT_Setup zop_Setup2 = vDSP_DFT_zop_CreateSetup(NULL, 40, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zop_Setup2 != nullptr, "FAILED: vDSP_DFT_zop_CreateSetup failed!\n");
+    vDSP_DFT_DestroySetup(zop_Setup2);
+
+    vDSP_DFT_Setup zop_Setup3 = vDSP_DFT_zop_CreateSetup(NULL, 42, vDSP_DFT_FORWARD);
+    ASSERT_TRUE_MSG(zop_Setup3 == nullptr, "FAILED: vDSP_DFT_zop_CreateSetup failed!\n");
+    vDSP_DFT_DestroySetup(zop_Setup3);
+
+    vDSP_DFT_Setup zrop_Setup_Inverse1 = vDSP_DFT_zrop_CreateSetup(NULL, 80, vDSP_DFT_INVERSE);
+    ASSERT_TRUE_MSG(zrop_Setup_Inverse1 != nullptr, "FAILED: vDSP_DFT_zrop_CreateSetup failed!\n");
+    vDSP_DFT_DestroySetup(zrop_Setup_Inverse1);
+
+    vDSP_DFT_Setup zrop_Setup_Inverse2 = vDSP_DFT_zrop_CreateSetup(NULL, 40, vDSP_DFT_INVERSE);
+    ASSERT_TRUE_MSG(zrop_Setup_Inverse2 == nullptr, "FAILED: vDSP_DFT_zrop_CreateSetup failed!\n");
+    vDSP_DFT_DestroySetup(zrop_Setup_Inverse2);
+}

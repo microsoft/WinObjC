@@ -250,7 +250,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapActualCameraChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapCamera* camera;
 @end
 
@@ -262,7 +262,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapActualCameraChangingEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapCamera* camera;
 @end
 
@@ -274,7 +274,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapCustomExperienceChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXCMMapCustomExperienceChangedEventArgs_DEFINED__
@@ -285,7 +285,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElementClickEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) NSMutableArray* mapElements;
 @property (readonly) WFPoint* position;
@@ -299,7 +299,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElementPointerEnteredEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WUXCMMapElement* mapElement;
 @property (readonly) WFPoint* position;
@@ -313,7 +313,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElementPointerExitedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WUXCMMapElement* mapElement;
 @property (readonly) WFPoint* position;
@@ -327,7 +327,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTargetCameraChangedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapCamera* camera;
 @end
 
@@ -339,7 +339,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileBitmapRequestDeferral : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)complete;
 @end
 
@@ -351,8 +351,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileBitmapRequest : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* pixelData;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* pixelData;
 - (WUXCMMapTileBitmapRequestDeferral*)getDeferral;
 @end
 
@@ -364,7 +364,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileBitmapRequestedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapTileBitmapRequest* request;
 @property (readonly) int x;
 @property (readonly) int y;
@@ -379,7 +379,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileUriRequestDeferral : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)complete;
 @end
 
@@ -391,8 +391,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileUriRequest : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* uri;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* uri;
 - (WUXCMMapTileUriRequestDeferral*)getDeferral;
 @end
 
@@ -404,7 +404,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileUriRequestedEventArgs : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUXCMMapTileUriRequest* request;
 @property (readonly) int x;
 @property (readonly) int y;
@@ -419,7 +419,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXDependencyObject : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WUCCoreDispatcher* dispatcher;
 - (RTObject*)getValue:(WXDependencyProperty*)dp;
 - (void)setValue:(WXDependencyProperty*)dp value:(RTObject*)value;
@@ -438,19 +438,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapCamera : WXDependencyObject
-+ (WUXCMMapCamera*)createInstanceWithLocation:(WDGGeopoint*)location ACTIVATOR;
-+ (WUXCMMapCamera*)createInstanceWithLocationAndHeading:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees ACTIVATOR;
-+ (WUXCMMapCamera*)createInstanceWithLocationHeadingAndPitch:(WDGGeopoint*)location
-                                            headingInDegrees:(double)headingInDegrees
-                                              pitchInDegrees:(double)pitchInDegrees ACTIVATOR;
-+ (WUXCMMapCamera*)createInstanceWithLocationHeadingPitchRollAndFieldOfView:(WDGGeopoint*)location
-                                                           headingInDegrees:(double)headingInDegrees
-                                                             pitchInDegrees:(double)pitchInDegrees
-                                                              rollInDegrees:(double)rollInDegrees
-                                                       fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
++ (WUXCMMapCamera*)makeInstanceWithLocation:(WDGGeopoint*)location ACTIVATOR;
++ (WUXCMMapCamera*)makeInstanceWithLocationAndHeading:(WDGGeopoint*)location headingInDegrees:(double)headingInDegrees ACTIVATOR;
++ (WUXCMMapCamera*)makeInstanceWithLocationHeadingAndPitch:(WDGGeopoint*)location
+                                          headingInDegrees:(double)headingInDegrees
+                                            pitchInDegrees:(double)pitchInDegrees ACTIVATOR;
++ (WUXCMMapCamera*)makeInstanceWithLocationHeadingPitchRollAndFieldOfView:(WDGGeopoint*)location
+                                                         headingInDegrees:(double)headingInDegrees
+                                                           pitchInDegrees:(double)pitchInDegrees
+                                                            rollInDegrees:(double)rollInDegrees
+                                                     fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
 @property double roll;
 @property double pitch;
-@property (copy) WDGGeopoint* location;
+@property (retain) WDGGeopoint* location;
 @property double heading;
 @property double fieldOfView;
 @end
@@ -463,7 +463,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapCustomExperience : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXCMMapCustomExperience_DEFINED__
@@ -474,7 +474,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapElement : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property int zIndex;
 @property BOOL visible;
 @property int mapTabIndex;
@@ -491,7 +491,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapInputEventArgs : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WDGGeopoint* location;
 @property (readonly) WFPoint* position;
 @end
@@ -504,9 +504,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapItemsControl : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject* itemsSource;
-@property (copy) WXDataTemplate* itemTemplate;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject* itemsSource;
+@property (retain) WXDataTemplate* itemTemplate;
 @property (readonly) NSMutableArray* items;
 + (WXDependencyProperty*)itemTemplateProperty;
 + (WXDependencyProperty*)itemsProperty;
@@ -521,8 +521,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapRouteView : WXDependencyObject
-@property (copy) WUColor* routeColor;
-@property (copy) WUColor* outlineColor;
+@property (retain) WUColor* routeColor;
+@property (retain) WUColor* outlineColor;
 @property (readonly) WSMMapRoute* route;
 @end
 
@@ -565,7 +565,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileDataSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WUXCMMapTileDataSource_DEFINED__
@@ -576,14 +576,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapTileSource : WXDependencyObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL isTransparencyEnabled;
 @property BOOL isRetryEnabled;
 @property BOOL isFadingEnabled;
-@property (copy) WUXCMMapTileDataSource* dataSource;
-@property (copy) WDGGeoboundingBox* bounds;
+@property (retain) WUXCMMapTileDataSource* dataSource;
+@property (retain) WDGGeoboundingBox* bounds;
 @property BOOL allowOverstretch;
-@property (copy) WUXCMMapZoomLevelRange* zoomLevelRange;
+@property (retain) WUXCMMapZoomLevelRange* zoomLevelRange;
 @property int zIndex;
 @property BOOL visible;
 @property int tilePixelSize;
@@ -627,7 +627,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMCustomMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (EventRegistrationToken)addBitmapRequestedEvent:(void (^)(WUXCMCustomMapTileDataSource*, WUXCMMapTileBitmapRequestedEventArgs*))del;
 - (void)removeBitmapRequestedEvent:(EventRegistrationToken)tok;
 @end
@@ -640,8 +640,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMHttpMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* uriFormatString;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* uriFormatString;
 @property BOOL allowCaching;
 @property (readonly) NSMutableDictionary* additionalRequestHeaders;
 - (EventRegistrationToken)addUriRequestedEvent:(void (^)(WUXCMHttpMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
@@ -656,8 +656,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMLocalMapTileDataSource : WUXCMMapTileDataSource
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* uriFormatString;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* uriFormatString;
 - (EventRegistrationToken)addUriRequestedEvent:(void (^)(WUXCMLocalMapTileDataSource*, WUXCMMapTileUriRequestedEventArgs*))del;
 - (void)removeUriRequestedEvent:(EventRegistrationToken)tok;
 @end
@@ -670,11 +670,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapIcon : WUXCMMapElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* title;
-@property (copy) WFPoint* normalizedAnchorPoint;
-@property (copy) WDGGeopoint* location;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* image;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* title;
+@property (retain) WFPoint* normalizedAnchorPoint;
+@property (retain) WDGGeopoint* location;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* image;
 @property WUXCMMapElementCollisionBehavior collisionBehaviorDesired;
 + (WXDependencyProperty*)locationProperty;
 + (WXDependencyProperty*)normalizedAnchorPointProperty;
@@ -690,12 +690,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapPolygon : WUXCMMapElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double strokeThickness;
 @property BOOL strokeDashed;
-@property (copy) WUColor* strokeColor;
-@property (copy) WDGGeopath* path;
-@property (copy) WUColor* fillColor;
+@property (retain) WUColor* strokeColor;
+@property (retain) WDGGeopath* path;
+@property (retain) WUColor* fillColor;
 + (WXDependencyProperty*)pathProperty;
 + (WXDependencyProperty*)strokeDashedProperty;
 + (WXDependencyProperty*)strokeThicknessProperty;
@@ -709,11 +709,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMMapPolyline : WUXCMMapElement
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double strokeThickness;
 @property BOOL strokeDashed;
-@property (copy) WUColor* strokeColor;
-@property (copy) WDGGeopath* path;
+@property (retain) WUColor* strokeColor;
+@property (retain) WDGGeopath* path;
 + (WXDependencyProperty*)pathProperty;
 + (WXDependencyProperty*)strokeDashedProperty;
 @end
@@ -726,11 +726,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXCMStreetsideExperience : WUXCMMapCustomExperience
-+ (WUXCMStreetsideExperience*)createInstanceWithPanorama:(WUXCMStreetsidePanorama*)panorama ACTIVATOR;
-+ (WUXCMStreetsideExperience*)createInstanceWithPanoramaHeadingPitchAndFieldOfView:(WUXCMStreetsidePanorama*)panorama
-                                                                  headingInDegrees:(double)headingInDegrees
-                                                                    pitchInDegrees:(double)pitchInDegrees
-                                                              fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
++ (WUXCMStreetsideExperience*)makeInstanceWithPanorama:(WUXCMStreetsidePanorama*)panorama ACTIVATOR;
++ (WUXCMStreetsideExperience*)makeInstanceWithPanoramaHeadingPitchAndFieldOfView:(WUXCMStreetsidePanorama*)panorama
+                                                                headingInDegrees:(double)headingInDegrees
+                                                                  pitchInDegrees:(double)pitchInDegrees
+                                                            fieldOfViewInDegrees:(double)fieldOfViewInDegrees ACTIVATOR;
 @property BOOL zoomButtonsVisible;
 @property BOOL streetLabelsVisible;
 @property BOOL overviewMapVisible;
@@ -817,26 +817,26 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 @property BOOL isRightTapEnabled;
-@property (copy) WUXMProjection* projection;
+@property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
 @property BOOL isHitTestVisible;
 @property double opacity;
-@property (copy) WUXMCacheMode* cacheMode;
+@property (retain) WUXMCacheMode* cacheMode;
 @property BOOL isDoubleTapEnabled;
 @property BOOL isTapEnabled;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (copy) WUXMRectangleGeometry* clip;
-@property (copy) WUXMATransitionCollection* transitions;
-@property (copy) WFPoint* renderTransformOrigin;
-@property (copy) WUXMTransform* renderTransform;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMATransitionCollection* transitions;
+@property (retain) WFPoint* renderTransformOrigin;
+@property (retain) WUXMTransform* renderTransform;
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
 @property (readonly) NSArray* pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
-@property (copy) WUXMMTransform3D* transform3D;
+@property (retain) WUXMMTransform3D* transform3D;
 @property BOOL canDrag;
 + (WXRoutedEvent*)dropEvent;
 + (WXDependencyProperty*)allowDropProperty;
@@ -963,22 +963,22 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
-+ (instancetype)create ACTIVATOR;
-@property (copy) WXThickness* margin;
-@property (copy) NSString* language;
++ (instancetype)make ACTIVATOR;
+@property (retain) WXThickness* margin;
+@property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
-@property (copy) RTObject* dataContext;
+@property (retain) RTObject* dataContext;
 @property WXVerticalAlignment verticalAlignment;
 @property double maxWidth;
 @property double maxHeight;
 @property double minHeight;
 @property double width;
-@property (copy) RTObject* tag;
-@property (copy) WXStyle* style;
-@property (copy) WXResourceDictionary* resources;
-@property (copy) NSString* name;
+@property (retain) RTObject* tag;
+@property (retain) WXStyle* style;
+@property (retain) WXResourceDictionary* resources;
+@property (retain) NSString* name;
 @property double minWidth;
 @property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
@@ -1035,29 +1035,29 @@ WINRT_EXPORT
 @interface WXCControl : WXFrameworkElement
 + (BOOL)getIsTemplateFocusTarget:(WXFrameworkElement*)element;
 + (void)setIsTemplateFocusTarget:(WXFrameworkElement*)element value:(BOOL)value;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WUTFontWeight* fontWeight;
++ (instancetype)make ACTIVATOR;
+@property (retain) WUTFontWeight* fontWeight;
 @property WUTFontStyle fontStyle;
 @property WUTFontStretch fontStretch;
 @property double fontSize;
-@property (copy) WUXMBrush* background;
-@property (copy) WUXMFontFamily* fontFamily;
-@property (copy) WUXMBrush* foreground;
+@property (retain) WUXMBrush* background;
+@property (retain) WUXMFontFamily* fontFamily;
+@property (retain) WUXMBrush* foreground;
 @property int characterSpacing;
-@property (copy) WXThickness* borderThickness;
-@property (copy) WUXMBrush* borderBrush;
+@property (retain) WXThickness* borderThickness;
+@property (retain) WUXMBrush* borderBrush;
 @property WXHorizontalAlignment horizontalContentAlignment;
 @property WXVerticalAlignment verticalContentAlignment;
-@property (copy) WXCControlTemplate* Template;
+@property (retain) WXCControlTemplate* Template;
 @property int tabIndex;
-@property (copy) WXThickness* padding;
+@property (retain) WXThickness* padding;
 @property BOOL isTabStop;
 @property BOOL isEnabled;
 @property WUXIKeyboardNavigationMode tabNavigation;
 @property (readonly) WXFocusState focusState;
 @property BOOL isTextScaleFactorEnabled;
 @property BOOL useSystemFocusVisuals;
-@property (copy) RTObject* defaultStyleKey;
+@property (retain) RTObject* defaultStyleKey;
 + (WXDependencyProperty*)fontSizeProperty;
 + (WXDependencyProperty*)backgroundProperty;
 + (WXDependencyProperty*)borderBrushProperty;
@@ -1125,16 +1125,16 @@ WINRT_EXPORT
 + (void)setLocation:(WXDependencyObject*)element value:(WDGGeopoint*)value;
 + (WFPoint*)getNormalizedAnchorPoint:(WXDependencyObject*)element;
 + (void)setNormalizedAnchorPoint:(WXDependencyObject*)element value:(WFPoint*)value;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property BOOL landmarksVisible;
 @property double heading;
 @property double desiredPitch;
 @property WUXCMMapColorScheme colorScheme;
-@property (copy) NSString* mapServiceToken;
+@property (retain) NSString* mapServiceToken;
 @property double zoomLevel;
 @property WUXCMMapWatermarkMode watermarkMode;
-@property (copy) WFPoint* transformOrigin;
-@property (copy) WDGGeopoint* center;
+@property (retain) WFPoint* transformOrigin;
+@property (retain) WDGGeopoint* center;
 @property BOOL pedestrianFeaturesVisible;
 @property WUXCMMapStyle style;
 @property BOOL trafficFlowVisible;
@@ -1148,10 +1148,10 @@ WINRT_EXPORT
 @property (readonly) double maxZoomLevel;
 @property BOOL transitFeaturesVisible;
 @property WUXCMMapInteractionMode tiltInteractionMode;
-@property (copy) WUXCMMapScene* scene;
+@property (retain) WUXCMMapScene* scene;
 @property WUXCMMapInteractionMode rotateInteractionMode;
 @property WUXCMMapPanInteractionMode panInteractionMode;
-@property (copy) WUXCMMapCustomExperience* customExperience;
+@property (retain) WUXCMMapCustomExperience* customExperience;
 @property BOOL businessLandmarksVisible;
 @property WUXCMMapInteractionMode zoomInteractionMode;
 @property (readonly) WUXCMMapCamera* targetCamera;

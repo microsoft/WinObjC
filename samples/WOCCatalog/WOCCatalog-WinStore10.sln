@@ -2,16 +2,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{802EC330-1C66-4ECE-ACAC-A22F0058E869}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{AFEC516B-E073-4A93-8550-D9EB25618620}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{A74AAE3B-53F9-42FE-B857-87153273DA20}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{F36FF2F2-7CC8-47AF-B4E2-8EB665225AFF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{49088E7E-1CED-4D0D-828B-E82205376972}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{bef9b300-b97b-4e96-90ac-c7d0150a6ed7}*SharedItemsImports = 4
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{a74aae3b-53f9-42fe-b857-87153273da20}*SharedItemsImports = 9
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{F36FF2F2-7CC8-47AF-B4E2-8EB665225AFF}*SharedItemsImports = 9
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{49088E7E-1CED-4D0D-828B-E82205376972}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +20,24 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|ARM.ActiveCfg = Debug|ARM
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|ARM.Build.0 = Debug|ARM
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|ARM.Deploy.0 = Debug|ARM
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Build.0 = Debug|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Debug|Win32.Deploy.0 = Debug|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|ARM.ActiveCfg = Release|ARM
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|ARM.Build.0 = Release|ARM
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|ARM.Deploy.0 = Release|ARM
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.ActiveCfg = Release|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Build.0 = Release|Win32
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7}.Release|Win32.Deploy.0 = Release|Win32
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Debug|ARM.ActiveCfg = Debug|ARM
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Debug|ARM.Build.0 = Debug|ARM
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Debug|ARM.Deploy.0 = Debug|ARM
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Debug|Win32.ActiveCfg = Debug|Win32
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Debug|Win32.Build.0 = Debug|Win32
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Debug|Win32.Deploy.0 = Debug|Win32
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Release|ARM.ActiveCfg = Release|ARM
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Release|ARM.Build.0 = Release|ARM
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Release|ARM.Deploy.0 = Release|ARM
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Release|Win32.ActiveCfg = Release|Win32
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Release|Win32.Build.0 = Release|Win32
+		{49088E7E-1CED-4D0D-828B-E82205376972}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A74AAE3B-53F9-42FE-B857-87153273DA20} = {802EC330-1C66-4ECE-ACAC-A22F0058E869}
-		{BEF9B300-B97B-4E96-90AC-C7D0150A6ED7} = {802EC330-1C66-4ECE-ACAC-A22F0058E869}
+		{F36FF2F2-7CC8-47AF-B4E2-8EB665225AFF} = {AFEC516B-E073-4A93-8550-D9EB25618620}
+		{49088E7E-1CED-4D0D-828B-E82205376972} = {AFEC516B-E073-4A93-8550-D9EB25618620}
 	EndGlobalSection
 EndGlobal

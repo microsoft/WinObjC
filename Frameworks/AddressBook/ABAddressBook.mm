@@ -17,6 +17,7 @@
 #import <AddressBook/ABAddressBook.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CFStringRef ABAddressBookErrorDomain = static_cast<const CFStringRef>(@"ABAddressBookErrorDomain");
 

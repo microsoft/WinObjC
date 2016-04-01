@@ -24,23 +24,26 @@
 #include "NSLocaleInternal.h"
 
 #include <unicode/gregocal.h>
+#include "LoggingNative.h"
 
-NSString* const NSCalendarIdentifierGregorian = @"NSCalendarIdentifierGregorian";
-NSString* const NSCalendarIdentifierBuddhist = @"NSCalendarIdentifierBuddhist";
-NSString* const NSCalendarIdentifierChinese = @"NSCalendarIdentifierChinese";
-NSString* const NSCalendarIdentifierCoptic = @"NSCalendarIdentifierCoptic";
-NSString* const NSCalendarIdentifierEthiopicAmeteMihret = @"NSCalendarIdentifierEthiopicAmeteMihret";
-NSString* const NSCalendarIdentifierEthiopicAmeteAlem = @"NSCalendarIdentifierEthiopicAmeteAlem";
-NSString* const NSCalendarIdentifierHebrew = @"NSCalendarIdentifierHebrew";
-NSString* const NSCalendarIdentifierISO8601 = @"NSCalendarIdentifierISO8601";
-NSString* const NSCalendarIdentifierIndian = @"NSCalendarIdentifierIndian";
-NSString* const NSCalendarIdentifierIslamic = @"NSCalendarIdentifierIslamic";
-NSString* const NSCalendarIdentifierIslamicCivil = @"NSCalendarIdentifierIslamicCivil";
-NSString* const NSCalendarIdentifierJapanese = @"NSCalendarIdentifierJapanese";
-NSString* const NSCalendarIdentifierPersian = @"NSCalendarIdentifierPersian";
-NSString* const NSCalendarIdentifierRepublicOfChina = @"NSCalendarIdentifierRepublicOfChina";
-NSString* const NSCalendarIdentifierIslamicTabular = @"NSCalendarIdentifierIslamicTabular";
-NSString* const NSCalendarIdentifierIslamicUmmAlQura = @"NSCalendarIdentifierIslamicUmmAlQura";
+static const wchar_t* TAG = L"NSCalendar";
+
+NSString* const NSCalendarIdentifierGregorian = @"gregorian";
+NSString* const NSCalendarIdentifierBuddhist = @"buddhist";
+NSString* const NSCalendarIdentifierChinese = @"chinese";
+NSString* const NSCalendarIdentifierCoptic = @"coptic";
+NSString* const NSCalendarIdentifierEthiopicAmeteMihret = @"ethiopic";
+NSString* const NSCalendarIdentifierEthiopicAmeteAlem = @"ethiopic-amete-alem";
+NSString* const NSCalendarIdentifierHebrew = @"hebrew";
+NSString* const NSCalendarIdentifierISO8601 = @"iso8601";
+NSString* const NSCalendarIdentifierIndian = @"indian";
+NSString* const NSCalendarIdentifierIslamic = @"islamic";
+NSString* const NSCalendarIdentifierIslamicCivil = @"islamic-civil";
+NSString* const NSCalendarIdentifierJapanese = @"japanese";
+NSString* const NSCalendarIdentifierPersian = @"persian";
+NSString* const NSCalendarIdentifierRepublicOfChina = @"roc";
+NSString* const NSCalendarIdentifierIslamicTabular = @"islamic-tbla";
+NSString* const NSCalendarIdentifierIslamicUmmAlQura = @"islamic-umalqura";
 NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotification";
 
 @implementation NSCalendar {
@@ -77,6 +80,10 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
 
     return _cal;
 }
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     NSCalendar* result = [NSCalendar alloc];
 
@@ -110,6 +117,9 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_identifier release];
     [_timeZone release];
@@ -360,8 +370,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 */
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)inUnit inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
     UNIMPLEMENTED();
-    EbrDebugLog("ordinalityOfUnit not supported\n");
-    return 0;
+    return StubReturn();
 }
 
 /**
@@ -399,10 +408,12 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 /**
  @Status Stub
 */
-- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate**)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
+- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
     UNIMPLEMENTED();
     // HACK: implement me!
-    *datep = [date retain];
+    if (datep) {
+        *datep = [date retain];
+    }
     return NO;
 }
 

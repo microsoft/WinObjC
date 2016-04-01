@@ -20,6 +20,9 @@
 #import <GLKit/GLKShaderDefs.h>
 #include "ShaderInfo.h"
 #include "ShaderGen.h"
+#import "NSLogging.h"
+
+static const wchar_t* TAG = L"ShaderGen";
 
 using namespace std;
 using namespace GLKitShader;
@@ -61,7 +64,7 @@ string ShaderContext::orderedTempVals(const TempMap& tempDefs, bool usePrecision
         }
 
         if (!foundOne) {
-            NSLog(@"Unable to generate temporary calculations for shader!");
+            NSTraceCritical(TAG, @"Unable to generate temporary calculations for shader!");
             assert(0);
             break;
         }

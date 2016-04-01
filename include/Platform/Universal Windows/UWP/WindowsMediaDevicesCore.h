@@ -174,7 +174,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureControl : RTObject
-@property (copy) id value;
+@property (retain) id value;
 @property BOOL Auto;
 @end
 
@@ -186,7 +186,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
-@property (copy) id value;
+@property (retain) id value;
 @end
 
 #endif // __WMDCFrameExposureCompensationControl_DEFINED__
@@ -197,7 +197,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
-@property (copy) id value;
+@property (retain) id value;
 @property BOOL Auto;
 @end
 
@@ -209,7 +209,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusControl : RTObject
-@property (copy) id value;
+@property (retain) id value;
 @end
 
 #endif // __WMDCFrameFocusControl_DEFINED__
@@ -234,8 +234,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameController : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) id photoConfirmationEnabled;
++ (instancetype)make ACTIVATOR;
+@property (retain) id photoConfirmationEnabled;
 @property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;
 @property (readonly) WMDCFrameExposureControl* exposureControl;
 @property (readonly) WMDCFrameFocusControl* focusControl;

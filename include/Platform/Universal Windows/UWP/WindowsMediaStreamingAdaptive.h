@@ -95,10 +95,10 @@ WINRT_EXPORT
                                     success:(void (^)(WMSAAdaptiveMediaSourceCreationResult*))success
                                     failure:(void (^)(NSError*))failure;
 @property unsigned int initialBitrate;
-@property (copy) WFTimeSpan* inboundBitsPerSecondWindow;
-@property (copy) id desiredMinBitrate;
-@property (copy) WFTimeSpan* desiredLiveOffset;
-@property (copy) id desiredMaxBitrate;
+@property (retain) WFTimeSpan* inboundBitsPerSecondWindow;
+@property (retain) id desiredMinBitrate;
+@property (retain) WFTimeSpan* desiredLiveOffset;
+@property (retain) id desiredMaxBitrate;
 @property (readonly) BOOL audioOnlyPlayback;
 @property (readonly) NSArray* availableBitrates;
 @property (readonly) uint64_t inboundBitsPerSecond;
@@ -213,11 +213,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadResult : RTObject
-@property (copy) WFUri* resourceUri;
-@property (copy) RTObject<WSSIInputStream>* inputStream;
+@property (retain) WFUri* resourceUri;
+@property (retain) RTObject<WSSIInputStream>* inputStream;
 @property unsigned int extendedStatus;
-@property (copy) NSString* contentType;
-@property (copy) RTObject<WSSIBuffer>* buffer;
+@property (retain) NSString* contentType;
+@property (retain) RTObject<WSSIBuffer>* buffer;
 @end
 
 #endif // __WMSAAdaptiveMediaSourceDownloadResult_DEFINED__

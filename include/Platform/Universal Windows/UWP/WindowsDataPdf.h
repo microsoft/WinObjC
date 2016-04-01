@@ -46,13 +46,13 @@ typedef unsigned WDPPdfPageRotation;
 
 WINRT_EXPORT
 @interface WDPPdfPageRenderOptions : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFRect* sourceRect;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFRect* sourceRect;
 @property BOOL isIgnoringHighContrast;
 @property unsigned int destinationWidth;
 @property unsigned int destinationHeight;
 @property WFGUID* bitmapEncoderId;
-@property (copy) WUColor* backgroundColor;
+@property (retain) WUColor* backgroundColor;
 @end
 
 #endif // __WDPPdfPageRenderOptions_DEFINED__

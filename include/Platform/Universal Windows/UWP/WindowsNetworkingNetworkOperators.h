@@ -299,7 +299,7 @@ WINRT_EXPORT
 @interface WNNProfileUsage : NSObject
 + (instancetype) new;
 @property unsigned int usageInMegabytes;
-@property (copy) WFDateTime* lastSyncTime;
+@property (retain) WFDateTime* lastSyncTime;
 @end
 
 // Windows.Networking.NetworkOperators.MobileBroadbandAccount
@@ -406,9 +406,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNNetworkOperatorTetheringAccessPointConfiguration : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* ssid;
-@property (copy) NSString* passphrase;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* ssid;
+@property (retain) NSString* passphrase;
 @end
 
 #endif // __WNNNetworkOperatorTetheringAccessPointConfiguration_DEFINED__
@@ -489,7 +489,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandAccountWatcher : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNNMobileBroadbandAccountWatcherStatus status;
 - (EventRegistrationToken)addAccountAddedEvent:(void (^)(WNNMobileBroadbandAccountWatcher*, WNNMobileBroadbandAccountEventArgs*))del;
 - (void)removeAccountAddedEvent:(EventRegistrationToken)tok;
@@ -950,7 +950,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNProvisioningAgent : RTObject
 + (WNNProvisioningAgent*)createFromNetworkAccountId:(NSString*)networkAccountId;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)provisionFromXmlDocumentAsync:(NSString*)provisioningXmlDocument
                               success:(void (^)(WNNProvisionFromXmlDocumentResults*))success
                               failure:(void (^)(NSError*))failure;
@@ -965,8 +965,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNUssdMessage : RTObject
-+ (WNNUssdMessage*)createMessage:(NSString*)messageText ACTIVATOR;
-@property (copy) NSString* payloadAsText;
++ (WNNUssdMessage*)makeMessage:(NSString*)messageText ACTIVATOR;
+@property (retain) NSString* payloadAsText;
 @property uint8_t dataCodingScheme;
 - (NSArray*)getPayload;
 - (void)setPayload:(id<NSFastEnumeration> /* uint8_t */)value;

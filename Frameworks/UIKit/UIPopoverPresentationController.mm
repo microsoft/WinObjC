@@ -23,7 +23,7 @@
 /**
  @Status Stub
 */
-- (id)initWithPresentedViewController:(UIViewController*)presentedViewController
+- (instancetype)initWithPresentedViewController:(UIViewController*)presentedViewController
              presentingViewController:(UIViewController*)presentingViewController {
     return [super initWithPresentedViewController:presentedViewController presentingViewController:presentingViewController];
 }

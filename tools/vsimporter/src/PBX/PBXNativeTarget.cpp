@@ -91,6 +91,13 @@ void PBXNativeTarget::getBuildSettings(VariableCollection& settings) const
 
     settings.insert("EXECUTABLE_NAME", productNameFull);
     settings.insert("EXECUTABLE_PATH", productNameFull);
+  }  else if (m_productType == "com.apple.product-type.framework") {
+    if (productFileType != "wrapper.framework") {
+      SBLog::warning() << "Unexpected product file type \"" << productFileType << "\" for \"" << getName() << "\" framework target." << std::endl;
+    }
+
+    settings.insert("EXECUTABLE_NAME", productName);
+    settings.insert("EXECUTABLE_PATH", joinPaths(productNameFull, productName));
   } else if (m_productType == "com.apple.product-type.application") {
     // Fix up product name, when necessary
     if (productFileType == "compiled.mach-o.executable")

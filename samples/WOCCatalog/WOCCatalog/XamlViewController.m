@@ -45,8 +45,8 @@
     [super viewDidLoad];
 
     [self tableView].allowsSelection = NO;
-    self.playPauseButton = [WXCButton create];
-    self.playPauseButton.background = [WUXMSolidColorBrush createInstanceWithColor:[WUColors cornflowerBlue]];
+    self.playPauseButton = [WXCButton make];
+    self.playPauseButton.background = [WUXMSolidColorBrush makeInstanceWithColor:[WUColors cornflowerBlue]];
     self.playPauseButton.requestedTheme = WXApplicationThemeDark;
     self.playPauseButton.content = [WFPropertyValue createString: @"Pause"];
 
@@ -88,7 +88,7 @@
     }
     
     if (indexPath.row == 0) {
-       WXCDatePicker *datePicker = [WXCDatePicker create];
+       WXCDatePicker *datePicker = [WXCDatePicker make];
        UIView *datePickerView = [[UIView alloc] initWithFrame: CGRectMake(0.0f, 0.0f, 400.0f, cell.frame.size.height)];
        [datePickerView setNativeElement:datePicker];
        cell.textLabel.text = @"DatePicker";
@@ -102,9 +102,9 @@
     }
     else if (indexPath.row == 2) {
 #ifdef WINOBJC_WIN10
-       WXCCheckBox *checkBox = [OurCheckBox create];
+       WXCCheckBox *checkBox = [OurCheckBox make];
 #else
-       WXCCheckBox *checkBox = [WXCCheckBox create];
+       WXCCheckBox *checkBox = [WXCCheckBox make];
 #endif
        checkBox.requestedTheme = WXApplicationThemeDark;
        checkBox.content = [WFPropertyValue createString:@"Check"];
@@ -114,16 +114,16 @@
        cell.accessoryView = checkBoxView;
     }
     else if (indexPath.row == 3) {
-       self.mediaElement = [WXCMediaElement create];
+       self.mediaElement = [WXCMediaElement make];
        UIView *meView = [[UIView alloc] initWithFrame: CGRectMake(0.0f, 0.0f, 400.0f, 300.f)];
        self.mediaElement.autoPlay = YES;
        [meView setNativeElement: self.mediaElement];
-       self.mediaElement.source = [WFUri createUri: @"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
+       self.mediaElement.source = [WFUri makeUri: @"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
        cell.textLabel.text = @"MSDN tv";
        cell.accessoryView = meView;
     }
     else if (indexPath.row == 4) {
-       WXCSlider *slider = [WXCSlider create];
+       WXCSlider *slider = [WXCSlider make];
        slider.requestedTheme = WXApplicationThemeDark;
        slider.minimum = 0.0;
        slider.maximum = 100.0;

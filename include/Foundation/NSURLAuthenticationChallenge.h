@@ -43,12 +43,12 @@ FOUNDATION_EXPORT_CLASS
                         failureResponse:(NSURLResponse*)response
                                   error:(NSError*)error
                                  sender:(id<NSURLAuthenticationChallengeSender>)sender STUB_METHOD;
-@property (readonly, copy) NSError* error STUB_PROPERTY;
-@property (readonly, copy) NSURLResponse* failureResponse STUB_PROPERTY;
-@property (readonly) NSInteger previousFailureCount STUB_PROPERTY;
-@property (readonly, copy) NSURLCredential* proposedCredential STUB_PROPERTY;
-@property (readonly, copy) NSURLProtectionSpace* protectionSpace STUB_PROPERTY;
-@property (readonly, retain) id<NSURLAuthenticationChallengeSender> sender STUB_PROPERTY;
+@property (readonly, copy) NSError* error;
+@property (readonly, copy) NSURLResponse* failureResponse;
+@property (readonly) NSInteger previousFailureCount;
+@property (readonly, copy) NSURLCredential* proposedCredential;
+@property (readonly, copy) NSURLProtectionSpace* protectionSpace;
+@property (readonly, retain) id<NSURLAuthenticationChallengeSender> sender;
 @end
 
 @protocol NSURLAuthenticationChallengeSender <NSObject>

@@ -16,7 +16,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #include "Starboard.h"
 #include "NSOrderedPerform.h"
 
-@implementation NSOrderedPerform : NSObject
+@implementation NSOrderedPerform
 - (NSOrderedPerform*)initWithSelector:(SEL)selector
                                target:(NSObject*)target
                              argument:(NSObject*)argument

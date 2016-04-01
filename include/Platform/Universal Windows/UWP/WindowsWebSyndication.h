@@ -91,12 +91,12 @@ WINRT_EXPORT
 
 @protocol WWSISyndicationNode
 @property (readonly) NSMutableArray* attributeExtensions;
-@property (copy) WFUri* baseUri;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* elementExtensions;
-@property (copy) NSString* language;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeValue;
+@property (retain) NSString* language;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeValue;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -107,9 +107,9 @@ WINRT_EXPORT
 #define __WWSISyndicationText_DEFINED__
 
 @protocol WWSISyndicationText <WWSISyndicationNode>
-@property (copy) NSString* text;
-@property (copy) NSString* type;
-@property (copy) WDXDXmlDocument* xml;
+@property (retain) NSString* text;
+@property (retain) NSString* type;
+@property (retain) WDXDXmlDocument* xml;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -122,8 +122,8 @@ WINRT_EXPORT
 @protocol WWSISyndicationClient
 @property BOOL bypassCacheOnRetrieve;
 @property unsigned int maxResponseBufferSize;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
 @property unsigned int timeout;
 - (void)setRequestHeader:(NSString*)name value:(NSString*)value;
 - (void)retrieveFeedAsync:(WFUri*)uri
@@ -140,13 +140,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationAttribute : RTObject
-+ (instancetype)create ACTIVATOR;
-+ (WWSSyndicationAttribute*)createSyndicationAttribute:(NSString*)attributeName
-                                    attributeNamespace:(NSString*)attributeNamespace
-                                        attributeValue:(NSString*)attributeValue ACTIVATOR;
-@property (copy) NSString* value;
-@property (copy) NSString* Namespace;
-@property (copy) NSString* name;
++ (instancetype)make ACTIVATOR;
++ (WWSSyndicationAttribute*)makeSyndicationAttribute:(NSString*)attributeName
+                                  attributeNamespace:(NSString*)attributeNamespace
+                                      attributeValue:(NSString*)attributeValue ACTIVATOR;
+@property (retain) NSString* value;
+@property (retain) NSString* Namespace;
+@property (retain) NSString* name;
 @end
 
 #endif // __WWSSyndicationAttribute_DEFINED__
@@ -157,15 +157,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationNode : RTObject <WWSISyndicationNode>
-+ (WWSSyndicationNode*)createSyndicationNode:(NSString*)nodeName
-                               nodeNamespace:(NSString*)nodeNamespace
-                                   nodeValue:(NSString*)nodeValue ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
++ (WWSSyndicationNode*)makeSyndicationNode:(NSString*)nodeName
+                             nodeNamespace:(NSString*)nodeNamespace
+                                 nodeValue:(NSString*)nodeValue ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -179,16 +179,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationGenerator : RTObject <WWSISyndicationNode>
-+ (instancetype)create ACTIVATOR;
-+ (WWSSyndicationGenerator*)createSyndicationGenerator:(NSString*)text ACTIVATOR;
-@property (copy) NSString* version;
-@property (copy) WFUri* uri;
-@property (copy) NSString* text;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
++ (instancetype)make ACTIVATOR;
++ (WWSSyndicationGenerator*)makeSyndicationGenerator:(NSString*)text ACTIVATOR;
+@property (retain) NSString* Version;
+@property (retain) WFUri* uri;
+@property (retain) NSString* text;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -202,19 +202,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationText : RTObject <WWSISyndicationText, WWSISyndicationNode>
-+ (instancetype)create ACTIVATOR;
-+ (WWSSyndicationText*)createSyndicationText:(NSString*)text ACTIVATOR;
-+ (WWSSyndicationText*)createSyndicationTextEx:(NSString*)text type:(WWSSyndicationTextType)type ACTIVATOR;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
++ (instancetype)make ACTIVATOR;
++ (WWSSyndicationText*)makeSyndicationText:(NSString*)text ACTIVATOR;
++ (WWSSyndicationText*)makeSyndicationTextEx:(NSString*)text type:(WWSSyndicationTextType)type ACTIVATOR;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
-@property (copy) WDXDXmlDocument* xml;
-@property (copy) NSString* type;
-@property (copy) NSString* text;
+@property (retain) WDXDXmlDocument* xml;
+@property (retain) NSString* type;
+@property (retain) NSString* text;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -226,20 +226,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationContent : RTObject <WWSISyndicationText, WWSISyndicationNode>
-+ (instancetype)create ACTIVATOR;
-+ (WWSSyndicationContent*)createSyndicationContent:(NSString*)text type:(WWSSyndicationTextType)type ACTIVATOR;
-+ (WWSSyndicationContent*)createSyndicationContentWithSourceUri:(WFUri*)sourceUri ACTIVATOR;
-@property (copy) WFUri* sourceUri;
-@property (copy) NSString* nodeValue;
-@property (copy) WFUri* baseUri;
-@property (copy) NSString* language;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* nodeNamespace;
++ (instancetype)make ACTIVATOR;
++ (WWSSyndicationContent*)makeSyndicationContent:(NSString*)text type:(WWSSyndicationTextType)type ACTIVATOR;
++ (WWSSyndicationContent*)makeSyndicationContentWithSourceUri:(WFUri*)sourceUri ACTIVATOR;
+@property (retain) WFUri* sourceUri;
+@property (retain) NSString* nodeValue;
+@property (retain) WFUri* baseUri;
+@property (retain) NSString* language;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* nodeNamespace;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
-@property (copy) NSString* text;
-@property (copy) NSString* type;
-@property (copy) WDXDXmlDocument* xml;
+@property (retain) NSString* text;
+@property (retain) NSString* type;
+@property (retain) WDXDXmlDocument* xml;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -251,24 +251,24 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationLink : RTObject <WWSISyndicationNode>
-+ (WWSSyndicationLink*)createSyndicationLink:(WFUri*)uri ACTIVATOR;
-+ (WWSSyndicationLink*)createSyndicationLinkEx:(WFUri*)uri
-                                  relationship:(NSString*)relationship
-                                         title:(NSString*)title
-                                     mediaType:(NSString*)mediaType
-                                        length:(unsigned int)length ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) WFUri* uri;
-@property (copy) NSString* title;
-@property (copy) NSString* resourceLanguage;
-@property (copy) NSString* relationship;
-@property (copy) NSString* mediaType;
++ (WWSSyndicationLink*)makeSyndicationLink:(WFUri*)uri ACTIVATOR;
++ (WWSSyndicationLink*)makeSyndicationLinkEx:(WFUri*)uri
+                                relationship:(NSString*)relationship
+                                       title:(NSString*)title
+                                   mediaType:(NSString*)mediaType
+                                      length:(unsigned int)length ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) WFUri* uri;
+@property (retain) NSString* title;
+@property (retain) NSString* resourceLanguage;
+@property (retain) NSString* relationship;
+@property (retain) NSString* mediaType;
 @property unsigned int length;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -282,19 +282,19 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationPerson : RTObject <WWSISyndicationNode>
-+ (WWSSyndicationPerson*)createSyndicationPerson:(NSString*)name ACTIVATOR;
-+ (WWSSyndicationPerson*)createSyndicationPersonEx:(NSString*)name email:(NSString*)email uri:(WFUri*)uri ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
++ (WWSSyndicationPerson*)makeSyndicationPerson:(NSString*)name ACTIVATOR;
++ (WWSSyndicationPerson*)makeSyndicationPersonEx:(NSString*)name email:(NSString*)email uri:(WFUri*)uri ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
-@property (copy) WFUri* uri;
-@property (copy) NSString* name;
-@property (copy) NSString* email;
+@property (retain) WFUri* uri;
+@property (retain) NSString* name;
+@property (retain) NSString* email;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -306,17 +306,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationCategory : RTObject <WWSISyndicationNode>
-+ (instancetype)create ACTIVATOR;
-+ (WWSSyndicationCategory*)createSyndicationCategory:(NSString*)term ACTIVATOR;
-+ (WWSSyndicationCategory*)createSyndicationCategoryEx:(NSString*)term scheme:(NSString*)scheme label:(NSString*)label ACTIVATOR;
-@property (copy) NSString* term;
-@property (copy) NSString* scheme;
-@property (copy) NSString* label;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
++ (instancetype)make ACTIVATOR;
++ (WWSSyndicationCategory*)makeSyndicationCategory:(NSString*)term ACTIVATOR;
++ (WWSSyndicationCategory*)makeSyndicationCategoryEx:(NSString*)term scheme:(NSString*)scheme label:(NSString*)label ACTIVATOR;
+@property (retain) NSString* term;
+@property (retain) NSString* scheme;
+@property (retain) NSString* label;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -330,16 +330,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationFeed : RTObject <WWSISyndicationNode>
-+ (WWSSyndicationFeed*)createSyndicationFeed:(NSString*)title subtitle:(NSString*)subtitle uri:(WFUri*)uri ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject<WWSISyndicationText>* title;
-@property (copy) RTObject<WWSISyndicationText>* subtitle;
-@property (copy) RTObject<WWSISyndicationText>* rights;
-@property (copy) WWSSyndicationGenerator* generator;
-@property (copy) WFDateTime* lastUpdatedTime;
-@property (copy) WFUri* imageUri;
-@property (copy) WFUri* iconUri;
-@property (copy) NSString* id;
++ (WWSSyndicationFeed*)makeSyndicationFeed:(NSString*)title subtitle:(NSString*)subtitle uri:(WFUri*)uri ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject<WWSISyndicationText>* title;
+@property (retain) RTObject<WWSISyndicationText>* subtitle;
+@property (retain) RTObject<WWSISyndicationText>* rights;
+@property (retain) WWSSyndicationGenerator* generator;
+@property (retain) WFDateTime* lastUpdatedTime;
+@property (retain) WFUri* imageUri;
+@property (retain) WFUri* iconUri;
+@property (retain) NSString* id;
 @property (readonly) WFUri* firstUri;
 @property (readonly) NSMutableArray* items;
 @property (readonly) WFUri* lastUri;
@@ -350,14 +350,14 @@ WINRT_EXPORT
 @property (readonly) WWSSyndicationFormat sourceFormat;
 @property (readonly) NSMutableArray* contributors;
 @property (readonly) NSMutableArray* authors;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
-- (void)load:(NSString*)feed;
+- (void)Load:(NSString*)feed;
 - (void)loadFromXml:(WDXDXmlDocument*)feedDocument;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
@@ -370,17 +370,17 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationItem : RTObject <WWSISyndicationNode>
-+ (WWSSyndicationItem*)createSyndicationItem:(NSString*)title content:(WWSSyndicationContent*)content uri:(WFUri*)uri ACTIVATOR;
-+ (instancetype)create ACTIVATOR;
-@property (copy) RTObject<WWSISyndicationText>* title;
-@property (copy) WWSSyndicationFeed* source;
-@property (copy) RTObject<WWSISyndicationText>* rights;
-@property (copy) RTObject<WWSISyndicationText>* summary;
-@property (copy) WFDateTime* publishedDate;
-@property (copy) WFUri* commentsUri;
-@property (copy) NSString* id;
-@property (copy) WFDateTime* lastUpdatedTime;
-@property (copy) WWSSyndicationContent* content;
++ (WWSSyndicationItem*)makeSyndicationItem:(NSString*)title content:(WWSSyndicationContent*)content uri:(WFUri*)uri ACTIVATOR;
++ (instancetype)make ACTIVATOR;
+@property (retain) RTObject<WWSISyndicationText>* title;
+@property (retain) WWSSyndicationFeed* source;
+@property (retain) RTObject<WWSISyndicationText>* rights;
+@property (retain) RTObject<WWSISyndicationText>* summary;
+@property (retain) WFDateTime* publishedDate;
+@property (retain) WFUri* commentsUri;
+@property (retain) NSString* id;
+@property (retain) WFDateTime* lastUpdatedTime;
+@property (retain) WWSSyndicationContent* content;
 @property (readonly) WFUri* editUri;
 @property (readonly) NSMutableArray* links;
 @property (readonly) NSMutableArray* authors;
@@ -389,14 +389,14 @@ WINRT_EXPORT
 @property (readonly) WFUri* itemUri;
 @property (readonly) NSString* eTag;
 @property (readonly) WFUri* editMediaUri;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
-- (void)load:(NSString*)item;
+- (void)Load:(NSString*)item;
 - (void)loadFromXml:(WDXDXmlDocument*)itemDocument;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
@@ -409,11 +409,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWSSyndicationClient : RTObject <WWSISyndicationClient>
-+ (instancetype)create ACTIVATOR;
-+ (WWSSyndicationClient*)createSyndicationClient:(WSCPasswordCredential*)serverCredential ACTIVATOR;
++ (instancetype)make ACTIVATOR;
++ (WWSSyndicationClient*)makeSyndicationClient:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 @property unsigned int timeout;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int maxResponseBufferSize;
 @property BOOL bypassCacheOnRetrieve;
 - (void)setRequestHeader:(NSString*)name value:(NSString*)value;

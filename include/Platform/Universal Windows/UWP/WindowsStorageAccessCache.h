@@ -53,8 +53,8 @@ typedef unsigned WSARecentStorageItemVisibility;
 WINRT_EXPORT
 @interface WSAAccessListEntry : NSObject
 + (instancetype) new;
-@property (copy) NSString* token;
-@property (copy) NSString* metadata;
+@property (retain) NSString* token;
+@property (retain) NSString* metadata;
 @end
 
 // Windows.Storage.AccessCache.IStorageItemAccessList

@@ -15,6 +15,9 @@
 //******************************************************************************
 
 #import "ImagesViewController.h"
+#import <CoreImage/CIImage.h>
+#import <CoreImage/CIContext.h>
+#import <CoreGraphics/CGImage.h>
 
 @implementation ImagesViewController
 
@@ -50,11 +53,17 @@
                                                 scaledRect:rect
                                                 quality:kCGInterpolationNone];
 
+    CIContext* context = [CIContext contextWithOptions:nil];
+    photo = [UIImage imageNamed:@"photo2.jpg"];
+    CIImage* ciImage = [CIImage imageWithCGImage:photo.CGImage];
+    CGImageRef cgImage = [context createCGImage:ciImage fromRect:CGRectMake(300, 600, 200, 200)];
+
     imagesView.animationImages = [NSArray arrayWithObjects:
                             scaledPhotoHighInterpolation,
                             scaledPhotoNoInterpolation,
                             [UIImage imageNamed:@"photo1.jpg"],
                             [UIImage imageNamed:@"photo2.jpg"],
+                            [UIImage imageWithCGImage:cgImage],
                             [UIImage imageNamed:@"photo3.jpg"],
                             [UIImage imageNamed:@"photo4.jpg"],
                             [UIImage imageNamed:@"photo5.jpg"],

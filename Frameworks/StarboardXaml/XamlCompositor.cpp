@@ -14,9 +14,6 @@
 //
 //******************************************************************************
 
-// XamlCompositor.cpp : Defines the exported functions for the DLL application.
-//
-
 #include <wrl/client.h>
 #include <memory>
 #include <agile.h>
@@ -32,6 +29,7 @@ using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
 #include "winobjc\winobjc.h"
+#include "ApplicationCompositor.h"
 #include "CompositorInterface.h"
 
 Windows::UI::Xaml::Controls::Grid ^ rootNode;
@@ -253,8 +251,6 @@ void DisplayAnimation::AddAnimation(DisplayNode* node, const wchar_t* propertyNa
                            toValid ? (Platform::Object ^ )(double)to : nullptr);
 }
 
-extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout);
-
 void DisplayAnimation::AddTransitionAnimation(DisplayNode* node, const char* type, const char* subtype) {
     auto xamlNode = GetCALayer(node);
     auto xamlAnimation = GetStoryboard(this);
@@ -338,9 +334,8 @@ void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info) {
     */
 }
 
-void DisplayNode::SetShouldRasterize(bool rasterize)
-{
-    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+void DisplayNode::SetShouldRasterize(bool rasterize) {
+    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     if (rasterize) {
         xamlNode->CacheMode = ref new Windows::UI::Xaml::Media::BitmapCache();
     } else {
@@ -543,8 +538,8 @@ void DisplayNode::SetContentsElement(winobjc::Id& elem, float width, float heigh
 void DisplayNode::SetContentsElement(winobjc::Id& elem) {
     XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::FrameworkElement ^ contents = (Windows::UI::Xaml::FrameworkElement ^ )(Platform::Object ^ )elem;
-    float width = contents->Width;
-    float height = contents->Height;
+    float width = static_cast<float>(contents->Width);
+    float height = static_cast<float>(contents->Height);
     float scale = 1.0f;
     xamlNode->setContentElement(contents, width, height, scale);
 }
@@ -664,7 +659,7 @@ void SetScreenParameters(float width, float height, float magnification, float r
 
 void CreateXamlCompositor(winobjc::Id& root);
 
-extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid) {
+extern "C" void SetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid) {
     winobjc::Id gridObj((Platform::Object ^ )grid);
     CreateXamlCompositor(gridObj);
 }

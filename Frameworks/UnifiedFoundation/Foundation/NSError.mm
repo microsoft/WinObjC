@@ -20,6 +20,9 @@
 #include "Foundation/NSString.h"
 
 #include <time.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"NSError";
 
 /* Error Domains */
 NSString* const NSOSStatusErrorDomain = @"NSOSStatusErrorDomain";
@@ -72,7 +75,7 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 
     const char* err = [domain UTF8String];
 
-    EbrDebugLog("failure %s: %d\n", err, code);
+    TraceError(TAG, L"failure %hs: %d", err, code);
 
     _userInfo = dict;
 
@@ -85,7 +88,7 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
         const char* pVal = [[[values objectAtIndex:i] description] UTF8String];
         const char* pKey = [[[keys objectAtIndex:i] description] UTF8String];
 
-        EbrDebugLog("%d: Key=%s Val=%s\n", i, pVal, pKey);
+        TraceVerbose(TAG, L"%d: Key=%hs Val=%hs", i, pVal, pKey);
     }
 
     return self;
@@ -141,6 +144,9 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
     return @"Generic failure";
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)description {
     return [self localizedDescription];
 }
@@ -149,10 +155,16 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
     _description.attach([description copy]);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _domain = nil;
     _userInfo = nil;

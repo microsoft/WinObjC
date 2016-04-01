@@ -15,29 +15,37 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "UIKit/UIFont.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSData.h"
-#include "Foundation/NSBundle.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSNib.h"
-#include "Foundation/NSNotificationCenter.h"
-#include "Foundation/NSRunLoop.h"
-#include "Foundation/NSAutoReleasePool.h"
 
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIDevice.h"
+#import <Foundation/NSMutableArray.h>
+#import <Foundation/NSData.h>
+#import <Foundation/NSBundle.h>
+#import <Foundation/NSDate.h>
+#import <Foundation/NSNotificationCenter.h>
+#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSAutoReleasePool.h>
+
+#import <UIKit/UIViewController.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIFont.h>
+#import <UIKit/UINib.h>
 
 #import <UIKit/UIApplicationDelegate.h>
 
-#include "UIInterface.h"
+#import "NSThread-Internal.h"
+#import "UIApplicationInternal.h"
+#import "UIFontInternal.h"
+#import "UIViewControllerInternal.h"
+#import "UIInterface.h"
+#import "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIApplicationMain";
 
 @interface NSAutoreleasePoolWarn : NSAutoreleasePool
 @end
 
 @implementation NSAutoreleasePoolWarn
 - (void)addObject:(id)obj {
-    EbrDebugLog("Autoreleasing a %s in the toplevel pool that will never be freed\n", object_getClassName(obj));
+    TraceVerbose(TAG, L"Autoreleasing a %hs in the toplevel pool that will never be freed", object_getClassName(obj));
     [super addObject:obj];
 }
 @end
@@ -84,23 +92,27 @@ UIInterfaceOrientation UIOrientationFromString(UIInterfaceOrientation curOrienta
 
         return UIInterfaceOrientationLandscapeRight;
     } else if (strcmp(pOrientation, "") == 0) {
-        EbrDebugLog("Warning: orientation is blank\n");
+        TraceWarning(TAG, L"Warning: orientation is blank");
         return UIInterfaceOrientationLandscapeRight;
     } else if (strcmp(pOrientation, "UIInterfaceOrientationPortraitUpsideDown") == 0) {
         return UIInterfaceOrientationPortraitUpsideDown;
     } else {
-        EbrDebugLog("Warning: Unsupported orientation %s\n", pOrientation);
+        TraceWarning(TAG, L"Warning: Unsupported orientation %hs", pOrientation);
         assert(0);
     }
 
     return UIInterfaceOrientationPortrait;
 }
 
+UIDeviceOrientation newDeviceOrientation = UIDeviceOrientationUnknown;
+
 BOOL _doShutdown = FALSE;
-int newDeviceOrientation;
 volatile bool g_uiMainRunning = false;
 static NSAutoreleasePoolWarn* outerPool;
 
+/**
+ @Public No
+*/
 int UIApplicationMainInit(
     int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, UIInterfaceOrientation defaultOrientation) {
     // Make sure we reference classes we need:
@@ -185,15 +197,15 @@ int UIApplicationMainInit(
             NSString* nibPath = [[NSBundle mainBundle] pathForResource:mainNibFile ofType:@"nib"];
             if (nibPath != nil) {
                 NSArray* obj =
-                    [[[NSNib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
+                    [[[UINib nibWithNibName:nibPath bundle:[NSBundle mainBundle]] instantiateWithOwner:uiApplication options:nil] retain];
                 int count = [obj count];
 
                 for (int i = 0; i < count; i++) {
                     NSObject* curObj = [obj objectAtIndex:i];
 
                     if ([curObj isKindOfClass:[UIViewController class]]) {
-                        [curObj setResizeToScreen:1];
-                        [curObj _doResizeToScreen];
+                        [reinterpret_cast<UIViewController*>(curObj) _setResizeToScreen:YES];
+                        [reinterpret_cast<UIViewController*>(curObj) _doResizeToScreen];
                     }
                 }
             }
@@ -211,7 +223,7 @@ int UIApplicationMainInit(
                 UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:storyBoardName bundle:[NSBundle mainBundle]];
                 UIViewController* viewController = [storyBoard instantiateInitialViewController];
                 if (viewController != nil) {
-                    [viewController setResizeToScreen:1];
+                    [viewController _setResizeToScreen:1];
                     rootController = viewController;
                 }
             }
@@ -243,6 +255,8 @@ int UIApplicationMainInit(
         rootController = nil;
     }
 
+    // TODO::
+    // bug-nithishm-03172016 -  Sending applicationDidBecomeActive as part of application launch until 6910008 is root caused.
     if ([curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
         [curDelegate applicationDidBecomeActive:uiApplication];
     }
@@ -255,9 +269,6 @@ int UIApplicationMainInit(
     if (newDeviceOrientation != 0) {
         [[UIDevice currentDevice] performSelectorOnMainThread:@selector(submitRotation) withObject:nil waitUntilDone:FALSE];
     }
-#ifdef SHOW_OPTIONS_ON_STARTUP
-    [[UIApplication sharedApplication] performSelectorOnMainThread:@selector(__showOptions) withObject:0 waitUntilDone:FALSE];
-#endif
 
     //  Make windows visible
     NSArray* windows = [[UIApplication sharedApplication] windows];
@@ -277,13 +288,16 @@ int UIApplicationMainInit(
     return 0;
 }
 
+/**
+ @Public No
+*/
 int UIApplicationMainLoop() {
     [[NSThread currentThread] _associateWithMainThread];
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
     for (;;) {
         [runLoop run];
-        EbrDebugLog("Warning: CFRunLoop stopped\n");
+        TraceWarning(TAG, L"Warning: CFRunLoop stopped");
         if (_doShutdown) {
             break;
         }
@@ -295,9 +309,17 @@ int UIApplicationMainLoop() {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationWillTerminateNotification"
                                                         object:[UIApplication sharedApplication]];
 
-    EbrDebugLog("Exiting uncleanly.\n");
+    TraceVerbose(TAG, L"Exiting uncleanly.");
     EbrShutdownAV();
     [outerPool release];
 
     return 0;
+}
+
+void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
+    [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
+}
+
+void UIApplicationMainHandleHighMemoryUsageEvent() {
+    [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }

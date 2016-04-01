@@ -182,13 +182,14 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "stepper", UIStepper)
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
+    IS_CONVERTER(ret, className, "customObject", ObjectConverterSwapper)
+
 
     if (ret == NULL) {
 #ifdef _DEBUG
 // printf("Unrecognized tag <%s>\n", className);
 #endif
-        // TODO: telemetry
-        // TELEMETRY_EVENT_DATA(L"UnRecognizedTag", className);
+        TELEMETRY_EVENT_DATA(L"UnRecognizedTag", className);
         ret = new XIBObject();
     }
 

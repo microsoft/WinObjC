@@ -121,7 +121,6 @@
 #import <Foundation/NSMutableURLRequest.h>
 #import <Foundation/NSNetService.h>
 #import <Foundation/NSNetServiceBrowser.h>
-#import <Foundation/NSNib.h>
 #import <Foundation/NSNotification.h>
 #import <Foundation/NSNotificationCenter.h>
 #import <Foundation/NSNotificationQueue.h>
@@ -177,7 +176,6 @@
 #import <Foundation/NSURLError.h>
 #import <Foundation/NSURLProtectionSpace.h>
 #import <Foundation/NSURLProtocol.h>
-#import <Foundation/NSURLProtocolClient.h>
 #import <Foundation/NSURLQueryItem.h>
 #import <Foundation/NSURLRequest.h>
 #import <Foundation/NSURLResponse.h>

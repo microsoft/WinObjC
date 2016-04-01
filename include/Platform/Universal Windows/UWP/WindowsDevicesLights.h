@@ -49,7 +49,7 @@ WINRT_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDLLamp*))success failure:(void (^)(NSError*))failure;
 @property BOOL isEnabled;
-@property (copy) WUColor* color;
+@property (retain) WUColor* color;
 @property float brightnessLevel;
 @property (readonly) NSString* deviceId;
 @property (readonly) BOOL isColorSettable;

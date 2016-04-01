@@ -20,10 +20,13 @@
 #include <stdlib.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSKeyValueCoding.h>
+#import "NSArrayInternal.h"
 #import <Starboard/String.h>
 #import "NSValueTransformers.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #import "NSDelayedPerform.h"
+#import "NSRunLoop+Internal.h"
+#import "NSThread-Internal.h"
 
 #include <memory>
 #include <vector>
@@ -48,10 +51,28 @@ NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator"
 @implementation NSObject (NSKeyValueCoding)
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 + (BOOL)accessInstanceVariablesDirectly {
     return YES;
+}
+
+static bool _ivarIsKVCCompliant(Ivar ivar, const char* propName) {
+    // For a given property x, our search order should be:
+    // _x, _isX, x, isX.
+    // If none of these is found, we don't support KVC for this key.
+    // Key length is caller-checked.
+    char upper = toupper(propName[0]);
+    const char* ivarName = ivar_getName(ivar);
+    // clang-format off
+    return (
+       /* (has _) */ ivarName[0] == '_' && (
+       /* _prop   */ (strcmp(ivarName + 1, propName) == 0)
+       /* _isProp */ || (ivarName[1] == 'i' && ivarName[2] == 's' && ivarName[3] == upper && (strcmp(ivarName + 4, propName + 1) == 0))
+       /* (no _)  */ ))
+       /* prop    */ || (strcmp(ivarName, propName) == 0
+       /* isProp  */ || (ivarName[0] == 'i' && ivarName[1] == 's' && ivarName[2] == upper && (strcmp(ivarName + 3, propName + 1) == 0)));
+    // clang-format on
 }
 
 struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
@@ -60,31 +81,14 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
         return nullptr;
     }
 
-    // For a given property x, our search order should be:
-    // _x, _isX, x, isX.
-    // If none of these is found, we don't support KVC for this key.
-    // Key length is caller-checked.
-    std::vector<std::string> searchIvars{
-        woc::string::format("_%s", propName),
-        woc::string::format("_is%c%s", toupper(propName[0]), &propName[1]),
-        propName,
-        woc::string::format("is%c%s", toupper(propName[0]), &propName[1]),
-    };
-
     // Walk up the class hierarchy looking for matching ivars.
     for (; cls; cls = class_getSuperclass(cls)) {
         unsigned int ivarCount = 0;
-        std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), free);
+        std::unique_ptr<Ivar, std::function<void(Ivar*)>> ivars(class_copyIvarList(cls, &ivarCount), IwFree);
         auto foundIvar = std::find_if(ivars.get(),
                                       ivars.get() + ivarCount,
-                                      [&searchIvars](const Ivar ivar) {
-                                          // by using find_if, we avoid constructing a very short-lived std::string
-                                          // for every ivar we iterate over.
-                                          return std::find_if(searchIvars.cbegin(),
-                                                              searchIvars.cend(),
-                                                              [&ivar](const std::string& wantedIvarName) -> bool {
-                                                                  return strcmp(ivar_getName(ivar), wantedIvarName.c_str()) == 0;
-                                                              }) != searchIvars.cend();
+                                      [propName](const Ivar ivar) {
+                                          return _ivarIsKVCCompliant(ivar, propName);
                                       });
         if (foundIvar != ivars.get() + ivarCount) {
             return *foundIvar;
@@ -98,13 +102,17 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
     // The possible getter selectors for a key x are -getX, -x, and -isX.
     // If we can't find any of these, we fall back to ivar lookup.
     // Key length is caller-checked.
-    std::vector<std::string> possibleSelectors{
-        woc::string::format("get%c%s", toupper(key[0]), &key[1]), key, woc::string::format("is%c%s", toupper(key[0]), &key[1]),
+    // clang-format off
+    std::vector<SEL (^)()> possibleSelectors {
+        ^SEL{ return sel_registerName(woc::string::format("get%c%s", toupper(key[0]), &key[1]).c_str()); },
+        ^SEL{ return sel_registerName(key); },
+        ^SEL{ return sel_registerName(woc::string::format("is%c%s", toupper(key[0]), &key[1]).c_str()); },
     };
+    // clang-format on
 
     Class cls = object_getClass(self);
-    for (auto& possibleSelString : possibleSelectors) {
-        auto possibleSelector = sel_registerName(possibleSelString.c_str());
+    for (auto& possibleSelGenerator : possibleSelectors) {
+        SEL possibleSelector = possibleSelGenerator();
         if ([cls instancesRespondToSelector:possibleSelector]) {
             return possibleSelector;
         }
@@ -119,24 +127,31 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     }
 
     NSMethodSignature* sig = [self methodSignatureForSelector:getter];
+
+    const char* valueType = [sig methodReturnType];
+    // We can't box or unbox char* or arbitrary pointers.
+    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
+        return false;
+    }
+
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
     [invocation setTarget:self];
     [invocation setSelector:getter];
     [invocation invoke];
 
-    const char* valueType = [sig methodReturnType];
     NSInteger len = [sig methodReturnLength];
+    id val = nil;
 
-    std::vector<uint8_t> data(static_cast<size_t>(len));
-    [invocation getReturnValue:data.data()];
-
-    // We can't box or unbox char* or arbitrary pointers.
-    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
-        return false;
+    if (len <= 16) { // Don't allocate for <= 16 bytes, we can handle that on the stack.
+        uint8_t buf[16];
+        [invocation getReturnValue:&buf[0]];
+        val = woc::valueFromDataWithType(&buf[0], valueType);
+    } else {
+        std::vector<uint8_t> data(static_cast<size_t>(len));
+        [invocation getReturnValue:data.data()];
+        val = woc::valueFromDataWithType(data.data(), valueType);
     }
-
-    id val = woc::valueFromDataWithType(data.data(), valueType);
 
     if (val) {
         *ret = val;
@@ -472,9 +487,7 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
  @Status Interoperable
 */
 - (void)performSelectorOnMainThread:(SEL)selector withObject:(id)obj1 waitUntilDone:(BOOL)wait {
-    id modes = [[NSArray alloc] initWithObject:@"kCFRunLoopDefaultMode"];
-    [self performSelectorOnMainThread:selector withObject:obj1 waitUntilDone:wait modes:modes];
-    selector, [modes release];
+    [self performSelectorOnMainThread:selector withObject:obj1 waitUntilDone:wait modes:@[@"kCFRunLoopDefaultMode"]];
 }
 
 /**
@@ -588,4 +601,27 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(double)delay inModes:(NSArray*)modes {
     [[self class] object:self performSelector:selector withObject:obj1 afterDelay:delay inModes:modes];
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
+// We're temporarily disabling the warning about implementing a non-category method
+// in a category until we determine where to put the NSObject threading extensions.
+
+/**
+ @Status Interoperable
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget {
+    [self cancelPreviousPerformRequestsWithTarget:aTarget selector:NULL object:nil];
+}
+
+/**
+ @Status Interoperable
+*/
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument {
+    NSDelayedPerform* delayed = [[NSDelayedPerform alloc] initWithObject:aTarget selector:aSelector argument:anArgument];
+    [[NSRunLoop currentRunLoop] _invalidateTimerWithDelayedPerform:delayed];
+    [delayed release];
+}
+#pragma clang diagnostic pop
+
 @end

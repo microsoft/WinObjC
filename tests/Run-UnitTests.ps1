@@ -49,11 +49,13 @@ function EnsureDeviceConnection
     }
 }
 
-function DeployTests
+function DeployTests($testList)
 {
     if ($TargetingDevice)
     {
         # Copy the tests to the device
+
+        Write-Host "Copying tests to the device - this may take a while... (about 2 minutes)"
 
         Try {
             mdd $TestDstDirectory
@@ -63,9 +65,26 @@ function DeployTests
             # This is awkward.
         }
 
-        putd -recurse $TestSrcDirectory\*.dll $TestDstDirectory
-        putd -recurse $TestSrcDirectory\*.exe $TestDstDirectory
-        putd -recurse $TestSrcDirectory\*.txt $TestDstDirectory
+        foreach($test in $testList) {
+          $testPath = Join-Path $TestSrcDirectory $test
+          $testDirectory = [System.IO.Path]::GetDirectoryName($testPath);
+          
+          $testOutputPath = Join-Path $TestDstDirectory $test
+          $testOutputDirectory = [System.IO.Path]::GetDirectoryName($testOutputPath);
+          
+          Try {
+            mdd $testOutputDirectory
+          } Catch {
+              # putd fails if the directory doesn't already exist.
+              # mdd fails if the directory does already exist.
+              # This is awkward.
+          }
+
+          putd -recurse $testDirectory\*.jpg $testOutputDirectory
+          putd -recurse $testDirectory\*.dll $testOutputDirectory
+          putd -recurse $testDirectory\*.exe $testOutputDirectory
+          putd -recurse $testDirectory\*.txt $testOutputDirectory
+        }
     }
     else
     {
@@ -126,8 +145,6 @@ $DefaultModuleFilter = ".*((u|U)nit)(t|T)ests.*\.(exe)"
 
 $Tests = $null
 
-DeployTests $TestDirectory
-
 Push-Location $TestSrcDirectory
 
 if ($ModuleFilter -ne [string]$null) {
@@ -137,6 +154,8 @@ if ($ModuleFilter -ne [string]$null) {
 }
 
 Pop-Location
+
+DeployTests $Tests
 
 if (($XMLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $XMLOutputDirectory -PathType Container) -eq 0)) {
     New-Item -ItemType Directory -Path $XMLOutputDirectory
@@ -195,6 +214,7 @@ $failureCount = 0;
 $disabledCount = 0;
 
 $failureMessageArray = @()
+$disabledMessageArray = @()
 
 foreach ($xmlTuple in $xmlOutputArray) {
     foreach($testsuite in $xmlTuple.Item2.testsuites.testsuite) {
@@ -215,6 +235,14 @@ foreach ($xmlTuple in $xmlOutputArray) {
                 }
             }
         }
+        
+        if ($testsuite.disabled -ne 0) {
+            foreach ($testcase in $testsuite.testcase) {
+                if ($testcase.status -ne "run") {
+                    $disabledMessageArray += [tuple]::Create([tuple]::Create($xmlTuple.Item1, $testsuite.name, $testcase.Name), 0)
+                }
+            }
+        }
 
     }
 }
@@ -230,6 +258,18 @@ Write-Host ($disabledCount) -foregroundcolor "Yellow" -NoNewLine
 Write-Host  " Total: " -NoNewLine 
 Write-Host  $testCount
 Write-Host  ""
+
+if ($disabledMessageArray.length -ne 0) {
+    Write-Host  "DISABLED TESTS:" -foregroundcolor "Yellow"
+
+    foreach ($disabledMessage in $disabledMessageArray) {
+        Write-Host  "  " $disabledMessage.Item1.Item2 -foregroundcolor "Yellow" -NoNewLine 
+        Write-Host  "." -foregroundcolor "Yellow" -NoNewLine
+        Write-Host  $disabledMessage.Item1.Item3 -foregroundcolor "Yellow"
+    }
+    
+    Write-Host  ""
+}
 
 if ($crashingTestArray.length -ne 0) {
     Write-Host  "PROBLEMS RUNNING MODULES:" -foregroundcolor "Red"

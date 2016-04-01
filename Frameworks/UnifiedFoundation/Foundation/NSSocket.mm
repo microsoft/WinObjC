@@ -49,8 +49,11 @@ typedef int socklen_t;
 #include "Foundation/NSError.h"
 #include "Foundation/NSString.h"
 #include "NSSSLHandler.h"
+#include "LoggingNative.h"
 
-@implementation NSSocket : NSObject
+static const wchar_t* TAG = L"NSSocket";
+
+@implementation NSSocket
 static inline void byteZero(void* vsrc, size_t size) {
     uint8_t* src = (uint8_t*)vsrc;
     size_t i;
@@ -162,7 +165,7 @@ static void* connectFunc(void* p) {
 #else
     sockets[0] = socket(AF_INET, SOCK_STREAM, 0);
     sockets[1] = socket(AF_INET, SOCK_STREAM, 0);
-    EbrDebugLog("sockets[0] = %d sockets[1] = %d\n", sockets[0], sockets[1]);
+    TraceVerbose(TAG, L"sockets[0] = %d sockets[1] = %d", sockets[0], sockets[1]);
 
     struct sockaddr_in sin, pin;
     memset(&sin, 0, sizeof(sin));
@@ -254,14 +257,14 @@ static void* connectFunc(void* p) {
     memset(&tryAddr, 0, sizeof(struct sockaddr_in));
 
     if (pHost == NULL) {
-        EbrDebugLog("NULL connection to %s\n", pHost);
+        TraceVerbose(TAG, L"NULL connection to %hs", pHost);
     } else {
         struct addrinfo* remoteHost;
 
         // struct hostent *remoteHost;
-        EbrDebugLog("Gethostbyname %s\n", pHost);
+        TraceVerbose(TAG, L"Gethostbyname %hs", pHost);
         int success = getaddrinfo(pHost, NULL, NULL, &remoteHost);
-        EbrDebugLog("%d\n", success);
+        TraceVerbose(TAG, L"%d", success);
 
         if (success == 0 && remoteHost != NULL) {
             struct sockaddr_in* pAddr = (sockaddr_in*)remoteHost->ai_addr;

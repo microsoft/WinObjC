@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBCentralManagerDelegate.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CBCentralManagerRestoredStatePeripheralsKey = @"CBCentralManagerRestoredStatePeripheralsKey";
 NSString* const CBCentralManagerRestoredStateScanServicesKey = @"CBCentralManagerRestoredStateScanServicesKey";

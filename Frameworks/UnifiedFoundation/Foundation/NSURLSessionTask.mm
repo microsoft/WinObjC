@@ -23,6 +23,13 @@ const float NSURLSessionTaskPriorityHigh = 1.0f;
 const float NSURLSessionTaskPriorityDefault = 0.5f;
 const float NSURLSessionTaskPriorityLow = 0.0f;
 
+#pragma region HTTP Status Codes
+enum HttpStatus : int {
+    PartialContent = 206,
+    RangeNotSatisfiableError = 416,
+};
+#pragma endregion
+
 @interface NSURLSessionTask () {
     NSURLProtocol* _protocolConnection;
     NSURLSessionConfiguration* _configuration;
@@ -36,7 +43,9 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     return [NSURLProtocol _URLProtocolClassForRequest:request];
 }
 
-- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate configuration:(NSURLSessionConfiguration*)configuration request:(NSURLRequest*)request {
+- (id)_initWithTaskDelegate:(id<_NSURLSessionTaskDelegate>)taskDelegate
+              configuration:(NSURLSessionConfiguration*)configuration
+                    request:(NSURLRequest*)request {
     if (self = [super init]) {
         _taskDelegate = taskDelegate;
         _configuration = [configuration retain];
@@ -66,6 +75,9 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_taskDescription release];
     [_currentRequest release];
@@ -77,6 +89,9 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
@@ -87,7 +102,37 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 
 - (void)_updateWithURLResponse:(NSURLResponse*)response {
     self.response = response;
-    self.countOfBytesExpectedToReceive = _response.expectedContentLength;
+
+    unsigned long long expected = _response.expectedContentLength;
+    unsigned long long received = 0;
+
+    // For a ranged HTTP response, the expected content length tells only half the story.
+    // If we have resumed a download, we *actually* care about the number of bytes that the
+    // ranged response can give us, and no more.
+    if ([_response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSHTTPURLResponse* httpResponse = static_cast<NSHTTPURLResponse*>(_response);
+        NSString* rangeResponse = [[httpResponse allHeaderFields] objectForKey:@"Content-Range"];
+        if ((httpResponse.statusCode == HttpStatus::PartialContent || httpResponse.statusCode == HttpStatus::RangeNotSatisfiableError) &&
+            rangeResponse) {
+            // Per RFC 7233 section 4.2, a byte-content-range header will always contain FIRST-LAST, and may optionally contain
+            // /COMPLETE_LENGTH, but only on 206 (Partial Content) or 416 (Range Not Satisfiable) responses.
+            unsigned long long first = 0, last = 0, completeLength = 0;
+            int tokens = sscanf_s([rangeResponse UTF8String], "bytes %llu-%llu/%llu", &first, &last, &completeLength);
+            if (tokens >= 2) { // "bytes" $FIRST "-" $LAST
+                received = first;
+                if (tokens >= 3) { // "/" $COMPLETE_LENGTH
+                    expected = completeLength;
+                } else {
+                    // last is the zero-based index of the last byte the server is including in the response;
+                    // here we add 1 to compensate.
+                    expected = last + 1;
+                }
+            }
+        }
+    }
+
+    self.countOfBytesReceived = received;
+    self.countOfBytesExpectedToReceive = expected;
 }
 
 - (void)_signalCompletionInState:(NSURLSessionTaskState)state withError:(NSError*)error {
@@ -100,8 +145,8 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     _protocolConnection = nil;
 }
 
-/*
-@Status Interoperable
+/**
+ @Status Interoperable
 */
 - (void)resume {
     @synchronized(self) {
@@ -118,9 +163,13 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     if (!_protocolConnection) {
         Class protocolClass = [[self class] _protocolClassForRequest:_currentRequest];
         if (!protocolClass || ![protocolClass canInitWithRequest:_currentRequest]) {
-            NSError* error = [NSError errorWithDomain:NSCocoaErrorDomain code:0 userInfo:@{
-                NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Unable to find a protocol handler for `%@`.", [_currentRequest.URL scheme]],
-            }];
+            NSError* error = [NSError
+                errorWithDomain:NSCocoaErrorDomain
+                           code:0
+                       userInfo:@{
+                           NSLocalizedDescriptionKey :
+                               [NSString stringWithFormat:@"Unable to find a protocol handler for `%@`.", [_currentRequest.URL scheme]],
+                       }];
             [self _signalCompletionInState:NSURLSessionTaskStateCompleted withError:error];
             return;
         }
@@ -133,11 +182,14 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 }
 
 - (void)_startLoading {
-    [self performSelector:@selector(__startLoadingThread) onThread:[reinterpret_cast<NSURLSession*>(_taskDelegate) _taskDispatchThread] withObject:nil waitUntilDone:NO];
+    [self performSelector:@selector(__startLoadingThread)
+                 onThread:[reinterpret_cast<NSURLSession*>(_taskDelegate) _taskDispatchThread]
+               withObject:nil
+            waitUntilDone:NO];
 }
 
-/*
-@Status Interoperable
+/**
+ @Status Interoperable
 */
 - (void)cancel {
     @synchronized(self) {
@@ -156,11 +208,14 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
 }
 
 - (void)_stopLoading {
-    [self performSelector:@selector(__stopLoadingThread) onThread:[reinterpret_cast<NSURLSession*>(_taskDelegate) _taskDispatchThread] withObject:nil waitUntilDone:YES];
+    [self performSelector:@selector(__stopLoadingThread)
+                 onThread:[reinterpret_cast<NSURLSession*>(_taskDelegate) _taskDispatchThread]
+               withObject:nil
+            waitUntilDone:YES];
 }
 
-/*
-@Status Stub
+/**
+ @Status Stub
 */
 - (void)suspend {
     @synchronized(self) {
@@ -171,18 +226,25 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     }
 }
 
-- (void)URLProtocol:(NSURLProtocol*)connection didReceiveResponse:(NSURLResponse*)response cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
-    // TODO: Some of our URL machinery will leak data before a redirect
-    // we don't want to count that data.
-
-    self.countOfBytesReceived = 0;
+/**
+ @Status Interoperable
+*/
+- (void)URLProtocol:(NSURLProtocol*)connection
+ didReceiveResponse:(NSURLResponse*)response
+ cacheStoragePolicy:(NSURLCacheStoragePolicy)policy {
     [self _updateWithURLResponse:response];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection didFailWithError:(NSError*)error {
     [self _signalCompletionInState:NSURLSessionTaskStateCompleted withError:error];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
     auto continuation = ^(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential* credential) {
         switch (disposition) {
@@ -203,33 +265,44 @@ const float NSURLSessionTaskPriorityLow = 0.0f;
     [_taskDelegate task:self didReceiveChallenge:challenge completionHandler:continuation];
 }
 
-- (void)URLProtocol:(NSURLProtocol*)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+/**
+ @Status Interoperable
+*/
+- (void)URLProtocol:(NSURLProtocol*)connection didCancelAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge {
     [self cancel];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection cachedResponseIsValid:(NSCachedURLResponse*)cachedResponse {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection wasRedirectedToRequest:(NSURLRequest*)request redirectResponse:(NSURLResponse*)response {
     auto continuation = ^(NSURLRequest* sessionNewRequest) {
-        @synchronized (self) {
+        @synchronized(self) {
             [self _stopLoading];
             self.currentRequest = sessionNewRequest;
             [self _startLoading];
         }
     };
 
-    [_taskDelegate
-                              task:self
-        willPerformHTTPRedirection:(NSHTTPURLResponse*)response
-                        newRequest:request
-                 completionHandler:continuation];
+    [_taskDelegate task:self willPerformHTTPRedirection:(NSHTTPURLResponse*)response newRequest:request completionHandler:continuation];
 };
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocol:(NSURLProtocol*)connection didLoadData:(NSData*)data {
     self.countOfBytesReceived = self.countOfBytesReceived + [data length];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)URLProtocolDidFinishLoading:(NSURLProtocol*)connection {
     [self _signalCompletionInState:NSURLSessionTaskStateCompleted withError:nil];
 }

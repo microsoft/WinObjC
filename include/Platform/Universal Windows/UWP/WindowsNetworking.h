@@ -69,13 +69,13 @@ typedef unsigned WNDomainNameType;
 WINRT_EXPORT
 @interface WNHostName : RTObject <WFIStringable>
 + (int)compare:(NSString*)value1 value2:(NSString*)value2;
-+ (WNHostName*)createHostName:(NSString*)hostName ACTIVATOR;
++ (WNHostName*)makeHostName:(NSString*)hostName ACTIVATOR;
 @property (readonly) NSString* canonicalName;
 @property (readonly) NSString* displayName;
 @property (readonly) WNCIPInformation* iPInformation;
 @property (readonly) NSString* rawName;
 @property (readonly) WNHostNameType type;
-- (BOOL)isEqual:(WNHostName*)hostName;
+- (BOOL)IsEqual:(WNHostName*)hostName;
 - (NSString*)toString;
 @end
 
@@ -87,14 +87,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNEndpointPair : RTObject
-+ (WNEndpointPair*)createEndpointPair:(WNHostName*)localHostName
-                     localServiceName:(NSString*)localServiceName
-                       remoteHostName:(WNHostName*)remoteHostName
-                    remoteServiceName:(NSString*)remoteServiceName ACTIVATOR;
-@property (copy) NSString* remoteServiceName;
-@property (copy) WNHostName* remoteHostName;
-@property (copy) NSString* localServiceName;
-@property (copy) WNHostName* localHostName;
++ (WNEndpointPair*)makeEndpointPair:(WNHostName*)localHostName
+                   localServiceName:(NSString*)localServiceName
+                     remoteHostName:(WNHostName*)remoteHostName
+                  remoteServiceName:(NSString*)remoteServiceName ACTIVATOR;
+@property (retain) NSString* remoteServiceName;
+@property (retain) WNHostName* remoteHostName;
+@property (retain) NSString* localServiceName;
+@property (retain) WNHostName* localHostName;
 @end
 
 #endif // __WNEndpointPair_DEFINED__

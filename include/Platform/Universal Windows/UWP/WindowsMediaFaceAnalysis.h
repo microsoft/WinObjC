@@ -51,8 +51,8 @@ WINRT_EXPORT
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker*))success failure:(void (^)(NSError*))failure;
 + (NSArray*)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
-@property (copy) WGIBitmapSize* minDetectableFaceSize;
-@property (copy) WGIBitmapSize* maxDetectableFaceSize;
+@property (retain) WGIBitmapSize* minDetectableFaceSize;
+@property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
 - (void)processNextFrameAsync:(WMVideoFrame*)videoFrame success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
 @end
@@ -68,8 +68,8 @@ WINRT_EXPORT
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector*))success failure:(void (^)(NSError*))failure;
 + (NSArray*)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
-@property (copy) WGIBitmapSize* minDetectableFaceSize;
-@property (copy) WGIBitmapSize* maxDetectableFaceSize;
+@property (retain) WGIBitmapSize* minDetectableFaceSize;
+@property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
 - (void)detectFacesAsync:(WGISoftwareBitmap*)image success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
 - (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image

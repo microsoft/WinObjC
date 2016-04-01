@@ -14,15 +14,24 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UITabBar.h"
-#include "UIBarItemInternal.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UITabBar.h"
+#import "UIBarItemInternal.h"
+#import "LoggingNative.h"
+#import "UIAppearanceSetter.h"
+
+static const wchar_t* TAG = L"UITabBarItem";
 
 @implementation UITabBarItem {
     idretaintype(NSString) _title, _badgeValue;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (NSObject*)initWithCoder:(NSCoder*)coder {
     _title = [coder decodeObjectForKey:@"UITitle"];
     _tag = [coder decodeIntegerForKey:@"UITag"];
@@ -60,6 +69,30 @@
 /**
  @Status Stub
 */
+- (instancetype)initWithTitle:(NSString*)title image:(UIImage*)image selectedImage:(UIImage*)selectedImage {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)finishedSelectedImage {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)finishedUnselectedImage {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
 - (UITabBarItem*)initWithTabBarSystemItem:(UITabBarSystemItem)sysItem tag:(NSInteger)tag {
     UNIMPLEMENTED();
     _title = @"Sys";
@@ -69,6 +102,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTitle:(NSString*)newTitle {
     _title.attach([newTitle copy]);
 }
@@ -89,6 +125,9 @@
     return _badgeValue;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setImage:(UIImage*)newImage {
     _image = newImage;
 }
@@ -97,51 +136,83 @@
  @Status Stub
 */
 - (void)setFinishedSelectedImage:(UIImage*)finishedSelected withFinishedUnselectedImage:(UIImage*)unselected {
-    UNIMPLEMENTED();
+    UNIMPLEMENTED_WITH_MSG("setFinishedSelectedImage not supported");
     _image = finishedSelected;
-    EbrDebugLog("setFinishedSelectedImage not supported\n");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTitleTextAttributes:(NSObject*)attributes forState:(NSUInteger)state {
-    EbrDebugLog("setTitleTextAttributes not supported\n");
+    UNIMPLEMENTED_WITH_MSG("setTitleTextAttributes not supported");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTitlePositionAdjustment:(CGPoint)adjustment {
-    EbrDebugLog("setTitlePositionAdjustment not supported\n");
+    UNIMPLEMENTED_WITH_MSG("setTitlePositionAdjustment not supported");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(NSString*)label {
-    EbrDebugLog("setAccessibilityLabel not supported\n");
+    UNIMPLEMENTED_WITH_MSG("setAccessibilityLabel not supported");
 }
 
+/**
+ @Status Stub
+*/
 - (void)setImageInsets:(UIEdgeInsets)insets {
-    EbrDebugLog("setImageInsets not supported\n");
+    UNIMPLEMENTED_WITH_MSG("setImageInsets not supported");
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setEnabled:(BOOL)enabled {
     _enabled = enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)enabled {
     return _enabled;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)title {
     return _title;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSInteger)tag {
     return _tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTag:(NSInteger)tag {
     _tag = tag;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIImage*)image {
     return _image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _title = nil;
     _image = nil;
@@ -150,11 +221,17 @@
     [super dealloc];
 }
 
-+ (id)appearance {
-    return [UIAppearanceSetter appearanceWhenContainedIn:nil forUIClass:self];
+/**
+ @Status Interoperable
+*/
++ (instancetype)appearance {
+    return [UIAppearanceSetter _appearanceWhenContainedIn:nil forUIClass:self];
 }
 
-+ (id)appearanceWhenContainedIn:(id)containedClass, ... {
+/**
+ @Status Interoperable
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
     id curClass = [self class];
 
     va_list pReader;
@@ -169,6 +246,6 @@
 
     va_end(pReader);
 
-    return [UIAppearanceSetter appearanceWhenContainedIn:containedClass forUIClass:self];
+    return [UIAppearanceSetter _appearanceWhenContainedIn:containedClass forUIClass:self];
 }
 @end

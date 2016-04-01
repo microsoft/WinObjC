@@ -18,6 +18,9 @@
 #include "UIProxyObject.h"
 #include "Foundation/NSMutableArray.h"
 #include "UIProxyObjectPair.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIProxyObject";
 
 id proxyObjects;
 
@@ -64,7 +67,7 @@ id proxyObjects;
         }
     }
 
-    EbrDebugLog("Proxy object not found: %s\n", [proxiedObjectIdentifier UTF8String]);
+    TraceVerbose(TAG, L"Proxy object not found: %hs", [proxiedObjectIdentifier UTF8String]);
     return self;
 }
 

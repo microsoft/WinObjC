@@ -114,5 +114,6 @@ public:
 
 typedef void (*CGImageDestructionListener)(CGImageRef img);
 COREGRAPHICS_EXPORT void CGImageAddDestructionListener(CGImageDestructionListener listener);
+COREGRAPHICS_EXPORT NSData* _CGImagePNGRepresentation(UIImage* img);
 
 #endif

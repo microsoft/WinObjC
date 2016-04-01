@@ -16,7 +16,7 @@
 
 #import <CoreText/CTFontManager.h>
 #import <StubReturn.h>
-
+#import <Starboard.h>
 #import <UIFontInternal.h>
 #import <UIKit/UIFont.h>
 
@@ -36,6 +36,7 @@ const CFStringRef kCTFontManagerRegisteredFontsChangedNotification =
 const CFStringRef kCTFontManagerErrorDomain = static_cast<CFStringRef>(@"kCTFontManagerErrorDomain");
 const CFStringRef kCTFontManagerErrorFontURLsKey = static_cast<CFStringRef>(@"kCTFontManagerErrorFontURLsKey");
 
+static IWLazyClassLookup _LazyUIFont("UIFont");
 /**
  @Status Stub
  @Notes
@@ -46,12 +47,20 @@ CFArrayRef CTFontManagerCreateFontDescriptorsFromURL(CFURLRef fileURL) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 bool CTFontManagerRegisterFontsForURL(CFURLRef fontURL, CTFontManagerScope scope, CFErrorRef _Nullable* error) {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // these scopes are not supported in ios
+    if (scope == kCTFontManagerScopeUser || scope == kCTFontManagerScopeSession) {
+        UNIMPLEMENTED_WITH_MSG("The scope values kCTFontManagerScopeUser and kCTFontManagerScopeSession are not a supported in ios");
+        if (error) {
+            *error = nil;
+        }
+
+        return false;
+    }
+
+    return [_LazyUIFont _CTFontManagerRegisterFontsForURL:fontURL withScope:scope withError:error];
 }
 
 /**

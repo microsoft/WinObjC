@@ -49,8 +49,8 @@ typedef void (^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInf
 
 WINRT_EXPORT
 @interface WSAOOnlineIdServiceTicketRequest : RTObject
-+ (WSAOOnlineIdServiceTicketRequest*)createOnlineIdServiceTicketRequest:(NSString*)service policy:(NSString*)policy ACTIVATOR;
-+ (WSAOOnlineIdServiceTicketRequest*)createOnlineIdServiceTicketRequestAdvanced:(NSString*)service ACTIVATOR;
++ (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequest:(NSString*)service policy:(NSString*)policy ACTIVATOR;
++ (WSAOOnlineIdServiceTicketRequest*)makeOnlineIdServiceTicketRequestAdvanced:(NSString*)service ACTIVATOR;
 @property (readonly) NSString* policy;
 @property (readonly) NSString* service;
 @end
@@ -156,7 +156,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAOOnlineIdAuthenticator : RTObject
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WFGUID* applicationId;
 @property (readonly) NSString* authenticatedSafeCustomerId;
 @property (readonly) BOOL canSignOut;

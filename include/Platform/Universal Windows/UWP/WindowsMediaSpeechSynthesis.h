@@ -44,7 +44,7 @@ typedef unsigned WMSVoiceGender;
 
 WINRT_EXPORT
 @interface WMSVoiceInformation : RTObject
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 @property (readonly) WMSVoiceGender gender;
 @property (readonly) NSString* id;
@@ -202,8 +202,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
-@property (copy) WMSVoiceInformation* voice;
++ (instancetype)make ACTIVATOR;
+@property (retain) WMSVoiceInformation* voice;
 + (NSArray*)allVoices;
 + (WMSVoiceInformation*)defaultVoice;
 - (void)synthesizeTextToStreamAsync:(NSString*)text

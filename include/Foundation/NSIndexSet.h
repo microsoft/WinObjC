@@ -32,7 +32,7 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)indexSetWithIndexesInRange:(NSRange)indexRange;
 - (instancetype)init;
 - (instancetype)initWithIndex:(NSUInteger)index;
-- (instancetype)initWithIndexesInRange:(NSRange)indexRange STUB_METHOD;
+- (instancetype)initWithIndexesInRange:(NSRange)indexRange;
 - (instancetype)initWithIndexSet:(NSIndexSet*)indexSet;
 - (BOOL)containsIndex:(NSUInteger)index;
 - (BOOL)containsIndexes:(NSIndexSet*)indexSet STUB_METHOD;
@@ -60,6 +60,6 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)indexGreaterThanIndex:(NSUInteger)index;
 - (NSUInteger)getIndexes:(NSUInteger*)indexBuffer maxCount:(NSUInteger)bufferSize inIndexRange:(NSRangePointer)indexRange STUB_METHOD;
 - (void)enumerateIndexesUsingBlock:(void (^)(NSUInteger, BOOL*))block;
-- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block STUB_METHOD;
+- (void)enumerateIndexesWithOptions:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block;
 - (void)enumerateIndexesInRange:(NSRange)range options:(NSEnumerationOptions)opts usingBlock:(void (^)(NSUInteger, BOOL*))block STUB_METHOD;
 @end

@@ -19,7 +19,12 @@
 #include <unicode/regex.h>
 #include <memory>
 
-@interface NSRegularExpression ()
+#import "LoggingNative.h"
+
+@interface NSRegularExpression () {
+    std::unique_ptr<RegexPattern> _icuRegex;
+    NSMatchingOptions _replacementOptions;
+}
 @property (readwrite, copy) NSString* pattern;
 @property (readwrite) NSRegularExpressionOptions options;
 @property (readwrite) NSUInteger numberOfCaptureGroups;
@@ -28,10 +33,10 @@
 static StrongId<NSCharacterSet> s_patternMetaCharacters;
 static StrongId<NSCharacterSet> s_templateMetaCharacters;
 
-@implementation NSRegularExpression {
-    std::unique_ptr<RegexPattern> _icuRegex;
-}
-
+@implementation NSRegularExpression
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     s_patternMetaCharacters = [NSCharacterSet characterSetWithCharactersInString:@"$^*()+/?[{}.\\"];
     s_templateMetaCharacters = [NSCharacterSet characterSetWithCharactersInString:@"$\\"];
@@ -44,6 +49,21 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
     return [[[self alloc] initWithPattern:pattern options:options error:error] autorelease];
 }
 
+// Helper function for evaluating option and flag membership
+static bool _evaluateOptionOrFlag(NSUInteger expectedOption, NSUInteger userOptions) {
+    return (expectedOption & userOptions) != 0;
+}
+
+static const wchar_t* TAG = L"NSRegularExpression";
+// Helper function for logging an ICU error code.
+static bool _U_LogIfError(UErrorCode status) {
+    if (U_FAILURE(status)) {
+        TraceError(TAG, L"ICU Status Error. Error Code : %hs.", u_errorName(status));
+        return true;
+    }
+    return false;
+}
+
 /**
  @Status Interoperable
 */
@@ -52,28 +72,28 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
         _pattern = [pattern copy];
 
         int icuRegexOptions = 0;
-        if (NSRegularExpressionCaseInsensitive & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionCaseInsensitive, options)) {
             icuRegexOptions |= UREGEX_CASE_INSENSITIVE;
         }
-        if (NSRegularExpressionAllowCommentsAndWhitespace & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionAllowCommentsAndWhitespace, options)) {
             icuRegexOptions |= UREGEX_COMMENTS;
         }
-        if (NSRegularExpressionIgnoreMetacharacters & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionIgnoreMetacharacters, options)) {
             // TODO - VSO 6264731: UREGEX_LITERAL causes faliures in ICU. Workaround is to use escaped version of pattern.
 
             // icuRegexOptions |= UREGEX_LITERAL;
             _pattern = [[NSRegularExpression escapedPatternForString:pattern] retain];
         }
-        if (NSRegularExpressionDotMatchesLineSeparators & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionDotMatchesLineSeparators, options)) {
             icuRegexOptions |= UREGEX_DOTALL;
         }
-        if (NSRegularExpressionAnchorsMatchLines & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionAnchorsMatchLines, options)) {
             icuRegexOptions |= UREGEX_MULTILINE;
         }
-        if (NSRegularExpressionUseUnixLineSeparators & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionUseUnixLineSeparators, options)) {
             icuRegexOptions |= UREGEX_UNIX_LINES;
         }
-        if (NSRegularExpressionUseUnicodeWordBoundaries & options) {
+        if (_evaluateOptionOrFlag(NSRegularExpressionUseUnicodeWordBoundaries, options)) {
             icuRegexOptions |= UREGEX_UWORD;
         }
 
@@ -84,7 +104,7 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
 
         _icuRegex.reset(RegexPattern::compile(unicodePattern.string(), icuRegexOptions, parseStatus, status));
 
-        if (U_FAILURE(status)) {
+        if (_U_LogIfError(status)) {
             if (error) {
                 *error = (NSError*)[NSError errorWithDomain:NSCocoaErrorDomain code:2048 userInfo:nil];
             }
@@ -104,15 +124,32 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_pattern release];
 
     [super dealloc];
 }
 
+// Helper function for setting ICU Regex options.
+static void _setMatcherOptions(RegexMatcher& icuRegex, int options) {
+    // Set transparent bounds
+    if (_evaluateOptionOrFlag(NSMatchingWithTransparentBounds, options)) {
+        icuRegex.useTransparentBounds(true);
+    }
+
+    // Without anchoring bounds
+    if (!(_evaluateOptionOrFlag(NSMatchingWithoutAnchoringBounds, options))) {
+        icuRegex.useAnchoringBounds(true);
+    } else {
+        icuRegex.useAnchoringBounds(false);
+    }
+}
+
 /**
- @Status Caveat
- @Notes Ignores NSMatchingOptions
+ @Status Interoperable
 */
 - (NSUInteger)numberOfMatchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range {
     __block NSUInteger count = 0;
@@ -121,15 +158,16 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
                            options:options
                              range:range
                         usingBlock:^void(NSTextCheckingResult* textResult, NSMatchingFlags flags, BOOL* stop) {
-                            count++;
+                            if (textResult) {
+                                count++;
+                            }
                         }];
 
     return count;
 }
 
 /**
- @Status Caveat
- @Notes Ignores NSMatchingOptions
+ @Status Interoperable
 */
 - (NSTextCheckingResult*)firstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range {
     NSRange tempRange = NSMakeRange(NSNotFound, 0);
@@ -140,16 +178,17 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
                            options:options
                              range:range
                         usingBlock:^void(NSTextCheckingResult* textResult, NSMatchingFlags flags, BOOL* stop) {
-                            result = [textResult retain];
-                            *stop = YES;
+                            if (textResult) {
+                                result = [textResult retain];
+                                *stop = YES;
+                            }
                         }];
 
     return [result autorelease];
 }
 
 /**
- @Status Caveat
- @Notes Ignores NSMatchingOptions
+ @Status Interoperable
 */
 - (NSRange)rangeOfFirstMatchInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range {
     __block NSRange result = { NSNotFound, 0 };
@@ -158,16 +197,17 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
                            options:options
                              range:range
                         usingBlock:^void(NSTextCheckingResult* textResult, NSMatchingFlags flags, BOOL* stop) {
-                            result = textResult.range;
-                            *stop = YES;
+                            if (textResult) {
+                                result = textResult.range;
+                                *stop = YES;
+                            }
                         }];
 
     return result;
 }
 
 /**
- @Status Caveat
- @Notes Ignores NSMatchingOptions
+ @Status Interoperable
 */
 - (NSArray*)matchesInString:(NSString*)string options:(NSMatchingOptions)options range:(NSRange)range {
     __block NSMutableArray* result = [NSMutableArray array];
@@ -176,7 +216,9 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
                            options:options
                              range:range
                         usingBlock:^void(NSTextCheckingResult* textResult, NSMatchingFlags flags, BOOL* stop) {
-                            [result addObject:textResult];
+                            if (textResult) {
+                                [result addObject:textResult];
+                            }
                         }];
 
     return result;
@@ -184,7 +226,7 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
 
 static NSUInteger _replaceAll(
     NSMutableString* string, NSRegularExpression* regex, RegexMatcher& icuRegex, NSString* replacement, UErrorCode status) {
-    if (U_FAILURE(status)) {
+    if (_U_LogIfError(status)) {
         return 0;
     }
 
@@ -192,17 +234,11 @@ static NSUInteger _replaceAll(
     int offset = 0;
 
     while (icuRegex.find() && status == U_ZERO_ERROR) {
-        NSString* replacedText;
-        NSTextCheckingResult* result;
+        NSString* replacedText = nil;
+        NSTextCheckingResult* result = nil;
 
         NSRange foundRange = NSMakeRange(icuRegex.start(status), icuRegex.end(status));
-        if (U_FAILURE(status)) {
-            if (replacedText) {
-                [replacedText release];
-            }
-            if (result) {
-                [result release];
-            }
+        if (_U_LogIfError(status)) {
             return count;
         }
 
@@ -223,8 +259,7 @@ static NSUInteger _replaceAll(
 }
 
 /**
- @Status Caveat
- @Notes Ignores NSMatchingOptions
+ @Status Interoperable
 */
 - (NSUInteger)replaceMatchesInString:(NSMutableString*)string
                              options:(NSMatchingOptions)options
@@ -238,21 +273,27 @@ static NSUInteger _replaceAll(
 
     UErrorCode status = U_ZERO_ERROR;
     RegexMatcher* matcher = _icuRegex->matcher(matchStr.string(), status);
-    if (U_FAILURE(status)) {
+    if (_U_LogIfError(status)) {
         return 0;
     }
 
     matcher->region(range.location, range.location + range.length, status);
-    if (U_FAILURE(status)) {
+    if (_U_LogIfError(status)) {
         return 0;
     }
 
-    return _replaceAll(string, self, *matcher, templateStr, status);
+    _setMatcherOptions(*matcher, options);
+
+    @synchronized(self) {
+        _replacementOptions = options;
+        NSUInteger returnval = _replaceAll(string, self, *matcher, templateStr, status);
+        _replacementOptions = 0;
+        return returnval;
+    }
 }
 
 /**
- @Status Caveat
- @Notes Uses default behavior only. Ignores NSMatchingOptions.
+ @Status Interoperable
 */
 - (NSString*)stringByReplacingMatchesInString:(NSString*)string
                                       options:(NSMatchingOptions)options
@@ -325,50 +366,119 @@ static NSString* _escapeStringForCharacterSet(NSString* string, NSCharacterSet* 
     return _escapeStringForCharacterSet(string, s_patternMetaCharacters);
 }
 
+struct CallBackContext {
+    BOOL* stop;
+    void (^block)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop);
+
+    // This callback services NSMatchingProgress where the second argument does not matter.
+    // Two callbacks are serviced with slightly different args, only the first of which we care about.
+    template <typename... Args>
+    static UBool matchCallback(const void* context, Args... args) {
+        // cast context to struct type
+        auto callbackStruct = reinterpret_cast<const CallBackContext*>(context);
+
+        // call block with struct's stop
+        callbackStruct->block(nil, NSMatchingProgress, callbackStruct->stop);
+
+        // return stop...?
+        return !(*callbackStruct->stop);
+    }
+};
+
 /**
- @Status Caveat
- @Notes Uses default behavior only. Ignores NSMatchingOptions.
+ @Status Interoperable
 */
 - (void)enumerateMatchesInString:(NSString*)string
                          options:(NSMatchingOptions)options
                            range:(NSRange)range
                       usingBlock:(void (^)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop))block {
-    // TODO - VSO 6262398: Switch on options to apply different ICU options to regex, remember to clear afterwards
-
     UErrorCode status = U_ZERO_ERROR;
 
     UStringHolder matchStr(string);
 
     RegexMatcher* matcher = _icuRegex->matcher(matchStr.string(), status);
-    if (U_FAILURE(status)) {
+    if (_U_LogIfError(status)) {
         return;
+    }
+
+    BOOL stop = NO;
+    CallBackContext context = { &stop, block };
+
+    // Set callbacks for reporting progress
+    if (options & NSMatchingReportProgress) {
+        matcher->setMatchCallback(&CallBackContext::matchCallback<int32_t>, &context, status);
+        if (_U_LogIfError(status)) {
+            return;
+        }
+
+        matcher->setFindProgressCallback(&CallBackContext::matchCallback<int64_t>, &context, status);
+        if (_U_LogIfError(status)) {
+            return;
+        }
     }
 
     NSTextCheckingResult* result;
     NSMatchingFlags flags = 0;
-    BOOL stop = NO;
 
     matcher->region(range.location, range.location + range.length, status);
-    if (U_FAILURE(status)) {
+
+    if (_U_LogIfError(status)) {
         return;
     }
 
+    _setMatcherOptions(*matcher, options);
+
+    bool anchorMatch = _evaluateOptionOrFlag(NSMatchingAnchored, options);
+
     // Find matches, if match do block
     while (matcher->find() && !stop) {
-        // Create NSTextCheckingResult
-        NSRange foundRange = NSMakeRange(matcher->start(status), matcher->end(status) - matcher->start(status));
-        if (U_FAILURE(status)) {
-            break;
-        } else {
-            result = [NSTextCheckingResult regularExpressionCheckingResultWithRanges:&foundRange count:1 regularExpression:self];
-            // Execute code block
+        flags = 0;
+
+        // TODO: ICU 48 does not support find(status) implemented in ICU 55. This is required for accurate NSMatchingInternalError flagging
+        if (_U_LogIfError(status)) {
+            flags |= NSMatchingInternalError;
             block(result, flags, &stop);
+        } else {
+            // Create NSTextCheckingResult
+            int startpos = matcher->start(status);
+            if (_U_LogIfError(status)) {
+                block(result, NSMatchingInternalError, &stop);
+                break;
+            }
+
+            int endpos = matcher->end(status);
+            if (_U_LogIfError(status)) {
+                block(result, NSMatchingInternalError, &stop);
+                break;
+            }
+
+            NSRange foundRange = NSMakeRange(startpos, endpos - startpos);
+            if (!anchorMatch || (anchorMatch && foundRange.location == range.location)) {
+                result = [NSTextCheckingResult regularExpressionCheckingResultWithRanges:&foundRange count:1 regularExpression:self];
+
+                if (matcher->requireEnd()) {
+                    flags |= NSMatchingRequiredEnd;
+                }
+
+                if (matcher->hitEnd()) {
+                    flags |= NSMatchingHitEnd;
+                }
+                block(result, flags, &stop);
+            }
         }
+
+        status = U_ZERO_ERROR;
+    }
+
+    if (_evaluateOptionOrFlag(NSMatchingCompleted, options)) {
+        flags |= NSMatchingCompleted;
+        block(result, flags, &stop);
     }
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Uses ICU's formatting to make replacements.
 */
 - (NSString*)replacementStringForResult:(NSTextCheckingResult*)result
                                inString:(NSString*)string
@@ -377,24 +487,35 @@ static NSString* _escapeStringForCharacterSet(NSString* string, NSCharacterSet* 
     // get range from result
     NSRange range = result.range;
 
-    // Create a new RegexMatcher by re-using the ivar pattern.
     UStringHolder tempStr(templateStr);
     UnicodeString replacedString;
     const UnicodeString unicodeTemplate = tempStr.string();
     UErrorCode status = U_ZERO_ERROR;
 
-    NSString* newString = [string substringWithRange:{ range.location + offset, range.length }];
+    UStringHolder newUString(string);
 
-    UStringHolder newUString(newString);
-
+    // TODO 6620456: replacementStringForResult Should Format and Build String Itself
+    // Create a new RegexMatcher by re-using the ivar pattern.
     RegexMatcher* matcher = _icuRegex->matcher(newUString.string(), status);
-    if (U_FAILURE(status)) {
+    if (_U_LogIfError(status)) {
         return nil;
     }
 
-    replacedString = matcher->replaceAll(unicodeTemplate, status);
+    // Set its region to the result's range
+    matcher->region(range.location + offset, range.location + range.length + offset, status);
+    if (_U_LogIfError(status)) {
+        return nil;
+    }
 
-    if (U_FAILURE(status)) {
+    _setMatcherOptions(*matcher, _replacementOptions);
+
+    // Find the match
+    matcher->find();
+
+    // Replace the match
+    matcher->appendReplacement(replacedString, unicodeTemplate, status);
+
+    if (_U_LogIfError(status)) {
         return nil;
     }
 

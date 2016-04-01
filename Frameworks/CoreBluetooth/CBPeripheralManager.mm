@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBPeripheralManager.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const CBPeripheralManagerOptionShowPowerAlertKey = @"CBPeripheralManagerOptionShowPowerAlertKey";
 NSString* const CBPeripheralManagerOptionRestoreIdentifierKey = @"CBPeripheralManagerOptionRestoreIdentifierKey";

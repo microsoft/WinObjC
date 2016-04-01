@@ -37,6 +37,8 @@
 #import "ApplicationViewController.h"
 #import "FoundationsViewController.h"
 #import "BasicAnimationViewController.h"
+#import "AccelerateViewController.h"
+#import "CoreMotionViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -52,7 +54,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.menuItems = [NSMutableArray array];
-
+    
+    //CoreMotion
+    [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
+    
     // Foundations tests
     [self addMenuItemViewController:[[FoundationsViewController alloc] init] andTitle:@"Foundation Tests"];
 
@@ -120,6 +125,9 @@
 
     // Basic Animation
     [self addMenuItemViewController:[[BasicAnimationViewController alloc] init] andTitle:@"Animation"];
+    
+    // Accelerate
+    [self addMenuItemViewController:[[AccelerateViewController alloc] init] andTitle:@"Accelerate"];
 }
 
 - (void)didReceiveMemoryWarning {

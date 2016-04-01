@@ -178,8 +178,8 @@ WINRT_EXPORT
 
 @protocol WNSIWebSocketControl
 @property unsigned int outboundBufferSizeInBytes;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
 @property (readonly) NSMutableArray* supportedProtocols;
 @end
 
@@ -229,7 +229,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSSocketActivityContext : RTObject
-+ (WNSSocketActivityContext*)create:(RTObject<WSSIBuffer>*)data ACTIVATOR;
++ (WNSSocketActivityContext*)make:(RTObject<WSSIBuffer>*)data ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* data;
 @end
 
@@ -250,7 +250,7 @@ WINRT_EXPORT
                                  sortOptions:(WNHostNameSortOptions)sortOptions
                                      success:(void (^)(NSArray*))success
                                      failure:(void (^)(NSError*))failure;
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSDatagramSocketControl* control;
 @property (readonly) WNSDatagramSocketInformation* information;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
@@ -289,7 +289,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamSocket : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSStreamSocketControl* control;
 @property (readonly) WNSStreamSocketInformation* information;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
@@ -326,7 +326,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamSocketListener : RTObject <WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSStreamSocketListenerControl* control;
 @property (readonly) WNSStreamSocketListenerInformation* information;
 - (EventRegistrationToken)addConnectionReceivedEvent:(void (^)(WNSStreamSocketListener*,
@@ -425,7 +425,7 @@ WINRT_EXPORT
 @property BOOL keepAlive;
 @property (readonly) NSMutableArray* ignorableServerCertificateErrors;
 @property BOOL serializeConnectionAttempts;
-@property (copy) WSCCCertificate* clientCertificate;
+@property (retain) WSCCCertificate* clientCertificate;
 @end
 
 #endif // __WNSStreamSocketControl_DEFINED__
@@ -511,8 +511,8 @@ WINRT_EXPORT
 @interface WNSMessageWebSocketControl : RTObject <WNSIWebSocketControl>
 @property WNSSocketMessageType messageType;
 @property unsigned int maxMessageSize;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
 @property (readonly) NSMutableArray* supportedProtocols;
 @end
@@ -538,7 +538,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSMessageWebSocket : RTObject <WNSIWebSocket, WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSMessageWebSocketControl* control;
 @property (readonly) WNSMessageWebSocketInformation* information;
 @property (readonly) RTObject<WSSIOutputStream>* outputStream;
@@ -574,8 +574,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNSStreamWebSocketControl : RTObject <WNSIWebSocketControl>
 @property BOOL noDelay;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
 @property (readonly) NSMutableArray* supportedProtocols;
 @end
@@ -601,7 +601,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSStreamWebSocket : RTObject <WNSIWebSocket, WFIClosable>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WNSStreamWebSocketControl* control;
 @property (readonly) WNSStreamWebSocketInformation* information;
 @property (readonly) RTObject<WSSIInputStream>* inputStream;
@@ -632,7 +632,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNSWebSocketKeepAlive : RTObject <WABIBackgroundTask>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (void)run:(RTObject<WABIBackgroundTaskInstance>*)taskInstance;
 @end
 

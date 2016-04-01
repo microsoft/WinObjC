@@ -77,14 +77,14 @@ typedef unsigned WSCUUserConsentVerificationResult;
 
 WINRT_EXPORT
 @interface WSCUCredentialPickerOptions : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* targetName;
-@property (copy) RTObject<WSSIBuffer>* previousCredential;
-@property (copy) NSString* message;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* targetName;
+@property (retain) RTObject<WSSIBuffer>* previousCredential;
+@property (retain) NSString* message;
 @property unsigned int errorCode;
-@property (copy) NSString* customAuthenticationProtocol;
+@property (retain) NSString* customAuthenticationProtocol;
 @property WSCUCredentialSaveOption credentialSaveOption;
-@property (copy) NSString* caption;
+@property (retain) NSString* caption;
 @property BOOL callerSavesCredential;
 @property WSCUAuthenticationProtocol authenticationProtocol;
 @property BOOL alwaysDisplayDialog;

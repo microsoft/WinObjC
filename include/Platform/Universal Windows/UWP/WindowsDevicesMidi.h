@@ -106,7 +106,7 @@ typedef unsigned WDMMidiMessageType;
 
 WINRT_EXPORT
 @interface WDMMidiNoteOffMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiNoteOffMessage*)createMidiNoteOffMessage:(uint8_t)channel note:(uint8_t)note velocity:(uint8_t)velocity ACTIVATOR;
++ (WDMMidiNoteOffMessage*)makeMidiNoteOffMessage:(uint8_t)channel note:(uint8_t)note velocity:(uint8_t)velocity ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -123,7 +123,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiNoteOnMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiNoteOnMessage*)createMidiNoteOnMessage:(uint8_t)channel note:(uint8_t)note velocity:(uint8_t)velocity ACTIVATOR;
++ (WDMMidiNoteOnMessage*)makeMidiNoteOnMessage:(uint8_t)channel note:(uint8_t)note velocity:(uint8_t)velocity ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -140,9 +140,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiPolyphonicKeyPressureMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiPolyphonicKeyPressureMessage*)createMidiPolyphonicKeyPressureMessage:(uint8_t)channel
-                                                                          note:(uint8_t)note
-                                                                      pressure:(uint8_t)pressure ACTIVATOR;
++ (WDMMidiPolyphonicKeyPressureMessage*)makeMidiPolyphonicKeyPressureMessage:(uint8_t)channel
+                                                                        note:(uint8_t)note
+                                                                    pressure:(uint8_t)pressure ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -159,9 +159,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiControlChangeMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiControlChangeMessage*)createMidiControlChangeMessage:(uint8_t)channel
-                                                    controller:(uint8_t)controller
-                                                  controlValue:(uint8_t)controlValue ACTIVATOR;
++ (WDMMidiControlChangeMessage*)makeMidiControlChangeMessage:(uint8_t)channel
+                                                  controller:(uint8_t)controller
+                                                controlValue:(uint8_t)controlValue ACTIVATOR;
 @property (readonly) uint8_t channel;
 @property (readonly) uint8_t controlValue;
 @property (readonly) uint8_t controller;
@@ -178,7 +178,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiProgramChangeMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiProgramChangeMessage*)createMidiProgramChangeMessage:(uint8_t)channel program:(uint8_t)program ACTIVATOR;
++ (WDMMidiProgramChangeMessage*)makeMidiProgramChangeMessage:(uint8_t)channel program:(uint8_t)program ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -194,7 +194,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiChannelPressureMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiChannelPressureMessage*)createMidiChannelPressureMessage:(uint8_t)channel pressure:(uint8_t)pressure ACTIVATOR;
++ (WDMMidiChannelPressureMessage*)makeMidiChannelPressureMessage:(uint8_t)channel pressure:(uint8_t)pressure ACTIVATOR;
 @property (readonly) uint8_t channel;
 @property (readonly) uint8_t pressure;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
@@ -210,7 +210,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiPitchBendChangeMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiPitchBendChangeMessage*)createMidiPitchBendChangeMessage:(uint8_t)channel bend:(unsigned short)bend ACTIVATOR;
++ (WDMMidiPitchBendChangeMessage*)makeMidiPitchBendChangeMessage:(uint8_t)channel bend:(unsigned short)bend ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -226,7 +226,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiSystemExclusiveMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiSystemExclusiveMessage*)createMidiSystemExclusiveMessage:(RTObject<WSSIBuffer>*)rawData ACTIVATOR;
++ (WDMMidiSystemExclusiveMessage*)makeMidiSystemExclusiveMessage:(RTObject<WSSIBuffer>*)rawData ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -240,7 +240,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiTimeCodeMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiTimeCodeMessage*)createMidiTimeCodeMessage:(uint8_t)frameType values:(uint8_t)values ACTIVATOR;
++ (WDMMidiTimeCodeMessage*)makeMidiTimeCodeMessage:(uint8_t)frameType values:(uint8_t)values ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -256,7 +256,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiSongPositionPointerMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiSongPositionPointerMessage*)createMidiSongPositionPointerMessage:(unsigned short)beats ACTIVATOR;
++ (WDMMidiSongPositionPointerMessage*)makeMidiSongPositionPointerMessage:(unsigned short)beats ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -271,7 +271,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiSongSelectMessage : RTObject <WDMIMidiMessage>
-+ (WDMMidiSongSelectMessage*)createMidiSongSelectMessage:(uint8_t)song ACTIVATOR;
++ (WDMMidiSongSelectMessage*)makeMidiSongSelectMessage:(uint8_t)song ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -286,7 +286,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiTuneRequestMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -300,7 +300,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiTimingClockMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -314,7 +314,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiStartMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -328,7 +328,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiContinueMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -342,7 +342,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiStopMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -356,7 +356,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiActiveSensingMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;
@@ -370,7 +370,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDMMidiSystemResetMessage : RTObject <WDMIMidiMessage>
-+ (instancetype)create ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @property (readonly) WFTimeSpan* timestamp;
 @property (readonly) WDMMidiMessageType type;

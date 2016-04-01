@@ -72,7 +72,12 @@ public:
         TLifetimeTraits::store(&_val, val);
     }
 
-    explicit AutoId(const typename std::enable_if<!std::is_same<TObjPointer, id>::value, id>::type& val) : _val(nil) {
+    // Constructor for id only when TCapturedObjPtr!=id, to break ambiguity with the following constructor.
+    template<
+        typename TCapturedObjPtr = TObjPointer,
+        typename = typename std::enable_if<!std::is_same<TCapturedObjPtr, id>::value, id>::type
+    >
+    explicit AutoId(id val) : _val(nil) {
         TLifetimeTraits::store(&_val, val);
     }
 
@@ -114,13 +119,18 @@ public:
     // t(y); // <-- y is convertible to NSString*, and this call succeeds.
     // and
     // NSString* x() { return AutoId<NSString*>(); }
-    template <typename Any, typename = typename std::enable_if<TCanConvertTo<Any>::value>::type>
+    //
+    // Note that we specifically disallow this from being 'operator id', since that override will be chosen when sending messages
+    // to our object, creating ambiguity in what message we're intending to invoke. AutoId is still coercible to id via the
+    // TObjPointer overload, since id is creatable without casting from any Objective C object type.
+
+    template <typename Any, typename = typename std::enable_if<TCanConvertTo<Any>::value && !std::is_same<Any, id>::value>::type>
     explicit operator Any() const {
         return reinterpret_cast<Any>(_val);
     }
 
-    // The id conversion operator is primarily used when an AutoId<> is the destination of a message.
-    operator id() const {
+    // The object conversion operator is primarily used when an AutoId<> is the destination of a message.
+    operator TObjPointer() const {
         return _val;
     }
 
@@ -254,11 +264,7 @@ using idretaint = AutoId<TObj, LifetimeRetain>;
 template <typename TObj>
 using idretainp = AutoId<TObj, LifetimeRetain>;
 
-#if defined(__OBJC__)
-using idretain = AutoId<NSObject, LifetimeRetain>;
-#else
 using idretain = AutoId<id, LifetimeRetain>;
-#endif
 
 template <typename TObj>
 using idtype = AutoId<TObj, LifetimeUnsafe>;

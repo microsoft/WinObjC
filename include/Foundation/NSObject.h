@@ -34,7 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 - (id)performSelector:(SEL)aSelector;
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject;
 - (id)performSelector:(SEL)aSelector withObject:(id)anObject withObject:(id)anotherObject;
-- (BOOL)isProxy STUB_METHOD;
+- (BOOL)isProxy;
 - (instancetype)retain;
 - (oneway void)release;
 - (instancetype)autorelease;
@@ -44,8 +44,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 @end
 
 FOUNDATION_EXPORT_CLASS
-__attribute__((objc_root_class))
-@interface NSObject <NSObject> {
+__attribute__((objc_root_class)) @interface NSObject<NSObject> {
 @public
     Class isa;
 }
@@ -55,7 +54,7 @@ __attribute__((objc_root_class))
 + (void)initialize;
 
 /* Creation and Destruction */
-+ (id)new;
++ (id) new;
 + (id)alloc;
 + (id)allocWithZone:(NSZone*)zone;
 
@@ -70,8 +69,8 @@ __attribute__((objc_root_class))
 - (id)self;
 
 /* Inheritance Introspection */
-+ (Class)class;
-- (Class)class;
++ (Class) class;
+- (Class) class;
 + (Class)superclass;
 + (BOOL)isSubclassOfClass:(Class)cls;
 - (BOOL)isKindOfClass:(Class)aClass;
@@ -83,14 +82,14 @@ __attribute__((objc_root_class))
 - (id)performSelector:(SEL)selector;
 - (id)performSelector:(SEL)selector withObject:(id)object0;
 - (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget STUB_METHOD;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument STUB_METHOD;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
 
 /* Method Introspection */
 + (BOOL)instancesRespondToSelector:(SEL)selector;
-- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector STUB_METHOD;
+- (NSMethodSignature*)methodSignatureForSelector:(SEL)selector;
 - (IMP)methodForSelector:(SEL)selector;
-+ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector STUB_METHOD;
++ (NSMethodSignature*)instanceMethodSignatureForSelector:(SEL)selector;
 + (IMP)instanceMethodForSelector:(SEL)selector;
 - (void)doesNotRecognizeSelector:(SEL)selector;
 
@@ -109,7 +108,7 @@ __attribute__((objc_root_class))
 - (id)mutableCopy;
 @end
 
-// clang-format off
+    // clang-format off
 @interface NSObject (NSCoding)
 @property (readonly) Class classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
@@ -141,10 +140,9 @@ __attribute__((objc_root_class))
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(NSTimeInterval)delay;
 - (void)performSelector:(SEL)selector withObject:(id)obj1 afterDelay:(NSTimeInterval)delay inModes:(NSArray*)modes;
 @end
-// clang-format on
 
 @protocol NSCoding <NSObject>
-- (instancetype)initWithCoder:(NSCoder*)decoder;
+- (instancetype)initWithCoder : (NSCoder*)decoder;
 - (void)encodeWithCoder:(NSCoder*)encoder;
 @end
 
@@ -153,15 +151,15 @@ __attribute__((objc_root_class))
 @end
 
 @protocol NSCopying
-- (id)copyWithZone:(NSZone*)zone;
+- (id)copyWithZone : (NSZone*)zone;
 @end
 
 @protocol NSMutableCopying
-- (id)mutableCopyWithZone:(NSZone*)zone;
+- (id)mutableCopyWithZone : (NSZone*)zone;
 @end
 
 #if __has_feature(objc_arc)
-    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
+NS_INLINE NS_RETURNS_RETAINED CFTypeRef
     CFBridgingRetain(id X) {
     return (__bridge_retained CFTypeRef)X;
 }
@@ -171,15 +169,22 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 }
 #else
 #pragma clang diagnostic ignored "-Wignored-attributes"
-    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
-    CFBridgingRetain(id X) {
+/**
+ @Status Interoperable
+*/
+NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
     return X ? CFRetain((CFTypeRef)X) : NULL;
 }
 
+/**
+ @Status Interoperable
+*/
 NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
     return [(id)CFMakeCollectable(X) autorelease];
 }
 #endif
+
+// clang-format on
 
 // [WinObjC Extension]
 // WinObjC_SetMissingSelectorFatal allows a developer to turn off the missing selector exception.
@@ -187,3 +192,11 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 // an application. Nonexistent methods called with this disengaged will return nil / 0 / 0L.
 // Defaults to YES: missing selectors will cause an exception to be thrown.
 FOUNDATION_EXPORT void WinObjC_SetMissingSelectorFatal(BOOL);
+
+// [WinObjC Extension]
+// WinObjC_SetZombiesEnabled allows a developer to toggle the runtime behaviour of object deallocation.
+// When "Zombies" are enabled, instances that are deallocated remain alive and throw exceptions when
+// they are the targets of messages. This allows for the detection of use-after-free issues, at the
+// cost of increased memory usage.
+// Zombies are only recommended for consumption during application development and debugging.
+FOUNDATION_EXPORT void WinObjC_SetZombiesEnabled(BOOL);

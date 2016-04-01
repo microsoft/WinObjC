@@ -21,9 +21,8 @@
 @protocol MTLDevice;
 @class NSString;
 
-//TODO: 6309387 value of MTLResourceCPUCacheModeShift/MTLResourceStorageModeShift can not be determined via reference doc
-#define MTLResourceCPUCacheModeShift 1
-#define MTLResourceStorageModeShift 2
+#define MTLResourceCPUCacheModeShift 0
+#define MTLResourceStorageModeShift 4
 
 typedef NS_ENUM(NSUInteger, MTLCPUCacheMode) { MTLCPUCacheModeDefaultCache = 0, MTLCPUCacheModeWriteCombined = 1 };
 

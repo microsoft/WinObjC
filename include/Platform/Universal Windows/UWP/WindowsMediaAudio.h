@@ -220,10 +220,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioGraphSettings : RTObject
-+ (WMAAudioGraphSettings*)create:(WMRAudioRenderCategory)audioRenderCategory ACTIVATOR;
++ (WMAAudioGraphSettings*)make:(WMRAudioRenderCategory)audioRenderCategory ACTIVATOR;
 @property WMAQuantumSizeSelectionMode quantumSizeSelectionMode;
-@property (copy) WDEDeviceInformation* primaryRenderDevice;
-@property (copy) WMMAudioEncodingProperties* encodingProperties;
+@property (retain) WDEDeviceInformation* primaryRenderDevice;
+@property (retain) WMMAudioEncodingProperties* encodingProperties;
 @property int desiredSamplesPerQuantum;
 @property WMAudioProcessing desiredRenderDeviceAudioProcessing;
 @property WMRAudioRenderCategory audioRenderCategory;
@@ -308,9 +308,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
 @property double playbackSpeedFactor;
-@property (copy) id loopCount;
-@property (copy) id endTime;
-@property (copy) id startTime;
+@property (retain) id loopCount;
+@property (retain) id endTime;
+@property (retain) id startTime;
 @property (readonly) WFTimeSpan* position;
 @property (readonly) WSStorageFile* sourceFile;
 @property (readonly) WFTimeSpan* duration;
@@ -534,7 +534,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAEqualizerEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMAEqualizerEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
++ (WMAEqualizerEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 @property (readonly) NSArray* bands;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
@@ -548,7 +548,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAReverbEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMAReverbEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
++ (WMAReverbEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 @property uint8_t highEQGain;
 @property uint8_t highEQCutoff;
 @property BOOL disableLateField;
@@ -584,7 +584,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAEchoEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMAEchoEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
++ (WMAEchoEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
 @property double wetDryMix;
 @property double feedback;
 @property double delay;
@@ -600,8 +600,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMALimiterEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMALimiterEffectDefinition*)create:(WMAAudioGraph*)audioGraph ACTIVATOR;
-@property unsigned int release;
++ (WMALimiterEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
+@property unsigned int Release;
 @property unsigned int loudness;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;

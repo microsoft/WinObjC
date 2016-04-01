@@ -422,15 +422,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCConnectionProfileFilter : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) id serviceProviderGuid;
++ (instancetype)make ACTIVATOR;
+@property (retain) id serviceProviderGuid;
 @property WNCNetworkCostType networkCostType;
 @property BOOL isWwanConnectionProfile;
 @property BOOL isWlanConnectionProfile;
 @property BOOL isConnected;
-@property (copy) id isRoaming;
-@property (copy) id isOverDataLimit;
-@property (copy) id isBackgroundDataUsageRestricted;
+@property (retain) id isRoaming;
+@property (retain) id isOverDataLimit;
+@property (retain) id isBackgroundDataUsageRestricted;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @end
 
@@ -454,9 +454,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCRoutePolicy : RTObject
-+ (WNCRoutePolicy*)createRoutePolicy:(WNCConnectionProfile*)connectionProfile
-                            hostName:(WNHostName*)hostName
-                                type:(WNDomainNameType)type ACTIVATOR;
++ (WNCRoutePolicy*)makeRoutePolicy:(WNCConnectionProfile*)connectionProfile
+                          hostName:(WNHostName*)hostName
+                              type:(WNDomainNameType)type ACTIVATOR;
 @property (readonly) WNCConnectionProfile* connectionProfile;
 @property (readonly) WNHostName* hostName;
 @property (readonly) WNDomainNameType hostNameType;
@@ -470,13 +470,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCCellularApnContext : RTObject
-+ (instancetype)create ACTIVATOR;
-@property (copy) NSString* userName;
-@property (copy) NSString* providerId;
-@property (copy) NSString* password;
++ (instancetype)make ACTIVATOR;
+@property (retain) NSString* userName;
+@property (retain) NSString* providerId;
+@property (retain) NSString* password;
 @property BOOL isCompressionEnabled;
 @property WNCCellularApnAuthenticationType authenticationType;
-@property (copy) NSString* accessPointName;
+@property (retain) NSString* accessPointName;
 @end
 
 #endif // __WNCCellularApnContext_DEFINED__

@@ -29,7 +29,16 @@
 }
 
 - (void)_makeConnection {
+    //  Grab existing collection from the target
     NSMutableArray* collection = [source valueForKey:label];
+
+    //  If the target property does not have a collection, make a new one and assign it
+    if (collection == nil) {
+        collection = [NSMutableArray new];
+        [source setValue: collection forKey: label];
+        [collection release];
+    }
+
     [collection addObject:dest];
 }
 

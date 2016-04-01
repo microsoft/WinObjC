@@ -21,10 +21,19 @@
 #import "CGContextImpl.h"
 #import "CGContextCairo.h"
 
-#import <cairoint.h>
+#include "LoggingNative.h"
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+
+#import <cairoint.h> // uses 'register int'
+
+#pragma clang diagnostic pop
 
 #pragma warning(push)
 #pragma warning(disable : 4146)
+
+static const wchar_t* TAG = L"CGBitmapImage";
 
 // NOTE: the negative strides below are to convert from bitmap file format
 // (which are generally bottom-up) to in-memory layout.
@@ -43,12 +52,10 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
     _bottomOrientation = FALSE;
     _freeWhenDone = FALSE;
 
-    // EbrDebugLog("Creating bitmap\n");
-
     switch (fmt) {
         case _Color565:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 2);
+                _imageData = (void*)IwCalloc(_width * height, 2);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 2;
@@ -81,7 +88,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
         case _ColorRGB32:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 4);
+                _imageData = (void*)IwCalloc(_width * height, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -112,7 +119,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
         case _ColorRGB32HE:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 4);
+                _imageData = (void*)IwCalloc(_width * height, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -146,7 +153,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 //_internalWidth = 1 << log2Ceil(width);
                 //_internalHeight = 1 << log2Ceil(height);
 
-                _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 4);
+                _imageData = (void*)IwCalloc(_internalWidth * _internalHeight, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -180,7 +187,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 //_internalWidth = 1 << log2Ceil(width);
                 //_internalHeight = 1 << log2Ceil(height);
 
-                _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 4);
+                _imageData = (void*)IwCalloc(_internalWidth * _internalHeight, 4);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 4;
@@ -218,7 +225,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
                 _bytesPerPixel = 3;
                 _bytesPerRow = _internalWidth * _bytesPerPixel;
 
-                _imageData = (void*)EbrCalloc(_internalWidth * _internalHeight, 3);
+                _imageData = (void*)IwCalloc(_internalWidth * _internalHeight, 3);
                 _freeWhenDone = TRUE;
 
                 //_surface = _cairo_image_surface_create_with_pixman_format((unsigned char
@@ -250,9 +257,9 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             break;
 
         case _ColorGrayscale:
-            EbrDebugLog("*** Warning: Grayscale not properly implemented ***\n");
+            TraceWarning(TAG, L"*** Warning: Grayscale not properly implemented ***");
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 1);
+                _imageData = (void*)IwCalloc(_width * height, 1);
                 _freeWhenDone = TRUE;
 
                 _bytesPerPixel = 1;
@@ -283,7 +290,7 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 
         case _ColorA8:
             if (!_imageData) {
-                _imageData = (void*)EbrCalloc(_width * height, 1);
+                _imageData = (void*)IwCalloc(_width * height, 1);
                 _freeWhenDone = TRUE;
             }
             _bytesPerPixel = 1;
@@ -301,9 +308,9 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
             break;
     }
 
-    EbrDebugLog("Constructed image from addr:%x\n", _imageData);
+    TraceVerbose(TAG, L"Constructed image from addr:%x", _imageData);
     imgDataSize += _internalWidth * _height * _bytesPerPixel;
-    EbrDebugLog("Allocated %dx%dx%d Number of images: %d (%dKB)\n", _width, _height, _bytesPerPixel, imgDataCount, imgDataSize / 1024);
+    TraceVerbose(TAG, L"Allocated %dx%dx%d Number of images: %d (%dKB)", _width, _height, _bytesPerPixel, imgDataCount, imgDataSize / 1024);
 
     _bitmapFmt = fmt;
 }
@@ -311,12 +318,12 @@ CGImageData::CGImageData(DWORD width, DWORD height, surfaceFormat fmt, void* dat
 CGImageData::~CGImageData() {
     EbrDecrement((volatile int*)&imgDataCount);
     imgDataSize -= _internalWidth * _height * _bytesPerPixel;
-    EbrDebugLog("Destroyed (freeing 0x%x) - Number of images: %d (%dKB total)\n", _imageData, imgDataCount, imgDataSize / 1024);
+    TraceVerbose(TAG, L"Destroyed (freeing 0x%x) - Number of images: %d (%dKB total)", _imageData, imgDataCount, imgDataSize / 1024);
 
     assert(_refCount == 0);
     if (_imageData) {
         if (_freeWhenDone)
-            EbrFree(_imageData);
+            IwFree(_imageData);
         cairo_surface_destroy(_surface);
     }
 }
@@ -397,7 +404,7 @@ CGBitmapImageBacking::CGBitmapImageBacking(CGImageRef img) {
 
 CGBitmapImageBacking::~CGBitmapImageBacking() {
     if (_cairoLocks != 0 || _imageLocks != 0) {
-        EbrDebugLog("Warning: Image data not unlocked (refcnt=%d, %d)\n", _cairoLocks, _imageLocks);
+        TraceWarning(TAG, L"Warning: Image data not unlocked (refcnt=%d, %d)", _cairoLocks, _imageLocks);
 
         while (_cairoLocks > 0) {
             ReleaseCairoSurface();

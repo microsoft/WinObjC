@@ -472,21 +472,21 @@ WINRT_EXPORT
 #define __WUTITextRange_DEFINED__
 
 @protocol WUTITextRange
-@property WCHAR character;
-@property (copy) RTObject<WUTITextCharacterFormat>* characterFormat;
+@property wchar_t character;
+@property (retain) RTObject<WUTITextCharacterFormat>* characterFormat;
 @property int endPosition;
-@property (copy) RTObject<WUTITextRange>* formattedText;
+@property (retain) RTObject<WUTITextRange>* formattedText;
 @property WUTRangeGravity gravity;
 @property (readonly) int length;
-@property (copy) NSString* link;
-@property (copy) RTObject<WUTITextParagraphFormat>* paragraphFormat;
+@property (retain) NSString* link;
+@property (retain) RTObject<WUTITextParagraphFormat>* paragraphFormat;
 @property int startPosition;
 @property (readonly) int storyLength;
-@property (copy) NSString* text;
+@property (retain) NSString* text;
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
-- (void)copy;
+- (void)Copy;
 - (void)cut;
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
@@ -510,7 +510,7 @@ WINRT_EXPORT
       alternateText:(NSString*)alternateText
               value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
-- (BOOL)isEqual:(RTObject<WUTITextRange>*)range;
+- (BOOL)IsEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveEnd:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveStart:(WUTTextRangeUnit)unit count:(int)count;
@@ -544,7 +544,7 @@ WINRT_EXPORT
 - (BOOL)canPaste:(int)format;
 - (void)changeCase:(WUTLetterCase)value;
 - (void)collapse:(BOOL)value;
-- (void)copy;
+- (void)Copy;
 - (void)cut;
 - (int)Delete:(WUTTextRangeUnit)unit count:(int)count;
 - (int)endOf:(WUTTextRangeUnit)unit extend:(BOOL)extend;
@@ -568,7 +568,7 @@ WINRT_EXPORT
       alternateText:(NSString*)alternateText
               value:(RTObject<WSSIRandomAccessStream>*)value;
 - (BOOL)inStory:(RTObject<WUTITextRange>*)range;
-- (BOOL)isEqual:(RTObject<WUTITextRange>*)range;
+- (BOOL)IsEqual:(RTObject<WUTITextRange>*)range;
 - (int)move:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveEnd:(WUTTextRangeUnit)unit count:(int)count;
 - (int)moveStart:(WUTTextRangeUnit)unit count:(int)count;
@@ -591,17 +591,17 @@ WINRT_EXPORT
 
 @protocol WUTITextCharacterFormat
 @property WUTFormatEffect allCaps;
-@property (copy) WUColor* backgroundColor;
+@property (retain) WUColor* backgroundColor;
 @property WUTFormatEffect bold;
 @property WUTFontStretch fontStretch;
 @property WUTFontStyle fontStyle;
-@property (copy) WUColor* foregroundColor;
+@property (retain) WUColor* foregroundColor;
 @property WUTFormatEffect hidden;
 @property WUTFormatEffect italic;
 @property float kerning;
-@property (copy) NSString* languageTag;
+@property (retain) NSString* languageTag;
 @property (readonly) WUTLinkType linkType;
-@property (copy) NSString* name;
+@property (retain) NSString* name;
 @property WUTFormatEffect outline;
 @property float position;
 @property WUTFormatEffect protectedText;
@@ -616,7 +616,7 @@ WINRT_EXPORT
 @property int weight;
 - (void)setClone:(RTObject<WUTITextCharacterFormat>*)value;
 - (RTObject<WUTITextCharacterFormat>*)getClone;
-- (BOOL)isEqual:(RTObject<WUTITextCharacterFormat>*)format;
+- (BOOL)IsEqual:(RTObject<WUTITextCharacterFormat>*)format;
 @end
 
 #endif // __WUTITextCharacterFormat_DEFINED__
@@ -653,7 +653,7 @@ WINRT_EXPORT
 - (void)deleteTab:(float)position;
 - (RTObject<WUTITextParagraphFormat>*)getClone;
 - (void)getTab:(int)index position:(float*)position align:(WUTTabAlignment*)align leader:(WUTTabLeader*)leader;
-- (BOOL)isEqual:(RTObject<WUTITextParagraphFormat>*)format;
+- (BOOL)IsEqual:(RTObject<WUTITextParagraphFormat>*)format;
 - (void)setClone:(RTObject<WUTITextParagraphFormat>*)format;
 - (void)setIndents:(float)start left:(float)left right:(float)right;
 - (void)setLineSpacing:(WUTLineSpacingRule)rule spacing:(float)spacing;

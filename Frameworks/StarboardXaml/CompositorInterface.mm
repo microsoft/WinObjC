@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,22 +14,29 @@
 //
 //******************************************************************************
 
-#define STARBOARD_PORT
+#import "Starboard.h"
+#import "CACompositor.h"
+#import "CACompositorClient.h"
+#import "QuartzCore\CALayer.h"
+#import "CGContextInternal.h"
+#import "UIInterface.h"
+#import "UIColorInternal.h"
+#import "QuartzCore\CATransform3D.h"
+#import "Quaternion.h"
+#import <deque>
+#import <map>
+#import <memory>
+#import "CompositorInterface.h"
+#import "CAAnimationInternal.h"
+#import "CALayerInternal.h"
+#import "UWP/interopBase.h"
+#import "UIApplicationInternal.h"
+#import "LoggingNative.h"
 
-#include "Starboard.h"
-#include "CACompositor.h"
-#include "CACompositorClient.h"
-#include "winobjc\winobjc.h"
-#include "QuartzCore\CALayer.h"
-#include "CGContextInternal.h"
-#include "UIInterface.h"
-#include "QuartzCore\CATransform3D.h"
-#include "Quaternion.h"
-#include <deque>
-#include <map>
-#include <memory>
-#include "CompositorInterface.h"
-#include "CAAnimationInternal.h"
+#import <UWP/WindowsUIViewManagement.h>
+#import <UWP/WindowsDevicesInput.h>
+
+static const wchar_t* TAG = L"CompositorInterface";
 
 @class RTObject;
 
@@ -64,7 +71,7 @@ void OnRenderedFrame() {
     CASignalDisplayLink();
 }
 
-#include <mutex>
+#import <mutex>
 
 std::mutex _displayTextureCacheLock;
 std::map<CGImageRef, DisplayTextureRef> _displayTextureCache;
@@ -173,7 +180,7 @@ public:
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
                         EbrFseek(fpIn, 0, SEEK_SET);
-                        void* pngData = (void*)malloc(fileLen);
+                        void* pngData = (void*)IwMalloc(fileLen);
                         len = EbrFread(pngData, 1, fileLen, fpIn);
                         EbrFclose(fpIn);
 
@@ -197,7 +204,7 @@ public:
                         EbrFseek(fpIn, 0, SEEK_END);
                         int fileLen = EbrFtell(fpIn);
                         EbrFseek(fpIn, 0, SEEK_SET);
-                        void* imgData = (void*)malloc(fileLen);
+                        void* imgData = (void*)IwMalloc(fileLen);
                         len = EbrFread(imgData, 1, fileLen, fpIn);
                         EbrFclose(fpIn);
 
@@ -208,10 +215,14 @@ public:
                         len = [(NSData*)jpgImg->_data length];
                     }
                 } break;
+                default:
+                    TraceError(TAG, L"Warning: unrecognized image format sent to DisplayTextureContent!");
+                    break;
             }
             _xamlImage = CreateBitmapFromImageData(data, len);
-            if (freeData)
-                free((void*)data);
+            if (freeData) {
+                IwFree((void*)data);
+            }
             return;
         }
         lockPtr = NULL;
@@ -333,7 +344,11 @@ public:
         _insets[2] = edgeInsets.right;
         _insets[3] = edgeInsets.bottom;
 
-        [color getColors:_color];
+        ColorQuad colorComponents;
+        [color getColors:&colorComponents];
+
+        ColorQuadToFloatArray(colorComponents, _color);
+
         _fontSize = [font pointSize];
         _centerVertically = centerVertically;
         _lineHeight = [font ascender] - [font descender];
@@ -371,7 +386,7 @@ public:
         autoReverse = false;
         repeatCount = 0;
         repeatDuration = 0;
-        speed = 1.0;
+        speed = 1.5;
         timeOffset = 0;
     }
 
@@ -399,8 +414,8 @@ private:
                 return;
             } else if (_byValue != nil) {
                 // Interpolate between _fromValue and (_fromValue + _byValue)
-                float fromValue  = [static_cast<NSNumber*>(_fromValue) floatValue];
-                float byValue  = [static_cast<NSNumber*>(_byValue) floatValue];
+                float fromValue = [static_cast<NSNumber*>(_fromValue) floatValue];
+                float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _toValue = [[NSNumber numberWithFloat:(fromValue + byValue)] retain];
             } else {
                 // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
@@ -409,8 +424,8 @@ private:
         } else if (_toValue != nil) {
             if (_byValue != nil) {
                 // Interpolate between (_toValue - _byValue) and _toValue
-                float toValue  = [static_cast<NSNumber*>(_toValue) floatValue];
-                float byValue  = [static_cast<NSNumber*>(_byValue) floatValue];
+                float toValue = [static_cast<NSNumber*>(_toValue) floatValue];
+                float byValue = [static_cast<NSNumber*>(_byValue) floatValue];
                 _fromValue = [[NSNumber numberWithFloat:(toValue - byValue)] retain];
             } else {
                 // Guaranteed to be taken care of by _createAnimation in CABasicAnimation.
@@ -448,13 +463,13 @@ private:
             [_toValue release];
             _toValue = [[NSNumber numberWithFloat:toSize.width] retain];
         }
-    
+
         if (byValid) {
             [static_cast<NSValue*>(_byValue) getValue:&bySize];
             [_byValue release];
             _byValue = [NSNumber numberWithFloat:bySize.width];
         }
-    
+
         NSString* newKeyPath = [curKeyPath stringByAppendingString:@".width"];
         _adjustFloatValuesForKeyPath(newKeyPath);
         fromSize.width = [static_cast<NSNumber*>(_fromValue) floatValue];
@@ -473,7 +488,7 @@ private:
         } else {
             _toValue = nil;
         }
-    
+
         if (byValid) {
             _byValue = [NSNumber numberWithFloat:bySize.height];
         } else {
@@ -516,13 +531,13 @@ private:
             [_toValue release];
             _toValue = [[NSNumber numberWithFloat:toPoint.x] retain];
         }
-    
+
         if (byValid) {
             [static_cast<NSValue*>(_byValue) getValue:&byPoint];
             [_byValue release];
             _byValue = [NSNumber numberWithFloat:byPoint.x];
         }
-    
+
         NSString* newKeyPath = [curKeyPath stringByAppendingString:@".x"];
         _adjustFloatValuesForKeyPath(newKeyPath);
         fromPoint.x = [static_cast<NSNumber*>(_fromValue) floatValue];
@@ -541,7 +556,7 @@ private:
         } else {
             _toValue = nil;
         }
-    
+
         if (byValid) {
             _byValue = [NSNumber numberWithFloat:byPoint.y];
         } else {
@@ -579,12 +594,12 @@ private:
             _fromValue = [[NSValue valueWithCGPoint:fromRect.origin] retain];
         }
 
-        if (toValid) { 
+        if (toValid) {
             [static_cast<NSValue*>(_toValue) getValue:&toRect];
             [_toValue release];
             _toValue = [[NSValue valueWithCGPoint:toRect.origin] retain];
         }
-    
+
         if (byValid) {
             [static_cast<NSValue*>(_byValue) getValue:&byRect];
             [_byValue release];
@@ -592,7 +607,7 @@ private:
             // _byValue is will be released by _adjustCGPointValuesForKeyPath
             _byValue = [[NSValue valueWithCGPoint:byRect.origin] retain];
         }
-    
+
         NSString* newKeyPath = [curKeyPath stringByAppendingString:@".origin"];
         _adjustCGPointValuesForKeyPath(newKeyPath);
         [static_cast<NSValue*>(_fromValue) getValue:&(fromRect.origin)];
@@ -611,7 +626,7 @@ private:
         } else {
             _toValue = nil;
         }
-    
+
         if (byValid) {
             // _byValue is will be released by _adjustCGSizeValuesForKeyPath
             _byValue = [[NSValue valueWithCGSize:byRect.size] retain];
@@ -625,18 +640,14 @@ private:
         [static_cast<NSValue*>(_toValue) getValue:&(toRect.size)];
         [_fromValue release];
         [_toValue release];
-        
+
         _fromValue = [[NSValue valueWithCGRect:fromRect] retain];
         _toValue = [[NSValue valueWithCGRect:toRect] retain];
         _byValue = nil;
     }
 
-    bool _adjustCATransform3DValues(float* translationFrom,
-                                    float* scaleFrom,
-                                    float* angleFrom,
-                                    float* translationTo,
-                                    float* scaleTo,
-                                    float* angleTo) {
+    bool _adjustCATransform3DValues(
+        float* translationFrom, float* scaleFrom, float* angleFrom, float* translationTo, float* scaleTo, float* angleTo) {
         const int dimensions = 3;
         float translationBy[dimensions] = { 0 };
         float scaleBy[dimensions] = { 1.0f, 1.0f, 1.0f };
@@ -645,17 +656,23 @@ private:
         CATransform3D fromValue = [static_cast<NSValue*>(_fromValue) CATransform3DValue];
         CATransform3D toValue = [static_cast<NSValue*>(_toValue) CATransform3DValue];
         CATransform3D byValue = [static_cast<NSValue*>(_byValue) CATransform3DValue];
-        float (^add) (float, float) = ^(float a, float b) { return (a + b);};
-        float (^subtract) (float, float) = ^(float a, float b) { return (a - b);};
-        float (^multiply) (float, float) = ^(float a, float b) { return a*b;};
-        float (^divide) (float, float) = ^(float a, float b) {
+        float (^add)(float, float) = ^(float a, float b) {
+            return (a + b);
+        };
+        float (^subtract)(float, float) = ^(float a, float b) {
+            return (a - b);
+        };
+        float (^multiply)(float, float) = ^(float a, float b) {
+            return a * b;
+        };
+        float (^divide)(float, float) = ^(float a, float b) {
             if (b == 0.0f) {
                 return 0.0f;
             }
-            return a/b;
+            return a / b;
         };
-        void (^performOperation) (float*, float*, float*, int, float (^)(float, float)) = 
-            ^(float* array1, float* array2, float* resultArray, int size, float (^operation) (float, float)) {
+        void (^performOperation)(float*, float*, float*, int, float (^)(float, float)) =
+            ^(float* array1, float* array2, float* resultArray, int size, float (^operation)(float, float)) {
                 for (int i = 0; i < size; i++) {
                     resultArray[i] = operation(array1[i], array2[i]);
                 }
@@ -773,8 +790,10 @@ public:
         speed = timingProperties->_speed;
         timeOffset = timingProperties->_timeOffset;
 
-        if ( repeatCount > 0xFFFFFF ) repeatCount = 0xFFFFFF;
-        if ( repeatDuration > 0xFFFFFF ) repeatDuration = 0xFFFFFF;
+        if (repeatCount > 0xFFFFFF)
+            repeatCount = 0xFFFFFF;
+        if (repeatDuration > 0xFFFFFF)
+            repeatDuration = 0xFFFFFF;
     }
 
     ~DisplayAnimationBasic() {
@@ -812,14 +831,14 @@ public:
             _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
-            
+
             AddAnimation(node, L"transform.translation.x", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "transform.translation.y") == 0) {
             _adjustFloatValuesForKeyPath(_propertyName);
             float fromValue = [(NSNumber*)_fromValue floatValue];
             float toValue = [(NSNumber*)_toValue floatValue];
-            
+
             AddAnimation(node, L"transform.translation.y", _fromValue != nil, fromValue, _toValue != nil, toValue);
             Start();
         } else if (strcmp(propName, "position") == 0) {
@@ -873,12 +892,7 @@ public:
             float scaleTo[3] = { 1.0f, 1.0f, 1.0f };
             float angleTo = 0.0f;
 
-            bool isValid = _adjustCATransform3DValues(translationFrom,
-                                                    scaleFrom,
-                                                    &angleFrom,
-                                                    translationTo,
-                                                    scaleTo,
-                                                    &angleTo);
+            bool isValid = _adjustCATransform3DValues(translationFrom, scaleFrom, &angleFrom, translationTo, scaleTo, &angleTo);
 
             if (scaleFrom[0] != 1.0f || scaleFrom[1] != 1.0f || scaleTo[0] != 1.0f || scaleTo[1] != 1.0f) {
                 AddAnimation(node, L"transform.scale.x", isValid, scaleFrom[0], isValid, scaleTo[0]);
@@ -1060,16 +1074,28 @@ public:
             //  [TODO: Update contents scale in Xaml node]
             // contentScale = [(NSNumber *) newValue floatValue];
         } else if (strcmp(name, "contentsOrientation") == 0) {
+            int position = [(NSNumber*)newValue intValue];
+            float toPosition = 0;
+            if (position == UIImageOrientationUp) {
+                toPosition = 0;
+            } else if (position == UIImageOrientationDown) {
+                toPosition = 180;
+            } else if (position == UIImageOrientationLeft) {
+                toPosition = 270;
+            } else if (position == UIImageOrientationRight) {
+                toPosition = 90;
+            }
+            SetProperty(L"transform.rotation", toPosition);
         } else if (strcmp(name, "contentsSize") == 0) {
         } else if (strcmp(name, "gravity") == 0) {
-            SetPropertyInt(L"gravity", [newValue intValue]);
+            SetPropertyInt(L"gravity", [(NSNumber*)newValue intValue]);
         } else if (strcmp(name, "zPosition") == 0) {
         } else if (strcmp(name, "contentColor") == 0) {
         } else if (strcmp(name, "sublayerTransform") == 0) {
         } else if (strcmp(name, "backgroundColor") == 0) {
-            float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+            ColorQuad color{};
             [(UIColor*)newValue getColors:&color];
-            SetBackgroundColor(color[0], color[1], color[2], color[3]);
+            SetBackgroundColor(color.r, color.g, color.b, color.a);
         } else {
             assert(0);
         }
@@ -1151,7 +1177,7 @@ public:
     QueuedProperty(DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = _strdup("contents");
+        _propertyName = IwStrDup("contents");
         _propertyValue = NULL;
         _newTexture = newTexture;
         _contentsScale = contentsScale;
@@ -1162,7 +1188,7 @@ public:
     QueuedProperty(DisplayNode* node, const char* propertyName, NSObject* propertyValue) {
         IncrementCounter("QueuedProperty");
         _node = node;
-        _propertyName = _strdup(propertyName);
+        _propertyName = IwStrDup(propertyName);
         _propertyValue = [propertyValue retain];
         _newTexture = NULL;
         _applyingTexture = false;
@@ -1170,8 +1196,9 @@ public:
 
     ~QueuedProperty() {
         DecrementCounter("QueuedProperty");
-        if (_propertyName)
-            free(_propertyName);
+        if (_propertyName) {
+            IwFree(_propertyName);
+        }
         [_propertyValue release];
 
         _propertyName = nullptr;
@@ -1354,19 +1381,19 @@ deque<DisplayTransaction*> _queuedTransactions;
 
 class CAXamlCompositor : public CACompositorInterface {
 public:
-    virtual void DisplayTreeChanged() {
+    virtual void DisplayTreeChanged() override {
         _client->RequestTransactionProcessing();
     }
-    virtual DisplayNode* CreateDisplayNode() {
+    virtual DisplayNode* CreateDisplayNode() override {
         DisplayNode* ret = new DisplayNodeXaml();
         return ret;
     }
 
-    DisplayTransaction* CreateDisplayTransaction() {
+    DisplayTransaction* CreateDisplayTransaction() override {
         return new DisplayTransaction();
     }
 
-    void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) {
+    void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) override {
         if (onTransaction) {
             onTransaction->QueueTransaction(transaction);
         } else {
@@ -1377,36 +1404,39 @@ public:
     void CommitDisplayTransaction(DisplayTransaction* transaction) {
     }
 
-    virtual void addNode(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayNode* superNode, DisplayNode* beforeNode, DisplayNode* afterNode) {
+    virtual void addNode(DisplayTransaction* transaction,
+                         DisplayNode* node,
+                         DisplayNode* superNode,
+                         DisplayNode* beforeNode,
+                         DisplayNode* afterNode) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode);
         transaction->QueueNodeMovement(newNode);
     }
 
-    virtual void sortWindowLevels() {
+    virtual void sortWindowLevels() override {
     }
 
-    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) {
+    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Move, node, beforeNode, afterNode, NULL);
         transaction->QueueNodeMovement(newNode);
     }
 
-    virtual void removeNode(DisplayTransaction* transaction, DisplayNode* node) {
+    virtual void removeNode(DisplayTransaction* transaction, DisplayNode* node) override {
         QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Remove, node, NULL, NULL, NULL);
         transaction->QueueNodeMovement(newNode);
     }
 
-    virtual void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) {
+    virtual void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) override {
         QueuedAnimation* newAnim = new QueuedAnimation(layer, animation, forKey);
 
         transaction->QueueAnimation(newAnim);
         DisplayTreeChanged();
     }
 
-    virtual void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) {
+    virtual void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
     }
 
-    virtual void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) {
+    virtual void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
         //  Removing animations while they're playing doesn't jibe well with the xaml compositor
         /*
         QueuedAnimation *newAnim = new QueuedAnimation(pAnimation);
@@ -1417,34 +1447,37 @@ public:
     }
 
     virtual void setNodeTexture(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
+        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) override {
         QueuedProperty* newPropChange = new QueuedProperty(node, newTexture, contentsSize, contentsScale);
 
         transaction->QueueProperty(newPropChange);
         DisplayTreeChanged();
     }
 
-    virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) {
+    virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) override {
     }
 
     virtual void setNewPatternBackground(id layer) {
     }
 
-    virtual void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) {
+    virtual void setDisplayProperty(DisplayTransaction* transaction,
+                                    DisplayNode* node,
+                                    const char* propertyName,
+                                    NSObject* newValue) override {
         QueuedProperty* newPropChange = new QueuedProperty(node, propertyName, newValue);
 
         transaction->QueueProperty(newPropChange);
         DisplayTreeChanged();
     }
 
-    virtual void setNodeTopMost(DisplayNode* node, bool topMost) {
+    virtual void setNodeTopMost(DisplayNode* node, bool topMost) override {
         node->SetTopMost();
     }
 
-    virtual void setNodeTopWindowLevel(DisplayNode* node, float level) {
+    virtual void setNodeTopWindowLevel(DisplayNode* node, float level) override {
     }
 
-    virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) {
+    virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) override {
         CGImageRetain(img);
         DisplayTexture* ret = img->Backing()->GetDisplayTexture();
         if (ret) {
@@ -1464,20 +1497,20 @@ public:
         return ret;
     }
 
-    DisplayTexture* CreateWritableBitmapTexture32(int width, int height) {
+    DisplayTexture* CreateWritableBitmapTexture32(int width, int height) override {
         DisplayTexture* ret = new DisplayTextureContent(width, height);
         return ret;
     }
 
-    void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) {
+    void* LockWritableBitmapTexture(DisplayTexture* tex, int* stride) override {
         return ((DisplayTextureContent*)tex)->LockWritableBitmap(stride);
     }
 
-    void UnlockWritableBitmapTexture(DisplayTexture* tex) {
+    void UnlockWritableBitmapTexture(DisplayTexture* tex) override {
         ((DisplayTextureContent*)tex)->UnlockWritableBitmap();
     }
 
-    virtual DisplayTexture* CreateDisplayTextureForText() {
+    virtual DisplayTexture* CreateDisplayTextureForText() override {
         DisplayTextureText* texRet = new DisplayTextureText();
         return texRet;
     }
@@ -1492,7 +1525,7 @@ public:
                                              const CGSize& shadowOffset,
                                              int numLines,
                                              UIEdgeInsets edgeInsets,
-                                             bool centerVertically) {
+                                             bool centerVertically) override {
         if (!texture)
             return;
 
@@ -1505,13 +1538,8 @@ public:
                                                        NSObject* fromValue,
                                                        NSObject* toValue,
                                                        NSObject* byValue,
-                                                       CAMediaTimingProperties* timingProperties) {
-        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj,
-                                                                     propertyName,
-                                                                     fromValue,
-                                                                     toValue,
-                                                                     byValue,
-                                                                     timingProperties);
+                                                       CAMediaTimingProperties* timingProperties) override {
+        DisplayAnimationBasic* basicAnim = new DisplayAnimationBasic(animobj, propertyName, fromValue, toValue, byValue, timingProperties);
         return basicAnim;
     }
 
@@ -1520,66 +1548,128 @@ public:
                                                       DisplayNode* animNode,
                                                       NSString* typeStr,
                                                       NSString* subtypeStr,
-                                                      CAMediaTimingProperties* timingProperties) {
+                                                      CAMediaTimingProperties* timingProperties) override {
         DisplayAnimationTransition* transitionAnim = new DisplayAnimationTransition(animobj, typeStr, subtypeStr);
         return transitionAnim;
     }
 
-    virtual void RetainAnimation(DisplayAnimation* animation) {
+    virtual void RetainAnimation(DisplayAnimation* animation) override {
         if (animation)
             animation->AddRef();
     }
 
-    virtual void ReleaseAnimation(DisplayAnimation* animation) {
+    virtual void ReleaseAnimation(DisplayAnimation* animation) override {
         if (animation)
             animation->Release();
     }
 
-    virtual void RetainNode(DisplayNode* node) {
+    virtual void RetainNode(DisplayNode* node) override {
         node->AddRef();
     }
 
-    virtual void ReleaseNode(DisplayNode* node) {
+    virtual void ReleaseNode(DisplayNode* node) override {
         node->Release();
     }
 
-    virtual void RetainDisplayTexture(DisplayTexture* tex) {
+    virtual void RetainDisplayTexture(DisplayTexture* tex) override {
         tex->AddRef();
     }
 
-    virtual void ReleaseDisplayTexture(DisplayTexture* tex) {
+    virtual void ReleaseDisplayTexture(DisplayTexture* tex) override {
         tex->Release();
     }
 
-    void SortWindowLevels() {
+    void SortWindowLevels() override {
     }
 
-    virtual bool isTablet() {
+    virtual bool isTablet() override {
         return tabletMode;
     }
-    virtual float screenWidth() {
+    virtual float screenWidth() override {
         return ::screenWidth;
     }
-    virtual float screenHeight() {
+    virtual float screenHeight() override {
         return ::screenHeight;
     }
-    virtual float screenScale() {
-        return ::screenMagnification * [[UIApplication displayMode] hostScreenScale];
+    virtual float screenScale() override {
+        float scale = ::screenMagnification;
+
+        if ([[UIApplication displayMode] useHostScaleFactor]) {
+            scale *= [UIApplication displayMode].hostScreenScale;
+        }
+
+        // On an iOS device, the only expected values for UIScreen.scale is 1, or 2 for retina displays.
+        // Some code paths rely on this.
+        if ([[UIApplication displayMode] clampScaleToClosestExpected]) {
+            // If we've set a fixed width or height, we're also expecting a fixed screenScale.
+            if ([UIApplication displayMode].autoMagnification &&
+                (([UIApplication displayMode].fixedWidth != 0) || ([UIApplication displayMode].fixedHeight != 0))) {
+                static float fixedScreenScale = 0;
+                static float prevWidth = 0;
+                static float prevHeight = 0;
+
+                if (fixedScreenScale &&
+                    (([UIApplication displayMode].fixedWidth == prevWidth) && ([UIApplication displayMode].fixedHeight == prevHeight))) {
+                    return fixedScreenScale;
+                }
+
+                prevWidth = [UIApplication displayMode].fixedWidth;
+                prevHeight = [UIApplication displayMode].fixedHeight;
+
+                float maxDimension = 0;
+                NSArray* pointerDevices = [WDIPointerDevice getPointerDevices];
+
+                for (int i = 0; i < [pointerDevices count]; i++) {
+                    WFRect* screenRect = [(WDIPointerDevice*)[pointerDevices objectAtIndex:i] screenRect];
+                    float hostScreenScale = [UIApplication displayMode].hostScreenScale;
+                    maxDimension = max(maxDimension, max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
+                }
+
+                // We can't know whether the app will be rotated, or moved from screen to screen. We have to take the
+                // worst case scenario, and set the scale using the maximum possible dimension.
+
+                float maxScreenDimension = max([UIApplication displayMode].fixedWidth, [UIApplication displayMode].fixedHeight);
+
+                if (maxDimension == 0) {
+                    TraceWarning(TAG, L"Could not determine screen size, defaulting to a screenScale of 2!");
+                    fixedScreenScale = 2.0f;
+                } else if (maxDimension > maxScreenDimension) {
+                    fixedScreenScale = 2.0f;
+                } else {
+                    fixedScreenScale = 1.0f;
+                }
+
+                return fixedScreenScale;
+            } else {
+                // Round to nearest int
+                scale = static_cast<float>(static_cast<int>(scale + 0.5f));
+
+                // Clamp
+                if (scale > 2.0f) {
+                    scale = 2.0f;
+                }
+                if (scale < 1.0f) {
+                    scale = 1.0f;
+                }
+            }
+        }
+
+        return scale;
     }
-    virtual int deviceWidth() {
+    virtual int deviceWidth() override {
         return ::deviceWidth;
     }
-    virtual int deviceHeight() {
+    virtual int deviceHeight() override {
         return ::deviceHeight;
     }
-    virtual float screenXDpi() {
+    virtual float screenXDpi() override {
         return ::screenXDpi;
     }
-    virtual float screenYDpi() {
+    virtual float screenYDpi() override {
         return ::screenYDpi;
     }
 
-    virtual void ProcessTransactions() {
+    virtual void ProcessTransactions() override {
         for (auto& cur : _queuedTransactions) {
             cur->Process();
             delete cur;
@@ -1587,53 +1677,53 @@ public:
         _queuedTransactions.clear();
     }
 
-    virtual void RequestRedraw() {
+    virtual void RequestRedraw() override {
         _client->RequestRedraw();
         CASignalDisplayLink();
     }
 
-    virtual void setScreenSize(float width, float height, float scale, float rotation) {
+    virtual void setScreenSize(float width, float height, float scale, float rotation) override {
         ::screenWidth = width;
         ::screenHeight = height;
         ::screenMagnification = scale;
         SetScreenParameters(::screenWidth, ::screenHeight, ::screenMagnification, rotation);
     }
 
-    virtual void setDeviceSize(int width, int height) {
+    virtual void setDeviceSize(int width, int height) override {
         ::deviceWidth = width;
         ::deviceHeight = height;
     }
 
-    virtual void setScreenDpi(int xDpi, int yDpi) {
+    virtual void setScreenDpi(int xDpi, int yDpi) override {
         ::screenXDpi = xDpi;
         ::screenYDpi = yDpi;
     }
 
-    virtual void setTablet(bool isTablet) {
+    virtual void setTablet(bool isTablet) override {
         ::tabletMode = isTablet;
     }
 
-    void EnableDisplaySyncNotification() {
+    void EnableDisplaySyncNotification() override {
         EnableRenderingListener(OnRenderedFrame);
     }
 
-    void DisableDisplaySyncNotification() {
+    void DisableDisplaySyncNotification() override {
         DisableRenderingListener();
     }
 
-    NSObject* getDisplayProperty(DisplayNode* node, const char* propertyName) {
+    NSObject* getDisplayProperty(DisplayNode* node, const char* propertyName) override {
         return (NSObject*)node->GetProperty(propertyName);
     }
 
-    void IncrementCounter(const char* name) {
+    void IncrementCounter(const char* name) override {
         ::IncrementCounter(name);
     }
 
-    void DecrementCounter(const char* name) {
+    void DecrementCounter(const char* name) override {
         ::DecrementCounter(name);
     }
 
-    DisplayTexture* CreateDisplayTextureForElement(id xamlElement) {
+    DisplayTexture* CreateDisplayTextureForElement(id xamlElement) override {
         GenericControlXaml* genericControlTexture = new GenericControlXaml((IUnknown*)[(RTObject*)xamlElement internalObject]);
         return genericControlTexture;
     }

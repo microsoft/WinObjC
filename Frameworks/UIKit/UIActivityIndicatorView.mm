@@ -24,6 +24,10 @@
     BOOL _addedAnimation;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     _color = [UIColor whiteColor];
@@ -45,6 +49,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)awakeFromNib {
     if (startAnimating) {
         [self startAnimating];
@@ -67,6 +74,9 @@
     return [self initWithFrame:frame];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -166,6 +176,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     return isAnimating;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(UIWindow*)window {
     if (window != nil) {
         addAnimation(self);
@@ -174,13 +187,25 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    // No-op
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    // No-op
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    // No-op
 }
 
 /**
@@ -199,10 +224,17 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     return _color;
 }
 
+/**
+ @Status Interoperable
+ @Notes Always returns NO
+*/
 - (BOOL)isUserInteractionEnabled {
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [super dealloc];
 }

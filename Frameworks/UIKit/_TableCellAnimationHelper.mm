@@ -24,7 +24,7 @@
         [_cellsToBeRemoved[i] removeFromSuperview];
         [_cellsToBeRemoved[i] release];
     }
-    EbrFree(_cellsToBeRemoved);
+    IwFree(_cellsToBeRemoved);
 
     [self release];
 }

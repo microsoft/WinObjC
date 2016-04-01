@@ -17,6 +17,7 @@
 #import <AddressBook/ABSource.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const ABPropertyID kABSourceNameProperty = 201;
 const ABPropertyID kABSourceTypeProperty = 202;

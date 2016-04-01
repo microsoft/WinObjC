@@ -13,9 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
+
 #include <windows.h>
-#include "wil/result.h"
+#include "ErrorHandling.h"
 #include "RawBuffer.h"
 #include <wrl/client.h>
 #include <wrl/implements.h>
@@ -93,20 +93,26 @@ IFACEMETHODIMP RawBuffer::Buffer(unsigned char** outData) {
     return S_OK;
 }
 
-ComPtr<IBuffer> BufferFromRawData(unsigned char* data, unsigned int length) {
+extern "C" HRESULT BufferFromRawData(IBuffer** buffer, unsigned char* data, unsigned int length) {
+    if (!buffer) {
+        return E_INVALIDARG;
+    }
+    
     ComPtr<RawBuffer> rawBuffer;
     HRESULT makeResult = MakeAndInitialize<RawBuffer>(&rawBuffer, data, length, length);
 
     if (FAILED_LOG(makeResult)) {
-        return nullptr;
+        return makeResult;
     }
 
     ComPtr<ABI::Windows::Storage::Streams::IBuffer> wrlBuffer;
     HRESULT result = rawBuffer.As(&wrlBuffer);
 
     if (FAILED_LOG(result)) {
-        return nullptr;
+        return result;
     }
 
-    return wrlBuffer;
+    *buffer = wrlBuffer.Detach();
+
+    return S_OK;
 }

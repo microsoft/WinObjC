@@ -77,7 +77,7 @@ WINRT_EXPORT
 @interface WASPStorePreviewSkuInfo : RTObject
 @property (readonly) NSString* currencyCode;
 @property (readonly) NSString* customDeveloperData;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* extendedData;
 @property (readonly) NSString* formattedListPrice;
 @property (readonly) NSString* productId;
@@ -105,7 +105,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASPStorePreviewProductInfo : RTObject
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* productId;
 @property (readonly) NSString* productType;
 @property (readonly) NSArray* skuInfoList;

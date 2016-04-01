@@ -28,7 +28,7 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
         self->_capacity = length;
 
         if (self->_freeWhenDone == FALSE) {
-            uint8_t* newBytes = (uint8_t*)malloc(self->_capacity);
+            uint8_t* newBytes = (uint8_t*)IwMalloc(self->_capacity);
 
             if (self->_length > 0) {
                 memcpy(newBytes, self->_bytes, self->_length);
@@ -36,7 +36,7 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 
             self->_bytes = newBytes;
         } else {
-            self->_bytes = (uint8_t*)realloc(self->_bytes, self->_capacity);
+            self->_bytes = (uint8_t*)IwRealloc(self->_bytes, self->_capacity);
         }
 
         self->_freeWhenDone = TRUE;
@@ -51,7 +51,7 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 
             assert(self->_capacity >= length);
             if (self->_freeWhenDone == FALSE) {
-                uint8_t* newBytes = (uint8_t*)malloc(self->_capacity);
+                uint8_t* newBytes = (uint8_t*)IwMalloc(self->_capacity);
 
                 if (self->_length > 0) {
                     memcpy(newBytes, self->_bytes, self->_length);
@@ -59,7 +59,7 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
 
                 self->_bytes = newBytes;
             } else {
-                self->_bytes = (uint8_t*)realloc(self->_bytes, self->_capacity);
+                self->_bytes = (uint8_t*)IwRealloc(self->_bytes, self->_capacity);
             }
 
             self->_freeWhenDone = TRUE;
@@ -67,6 +67,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)data {
     return [[[self alloc] initWithLength:0] autorelease];
 }
@@ -254,6 +257,9 @@ void setCapacity(NSMutableData* self, unsigned length, bool exact = false) {
     return (void*)_bytes;
 }
 
+/**
+ @Status Interoperable
+*/
 - (id)copyWithZone:(NSZone*)zone {
     return [[NSMutableData alloc] initWithData:self];
 }

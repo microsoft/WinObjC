@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -28,5 +29,5 @@ typedef struct {
 
 COREMOTION_EXPORT_CLASS
 @interface CMGyroData : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMRotationRate rotationRate STUB_PROPERTY;
+@property (readonly, nonatomic) CMRotationRate rotationRate;
 @end

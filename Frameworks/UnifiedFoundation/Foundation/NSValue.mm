@@ -438,9 +438,9 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 - (NSValue*)initWithBytes:(const void*)ptr objCType:(const char*)ocType {
     if ((self = [super init]) != nil) {
         _valueType = NSValueTypeGeneric;
-        _objcType = _strdup(ocType);
+        _objcType = IwStrDup(ocType);
         size_t size = objc_sizeof_type(ocType);
-        _valPtr = malloc(size);
+        _valPtr = IwMalloc(size);
         memcpy(_valPtr, ptr, size);
     }
     return self;
@@ -448,10 +448,10 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
 
 - (void)dealloc {
     if (_objcType) {
-        free((void*)_objcType);
+        IwFree((void*)_objcType);
     }
     if (_valPtr) {
-        free(_valPtr);
+        IwFree(_valPtr);
     }
     [super dealloc];
 }
