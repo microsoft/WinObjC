@@ -16,6 +16,13 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSObject.h>
+#import <CoreFoundation/CFData.h>
+#import <CoreFoundation/CFURL.h>
+#import <CoreGraphics/CoreGraphicsExport.h>
+
+@class NSData;
+
 @interface ImageSource : NSObject
 @property (nonatomic) NSData *data;
 - (instancetype)initWithData:(CFDataRef)data;
