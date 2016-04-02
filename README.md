@@ -51,6 +51,10 @@ For guidance on importing your own Xcode project and other tips, see the [wiki](
 See our [contribution guidance in the wiki](https://github.com/Microsoft/WinObjC/wiki/How-to-Contribute) for details on how to contribute to the project.
 
 
+## Privacy
+See [Microsoft's privacy statement](https://www.microsoft.com/en-us/privacystatement/default.aspx) for more information.
+
+
 ## What's still under development?
 As this project is still under active development, there are many features that are not yet complete. You can check out [our roadmap in the wiki](https://github.com/Microsoft/WinObjC/wiki/Roadmap) for more information.
 
