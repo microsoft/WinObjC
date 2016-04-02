@@ -16,7 +16,7 @@
 
 #include <Windows.h>
 #include <CommonCrypto\CommonHMAC.h>
-#include <CommonCrypto\CommonCryptor.h>
+#include <CommonCrypto\CommonDigest.h>
 #include <COMIncludes.h>
 #include <wrl\wrappers\corewrappers.h>
 #include <wrl\client.h>
