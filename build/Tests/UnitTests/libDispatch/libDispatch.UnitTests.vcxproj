@@ -241,6 +241,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_timer_bit31.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_timer_bit63.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_timer_set_time.m" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\libDispatch\dispatch_autorelease.m" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\tests\unittests\libDispatch\dispatch_test.h" />

@@ -10,6 +10,14 @@ static dispatch_once_t _dispatch_main_q_port_pred;
 static mach_port_t main_q_port;
 #endif
 
+#if WINOBJC
+void *objc_autoreleasePoolPush(void);
+void objc_autoreleasePoolPop(void *pool);
+
+void *(*_dispatch_begin_NSAutoReleasePool)(void) = objc_autoreleasePoolPush;
+void(*_dispatch_end_NSAutoReleasePool)(void *) = objc_autoreleasePoolPop;
+#endif
+
 #if TARGET_OS_WIN32
 static dispatch_once_t _dispatch_window_message_pred;
 static UINT _dispatch_main_window_message;
