@@ -18,6 +18,18 @@
 #import <StubReturn.h>
 
 @implementation CMMagnetometerData
+
+-(instancetype)initWithValues:(double)x y:(double)y z:(double)z {
+    if (self = [super init]) {
+        _magneticField.x = x;
+        _magneticField.y = y;
+        _magneticField.z = z;
+    }
+
+    return self;
+}
+
+
 /**
 @Status Stub
 */

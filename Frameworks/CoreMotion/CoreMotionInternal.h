@@ -24,3 +24,7 @@
 - (instancetype)initWithValues:(double)x y:(double)y z:(double)z;
 @end
 
+@interface CMMagnetometerData ()
+- (instancetype)initWithValues:(double)x y:(double)y z:(double)z;
+@end
+

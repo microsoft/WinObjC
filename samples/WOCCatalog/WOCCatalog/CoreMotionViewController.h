@@ -38,6 +38,15 @@
     UISegmentedControl* gyroHandlerSegment;
     NSOperationQueue* gyroQueue;
     int gyroHeight;
+    
+    UILabel* magnetoLabel;
+    UILabel* magnetoVal;
+    UIButton* magnetoStopButton;
+    UIButton* magnetoStartButton;
+    UIButton* magnetoUpdateButton;
+    UISegmentedControl* magnetoHandlerSegment;
+    NSOperationQueue* magnetoQueue;
+    int magnetoHeight;
 
     CMMotionManager* motionManager;
     UIScrollView* scrollView;

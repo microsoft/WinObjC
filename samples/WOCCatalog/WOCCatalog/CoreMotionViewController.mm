@@ -31,6 +31,7 @@
     buttonLength = 72;
     accHeight = 80;
     gyroHeight = 280;
+    magnetoHeight = 480;
 
     motionManager = [[CMMotionManager alloc] init];
     
@@ -56,6 +57,18 @@
         [gyroLabel setText:@"Gyrometer Not Available!"];
         [gyroLabel setTextAlignment:UITextAlignmentLeft];
         [scrollView addSubview:gyroLabel];
+    }
+    
+    if (motionManager.isMagnetometerAvailable) {
+        magnetoQueue = [[NSOperationQueue alloc] init];
+        motionManager.magnetometerUpdateInterval = 0.016;
+        [self setupMagnetometer];
+    } else {
+        magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 480, 300, 50)];
+        [magnetoLabel setBackgroundColor:nil];
+        [magnetoLabel setText:@"Magnetometer Not Available!"];
+        [magnetoLabel setTextAlignment:UITextAlignmentLeft];
+        [scrollView addSubview:magnetoLabel];
     }
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -251,6 +264,102 @@
     } else {
         gyroUpdateButton.enabled = YES;
         [motionManager startGyroUpdates];
+    }
+}
+
+
+// Methods for Magnetometer
+-(void)setupMagnetometer {
+    magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, magnetoHeight - 5, 150, 50)];
+    [magnetoLabel setBackgroundColor:[UIColor whiteColor]];
+    [magnetoLabel setText:@"Magnetometer"];
+    [magnetoLabel setTextAlignment:NSTextAlignmentLeft];
+    [scrollView addSubview:magnetoLabel];
+
+    magnetoStartButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [magnetoStartButton setTitle:@"Start" forState:UIControlStateNormal];
+    magnetoStartButton.frame = CGRectMake(100, magnetoHeight + 50, buttonLength, 40);
+    [magnetoStartButton addTarget:self action:@selector(magnetoStartButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:magnetoStartButton];
+
+    magnetoStopButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [magnetoStopButton setTitle:@"Stop" forState:UIControlStateNormal];
+    magnetoStopButton.frame = CGRectMake(180, magnetoHeight + 50, buttonLength, 40);
+    magnetoStopButton.enabled = NO;
+    [magnetoStopButton addTarget:self action:@selector(magnetoStopButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:magnetoStopButton];
+
+    NSArray* segmentTextContent = [NSArray arrayWithObjects:@"with Handler", @"without Handler", nil];
+    magnetoHandlerSegment = [[UISegmentedControl alloc] initWithItems:segmentTextContent];
+    magnetoHandlerSegment.frame = CGRectMake(130, magnetoHeight, buttonLength * 3 + 20, 40);
+    [magnetoHandlerSegment addTarget:self action:@selector(magnetoStopButtonPressed:) forControlEvents:UIControlEventValueChanged];
+    magnetoHandlerSegment.selectedSegmentIndex = 0;
+    [scrollView addSubview:magnetoHandlerSegment];
+
+    magnetoUpdateButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [magnetoUpdateButton setTitle:@"Poll Values" forState:UIControlStateNormal];
+    magnetoUpdateButton.frame = CGRectMake(270, magnetoHeight + 50, buttonLength * 1.3f, 40);
+    [magnetoUpdateButton addTarget:self action:@selector(magnetoUpdateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    magnetoUpdateButton.enabled = NO;
+    [scrollView addSubview:magnetoUpdateButton];
+
+    magnetoVal = [[UILabel alloc] initWithFrame:CGRectMake(0, magnetoHeight + 100, 350, 40)];
+    [magnetoVal setBackgroundColor:[UIColor whiteColor]];
+    [magnetoVal setText:@"X: 0.000        Y: 0.000        Z: 0.000"];
+    [magnetoVal setTextAlignment:NSTextAlignmentRight];
+    [scrollView addSubview:magnetoVal];
+}
+
+
+-(void)magnetoStopUpdates {
+    dispatch_queue_t backgroundQueue = dispatch_queue_create("stopMagneto", NULL);
+    dispatch_async(backgroundQueue, ^{ [motionManager stopMagnetometerUpdates]; });
+}
+
+
+-(void)magnetoStartUpdatesWithHandler {
+    [motionManager startMagnetometerUpdatesToQueue:magnetoQueue withHandler:^(CMMagnetometerData* magnetometerData, NSError* error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [magnetoVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f", 
+                magnetometerData.magneticField.x, magnetometerData.magneticField.y, magnetometerData.magneticField.z]];
+         });         
+    }];
+}
+
+
+-(void)magnetoStopButtonPressed:(UIButton*)button {
+
+    if ([motionManager isMagnetometerActive]) {
+        magnetoStartButton.enabled = YES;
+        magnetoStopButton.enabled = NO;
+        magnetoUpdateButton.enabled = NO;
+        [self magnetoStopUpdates];
+    }
+}
+
+    
+-(void)magnetoUpdateButtonPressed:(UIButton*)button {
+
+    if ([motionManager isMagnetometerActive]) { 
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [magnetoVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
+                motionManager.magnetometerData.magneticField.x, 
+                motionManager.magnetometerData.magneticField.y,
+                motionManager.magnetometerData.magneticField.z]];
+        });
+    }
+}
+            
+
+-(void)magnetoStartButtonPressed:(UIButton*)button {
+    magnetoStartButton.enabled = NO;
+    magnetoStopButton.enabled = YES;
+
+    if (magnetoHandlerSegment.selectedSegmentIndex == 0) {
+        [self magnetoStartUpdatesWithHandler];
+    } else {
+        magnetoUpdateButton.enabled = YES;
+        [motionManager startMagnetometerUpdates];
     }
 }
 

@@ -48,13 +48,20 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 @property (readwrite, nonatomic, getter=isGyroAvailable) BOOL gyroAvailable;
 @property (readwrite) CMGyroData* gyroData; 
 
+@property WDSMagnetometer* magnetometer;
+@property EventRegistrationToken magnetometerToken;
+@property NSOperationQueue* magnetometerQueue; 
+@property (readwrite, nonatomic, getter=isMagnetometerActive) BOOL magnetometerActive;
+@property (readwrite, nonatomic, getter=isMagnetometerAvailable) BOOL magnetometerAvailable;
+@property (readwrite) CMMagnetometerData* magnetometerData; 
 @end
 
 @implementation CMMotionManager
 
 - (instancetype)init {
 
-    if (self = [super init]) {        
+    if (self = [super init]) {   
+    
        _accelerometer = [WDSAccelerometer getDefault];
        _accelerometerActive = false;
        _accelerometerToken.value = 0;
@@ -81,6 +88,20 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
         } else {
             _gyroAvailable = false;
             NSTraceInfo(TAG, @"Gyrometer not found!");  
+        }
+        
+       _magnetometer = [WDSMagnetometer getDefault];
+       _magnetometerActive = false;
+       _magnetometerToken.value = 0;
+      
+       if (_magnetometer) {
+            _magnetometerAvailable = true;
+
+            // The ref. frame is portrait-mode for iOS, while it is different across devices running Windows.
+            [_magnetometer setReadingTransform:WGDDisplayOrientationsPortrait];
+        } else {
+            _magnetometerAvailable = false;
+            NSTraceInfo(TAG, @"Magnetometer not found!");  
         }
     } 
 
@@ -115,6 +136,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes
 */
 - (void)startAccelerometerUpdates {
+    
     @synchronized(self) {
         if (self.accelerometerAvailable) {
             if (self.accelerometerActive) {
@@ -132,6 +154,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes
 */
 - (void)stopAccelerometerUpdates {
+    
     @synchronized(self) {
         if (self.accelerometerActive) {
             self.accelerometerActive = false;
@@ -154,6 +177,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
 // getter function for on-demand reading from sensor
  -(CMAccelerometerData*)accelerometerData {
+     
     WDSAccelerometerReading* reading = [self.accelerometer getCurrentReading];
 
     CMAccelerometerData* data =
@@ -161,7 +185,9 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
     return data;
 }
 
-- (void)setAccelerometerUpdateInterval:(NSTimeInterval)updateInterval {
+
+-(void)setAccelerometerUpdateInterval:(NSTimeInterval)updateInterval {
+    
     @synchronized(self) {
         // iOS uses seconds while WINRT uses milliseconds, hence the multiplication/division by c_intervalScaleFactor
         if (updateInterval * c_intervalScaleFactor < self.accelerometer.minimumReportInterval) {
@@ -205,6 +231,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes
 */
 - (void)startGyroUpdates {
+    
     @synchronized(self) {
       
         if (self.gyroAvailable) {
@@ -225,6 +252,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
  @Notes
 */
 - (void)stopGyroUpdates {
+    
     @synchronized(self) {
 
         if (self.gyroActive) {
@@ -249,6 +277,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
  // getter function for on-demand reading from sensor
  -(CMGyroData*)gyroData {
+     
     WDSGyrometerReading* reading = [self.gyrometer getCurrentReading];
 
     // For gyrometer values iOS uses unit as radians per sec. while WinRT uses degrees per sec. 
@@ -260,6 +289,7 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
 
  -(void)setGyroUpdateInterval:(NSTimeInterval)updateInterval {
+     
     @synchronized(self) {
         
         // iOS uses seconds while WINRT uses milliseconds, hence the multiplication/division by c_intervalScaleFactor
@@ -276,28 +306,107 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)startMagnetometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMMagnetometerHandler)handler {
-    UNIMPLEMENTED();
+    
+    if (self.magnetometerAvailable) {
+        [self startMagnetometerUpdates];
+        self.magnetometerQueue = queue;
+
+        self.magnetometerToken = [self.magnetometer addReadingChangedEvent:
+            ^void(WDSMagnetometer* sender, WDSMagnetometerReadingChangedEventArgs* e) {
+
+                WDSMagnetometerReading* reading = e.reading;
+
+                CMMagnetometerData* data = [[CMMagnetometerData alloc] initWithValues:reading.magneticFieldX 
+                                                                                    y:reading.magneticFieldY
+                                                                                    z:reading.magneticFieldZ];
+                [queue addOperationWithBlock:^{ handler(data, nil); }];                                   
+            }];          
+    }    
 }
 
+
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)startMagnetometerUpdates {
-    UNIMPLEMENTED();
+    
+    @synchronized(self) {
+      
+        if (self.magnetometerAvailable) {
+        
+            if (self.magnetometerActive) {
+                [self stopMagnetometerUpdates];
+            }
+        
+            self.magnetometerActive = true;
+
+            self.magnetometer.reportInterval = static_cast<unsigned int>(self.magnetometerUpdateInterval * c_intervalScaleFactor);
+        } 
+    }               
 }
 
+
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)stopMagnetometerUpdates {
-    UNIMPLEMENTED();
+    
+    @synchronized(self) {
+
+        if (self.magnetometerActive) {
+            self.magnetometerActive = false;
+        
+            // the reportInterval is set to 0, the default value.
+            self.magnetometer.reportInterval = 0;
+        
+            if (self.magnetometerToken.value != 0) {
+                [self.magnetometer removeReadingChangedEvent:self.magnetometerToken];
+                self.magnetometerToken = {0};
+            }
+        
+            if (self.magnetometerQueue) {
+                [self.magnetometerQueue cancelAllOperations];
+                self.magnetometerQueue = nil;
+            }
+        }
+    }                         
+ }
+ 
+
+ // getter function for on-demand reading from sensor
+ -(CMMagnetometerData*)magnetometerData {
+     
+    WDSMagnetometerReading* reading = [self.magnetometer getCurrentReading];
+
+    _magnetometerData = [[CMMagnetometerData alloc] initWithValues:reading.magneticFieldX 
+                                                                 y:reading.magneticFieldY
+                                                                 z:reading.magneticFieldZ];
+    return _magnetometerData;
+ }
+
+
+-(void)setMagnetometerUpdateInterval:(NSTimeInterval)updateInterval {
+    
+    @synchronized(self) {
+        
+        // iOS uses seconds while WINRT uses milliseconds, hence the multiplication/division by c_intervalScaleFactor
+        if (updateInterval * c_intervalScaleFactor < self.magnetometer.minimumReportInterval) {
+            _magnetometerUpdateInterval = self.magnetometer.minimumReportInterval / c_intervalScaleFactor;
+            NSTraceInfo(TAG, @"magnetometerUpdateInterval capped to minimum supported value: %d", _magnetometerUpdateInterval);
+        } else {
+            _magnetometerUpdateInterval = updateInterval;
+        }
+        
+        self.magnetometer.reportInterval = static_cast<unsigned int>(self.magnetometerUpdateInterval * c_intervalScaleFactor);
+    }
 }
+
 
 /**
  @Status Stub
