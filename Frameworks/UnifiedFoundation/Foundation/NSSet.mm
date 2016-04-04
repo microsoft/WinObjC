@@ -29,6 +29,8 @@
 
 @implementation NSSet
 
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSSet, NSSetConcrete);
+
 /**
  @Status Interoperable
 */
@@ -94,15 +96,9 @@
 /**
  @Status Interoperable
 */
-- (NSObject*)init {
-    BRIDGED_INIT(NSSet, NSMutableSet, NSSetConcrete);
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
-    BRIDGED_INIT_ABSTRACT(NSSet, NSMutableSet, NSSetConcrete, objects, count);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -240,7 +236,7 @@
  @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    return [self retain];
+    return [[[self class] alloc] initWithSet:self];
 }
 
 /**
@@ -263,8 +259,6 @@
  @Status Interoperable
 */
 - (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
-    // HACKHACK: this is inefficient. There may be private functions from CF that we can use to do better.
-
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
         state->extra[0] = (unsigned long)[self objectEnumerator];
@@ -327,6 +321,21 @@
 /**
  @Status Interoperable
 */
+- (BOOL)isEqual:(id)other {
+    if (self == other) {
+        return YES;
+    }
+
+    if (![other isKindOfClass:[NSSet class]]) {
+        return NO;
+    }
+
+    return [self isEqualToSet:static_cast<NSSet*>(other)];
+}
+
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqualToSet:(NSSet*)other {
     if (self == other) {
         return YES;
@@ -343,6 +352,14 @@
     }
 
     return YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)hash {
+    // Surprisingly, this is the behavior on the reference platform
+    return [self count];
 }
 
 /**

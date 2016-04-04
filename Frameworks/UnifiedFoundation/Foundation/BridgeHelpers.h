@@ -142,3 +142,13 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
     (ReturnValue) __VA_ARGS__ {                          \
         return [InnerObject __VA_ARGS__];                \
     }
+
+// Helper macro for implementing allocWithZone
+#define ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedConcreteType) \
+    (NSObject*) allocWithZone : (NSZone*)zone {                                 \
+        if (self == [NSBridgedType class]) {                                    \
+            return [NSBridgedConcreteType allocWithZone:zone];                  \
+        }                                                                       \
+                                                                                \
+        return [super allocWithZone:zone];                                      \
+    }

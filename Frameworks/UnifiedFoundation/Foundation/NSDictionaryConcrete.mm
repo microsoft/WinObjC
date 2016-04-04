@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "StubReturn.h"
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
 #include "NSDictionaryConcrete.h"
@@ -24,69 +23,100 @@
 
 static const wchar_t* TAG = L"NSDictionary";
 
-@implementation NSDictionaryConcrete
+#pragma region Immutable Concrete Subclass
+@implementation NSDictionaryConcrete {
+@private
+    StrongId<NSCFDictionary> _nscf;
+}
 
-BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionary, NSDictionaryConcrete)
+- (instancetype)init {
+    return [self initWithObjects:nil forKeys:nil count:0];
+}
 
-/**
- @Status Interoperable
-*/
 - (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    NSDictionaryConcrete* newSelf = nullptr;
-    // need to figure out if this is a mutable init or not.
-    if ([self isMemberOfClass:[NSMutableDictionary class]]) {
-        newSelf = reinterpret_cast<NSDictionaryConcrete*>(static_cast<NSMutableDictionary*>(
-            CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks)));
-
-        for (unsigned i = 0; i < count; i++) {
-            id key = [keys[i] copy];
-            CFDictionarySetValue(static_cast<CFMutableDictionaryRef>(newSelf), (const void*)key, (void*)vals[i]);
-            [key release];
-        }
-    } else {
+    if (self = [super init]) {
         std::vector<id> keyCopies(count);
         for (unsigned i = 0; i < count; i++) {
             keyCopies[i] = [keys[i] copy];
         }
 
-        newSelf = reinterpret_cast<NSDictionaryConcrete*>(static_cast<NSDictionary*>(CFDictionaryCreate(NULL,
-                                                                                                        (const void**)(keyCopies.data()),
-                                                                                                        (const void**)(vals),
-                                                                                                        count,
-                                                                                                        &kCFTypeDictionaryKeyCallBacks,
-                                                                                                        &kCFTypeDictionaryValueCallBacks)));
+        _nscf.attach(reinterpret_cast<NSCFDictionary*>(static_cast<NSDictionary*>(CFDictionaryCreate(NULL,
+                                                                                                     (const void**)(keyCopies.data()),
+                                                                                                     (const void**)(vals),
+                                                                                                     count,
+                                                                                                     &kCFTypeDictionaryKeyCallBacks,
+                                                                                                     &kCFTypeDictionaryValueCallBacks))));
 
         for (unsigned i = 0; i < count; i++) {
             [keyCopies[i] release];
         }
     }
-
-    [self release];
-    self = newSelf;
     return self;
 }
 
-/**
- @Status Interoperable
-*/
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
+- INNER_BRIDGE_CALL(_nscf, id, objectForKey:(id)key);
+- INNER_BRIDGE_CALL(_nscf, NSEnumerator*, keyEnumerator);
+
+@end
+#pragma endregion
+
+#pragma region Mutable Concrete Subclass
+@implementation NSMutableDictionaryConcrete {
+@private
+    StrongId<NSCFDictionary> _nscf;
+}
+
 - (instancetype)init {
-    return [self initWithObjects:nullptr forKeys:nullptr count:0];
+    return [self initWithCapacity:0];
 }
 
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithCapacity:(NSUInteger)numElements {
-    NSDictionaryConcrete* newSelf = reinterpret_cast<NSDictionaryConcrete*>(static_cast<NSMutableDictionary*>(
-        CFDictionaryCreateMutable(NULL, numElements, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks)));
-    [self release];
-    self = newSelf;
+- (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
+    if (self = [super init]) {
+        _nscf.attach(reinterpret_cast<NSCFDictionary*>(static_cast<NSDictionary*>(
+            CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks))));
+        for (unsigned i = 0; i < count; i++) {
+            [_nscf setObject:vals[i] forKey:keys[i]];
+        }
+    }
     return self;
 }
 
-/**
- @Status Interoperable
-*/
+- (instancetype)initWithCapacity:(NSUInteger)numItems {
+    if (self = [super init]) {
+        _nscf.attach(reinterpret_cast<NSCFDictionary*>(static_cast<NSDictionary*>(
+            CFDictionaryCreateMutable(NULL, numItems, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks))));
+    }
+    return self;
+}
+
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
+- INNER_BRIDGE_CALL(_nscf, id, objectForKey:(id)key);
+- INNER_BRIDGE_CALL(_nscf, NSEnumerator*, keyEnumerator);
+- INNER_BRIDGE_CALL(_nscf, void, setObject:(id)anObject forKey:(id<NSCopying>)aKey);
+- INNER_BRIDGE_CALL(_nscf, void, removeObjectForKey:(id)key);
+- INNER_BRIDGE_CALL(_nscf, void, removeAllObjects);
+- INNER_BRIDGE_CALL(_nscf, NSArray*, allValues);
+- INNER_BRIDGE_CALL(_nscf, NSArray*, allKeys);
+
+@end
+#pragma endregion
+
+#pragma region NSCF Bridged Class
+@implementation NSCFDictionary
+
+BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionary, NSCFDictionary)
+
+- (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
+    FAIL_FAST();
+    return nil;
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    FAIL_FAST();
+    return nil;
+}
+
 - (id)objectForKey:(id)key {
     if (key == nil) {
         TraceWarning(TAG, L"Warning: objectForKey called with nil\n");
@@ -101,30 +131,22 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionar
 }
 
 - (NSEnumerator*)keyEnumerator {
-    // HACKHACK: this isn't quite correct because it snapshots the keys at this moment.
-    // its technically not supported to mutate while enumerating so go with it.
+    // TODO: BUG 7087201
+    // This isn't quite correct because it snapshots the keys at this moment,
+    // but it's technically not supported to mutate while enumerating, so go with it.
     return [[self allKeys] objectEnumerator];
 }
 
-/**
- @Status Interoperable
-*/
 - (void)setObject:(id)object forKey:(id)key {
     key = [key copy];
     CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)object);
     [key release];
 }
 
-/**
- @Status Interoperable
-*/
 - (void)removeObjectForKey:(id)key {
     CFDictionaryRemoveValue((CFMutableDictionaryRef)self, (void*)key);
 }
 
-/**
- @Status Interoperable
-*/
 - (void)removeAllObjects {
     CFDictionaryRemoveAllValues((CFMutableDictionaryRef)self);
 }
@@ -156,3 +178,4 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionar
 }
 
 @end
+#pragma endregion

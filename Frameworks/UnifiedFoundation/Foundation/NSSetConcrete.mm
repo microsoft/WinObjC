@@ -22,59 +22,87 @@
 #include <CoreFoundation/CFSet.h>
 #include <vector>
 
-@implementation NSSetConcrete
-
-BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSSetConcrete)
-
-/**
-@Status Interoperable
-*/
-- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    NSSetConcrete* newSelf = nullptr;
-    // need to figure out if this is a mutable init or not.
-    if ([self isMemberOfClass:[NSMutableSet class]]) {
-        newSelf = reinterpret_cast<NSSetConcrete*>(static_cast<NSMutableSet*>(CFSetCreateMutable(NULL, 0, &kCFTypeSetCallBacks)));
-        for (unsigned int i = 0; i < count; i++) {
-            CFSetAddValue(static_cast<CFMutableSetRef>(newSelf), objs[i]);
-        }
-    } else {
-        newSelf =
-            reinterpret_cast<NSSetConcrete*>(static_cast<NSSet*>(CFSetCreate(NULL, (const void**)(objs), count, &kCFTypeSetCallBacks)));
-    }
-
-    [self release];
-    self = newSelf;
-    return self;
+#pragma region Immutable Concrete Subclass
+@implementation NSSetConcrete {
+@private
+    StrongId<NSCFSet> _nscf;
 }
 
-/**
- @Status Interoperable
-*/
 - (instancetype)init {
-    return [self initWithObjects:nullptr count:0];
+    return [self initWithObjects:nil count:0];
 }
 
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithCapacity:(NSUInteger)numElements {
-    NSSetConcrete* newSelf =
-        reinterpret_cast<NSSetConcrete*>(static_cast<NSMutableSet*>(CFSetCreateMutable(NULL, numElements, &kCFTypeSetCallBacks)));
-    [self release];
-    self = newSelf;
+- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    if (self = [super init]) {
+        _nscf.attach(
+            reinterpret_cast<NSCFSet*>(static_cast<NSSet*>((CFSetCreate(NULL, (const void**)(objs), count, &kCFTypeSetCallBacks)))));
+    }
     return self;
 }
 
-/**
- @Status Interoperable
-*/
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
+- INNER_BRIDGE_CALL(_nscf, id, member:(id)object);
+- INNER_BRIDGE_CALL(_nscf, NSEnumerator*, objectEnumerator);
+
+@end
+#pragma endregion
+
+#pragma region Mutable Concrete Subclass
+@implementation NSMutableSetConcrete {
+@private
+    StrongId<NSCFSet> _nscf;
+}
+
+- (instancetype)init {
+    return [self initWithObjects:nil count:0];
+}
+
+- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    if (self = [super init]) {
+        _nscf.attach(reinterpret_cast<NSCFSet*>(static_cast<NSSet*>((CFSetCreateMutable(NULL, count, &kCFTypeSetCallBacks)))));
+        for (unsigned i = 0; i < count; i++) {
+            [_nscf addObject:objs[i]];
+        }
+    }
+    return self;
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)numItems {
+    if (self = [super init]) {
+        _nscf.attach(reinterpret_cast<NSCFSet*>(static_cast<NSSet*>((CFSetCreateMutable(NULL, numItems, &kCFTypeSetCallBacks)))));
+    }
+    return self;
+}
+
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
+- INNER_BRIDGE_CALL(_nscf, id, member:(id)object);
+- INNER_BRIDGE_CALL(_nscf, NSEnumerator*, objectEnumerator);
+- INNER_BRIDGE_CALL(_nscf, void, addObject:(id)object);
+- INNER_BRIDGE_CALL(_nscf, void, removeObject:(id)object);
+- INNER_BRIDGE_CALL(_nscf, void, removeAllObjects);
+
+@end
+#pragma endregion
+
+#pragma region NSCF Bridged Class
+@implementation NSCFSet
+
+BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
+
+- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    FAIL_FAST();
+    return nil;
+}
+
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    FAIL_FAST();
+    return nil;
+}
+
 - (unsigned)count {
     return CFSetGetCount(static_cast<CFSetRef>(self));
 }
 
-/**
- @Status Interoperable
-*/
 - (NSEnumerator*)objectEnumerator {
     std::vector<id> values([self count]);
     CFSetGetValues(static_cast<CFSetRef>(self), (const void**)values.data());
@@ -82,9 +110,6 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSSetConcrete)
     return [[NSArray arrayWithObjects:values.data() count:values.size()] objectEnumerator];
 }
 
-/**
- @Status Interoperable
-*/
 - (id)member:(id)object {
     id objectToReturn = nil;
 
@@ -95,25 +120,17 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSSetConcrete)
     return nil;
 }
 
-/**
- @Status Interoperable
-*/
 - (void)addObject:(id)object {
     CFSetAddValue(static_cast<CFMutableSetRef>(self), object);
 }
 
-/**
- @Status Interoperable
-*/
 - (void)removeObject:(id)object {
     CFSetRemoveValue(static_cast<CFMutableSetRef>(self), object);
 }
 
-/**
- @Status Interoperable
-*/
 - (void)removeAllObjects {
     CFSetRemoveAllValues(static_cast<CFMutableSetRef>(self));
 }
 
 @end
+#pragma endregion

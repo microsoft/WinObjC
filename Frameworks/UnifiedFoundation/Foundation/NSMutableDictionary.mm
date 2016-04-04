@@ -24,6 +24,9 @@
 #include "BridgeHelpers.h"
 
 @implementation NSMutableDictionary
+
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableDictionary, NSMutableDictionaryConcrete);
+
 /**
  @Status Interoperable
 */
@@ -49,7 +52,8 @@
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(unsigned)capacity {
-    BRIDGED_INIT_ABSTRACT(NSMutableDictionary, NSMutableDictionary, NSDictionaryConcrete, capacity);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

@@ -24,6 +24,8 @@
 
 @implementation NSMutableSet
 
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableSet, NSMutableSetConcrete);
+
 /**
  @Status Interoperable
 */
@@ -116,7 +118,8 @@
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(unsigned)capacity {
-    BRIDGED_INIT_ABSTRACT(NSMutableSet, NSMutableSet, NSSetConcrete, capacity);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

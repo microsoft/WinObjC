@@ -14,14 +14,58 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSMutableArray.h>
+#import <Foundation/NSMutableArray.h>
 #import "BridgeHelpers.h"
 
+#pragma region Immutable Concrete Subclass
 @interface NSArrayConcrete : NSArray
 
-- (instancetype)init;
-- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count;
+- (_Nullable instancetype)init;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objs count:(NSUInteger)count;
 - (NSUInteger)count;
-- (id)objectAtIndex:(NSUInteger)index;
+- (_Nonnull id)objectAtIndex:(NSUInteger)index;
 
 @end
+#pragma endregion
+
+#pragma region Mutable Concrete Subclass
+@interface NSMutableArrayConcrete : NSMutableArray
+
+- (_Nullable instancetype)init;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objs count:(NSUInteger)count;
+- (NSUInteger)count;
+- (_Nonnull id)objectAtIndex:(NSUInteger)index;
+
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
+- (void)removeObjectAtIndex:(NSUInteger)index;
+- (void)removeLastObject;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject* _Nonnull)obj;
+- (void)insertObject:(NSObject* _Nonnull)objAddr atIndex:(NSUInteger)index;
+- (void)addObject:(NSObject* _Nonnull)objAddr;
+
+// Not actually necessary. Optimization here for CF backed array.
+- (void)removeAllObjects;
+
+@end
+#pragma endregion
+
+#pragma region NSCF Bridged Class
+@interface NSCFArray : NSMutableArray
+
+BRIDGED_CLASS_REQUIRED_DECLS
+
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objs count:(NSUInteger)count;
+- (NSUInteger)count;
+- (_Nonnull id)objectAtIndex:(NSUInteger)index;
+
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
+- (void)removeObjectAtIndex:(NSUInteger)index;
+- (void)removeLastObject;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject* _Nonnull)obj;
+- (void)insertObject:(NSObject* _Nonnull)objAddr atIndex:(NSUInteger)index;
+- (void)addObject:(NSObject* _Nonnull)objAddr;
+
+// Not actually necessary. Optimization here for CF backed array.
+- (void)removeAllObjects;
+@end
+#pragma endregion

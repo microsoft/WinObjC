@@ -14,31 +14,21 @@
 //
 //******************************************************************************
 #pragma once
-#import <Foundation/NSMutableSet.h>
+#import <Foundation/NSMutableData.h>
 #import "BridgeHelpers.h"
 
+// CFBag is not technically toll-free bridgeable with NSCountedSet
+// However, since it shares a similar relationship as toll-free bridging, reuse the same pattern
 #pragma region Immutable Concrete Subclass
-@interface NSSetConcrete : NSSet
+@interface NSCountedSetConcrete : NSCountedSet
 
 - (_Nullable instancetype)init;
-- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count;
-@property (readonly) NSUInteger count;
-- (id _Nullable)member:(id _Nonnull)object;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objs count:(NSUInteger)count;
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)capacity;
+- (NSUInteger)countForObject:(id _Nonnull)object;
+- (unsigned)count;
 - (NSEnumerator* _Nonnull)objectEnumerator;
-
-@end
-#pragma endregion
-
-#pragma region Mutable Concrete Subclass
-@interface NSMutableSetConcrete : NSMutableSet
-
-- (_Nullable instancetype)init;
-- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count;
-@property (readonly) NSUInteger count;
 - (id _Nullable)member:(id _Nonnull)object;
-- (NSEnumerator* _Nonnull)objectEnumerator;
-
-- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
 - (void)addObject:(id _Nonnull)object;
 - (void)removeObject:(id _Nonnull)object;
 - (void)removeAllObjects;
@@ -47,16 +37,16 @@
 #pragma endregion
 
 #pragma region NSCF Bridged Class
-@interface NSCFSet : NSMutableSet
+@interface NSCFCountedSet : NSCountedSet
 
 BRIDGED_CLASS_REQUIRED_DECLS
 
-- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count;
-@property (readonly) NSUInteger count;
-- (id _Nullable)member:(id _Nonnull)object;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objs count:(NSUInteger)count;
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)capacity;
+- (NSUInteger)countForObject:(id _Nonnull)object;
+- (unsigned)count;
 - (NSEnumerator* _Nonnull)objectEnumerator;
-
-- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
+- (id _Nullable)member:(id _Nonnull)object;
 - (void)addObject:(id _Nonnull)object;
 - (void)removeObject:(id _Nonnull)object;
 - (void)removeAllObjects;

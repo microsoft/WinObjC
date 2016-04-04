@@ -36,7 +36,6 @@
 #include "NSRaise.h"
 #include "NSArrayConcrete.h"
 #include "BridgeHelpers.h"
-#include "NSCFArray.h"
 #include <objc/runtime.h>
 
 static const wchar_t* TAG = L"NSArray";
@@ -45,16 +44,7 @@ static const wchar_t* TAG = L"NSArray";
 
 @implementation NSArray
 
-/**
- @Status Interoperable
-*/
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSArray class]) {
-        return [NSArrayConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
-}
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSArray, NSArrayConcrete);
 
 /**
  @Status Interoperable
@@ -872,6 +862,14 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 /**
  @Status Interoperable
 */
+- (NSUInteger)hash {
+    // Surprisingly, this is the behavior on the reference platform
+    return [self count];
+}
+
+/**
+ @Status Interoperable
+*/
 - (NSArray*)objectsAtIndexes:(NSIndexSet*)indexes {
     unsigned idx = [indexes firstIndex];
     id ret = [NSMutableArray array];
@@ -1040,4 +1038,3 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 @end
-

@@ -41,7 +41,6 @@ FOUNDATION_EXPORT_CLASS
 - (NSSet*)setByAddingObject:(id)anObject;
 - (NSSet*)setByAddingObjectsFromSet:(NSSet*)other;
 - (NSSet*)setByAddingObjectsFromArray:(NSArray*)other STUB_METHOD;
-- (instancetype)init;
 - (instancetype)initWithArray:(NSArray*)array;
 - (instancetype)initWithObjects:(id)firstObj, ...;
 - (instancetype)initWithObjects:(id _Nonnull const[])objects count:(NSUInteger)cnt;

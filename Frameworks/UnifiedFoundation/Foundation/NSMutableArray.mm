@@ -23,7 +23,7 @@
 #include "Foundation/NSMutableArray.h"
 #include "LoggingNative.h"
 #include "NSRaise.h"
-#include "NSMutableArrayConcrete.h"
+#include "NSArrayConcrete.h"
 #include "BridgeHelpers.h"
 
 static const wchar_t* TAG = L"NSMutableArray";
@@ -32,16 +32,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 
 @implementation NSMutableArray
 
-/**
- @Status Interoperable
-*/
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSMutableArray class]) {
-        return [NSMutableArrayConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
-}
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableArray, NSMutableArrayConcrete);
 
 /**
  @Status Interoperable
@@ -550,4 +541,3 @@ recurse:
 }
 
 @end
-

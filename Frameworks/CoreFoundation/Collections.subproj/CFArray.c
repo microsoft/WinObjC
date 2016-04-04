@@ -22,7 +22,6 @@
 #include "ForFoundationOnly.h"
 #include <string.h>
 
-// HACKHACK: The function dispatch relies on NSMutableArray so include it here.
 #include <Foundation/NSMutableArray.h>
 
 
@@ -696,7 +695,7 @@ void CFArrayAppendValue(CFMutableArrayRef array, const void *value) {
 
 void CFArraySetValueAtIndex(CFMutableArrayRef array, CFIndex idx, const void *value) {
     // CF_SWIFT_FUNCDISPATCHV(CFArrayGetTypeID(), void, (CFSwiftRef)array, NSMutableArray.setObject, idx, value);
-    // HACKHACK: setObject:(id)value atIndex: doesn't exist // CF_OBJC_FUNCDISPATCHV(CFArrayGetTypeID(), void, (NSMutableArray *)array, setObject:(id)value atIndex:(NSUInteger)idx);
+    // WINOBJC: setObject:(id)value atIndex: doesn't exist // CF_OBJC_FUNCDISPATCHV(CFArrayGetTypeID(), void, (NSMutableArray *)array, setObject:(id)value atIndex:(NSUInteger)idx);
     CF_OBJC_FUNCDISPATCHV(CFArrayGetTypeID(), void, (NSMutableArray *)array, setObject:(id)value atIndexedSubscript:(NSUInteger)idx);
 
     __CFGenericValidateType(array, CFArrayGetTypeID());
@@ -1051,7 +1050,7 @@ void CFArraySortValues(CFMutableArrayRef array, CFRange range, CFComparatorFunct
     Boolean immutable = false;
     if (CF_IS_OBJC(CFArrayGetTypeID(), array) || CF_IS_SWIFT(CFArrayGetTypeID(), array)) {
         BOOL result;
-        // HACKHACK: [NSMutableArray class] links us against Foundation which we don't want here.
+        // WINOBJC: [NSMutableArray class] links us against Foundation which we don't want here.
         // Because its already in the if block for CF-IB_OBJC, we are fairly certain that Foundation is already loaded though.
         // To work around this, call out to the runtime directly instead to get the class.
         // result = CF_OBJC_CALLV((NSMutableArray *)array, isKindOfClass:[NSMutableArray class]);

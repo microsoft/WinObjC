@@ -15,126 +15,99 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "StubReturn.h"
-#include "CFHelpers.h"
-#include "CFFoundationInternal.h"
 #include <Foundation/NSCountedSet.h>
-#include <CoreFoundation/CFBag.h>
-#include <vector>
+#include "NSCountedSetConcrete.h"
+#include "NSRaise.h"
 
-// HACKHACK: this is basically just a copy of NSSetConcrete with the addition of
-// countForObject and using CFBag. To more properly share code here, a different strategy should be used
-// but the class diagram with clustering makes that "difficult". For now be lazy.
 @implementation NSCountedSet
+
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSCountedSet, NSCountedSetConcrete);
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCapacity:(unsigned)capacity {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)countForObject:(id)object {
-    return CFBagGetCountOfValue(static_cast<CFBagRef>(self), object);
-}
-
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)retain {
-    CFRetain(static_cast<CFBagRef>(self));
-    return self;
-}
-
-// Provide our own implementations of retain and release so that the bridging works out.
-- (oneway void)release {
-    CFRelease(static_cast<CFBagRef>(self));
-}
-
-// Provide our own implementations of retain and release so that the bridging works out.
-- (id)autorelease {
-    return (id)(CFAutorelease(static_cast<CFBagRef>(self)));
-}
-
-/**
- @Status Interoperable
-*/
-- (NSUInteger)retainCount {
-    return CFGetRetainCount(static_cast<CFBagRef>(self));
-}
-
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    return static_cast<NSObject*>(CFBagCreateMutable(NULL, 0, &kCFTypeBagCallBacks));
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    // No-op for bridged classes. This is because the CF system is responsible for the allocation and dealloc of the backing memory.
-    // This is all handled via the CFRelease calls. When its CF ref count drops to 0 the CF version of dealloc is invoked so by the time
-    // the NSObject dealloc is called, there is nothing left to do.
-}
-
-/**
- @Status Interoperable
-*/
-+ (void)load {
-    // self here is referring to the Class object since its a + method.
-    _CFRuntimeBridgeTypeToClass(CFBagGetTypeID(), self);
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithObjects:(id*)objects count:(unsigned)count {
-    for (unsigned int i = 0; i < count; i++) {
-        CFBagAddValue(static_cast<CFMutableBagRef>(self), objects[i]);
-    }
-
-    return self;
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned)count {
-    return CFBagGetCount(static_cast<CFBagRef>(self));
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    std::vector<id> values([self count]);
-    CFBagGetValues(static_cast<CFBagRef>(self), (const void**)values.data());
-
-    return [[NSArray arrayWithObjects:values.data() count:values.size()] objectEnumerator];
+    // TODO: As an optimization, create a parallel implementation of this function, so that subclasses will not have to override this
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (id)member:(id)object {
-    id objectToReturn = nil;
-
-    if (CFBagGetValueIfPresent(static_cast<CFBagRef>(self), (void*)object, (const void**)&objectToReturn)) {
-        return objectToReturn;
-    }
-
-    return nil;
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)addObject:(id)object {
-    CFBagAddValue(static_cast<CFMutableBagRef>(self), object);
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeObject:(id)object {
-    CFBagRemoveValue(static_cast<CFMutableBagRef>(self), object);
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    NSInvalidAbstractInvocation();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)removeAllObjects {
-    CFBagRemoveAllValues(static_cast<CFMutableBagRef>(self));
+    // TODO: As an optimization, create a parallel implementation of this function, so that subclasses will not have to override this
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [[[self class] alloc] initWithSet:self];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
+    // NSCountedSet is derived from NSMutableSet
+    return [self copy];
 }
 
 @end

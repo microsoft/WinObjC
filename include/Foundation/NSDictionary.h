@@ -40,15 +40,14 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)dictionaryWithDictionary:(NSDictionary*)otherDictionary;
 + (instancetype)dictionaryWithObject:(id)anObject forKey:(id<NSCopying>)aKey;
 + (instancetype)dictionaryWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
-+ (instancetype)dictionaryWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
++ (instancetype)dictionaryWithObjects:(id const[])objects forKeys:(id<NSCopying> const[])keys count:(NSUInteger)count;
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObject, ...;
-- (instancetype)init;
 - (instancetype)initWithContentsOfFile:(NSString*)path;
 - (instancetype)initWithContentsOfURL:(NSURL*)aURL;
 - (instancetype)initWithDictionary:(NSDictionary*)otherDictionary;
 - (instancetype)initWithDictionary:(NSDictionary*)otherDictionary copyItems:(BOOL)flag;
 - (instancetype)initWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
-- (instancetype)initWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
+- (instancetype)initWithObjects:(id const[])objects forKeys:(id<NSCopying> const[])keys count:(NSUInteger)count;
 - (instancetype)initWithObjectsAndKeys:(id)firstObject, ...;
 + (id)sharedKeySetForKeys:(NSArray*)keys STUB_METHOD;
 @property (readonly) NSUInteger count;

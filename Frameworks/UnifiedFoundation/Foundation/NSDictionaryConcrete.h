@@ -14,26 +14,60 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSMutableDictionary.h>
+#import <Foundation/NSMutableDictionary.h>
 #import "BridgeHelpers.h"
 
-@interface NSDictionaryConcrete : NSMutableDictionary
+#pragma region Immutable Concrete Subclass
+@interface NSDictionaryConcrete : NSDictionary
 
-BRIDGED_CLASS_REQUIRED_DECLS
-
-- (instancetype)init;
-- (instancetype)initWithObjects:(id*)objs forKeys:(id*)keys count:(NSUInteger)count;
+- (_Nullable instancetype)init;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull* _Nullable)objs forKeys:(id _Nonnull* _Nullable)keys count:(NSUInteger)count;
 - (NSUInteger)count;
-- (id)objectForKey:(id)key;
-- (NSEnumerator*)keyEnumerator;
+- (_Nonnull id)objectForKey:(id _Nonnull)key;
+- (NSEnumerator* _Nonnull)keyEnumerator;
 
-- (instancetype)initWithCapacity:(NSUInteger)numItems;
-- (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey;
-- (void)removeObjectForKey:(id)key;
+@end
+#pragma endregion
+
+#pragma region Mutable Concrete Subclass
+@interface NSMutableDictionaryConcrete : NSMutableDictionary
+
+- (_Nullable instancetype)init;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull* _Nullable)objs forKeys:(id _Nonnull* _Nullable)keys count:(NSUInteger)count;
+- (NSUInteger)count;
+- (_Nonnull id)objectForKey:(id _Nonnull)key;
+- (NSEnumerator* _Nonnull)keyEnumerator;
+
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
+- (void)setObject:(id _Nonnull)anObject forKey:(id<NSCopying> _Nonnull)aKey;
+- (void)removeObjectForKey:(id _Nonnull)key;
 
 // Not actually necessary. Optimization here for CF backed dictionary.
 - (void)removeAllObjects;
-- (NSArray*)allValues;
-- (NSArray*)allKeys;
+- (NSArray* _Nonnull)allValues;
+- (NSArray* _Nonnull)allKeys;
 
 @end
+#pragma endregion
+
+#pragma region NSCF Bridged Class
+@interface NSCFDictionary : NSMutableDictionary
+
+BRIDGED_CLASS_REQUIRED_DECLS
+
+- (_Nullable instancetype)initWithObjects:(id _Nonnull* _Nullable)objs forKeys:(id _Nonnull* _Nullable)keys count:(NSUInteger)count;
+- (NSUInteger)count;
+- (_Nonnull id)objectForKey:(id _Nonnull)key;
+- (NSEnumerator* _Nonnull)keyEnumerator;
+
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
+- (void)setObject:(id _Nonnull)anObject forKey:(id<NSCopying> _Nonnull)aKey;
+- (void)removeObjectForKey:(id _Nonnull)key;
+
+// Not actually necessary. Optimization here for CF backed dictionary.
+- (void)removeAllObjects;
+- (NSArray* _Nonnull)allValues;
+- (NSArray* _Nonnull)allKeys;
+
+@end
+#pragma endregion

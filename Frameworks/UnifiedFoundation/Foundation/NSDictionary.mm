@@ -112,6 +112,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary
 
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSDictionary, NSDictionaryConcrete);
+
 /**
  @Status Interoperable
 */
@@ -147,22 +149,16 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 /**
  @Status Interoperable
 */
-+ (instancetype)dictionaryWithObjects:(id _Nonnull const*)vals forKeys:(id<NSCopying> _Nonnull const*)keys count:(unsigned)count {
++ (instancetype)dictionaryWithObjects:(id const*)vals forKeys:(id<NSCopying> const*)keys count:(unsigned)count {
     return [[[self alloc] initWithObjects:vals forKeys:keys count:count] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (NSObject*)init {
-    BRIDGED_INIT(NSDictionary, NSMutableDictionary, NSDictionaryConcrete);
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)initWithObjects:(id _Nonnull const*)vals forKeys:(id<NSCopying> _Nonnull const*)keys count:(unsigned)count {
-    BRIDGED_INIT_ABSTRACT(NSDictionary, NSMutableDictionary, NSDictionaryConcrete, vals, keys, count);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -502,8 +498,6 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
  @Status Interoperable
 */
 - (unsigned)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(unsigned)maxCount {
-    // HACKHACK: this is inefficient. There may be private functions from CF that we can use to do better.
-
     if (state->state == 0) {
         state->mutationsPtr = (unsigned long*)&state->extra[1];
         state->extra[0] = (unsigned long)[self keyEnumerator];
@@ -686,6 +680,14 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     }
 
     return YES;
+}
+
+/**
+  @Status Interoperable
+ */
+- (NSUInteger)hash {
+    // Surprisingly, this is the behavior on the reference platform
+    return [self count];
 }
 
 /**
