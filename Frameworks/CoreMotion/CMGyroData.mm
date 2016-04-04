@@ -17,12 +17,13 @@
 
 #import <CoreMotion/CMGyroData.h>
 #import <StubReturn.h>
+#import "CMLogItemInternal.h"
 
 @implementation CMGyroData
 
--(instancetype)initWithValues:(double)x y:(double)y z:(double)z {
+-(instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time {
 
-    if (self = [super init]) {
+    if (self = [super initWithTimestamp:time]) {
         _rotationRate.x = x;
         _rotationRate.y = y;
         _rotationRate.z = z;

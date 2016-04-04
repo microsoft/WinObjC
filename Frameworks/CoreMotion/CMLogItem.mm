@@ -18,6 +18,17 @@
 #import <StubReturn.h>
 
 @implementation CMLogItem
+
+- (instancetype)initWithTimestamp:(double)time {
+    
+    if (self = [super init]) {
+        _timestamp = time;
+    }
+
+    return self;
+}
+
+
 /**
  @Status Stub
  @Notes

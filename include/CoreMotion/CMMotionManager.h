@@ -72,7 +72,7 @@ COREMOTION_EXPORT_CLASS
 - (void)stopMagnetometerUpdates;
 @property (readonly, nonatomic, getter=isMagnetometerActive) BOOL magnetometerActive;
 @property (readonly, nonatomic, getter=isMagnetometerAvailable) BOOL magnetometerAvailable;
-@property (readonly) CMMagnetometerData* magnetometerData;
+@property (readonly, nonatomic) CMMagnetometerData* magnetometerData;
 
 @property (assign, nonatomic) BOOL showsDeviceMovementDisplay STUB_PROPERTY;
 @property (assign, nonatomic) NSTimeInterval deviceMotionUpdateInterval STUB_PROPERTY;

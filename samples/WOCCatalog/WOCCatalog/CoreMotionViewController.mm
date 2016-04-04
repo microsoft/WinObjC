@@ -43,7 +43,7 @@
         accLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 80, 300, 50)];
         [accLabel setBackgroundColor:nil];
         [accLabel setText:@"Accelerometer Not Available!"];
-        [accLabel setTextAlignment:UITextAlignmentLeft];
+        [accLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:accLabel];
     }
 
@@ -55,7 +55,7 @@
         gyroLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 280, 300, 50)];
         [gyroLabel setBackgroundColor:nil];
         [gyroLabel setText:@"Gyrometer Not Available!"];
-        [gyroLabel setTextAlignment:UITextAlignmentLeft];
+        [gyroLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:gyroLabel];
     }
     
@@ -67,7 +67,7 @@
         magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 480, 300, 50)];
         [magnetoLabel setBackgroundColor:nil];
         [magnetoLabel setText:@"Magnetometer Not Available!"];
-        [magnetoLabel setTextAlignment:UITextAlignmentLeft];
+        [magnetoLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:magnetoLabel];
     }
     
@@ -120,8 +120,7 @@
 
 
 -(void)accStopUpdates {
-    dispatch_queue_t backgroundQueue = dispatch_queue_create("stop", NULL);
-    dispatch_async(backgroundQueue, ^{ [motionManager stopAccelerometerUpdates]; }); 
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{ [motionManager stopAccelerometerUpdates]; }); 
 }
 
 
@@ -149,11 +148,12 @@
 -(void)accUpdateButtonPressed:(UIButton*)button {
 
     if ([motionManager isAccelerometerActive]) { 
+        CMAccelerometerData* accelerometerData = motionManager.accelerometerData;
         dispatch_async(dispatch_get_main_queue(), ^{
             [accVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
-                motionManager.accelerometerData.acceleration.x, 
-                motionManager.accelerometerData.acceleration.y,
-                motionManager.accelerometerData.acceleration.z]];
+                accelerometerData.acceleration.x, 
+                accelerometerData.acceleration.y,
+                accelerometerData.acceleration.z]];
         });
     }
 }
@@ -216,8 +216,7 @@
 
 
 -(void)gyroStopUpdates {
-    dispatch_queue_t backgroundQueue = dispatch_queue_create("stopGyro", NULL);
-    dispatch_async(backgroundQueue, ^{ [motionManager stopGyroUpdates]; });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{ [motionManager stopGyroUpdates]; });
 }
 
 
@@ -244,12 +243,13 @@
 
 -(void)gyroUpdateButtonPressed:(UIButton*)button {
 
-    if ([motionManager isGyroActive]) { 
+    if ([motionManager isGyroActive]) {
+        CMGyroData* gyroData = motionManager.gyroData; 
         dispatch_async(dispatch_get_main_queue(), ^{
             [gyroVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
-                motionManager.gyroData.rotationRate.x, 
-                motionManager.gyroData.rotationRate.y,
-                motionManager.gyroData.rotationRate.z]];
+                gyroData.rotationRate.x, 
+                gyroData.rotationRate.y,
+                gyroData.rotationRate.z]];
         });
     }
 }
@@ -312,8 +312,7 @@
 
 
 -(void)magnetoStopUpdates {
-    dispatch_queue_t backgroundQueue = dispatch_queue_create("stopMagneto", NULL);
-    dispatch_async(backgroundQueue, ^{ [motionManager stopMagnetometerUpdates]; });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{ [motionManager stopMagnetometerUpdates]; });
 }
 
 
@@ -340,12 +339,13 @@
     
 -(void)magnetoUpdateButtonPressed:(UIButton*)button {
 
-    if ([motionManager isMagnetometerActive]) { 
+    if ([motionManager isMagnetometerActive]) {
+        CMMagnetometerData* magnetometerData = motionManager.magnetometerData;
         dispatch_async(dispatch_get_main_queue(), ^{
             [magnetoVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
-                motionManager.magnetometerData.magneticField.x, 
-                motionManager.magnetometerData.magneticField.y,
-                motionManager.magnetometerData.magneticField.z]];
+                magnetometerData.magneticField.x, 
+                magnetometerData.magneticField.y,
+                magnetometerData.magneticField.z]];
         });
     }
 }
