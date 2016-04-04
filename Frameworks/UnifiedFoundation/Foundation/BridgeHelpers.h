@@ -18,14 +18,14 @@
 #include "NSRaise.h"
 
 // Helper macro for toll-free bridged classes - all must override the following set of functions
-#define BRIDGED_CLASS_REQUIRED_DECLS \
-    +(void)load;                     \
-    -(id)retain;                     \
-    -(oneway void)release;           \
-    -(id)autorelease;                \
-    -(NSUInteger)retainCount;        \
-    -(void)dealloc;                  \
-    +(NSObject*)allocWithZone : (NSZone*)zone;
+#define BRIDGED_CLASS_REQUIRED_DECLS     \
+    +(void)load;                         \
+    -(_Nonnull instancetype)retain;      \
+    -(oneway void)release;               \
+    -(_Nonnull instancetype)autorelease; \
+    -(NSUInteger)retainCount;            \
+    -(void)dealloc;                      \
+    +(NSObject * _Nonnull)allocWithZone : (NSZone * _Nullable)zone;
 
 // Helper macro for toll-free bridged classes - all must override the following set of functions
 // Provide our own implementations of retain and release so that the bridging works out.

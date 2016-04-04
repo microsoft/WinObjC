@@ -21,17 +21,17 @@
 
 BRIDGED_CLASS_REQUIRED_DECLS
 
-- (instancetype)init;
-- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count;
+- (_Nullable instancetype)init;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objs count:(NSUInteger)count;
 - (NSUInteger)count;
-- (id)objectAtIndex:(NSUInteger)index;
+- (_Nonnull id)objectAtIndex:(NSUInteger)index;
 
-- (instancetype)initWithCapacity:(NSUInteger)numItems;
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems;
 - (void)removeObjectAtIndex:(NSUInteger)index;
 - (void)removeLastObject;
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject*)obj;
-- (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index;
-- (void)addObject:(NSObject*)objAddr;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(NSObject* _Nonnull)obj;
+- (void)insertObject:(NSObject* _Nonnull)objAddr atIndex:(NSUInteger)index;
+- (void)addObject:(NSObject* _Nonnull)objAddr;
 
 // Not actually necessary. Optimization here for CF backed array.
 - (void)removeAllObjects;
