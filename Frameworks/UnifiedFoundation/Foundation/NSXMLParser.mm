@@ -37,24 +37,22 @@
 }
 
 - (instancetype)initWithContentsOfFile:(id)path {
-    id data = [[NSData alloc] initWithContentsOfFile:path];
+    id data = [NSData dataWithContentsOfFile:path];
     if (data == nil) {
-        [self dealloc];
+        [self release];
         return nil;
     }
 
-    id ret = [self initWithData:data];
-    [data release];
-
-    return ret;
+    return [self initWithData:data];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithData:(id)data {
-    _data = [data retain];
-
+    if (self = [super init]) {
+        _data = [data retain];
+    }
     return self;
 }
 
