@@ -23,11 +23,36 @@ extern "C" {
 #endif
 
 enum {
-    kCCBlockSizeAES128 = 16,
+    kCCBlockSizeAES128        = 16,
+    kCCBlockSizeDES           = 8,
+    kCCBlockSize3DES          = 8,
+    kCCBlockSizeCAST          = 8,
+    kCCBlockSizeRC2           = 8,
+    kCCBlockSizeBlowfish      = 8,
 };
 
 enum {
-    kCCKeySizeAES256 = 32,
+    kCCKeySizeAES128          = 16,
+    kCCKeySizeAES192          = 24,
+    kCCKeySizeAES256          = 32,
+    kCCKeySizeDES             = 8,
+    kCCKeySize3DES            = 24,
+    kCCKeySizeMinCAST         = 5,
+    kCCKeySizeMaxCAST         = 16,
+    kCCKeySizeMinRC4          = 1,
+    kCCKeySizeMaxRC4          = 512,
+    kCCKeySizeMinRC2          = 1,
+    kCCKeySizeMaxRC2          = 128,
+    kCCKeySizeMinBlowfish     = 8,
+    kCCKeySizeMaxBlowfish     = 56,
+};
+
+enum {
+    kCCContextSizeAES128	= 404,
+    kCCContextSizeDES		= 240,
+    kCCContextSize3DES		= 496,
+    kCCContextSizeCAST		= 240,
+    kCCContextSizeRC4		= 1072
 };
 
 #define CC_SHA256_DIGEST_LENGTH 32
