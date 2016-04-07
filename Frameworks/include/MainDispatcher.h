@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,12 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#include "UIKit/UIKit.h"
-#include "NSRunLoop+Internal.h"
-
-int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
-
-void SetXamlUIWaiter() {
-    [NSRunLoop setUIThreadWaitFunction:&XamlTimedMultipleWait];
-}
+extern "C" void ScheduleMainRunLoop();
+extern "C" void SetupMainRunLoopTimedMultipleWaiter();

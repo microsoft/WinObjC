@@ -45,3 +45,4 @@
 // in a file that gets included in C++/CX sources.
 UIKIT_EXPORT int UIApplicationMainInit(
     int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);
+void _UIApplicationShutdown();

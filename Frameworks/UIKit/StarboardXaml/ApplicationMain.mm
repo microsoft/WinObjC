@@ -27,12 +27,12 @@
 #import <d3d11.h>
 #import <d3d11_2.h>
 
-#import "Starboard.h"
-#import "UIInterface.h"
-#import "CACompositorClient.h"
-#import "UIApplicationInternal.h"
-#import "NSBundleInternal.h"
-#import "..\UIApplicationMainInternal.h"
+#import <Starboard.h>
+#import <UIInterface.h>
+#import <CACompositorClient.h>
+#import <UIApplicationInternal.h>
+#import <NSBundleInternal.h>
+#import <MainDispatcher.h>
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -103,7 +103,9 @@ int ApplicationMainStart(
     [displayMode _updateDisplaySettings];
 
     UIApplicationMainInit(argc, argv, principalClassName, delegateClassName, defaultOrientation);
-    return UIApplicationMainLoop();
+    ScheduleMainRunLoop();
+
+    return 0;
 }
 
 void SetTemporaryFolder(const char* folder) {

@@ -26,12 +26,14 @@
 #include <windows.ui.xaml.automation.peers.h>
 #include <windows.ui.xaml.media.h>
 
+using namespace concurrency;
 using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
 #include "winobjc\winobjc.h"
 #include "ApplicationCompositor.h"
 #include "CompositorInterface.h"
+#include <StringHelpers.h>
 
 Windows::UI::Xaml::Controls::Grid ^ rootNode;
 Windows::UI::Xaml::Controls::Canvas ^ windowCollection;
@@ -250,16 +252,10 @@ void DisplayAnimation::AddTransitionAnimation(DisplayNode* node, const char* typ
     auto xamlNode = GetCALayer(node);
     auto xamlAnimation = GetStoryboard(this);
 
-    std::string stype(type);
-    std::wstring wtype(stype.begin(), stype.end());
-    std::string ssubtype(subtype);
-    std::wstring wsubtype(ssubtype.begin(), ssubtype.end());
-    auto async = xamlAnimation->AddTransition(xamlNode, ref new Platform::String(wtype.data()), ref new Platform::String(wsubtype.data()));
-    HANDLE newEvent = CreateEventEx(NULL, NULL, 0, EVENT_ALL_ACCESS);
-    async->Completed = ref new Windows::Foundation::AsyncOperationCompletedHandler<int>(
-        [newEvent](Platform::Object ^ sender, Windows::Foundation::AsyncStatus result) { SetEvent(newEvent); });
-    XamlWaitHandle((uintptr_t)newEvent, INFINITE);
-    CloseHandle(newEvent);
+    std::wstring wtype = Strings::NarrowToWide<std::wstring>(type);
+    std::wstring wsubtype = Strings::NarrowToWide<std::wstring>(subtype);
+
+    xamlAnimation->AddTransition(xamlNode, ref new Platform::String(wtype.data()), ref new Platform::String(wsubtype.data()));
 }
 
 void DisplayNode::AddToRoot() {

@@ -34,6 +34,7 @@
 #import "UIInterface.h"
 #import "LoggingNative.h"
 #import "UIDeviceInternal.h"
+#import <MainDispatcher.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -276,29 +277,12 @@ int UIApplicationMainInit(
         [curWindow setHidden:FALSE];
     }
 
-    //  Cycle through the runloop once before releasing our pool,
-    //  so that any layouts or selectors get a chance to retain before
-    //  objects get destroyed
-    [runLoop runMode:@"kCFRunLoopDefaultMode" beforeDate:[NSDate distantPast]];
     [pool release];
 
     return 0;
 }
 
-/**
- @Public No
-*/
-extern "C" int UIApplicationMainLoop() {
-    [[NSThread currentThread] _associateWithMainThread];
-    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
-
-    for (;;) {
-        [runLoop run];
-        TraceWarning(TAG, L"Warning: CFRunLoop stopped");
-        if (_doShutdown) {
-            break;
-        }
-    }
+void _UIApplicationShutdown() {
     UIBecomeInactive();
     if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(applicationWillTerminate:)]) {
         [[[UIApplication sharedApplication] delegate] applicationWillTerminate:[UIApplication sharedApplication]];
@@ -309,8 +293,6 @@ extern "C" int UIApplicationMainLoop() {
     TraceVerbose(TAG, L"Exiting uncleanly.");
     EbrShutdownAV();
     [outerPool release];
-
-    return 0;
 }
 
 extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {

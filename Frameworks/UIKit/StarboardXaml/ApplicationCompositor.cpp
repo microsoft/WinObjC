@@ -20,6 +20,7 @@
 #include "StringHelpers.h"
 #include "ApplicationCompositor.h"
 #include "ApplicationMain.h"
+#include <MainDispatcher.h>
 
 #include <assert.h>
 #include <string>
@@ -27,61 +28,6 @@
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
 using namespace Windows::System::Threading;
-
-void* g_XamlUIFiber = nullptr;
-void* g_WinObjcUIFiber = nullptr;
-
-int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets) {
-    //  If our current fiber is the main winobjc UI thread,
-    //  we perform the wait on a separate worker thread, then
-    //  yield to the Xaml Dispatcher fiber.  Once the worker thread wakes
-    //  up, it will queue the result on the Xaml dispatcher, then
-    //  have it switch back to the winobjc fiber with the result
-    if (::GetCurrentFiber() == g_WinObjcUIFiber) {
-        int retval = 0;
-        bool signaled = false;
-        auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-        ThreadPool::RunAsync(
-            ref new WorkItemHandler([&retval, &signaled, events, numEvents, timeout, sockets, dispatcher](IAsyncAction^ action) {
-                //  Wait for an event
-                retval = EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
-                signaled = true;
-
-                //  Dispatch it on the UI thread
-                dispatcher->RunAsync(CoreDispatcherPriority::High, ref new DispatchedHandler([]() { ::SwitchToFiber(g_WinObjcUIFiber); }));
-            }));
-
-        //  ** WARNING ** The "local" retval is passed by ref to the lamba - never wake up this
-        //  fiber from somewhere else!
-        ::SwitchToFiber(g_XamlUIFiber);
-
-        assert(signaled);
-        return retval;
-    } else {
-        return EbrEventTimedMultipleWait(events, numEvents, timeout, sockets);
-    }
-}
-
-extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout) {
-    int retval = 0;
-    bool signaled = false;
-    auto dispatcher = CoreWindow::GetForCurrentThread()->Dispatcher;
-    ThreadPool::RunAsync(ref new WorkItemHandler([&retval, &signaled, hEvent, timeout, dispatcher](IAsyncAction^ action) {
-        //  Wait for an event
-        retval = WaitForSingleObjectEx((HANDLE)hEvent, timeout, TRUE);
-        signaled = true;
-
-        //  Dispatch it on the UI thread
-        dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([]() { ::SwitchToFiber(g_WinObjcUIFiber); }));
-    }));
-
-    //  ** WARNING ** The "local" retval is passed by ref to the lamba - never wake up this
-    //  fiber from somewhere else!
-    ::SwitchToFiber(g_XamlUIFiber);
-
-    assert(signaled);
-    return retval;
-}
 
 struct StartParameters {
     int argc;
@@ -92,31 +38,6 @@ struct StartParameters {
 };
 
 StartParameters g_startParams = { 0, nullptr, std::string(), std::string(), 0.0f, 0.0f };
-
-static VOID CALLBACK WinObjcMainLoop(LPVOID param) {
-    ApplicationMainStart(g_startParams.argc,
-                         g_startParams.argv,
-                         g_startParams.principalClassName.c_str(),
-                         g_startParams.delegateClassName.c_str(),
-                         g_startParams.windowWidth,
-                         g_startParams.windowHeight);
-}
-
-void SetXamlUIWaiter();
-
-static void StartCompositedRunLoop() {
-    // Switch this xaml/winrt thread to a fiber, and store it
-    ::ConvertThreadToFiberEx(nullptr, FIBER_FLAG_FLOAT_SWITCH);
-    g_XamlUIFiber = ::GetCurrentFiber();
-
-    // Create our WinObjC fiber
-    const size_t stackCommitSize = 4096 * 4; // 4 pages
-    const size_t stackReserveSize = 1024 * 1024; // 1MB
-    g_WinObjcUIFiber = ::CreateFiberEx(stackCommitSize, stackReserveSize, FIBER_FLAG_FLOAT_SWITCH, WinObjcMainLoop, nullptr);
-
-    // Switch to the WinObjC fiber to kick off the IOS launch sequence
-    ::SwitchToFiber(g_WinObjcUIFiber);
-}
 
 void InitializeApp() {
     // Only init once.
@@ -138,8 +59,8 @@ void InitializeApp() {
     wcstombs_s(&outLen, writableFolder, tempPathData->Data(), sizeof(writableFolder) - 1);
     SetTemporaryFolder(writableFolder);
 
-    // Set the waiter routine for yielding waits to the XAML/UI thread
-    SetXamlUIWaiter();
+    // Set the waiter routine for the main runloop to yield
+    SetupMainRunLoopTimedMultipleWaiter();
 }
 
 extern "C" void RunApplicationMain(Platform::String^ principalClassName,
@@ -157,8 +78,13 @@ extern "C" void RunApplicationMain(Platform::String^ principalClassName,
     g_startParams.windowWidth = windowWidth;
     g_startParams.windowHeight = windowHeight;
 
-    // Kick off the run loop
-    StartCompositedRunLoop();
+    // Kick off iOS application main startup
+    ApplicationMainStart(g_startParams.argc,
+        g_startParams.argv,
+        g_startParams.principalClassName.c_str(),
+        g_startParams.delegateClassName.c_str(),
+        g_startParams.windowWidth,
+        g_startParams.windowHeight);
 }
 
 // clang-format off

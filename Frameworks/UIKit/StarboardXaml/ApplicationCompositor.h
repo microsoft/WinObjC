@@ -20,5 +20,4 @@ extern "C" void RunApplicationMain(Platform::String ^ principalClassName,
                                    Platform::String ^ delegateClassName,
                                    float windowWidth,
                                    float windowHeight);
-extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout);
 #endif

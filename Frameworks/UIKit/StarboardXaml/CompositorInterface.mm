@@ -15,6 +15,16 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#include <COMIncludes.h>
+#import <WRLHelpers.h>
+#import <ErrorHandling.h>
+#import <RawBuffer.h>
+#import <wrl/client.h>
+#import <wrl/implements.h>
+#import <wrl/async.h>
+#import <wrl/wrappers/corewrappers.h>
+#import <windows.foundation.h>
+#include <COMIncludes_end.h>
 #import "CACompositor.h"
 #import "CACompositorClient.h"
 #import "QuartzCore\CALayer.h"
@@ -25,13 +35,14 @@
 #import "Quaternion.h"
 #import <deque>
 #import <map>
-#import <memory>
+#import <algorithm>
 #import "CompositorInterface.h"
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
 #import "UWP/interopBase.h"
 #import "UIApplicationInternal.h"
-#import "LoggingNative.h"
+#import <LoggingNative.h>
+#import <MainDispatcher.h>
 
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>

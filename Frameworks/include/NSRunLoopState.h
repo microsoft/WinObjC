@@ -39,7 +39,7 @@
     bool _builtWakeupSockets;
     int _wakeupSockets[2];
 }
-+ (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
++ (void)setUIThreadMainRunLoopWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback;
 - (NSObject*)init;
 - (void)dealloc;
 - (void)wakeUp;
@@ -58,4 +58,5 @@
 - (void)invalidateTimerWithDelayedPerform:(id)delayed;
 - (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date;
 - (NSString*)description;
+- (void)_handleSignaledInput:(int)signaled;
 @end

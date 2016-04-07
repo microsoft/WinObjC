@@ -207,6 +207,3 @@ public:
     void MoveNode(DisplayNode* before, DisplayNode* after);
     void RemoveFromSupernode();
 };
-
-void IncrementCounter(const char* name);
-void DecrementCounter(const char* name);

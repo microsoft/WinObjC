@@ -55,6 +55,7 @@
 
 #include "UWP/WindowsUINotifications.h"
 #include "LoggingNative.h"
+#include "UIApplicationMainInternal.h"
 
 static const wchar_t* TAG = L"UIApplication";
 
@@ -865,6 +866,8 @@ static void printViews(id curView, int level) {
 + (void)_shutdownEvent {
     _doShutdown = TRUE;
     [[NSRunLoop mainRunLoop] _stop];
+    [[NSRunLoop mainRunLoop] _shutdown];
+    _UIApplicationShutdown();
 }
 
 - (void)newMouseEvent {

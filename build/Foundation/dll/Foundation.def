@@ -995,3 +995,7 @@ LIBRARY Foundation
         NSIsNotNilTransformerName DATA
         NSUnarchiveFromDataTransformerName DATA
         NSKeyedUnarchiveFromDataTransformerName DATA
+
+        ; MainDispatcher
+        ScheduleMainRunLoop
+        SetupMainRunLoopTimedMultipleWaiter

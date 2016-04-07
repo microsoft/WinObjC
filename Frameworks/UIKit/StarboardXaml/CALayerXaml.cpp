@@ -1630,7 +1630,7 @@ void EventedStoryboard::_CreateFlip(CALayerXaml^ layer, bool flipRight, bool inv
         });
     } else {
         rotateAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
-            // Using Projection transforms (even Identity) causes less-than-pixel-perfect rendering. 
+            // Using Projection transforms (even Identity) causes less-than-pixel-perfect rendering.
             layer->Projection = nullptr;
         });
     }
@@ -1668,14 +1668,14 @@ void EventedStoryboard::_CreateWoosh(CALayerXaml^ layer, bool fromRight, bool in
 
     Storyboard::SetTargetProperty(wooshAnim, "(UIElement.Projection).(PlaneProjection.LocalOffsetX)");
     Storyboard::SetTarget(wooshAnim, layer);
-    
+
     if (removeFromParent) {
         wooshAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
             VisualTreeHelper::DisconnectChildrenRecursive(layer);
         });
     } else {
         wooshAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
-            // Using Projection transforms (even Identity) causes less-than-pixel-perfect rendering. 
+            // Using Projection transforms (even Identity) causes less-than-pixel-perfect rendering.
             layer->Projection = nullptr;
         });
     }
@@ -1686,12 +1686,14 @@ void EventedStoryboard::_CreateWoosh(CALayerXaml^ layer, bool fromRight, bool in
 IAsyncOperation<int>^ EventedStoryboard::AddTransition(CALayerXaml^ layer, String^ type, String^ subtype) {
     RenderTargetBitmap^ copiedLayer = ref new RenderTargetBitmap();
     double scale = CALayerXaml::s_screenScale;
-    
+    /*
     auto renderAsync = copiedLayer->RenderAsync(layer, (int)(layer->CurrentWidth * scale), 0);
-    return create_async([this, layer, type, subtype, renderAsync, copiedLayer, &scale]() {
+    // Note: Usage of PPL tasks is not recommened as it is a nightmare to debug. As part of fixing bug 7184543
+    // PPL tasks should be removed.
+    return create_async([this, layer, type, subtype, renderAsync, copiedLayer, scale, opacity]() {
         return create_task(renderAsync)
             .then(
-                [this, layer, type, subtype, copiedLayer, scale]() -> int {
+                [this, layer, type, subtype, copiedLayer, scale, opacity]() -> int {
                     CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
                     newLayer->_CopyPropertiesFrom(layer);
                     int width = copiedLayer->PixelWidth;
@@ -1754,6 +1756,74 @@ IAsyncOperation<int>^ EventedStoryboard::AddTransition(CALayerXaml^ layer, Strin
                 },
                 task_continuation_context::use_current());
     });
+    */
+
+    // TODO::
+    // HACKHACK - remove this code
+    auto async = create_async([this]
+    {
+        return create_task([] { return 0; });
+    });
+
+    CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
+    newLayer->_CopyPropertiesFrom(layer);
+    int width = (int)(layer->CurrentWidth * scale);
+    int height = (int)(layer->CurrentHeight * scale);
+
+    newLayer->setContentImage(copiedLayer, (float)width, (float)height, (float)scale);
+    newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
+
+    if (type == "kCATransitionFlip") {
+        TimeSpan timeSpan = TimeSpan();
+        timeSpan.Duration = (long long)(0.75 * c_hundredNanoSeconds);
+        m_container->Duration = Duration(timeSpan);
+        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(layer);
+        if (parent != nullptr) {
+            unsigned int idx;
+            parent->Children->IndexOf(layer, &idx);
+            parent->Children->InsertAt(idx + 1, newLayer);
+            parent->InvalidateArrange();
+            layer->Opacity = 0;
+
+            bool flipToLeft = true;
+            if (subtype != "kCATransitionFromLeft") {
+                flipToLeft = false;
+            }
+
+            _CreateFlip(newLayer, flipToLeft, false, true);
+            _CreateFlip(layer, flipToLeft, true, false);
+        }
+    }
+    else {
+        TimeSpan timeSpan = TimeSpan();
+        timeSpan.Duration = (long long)(0.5 * c_hundredNanoSeconds);
+        m_container->Duration = Duration(timeSpan);
+        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(layer);
+        if (parent != nullptr) {
+            unsigned int idx;
+            parent->Children->IndexOf(layer, &idx);
+
+            bool fromRight = true;
+            if (subtype == "kCATransitionFromLeft") {
+                fromRight = false;
+            }
+
+            if (fromRight) {
+                parent->Children->InsertAt(idx, newLayer);
+                parent->InvalidateArrange();
+                _CreateWoosh(newLayer, fromRight, true, true);
+                _CreateWoosh(layer, fromRight, false, false);
+            }
+            else {
+                parent->Children->InsertAt(idx + 1, newLayer);
+                parent->InvalidateArrange();
+                _CreateWoosh(newLayer, fromRight, false, true);
+                _CreateWoosh(layer, fromRight, true, false);
+            }
+        }
+    }
+
+    return async;
 }
 
 void EventedStoryboard::Animate(CALayerXaml^ layer, String^ propertyName, Object^ from, Object^ to) {
