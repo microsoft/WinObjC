@@ -158,17 +158,17 @@
     </ItemGroup>
 
     <Message
-      Condition="('%(ClangCompile.MaxClangProcesses)' != '1') and '%(ClangCompile.ObjectiveCModules)' == 'true'"
+      Condition="'@(ClangCompile)' != '' and '%(ClangCompile.MaxClangProcesses)' != '1' and '%(ClangCompile.ObjectiveCModules)' == 'true'"
       Importance="High"
       Text="Note: Setting MaxClangProcesses to 1 because Modules are enabled." />
 
     <ItemGroup>
       <ClangCompile>
-        <MaxClangProcesses Condition="('%(ClangCompile.MaxClangProcesses)' != '1') and '%(ClangCompile.ObjectiveCModules)' == 'true'">1</MaxClangProcesses>
+        <MaxClangProcesses Condition="'@(ClangCompile)' != '' and '%(ClangCompile.MaxClangProcesses)' != '1' and '%(ClangCompile.ObjectiveCModules)' == 'true'">1</MaxClangProcesses>
       </ClangCompile>
     </ItemGroup>
 
-    <Error Condition="('%(ClangCompile.MaxClangProcesses)' &lt; '-1') or ('%(ClangCompile.MaxClangProcesses)' == '0')"
+    <Error Condition="'@(ClangCompile)' != '' and ('%(ClangCompile.MaxClangProcesses)' &lt; '-1' or '%(ClangCompile.MaxClangProcesses)' == '0')"
       Text="%(ClangCompile.MaxClangProcesses) is an invalid value for MaxClangProcesses. MaxClangProcesses must be -1, or a postive integer." />
 
     <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
