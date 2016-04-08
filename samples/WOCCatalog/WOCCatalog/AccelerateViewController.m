@@ -31,189 +31,178 @@
 #import "AccelerateViewController.h"
 #import "SingleImageViewController.h"
 
-@implementation AccelerateViewController
+static const double meanDivisor = 100;
 
-int accelerateImageNumber = 1;
-int valueRed = 100, valueGreen = 100, valueBlue = 100;
-int convolveSize = 1;
-NSArray *indexPathArray;
-UIImage *img;
-UIImageView *imv;
-UISlider* redSlider;
-UISlider* greenSlider;
-UISlider* blueSlider;
-UISlider* convolveSlider;
-UILabel *rLabel, *gLabel, *bLabel, *boxLabel;
-
+@implementation AccelerateViewController {
+    int _accelerateImageNumber;
+    int _valueRed;
+    int _valueGreen;
+    int _valueBlue;
+    int _convolveSize;
+    NSArray* _indexPathArray;
+    UIImage* _img;
+    UIImageView* _imv;
+    UISlider* _redSlider;
+    UISlider* _greenSlider;
+    UISlider* _blueSlider;
+    UISlider* _convolveSlider;
+    UILabel* _rLabel;
+    UILabel* _gLabel; 
+    UILabel* _bLabel;
+    UILabel* _boxLabel;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    _accelerateImageNumber = 1;
+    _valueRed = 100;
+    _valueGreen = 100;
+    _valueBlue = 100;
+    _convolveSize = 1;
     
-    redSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
-    redSlider.backgroundColor = [UIColor clearColor];
-    redSlider.minimumValue = 0.0;
-    redSlider.maximumValue = 200.0;
-    redSlider.continuous = YES;
-    redSlider.value = 100.0;
+    _redSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _redSlider.backgroundColor = [UIColor clearColor];
+    _redSlider.minimumValue = 0.0;
+    _redSlider.maximumValue = 200.0;
+    _redSlider.continuous = YES;
+    _redSlider.value = 100.0;
     
-    greenSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
-    greenSlider.backgroundColor = [UIColor clearColor];
-    greenSlider.minimumValue = 0.0;
-    greenSlider.maximumValue = 200.0;
-    greenSlider.continuous = YES;
-    greenSlider.value = 100.0;
+    _greenSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _greenSlider.backgroundColor = [UIColor clearColor];
+    _greenSlider.minimumValue = 0.0;
+    _greenSlider.maximumValue = 200.0;
+    _greenSlider.continuous = YES;
+    _greenSlider.value = 100.0;
     
-    blueSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
-    blueSlider.backgroundColor = [UIColor clearColor];
-    blueSlider.minimumValue = 0.0;
-    blueSlider.maximumValue = 200.0;
-    blueSlider.continuous = YES;
-    blueSlider.value = 100.0;
+    _blueSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _blueSlider.backgroundColor = [UIColor clearColor];
+    _blueSlider.minimumValue = 0.0;
+    _blueSlider.maximumValue = 200.0;
+    _blueSlider.continuous = YES;
+    _blueSlider.value = 100.0;
     
-    convolveSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
-    convolveSlider.backgroundColor = [UIColor clearColor];
-    convolveSlider.minimumValue = 1.0;
-    convolveSlider.maximumValue = 99.0;
-    convolveSlider.continuous = YES;
-    convolveSlider.value = 1.0;
+    _convolveSlider = [[UISlider alloc] initWithFrame:CGRectMake(5.0, 12.0, 180.0, 8.0)];
+    _convolveSlider.backgroundColor = [UIColor clearColor];
+    _convolveSlider.minimumValue = 1.0;
+    _convolveSlider.maximumValue = 99.0;
+    _convolveSlider.continuous = YES;
+    _convolveSlider.value = 1.0;
     
-    [redSlider addTarget:self action:@selector(redChanged:) forControlEvents:UIControlEventValueChanged];
-    [greenSlider addTarget:self action:@selector(greenChanged:) forControlEvents:UIControlEventValueChanged];
-    [blueSlider addTarget:self action:@selector(blueChanged:) forControlEvents:UIControlEventValueChanged];
-    [convolveSlider addTarget:self action:@selector(convolveChanged:) forControlEvents:UIControlEventValueChanged];
+    [_redSlider addTarget:self action:@selector(redChanged:) forControlEvents:UIControlEventValueChanged];
+    [_greenSlider addTarget:self action:@selector(greenChanged:) forControlEvents:UIControlEventValueChanged];
+    [_blueSlider addTarget:self action:@selector(blueChanged:) forControlEvents:UIControlEventValueChanged];
+    [_convolveSlider addTarget:self action:@selector(convolveChanged:) forControlEvents:UIControlEventValueChanged];
     
-    rLabel = [[UILabel alloc] init];
-    gLabel = [[UILabel alloc] init];
-    bLabel = [[UILabel alloc] init];
-    boxLabel = [[UILabel alloc] init];
+    _rLabel = [[UILabel alloc] init];
+    _gLabel = [[UILabel alloc] init];
+    _bLabel = [[UILabel alloc] init];
+    _boxLabel = [[UILabel alloc] init];
     
-    img = [UIImage imageNamed:[NSString stringWithFormat:@"photo%d.jpg", accelerateImageNumber]];
+    _img = [UIImage imageNamed:[NSString stringWithFormat:@"photo%d.jpg", _accelerateImageNumber]];
 }
+
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
     return 8;
 }
 
+
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
     CGRect screenRect = [[UIScreen mainScreen] bounds];
-    if (indexPath.row == 1)
+
+    if (indexPath.row == 1) {
         return screenRect.size.height - 360;
+    }
+
     return 40;
 }
 
+
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath {
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
+
     if (nil == cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     }
     
     if (indexPath.row == 0) {
         // Title cell
-        
-        cell.textLabel.text = @"Accelerate Test";
+
+        cell.textLabel.text = @"Accelerate Sample";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 1) {
         // Image display box
+
+        [_imv removeFromSuperview];
+        UIImage* transformImg = [self transformImage:_img];
+        _imv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 2, cell.bounds.size.width - 6.0f, cell.bounds.size.height - 4.0f)];
+        _imv.image = transformImg;
         
-        [imv removeFromSuperview];
-        UIImage *transformImg = [self transformImage:img];
-        imv = [[UIImageView alloc] initWithFrame:CGRectMake(3, 2, cell.bounds.size.width - 6.0f, cell.bounds.size.height - 4.0f)];
-        imv.image = transformImg;
-        
-        [imv setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-        [cell addSubview:imv];
+        [_imv setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+        [cell addSubview:_imv];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 2) {
         // Red controls
-        
-        /*UIButton *rDown  = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-         rDown.frame = CGRectMake(cell.bounds.size.width - 70.0f, 5.0f, 30.0f, cell.bounds.size.height - 15.0f);
-         rDown.layer.cornerRadius = 5.0f;
-         rDown.backgroundColor = [UIColor lightGrayColor];
-         [rDown setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-         [rDown setTitle:@"-" forState:UIControlStateNormal];
-         [rDown setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
-         
-         UIButton *rUp  = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-         rUp.frame = CGRectMake(cell.bounds.size.width - 35.0f, 5.0f, 30.0f, cell.bounds.size.height - 15.0f);
-         rUp.layer.cornerRadius = 5.0f;
-         rUp.backgroundColor = [UIColor lightGrayColor];
-         [rUp setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-         [rUp setTitle:@"+" forState:UIControlStateNormal];
-         [rUp setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin];
-         
-         [cell addSubview:rDown];
-         [cell addSubview:rUp];
-         */
-        
-        //cell.textLabel.text = [NSString stringWithFormat:@"Red: %d%%", valueRed];
+
         cell.textLabel.text = [NSString stringWithFormat:@"Red"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        cell.accessoryView = redSlider;
-        
-        //[redSlider addTarget:self action:@selector(redChanged:) forControlEvents:UIControlEventValueChanged];
-        
-        //[rUp addTarget:self action:@selector(rUpPress) forControlEvents:UIControlEventTouchUpInside];
-        //[rDown addTarget:self action:@selector(rDownPress) forControlEvents:UIControlEventTouchUpInside];
+        cell.accessoryView = _redSlider;
     } else if (indexPath.row == 3) {
         // Green controls
-        
+
         cell.textLabel.text = [NSString stringWithFormat:@"Green"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        cell.accessoryView = greenSlider;
+        cell.accessoryView = _greenSlider;
     } else if (indexPath.row == 4) {
         // Blue controls
-        
+
         cell.textLabel.text = [NSString stringWithFormat:@"Blue"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        cell.accessoryView = blueSlider;
+        cell.accessoryView = _blueSlider;
     } else if (indexPath.row == 5) {
         // Box convolve controls
-        
+
         cell.textLabel.text = [NSString stringWithFormat:@"Blur"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
-        cell.accessoryView = convolveSlider;
+        cell.accessoryView = _convolveSlider;
     } else if (indexPath.row == 6) {
         // Labels
+
+        [_rLabel removeFromSuperview];
+        [_gLabel removeFromSuperview];
+        [_bLabel removeFromSuperview];
+        [_boxLabel removeFromSuperview];
         
-        [rLabel removeFromSuperview];
-        [gLabel removeFromSuperview];
-        [bLabel removeFromSuperview];
-        [boxLabel removeFromSuperview];
+        _rLabel.text = [NSString stringWithFormat:@"R: %d%%", _valueRed];
+        _gLabel.text = [NSString stringWithFormat:@"G: %d%%", _valueGreen];
+        _bLabel.text = [NSString stringWithFormat:@"B: %d%%", _valueBlue];
+        _boxLabel.text = [NSString stringWithFormat:@"Kernel Size: %d", _convolveSize];
         
-        rLabel.text = [NSString stringWithFormat:@"R: %d%%", valueRed];
-        gLabel.text = [NSString stringWithFormat:@"G: %d%%", valueGreen];
-        bLabel.text = [NSString stringWithFormat:@"B: %d%%", valueBlue];
-        boxLabel.text = [NSString stringWithFormat:@"Kernel Size: %d", convolveSize];
+        _rLabel.frame = CGRectMake(17.0f, 5.0f, 100.0f, cell.bounds.size.height - 5.0f);
+        _gLabel.frame = CGRectMake(92.0f, 5.0f, 100.0f, cell.bounds.size.height - 5.0f);
+        _bLabel.frame = CGRectMake(167.0f, 5.0f, 100.0f, cell.bounds.size.height - 5.0f);
+        _boxLabel.frame = CGRectMake(242.0f, 5.0f, 200.0f, cell.bounds.size.height - 5.0f);
         
-        rLabel.frame = CGRectMake(17.0f, 5.0f, 100.0f, cell.bounds.size.height - 5.0f);
-        gLabel.frame = CGRectMake(92.0f, 5.0f, 100.0f, cell.bounds.size.height - 5.0f);
-        bLabel.frame = CGRectMake(167.0f, 5.0f, 100.0f, cell.bounds.size.height - 5.0f);
-        boxLabel.frame = CGRectMake(242.0f, 5.0f, 200.0f, cell.bounds.size.height - 5.0f);
+        [_rLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+        [_gLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+        [_bLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+        [_boxLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         
-        [rLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-        [gLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-        [bLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-        [boxLabel setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-        
-        [cell addSubview:rLabel];
-        [cell addSubview:gLabel];
-        [cell addSubview:bLabel];
-        [cell addSubview:boxLabel];
+        [cell addSubview:_rLabel];
+        [cell addSubview:_gLabel];
+        [cell addSubview:_bLabel];
+        [cell addSubview:_boxLabel];
         
     } else if (indexPath.row == 7) {
-        // Image change
-        
-        UIButton *imageChange  = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        // Select Image
+
+        UIButton* imageChange  = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         imageChange.frame = CGRectMake(10.0f, 5.0f, 120.0f, cell.bounds.size.height - 15.0f);
         imageChange.layer.cornerRadius = 5.0f;
         imageChange.backgroundColor = [UIColor lightGrayColor];
         [imageChange setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [imageChange setTitle:@"Next Image" forState:UIControlStateNormal];
+        [imageChange setTitle:@"Select Image" forState:UIControlStateNormal];
         
         [cell addSubview:imageChange];
         
@@ -224,97 +213,97 @@ UILabel *rLabel, *gLabel, *bLabel, *boxLabel;
     return cell;
 }
 
--(void) redChanged:(UISlider *)slider {
-    int oldValue = valueRed;
-    valueRed = (int) slider.value;
-    
-    if (oldValue != valueRed) {
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-        
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-    }
-}
 
--(void) blueChanged:(UISlider *)slider {
-    int oldValue = valueBlue;
-    valueBlue = (int) slider.value;
+-(void) redChanged:(UISlider*)slider {
+    int oldValue = _valueRed;
+    _valueRed = (int) slider.value;
     
-    if (oldValue != valueBlue) {
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    if (oldValue != _valueRed) {
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
         
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-    }
-}
-
--(void) greenChanged:(UISlider *)slider {
-    int oldValue = valueGreen;
-    valueGreen = (int) slider.value;
-    
-    if (oldValue != valueGreen) {
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-        
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-    }
-}
-
--(void) convolveChanged:(UISlider *)slider {
-    int oldValue = convolveSize;
-    convolveSize = (int) slider.value;
-    convolveSize += (convolveSize % 2) - 1;
-    
-    if (oldValue != convolveSize) {
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-        
-        indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
-        [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
 
--(void) imageChangePress
-{
-    accelerateImageNumber++;
-    if (accelerateImageNumber == 7)
-        accelerateImageNumber = 1;
+-(void) blueChanged:(UISlider*)slider {
+    int oldValue = _valueBlue;
+    _valueBlue = (int) slider.value;
     
-    img = [UIImage imageNamed:[NSString stringWithFormat:@"photo%d.jpg", accelerateImageNumber]];
-    
-    indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
-    [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
-    
-    indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
-    [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    if (oldValue != _valueBlue) {
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+        
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
--(UIImage *)transformImage:(UIImage *)image {
-    CGImageRef img = image.CGImage;
+
+-(void) greenChanged:(UISlider*)slider {
+    int oldValue = _valueGreen;
+    _valueGreen = (int) slider.value;
     
+    if (oldValue != _valueGreen) {
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+        
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
+
+-(void) convolveChanged:(UISlider*)slider {
+    int oldValue = _convolveSize;
+    _convolveSize = (int) slider.value;
+    _convolveSize += (_convolveSize % 2) - 1;
+    
+    if (oldValue != _convolveSize) {
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+        
+        _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:6 inSection:0]];
+        [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
+
+-(void) imageChangePress {
+    PhotoSelectorController* photoView = [[PhotoSelectorController alloc] init];
+    photoView.delegate = self;
+    [self.navigationController pushViewController:photoView animated:NO];
+}
+
+
+-(void) imageFromController:(UIImage*)image {
+    _img = image;
+    _indexPathArray = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]];
+    [self.tableView reloadRowsAtIndexPaths:_indexPathArray withRowAnimation:UITableViewRowAnimationNone];
+}
+
+
+-(UIImage*)transformImage:(UIImage*)image {
+    CGImageRef _img = image.CGImage;
     vImage_Buffer inBuffer, midBuffer, outBuffer;
     vImage_Error error;
     void *pixelBuffer, *midPixelBuffer;
     
     //create vImage_Buffer with data from CGImageRef
-    
-    CGDataProviderRef inProvider = CGImageGetDataProvider(img);
+    CGDataProviderRef inProvider = CGImageGetDataProvider(_img);
     CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
-    
-    inBuffer.width = CGImageGetWidth(img);
-    inBuffer.height = CGImageGetHeight(img);
-    inBuffer.rowBytes = CGImageGetBytesPerRow(img);
+     
+    inBuffer.width = CGImageGetWidth(_img);
+    inBuffer.height = CGImageGetHeight(_img);
+    inBuffer.rowBytes = CGImageGetBytesPerRow(_img);
     
     inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
     
     //create vImage_Buffer for output
-    
-    midPixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
-    pixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
+    midPixelBuffer = malloc(CGImageGetBytesPerRow(_img) * CGImageGetHeight(_img));
+    pixelBuffer = malloc(CGImageGetBytesPerRow(_img) * CGImageGetHeight(_img));
     
     if(midPixelBuffer == NULL)
         NSLog(@"No midpixelbuffer");
@@ -322,23 +311,21 @@ UILabel *rLabel, *gLabel, *bLabel, *boxLabel;
         NSLog(@"No pixelbuffer");
     
     midBuffer.data = midPixelBuffer;
-    midBuffer.width = CGImageGetWidth(img);
-    midBuffer.height = CGImageGetHeight(img);
-    midBuffer.rowBytes = CGImageGetBytesPerRow(img);
+    midBuffer.width = CGImageGetWidth(_img);
+    midBuffer.height = CGImageGetHeight(_img);
+    midBuffer.rowBytes = CGImageGetBytesPerRow(_img);
     
     outBuffer.data = pixelBuffer;
-    outBuffer.width = CGImageGetWidth(img);
-    outBuffer.height = CGImageGetHeight(img);
-    outBuffer.rowBytes = CGImageGetBytesPerRow(img);
+    outBuffer.width = CGImageGetWidth(_img);
+    outBuffer.height = CGImageGetHeight(_img);
+    outBuffer.rowBytes = CGImageGetBytesPerRow(_img);
     
-    int16_t A[] = { valueRed, 0, 0, 0,
-        0, valueGreen, 0, 0,
-        0, 0, valueBlue, 0,
-        0, 0, 0, 0 };
+    int16_t A[] = { _valueRed,          0,         0,         0,
+                           0, _valueGreen,         0,         0,
+                           0,          0, _valueBlue,         0,
+                           0,          0,         0,         0};
     
-    double meandivisor = 100;
-    
-    error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meandivisor, NULL, NULL, 0);
+    error = vImageMatrixMultiply_ARGB8888(&inBuffer, &midBuffer, A, meanDivisor, NULL, NULL, 0);
     
     if (error) {
         NSLog(@"error from matrix multiply %ld", error);
@@ -351,15 +338,13 @@ UILabel *rLabel, *gLabel, *bLabel, *boxLabel;
     background[3] = 0;
     
     //perform convolution
-    error = vImageBoxConvolve_ARGB8888(&midBuffer, &outBuffer, NULL, 0, 0, convolveSize, convolveSize, background, kvImageEdgeExtend);
+    error = vImageBoxConvolve_ARGB8888(&midBuffer, &outBuffer, NULL, 0, 0, _convolveSize, _convolveSize, background, kvImageEdgeExtend);
     
     if (error) {
         NSLog(@"error from convolution %ld", error);
     }
     
     //create CGImageRef from vImage_Buffer output
-    //1 - CGBitmapContextCreateImage -
-    
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
     CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
@@ -369,9 +354,10 @@ UILabel *rLabel, *gLabel, *bLabel, *boxLabel;
                                              outBuffer.rowBytes,
                                              colorSpace,
                                              (CGBitmapInfo)kCGImageAlphaNoneSkipLast);
+
     CGImageRef imageRef = CGBitmapContextCreateImage (ctx);
     
-    UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
+    UIImage* returnImage = [UIImage imageWithCGImage:imageRef];
     
     //clean up
     CGContextRelease(ctx);
@@ -381,9 +367,111 @@ UILabel *rLabel, *gLabel, *bLabel, *boxLabel;
     CFRelease(inBitmapData);
     CGImageRelease(imageRef);
     
-    return returnImage;
-    
+    return returnImage;  
 }
-
 @end
 
+
+@interface SelectorLayout : UICollectionViewFlowLayout
+@end
+
+
+@implementation SelectorLayout
+
+- (instancetype)init {
+    
+    if (self = [super init]) {
+        self.itemSize = CGSizeMake(140, 140);
+        self.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+        self.minimumInteritemSpacing = 5.0f;
+        self.minimumLineSpacing = 10.0f;
+        
+        [self setScrollDirection:UICollectionViewScrollDirectionVertical];
+    }
+    
+    return self;
+}
+@end
+
+
+@implementation SelectorCell
+
+- (instancetype)initWithFrame:(CGRect)frame {
+
+    if (self = [super initWithFrame:frame]) {
+        self.imageView = [[UIImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)), 5, 5)];
+        
+        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.imageView.layer.masksToBounds = YES;
+        self.imageView.layer.contentsGravity = kCAGravityResizeAspectFill;
+        [self.contentView addSubview:self.imageView];
+        
+        self.backgroundColor = [UIColor whiteColor];
+    }
+    
+    return self;
+}
+
+
+- (void)setImage:(UIImage*)image {
+    self.imageView.image = image;
+}
+@end
+
+
+@implementation PhotoSelectorController  {
+    NSArray* images;
+}
+
+@synthesize delegate = _delegate;
+
+- (instancetype)init {
+
+    if (self = [super init]) {
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[SelectorLayout alloc] init]];
+        [self.collectionView setDataSource:self];
+        [self.collectionView setDelegate:self];
+        [self.collectionView registerClass:[SelectorCell class] forCellWithReuseIdentifier:@"photoCell"];
+        
+        images = [NSArray arrayWithObjects:[[UIImage imageNamed:@"photo1.jpg"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal],
+                  [UIImage imageNamed:@"photo2.jpg"],
+                  [UIImage imageNamed:@"photo3.jpg"],
+                  [UIImage imageNamed:@"photo4.jpg"],
+                  [UIImage imageNamed:@"photo5.jpg"],
+                  [UIImage imageNamed:@"photo6.jpg"],
+                  [UIImage imageNamed:@"photo7.gif"],
+                  [UIImage imageNamed:@"photo8.tif"],
+                  nil];
+    }
+     
+    return self;
+}
+
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView*)collectionView {
+    return 1;
+}
+
+
+- (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
+    return [images count];
+}
+
+
+- (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
+    SelectorCell* pc = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
+    [pc setImage:[images objectAtIndex:indexPath.item]];
+    
+    return pc;
+}
+
+
+- (void)collectionView:(UICollectionView*)collectionView didSelectItemAtIndexPath:(NSIndexPath*)indexPath {
+
+    if ([_delegate respondsToSelector:@selector(imageFromController:)]) {
+        [_delegate imageFromController:[images objectAtIndex:indexPath.item]];
+    }
+    
+    [self.navigationController popViewControllerAnimated:NO];
+}
+@end
