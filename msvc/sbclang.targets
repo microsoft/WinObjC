@@ -127,6 +127,10 @@
       <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
 
+    <PropertyGroup>
+      <StarboardAllLibDirs>$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</StarboardAllLibDirs>
+    </PropertyGroup>
+
     <!-- Print which WinObjC libraries will be used, when building an Application -->
     <Message
       Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(ConfigurationType)' == 'Application'"
@@ -341,14 +345,33 @@
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
 
+  <!-- Fix up AdditionalLibraryDirectories before the CreateWinMD target runs. -->
   <Target
-    Name="FixLinkAdditionalLibraryDirectories"
+    Name="FixAdditionalLibraryDirectoriesWinMD"
     DependsOnTargets="$(ComputeLinkInputsTargets)"
+    BeforeTargets="CreateWinMD">
+
+    <ItemGroup>
+      <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+        <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
+      </Link>
+    </ItemGroup>
+
+  </Target>
+
+  <!-- The build process for XAML files adds Link item(s) in between the execution of CreateWinMD and Link targets.
+       These items need to be updated with our AdditionalLibraryDirectories. Otherwise, a mismatch of
+       metadata will result in multiple invocations of link.exe due to task batching. -->
+  <Target
+    Name="FixAdditionalLibraryDirectoriesLink"
+    DependsOnTargets="FixAdditionalLibraryDirectoriesWinMD"
     BeforeTargets="Link">
 
     <ItemGroup>
-      <Link>
-        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</AdditionalLibraryDirectories>
+      <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+        <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
       </Link>
     </ItemGroup>
 
