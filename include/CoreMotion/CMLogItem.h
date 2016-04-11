@@ -21,5 +21,5 @@
 
 COREMOTION_EXPORT_CLASS
 @interface CMLogItem : NSObject <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) NSTimeInterval timestamp STUB_PROPERTY;
+@property (readonly, nonatomic) NSTimeInterval timestamp;
 @end

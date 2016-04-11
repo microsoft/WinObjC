@@ -14,53 +14,18 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#import <CoreMotion/CMAccelerometerData.h>
-#import <StubReturn.h>
-#import "CMLogItemInternal.h"
+#import "UWP/WindowsFoundation.h"
 
-@implementation CMAccelerometerData
+@interface CMAccelerometerData ()
+- (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time;
+@end
 
-- (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time {
+@interface CMGyroData ()
+- (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time;
+@end
 
-    if (self = [super initWithTimestamp:time]) {
-        _acceleration.x = x;
-        _acceleration.y = y;
-        _acceleration.z = z;
-    }
-
-    return self;
-}
-
-
-/**
-@Status Stub
-*/
-- (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-*/
-+ (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-*/
-- (instancetype)initWithCoder:(NSCoder*)decoder {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
-@Status Stub
-*/
-- (void)encodeWithCoder:(NSCoder*)encoder {
-    UNIMPLEMENTED();
-}
+@interface CMMagnetometerData ()
+- (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time;
 @end

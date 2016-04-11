@@ -38,5 +38,5 @@ typedef struct {
 
 COREMOTION_EXPORT_CLASS
 @interface CMMagnetometerData : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMMagneticField magneticField STUB_PROPERTY;
+@property (readonly, nonatomic) CMMagneticField magneticField;
 @end
