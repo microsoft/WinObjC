@@ -5,7 +5,12 @@
     <TargetOsAndVersion Condition="'$(TargetOsAndVersion)'==''">Universal Windows</TargetOsAndVersion>
     <UseStarboardSourceSdk>true</UseStarboardSourceSdk>
   </PropertyGroup>
+
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)starboard-sdk.props" />
   </ImportGroup>
+
+  <PropertyGroup>
+    <StripAppContainerBit>true</StripAppContainerBit>
+  </PropertyGroup>
 </Project>

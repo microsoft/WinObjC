@@ -45,7 +45,7 @@
 
   <Target
     Name="HandleExplicitLibs"
-    Condition="'$(ConfigurationType)' == 'Application'"
+    Condition="'$(CopyStarboardLibraries)' == 'true'"
     BeforeTargets="SBResourcePackage"
     AfterTargets="Link">
 
@@ -59,7 +59,7 @@
 
   <Target
     Name="ComputeLibsToCopy"
-    Condition="'$(ConfigurationType)' == 'Application'"
+    Condition="'$(CopyStarboardLibraries)' == 'true'"
     BeforeTargets="SBResourcePackage"
     AfterTargets="Link">
 
@@ -131,9 +131,9 @@
       <StarboardAllLibDirs>$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</StarboardAllLibDirs>
     </PropertyGroup>
 
-    <!-- Print which WinObjC libraries will be used, when building an Application -->
+    <!-- Print which WinObjC libraries will be used, when copying dependent libraries -->
     <Message
-      Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(ConfigurationType)' == 'Application'"
+      Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(CopyStarboardLibraries)' == 'true'"
       Importance="High"
       Text="Using $(StarboardCRTConfig) WinObjC libraries due to $(StarboardCRT) CRT." />
 
