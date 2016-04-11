@@ -25,6 +25,9 @@
     <ProjectReference Include="..\..\..\Foundation\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj">
+      <Project>{BC8C5D49-060C-4375-904C-FE472C757E58}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Logging\lib\LoggingLib.vcxproj">
       <Project>{D3500720-CF56-43AB-A9D6-9DC119A411B8}</Project>
     </ProjectReference>
@@ -241,9 +244,9 @@
     <ClCompile Include="$(StarboardBasePath)\tests\unittests\EntryPoint.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSObject_NSCoding.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\Frameworks\UnifiedFoundation\Foundation\NSKeyValueCoding.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
   </ItemGroup>

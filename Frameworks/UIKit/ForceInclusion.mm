@@ -24,7 +24,7 @@
 #include "UITableViewCellContentView.h"
 #include "UIClassSwapper.h"
 #include "../QuartzCore/CATransaction.h"
-#include "../UnifiedFoundation/Foundation/NSColor.h"
+#include "../Foundation/NSColor.h"
 
 extern "C" void NSObjForceinclude();
 void NSStringForceinclude();
