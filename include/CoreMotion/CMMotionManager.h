@@ -66,13 +66,14 @@ COREMOTION_EXPORT_CLASS
 @property (readonly, nonatomic, getter=isGyroAvailable) BOOL gyroAvailable;
 @property (readonly, nonatomic) CMGyroData* gyroData;
 
-@property (assign, nonatomic) NSTimeInterval magnetometerUpdateInterval STUB_PROPERTY;
-- (void)startMagnetometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMMagnetometerHandler)handler STUB_METHOD;
-- (void)startMagnetometerUpdates STUB_METHOD;
-- (void)stopMagnetometerUpdates STUB_METHOD;
-@property (readonly, nonatomic, getter=isMagnetometerActive) BOOL magnetometerActive STUB_PROPERTY;
-@property (readonly, nonatomic, getter=isMagnetometerAvailable) BOOL magnetometerAvailable STUB_PROPERTY;
-@property (readonly) CMMagnetometerData* magnetometerData STUB_PROPERTY;
+@property (assign, nonatomic) NSTimeInterval magnetometerUpdateInterval;
+- (void)startMagnetometerUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMMagnetometerHandler)handler;
+- (void)startMagnetometerUpdates;
+- (void)stopMagnetometerUpdates;
+@property (readonly, nonatomic, getter=isMagnetometerActive) BOOL magnetometerActive;
+@property (readonly, nonatomic, getter=isMagnetometerAvailable) BOOL magnetometerAvailable;
+@property (readonly, nonatomic) CMMagnetometerData* magnetometerData;
+
 @property (assign, nonatomic) BOOL showsDeviceMovementDisplay STUB_PROPERTY;
 @property (assign, nonatomic) NSTimeInterval deviceMotionUpdateInterval STUB_PROPERTY;
 - (void)startDeviceMotionUpdatesUsingReferenceFrame:(CMAttitudeReferenceFrame)referenceFrame

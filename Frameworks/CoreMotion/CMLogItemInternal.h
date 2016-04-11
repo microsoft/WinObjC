@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016 Intel Corporation. All rights reserved.
+// Copyright (c) 2016 Intel Corporation.  All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,11 +16,6 @@
 //******************************************************************************
 #pragma once
 
-@interface CMAccelerometerData ()
-- (instancetype)initWithValues:(double)x y:(double)y z:(double)z;
+@interface CMLogItem()
+- (instancetype)initWithTimestamp:(double)time;
 @end
-
-@interface CMGyroData ()
-- (instancetype)initWithValues:(double)x y:(double)y z:(double)z;
-@end
-

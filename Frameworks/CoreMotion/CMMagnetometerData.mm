@@ -16,8 +16,22 @@
 
 #import <CoreMotion/CMMagnetometerData.h>
 #import <StubReturn.h>
+#import "CMLogItemInternal.h"
 
 @implementation CMMagnetometerData
+
+-(instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time {
+
+    if (self = [super initWithTimestamp:time]) {
+        _magneticField.x = x;
+        _magneticField.y = y;
+        _magneticField.z = z;
+    }
+
+    return self;
+}
+
+
 /**
 @Status Stub
 */

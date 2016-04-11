@@ -31,6 +31,7 @@
     buttonLength = 72;
     accHeight = 80;
     gyroHeight = 280;
+    magnetoHeight = 480;
 
     motionManager = [[CMMotionManager alloc] init];
     
@@ -42,7 +43,7 @@
         accLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 80, 300, 50)];
         [accLabel setBackgroundColor:nil];
         [accLabel setText:@"Accelerometer Not Available!"];
-        [accLabel setTextAlignment:UITextAlignmentLeft];
+        [accLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:accLabel];
     }
 
@@ -54,8 +55,20 @@
         gyroLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 280, 300, 50)];
         [gyroLabel setBackgroundColor:nil];
         [gyroLabel setText:@"Gyrometer Not Available!"];
-        [gyroLabel setTextAlignment:UITextAlignmentLeft];
+        [gyroLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:gyroLabel];
+    }
+    
+    if (motionManager.isMagnetometerAvailable) {
+        magnetoQueue = [[NSOperationQueue alloc] init];
+        motionManager.magnetometerUpdateInterval = 0.016;
+        [self setupMagnetometer];
+    } else {
+        magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 480, 300, 50)];
+        [magnetoLabel setBackgroundColor:nil];
+        [magnetoLabel setText:@"Magnetometer Not Available!"];
+        [magnetoLabel setTextAlignment:NSTextAlignmentLeft];
+        [scrollView addSubview:magnetoLabel];
     }
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -107,8 +120,7 @@
 
 
 -(void)accStopUpdates {
-    dispatch_queue_t backgroundQueue = dispatch_queue_create("stop", NULL);
-    dispatch_async(backgroundQueue, ^{ [motionManager stopAccelerometerUpdates]; }); 
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{ [motionManager stopAccelerometerUpdates]; }); 
 }
 
 
@@ -136,11 +148,12 @@
 -(void)accUpdateButtonPressed:(UIButton*)button {
 
     if ([motionManager isAccelerometerActive]) { 
+        CMAccelerometerData* accelerometerData = motionManager.accelerometerData;
         dispatch_async(dispatch_get_main_queue(), ^{
             [accVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
-                motionManager.accelerometerData.acceleration.x, 
-                motionManager.accelerometerData.acceleration.y,
-                motionManager.accelerometerData.acceleration.z]];
+                accelerometerData.acceleration.x, 
+                accelerometerData.acceleration.y,
+                accelerometerData.acceleration.z]];
         });
     }
 }
@@ -203,8 +216,7 @@
 
 
 -(void)gyroStopUpdates {
-    dispatch_queue_t backgroundQueue = dispatch_queue_create("stopGyro", NULL);
-    dispatch_async(backgroundQueue, ^{ [motionManager stopGyroUpdates]; });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{ [motionManager stopGyroUpdates]; });
 }
 
 
@@ -231,12 +243,13 @@
 
 -(void)gyroUpdateButtonPressed:(UIButton*)button {
 
-    if ([motionManager isGyroActive]) { 
+    if ([motionManager isGyroActive]) {
+        CMGyroData* gyroData = motionManager.gyroData; 
         dispatch_async(dispatch_get_main_queue(), ^{
             [gyroVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
-                motionManager.gyroData.rotationRate.x, 
-                motionManager.gyroData.rotationRate.y,
-                motionManager.gyroData.rotationRate.z]];
+                gyroData.rotationRate.x, 
+                gyroData.rotationRate.y,
+                gyroData.rotationRate.z]];
         });
     }
 }
@@ -251,6 +264,102 @@
     } else {
         gyroUpdateButton.enabled = YES;
         [motionManager startGyroUpdates];
+    }
+}
+
+
+// Methods for Magnetometer
+-(void)setupMagnetometer {
+    magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, magnetoHeight - 5, 150, 50)];
+    [magnetoLabel setBackgroundColor:[UIColor whiteColor]];
+    [magnetoLabel setText:@"Magnetometer"];
+    [magnetoLabel setTextAlignment:NSTextAlignmentLeft];
+    [scrollView addSubview:magnetoLabel];
+
+    magnetoStartButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [magnetoStartButton setTitle:@"Start" forState:UIControlStateNormal];
+    magnetoStartButton.frame = CGRectMake(100, magnetoHeight + 50, buttonLength, 40);
+    [magnetoStartButton addTarget:self action:@selector(magnetoStartButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:magnetoStartButton];
+
+    magnetoStopButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [magnetoStopButton setTitle:@"Stop" forState:UIControlStateNormal];
+    magnetoStopButton.frame = CGRectMake(180, magnetoHeight + 50, buttonLength, 40);
+    magnetoStopButton.enabled = NO;
+    [magnetoStopButton addTarget:self action:@selector(magnetoStopButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:magnetoStopButton];
+
+    NSArray* segmentTextContent = [NSArray arrayWithObjects:@"with Handler", @"without Handler", nil];
+    magnetoHandlerSegment = [[UISegmentedControl alloc] initWithItems:segmentTextContent];
+    magnetoHandlerSegment.frame = CGRectMake(130, magnetoHeight, buttonLength * 3 + 20, 40);
+    [magnetoHandlerSegment addTarget:self action:@selector(magnetoStopButtonPressed:) forControlEvents:UIControlEventValueChanged];
+    magnetoHandlerSegment.selectedSegmentIndex = 0;
+    [scrollView addSubview:magnetoHandlerSegment];
+
+    magnetoUpdateButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [magnetoUpdateButton setTitle:@"Poll Values" forState:UIControlStateNormal];
+    magnetoUpdateButton.frame = CGRectMake(270, magnetoHeight + 50, buttonLength * 1.3f, 40);
+    [magnetoUpdateButton addTarget:self action:@selector(magnetoUpdateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    magnetoUpdateButton.enabled = NO;
+    [scrollView addSubview:magnetoUpdateButton];
+
+    magnetoVal = [[UILabel alloc] initWithFrame:CGRectMake(0, magnetoHeight + 100, 350, 40)];
+    [magnetoVal setBackgroundColor:[UIColor whiteColor]];
+    [magnetoVal setText:@"X: 0.000        Y: 0.000        Z: 0.000"];
+    [magnetoVal setTextAlignment:NSTextAlignmentRight];
+    [scrollView addSubview:magnetoVal];
+}
+
+
+-(void)magnetoStopUpdates {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{ [motionManager stopMagnetometerUpdates]; });
+}
+
+
+-(void)magnetoStartUpdatesWithHandler {
+    [motionManager startMagnetometerUpdatesToQueue:magnetoQueue withHandler:^(CMMagnetometerData* magnetometerData, NSError* error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [magnetoVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f", 
+                magnetometerData.magneticField.x, magnetometerData.magneticField.y, magnetometerData.magneticField.z]];
+         });         
+    }];
+}
+
+
+-(void)magnetoStopButtonPressed:(UIButton*)button {
+
+    if ([motionManager isMagnetometerActive]) {
+        magnetoStartButton.enabled = YES;
+        magnetoStopButton.enabled = NO;
+        magnetoUpdateButton.enabled = NO;
+        [self magnetoStopUpdates];
+    }
+}
+
+    
+-(void)magnetoUpdateButtonPressed:(UIButton*)button {
+
+    if ([motionManager isMagnetometerActive]) {
+        CMMagnetometerData* magnetometerData = motionManager.magnetometerData;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [magnetoVal setText:[NSString stringWithFormat:@"X: %.3f        Y: %.3f        Z: %.3f",
+                magnetometerData.magneticField.x, 
+                magnetometerData.magneticField.y,
+                magnetometerData.magneticField.z]];
+        });
+    }
+}
+            
+
+-(void)magnetoStartButtonPressed:(UIButton*)button {
+    magnetoStartButton.enabled = NO;
+    magnetoStopButton.enabled = YES;
+
+    if (magnetoHandlerSegment.selectedSegmentIndex == 0) {
+        [self magnetoStartUpdatesWithHandler];
+    } else {
+        magnetoUpdateButton.enabled = YES;
+        [motionManager startMagnetometerUpdates];
     }
 }
 
