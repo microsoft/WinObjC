@@ -86,7 +86,7 @@ void VerifyDataWithJSONObjectThrows(id testObject) {
     ASSERT_ANY_THROW([NSJSONSerialization dataWithJSONObject:testObject options:0 error:&err]);
 }
 
-TEST(Foundation, JSONObjectWithDataTests) {
+TEST(NSJSON, JSONObjectWithDataTests) {
     NSString* testString1 = @"1";
     NSString* testString2 = @"false";
     NSString* testString3 = @"foo";
@@ -118,7 +118,7 @@ TEST(Foundation, JSONObjectWithDataTests) {
     ASSERT_NO_THROW([NSJSONSerialization JSONObjectWithData:[testString1 dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nullptr]);
 }
 
-TEST(Foundation, DataWithJSONObjectTests) {
+TEST(NSJSON, DataWithJSONObjectTests) {
     id testObject1 = nil;
     id testObject2 = [NSNumber numberWithBool:NO];
     id testObject3 = [NSNumber numberWithInteger:1];
@@ -144,7 +144,7 @@ TEST(Foundation, DataWithJSONObjectTests) {
     ASSERT_NO_THROW([NSJSONSerialization dataWithJSONObject:testObject5 options:0 error:nullptr]);
 }
 
-TEST(Foundation, ValidJSONObjectTests) {
+TEST(NSJSON, ValidJSONObjectTests) {
     id testObject1 = nil;
     id testObject2 = [NSNumber numberWithBool:NO];
     id testObject3 = @[ @1, @2, @3, @4, (NSNumber*)kCFNumberNaN ];

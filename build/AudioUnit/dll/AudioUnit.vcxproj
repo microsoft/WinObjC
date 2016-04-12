@@ -25,9 +25,6 @@
     <None Include="AudioUnit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\lib\AudioUnitLib.vcxproj">
       <Project>{9480DE11-8D5F-4AAA-A9E7-6BB1922BF8EA}</Project>
     </ProjectReference>

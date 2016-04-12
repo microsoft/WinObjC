@@ -45,11 +45,13 @@
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>Logging</OutputName>
+    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <LinkWithFoundation>false</LinkWithFoundation>
     <LinkWithStarboard>false</LinkWithStarboard>
+    <LinkWithLogging>false</LinkWithLogging>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />

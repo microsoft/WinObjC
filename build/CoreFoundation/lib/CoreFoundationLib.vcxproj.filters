@@ -1,0 +1,571 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{d2a6c7b3-47ff-43ee-a7f9-c8667ac74c24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AppServices">
+      <UniqueIdentifier>{db626cd4-ed21-46c7-99a5-a8e4dc4489e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CharacterSets">
+      <UniqueIdentifier>{ce4383b0-592b-493d-8bc1-884eb5bd9431}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collections">
+      <UniqueIdentifier>{916789ec-7adf-40d3-a44d-d2cb4827eb07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Error">
+      <UniqueIdentifier>{418032f7-59ef-44d3-b0d8-b2fa48c4f1f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Locale">
+      <UniqueIdentifier>{a9500915-cd65-4f6f-a1ff-1d6f098b974b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NumberDate">
+      <UniqueIdentifier>{869e4468-daa7-4280-80db-d633c35e9c20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parsing">
+      <UniqueIdentifier>{efb4acd9-f926-4a05-9549-37d8590dcecb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin">
+      <UniqueIdentifier>{a10c72f4-0ab9-419b-ae81-0bfe956fb440}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Preferences">
+      <UniqueIdentifier>{61aa1dfe-b4a6-4770-b7ca-8c52c2f9dc5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RunLoop">
+      <UniqueIdentifier>{409ea52b-3a48-4688-ad79-a2ce04e0ebda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stream">
+      <UniqueIdentifier>{662b7d2d-c3f8-4592-8d5a-1dd9c5e5ead0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{42788aab-eb98-44ad-b41a-d0456d438239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StringEncodings">
+      <UniqueIdentifier>{e2875055-a41b-4269-8b4a-79fd281fbfb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="URL">
+      <UniqueIdentifier>{2eb35400-9b45-4ac8-b5c2-287e0c34e056}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFAvailability.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBase.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFByteOrder.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFInternal.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFLogUtilities.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFPriv.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFUtilities.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFUUID.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\ForFoundationOnly.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\ForSwiftFoundationOnly.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\AppServices.subproj\CFUserNotification.h">
+      <Filter>AppServices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFArray.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBag.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBasicHash.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBinaryHeap.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBitVector.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFData.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFDictionary.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFSet.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFStorage.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFTree.h">
+      <Filter>Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Error.subproj\CFError.h">
+      <Filter>Error</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Error.subproj\CFError_Private.h">
+      <Filter>Error</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFCalendar.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFDateFormatter.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFICULogging.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFLocale.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFLocaleInternal.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFNumberFormatter.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFStringLocalizedFormattingInternal.h">
+      <Filter>Locale</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURL.h">
+      <Filter>URL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURL.inc.h">
+      <Filter>URL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLAccess.h">
+      <Filter>URL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLComponents.h">
+      <Filter>URL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLComponents_Internal.h">
+      <Filter>URL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLPriv.h">
+      <Filter>URL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFICUConverters.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFStringEncodingConverter.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFStringEncodingConverterExt.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFStringEncodingConverterPriv.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFStringEncodingDatabase.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUniChar.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUniCharPriv.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUnicodeDecomposition.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUnicodePrecomposition.h">
+      <Filter>StringEncodings</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFAttributedString.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFBurstTrie.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFCharacterSet.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFCharacterSetPriv.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFRegularExpression.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFRunArray.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFString.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringDefaultEncoding.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringEncodingExt.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringLocalizedFormattingInternal.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFStream.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFStreamAbstract.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFStreamInternal.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFStreamPriv.h">
+      <Filter>Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFMachPort.h">
+      <Filter>RunLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFMessagePort.h">
+      <Filter>RunLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFRunLoop.h">
+      <Filter>RunLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFSocket.h">
+      <Filter>RunLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Preferences.subproj\CFPreferences.h">
+      <Filter>Preferences</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_BinaryTypes.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_Internal.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundlePriv.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn_Factory.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugInCOM.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFPropertyList.h">
+      <Filter>Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInputStream.h">
+      <Filter>Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInterface.h">
+      <Filter>Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLNode.h">
+      <Filter>Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLParser.h">
+      <Filter>Parsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFBigNumber.h">
+      <Filter>NumberDate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFDate.h">
+      <Filter>NumberDate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFNumber.h">
+      <Filter>NumberDate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFTimeZone.h">
+      <Filter>NumberDate</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFBase.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFFileUtilities.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFPlatform.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFSortFunctions.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFSystemDirectories.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFUtilities.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\CFUUID.c">
+      <Filter>Base</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFArray.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBag.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBasicHash.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBinaryHeap.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFBitVector.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFData.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFDictionary.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFSet.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFStorage.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Collections.subproj\CFTree.c">
+      <Filter>Collections</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Error.subproj\CFError.c">
+      <Filter>Error</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFCalendar.c">
+      <Filter>Locale</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFDateFormatter.c">
+      <Filter>Locale</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFLocale.c">
+      <Filter>Locale</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFLocaleIdentifier.c">
+      <Filter>Locale</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFLocaleKeys.c">
+      <Filter>Locale</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Locale.subproj\CFNumberFormatter.c">
+      <Filter>Locale</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURL.c">
+      <Filter>URL</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLAccess.c">
+      <Filter>URL</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLComponents.c">
+      <Filter>URL</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\URL.subproj\CFURLComponents_URIParser.c">
+      <Filter>URL</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFBuiltinConverters.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFICUConverters.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFPlatformConverters.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFStringEncodingConverter.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFStringEncodingDatabase.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUniChar.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUnicodeDecomposition.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\StringEncodings.subproj\CFUnicodePrecomposition.c">
+      <Filter>StringEncodings</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFBurstTrie.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFCharacterSet.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFRegularExpression.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFString.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringEncodings.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringScanner.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringTransform.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFStringUtilities.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFConcreteStreams.c">
+      <Filter>Stream</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFSocketStream.c">
+      <Filter>Stream</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Stream.subproj\CFStream.c">
+      <Filter>Stream</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFRunLoop.c">
+      <Filter>RunLoop</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\RunLoop.subproj\CFSocket.c">
+      <Filter>RunLoop</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Preferences.subproj\CFApplicationPreferences.c">
+      <Filter>Preferences</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Preferences.subproj\CFPreferences.c">
+      <Filter>Preferences</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_Binary.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_Grok.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_InfoPlist.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_Locale.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_Resources.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundle_Strings.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn_Factory.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn_Instance.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\PlugIn.subproj\CFPlugIn_PlugIn.c">
+      <Filter>Plugin</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFBinaryPList.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFOldStylePList.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFPropertyList.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInputStream.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLInterface.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLNode.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLParser.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\Parsing.subproj\CFXMLTree.c">
+      <Filter>Parsing</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFBigNumber.c">
+      <Filter>NumberDate</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFDate.c">
+      <Filter>NumberDate</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFNumber.c">
+      <Filter>NumberDate</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\NumberDate.subproj\CFTimeZone.c">
+      <Filter>NumberDate</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFAttributedString.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFRunArray.c">
+      <Filter>String</Filter>
+    </ClangCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\DarwinSymbolAliases">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\linux.modulemap">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\module.modulemap">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\Base.subproj\SymbolAliases">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\CharacterSets\CFCharacterSetBitmaps.bitmap">
+      <Filter>CharacterSets</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\CharacterSets\CFUniCharPropertyDatabase.data">
+      <Filter>CharacterSets</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\CharacterSets\CFUnicodeData-B.mapping">
+      <Filter>CharacterSets</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\CharacterSets\CFUnicodeData-L.mapping">
+      <Filter>CharacterSets</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFCharacterSetData.S">
+      <Filter>String</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFUniCharPropertyDatabase.S">
+      <Filter>String</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\String.subproj\CFUnicodeDataL.S">
+      <Filter>String</Filter>
+    </None>
+    <None Include="..\..\..\Frameworks\CoreFoundation\Info.plist" />
+    <None Include="..\..\..\Frameworks\CoreFoundation\linux.ld" />
+  </ItemGroup>
+</Project>

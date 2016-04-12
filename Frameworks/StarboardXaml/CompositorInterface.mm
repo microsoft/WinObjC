@@ -23,6 +23,7 @@
 #import "UIColorInternal.h"
 #import "QuartzCore\CATransform3D.h"
 #import "Quaternion.h"
+#import <algorithm>
 #import <deque>
 #import <map>
 #import <memory>
@@ -1623,13 +1624,14 @@ public:
                 for (int i = 0; i < [pointerDevices count]; i++) {
                     WFRect* screenRect = [(WDIPointerDevice*)[pointerDevices objectAtIndex:i] screenRect];
                     float hostScreenScale = [UIApplication displayMode].hostScreenScale;
-                    maxDimension = max(maxDimension, max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
+                    maxDimension =
+                        std::max(maxDimension, std::max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
                 }
 
                 // We can't know whether the app will be rotated, or moved from screen to screen. We have to take the
                 // worst case scenario, and set the scale using the maximum possible dimension.
 
-                float maxScreenDimension = max([UIApplication displayMode].fixedWidth, [UIApplication displayMode].fixedHeight);
+                float maxScreenDimension = std::max([UIApplication displayMode].fixedWidth, [UIApplication displayMode].fixedHeight);
 
                 if (maxDimension == 0) {
                     TraceWarning(TAG, L"Could not determine screen size, defaulting to a screenScale of 2!");

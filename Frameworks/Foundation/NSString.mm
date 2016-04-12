@@ -31,7 +31,6 @@
 #import <Starboard/String.h>
 #import "LoggingNative.h"
 #import "NSStringInternal.h"
-#import "NSArrayInternal.h"
 
 static const wchar_t* TAG = L"NSString";
 
@@ -2070,48 +2069,44 @@ typedef NSUInteger NSStringCompareOptions;
     }
 
     curPos = 0;
-    id* objects = (id*)IwMalloc(count * sizeof(id));
+    StrongId<NSMutableArray> objects;
+    objects.attach([NSMutableArray new]);
     int objOut = 0;
 
     for (;;) {
         int pos = str1.indexOf(str2, curPos);
         if (pos == -1) {
             //  Add what's left
-            NSString* toAdd = nil;
+            StrongId<NSString> toAdd;
 
             if (len - curPos == 0) {
-                toAdd = @"";
+                toAdd.attach(@"");
             } else {
                 UnicodeString subStr(str1, curPos, len - curPos);
-                toAdd = [NSString alloc];
+                toAdd.attach([NSString alloc]);
                 setToUnicode(toAdd, subStr);
             }
 
-            objects[objOut++] = toAdd;
+            [objects addObject:toAdd];
             break;
         }
 
-        NSString* toAdd = nil;
+        StrongId<NSString> toAdd;
 
         if (pos - curPos == 0) {
-            toAdd = @"";
+            toAdd.attach(@"");
         } else {
             UnicodeString subStr(str1, curPos, pos - curPos);
-            toAdd = [NSString alloc];
+            toAdd.attach([NSString alloc]);
             setToUnicode(toAdd, subStr);
         }
 
-        objects[objOut++] = toAdd;
+        [objects addObject:toAdd];
 
         curPos = pos + str2.length();
     }
 
-    NSArray* ret = [NSArray alloc];
-    [ret _initWithObjectsTakeOwnership:objects count:objOut];
-
-    IwFree(objects);
-
-    return [ret autorelease];
+    return [objects.detach() autorelease];
 }
 
 /**
@@ -2942,9 +2937,12 @@ const int s_oneByte = 16;
  @Status Caveat
  @Notes Only UTF-8 is supported
 */
-- (NSString*)stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
-    return [static_cast<NSString*>(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
-        nullptr, reinterpret_cast<CFStringRef>(self), nullptr, CFStringConvertNSStringEncodingToEncoding(encoding))) autorelease];
+- (NSString*)stringByReplacingPercentEscapesUsingEncoding:(DWORD)encoding {
+    return (NSString*)[CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
+        nullptr,
+        static_cast<CFStringRef>(CFAutorelease(CFStringCreateWithCString(nullptr, [self UTF8String], NSUTF8StringEncoding))),
+        CFSTR(""),
+        CFStringConvertNSStringEncodingToEncoding(encoding)) autorelease];
 }
 
 /**

@@ -25,8 +25,8 @@
     <None Include="CoreMIDI.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
     <ProjectReference Include="..\lib\CoreMIDILib.vcxproj">
       <Project>{D6701AFA-9CBC-4F78-90CC-10F3CF7C07A5}</Project>

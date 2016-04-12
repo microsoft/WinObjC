@@ -19,6 +19,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
+#import <CoreFoundation/CFAttributedString.h>
 
 #include <functional>
 
@@ -67,7 +68,10 @@ protected:
         CTFontRef fontRef = CTFontCreateWithName(static_cast<CFStringRef>(font.fontName), font.pointSize, NULL);
         ASSERT_TRUE_MSG(fontRef != nullptr, "FAILED: Could not create font!");
 
-        CFAttributedStringSetAttribute(_attributedStringRef, currentRange, kCTFontAttributeName, fontRef);
+        CFAttributedStringSetAttribute(const_cast<__CFAttributedString*>(_attributedStringRef),
+                                       currentRange,
+                                       kCTFontAttributeName,
+                                       fontRef);
         _framesetter = CTFramesetterCreateWithAttributedString(_attributedStringRef);
         ASSERT_TRUE_MSG(_framesetter != nullptr, "FAILED: Could not create frame setter!");
 

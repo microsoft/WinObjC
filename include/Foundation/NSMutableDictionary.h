@@ -28,7 +28,6 @@ FOUNDATION_EXPORT_CLASS
 @interface NSMutableDictionary : NSDictionary <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
 + (instancetype)dictionaryWithCapacity:(NSUInteger)numItems;
 - (instancetype)initWithCapacity:(NSUInteger)numItems;
-- (instancetype)init;
 + (NSMutableDictionary*)dictionaryWithSharedKeySet:(id)keyset STUB_METHOD;
 - (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey;
 - (void)setObject:(id)object forKeyedSubscript:(id<NSCopying>)aKey;

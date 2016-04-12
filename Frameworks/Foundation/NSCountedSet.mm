@@ -15,18 +15,99 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Foundation/NSMutableSet.h"
-
-NSUInteger NSSetTableGetValue(NSSet* set, id object);
+#include <Foundation/NSCountedSet.h>
+#include "NSCountedSetConcrete.h"
+#include "NSRaise.h"
 
 @implementation NSCountedSet
+
++ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSCountedSet, NSCountedSetConcrete);
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCapacity:(unsigned)capacity {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)countForObject:(id)object {
-    NSUInteger count = NSSetTableGetValue(self, object);
-    return count;
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (unsigned)count {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSEnumerator*)objectEnumerator {
+    // TODO: As an optimization, create a parallel implementation of this function, so that subclasses will not have to override this
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)member:(id)object {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)addObject:(id)object {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObject:(id)object {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeAllObjects {
+    // TODO: As an optimization, create a parallel implementation of this function, so that subclasses will not have to override this
+    NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [[[self class] alloc] initWithSet:self];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
+    // NSCountedSet is derived from NSMutableSet
+    return [self copy];
 }
 
 @end

@@ -19,7 +19,7 @@
 #import <CoreVideo/CVPixelBuffer.h>
 #import <CoreFoundation/CFBase.h>
 #import <CoreFoundation/CFDictionary.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFString.h>
 
 typedef struct _CVPixelBufferPool* CVPixelBufferPoolRef;

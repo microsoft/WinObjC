@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+        <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>

@@ -23,7 +23,7 @@ void testNSURLMethod(SEL selector, NSURL* input, id argument, NSURL* expected) {
     ASSERT_OBJCEQ_MSG(expected, actual, "FAILED: expected != actual");
 }
 
-TEST(NSFoundation, NSURLTests) {
+TEST(NSURL, NSURLTests) {
     NSURL* testURL = [[NSURL alloc] initWithString:@"http://www.test.com/home/index.html?Foo#24"];
     NSURL* testURL2 = [[NSURL alloc] initWithString:@"http://www.test.com/"];
     NSURL* testURL3 = [[NSURL alloc] initWithString:@"http://www.test.com/home/asdf/./index.html?Foo#24"];
@@ -159,7 +159,7 @@ TEST(NSFoundation, NSURLTests) {
     [testURL7 release];
 }
 
-TEST(NSFoundation, NSURL_URLByAppendingPathComponent) {
+TEST(NSURL, URLByAppendingPathComponent) {
     NSURL* fileURL = [NSURL fileURLWithPath:@"."];
     NSURL* newFileURL = [fileURL URLByAppendingPathComponent:@"Hello.txt"];
     ASSERT_TRUE_MSG([newFileURL isFileURL], "The passed URL should be a file URL type");
@@ -170,7 +170,7 @@ TEST(NSFoundation, NSURL_URLByAppendingPathComponent) {
     ASSERT_OBJCEQ_MSG(fileURLString, newFileURLString, "File URLs do not match!");
 }
 
-TEST(NSFoundation, NSURL_URLByAppendingPathExtension) {
+TEST(NSURL, URLByAppendingPathExtension) {
     NSURL* fileURL = [NSURL fileURLWithPath:@"usr"];
     NSURL* newFileURL = [fileURL URLByAppendingPathExtension:@"World.txt"];
     ASSERT_TRUE_MSG([newFileURL isFileURL], "The passed URL should be a file URL type");
@@ -186,7 +186,7 @@ TEST(NSFoundation, NSURL_URLByAppendingPathExtension) {
     ASSERT_OBJCEQ_MSG(fileURLString, newFileURLString, "File URLs do not match!");
 }
 
-TEST(NSFoundation, NSURL_checkResourceIsReachable) {
+TEST(NSURL, checkResourceIsReachable) {
     // construct target URL using current directory and relative URL
     // get test startup full path
     wchar_t startUpPath[_MAX_PATH];

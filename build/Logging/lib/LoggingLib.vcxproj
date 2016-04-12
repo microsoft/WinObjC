@@ -35,6 +35,7 @@
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>LoggingLib</OutputName>
+    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -51,7 +52,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLogging_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -61,7 +62,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLogging_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -71,7 +72,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLogging_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -81,7 +82,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLogging_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DLOGGING_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

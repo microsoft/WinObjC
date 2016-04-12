@@ -27,14 +27,9 @@
 @class NSEnumerator;
 @class NSString;
 
-struct NSSetTable {
-    CFMutableDictionaryRef dict;
-};
-
 FOUNDATION_EXPORT_CLASS
 @interface NSSet : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
-    struct NSSetTable _table;
 }
 
 + (instancetype)set;
@@ -51,7 +46,6 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithObjects:(id _Nonnull const[])objects count:(NSUInteger)cnt;
 - (instancetype)initWithSet:(NSSet*)set;
 - (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag STUB_METHOD;
-- (instancetype)init;
 @property (readonly) NSUInteger count;
 @property (readonly, copy) NSArray* allObjects;
 - (id)anyObject;

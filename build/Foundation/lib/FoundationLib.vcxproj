@@ -71,7 +71,6 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMethodSignature.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableArray.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableAttributedString.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableAttributedStringConcrete.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableCharacterSet.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableData.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableDictionary.mm" />
@@ -210,6 +209,10 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSValueTransformer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSZone.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\CFHelpers.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayConcrete.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryConcrete.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSMutableAttributedStringConcrete.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionaryInternal.h" />
@@ -238,6 +241,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLInternal.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSURLProtocol_file.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSXMLPropertyList.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\BridgeHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSArrayConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSCountedSetConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDataConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSDictionaryConcrete.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSSetConcrete.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</ProjectGuid>
@@ -263,7 +272,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
-      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -271,14 +280,14 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>NO_STUBS;_UNICODE;UNICODE;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_UNICODE;UNICODE;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
-      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -291,7 +300,7 @@
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
-      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -299,14 +308,14 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\include;</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <PreprocessorDefinitions>NO_STUBS;_UNICODE;UNICODE;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;_UNICODE;UNICODE;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
-      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

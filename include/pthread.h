@@ -38,11 +38,13 @@
 /*
  * Header files.
  */
+#include <sys/cdefs.h>
 #include <sys/_pthreadtypes.h>
 #ifdef WOCSTDLIB
+#include <sys/timespec.h>
 #include <sched.h>
 #endif
-#include <time.h>
+//#include <time.h>
 
 /*
  * Run-time invariant values:

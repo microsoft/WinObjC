@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSBundle_SanityTest) {
+TEST(NSBundle, NSBundle_SanityTest) {
     LOG_INFO("NSBundle sanity test: ");
 
     NSString* filePath = @"F:/temp";

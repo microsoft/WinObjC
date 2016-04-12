@@ -701,3 +701,11 @@ extern "C" int pthread_rwlock_unlock(pthread_rwlock_t* mutex) {
     UNIMPLEMENTED();
     return StubReturn();
 }
+
+/**
+@Status Stub
+*/
+extern "C" int pthread_attr_setdetachstate(pthread_attr_t*, int) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}

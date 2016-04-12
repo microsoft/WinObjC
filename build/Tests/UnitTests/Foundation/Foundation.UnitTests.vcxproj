@@ -22,6 +22,9 @@
     <ProjectReference Include="..\..\..\Starboard\dll\Starboard.vcxproj">
       <Project>{0AC27ECF-E2AB-420B-9359-4843FFF4CBFA}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Foundation\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
     </ProjectReference>
@@ -245,12 +248,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSObject_NSCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSArrayConcrete.mm" /> 
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSCountedSetConcrete.mm" /> 
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSDataConcrete.mm" /> 
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSDictionaryConcrete.mm" /> 
+    <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSSetConcrete.mm" /> 
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
   </ItemGroup>
   <ItemGroup>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSDictionaryTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLoggingTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSStringInternalTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSInvocationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\BlockClassTests.mm" />
@@ -259,11 +267,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRecursiveLockTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ArchivalTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFAttributedStringTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBinaryHeapTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFBridgeBaseTests.mm" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFUUIDTests.m" />
-    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFURLTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CoreFoundationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ErrorHandlingTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\FoundationTests.m" />
@@ -313,6 +317,10 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\CFStringTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSIndexSetTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSThreadTests.m" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSArray.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSData.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDictionary.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSSet.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">

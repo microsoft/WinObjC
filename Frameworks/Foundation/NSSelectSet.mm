@@ -168,7 +168,7 @@ static void transferNativeToSetWithOriginals(native_set* sset, id set, id origin
     native_set* activeRead = native_set_new(maxDescriptor);
     native_set* activeWrite = native_set_new(maxDescriptor);
     native_set* activeExcept = native_set_new(maxDescriptor);
-    struct __ws2_timeval timeval;
+    struct timeval timeval;
     NSTimeInterval interval = 1.0;
 
     int numFds = 0;

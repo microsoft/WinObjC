@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSCachedURLResponse.h>
 
-TEST(Foundation, NSCachedURLResponse_initWithResponseAndData) {
+TEST(NSCachedURLResponse, initWithResponseAndData) {
     NSData* data = [NSData data];
     ASSERT_TRUE_MSG(data != NULL, "FAILED: data should be non-null!");
     NSHTTPURLResponse* urlresponse =
@@ -38,7 +38,7 @@ TEST(Foundation, NSCachedURLResponse_initWithResponseAndData) {
     [cachedResponse release];
 }
 
-TEST(Foundation, NSCachedURLResponse_initWithResponseAll) {
+TEST(NSCachedURLResponse, initWithResponseAll) {
     NSData* data = [NSData data];
     NSDictionary* dict = [NSDictionary dictionary];
     ASSERT_TRUE_MSG(data != NULL, "FAILED: data should be non-null!");

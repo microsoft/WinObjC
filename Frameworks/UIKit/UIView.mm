@@ -31,6 +31,7 @@
 #import <Windows.h>
 #import <LoggingNative.h>
 #import <NSLogging.h>
+#import <objc/blocks_runtime.h>
 
 @class UIAppearanceSetter;
 

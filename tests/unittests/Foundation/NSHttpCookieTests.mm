@@ -20,14 +20,15 @@
 // Implemented in NSHTTPCookie.mm
 extern void parseCookies(const char* lineptr, id dict);
 
-TEST(Foundation, ParseCookies) {
+TEST(NSHTTPCookie, ParseCookies) {
     NSMutableDictionary* cookies = [[NSMutableDictionary alloc] initWithCapacity:0];
-    const char line[] = "__cfduid=d1abe44e4920d4f908a73c981d32b74131454529278; expires=Thu, 02-Feb-17 19:54:38 GMT; path=/; domain=.reddit.com; HttpOnly";
+    const char line[] =
+        "__cfduid=d1abe44e4920d4f908a73c981d32b74131454529278; expires=Thu, 02-Feb-17 19:54:38 GMT; path=/; domain=.reddit.com; HttpOnly";
     parseCookies(line, cookies);
 
     ASSERT_EQ([cookies count], 4);
-    ASSERT_TRUE([[cookies valueForKey : @"NSHTTPCookieValue"] isEqual:@"d1abe44e4920d4f908a73c981d32b74131454529278"]);
-    ASSERT_TRUE([[cookies valueForKey : @"NSHTTPCookieName"] isEqual:@"__cfduid"]);
-    ASSERT_TRUE([[cookies valueForKey : @"NSHTTPCookiePath"] isEqual:@"/"]);
-    ASSERT_TRUE([[cookies valueForKey : @"NSHTTPCookieDomain"] isEqual:@"reddit.com"]);
+    ASSERT_TRUE([[cookies valueForKey:@"NSHTTPCookieValue"] isEqual:@"d1abe44e4920d4f908a73c981d32b74131454529278"]);
+    ASSERT_TRUE([[cookies valueForKey:@"NSHTTPCookieName"] isEqual:@"__cfduid"]);
+    ASSERT_TRUE([[cookies valueForKey:@"NSHTTPCookiePath"] isEqual:@"/"]);
+    ASSERT_TRUE([[cookies valueForKey:@"NSHTTPCookieDomain"] isEqual:@"reddit.com"]);
 }

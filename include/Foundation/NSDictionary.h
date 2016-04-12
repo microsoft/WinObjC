@@ -29,30 +29,25 @@
 @class NSDate;
 @class NSNumber;
 
-#define __CFDICTIONARY_SIZE_BYTES (0x54)
-
 FOUNDATION_EXPORT_CLASS
 @interface NSDictionary : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
-    CFMutableDictionaryRef dict;
-    uint32_t _dictSpace[((__CFDICTIONARY_SIZE_BYTES + 3) & ~3) / 4];
 }
 
 + (instancetype)dictionary;
-+ (NSDictionary*)dictionaryWithContentsOfFile:(NSString*)path;
-+ (NSDictionary*)dictionaryWithContentsOfURL:(NSURL*)aURL;
++ (instancetype)dictionaryWithContentsOfFile:(NSString*)path;
++ (instancetype)dictionaryWithContentsOfURL:(NSURL*)aURL;
 + (instancetype)dictionaryWithDictionary:(NSDictionary*)otherDictionary;
 + (instancetype)dictionaryWithObject:(id)anObject forKey:(id<NSCopying>)aKey;
 + (instancetype)dictionaryWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
-+ (instancetype)dictionaryWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
++ (instancetype)dictionaryWithObjects:(id const[])objects forKeys:(id<NSCopying> const[])keys count:(NSUInteger)count;
 + (instancetype)dictionaryWithObjectsAndKeys:(id)firstObject, ...;
-- (instancetype)init;
-- (NSDictionary*)initWithContentsOfFile:(NSString*)path;
-- (NSDictionary*)initWithContentsOfURL:(NSURL*)aURL;
+- (instancetype)initWithContentsOfFile:(NSString*)path;
+- (instancetype)initWithContentsOfURL:(NSURL*)aURL;
 - (instancetype)initWithDictionary:(NSDictionary*)otherDictionary;
 - (instancetype)initWithDictionary:(NSDictionary*)otherDictionary copyItems:(BOOL)flag;
 - (instancetype)initWithObjects:(NSArray*)objects forKeys:(NSArray*)keys;
-- (instancetype)initWithObjects:(id _Nonnull const[])objects forKeys:(id<NSCopying> _Nonnull const[])keys count:(NSUInteger)count;
+- (instancetype)initWithObjects:(id const[])objects forKeys:(id<NSCopying> const[])keys count:(NSUInteger)count;
 - (instancetype)initWithObjectsAndKeys:(id)firstObject, ...;
 + (id)sharedKeySetForKeys:(NSArray*)keys STUB_METHOD;
 @property (readonly) NSUInteger count;
@@ -100,5 +95,5 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)fileType;
 @end
 
-#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" # __VA_ARGS__, __VA_ARGS__, nil)
-FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString *keys, ...);
+#define NSDictionaryOfVariableBindings(...) _NSDictionaryOfVariableBindings(@"" #__VA_ARGS__, __VA_ARGS__, nil)
+FOUNDATION_EXPORT NSDictionary* _NSDictionaryOfVariableBindings(NSString* keys, ...);
