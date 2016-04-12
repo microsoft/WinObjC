@@ -14,24 +14,20 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSMutableString.h>
-#include "_NSCFTemporaryRootObject.h"
 
-// _NSCFTemporaryRootObject will be replaced with NSMutableString at Foundation load time
-FOUNDATION_EXPORT_CLASS
-@interface _NSCFString : _NSCFTemporaryRootObject
-
-- (_Nonnull instancetype)retain;
-- (oneway void)release;
-- (_Nonnull instancetype)autorelease;
-- (NSUInteger)retainCount;
-- (void)dealloc;
-+ (_Nonnull instancetype)allocWithZone:(NSZone* _Nullable)zone;
-
-- (NSUInteger)length;
-- (unichar)characterAtIndex:(NSUInteger)index;
-- (void)getCharacters:(unichar* _Nonnull)buffer range:(NSRange)range;
-- (void)replaceCharactersInRange:(NSRange)range withString:(NSString* _Nonnull)replacement;
-- (_Nonnull instancetype)copyWithZone:(NSZone* _Nullable)zone;
-
+// Placeholder object for certain _NSCF classes' super class object,
+//
+// eg: _NSCFString
+// In order to allow for _NSCFString to eventually have the correct class
+// hierarchy ( NSObject --> NSString --> NSMutableString --> _NSCFString),
+// its initial ivar layout *must* match its eventual layout.
+// Because of this, a temporary "root" class is needed to take the place of
+// NSObject (the only other class in the tree with an ivar). _NSCFTemporaryRootObject
+// is that object and will be replaced at Foundation load time with NSMutableString
+// to reseat _NSCFString correctly in the class tree.
+//
+__attribute__((objc_root_class)) @interface _NSCFTemporaryRootObject {
+@public
+    Class isa;
+}
 @end

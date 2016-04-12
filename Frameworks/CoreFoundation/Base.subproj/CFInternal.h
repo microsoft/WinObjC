@@ -97,6 +97,9 @@
 #include "CFLogUtilities.h"
 #include "CFRuntime.h"
 
+// WINOBJC: Extra includes for bridging
+#include "_NSCFNumber.h"
+
 CF_EXTERN_C_BEGIN
 
 #include <limits.h>
@@ -362,6 +365,11 @@ CF_PRIVATE Boolean __CFProcessIsRestricted();
 // CF_EXPORT void * __CFConstantStringClassReferencePtrPtr;
 // CF_EXPORT void *__CFConstantStringClassReferencePtr[];
 extern "C" Class _OBJC_CLASS__NSCFString;
+
+// WINOBJC: Compilation can't find these class names
+// Needed for class checks against cfisa, _CFRuntimeBridgeTypeToClass
+extern "C" Class _OBJC_CLASS__NSCFNumber;
+extern "C" Class _OBJC_CLASS__NSCFBoolean;
 
 #ifdef __CONSTANT_CFSTRINGS__
 
@@ -689,14 +697,18 @@ CF_INLINE uintptr_t __CFISAForTypeID(CFTypeID typeID) {
 // WINOBJC: helper function to determine if a cf object is a bridged CF object.
 CF_INLINE bool __CF_IsBridgedObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
-    if (!object || (object->_cfisa == 0) || (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString))) {
+    if (!object || 
+        (object->_cfisa == 0) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) || 
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean))) {
         return false;
     }
 
     for (unsigned int i = 0; i < __CFRuntimeClassTableSize; i++) {
         if ((__CFRuntimeObjCClassTable[i] != 0) && 
             ((object->_cfisa == __CFRuntimeObjCClassTable[i]) ||
-            ([(id)(object->_cfisa) isKindOfClass:(Class)(__CFRuntimeObjCClassTable[i])]))) {
+            ([object isKindOfClass:(Class)(__CFRuntimeObjCClassTable[i])]))) {
             return true;
         }
     }
@@ -711,6 +723,8 @@ CF_INLINE bool __CF_IsCFObject(CFTypeRef obj) {
     CFRuntimeBase* object = (CFRuntimeBase*)obj;
     if ((object->_cfisa == 0) || 
         (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFString)) ||
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFNumber)) ||
+        (object->_cfisa == (uintptr_t)(&_OBJC_CLASS__NSCFBoolean)) ||
         __CF_IsBridgedObject(obj)) {
         return true;
     }

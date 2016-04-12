@@ -20,9 +20,6 @@
 #include "_NSCFString.h"
 #include <CoreFoundation/CFString.h>
 
-@implementation _NSCFTemporaryRootObject
-@end
-
 // ignore bridge cast warnings here. _NSCFString will be a subclass of NSString. It just
 // doesn't realize it yet.
 #pragma clang diagnostic push

@@ -80,6 +80,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDictionary.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSNumber.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSSet.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>

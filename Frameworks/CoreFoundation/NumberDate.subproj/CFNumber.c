@@ -20,7 +20,10 @@
 #include "CFPriv.h"
 #include <math.h>
 #include <float.h>
+// WINOBJC: extra includes for bridging
 #include <Foundation/NSNumber.h>
+#include "_NSCFNumber.h"
+#include "CFFoundationInternal.h"
 #include "NSNumberInternal.h"
 
 
@@ -83,6 +86,14 @@ CFTypeID CFBooleanGetTypeID(void) {
     static dispatch_once_t initOnce = 0;
     dispatch_once(&initOnce, ^{
         __kCFBooleanTypeID = _CFRuntimeRegisterClass(&__CFBooleanClass); // initOnce covered
+
+        // WINOBJC: Bridge to NSCFBoolean
+        // The two _CFRuntimeSetInstanceTypeIDAndIsa calls below, set the _cfisa of kCFBooleanTrue & False
+        // By bridging here, that _cfisa is set to that of NSCFBoolean
+        // Placed in this function as this gets called from CFInitialize, 
+        // ensuring this setup before any runtime-created objects can get an incorrect isa
+        _CFRuntimeBridgeTypeToClass(__kCFBooleanTypeID, &_OBJC_CLASS__NSCFBoolean);
+
         _CFRuntimeSetInstanceTypeIDAndIsa(&__kCFBooleanTrue, __kCFBooleanTypeID);
         _CFRuntimeSetInstanceTypeIDAndIsa(&__kCFBooleanFalse, __kCFBooleanTypeID);
     });
@@ -1056,6 +1067,9 @@ CFTypeID CFNumberGetTypeID(void) {
 }
 
 CF_PRIVATE void __CFNumberInitialize(void) {
+    // WINOBJC: Also bridge CFNumber to NSCFNumber here so that all values get the isa set properly.
+    _CFRuntimeBridgeTypeToClass(__kCFNumberTypeID, &_OBJC_CLASS__NSCFNumber);
+
     _CFRuntimeSetInstanceTypeIDAndIsa(&__kCFNumberNaN, __kCFNumberTypeID);
     __CFBitfieldSetValue(__kCFNumberNaN._base._cfinfo[CF_INFO_BITS], 4, 0, kCFNumberFloat64Type);
     __kCFNumberNaN._pad = BITSFORDOUBLENAN;
