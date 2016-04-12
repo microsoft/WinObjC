@@ -22,6 +22,7 @@
 #import <vector>
 #import <Starboard/String.h>
 
+#import "NSObject_NSKeyValueCoding-Internal.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"
 
 /*

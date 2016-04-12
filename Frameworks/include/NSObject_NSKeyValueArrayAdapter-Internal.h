@@ -27,11 +27,3 @@
 @interface _NSMutableKeyProxyArray: NSMutableArray
 + (instancetype)proxyArrayForObject:(id)object key:(NSString*)key ivar:(struct objc_ivar*)ivar;
 @end
-
-struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName);
-SEL KVCGetterForPropertyName(NSObject* self, const char* key);
-bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret);
-bool KVCGetViaIvar(id self, struct objc_ivar* ivar, id* ret);
-SEL KVCSetterForPropertyName(NSObject* self, const char* key);
-bool KVCSetViaAccessor(NSObject* self, SEL setter, id value);
-bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value);
