@@ -106,7 +106,7 @@
  @Status Interoperable
 */
 - (instancetype)mutableCopyWithZone:(NSZone*)zone {
-    return [[[NSMutableURLRequest alloc] _initWithURLRequest:self] autorelease];
+    return [[NSMutableURLRequest alloc] _initWithURLRequest:self];
 }
 
 /**
