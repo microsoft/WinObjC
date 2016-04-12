@@ -70,12 +70,6 @@ void ObjectCache::PushCacheableObject(ICacheableObject^ obj) {
 LayerContent::LayerContent() {
     m_gravity = ContentGravity::Resize;
     m_scaleFactor = 1.0f;
-
-    CAXamlDebugCounters::IncCounter("LayerContent");
-}
-
-LayerContent::~LayerContent() {
-    CAXamlDebugCounters::DecCounter("LayerContent");
 }
 
 void LayerContent::Reset() {
@@ -1245,9 +1239,6 @@ void CALayerXaml::_CreateTransforms() {
         VisualWidth = m_size.Width;
         VisualHeight = m_size.Height;
         m_createdTransforms = true;
-        if (m_createdTransforms) {
-            CAXamlDebugCounters::IncCounter("CALayerXamlTransforms");
-        }
     }
 }
 
@@ -1279,7 +1270,6 @@ void CALayerXaml::SizeChangedCallback(DependencyObject^ d, DependencyPropertyCha
 }
 
 CALayerXaml::CALayerXaml() {
-    CAXamlDebugCounters::IncCounter("CALayerXaml");
     m_invOriginTransform = ref new TranslateTransform();
     m_clipGeometry = ref new RectangleGeometry();
     m_clipGeometry->Transform = m_invOriginTransform;
@@ -1311,13 +1301,6 @@ CALayerXaml::CALayerXaml() {
                                                               Panel::typeid,
                                                               ref new PropertyMetadata((Platform::Object^ )0.0,
                                                                 ref new PropertyChangedCallback(&CALayerXaml::SizeChangedCallback)));
-    }
-}
-
-CALayerXaml::~CALayerXaml() {
-    CAXamlDebugCounters::DecCounter("CALayerXaml");
-    if (m_createdTransforms) {
-        CAXamlDebugCounters::DecCounter("CALayerXamlTransforms");
     }
 }
 
@@ -1767,78 +1750,6 @@ void EventedStoryboard::Animate(CALayerXaml^ layer, String^ propertyName, Object
 
 Object^ EventedStoryboard::GetStoryboard() {
     return m_container;
-}
-
-//
-// CAXamlDebugCounters::Counter
-//
-CAXamlDebugCounters::Counter::Counter() {
-    Updating = false;
-};
-
-void CAXamlDebugCounters::Counter::UpdateText() {
-    if (!Updating) {
-        Updating = true;
-        IAsyncAction^ ret =
-            CAXamlDebugCounters::Instance->Dispatcher->RunAsync(CoreDispatcherPriority::Low,
-                                                                ref new DispatchedHandler([this]() {
-                                                                    if (TextOutput == nullptr) {
-                                                                        TextOutput = ref new TextBlock();
-                                                                        TextOutput->FontSize = 14;
-                                                                        TextOutput->Text = Name;
-                                                                        TextOutput->SetValue(Canvas::LeftProperty, (Object^)0);
-                                                                        TextOutput->SetValue(Canvas::TopProperty,
-                                                                                             (Object^)(30 + Idx * 17.0));
-                                                                        CAXamlDebugCounters::Instance->Children->Append(TextOutput);
-                                                                        CAXamlDebugCounters::Instance->InvalidateArrange();
-                                                                        CAXamlDebugCounters::Instance->InvalidateMeasure();
-                                                                    }
-                                                                    Updating = false;
-                                                                    TextOutput->Text =
-                                                                        ref new String(Strings::Format(L"%s: %d", Name, Count).c_str());
-                                                                }));
-    }
-}
-
-//
-// CAXamlDebugCounters
-//
-CAXamlDebugCounters::Counter^ CAXamlDebugCounters::_GetCounter(String^ name) {
-    Counter^ curCounter;
-
-    if (m_counters.find(name) == m_counters.end()) {
-        curCounter = ref new CAXamlDebugCounters::Counter();
-        curCounter->Count = 0;
-        curCounter->Name = name;
-        curCounter->Idx = m_counters.size();
-        m_counters[name] = curCounter;
-    } else {
-        curCounter = m_counters[name];
-    }
-
-    return curCounter;
-}
-
-void CAXamlDebugCounters::IncCounter(String^ name) {
-    CAXamlDebugCounters::Instance->IncrementCounter(name);
-}
-
-void CAXamlDebugCounters::DecCounter(String^ name) {
-    CAXamlDebugCounters::Instance->DecrementCounter(name);
-}
-
-void CAXamlDebugCounters::IncrementCounter(String^ name) {
-    CAXamlDebugCounters::Counter^ curCounter = _GetCounter(name);
-
-    curCounter->Count++;
-    curCounter->UpdateText();
-}
-
-void CAXamlDebugCounters::DecrementCounter(String^ name) {
-    CAXamlDebugCounters::Counter^ curCounter = _GetCounter(name);
-
-    curCounter->Count--;
-    curCounter->UpdateText();
 }
 
 //
