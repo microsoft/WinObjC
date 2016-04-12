@@ -18,13 +18,6 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-@interface NSKeyedArchiver (Internal)
-- (void)encodeCGPoint:(CGPoint)p forKey:(NSString*)k;
-@end
-@interface NSKeyedUnarchiver (Internal)
-- (CGPoint)decodeCGPointForKey:(NSString*)k;
-@end
-
 @interface TestCreationSignallingClass : NSObject <NSSecureCoding>
 + (void)resetCreationCount;
 @end

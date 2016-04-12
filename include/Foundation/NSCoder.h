@@ -50,14 +50,7 @@ FOUNDATION_EXPORT_CLASS
 - (void)encodeRootObject:(id)rootObject;
 - (void)encodeValueOfObjCType:(const char*)type at:(const void*)addr;
 - (void)encodeValuesOfObjCTypes:(const char*)types, ...;
-- (void)encodeCGPoint:(CGPoint)point forKey:(NSString*)key STUB_METHOD;
-- (void)encodeCGRect:(CGRect)rect forKey:(NSString*)key STUB_METHOD;
-- (void)encodeCGSize:(CGSize)size forKey:(NSString*)key STUB_METHOD;
-// HACKHACK: these should be class extensions in other libraries
-// - (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key;
-// - (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key;
-// - (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key;
-// - (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key;
+//  HACKHACK: these should be class extensions in other libraries
 // - (void)encodeCMTime:(CMTime)time forKey:(NSString*)key;
 // - (void)encodeCMTimeRange:(CMTimeRange)timeRange forKey:(NSString*)key;
 // - (void)encodeCMTimeMapping:(CMTimeMapping)timeMapping forKey:(NSString*)key;
@@ -79,14 +72,7 @@ FOUNDATION_EXPORT_CLASS
 - (id)decodeObjectOfClass:(Class)aClass forKey:(NSString*)key;
 - (id)decodeObjectOfClasses:(NSSet*)classes forKey:(NSString*)key;
 - (id)decodePropertyListForKey:(NSString*)key STUB_METHOD;
-- (CGPoint)decodeCGPointForKey:(NSString*)key STUB_METHOD;
-- (CGRect)decodeCGRectForKey:(NSString*)key STUB_METHOD;
-- (CGSize)decodeCGSizeForKey:(NSString*)key STUB_METHOD;
 // HACKHACK: these should be class extensions in other libraries
-// - (CGAffineTransform)decodeCGAffineTransformForKey:(NSString*)key;
-// - (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString*)key;
-// - (UIOffset)decodeUIOffsetForKey:(NSString*)key;
-// - (CGVector)decodeCGVectorForKey:(NSString*)key;
 // - (CMTime)decodeCMTimeForKey:(NSString*)key;
 // - (CMTimeRange)decodeCMTimeRangeForKey:(NSString*)key;
 // - (CMTimeMapping)decodeCMTimeMappingForKey:(NSString*)key;
