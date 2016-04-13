@@ -16,10 +16,13 @@
 
 #import "NSExpressionDefaultFunctions.h"
 #import <Foundation/NSArray.h>
+#import <Foundation/NSException.h>
 
 @implementation NSExpressionDefaultFunctions
 
-// Future Support-TODO: Add functions for support, stddev, add, sub, etc.
+// Future Support-VSO 7120732: Add functions for support, stddev etc.
+
+// VSO 7120710: Switch to NSDecimalNumber when it's ready, it will do most of the work for us.
 
 /**
  @Status Interoperable
@@ -32,6 +35,41 @@
     }
 
     return [NSNumber numberWithDouble:result];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)plus:(NSNumber*)first second:(NSNumber*)second {
+    return [NSNumber numberWithDouble:([first doubleValue] + [second doubleValue])];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)minus:(NSNumber*)first second:(NSNumber*)second {
+    return [NSNumber numberWithDouble:([first doubleValue] - [second doubleValue])];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)multiply:(NSNumber*)first second:(NSNumber*)second {
+    return [NSNumber numberWithDouble:([first doubleValue] * [second doubleValue])];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)divideBy:(NSNumber*)first second:(NSNumber*)second {
+    return [NSNumber numberWithDouble:([first doubleValue] / [second doubleValue])];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)exp:(NSNumber*)base to:(NSNumber*)power {
+    return [NSNumber numberWithDouble:(pow([base doubleValue], [power doubleValue]))];
 }
 
 - (id)copyWithZone:(NSZone*)zone {
