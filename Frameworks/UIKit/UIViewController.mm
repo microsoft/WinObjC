@@ -238,7 +238,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 @implementation _UILayoutGuide {
 @public
     CGFloat _length;
-    NSString* _identifier;
+    StrongId<NSString> _identifier;
 }
 
 - (instancetype)init {
@@ -254,7 +254,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
 - (NSString*)description {
     NSString* ret = [super description];
-    return [NSString stringWithFormat:@"%@:%@", ret, _identifier];
+    return [NSString stringWithFormat:@"%@:%@", ret, (id)_identifier];
 }
 
 - (instancetype)initWithCoder:(NSCoder*)coder {
