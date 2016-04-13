@@ -28,7 +28,7 @@ enum {
 };
 
 struct CC_Hmac_State;
-typedef CC_Hmac_State* CCHmacContext;
+typedef struct CC_Hmac_State* CCHmacContext;
 typedef int32_t CCHmacAlgorithm;
 
 SB_EXTERNC_BEGIN
