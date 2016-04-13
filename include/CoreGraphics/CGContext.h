@@ -174,8 +174,8 @@ COREGRAPHICS_EXPORT void CGContextSetGrayStrokeColor(CGContextRef c, CGFloat gra
 COREGRAPHICS_EXPORT void CGContextSetRGBFillColor(CGContextRef c, CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha);
 COREGRAPHICS_EXPORT void CGContextSetRGBStrokeColor(CGContextRef c, CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha);
 
-COREGRAPHICS_EXPORT void CGContextSetShadow(CGContextRef c, CGSize offset, CGFloat blur) STUB_METHOD;
-COREGRAPHICS_EXPORT void CGContextSetShadowWithColor(CGContextRef c, CGSize offset, CGFloat blur, CGColorRef color) STUB_METHOD;
+COREGRAPHICS_EXPORT void CGContextSetShadow(CGContextRef c, CGSize offset, CGFloat blur);
+COREGRAPHICS_EXPORT void CGContextSetShadowWithColor(CGContextRef c, CGSize offset, CGFloat blur, CGColorRef color);
 
 COREGRAPHICS_EXPORT void CGContextSetStrokeColor(CGContextRef c, const CGFloat* components);
 

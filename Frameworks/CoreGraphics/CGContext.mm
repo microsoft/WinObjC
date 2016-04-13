@@ -682,10 +682,10 @@ void CGContextSetRenderingIntent(CGContextRef context, CGColorRenderingIntent in
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShadow(CGContextRef context, CGSize offset, float blur) {
-    UNIMPLEMENTED();
+    context->Backing()->CGContextSetShadow(offset, blur);
 }
 
 /**
@@ -1001,10 +1001,10 @@ CGContextRef CGContextRetain(CGContextRef ctx) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextSetShadowWithColor(CGContextRef ctx, CGSize offset, float blur, CGColorRef color) {
-    UNIMPLEMENTED();
+    ctx->Backing()->CGContextSetShadowWithColor(offset, blur, color);
 }
 
 /**

@@ -16,6 +16,7 @@
 
 #import <Starboard.h>
 #import <CoreGraphics/CGGeometry.h>
+#import <memory>
 
 #import "CGContextImpl.h"
 #import "CGImageInternal.h"
@@ -80,6 +81,188 @@ void CGContextCairo::ReleaseLock() {
 void CGContextCairo::_assignAndResetFilter(cairo_pattern_t* pattern) {
     cairo_pattern_set_filter(pattern, _filter);
     _filter = CAIRO_FILTER_BILINEAR;
+}
+
+// This function quotes an open source function from Github.
+// An OSS request has been submitted. The link for the request is:
+// https://osstool.microsoft.com/palamida/RequestDetails.htm?rid=40072&projectId=1
+void CGContextCairo::_cairoImageSurfaceBlur(cairo_surface_t* surface) {
+    double blur = curState->shadowBlur;
+
+    if (surface == NULL || blur <= 0) {
+        return;
+    }
+
+    int width = cairo_image_surface_get_width(surface);
+    int height = cairo_image_surface_get_height(surface);
+    std::unique_ptr<unsigned char[]> dstPtr = std::make_unique<unsigned char[]>(width * height * 4);
+    std::unique_ptr<unsigned[]> precalPtr = std::make_unique<unsigned[]>(width * height);
+    unsigned char* dst = dstPtr.get();
+    unsigned* precalc = precalPtr.get();
+    unsigned char* src = cairo_image_surface_get_data(surface);
+    double mul = 1.f / ((blur * 2) * (blur * 2));
+    int channel;
+
+    // The number of times to perform the averaging. According to wikipedia,
+    // three iterations is good enough to pass for a gaussian.
+    const int MAX_ITERATIONS = 3;
+    int iteration;
+
+    memcpy(dst, src, width * height * 4);
+
+    for (iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
+        for (channel = 0; channel < 4; channel++) {
+            int x, y;
+
+            // precomputation step.
+            unsigned char* pix = src;
+            unsigned* pre = precalc;
+
+            pix += channel;
+            for (y = 0; y < height; y++) {
+                for (x = 0; x < width; x++) {
+                    int tot = pix[0];
+                    if (x > 0)
+                        tot += pre[-1];
+                    if (y > 0)
+                        tot += pre[-width];
+                    if (x > 0 && y > 0)
+                        tot -= pre[-width - 1];
+                    *pre++ = tot;
+                    pix += 4;
+                }
+            }
+
+            // blur step.
+            pix = dst + (int)blur * width * 4 + (int)blur * 4 + channel;
+            for (y = blur; y < height - blur; y++) {
+                for (x = blur; x < width - blur; x++) {
+                    int l = MAX(0, x - blur);
+                    int t = MAX(0, y - blur);
+                    int r = MIN(width - 1, x + blur);
+                    int b = MIN(height - 1, y + blur);
+                    int tot = precalc[r + b * width] + precalc[l + t * width] - precalc[l + b * width] - precalc[r + t * width];
+                    *pix = (unsigned char)(tot * mul);
+                    pix += 4;
+                }
+                pix += (int)blur * 2 * 4;
+            }
+        }
+        memcpy(src, dst, width * height * 4);
+    }
+}
+
+void CGContextCairo::_cairoContextStrokePathShadow() {
+    int i;
+    double width, height, deltaWidth, deltaHeight;
+
+    cairo_save(_drawContext);
+
+    // In order to calculate the shadow near the boundary of surface,
+    // the width and height will be enlarged for delta_width and delta_height.
+    if (curState->shadowOffset.width >= 0) {
+        deltaWidth = curState->shadowOffset.width + 2 * curState->shadowBlur;
+    } else {
+        deltaWidth = (-1) * curState->shadowOffset.width + 2 * curState->shadowBlur;
+    }
+
+    if (curState->shadowOffset.height >= 0) {
+        deltaHeight = curState->shadowOffset.height + 2 * curState->shadowBlur;
+    } else {
+        deltaHeight = (-1) * curState->shadowOffset.height + 2 * curState->shadowBlur;
+    }
+
+    cairo_path_t* originalPath = cairo_copy_path(_drawContext);
+    cairo_path_t* path = cairo_copy_path(_drawContext);
+
+    // Modify the path to adapt to the enlarged surface.
+    for (i = 0; i < path->num_data; i += path->data[i].header.length) {
+        cairo_path_data_t* data = &path->data[i];
+
+        switch (data->header.type) {
+            case CAIRO_PATH_MOVE_TO:
+                data[1].point.x += deltaWidth;
+                data[1].point.y += deltaHeight;
+                break;
+            case CAIRO_PATH_LINE_TO:
+                data[1].point.x += deltaWidth;
+                data[1].point.y += deltaHeight;
+                break;
+            case CAIRO_PATH_CURVE_TO:
+                data[1].point.x += deltaWidth;
+                data[1].point.y += deltaHeight;
+                data[2].point.x += deltaWidth;
+                data[2].point.y += deltaHeight;
+                data[3].point.x += deltaWidth;
+                data[3].point.y += deltaHeight;
+                break;
+            case CAIRO_PATH_CLOSE_PATH:
+                break;
+        }
+    }
+
+    cairo_surface_t* surface = cairo_get_group_target(_drawContext);
+    width = cairo_image_surface_get_width(surface);
+    height = cairo_image_surface_get_height(surface);
+
+    // Enlarge the width and heigth of the image surface. Then draw the shadow on the surface.
+    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width + 2 * deltaWidth, height + 2 * deltaHeight);
+    cairo_t* ctx = cairo_create(surface);
+
+    cairo_append_path(ctx, path);
+
+    NSUInteger componentsNum = CGColorGetNumberOfComponents(curState->shadowColor);
+    CGFloat* components = (CGFloat*)CGColorGetComponents(curState->shadowColor);
+    if (componentsNum == 2) {
+        cairo_set_source_rgba(ctx, components[0], components[0], components[0], components[1]);
+    } else if (componentsNum == 4) {
+        cairo_set_source_rgba(ctx, components[0], components[1], components[2], components[3]);
+    }
+    IwFree(components);
+
+    // Make the stroke style same as _drawContext
+    cairo_set_line_width(ctx, cairo_get_line_width(_drawContext));
+    cairo_set_line_cap(ctx, cairo_get_line_cap(_drawContext));
+    cairo_set_line_join(ctx, cairo_get_line_join(_drawContext));
+    cairo_set_miter_limit(ctx, cairo_get_miter_limit(_drawContext));
+
+    int dashCount = cairo_get_dash_count(_drawContext);
+    double offset;
+    double* dash = (double*)IwMalloc(sizeof(double) * dashCount);
+    cairo_get_dash(_drawContext, dash, &offset);
+    cairo_set_dash(ctx, dash, dashCount, offset);
+    IwFree(dash);
+
+    cairo_stroke(ctx);
+
+    // Blur the surface for shadow here
+    _cairoImageSurfaceBlur(surface);
+
+    cairo_destroy(ctx);
+    cairo_new_path(_drawContext);
+
+    // Select the right scope to surface_rect
+    cairo_surface_t* surfaceRect = cairo_surface_create_for_rectangle(surface,
+                                                                      deltaWidth - curState->shadowOffset.width,
+                                                                      deltaHeight - curState->shadowOffset.height,
+                                                                      width,
+                                                                      height);
+
+    cairo_pattern_t* shadowPattern = cairo_pattern_create_for_surface(surfaceRect);
+    cairo_set_source(_drawContext, shadowPattern);
+    cairo_rectangle(_drawContext, 0, 0, width, height);
+    cairo_fill(_drawContext);
+
+    cairo_pattern_destroy(shadowPattern);
+    cairo_surface_destroy(surface);
+    cairo_surface_destroy(surfaceRect);
+
+    cairo_restore(_drawContext);
+    cairo_new_path(_drawContext);
+    cairo_append_path(_drawContext, originalPath);
+
+    cairo_path_destroy(path);
+    cairo_path_destroy(originalPath);
 }
 
 void CGContextCairo::Clear(float r, float g, float b, float a) {
@@ -942,6 +1125,9 @@ void CGContextCairo::CGContextStrokePath() {
 
     LOCK_CAIRO();
     cairo_save(_drawContext);
+    if (curState->shadowColor != NULL) {
+        _cairoContextStrokePathShadow();
+    }
 
     cairo_set_source_rgba(_drawContext,
                           curState->curStrokeColor.r,
