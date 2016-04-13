@@ -40,6 +40,8 @@
 #import "UIViewInternal.h"
 #import <cmath>
 
+const wchar_t* TAG = L"UIScrollView";
+
 /** @Status Stub */
 const float UIScrollViewDecelerationRateNormal = StubConstant();
 /** @Status Stub */
@@ -1306,99 +1308,101 @@ static float findMinY(UIScrollView* o) {
     bounds = [self bounds];
 
     CGPoint newOffset = _contentOffset;
-    int panStage = [gesture stage];
 
-    //  Stage 0: Only freewheeling
-    if (panStage == 0 || panStage == 1) {
-        float minX = findMinX(self);
-        float maxX = findMaxX(self);
-        float minY = findMinY(self);
-        float maxY = findMaxY(self);
-        float oldX = newOffset.x;
-        float oldY = newOffset.y;
-        float newX = newOffset.x - delta.x;
-        float newY = newOffset.y - delta.y;
-
-        //  Stage 1: unstick axis's
-        if (panStage == 1) {
+    switch ([gesture _stage]) {
+        // Deferred: unstick axes
+        case _UIPanGestureStageDeferred:
             if (delta.x != 0) {
                 _xStuck = false;
             }
             if (delta.y != 0) {
                 _yStuck = false;
             }
-        }
 
-        if (!_xStuck) {
-            if (delta.x > 0.0f) {
-                if (newX < minX) {
-                    _xStuck = true;
-                }
-                if (newX < minX && oldX > minX) {
-                    newX = minX;
-                    newOffset.x = newX;
-                }
-            } else if (delta.x < 0.0f) {
-                if (newX > maxX) {
-                    _xStuck = true;
-                }
-                if (newX > maxX && oldX < maxX) {
-                    newX = maxX;
-                    newOffset.x = newX;
-                }
-            }
-        }
+           // fall-through
 
-        if (!_yStuck) {
-            if (delta.y > 0.0f) {
-                if (newY < minY) {
-                    _yStuck = true;
-                }
-                if (newY < minY && oldY > minY) {
-                    newY = minY;
-                    newOffset.y = newY;
-                }
-            } else if (delta.y < 0.0f) {
-                if (newY > maxY) {
-                    _yStuck = true;
-                }
-                if (newY > maxY && oldY < maxY) {
-                    newY = maxY;
-                    newOffset.y = newY;
-                }
-            }
-        }
+        // Immediate: Only freewheeling
+        case _UIPanGestureStageImmediate: {
+            float minX = findMinX(self);
+            float maxX = findMaxX(self);
+            float minY = findMinY(self);
+            float maxY = findMaxY(self);
+            float oldX = newOffset.x;
+            float oldY = newOffset.y;
+            float newX = newOffset.x - delta.x;
+            float newY = newOffset.y - delta.y;
 
-        if (!_xStuck) {
-            newOffset.x = newX;
-        }
-        if (!_yStuck) {
-            newOffset.y = newY;
-        }
-
-        if (_pagingEnabled) {
             if (!_xStuck) {
-                //  Crossing page boundaries is sticky
-                int curScrollPage = int((_contentOffset.x + bounds.size.width / 2.0f) / bounds.size.width);
-
-                float scrollPageBoundary = curScrollPage * bounds.size.width;
-
-                float minX = min(newOffset.x, _contentOffset.x);
-                float maxX = max(newOffset.x, _contentOffset.x);
-
-                if (minX < scrollPageBoundary && maxX > scrollPageBoundary) {
-                    newOffset.x = scrollPageBoundary;
-                    _xStuck = true;
+                if (delta.x > 0.0f) {
+                    if (newX < minX) {
+                        _xStuck = true;
+                    }
+                    if (newX < minX && oldX > minX) {
+                        newX = minX;
+                        newOffset.x = newX;
+                    }
+                } else if (delta.x < 0.0f) {
+                    if (newX > maxX) {
+                        _xStuck = true;
+                    }
+                    if (newX > maxX && oldX < maxX) {
+                        newX = maxX;
+                        newOffset.x = newX;
+                    }
                 }
             }
-        }
-    } else if (panStage == 2) {
-        // if ( delta.x != 0.0f ) _xStuck = false;
-        // if ( delta.y != 0.0f ) _yStuck = false;
 
-        //  Stage 1: overdrag, unsticking
-        newOffset.x -= delta.x;
-        newOffset.y -= delta.y;
+            if (!_yStuck) {
+                if (delta.y > 0.0f) {
+                    if (newY < minY) {
+                        _yStuck = true;
+                    }
+                    if (newY < minY && oldY > minY) {
+                        newY = minY;
+                        newOffset.y = newY;
+                    }
+                } else if (delta.y < 0.0f) {
+                    if (newY > maxY) {
+                        _yStuck = true;
+                    }
+                    if (newY > maxY && oldY < maxY) {
+                        newY = maxY;
+                        newOffset.y = newY;
+                    }
+                }
+            }
+
+            if (!_xStuck) {
+                newOffset.x = newX;
+            }
+            if (!_yStuck) {
+                newOffset.y = newY;
+            }
+
+            if (_pagingEnabled) {
+                if (!_xStuck) {
+                    //  Crossing page boundaries is sticky
+                    int curScrollPage = int((_contentOffset.x + bounds.size.width / 2.0f) / bounds.size.width);
+
+                    float scrollPageBoundary = curScrollPage * bounds.size.width;
+
+                    float minX = min(newOffset.x, _contentOffset.x);
+                    float maxX = max(newOffset.x, _contentOffset.x);
+
+                    if (minX < scrollPageBoundary && maxX > scrollPageBoundary) {
+                        newOffset.x = scrollPageBoundary;
+                        _xStuck = true;
+                    }
+                }
+            }
+        } break;
+        case _UIPanGestureStageRemainder:
+            // Remainder: overdrag, unsticking
+            // Note: On reference platform if leaf begins panning its content, the root doesn't overdrag.
+            // On our platform, we always overdrag the leaf.
+            newOffset.x -= delta.x;
+            newOffset.y -= delta.y;
+            break;
     }
 
     if (newOffset != _contentOffset) {
@@ -1465,6 +1469,84 @@ static float clipToPage(float start, float curOffset, float velocity, float page
     return float(destScrollPage) * pageSize;
 }
 
+- (void)_doPanEndedWithVelocity:(CGPoint)velocity notify:(BOOL)notify {
+    BOOL willDecelerate = TRUE;
+    BOOL decelerateAnimation = FALSE;
+    CGPoint dest;
+    CGRect bounds = [self bounds];
+    CGSize contentSize = [self _paddedContentSize];
+
+    if (self.pagingEnabled) {
+        dest.x = clipToPage(_panStart.x, _contentOffset.x, velocity.x, bounds.size.width, contentSize.width);
+        dest.y = clipToPage(_panStart.y, _contentOffset.y, velocity.y, bounds.size.height, contentSize.height);
+    } else {
+        dest = calcInertialDestination(self, _contentOffset, -velocity);
+    }
+
+    if (!notify && (_contentOffset.x == dest.x) && (_contentOffset.y == dest.y)) {
+        return;
+    }
+
+    if (notify && [_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        CGPoint old = dest;
+        [_delegate scrollViewWillEndDragging:self withVelocity:-velocity targetContentOffset:&dest];
+        if (old != dest) {
+            doAnimatedScroll(self, dest, ANIMATION_DECELERATING_TARGET);
+            willDecelerate = TRUE;
+            decelerateAnimation = TRUE;
+        }
+    }
+
+    if (_pagingEnabled || (velocity.x == 0.0f && velocity.y == 0.0f)) {
+        willDecelerate = FALSE;
+    }
+
+    _isDragging = false;
+
+    if (notify && [_delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [_delegate scrollViewDidEndDragging:self willDecelerate:willDecelerate];
+    }
+
+    if (!decelerateAnimation) {
+        if (_pagingEnabled) {
+            doAnimatedScroll(self, dest, ANIMATION_PAGING);
+            if (notify && [_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+                [_delegate scrollViewWillBeginDecelerating:self];
+            }
+        } else {
+            if (willDecelerate) {
+                if (notify && [_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+                    [_delegate scrollViewWillBeginDecelerating:self];
+                }
+                doInertialScroll(self, -velocity, ANIMATION_DECELERATING);
+            } else {
+                //  We need to do inertial scroll if we're out of bounds
+                if (_contentOffset.x < findMinX(self) || _contentOffset.x > findMaxX(self) || _contentOffset.y < findMinY(self) ||
+                    _contentOffset.y > findMaxY(self)) {
+                    doInertialScroll(self, -velocity, ANIMATION_BOUNCING);
+                } else {
+                    hideScrollersAction(self);
+                }
+            }
+        }
+    } else {
+        hideScrollersAction(self);
+    }
+}
+
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    if (!_isDragging && _pagingEnabled) {
+        [self _doPanEndedWithVelocity:CGPointMake(0, 0) notify:FALSE];
+    }
+}
+
+- (CGSize)_paddedContentSize {
+    CGSize contentSize = _contentSize;
+    contentSize.width += _contentInset.right;
+    contentSize.height += _contentInset.bottom;
+    return contentSize;
+}
+
 - (id)_panGestureCallback:(UIPanGestureRecognizer*)gesture {
     if (!_scrollEnabled) {
         return self;
@@ -1472,19 +1554,15 @@ static float clipToPage(float start, float curOffset, float velocity, float page
 
     stopScrollAnimations(self);
 
-    CGRect bounds;
-    bounds = [self bounds];
-
-    CGSize contentSize = _contentSize;
-    contentSize.width += _contentInset.right;
-    contentSize.height += _contentInset.bottom;
-
     CGPoint delta;
     delta = [gesture translationInView:self];
 
     int state = [gesture state];
 
-    if (state == UIGestureRecognizerStateBegan && [gesture stage] == 0) {
+    if (state == UIGestureRecognizerStateBegan && [gesture _stage] == _UIPanGestureStageImmediate) {
+        CGRect bounds = [self bounds];
+        CGSize contentSize = [self _paddedContentSize];
+
         _xStuck = false;
         _yStuck = false;
         _lockVertical = false;
@@ -1531,10 +1609,6 @@ static float clipToPage(float start, float curOffset, float velocity, float page
             //
             // This is the after-gesture frictiony dragging business:
             //
-
-            CGRect bounds;
-            bounds = [self bounds];
-
             CGPoint velocity = { 0 };
 
             if ([gesture state] != UIGestureRecognizerStateCancelled) {
@@ -1554,73 +1628,18 @@ static float clipToPage(float start, float curOffset, float velocity, float page
                 velocity.y = 0;
             }
 
-            BOOL willDecelerate = TRUE;
-            BOOL decelerateAnimation = FALSE;
-
-            CGPoint dest;
-            if (self.pagingEnabled) {
-                dest.x = clipToPage(_panStart.x, _contentOffset.x, velocity.x, bounds.size.width, contentSize.width);
-                dest.y = clipToPage(_panStart.y, _contentOffset.y, velocity.y, bounds.size.height, contentSize.height);
-            } else {
-                dest = calcInertialDestination(self, _contentOffset, -velocity);
-            }
-
-            if ([_delegate respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
-                CGPoint old = dest;
-                [_delegate scrollViewWillEndDragging:self withVelocity:-velocity targetContentOffset:&dest];
-                if (old != dest) {
-                    doAnimatedScroll(self, dest, ANIMATION_DECELERATING_TARGET);
-                    willDecelerate = TRUE;
-                    decelerateAnimation = TRUE;
-                }
-            }
-
-            if (_pagingEnabled || (velocity.x == 0.0f && velocity.y == 0.0f)) {
-                willDecelerate = FALSE;
-            }
-
-            _isDragging = false;
-
-            if ([_delegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
-                [_delegate scrollViewDidEndDragging:self willDecelerate:willDecelerate];
-            }
-
-            if (!decelerateAnimation) {
-                if (_pagingEnabled) {
-                    doAnimatedScroll(self, dest, ANIMATION_PAGING);
-                    if ([_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
-                        [_delegate scrollViewWillBeginDecelerating:self];
-                    }
-                } else {
-                    if (willDecelerate) {
-                        if ([_delegate respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
-                            [_delegate scrollViewWillBeginDecelerating:self];
-                        }
-                        doInertialScroll(self, -velocity, ANIMATION_DECELERATING);
-                    } else {
-                        //  We need to do inertial scroll if we're out of bounds
-                        if (_contentOffset.x < findMinX(self) || _contentOffset.x > findMaxX(self) || _contentOffset.y < findMinY(self) ||
-                            _contentOffset.y > findMaxY(self)) {
-                            doInertialScroll(self, -velocity, ANIMATION_BOUNCING);
-                        } else {
-                            hideScrollersAction(self);
-                        }
-                    }
-                }
-            } else {
-                hideScrollersAction(self);
-            }
+            [self _doPanEndedWithVelocity:velocity notify:TRUE];
         }
     }
     return self;
 }
 
-- (void)_didPinch:(UIGestureRecognizer*)gesture {
+- (void)_didPinch:(UIPinchGestureRecognizer*)gesture {
     if (_minimumZoomScale == _maximumZoomScale) {
         return;
     }
 
-    UIGestureRecognizerState state = (UIGestureRecognizerState)[gesture state];
+    UIGestureRecognizerState state = [gesture state];
     UIView* view = self;
 
     if ([_delegate respondsToSelector:@selector(viewForZoomingInScrollView:)]) {

@@ -91,6 +91,7 @@ add_executable(hmapmaker
 )
 
 add_executable(Xib2Nib
+  src/utils/miscutils.cpp
   ${Xib2Nib_SRC}
 )
 

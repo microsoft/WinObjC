@@ -39,6 +39,14 @@
     <SBResourceComputeTargets>ComputeXibCompileOptions;ComputeStoryboardCompileOptions;ComputeDataModelCompileOptions;ComputeDataModelDirCompileOptions;ComputeAssetCatalogCompileOptions;ComputePlistCopyOptions</SBResourceComputeTargets>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- SBResourcesDir is not the final destination in the case we're building an AppX
+         AppxPackagePayload takes care of the copying in that case -->
+    <SBResourcesDir Condition="'$(SBResourceCopyToAPPX)' != 'true'">$(OutDir)</SBResourcesDir>
+    <SBResourcesDir Condition="'$(SBResourceCopyToAPPX)' == 'true'"></SBResourcesDir>
+    <SBResourcesDir Condition="'$(IslandwoodConfigurationType)' == 'Bundle'">$(OutDir)\$(TargetName).bundle</SBResourcesDir>
+  </PropertyGroup>
+
   <Target
     Name="SBResourceCompile"
     BeforeTargets="$(SBResourceCompileBeforeTargets)"
@@ -87,7 +95,7 @@
     DependsOnTargets="ComputeResourceCopyOptions"
     Inputs="@(SBResourceCopy)"
     Outputs="$(AppxPackageRecipe)"
-    Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' == 'true'">
+    Condition="'@(SBResourceCopy)' != '' and '$(SBResourceCopyToAPPX)' == 'true'">
 
     <ItemGroup>
       <_UnfilteredAppxPackagePayload Include="@(SBResourceCopy->'%(FullPath)')" Condition="'%(SBResourceCopy.ExcludedFromBuild)' != 'true'">
@@ -127,8 +135,8 @@
     DependsOnTargets="ComputeResourceCopyOptions;ComputeResourceTLog"
     Inputs="@(SBResourceCopy)"
     Outputs="@(SBResourceCopy->'%(OutputFile)')"
-    Condition="'@(SBResourceCopy)' != '' and '$(AppContainerApplication)' != 'true'">
-    <!-- Currently, this target is only for unit tests since they set AppContainerApplication==false -->
+    Condition="'@(SBResourceCopy)' != '' and '$(SBResourceCopyToAPPX)' != 'true'">
+
     <Message Importance="high"
       Text="Copying assets" />
 
@@ -142,7 +150,7 @@
       DestinationFiles="@(SBResourceCopy->'%(OutputFile)')" />
 
     <Exec
-      Condition="$([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
+      Condition="'$(StripAppContainerBit)' == 'true' and $([System.IO.Path]::GetExtension('%(SBResourceCopy.OutputFile)').ToUpper()) == '.DLL'"
       Command="Link.exe /EDIT /NOLOGO /APPCONTAINER:NO %(SBResourceCopy.OutputFile)" />
 
   </Target>

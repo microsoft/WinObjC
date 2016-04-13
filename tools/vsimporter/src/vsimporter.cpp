@@ -187,8 +187,21 @@ int main(int argc, char* argv[])
   // Set AI Telemetry_Init 
   TELEMETRY_INIT(L"AIF-23c336e0-1e7e-43ba-a5ce-eb9dc8a06d34");
 
-  TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
+  if (checkTelemetryOptIn())
+  {
+      TELEMETRY_ENABLE();
+  }
+  else
+  {
+      TELEMETRY_DISABLE();
+  }
 
+  TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
+  TELEMETRY_EVENT_DATA(L"IsInternal", isMSFTInternalMachine() ? "1" : "0");
+  string machineID = getMachineID();
+  if (!machineID.empty()) {
+      TELEMETRY_EVENT_DATA(L"MachineId", machineID.c_str());
+  }
   // Process non-option ARGV-elements
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
   while (optind < argc) {

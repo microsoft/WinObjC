@@ -40,6 +40,14 @@ LIBRARY Starboard
         CCHmacUpdate
         CCHmacFinal
         CCHmac
+        CCCryptorCreate
+        CCCryptorCreateFromData
+        CCCryptorRelease
+        CCCryptorUpdate
+        CCCryptorFinal
+        CCCryptorGetOutputLength
+        CCCryptorReset
+        CCCrypt
 
         ; pthread:
         pthread_attr_destroy

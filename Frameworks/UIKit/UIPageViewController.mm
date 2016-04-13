@@ -355,11 +355,10 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     CGRect frame = self.frame;
 
     // TODO: Vertical layout
+    
+    [self _updateVisible];
 
     for (int i = 0; i < [_pages count]; i++) {
-        CGFloat pageOrigin = i * self.frame.size.width;
-        CGFloat contentOffset = self.contentOffset.x;
-        CGFloat contentSpan = self.frame.size.width;
         CGRect childFrame = frame;
         childFrame.origin.y = 0;
         childFrame.origin.x = i * frame.size.width;

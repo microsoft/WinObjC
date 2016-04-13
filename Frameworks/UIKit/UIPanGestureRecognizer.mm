@@ -61,7 +61,7 @@ NSArray* curPanList = nil;
     float _dragSlack;
     double _disableVelocity;
 
-    int _stage;
+    _UIPanGestureStage _stage;
     bool _didFireEnded;
     bool _lockVertical, _lockHorizontal;
 }
@@ -464,7 +464,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 /**
  @Status Interoperable
 */
-- (int)stage {
+- (_UIPanGestureStage)_stage {
     return _stage;
 }
 
@@ -502,7 +502,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 
     curPanList = gestures;
 
-    for (int curstage = 0; curstage < 3; curstage++) {
+    for (int curstage = 0; curstage < _UIPanGestureStageNumStages; curstage++) {
         for (int i = count - 1; i >= 0; i--) {
             UIPanGestureRecognizer* curgesture = [gestures objectAtIndex:i];
 
@@ -516,7 +516,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
                     curgesture->_didFireEnded = true;
                 }
 
-                curgesture->_stage = curstage;
+                curgesture->_stage = static_cast<_UIPanGestureStage>(curstage);
 
                 if (curgesture->_state == UIGestureRecognizerStateBegan && curstage != 0) {
                     curgesture->_state = UIGestureRecognizerStateChanged;

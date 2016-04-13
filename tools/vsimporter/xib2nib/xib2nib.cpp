@@ -30,6 +30,7 @@
 #include "XIBDocument.h"
 #include "NIBWriter.h"
 #include "Plist.hpp"
+#include "miscutils.h"
 
 #include "..\WBITelemetry\WBITelemetry.h"
 
@@ -230,81 +231,6 @@ void ConvertXIBToNib(FILE* fpOut, pugi::xml_document& doc) {
     writer->WriteData();
 }
 
-// Checks whether or not the user has opted in to visual studio telemetry
-BOOL CheckTelemetryOptIn()
-{
-    BOOL isOptIn = FALSE;
-    const wstring basePath = L"Software\\Microsoft\\VSCommon";
-    const wstring policyKeyPath = L"SOFTWARE\\Policies\\Microsoft\\VisualStudio\\SQM";
-    const DWORD maxKeyLength = 255;
-
-    // First check group policy
-    HKEY policyKey;
-    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, policyKeyPath.c_str(), 0, KEY_READ, &policyKey) == ERROR_SUCCESS)
-    {
-        WCHAR buffer[2];
-        DWORD bufferSize = sizeof(buffer);
-
-        if (RegQueryValueEx(policyKey, "OptIn", 0, NULL, (LPBYTE)buffer, &bufferSize) == ERROR_SUCCESS)
-        {
-            if (wcscmp(buffer, L"0") == 0)
-            {
-                return FALSE;
-            }
-        }
-
-        RegCloseKey(policyKey);
-    }
-
-    // Then check user preferences
-    HKEY baseKey;
-    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, basePath.c_str(), 0, KEY_READ, &baseKey) == ERROR_SUCCESS)
-    {
-        WCHAR subKeyName[maxKeyLength];
-        DWORD subKeyNameSize;
-        DWORD numSubKeys;
-
-        DWORD i;
-        if (RegQueryInfoKey(baseKey, NULL, NULL, NULL, &numSubKeys, NULL, NULL, NULL, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
-        {
-            for (i = 0; i < numSubKeys; i++)
-            {
-                subKeyNameSize = maxKeyLength;
-                if (RegEnumKeyExW(baseKey, i, subKeyName, &subKeyNameSize, NULL, NULL, NULL, NULL) == ERROR_SUCCESS)
-                {
-                    HKEY subHKey;
-                    wstring subKeyNameStr(subKeyName);
-                    wstring subPath = basePath + L"\\" + subKeyName + L"\\SQM";
-
-                    if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, subPath.c_str(), 0, KEY_READ, &subHKey) == ERROR_SUCCESS)
-                    {
-                        DWORD value;
-                        DWORD bufferSize = sizeof(DWORD);
-                        if (RegQueryValueExW(subHKey, L"OptIn", NULL, NULL, (LPBYTE)(&value), &bufferSize) == ERROR_SUCCESS)
-                        {
-                            if (!value)
-                            {
-                                return FALSE;
-                            }
-                            else
-                            {
-                                isOptIn = TRUE;
-                            }
-                        }
-
-                        RegCloseKey(subHKey);
-                    }
-                }
-            }
-        }
-
-        RegCloseKey(baseKey);
-    }
-
-    return isOptIn;
-}
-
-
 int main(int argc, char* argv[]) {
 #if 0
     argv[1] = "input.xib";
@@ -314,7 +240,7 @@ int main(int argc, char* argv[]) {
 
     TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
-    if (CheckTelemetryOptIn())
+    if (checkTelemetryOptIn())
     {
         TELEMETRY_ENABLE();
     }
@@ -326,34 +252,10 @@ int main(int argc, char* argv[]) {
     std::tr2::sys::path fName(argv[1]);
 
     TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
-
-    bool isInternal = false;
-    HKEY hKey;
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Policies\\Microsoft\\SQMClient", 0, KEY_READ, &hKey) == ERROR_SUCCESS)
-    {
-        DWORD result;
-        DWORD size = sizeof(DWORD);
-        if (RegQueryValueEx(hKey, "MSFTInternal", NULL, NULL, (LPBYTE)(&result), &size) == ERROR_SUCCESS)
-        {
-            isInternal = (bool)result;
-        }
-
-        RegCloseKey(hKey);
-    }
-
-    TELEMETRY_EVENT_DATA(L"IsInternal", isInternal ? "1" : "0");
-
-    HKEY machineHKey;
-    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\Microsoft\\SQMClient", 0, KEY_READ | KEY_WOW64_64KEY, &machineHKey) == ERROR_SUCCESS) 
-    {
-        char buffer[39];
-        DWORD bufferSize = sizeof(buffer);
-        if (RegQueryValueEx(machineHKey, "MachineId", 0, NULL, (LPBYTE)buffer, &bufferSize) == ERROR_SUCCESS)
-        {
-            TELEMETRY_EVENT_DATA(L"MachineId", buffer);
-        }
-
-        RegCloseKey(machineHKey);
+    TELEMETRY_EVENT_DATA(L"IsInternal", isMSFTInternalMachine() ? "1" : "0");
+    string machineID = getMachineID();
+    if (!machineID.empty()) {
+        TELEMETRY_EVENT_DATA(L"MachineId", machineID.c_str());
     }
 
     pugi::xml_document doc;

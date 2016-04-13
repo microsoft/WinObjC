@@ -678,12 +678,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageIO", "ImageIO", "{45D0
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageIO.UnitTests", "Tests\UnitTests\ImageIO\ImageIO.UnitTests.vcxproj", "{44B89F7E-CCD8-8CEA-8566-EF51B6666B82}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreFoundationAdditions", "CoreFoundationAdditions", "{B309943F-E9E9-482E-93C7-56FA7D58F898}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{3DC04C10-245A-4EF7-ACB6-12BE7D4ECF76}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreFoundationAdditionsLib", "CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj", "{BC8C5D49-060C-4375-904C-FE472C757E58}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Headers\Headers.Shared\Internal.Shared.vcxitems*{c0db71aa-0f89-41ac-bb7d-c0cb5458f4f9}*SharedItemsImports = 9
-		Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
-		Tests\Tests.Shared\Tests.Shared.vcxitems*{ee68a240-536d-4557-ab96-d164e93059a1}*SharedItemsImports = 9
-	EndGlobalSection
+    GlobalSection(SharedMSBuildProjectFiles) = preSolution
+        Headers\Headers.Shared\Internal.Shared.vcxitems*{c0db71aa-0f89-41ac-bb7d-c0cb5458f4f9}*SharedItemsImports = 9
+        Headers\Headers.Shared\Public.Shared.vcxitems*{45d41acc-2c3c-43d2-bc10-02aa73ffc7c7}*SharedItemsImports = 9
+        Tests\Tests.Shared\Tests.Shared.vcxitems*{ee68a240-536d-4557-ab96-d164e93059a1}*SharedItemsImports = 9
+    EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
 		Debug|x86 = Debug|x86
@@ -1779,6 +1785,14 @@ Global
 		{44B89F7E-CCD8-8CEA-8566-EF51B6666B82}.Release|ARM.Build.0 = Release|ARM
 		{44B89F7E-CCD8-8CEA-8566-EF51B6666B82}.Release|x86.ActiveCfg = Release|Win32
 		{44B89F7E-CCD8-8CEA-8566-EF51B6666B82}.Release|x86.Build.0 = Release|Win32
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Debug|ARM.ActiveCfg = Debug|ARM
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Debug|ARM.Build.0 = Debug|ARM
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Debug|x86.ActiveCfg = Debug|Win32
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Debug|x86.Build.0 = Debug|Win32
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Release|ARM.ActiveCfg = Release|ARM
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Release|ARM.Build.0 = Release|ARM
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Release|x86.ActiveCfg = Release|Win32
+		{BC8C5D49-060C-4375-904C-FE472C757E58}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2060,5 +2074,7 @@ Global
 		{E93B116D-5467-4B1F-8815-B6B81F81B6D0} = {6E3A1CFA-110E-40FD-9920-9528FC77AC08}
 		{45D0E252-D620-4A7C-A058-2DDDEB218C91} = {88413F6C-C27A-4B48-9AE5-D36161920F6D}
 		{44B89F7E-CCD8-8CEA-8566-EF51B6666B82} = {45D0E252-D620-4A7C-A058-2DDDEB218C91}
+		{3DC04C10-245A-4EF7-ACB6-12BE7D4ECF76} = {B309943F-E9E9-482E-93C7-56FA7D58F898}
+		{BC8C5D49-060C-4375-904C-FE472C757E58} = {3DC04C10-245A-4EF7-ACB6-12BE7D4ECF76}
 	EndGlobalSection
 EndGlobal

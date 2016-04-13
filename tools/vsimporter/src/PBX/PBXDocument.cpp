@@ -40,6 +40,7 @@
 #include "PBXShellScriptBuildPhase.h"
 #include "XCBuildConfiguration.h"
 #include "PBXBuildRule.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 PBXDocument::~PBXDocument()
 {
@@ -81,7 +82,8 @@ bool PBXDocument::initFromPlist(const Plist::dictionary_type& plist)
   
   // Get objectVersion
   m_objectVersion = getIntForKey(plist, "objectVersion", VALUE_REQUIRED, m_parseER);
-  
+  TELEMETRY_EVENT_DATA(L"VSImporterObjectVersion", to_string(m_objectVersion).c_str());
+
   // Get objects
   const Plist::dictionary_type& objectsDict = getContainerForKey<Plist::dictionary_type>(plist, "objects", VALUE_REQUIRED, m_parseER);
   constructObjects(objectsDict);
@@ -98,6 +100,10 @@ bool PBXDocument::initFromPlist(const Plist::dictionary_type& plist)
     return false;
   }
 
+  // Track hash of rootObject
+  hash<String> rootObject_hash;
+  string hash_str = to_string(rootObject_hash(m_rootObjectId));
+  TELEMETRY_EVENT_DATA(L"VSImporterRootObjectIdHash", hash_str.c_str());
   return true;
 }
 

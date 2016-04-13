@@ -506,7 +506,7 @@ void OpenGLES20Context::glLightModelfv(GLenum pname, const GLfloat* params) {
             openGLESState.setGlobalAmbientColor(params);
             break;
         default:
-            LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown light model" + pname));
+            LOG_MESSAGE(__FILE__, __LINE__, OpenGLESString("ERROR: Unknown light model") + pname);
             break;
     }
 }

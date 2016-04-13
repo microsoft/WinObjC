@@ -45,7 +45,7 @@
 
   <Target
     Name="HandleExplicitLibs"
-    Condition="'$(ConfigurationType)' == 'Application'"
+    Condition="'$(CopyStarboardLibraries)' == 'true'"
     BeforeTargets="SBResourcePackage"
     AfterTargets="Link">
 
@@ -59,7 +59,7 @@
 
   <Target
     Name="ComputeLibsToCopy"
-    Condition="'$(ConfigurationType)' == 'Application'"
+    Condition="'$(CopyStarboardLibraries)' == 'true'"
     BeforeTargets="SBResourcePackage"
     AfterTargets="Link">
 
@@ -127,9 +127,13 @@
       <StarboardConfigSpecificPrebuiltLibsDir>$(StarboardLibDirs)\$(StarboardCRTConfig)</StarboardConfigSpecificPrebuiltLibsDir>
     </PropertyGroup>
 
-    <!-- Print which WinObjC libraries will be used, when building an Application -->
+    <PropertyGroup>
+      <StarboardAllLibDirs>$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</StarboardAllLibDirs>
+    </PropertyGroup>
+
+    <!-- Print which WinObjC libraries will be used, when copying dependent libraries -->
     <Message
-      Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(ConfigurationType)' == 'Application'"
+      Condition="'$(UseStarboardSourceSdk)' == 'true' and '$(CopyStarboardLibraries)' == 'true'"
       Importance="High"
       Text="Using $(StarboardCRTConfig) WinObjC libraries due to $(StarboardCRT) CRT." />
 
@@ -154,17 +158,17 @@
     </ItemGroup>
 
     <Message
-      Condition="('%(ClangCompile.MaxClangProcesses)' != '1') and '%(ClangCompile.ObjectiveCModules)' == 'true'"
+      Condition="'@(ClangCompile)' != '' and '%(ClangCompile.MaxClangProcesses)' != '1' and '%(ClangCompile.ObjectiveCModules)' == 'true'"
       Importance="High"
       Text="Note: Setting MaxClangProcesses to 1 because Modules are enabled." />
 
     <ItemGroup>
       <ClangCompile>
-        <MaxClangProcesses Condition="('%(ClangCompile.MaxClangProcesses)' != '1') and '%(ClangCompile.ObjectiveCModules)' == 'true'">1</MaxClangProcesses>
+        <MaxClangProcesses Condition="'@(ClangCompile)' != '' and '%(ClangCompile.MaxClangProcesses)' != '1' and '%(ClangCompile.ObjectiveCModules)' == 'true'">1</MaxClangProcesses>
       </ClangCompile>
     </ItemGroup>
 
-    <Error Condition="('%(ClangCompile.MaxClangProcesses)' &lt; '-1') or ('%(ClangCompile.MaxClangProcesses)' == '0')"
+    <Error Condition="'@(ClangCompile)' != '' and ('%(ClangCompile.MaxClangProcesses)' &lt; '-1' or '%(ClangCompile.MaxClangProcesses)' == '0')"
       Text="%(ClangCompile.MaxClangProcesses) is an invalid value for MaxClangProcesses. MaxClangProcesses must be -1, or a postive integer." />
 
     <!-- Call Clang, passing AdditionalOptions as the LAST argument -->
@@ -341,14 +345,33 @@
     <ComputeImpLibInputsTargets>$(ComputeImpLibInputsTargets);ComputeClangImpLibInputs;</ComputeImpLibInputsTargets>
   </PropertyGroup>
 
+  <!-- Fix up AdditionalLibraryDirectories before the CreateWinMD target runs. -->
   <Target
-    Name="FixLinkAdditionalLibraryDirectories"
+    Name="FixAdditionalLibraryDirectoriesWinMD"
     DependsOnTargets="$(ComputeLinkInputsTargets)"
+    BeforeTargets="CreateWinMD">
+
+    <ItemGroup>
+      <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+        <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
+      </Link>
+    </ItemGroup>
+
+  </Target>
+
+  <!-- The build process for XAML files adds Link item(s) in between the execution of CreateWinMD and Link targets.
+       These items need to be updated with our AdditionalLibraryDirectories. Otherwise, a mismatch of
+       metadata will result in multiple invocations of link.exe due to task batching. -->
+  <Target
+    Name="FixAdditionalLibraryDirectoriesLink"
+    DependsOnTargets="FixAdditionalLibraryDirectoriesWinMD"
     BeforeTargets="Link">
 
     <ItemGroup>
-      <Link>
-        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardLibDirs);$(StarboardConfigSpecificLibsDir);$(StarboardPrebuiltLibsDir);$(StarboardConfigSpecificPrebuiltLibsDir)</AdditionalLibraryDirectories>
+      <Link Condition="'%(Link.ContainsStarboardLibraryDirectories)' != 'true'">
+        <AdditionalLibraryDirectories>%(Link.AdditionalLibraryDirectories);$(StarboardAllLibDirs)</AdditionalLibraryDirectories>
+        <ContainsStarboardLibraryDirectories>true</ContainsStarboardLibraryDirectories>
       </Link>
     </ItemGroup>
 

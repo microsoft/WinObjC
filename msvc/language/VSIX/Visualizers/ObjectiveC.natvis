@@ -1,194 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
-    <!-- Primitive/Runtime Types -->
-    <Type Name="objc_selector">
-        <DisplayString Condition="((libobjc2.dll!objc_selector*)this)->index &lt; libobjc2.dll!selector_count">@selector({libobjc2.dll!selector_list[((libobjc2.dll!objc_selector*)this)->index]->value,s8b})</DisplayString>
-        <DisplayString>@selector({((libobjc2.dll!objc_selector*)this)->name,s8b})</DisplayString>
-        <Expand HideRawView="true">
-            <Item Name="[Type Encoding]">((libobjc2.dll!objc_selector*)this)->types,s8b</Item>
-        </Expand>
-    </Type>
-
-    <!-- Object Types -->
-    <Type Name="NSNumber">
-        <DisplayString Optional="true" Condition="_objCType[0] == 'c'">@{_val.charValue} (char)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'i'">@{_val.intValue} (int)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 's'">@{_val.shortValue} (short)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'l'">@{_val.longValue}L (long)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'q'">@{_val.longLongValue}LL (long long)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'C'">@{_val.unsignedCharValue} (unsigned char)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'I'">@{_val.unsignedIntValue} (unsigned int)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'S'">@{_val.unsignedShortValue} (unsigned short)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'L'">@{_val.unsignedLongValue}UL (unsigned long)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'Q'">@{_val.unsignedLongLongValue}ULL (unsigned long long)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'f'">@{_val.floatValue}f (float)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'd'">@{_val.doubleValue} (double)</DisplayString>
-        <DisplayString Optional="true" Condition="_objCType[0] == 'B'">@{(bool)_val.charValue} (bool)</DisplayString>
-        <DisplayString>@{_val.unsignedLongLongValue,h} (unknown type `{_objCType,s8b}')</DisplayString>
-    </Type>
-
-    <Type Name="NSString">
-        <DisplayString Condition="strType == 0x7fffffff">{((Foundation.dll!_ConstructedStringData*)u->ConstructedString.constructedStr)->str,na}</DisplayString>
-        <DisplayString>{u,s8}</DisplayString>
-        <StringView Condition="strType == 0x7fffffff">((Foundation.dll!_ConstructedStringData*)u->ConstructedString.constructedStr)->str,na</StringView>
-        <StringView>u,s8</StringView>
-    </Type>
-
-    <Type Name="icu_48::UnicodeString">
-        <DisplayString Condition="fFlags == kUsingStackBuffer">{(wchar_t*)fUnion.fStackBuffer,[fShortLength]na}</DisplayString>
-        <DisplayString Condition="fFlags == kRefCounted &amp; fShortLength &lt;= 127">{fUnion.fFields.fArray,[fShortLength]na}</DisplayString>
-        <DisplayString Condition="fFlags == kRefCounted">{fUnion.fFields.fArray,[fUnion.fFields.fLength]na}</DisplayString>
-        <StringView Condition="fFlags == kUsingStackBuffer">(wchar_t*)fUnion.fStackBuffer,[fShortLength]na</StringView>
-        <StringView Condition="fFlags == kRefCounted &amp; fShortLength &lt;=127">fUnion.fFields.fArray,[fShortLength]na</StringView>
-        <StringView Condition="fFlags == kRefCounted">fUnion.fFields.fArray,[fUnion.fFields.fLength]na</StringView>
-    </Type>
-
-    <Type Name="NSData">
-        <AlternativeType Name="NSMutableData"/>
-        <DisplayString Condition="_length &gt; 0 &amp;&amp; _bytes[0] &gt;= 32 &amp;&amp; _bytes[0] &lt; 128">{{ binary data (printable), {_length} characters }}</DisplayString>
-        <DisplayString>{{ binary data, {_length} bytes }}</DisplayString>
-        <StringView Condition="_length &gt; 0 &amp;&amp; _bytes[0] &gt;= 32 &amp;&amp; _bytes[0] &lt; 128">_bytes,[_length]s8</StringView>
-        <Expand>
-            <Item Name="[Length]">_length</Item>
-            <Synthetic Name="[Raw Bytes]">
-                <DisplayString>{(unsigned char*)_bytes,[_length]}</DisplayString>
-                <Expand>
-                    <ArrayItems>
-                        <Size>_length</Size>
-                        <ValuePointer>_bytes</ValuePointer>
-                    </ArrayItems>
-                </Expand>
-            </Synthetic>
-        </Expand>
-    </Type>
-
-    <Type Name="AutoId&lt;*,*&gt;">
-        <!-- AutoId with known subtype -->
-        <DisplayString Condition="(*(void**)this) == 0">nil</DisplayString>
-        <DisplayString>{*($T1 **)(this)}</DisplayString>
-        <Expand HideRawView="true">
-            <Synthetic Name="[Automatic Lifetime]">
-                <DisplayString>{&quot;$T2&quot;,s8b}</DisplayString>
-                <Expand />
-            </Synthetic>
-            <ExpandedItem Condition="(*(void**)this) != 0">*($T1 **)(this)</ExpandedItem>
-            <Synthetic Condition="(*(void**)this) == 0" Name="[Empty]">
-                <DisplayString></DisplayString>
-                <Expand />
-            </Synthetic>
-        </Expand>
-    </Type>
-
-    <Type Name="AutoId&lt;??,*&gt;">
-        <!-- AutoId with unknown/erased subtype -->
-        <DisplayString Condition="(*(void**)this) == 0">nil</DisplayString>
-        <DisplayString>{*(Foundation.dll!NSObject **)(this)}</DisplayString>
-        <Expand HideRawView="true">
-            <Synthetic Name="[Automatic Lifetime]">
-                <DisplayString>{&quot;$T1&quot;,s8b}</DisplayString>
-                <Expand />
-            </Synthetic>
-            <ExpandedItem Condition="(*(void**)this) != 0">*(Foundation.dll!NSObject **)(this)</ExpandedItem>
-            <Synthetic Condition="(*(void**)this) == 0" Name="[Empty]">
-                <DisplayString></DisplayString>
-                <Expand />
-            </Synthetic>
-        </Expand>
-    </Type>
-
-    <Type Name="NSArrayConcrete">
-        <AlternativeType Name="NSMutableArrayConcrete"/>
-        <Expand>
-            <ArrayItems>
-                <Size>arr->objCount</Size>
-                <ValuePointer Condition="arr->heapAlloced">arr->contents.heap.objsArray</ValuePointer>
-                <ValuePointer>arr->contents.objs</ValuePointer>
-            </ArrayItems>
-        </Expand>
-    </Type>
-
-    <Type Name="std::vector&lt;std::pair&lt;void const*, void const*&gt;, *&gt;" IncludeView="NSDictionaryOpenBucket">
-        <!-- We can't currently visualize the std::vector<std::pair<void*,void*>> for a chained key properly. -->
-        <DisplayString>{{ {_Mypair._Myval2._Mylast - _Mypair._Myval2._Myfirst} items }}</DisplayString>
-        <Expand>
-            <ArrayItems>
-                <Size>_Mypair._Myval2._Mylast - _Mypair._Myval2._Myfirst</Size>
-                <ValuePointer>_Mypair._Myval2._Myfirst</ValuePointer>
-            </ArrayItems>
-        </Expand>
-    </Type>
-
-    <Type Name="NSDictionary">
-        <AlternativeType Name="NSMutableDictionary"/>
-        <DisplayString Condition="dict-&gt;numKeys != 1">{{ dictionary, {dict->numKeys} items }}</DisplayString>
-        <DisplayString>{{ dictionary, 1 item }}</DisplayString>
-        <Expand HideRawView="false">
-            <Item Name="[capacity]">dict->n_buckets</Item>
-            <CustomListItems>
-                <Variable Name="i" InitialValue="0"/>
-                <Variable Name="mi" InitialValue="dict->vals->manyItems"/>
-                <Loop>
-                    <If Condition="i &gt;= dict-&gt;n_buckets">
-                        <Break/>
-                    </If>
-                    <If Condition="(((int*)dict-&gt;flags)[i&gt;&gt;4] &gt;&gt; ((i &amp; 0xf) &lt;&lt; 1) &amp; 2) == 0">
-                        <If Condition="dict->vals[i].manyItems != 0">
-                            <Exec>mi = dict->vals[i].manyItems</Exec>
-                            <Item Name="[bucket {i}]">mi,view(NSDictionaryOpenBucket)</Item>
-                        </If>
-                        <Else>
-                            <Item Name="{(Foundation.dll!NSObject*)dict->vals[i].singleKey,na}">(Foundation.dll!NSObject*)dict->vals[i].singleValue</Item>
-                        </Else>
-                    </If>
-                    <Exec>i++</Exec>
-                </Loop>
-            </CustomListItems>
-        </Expand>
-    </Type>
-
-    <Type Name="NSError">
-        <DisplayString>{_domain,na}: {_description,na}</DisplayString>
-    </Type>
-
-    <Type Name="NSException">
-        <DisplayString>{_name,na}: {_reason,na}</DisplayString>
-    </Type>
-
-    <Type Name="NSObject">
-        <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
-    members of the objects, as it would if this natvis entry did not exist.-->
-        <DisplayString>{*this,!}</DisplayString>
-        <Expand HideRawView="true">
-            <!-- We're strictly adding nodes here, not removing any, so the 'raw view' node has no value.-->
-            <!-- Description node-->
-            <Synthetic Name="description" Expression="*this,expand(0)">
-                <CustomVisualizer VisualizerId="7f4e0d61-4720-4dfb-aff7-b611935df606" />
-            </Synthetic>
-            <!-- debugDescription node-->
-            <Synthetic Name="debugDescription" Expression="*this,expand(1)">
-                <CustomVisualizer VisualizerId="454155fb-921d-4eeb-a2dd-bce2bafdc89c" />
-            </Synthetic>
-            <!-- Now, show the raw fields of the object here.-->
-            <ExpandedItem>*this,!</ExpandedItem>
-        </Expand>
-    </Type>
-
-
-    <!-- Disabling implicit func-eval of 'Description' on NSObjects-->
-    <!--<Type Name="NSObject">
-    -->
-    <!-- Invoking the custom visualizer through a custom view as a display string means the custom visualizer controls only the display string;
-         the default visualization will determine the expansion.-->
-    <!--
-    <DisplayString>{this,view(ShowDescription)na}</DisplayString>
+  <!-- Primitive/Runtime Types -->
+  <Type Name="objc_selector">
+    <DisplayString Condition="((libobjc2.dll!objc_selector*)this)->index &lt; libobjc2.dll!selector_count">@selector({libobjc2.dll!selector_list[((libobjc2.dll!objc_selector*)this)->index]->value,s8b})</DisplayString>
+    <DisplayString>@selector({((libobjc2.dll!objc_selector*)this)->name,s8b})</DisplayString>
+    <Expand HideRawView="true">
+      <Item Name="[Type Encoding]">((libobjc2.dll!objc_selector*)this)->types,s8b</Item>
+    </Expand>
   </Type>
 
-  <Type Name="NSObject" IncludeView="ShowDescription">
-    -->
-    <!-- Custom visualizer for NSObject func-evals Description()/DebugDescription() messages when possible.-->
-    <!--
-    <CustomVisualizer VisualizerId="644aef63-4ec5-4ded-9fe4-0eedca065a57" />
-  </Type>-->
+  <!-- Object Types -->
+  <Type Name="NSNumber">
+    <DisplayString Optional="true" Condition="_objCType[0] == 'c'">@{_val.charValue} (char)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'i'">@{_val.intValue} (int)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 's'">@{_val.shortValue} (short)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'l'">@{_val.longValue}L (long)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'q'">@{_val.longLongValue}LL (long long)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'C'">@{_val.unsignedCharValue} (unsigned char)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'I'">@{_val.unsignedIntValue} (unsigned int)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'S'">@{_val.unsignedShortValue} (unsigned short)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'L'">@{_val.unsignedLongValue}UL (unsigned long)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'Q'">@{_val.unsignedLongLongValue}ULL (unsigned long long)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'f'">@{_val.floatValue}f (float)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'd'">@{_val.doubleValue} (double)</DisplayString>
+    <DisplayString Optional="true" Condition="_objCType[0] == 'B'">@{(bool)_val.charValue} (bool)</DisplayString>
+    <DisplayString>@{_val.unsignedLongLongValue,h} (unknown type `{_objCType,s8b}')</DisplayString>
+  </Type>
 
+  <Type Name="NSString">
+    <DisplayString Condition="strType == 0x7fffffff">{((Foundation.dll!_ConstructedStringData*)u->ConstructedString.constructedStr)->str,na}</DisplayString>
+    <DisplayString>{u,s8}</DisplayString>
+    <StringView Condition="strType == 0x7fffffff">((Foundation.dll!_ConstructedStringData*)u->ConstructedString.constructedStr)->str,na</StringView>
+    <StringView>u,s8</StringView>
+  </Type>
+
+  <Type Name="icu_48::UnicodeString">
+    <DisplayString Condition="fFlags == kUsingStackBuffer">{(wchar_t*)fUnion.fStackBuffer,[fShortLength]na}</DisplayString>
+    <DisplayString Condition="fFlags == kRefCounted &amp;&amp; fShortLength &gt;=0 &amp;&amp; fShortLength &lt;= 127">{fUnion.fFields.fArray,[fShortLength]na}</DisplayString>
+    <DisplayString Condition="fFlags == kRefCounted">{fUnion.fFields.fArray,[fUnion.fFields.fLength]na}</DisplayString>
+    <StringView Condition="fFlags == kUsingStackBuffer">(wchar_t*)fUnion.fStackBuffer,[fShortLength]na</StringView>
+    <StringView Condition="fFlags == kRefCounted &amp;&amp; fShortLength &gt;=0 &amp;&amp; fShortLength &lt;=127">fUnion.fFields.fArray,[fShortLength]na</StringView>
+    <StringView Condition="fFlags == kRefCounted">fUnion.fFields.fArray,[fUnion.fFields.fLength]na</StringView>
+  </Type>
+
+  <Type Name="NSData">
+    <AlternativeType Name="NSMutableData"/>
+    <DisplayString Condition="_length &gt; 0 &amp;&amp; _bytes[0] &gt;= 32 &amp;&amp; _bytes[0] &lt; 128">{{ binary data (printable), {_length} characters }}</DisplayString>
+    <DisplayString>{{ binary data, {_length} bytes }}</DisplayString>
+    <StringView Condition="_length &gt; 0 &amp;&amp; _bytes[0] &gt;= 32 &amp;&amp; _bytes[0] &lt; 128">_bytes,[_length]s8</StringView>
+    <Expand>
+      <Item Name="[Length]">_length</Item>
+      <Synthetic Name="[Raw Bytes]">
+        <DisplayString>{(unsigned char*)_bytes,[_length]}</DisplayString>
+        <Expand>
+          <ArrayItems>
+            <Size>_length</Size>
+            <ValuePointer>_bytes</ValuePointer>
+          </ArrayItems>
+        </Expand>
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="AutoId&lt;*,*&gt;">
+    <!-- AutoId with known subtype -->
+    <DisplayString Condition="(*(void**)this) == 0">nil</DisplayString>
+    <DisplayString>{*($T1 **)(this)}</DisplayString>
+    <Expand HideRawView="true">
+      <Synthetic Name="[Automatic Lifetime]">
+        <DisplayString>{&quot;$T2&quot;,s8b}</DisplayString>
+        <Expand />
+      </Synthetic>
+      <ExpandedItem Condition="(*(void**)this) != 0">*($T1 **)(this)</ExpandedItem>
+      <Synthetic Condition="(*(void**)this) == 0" Name="[Empty]">
+        <DisplayString></DisplayString>
+        <Expand />
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="AutoId&lt;??,*&gt;">
+    <!-- AutoId with unknown/erased subtype -->
+    <DisplayString Condition="(*(void**)this) == 0">nil</DisplayString>
+    <DisplayString>{*(Foundation.dll!NSObject **)(this)}</DisplayString>
+    <Expand HideRawView="true">
+      <Synthetic Name="[Automatic Lifetime]">
+        <DisplayString>{&quot;$T1&quot;,s8b}</DisplayString>
+        <Expand />
+      </Synthetic>
+      <ExpandedItem Condition="(*(void**)this) != 0">*(Foundation.dll!NSObject **)(this)</ExpandedItem>
+      <Synthetic Condition="(*(void**)this) == 0" Name="[Empty]">
+        <DisplayString></DisplayString>
+        <Expand />
+      </Synthetic>
+    </Expand>
+  </Type>
+
+  <Type Name="NSArrayConcrete">
+    <AlternativeType Name="NSMutableArrayConcrete"/>
+    <Expand>
+      <ArrayItems>
+        <Size>arr->objCount</Size>
+        <ValuePointer Condition="arr->heapAlloced">arr->contents.heap.objsArray</ValuePointer>
+        <ValuePointer>arr->contents.objs</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="std::vector&lt;std::pair&lt;void const*, void const*&gt;, *&gt;" IncludeView="NSDictionaryOpenBucket">
+    <!-- We can't currently visualize the std::vector<std::pair<void*,void*>> for a chained key properly. -->
+    <DisplayString>{{ {_Mypair._Myval2._Mylast - _Mypair._Myval2._Myfirst} items }}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>_Mypair._Myval2._Mylast - _Mypair._Myval2._Myfirst</Size>
+        <ValuePointer>_Mypair._Myval2._Myfirst</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="NSDictionary">
+    <AlternativeType Name="NSMutableDictionary"/>
+    <DisplayString Condition="dict-&gt;numKeys != 1">{{ dictionary, {dict->numKeys} items }}</DisplayString>
+    <DisplayString>{{ dictionary, 1 item }}</DisplayString>
+    <Expand HideRawView="false">
+      <Item Name="[capacity]">dict->n_buckets</Item>
+      <CustomListItems>
+        <Variable Name="i" InitialValue="0"/>
+        <Variable Name="mi" InitialValue="dict->vals->manyItems"/>
+        <Loop>
+          <If Condition="i &gt;= dict-&gt;n_buckets">
+            <Break/>
+          </If>
+          <If Condition="(((int*)dict-&gt;flags)[i&gt;&gt;4] &gt;&gt; ((i &amp; 0xf) &lt;&lt; 1) &amp; 2) == 0">
+            <If Condition="dict->vals[i].manyItems != 0">
+              <Exec>mi = dict->vals[i].manyItems</Exec>
+              <Item Name="[bucket {i}]">mi,view(NSDictionaryOpenBucket)</Item>
+            </If>
+            <Else>
+              <Item Name="{(Foundation.dll!NSObject*)dict->vals[i].singleKey,na}">(Foundation.dll!NSObject*)dict->vals[i].singleValue</Item>
+            </Else>
+          </If>
+          <Exec>i++</Exec>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="NSError">
+    <DisplayString>{_domain,na}: {_description,na}</DisplayString>
+  </Type>
+
+  <Type Name="NSException">
+    <DisplayString>{_name,na}: {_reason,na}</DisplayString>
+  </Type>
+
+  <Type Name="NSObject" Inheritable="false">
+    <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
+    members of the objects, as it would if this natvis entry did not exist.-->
+    <Expand HideRawView="true">
+      <!-- We're strictly adding nodes here, not removing any, so the 'raw view' node has no value.-->
+      <!-- Description node-->
+      <Synthetic Name="description" Expression="*this,ndexpand(0)">
+        <CustomVisualizer VisualizerId="7f4e0d61-4720-4dfb-aff7-b611935df606" />
+      </Synthetic>
+      <!-- debugDescription node-->
+      <Synthetic Name="debugDescription" Expression="*this,ndexpand(1)">
+        <CustomVisualizer VisualizerId="454155fb-921d-4eeb-a2dd-bce2bafdc89c" />
+      </Synthetic>
+      <!-- Now, show the raw fields of the object here.-->
+      <Item Name="isa">isa</Item>
+    </Expand>
+  </Type>
+
+  <!-- Alternate visualizer of NSObject for VS 2015, Update 2.  In general, the above visualizer is preferable because it avoids the need
+  to drill down extra times to see ivar's.  However, VS 2015 update 2 doesn't support combining the "nd" format specifier with the "expand" format specifier,
+  so a fallback visualizer is required for which all of the sub-expressions parse against update 2.  This alternate visualizer can be removed once VS 2015 Update 2
+  compatibility is no longer supported.
+  -->
+  <Type Name="NSObject" Priority="Low">
+    <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
+    members of the objects, as it would if this natvis entry did not exist.-->
+    <DisplayString>{*this,!}</DisplayString>
+    <Expand HideRawView="true">
+      <!-- We're strictly adding nodes here, not removing any, so the 'raw view' node has no value.-->
+      <!-- Description node-->
+      <Synthetic Name="description" Expression="*this,expand(0)">
+        <CustomVisualizer VisualizerId="7f4e0d61-4720-4dfb-aff7-b611935df606" />
+      </Synthetic>
+      <!-- debugDescription node-->
+      <Synthetic Name="debugDescription" Expression="*this,expand(1)">
+        <CustomVisualizer VisualizerId="454155fb-921d-4eeb-a2dd-bce2bafdc89c" />
+      </Synthetic>
+      <!-- Now, show the raw fields of the object here.-->
+      <ExpandedItem>*this,!</ExpandedItem>
+    </Expand>
+  </Type>
+  
 </AutoVisualizer>
