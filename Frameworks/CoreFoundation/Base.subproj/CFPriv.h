@@ -571,7 +571,8 @@ CF_EXPORT CFMessagePortRef _CFMessagePortCreateLocalEx(CFAllocatorRef allocator,
 #include <pthread.h>
 #elif !TARGET_OS_LINUX
 // Avoid including the pthread header
-#ifndef HAVE_STRUCT_TIMESPEC
+// WINOBJC: defined elsewhere // #ifndef HAVE_STRUCT_TIMESPEC
+#if 0
 #define HAVE_STRUCT_TIMESPEC 1
 struct timespec { long tv_sec; long tv_nsec; };
 #endif

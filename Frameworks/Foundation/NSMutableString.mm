@@ -130,7 +130,8 @@
             searchOptions = NSMatchingAnchored;
         }
 
-        StrongId<NSRegularExpression> regExp = [[NSRegularExpression alloc] initWithPattern:target options:regOptions error:NULL];
+        StrongId<NSRegularExpression> regExp;
+        regExp.attach([[NSRegularExpression alloc] initWithPattern:target options:regOptions error:NULL]);
         int count = [regExp replaceMatchesInString:self options:searchOptions range:range withTemplate:replacement];
 
         return count;
