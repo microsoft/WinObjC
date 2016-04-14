@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -29,7 +30,7 @@
 
 COREMOTION_EXPORT_CLASS
 @interface CMDeviceMotion : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMAttitude* attitude STUB_PROPERTY;
+@property (readonly, nonatomic) CMAttitude* attitude;
 @property (readonly, nonatomic) CMRotationRate rotationRate STUB_PROPERTY;
 @property (readonly, nonatomic) CMAcceleration gravity STUB_PROPERTY;
 @property (readonly, nonatomic) CMAcceleration userAcceleration STUB_PROPERTY;

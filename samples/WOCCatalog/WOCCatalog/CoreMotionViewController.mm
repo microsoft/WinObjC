@@ -25,14 +25,15 @@
     
     scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.width, bounds.size.height)];
     scrollView.backgroundColor = [UIColor whiteColor];
-    scrollView.contentSize = CGSizeMake(450, 960);
+    scrollView.contentSize = CGSizeMake(450, 1200);
     scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     
     buttonLength = 72;
     accHeight = 80;
     gyroHeight = 280;
     magnetoHeight = 480;
-
+    deviceHeight = 680;
+    
     motionManager = [[CMMotionManager alloc] init];
     
     if (motionManager.isAccelerometerAvailable) {
@@ -40,7 +41,7 @@
         motionManager.accelerometerUpdateInterval = 0.016;
         [self setupAccelerometer];
     } else {
-        accLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 80, 300, 50)];
+        accLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, accHeight, 300, 50)];
         [accLabel setBackgroundColor:nil];
         [accLabel setText:@"Accelerometer Not Available!"];
         [accLabel setTextAlignment:NSTextAlignmentLeft];
@@ -52,7 +53,7 @@
         motionManager.gyroUpdateInterval = 0.016;
         [self setupGyrometer];
     } else {
-        gyroLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 280, 300, 50)];
+        gyroLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, gyroHeight, 300, 50)];
         [gyroLabel setBackgroundColor:nil];
         [gyroLabel setText:@"Gyrometer Not Available!"];
         [gyroLabel setTextAlignment:NSTextAlignmentLeft];
@@ -64,11 +65,23 @@
         motionManager.magnetometerUpdateInterval = 0.016;
         [self setupMagnetometer];
     } else {
-        magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 480, 300, 50)];
+        magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, magnetoHeight, 300, 50)];
         [magnetoLabel setBackgroundColor:nil];
         [magnetoLabel setText:@"Magnetometer Not Available!"];
         [magnetoLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:magnetoLabel];
+    }
+    
+    if (motionManager.isDeviceMotionAvailable) {
+        deviceQueue = [[NSOperationQueue alloc] init];
+        motionManager.deviceMotionUpdateInterval = 0.016;
+        [self setupDeviceMotion];
+    } else {
+        deviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, deviceHeight, 300, 50)];
+        [deviceLabel setBackgroundColor:[UIColor whiteColor]];
+        [deviceLabel setText:@"DeviceMotion Not Available!"];
+        [deviceLabel setTextAlignment:NSTextAlignmentLeft];
+        [scrollView addSubview:deviceLabel];
     }
     
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -360,6 +373,149 @@
     } else {
         magnetoUpdateButton.enabled = YES;
         [motionManager startMagnetometerUpdates];
+    }
+}
+
+
+// Methods for DeviceMotion
+-(void)setupDeviceMotion {
+    deviceLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, deviceHeight - 5, 150, 50)];
+    [deviceLabel setBackgroundColor:[UIColor whiteColor]];
+    [deviceLabel setText:@"DeviceMotion"];
+    [deviceLabel setTextAlignment:NSTextAlignmentLeft];
+    [scrollView addSubview:deviceLabel];
+
+    deviceStartButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [deviceStartButton setTitle:@"Start" forState:UIControlStateNormal];
+    deviceStartButton.frame = CGRectMake(100, deviceHeight + 50, buttonLength, 40);
+    [deviceStartButton addTarget:self action:@selector(deviceStartButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:deviceStartButton];
+
+    deviceStopButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [deviceStopButton setTitle:@"Stop" forState:UIControlStateNormal];
+    deviceStopButton.frame = CGRectMake(180, deviceHeight + 50, buttonLength, 40);
+    deviceStopButton.enabled = NO;
+    [deviceStopButton addTarget:self action:@selector(deviceStopButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:deviceStopButton];
+
+    NSArray* segmentTextContent = [NSArray arrayWithObjects:@"with Handler", @"without Handler", nil];
+    deviceHandlerSegment = [[UISegmentedControl alloc] initWithItems:segmentTextContent];
+    deviceHandlerSegment.frame = CGRectMake(130, deviceHeight, buttonLength * 3 + 20, 40);
+    [deviceHandlerSegment addTarget:self action:@selector(deviceStopButtonPressed:) forControlEvents:UIControlEventValueChanged];
+    deviceHandlerSegment.selectedSegmentIndex = 0;
+    [scrollView addSubview:deviceHandlerSegment];
+
+    deviceUpdateButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [deviceUpdateButton setTitle:@"Poll Values" forState:UIControlStateNormal];
+    deviceUpdateButton.frame = CGRectMake(270, deviceHeight + 50, buttonLength * 1.3f, 40);
+    [deviceUpdateButton addTarget:self action:@selector(deviceUpdateButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    deviceUpdateButton.enabled = NO;
+    [scrollView addSubview:deviceUpdateButton];
+
+    deviceVal = [[UILabel alloc] initWithFrame:CGRectMake(10, deviceHeight + 100, 350, 40)];
+    [deviceVal setBackgroundColor:[UIColor whiteColor]];
+    [deviceVal setText:@"roll: 0.000        pitch: 0.000        yaw: 0.000"];
+    [deviceVal setTextAlignment:NSTextAlignmentRight];
+    [scrollView addSubview:deviceVal];
+
+    deviceQVal = [[UILabel alloc] initWithFrame:CGRectMake(30, deviceHeight + 150, 350, 80)];
+    [deviceQVal setBackgroundColor:[UIColor whiteColor]];
+    [deviceQVal setText:@"Quaternion:\n  W: 0.00      X: 0.00      Y: 0.00      Z: 0.00"];
+    [deviceQVal setTextAlignment:NSTextAlignmentLeft];
+    deviceQVal.numberOfLines = 0;
+    [scrollView addSubview:deviceQVal];
+
+    deviceRMVal = [[UILabel alloc] initWithFrame:CGRectMake(30, deviceHeight + 250, 350, 100)];
+    [deviceRMVal setBackgroundColor:[UIColor whiteColor]];
+    [deviceRMVal setText:@"Rotation Matrix:\n       0.000     0.000     0.000\
+                                           \n       0.000     0.000     0.000\
+                                           \n       0.000     0.000     0.000"];
+    [deviceRMVal setTextAlignment:NSTextAlignmentLeft];
+    deviceRMVal.numberOfLines = 0;
+    [scrollView addSubview:deviceRMVal];
+}
+
+
+-(void)deviceStopUpdates {
+    dispatch_queue_t backgroundQueue = dispatch_queue_create("stop", NULL);
+    dispatch_async(backgroundQueue, ^{ [motionManager stopDeviceMotionUpdates]; }); 
+}
+
+
+-(void)deviceStartUpdatesWithHandler {
+    [motionManager startDeviceMotionUpdatesToQueue:deviceQueue withHandler:^(CMDeviceMotion *motion, NSError* error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            [deviceVal setText:[NSString stringWithFormat:@"roll: %.3f        pitch: %.3f        yaw: %.3f", 
+                motion.attitude.roll, motion.attitude.pitch, motion.attitude.yaw]];
+
+            [deviceQVal setText:[NSString stringWithFormat:@"Quaternion:\n  W: % 3.2f      X: % 3.2f      Y: % 3.2f      Z: % 3.2f",
+                motion.attitude.quaternion.w, motion.attitude.quaternion.x, motion.attitude.quaternion.y, motion.attitude.quaternion.z]];
+
+            [deviceRMVal setText:[NSString stringWithFormat:@"Rotation Matrix:\n    % 8.3f  % 8.3f  % 8.3f\
+                                                                              \n    % 8.3f  % 8.3f  % 8.3f\
+                                                                              \n    % 8.3f  % 8.3f  % 8.3f",
+                motion.attitude.rotationMatrix.m11, motion.attitude.rotationMatrix.m12, motion.attitude.rotationMatrix.m13,
+                motion.attitude.rotationMatrix.m21, motion.attitude.rotationMatrix.m22, motion.attitude.rotationMatrix.m23,
+                motion.attitude.rotationMatrix.m31, motion.attitude.rotationMatrix.m32, motion.attitude.rotationMatrix.m33]];
+         });         
+    }];
+}
+
+
+-(void)deviceStopButtonPressed:(UIButton*)button {
+
+    if ([motionManager isDeviceMotionActive]) {
+        deviceStartButton.enabled = YES;
+        deviceStopButton.enabled = NO;
+        deviceUpdateButton.enabled = NO;
+        [self deviceStopUpdates];
+    }
+}
+
+
+-(void)deviceUpdateButtonPressed:(UIButton*)button {
+
+    if ([motionManager isDeviceMotionActive]) { 
+        dispatch_async(dispatch_get_main_queue(), ^{
+
+            [deviceVal setText:[NSString stringWithFormat:@"roll: %.3f        pitch: %.3f        yaw: %.3f",
+                motionManager.deviceMotion.attitude.roll, 
+                motionManager.deviceMotion.attitude.pitch,
+                motionManager.deviceMotion.attitude.yaw]];
+
+            [deviceQVal setText:[NSString stringWithFormat:@"Quaternion:\n  W: % 3.2f      X: % 3.2f      Y: % 3.2f      Z: % 3.2f",
+                motionManager.deviceMotion.attitude.quaternion.w, 
+                motionManager.deviceMotion.attitude.quaternion.x, 
+                motionManager.deviceMotion.attitude.quaternion.y, 
+                motionManager.deviceMotion.attitude.quaternion.z]];
+
+            [deviceRMVal setText:[NSString stringWithFormat:@"Rotation Matrix:\n    % 8.3f  % 8.3f  % 8.3f\
+                                                                              \n    % 8.3f  % 8.3f  % 8.3f\
+                                                                              \n    % 8.3f  % 8.3f  % 8.3f",
+                motionManager.deviceMotion.attitude.rotationMatrix.m11, 
+                motionManager.deviceMotion.attitude.rotationMatrix.m12, 
+                motionManager.deviceMotion.attitude.rotationMatrix.m13,
+                motionManager.deviceMotion.attitude.rotationMatrix.m21,
+                motionManager.deviceMotion.attitude.rotationMatrix.m22, 
+                motionManager.deviceMotion.attitude.rotationMatrix.m23,
+                motionManager.deviceMotion.attitude.rotationMatrix.m31,
+                motionManager.deviceMotion.attitude.rotationMatrix.m32,
+                motionManager.deviceMotion.attitude.rotationMatrix.m33]];
+        });
+    }
+}
+            
+
+-(void)deviceStartButtonPressed:(UIButton*)button {
+    deviceStartButton.enabled = NO;
+    deviceStopButton.enabled = YES;
+
+    if (deviceHandlerSegment.selectedSegmentIndex == 0) {
+        [self deviceStartUpdatesWithHandler];
+    } else {
+        deviceUpdateButton.enabled = YES;
+        [motionManager startDeviceMotionUpdates];
     }
 }
 

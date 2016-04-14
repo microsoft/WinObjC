@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -36,10 +37,10 @@ typedef enum {
 
 COREMOTION_EXPORT_CLASS
 @interface CMAttitude : NSObject <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) double roll STUB_PROPERTY;
-@property (readonly, nonatomic) double pitch STUB_PROPERTY;
-@property (readonly, nonatomic) double yaw STUB_PROPERTY;
-@property (readonly, nonatomic) CMRotationMatrix rotationMatrix STUB_PROPERTY;
-@property (readonly, nonatomic) CMQuaternion quaternion STUB_PROPERTY;
+@property (readonly, nonatomic) double roll;
+@property (readonly, nonatomic) double pitch;
+@property (readonly, nonatomic) double yaw;
+@property (readonly, nonatomic) CMRotationMatrix rotationMatrix;
+@property (readonly, nonatomic) CMQuaternion quaternion;
 - (void)multiplyByInverseOfAttitude:(CMAttitude*)attitude STUB_METHOD;
 @end

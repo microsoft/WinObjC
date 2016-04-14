@@ -1,6 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2016 Intel Corporation. All rights reserved.
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -17,6 +18,7 @@
 #pragma once
 
 #import "UWP/WindowsFoundation.h"
+#import "UWP/WindowsDevicesSensors.h"
 
 @interface CMAccelerometerData ()
 - (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time;
@@ -28,4 +30,20 @@
 
 @interface CMMagnetometerData ()
 - (instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time;
+@end
+
+@interface CMAttitude ()
+- (instancetype)initWithValues:(double)roll
+                         pitch:(double)pitch
+                           yaw:(double)yaw
+                rotationMatrix:(CMRotationMatrix)rotationMatrix
+                    quaternion:(CMQuaternion)quaternion;
+@end
+
+@interface CMDeviceMotion()
+- (instancetype)initWithValues:(CMAttitude*)attitude time:(double)time;
+@end
+
+@interface CMMotionManager ()
++ (CMAttitude*)toAttitude:(WDSSensorRotationMatrix*)rm quaternion:(WDSSensorQuaternion*)q;
 @end
