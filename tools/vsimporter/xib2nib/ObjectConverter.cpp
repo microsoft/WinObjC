@@ -138,6 +138,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "connections", XIBArray)
     IS_CONVERTER(ret, className, "string", XIBObjectString)
     IS_CONVERTER(ret, className, "viewController", UIViewController)
+    IS_CONVERTER(ret, className, "splitViewController", UIViewController)
     IS_CONVERTER(ret, className, "placeholder", UIProxyObject)
     IS_CONVERTER(ret, className, "tabBarController", UITabBarController)
     IS_CONVERTER(ret, className, "navigationItem", UINavigationItem)
