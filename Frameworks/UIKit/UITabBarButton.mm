@@ -72,7 +72,7 @@
             CGContextClipToMask(context, drawRect, (CGImageRef)[image CGImage]);
             CGContextDrawImage(context, drawRect, (CGImageRef)[highlight CGImage]);
         } else {
-            if ([_item enabled]) {
+            if ([_item isEnabled]) {
                 id deselected = [UIImage imageNamed:@"/img/tabbar-button-deselected.png"];
 
                 CGContextClipToMask(context, drawRect, (CGImageRef)[image CGImage]);
@@ -127,8 +127,8 @@
 
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     UIView* parent = [self superview];
-    if ([_item enabled] && [static_cast<UITabBar*>(parent) selectedItem] != _item) {
-        [parent setSelectedItem:_item];
+    if ([_item isEnabled] && [static_cast<UITabBar*>(parent) selectedItem] != _item) {
+        [static_cast<UITabBar*>(parent) setSelectedItem:_item];
 
         if ([_delegate respondsToSelector:@selector(_tabBar:didSelectItem:)]) {
             [static_cast<UITabBarController*>(_delegate) _tabBar:static_cast<UITabBar*>(parent) didSelectItem:_item];

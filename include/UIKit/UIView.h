@@ -334,7 +334,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) UIColor* backgroundColor;
 @property (nonatomic, getter=isExclusiveTouch) BOOL exclusiveTouch STUB_PROPERTY;
 @property (nonatomic, getter=isHidden) BOOL hidden;
-@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled STUB_PROPERTY;
+@property (nonatomic, getter=isMultipleTouchEnabled) BOOL multipleTouchEnabled;
 @property (nonatomic, getter=isOpaque) BOOL opaque;
 @property (nonatomic, getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 @property (nonatomic, readonly) CALayer* layer;

@@ -31,6 +31,7 @@
 #import "UITableViewCellInternal.h"
 #import "UIScrollViewInternal.h"
 #import <UIKit/UITableViewDataSource.h>
+#import "UINibInternal.h"
 
 typedef id idweak;
 
@@ -375,7 +376,7 @@ public:
             [view _setGroupEdgeStyle:groupEdgeStyle];
         } else {
             if (_parent->tablePriv->_separatorStyle == 1) {
-                [view addBottomBorder:_parent];
+                [view _addBottomBorder:_parent];
             }
             [view _setGroupEdgeStyle:0];
         }
@@ -421,12 +422,12 @@ public:
     id getView(CGRect frame) {
         id view = nil;
         if (_isHeader) {
-            if ([_parent->tablePriv->_dataSource respondsToSelector:@selector(tableView:viewForHeaderInSection:)]) {
-                view = [_parent->tablePriv->_dataSource tableView:_parent viewForHeaderInSection:_parentSection->_sectionIndex];
+            if ([_parent->tablePriv->_delegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)]) {
+                view = [_parent->tablePriv->_delegate tableView:_parent viewForHeaderInSection:_parentSection->_sectionIndex];
             }
         } else {
-            if ([_parent->tablePriv->_dataSource respondsToSelector:@selector(tableView:viewForFooterInSection:)]) {
-                view = [_parent->tablePriv->_dataSource tableView:_parent viewForFooterInSection:_parentSection->_sectionIndex];
+            if ([_parent->tablePriv->_delegate respondsToSelector:@selector(tableView:viewForFooterInSection:)]) {
+                view = [_parent->tablePriv->_delegate tableView:_parent viewForFooterInSection:_parentSection->_sectionIndex];
             }
         }
 
@@ -1398,7 +1399,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     id reusableNib = [tablePriv->_reusableCellNibs objectForKey:identifier];
     if (reusableNib != nil) {
         id proxies = [tablePriv->_externalObjects objectForKey:identifier];
-        id objects = [reusableNib instantiateWithOwner:self options:nil proxies:proxies];
+        id objects = [reusableNib _instantiateWithOwner:self options:nil proxies:proxies];
         id ret = [[objects objectAtIndex:0] retain];
         [ret _setReuseIdentifier:identifier];
         return [ret autorelease];
@@ -1448,7 +1449,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
     id reusableNib = [tablePriv->_reusableCellNibs objectForKey:identifier];
     if (reusableNib != nil) {
         id proxies = [tablePriv->_externalObjects objectForKey:identifier];
-        id objects = [reusableNib instantiateWithOwner:self options:nil proxies:proxies];
+        id objects = [reusableNib _instantiateWithOwner:self options:nil proxies:proxies];
         id ret = [[objects objectAtIndex:0] retain];
         [ret _setReuseIdentifier:identifier];
         return [ret autorelease];
@@ -1685,7 +1686,7 @@ static void recalcTableSize(UITableView* self, bool changedWidth) {
 
             [_indexPathsForSelectedItems addObject:indexPath];
 
-            [selectedCell performSelectionSegue];
+            [selectedCell _performSelectionSegue];
 
             if (scrollPosition != UITableViewScrollPositionNone) {
                 [self scrollToRowAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];

@@ -144,13 +144,6 @@ void initInternal(UIToolbar* self) {
 /**
  @Status Interoperable
 */
-- (void)buttonClicked:(NSUInteger)button {
-    [_delegate buttonBarItemTapped:button];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setItems:(NSArray*)items {
     [self setItems:items animated:FALSE];
 }

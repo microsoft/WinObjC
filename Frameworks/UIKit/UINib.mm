@@ -27,6 +27,7 @@
 #import "UINibUnarchiver.h"
 #import "UIRuntimeOutletCollectionConnection.h"
 #import "UIRuntimeOutletConnection.h"
+#import "UINibInternal.h"
 
 NSString* const UINibExternalObjects = @"UINibExternalObjects";
 
@@ -150,6 +151,10 @@ NSString* const UINibExternalObjects = @"UINibExternalObjects";
 */
 - (void)dealloc {
     [super dealloc];
+}
+
+- (NSArray*)_instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options proxies:(id)proxies {
+    return [self instantiateWithOwner:ownerObject options:options];
 }
 
 @end

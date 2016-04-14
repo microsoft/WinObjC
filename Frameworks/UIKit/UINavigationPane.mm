@@ -14,10 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UINavigationController.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "UINavigationControllerInternal.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UINavigationPane";
 
@@ -30,7 +29,10 @@ static const wchar_t* TAG = L"UINavigationPane";
     if (_parentController == nil) {
         TraceVerbose(TAG, L"UINavigationPane: parent destroyed?");
     }
-    [_parentController layoutContainer];
+
+    if ([_parentController respondsToSelector:@selector(_layoutContainer)]) {
+        [static_cast<UINavigationController*>(_parentController) _layoutContainer];
+    }
 }
 
 @end

@@ -28,6 +28,7 @@
 #import "UIApplicationInternal.h"
 #import "CALayerInternal.h"
 #import "UIDeviceInternal.h"
+#import "CATransactionInternal.h"
 
 static const wchar_t* TAG = L"UIWindow";
 

@@ -17,6 +17,7 @@
 // NSUnarchiver is only available for OS X.
 // The two derived classes UINibUnarchiver and NSKeyedUnarchiver override this method.
 // Therefore this method is placed in the extension for the base class - NSCoder.
-@interface NSCoder () 
+@interface NSCoder ()
+- (NSBundle*)_bundle;
 - (void)_swapActiveObject:(id)object;
 @end

@@ -17,6 +17,7 @@
 #import "Starboard.h"
 #import <UIKit/UIKit.h>
 #import "UIPickerViewInternal.h"
+#import "UIDatePicker+Internal.h"
 
 static const wchar_t* TAG = L"UIDatePicker";
 
@@ -768,10 +769,7 @@ static NSString* titleForDayRow(UIDatePicker* self, int row) {
     return ret;
 }
 
-/**
- @Status Interoperable
-*/
-- (NSString*)pickerView:(UIDatePicker*)picker titleForRow:(unsigned)row forComponent:(int)component withColor:(UIColor**)color {
+- (NSString*)_pickerView:(UIDatePicker*)picker titleForRow:(unsigned)row forComponent:(int)component withColor:(UIColor**)color {
     switch (_mode) {
         case UIDatePickerModeTime:
             return titleForTimeRow(self, row, component, color);

@@ -14,17 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIButtonContent.h"
+@class UIDatePicker;
+@class UIColor;
 
-@implementation UIButtonContent
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    _image = [coder decodeObjectForKey:@"UIImage"];
-    _backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
-    _title = [coder decodeObjectForKey:@"UITitle"];
-    _titleColor = [coder decodeObjectForKey:@"UITitleColor"];
-    _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
-
-    return self;
-}
+@interface UIDatePicker (Internal)
+- (NSString*)_pickerView:(UIDatePicker*)picker titleForRow:(unsigned)row forComponent:(int)component withColor:(UIColor**)color;
 @end

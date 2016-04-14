@@ -84,7 +84,7 @@ static int _changingResponder = 0;
         return TRUE;
     }
     if ([self respondsToSelector:@selector(window)]) {
-        if ([self window] == nil) {
+        if ([static_cast<UIView*>(self) window] == nil) {
             return FALSE;
         }
     }
@@ -223,15 +223,14 @@ static int _changingResponder = 0;
  @Status Interoperable
 */
 - (void)didMoveToWindow {
-    if (_curFirstResponder == self && [self window] == nil) {
-        [self resignFirstResponder];
-        _curFirstResponder = nil;
+    if ([self respondsToSelector:@selector(window)]) {
+        if (_curFirstResponder == self && [static_cast<UIView*>(self) window] == nil) {
+            [self resignFirstResponder];
+            _curFirstResponder = nil;
+        }
     }
 }
 
-/**
- @Status Interoperable
-*/
 + (void)_resignCurResponder {
     [_curFirstResponder resignFirstResponder];
     _curFirstResponder = nil;

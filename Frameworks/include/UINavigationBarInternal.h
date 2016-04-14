@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,8 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIButtonContent.h"
+#pragma once
 
-@implementation UIButtonContent
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    _image = [coder decodeObjectForKey:@"UIImage"];
-    _backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
-    _title = [coder decodeObjectForKey:@"UITitle"];
-    _titleColor = [coder decodeObjectForKey:@"UITitleColor"];
-    _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
-
-    return self;
-}
+@interface UINavigationBar (Internal)
+- (void)_pushNavigationItem:(UINavigationItem*)item;
 @end

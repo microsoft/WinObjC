@@ -92,10 +92,10 @@ static int addButton(UIActionSheet* self, id text) {
  @Status Interoperable
 */
 - (instancetype)initWithTitle:(id)title
-                  delegate:(id)delegate
-         cancelButtonTitle:(id)cancelButtonTitle
-    destructiveButtonTitle:(id)destructiveButtonTitle
-         otherButtonTitles:(id)otherButtonTitles, ... {
+                     delegate:(id)delegate
+            cancelButtonTitle:(id)cancelButtonTitle
+       destructiveButtonTitle:(id)destructiveButtonTitle
+            otherButtonTitles:(id)otherButtonTitles, ... {
     va_list pReader;
     va_start(pReader, otherButtonTitles);
     [self init];
@@ -272,8 +272,8 @@ static int addButton(UIActionSheet* self, id text) {
 /**
  @Status Interoperable
 */
-- (void)showFromBarButtonItem:(id)item animated:(BOOL)animated {
-    [self showInView:[[[item view] superview] superview]];
+- (void)showFromBarButtonItem:(UIBarButtonItem*)item animated:(BOOL)animated {
+    [self showInView:[[[item _view] superview] superview]];
 }
 
 /**

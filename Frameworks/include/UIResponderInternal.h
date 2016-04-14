@@ -20,5 +20,5 @@
 + (void)_keyPressed:(unsigned short)key;
 - (void)_keyPressed:(unsigned short)key;
 + (id)_deleteRange:(id)num;
-
++ (void)_resignCurResponder;
 @end

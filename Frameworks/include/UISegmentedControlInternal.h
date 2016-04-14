@@ -15,9 +15,7 @@
 //******************************************************************************
 #pragma once
 
-#import <UIKit/UISegmentedControl.h>
-
-@interface UISegmentedControl ()
+@interface UISegmentedControl (Internal)
 - (id)_segmentSelectedDown:(id)segment;
 - (id)_segmentSelectedUp:(id)segment;
 - (id)_segmentSelectedCancelled:(id)segment;

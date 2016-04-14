@@ -14,17 +14,10 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIButtonContent.h"
+#pragma once
 
-@implementation UIButtonContent
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    _image = [coder decodeObjectForKey:@"UIImage"];
-    _backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
-    _title = [coder decodeObjectForKey:@"UITitle"];
-    _titleColor = [coder decodeObjectForKey:@"UITitleColor"];
-    _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
+@class NSDictionary;
 
-    return self;
-}
+@interface UINib (Internal)
+- (NSArray*)_instantiateWithOwner:(id)ownerObject options:(NSDictionary*)options proxies:(id)proxies;
 @end

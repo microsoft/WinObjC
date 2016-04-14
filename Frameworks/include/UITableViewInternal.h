@@ -165,7 +165,7 @@ struct UITableViewPriv {
     idretain _swipeGestureRecognizer;
     StrongId<UIButton> _removeButton;
 
-    StrongId<UIView> _editSelectedView;
+    StrongId<UIImageView> _editSelectedView;
     BOOL _editSelectedViewVisible;
 }
 

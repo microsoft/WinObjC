@@ -39,6 +39,8 @@
 #import "UIViewInternal.h"
 #import "UIViewControllerInternal.h"
 #import "UIStoryboardInternal.h"
+#import "UIResponderInternal.h"
+#import "NSCoderInternal.h"
 
 NSString* const UIViewControllerHierarchyInconsistencyException = @"UIViewControllerHierarchyInconsistencyException";
 NSString* const UIViewControllerShowDetailTargetDidChangeNotification = @"UIViewControllerShowDetailTargetDidChangeNotification";

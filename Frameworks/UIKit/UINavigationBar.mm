@@ -34,6 +34,7 @@
 #import "LoggingNative.h"
 #import "UINavigationControllerInternal.h"
 #import "UIBarButtonItem+Internals.h"
+#import "UINavigationBarInternal.h"
 
 static const wchar_t* TAG = L"UINavigationBar";
 
@@ -210,10 +211,7 @@ static void setBackground(UINavigationBar* self) {
     }
 }
 
-/**
- @Status Interoperable
-*/
-- (void)pushNavigationItem:(UINavigationItem*)item {
+- (void)_pushNavigationItem:(UINavigationItem*)item {
     [_items addObject:item];
     [self setNeedsDisplay];
     [self setNeedsLayout];
@@ -250,7 +248,7 @@ static void setBackground(UINavigationBar* self) {
  @Notes animation parameter not supported
 */
 - (void)pushNavigationItem:(UINavigationItem*)item animated:(BOOL)animated {
-    [self pushNavigationItem:item];
+    [self _pushNavigationItem:item];
 }
 
 /**
@@ -381,11 +379,11 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (_leftButton != nil) {
-            [[_leftButton view] setBackButtonDelegate:nil action:NULL withParam:nil];
-            [[_leftButton view] removeFromSuperview];
+            [[_leftButton _view] setBackButtonDelegate:nil action:NULL withParam:nil];
+            [[_leftButton _view] removeFromSuperview];
         }
         if (_rightButton != nil) {
-            [[_rightButton view] removeFromSuperview];
+            [[_rightButton _view] removeFromSuperview];
         }
         if (_titleView != nil) {
             [_titleView removeFromSuperview];
@@ -419,16 +417,16 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
                 } else {
                     _leftButton = _backButton;
                     [_backButton setTitle:@"       "]; // Space needed to secure the space for back button image
-                    [_backButton setImage:[UIImage imageNamed : @"/img/backbutton@2x.png"]];
+                    [_backButton setImage:[UIImage imageNamed:@"/img/backbutton@2x.png"]];
                     backButtonHandler = true;
                 }
             }
         }
 
         if (backButtonHandler && [_leftButton respondsToSelector:@selector(_sendAction:)]) {
-            [[_leftButton view] setBackButtonDelegate:_leftButton action:@selector(_sendAction:) withParam:nil];
-            [[_leftButton view] setBackButtonReturnsSuccess:FALSE];
-            [[_leftButton view] setBackButtonPriority:-100];
+            [[_leftButton _view] setBackButtonDelegate:_leftButton action:@selector(_sendAction:) withParam:nil];
+            [[_leftButton _view] setBackButtonReturnsSuccess:FALSE];
+            [[_leftButton _view] setBackButtonPriority:-100];
         }
 
         CGRect bounds;
@@ -438,7 +436,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         float rightMargin = 0;
 
         if (_leftButton != nil) {
-            UIView* leftButtonView = [_leftButton view];
+            UIView* leftButtonView = [_leftButton _view];
             CGRect frame = CGRectMake(5.0f, 5.0f, 65.0f, 35.0f);
 
             frame.size = [_leftButton idealSize];
@@ -453,7 +451,7 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         }
 
         if (_rightButton != nil) {
-            UIView* rightButtonView = [_rightButton view];
+            UIView* rightButtonView = [_rightButton _view];
 
             CGRect frame = CGRectMake(5.0f, 5.0f, 65.0f, 35.0f);
 

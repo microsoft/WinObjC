@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,17 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIButtonContent.h"
-
-@implementation UIButtonContent
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    _image = [coder decodeObjectForKey:@"UIImage"];
-    _backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
-    _title = [coder decodeObjectForKey:@"UITitle"];
-    _titleColor = [coder decodeObjectForKey:@"UITitleColor"];
-    _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
-
-    return self;
+// TODO: Task 7188763-Reimplement CGDataProvider which does not inherit from NSData but rather uses it within itself.
+@interface CGDataProvider : NSData {
+@public
+    CGDataProviderReleaseDataCallback releaseFunc;
+    void* info;
+    size_t size;
+    const void* data;
+    StrongId<NSString> filename;
 }
+- (NSString*)_fileName;
 @end

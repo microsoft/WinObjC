@@ -65,9 +65,9 @@ void sendDidStop(id delegate, SEL selector, NSString* animName, BOOL finished, v
         }
 
         if (selName) {
-            id didFinish = [NSNumber numberWithBool:finished];
+            NSNumber* didFinish = [NSNumber numberWithBool:finished];
             if (contextArg) {
-                [delegate performSelector:selName withObject:animName withObject:didFinish withObject:context];
+                ((id (*)(id, SEL, NSString*, NSNumber*, void*))objc_msgSend)(delegate, selName, animName, didFinish, context);
             } else {
                 [delegate performSelector:selName withObject:animName withObject:didFinish];
             }

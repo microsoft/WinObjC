@@ -20,6 +20,7 @@
 #import "UIKit/UIImage.h"
 #import "LoggingNative.h"
 #import "UINibUnarchiver.h"
+#import "NSCoderInternal.h"
 
 static const wchar_t* TAG = L"UIImageNibPlaceholder";
 
