@@ -26,7 +26,6 @@
 #import <TestFramework.h>
 #import <vector>
 
-// TODO 6670035: This test has a dependency on NSBundle
 TEST(NSData, WriteToURLOptions) {
     NSData* saveData = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Test" withExtension:@"plist"]];
     auto savePath = @"/tmp/Test.plist";
