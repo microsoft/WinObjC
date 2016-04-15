@@ -267,8 +267,7 @@ TEST(NSString, UppercaseStringWithLocale) {
     // Special casing (see swift/validation-tests/stdlib/NSStringAPI.swift)
     ASSERT_OBJCEQ([@"\u0069" uppercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0049");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly
-    // ASSERT_OBJCEQ([@"\u069"] uppercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"tr"]],
-    // @"\u0130")
+    ASSERT_OBJCEQ([@"\u0069" uppercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"tr"]], @"\u0130");
 }
 
 TEST(NSString, LowercaseString) {
@@ -282,12 +281,10 @@ TEST(NSString, LowercaseStringWithLocale) {
     // Special casing (see swift/validation-tests/stdlib/NSStringAPI.swift)
     ASSERT_OBJCEQ([@"\u0130" lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0069\u0307");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly
-    // ASSERT_OBJCEQ([@"\u130"] lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"tr"]],
-    // @"\u0069")
+    ASSERT_OBJCEQ([@"\u0130" lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"tr"]], @"\u0069");
     ASSERT_OBJCEQ([@"\u0049\u0307" lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0069\u0307");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly
-    // ASSERT_OBJCEQ([@"\u049\u0307"] lowercaseStringWithLocale:[NSLocale
-    // localeWithLocaleIdentifier:@"tr"]], @"\u0069")
+    ASSERT_OBJCEQ([@"\u0049\u0307" lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"tr"]], @"\u0069");
 }
 
 TEST(NSString, CapitalizedString) {

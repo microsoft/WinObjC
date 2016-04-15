@@ -22,9 +22,10 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFNumber.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFTemporaryRootObject.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_CFLocaleInternal.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC8C5D49-060C-4375-904C-FE472C757E58}</ProjectGuid>

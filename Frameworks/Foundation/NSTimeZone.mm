@@ -102,7 +102,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     @synchronized(self) {
         if (!s_systemTimeZone) {
             // Get current locale.
-            NSString* countryCode = [NSLocale _currentNSLocaleCountryCode];
+            NSString* countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
 
             // Get time zone info from system.
             DYNAMIC_TIME_ZONE_INFORMATION dtz;

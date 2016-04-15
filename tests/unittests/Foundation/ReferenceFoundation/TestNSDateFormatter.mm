@@ -27,14 +27,12 @@
 static NSString* DEFAULT_TIMEZONE = @"GMT";
 static NSString* DEFAULT_LOCALE = @"en_US";
 
-// TODO 7284899: Dependency on Locale.subproj
-TEST(NSDateFormatter, DISABLED_BasicConstruction) {
+TEST(NSDateFormatter, BasicConstruction) {
     NSDateFormatter* f = [[NSDateFormatter new] autorelease];
     ASSERT_OBJCNE(nil, f);
 }
 
-// TODO 7284899: Dependency on Locale.subproj
-TEST(NSDateFormatter, DISABLED_CustomDateFormat) {
+TEST(NSDateFormatter, CustomDateFormat) {
     NSDateFormatter* dateFormatter = [[NSDateFormatter new] autorelease];
     dateFormatter.dateFormat = @"dd-MM-yyyy";
     auto dateStr = [dateFormatter stringFromDate:[NSDate date]];
@@ -42,7 +40,7 @@ TEST(NSDateFormatter, DISABLED_CustomDateFormat) {
     LOG_INFO(@"With dateFormat '%@':  '%@'", dateFormatter.dateFormat, dateStr);
 }
 
-// TODO 7284899: Dependency on Locale.subproj
+// TODO 7367511: Slight format difference in ICU
 // ShortStyle
 // locale  stringFromDate  example
 // ------  --------------  --------
@@ -86,7 +84,7 @@ TEST(NSDateFormatter, DISABLED_DateStyleShort) {
     }
 }
 
-// TODO 7284899: Dependency on Locale.subproj
+// TODO 7367511: Slight format difference in ICU
 // MediumStyle
 // locale  stringFromDate  example
 // ------  --------------  ------------
@@ -128,7 +126,7 @@ TEST(NSDateFormatter, DISABLED_DateStyleMedium) {
     }
 }
 
-// TODO 7284899: Dependency on Locale.subproj
+// TODO 7367511: Slight format difference in ICU
 // LongStyle
 // locale  stringFromDate  example
 // ------  --------------  -----------------
@@ -170,12 +168,12 @@ TEST(NSDateFormatter, DISABLED_DateStyleLong) {
     }
 }
 
-// TODO 7284899: Dependency on Locale.subproj
+// TODO 7367511: Slight format difference in ICU
 // FullStyle
 // locale  stringFromDate  example
 // ------  --------------  -------------------------
 // en_US   EEEE, MMMM d, y  Friday, December 25, 2015
-TEST(NSDateFormatter, DISABLED_ateStyleFull) {
+TEST(NSDateFormatter, DISABLED_DateStyleFull) {
     auto timestamps = @{
         @-31536000 : @"Wednesday, January 1, 1969 at 12:00:00 AM GMT",
         @0.0 : @"Thursday, January 1, 1970 at 12:00:00 AM GMT",

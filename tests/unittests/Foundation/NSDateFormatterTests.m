@@ -61,8 +61,7 @@ bool isSupportedLocaleAndTimeZone(NSLocale* locale, NSTimeZone* timezone) {
     return supportedTestCase;
 }
 
-// TODO 7284899: Dependency on Locale.subproj
-TEST(NSDateFormatter, DISABLED_NSDateFormatter) {
+TEST(NSDateFormatter, NSDateFormatter) {
     NSLocale* currentLocale = [NSLocale currentLocale];
     NSTimeZone* systemTimeZone = [NSTimeZone systemTimeZone];
 

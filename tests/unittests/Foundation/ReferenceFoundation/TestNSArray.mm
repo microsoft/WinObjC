@@ -450,19 +450,18 @@ TEST(NSArray, SortUsingComparator) {
 
     ASSERT_OBJCEQ(mutableInput, expectedNumbers);
 
-    // TODO (7284899): This section has a dependency on the Locale subproj
-    // // check that it works in the way [self sortWithOptions:[] usingComparator: cmptr] does
-    // auto inputStrings = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
-    // NSMutableArray* mutableStringsInput1 = (NSMutableArray*)[inputStrings mutableCopy];
-    // NSMutableArray* mutableStringsInput2 = (NSMutableArray*)[inputStrings mutableCopy];
-    // auto comparator = ^NSComparisonResult(id left, id right) {
-    //     NSString* l = (NSString*)left;
-    //     NSString* r = (NSString*)right;
-    //     return [l localizedCaseInsensitiveCompare:r];
-    // };
-    // [mutableStringsInput1 sortUsingComparator:comparator];
-    // [mutableStringsInput2 sortWithOptions:0 usingComparator:comparator];
-    // ASSERT_TRUE([mutableStringsInput1 isEqualToArray:mutableStringsInput2]);
+    // check that it works in the way [self sortWithOptions:[] usingComparator: cmptr] does
+    auto inputStrings = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
+    NSMutableArray* mutableStringsInput1 = (NSMutableArray*)[inputStrings mutableCopy];
+    NSMutableArray* mutableStringsInput2 = (NSMutableArray*)[inputStrings mutableCopy];
+    auto comparator = ^NSComparisonResult(id left, id right) {
+        NSString* l = (NSString*)left;
+        NSString* r = (NSString*)right;
+        return [l localizedCaseInsensitiveCompare:r];
+    };
+    [mutableStringsInput1 sortUsingComparator:comparator];
+    [mutableStringsInput2 sortWithOptions:0 usingComparator:comparator];
+    ASSERT_TRUE([mutableStringsInput1 isEqualToArray:mutableStringsInput2]);
 }
 
 TEST(NSArray, Equality) {
