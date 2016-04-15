@@ -131,7 +131,7 @@ static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbol
         [symbolList addObject:string];
     }
 
-    return [symbolList retain];
+    return symbolList;
 }
 
 static void SetSymbolFromNSString(icu::DateFormat* formatter, NSString* value, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
