@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,8 +17,20 @@
 
 #import <CoreMotion/CMDeviceMotion.h>
 #import <StubReturn.h>
+#import "CMLogItemInternal.h"
 
 @implementation CMDeviceMotion
+
+- (instancetype)initWithValues:(CMAttitude*)attitude time:(double)time {
+
+    if (self = [super initWithTimestamp:time]) {
+        _attitude = attitude;
+    }
+
+    return self;
+}
+
+
 /**
 @Status Stub
 */

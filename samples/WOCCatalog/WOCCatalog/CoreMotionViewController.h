@@ -47,6 +47,17 @@
     UISegmentedControl* magnetoHandlerSegment;
     NSOperationQueue* magnetoQueue;
     int magnetoHeight;
+    
+    UILabel* deviceLabel;
+    UILabel* deviceVal;
+    UILabel* deviceQVal;
+    UILabel* deviceRMVal;
+    UIButton* deviceStopButton;
+    UIButton* deviceStartButton;
+    UIButton* deviceUpdateButton;
+    UISegmentedControl*deviceHandlerSegment;
+    NSOperationQueue* deviceQueue;
+    int deviceHeight;
 
     CMMotionManager* motionManager;
     UIScrollView* scrollView;
