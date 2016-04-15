@@ -481,7 +481,7 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                            return target->m_position.X;
+                                                            return (double)target->m_position.X;
                                                     }
                                                     return CALayerXaml::_GetAnimatedTransformIndex(
                                                         target, 3, TranslateTransform::XProperty);
@@ -510,7 +510,7 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                          return target->m_position.X;
+                                                          return (double)target->m_position.X;
                                                     }
                                                     return CALayerXaml::_GetAnimatedTransformIndex(
                                                         target, 3, TranslateTransform::XProperty);
@@ -536,8 +536,9 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           }),
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
-                                                    return Point((float)target->Get("position.x"),
-                                                            (float)target->Get("position.y"));
+                                                    // Unbox x and y values as doubles, before casting them to floats
+                                                    return Point((float)(double)target->Get("position.x"),
+                                                                 (float)(double)target->Get("position.y"));
                                                })) },
     { "origin.x",
       ref new CALayerXaml::AnimatableProperty(
@@ -584,11 +585,10 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                        return target->m_origin.X;
+                                                        return (double)target->m_origin.X;
                                                     }
-                                                    return (Object^)(
-                                                        -((double)CALayerXaml::_GetAnimatedTransformIndex(
-                                                        target, 1, TranslateTransform::XProperty)));
+                                                    return -((double)CALayerXaml::_GetAnimatedTransformIndex(
+                                                        target, 1, TranslateTransform::XProperty));
                                                })) },
 
     { "origin.y",
@@ -635,10 +635,10 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                        return target->m_origin.Y;
+                                                        return (double)target->m_origin.Y;
                                                     }
-                                                    return (Object^)(-((double)CALayerXaml::_GetAnimatedTransformIndex(
-                                                        target, 1, TranslateTransform::YProperty)));
+                                                    return -((double)CALayerXaml::_GetAnimatedTransformIndex(
+                                                        target, 1, TranslateTransform::YProperty));
                                                })) },
     { "origin",
       ref new CALayerXaml::AnimatableProperty(
@@ -661,8 +661,9 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           }),
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
-                                                    return Point((float)target->Get("origin.x"),
-                                                        (float)target->Get("origin.y"));
+                                                    // Unbox x and y values as doubles, before casting them to floats
+                                                    return Point((float)(double)target->Get("origin.x"),
+                                                                 (float)(double)target->Get("origin.y"));
                                                })) },
     { "anchorPoint.x",
       ref new CALayerXaml::AnimatableProperty(
@@ -689,7 +690,7 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
                   target->_CalcTransforms();
               }
           }),
-          ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^ { return (Object^)target->m_anchorPoint.X; })) },
+          ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^ { return (double)target->m_anchorPoint.X; })) },
     { "anchorPoint.y",
       ref new CALayerXaml::AnimatableProperty(
           ref new CALayerXaml::ApplyAnimationFunction(
@@ -715,7 +716,7 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
                   target->_CalcTransforms();
               }
           }),
-          ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^ { return (Object^)target->m_anchorPoint.Y; })) },
+          ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^ { return (double)target->m_anchorPoint.Y; })) },
     { "anchorPoint",
       ref new CALayerXaml::AnimatableProperty(
           ref new CALayerXaml::ApplyAnimationFunction(
@@ -737,8 +738,9 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           }),
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
-                                                    return Point((float)target->Get("anchorPoint.x"),
-                                                        (float)target->Get("anchorPoint.y"));
+                                                    // Unbox x and y values as doubles, before casting them to floats
+                                                    return Point((float)(double)target->Get("anchorPoint.x"),
+                                                                 (float)(double)target->Get("anchorPoint.y"));
                                                })) },
     { "size.width",
       ref new CALayerXaml::AnimatableProperty(
@@ -793,7 +795,7 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                        return target->m_size.Width;
+                                                        return (double)target->m_size.Width;
                                                     }
                                                     return target->GetValue(CALayerXaml::VisualWidthProperty);
                                                })) },
@@ -849,7 +851,7 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                        return target->m_size.Height;
+                                                        return (double)target->m_size.Height;
                                                     }
                                                     return target->GetValue(CALayerXaml::VisualHeightProperty);
                                                })) },
@@ -874,8 +876,9 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           }),
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
-                                                    return Size((float)target->Get("size.width"),
-                                                        (float)target->Get("size.height"));
+                                                    // Unbox width and height values as doubles, before casting them to floats
+                                                    return Size((float)(double)target->Get("size.width"),
+                                                                (float)(double)target->Get("size.height"));
                                                })) },
     { "transform.rotation",
       ref new CALayerXaml::AnimatableProperty(
