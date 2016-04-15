@@ -196,9 +196,6 @@ NSString* const NSURLProtectionSpaceFTP = @"NSURLProtectionSpaceFTP";
         NSUInteger prime = 31;
         result = prime * result + _port;
 
-        // VSO 7034224: _serverTrust is not an object.
-        // result = prime * result + [_serverTrust hash];
-
         result = prime * result + [_authenticationMethod hash];
         result = prime * result + [_distinguishedNames hash];
         result = prime * result + [_host hash];
