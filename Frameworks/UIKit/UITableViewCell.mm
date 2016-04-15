@@ -1550,4 +1550,20 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
+- (void)setMultipleSelectionBackgroundView:(UIView*)view {
+    UNIMPLEMENTED();
+    self->_multipleSelectionBackgroundView = view;
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)multipleSelectionBackgroundView {
+    UNIMPLEMENTED();
+    return self->_multipleSelectionBackgroundView;
+}
+
 @end

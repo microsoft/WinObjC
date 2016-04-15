@@ -25,16 +25,16 @@ UIKIT_EXPORT extern NSString* const UILocalNotificationDefaultSoundName;
 @class NSDictionary;
 
 UIKIT_EXPORT_CLASS
-@interface UILocalNotification : NSObject {
-}
+@interface UILocalNotification : NSObject
 
-@property (nonatomic, copy) NSDate* fireDate;
-@property (nonatomic, copy) NSString* alertBody;
-@property (nonatomic, copy) NSTimeZone* timeZone;
-@property (nonatomic, copy) NSString* soundName;
-@property (nonatomic) NSInteger applicationIconBadgeNumber;
-@property (nonatomic, copy) NSString* alertAction;
-@property (nonatomic) NSCalendarUnit repeatInterval;
-@property (nonatomic, copy) NSDictionary* userInfo;
+@property (nonatomic, copy) NSDate* fireDate STUB_PROPERTY;
+@property (nonatomic, copy) NSString* alertBody STUB_PROPERTY;
+@property (nonatomic, copy) NSTimeZone* timeZone STUB_PROPERTY;
+@property (nonatomic, copy) NSString* soundName STUB_PROPERTY;
+@property (nonatomic) NSInteger applicationIconBadgeNumber STUB_PROPERTY;
+@property (nonatomic, copy) NSString* alertAction STUB_PROPERTY;
+@property (nonatomic) NSCalendarUnit repeatInterval STUB_PROPERTY;
+@property (nonatomic, copy) NSDictionary* userInfo STUB_PROPERTY;
+@property (nonatomic, copy) NSString* category STUB_PROPERTY;
 
 @end

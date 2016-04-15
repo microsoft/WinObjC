@@ -136,6 +136,7 @@ struct UITableViewPriv {
     StrongId<UIView> _contentView;
     StrongId<UIView> _curAccessoryView;
     StrongId<UIStoryboardSegueTemplate> _selectionSegueTemplate;
+    StrongId<UIView> _multipleSelectionBackgroundView;
 
     BOOL _isSelected, _isHighlighted, _currentlyHighlighted;
     BOOL _isEditing;

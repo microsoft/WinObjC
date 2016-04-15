@@ -58,4 +58,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) CGFloat brightness;
 @property (nonatomic, readonly, retain) UIScreenMode* preferredMode STUB_PROPERTY;
 
+- (CADisplayLink*)displayLinkWithTarget:(id)target selector:(SEL)sel;
+- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates STUB_METHOD;
+
 @end
