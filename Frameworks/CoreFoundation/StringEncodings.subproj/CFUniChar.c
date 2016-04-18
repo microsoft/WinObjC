@@ -35,10 +35,10 @@
 #endif
 
 #if DEPLOYMENT_TARGET_WINDOWS
-// WINOBJC: This path is used to load resource files from. For now assume that the current directory will be enough.
-void _CFGetFrameworkPath(wchar_t *path, int maxLength) {
-
-    DWORD ignoredResult = GetCurrentDirectoryW(maxLength, path);
+// WINOBJC: This path is used to load resource files from. For now assume that the executable directory is enough
+void _CFGetFrameworkPath(wchar_t* path, int maxLength) {
+    const wchar_t* dllPath = _CFDLLPath();
+    errno_t ignoredResult = wcscpy_s(path, maxLength, dllPath);
     return;
 }
 #endif
