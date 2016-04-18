@@ -30,7 +30,6 @@ static const wchar_t* TAG = L"UIStoryboard";
 @implementation UIStoryboard {
     idretaintype(NSString) _entryPoint;
     idretaintype(NSDictionary) _fileMap;
-    idretaintype(NSDictionary) _fileMapByStoryboardId;
     idretaintype(NSString) _path;
     idretaintype(NSBundle) _bundle;
 }
@@ -55,7 +54,6 @@ static const wchar_t* TAG = L"UIStoryboard";
         if (storyInfo) {
             ret->_entryPoint = [storyInfo objectForKey:@"UIStoryboardDesignatedEntryPointIdentifier"];
             ret->_fileMap = [storyInfo objectForKey:@"UIViewControllerIdentifiersToNibNames"];
-            ret->_fileMapByStoryboardId = [storyInfo objectForKey:@"UIViewControllerStoryboardIdentifiersToNibNames"];
             ret->_bundle = storyboardBundle;
 
             return ret;
@@ -115,9 +113,6 @@ static const wchar_t* TAG = L"UIStoryboard";
 - (UIViewController*)instantiateViewControllerWithIdentifier:(id)identifier {
     TraceVerbose(TAG, L"instantiateViewControllerWithIdentifier %hs", [identifier UTF8String]);
     NSString* fileName = [_fileMap objectForKey:(id)identifier];
-    if (!fileName) {
-        fileName = [_fileMapByStoryboardId objectForKey:(id)identifier];
-    }
 
     UIApplication* uiApplication = [UIApplication sharedApplication];
 

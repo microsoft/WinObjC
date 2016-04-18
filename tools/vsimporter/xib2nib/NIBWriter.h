@@ -63,7 +63,7 @@ public:
     NIBWriter(FILE *out, XIBDictionary *externalRefsDict, XIBObject *base);
 
     static void ExportController(const char *controllerId);
-    static void NIBWriter::ExportAllControllers();
+    static void ExportAllControllers();
     void ExportObject(XIBObject *obj);
     void WriteObjects();
     XIBObject *AddOutputObject(XIBObject *pObj);

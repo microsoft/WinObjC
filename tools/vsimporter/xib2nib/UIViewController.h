@@ -22,6 +22,8 @@ class UINavigationItem;
 class UINavigationBar;
 class UITabBarItem;
 
+typedef std::vector<const char*> viewControllerList;
+
 class UIViewController : public ObjectConverterSwapper
 {
 public:
@@ -33,6 +35,7 @@ public:
     XIBArray *_segueTemplates;
     bool _resizesToFullSize;
     const char *_storyboardIdentifier;
+    static viewControllerList _viewControllerNames;
 
     UIViewController();
     virtual void InitFromXIB(XIBObject *obj);
