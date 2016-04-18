@@ -47,9 +47,9 @@ UIKIT_EXPORT_CLASS
 - (void)setBackgroundImage:(UIImage*)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics;
 
 @property (nonatomic) UIBarStyle barStyle;
-@property (nonatomic, retain) UIColor* tintColor;
-@property (nonatomic, retain) UIColor* barTintColor;
+@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
+@property (nonatomic, retain) UIColor* barTintColor STUB_PROPERTY;
 @property (nonatomic, copy) NSArray* items;
-@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
+@property (nonatomic, assign, getter=isTranslucent) BOOL translucent STUB_PROPERTY;
 
 @end

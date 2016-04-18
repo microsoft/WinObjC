@@ -14,14 +14,12 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-
-#include "Starboard.h"
-#include "UIAnimationNotification.h"
-#include "QuartzCore/CABasicAnimation.h"
-#include "QuartzCore/CALayer.h"
-#include "UIAppearanceSetter.h"
-
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "UIAnimationNotification.h"
+#import "QuartzCore/CABasicAnimation.h"
+#import "QuartzCore/CALayer.h"
+#import "UIAppearanceSetter.h"
 #import "UIViewInternal.h"
 #import "UIWindowInternal.h"
 #import "UIViewControllerInternal.h"
@@ -29,15 +27,15 @@
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
 #import "AutoLayout.h"
+#import <math.h>
+#import <Windows.h>
+#import <LoggingNative.h>
+#import <NSLogging.h>
 
 @class UIAppearanceSetter;
 
-#include <math.h>
-
-#include <Windows.h>
-
-const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 static const wchar_t* TAG = L"UIView";
+const CGFloat UIViewNoIntrinsicMetric = -1.0f;
 
 /** @Status Stub */
 const CGSize UILayoutFittingCompressedSize = StubConstant();
@@ -118,20 +116,28 @@ int viewCount = 0;
 
     self->layer.attach([[[self class] layerClass] new]);
     [self->layer setDelegate:self];
-
     // TraceWarning(TAG,L"%d: Allocing %hs (%x)", viewCount, object_getClassName(self), (id) self);
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     self.isAccessibilityElement = FALSE;
     self.accessibilityTraits = UIAccessibilityTraitNone;
     [self updateAccessibility];
 }
 
+/**
+ @Public No
+*/
 - (void)updateAccessibility {
     IWUpdateAccessibility(self.layer, self);
 }
 
+/**
+ @Status Interoperable
+*/
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIView* ret = [super allocWithZone:zone];
 
@@ -158,6 +164,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     return initInternal(self, pos);
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     CGRect pos;
 
@@ -175,7 +184,11 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     if (g_nestedAnimationsDisabled < 0) \
         g_nestedAnimationsDisabled = 0;
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     CGRect bounds;
 
     id boundsObj = [coder decodeObjectForKey:@"UIBounds"];
@@ -274,7 +287,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                 for (int i = 0; i < [removeConstraints count]; i++) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
-                        TraceWarning(TAG, L"Removing constraint (%hs): ", [[wayward description] UTF8String]);
+                        NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
                         [wayward printConstraint];
                         remove = true;
                         break;
@@ -288,7 +301,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     }
                 }
             } else {
-                TraceWarning(TAG, L"Skipping unsupported constraint type: %hs", [[constraint description] UTF8String]);
+                NSTraceVerbose(TAG, @"Skipping unsupported constraint type: %@", [constraint description]);
             }
         }
     }
@@ -312,13 +325,16 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 
     NSArray* gestures = [coder decodeObjectForKey:@"gestureRecognizers"];
     if (gestures != nil) {
-        TraceWarning(TAG, L"UIView initWithCoder adding gesture recognizers");
+        TraceVerbose(TAG, L"UIView initWithCoder adding gesture recognizers");
         [self setGestureRecognizers:gestures];
     }
 
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     TraceWarning(TAG, L"Unsupported attempt to encode a UIView");
 }
@@ -365,6 +381,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     [layer setPosition:center];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSublayersOfLayer:(CALayer*)forLayer {
     if (forLayer == layer) {
         UIViewController* controller = [UIViewController controllerForView:self];
@@ -415,6 +434,9 @@ static UIView* initInternal(UIView* self, CGRect pos) {
     [layer _setShouldLayout];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)origin {
     CGRect curFrame;
 
@@ -603,7 +625,7 @@ static float doRound(float f) {
     frame.size.width = doRound(frame.size.width);
     frame.size.height = doRound(frame.size.height);
 
-    TraceWarning(TAG,
+    TraceVerbose(TAG,
                  L"SetFrame(%hs): %f, %f, %f, %f",
                  object_getClassName(self),
                  frame.origin.x,
@@ -699,6 +721,9 @@ static float doRound(float f) {
     [layer setBounds:bounds];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setOrigin:(CGPoint)origin {
     CGRect curFrame;
 
@@ -708,7 +733,7 @@ static float doRound(float f) {
     [layer setFrame:curFrame];
 }
 
-- (void)setBoundsOrigin:(CGPoint)origin {
+- (void)_setBoundsOrigin:(CGPoint)origin {
     [layer setOrigin:origin];
 }
 
@@ -731,19 +756,19 @@ static float doRound(float f) {
 
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || g_alwaysSendViewEvents)
-            [controller notifyViewWillAppear:g_presentingAnimated]; /*** should we do this? ****/
+            [controller _notifyViewWillAppear:g_presentingAnimated]; /*** should we do this? ****/
     }
     if (controller != nil && window == nil) {
         UIViewController* rootController = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] rootViewController];
         UIViewController* parentController = [UIViewController controllerForView:superview];
         if (rootController == controller || g_alwaysSendViewEvents)
-            [controller notifyViewWillDisappear:g_presentingAnimated]; /*** should we do this? ****/
+            [controller _notifyViewWillDisappear:g_presentingAnimated]; /*** should we do this? ****/
     }
 
     if (window == nil) {
         for (UIGestureRecognizer* curgesture in priv->gestures) {
-            if ([curgesture respondsToSelector:@selector(cancelIfActive)]) {
-                [curgesture cancelIfActive];
+            if ([curgesture respondsToSelector:@selector(_cancelIfActive)]) {
+                [curgesture _cancelIfActive];
             }
         }
     }
@@ -775,8 +800,8 @@ static float doRound(float f) {
             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
             g_alwaysSendViewEvents) {
             if (stackLevel == 0) {
-                [controller notifyViewWillAppear:FALSE];
-                [controller notifyViewDidAppear:FALSE];
+                [controller _notifyViewWillAppear:FALSE];
+                [controller _notifyViewDidAppear:FALSE];
             }
         }
     }
@@ -790,7 +815,7 @@ static float doRound(float f) {
         if (rootController == controller || [controller parentViewController] != nil ||
             [controller isKindOfClass:[UINavigationController class]] || [parentController isKindOfClass:[UINavigationController class]] ||
             g_alwaysSendViewEvents)
-            [controller notifyViewDidDisappear:FALSE];
+            [controller _notifyViewDidDisappear:FALSE];
     }
 
     if (window == nil) {
@@ -1188,11 +1213,19 @@ static float doRound(float f) {
     return [layer contentsScale];
 }
 
+/**
+ @Status Stub
+*/
 - (void)orderFront:(UIView*)view {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)makeKey:(UIView*)view {
     TraceWarning(TAG, L"UIVIew::makeKey");
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1396,21 +1429,17 @@ static float doRound(float f) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawLayer:(CALayer*)layer inContext:(CGContextRef)context {
     UIGraphicsPushContext(context);
 
     CGRect bounds;
-    // bounds = [layer bounds];
     bounds = CGContextGetClipBoundingBox(context);
     [self drawRect:bounds];
 
     UIGraphicsPopContext();
-}
-
-- (void)setTapDelegate:(id)delegateAddr {
-}
-
-- (void)setGestureDelegate:(id)delegateAddr {
 }
 
 /**
@@ -1469,7 +1498,7 @@ static float doRound(float f) {
 /**
  @Status Interoperable
 */
-+ (id)layerClass {
++ (Class)layerClass {
     return [CALayer class];
 }
 
@@ -1494,8 +1523,11 @@ static float doRound(float f) {
     [layer setAffineTransform:transform];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setRotationBy:(float)degrees {
-    assert(0);
+    UNIMPLEMENTED();
 }
 
 /**
@@ -1835,8 +1867,7 @@ static float doRound(float f) {
             return priv->_contentHuggingPriority.height;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content compression resistance for unknown axis");
+            TraceWarning(TAG, L"Content compression resistance for unknown axis.");
             return 0.0f;
     }
 }
@@ -1853,8 +1884,7 @@ static float doRound(float f) {
             priv->_contentCompressionResistancePriority.height = priority;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content compression resistance set on unknown axis");
+            TraceWarning(TAG, L"Content compression resistance set on unknown axis.");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1872,8 +1902,7 @@ static float doRound(float f) {
             return priv->_contentHuggingPriority.height;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content hugging for unknown axis");
+            TraceWarning(TAG, L"Content hugging for unknown axis.");
             return 0.0f;
     }
 }
@@ -1890,8 +1919,7 @@ static float doRound(float f) {
             priv->_contentHuggingPriority.height = priority;
             break;
         default:
-            // assert?
-            TraceWarning(TAG, L"Content hugging set on unknown axis");
+            TraceWarning(TAG, L"Content hugging set on unknown axis.");
             return;
     }
     [self setNeedsUpdateConstraints];
@@ -1915,6 +1943,9 @@ static float doRound(float f) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)nextResponder {
     UIViewController* controller = [UIViewController controllerForView:self];
 
@@ -1925,6 +1956,9 @@ static float doRound(float f) {
     return priv->superview;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1933,8 +1967,11 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    TraceWarning(TAG, L"Clicked: %hs", object_getClassName(self));
+    TraceVerbose(TAG, L"Clicked: %hs", object_getClassName(self));
     UIResponder* nextResponder = [self nextResponder];
 
     if (nextResponder != nil) {
@@ -1942,6 +1979,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1950,6 +1990,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     UIResponder* nextResponder = [self nextResponder];
 
@@ -1966,14 +2009,23 @@ static float doRound(float f) {
 }
 
 /**
+ @Status Interoperable
+*/
+- (BOOL)clipsToBounds {
+    return [layer masksToBounds];
+}
+
+/**
  @Status Stub
 */
 - (void)setExclusiveTouch:(BOOL)isExclusive {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"setExclusiveTouch not supported");
-    // assert(0);
+    TraceWarning(TAG, L"setExclusiveTouch not supported.");
 }
 
+/**
+ @Status Interoperable
+*/
 - (id<CAAction>)actionForLayer:(CALayer*)actionLayer forKey:(NSString*)key {
     if (stackLevel > 0 && g_animationsDisabled == 0 && g_nestedAnimationsDisabled == 0) {
         if ([key isEqualToString:@"opacity"] || [key isEqualToString:@"position"] || [key isEqualToString:@"bounds"] ||
@@ -2067,7 +2119,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 + (void)animateWithDuration:(double)duration animations:(animationBlockFunc)animationBlock completion:(completionBlockFunc)completion {
-    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported");
+    TraceWarning(TAG, L"animationWithDurationCompletion not fully supported.");
     [self beginAnimations:nil context:0];
     _animationProperties[stackLevel]._completionBlock = COPYBLOCK(completion);
     [self setAnimationDuration:duration];
@@ -2131,7 +2183,7 @@ static float doRound(float f) {
                           completion:(void (^)(BOOL finished))completion {
     TraceWarning(TAG,
                  L"animateKeyframesWithDuration:(NSTimeInterval)duration options:(UIViewKeyframeAnimationOptions)options"
-                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported");
+                 "animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion not fully supported.");
     // remove all unsupported options.
     UIViewAnimationOptions uiViewAnimationOptions = (UIViewAnimationOptions)(0x23F & options);
 
@@ -2261,6 +2313,9 @@ static float doRound(float f) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 + (BOOL)animationsEnabled {
     return (g_animationsDisabled == 0) && (g_nestedAnimationsDisabled == 0);
 }
@@ -2309,7 +2364,7 @@ static float doRound(float f) {
 + (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft {
     if (stackLevel > 0) {
         _animationProperties[stackLevel]._numAnimations++;
-        id ret = [CATransition animation];
+        CATransition* ret = [CATransition animation];
         [ret setDuration:_animationProperties[stackLevel]._animationDuration];
         [ret setAutoreverses:_animationProperties[stackLevel]._autoReverses];
         [ret setRepeatCount:_animationProperties[stackLevel]._repeatCount];
@@ -2406,6 +2461,9 @@ static float doRound(float f) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)awakeFromNib {
 }
 
@@ -2451,12 +2509,15 @@ static float doRound(float f) {
     [self setFrame:curSize];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     if (_deallocating)
         return;
     _deallocating = true;
     viewCount--;
-    TraceWarning(TAG, L"%d: dealloc %hs %x", viewCount, object_getClassName(self), self);
+    TraceInfo(TAG, L"%d: dealloc %hs %x", viewCount, object_getClassName(self), self);
 
     [self removeFromSuperview];
     priv->backgroundColor = nil;
@@ -2570,14 +2631,20 @@ static float doRound(float f) {
     return priv->gestures;
 }
 
-+ (id)appearance {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called", __func__);
-    return nil;
+/**
+ @Status Stub
+*/
++ (instancetype)appearance {
+    UNIMPLEMENTED_WITH_MSG("Unimplemented method %hs on UIView called", __func__);
+    return StubReturn();
 }
 
-+ (id)appearanceWhenContainedIn:(id)containedClass, ... {
-    TraceWarning(TAG, L"Unimplemented method %hs on UIView called", __func__);
-    return nil;
+/**
+ @Status Stub
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
+    UNIMPLEMENTED_WITH_MSG("Unimplemented method %hs on UIView called", __func__);
+    return StubReturn();
 }
 
 /**
@@ -2603,11 +2670,17 @@ static float doRound(float f) {
     _backButtonPriority = priority;
 }
 
+/**
+ @Public No
+*/
 - (void)setEnabled:(BOOL)enabled {
     [self setUserInteractionEnabled:enabled];
 }
 
-- (BOOL)isEnabled {
+/**
+ @Public No
+*/
+- (BOOL)_isEnabled {
     return [self isUserInteractionEnabled];
 }
 

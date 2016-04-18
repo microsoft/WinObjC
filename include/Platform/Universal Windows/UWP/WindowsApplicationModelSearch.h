@@ -72,7 +72,7 @@ WINRT_EXPORT
 @interface WASLocalContentSuggestionSettings : RTObject
 + (instancetype)make ACTIVATOR;
 @property BOOL enabled;
-@property (copy) NSString* aqsFilter;
+@property (retain) NSString* aqsFilter;
 @property (readonly) NSMutableArray* locations;
 @property (readonly) NSMutableArray* propertiesToMatch;
 @end
@@ -85,9 +85,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WASSearchQueryLinguisticDetails : RTObject
-+ (WASSearchQueryLinguisticDetails*)createInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
-                         queryTextCompositionStart:(unsigned int)queryTextCompositionStart
-                        queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
++ (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
+                       queryTextCompositionStart:(unsigned int)queryTextCompositionStart
+                      queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
 @property (readonly) NSArray* queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
 @property (readonly) unsigned int queryTextCompositionStart;

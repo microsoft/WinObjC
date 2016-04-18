@@ -81,7 +81,7 @@ WINRT_EXPORT
 @property BOOL isGlyphVisible;
 @property BOOL isContentVisible;
 @property BOOL isCaptionVisible;
-@property (copy) NSString* caption;
+@property (retain) NSString* caption;
 - (void)setContentFromSoftwareBitmap:(WGISoftwareBitmap*)softwareBitmap;
 - (void)setContentFromSoftwareBitmapWithAnchorPoint:(WGISoftwareBitmap*)softwareBitmap anchorPoint:(WFPoint*)anchorPoint;
 - (void)clear;

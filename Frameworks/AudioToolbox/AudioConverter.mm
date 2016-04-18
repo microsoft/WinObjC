@@ -27,11 +27,17 @@ OSStatus AudioConverterDispose(AudioConverterRef inAudioConverter) {
 }
 
 /**
- @Status Caveat
+ @Status Stub
 */
-DWORD AudioConverterNew(AudioStreamBasicDescription* in, AudioStreamBasicDescription* out, DWORD* handle) {
-    *handle = 1234;
-    return 0;
+OSStatus AudioConverterNew(const AudioStreamBasicDescription* inSourceFormat,
+                           const AudioStreamBasicDescription* inDestinationFormat,
+                           DWORD* outAudioConverter) {
+    // TODO: outAudioConverter ought to be made AudioConverterRef _Nullable * when this is unstubbed
+    UNIMPLEMENTED();
+    if (outAudioConverter) {
+        *outAudioConverter = 1234;
+    }
+    return StubReturn();
 }
 
 /**

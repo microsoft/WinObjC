@@ -17,6 +17,7 @@
 #import <AddressBook/ABPerson.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const ABPropertyID kABPersonFirstNameProperty = 101;
 const ABPropertyID kABPersonLastNameProperty = 102;

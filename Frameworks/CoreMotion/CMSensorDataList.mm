@@ -22,7 +22,7 @@
  @Status Stub
  @Notes
 */
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id _Nonnull[])stackbuf count:(NSUInteger)len {
+- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained _Nonnull[])stackbuf count:(NSUInteger)len {
     UNIMPLEMENTED();
     return StubReturn();
 }

@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -29,14 +30,14 @@ typedef enum {
     CMMagneticFieldCalibrationAccuracyHigh
 } CMMagneticFieldCalibrationAccuracy;
 
-typedef struct CMMagneticField { double x, y, z; };
+typedef struct { double x, y, z; } CMMagneticField;
 
-typedef struct CMCalibratedMagneticField {
+typedef struct {
     CMMagneticField field;
     CMMagneticFieldCalibrationAccuracy accuracy;
-};
+} CMCalibratedMagneticField;
 
 COREMOTION_EXPORT_CLASS
 @interface CMMagnetometerData : CMLogItem <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) CMMagneticField magneticField STUB_PROPERTY;
+@property (readonly, nonatomic) CMMagneticField magneticField;
 @end

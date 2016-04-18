@@ -5,6 +5,7 @@
     UILabel* _welcomeLabel;
     UIButton* _draggableButton;
     UIButton* _longPressableButton;
+    UIButton* _tapGestureButton;
 }
 @end
 
@@ -49,12 +50,19 @@
     [_longPressableButton setTitle:@"LongPress me!" forState:UIControlStateNormal];
     [_longPressableButton setTintColor:[UIColor purpleColor]];
     _longPressableButton.frame = CGRectMake(bounds.size.width / 2.0f - 50.0f, 100.0f, 140.0f, 40.0f);
-    [_longPressableButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [_mainWindow addSubview:_longPressableButton];
 
     UILongPressGestureRecognizer* longPressGesture =
         [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(buttonLongPressed:)];
     [_longPressableButton addGestureRecognizer:longPressGesture];
+
+    _tapGestureButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [_tapGestureButton setTitle:@"Touch Gesture!" forState:UIControlStateNormal];
+    [_tapGestureButton setTintColor:[UIColor purpleColor]];
+    _tapGestureButton.frame = CGRectMake(bounds.size.width / 2.0f - 50.0f, 150.0f, 100.0f, 40.0f);
+    [_mainWindow addSubview:_tapGestureButton];
+    UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [_tapGestureButton addGestureRecognizer:tapGesture];
 
     [_mainWindow makeKeyAndVisible];
 }
@@ -85,6 +93,18 @@
         [_welcomeLabel setText:@"Long Press Failed!"];
     } else if (gesture.state == UIGestureRecognizerStateCancelled) {
         [_welcomeLabel setText:@"Long Press Cancelled!"];
+    }
+}
+
+- (void)handleTap:(UITapGestureRecognizer*)sender {
+    if (sender.state == UIGestureRecognizerStatePossible) {
+        [_welcomeLabel setText:@"Tap possible!"];
+    } else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateRecognized) {
+        [_welcomeLabel setText:@"Tap Ended!"];
+    } else if (sender.state == UIGestureRecognizerStateFailed) {
+        [_welcomeLabel setText:@"Tap Failed!"];
+    } else if (sender.state == UIGestureRecognizerStateCancelled) {
+        [_welcomeLabel setText:@"Tap Cancelled!"];
     }
 }
 @end

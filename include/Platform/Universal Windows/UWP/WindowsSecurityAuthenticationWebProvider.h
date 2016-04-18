@@ -128,7 +128,7 @@ typedef unsigned WSAWPWebAccountScope;
 #define __WSAWPIWebAccountProviderTokenOperation_DEFINED__
 
 @protocol WSAWPIWebAccountProviderTokenOperation <WSAWPIWebAccountProviderOperation>
-@property (copy) WFDateTime* cacheExpirationTime;
+@property (retain) WFDateTime* cacheExpirationTime;
 @property (readonly) WSAWPWebProviderTokenRequest* providerRequest;
 @property (readonly) NSMutableArray* providerResponses;
 @end
@@ -169,7 +169,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWPWebProviderTokenResponse : RTObject
-+ (WSAWPWebProviderTokenResponse*)create:(WSAWCWebTokenResponse*)webTokenResponse ACTIVATOR;
++ (WSAWPWebProviderTokenResponse*)make:(WSAWCWebTokenResponse*)webTokenResponse ACTIVATOR;
 @property (readonly) WSAWCWebTokenResponse* clientResponse;
 @end
 
@@ -181,11 +181,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSAWPWebAccountClientView : RTObject
-+ (WSAWPWebAccountClientView*)create:(WSAWPWebAccountClientViewType)viewType
-              applicationCallbackUri:(WFUri*)applicationCallbackUri ACTIVATOR;
-+ (WSAWPWebAccountClientView*)createWithPairwiseId:(WSAWPWebAccountClientViewType)viewType
-                            applicationCallbackUri:(WFUri*)applicationCallbackUri
-                                 accountPairwiseId:(NSString*)accountPairwiseId ACTIVATOR;
++ (WSAWPWebAccountClientView*)make:(WSAWPWebAccountClientViewType)viewType applicationCallbackUri:(WFUri*)applicationCallbackUri ACTIVATOR;
++ (WSAWPWebAccountClientView*)makeWithPairwiseId:(WSAWPWebAccountClientViewType)viewType
+                          applicationCallbackUri:(WFUri*)applicationCallbackUri
+                               accountPairwiseId:(NSString*)accountPairwiseId ACTIVATOR;
 @property (readonly) NSString* accountPairwiseId;
 @property (readonly) WFUri* applicationCallbackUri;
 @property (readonly) WSAWPWebAccountClientViewType type;
@@ -238,7 +237,7 @@ WINRT_EXPORT
                                                                     WSAWPIWebAccountProviderUIReportOperation,
                                                                     WSAWPIWebAccountProviderBaseReportOperation>
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
-@property (copy) WFDateTime* cacheExpirationTime;
+@property (retain) WFDateTime* cacheExpirationTime;
 @property (readonly) WSAWPWebProviderTokenRequest* providerRequest;
 @property (readonly) NSMutableArray* providerResponses;
 - (void)reportUserCanceled;
@@ -258,7 +257,7 @@ WINRT_EXPORT
                                                                       WSAWPIWebAccountProviderSilentReportOperation,
                                                                       WSAWPIWebAccountProviderBaseReportOperation>
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
-@property (copy) WFDateTime* cacheExpirationTime;
+@property (retain) WFDateTime* cacheExpirationTime;
 @property (readonly) WSAWPWebProviderTokenRequest* providerRequest;
 @property (readonly) NSMutableArray* providerResponses;
 - (void)reportUserInteractionRequired;
@@ -334,7 +333,7 @@ WINRT_EXPORT
 @interface WSAWPWebAccountProviderRetrieveCookiesOperation
     : RTObject <WSAWPIWebAccountProviderOperation, WSAWPIWebAccountProviderBaseReportOperation>
 @property (readonly) WSAWPWebAccountProviderOperationKind kind;
-@property (copy) WFUri* uri;
+@property (retain) WFUri* uri;
 @property (readonly) WFUri* applicationCallbackUri;
 @property (readonly) WFUri* context;
 @property (readonly) NSMutableArray* cookies;

@@ -26,7 +26,7 @@ NSString* const kCAMediaTimingFunctionEaseOut = @"kCAMediaTimingFunctionEaseOut"
 NSString* const kCAMediaTimingFunctionEaseInEaseOut = @"kCAMediaTimingFunctionEaseInEaseOut";
 NSString* const kCAMediaTimingFunctionDefault = @"kCAMediaTimingFunctionDefault";
 
-__declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
+float applyMediaTimingFunction(id function, float t) {
     if (function == nil) {
         return t;
     }
@@ -75,6 +75,7 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     return nil;
 }
 
+// clang-format off
 /**
  @Status Interoperable
 */
@@ -92,6 +93,7 @@ __declspec(dllexport) float applyMediaTimingFunction(id function, float t) {
     _c2y = c2y;
     return self;
 }
+// clang-format on
 
 /**
  @Status Interoperable

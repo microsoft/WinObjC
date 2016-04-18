@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMCharacteristic.h>
+#import "AssertARCEnabled.h"
 
 NSString* const HMCharacteristicPropertySupportsEventNotification = @"HMCharacteristicPropertySupportsEventNotification";
 NSString* const HMCharacteristicPropertyReadable = @"HMCharacteristicPropertyReadable";

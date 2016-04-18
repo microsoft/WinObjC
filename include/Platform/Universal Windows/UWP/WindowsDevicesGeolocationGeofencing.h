@@ -72,23 +72,23 @@ typedef unsigned WDGGGeofenceRemovalReason;
 
 WINRT_EXPORT
 @interface WDGGGeofence : RTObject
-+ (WDGGGeofence*)create:(NSString*)id geoshape:(RTObject<WDGIGeoshape>*)geoshape ACTIVATOR;
-+ (WDGGGeofence*)createWithMonitorStates:(NSString*)id
-                                geoshape:(RTObject<WDGIGeoshape>*)geoshape
-                         monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates
-                               singleUse:(BOOL)singleUse ACTIVATOR;
-+ (WDGGGeofence*)createWithMonitorStatesAndDwellTime:(NSString*)id
-                                            geoshape:(RTObject<WDGIGeoshape>*)geoshape
-                                     monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates
-                                           singleUse:(BOOL)singleUse
-                                           dwellTime:(WFTimeSpan*)dwellTime ACTIVATOR;
-+ (WDGGGeofence*)createWithMonitorStatesDwellTimeStartTimeAndDuration:(NSString*)id
-                                                             geoshape:(RTObject<WDGIGeoshape>*)geoshape
-                                                      monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates
-                                                            singleUse:(BOOL)singleUse
-                                                            dwellTime:(WFTimeSpan*)dwellTime
-                                                            startTime:(WFDateTime*)startTime
-                                                             duration:(WFTimeSpan*)duration ACTIVATOR;
++ (WDGGGeofence*)make:(NSString*)id geoshape:(RTObject<WDGIGeoshape>*)geoshape ACTIVATOR;
++ (WDGGGeofence*)makeWithMonitorStates:(NSString*)id
+                              geoshape:(RTObject<WDGIGeoshape>*)geoshape
+                       monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates
+                             singleUse:(BOOL)singleUse ACTIVATOR;
++ (WDGGGeofence*)makeWithMonitorStatesAndDwellTime:(NSString*)id
+                                          geoshape:(RTObject<WDGIGeoshape>*)geoshape
+                                   monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates
+                                         singleUse:(BOOL)singleUse
+                                         dwellTime:(WFTimeSpan*)dwellTime ACTIVATOR;
++ (WDGGGeofence*)makeWithMonitorStatesDwellTimeStartTimeAndDuration:(NSString*)id
+                                                           geoshape:(RTObject<WDGIGeoshape>*)geoshape
+                                                    monitoredStates:(WDGGMonitoredGeofenceStates)monitoredStates
+                                                          singleUse:(BOOL)singleUse
+                                                          dwellTime:(WFTimeSpan*)dwellTime
+                                                          startTime:(WFDateTime*)startTime
+                                                           duration:(WFTimeSpan*)duration ACTIVATOR;
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) WFTimeSpan* dwellTime;
 @property (readonly) RTObject<WDGIGeoshape>* geoshape;

@@ -205,6 +205,11 @@ namespace PropSchemaGen
                             curElement = (XmlElement)ruleElement.AppendChild(doc.CreateElement("BoolProperty", xmlns));
                             PropsToXmlAttr(doc, propAttr, curElement).SetAttribute("Name", member.Name);
                         }
+                        else if (pInfo.PropertyType.IsAssignableFrom(typeof(int)))
+                        {
+                            curElement = (XmlElement)ruleElement.AppendChild(doc.CreateElement("IntProperty", xmlns));
+                            PropsToXmlAttr(doc, propAttr, curElement).SetAttribute("Name", member.Name);
+                        }
                         break;
                     
                     // Fields are not exposed, only property accessors. 

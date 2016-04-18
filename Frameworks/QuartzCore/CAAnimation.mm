@@ -17,6 +17,8 @@
 #import <StubReturn.h>
 #include "Starboard.h"
 
+#include "CATransactionInternal.h"
+#include "CALayerInternal.h"
 #include "QuartzCore/CAAnimation.h"
 #include "QuartzCore/CALayer.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -24,7 +26,10 @@
 #include "CACompositor.h"
 
 #include "CAAnimationInternal.h"
+#include "LoggingNative.h"
 #include "UIAnimationNotification.h"
+
+static const wchar_t* TAG = L"CAAnimation";
 
 @implementation CAAnimation {
     idretain _delegate;
@@ -46,11 +51,15 @@
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _timingProperties._duration = 1.0;
-    _timingProperties._speed = 1.0;
-    _timingProperties._removedOnCompletion = TRUE;
-
+    if (self = [super init]) {
+        _timingProperties._duration = 1.0;
+        _timingProperties._speed = 1.0;
+        _timingProperties._removedOnCompletion = TRUE;
+    }
     return self;
 }
 
@@ -252,7 +261,7 @@
 - (void)animationDidStart {
     if (_delegate) {
         if ([_delegate respondsToSelector:@selector(animationDidStart:)]) {
-            [_delegate animationDidStart:self];
+            [static_cast<id<CAAnimationDelegate>>(_delegate) animationDidStart:self];
         }
     }
 }
@@ -324,8 +333,12 @@
     _wasAborted = TRUE;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setValue:(id)val forUndefinedKey:(id)key {
-    EbrDebugLog("CAAnimation setting value for key \"%s\"\n", [key UTF8String]);
+    TraceVerbose(TAG, L"CAAnimation setting value for key \"%hs\"", [key UTF8String]);
     if (_undefinedKeys == nil) {
         _undefinedKeys.attach([NSMutableDictionary new]);
     }
@@ -333,15 +346,23 @@
     [(NSMutableDictionary*)_undefinedKeys setObject:val forKey:key];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)valueForUndefinedKey:(id)keyPath {
     id ret = [(NSMutableDictionary*)_undefinedKeys objectForKey:keyPath];
 
     if (ret == nil) {
-        EbrDebugLog("CAAnimation: no value for undefined key \"%s\"\n", [keyPath UTF8String]);
+        TraceVerbose(TAG, L"CAAnimation: no value for undefined key \"%hs\"", [keyPath UTF8String]);
     }
     return ret;
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)copyWithZone:(NSZone*)zone {
     CAAnimation* ret = [[self class] alloc];
 

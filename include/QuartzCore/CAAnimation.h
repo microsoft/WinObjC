@@ -68,7 +68,7 @@ CA_EXPORT_CLASS
 
 @end
 
-@interface NSObject (CAAnimationDelegate)
-- (void)animationDidStart:(CAAnimation*)animation;
-- (void)animationDidStop:(CAAnimation*)animation finished:(BOOL)finished;
+@protocol CAAnimationDelegate
+- (void)animationDidStart:(CAAnimation*)theAnimation;
+- (void)animationDidStop:(BOOL)finished;
 @end

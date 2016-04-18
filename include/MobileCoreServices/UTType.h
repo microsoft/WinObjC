@@ -23,13 +23,13 @@
 
 MOBILECORESERVICES_EXPORT CFStringRef UTTypeCreatePreferredIdentifierForTag(CFStringRef inTagClass,
                                                                             CFStringRef inTag,
-                                                                            CFStringRef inConformingToUTI) STUB_METHOD;
+                                                                            CFStringRef inConformingToUTI);
 MOBILECORESERVICES_EXPORT CFArrayRef UTTypeCreateAllIdentifiersForTag(CFStringRef inTagClass,
                                                                       CFStringRef inTag,
-                                                                      CFStringRef inConformingToUTI) STUB_METHOD;
-MOBILECORESERVICES_EXPORT CFStringRef UTTypeCopyPreferredTagWithClass(CFStringRef inUTI, CFStringRef inTagClass) STUB_METHOD;
-MOBILECORESERVICES_EXPORT Boolean UTTypeEqual(CFStringRef inUTI1, CFStringRef inUTI2) STUB_METHOD;
-MOBILECORESERVICES_EXPORT Boolean UTTypeConformsTo(CFStringRef inUTI, CFStringRef inConformsToUTI) STUB_METHOD;
+                                                                      CFStringRef inConformingToUTI);
+MOBILECORESERVICES_EXPORT CFStringRef UTTypeCopyPreferredTagWithClass(CFStringRef inUTI, CFStringRef inTagClass);
+MOBILECORESERVICES_EXPORT Boolean UTTypeEqual(CFStringRef inUTI1, CFStringRef inUTI2);
+MOBILECORESERVICES_EXPORT Boolean UTTypeConformsTo(CFStringRef inUTI, CFStringRef inConformsToUTI);
 MOBILECORESERVICES_EXPORT CFStringRef UTTypeCopyDescription(CFStringRef inUTI) STUB_METHOD;
 MOBILECORESERVICES_EXPORT CFDictionaryRef UTTypeCopyDeclaration(CFStringRef inUTI) STUB_METHOD;
 MOBILECORESERVICES_EXPORT CFURLRef UTTypeCopyDeclaringBundleURL(CFStringRef inUTI) STUB_METHOD;

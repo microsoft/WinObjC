@@ -49,9 +49,24 @@ NSString* const UIKeyInputEscape = @"UIKeyInputEscape";
  @Status Stub
  @Notes
 */
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (instancetype)initWithCoder:(NSCoder*)decoder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
 }
 
 /**

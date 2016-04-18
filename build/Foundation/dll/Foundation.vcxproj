@@ -19,9 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSObject_NSCoding.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSKeyValueCoding.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UnifiedFoundation\Foundation\NSStringInternal.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSObject_NSCoding.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSKeyValueCoding.mm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
@@ -29,6 +28,9 @@
     </ProjectReference>
     <ProjectReference Include="..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj">
+      <Project>{BC8C5D49-060C-4375-904C-FE472C757E58}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -53,14 +55,14 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/ignore:4087 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -69,15 +71,15 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalOptions>/ignore:4087 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
@@ -87,14 +89,14 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalOptions>/ignore:4087 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -103,15 +105,15 @@
       <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>mincore.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;libcurl_imp.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>windowsapp.lib;libxml2.lib;icudt.lib;icuin.lib;icuuc.lib;libdispatch.lib;icudata_arm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>Foundation.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(StarboardBasePath)\Frameworks\limbo;$(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalOptions>/ignore:4087 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 -Werror=incomplete-implementation -Werror=protocol -Werror=deprecated-declarations -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
     </ClangCompile>

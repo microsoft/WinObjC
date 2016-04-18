@@ -33,6 +33,7 @@
 #import "UIViewController.h"
 #import <UIKit/UINavigationController.h>
 #import <UIKit/UITableViewController.h>
+#import <UIKit/UITabBarDelegate.h>
 
 @class UITabBarController;
 
@@ -48,7 +49,8 @@
 @protocol UITabBarControllerDelegate;
 
 UIKIT_EXPORT_CLASS
-@interface UITabBarController : UIViewController {
+@interface UITabBarController
+    : UIViewController <NSCoding, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITabBarDelegate, UITraitEnvironment> {
 @public
     unsigned _selectedIndex;
     bool _hideTabBar;
@@ -56,7 +58,7 @@ UIKIT_EXPORT_CLASS
     bool _layoutForRotation;
 }
 
-- (void)setViewControllers:(NSArray*)viewController animated:(BOOL)animated;
+- (void)setViewControllers:(NSArray*)viewController animated:(BOOL)animated STUB_METHOD;
 
 @property (nonatomic, assign) UIViewController* selectedViewController;
 @property (nonatomic, copy) NSArray* viewControllers;

@@ -105,13 +105,13 @@ UIKIT_EXPORT_CLASS
 - (UIFontDescriptor*)fontDescriptorWithFamily:(NSString*)newFamily STUB_METHOD;
 - (UIFontDescriptor*)fontDescriptorWithMatrix:(CGAffineTransform)matrix STUB_METHOD;
 - (UIFontDescriptor*)fontDescriptorWithSize:(CGFloat)newPointSize STUB_METHOD;
-- (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits STUB_METHOD;
+- (UIFontDescriptor*)fontDescriptorWithSymbolicTraits:(UIFontDescriptorSymbolicTraits)symbolicTraits;
 - (instancetype)initWithFontAttributes:(NSDictionary*)attributes STUB_METHOD;
 - (NSArray*)matchingFontDescriptorsWithMandatoryKeys:(NSSet*)mandatoryKeys STUB_METHOD;
 - (NSDictionary*)fontAttributes STUB_METHOD;
 @property (readonly, nonatomic) CGAffineTransform matrix STUB_PROPERTY;
 - (id)objectForKey:(NSString*)anAttribute STUB_METHOD;
-@property (readonly, nonatomic) CGFloat pointSize STUB_PROPERTY;
+@property (readonly, nonatomic) CGFloat pointSize;
 @property (readonly, nonatomic) NSString* postscriptName STUB_PROPERTY;
 @property (readonly, nonatomic) UIFontDescriptorSymbolicTraits symbolicTraits;
 @end

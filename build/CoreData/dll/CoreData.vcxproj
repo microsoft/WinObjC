@@ -52,12 +52,11 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreData.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,12 +66,11 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreData.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -82,12 +80,11 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreData.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -97,12 +94,11 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreData.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
       </IncludePaths>
-      <AdditionalOptions>-Werror=protocol -Werror=objc-protocol-property-synthesis %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

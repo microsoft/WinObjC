@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLVertexBufferLayoutDescriptor.h>
 
 @implementation MTLVertexBufferLayoutDescriptor
 /**

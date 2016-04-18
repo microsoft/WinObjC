@@ -27,15 +27,14 @@
 #import "UICollectionViewLayout+Internal.h"
 #include "UICollectionViewLayoutAttributes+Internal.h"
 #import "UICollectionViewItemKey.h"
+#import "NSLogging.h"
+#import "AssertARCEnabled.h"
 
+static const wchar_t* TAG = L"UICollectionView";
 static CGFloat UIAnimationDragCoefficient = 1.f;
 static CGFloat UISimulatorAnimationDragCoefficient(void) {
     return UIAnimationDragCoefficient;
 }
-
-@interface UICollectionViewLayout (Internal)
-@property (nonatomic, unsafe_unretained) UICollectionView* collectionView;
-@end
 
 @interface UICollectionViewData (Internal)
 - (void)prepareToLoadData;
@@ -154,7 +153,7 @@ static char kUIColletionViewExt;
 #pragma mark - NSObject
 
 /**
-   @Public No
+ @Public No
 */
 - (void)_commonSetup {
     _collectionViewFlags.allowsSelection = YES;
@@ -171,16 +170,16 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame {
     return [self initWithFrame:frame collectionViewLayout:nil];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout*)layout {
+- (instancetype)initWithFrame:(CGRect)frame collectionViewLayout:(UICollectionViewLayout*)layout {
     if ((self = [super initWithFrame:frame])) {
         // Set self as the UIScrollView's delegate
         [super setDelegate:self];
@@ -193,9 +192,9 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)inCoder {
+- (instancetype)initWithCoder:(NSCoder*)inCoder {
     if ((self = [super initWithCoder:inCoder])) {
         // Set self as the UIScrollView's delegate
         [super setDelegate:self];
@@ -227,7 +226,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -240,7 +239,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSString*)description {
     return [NSString stringWithFormat:@"%@ collection view layout: %@", [super description], self.collectionViewLayout];
@@ -250,7 +249,7 @@ static char kUIColletionViewExt;
 #pragma mark - UIView
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -265,7 +264,7 @@ static char kUIColletionViewExt;
         transition.type = kCATransitionFade;
         [self.layer addAnimation:transition forKey:@"rotationAnimation"];
 #endif
-        NSLog(@"fadeCellsForBoundsChange not supported");
+        NSTraceWarning(TAG, @"fadeCellsForBoundsChange not supported");
     }
 
     [_collectionViewData validateLayoutInRect:self.bounds];
@@ -302,7 +301,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setFrame:(CGRect)frame {
     if (!CGRectEqualToRect(frame, self.frame)) {
@@ -317,7 +316,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setBounds:(CGRect)bounds {
     if (!CGRectEqualToRect(bounds, self.bounds)) {
@@ -334,7 +333,7 @@ static char kUIColletionViewExt;
 #pragma mark - UIScrollViewDelegate
 
 /**
-   @Public No
+ @Public No
  */
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -344,7 +343,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewDidZoom:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -354,7 +353,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewWillBeginDragging:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -364,7 +363,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewWillEndDragging:(UIScrollView*)scrollView
                      withVelocity:(CGPoint)velocity
@@ -381,7 +380,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -396,7 +395,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewWillBeginDecelerating:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -406,7 +405,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -416,7 +415,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -426,7 +425,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (UIView*)viewForZoomingInScrollView:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -437,7 +436,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewWillBeginZooming:(UIScrollView*)scrollView withView:(UIView*)view {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -447,7 +446,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewDidEndZooming:(UIScrollView*)scrollView withView:(UIView*)view atScale:(CGFloat)scale {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -457,7 +456,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -468,7 +467,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)scrollViewDidScrollToTop:(UIScrollView*)scrollView {
     id<UICollectionViewDelegate> delegate = self.collectionViewDelegate;
@@ -481,7 +480,7 @@ static char kUIColletionViewExt;
 #pragma mark - Public
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString*)identifier {
     NSParameterAssert(cellClass);
@@ -490,7 +489,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString*)elementKind withReuseIdentifier:(NSString*)identifier {
     NSParameterAssert(viewClass);
@@ -526,7 +525,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (id)dequeueReusableCellWithReuseIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath {
     // de-queue cell (if available)
@@ -576,7 +575,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (id)dequeueReusableSupplementaryViewOfKind:(NSString*)elementKind
                          withReuseIdentifier:(NSString*)identifier
@@ -680,7 +679,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (NSArray*)allCells {
     auto res = [[NSMutableArray alloc] init];
@@ -700,7 +699,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSArray*)visibleCells {
     auto res = [[NSMutableArray alloc] init];
@@ -723,7 +722,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)reloadData {
     if (_reloadingSuspendedCount != 0)
@@ -751,35 +750,35 @@ static char kUIColletionViewExt;
 #pragma mark - Query Grid
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSInteger)numberOfSections {
     return [_collectionViewData numberOfSections];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (NSInteger)numberOfItemsInSection:(NSInteger)section {
     return [_collectionViewData numberOfItemsInSection:section];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForItemAtIndexPath:(NSIndexPath*)indexPath {
     return [[self collectionViewLayout] layoutAttributesForItemAtIndexPath:indexPath];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (UICollectionViewLayoutAttributes*)layoutAttributesForSupplementaryElementOfKind:(NSString*)kind atIndexPath:(NSIndexPath*)indexPath {
     return [[self collectionViewLayout] layoutAttributesForSupplementaryViewOfKind:kind atIndexPath:indexPath];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (NSIndexPath*)indexPathForItemAtPoint:(CGPoint)point {
@@ -789,7 +788,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (NSIndexPath*)indexPathForCell:(UICollectionViewCell*)cell {
@@ -809,7 +808,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (UICollectionViewCell*)cellForItemAtIndexPath:(NSIndexPath*)indexPath {
@@ -830,7 +829,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (NSArray*)indexPathsForVisibleItems {
@@ -846,7 +845,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 // returns nil or an array of selected index paths
@@ -855,7 +854,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 // Interacting with the collection view.
@@ -873,7 +872,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (CGRect)makeRect:(CGRect)targetRect toScrollPosition:(UICollectionViewScrollPosition)scrollPosition {
@@ -940,6 +939,9 @@ static char kUIColletionViewExt;
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Touch Handling
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     [super touchesBegan:touches withEvent:event];
 
@@ -969,6 +971,9 @@ static char kUIColletionViewExt;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     [super touchesMoved:touches withEvent:event];
 
@@ -993,7 +998,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Public No
+ @Public No
 */
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     [super touchesEnded:touches withEvent:event];
@@ -1019,6 +1024,9 @@ static char kUIColletionViewExt;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     [super touchesCancelled:touches withEvent:event];
 
@@ -1047,7 +1055,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 // select item, notify delegate (internal)
@@ -1099,7 +1107,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (void)selectItemAtIndexPath:(NSIndexPath*)indexPath
@@ -1109,7 +1117,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (void)deselectItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated {
@@ -1117,7 +1125,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (void)deselectItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
@@ -1143,7 +1151,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (BOOL)highlightItemAtIndexPath:(NSIndexPath*)indexPath
@@ -1172,7 +1180,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (BOOL)unhighlightItemAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated notifyDelegate:(BOOL)notifyDelegate {
@@ -1180,7 +1188,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 
 - (BOOL)unhighlightItemAtIndexPath:(NSIndexPath*)indexPath
@@ -1216,14 +1224,14 @@ static char kUIColletionViewExt;
 #pragma mark - Update Grid
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)insertSections:(NSIndexSet*)sections {
     [self updateSections:sections updateAction:UICollectionUpdateActionInsert];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)deleteSections:(NSIndexSet*)sections {
     // First delete all items
@@ -1239,14 +1247,14 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)reloadSections:(NSIndexSet*)sections {
     [self updateSections:sections updateAction:UICollectionUpdateActionReload];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection {
     NSMutableArray* moveUpdateItems = [self arrayForUpdateAction:UICollectionUpdateActionMove];
@@ -1261,28 +1269,28 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)insertItemsAtIndexPaths:(NSArray*)indexPaths {
     [self updateRowsAtIndexPaths:indexPaths updateAction:UICollectionUpdateActionInsert];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)deleteItemsAtIndexPaths:(NSArray*)indexPaths {
     [self updateRowsAtIndexPaths:indexPaths updateAction:UICollectionUpdateActionDelete];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)reloadItemsAtIndexPaths:(NSArray*)indexPaths {
     [self updateRowsAtIndexPaths:indexPaths updateAction:UICollectionUpdateActionReload];
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)moveItemAtIndexPath:(NSIndexPath*)indexPath toIndexPath:(NSIndexPath*)newIndexPath {
     NSMutableArray* moveUpdateItems = [self arrayForUpdateAction:UICollectionUpdateActionMove];
@@ -1296,7 +1304,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)performBatchUpdates:(void (^)(void))updates completion:(void (^)(BOOL finished))completion {
     [self setupCellAnimations];
@@ -1313,7 +1321,7 @@ static char kUIColletionViewExt;
 #pragma mark - Properties
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setBackgroundView:(UIView*)backgroundView {
     if (backgroundView != _backgroundView) {
@@ -1327,7 +1335,7 @@ static char kUIColletionViewExt;
 }
 
 /**
-   @Status Interoperable
+ @Status Interoperable
 */
 - (void)setCollectionViewLayout:(UICollectionViewLayout*)layout animated:(BOOL)animated {
     if (layout == _layout)

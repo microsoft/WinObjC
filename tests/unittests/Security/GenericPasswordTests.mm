@@ -109,7 +109,6 @@ TEST(Security, GenericPasswordHandler_Add) {
     ASSERT_OBJCEQ(@"www.fakeWebService.com", [outDictionary objectForKey:(__bridge id)(kSecAttrService)]);
 
     [outDictionary release];
-    [dictionary release];
     [mockVault release];
     [handler release];
 }
@@ -142,7 +141,6 @@ TEST(Security, GenericPasswordHandler_AddEmpty) {
     ASSERT_OBJCEQ((__bridge id)(kSecClassGenericPassword), [outDictionary objectForKey:(__bridge id)(kSecClass)]);
 
     [outDictionary release];
-    [dictionary release];
     [mockVault release];
     [handler release];
 }
@@ -204,7 +202,6 @@ TEST(Security, GenericPasswordHandler_Query) {
     ASSERT_OBJCEQ(@"www.fakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
 
     [attributes release];
-    [attrQuery1 release];
 
     // Now query for password data and match multiple
     NSDictionary* dataQuery1 = @{
@@ -220,12 +217,10 @@ TEST(Security, GenericPasswordHandler_Query) {
 
     // Note that this assumes return order is the same as add order which isn't necessarily true
     // but will be for the mock.
-    ASSERT_OBJCEQ([[mockPassword1 dataUsingEncoding:NSUTF8StringEncoding] autorelease], [outArray objectAtIndex:0]);
-    ASSERT_OBJCEQ([[mockPassword2 dataUsingEncoding:NSUTF8StringEncoding] autorelease], [outArray objectAtIndex:1]);
+    ASSERT_OBJCEQ([mockPassword1 dataUsingEncoding:NSUTF8StringEncoding], [outArray objectAtIndex:0]);
+    ASSERT_OBJCEQ([mockPassword2 dataUsingEncoding:NSUTF8StringEncoding], [outArray objectAtIndex:1]);
 
     [outArray release];
-    [dataQuery1 release];
-
     outArray = nil;
 
     // Query for something not there.
@@ -240,11 +235,6 @@ TEST(Security, GenericPasswordHandler_Query) {
     ASSERT_EQ(result, errSecItemNotFound);
     ASSERT_EQ(nil, outArray);
 
-    [attrQuery2 release];
-
-    [credential1 release];
-    [credential2 release];
-    [credential3 release];
     [mockVault release];
     [handler release];
 }
@@ -295,10 +285,6 @@ TEST(Security, GenericPasswordHandler_Update) {
     ASSERT_OBJCEQ(@"www.anUpdatedFakeWebService.com", [attributes objectForKey:(__bridge id)(kSecAttrService)]);
 
     [attributes release];
-    [queryDictionary release];
-    [updateQuery release];
-    [updateDictionary release];
-    [dictionary release];
     [mockVault release];
     [handler release];
 }
@@ -357,11 +343,6 @@ TEST(Security, GenericPasswordHandler_Remove) {
     ASSERT_EQ(result, errSecItemNotFound);
     ASSERT_EQ(nil, outArray);
 
-    [removeQuery release];
-    [queryDictionary release];
-    [credential1 release];
-    [credential2 release];
-    [credential3 release];
     [mockVault release];
     [handler release];
 }

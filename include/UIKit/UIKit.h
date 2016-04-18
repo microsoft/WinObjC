@@ -37,7 +37,7 @@
 #import <UIKit/NSObject+UIKitAdditions.h>
 #import <UIKit/NSParagraphStyle.h>
 #import <UIKit/NSShadow.h>
-#import <UIKit/NSStringDrawing.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import <UIKit/NSStringDrawingContext.h>
 #import <UIKit/NSTextAttachment.h>
 #import <UIKit/NSTextAttachmentContainer.h>
@@ -50,7 +50,6 @@
 #import <UIKit/UIAccelerometer.h>
 #import <UIKit/UIAccelerometerDelegate.h>
 #import <UIKit/UIAccessibility.h>
-#import <UIKit/UIAccessibilityConstants.h>
 #import <UIKit/UIAccessibilityCustomAction.h>
 #import <UIKit/UIAccessibilityElement.h>
 #import <UIKit/UIAccessibilityIdentification.h>

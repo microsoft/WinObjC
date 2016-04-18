@@ -17,6 +17,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 NSString* const AVMetadataObjectTypeUPCECode = @"AVMetadataObjectTypeUPCECode";
 NSString* const AVMetadataObjectTypeCode39Code = @"AVMetadataObjectTypeCode39Code";

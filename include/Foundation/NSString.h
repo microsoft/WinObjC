@@ -97,7 +97,6 @@ typedef NSUInteger NSStringCompareOptions;
 struct _ConstructedStringData;
 struct _ConstructedStringType {
     uint8_t _hashIsCached;
-    uint8_t _placementAllocated;
     uint8_t align;
     struct _ConstructedStringData* constructedStr;
     uint32_t _hashCache;

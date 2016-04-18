@@ -24,7 +24,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <TargetConditionals.h>
 #import <Foundation/FoundationExport.h>
 #import <Availability.h>
-#import <StarboardExport.h>
 #import <StubIncludes.h>
 
 #define NS_INLINE static inline

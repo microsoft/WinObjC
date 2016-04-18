@@ -33,7 +33,7 @@
 
     idt(NSMutableArray) _timers;
     idt(NSMutableArray) _observers;
-    idt(NSInputSource) _cancelSource;
+    idt(NSRunLoopSource) _cancelSource;
     int _starveCount;
 
     bool _builtWakeupSockets;

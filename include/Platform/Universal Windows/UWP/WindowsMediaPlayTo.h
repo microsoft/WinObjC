@@ -64,7 +64,7 @@ WINRT_EXPORT
 @property (readonly) NSString* album;
 @property (readonly) NSString* author;
 @property (readonly) id date;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* genre;
 @property (readonly) NSDictionary* properties;
 @property (readonly) id rating;
@@ -129,7 +129,7 @@ WINRT_EXPORT
 @property BOOL supportsVideo;
 @property BOOL supportsImage;
 @property BOOL supportsAudio;
-@property (copy) NSString* friendlyName;
+@property (retain) NSString* friendlyName;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 - (EventRegistrationToken)addCurrentTimeChangeRequestedEvent:(void (^)(WMPPlayToReceiver*, WMPCurrentTimeChangeRequestedEventArgs*))del;
 - (void)removeCurrentTimeChangeRequestedEvent:(EventRegistrationToken)tok;
@@ -190,9 +190,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPPlayToSource : RTObject
-@property (copy) WMPPlayToSource* next;
+@property (retain) WMPPlayToSource* next;
 @property (readonly) WMPPlayToConnection* connection;
-@property (copy) WFUri* preferredSourceUri;
+@property (retain) WFUri* preferredSourceUri;
 - (void)playNext;
 @end
 

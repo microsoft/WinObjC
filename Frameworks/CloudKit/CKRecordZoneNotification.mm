@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKRecordZoneNotification.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKRecordZoneNotification
 @end

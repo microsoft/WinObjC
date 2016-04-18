@@ -32,7 +32,6 @@
 #pragma once
 
 #import "UINavigationController.h"
-#import <StarboardExport.h>
 
 typedef NSUInteger UIImagePickerControllerSourceType;
 enum {

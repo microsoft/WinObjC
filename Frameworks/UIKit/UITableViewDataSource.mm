@@ -18,7 +18,7 @@
 #include "UITableViewDataSource.h"
 
 @implementation UITableViewDataSource : NSObject
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _tableSections = [coder decodeObjectForKey:@"UITableSections"];
     return self;
 }

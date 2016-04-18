@@ -15,7 +15,7 @@
 //******************************************************************************
 #pragma once
 
-#import <stubincludes.h>
+#import <StubIncludes.h>
 
 #import <AddressBook/AddressBookExport.h>
 #import <AddressBook/ABAddressBook.h>

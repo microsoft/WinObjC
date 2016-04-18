@@ -197,8 +197,8 @@ typedef unsigned WAAAppointmentStoreChangeType;
 #define __WAAIAppointmentParticipant_DEFINED__
 
 @protocol WAAIAppointmentParticipant
-@property (copy) NSString* address;
-@property (copy) NSString* displayName;
+@property (retain) NSString* address;
+@property (retain) NSString* displayName;
 @end
 
 #endif // __WAAIAppointmentParticipant_DEFINED__
@@ -210,27 +210,27 @@ typedef unsigned WAAAppointmentStoreChangeType;
 WINRT_EXPORT
 @interface WAAAppointment : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* location;
+@property (retain) NSString* location;
 @property BOOL allDay;
-@property (copy) WAAAppointmentOrganizer* organizer;
-@property (copy) WFTimeSpan* duration;
-@property (copy) NSString* details;
-@property (copy) WFUri* uri;
+@property (retain) WAAAppointmentOrganizer* organizer;
+@property (retain) WFTimeSpan* duration;
+@property (retain) NSString* details;
+@property (retain) WFUri* uri;
 @property WAAAppointmentBusyStatus busyStatus;
-@property (copy) WAAAppointmentRecurrence* recurrence;
-@property (copy) NSString* subject;
-@property (copy) WFDateTime* startTime;
+@property (retain) WAAAppointmentRecurrence* recurrence;
+@property (retain) NSString* subject;
+@property (retain) WFDateTime* startTime;
 @property WAAAppointmentSensitivity sensitivity;
-@property (copy) id reminder;
+@property (retain) id reminder;
 @property (readonly) NSMutableArray* invitees;
 @property BOOL allowNewTimeProposal;
 @property WAAAppointmentParticipantResponse userResponse;
-@property (copy) NSString* roamingId;
-@property (copy) id replyTime;
+@property (retain) NSString* roamingId;
+@property (retain) id replyTime;
 @property BOOL isResponseRequested;
 @property BOOL isOrganizedByUser;
 @property BOOL isCanceledMeeting;
-@property (copy) NSString* onlineMeetingLink;
+@property (retain) NSString* onlineMeetingLink;
 @property (readonly) BOOL hasInvitees;
 @property (readonly) NSString* calendarId;
 @property (readonly) NSString* localId;
@@ -329,8 +329,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppointmentOrganizer : RTObject <WAAIAppointmentParticipant>
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* displayName;
-@property (copy) NSString* address;
+@property (retain) NSString* displayName;
+@property (retain) NSString* address;
 @end
 
 #endif // __WAAAppointmentOrganizer_DEFINED__
@@ -344,8 +344,8 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property WAAAppointmentParticipantRole role;
 @property WAAAppointmentParticipantResponse response;
-@property (copy) NSString* displayName;
-@property (copy) NSString* address;
+@property (retain) NSString* displayName;
+@property (retain) NSString* address;
 @end
 
 #endif // __WAAAppointmentInvitee_DEFINED__
@@ -358,14 +358,14 @@ WINRT_EXPORT
 @interface WAAAppointmentRecurrence : RTObject
 + (instancetype)make ACTIVATOR;
 @property WAAAppointmentRecurrenceUnit unit;
-@property (copy) id occurrences;
+@property (retain) id occurrences;
 @property unsigned int month;
 @property unsigned int interval;
 @property WAAAppointmentDaysOfWeek daysOfWeek;
 @property unsigned int day;
 @property WAAAppointmentWeekOfMonth weekOfMonth;
-@property (copy) id until;
-@property (copy) NSString* timeZone;
+@property (retain) id until;
+@property (retain) NSString* timeZone;
 @property (readonly) WAARecurrenceType recurrenceType;
 @property (readonly) NSString* calendarIdentifier;
 @end
@@ -483,15 +483,15 @@ WINRT_EXPORT
 @interface WAAAppointmentCalendar : RTObject
 @property WAAAppointmentSummaryCardView summaryCardView;
 @property WAAAppointmentCalendarOtherAppWriteAccess otherAppWriteAccess;
-@property (copy) WUColor* displayColor;
+@property (retain) WUColor* displayColor;
 @property BOOL isHidden;
-@property (copy) NSString* displayName;
+@property (retain) NSString* displayName;
 @property WAAAppointmentCalendarOtherAppReadAccess otherAppReadAccess;
 @property (readonly) NSString* localId;
 @property (readonly) NSString* sourceDisplayName;
 @property BOOL canCancelMeetings;
 @property BOOL canNotifyInvitees;
-@property (copy) NSString* remoteId;
+@property (retain) NSString* remoteId;
 @property BOOL mustNofityInvitees;
 @property BOOL canUpdateMeetingResponses;
 @property BOOL canProposeNewTimeForMeetings;

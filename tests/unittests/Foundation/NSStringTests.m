@@ -77,7 +77,6 @@ TEST(NSString, NSStringTests) {
     allowedCharacterSet = [NSCharacterSet alphanumericCharacterSet];
 
     testString = [stringWillDie stringByAddingPercentEncodingWithAllowedCharacters:allowedCharacterSet];
-    [stringWillDie release];
     ASSERT_OBJCEQ(urlEncodedString, testString);
 
     // stringByAppendingFormat test

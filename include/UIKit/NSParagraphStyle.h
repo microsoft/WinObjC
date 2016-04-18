@@ -17,7 +17,7 @@
 #pragma once
 
 #import <UIKit/UIKitExport.h>
-#import <UIKit/NSStringDrawing.h>
+#import <UIKit/NSString+UIKitAdditions.h>
 #import <Foundation/NSObject.h>
 
 @class NSDictionary;
@@ -27,7 +27,7 @@
 @class NSTextTab;
 
 UIKIT_EXPORT_CLASS
-@interface NSParagraphStyle : NSObject
+@interface NSParagraphStyle : NSObject <NSCopying, NSMutableCopying, NSSecureCoding>
 
 + (NSParagraphStyle*)defaultParagraphStyle;
 + (NSWritingDirection)defaultWritingDirectionForLanguage:(NSString*)languageName;

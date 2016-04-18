@@ -35,7 +35,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{CC5BF26B-322D-4E39-9555-39C77C1E70A4}</ProjectGuid>
     <ProjectName>StoreKitLib</ProjectName>
-    <RootNamespace>StoreKit</RootNamespace>
+    <RootNamespace>StoreKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>StoreKitLib</OutputName>
@@ -52,7 +52,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -61,7 +61,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -71,7 +71,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -80,7 +80,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DSTOREKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

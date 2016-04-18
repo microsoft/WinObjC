@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using System.Threading;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace ClangCompile
 {
@@ -46,7 +47,7 @@ namespace ClangCompile
                                 .Where(arg => !string.IsNullOrEmpty(arg));
         }
     }
-
+    
     [Rule(Name="Clang", PageTemplate="tool", DisplayName="Clang", Order="200")]
     [DataSource(Persistence="ProjectFile", ItemType="ClangCompile")]
     [PropertyCategory(Name="General", DisplayName="General", Order = 0)]
@@ -66,6 +67,82 @@ namespace ClangCompile
     [ContentType(Name = "ClangObjCpp", DisplayName = "Clang Objective C/C++", ItemType = "ClangCompile")]
     public class Clang : ToolTask
     {
+        /// <summary>
+        /// This class holds an item to be compiled by clang.
+        /// </summary>
+        class ClangItem
+        {
+            private Clang clangTask = null;
+            private List<string> stdOut;
+            private List<string> stdErr;
+
+            public ITaskItem Item { get; private set; }
+            public string ObjFileName { get; private set; }
+            public string DepFileName { get; private set; }
+            public string CommandLine { get; private set; }
+            public int ExitCode { get; private set; }
+
+            public ClangItem(Clang clangTask, ITaskItem item, string objFileName, string depFileName, string commandLine)
+            {
+                this.clangTask = clangTask;
+                this.Item = item;
+                this.ObjFileName = objFileName;
+                this.DepFileName = depFileName;
+                this.CommandLine = commandLine;
+                this.stdOut = new List<string>();
+                this.stdErr = new List<string>();
+            }
+
+            public void RunClang(string executable)
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = executable;
+                startInfo.Arguments = this.CommandLine;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+
+                string stdOutString = null;
+                string stdErrString = null;
+
+                Process process = Process.Start(startInfo);
+
+                // Wait for the program to complete as we record all of its StdOut and StdErr
+                Parallel.Invoke(
+                    () => { stdOutString = process.StandardOutput.ReadToEnd(); },
+                    () => { stdErrString = process.StandardError.ReadToEnd(); }
+                    );
+
+                process.WaitForExit();
+
+                ExitCode = process.ExitCode;
+                if (!string.IsNullOrEmpty(stdOutString))
+                {
+                    this.stdOut = (stdOutString.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(stdErrString))
+                {
+                    this.stdErr = (stdErrString.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries)).ToList();
+                }
+            }
+
+            public void LogOutput()
+            {
+                clangTask.LogEventsFromTextOutput(this.Item.ItemSpec, MessageImportance.High);
+
+                for (int i = 0; i < this.stdOut.Count; i++)
+                {
+                    clangTask.LogEventsFromTextOutput(this.stdOut[i], MessageImportance.Normal);
+                }
+
+                for (int i = 0; i < this.stdErr.Count; i++)
+                {
+                    clangTask.LogEventsFromTextOutput(this.stdErr[i], MessageImportance.Normal);
+                }
+            }
+        }
+
         // This is only used to output our .tlog files at a logical time, after the end of a build.
         class TLogWriter : IDisposable
         {
@@ -327,7 +404,7 @@ namespace ClangCompile
                     fileModDate = GetModDate(file);
                     newestModDate = GetNewestInTree(file);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     // FileNotFoundException is never thrown, it just returns 00:00/1/1/1601 UTC
                     needsRebuilding[file] = true;
@@ -354,7 +431,7 @@ namespace ClangCompile
             Dictionary<string, bool> needsRebuilding = new Dictionary<string, bool>();
         }
 
-        #region Private and utils
+#region Private and utils
         void LogMessage(MessageImportance importance, string message, params object[] list)
         {
 #if !LOWLEVEL_DEBUG
@@ -448,9 +525,9 @@ namespace ClangCompile
         {
             return LLVMDirectory + @"\lib\clang\" + LLVMClangVersion;
         }
-        #endregion
+#endregion
 
-        #region MSBuild Properties
+#region MSBuild Properties
         [PropertyPage(Visible = false, IncludeInCommandLine = false)]
         public string LLVMClangVersion
         {
@@ -661,8 +738,17 @@ namespace ClangCompile
             DisplayName = "Enable C and Objective-C Modules",
             Description = "Specifies whether to use Clang modules.",
             Category = "General",
-            Switch = "-fmodules")]
+            Switch = "-fmodules -fimplicit-module-maps")]
         public bool ObjectiveCModules { get; set; }
+
+        [PropertyPage(
+            DisplayName = "Path to Objective-C modules",
+            Description = "Path to the directory where the modules will be cached",
+            Category = "General",
+            Visible = false,
+            Switch = "-fmodules-cache-path=")]
+        [ResolvePath()]
+        public string ObjectiveCModulesCachePath { get; set; }
 
         [PropertyPage(
             Category = "Paths",
@@ -672,6 +758,40 @@ namespace ClangCompile
             Visible = false)]
         [ResolvePath()]
         public string[] InternalSystemIncludePaths { get; set; }
+
+        [PropertyPage(
+            Category = "Paths",
+            DisplayName = "Excluded Search Path Subdirectories",
+            Description = "Wildcard pattern for subdirectories to exclude from recursive search",
+            IncludeInCommandLine = false)]
+        public string[] ExcludedSearchPathSubdirectories
+        {
+            get { return ExcludedSearchPathSubdirectoriesValues; }
+            set { ExcludedSearchPathSubdirectoriesValues = convertWildcardToRegEx(value); }
+        }
+
+        string[] ExcludedSearchPathSubdirectoriesValues;
+
+        private static string[] convertWildcardToRegEx(string[] wildcardPaths)
+        {
+            List<string> patterns = new List<string>();
+
+            foreach (string wildcard in wildcardPaths)
+            {
+                string pattern = Regex.Escape(wildcard);
+                pattern = pattern.Replace("/", "\\\\");
+
+                // Convert "*" to ".*", i.e. match any character except the path separator, zero or more times.
+                pattern = pattern.Replace("\\*", "[^\\\\]*");
+
+                // Convert "?" to ".", i.e. match exactly one character except the path separator.
+                pattern = pattern.Replace("\\?", "[^\\\\]");
+
+                patterns.Add(pattern + "$");
+            }
+
+            return patterns.ToArray();
+        }
 
         private void dirSearch(string dirPath, ref List<string> outPaths)
         {
@@ -683,10 +803,26 @@ namespace ClangCompile
                 {
                     foreach (string d in Directory.GetDirectories(outPaths[i]))
                     {
-                        outPaths.Add(d);
+                        bool excluded = false;
+                        if (ExcludedSearchPathSubdirectories != null)
+                        {
+                            foreach (string pattern in ExcludedSearchPathSubdirectories)
+                            {
+                                if (Regex.IsMatch(d, pattern, RegexOptions.None))
+                                {
+                                    excluded = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!excluded)
+                        {
+                            outPaths.Add(d);
+                        }
                     }
                 }
-                catch (System.Exception e) { }
+                catch (System.Exception) { }
             }
         }
 
@@ -816,6 +952,13 @@ namespace ClangCompile
         public string[] PrefixHeader { get; set; }
 
         [PropertyPage(
+            Category = "General",
+            DisplayName = "Maximum Clang Processes",
+            Description = "Specifies the maximum number of clang processes to run in parallel. The argument can be -1 or any positive integer. A positive property value limits the number of concurrent operations to the set value. If it is -1, there is no limit on the number of concurrently running operations.",
+            IncludeInCommandLine = false)]
+        public int MaxClangProcesses { get; set; }
+
+        [PropertyPage(
             Category = "Language",
             DisplayName = "Other C Flags",
             Description = "Other C Flags",
@@ -918,9 +1061,9 @@ namespace ClangCompile
             Description = "Don't ignore system headers when calculating dependencies.",
             Switch = "-sys-header-deps")]
         public bool SystemHeaderDeps { get; set; }
-        #endregion
+#endregion
 
-        #region ToolTask Overrides
+#region ToolTask Overrides
         // ToLower() is affected by localization.
         // Be VERY careful when adding static strings to the dictionary, since lookup is also done with ToLower.
         static Dictionary<string, PropertyInfo> AllProps = typeof(Clang).GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance).ToDictionary(x => x.Name.ToLower());
@@ -1280,9 +1423,11 @@ namespace ClangCompile
                     return i;
                 }));
             }
-            
-            foreach (ITaskItem item in Input)
+
+            List<ClangItem> clangItems = new List<ClangItem>(Input.Length);
+            for (int i = 0; i < Input.Length; i++)
             {
+                ITaskItem item = Input[i];
                 string objFileName = Path.GetFullPath(GetSpecial("objectfilename", ObjectFileName, item));
                 string depFileName = Path.GetFullPath(GetSpecial("dependencyfile", DependencyFile, item));
 
@@ -1291,42 +1436,73 @@ namespace ClangCompile
                     continue;
                 }
 
-                LogMessage(MessageImportance.High, item.ItemSpec);
-
                 string commandLine = ReplaceOptions(commandLineCommands, item);
-                retCode = base.ExecuteTool(pathToTool, responseFileCommands, commandLine);
+                clangItems.Add(new ClangItem(this, item, objFileName, depFileName, commandLine));
+            }
 
-                string inputFullPath = Path.GetFullPath(item.ItemSpec);
-
-                ReadTLog(Path.GetFullPath(CommandTLogFile))[inputFullPath] = new List<string>() { commandLine };
-
-                if (retCode == 0)
+            if ((MaxClangProcesses > 1) || (MaxClangProcesses == -1))
+            {
+                Parallel.ForEach(clangItems, new ParallelOptions { MaxDegreeOfParallelism = MaxClangProcesses }, (clangItem) =>
                 {
-                    if (File.Exists(depFileName))
+                    clangItem.RunClang(pathToTool);
+                    lock (this)
                     {
-                        List<string> deps = ReadDependencyFile(depFileName);
+                        clangItem.LogOutput();
+                    }
+                });
+            }
+            else
+            {
+                for(int i=0;i<clangItems.Count; i++)
+                {
+                    clangItems[i].RunClang(pathToTool);
+                    clangItems[i].LogOutput();
+                    if (clangItems[i].ExitCode != 0)
+                    {
+                        //Note: this break is for backward compatibility.  We would previously return on the first file that failed to compile correctly.
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < clangItems.Count; i++)
+            {
+                ClangItem clangItem = clangItems[i];
+                retCode |= clangItem.ExitCode;
+
+                string inputFullPath = Path.GetFullPath(clangItem.Item.ItemSpec);
+
+                ReadTLog(Path.GetFullPath(CommandTLogFile))[inputFullPath] = new List<string>() { clangItem.CommandLine };
+
+                if (clangItem.ExitCode == 0)
+                {
+                    if (File.Exists(clangItem.DepFileName))
+                    {
+                        List<string> deps = ReadDependencyFile(clangItem.DepFileName);
                         if (deps != null)
                         {
                             // Should we do anything special if we fail to parse the dependency file?
                             // As it stands now, if we fail the object file will not be up to date, and it will continute to be built.
                             Tracker.SetDependencies(inputFullPath, deps);
-                            Tracker.SetUpToDate(objFileName);
+                            Tracker.SetUpToDate(clangItem.ObjFileName);
                         }
-                        Tracker.SetDependencies(objFileName, new List<string>() { inputFullPath });
+                        Tracker.SetDependencies(clangItem.ObjFileName, new List<string>() { inputFullPath });
                     }
                 }
                 else
                 {
                     tracker.SetUpToDate(inputFullPath, false); // Probably an invalid object file, if it exists.
-                    // Todo: Keep-going logic
-                    return retCode;
+                    if ((MaxClangProcesses > 1) || (MaxClangProcesses == -1))
+                    {
+                        //Note: this return is for backward compatibility.  We would previously return on the first file that failed to compile correctly.
+                        return retCode;
+                    }
                 }
             }
-
             return retCode;
         }
 
-        #endregion
+#endregion
 
         List<string> ReadDependencyFile(string file)
         {

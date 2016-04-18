@@ -28,16 +28,23 @@
 
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIColor.h"
+#include "UIColorInternal.h"
 
-#include "CALayerInternal.h"
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CATransaction.h"
 #include "QuartzCore/CAEAGLLayer.h"
+#include "CAEAGLLayerInternal.h"
 
 #include "..\include\CACompositor.h"
 #include "CAAnimationInternal.h"
+#include "CABasicAnimationInternal.h"
 #include "CATransactionInternal.h"
 #include "Quaternion.h"
+
+#include "LoggingNative.h"
+#include "CALayerInternal.h"
+
+static const wchar_t* TAG = L"CALayer";
 
 NSString* const kCAOnOrderIn = @"kCAOnOrderIn";
 NSString* const kCAOnOrderOut = @"kCAOnOrderOut";
@@ -57,6 +64,16 @@ NSString* const kCAGravityResizeAspectFill = @"kCAGravityResizeAspectFill";
 NSString* const kCAFilterLinear = @"kCAFilterLinear";
 NSString* const kCAFilterNearest = @"kCAFilterNearest";
 NSString* const kCAFilterTrilinear = @"kCAFilterTrilinear";
+
+@interface CALayer () {
+    WXFrameworkElement* _contentsElement;
+@public
+    CAPrivateInfo* priv;
+}
+
+- (DisplayTexture*)_getDisplayTexture;
+
+@end
 
 // FIXME(DH): Compatibility shim to avoid rewriting parts of CA for libobjc2.
 // VSO 6149838
@@ -167,7 +184,7 @@ static void DoDisplayList(CALayer* layer) {
 
         if (!cur->_textureOverride) {
             if (cur->delegate) {
-                EbrDebugLog("Getting new texture for %s\n", object_getClassName(cur->delegate));
+                TraceVerbose(TAG, L"Getting new texture for %hs", object_getClassName(cur->delegate));
             }
             DisplayTexture* newTexture = (DisplayTexture*)[cur->self _getDisplayTexture];
             cur->needsDisplay = FALSE;
@@ -214,8 +231,8 @@ static void DiscardLayerContents(CALayer* layer) {
     LLTREE_FOREACH(curLayer, layer->priv) {
         DiscardLayerContents(curLayer->self);
 
-        if ([curLayer isKindOfClass:[CAEAGLLayer class]]) {
-            [curLayer _unlockTexture];
+        if ([curLayer->self isKindOfClass:[CAEAGLLayer class]]) {
+            [curLayer->self _unlockTexture];
         } else {
             [curLayer->self _releaseContents:TRUE];
         }
@@ -346,10 +363,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     return ret;
 }
 
-@implementation CALayer {
-    WXFrameworkElement* _contentsElement;
-}
-
+@implementation CALayer
 /**
  @Status Interoperable
 */
@@ -358,6 +372,17 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     priv = new CAPrivateInfo(self);
 
     return self;
+}
+
+- (CAPrivateInfo*)_priv {
+    return priv;
+}
+
+- (bool)_isVisibleOrHitable {
+    if (priv->hidden || priv->opacity <= 0.01f) {
+        return NO;
+    }
+    return YES;
 }
 
 /**
@@ -386,7 +411,8 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
  @Notes transform properties not supported
 */
 - (void)renderInContext:(CGContextRef)ctx {
-    if (priv->hidden) {
+    // if calayer is hidden or opacity is 0 do not render it.
+    if (![self _isVisibleOrHitable]) {
         return;
     }
 
@@ -413,7 +439,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
 
     if (priv->contents == NULL) {
         if (priv->_backgroundColor != nil) {
-            [priv->_backgroundColor setFill];
+            [static_cast<UIColor*>(priv->_backgroundColor) setFill];
             CGContextFillRect(ctx, destRect);
         }
         [self drawInContext:ctx];
@@ -474,10 +500,11 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
  @Status Interoperable
 */
 - (void)display {
-    EbrDebugLog("Displaying for 0x%08x (%s, %s)\n",
-                priv->delegate,
-                object_getClassName(self),
-                priv->delegate ? object_getClassName(priv->delegate) : "nil");
+    TraceVerbose(TAG,
+                 L"Displaying for 0x%08x (%hs, %hs)",
+                 priv->delegate,
+                 object_getClassName(self),
+                 priv->delegate ? object_getClassName(priv->delegate) : "nil");
 
     if (priv->savedContext != NULL) {
         CGContextRelease(priv->savedContext);
@@ -492,7 +519,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
     if (priv->contents == NULL || priv->ownsContents || [self isKindOfClass:[CAShapeLayer class]]) {
         if (priv->contents) {
             if (priv->ownsContents) {
-                EbrDebugLog("Freeing 0x%x with refcount %d\n", priv->contents, CFGetRetainCount((CFTypeRef)priv->contents));
+                TraceVerbose(TAG, L"Freeing 0x%x with refcount %d", priv->contents, CFGetRetainCount((CFTypeRef)priv->contents));
                 CGImageRelease(priv->contents);
             }
             priv->contents = NULL;
@@ -544,7 +571,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         }
 
         if (!target) {
-            if ((priv->isOpaque && priv->_backgroundColor == nil) || priv->backgroundColor.a == 1.0 && 0) {
+            if ((priv->isOpaque && priv->_backgroundColor == nil) || (priv->backgroundColor.a == 1.0 && 0)) {
                 /* CGVectorImage is currently in development - not ready for general use */
                 if (useVector) {
                     // target = new CGVectorImage(width, height, _ColorRGB);
@@ -570,7 +597,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
         priv->savedContext = drawContext;
 
         if (!vectorTarget) {
-            if (priv->_backgroundColor == nil || (int)[priv->_backgroundColor _type] == solidBrush) {
+            if (priv->_backgroundColor == nil || (int)[static_cast<UIColor*>(priv->_backgroundColor) _type] == solidBrush) {
                 CGContextClearToColor(drawContext,
                                       priv->backgroundColor.r,
                                       priv->backgroundColor.g,
@@ -580,7 +607,7 @@ CGContextRef CreateLayerContentsBitmapContext32(int width, int height) {
                 CGContextClearToColor(drawContext, 0, 0, 0, 0);
 
                 CGContextSaveGState(drawContext);
-                CGContextSetFillColorWithColor(drawContext, [priv->_backgroundColor CGColor]);
+                CGContextSetFillColorWithColor(drawContext, [static_cast<UIColor*>(priv->_backgroundColor) CGColor]);
 
                 CGRect wholeRect;
 
@@ -800,7 +827,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         insertBefore = priv->childAtIndex(index)->self;
     } else {
         if (index > (unsigned)priv->childCount) {
-            EbrDebugLog("Adding sublayer at index %d, count=%d!\n", index, priv->childCount);
+            TraceVerbose(TAG, L"Adding sublayer at index %d, count=%d!", index, priv->childCount);
             index = priv->childCount;
         }
     }
@@ -982,7 +1009,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     ret = CGRectApplyAffineTransform(ret, translate);
     /*
-    EbrDebugLog("%s: frame(%d, %d, %d, %d)\n", object_getClassName(self),
+    TraceVerbose(TAG, L"%hs: frame(%d, %d, %d, %d)", object_getClassName(self),
     (int) ret->origin.x, (int) ret->origin.y,
     (int) ret->size.width, (int) ret->size.height);
     */
@@ -1002,7 +1029,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     sprintf_s(szOut, sizeof(szOut), "%s: setFrame(%f, %f, %f, %f)\n", object_getClassName(self),
     frame.origin.x, frame.origin.y,
     frame.size.width, frame.size.height);
-    EbrDebugLog("%s", szOut);
+    TraceVerbose(TAG, L"%hs", szOut);
     */
     priv->_frameIsCached = FALSE;
 
@@ -1136,11 +1163,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
     if (bounds.origin.x != bounds.origin.x || bounds.origin.y != bounds.origin.y || bounds.size.width != bounds.size.width ||
         bounds.size.height != bounds.size.height) {
-        EbrDebugLog("**** Warning: Bad bounds on CALayer - %f, %f, %f, %f *****\n",
-                    bounds.origin.x,
-                    bounds.origin.y,
-                    bounds.size.width,
-                    bounds.size.height);
+        TraceWarning(TAG,
+                     L"**** Warning: Bad bounds on CALayer - %f, %f, %f, %f *****",
+                     bounds.origin.x,
+                     bounds.origin.y,
+                     bounds.size.width,
+                     bounds.size.height);
         memset(&bounds, 0, sizeof(CGRect));
 #if defined(_DEBUG) || !defined(WINPHONE)
         assert(0);
@@ -1148,7 +1176,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     }
     /*
     if ( bounds.size.height > 16384 || bounds.size.width > 16384 ) {
-    EbrDebugLog("**** Warning: Bad bounds on CALayer - %d, %d, %d, %d *****\n", (int) bounds.origin.x, (int)
+    TraceWarning(TAG, L"**** Warning: Bad bounds on CALayer - %d, %d, %d, %d *****", (int) bounds.origin.x, (int)
     bounds.origin.y,
     (int) bounds.size.width, (int) bounds.size.height);
     bounds.size.height = 32;
@@ -1195,7 +1223,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 
 - (void)setOrigin:(CGPoint)origin {
     if (origin.x != origin.x || origin.y != origin.y) {
-        EbrDebugLog("**** Warning: Bad origin on CALayer - %f, %f *****\n", origin.x, origin.y);
+        TraceWarning(TAG, L"**** Warning: Bad origin on CALayer - %f, %f *****", origin.x, origin.y);
         memset(&origin, 0, sizeof(CGPoint));
         assert(0);
     }
@@ -1373,12 +1401,12 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 /**
  @Status Interoperable
 */
-- (void)setContents:(CGImageRef)pImg {
+- (void)setContents:(id)pImg {
     CGImageRef oldContents = priv->contents;
 
     if (pImg != NULL) {
-        priv->contents = pImg;
-        CGImageRetain(pImg);
+        priv->contents = static_cast<CGImageRef>(pImg);
+        CGImageRetain(static_cast<CGImageRef>(pImg));
         priv->ownsContents = FALSE;
 
         priv->contentsSize.width = float(priv->contents->Backing()->Width());
@@ -1529,9 +1557,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     CAAnimation* animCopy = [anim copy];
     animCopy->_keyName = [key copy];
     [priv->_animations setObject:(id)animCopy forKey:(id)animCopy->_keyName];
-    [animCopy release];
 
     [CATransaction _addAnimationToLayer:self animation:animCopy forKey:key];
+    [animCopy release];
 }
 
 - (void)_removeAnimation:(CAAnimation*)animation {
@@ -1674,7 +1702,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setBackgroundColor:(CGColorRef)color {
     if (color != nil) {
-        [color getColors:&priv->backgroundColor];
+        [static_cast<UIColor*>(color) getColors:&priv->backgroundColor];
     } else {
         priv->backgroundColor.r = 0.0f;
         priv->backgroundColor.g = 0.0f;
@@ -1698,8 +1726,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)_setContentColor:(CGColorRef)newColor {
-    [newColor getColors:&priv->contentColor];
-    [CATransaction _setPropertyForLayer:self name:@"contentColor" value:newColor];
+    [static_cast<UIColor*>(newColor) getColors:&priv->contentColor];
+    [CATransaction _setPropertyForLayer:self name:@"contentColor" value:static_cast<UIColor*>(newColor)];
 }
 
 /**
@@ -1708,7 +1736,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 - (void)setBorderColor:(CGColorRef)color {
     UNIMPLEMENTED();
     if (color != nil) {
-        [color getColors:&priv->borderColor];
+        [static_cast<UIColor*>(color) getColors:&priv->borderColor];
     } else {
         priv->borderColor.r = 0.0f;
         priv->borderColor.g = 0.0f;
@@ -1896,7 +1924,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Interoperable
 */
 - (NSString*)name {
-    return priv->_name;
+    return static_cast<NSString*>(priv->_name);
 }
 
 /**
@@ -1965,18 +1993,22 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
             ret = [CATransaction _implicitAnimationForKey:key];
             if (ret != nil) {
                 NSObject* value = GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
-                [ret setFromValue:value];
+                [static_cast<CABasicAnimation*>(ret) setFromValue:value];
             }
         }
     }
 
-    if ([ret isKindOfClass:[NSNull class]]) {
+    if ([static_cast<NSObject*>(ret) isKindOfClass:[NSNull class]]) {
         return nil;
     }
 
     return ret;
 }
 
+/**
+ @Status Interoperable
+ @Notes Intended override point for subclasses.
+*/
 + (id<CAAction>)defaultActionForKey:(NSString*)key {
     return nil;
 }
@@ -2025,8 +2057,11 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return priv->needsDisplayOnBoundsChange;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CALayer*)hitTest:(CGPoint)point {
-    if (priv->opacity <= 0.01f || priv->hidden == 1) {
+    if (![self _isVisibleOrHitable]) {
         return nil;
     }
 
@@ -2068,6 +2103,9 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     return nil;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)containsPoint:(CGPoint)point {
     if (point.x >= priv->bounds.origin.x && point.y >= priv->bounds.origin.y && point.x < priv->bounds.origin.x + priv->bounds.size.width &&
         point.y < priv->bounds.origin.x + priv->bounds.size.height) {
@@ -2078,7 +2116,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 }
 
 - (void)dealloc {
-    EbrDebugLog("CALayer dealloced\n");
+    TraceVerbose(TAG, L"CALayer dealloced");
     [self removeAllAnimations];
     [self removeFromSuperlayer];
     while (priv->firstChild) {
@@ -2092,14 +2130,18 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [super dealloc];
 }
 
-- (instancetype)retain {
-    return [super retain];
-}
-
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)valueForUndefinedKey:(NSString*)keyPath {
     return [priv->_undefinedKeys valueForKey:keyPath];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (id)valueForKeyPath:(NSString*)keyPath {
     char* pPath = (char*)[keyPath UTF8String];
     if (strcmp(pPath, "position.x") == 0) {
@@ -2111,9 +2153,8 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
         Quaternion qval;
         qval.CreateFromMatrix(reinterpret_cast<float*>(&curTransform));
         return [NSNumber numberWithFloat:(float)-qval.roll() * 180.0f / M_PI];
-    } else if (strcmp(pPath, "transform.rotation.x") == 0 ||
-               strcmp(pPath, "transform.rotation.y") == 0) {
-        EbrDebugLog("Should get rotation\n");
+    } else if (strcmp(pPath, "transform.rotation.x") == 0 || strcmp(pPath, "transform.rotation.y") == 0) {
+        TraceVerbose(TAG, L"Should get rotation");
         return [NSNumber numberWithFloat:0.0f];
     } else if (strcmp(pPath, "transform.scale") == 0) {
         CATransform3D curTransform = [self transform];
@@ -2173,11 +2214,15 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     } else if (strcmp(pPath, "bounds.origin.y") == 0) {
         CGRect bounds = [self bounds];
         return [NSNumber numberWithFloat:bounds.origin.y];
-    } 
+    }
 
     return [super valueForKeyPath:keyPath];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setValue:(id)value forUndefinedKey:(NSString*)key {
     if (priv->_undefinedKeys == nil) {
         priv->_undefinedKeys.attach([NSMutableDictionary new]);
@@ -2185,6 +2230,10 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
     [priv->_undefinedKeys setObject:value forKey:key];
 }
 
+/**
+ @Status Interoperable
+ @Public No
+*/
 - (void)setValue:(id)value forKeyPath:(NSString*)keyPath {
     if ([keyPath isEqual:@"transform.scale"]) {
         CATransform3D curTransform;
@@ -2220,7 +2269,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (CALayer*)mask {
     UNIMPLEMENTED();
-    EbrDebugLog("mask not supported\n");
+    TraceVerbose(TAG, L"mask not supported");
     return nil;
 }
 
@@ -2229,7 +2278,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
 */
 - (void)setShadowPath:(CGPathRef)path {
     UNIMPLEMENTED();
-    EbrDebugLog("setShadowPath not supported\n");
+    TraceVerbose(TAG, L"setShadowPath not supported");
 }
 
 /**
@@ -2244,7 +2293,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
  @Status Interoperable
 */
 - (NSArray*)actions {
-    return priv->_actions;
+    return static_cast<NSArray*>(priv->_actions);
 }
 
 /**
@@ -2454,6 +2503,10 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     return GetCACompositor()->getDisplayProperty(priv->_presentationNode, [key UTF8String]);
 }
 
+/**
+ @Status Interoperable
+ @Notes WinObjC extension.
+*/
 - (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info {
     GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
 }

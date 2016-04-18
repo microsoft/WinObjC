@@ -14,24 +14,37 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UITabBarController.h"
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIApplication.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "UIKit/UINavigationController.h"
-#include "UIViewControllerInternal.h"
-#include "UITabPane.h"
+#import "Starboard.h"
+#import "UIKit/UITabBarController.h"
+#import "UIKit/UIViewController.h"
+#import "UIKit/UIApplication.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "UIKit/UINavigationController.h"
+#import "UIViewControllerInternal.h"
+#import "UITabPane.h"
+#import "LoggingNative.h"
+#import "UITabBarControllerInternal.h"
+#import "UITabBarInternal.h"
+
+static const wchar_t* TAG = L"UITabBarController";
 
 @implementation UITabMoreTableView
-- (unsigned)numberOfSectionsInTableView:(UITableView*)tableview {
+
+/**
+ @Status Interoperable
+*/
+- (NSInteger)numberOfSectionsInTableView:(UITableView*)tableview {
     return 0;
 }
 
 @end
 
 @implementation UITabMoreController
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     [super init];
 
@@ -54,6 +67,10 @@
     id _delegate;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
 
@@ -62,7 +79,7 @@
     _tabBar = [coder decodeObjectForKey:@"UITabBar"];
     [_tabBar setDelegate:self];
     if (_tabBar == nil) {
-        EbrDebugLog("No tab!\n");
+        TraceVerbose(TAG, L"No tab!");
     }
     _moreNavigationController = [UITabMoreController new];
     [self setViewControllers:viewControllers];
@@ -72,6 +89,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithNibName:(NSString*)name bundle:(NSBundle*)bundle {
     _selectedIndex = -1;
 
@@ -164,7 +184,7 @@
         NSArray* items = [_tabBar items];
 
         if (index >= [items count]) {
-            EbrDebugLog("setSelectedIndex: bad index\n");
+            TraceVerbose(TAG, L"setSelectedIndex: bad index");
             return;
         }
 
@@ -204,6 +224,9 @@
     [self setSelectedIndex:index];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)loadView {
     if (_moreNavigationController == nil) {
         _moreNavigationController = [UITabMoreController new];
@@ -239,8 +262,11 @@
     return _moreNavigationController;
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSArray*)customizableViewControllers {
-    EbrDebugLog("Warning: No customizableViewControllers");
+    TraceWarning(TAG, L"Warning: No customizableViewControllers");
     return _customizableControllers;
 }
 
@@ -254,6 +280,9 @@
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setCustomizableViewControllers:(NSArray*)controllers {
     _customizableControllers = controllers;
 }
@@ -316,44 +345,47 @@
             [_delegate tabBarController:self didSelectViewController:controller];
         }
     } else {
-        if (_selectedIndex >= 0 && _selectedIndex < [[_tabBar items] count]) {
+        if (_selectedIndex < [[_tabBar items] count]) {
             [tabBar setSelectedItem:[[tabBar items] objectAtIndex:_selectedIndex]];
         }
     }
 }
 
-- (void)notifyViewWillAppear:(BOOL)animated {
+- (void)_notifyViewWillAppear:(BOOL)animated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewWillAppear:animated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewWillAppear:animated];
     }
 
-    [super notifyViewWillAppear:animated];
+    [super _notifyViewWillAppear:animated];
 }
 
-- (void)notifyViewDidAppear:(BOOL)isAnimated {
+- (void)_notifyViewDidAppear:(BOOL)isAnimated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewDidAppear:isAnimated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewDidAppear:isAnimated];
     }
 
-    [super notifyViewDidAppear:isAnimated];
+    [super _notifyViewDidAppear:isAnimated];
 }
 
-- (void)notifyViewWillDisappear:(BOOL)isAnimated {
+- (void)_notifyViewWillDisappear:(BOOL)isAnimated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewWillDisappear:isAnimated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewWillDisappear:isAnimated];
     }
 
-    [super notifyViewWillDisappear:isAnimated];
+    [super _notifyViewWillDisappear:isAnimated];
 }
 
-- (void)notifyViewDidDisappear:(BOOL)isAnimated {
+- (void)_notifyViewDidDisappear:(BOOL)isAnimated {
     if (_mainView != nil) {
-        [((UITabPane*)_tabPane)->_curController notifyViewDidDisappear:isAnimated];
+        [((UITabPane*)_tabPane)->_curController _notifyViewDidDisappear:isAnimated];
     }
 
-    [super notifyViewDidDisappear:isAnimated];
+    [super _notifyViewDidDisappear:isAnimated];
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation {
     if ([_viewControllers count] > 0 && _selectedIndex != -1) {
         UIViewController* curController = [_viewControllers objectAtIndex:_selectedIndex];
@@ -365,6 +397,9 @@
     return [super shouldAutorotateToInterfaceOrientation:orientation];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     _layoutForRotation = true;
     if ([_viewControllers count] > 0 && _selectedIndex != -1) {
@@ -379,6 +414,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)orientation duration:(double)duration {
     if ([_viewControllers count] > 0 && _selectedIndex != -1) {
         UIViewController* curController = [_viewControllers objectAtIndex:_selectedIndex];
@@ -388,6 +426,9 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)orientation {
     // We need to tell the tab bar to layout itself again:
     [_tabBar _setLayoutDirty];
@@ -400,6 +441,13 @@
     } else {
         [super didRotateFromInterfaceOrientation:orientation];
     }
+}
+
+/**
+ @Status Stub
+*/
+- (void)setViewControllers:(NSArray*)viewControllers animated:(BOOL)animated {
+    UNIMPLEMENTED();
 }
 
 @end

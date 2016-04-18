@@ -27,6 +27,9 @@
 #include "CoreGraphics/CGPattern.h"
 
 #include <math.h>
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIColor";
 
 typedef struct {
     double r; // percent
@@ -180,18 +183,28 @@ static id _cachedColorsDict;
     float _r, _g, _b, _a;
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+/**
+ @Status Stub
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _type = solidBrush;
 
     NSString* pattern = [coder decodeObjectForKey:@"UIPatternSelector"];
+    if (pattern == nil) {
+        pattern = [coder decodeObjectForKey: @"UISystemColorName"];
+    }
     if (pattern != nil) {
         const char* pPattern = [pattern UTF8String];
-        EbrDebugLog("Selecting pattern %s\n", pPattern);
+        TraceVerbose(TAG, L"Selecting pattern %hs", pPattern);
 
         return [[[self class] performSelector:NSSelectorFromString(pattern)] retain];
     } else {
@@ -212,6 +225,9 @@ static id _cachedColorsDict;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)encodeWithCoder:(NSCoder*)coder {
     assert(_type == solidBrush);
 
@@ -476,7 +492,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [[ret initWithPatternImage:image] autorelease];
 }
 
-+ (UIColor*)colorWithCGPattern:(CGPatternRef)pattern {
++ (UIColor*)_colorWithCGPattern:(CGPatternRef)pattern {
     UIColor* ret = [self alloc];
 
     ret->_type = cgPatternBrush;
@@ -530,11 +546,13 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [ret autorelease];
 }
 
-- (void)getColors:(float*)colors {
-    colors[0] = _r;
-    colors[1] = _g;
-    colors[2] = _b;
-    colors[3] = _a;
+- (void)getColors:(ColorQuad*)colors {
+    if (colors) {
+        colors->r = _r;
+        colors->g = _g;
+        colors->b = _b;
+        colors->a = _a;
+    }
 }
 
 /**
@@ -546,7 +564,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
         CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
         CGContextSetStrokeColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
     } else {
-        EbrDebugLog("UIColor::set - context not set\n");
+        TraceVerbose(TAG, L"UIColor::set - context not set");
     }
 }
 
@@ -566,7 +584,7 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     if (UIGraphicsGetCurrentContext()) {
         CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)self);
     } else {
-        EbrDebugLog("UIColor::setFill - context not set\n");
+        TraceVerbose(TAG, L"UIColor::setFill - context not set");
     }
 }
 
@@ -585,20 +603,40 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return [self colorWithRed:197.f / 255.f green:204.f / 255.f blue:210.f / 255.f alpha:1.0f];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)viewFlipsideBackgroundColor {
     return [self whiteColor];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)windowsControlFocusedColor {
     return [self colorWithRed:0.19f green:0.46f blue:0.73f alpha:1.0f];
 }
 
+/**
+ @Status Stub
+*/
 + (UIColor*)windowsControlDefaultBackgroundColor {
     return [self colorWithRed:0.95f green:0.95f blue:0.95f alpha:1.0f];
 }
 
-+ (UIColor*)windowsTableViewCellSelectionBackgroundColor {
+/**
+ @Status Stub
+*/
++ (UIColor*)_windowsTableViewCellSelectionBackgroundColor {
     return [self colorWithRed:0.63 green:0.79 blue:0.89 alpha:1.0];
+}
+
+/**
+ @Status Stub
+*/
++ (UIColor*)windowsTableViewSelectionBackgroundColor {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -650,6 +688,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     return TRUE;
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)isEqual:(UIColor*)other {
     if (![other isKindOfClass:[UIColor class]]) {
         return FALSE;
@@ -663,12 +704,18 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_image release];
     [_pattern release];
     [super dealloc];
 }
 
+/**
+ @Status Interoperable
+*/
 + (void)initialize {
     _cachedColorsDict = [NSMutableDictionary new];
 }

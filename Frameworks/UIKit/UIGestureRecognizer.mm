@@ -25,6 +25,9 @@
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
 #import "UIGestureRecognizerInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIGestureRecognizer";
 
 extern NSMutableDictionary* g_curGesturesDict;
 
@@ -37,6 +40,9 @@ static void commonInit(UIGestureRecognizer* self) {
     self->_delaysTouchesEnded = YES;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         commonInit(self);
@@ -45,7 +51,7 @@ static void commonInit(UIGestureRecognizer* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
         commonInit(self);
 
@@ -72,6 +78,10 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
 }
 
 - (void)addEventConnection:(UIRuntimeEventConnection*)connection {
@@ -194,12 +204,7 @@ static void commonInit(UIGestureRecognizer* self) {
         id target = _targets[i]._target;
         SEL sel = _targets[i]._selector;
 
-        {
-            TimingFunction t("Gesture");
-            // EbrDebugLog("Gesture %s detected - calling %s::%s\n", object_getClassName(self),
-            // object_getClassName(target), sel);
-            [target performSelector:sel withObject:self];
-        }
+        [target performSelector:sel withObject:self];
     }
 }
 
@@ -251,24 +256,24 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
-- (void)cancelIfActive {
+- (void)_cancelIfActive {
     id curList = [g_curGesturesDict objectForKey:[self class]];
     if ([curList containsObject:self]) {
         [self cancel];
     }
 }
 
-+ (void)cancelActiveExcept:(UIGestureRecognizer*)gesture {
++ (void)_cancelActiveExcept:(UIGestureRecognizer*)gesture {
     id curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
-            EbrDebugLog("Cancelling %s\n", object_getClassName(curGesture));
+            TraceVerbose(TAG, L"Cancelling %hs", object_getClassName(curGesture));
             [curGesture cancel];
         }
     }
 }
 
-+ (void)failActiveExcept:(UIGestureRecognizer*)gesture {
++ (void)_failActiveExcept:(UIGestureRecognizer*)gesture {
     NSArray* curList = [g_curGesturesDict objectForKey:self];
     for (UIGestureRecognizer* curGesture in curList) {
         if (curGesture != gesture) {
@@ -281,65 +286,107 @@ static void commonInit(UIGestureRecognizer* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationInView:(UIView*)view {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (CGPoint)locationOfTouch:(NSUInteger)touchIndex inView:(UIView*)view {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (NSUInteger)numberOfTouches {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
 - (void)ignorePress:(UIPress*)button forEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesBegan:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesCancelled:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesChanged:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)pressesEnded:(NSSet*)presses withEvent:(UIPressesEvent*)event {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
 - (void)removeTarget:(id)target action:(SEL)action {
     UNIMPLEMENTED();
 }

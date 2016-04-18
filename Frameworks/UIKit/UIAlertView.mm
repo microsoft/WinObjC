@@ -14,18 +14,21 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIAlertView.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UIColor.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "CoreGraphics/CGAffineTransform.h"
-#include "CoreFoundation/CFType.h"
-#include "UIKit/UIImage.h"
-#include <objc/objc-arc.h>
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIAlertView.h"
+#import "UIKit/UIAlertViewDelegate.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIColor.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "CoreFoundation/CFType.h"
+#import "UIKit/UIImage.h"
+#import "UIFontInternal.h"
+#import "UIApplicationInternal.h"
+#import <objc/objc-arc.h>
 
 typedef struct {
     idretain _buttonText;
@@ -59,13 +62,17 @@ struct UIAlertViewPriv {
 
     UIAlertViewStyle _style;
 
-    BOOL _delegateSupportsDidDismiss, _delegateSupportsModalDismiss, _delegateSupportsModalCancel;
+    BOOL _delegateSupportsDidDismiss;
 };
 
 @implementation UIAlertView {
     struct UIAlertViewPriv* alertPriv;
 }
-+ (id)allocWithZone:(NSZone*)zone {
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)allocWithZone:(NSZone*)zone {
     UIAlertView* ret = [super allocWithZone:zone];
     ret->alertPriv = new UIAlertViewPriv();
 
@@ -81,7 +88,7 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
 /**
  @Status Interoperable
 */
-- (id)initWithTitle:(NSString*)title
+- (instancetype)initWithTitle:(NSString*)title
             message:(NSString*)message
            delegate:(id)delegate
   cancelButtonTitle:(NSString*)cancelButtonTitle
@@ -122,7 +129,10 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return self;
 }
 
-- (id)initWithTitle:(id)title
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithTitle:(id)title
             message:(id)message
            delegate:(id)delegate
       defaultButton:(id)defaultButton
@@ -165,7 +175,10 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
     return self;
 }
 
-- (id) /* use typed version */ init {
+/**
+ @Status Interoperable
+*/
+- (instancetype) init {
     alertPriv->_otherButtonIndex = -1;
     alertPriv->_cancelButtonIndex = -1;
 
@@ -178,8 +191,6 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
 - (void)setDelegate:(id)delegate {
     objc_storeWeak(&alertPriv->_delegate, delegate);
     alertPriv->_delegateSupportsDidDismiss = [alertPriv->_delegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)];
-    alertPriv->_delegateSupportsModalDismiss = [alertPriv->_delegate respondsToSelector:@selector(modalView:didDismissWithButtonIndex:)];
-    alertPriv->_delegateSupportsModalCancel = [alertPriv->_delegate respondsToSelector:@selector(modalViewCancel:)];
 }
 
 /**
@@ -305,16 +316,6 @@ static id createButton(UIAlertView* self, int index, id text, float x, float y, 
     if (alertPriv->_delegateSupportsDidDismiss) {
         [weakDelegate alertView:self didDismissWithButtonIndex:alertPriv->_hideIndex];
     }
-    if (alertPriv->_delegateSupportsModalDismiss) {
-        if (alertPriv->_hideIndex != alertPriv->_cancelButtonIndex) {
-            [weakDelegate modalView:self didDismissWithButtonIndex:alertPriv->_hideIndex];
-        }
-    }
-    if (alertPriv->_delegateSupportsModalCancel) {
-        if (alertPriv->_hideIndex == alertPriv->_cancelButtonIndex) {
-            [weakDelegate modalViewCancel:self];
-        }
-    }
     return self;
 }
 
@@ -337,16 +338,6 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
         id weakDelegate = objc_loadWeak(&self->alertPriv->_delegate);
         if ([weakDelegate respondsToSelector:@selector(alertView:didDismissWithButtonIndex:)]) {
             [weakDelegate alertView:self didDismissWithButtonIndex:index];
-        }
-        if (self->alertPriv->_delegateSupportsModalDismiss) {
-            if (index != self->alertPriv->_cancelButtonIndex) {
-                [weakDelegate modalView:self didDismissWithButtonIndex:index];
-            }
-        }
-        if (self->alertPriv->_delegateSupportsModalCancel) {
-            if (index == self->alertPriv->_cancelButtonIndex) {
-                [weakDelegate modalViewCancel:self];
-            }
         }
     }
 }
@@ -591,6 +582,9 @@ static void hideAlert(UIAlertView* self, int index, BOOL animated) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     for (int i = 0; i < alertPriv->_numButtons; i++) {
         alertPriv->_buttons[i]._buttonView = nil;

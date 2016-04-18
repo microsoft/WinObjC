@@ -40,6 +40,9 @@ FOUNDATION_EXPORT NSPoint NSPointFromString(NSString* string);
 //
 FOUNDATION_EXPORT const NSSize NSZeroSize;
 
+/**
+ @Status Interoperable
+*/
 static inline NSSize NSMakeSize(CGFloat w, CGFloat h) {
     NSSize size = { w, h };
     return size;
@@ -49,42 +52,68 @@ FOUNDATION_EXPORT BOOL NSEqualSizes(NSSize size0, NSSize size1);
 FOUNDATION_EXPORT NSString* NSStringFromSize(NSSize size);
 FOUNDATION_EXPORT NSSize NSSizeFromString(NSString* string);
 
-//
 FOUNDATION_EXPORT const NSRect NSZeroRect;
 
+/**
+ @Status Interoperable
+*/
 static inline NSRect NSMakeRect(CGFloat x, CGFloat y, CGFloat w, CGFloat h) {
     NSRect rect = { { x, y }, { w, h } };
     return rect;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSMinX(NSRect rect) {
     return rect.origin.x;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSMinY(NSRect rect) {
     return rect.origin.y;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSWidth(NSRect rect) {
     return rect.size.width;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSHeight(NSRect rect) {
     return rect.size.height;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSMaxX(NSRect rect) {
     return rect.origin.x + rect.size.width;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSMaxY(NSRect rect) {
     return rect.origin.y + rect.size.height;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSMidX(NSRect rect) {
     return rect.origin.x + rect.size.width / 2;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGFloat NSMidY(NSRect rect) {
     return rect.origin.y + rect.size.height / 2;
 }
@@ -107,18 +136,26 @@ FOUNDATION_EXPORT BOOL NSIntersectsRect(NSRect rect0, NSRect rect1);
 FOUNDATION_EXPORT NSString* NSStringFromRect(NSRect rect);
 FOUNDATION_EXPORT NSRect NSRectFromString(NSString* string);
 
-//
 FOUNDATION_EXPORT BOOL NSPointInRect(NSPoint point, NSRect rect);
 FOUNDATION_EXPORT BOOL NSMouseInRect(NSPoint point, NSRect rect, BOOL flipped);
 
+/**
+ @Status Interoperable
+*/
 static inline CGRect NSRectToCGRect(NSRect rect) {
     return rect;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGSize NSSizeToCGSize(NSSize size) {
     return size;
 }
 
+/**
+ @Status Interoperable
+*/
 static inline CGPoint NSPointToCGPoint(NSPoint point) {
     return point;
 }

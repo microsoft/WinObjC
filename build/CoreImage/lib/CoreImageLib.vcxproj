@@ -19,10 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
+      <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
+      <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
+      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
+      <Project>{2a00fc26-2ecf-4df7-8ecf-2d18c5ac61c9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
+      <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIColor.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIImage.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIColorKernel.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIDetector.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIFaceFeature.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIFeature.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIFilter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIFilterShape.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIImageAccumulator.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIImageProvider.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIKernel.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIQRCodeFeature.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIRectangleFeature.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CISampler.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CITextFeature.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIVector.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIWarpKernel.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreImage\CIContext.mm">
       <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ObjectiveCARC>
       <ObjectiveCARC Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ObjectiveCARC>
@@ -51,7 +81,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -61,7 +91,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -72,7 +102,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -82,7 +112,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DCOREIMAGE_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

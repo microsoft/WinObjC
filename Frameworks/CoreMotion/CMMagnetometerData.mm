@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,8 +17,22 @@
 
 #import <CoreMotion/CMMagnetometerData.h>
 #import <StubReturn.h>
+#import "CMLogItemInternal.h"
 
 @implementation CMMagnetometerData
+
+-(instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time {
+
+    if (self = [super initWithTimestamp:time]) {
+        _magneticField.x = x;
+        _magneticField.y = y;
+        _magneticField.z = z;
+    }
+
+    return self;
+}
+
+
 /**
 @Status Stub
 */

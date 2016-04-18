@@ -14,10 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIImageNibPlaceholder.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIImage.h"
+#import "Starboard.h"
+#import "UIImageNibPlaceholder.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIImage.h"
+#import "LoggingNative.h"
+#import "UINibUnarchiver.h"
+
+static const wchar_t* TAG = L"UIImageNibPlaceholder";
 
 @implementation UIImageNibPlaceholder
 - (instancetype)initWithCoder:(NSCoder*)coder {
@@ -35,7 +39,7 @@
 
         id ret = [[UIImage imageNamed:resourcePath] retain];
         if (ret == nil) {
-            EbrDebugLog("**** Failed to initialize image ****\n");
+            TraceError(TAG, L"**** Failed to initialize image ****");
             ret = [[UIImage imageWithCGImage:NULL] retain];
         }
 

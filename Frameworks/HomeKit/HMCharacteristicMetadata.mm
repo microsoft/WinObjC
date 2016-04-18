@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMCharacteristicMetadata.h>
+#import "AssertARCEnabled.h"
 
 NSString* const HMCharacteristicMetadataUnitsCelsius = @"HMCharacteristicMetadataUnitsCelsius";
 NSString* const HMCharacteristicMetadataUnitsFahrenheit = @"HMCharacteristicMetadataUnitsFahrenheit";

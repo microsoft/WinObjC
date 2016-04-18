@@ -17,5 +17,7 @@
 #pragma once
 
 @interface UIWindow ()
+- (UIWindow*)_initWithContentRect:(CGRect)pos;
 - (void)_setRootViewController:(UIViewController*)controller;
+- (void)_destroy;
 @end

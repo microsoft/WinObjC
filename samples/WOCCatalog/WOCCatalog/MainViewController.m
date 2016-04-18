@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -38,6 +39,7 @@
 #import "FoundationsViewController.h"
 #import "BasicAnimationViewController.h"
 #import "AccelerateViewController.h"
+#import "CoreMotionViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -53,7 +55,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.menuItems = [NSMutableArray array];
-
+    
+    //CoreMotion
+    [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];
+    
     // Foundations tests
     [self addMenuItemViewController:[[FoundationsViewController alloc] init] andTitle:@"Foundation Tests"];
 

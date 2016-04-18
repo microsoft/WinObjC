@@ -1,11 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{90485838-95F1-459D-87E4-92788E02C934}</UniqueIdentifier>
+      <UniqueIdentifier>{D6C9F8E4-7785-4863-B880-A1A4B2D13076}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreMotionViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
@@ -97,6 +100,9 @@
       <Filter>WOCCatalog</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TaskInfoViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PopoverViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>
   </ItemGroup>

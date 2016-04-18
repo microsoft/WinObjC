@@ -17,10 +17,10 @@
 #ifndef __ERRORHANDLING_H
 #define __ERRORHANDLING_H
 
-#include <Foundation/FoundationExport.h>
 #include <sys/cdefs.h>
 #include <winerror.h>
 #include <stdarg.h>
+#include <StarboardExport.h>
 
 namespace wil {
 struct FailureInfo;
@@ -179,45 +179,71 @@ struct OBJC_ENUM_FLAG_SIZED_INTEGER {
 
 // Override Win32 function calls
 #pragma push_macro("GetCurrentThreadId")
+#undef GetCurrentThreadId
 #pragma push_macro("InterlockedIncrementNoFence")
+#undef InterlockedIncrementNoFence
 #pragma push_macro("GetLastError")
+#undef GetLastError
 #pragma push_macro("CopyMemory")
+#undef CopyMemory
 #pragma push_macro("ZeroMemory")
+#undef ZeroMemory
 #pragma push_macro("FormatMessageW")
+#undef FormatMessageW
 #pragma push_macro("OutputDebugStringW")
+#undef OutputDebugStringW
 #pragma push_macro("InterlockedDecrementRelease")
+#undef InterlockedDecrementRelease
 #pragma push_macro("InterlockedCompareExchangePointer")
+#undef InterlockedCompareExchangePointer
 
 __BEGIN_DECLS
 
-#ifndef IWPLATFORM_EXPORT
-#define IWPLATFORM_EXPORT
-#endif
-
 // Should hitting the UNIMPLEMENTED macro cause a fast fail? If this returns false, we still log unimplemented calls but they are not fatal.
-IWPLATFORM_EXPORT bool failFastOnUnimplemented();
+SB_EXPORT bool failFastOnUnimplemented();
 
 // Error-handling exports
-IWPLATFORM_EXPORT unsigned long starboardGetCurrentThreadId();
-IWPLATFORM_EXPORT long starboardInterlockedIncrementNoFence(long volatile* addend);
-IWPLATFORM_EXPORT unsigned long starboardGetLastError();
-IWPLATFORM_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
-IWPLATFORM_EXPORT void starboardZeroMemory(void* destination, size_t length);
-IWPLATFORM_EXPORT unsigned long starboardFormatMessageW(unsigned long flags, const void* source, unsigned long messageId, unsigned long languageId, wchar_t* buffer, unsigned long size, va_list* arguments);
-IWPLATFORM_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
-IWPLATFORM_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
-IWPLATFORM_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
+SB_EXPORT unsigned long starboardGetCurrentThreadId();
+SB_EXPORT long starboardInterlockedIncrementNoFence(long volatile* addend);
+SB_EXPORT unsigned long starboardGetLastError();
+SB_EXPORT void starboardCopyMemory(void* destination, const void* source, size_t length);
+SB_EXPORT void starboardZeroMemory(void* destination, size_t length);
+SB_EXPORT unsigned long starboardFormatMessageW(unsigned long flags,
+                                                const void* source,
+                                                unsigned long messageId,
+                                                unsigned long languageId,
+                                                wchar_t* buffer,
+                                                unsigned long size,
+                                                va_list* arguments);
+SB_EXPORT void starboardOutputDebugStringW(wchar_t* outputString);
+SB_EXPORT long starboardInterlockedDecrementRelease(long volatile* addend);
+SB_EXPORT void* starboardInterlockedCompareExchangePointer(void* volatile* destination, void* exchange, void* comparand);
 
 __END_DECLS
 
 #define GetCurrentThreadId starboardGetCurrentThreadId
+#ifdef InterlockedIncrementNoFence
+#undef InterlockedIncrementNoFence
+#endif
 #define InterlockedIncrementNoFence starboardInterlockedIncrementNoFence
 #define GetLastError starboardGetLastError
+#ifdef CopyMemory
+#undef CopyMemory
+#endif
 #define CopyMemory starboardCopyMemory
+#ifdef ZeroMemory
+#undef ZeroMemory
+#endif
 #define ZeroMemory starboardZeroMemory
 #define FormatMessageW starboardFormatMessageW
 #define OutputDebugStringW starboardOutputDebugStringW
+#ifdef InterlockedDecrementRelease
+#undef InterlockedDecrementRelease
+#endif
 #define InterlockedDecrementRelease starboardInterlockedDecrementRelease
+#ifdef InterlockedCompareExchangePointer
+#undef InterlockedCompareExchangePointer
+#endif
 #define InterlockedCompareExchangePointer starboardInterlockedCompareExchangePointer
 
 // Ignore some warnings in result.h
@@ -243,14 +269,23 @@ __END_DECLS
 #endif
 
 // Pop all the temp Win32 function defines
+#undef GetCurrentThreadId
 #pragma pop_macro("GetCurrentThreadId")
+#undef InterlockedIncrementNoFence
 #pragma pop_macro("InterlockedIncrementNoFence")
+#undef GetLastError
 #pragma pop_macro("GetLastError")
+#undef CopyMemory
 #pragma pop_macro("CopyMemory")
+#undef ZeroMemory
 #pragma pop_macro("ZeroMemory")
+#undef FormatMessageW
 #pragma pop_macro("FormatMessageW")
+#undef OutputDebugStringW
 #pragma pop_macro("OutputDebugStringW")
+#undef InterlockedDecrementRelease
 #pragma pop_macro("InterlockedDecrementRelease")
+#undef InterlockedCompareExchangePointer
 #pragma pop_macro("InterlockedCompareExchangePointer")
 
 // Pop all the temp Win32 defines

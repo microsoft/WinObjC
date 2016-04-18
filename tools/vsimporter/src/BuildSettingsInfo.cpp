@@ -181,7 +181,7 @@ static SettingDesc _settings[] = {
   {"TARGET_TEMP_DIR", "${CONFIGURATION_TEMP_DIR}/${TARGET_NAME}.sbuild", PathValue, NULL, UniversalSetting},
   {"DERIVED_SOURCES_DIR", "${DERIVED_FILE_DIR}", PathValue, NULL, UniversalSetting},
   {"OBJECT_FILE_DIR", "$(TEMP_DIR)/Objects/${CURRENT_ARCH}", PathValue, NULL, UniversalSetting},
-  {"EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", "*.nib *.lproj *.framework *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj", StringListValue, NULL, UniversalSetting},
+  {"EXCLUDED_RECURSIVE_SEARCH_PATH_SUBDIRECTORIES", "*.nib *.lproj *.framework *.gch (*) .DS_Store CVS .svn .git .hg *.xcodeproj *.xcode *.pbproj *.pbxproj *.xcassets", StringListValue, NULL, UniversalSetting},
   {"LINK_FILE_LIST", "${OBJECT_FILE_DIR}/${TARGET_NAME}.LinkFileList", PathValue, NULL, UniversalSetting},
   {"ASSETCATALOG_COMPILER_APPICON_NAME", "", StringValue, NULL, UniversalSetting},
   {"ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME", "", StringValue, NULL, UniversalSetting},

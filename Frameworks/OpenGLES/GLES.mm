@@ -26,7 +26,6 @@
 
 #include "Etc.h"
 #include "Hash.h"
-#include "MurmurHash3.h"
 #include "CoreGraphics/CGImage.h"
 #include "UIKit/UIImage.h"
 

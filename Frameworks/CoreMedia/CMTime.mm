@@ -16,6 +16,7 @@
 
 #import <CoreMedia/CMTime.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 const CMTime kCMTimeInvalid = { 0, 0, 0, 0 };
 const CMTime kCMTimeIndefinite = { 0, 0, 17, 0 };

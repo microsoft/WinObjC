@@ -214,8 +214,8 @@ WINRT_EXPORT
 @interface WMCCameraCaptureUIPhotoCaptureSettings : RTObject
 @property WMCCameraCaptureUIMaxPhotoResolution maxResolution;
 @property WMCCameraCaptureUIPhotoFormat format;
-@property (copy) WFSize* croppedSizeInPixels;
-@property (copy) WFSize* croppedAspectRatio;
+@property (retain) WFSize* croppedSizeInPixels;
+@property (retain) WFSize* croppedAspectRatio;
 @property BOOL allowCropping;
 @end
 
@@ -417,18 +417,18 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaCaptureInitializationSettings : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* videoDeviceId;
+@property (retain) NSString* videoDeviceId;
 @property WMCStreamingCaptureMode streamingCaptureMode;
 @property WMCPhotoCaptureSource photoCaptureSource;
-@property (copy) NSString* audioDeviceId;
+@property (retain) NSString* audioDeviceId;
 @property WMCMediaCategory mediaCategory;
 @property WMAudioProcessing audioProcessing;
-@property (copy) RTObject<WMCIMediaSource>* audioSource;
-@property (copy) RTObject<WMCIMediaSource>* videoSource;
-@property (copy) WMCMediaCaptureVideoProfile* videoProfile;
-@property (copy) WMCMediaCaptureVideoProfileMediaDescription* recordMediaDescription;
-@property (copy) WMCMediaCaptureVideoProfileMediaDescription* previewMediaDescription;
-@property (copy) WMCMediaCaptureVideoProfileMediaDescription* photoMediaDescription;
+@property (retain) RTObject<WMCIMediaSource>* audioSource;
+@property (retain) RTObject<WMCIMediaSource>* videoSource;
+@property (retain) WMCMediaCaptureVideoProfile* videoProfile;
+@property (retain) WMCMediaCaptureVideoProfileMediaDescription* recordMediaDescription;
+@property (retain) WMCMediaCaptureVideoProfileMediaDescription* previewMediaDescription;
+@property (retain) WMCMediaCaptureVideoProfileMediaDescription* photoMediaDescription;
 @end
 
 #endif // __WMCMediaCaptureInitializationSettings_DEFINED__

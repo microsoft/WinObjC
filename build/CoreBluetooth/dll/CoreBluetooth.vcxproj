@@ -49,7 +49,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreBluetooth.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
@@ -64,7 +63,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreBluetooth.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
@@ -79,7 +77,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreBluetooth.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>
@@ -94,7 +91,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>CoreBluetooth.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths>

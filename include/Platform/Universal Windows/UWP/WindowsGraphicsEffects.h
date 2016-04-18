@@ -39,7 +39,7 @@
 #define __WGEIGraphicsEffect_DEFINED__
 
 @protocol WGEIGraphicsEffect <WGEIGraphicsEffectSource>
-@property (copy) NSString* name;
+@property (retain) NSString* name;
 @end
 
 #endif // __WGEIGraphicsEffect_DEFINED__

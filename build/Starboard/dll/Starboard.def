@@ -1,5 +1,9 @@
 LIBRARY Starboard
     EXPORTS
+        ; Utility exports
+        BufferFromRawData
+
+        ; Common Crypto:
         CC_MD2
         CC_MD2_Final
         CC_MD2_Init
@@ -32,9 +36,20 @@ LIBRARY Starboard
         CC_SHA512_Final
         CC_SHA512_Init
         CC_SHA512_Update
-        dbg_printf
-        host_page_size
-        mach_task_self
+        CCHmacInit
+        CCHmacUpdate
+        CCHmacFinal
+        CCHmac
+        CCCryptorCreate
+        CCCryptorCreateFromData
+        CCCryptorRelease
+        CCCryptorUpdate
+        CCCryptorFinal
+        CCCryptorGetOutputLength
+        CCCryptorReset
+        CCCrypt
+
+        ; pthread:
         pthread_attr_destroy
         pthread_attr_init
         pthread_attr_setstacksize
@@ -66,12 +81,111 @@ LIBRARY Starboard
         pthread_rwlock_wrlock
         pthread_self
         pthread_setspecific
+        pthread_setschedparam
+        pthread_getschedparam
+
+        ; System stuff not in Windows:
         sleep
         task_info
         uname
         usleep
+        sched_get_priority_max
+        sched_get_priority_min
+        pthread_attr_setschedparam
+        mach_host_self
+        host_statistics
+        srandom
+        random
+        gettimeofday
+        strnstr
+        __inet_ntoa
+        if_indextoname
+        host_page_size
+        mach_task_self
+
+        ; DNS Service:
+        DNSServiceGetAddrInfo
+        DNSServiceResolve
+        DNSServiceRegister
+        DNSServiceRefDeallocate
+        DNSServiceSetDispatchQueue
+        DNSServiceBrowse
+
+        EbrLockInit
+        EbrLockDestroy
+        EbrLockEnter
+        EbrLockTryEnter
+        EbrLockLeave
+        EbrIncrement
+        EbrDecrement
+        EbrCompareExchange
+        EbrSleep
+        EbrAllocFile
+        EbrFreeFile
+        EbrFileFromFd
+        EbrFileGetType
+        EbrFmake
+        EbrFopen
+        EbrFdopen
+        EbrFclose
+        EbrFread
+        EbrFwrite
+        EbrFseek
+        EbrFtell
+        EbrFeof
+        EbrStat
+        EbrFputc
+        EbrAccess
+        EbrRewind
+        EbrFerror
+        EbrFgetc
+        EbrUngetc
+        EbrFputs
+        EbrFputs
+        EbrFileno
+        EbrNativeFILE
+        EbrClearerr
+        EbrFreopen
+        EbrFflush
+        EbrFsetpos
+        EbrFgetpos
+        EbrOpen
+        EbrClose
+        EbrFd2Host
+        EbrFstat
+        EbrRead
+        EbrWrite
+        EbrLseek
+        EbrTruncate
+        EbrDup
+        EbrRename
+        EbrUnlink
+        EbrMkdir
+        EbrGetcwd
+        EbrChdir
+        EbrRemove
+        EbrRemoveEmptyDir
+        EbrIsDir
+        EbrOpenDir
+        EbrReadDir
+        EbrCloseDir
+        EbrGetTimeOfDay
+        EbrGetMediaTime
+        EbrGetWantedOrientation
+        EbrGetRootMapping
+        EbrGetWritableFolder
+        EbrSetWritableFolder
+        EbrBlockIfBackground
+        EbrEventInit
+        EbrEventSignal
+        EbrEventWait
+        EbrEventTryWait
+        EbrEventTimedWait
+        EbrEventTimedMultipleWait
+        EbrEventDestroy
 
         ; Error Handling Internal
+        dbg_printf
         failFastOnUnimplemented
         starboardGetCurrentThreadId
         starboardInterlockedIncrementNoFence

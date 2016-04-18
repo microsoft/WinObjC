@@ -14,16 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include "Foundation/NSString.h"
-#include "Foundation/NSUserDefaults.h"
-#include "UIKit/UIDevice.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UIViewController.h"
-#include "UIKit/UIView.h"
-#include "UWP/WindowsApplicationModel.h"
-#include "MurmurHash3.h"
+#import "Starboard.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSUserDefaults.h"
+#import "UIKit/UIDevice.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UIViewController.h"
+#import "UIKit/UIView.h"
+#import "UWP/WindowsApplicationModel.h"
+#import "UIViewControllerInternal.h"
 
 NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
 NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";
@@ -45,7 +44,7 @@ DWORD uuid_generate(BYTE* uuid);
 /**
  @Status Interoperable
 */
-+ (id) /* use typed version */ currentDevice {
++ (id)currentDevice {
     if (_currentDevice == nil) {
         _currentDevice = [UIDevice new];
 
@@ -55,7 +54,10 @@ DWORD uuid_generate(BYTE* uuid);
     return _currentDevice;
 }
 
-- (id)init {
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
     self = [super init];
     if (self) {
         _systemVersion = @"7.0";
@@ -74,7 +76,7 @@ DWORD uuid_generate(BYTE* uuid);
 /**
  @Status Interoperable
 */
-- (void) /* use typed version */ beginGeneratingDeviceOrientationNotifications {
+- (void)beginGeneratingDeviceOrientationNotifications {
     _isGeneratingEvents++;
 }
 
@@ -88,7 +90,7 @@ DWORD uuid_generate(BYTE* uuid);
 /**
  @Status Interoperable
 */
-- (void) /* use typed version */ endGeneratingDeviceOrientationNotifications {
+- (void)endGeneratingDeviceOrientationNotifications {
     _isGeneratingEvents--;
 }
 
@@ -108,11 +110,11 @@ DWORD uuid_generate(BYTE* uuid);
     return _batteryMonitoringEnabled;
 }
 
-- (id)setOrientation:(UIDeviceOrientation)orientation {
-    return [self setOrientation:orientation animated:TRUE];
+- (id)_setOrientation:(UIDeviceOrientation)orientation {
+    return [self _setOrientation:orientation animated:TRUE];
 }
 
-- (id)setOrientation:(UIDeviceOrientation)orientation animated:(BOOL)animated {
+- (id)_setOrientation:(UIDeviceOrientation)orientation animated:(BOOL)animated {
     _curOrientation = orientation;
 
     if (_curOrientation != UIDeviceOrientationUnknown) {
@@ -140,10 +142,10 @@ DWORD uuid_generate(BYTE* uuid);
                     id modal = [controller modalViewController];
 
                     if (modal != nil) {
-                        [modal setRotation:orientation animated:animated];
+                        [modal _setRotation:orientation animated:animated];
                         didRotate = true;
                     } else {
-                        [controller setRotation:orientation animated:animated];
+                        [controller _setRotation:orientation animated:animated];
                     }
                 }
                 if (didRotate) {
@@ -159,7 +161,7 @@ if ( (unsigned int)j >= [subviews count] ) continue;
 id curView = [subviews objectAtIndex:j];
 
 if ( [curView isKindOfClass:popoverClass] ) {
-[curView setRotation:orientation animated:animated];
+[curView _setRotation:orientation animated:animated];
 }
 }
 #endif
@@ -198,33 +200,23 @@ if ( [curView isKindOfClass:popoverClass] ) {
 /**
  @Status Stub
 */
-- (id) /* use typed version */ model {
+- (id)model {
     UNIMPLEMENTED();
-#ifdef REPORT_STARBOARD_METRICS
-    static id ret;
-    if (ret == nil) {
-        char combinedName[256];
-        sprintf_s(combinedName, sizeof(combinedName), "%s %s", EbrGetDeviceInfo()->manufacturer, EbrGetDeviceInfo()->model);
-        ret = EbrBuildCFConstantString(combinedName);
-    }
-    return ret;
-#else
     if (!GetCACompositor()->isTablet()) {
         return @"iPhone";
     } else {
         return @"iPad";
     }
-#endif
 }
 
 /**
  @Status Interoperable
 */
-- (id) /* use typed version */ name {
+- (id)name {
     return @"Starboard";
 }
 
-- (id) /* use typed version */ localizedModel {
+- (id)localizedModel {
     return [self model];
 }
 
@@ -249,48 +241,17 @@ if ( [curView isKindOfClass:popoverClass] ) {
 /**
  @Status Stub
 */
-- (id) /* use typed version */ systemName {
+- (id)systemName {
     UNIMPLEMENTED();
-#ifdef REPORT_STARBOARD_METRICS
-    static id ret;
-    if (ret == nil)
-        ret = EbrBuildCFConstantString(EbrGetDeviceInfo()->platformName);
-    return ret;
-#else
     return @"iPhone OS";
-#endif
 }
 
 /**
  @Status Stub
 */
-- (id) /* use typed version */ uniqueIdentifier {
+- (id)uniqueIdentifier {
     UNIMPLEMENTED();
-#if 0
-static id ret = nil;
-if (ret == nil) {
-id uniqueIdData = [UIDevice sbExt_DeviceUniqueId];
-if (uniqueIdData == nil) {  //  Permission denied error - needs ID_CAP_IDENTITY_DEVICE
-ret = LocalUIDForName(@"__Starboard_ID");
-}
-else {
-char *bytes = (char *)[uniqueIdData bytes];
-int len = (int)[uniqueIdData length];
-
-unsigned char digest[CC_MD5_DIGEST_LENGTH];
-CC_MD5((unsigned char *)bytes, len, digest);
-
-char szUUID[64];
-uuid_unparse(digest, szUUID);
-
-ret = EbrBuildCFConstantString(szUUID);
-}
-}
-
-return ret;
-#else
     return nil;
-#endif
 }
 
 /**
@@ -304,20 +265,8 @@ return ret;
 /**
  @Status Stub
 */
-- (float)screenPhysicalWidth {
-    UNIMPLEMENTED();
-    return EbrGetDeviceInfo()->devicePhysWidth;
-}
-
-/**
- @Status Stub
-*/
-- (float)screenPhysicalHeight {
-    UNIMPLEMENTED();
-    return EbrGetDeviceInfo()->devicePhysHeight;
-}
-
 - (void)playInputClick {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -336,7 +285,7 @@ return ret;
     return UIDeviceBatteryStateFull;
 }
 
-- (id) /* use typed version */ hardware {
+- (id)hardware {
     return @"Starboard";
 }
 
@@ -353,17 +302,12 @@ return ret;
     return FALSE;
 }
 
-- (id) /* use typed version */ _setInitialOrientation {
-    UIDeviceOrientation def = UIDeviceOrientationPortrait;
-#if 0
-def = (UIDeviceOrientation) EbrGetWantedOrientation();
-#endif
-
-    return [self setOrientation:def animated:FALSE];
+- (void)_setInitialOrientation {
+    [self _setOrientation:UIDeviceOrientationPortrait animated:FALSE];
 }
 
-- (id) /* use typed version */ submitRotation {
-    return [self setOrientation:newDeviceOrientation];
+- (id)submitRotation {
+    return [self _setOrientation:newDeviceOrientation];
 }
 
 @end

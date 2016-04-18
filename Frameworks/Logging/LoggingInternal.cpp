@@ -16,11 +16,19 @@
 
 #include "LoggingInternal.h"
 
+TRACELOGGING_DEFINE_PROVIDER(s_traceLoggingProvider,
+                             "WinObjCTraceLoggingProvider",
+                             (0xe4babc11, 0x825e, 0x4d44, 0x81, 0x4, 0xd6, 0xcf, 0xac, 0x39, 0xae, 0x13));
+
 void _vdebugPrintf(const wchar_t* format, va_list va) {
 #ifdef _DEBUG
     wchar_t buf[c_bufferCount];
     _vsnwprintf_s(buf, _countof(buf), _TRUNCATE, format, va);
     OutputDebugStringW(buf);
+    if (g_isTestHookEnabled) {
+        std::wstring bufString(buf);
+        g_debugTestHook = bufString;
+    }
 #endif
 }
 

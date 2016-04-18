@@ -16,6 +16,9 @@
 
 #import "TestFramework.h"
 #import <Foundation/NSInvocation.h>
+#import <Foundation/NSNumber.h>
+#import <Foundation/NSException.h>
+#import <Foundation/NSMethodSignature.h>
 #import <memory>
 #import <type_traits>
 
@@ -123,7 +126,7 @@ struct SmallDisparateAggregate4 { // on x86 and ARM, this will be returned in re
     }
 };
 
-@interface NSIT_InvocationTestClass: NSObject
+@interface NSIT_InvocationTestClass : NSObject
 @property (nonatomic, assign) UniformAggregateF1 uniformAggregateF1;
 @property (nonatomic, assign) UniformAggregateD1 uniformAggregateD1;
 @property (nonatomic, assign) UniformAggregateF2 uniformAggregateF2;
@@ -142,10 +145,12 @@ struct SmallDisparateAggregate4 { // on x86 and ARM, this will be returned in re
 // properties synthesized here
 @end
 
-#define SET_AND_TEST(object, prop, ...) do { \
-    object.prop = __VA_ARGS__; \
-    _testInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__);\
-} while(0)
+#define SET_AND_TEST(object, prop, ...)                                               \
+    do {                                                                              \
+        object.prop = __VA_ARGS__;                                                    \
+        _testInvocation<decltype(object.prop)>(object, @selector(prop), __VA_ARGS__); \
+    \
+} while (0)
 
 template <typename T>
 static void _testInvocation(id object, SEL selector, T value) {
@@ -163,28 +168,67 @@ static void _testInvocation(id object, SEL selector, T value) {
 TEST(NSInvocation, AggregateReturn) {
     NSIT_InvocationTestClass* tester = [[NSIT_InvocationTestClass alloc] init];
 
-    SET_AND_TEST(tester, uniformAggregateF1, {std::numeric_limits<float>::max()});
-    SET_AND_TEST(tester, uniformAggregateD1, {std::numeric_limits<double>::max()});
+    SET_AND_TEST(tester, uniformAggregateF1, { std::numeric_limits<float>::max() });
+    SET_AND_TEST(tester, uniformAggregateD1, { std::numeric_limits<double>::max() });
 
-    SET_AND_TEST(tester, uniformAggregateF2, {std::numeric_limits<float>::max(), 1024.f});
-    SET_AND_TEST(tester, uniformAggregateD2, {std::numeric_limits<double>::max(), 2048.});
+    SET_AND_TEST(tester, uniformAggregateF2, { std::numeric_limits<float>::max(), 1024.f });
+    SET_AND_TEST(tester, uniformAggregateD2, { std::numeric_limits<double>::max(), 2048. });
 
-    SET_AND_TEST(tester, uniformAggregateF3, {{std::numeric_limits<float>::max()}, {1024.f, 8192.f}});
-    SET_AND_TEST(tester, uniformAggregateD3, {{std::numeric_limits<double>::max()}, {2048., 16384.}});
+    SET_AND_TEST(tester, uniformAggregateF3, { { std::numeric_limits<float>::max() }, { 1024.f, 8192.f } });
+    SET_AND_TEST(tester, uniformAggregateD3, { { std::numeric_limits<double>::max() }, { 2048., 16384. } });
 
-    SET_AND_TEST(tester, uniformAggregateF4, {{std::numeric_limits<float>::max(), 1.f}, {1024.f, 8192.f}});
-    SET_AND_TEST(tester, uniformAggregateD4, {{std::numeric_limits<double>::max(), 2.f}, {2048., 16384.}});
+    SET_AND_TEST(tester, uniformAggregateF4, { { std::numeric_limits<float>::max(), 1.f }, { 1024.f, 8192.f } });
+    SET_AND_TEST(tester, uniformAggregateD4, { { std::numeric_limits<double>::max(), 2.f }, { 2048., 16384. } });
 
-    SET_AND_TEST(tester, disparateAggregateDF, {1.0, 2.0f});
+    SET_AND_TEST(tester, disparateAggregateDF, { 1.0, 2.0f });
 
-    SET_AND_TEST(tester, largeUniformAggregateF6, {1.f, 2.f, {{4.f, 8.f}, {16.f, 32.f}}});
+    SET_AND_TEST(tester, largeUniformAggregateF6, { 1.f, 2.f, { { 4.f, 8.f }, { 16.f, 32.f } } });
 
     const wchar_t hello[] = L"hello";
-    SET_AND_TEST(tester, largeDisparateAggregate, {1048576, -1.0, hello});
+    SET_AND_TEST(tester, largeDisparateAggregate, { 1048576, -1.0, hello });
 
-    SET_AND_TEST(tester, smallDisparateAggregate8, {'\x7f', 0xafafafaf});
+    SET_AND_TEST(tester, smallDisparateAggregate8, { '\x7f', 0xafafafaf });
 
-    SET_AND_TEST(tester, smallDisparateAggregate4, {'\x1f', 0xbeef});
+    SET_AND_TEST(tester, smallDisparateAggregate4, { '\x1f', 0xbeef });
 
     [tester release];
+}
+
+ARM_DISABLED_TEST(NSInvocation, ArgumentLimit) {
+    SEL selector = @selector(initWithFormat:locale:);
+    NSString* s = [[NSString alloc] initWithString:@"hello"];
+    NSString* format = @"%@";
+    NSMethodSignature* sig = [s methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
+    [invocation setSelector:selector];
+    [invocation setTarget:s];
+
+    BOOL exceptionThrown = NO;
+    [invocation setArgument:format atIndex:2];
+    @try {
+        [invocation setArgument:@"foo" atIndex:4];
+    } @catch (NSException* exception) {
+        exceptionThrown = (([[exception name] isEqual:NSInvalidArgumentException]) ? YES : NO);
+    }
+    ASSERT_TRUE_MSG(exceptionThrown, "FAILED: NSInvalidArgumentException was not thrown.");
+
+    ASSERT_ANY_THROW([invocation setArgument:@"foo" atIndex:-1]);
+}
+
+ARM_DISABLED_TEST(NSInvocation, PropertyMethod) {
+    SEL selector = @selector(length);
+    NSString* st = @"hello";
+    NSMethodSignature* sig = [st methodSignatureForSelector:selector];
+    NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
+    [invocation setSelector:selector];
+    [invocation setTarget:st];
+
+    BOOL exceptionThrown = NO;
+
+    @try {
+        [invocation setArgument:@"test" atIndex:2];
+    } @catch (NSException* exception) {
+        exceptionThrown = (([[exception name] isEqual:NSInvalidArgumentException]) ? YES : NO);
+    }
+    ASSERT_TRUE_MSG(exceptionThrown, "FAILED: NSInvalidArgumentException was not thrown.");
 }

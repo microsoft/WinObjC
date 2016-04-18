@@ -182,8 +182,8 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 WINRT_EXPORT
 @interface WMEVideoCompositorDefinition : RTObject <WMEIVideoCompositorDefinition>
-+ (WMEVideoCompositorDefinition*)create:(NSString*)activatableClassId ACTIVATOR;
-+ (WMEVideoCompositorDefinition*)createWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEVideoCompositorDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
++ (WMEVideoCompositorDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -268,8 +268,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEVideoEffectDefinition : RTObject <WMEIVideoEffectDefinition>
-+ (WMEVideoEffectDefinition*)create:(NSString*)activatableClassId ACTIVATOR;
-+ (WMEVideoEffectDefinition*)createWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEVideoEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
++ (WMEVideoEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -282,8 +282,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMEAudioEffectDefinition : RTObject <WMEIAudioEffectDefinition>
-+ (WMEAudioEffectDefinition*)create:(NSString*)activatableClassId ACTIVATOR;
-+ (WMEAudioEffectDefinition*)createWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
++ (WMEAudioEffectDefinition*)make:(NSString*)activatableClassId ACTIVATOR;
++ (WMEAudioEffectDefinition*)makeWithProperties:(NSString*)activatableClassId props:(RTObject<WFCIPropertySet>*)props ACTIVATOR;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end
@@ -325,10 +325,10 @@ WINRT_EXPORT
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @property WMMMediaRotation rotation;
 @property WMTMediaVideoProcessingAlgorithm processingAlgorithm;
-@property (copy) WUColor* paddingColor;
-@property (copy) WFSize* outputSize;
+@property (retain) WUColor* paddingColor;
+@property (retain) WFSize* outputSize;
 @property WMMMediaMirroringOptions mirror;
-@property (copy) WFRect* cropRectangle;
+@property (retain) WFRect* cropRectangle;
 @end
 
 #endif // __WMEVideoTransformEffectDefinition_DEFINED__

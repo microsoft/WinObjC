@@ -83,7 +83,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAppDisplayInfo : RTObject
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 - (WSSRandomAccessStreamReference*)getLogo:(WFSize*)size;
 @end
@@ -173,7 +173,7 @@ WINRT_EXPORT
 @property (readonly) NSString* publisher;
 @property (readonly) NSString* publisherId;
 @property (readonly) NSString* resourceId;
-@property (readonly) WAPackageVersion* version;
+@property (readonly) WAPackageVersion* Version;
 @property (readonly) NSString* author;
 @property (readonly) NSString* productId;
 @end
@@ -190,7 +190,7 @@ WINRT_EXPORT
 @property (readonly) WAPackageId* id;
 @property (readonly) WSStorageFolder* installedLocation;
 @property (readonly) BOOL isFramework;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 @property (readonly) BOOL isBundle;
 @property (readonly) BOOL isDevelopmentMode;

@@ -40,14 +40,7 @@ UIKIT_EXPORT_CLASS
 - (void)setTranslation:(CGPoint)translation inView:(UIView*)view;
 - (CGPoint)velocityInView:(UIView*)view;
 
-// [jms] Ebr internal
-- (int)stage;
-
 @property (nonatomic) NSUInteger maximumNumberOfTouches;
 @property (nonatomic) NSUInteger minimumNumberOfTouches;
-
-// Internal ---------------
-- (void)_setDragSlack:(float)slack;
-// -----------------------
 
 @end

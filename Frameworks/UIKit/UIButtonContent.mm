@@ -18,7 +18,7 @@
 #include "UIButtonContent.h"
 
 @implementation UIButtonContent
-- (instancetype)initWithCoder:(id)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     image = [coder decodeObjectForKey:@"UIImage"];
     backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
     title = [coder decodeObjectForKey:@"UITitle"];

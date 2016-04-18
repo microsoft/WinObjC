@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -17,6 +18,27 @@
 #import <UIKit/UIKit.h>
 #import <Accelerate/Accelerate.h>
 
-@interface AccelerateViewController : UITableViewController
+
+@protocol PhotoSelectorControllerDelegate <NSObject>
+- (void)imageFromController:(UIImage*)image;
+@end
+
+
+@interface SelectorCell : UICollectionViewCell
+
+@property (nonatomic, strong) UIImageView* imageView;
+
+-(void)setImage:(UIImage*)image;
+
+@end
+
+@interface PhotoSelectorController : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+
+@property (weak, nonatomic) id<PhotoSelectorControllerDelegate> delegate;
+@property (retain, nonatomic) UIImage* img;
+
+@end
+
+@interface AccelerateViewController : UITableViewController <PhotoSelectorControllerDelegate>
 
 @end

@@ -14,19 +14,21 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIAppearanceSetter.h"
-#include "UIBarButtonItem+Internals.h"
+#import "Starboard.h"
+#import "UIKit/UINavigationItem.h"
+#import "UIAppearanceSetter.h"
+#import "UIBarButtonItem+Internals.h"
+#import "UINavigationItemInternal.h"
 
 @implementation UINavigationItem {
-    idretaintype(NSString) _title;
-    idretaintype(UIView) _titleView;
-    idretaintype(NSString) _prompt;
-    idretaintype(UIBarButtonItem) _rightBarButtonItem, _leftBarButtonItem, _backBarButtonItem;
-    idretaintype(NSArray) _rightBarButtonItems, _leftBarButtonItems;
-    idretaintype(UIBarButtonItem) _rightSegmentedControlItem;
+    StrongId<NSString> _title;
+    StrongId<UIView> _titleView;
+    StrongId<NSString> _prompt;
+    StrongId<UIBarButtonItem> _rightBarButtonItem, _leftBarButtonItem, _backBarButtonItem;
+    StrongId<NSMutableArray> _rightBarButtonItems, _leftBarButtonItems;
+    StrongId<UIBarButtonItem> _rightSegmentedControlItem;
     BOOL _hidesBackButton;
-    id _delegate;
+    id<UINavigationItemDelegate> _delegate;
 }
 
 /**
@@ -148,20 +150,6 @@
     [self setRightBarButtonItems:rightBarItems animated:FALSE];
 }
 
-/**
- @Status Interoperable
-*/
-- (UIBarButtonItem*)rightBarButtonItem {
-    return _rightBarButtonItem;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSArray*)rightBarButtonItems {
-    return _rightBarButtonItems;
-}
-
 - (UIBarButtonItem*)_rightBarButtonOrControl {
     if ([_rightBarButtonItems count] > 1) {
         if (_rightSegmentedControlItem == nil) {
@@ -189,6 +177,20 @@
         return [self rightBarButtonItem];
     }
     return nil;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIBarButtonItem*)rightBarButtonItem {
+    return _rightBarButtonItem;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray*)rightBarButtonItems {
+    return _rightBarButtonItems;
 }
 
 /**
@@ -309,10 +311,13 @@
     return _hidesBackButton;
 }
 
-- (void)setDelegate:(id)delegate {
+- (void)_setDelegate:(id<UINavigationItemDelegate>)delegate {
     _delegate = delegate;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _title = nil;
     _titleView = nil;

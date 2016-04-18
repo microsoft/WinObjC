@@ -98,7 +98,7 @@ TEST(NSPointerFunctions, IntegerPersonality) {
 }
 
 TEST(NSPointerFunctions, InvalidConfig) {
-    NSLog(@"! Invalid config messages during this test are expected:");
+    LOG_INFO("Invalid config messages during this test are expected:");
 
     // Not a value of NSPointerFunctionsOptions
     ASSERT_ANY_THROW([NSPointerFunctions pointerFunctionsWithOptions:7]);

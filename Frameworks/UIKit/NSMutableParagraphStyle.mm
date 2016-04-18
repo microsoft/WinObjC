@@ -19,6 +19,15 @@
 #import "NSParagraphStyleInternal.h"
 
 @implementation NSMutableParagraphStyle
+
+/**
+ @Status Stub
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 /**
  @Status Stub
  @Notes
@@ -41,6 +50,41 @@
 */
 - (void)removeTabStop:(NSTextTab*)anObject {
     UNIMPLEMENTED();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+}
+
+/**
+@Status Stub
+@Notes
+*/
++ (BOOL)supportsSecureCoding {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+@Notes
+*/
+- (id)mutableCopyWithZone:(NSZone*)zone {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

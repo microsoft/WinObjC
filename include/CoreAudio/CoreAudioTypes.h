@@ -116,8 +116,8 @@ typedef struct AudioValueTranslation AudioValueTranslation;
 #define TestAudioFormatNativeEndian(f) \
     ((f.mFormatID == kAudioFormatLinearPCM) && ((f.mFormatFlags & kAudioFormatFlagIsBigEndian) == kAudioFormatFlagsNativeEndian))
 
+#ifdef __cplusplus
 COREAUDIO_EXPORT bool IsAudioFormatNativeEndian(const AudioStreamBasicDescription* f) STUB_METHOD;
-#define AudioChannelLayoutTag_GetNumberOfChannels(layoutTag) ((UInt32)((layoutTag)&0x0000FFFF))
 COREAUDIO_EXPORT UInt32 CalculateLPCMFlags(
     UInt32 inValidBitsPerChannel, UInt32 inTotalBitsPerChannel, bool inIsFloat, bool inIsBigEndian, bool inIsNonInterleaved) STUB_METHOD;
 COREAUDIO_EXPORT void FillOutASBDForLPCM(AudioStreamBasicDescription* outASBD,
@@ -128,6 +128,10 @@ COREAUDIO_EXPORT void FillOutASBDForLPCM(AudioStreamBasicDescription* outASBD,
                                          bool inIsFloat,
                                          bool inIsBigEndian,
                                          bool inIsNonInterleaved) STUB_METHOD;
+#endif
+
+#define AudioChannelLayoutTag_GetNumberOfChannels(layoutTag) ((UInt32)((layoutTag)&0x0000FFFF))
+
 COREAUDIO_EXPORT void FillOutAudioTimeStampWithHostTime(AudioTimeStamp* outATS, UInt64 inHostTime) STUB_METHOD;
 COREAUDIO_EXPORT void FillOutAudioTimeStampWithSampleTime(AudioTimeStamp* outATS, Float64 inSampleTime) STUB_METHOD;
 COREAUDIO_EXPORT void FillOutAudioTimeStampWithSampleAndHostTime(AudioTimeStamp* outATS,

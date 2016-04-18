@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBATTRequest.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @implementation CBATTRequest
 @end

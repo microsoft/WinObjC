@@ -13,69 +13,30 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef __STARBOARD_H
-#define __STARBOARD_H
-
-#include "Logging.h"
+#include "LoggingNative.h"
 #include "IwMalloc.h"
+#include <StarboardExport.h>
 
 // Interface should not be defined for Objective-C code
 #ifdef interface
 #undef interface
 #endif
 
-#ifndef IWPLATFORM_EXPORT
-#define IWPLATFORM_EXPORT
-#endif
-
-//
-// Helper macros for NSLog
-//
-// DLog displays output only when with DEBUG setting.
-#if (defined(DEBUG) || defined(_DEBUG))
-#define DLog(fmt, ...) NSLog((@"%s [Line \"%d\"] : " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
-#else
-#define DLog(...)
-#endif
-// VLog always displays output regardless of the DEBUG setting.
-#define VLog(fmt, ...) NSLog((@"%s : " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__)
-
 extern "C" void dbg_printf(const char* fmt, ...);
-#define EbrDebugLog(...) EbrDebugLogShim(__VA_ARGS__)
 #define fatal_printf(...)
 #define EbrShutdownAV()
 #define idp(protocol) id<protocol>
 
 #include <assert.h>
-#include <stdio.h>
-#ifdef __OBJC__
-#include "UIKit/UIKit.h"
-@class UIAppearanceSetter, UIRuntimeEventConnection;
 
-static inline id m_assert(const char* file, int line) {
-    printf("_m sent @ %s:%d\n", file, line);
-    return nil;
-}
-static inline float m_assert_float() {
-    printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return 0.0;
-}
-#else
-static inline unsigned int m_assert(const char* file, int line) {
-    printf("_m sent @ %s:%d\n", file, line);
-    return 0;
-}
-static inline float m_assert_float() {
-    printf("_m sent @ %s:%d\n", __FILE__, __LINE__);
-    return 0;
-}
-#endif
-#define _m(...) m_assert(__FILE__, __LINE__)
-#define _m_float(...) m_assert_float()
 #define logPerf(...)
 
 #ifdef __OBJC__
+
+#include "UIKit/UIKit.h"
+
 static const float kPi = 3.14159265358979323846f;
 static const double kPi_d = 3.14159265358979323846;
 
@@ -106,7 +67,7 @@ private:
         if (!_initialized) {
             Ivar var = class_getInstanceVariable(_cls, _ivarName);
             if (!var) {
-                EbrDebugLog("Couldn't lazy lookup offset of ivar %s\n", _ivarName);
+                TraceCritical(L"Starboard", L"Couldn't lazy lookup offset of ivar %hs", _ivarName);
                 assert(var);
             }
             _offset = ivar_getOffset(var);
@@ -152,11 +113,11 @@ typedef unsigned int EbrLock;
 #define EBRLOCK_INITIALIZE 0xFAADEEEE
 #define EBRLOCK_INITIALIZING 0xFAAAEEEE
 
-IWPLATFORM_EXPORT void EbrLockInit(EbrLock* pLock);
-IWPLATFORM_EXPORT void EbrLockDestroy(EbrLock pLock);
-IWPLATFORM_EXPORT void EbrLockEnter(EbrLock& pLock);
-IWPLATFORM_EXPORT bool EbrLockTryEnter(EbrLock& pLock);
-IWPLATFORM_EXPORT void EbrLockLeave(EbrLock pLock);
+SB_EXPORT void EbrLockInit(EbrLock* pLock);
+SB_EXPORT void EbrLockDestroy(EbrLock pLock);
+SB_EXPORT void EbrLockEnter(EbrLock& pLock);
+SB_EXPORT bool EbrLockTryEnter(EbrLock& pLock);
+SB_EXPORT void EbrLockLeave(EbrLock pLock);
 
 enum surfaceFormat { _Color565, _ColorARGB, _ColorRGBA, _ColorRGB32, _ColorRGB32HE, _ColorGrayscale, _ColorRGB, _ColorA8, _ColorIndexed };
 
@@ -177,10 +138,10 @@ class EbrFile;
 #define kGravityRight 10
 #define kGravityBottomRight 11
 
-IWPLATFORM_EXPORT int EbrIncrement(int volatile* var);
-IWPLATFORM_EXPORT int EbrDecrement(int volatile* var);
-IWPLATFORM_EXPORT int EbrCompareExchange(int volatile* Destination, int Exchange, int Comperand);
-IWPLATFORM_EXPORT void EbrSleep(__int64 nanoseconds);
+SB_EXPORT int EbrIncrement(int volatile* var);
+SB_EXPORT int EbrDecrement(int volatile* var);
+SB_EXPORT int EbrCompareExchange(int volatile* Destination, int Exchange, int Comperand);
+SB_EXPORT void EbrSleep(__int64 nanoseconds);
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -325,5 +286,3 @@ inline CAPoint3D operator*(float f, const CAPoint3D& v) {
 }
 
 #include "Starboard/SmartTypes.h"
-
-#endif // __STARBOARD_H

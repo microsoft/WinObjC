@@ -14,19 +14,22 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
+#import "Starboard.h"
 #import <StubReturn.h>
+#import "CoreGraphics/CGGeometry.h"
+#import "CoreGraphics/CGAffineTransform.h"
+#import "Foundation/NSNotificationCenter.h"
+#import "QuartzCore/CALayer.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIWindow.h"
+#import "UIKit/UIApplication.h"
+#import "UIKit/UITouch.h"
+#import "LoggingNative.h"
+#import "UIApplicationInternal.h"
+#import "CALayerInternal.h"
+#import "UIDeviceInternal.h"
 
-#include "CoreGraphics/CGGeometry.h"
-#include "CoreGraphics/CGAffineTransform.h"
-
-#include "Foundation/NSNotificationCenter.h"
-#include "QuartzCore/CALayer.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIWindow.h"
-#include "UIKit/UIApplication.h"
-#include "UIKit/UITouch.h"
+static const wchar_t* TAG = L"UIWindow";
 
 UIWindow* m_pMainWindow = NULL;
 
@@ -81,10 +84,26 @@ const UIWindowLevel UIWindowLevelStatusBar = StubConstant();
 }
 
 /**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
  @Status Interoperable
 */
 - (CGPoint)convertPoint:(CGPoint)point fromView:(UIView*)fromView toView:(UIView*)toView {
     return [CALayer convertPoint:point fromLayer:[fromView layer] toLayer:[toView layer]];
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 static void initInternal(UIWindow* self, CGRect pos) {
@@ -108,12 +127,15 @@ static void initInternal(UIWindow* self, CGRect pos) {
 - (void)_destroy {
     m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
-    [[[UIApplication sharedApplication] windows] removeObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
     [self resignKeyWindow];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIWindow*)initWithFrame:(CGRect)pos {
-    [[[UIApplication sharedApplication] windows] addObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
 
     if (![[UIApplication sharedApplication] keyWindow]) {
         [self makeKeyWindow];
@@ -127,14 +149,18 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return self;
 }
 
-- (UIWindow*)initWithContentRect:(CGRect)pos {
+- (UIWindow*)_initWithContentRect:(CGRect)pos {
     [self initWithFrame:pos];
 
     return self;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (NSObject*)initWithCoder:(NSCoder*)coder {
-    [[[UIApplication sharedApplication] windows] addObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) addObject:self];
 
     id ret = [super initWithCoder:coder];
 
@@ -161,6 +187,9 @@ static void initInternal(UIWindow* self, CGRect pos) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 + (UIWindow*)mainWindow {
     return (UIWindow*)m_pMainWindow;
 }
@@ -208,6 +237,9 @@ static void initInternal(UIWindow* self, CGRect pos) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIResponder*)nextResponder {
     return [UIApplication sharedApplication];
 }
@@ -230,18 +262,18 @@ static void initInternal(UIWindow* self, CGRect pos) {
     if (controllerView != nil) {
         [self addSubview:controllerView];
         CGRect screenFrame;
-        if ([_rootViewController wantsFullScreenLayout]) {
+        if ([static_cast<UIViewController*>(_rootViewController) wantsFullScreenLayout]) {
             screenFrame = [[UIScreen mainScreen] bounds];
         } else {
             screenFrame = [[UIScreen mainScreen] applicationFrame];
         }
 
-        [[_rootViewController view] setFrame:screenFrame];
+        [[static_cast<UIViewController*>(_rootViewController) view] setFrame:screenFrame];
     }
 
     if (controller && [controller respondsToSelector:@selector(preferredInterfaceOrientationForPresentation)]) {
-        int ourOrientation = [controller preferredInterfaceOrientationForPresentation];
-        [[UIDevice currentDevice] setOrientation:ourOrientation animated:FALSE];
+        UIDeviceOrientation ourOrientation = static_cast<UIDeviceOrientation>([controller preferredInterfaceOrientationForPresentation]);
+        [[UIDevice currentDevice] _setOrientation:ourOrientation animated:FALSE];
     }
 }
 
@@ -251,13 +283,13 @@ static void initInternal(UIWindow* self, CGRect pos) {
         id view = [controller view];
 
         if ([[view superview] isKindOfClass:[UIWindow class]]) {
-            EbrDebugLog("Setting root controller to %s\n", object_getClassName(controller));
+            TraceVerbose(TAG, L"Setting root controller to %hs", object_getClassName(controller));
             CGRect screenFrame;
             screenFrame = [[UIScreen mainScreen] applicationFrame];
             [view setFrame:screenFrame];
         }
     } else {
-        EbrDebugLog("Setting root controller to nil");
+        TraceVerbose(TAG, L"Setting root controller to nil");
     }
 }
 
@@ -283,7 +315,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
     CALayer* ourLayer = [self layer];
     GetCACompositor()->setNodeTopWindowLevel((DisplayNode*)[ourLayer _presentationNode], level);
     GetCACompositor()->SortWindowLevels();
-    [[[UIApplication sharedApplication] windows] sortUsingSelector:@selector(_compareWindowLevel:)];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) sortUsingSelector:@selector(_compareWindowLevel:)];
 }
 
 /**
@@ -299,15 +331,48 @@ static void initInternal(UIWindow* self, CGRect pos) {
 */
 - (void)setScreen:(UIScreen*)screen {
     UNIMPLEMENTED();
-    return;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     m_pMainWindow = NULL;
     [CATransaction _removeLayer:[self layer]];
-    [[[UIApplication sharedApplication] windows] removeObject:self];
+    [static_cast<NSMutableArray*>([[UIApplication sharedApplication] windows]) removeObject:self];
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point toWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGPoint)convertPoint:(CGPoint)point fromWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)convertRect:(CGRect)rect toWindow:(UIWindow*)window {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)sendEvent:(UIEvent*)event {
+    UNIMPLEMENTED();
 }
 
 @end

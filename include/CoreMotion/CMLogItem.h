@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -21,5 +22,5 @@
 
 COREMOTION_EXPORT_CLASS
 @interface CMLogItem : NSObject <NSCopying, NSSecureCoding>
-@property (readonly, nonatomic) NSTimeInterval timestamp STUB_PROPERTY;
+@property (readonly, nonatomic) NSTimeInterval timestamp;
 @end

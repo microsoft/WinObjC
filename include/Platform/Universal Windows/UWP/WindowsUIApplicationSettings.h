@@ -102,9 +102,9 @@ typedef void (^WUACredentialCommandCredentialDeletedHandler)(WUACredentialComman
 #define __WUPIUICommand_DEFINED__
 
 @protocol WUPIUICommand
-@property (copy) RTObject* id;
+@property (retain) RTObject* id;
 @property (copy) WUPUICommandInvokedHandler invoked;
-@property (copy) NSString* label;
+@property (retain) NSString* label;
 @end
 
 #endif // __WUPIUICommand_DEFINED__
@@ -115,12 +115,12 @@ typedef void (^WUACredentialCommandCredentialDeletedHandler)(WUACredentialComman
 
 WINRT_EXPORT
 @interface WUASettingsCommand : RTObject <WUPIUICommand>
-+ (WUASettingsCommand*)createSettingsCommand:(RTObject*)settingsCommandId
-                                       label:(NSString*)label
-                                     handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
-@property (copy) NSString* label;
++ (WUASettingsCommand*)makeSettingsCommand:(RTObject*)settingsCommandId
+                                     label:(NSString*)label
+                                   handler:(WUPUICommandInvokedHandler)handler ACTIVATOR;
+@property (retain) NSString* label;
 @property (copy) WUPUICommandInvokedHandler invoked;
-@property (copy) RTObject* id;
+@property (retain) RTObject* id;
 + (WUASettingsCommand*)accountsCommand;
 @end
 
@@ -132,8 +132,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUAWebAccountProviderCommand : RTObject
-+ (WUAWebAccountProviderCommand*)createWebAccountProviderCommand:(WSCWebAccountProvider*)webAccountProvider
-                                                         invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
++ (WUAWebAccountProviderCommand*)makeWebAccountProviderCommand:(WSCWebAccountProvider*)webAccountProvider
+                                                       invoked:(WUAWebAccountProviderCommandInvokedHandler)invoked ACTIVATOR;
 @property (readonly) WUAWebAccountProviderCommandInvokedHandler invoked;
 @property (readonly) WSCWebAccountProvider* webAccountProvider;
 @end
@@ -146,9 +146,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUAWebAccountCommand : RTObject
-+ (WUAWebAccountCommand*)createWebAccountCommand:(WSCWebAccount*)webAccount
-                                         invoked:(WUAWebAccountCommandInvokedHandler)invoked
-                                         actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
++ (WUAWebAccountCommand*)makeWebAccountCommand:(WSCWebAccount*)webAccount
+                                       invoked:(WUAWebAccountCommandInvokedHandler)invoked
+                                       actions:(WUASupportedWebAccountActions)actions ACTIVATOR;
 @property (readonly) WUASupportedWebAccountActions actions;
 @property (readonly) WUAWebAccountCommandInvokedHandler invoked;
 @property (readonly) WSCWebAccount* webAccount;
@@ -173,9 +173,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUACredentialCommand : RTObject
-+ (WUACredentialCommand*)createCredentialCommand:(WSCPasswordCredential*)passwordCredential ACTIVATOR;
-+ (WUACredentialCommand*)createCredentialCommandWithHandler:(WSCPasswordCredential*)passwordCredential
-                                                    deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
++ (WUACredentialCommand*)makeCredentialCommand:(WSCPasswordCredential*)passwordCredential ACTIVATOR;
++ (WUACredentialCommand*)makeCredentialCommandWithHandler:(WSCPasswordCredential*)passwordCredential
+                                                  deleted:(WUACredentialCommandCredentialDeletedHandler)deleted ACTIVATOR;
 @property (readonly) WUACredentialCommandCredentialDeletedHandler credentialDeleted;
 @property (readonly) WSCPasswordCredential* passwordCredential;
 @end
@@ -199,7 +199,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUAAccountsSettingsPaneCommandsRequestedEventArgs : RTObject
-@property (copy) NSString* headerText;
+@property (retain) NSString* headerText;
 @property (readonly) NSMutableArray* commands;
 @property (readonly) NSMutableArray* credentialCommands;
 @property (readonly) NSMutableArray* webAccountCommands;

@@ -52,7 +52,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths></IncludePaths>
@@ -66,7 +65,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths></IncludePaths>
@@ -80,7 +78,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths></IncludePaths>
@@ -94,7 +91,6 @@
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>StoreKit.def</ModuleDefinitionFile>
-      <AdditionalOptions>/ignore:4087 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ClangCompile>
       <IncludePaths></IncludePaths>

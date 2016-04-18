@@ -20,6 +20,9 @@
 #import "CGContextInternal.h"
 #import "CGColorSpaceInternal.h"
 #import "_CGLifetimeBridgingType.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGColorSpace";
 
 const CFStringRef kCGColorSpaceGenericGray = static_cast<CFStringRef>(@"kCGColorSpaceGenericGray");
 const CFStringRef kCGColorSpaceGenericRGB = static_cast<CFStringRef>(@"kCGColorSpaceGenericRGB");
@@ -40,9 +43,12 @@ static IWLazyClassLookup _LazyUIColor2("UIColor");
 @end
 
 @implementation CGNSColorSpace
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
 - (void)dealloc {
     delete (__CGColorSpace*)self;
 }
+#pragma clang diagnostic pop
 @end
 
 __CGColorSpace::__CGColorSpace(surfaceFormat fmt) {
@@ -60,11 +66,18 @@ __CGColorSpace::~__CGColorSpace() {
     }
 }
 
+/**
+ @Status Stub
+*/
 CGColorSpaceRef CGColorSpaceCreateCalibratedRGB() {
-    EbrDebugLog("CGColorSpaceCreateCalibratedRGB not supported\n");
+    UNIMPLEMENTED();
+    TraceWarning(TAG, L"CGColorSpaceCreateCalibratedRGB not supported");
     return (CGColorSpaceRef) new __CGColorSpace(_ColorRGBA);
 }
 
+/**
+ @Status Interoperable
+*/
 CGColorSpaceRef CGColorSpaceCreateIndexed(id baseSpace, int lastIndex, void* colorTable) {
     __CGColorSpace* ret = new __CGColorSpace(_ColorIndexed);
 
@@ -96,7 +109,7 @@ CGColorSpaceRef CGColorSpaceCreatePattern(CGColorSpaceRef source) {
 */
 CGColorSpaceModel CGColorSpaceGetModel(CGColorSpaceRef colorSpace) {
     UNIMPLEMENTED();
-    EbrDebugLog("CGColorSpaceGetModel not implemented\n");
+    TraceWarning(TAG, L"CGColorSpaceGetModel not implemented");
     return kCGColorSpaceModelRGB;
 }
 
@@ -126,6 +139,10 @@ CGColorSpaceRef CGColorSpaceCreateDeviceGray() {
     return (CGColorSpaceRef) new __CGColorSpace(_ColorGrayscale);
 }
 
+/**
+ @Status Caveat
+ @Notes Must be "kCGColorSpaceGenericRGB" or "kCGColorSpaceGenericRGBLinear"
+*/
 CGColorSpaceRef CGColorSpaceCreateWithName(id name) {
     char* strName = (char*)[name UTF8String];
 
@@ -163,7 +180,7 @@ CGColorSpaceRef CGColorSpaceRetain(CGColorSpaceRef colorSpace) {
 CGColorRef CGColorGetConstantColor(CFStringRef name) {
     UIColor* ret;
 
-    char* pName = (char*)[name UTF8String];
+    char* pName = (char*)[(NSString*)name UTF8String];
     if (strcmp(pName, "BLACK") == 0) {
         ret = [_LazyUIColor2 blackColor];
     } else if (strcmp(pName, "WHITE") == 0) {

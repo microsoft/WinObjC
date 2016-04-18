@@ -14,10 +14,12 @@
 //
 //******************************************************************************
 
+#pragma once
+
 #include "UIKit/UIView.h"
 
 @interface UIEmptyController : UIView {
 @public
 }
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event;
+
 @end

@@ -60,7 +60,7 @@ static const int c_numControllers = 3;
     UIButton* forwardButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     UIButton* reverseButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    forwardButton.frame = CGRectMake(self.view.frame.size.width - 75, 100, 50, 50);
+    forwardButton.frame = CGRectMake(self.view.frame.size.width - 100, 100, 50, 50);
     reverseButton.frame = CGRectMake(50, 100, 50, 50);
     forwardButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     

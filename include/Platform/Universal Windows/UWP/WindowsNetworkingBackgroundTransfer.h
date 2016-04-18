@@ -112,10 +112,10 @@ WINRT_EXPORT
 
 @protocol WNBIBackgroundTransferBase
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (copy) NSString* group;
-@property (copy) NSString* method;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) WSCPasswordCredential* serverCredential;
+@property (retain) NSString* group;
+@property (retain) NSString* method;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
 - (void)setRequestHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 @end
 
@@ -258,8 +258,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBBackgroundTransferContentPart : RTObject
-+ (WNBBackgroundTransferContentPart*)createWithName:(NSString*)name ACTIVATOR;
-+ (WNBBackgroundTransferContentPart*)createWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
++ (WNBBackgroundTransferContentPart*)makeWithName:(NSString*)name ACTIVATOR;
++ (WNBBackgroundTransferContentPart*)makeWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 - (void)setHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 - (void)setText:(NSString*)value;
@@ -297,18 +297,18 @@ WINRT_EXPORT
 + (void)getCurrentDownloadsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentDownloadsForGroupAsync:(NSString*)group success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
-+ (WNBBackgroundDownloader*)createWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
-@property (copy) WUNToastNotification* failureToastNotification;
-@property (copy) WUNTileNotification* successTileNotification;
-@property (copy) WUNToastNotification* successToastNotification;
-@property (copy) WNBBackgroundTransferGroup* transferGroup;
-@property (copy) WUNTileNotification* failureTileNotification;
++ (WNBBackgroundDownloader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
+@property (retain) WUNToastNotification* failureToastNotification;
+@property (retain) WUNTileNotification* successTileNotification;
+@property (retain) WUNToastNotification* successToastNotification;
+@property (retain) WNBBackgroundTransferGroup* transferGroup;
+@property (retain) WUNTileNotification* failureTileNotification;
 @property (readonly) WNBBackgroundTransferCompletionGroup* completionGroup;
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (copy) NSString* group;
-@property (copy) NSString* method;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) WSCPasswordCredential* serverCredential;
+@property (retain) NSString* group;
+@property (retain) NSString* method;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
 - (WNBDownloadOperation*)createDownload:(WFUri*)uri resultFile:(RTObject<WSIStorageFile>*)resultFile;
 - (WNBDownloadOperation*)createDownloadFromFile:(WFUri*)uri
                                      resultFile:(RTObject<WSIStorageFile>*)resultFile
@@ -337,18 +337,18 @@ WINRT_EXPORT
                                  failure:(void (^)(NSError*))failure;
 + (void)getCurrentUploadsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
 + (void)getCurrentUploadsForGroupAsync:(NSString*)group success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (WNBBackgroundUploader*)createWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
++ (WNBBackgroundUploader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) NSString* method;
-@property (copy) NSString* group;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) NSString* method;
+@property (retain) NSString* group;
 @property WNBBackgroundTransferCostPolicy costPolicy;
-@property (copy) WUNTileNotification* failureTileNotification;
-@property (copy) WNBBackgroundTransferGroup* transferGroup;
-@property (copy) WUNToastNotification* successToastNotification;
-@property (copy) WUNTileNotification* successTileNotification;
-@property (copy) WUNToastNotification* failureToastNotification;
+@property (retain) WUNTileNotification* failureTileNotification;
+@property (retain) WNBBackgroundTransferGroup* transferGroup;
+@property (retain) WUNToastNotification* successToastNotification;
+@property (retain) WUNTileNotification* successTileNotification;
+@property (retain) WUNToastNotification* failureToastNotification;
 @property (readonly) WNBBackgroundTransferCompletionGroup* completionGroup;
 - (WNBUploadOperation*)createUpload:(WFUri*)uri sourceFile:(RTObject<WSIStorageFile>*)sourceFile;
 - (void)createUploadFromStreamAsync:(WFUri*)uri

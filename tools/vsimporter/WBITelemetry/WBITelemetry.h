@@ -22,6 +22,14 @@
         WBITelemetry::WBITelemetryManager::InitializeAppInsights(ikey);\
     }
 
+#define TELEMETRY_ENABLE() {\
+        WBITelemetry::WBITelemetryManager::EnableTracking();\
+    }
+
+#define TELEMETRY_DISABLE() {\
+        WBITelemetry::WBITelemetryManager::DisableTracking();\
+    }
+
 #define TELEMETRY_FLUSH() {\
         WBITelemetry::WBITelemetryManager::Flush();\
     }
@@ -68,6 +76,9 @@ namespace WBITelemetry
         static ApplicationInsights::core::TelemetryClient m_tc;
 
         static void InitializeAppInsights(wstring ikey);
+
+        static void EnableTracking();
+        static void DisableTracking();
 
         static void Flush();
 

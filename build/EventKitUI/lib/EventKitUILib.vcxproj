@@ -26,7 +26,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{543D860F-B4A3-4B9F-B59A-93B825E89F7D}</ProjectGuid>
     <ProjectName>EventKitUILib</ProjectName>
-    <RootNamespace>EventKitUI</RootNamespace>
+    <RootNamespace>EventKitUILib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>EventKitUILib</OutputName>
@@ -43,7 +43,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -52,7 +52,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -62,7 +62,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -71,7 +71,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis "-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DEVENTKITUI_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

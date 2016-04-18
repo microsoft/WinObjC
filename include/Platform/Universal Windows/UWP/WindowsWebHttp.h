@@ -149,9 +149,9 @@ WINRT_EXPORT
 + (instancetype) new;
 @property WWHHttpProgressStage stage;
 @property uint64_t bytesSent;
-@property (copy) id /* uint64_t */ totalBytesToSend;
+@property (retain) id /* uint64_t */ totalBytesToSend;
 @property uint64_t bytesReceived;
-@property (copy) id /* uint64_t */ totalBytesToReceive;
+@property (retain) id /* uint64_t */ totalBytesToReceive;
 @property unsigned int retries;
 @end
 
@@ -206,10 +206,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHttpRequestMessage : RTObject <WFIClosable, WFIStringable>
 + (instancetype)make ACTIVATOR;
-+ (WWHHttpRequestMessage*)create:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
-@property (copy) WFUri* requestUri;
-@property (copy) WWHHttpMethod* method;
-@property (copy) RTObject<WWHIHttpContent>* content;
++ (WWHHttpRequestMessage*)make:(WWHHttpMethod*)method uri:(WFUri*)uri ACTIVATOR;
+@property (retain) WFUri* requestUri;
+@property (retain) WWHHttpMethod* method;
+@property (retain) RTObject<WWHIHttpContent>* content;
 @property (readonly) WWHHHttpRequestHeaderCollection* headers;
 @property (readonly) NSMutableDictionary* properties;
 @property (readonly) WWHHttpTransportInformation* transportInformation;
@@ -225,14 +225,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
-+ (WWHHttpResponseMessage*)create:(WWHHttpStatusCode)statusCode ACTIVATOR;
++ (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property WWHHttpVersion version;
+@property WWHHttpVersion Version;
 @property WWHHttpStatusCode statusCode;
 @property WWHHttpResponseMessageSource source;
-@property (copy) WWHHttpRequestMessage* requestMessage;
-@property (copy) NSString* reasonPhrase;
-@property (copy) RTObject<WWHIHttpContent>* content;
+@property (retain) WWHHttpRequestMessage* requestMessage;
+@property (retain) NSString* reasonPhrase;
+@property (retain) RTObject<WWHIHttpContent>* content;
 @property (readonly) WWHHHttpResponseHeaderCollection* headers;
 @property (readonly) BOOL isSuccessStatusCode;
 - (WWHHttpResponseMessage*)ensureSuccessStatusCode;
@@ -248,7 +248,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
-+ (WWHHttpClient*)create:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
++ (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WWHHHttpRequestHeaderCollection* defaultRequestHeaders;
 - (void)deleteAsync:(WFUri*)uri
@@ -307,11 +307,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpCookie : RTObject <WFIStringable>
-+ (WWHHttpCookie*)create:(NSString*)name domain:(NSString*)domain path:(NSString*)path ACTIVATOR;
-@property (copy) NSString* value;
++ (WWHHttpCookie*)make:(NSString*)name domain:(NSString*)domain path:(NSString*)path ACTIVATOR;
+@property (retain) NSString* value;
 @property BOOL secure;
 @property BOOL httpOnly;
-@property (copy) id expires;
+@property (retain) id expires;
 @property (readonly) NSString* domain;
 @property (readonly) NSString* name;
 @property (readonly) NSString* path;
@@ -341,7 +341,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpMethod : RTObject <WFIStringable>
-+ (WWHHttpMethod*)create:(NSString*)method ACTIVATOR;
++ (WWHHttpMethod*)make:(NSString*)method ACTIVATOR;
 @property (readonly) NSString* method;
 + (WWHHttpMethod*)Delete;
 + (WWHHttpMethod*)get;
@@ -376,11 +376,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpStringContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpStringContent*)createFromString:(NSString*)content ACTIVATOR;
-+ (WWHHttpStringContent*)createFromStringWithEncoding:(NSString*)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
-+ (WWHHttpStringContent*)createFromStringWithEncodingAndMediaType:(NSString*)content
-                                                         encoding:(WSSUnicodeEncoding)encoding
-                                                        mediaType:(NSString*)mediaType ACTIVATOR;
++ (WWHHttpStringContent*)makeFromString:(NSString*)content ACTIVATOR;
++ (WWHHttpStringContent*)makeFromStringWithEncoding:(NSString*)content encoding:(WSSUnicodeEncoding)encoding ACTIVATOR;
++ (WWHHttpStringContent*)makeFromStringWithEncodingAndMediaType:(NSString*)content
+                                                       encoding:(WSSUnicodeEncoding)encoding
+                                                      mediaType:(NSString*)mediaType ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -407,10 +407,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpBufferContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpBufferContent*)createFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
-+ (WWHHttpBufferContent*)createFromBufferWithOffset:(RTObject<WSSIBuffer>*)content
-                                             offset:(unsigned int)offset
-                                              count:(unsigned int)count ACTIVATOR;
++ (WWHHttpBufferContent*)makeFromBuffer:(RTObject<WSSIBuffer>*)content ACTIVATOR;
++ (WWHHttpBufferContent*)makeFromBufferWithOffset:(RTObject<WSSIBuffer>*)content
+                                           offset:(unsigned int)offset
+                                            count:(unsigned int)count ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -437,7 +437,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpStreamContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpStreamContent*)createFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
++ (WWHHttpStreamContent*)makeFromInputStream:(RTObject<WSSIInputStream>*)content ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -464,7 +464,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpFormUrlEncodedContent*)create:(id<NSFastEnumeration> /* RTKeyValuePair* */)content ACTIVATOR;
++ (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* */)content ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success
@@ -491,8 +491,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpMultipartContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpMultipartContent*)createWithSubtype:(NSString*)subtype ACTIVATOR;
-+ (WWHHttpMultipartContent*)createWithSubtypeAndBoundary:(NSString*)subtype boundary:(NSString*)boundary ACTIVATOR;
++ (WWHHttpMultipartContent*)makeWithSubtype:(NSString*)subtype ACTIVATOR;
++ (WWHHttpMultipartContent*)makeWithSubtypeAndBoundary:(NSString*)subtype boundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
@@ -521,7 +521,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpMultipartFormDataContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpMultipartFormDataContent*)createWithBoundary:(NSString*)boundary ACTIVATOR;
++ (WWHHttpMultipartFormDataContent*)makeWithBoundary:(NSString*)boundary ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;

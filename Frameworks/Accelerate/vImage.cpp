@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2016, Intel Corporation
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -66,11 +66,11 @@ vImage_Error vImageBoxConvolve_ARGB8888(const vImage_Buffer* src,
     uint32_t end_i = dest->height - 1;
     uint32_t end_j = dest->width - 1;
 
-    if (srcOffsetToROI_Y < KH_d2) {
+    if (static_cast<int>(srcOffsetToROI_Y) < KH_d2) {
         start_i = KH_d2 - srcOffsetToROI_Y;
     }
 
-    if (srcOffsetToROI_X < KW_d2) {
+    if (static_cast<int>(srcOffsetToROI_X) < KW_d2) {
         start_j = KW_d2 - srcOffsetToROI_X;
     }
 

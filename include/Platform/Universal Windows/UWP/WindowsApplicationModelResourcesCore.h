@@ -92,7 +92,7 @@ WINRT_EXPORT
                                    persistence:(WARCResourceQualifierPersistence)persistence;
 + (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
 + (instancetype)make ACTIVATOR;
-@property (copy) NSArray* languages;
+@property (retain) NSArray* languages;
 @property (readonly) NSMutableDictionary<RTObservableCollection>* qualifierValues;
 - (void)reset;
 - (void)resetQualifierValues:(id<NSFastEnumeration> /* NSString * */)qualifierNames;

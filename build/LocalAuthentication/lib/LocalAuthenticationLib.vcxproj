@@ -24,7 +24,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A905201C-4CF2-4FF3-8D99-9DE5EF4959FD}</ProjectGuid>
     <ProjectName>LocalAuthenticationLib</ProjectName>
-    <RootNamespace>LocalAuthentication</RootNamespace>
+    <RootNamespace>LocalAuthenticationLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>LocalAuthenticationLib</OutputName>
@@ -41,7 +41,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -50,7 +50,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -60,7 +60,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -69,7 +69,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DLOCALAUTHENTICATION_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

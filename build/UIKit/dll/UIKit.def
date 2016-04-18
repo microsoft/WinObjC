@@ -1162,24 +1162,5 @@ LIBRARY UIKit
         UIApplicationMainInit
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
-
-        UIDeviceBatteryLevelDidChangeNotification
-        UIDeviceBatteryStateDidChangeNotification
-        UIDeviceOrientationDidChangeNotification
-        UIDeviceProximityStateDidChangeNotification
-
-        ; Stub that should really be elsewhere:
-        __inet_ntoa
-        DNSServiceGetAddrInfo
-        DNSServiceResolve
-        DNSServiceRegister
-        DNSServiceRefDeallocate
-        DNSServiceSetDispatchQueue
-        DNSServiceBrowse
-        if_indextoname
-        strnstr
-        random
-        gettimeofday
-        srandom
-        mach_host_self
-        host_statistics
+        UIApplicationMainHandleWindowVisibilityChangeEvent
+        UIApplicationMainHandleHighMemoryUsageEvent

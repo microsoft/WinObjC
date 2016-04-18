@@ -76,10 +76,15 @@ struct UIViewControllerPriv {
     struct UIViewControllerPriv* priv;
 }
 
-- (void)notifyViewWillAppear:(BOOL)isAnimated;
-- (void)notifyViewDidAppear:(BOOL)isAnimated;
-- (void)notifyViewWillDisappear:(BOOL)isAnimated;
-- (void)notifyViewDidDisappear:(BOOL)isAnimated;
+- (void)_notifyViewWillAppear:(BOOL)isAnimated;
+- (void)_notifyViewDidAppear:(BOOL)isAnimated;
+- (void)_notifyViewWillDisappear:(BOOL)isAnimated;
+- (void)_notifyViewDidDisappear:(BOOL)isAnimated;
+
+- (void)_setResizeToScreen:(BOOL)resize;
+- (void)_doResizeToScreen;
+- (int)_edgesForExtendedLayout;
+- (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 @end
 
 #endif

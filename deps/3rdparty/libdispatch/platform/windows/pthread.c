@@ -134,13 +134,18 @@ void NTAPI pthread_tls_init(void* dll, DWORD reason, void* reserved)
 		InitializeCriticalSectionEx(&destructor_lock, 0, 0);
 		// fall through
 	case DLL_THREAD_ATTACH:
+		// For WINOBJC - TLS initialization can be defered until a caller is actually trying to set/get from the TLS. Initializing
+		// TLS for all threads does not really give us any benefit, rather can theoritically slow things down as we initialize it
+		// for every thread the application creates that won't be using the TLS.
+#ifndef WINOBJC
 		_pthread_tls_attach_thread();
+#endif
 		break;
 	case DLL_THREAD_DETACH:
 		_pthread_tls_detach_thread();
 		break;
 	case DLL_PROCESS_DETACH:
-        /* For WINOBJC - Don't detach the last thread, as it is likely executing from within a block and will complain about the 
+		/* For WINOBJC - Don't detach the last thread, as it is likely executing from within a block and will complain about the 
 		   queue not being empty */
 #ifndef WINOBJC
 		_pthread_tls_detach_thread();
@@ -219,6 +224,15 @@ int pthread_key_delete(pthread_key_t key)
 static pthread_items_t _get_items()
 {
 	pthread_items_t items = pthread_items_tlv;
+#ifdef WINOBJC
+	if (items == NULL)
+	{
+		// TLS is being accessed for the first time for this thread. Initialize TLS area.
+		_pthread_tls_attach_thread();
+		items = pthread_items_tlv;
+	}
+#endif
+
 	if(items->count < slots_allocated)
 	{
 		long i = 0;

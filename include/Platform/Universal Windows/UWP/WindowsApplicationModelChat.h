@@ -212,28 +212,28 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatMessage : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* transportId;
-@property (copy) WFDateTime* networkTimestamp;
-@property (copy) WFDateTime* localTimestamp;
+@property (retain) NSString* transportId;
+@property (retain) WFDateTime* networkTimestamp;
+@property (retain) WFDateTime* localTimestamp;
 @property BOOL isRead;
 @property BOOL isIncoming;
 @property BOOL isForwardingDisabled;
-@property (copy) NSString* subject;
-@property (copy) NSString* from;
-@property (copy) NSString* body;
+@property (retain) NSString* subject;
+@property (retain) NSString* from;
+@property (retain) NSString* body;
 @property WACChatMessageStatus status;
 @property (readonly) NSMutableArray* attachments;
 @property (readonly) NSDictionary* recipientSendStatuses;
 @property (readonly) NSMutableArray* recipients;
 @property (readonly) NSString* transportFriendlyName;
 @property (readonly) NSString* id;
-@property (copy) WACChatConversationThreadingInfo* threadingInfo;
+@property (retain) WACChatConversationThreadingInfo* threadingInfo;
 @property BOOL isSeen;
 @property BOOL isReceivedDuringQuietHours;
 @property BOOL isAutoReply;
 @property uint64_t estimatedDownloadSize;
 @property BOOL shouldSuppressNotification;
-@property (copy) NSString* remoteId;
+@property (retain) NSString* remoteId;
 @property WACChatMessageOperatorKind messageOperatorKind;
 @property WACChatMessageKind messageKind;
 @property (readonly) BOOL isReplyDisabled;
@@ -274,15 +274,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageAttachment : RTObject
-+ (WACChatMessageAttachment*)createChatMessageAttachment:(NSString*)mimeType
-                                     dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
-@property (copy) NSString* text;
-@property (copy) NSString* mimeType;
++ (WACChatMessageAttachment*)makeChatMessageAttachment:(NSString*)mimeType
+                                   dataStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)dataStreamReference ACTIVATOR;
+@property (retain) NSString* text;
+@property (retain) NSString* mimeType;
 @property unsigned int groupId;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* dataStreamReference;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* dataStreamReference;
 @property double transferProgress;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (copy) NSString* originalFileName;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
+@property (retain) NSString* originalFileName;
 @end
 
 #endif // __WACChatMessageAttachment_DEFINED__
@@ -295,9 +295,9 @@ WINRT_EXPORT
 @interface WACChatConversationThreadingInfo : RTObject
 + (instancetype)make ACTIVATOR;
 @property WACChatConversationThreadingKind kind;
-@property (copy) NSString* custom;
-@property (copy) NSString* conversationId;
-@property (copy) NSString* contactId;
+@property (retain) NSString* custom;
+@property (retain) NSString* conversationId;
+@property (retain) NSString* contactId;
 @property (readonly) NSMutableArray* participants;
 @end
 
@@ -310,9 +310,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* transportAddress;
-@property (copy) id readTime;
-@property (copy) id deliveryTime;
+@property (retain) NSString* transportAddress;
+@property (retain) id readTime;
+@property (retain) id deliveryTime;
 @property (readonly) BOOL isErrorPermanent;
 @property (readonly) WACChatMessageStatus status;
 @property (readonly) int transportErrorCode;
@@ -430,7 +430,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatConversation : RTObject
-@property (copy) NSString* subject;
+@property (retain) NSString* subject;
 @property BOOL isConversationMuted;
 @property (readonly) BOOL hasUnreadMessages;
 @property (readonly) NSString* id;
@@ -474,7 +474,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACChatQueryOptions : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* searchString;
+@property (retain) NSString* searchString;
 @end
 
 #endif // __WACChatQueryOptions_DEFINED__

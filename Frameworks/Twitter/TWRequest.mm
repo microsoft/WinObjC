@@ -16,6 +16,7 @@
 
 #import <Twitter/Twitter.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @implementation TWRequest
 /**

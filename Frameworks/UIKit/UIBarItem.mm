@@ -14,10 +14,11 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIBarItem.h"
-#include "UIKit/UIView.h"
-#include "UIBarItemInternal.h"
+#import "Starboard.h"
+#import "UIKit/UIBarItem.h"
+#import "UIKit/UIView.h"
+#import "UIBarItemInternal.h"
+#import <StubReturn.h>
 
 @implementation UIBarItem {
     idretaintype(NSString) __title;
@@ -36,7 +37,11 @@
     idretaintype(UIColor) _tintColor;
 }
 
+/**
+ @Status Stub
+*/
 - (void)awakeFromNib {
+    UNIMPLEMENTED();
 }
 
 - (void)setTintColor:(UIColor*)color {
@@ -61,9 +66,64 @@
     return _image;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _tintColor = nil;
     [super dealloc];
+}
+
+/**
+ @Status Stub
+*/
+- (void)setTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSObject*)initWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)encodeWithCoder:(NSCoder*)encoder {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
++ (instancetype)appearance {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
++ (instancetype)appearanceWhenContainedIn:(Class<UIAppearanceContainer>)containedClass, ... {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Public No
+*/
+- (void)initAccessibility {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Public No
+*/
+- (void)updateAccessibility {
+    UNIMPLEMENTED();
 }
 
 @end

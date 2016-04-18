@@ -82,8 +82,8 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 - (id)performSelector:(SEL)selector;
 - (id)performSelector:(SEL)selector withObject:(id)object0;
 - (id)performSelector:(SEL)selector withObject:(id)object0 withObject:(id)object1;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget STUB_METHOD;
-+ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument STUB_METHOD;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget;
++ (void)cancelPreviousPerformRequestsWithTarget:(id)aTarget selector:(SEL)aSelector object:(id)anArgument;
 
 /* Method Introspection */
 + (BOOL)instancesRespondToSelector:(SEL)selector;
@@ -108,7 +108,7 @@ __attribute__((objc_root_class)) @interface NSObject<NSObject> {
 - (id)mutableCopy;
 @end
 
-// clang-format off
+    // clang-format off
 @interface NSObject (NSCoding)
 @property (readonly) Class classForCoder;
 - (id)replacementObjectForCoder:(NSCoder*)coder;
@@ -169,11 +169,16 @@ NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
 }
 #else
 #pragma clang diagnostic ignored "-Wignored-attributes"
-    NS_INLINE NS_RETURNS_RETAINED CFTypeRef
-    CFBridgingRetain(id X) {
+/**
+ @Status Interoperable
+*/
+NS_INLINE NS_RETURNS_RETAINED CFTypeRef CFBridgingRetain(id X) {
     return X ? CFRetain((CFTypeRef)X) : NULL;
 }
 
+/**
+ @Status Interoperable
+*/
 NS_INLINE id CFBridgingRelease(CFTypeRef CF_CONSUMED X) {
     return [(id)CFMakeCollectable(X) autorelease];
 }

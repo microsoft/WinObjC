@@ -22,6 +22,9 @@
 #import "CGPatternInternal.h"
 #import "CoreGraphics/CGGeometry.h"
 #import "cairo-ft.h"
+#import "CGPathInternal.h"
+#import "UIColorInternal.h"
+#import "UIFontInternal.h"
 
 extern "C" {
 #import <ft2build.h>
@@ -31,6 +34,10 @@ extern "C" {
 #import <ftadvanc.h>
 #import <ftsizes.h>
 }
+
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGContextImpl";
 
 static IWLazyClassLookup _LazyUIFont("UIFont");
 
@@ -235,7 +242,7 @@ void CGContextImpl::CGContextSetCTM(CGAffineTransform transform) {
 
 void CGContextImpl::CGContextDrawImage(CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -257,7 +264,7 @@ void CGContextImpl::CGContextDrawImage(CGRect rct, CGImageRef img) {
 
 void CGContextImpl::CGContextDrawImageRect(CGImageRef img, CGRect src, CGRect rct) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -269,7 +276,7 @@ void CGContextImpl::CGContextDrawImageRect(CGImageRef img, CGRect src, CGRect rc
 
 void CGContextImpl::CGContextDrawTiledImage(CGRect rct, CGImageRef img) {
     if (img == NULL) {
-        EbrDebugLog("Img == NULL!\n");
+        TraceWarning(TAG, L"Img == NULL!");
         return;
     }
 
@@ -338,12 +345,12 @@ void CGContextImpl::CGContextSetStrokeColor(float* components) {
 }
 
 void CGContextImpl::CGContextSetStrokeColorWithColor(id color) {
-    [color getColors:&curState->curStrokeColor];
+    [(UIColor*)color getColors:&curState->curStrokeColor];
 }
 
 void CGContextImpl::CGContextSetFillColorWithColor(id color) {
-    if ((int)[color _type] == solidBrush) {
-        [color getColors:&curState->curFillColor];
+    if ((int)[(UIColor*)color _type] == solidBrush) {
+        [(UIColor*)color getColors:&curState->curFillColor];
         curState->curFillColorObject = nil;
     } else {
         curState->curFillColorObject = [color retain];
@@ -428,7 +435,7 @@ void CGContextImpl::CGContextSaveGState() {
 
 void CGContextImpl::CGContextRestoreGState() {
     if (curStateNum == 0) {
-        EbrDebugLog("CGContextRestoreGState: no state to restore!\n");
+        TraceWarning(TAG, L"CGContextRestoreGState: no state to restore!");
         return;
     }
 
@@ -539,8 +546,8 @@ void CGContextImpl::CGContextStrokeEllipseInRect(CGRect rct) {
 void CGContextImpl::CGContextFillEllipseInRect(CGRect rct) {
 }
 
-void CGContextImpl::CGContextAddPath(id path) {
-    [path _applyPath:_rootContext];
+void CGContextImpl::CGContextAddPath(CGPathRef path) {
+    _CGPathApplyPath(path, _rootContext);
 }
 
 void CGContextImpl::CGContextStrokePath() {

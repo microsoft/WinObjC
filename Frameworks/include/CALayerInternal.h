@@ -72,7 +72,7 @@ public:
     BOOL _isPresentationLayer;
 
     BOOL _shouldRasterize;
-    
+
     DisplayNode* _presentationNode;
     idretain _undefinedKeys;
     idretain _actions;
@@ -98,11 +98,12 @@ public:
 - (int)_pixelWidth;
 - (int)_pixelHeight;
 
+- (void)_setContentColor:(CGColorRef)newColor;
 - (void)setOrigin:(CGPoint)origin;
 - (void)_setShouldLayout;
 - (void)setContentsOrientation:(UIImageOrientation)orientation;
 - (UIImageOrientation)contentsOrientation;
-
+- (DisplayNode*)_presentationNode;
 - (void)_releaseContents:(BOOL)immediately;
 
 // Some additional non-standard layer swapping functionality:
@@ -110,5 +111,17 @@ public:
 - (void)exchangeSubviewAtIndex:(int)index1 withSubviewAtIndex:(int)index2;
 - (void)sendSublayerToBack:(CALayer*)sublayer;
 - (void)bringSublayerToFront:(CALayer*)sublayer;
+- (void)validateDisplayHierarchy;
+- (void)discardDisplayHierarchy;
+
+- (void)updateAccessibilityInfo:(const IWAccessibilityInfo*)info;
+
+- (void)_removeAnimation:(CAAnimation*)animation;
+- (DisplayTexture*)_getDisplayTexture;
+
+- (CAPrivateInfo*)_priv;
+- (void)_setRootLayer:(BOOL)isRootLayer;
+
 @end
+
 #endif /* _CALAYERPRIVATE_H_ */

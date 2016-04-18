@@ -77,13 +77,13 @@ UIKIT_EXPORT_CLASS
                               UIFocusEnvironment,
                               UITraitEnvironment>
 
-- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow;
+- (CGPoint)convertPoint:(CGPoint)toConvert toWindow:(UIWindow*)toWindow STUB_METHOD;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromWindow:(UIWindow*)fromWindow STUB_METHOD;
 - (CGRect)convertRect:(CGRect)toConvert fromWindow:(UIWindow*)fromWindow;
-- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow;
-- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView;
+- (CGRect)convertRect:(CGRect)toConvert toWindow:(UIWindow*)toWindow STUB_METHOD;
+- (CGRect)convertRect:(CGRect)toConvert fromView:(UIView*)fromView toView:(UIView*)toView STUB_METHOD;
 - (CGPoint)convertPoint:(CGPoint)toConvert fromView:(UIView*)fromView toView:(UIView*)toView;
-- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView;
+- (CGPoint)convertPoint:(CGPoint)toConvert fromLayer:(CALayer*)fromView toLayer:(CALayer*)toView STUB_METHOD;
 
 - (void)makeKeyWindow;
 - (void)makeKeyAndVisible;
@@ -92,8 +92,8 @@ UIKIT_EXPORT_CLASS
 - (void)sendEvent:(UIEvent*)event;
 
 @property (nonatomic, readonly, getter=isKeyWindow) BOOL keyWindow;
-@property (nonatomic, retain) UIScreen* screen;
-@property (nonatomic, assign) UIWindowLevel windowLevel;
+@property (nonatomic, retain) UIScreen* screen STUB_PROPERTY;
+@property (nonatomic, assign) UIWindowLevel windowLevel STUB_PROPERTY;
 @property (nonatomic, retain) UIViewController* rootViewController;
 
 @end

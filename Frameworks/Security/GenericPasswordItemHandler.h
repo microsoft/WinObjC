@@ -15,11 +15,9 @@
 //******************************************************************************
 
 #pragma once
+
 #import "SecItemHandlerProtocol.h"
 
-// This is really not cool and shouldn't be needed. The projections need to handle including standard windows headers
-// or not rely windows types
-using WCHAR = wchar_t;
 #import <UWP/WindowsSecurityCredentials.h>
 
 @interface GenericPasswordItemHandler : NSObject <SecItemHandler>

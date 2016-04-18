@@ -13,9 +13,28 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
+#ifndef CFNETWORK_IMPEXP
+#define CFNETWORK_IMPEXP __declspec(dllimport)
+#endif
+
+#ifndef CFNETWORK_EXPORT
 #ifdef __cplusplus
-#define CFNETWORK_EXPORT extern "C" COREFOUNDATION_EXPORT
+#define CFNETWORK_EXPORT CFNETWORK_IMPEXP extern "C"
+#define CFNETWORK_EXPORT_CLASS CFNETWORK_IMPEXP
 #else
-#define CFNETWORK_EXPORT COREFOUNDATION_EXPORT
-#endif // __cplusplus
+#define CFNETWORK_EXPORT CFNETWORK_IMPEXP extern
+#define CFNETWORK_EXPORT_CLASS CFNETWORK_IMPEXP
+#endif
+#endif
+
+#ifndef CFNETWORK_EXTERNC_BEGIN
+#if defined(__cplusplus)
+#define CFNETWORK_EXTERNC_BEGIN extern "C" {
+#define CFNETWORK_EXTERNC_END }
+#else
+#define CFNETWORK_EXTERNC_BEGIN
+#define CFNETWORK_EXTERNC_END
+#endif
+#endif

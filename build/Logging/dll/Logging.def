@@ -7,4 +7,13 @@ LIBRARY Logging
      TraceCritical
      TraceRegister
      TraceUnregister
-     EbrDebugLogShim
+     ; TODO: WIL logging callback
+     ; g_pfnLoggingCallback
+
+     TelemetryEvent
+     TelemetryMetric
+     TelemetryTraceVerbose
+     TelemetryTraceInfo
+     TelemetryTraceWarning
+     TelemetryTraceError
+     TelemetryTraceCritical

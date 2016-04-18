@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,6 +24,7 @@
 #include "SBNativeTarget.h"
 #include "VCProject.h"
 #include "VCProjectItem.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 SBNativeTarget::~SBNativeTarget() {}
 
@@ -48,23 +49,29 @@ bool SBNativeTarget::init()
   // Verify that target's build type is valid
   String productType = m_target->getProductType();
   if (productType == "com.apple.product-type.library.static") {
-    m_type = TargetStaticLib;
+      m_type = TargetStaticLib;
+      TELEMETRY_EVENT(L"VSImporterStaticLibTarget");
   } else if (productType == "com.apple.product-type.framework") {
-    m_type = TargetStaticLib;
-    SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library. This is experimental behaviour." << std::endl;
+      m_type = TargetStaticLib;
+      SBLog::warning() << "Treating \"" << getName() << "\" framework target as a static library. This is experimental behaviour." << std::endl;
+      TELEMETRY_EVENT(L"VSImporterStaticFrameworkTarget");
   } else if (productType == "com.apple.product-type.application") {
-    m_type = TargetApplication;
+      m_type = TargetApplication;
+      TELEMETRY_EVENT(L"VSImporterApplicationTarget");
   } else if (productType == "com.apple.product-type.bundle") {
-    m_type = TargetBundle;
+      m_type = TargetBundle;
+      TELEMETRY_EVENT(L"VSImporterBundleTarget");
   } else {
-    SBLog::warning() << "Ignoring \"" << getName() << "\" target with unsupported product type \"" << productType << "\"." << std::endl;
-    return false;
+      SBLog::warning() << "Ignoring \"" << getName() << "\" target with unsupported product type \"" << productType << "\"." << std::endl;
+      TELEMETRY_EVENT_DATA(L"VSImporterUnsupportedTarget", productType.c_str());
+      return false;
   }
 
   // Check if any custom build rules are defined
   const BuildRuleList& buildRules = m_target->getBuildRules();
   if (!buildRules.empty()) {
     SBLog::warning() << "Ignoring custom build rules for \"" << getName() << "\" target." << std::endl;
+	TELEMETRY_EVENT(L"VSImporterCustomBuildDetected");
   }
 
   // Call super init

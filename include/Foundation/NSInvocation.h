@@ -26,7 +26,6 @@
 FOUNDATION_EXPORT_CLASS
 @interface NSInvocation : NSObject {
     NSMethodSignature* _methodSignature;
-    id target;
     void* returnValue;
     void* args[MAX_ARGS];
     BOOL retainArguments;

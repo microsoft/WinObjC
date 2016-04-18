@@ -73,6 +73,6 @@ COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateDirect(void* info, off
 
 COREGRAPHICS_EXPORT CFTypeID CGDataProviderGetTypeID() STUB_METHOD;
 COREGRAPHICS_EXPORT CGDataProviderRef CGDataProviderCreateSequential(void* info,
-                                                                     const CGDataProviderSequentialCallbacks* callbacks) STUB_METHOD;
+                                                                     const CGDataProviderSequentialCallbacks* callbacks);
 
 DISABLE_IMPLICIT_BRIDGING

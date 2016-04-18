@@ -17,6 +17,12 @@
     <CC1Args>-cc1 -triple $(CC1TargetTriple) -internal-isystem "[LLVMResourceDir]\include" -emit-obj -disable-free -main-file-name [InputFileName] -mrelocation-model static -mthread-model posix -mdisable-fp-elim -relaxed-aliasing -fmath-errno -masm-verbose -mconstructor-aliases -target-cpu $(CC1TargetCpu) -fdiagnostics-format msvc -fno-caret-diagnostics -dwarf-column-info -coverage-file [Input] -resource-dir "[LLVMResourceDir]" -fdebug-compilation-dir [InputAbsDir] -ferror-limit 19 -mstackrealign -fms-extensions -fms-compatibility -fms-compatibility-version=19.00 -fdelayed-template-parsing -fobjc-runtime=objfw -fobjc-dispatch-method=non-legacy -fdiagnostics-show-option -D_HAS_EXCEPTIONS=0 -DWINOBJC -D__WRL_NO_DEFAULT_LIB__ $(CC1PlatformArgs) $(CC1CpuArgs) [ObjectFileName]</CC1Args>
     <CC1DefaultIncludesTLog>-Xclang -internal-isystem -Xclang "[LLVMResourceDir]\include" -Xclang -internal-isystem -Xclang "$(VCInstallDir)include" -Xclang -internal-isystem -Xclang "$(StarboardSdkRoot)\include"</CC1DefaultIncludesTLog>
     <CC1ArgsTLog>-Xclang -triple -Xclang $(CC1TargetTriple) -mrelocation-model static -mthread-model posix -mdisable-fp-elim -relaxed-aliasing -fmath-errno -masm-verbose -mconstructor-aliases -target-cpu $(CC1TargetCpu) -fdiagnostics-format msvc -dwarf-column-info -resource-dir "[LLVMResourceDir]" $(CC1DefaultIncludesTLog) -ferror-limit 19 -mstackrealign -fms-extensions -fms-compatibility -fms-compatibility-version=19.00 -fdelayed-template-parsing -fobjc-runtime=objfw -fobjc-dispatch-method=non-legacy -fdiagnostics-show-option -D_HAS_EXCEPTIONS=0</CC1ArgsTLog>
+    <VSUpdateVersion>$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\DevDiv\vc\Servicing\14.0\IDE.x64@Version)</VSUpdateVersion>
+    <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Microsoft\DevDiv\vc\Servicing\14.0\IDE.Base@Version)</VSUpdateVersion>
+    <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\DevDiv\vc\Servicing\14.0\IDE.x64@Version)</VSUpdateVersion>
+    <VSUpdateVersion Condition="'$(VSUpdateVersion)' == ''">$(registry:HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\DevDiv\vc\Servicing\14.0\IDE.Base@Version)</VSUpdateVersion>
+    <!-- Use the old code view records if VS is VS2015 VSU2 RC or older -->
+    <CC1Args Condition="'$(VSUpdateVersion)' != '' and '$(VSUpdateVersion)'  &lt;= '14.0.25029'">$(CC1Args) -fno-new-code-view-record</CC1Args>
   </PropertyGroup>
 
   <ItemDefinitionGroup Label="Defaults">
@@ -27,22 +33,26 @@
       <ExceptionHandling Condition="'%(ClangCompile.ExceptionHandling)' == ''">true</ExceptionHandling>
       <HeaderMap Condition="'%(ClangCompile.HeaderMap)' == ''">Disabled</HeaderMap>
       <HeaderMapAddFrameworkEntries Condition="'%(ClangCompile.HeaderMapAddFrameworkEntries)' == ''">true</HeaderMapAddFrameworkEntries>
+      <ExcludedSearchPathSubdirectories Condition="'%(ClangCompile.ExcludedSearchPathsSubdirectories)' == ''">*.nib;*.lproj;*.framework;*.gch;(*);.DS_Store;CVS;.svn;.git;.hg;*.xcodeproj;*.xcode;*.pbproj;*.pbxproj;*.xcassets</ExcludedSearchPathSubdirectories>
       <ObjectFileName Condition="'%(ClangCompile.ObjectFileName)' == ''">$(IntDir)</ObjectFileName>
       <ObjectiveCARC Condition="'%(ClangCompile.ObjectiveCARC)' == ''">false</ObjectiveCARC>
       <ObjectiveCModules Condition="'%(ClangCompile.ObjectiveCModules)' == ''">false</ObjectiveCModules>
+      <ObjectiveCModulesCachePath Condition="'%(ClangCompile.ObjectiveCModulesCachePath)' == ''">$(ProjectDir)ModuleCache</ObjectiveCModulesCachePath>
       <OptimizationLevel Condition="'%(ClangCompile.OptimizationLevel)' == ''">Disabled</OptimizationLevel>
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
       <WOCStdlib Condition="'%(ClangCompile.WOCStdlib)' == ''">true</WOCStdlib>
       <InternalSystemIncludePaths Condition="'%(ClangCompile.InternalSystemIncludePaths)' == ''">$(IncludePath);$(StarboardSdkRoot)\include;$(StarboardSdkRoot)\include\VCInclude</InternalSystemIncludePaths>
+      <MaxClangProcesses Condition="'%(ClangCompile.MaxClangProcesses)' == ''">-1</MaxClangProcesses>
     </ClangCompile>
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardDefaultLibs>Starboard.lib;Foundation.lib;UIKit.lib;AutoLayout.lib;QuartzCore.lib;CoreGraphics.lib;CoreText.lib;Security.lib;objcuwp.lib;libdispatch.lib;CoreLocation.lib;Accounts.lib;AdSupport.lib;StoreKit.lib;AssetsLibrary.lib;QuickLook.lib;MediaPlayer.lib;GameKit.lib;CoreData.lib;WebKit.lib;HomeKit.lib;CoreVideo.lib;AddressBook.lib;AddressBookUI.lib;HealthKit.lib;LocalAuthentication.lib;GamePlayKit.lib;CoreTelephony.lib;CloudKit.lib;AVKit.lib;GameController.lib;Contacts.lib;MediaAccessibility.lib;Social.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs>Accelerate.lib;Accounts.lib;AddressBook.lib;AddressBookUI.lib;AdSupport.lib;AssetsLibrary.lib;AudioToolbox.lib;AudioUnit.lib;AVFoundation.lib;AVKit.lib;CFNetwork.lib;CloudKit.lib;Contacts.lib;CoreAudio.lib;CoreAudioKit.lib;CoreBluetooth.lib;CoreData.lib;CoreGraphics.lib;CoreImage.lib;CoreLocation.lib;CoreMedia.lib;CoreMIDI.lib;CoreMotion.lib;CoreTelephony.lib;CoreText.lib;CoreVideo.lib;EventKit.lib;EventKitUI.lib;Foundation.lib;GameController.lib;GameKit.lib;GameplayKit.lib;GLKit.lib;HealthKit.lib;HomeKit.lib;iAd.lib;ImageIO.lib;LocalAuthentication.lib;MapKit.lib;MediaAccessibility.lib;MediaPlayer.lib;MessageUI.lib;Metal.lib;MobileCoreServices.lib;OpenAL.lib;OpenGLES.lib;QuartzCore.lib;QuickLook.lib;Security.lib;Social.lib;Starboard.lib;StoreKit.lib;SystemConfiguration.lib;Twitter.lib;UIKit.lib;WebKit.lib;libdispatch.lib;objcuwp.lib</StarboardDefaultLibs>
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>
+    <CopyStarboardLibraries Condition="'$(ConfigurationType)' == 'Application'">true</CopyStarboardLibraries>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

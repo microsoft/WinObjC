@@ -273,6 +273,7 @@ struct TestKVOStruct {
 @end
 
 TEST(Foundation, KeyValueObservation_BasicChangeNotification) { // Basic change notification
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -294,9 +295,12 @@ TEST(Foundation, KeyValueObservation_BasicChangeNotification) { // Basic change 
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
                       @"Hello",
                       "The new value stored in the change notification should be Hello.");
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_ExclusiveChangeNotification) { // Exclusive change notification
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
     TestKVOObserver* observer2 = [[[TestKVOObserver alloc] init] autorelease];
@@ -314,9 +318,14 @@ TEST(Foundation, KeyValueObservation_ExclusiveChangeNotification) { // Exclusive
     EXPECT_EQ_MSG([[observer changesForKeypath:@"basicPodProperty"] count],
                   0,
                   "No changes on basicPodProperty for second observer should have fired.");
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [observed removeObserver:observer2 forKeyPath:@"basicPodProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_ManualChangeNotification) { // Manual change notification.
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -331,9 +340,13 @@ TEST(Foundation, KeyValueObservation_ManualChangeNotification) { // Manual chang
                           objectForKey:NSKeyValueChangeNewKey],
                       @(1),
                       "The new value stored in the change notification should be a boxed 1.");
+
+    [observed removeObserver:observer forKeyPath:@"manuallyNotifyingIntegerProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_BasicChangeCaptureOld) { // Basic change notification with Old Value
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -345,9 +358,13 @@ TEST(Foundation, KeyValueObservation_BasicChangeCaptureOld) { // Basic change no
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey],
                       [NSNull null],
                       "The old value stored in the change notification should be null.");
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_CascadingNotificationWithEmptyLeaf) { // Cascading change notification testing subscribing to nil AND
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     // property replacement
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
@@ -390,9 +407,13 @@ TEST(Foundation, KeyValueObservation_CascadingNotificationWithEmptyLeaf) { // Ca
                           objectForKey:NSKeyValueChangeOldKey],
                       @"Hello",
                       "The old value stored in the change notification should be Hello.");
+
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_PriorNotification) { // Basic change notification with a Prior notification requested
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -409,9 +430,13 @@ TEST(Foundation, KeyValueObservation_PriorNotification) { // Basic change notifi
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeOldKey],
                       [NSNull null],
                       "The old value stored in the change notification should be null or nil.");
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DependentKeyNotification) { // Derived change notification (dependent keys)
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -429,9 +454,11 @@ TEST(Foundation, KeyValueObservation_DependentKeyNotification) { // Derived chan
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"derivedObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
                       @"!!!Hello!!!",
                       "The new value stored in the change notification should be !!!Hello!!! (the derived object).");
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_PODNotification) { // Notification on a plain old data property (non-object)
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -446,9 +473,13 @@ TEST(Foundation, KeyValueObservation_PODNotification) { // Notification on a pla
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicPodProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
                       @(10),
                       "The new value stored in the change notification should be a boxed 10.");
+
+    [observed removeObserver:observer forKeyPath:@"basicPodProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_StructNotification) { // Basic change notification on a struct type
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -464,9 +495,13 @@ TEST(Foundation, KeyValueObservation_StructNotification) { // Basic change notif
     EXPECT_STREQ_MSG([[[[[observer changesForKeypath:@"structProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey] objCType],
                      @encode(TestKVOStruct),
                      "The new objc type stored in the change notification should have an objc type matching our Struct.");
+
+    [observed removeObserver:observer forKeyPath:@"structProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DisabledNotification) { // No notification for non-notifying keypaths.
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -476,9 +511,13 @@ TEST(Foundation, KeyValueObservation_DisabledNotification) { // No notification 
     EXPECT_EQ_MSG([[observer changesForKeypath:@"nonNotifyingObjectProperty"] count],
                   0,
                   "No changes for nonNotifyingObjectProperty should have fired.");
+
+    [observed removeObserver:observer forKeyPath:@"nonNotifyingObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DisabledInitialNotification) { // Initial notification for non-notifying keypaths.
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -488,9 +527,13 @@ TEST(Foundation, KeyValueObservation_DisabledInitialNotification) { // Initial n
     EXPECT_EQ_MSG([[observer changesForKeypath:@"nonNotifyingObjectProperty"] count],
                   1,
                   "An INITIAL notification for nonNotifyingObjectProperty should have fired.");
+
+    [observed removeObserver:observer forKeyPath:@"nonNotifyingObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_SetValueForKeyIvarNotification) { // Notification of ivar change through setValue:forKey:
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -504,9 +547,13 @@ TEST(Foundation, KeyValueObservation_SetValueForKeyIvarNotification) { // Notifi
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"ivarWithoutSetter"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
                       @(1024),
                       "The new value stored in the change notification should a boxed 1024.");
+
+    [observed removeObserver:observer forKeyPath:@"ivarWithoutSetter"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_SetValueForKeyPropertyNotification) { // Notification through setValue:forKey: to make sure that we do
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     // not get two notifications for the same change.
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
@@ -521,10 +568,15 @@ TEST(Foundation, KeyValueObservation_SetValueForKeyPropertyNotification) { // No
     EXPECT_OBJCEQ_MSG([[[[observer changesForKeypath:@"basicObjectProperty"] anyObject] info] objectForKey:NSKeyValueChangeNewKey],
                       @(1024),
                       "The new value stored in the change notification should a boxed 1024.");
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation,
      KeyValueObservation_DictionaryNotification) { // Basic notification on a dictionary, which does not have properties or ivars.
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
     NSMutableDictionary* observed = [NSMutableDictionary dictionary];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -543,9 +595,14 @@ TEST(Foundation,
     EXPECT_EQ_MSG([[observer changesForKeypath:@"subKey.basicObjectProperty"] count],
                   1,
                   "On a NSMutableDictionary, a change notification for subKey.basicObjectProperty.");
+
+    [observed removeObserver:observer forKeyPath:@"arbitraryValue"];
+    [observed removeObserver:observer forKeyPath:@"subKey.basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_BasicDeregistration) { // Deregistration test
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -566,18 +623,21 @@ TEST(Foundation, KeyValueObservation_BasicDeregistration) { // Deregistration te
     EXPECT_EQ_MSG([[observer changesForKeypath:@"cascadableKey.basicObjectProperty"] count],
                   0,
                   "No changes on cascadableKey.basicObjectProperty should have fired.");
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DeeplyNested1) { // Double derived depth test
-    TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
-    TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+
+    TestKVOObject* observed = [[TestKVOObject alloc] init];
+    TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
     [observed addObserver:observer
                forKeyPath:@"cascadableKey.derivedObjectProperty.length"
                   options:NSKeyValueObservingOptionNew
                   context:NULL];
 
-    TestKVOObject* subObject = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObject* subObject = [[TestKVOObject alloc] init];
     subObject.basicObjectProperty = @"Hello";
     observed.cascadableKey = subObject;
 
@@ -598,14 +658,21 @@ TEST(Foundation, KeyValueObservation_DeeplyNested1) { // Double derived depth te
     EXPECT_EQ_MSG([[observer changesForKeypath:@"cascadableKey.derivedObjectProperty.length"] count],
                   0,
                   "No additional changes on cascade.derived.length should have fired.");
+
+    EXPECT_NO_THROW([subObject release]);
+    EXPECT_NO_THROW([observer release]);
+    EXPECT_NO_THROW([observed release]);
+
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_Nested1) { // Test normally-nested observation and value replacement
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
     [observed addObserver:observer forKeyPath:@"cascadableKey.cascadableKey" options:0 context:nil];
 
-    TestKVOObject* child = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObject* child = [[TestKVOObject alloc] init];
 
     observed.cascadableKey = child;
     observed.cascadableKey = nil;
@@ -614,11 +681,14 @@ TEST(Foundation, KeyValueObservation_Nested1) { // Test normally-nested observat
 
     EXPECT_NO_THROW([observed removeObserver:observer forKeyPath:@"cascadableKey.cascadableKey"]);
 
+    EXPECT_NO_THROW([child release]);
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DeeplyNested2) { // Test deeply-nested observation
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
     [observed addObserver:observer forKeyPath:@"cascadableKey.cascadableKey.cascadableKey" options:0 context:nil];
@@ -637,9 +707,11 @@ TEST(Foundation, KeyValueObservation_DeeplyNested2) { // Test deeply-nested obse
 
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_LeafReplacement1) { // Test key value replacement and re-registration (1)
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
@@ -656,9 +728,11 @@ TEST(Foundation, KeyValueObservation_LeafReplacement1) { // Test key value repla
 
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_LeafReplacement2) { // Test key value replacement and re-registration (2)
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
@@ -679,9 +753,11 @@ TEST(Foundation, KeyValueObservation_LeafReplacement2) { // Test key value repla
 
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_LeafReplacement3) { // Test key value replacement and re-registration (3)
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
     TestKVOObject* child1 = [[[TestKVOObject alloc] init] autorelease];
@@ -701,9 +777,11 @@ TEST(Foundation, KeyValueObservation_LeafReplacement3) { // Test key value repla
 
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_NestingWithReplacement) { // Test a more complex nested observation system
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
     TestKVOObject* child1 = [[[TestKVOObject alloc] init] autorelease];
@@ -732,9 +810,11 @@ TEST(Foundation, KeyValueObservation_NestingWithReplacement) { // Test a more co
 
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_NestingInitial) { // Test initial observation on nested keys
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
     TestKVOObject* child1 = [[[TestKVOObject alloc] init] autorelease];
@@ -762,9 +842,15 @@ TEST(Foundation, KeyValueObservation_NestingInitial) { // Test initial observati
     EXPECT_OBJCEQ(@"!!!(null)!!!",
                   [[[[observer changesForKeypath:@"cascadableKey.derivedObjectProperty"] anyObject] info]
                       objectForKey:NSKeyValueChangeNewKey]);
+
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.basicObjectProperty"];
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.basicPodProperty"];
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.derivedObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DependencyLoop) { // Make sure that dependency loops don't cause crashes.
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[TestKVOObserver alloc] init];
     EXPECT_NO_THROW([observed addObserver:observer forKeyPath:@"recursiveDependent1" options:0 context:nil]);
@@ -774,11 +860,14 @@ TEST(Foundation, KeyValueObservation_DependencyLoop) { // Make sure that depende
     EXPECT_EQ(4, [observer numberOfObservedChanges]);
     EXPECT_NO_THROW([observed removeObserver:observer forKeyPath:@"recursiveDependent1"]);
     EXPECT_NO_THROW([observed removeObserver:observer forKeyPath:@"recursiveDependent2"]);
+
     EXPECT_NO_THROW([observer release]);
     EXPECT_NO_THROW([observed release]);
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_ObserveAllProperties) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[TestKVOObject alloc] init];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -799,12 +888,19 @@ TEST(Foundation, KeyValueObservation_ObserveAllProperties) {
 
     EXPECT_EQ_MSG([observer numberOfObservedChanges], 6, "There should have been 6 observed changes on the observer.");
 
-    EXPECT_ANY_THROW([observed release]);
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [observed removeObserver:observer forKeyPath:@"basicPodProperty"];
+    [observed removeObserver:observer forKeyPath:@"structProperty"];
+    [observed removeObserver:observer forKeyPath:@"derivedObjectProperty"];
+    [observed removeObserver:observer forKeyPath:@"cascadableKey"];
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.basicObjectProperty"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_RemoveWithoutContext) { // Test removal without specifying context.
-    TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
-    TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    TestKVOObject* observed = [[TestKVOObject alloc] init];
+    TestKVOObserver* observer = [[TestKVOObserver alloc] init];
 
     [observed addObserver:observer
                forKeyPath:@"basicObjectProperty"
@@ -814,6 +910,7 @@ TEST(Foundation, KeyValueObservation_RemoveWithoutContext) { // Test removal wit
                forKeyPath:@"basicObjectProperty"
                   options:NSKeyValueObservingOptionNew
                   context:reinterpret_cast<void*>(2)];
+
     [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
 
     observed.basicObjectProperty = @"";
@@ -821,9 +918,15 @@ TEST(Foundation, KeyValueObservation_RemoveWithoutContext) { // Test removal wit
     EXPECT_EQ_MSG([observer numberOfObservedChanges],
                   1,
                   "There should be only one change notification despite registering two with contexts.");
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty" context:reinterpret_cast<void*>(2)];
+    [observed release];
+    [observer release];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_DuplicateContext) { // Test adding duplicate contexts
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
@@ -847,14 +950,20 @@ TEST(Foundation, KeyValueObservation_DuplicateContext) { // Test adding duplicat
     EXPECT_EQ_MSG([observer numberOfObservedChanges],
                   3,
                   "There should be one additional observed change; the removal should have only effected one.");
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty" context:reinterpret_cast<void*>(1)];
+    [pool release];
 }
 
-TEST(Foundation, KeyValueObservation_RemoveUnregistered) { // Test removing an urnegistered observer
+TEST(Foundation, KeyValueObservation_RemoveUnregistered) { // Test removing an urnegistered observer[observed removeObserver:observer
+    // forKeyPath:@"basicObjectProperty" context:reinterpret_cast<void*>(1)];
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
     EXPECT_ANY_THROW_MSG([observed removeObserver:observer forKeyPath:@"basicObjectProperty" context:reinterpret_cast<void*>(1)],
                          "Removing an unregistered observer should throw an exception.");
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_SelfObservationDealloc) { // Test deallocation of an object that is its own observer
@@ -863,6 +972,7 @@ TEST(Foundation, KeyValueObservation_SelfObservationDealloc) { // Test deallocat
 }
 
 TEST(Foundation, KeyValueObservation_CascadeWithDiverseTypes) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject2* floatGuy = [[[TestKVOObject2 alloc] init] autorelease];
     floatGuy.someFloat = 1.234f;
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
@@ -873,9 +983,13 @@ TEST(Foundation, KeyValueObservation_CascadeWithDiverseTypes) {
     [observed addObserver:observer forKeyPath:@"cascadableKey.dictionaryProperty.floatGuy.someFloat" options:0 context:nil];
     observed.cascadableKey = child;
     EXPECT_EQ([observer numberOfObservedChanges], 1);
+
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.dictionaryProperty.floatGuy.someFloat"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_CascadeWithDiverseTypesInitializedToNil) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     // The same test as above, but testing nil value reconstitution to ensure that the keypath is wired up properly.
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
@@ -890,23 +1004,30 @@ TEST(Foundation, KeyValueObservation_CascadeWithDiverseTypesInitializedToNil) {
     observed.cascadableKey = child;
 
     EXPECT_EQ([observer numberOfObservedChanges], 2);
+
+    [observed removeObserver:observer forKeyPath:@"cascadableKey.dictionaryProperty.floatGuy.someFloat"];
+    [pool release];
 }
 
 TEST(Foundation, KeyValueObservation_CascadeOfDerivedKey) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObject* child = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObject* child2 = [[[TestKVOObject alloc] init] autorelease];
     TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
 
     observed.cascadableKey = child;
-    child.dictionaryProperty = @{@"Key1": @"Value1"};
+    child.dictionaryProperty = @{ @"Key1" : @"Value1" };
 
     [observed addObserver:observer forKeyPath:@"derivedCascadableKey.dictionaryProperty.Key1" options:0 context:nil];
 
     observed.cascadableKey = child2;
-    child2.dictionaryProperty = @{@"Key1": @"Value2"};
+    child2.dictionaryProperty = @{ @"Key1" : @"Value2" };
 
     EXPECT_EQ([observer numberOfObservedChanges], 2);
+
+    [observed removeObserver:observer forKeyPath:@"derivedCascadableKey.dictionaryProperty.Key1"];
+    [pool release];
 }
 
 @interface NSObject (Nonexistent)
@@ -939,4 +1060,14 @@ TEST(Foundation, NSSearchPathForDirectoriesInDomains) {
         EXPECT_NO_THROW([@"Testing 1 2 3" writeToFile:filePath atomically:NO encoding:NSUTF8StringEncoding error:&error]);
         ASSERT_OBJCEQ(nil, error);
     }
+}
+
+TEST(Foundation, NSSet_PerformSelector) {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:1];
+    [array addObject:@1];
+    NSSet* set = [NSSet setWithObject:array];
+
+    EXPECT_EQ(1, [array count]);
+    [set makeObjectsPerformSelector:@selector(removeAllObjects)];
+    EXPECT_EQ(0, [array count]);
 }

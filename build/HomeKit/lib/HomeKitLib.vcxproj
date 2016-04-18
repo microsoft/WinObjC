@@ -40,7 +40,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E0329C98-BDEC-4C5E-8396-ACA8771F8671}</ProjectGuid>
     <ProjectName>HomeKitLib</ProjectName>
-    <RootNamespace>HomeKit</RootNamespace>
+    <RootNamespace>HomeKitLib</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>HomeKitLib</OutputName>
@@ -57,7 +57,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -67,7 +67,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
@@ -78,7 +78,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -88,7 +88,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"-DHOMEKIT_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>

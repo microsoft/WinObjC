@@ -16,6 +16,7 @@
 
 #import "FoundationsViewController.h"
 #import "TaskInfoViewController.h"
+#import "URLSessionViewController.h"
 
 @interface FoundationsViewController ()
 
@@ -28,6 +29,8 @@
 
     // add foundation test controllers here
     [self addMenuItemViewController:[[TaskInfoViewController alloc] init] andTitle:@"task_info"];
+
+    [self addMenuItemViewController:[[URLSessionViewController alloc] init] andTitle:@"URL Session"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -17,6 +17,7 @@
 #pragma once
 
 #import <CoreImage/CIImage.h>
+#include "Starboard.h"
 
 @interface CIImage () {
     idretain _cgImage;

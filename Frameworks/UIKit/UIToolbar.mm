@@ -14,13 +14,14 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
-#include <UIKit/UIKit.h>
-#include <vector>
-#include "UIBarButtonItem+Internals.h"
-
-@class UIAppearanceSetter;
+#import "Starboard.h"
+#import "StubReturn.h"
+#import <UIKit/UIKit.h>
+#import <vector>
+#import "UIBarButtonItem+Internals.h"
+#import "UIAppearanceSetter.h"
+#import "UIViewInternal.h"
+#import "UIBarButtonItem+Internals.h"
 
 @implementation UIToolbar {
     id _delegate;
@@ -33,10 +34,15 @@
     idretaintype(UIColor) _backgroundTintColor;
     idretaintype(UIColor) _itemTintColor;
 }
+
 void initInternal(UIToolbar* self) {
     self->_curAddedViews.attach([NSMutableArray new]);
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     initInternal(self);
@@ -45,13 +51,12 @@ void initInternal(UIToolbar* self) {
     _style = (UIBarStyle)[coder decodeInt32ForKey:@"UIBarStyle"];
 
     switch (_style) {
-        case 1:
+        case UIBarStyleBlack:
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
-        case 2:
-        case 3:
+        case UIBarStyleBlackTranslucent: // deprecated
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
@@ -74,6 +79,9 @@ void initInternal(UIToolbar* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     if (frame.size.height > 44.0f) {
         frame.size.height = 44.0f;
@@ -95,13 +103,12 @@ void initInternal(UIToolbar* self) {
     _style = style;
 
     switch (_style) {
-        case 1:
+        case UIBarStyleBlack:
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blackopaque.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
 
-        case 2:
-        case 3:
+        case UIBarStyleBlackTranslucent: // deprecated
             _backgroundGradient =
                 [[UIImage imageNamed:@"/img/navgradient-blacktranslucent.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
             break;
@@ -117,8 +124,12 @@ void initInternal(UIToolbar* self) {
 - (void)setButtonBarTrackingMode:(int)mode {
 }
 
-- (id)viewWithTag:(NSUInteger)tag {
-    return nil;
+/**
+ @Status Stub
+*/
+- (__kindof UIView*)viewWithTag:(NSInteger)tag {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 - (void)showSelectionForButton:(NSUInteger)button {
@@ -130,6 +141,9 @@ void initInternal(UIToolbar* self) {
 - (void)showButtonGroup:(int)group withDuration:(double)withDuration {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)buttonClicked:(NSUInteger)button {
     [_delegate buttonBarItemTapped:button];
 }
@@ -250,7 +264,7 @@ void layoutItems(UIToolbar* self) {
         }
         [UIAppearanceSetter _applyAppearance:curButton withAppearanceClass:[UIBarButtonItem class] withBaseView:self];
 
-        if ([curButton isFlexibleWidth]) {
+        if ([curButton _isFlexibleWidth]) {
             if (curContainer) {
                 lastContainer = curContainer;
 
@@ -407,11 +421,17 @@ void layoutItems(UIToolbar* self) {
     layoutItems(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setFrame:(CGRect)frame {
     [self _setShouldLayout];
     [super setFrame:frame];
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGSize)sizeThatFits:(CGSize)curSize {
     CGSize ret;
 
@@ -426,7 +446,7 @@ void layoutItems(UIToolbar* self) {
     for (i = 0; i < count; i++) {
         UIBarButtonItem* curButton = [_items objectAtIndex:i];
 
-        if (![curButton isFlexibleWidth]) {
+        if (![curButton _isFlexibleWidth]) {
             CGSize idealSize = [curButton idealSize];
             totalWidth += idealSize.width + curButton.margin * 2.0f;
         }
@@ -444,6 +464,9 @@ void layoutItems(UIToolbar* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _items = nil;
     _backgroundGradient = nil;
@@ -457,7 +480,7 @@ void layoutItems(UIToolbar* self) {
  @Status Caveat
  @Notes position and metrics parameters not supported
 */
-- (void)setBackgroundImage:(UIImage*)image forToolbarPosition:(unsigned int)position barMetrics:(UIBarMetrics)metrics {
+- (void)setBackgroundImage:(UIImage*)image forToolbarPosition:(UIToolbarPosition)position barMetrics:(UIBarMetrics)metrics {
     _backgroundGradient = image;
     UIImageSetLayerContents([self layer], _backgroundGradient);
 }

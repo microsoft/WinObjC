@@ -17,7 +17,7 @@
 #import <CoreText/CTParagraphStyle.h>
 #import <StubReturn.h>
 #import "CoreTextInternal.h"
-#include <stddef.h>
+#import <stddef.h>
 
 static const size_t MAX_SPECIFIER_COUNT = 16;
 
@@ -199,7 +199,7 @@ bool CTParagraphStyleGetValueForSpecifier(CTParagraphStyleRef paragraphStyle,
     _CTParagraphStyle* paraStyle = static_cast<_CTParagraphStyle*>(paragraphStyle);
     bool isDefaultValue = true;
 
-    if (spec >= 0 && spec <= MAX_SPECIFIER_COUNT) {
+    if (spec <= MAX_SPECIFIER_COUNT) {
         _CTParagraphStyleProperties* paraStyleProperty = &paraStyle->_properties;
 
         // structContainingData is the struct that contains the actual data and a bool varibale _isDefault to store if data has a default

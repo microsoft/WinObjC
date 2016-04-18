@@ -14,15 +14,21 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UITableViewContentView.h"
-#include "UIKit/UILabel.h"
-#include "UIViewInternal.h"
-#include "_UIGroupEdgeView.h"
-#include "UITableViewInternal.h"
+#import "Starboard.h"
+#import "UITableViewContentView.h"
+#import "UIKit/UILabel.h"
+#import "UIViewInternal.h"
+#import "_UIGroupEdgeView.h"
+#import "UITableViewInternal.h"
+#import "UITableViewCellInternal.h"
+#import "LoggingNative.h"
+#import "CALayerInternal.h"
+#import "UITableViewInternal.h"
+#import "UIColorInternal.h"
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#import <algorithm>
+
+static const wchar_t* TAG = L"UITableViewCell";
 
 @implementation UITableViewCell
 
@@ -149,6 +155,13 @@ static UILabel* getTextLabel(UITableViewCell* self) {
             case UITableViewCellStyleValue2:
                 [self->_textLabel setFont:[UIFont fontWithName:@"Helvetica Bold" size:[UIFont smallSystemFontSize]]];
                 break;
+
+            case UITableViewCellStyleDefault:
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", self->_style);
+                break;
+
+            default:
+                TraceWarning(TAG, L"Invalid UITableViewCell style specified: %u", self->_style);
         }
     }
 
@@ -244,6 +257,13 @@ static id getSecondaryLabel(UITableViewCell* self) {
             case UITableViewCellStyleValue2:
                 [self->_secondaryLabel setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
                 break;
+
+            case UITableViewCellStyleDefault:
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", self->_style);
+                break;
+
+            default:
+                TraceWarning(TAG, L"Invalid UITableViewCell style specified: %u", self->_style);
         }
     }
 
@@ -292,7 +312,11 @@ static void initInternal(UITableViewCell* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     id ret = [super initWithCoder:coder];
 
     if ([coder containsValueForKey:@"UISelectionStyle"]) {
@@ -318,6 +342,9 @@ static void initInternal(UITableViewCell* self) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     return [self initWithFrame:pos reuseIdentifier:nil];
 }
@@ -372,7 +399,7 @@ static void initInternal(UITableViewCell* self) {
 - (void)_removeButtonCallback:(id)button {
     _removeButton = nil;
     [button removeFromSuperview];
-    [[self superview] _forwardCellRemoval:self];
+    [static_cast<UITableView*>([self superview]) _forwardCellRemoval:self];
 }
 
 /**
@@ -471,13 +498,21 @@ static void initInternal(UITableViewCell* self) {
         _cellOldBackgroundColor = _cellBackgroundColor;
         switch (_selectionStyle) {
             case UITableViewCellSelectionStyleBlue:
-                [self setBackgroundColor:[UIColor windowsTableViewCellSelectionBackgroundColor]];
+                [self setBackgroundColor:[UIColor _windowsTableViewCellSelectionBackgroundColor]];
                 break;
 
             case UITableViewCellSelectionStyleGray:
                 [self setBackgroundColor:[UIColor grayColor]];
                 break;
+
+            case UITableViewCellSelectionStyleNone:
+               UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", _selectionStyle);
+               break;
+
+            default:
+                TraceWarning(TAG, L"Invalid UITableViewCell selection style specified: %u", _selectionStyle);
         }
+
         if (_selectionStyle != UITableViewCellSelectionStyleNone)
             [self setHighlighted:highlight forViews:[_contentView subviews]];
         updateBackgroundView(self);
@@ -488,7 +523,15 @@ static void initInternal(UITableViewCell* self) {
                 case UITableViewCellSelectionStyleGray:
                     [self setBackgroundColor:_cellOldBackgroundColor];
                     break;
+
+                case UITableViewCellSelectionStyleNone:
+                    UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", _selectionStyle);
+                    break;
+
+                default:
+                    TraceWarning(TAG, L"Invalid selection style: %u", _selectionStyle);
             }
+
             [self setHighlighted:highlight forViews:[_contentView subviews]];
             updateBackgroundView(self);
         }
@@ -501,7 +544,7 @@ static void initInternal(UITableViewCell* self) {
         // Ignore the events if view wants to
         if (![view isUserInteractionEnabled] && [view respondsToSelector:@selector(setHighlighted:)] &&
             ![view isKindOfClass:[UIControl class]]) {
-            [view setHighlighted:highlighted];
+            [static_cast<UIControl*>(view) setHighlighted:highlighted];
 
             [self setHighlighted:highlighted forViews:[view subviews]];
         }
@@ -589,19 +632,32 @@ static void initInternal(UITableViewCell* self) {
     return getSecondaryLabel(self);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([priv->superview respondsToSelector:@selector(_cellSelectedDown:)])
         [priv->superview _cellSelectedDown:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    // Intentional no-op
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([priv->superview respondsToSelector:@selector(_cellSelectedCancelled:)])
         [priv->superview _cellSelectedCancelled:self];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     if ([priv->superview respondsToSelector:@selector(_cellSelectedUp:)])
         [priv->superview _cellSelectedUp:self];
@@ -622,7 +678,7 @@ static float getMarginWidth(UITableViewCell* self) {
         if (tableViewWidth < 400 || !GetCACompositor()->isTablet()) {
             marginWidth = 10.0f;
         } else {
-            marginWidth = MAX(31.0f, MIN(45.0f, tableViewWidth * 0.06f));
+            marginWidth = std::max(31.0f, std::min(45.0f, tableViewWidth * 0.06f));
         }
     } else {
         marginWidth = tableViewWidth - 10.0f;
@@ -757,8 +813,8 @@ static void updateBackgroundView(UITableViewCell* self, bool forceRefresh = fals
 /**
  @Status Interoperable
 */
-- (unsigned)accessoryType {
-    return _accessoryType;
+- (UITableViewCellAccessoryType)accessoryType {
+    return static_cast<UITableViewCellAccessoryType>(_accessoryType);
 }
 
 static void setInternalAccessoryColor(UITableViewCell* self) {
@@ -777,11 +833,19 @@ static void setInternalAccessoryColor(UITableViewCell* self) {
                     contentColor.g = 1.0f;
                     contentColor.b = 1.0f;
                     break;
+
+                case UITableViewCellSelectionStyleNone:
+                    UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", self->_selectionStyle);
+                    break;
+
+                default:
+                    TraceWarning(TAG, L"Invalid selection style: %u", self->_selectionStyle);
             }
         }
 
-        [[self->_internalAccessoryView layer]
-            _setContentColor:[UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]];
+        CGColorRef color = 
+            static_cast<CGColorRef>([UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]);
+        [[self->_internalAccessoryView layer] _setContentColor:color];
     }
 }
 
@@ -852,6 +916,12 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
             case UITableViewCellAccessoryDetailButton:
                 ret = buildInternalAccessory(self, self->_accessoryType);
                 break;
+
+            case UITableViewCellAccessoryNone:
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell accessory type: %u is unhandled", self->_accessoryType);
+
+            default:
+                TraceWarning(TAG, L"Invalid accessory style: %u", self->_selectionStyle);
         }
     }
 
@@ -938,7 +1008,7 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
 }
 
 - (void)setSelectedTextColor:(UIColor*)color {
-    EbrDebugLog("setSelectedTextColor not supported\n");
+    TraceVerbose(TAG, L"setSelectedTextColor not supported");
 }
 
 /**
@@ -965,6 +1035,9 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
     return _indexPath;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setBackgroundColor:(UIColor*)color {
     _cellBackgroundColor = color;
     _cellBackgroundColorSet = TRUE;
@@ -974,10 +1047,16 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
         [super setBackgroundColor:color];
 }
 
+/**
+ @Status Interoperable
+*/
 - (UIColor*)backgroundColor {
     return _cellBackgroundColor;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _textLabel = nil;
     _secondaryLabel = nil;
@@ -1005,13 +1084,13 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
 
 - (void)addBottomBorder:(UITableView*)parentTable {
     if (_borderView == nil) {
-        float tableBackground[4] = { 0 };
+        ColorQuad color = {0};
 
-        [[parentTable backgroundColor] getColors:tableBackground];
+        [[parentTable backgroundColor] getColors:&color];
         UIColor* backgroundColor = nil;
 
-        if ((tableBackground[3] == 0.0f) ||
-            (tableBackground[0] == 1.0f && tableBackground[1] == 1.0f && tableBackground[2] == 1.0f && tableBackground[3] == 1.0f)) {
+        if ((color.a == 0.0f) ||
+            (color.r == 1.0f && color.g == 1.0f && color.b == 1.0f && color.a == 1.0f)) {
             backgroundColor = [UIColor grayColor];
         } else {
             backgroundColor = [UIColor whiteColor];
@@ -1057,6 +1136,9 @@ static void setupGroupView(UITableViewCell* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)layoutSubviews {
     CGRect ourBounds = { 0 };
 
@@ -1386,7 +1468,11 @@ static void setupGroupView(UITableViewCell* self) {
     }
 }
 
+/**
+ @Status Stub
+*/
 - (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
 }
 
 static void removeAllAnimationsFromLayers(CALayer* layer) {
@@ -1442,6 +1528,27 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
     }
     */
     [self setNeedsLayout];
+}
+
+/**
+ @Status Stub
+*/
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)willTransitionToState:(UITableViewCellStateMask)state {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didTransitionToState:(UITableViewCellStateMask)state {
+    UNIMPLEMENTED();
 }
 
 @end

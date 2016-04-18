@@ -30,6 +30,9 @@
 
 #include "pevents.h"
 #include "PathMapper.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"PlatformSupport";
 
 void EbrBlockIfBackground() {
 }
@@ -747,14 +750,6 @@ typedef struct {
 
 static std::map<void*, MapInfo> _memoryMaps;
 
-void* EbrMmap(void* addr, DWORD size, DWORD prot, DWORD flags, DWORD fd, DWORD offset) {
-    return NULL;
-}
-
-int EbrMunmap(void* addr, DWORD size) {
-    return 0;
-}
-
 bool EbrRemoveEmptyDir(const char* path) {
     return RemoveDirectoryA(CPathMapper(path));
 }
@@ -859,14 +854,6 @@ bool EbrGetRootMapping(const char* dirName, char* dirOut, uint32_t maxLen) {
     return true;
 }
 
-void* EbrMmap(void* addr, size_t size, uint32_t prot, uint32_t flags, int fd, uint32_t offset) {
-    return NULL;
-}
-
-int EbrMunmap(void* addr, uint32_t size) {
-    return -1;
-}
-
 bool EbrMkdir(const char* path) {
     return _mkdir(CPathMapper(path)) == 0;
 }
@@ -882,7 +869,7 @@ int EbrChdir(const char* path) {
     return 0;
 }
 
-extern "C" void dbg_printf(const char* fmt, ...) {
+void dbg_printf(const char* fmt, ...) {
 #ifdef _DEBUG
     va_list va;
 
@@ -904,7 +891,7 @@ bool EbrRemove(const char* path) {
             if (EbrUnlink(path)) {
                 return true;
             } else {
-                EbrDebugLog("Failed to unlink file %s\n", path);
+                TraceError(TAG, L"Failed to unlink file %hs", path);
                 return false;
             }
         } else if (s.st_mode & S_IFDIR) {
@@ -927,20 +914,9 @@ bool EbrRemove(const char* path) {
 
             return EbrRemoveEmptyDir(path);
         } else {
-            EbrDebugLog("Unrecognized file type: %d\n", s.st_mode);
+            TraceVerbose(TAG, L"Unrecognized file type: %d", s.st_mode);
             return false;
         }
     }
     return false;
-}
-
-__declspec(dllexport) void EbrSetCurrentThreadName(char const*) {
-}
-
-__declspec(dllexport) void EbrThreadMakeBackgroundExecutable(void) {
-}
-
-void EbrThrowFatal(int code, const char* msg, ...) {
-    printf("FATAL: %s\n", msg);
-    __fastfail(code);
 }

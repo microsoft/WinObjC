@@ -30,7 +30,6 @@
 
 #pragma once
 
-#import <StarboardExport.h>
 #import <UIKit/UIScrollView.h>
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/NSIndexPath+UITableView.h>

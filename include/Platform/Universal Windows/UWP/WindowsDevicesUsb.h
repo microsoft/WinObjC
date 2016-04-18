@@ -112,10 +112,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbSetupPacket : RTObject
-+ (WDUUsbSetupPacket*)createWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
++ (WDUUsbSetupPacket*)makeWithEightByteBuffer:(RTObject<WSSIBuffer>*)eightByteBuffer ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property unsigned int value;
-@property (copy) WDUUsbControlRequestType* requestType;
+@property (retain) WDUUsbControlRequestType* requestType;
 @property uint8_t request;
 @property unsigned int length;
 @property unsigned int index;
@@ -130,8 +130,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbDeviceClass : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) id subclassCode;
-@property (copy) id protocolCode;
+@property (retain) id subclassCode;
+@property (retain) id protocolCode;
 @property uint8_t classCode;
 @end
 

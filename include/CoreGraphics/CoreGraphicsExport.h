@@ -59,12 +59,12 @@ typedef struct __CGPDFStream* CGPDFStreamRef;
 typedef union __CGPDFObject* CGPDFObjectRef;
 typedef struct __CGImage* CGImageRef;
 typedef struct __CGShading* CGShadingRef;
+typedef struct __CGPath* CGPathRef;
+typedef struct __CGPath* CGMutablePathRef;
 
 // TODO: following opaque types can not use form of
 // typedef struct __Foo* FooRef;
 // indiciating backing code need some clean up
 typedef void* CGDataProviderRef;
 typedef id CGFontRef;
-typedef id CGPathRef;
-typedef id CGMutablePathRef;
 typedef id CGPatternRef;

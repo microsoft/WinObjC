@@ -372,7 +372,7 @@ static NSLock* _allReachabilityOperationsLock;
         [self retain];
 
         NSString* strAddress = [NSString stringWithCharacters:(const unichar*)addressStr length:addressStrLen - 1];
-        WNHostName* wnHostName = [WNHostName createHostName:strAddress];
+        WNHostName* wnHostName = [WNHostName makeHostName:strAddress];
         [WNSDatagramSocket getEndpointPairsAsync:wnHostName
             remoteServiceName:@"0"
             success:^void(id<NSFastEnumeration> pairs) {
@@ -418,9 +418,9 @@ static NSLock* _allReachabilityOperationsLock;
 
     WNHostName* wnHostName;
     if (url.host.length > 0) {
-        wnHostName = [WNHostName createHostName:url.host];
+        wnHostName = [WNHostName makeHostName:url.host];
     } else {
-        wnHostName = [WNHostName createHostName:hostStr];
+        wnHostName = [WNHostName makeHostName:hostStr];
     }
     [WNSDatagramSocket getEndpointPairsAsync:wnHostName
         remoteServiceName:@"0"

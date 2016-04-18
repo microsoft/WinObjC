@@ -83,7 +83,8 @@ typedef enum : NSUInteger {
 @class UIFont;
 
 UIKIT_EXPORT_CLASS
-@interface UITableViewCell : UIView
+@interface UITableViewCell
+    : UIView <UIAppearance, UIAppearanceContainer, UICoordinateSpace, UIDynamicItem, UIFocusEnvironment, UITraitEnvironment>
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString*)reuseIdentifier;
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated;
@@ -95,16 +96,13 @@ UIKIT_EXPORT_CLASS
 - (void)willTransitionToState:(UITableViewCellStateMask)state;
 - (void)didTransitionToState:(UITableViewCellStateMask)state;
 
-// -- internal --
-- (void)_setEditingMode:(BOOL)editingMode animated:(BOOL)animated;
-// --------------
-
 @property (nonatomic, readonly, retain) UIView* contentView;
 @property (nonatomic, readonly, retain) UILabel* textLabel;
 @property (nonatomic, readonly, retain) UILabel* detailTextLabel;
 @property (nonatomic, readonly, retain) UIImageView* imageView;
 @property (nonatomic, retain) UIView* backgroundView;
 @property (nonatomic, retain) UIView* selectedBackgroundView;
+@property (nonatomic, strong) UIView* multipleSelectionBackgroundView STUB_PROPERTY;
 @property (nonatomic) UITableViewCellSelectionStyle selectionStyle;
 @property (nonatomic) NSInteger indentationLevel;
 @property (nonatomic) UITableViewCellAccessoryType accessoryType;
@@ -112,16 +110,25 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) UITableViewCellAccessoryType editingAccessoryType;
 @property (nonatomic, getter=isSelected) BOOL selected;
 @property (nonatomic, getter=isHighlighted) BOOL highlighted;
-@property (nonatomic, getter=isEditing) BOOL editing; // not yet implemented
-@property (nonatomic, readonly) BOOL showingDeleteConfirmation; // not yet implemented
+@property (nonatomic, getter=isEditing) BOOL editing STUB_PROPERTY;
+@property (readonly, nonatomic) UITableViewCellEditingStyle editingStyle STUB_PROPERTY;
+@property (nonatomic, readonly) BOOL showingDeleteConfirmation STUB_PROPERTY;
 @property (nonatomic, readonly, copy) NSString* reuseIdentifier;
+@property (nonatomic) BOOL shouldIndentWhileEditing STUB_PROPERTY;
 @property (nonatomic, assign) CGFloat indentationWidth; // 10 per default
 @property (nonatomic, retain) UIView* editingAccessoryView;
 @property (nonatomic) BOOL showsReorderControl;
 @property (nonatomic, retain) UIImage* image; // depr
+@property (nonatomic, strong) UIImage* selectedImage STUB_PROPERTY;
 @property (nonatomic, copy) NSString* text; // depr
+@property (nonatomic) UIEdgeInsets separatorInset STUB_PROPERTY;
 @property (nonatomic, retain) UIFont* font; // depr
 @property (nonatomic) UITextAlignment textAlignment; // depr
 @property (nonatomic, retain) UIColor* textColor; // depr
+@property (nonatomic, strong) UIColor* selectedTextColor STUB_PROPERTY;
+@property (nonatomic) NSLineBreakMode lineBreakMode STUB_PROPERTY;
+@property (assign, nonatomic) id target STUB_PROPERTY;
+@property (nonatomic) SEL editAction STUB_PROPERTY;
+@property (nonatomic) SEL accessoryAction STUB_PROPERTY;
 
 @end

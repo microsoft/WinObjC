@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLRenderPassDepthAttachmentDescriptor.h>
 
 @implementation MTLRenderPassDepthAttachmentDescriptor
 @end

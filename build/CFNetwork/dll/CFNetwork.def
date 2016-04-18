@@ -1,0 +1,240 @@
+LIBRARY CFNetwork
+    EXPORTS
+        ; CFFTPStream.mm
+        kCFStreamPropertyFTPUserName DATA
+        kCFStreamPropertyFTPPassword DATA
+        kCFStreamPropertyFTPUsePassiveMode DATA
+        kCFStreamPropertyFTPResourceSize DATA
+        kCFStreamPropertyFTPFetchResourceInfo DATA
+        kCFStreamPropertyFTPFileTransferOffset DATA
+        kCFStreamPropertyFTPAttemptPersistentConnection DATA
+        kCFStreamPropertyFTPProxy DATA
+        kCFStreamPropertyFTPProxyHost DATA
+        kCFStreamPropertyFTPProxyPort DATA
+        kCFStreamPropertyFTPProxyUser DATA
+        kCFStreamPropertyFTPProxyPassword DATA
+        kCFFTPResourceMode DATA
+        kCFFTPResourceName DATA
+        kCFFTPResourceOwner DATA
+        kCFFTPResourceGroup DATA
+        kCFFTPResourceLink DATA
+        kCFFTPResourceSize DATA
+        kCFFTPResourceType DATA
+        kCFFTPResourceModDate DATA
+        kCFStreamErrorDomainFTP DATA
+        CFReadStreamCreateWithFTPURL
+        CFWriteStreamCreateWithFTPURL
+        CFFTPCreateParsedResourceListing
+
+        ; CFHost.mm
+        kCFStreamErrorDomainNetDB DATA
+        kCFStreamErrorDomainSystemConfiguration DATA
+        CFHostCreateCopy
+        CFHostCreateWithAddress
+        CFHostCreateWithName
+        CFHostCancelInfoResolution
+        CFHostGetAddressing
+        CFHostGetNames
+        CFHostGetReachability
+        CFHostStartInfoResolution
+        CFHostSetClient
+        CFHostScheduleWithRunLoop
+        CFHostUnscheduleFromRunLoop
+        CFHostGetTypeID
+
+        ; CFHTTPAuthentication.mm
+        kCFHTTPAuthenticationSchemeBasic DATA
+        kCFHTTPAuthenticationSchemeDigest DATA
+        kCFHTTPAuthenticationSchemeNegotiate DATA
+        kCFHTTPAuthenticationSchemeNTLM DATA
+        kCFHTTPAuthenticationUsername DATA
+        kCFHTTPAuthenticationPassword DATA
+        kCFHTTPAuthenticationAccountDomain DATA
+        CFHTTPAuthenticationCreateFromResponse
+        CFHTTPAuthenticationAppliesToRequest
+        CFHTTPAuthenticationCopyDomains
+        CFHTTPAuthenticationCopyMethod
+        CFHTTPAuthenticationCopyRealm
+        CFHTTPAuthenticationIsValid
+        CFHTTPAuthenticationRequiresAccountDomain
+        CFHTTPAuthenticationRequiresOrderedRequests
+        CFHTTPAuthenticationRequiresUserNameAndPassword
+        CFHTTPAuthenticationGetTypeID
+
+        ; CFHTTPMessage.mm
+        kCFHTTPVersion1_0 DATA
+        kCFHTTPVersion1_1 DATA
+        kCFHTTPAuthenticationSchemeBasic DATA
+        kCFHTTPAuthenticationSchemeDigest DATA
+        kCFHTTPAuthenticationSchemeNTLM DATA
+        kCFHTTPAuthenticationSchemeNegotiate DATA
+        kCFHTTPAuthenticationSchemeKerberos DATA
+        kCFHTTPAuthenticationSchemeNegotiate2 DATA
+        kCFHTTPAuthenticationSchemeOAuth1 DATA
+        kCFHTTPAuthenticationSchemeXMobileMeAuthToken DATA
+        CFHTTPMessageCreateCopy
+        CFHTTPMessageCreateEmpty
+        CFHTTPMessageCreateRequest
+        CFHTTPMessageCreateResponse
+        CFHTTPMessageAppendBytes
+        CFHTTPMessageSetBody
+        CFHTTPMessageSetHeaderFieldValue
+        CFHTTPMessageCopyBody
+        CFHTTPMessageCopyAllHeaderFields
+        CFHTTPMessageCopyHeaderFieldValue
+        CFHTTPMessageCopyRequestMethod
+        CFHTTPMessageCopyRequestURL
+        CFHTTPMessageCopySerializedMessage
+        CFHTTPMessageCopyVersion
+        CFHTTPMessageIsRequest
+        CFHTTPMessageIsHeaderComplete
+        CFHTTPMessageGetResponseStatusCode
+        CFHTTPMessageCopyResponseStatusLine
+        CFHTTPMessageApplyCredentials
+        CFHTTPMessageApplyCredentialDictionary
+        CFHTTPMessageAddAuthentication
+        CFHTTPMessageGetTypeID
+
+        ; CFHTTPStream.mm
+        kCFStreamPropertyHTTPAttemptPersistentConnection DATA
+        kCFStreamPropertyHTTPFinalURL DATA
+        kCFStreamPropertyHTTPFinalRequest DATA
+        kCFStreamPropertyHTTPProxy DATA
+        kCFStreamPropertyHTTPRequestBytesWrittenCount DATA
+        kCFStreamPropertyHTTPResponseHeader DATA
+        kCFStreamPropertyHTTPShouldAutoredirect DATA
+        kCFStreamErrorDomainHTTP DATA
+        CFReadStreamCreateForHTTPRequest
+        CFReadStreamCreateForStreamedHTTPRequest
+
+        ; CFNetDiagnostics.mm
+        CFNetDiagnosticCreateWithStreams
+        CFNetDiagnosticCreateWithURL
+        CFNetDiagnosticSetName
+        CFNetDiagnosticDiagnoseProblemInteractively
+        CFNetDiagnosticCopyNetworkStatusPassively
+
+        ; CFNetServices.mm
+        kCFStreamErrorDomainMach DATA
+        kCFStreamErrorDomainNetServices DATA
+        CFNetServiceCreate
+        CFNetServiceCreateCopy
+        CFNetServiceMonitorCreate
+        CFNetServiceBrowserCreate
+        CFNetServiceBrowserInvalidate
+        CFNetServiceBrowserScheduleWithRunLoop
+        CFNetServiceBrowserSearchForDomains
+        CFNetServiceBrowserSearchForServices
+        CFNetServiceBrowserStopSearch
+        CFNetServiceBrowserUnscheduleFromRunLoop
+        CFNetServiceCancel
+        CFNetServiceCreateDictionaryWithTXTData
+        CFNetServiceCreateTXTDataWithDictionary
+        CFNetServiceGetAddressing
+        CFNetServiceGetTargetHost
+        CFNetServiceGetDomain
+        CFNetServiceGetName
+        CFNetServiceGetPortNumber
+        CFNetServiceGetTXTData
+        CFNetServiceGetType
+        CFNetServiceMonitorInvalidate
+        CFNetServiceMonitorScheduleWithRunLoop
+        CFNetServiceMonitorStart
+        CFNetServiceMonitorStop
+        CFNetServiceMonitorUnscheduleFromRunLoop
+        CFNetServiceRegisterWithOptions
+        CFNetServiceResolveWithTimeout
+        CFNetServiceScheduleWithRunLoop
+        CFNetServiceSetClient
+        CFNetServiceSetTXTData
+        CFNetServiceUnscheduleFromRunLoop
+        CFNetServiceGetTypeID
+        CFNetServiceMonitorGetTypeID
+        CFNetServiceBrowserGetTypeID
+
+        ; CFNetwork Error Codes.mm
+        kCFURLErrorFailingURLErrorKey DATA
+        kCFURLErrorFailingURLStringErrorKey DATA
+        kCFGetAddrInfoFailureKey DATA
+        kCFSOCKSStatusCodeKey DATA
+        kCFSOCKSVersionKey DATA
+        kCFSOCKSNegotiationMethodKey DATA
+        kCFDNSServiceFailureKey DATA
+        kCFFTPStatusCodeKey DATA
+        kCFErrorDomainCFNetwork DATA
+        kCFErrorDomainWinSock DATA
+
+        ; CFProxySupport.mm
+        kCFProxyAutoConfigurationHTTPResponseKey DATA
+        kCFProxyAutoConfigurationJavaScriptKey DATA
+        kCFProxyAutoConfigurationURLKey DATA
+        kCFProxyHostNameKey DATA
+        kCFProxyPasswordKey DATA
+        kCFProxyPortNumberKey DATA
+        kCFProxyTypeKey DATA
+        kCFProxyUsernameKey DATA
+        kCFProxyTypeNone DATA
+        kCFProxyTypeAutoConfigurationURL DATA
+        kCFProxyTypeAutoConfigurationJavaScript DATA
+        kCFProxyTypeFTP DATA
+        kCFProxyTypeHTTP DATA
+        kCFProxyTypeHTTPS DATA
+        kCFProxyTypeSOCKS DATA
+        kCFNetworkProxiesHTTPEnable DATA
+        kCFNetworkProxiesHTTPPort DATA
+        kCFNetworkProxiesHTTPProxy DATA
+        kCFNetworkProxiesProxyAutoConfigEnable DATA
+        kCFNetworkProxiesProxyAutoConfigJavaScript DATA
+        kCFNetworkProxiesProxyAutoConfigURLString DATA
+        CFNetworkCopyProxiesForURL
+        CFNetworkCopyProxiesForAutoConfigurationScript
+        CFNetworkExecuteProxyAutoConfigurationScript
+        CFNetworkExecuteProxyAutoConfigurationURL
+        CFNetworkCopySystemProxySettings
+
+        ; CFStream Socket Additions.mm
+        kCFStreamPropertyShouldCloseNativeSocket DATA
+        kCFStreamPropertySocketSecurityLevel DATA
+        kCFStreamPropertySOCKSProxy DATA
+        kCFStreamPropertySSLPeerCertificates DATA
+        kCFStreamPropertySSLPeerTrust DATA
+        kCFStreamPropertySSLSettings DATA
+        kCFStreamPropertySSLContext DATA
+        kCFStreamPropertyProxyLocalByPass DATA
+        kCFStreamPropertySocketRemoteHost DATA
+        kCFStreamPropertySocketRemoteNetService DATA
+        kCFStreamNetworkServiceType DATA
+        kCFStreamPropertyConnectionIsCellular DATA
+        kCFStreamPropertyNoCellular DATA
+        kCFStreamSSLLevel DATA
+        kCFStreamSSLAllowsExpiredCertificates DATA
+        kCFStreamSSLAllowsExpiredRoots DATA
+        kCFStreamSSLAllowsAnyRoot DATA
+        kCFStreamSSLValidatesCertificateChain DATA
+        kCFStreamSSLPeerName DATA
+        kCFStreamSSLCertificates DATA
+        kCFStreamSSLIsServer DATA
+        kCFStreamSocketSecurityLevelNone DATA
+        kCFStreamSocketSecurityLevelSSLv2 DATA
+        kCFStreamSocketSecurityLevelSSLv3 DATA
+        kCFStreamSocketSecurityLevelTLSv1 DATA
+        kCFStreamSocketSecurityLevelNegotiatedSSL DATA
+        kCFStreamPropertySOCKSProxyHost DATA
+        kCFStreamPropertySOCKSProxyPort DATA
+        kCFStreamPropertySOCKSVersion DATA
+        kCFStreamSocketSOCKSVersion4 DATA
+        kCFStreamSocketSOCKSVersion5 DATA
+        kCFStreamPropertySOCKSUser DATA
+        kCFStreamPropertySOCKSPassword DATA
+        kCFStreamNetworkServiceTypeVoIP DATA
+        kCFStreamNetworkServiceTypeVideo DATA
+        kCFStreamNetworkServiceTypeBackground DATA
+        kCFStreamNetworkServiceTypeVoice DATA
+        kCFStreamErrorDomainSOCKS DATA
+        kCFStreamErrorDomainSSL DATA
+        kCFStreamErrorDomainWinSock DATA
+        CFStreamCreatePairWithSocketToCFHost
+        CFStreamCreatePairWithSocketToNetService
+        CFSocketStreamSOCKSGetError
+        CFSocketStreamSOCKSGetErrorSubdomain
+

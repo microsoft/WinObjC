@@ -14,8 +14,8 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIKit.h"
+#import "Starboard.h"
+#import "UIKit/UIKit.h"
 
 @implementation UIActivityIndicatorView {
     BOOL hidesWhenStopped, isAnimating;
@@ -24,6 +24,10 @@
     BOOL _addedAnimation;
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     [super initWithCoder:coder];
     _color = [UIColor whiteColor];
@@ -45,6 +49,9 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)awakeFromNib {
     if (startAnimating) {
         [self startAnimating];
@@ -67,6 +74,9 @@
     return [self initWithFrame:frame];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
 
@@ -79,13 +89,6 @@
     [[self layer] setContentsGravity:kCAGravityCenter];
 
     return self;
-}
-
-/**
- @Status Stub
-*/
-- (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
-    UNIMPLEMENTED();
 }
 
 /**
@@ -116,6 +119,7 @@ static void addAnimation(UIActivityIndicatorView* self) {
         [animation setToValue:[NSNumber numberWithFloat:M_PI * 2]];
         [animation setFromValue:[NSNumber numberWithFloat:0.0f]];
         [animation setDuration:1.0f];
+        [animation setBeginTime:CACurrentMediaTime()];
         [animation setRepeatCount:300000.0f];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionLinear"]];
         [[self layer] addAnimation:animation forKey:@"RotateAnim"];
@@ -166,6 +170,9 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     return isAnimating;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)willMoveToWindow:(UIWindow*)window {
     if (window != nil) {
         addAnimation(self);
@@ -174,13 +181,25 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    // No-op
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    // No-op
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    // No-op
 }
 
 /**
@@ -199,10 +218,17 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     return _color;
 }
 
+/**
+ @Status Interoperable
+ @Notes Always returns NO
+*/
 - (BOOL)isUserInteractionEnabled {
     return NO;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [super dealloc];
 }

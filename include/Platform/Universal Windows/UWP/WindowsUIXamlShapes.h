@@ -190,26 +190,26 @@ WINRT_EXPORT
 @interface WXUIElement : WXDependencyObject
 + (BOOL)tryStartDirectManipulation:(WUXIPointer*)value;
 @property BOOL isRightTapEnabled;
-@property (copy) WUXMProjection* projection;
+@property (retain) WUXMProjection* projection;
 @property BOOL allowDrop;
 @property BOOL isHitTestVisible;
 @property double opacity;
-@property (copy) WUXMCacheMode* cacheMode;
+@property (retain) WUXMCacheMode* cacheMode;
 @property BOOL isDoubleTapEnabled;
 @property BOOL isTapEnabled;
 @property WXVisibility visibility;
 @property BOOL useLayoutRounding;
-@property (copy) WUXMRectangleGeometry* clip;
-@property (copy) WUXMATransitionCollection* transitions;
-@property (copy) WFPoint* renderTransformOrigin;
-@property (copy) WUXMTransform* renderTransform;
+@property (retain) WUXMRectangleGeometry* clip;
+@property (retain) WUXMATransitionCollection* transitions;
+@property (retain) WFPoint* renderTransformOrigin;
+@property (retain) WUXMTransform* renderTransform;
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
 @property (readonly) NSArray* pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
-@property (copy) WUXMMTransform3D* transform3D;
+@property (retain) WUXMMTransform3D* transform3D;
 @property BOOL canDrag;
 + (WXRoutedEvent*)dropEvent;
 + (WXDependencyProperty*)allowDropProperty;
@@ -337,21 +337,21 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXFrameworkElement : WXUIElement
 + (instancetype)make ACTIVATOR;
-@property (copy) WXThickness* margin;
-@property (copy) NSString* language;
+@property (retain) WXThickness* margin;
+@property (retain) NSString* language;
 @property WXHorizontalAlignment horizontalAlignment;
 @property double height;
 @property WXFlowDirection flowDirection;
-@property (copy) RTObject* dataContext;
+@property (retain) RTObject* dataContext;
 @property WXVerticalAlignment verticalAlignment;
 @property double maxWidth;
 @property double maxHeight;
 @property double minHeight;
 @property double width;
-@property (copy) RTObject* tag;
-@property (copy) WXStyle* style;
-@property (copy) WXResourceDictionary* resources;
-@property (copy) NSString* name;
+@property (retain) RTObject* tag;
+@property (retain) WXStyle* style;
+@property (retain) WXResourceDictionary* resources;
+@property (retain) NSString* name;
 @property double minWidth;
 @property (readonly) double actualWidth;
 @property (readonly) WFUri* baseUri;
@@ -407,12 +407,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXSShape : WXFrameworkElement
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXMDoubleCollection* strokeDashArray;
-@property (copy) WUXMBrush* stroke;
+@property (retain) WUXMDoubleCollection* strokeDashArray;
+@property (retain) WUXMBrush* stroke;
 @property WUXMStretch stretch;
 @property WUXMPenLineCap strokeDashCap;
 @property double strokeDashOffset;
-@property (copy) WUXMBrush* fill;
+@property (retain) WUXMBrush* fill;
 @property double strokeThickness;
 @property WUXMPenLineCap strokeStartLineCap;
 @property double strokeMiterLimit;
@@ -471,7 +471,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXSPath : WUXSShape
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXMGeometry* data;
+@property (retain) WUXMGeometry* data;
 + (WXDependencyProperty*)dataProperty;
 @end
 
@@ -484,7 +484,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXSPolygon : WUXSShape
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXMPointCollection* points;
+@property (retain) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
 + (WXDependencyProperty*)fillRuleProperty;
 + (WXDependencyProperty*)pointsProperty;
@@ -499,7 +499,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXSPolyline : WUXSShape
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXMPointCollection* points;
+@property (retain) WUXMPointCollection* points;
 @property WUXMFillRule fillRule;
 + (WXDependencyProperty*)fillRuleProperty;
 + (WXDependencyProperty*)pointsProperty;

@@ -21,7 +21,7 @@
     idretain _identifier, _source, _destination;
 }
 
-- (id)initWithIdentifier:(id)identifier source:(id)source destination:(id)dest {
+- (instancetype)initWithIdentifier:(id)identifier source:(id)source destination:(id)dest {
     _identifier = [identifier copy];
     _source = source;
     _destination = dest;

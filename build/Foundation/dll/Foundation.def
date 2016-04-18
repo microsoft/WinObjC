@@ -293,7 +293,6 @@ LIBRARY Foundation
         __objc_class_name_NSUUID CONSTANT
         __objc_class_name_NSValueTransformer CONSTANT
         __objc_class_name_NSXMLParser CONSTANT
-
         isOSTarget
         CFAbsoluteTimeGetCurrent
         CFArrayAppendArray
@@ -343,6 +342,7 @@ LIBRARY Foundation
         CFBooleanGetValue
         CFCopyDescription
         CFDataGetBytePtr
+        CFDictionaryAddValue
         CFDictionaryApplyFunction
         CFDictionaryContainsKey
         CFDictionaryCreateMutable
@@ -655,13 +655,9 @@ LIBRARY Foundation
         NSWINSOCKErrorDomain DATA
         NSWeekDayNameArray DATA
         NSWin32ErrorDomain DATA
-        UINibExternalObjects DATA
 
         ; Private Dictionary function
         _NSDictionaryOfVariableBindings
-
-        ; Utility exports
-        BufferFromRawData
 
         ; Private
         _OBJC_CLASS__NSBlockAdapter DATA ; Ensure that this gets included in the .dll
@@ -669,7 +665,6 @@ LIBRARY Foundation
         _OBJC_CLASS_NSColor DATA
         _OBJC_CLASS_NSComparisonPredicate DATA
         _OBJC_CLASS_NSCompoundPredicate DATA
-        _OBJC_CLASS_NSNib DATA
         _OBJC_CLASS_NSRunLoopSource DATA
         _OBJC_CLASS_NSURLProtocol_file DATA
         _OBJC_CLASS_NSURLProtocol_WinHTTP DATA
@@ -678,11 +673,15 @@ LIBRARY Foundation
         __objc_class_name_NSColor CONSTANT
         __objc_class_name_NSComparisonPredicate CONSTANT
         __objc_class_name_NSCompoundPredicate CONSTANT
-        __objc_class_name_NSNib CONSTANT
         __objc_class_name_NSRunLoopSource CONSTANT
         __objc_class_name_NSURLProtocol_file CONSTANT
         __objc_class_name_NSURLProtocol_WinHTTP CONSTANT
         __objc_class_name_NSValue CONSTANT
+        NSTraceVerbose
+        NSTraceInfo
+        NSTraceWarning
+        NSTraceError
+        NSTraceCritical
 
         ; Foundation Stubs
         NSMallocException DATA

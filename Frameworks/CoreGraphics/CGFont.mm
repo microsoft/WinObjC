@@ -45,6 +45,10 @@ DWORD CGFontGetFontBBox(CGRect* ret, id font);
 static IWLazyClassLookup _LazyUIFont("UIFont");
 static IWLazyIvarLookup<float> _LazyUIFontHorizontalScale(_LazyUIFont, "_horizontalScale");
 
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"CGFont";
+
 static float spacing = 1.0f;
 
 static DWORD textureBuffer[1024];
@@ -177,7 +181,7 @@ int freeTypeGetCharWidth(WORD* str, void* opaque, unsigned idx) {
         if (error == 0) {
             ret = slot->advance.x;
         } else {
-            EbrDebugLog("Glyph %d not found\n", c);
+            TraceWarning(TAG, L"Glyph %d not found", c);
         }
     }
 
@@ -340,7 +344,7 @@ DWORD CGFontMeasureGlyphs(id font, float size, WORD* glyphs, unsigned count, CGS
     for (i = 0; i < count; i++) {
         error = FT_Load_Glyph(face, glyphs[i], FT_LOAD_NO_HINTING);
         if (error != 0) {
-            EbrDebugLog("CGFontMeasureGlyphs: unknown char %x err=%d\n", glyphs[i], error);
+            TraceError(TAG, L"CGFontMeasureGlyphs: unknown char %x err=%d", glyphs[i], error);
         } else {
             /* increment pen position */
             penX += slot->advance.x;
@@ -421,7 +425,7 @@ CFStringRef CGFontCopyFullName(CGFontRef font) {
 */
 CGFontRef CGFontCreateWithDataProvider(CGDataProviderRef cgDataProvider) {
     CFRetain(cgDataProvider);
-    return (CGFontRef)[[_LazyUIFont fontWithData:cgDataProvider] retain];
+    return (CGFontRef)[[_LazyUIFont fontWithData:(NSData*)cgDataProvider] retain];
 }
 
 /**
@@ -525,7 +529,7 @@ bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, C
 
         error = FT_Load_Glyph(face, glyphs[i], FT_LOAD_NO_SCALE | FT_LOAD_IGNORE_TRANSFORM);
         if (error != 0) {
-            EbrDebugLog("CGFontGetGlyphBBoxes: unknown char %x err=%d\n", glyphs[i], error);
+            TraceError(TAG, L"CGFontGetGlyphBBoxes: unknown char %x err=%d", glyphs[i], error);
 
             bboxes[i].origin.x = 0;
             bboxes[i].origin.y = 0;

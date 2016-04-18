@@ -92,6 +92,9 @@
     return _textLabel;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _textLabel = nil;
     _backgroundView = nil;

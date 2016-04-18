@@ -32,7 +32,7 @@
 
 typedef NSInteger NSStringDrawingOptions;
 
-@interface NSAttributedString (UIKit)
+@interface NSAttributedString (UIKitAdditions)
 + (NSAttributedString*)attributedStringWithAttachment:(NSTextAttachment*)attachment;
 - (instancetype)initWithData:(NSData*)data
                      options:(NSDictionary*)options

@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKQueryOperation.h>
+#import "AssertARCEnabled.h"
 
 const NSUInteger CKQueryOperationMaximumResults = 0;
 

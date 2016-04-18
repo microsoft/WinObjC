@@ -18,11 +18,11 @@
 
 #import <Foundation/NSObject.h>
 
-@interface UIRuntimeEventConnection : NSObject {
-    unsigned mask;
-    SEL selector;
-    id obj, targetControl;
-    BOOL valid;
-}
-- (unsigned)mask;
+@interface UIRuntimeEventConnection : NSObject
+@property (nonatomic, readonly, assign) NSUInteger mask;
+@property (nonatomic, readonly, assign) SEL sel;
+@property (nonatomic, readonly, assign) id obj;
+@property (nonatomic, readonly, assign) id targetControl;
+@property (nonatomic, readonly, assign) BOOL isValid;
+- (void)invalidate;
 @end

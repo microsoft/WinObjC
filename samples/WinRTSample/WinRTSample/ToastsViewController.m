@@ -112,7 +112,7 @@ NSString* const kScheduled = @"scheduled (1 min) toast notification";
     WDXDXmlDocument* toastXml = [WDXDXmlDocument make];
     [toastXml loadXml:xmlString];
 
-    WUNToastNotification* toast = [WUNToastNotification createToastNotification:toastXml];
+    WUNToastNotification* toast = [WUNToastNotification makeToastNotification:toastXml];
     [[WUNToastNotificationManager createToastNotifier] show:toast];
 }
 
@@ -275,7 +275,7 @@ NSString* const kScheduled = @"scheduled (1 min) toast notification";
     [_calendar addMinutes:1];
     WFDateTime* dt = [_calendar getDateTime];
 
-    WUNScheduledToastNotification* toast = [WUNScheduledToastNotification createScheduledToastNotification:toastXml deliveryTime:dt];
+    WUNScheduledToastNotification* toast = [WUNScheduledToastNotification makeScheduledToastNotification:toastXml deliveryTime:dt];
     [[WUNToastNotificationManager createToastNotifier] addToSchedule:toast];
 }
 

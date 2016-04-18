@@ -283,9 +283,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIManipulationPivot : RTObject
 + (instancetype)make ACTIVATOR;
-+ (WUXIManipulationPivot*)createInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
++ (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
 @property double radius;
-@property (copy) WFPoint* center;
+@property (retain) WFPoint* center;
 @end
 
 #endif // __WUXIManipulationPivot_DEFINED__
@@ -368,7 +368,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXIInputScopeName : WXDependencyObject
-+ (WUXIInputScopeName*)createInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
++ (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property WUXIInputScopeNameValue nameValue;
 @end
@@ -434,10 +434,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIManipulationInertiaStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXIInertiaTranslationBehavior* translationBehavior;
-@property (copy) WUXIInertiaRotationBehavior* rotationBehavior;
+@property (retain) WUXIInertiaTranslationBehavior* translationBehavior;
+@property (retain) WUXIInertiaRotationBehavior* rotationBehavior;
 @property BOOL handled;
-@property (copy) WUXIInertiaExpansionBehavior* expansionBehavior;
+@property (retain) WUXIInertiaExpansionBehavior* expansionBehavior;
 @property (readonly) WXUIElement* container;
 @property (readonly) WUIManipulationDelta* cumulative;
 @property (readonly) WUIManipulationDelta* delta;
@@ -471,10 +471,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIManipulationStartingRoutedEventArgs : WXRoutedEventArgs
 + (instancetype)make ACTIVATOR;
-@property (copy) WUXIManipulationPivot* pivot;
+@property (retain) WUXIManipulationPivot* pivot;
 @property WUXIManipulationModes mode;
 @property BOOL handled;
-@property (copy) WXUIElement* container;
+@property (retain) WXUIElement* container;
 @end
 
 #endif // __WUXIManipulationStartingRoutedEventArgs_DEFINED__

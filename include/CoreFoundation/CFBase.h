@@ -28,7 +28,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #import <TargetConditionals.h>
 #import <Block.h>
 #import <CoreFoundation/CoreFoundationExport.h>
-#import <StarboardExport.h>
 #include <StubIncludes.h>
 
 /* Apple's Foundation imports CoreGraphics in order to get some of the basic CG* types, unfortunately

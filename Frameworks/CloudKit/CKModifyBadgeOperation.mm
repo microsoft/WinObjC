@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKModifyBadgeOperation.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKModifyBadgeOperation
 /**

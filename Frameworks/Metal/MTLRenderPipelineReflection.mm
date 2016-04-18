@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <Metal/MTLRenderPipelineReflection.h>
 
 @implementation MTLRenderPipelineReflection
 @end

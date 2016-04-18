@@ -94,7 +94,7 @@
 }
 
 - (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
-    PhotoCell* pc = [collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
+    PhotoCell* pc = (PhotoCell*)[collectionView dequeueReusableCellWithReuseIdentifier:@"photoCell" forIndexPath:indexPath];
     [pc setImage:[images objectAtIndex:indexPath.item]];
 
     return pc;

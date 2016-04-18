@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBMutableService.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @implementation CBMutableService
 /**

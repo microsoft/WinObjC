@@ -185,7 +185,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBGGattPresentationFormat : RTObject
-@property (readonly) unsigned short description;
+@property (readonly) unsigned short Description;
 @property (readonly) int exponent;
 @property (readonly) uint8_t formatType;
 @property (readonly) uint8_t Namespace;

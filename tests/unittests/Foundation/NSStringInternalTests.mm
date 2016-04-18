@@ -19,7 +19,7 @@
 #import "NSStringInternal.h"
 
 TEST(Foundation, ReverseString) {
-    NSString* str = [NSString stringWithString:@"hello"];
+    NSString* str = @"hello";
     NSString* reverse = [str _reverseString];
     ASSERT_TRUE_MSG(reverse != nil, "FAILED: String should not be nil");
 

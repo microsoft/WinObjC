@@ -38,10 +38,11 @@
 
 #include "GLES1122/OpenGLES20/OpenGLES20Context.h"
 
-#include "Logging.h"
+#include "LoggingNative.h"
 
 __declspec(thread) EAGLContext* tlsCurContext;
 static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
+static const wchar_t* TAG = L"EAGL";
 
 @implementation EAGLContext {
     BOOL _useMultisampling;
@@ -206,9 +207,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         [NSException raiseWithLogging:@"EAGLContextFailure" format:@"Unable to find a valid EGL configuration"];
     }
 
-    for (int i = 0; i < configCount; i ++) {
+    for (int i = 0; i < configCount; i++) {
         int redBits, greenBits, blueBits, alphaBits;
-        
+
         eglGetConfigAttrib(eglDisplay, configList[i], EGL_RED_SIZE, &redBits);
         eglGetConfigAttrib(eglDisplay, configList[i], EGL_GREEN_SIZE, &greenBits);
         eglGetConfigAttrib(eglDisplay, configList[i], EGL_BLUE_SIZE, &blueBits);
@@ -228,9 +229,9 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     if (!_rgb565Supported && !_rgba8888Supported) {
         [NSException raiseWithLogging:@"EAGLContextFailure" format:@"Unable to find a valid EGL configuration"];
     }
-    
+
     _mConfig = configList[0];
-    
+
     EGLContext shareContext = EGL_NO_CONTEXT;
     if (sharegroup != nil) {
         shareContext = sharegroup->_eglContext;
@@ -307,14 +308,13 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
  @Status Interoperable
 */
 - (BOOL)renderbufferStorage:(int)target fromDrawable:(CAEAGLLayer*)surface {
-
     auto props = surface.drawableProperties;
-    if([props objectForKey:kEAGLMultisample4X] != nil) {
+    if ([props objectForKey:kEAGLMultisample4X] != nil) {
         _useMultisampling = TRUE;
     } else {
         _useMultisampling = FALSE;
     }
-    
+
     //  Delete any existing surface
     if (_eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(eglDisplay, _eglSurface);
@@ -330,7 +330,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         _rbWidth = 320;
         _rbHeight = 480;
     }
-    
+
     //  Create a temporary surface so that we can make the context current
     EGLint surface_attribute_list[] =
         { EGL_WIDTH, _rbWidth, EGL_HEIGHT, _rbHeight, EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE, EGL_FIXED_SIZE_ANGLE,
@@ -355,7 +355,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
         swapBehavior = EGL_BUFFER_PRESERVED;
     }
     if (!eglSurfaceAttrib(eglDisplay, _eglSurface, EGL_SWAP_BEHAVIOR, swapBehavior)) {
-        TraceWarning(L"EAGL", L"Unable to set up backbuffer swap behavior, app may experience graphical glitches!");
+        TraceWarning(TAG, L"Unable to set up backbuffer swap behavior, app may experience graphical glitches!");
     }
 
     // Pick desired format.
@@ -376,7 +376,7 @@ static EGLDisplay eglDisplay = EGL_NO_DISPLAY;
     if (renderBufferFormat == GL_BGRA8_EXT && !_rgba8888Supported) {
         renderBufferFormat = GL_RGB565_OES;
     }
-    
+
     if (_useMultisampling) {
         glRenderbufferStorageMultisampleANGLE(target, 4, renderBufferFormat, _rbWidth, _rbHeight);
     } else {

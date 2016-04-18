@@ -27,7 +27,7 @@
     <UseStarboardSourceSdk Condition="'$(UseStarboardSourceSdk)'==''">true</UseStarboardSourceSdk>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)'==''">false</IslandwoodDRT>
     <WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)'==''">10.0.10586.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10240.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformMinVersion Condition="'$(WindowsTargetPlatformMinVersion)'==''">10.0.10586.0</WindowsTargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile Condition="'$(EnableDotNetNativeCompatibleProfile)'==''">true</EnableDotNetNativeCompatibleProfile>
   </PropertyGroup>
 
@@ -66,12 +66,15 @@
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4087 /ignore:4001 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
 
       <!-- Ensure we pick up operator new from our project rather than the C runtime -->
       <ForceSymbolReferences>??2@YAPAXI@Z</ForceSymbolReferences>
@@ -80,6 +83,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebugDLL</RuntimeLibrary>
       <SystemHeaderDeps>true</SystemHeaderDeps>
+      <AdditionalOptions>-Werror -Wno-microsoft %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
 

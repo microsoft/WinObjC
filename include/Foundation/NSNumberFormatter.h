@@ -65,10 +65,22 @@ enum {
 
 FOUNDATION_EXPORT_CLASS
 @interface NSNumberFormatter : NSFormatter <NSCoding, NSCopying>
+
+/**
+@Status Caveat
+@Notes NSNumberFormatterBehavior10_0 likely crashes.
+*/
 @property NSNumberFormatterBehavior formatterBehavior;
+
 + (void)setDefaultFormatterBehavior:(NSNumberFormatterBehavior)behavior STUB_METHOD;
 + (NSNumberFormatterBehavior)defaultFormatterBehavior;
+
+/**
+ @Status Caveat
+ @Notes Not thoroughly implemented
+*/
 @property NSNumberFormatterStyle numberStyle;
+
 @property BOOL generatesDecimalNumbers;
 - (BOOL)getObjectValue:(id _Nullable*)anObject
              forString:(NSString*)aString
@@ -79,14 +91,14 @@ FOUNDATION_EXPORT_CLASS
 + (NSString*)localizedStringFromNumber:(NSNumber*)num numberStyle:(NSNumberFormatterStyle)localizationStyle;
 @property (copy) NSLocale* locale;
 @property (copy) NSNumber* roundingIncrement;
-@property NSNumberFormatterRoundingMode roundingMode;
+@property NSNumberFormatterRoundingMode roundingMode STUB_PROPERTY;
 @property NSFormattingContext formattingContext;
 @property NSUInteger formatWidth;
 @property (copy) NSString* negativeFormat;
-@property (copy) NSString* positiveFormat;
+@property (copy) NSString* positiveFormat STUB_PROPERTY;
 @property (copy) NSNumber* multiplier;
 @property (copy) NSString* percentSymbol;
-@property (copy) NSString* perMillSymbol;
+@property (copy) NSString* perMillSymbol STUB_PROPERTY;
 @property (copy) NSString* minusSign;
 @property (copy) NSString* plusSign;
 @property (copy) NSString* exponentSymbol;
@@ -114,7 +126,7 @@ FOUNDATION_EXPORT_CLASS
 @property BOOL usesGroupingSeparator;
 @property (copy) NSString* decimalSeparator;
 @property BOOL alwaysShowsDecimalSeparator;
-@property (copy) NSString* currencyDecimalSeparator;
+@property (copy) NSString* currencyDecimalSeparator STUB_PROPERTY;
 @property NSUInteger groupingSize;
 @property NSUInteger secondaryGroupingSize;
 @property (copy) NSString* paddingCharacter;
@@ -123,12 +135,12 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSNumber* minimum;
 @property (copy) NSNumber* maximum;
 @property NSUInteger minimumIntegerDigits;
-@property NSUInteger minimumFractionDigits;
+@property NSUInteger minimumFractionDigits STUB_PROPERTY;
 @property NSUInteger maximumIntegerDigits;
 @property NSUInteger maximumFractionDigits;
-@property BOOL usesSignificantDigits;
-@property NSUInteger minimumSignificantDigits;
-@property NSUInteger maximumSignificantDigits;
+@property BOOL usesSignificantDigits STUB_PROPERTY;
+@property NSUInteger minimumSignificantDigits STUB_PROPERTY;
+@property NSUInteger maximumSignificantDigits STUB_PROPERTY;
 @property (getter=isLenient) BOOL lenient;
 @property (getter=isPartialStringValidationEnabled) BOOL partialStringValidationEnabled;
 @end

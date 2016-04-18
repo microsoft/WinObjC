@@ -14,15 +14,23 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIRuntimeEventConnection.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSMutableArray.h"
-#include "Foundation/NSMutableSet.h"
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIRuntimeEventConnection.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSMutableArray.h"
+#import "Foundation/NSMutableSet.h"
+#import "LoggingNative.h"
+#import "StubReturn.h"
+
+static const wchar_t* TAG = L"UIControl";
 
 @implementation UIControl
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)pos {
     _registeredActions = [NSMutableArray new];
     _activeTouches = [NSMutableArray new];
@@ -34,7 +42,11 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     _registeredActions = [[NSMutableArray alloc] init];
     _activeTouches = [NSMutableArray new];
 
@@ -58,6 +70,9 @@
     return self;
 }
 
+/**
+ @Public No
+*/
 - (void)initAccessibility {
     [super initAccessibility];
     self.isAccessibilityElement = TRUE;
@@ -67,6 +82,9 @@
     [_registeredActions addObject:connection];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendAction:(SEL)sel to:(id)target forEvent:(UIEvent*)event {
     if (target == nil) {
         target = self;
@@ -84,7 +102,7 @@
     }
 }
 
-/*
+/**
  @Status Interoperable
 */
 - (void)sendActionsForControlEvents:(UIControlEvents)mask {
@@ -141,7 +159,7 @@
 
         unsigned objMask = [obj mask];
         id target = [obj obj];
-        char* sel = (char*)[obj sel];
+        const char* sel = sel_getName([obj sel]);
 
         if ((objMask & controlEvent) != 0 && target == targetObj) {
             [ret addObject:[NSString stringWithCString:sel]];
@@ -262,7 +280,11 @@
     [self setNeedsLayout];
 }
 
+/**
+ @Status Stub
+*/
 - (void)setAccessibilityLabel:(UILabel*)label {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -297,11 +319,11 @@
  @Status Interoperable
 */
 - (void)addTarget:(id)target action:(SEL)actionSel forControlEvents:(UIControlEvents)events {
-    // EbrDebugLog("%s: addTaret(%s, %s) for 0x%08x\n", object_getClassName(self), target != nil ?
+    // TraceVerbose(TAG, L"%hs: addTaret(%hs, %hs) for 0x%08x", object_getClassName(self), target != nil ?
     // object_getClassName(target) : "(nil)", actionSel != NULL ? sel_getName(actionSel) : "(null)", events);
 
     if (actionSel == NULL) {
-        EbrDebugLog("addTarget: *** ERROR *** actionSel = NULL\n");
+        TraceError(TAG, L"addTarget: *** ERROR *** actionSel = NULL");
         return;
     }
 
@@ -337,9 +359,12 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -361,9 +386,12 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touchSet withEvent:(UIEvent*)event {
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -387,11 +415,14 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touchSet withEvent:(UIEvent*)event {
     _touchInside = FALSE;
 
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -410,11 +441,14 @@
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesCancelled:(NSSet*)touchSet withEvent:(UIEvent*)event {
     _touchInside = FALSE;
 
     if (_curState & UIControlStateDisabled) {
-        EbrDebugLog("UIControl is disabled - ignoring touch\n");
+        TraceVerbose(TAG, L"UIControl is disabled - ignoring touch");
         return;
     }
 
@@ -425,7 +459,7 @@
  @Status Interoperable
 */
 - (void)cancelTrackingWithEvent:(UIEvent*)event {
-    EbrDebugLog("cancelTrackingWithEvent not implemented\n");
+    TraceVerbose(TAG, L"cancelTrackingWithEvent not implemented");
 }
 
 /**
@@ -455,6 +489,9 @@
 - (void)endTrackingWithTouch:(NSSet*)touchSet withEvent:(UIEvent*)event {
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)sendControlEventsOnBack:(UIControlEvents)events {
     if (events == 0) {
         [self setBackButtonDelegate:nil action:NULL withParam:0];
@@ -468,11 +505,29 @@
     [self sendActionsForControlEvents:_sendControlEventsOnBack];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_registeredActions release];
     [_activeTouches release];
 
     [super dealloc];
+}
+
+/**
+ @Status Stub
+*/
+- (UIControlEvents)allControlEvents {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)sendEvent:(id)event mask:(unsigned)mask {
+    UNIMPLEMENTED();
 }
 
 @end

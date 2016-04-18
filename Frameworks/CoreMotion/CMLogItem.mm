@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -18,6 +19,17 @@
 #import <StubReturn.h>
 
 @implementation CMLogItem
+
+- (instancetype)initWithTimestamp:(double)time {
+    
+    if (self = [super init]) {
+        _timestamp = time;
+    }
+
+    return self;
+}
+
+
 /**
  @Status Stub
  @Notes

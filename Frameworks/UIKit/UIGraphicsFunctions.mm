@@ -18,6 +18,9 @@
 #include <StubReturn.h>
 #include "UIKit/UIKit.h"
 #include "CGContextInternal.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"UIGraphicsFunctions";
 
 #define MAX_CONTEXT_DEPTH 128
 __declspec(thread) CGContextRef _currentCGContext[MAX_CONTEXT_DEPTH];
@@ -124,7 +127,7 @@ void UIRectFrame(CGRect rect) {
     UNIMPLEMENTED();
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     // CGContextFillRect(ctx, rect);
-    EbrDebugLog("UIRectFrame not supported\n");
+    TraceVerbose(TAG, L"UIRectFrame not supported");
 }
 
 /**

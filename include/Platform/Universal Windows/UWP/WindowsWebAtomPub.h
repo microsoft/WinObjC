@@ -39,12 +39,12 @@
 
 @protocol WWSISyndicationNode
 @property (readonly) NSMutableArray* attributeExtensions;
-@property (copy) WFUri* baseUri;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* elementExtensions;
-@property (copy) NSString* language;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeValue;
+@property (retain) NSString* language;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeValue;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -60,11 +60,11 @@ WINRT_EXPORT
 @property (readonly) NSArray* categories;
 @property (readonly) RTObject<WWSISyndicationText>* title;
 @property (readonly) WFUri* uri;
-@property (copy) WFUri* baseUri;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
+@property (retain) WFUri* baseUri;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -80,11 +80,11 @@ WINRT_EXPORT
 @interface WWAWorkspace : RTObject <WWSISyndicationNode>
 @property (readonly) NSArray* collections;
 @property (readonly) RTObject<WWSISyndicationText>* title;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -99,11 +99,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWAServiceDocument : RTObject <WWSISyndicationNode>
 @property (readonly) NSArray* workspaces;
-@property (copy) NSString* nodeValue;
-@property (copy) NSString* nodeNamespace;
-@property (copy) NSString* nodeName;
-@property (copy) NSString* language;
-@property (copy) WFUri* baseUri;
+@property (retain) NSString* nodeValue;
+@property (retain) NSString* nodeNamespace;
+@property (retain) NSString* nodeName;
+@property (retain) NSString* language;
+@property (retain) WFUri* baseUri;
 @property (readonly) NSMutableArray* attributeExtensions;
 @property (readonly) NSMutableArray* elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
@@ -118,8 +118,8 @@ WINRT_EXPORT
 @protocol WWSISyndicationClient
 @property BOOL bypassCacheOnRetrieve;
 @property unsigned int maxResponseBufferSize;
-@property (copy) WSCPasswordCredential* proxyCredential;
-@property (copy) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
 @property unsigned int timeout;
 - (void)setRequestHeader:(NSString*)name value:(NSString*)value;
 - (void)retrieveFeedAsync:(WFUri*)uri
@@ -136,11 +136,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWAAtomPubClient : RTObject <WWSISyndicationClient>
-+ (WWAAtomPubClient*)createAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;
++ (WWAAtomPubClient*)makeAtomPubClientWithCredentials:(WSCPasswordCredential*)serverCredential ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property unsigned int timeout;
-@property (copy) WSCPasswordCredential* serverCredential;
-@property (copy) WSCPasswordCredential* proxyCredential;
+@property (retain) WSCPasswordCredential* serverCredential;
+@property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int maxResponseBufferSize;
 @property BOOL bypassCacheOnRetrieve;
 - (void)retrieveServiceDocumentAsync:(WFUri*)uri

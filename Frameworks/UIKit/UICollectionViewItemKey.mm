@@ -22,6 +22,7 @@
 #import <UIKit/UIKit.h>
 #import "UICollectionViewItemKey.h"
 #import "UICollectionViewLayoutAttributes+Internal.h"
+#import "AssertARCEnabled.h"
 
 NSString* const UICollectionElementKindCell = @"UICollectionElementKindCell";
 NSString* const UICollectionElementKindDecorationView = @"UICollectionElementKindDecorationView";
@@ -92,7 +93,7 @@ NSString* UICollectionViewItemTypeToString(UICollectionViewItemType type) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UICollectionViewItemKey* itemKey = [self.class new];
     itemKey.indexPath = self.indexPath;
     itemKey.type = self.type;

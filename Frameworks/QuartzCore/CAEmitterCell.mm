@@ -15,12 +15,11 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include "Starboard.h"
-#include "QuartzCore/CAEmitterCell.h"
-#include "CAEmitterCellInternal.h"
-#include "QuartzCore/CATransform3D.h"
-
-#include <stdlib.h>
+#import "Starboard.h"
+#import "QuartzCore/CAEmitterCell.h"
+#import "CAEmitterCellInternal.h"
+#import "QuartzCore/CATransform3D.h"
+#import <stdlib.h>
 
 @interface CAEmitterCALayer : CALayer <CAMediaTiming, NSCoding, NSObject>
 @property (strong) CAEmitterCell* birthedCell;
@@ -289,7 +288,6 @@ static const CGFloat epsilon = .000001f;
     birthedCell.velocity = _velocity;
     birthedCell.velocityRange = _velocityRange;
     birthedCell.lifetime = _lifetime;
-    birthedCell.alphaSpeed = _alphaSpeed;
     birthedCell.yAcceleration = _yAcceleration;
     birthedCell.enabled = _enabled;
     birthedCell.beginTime = beginTime + startOffset;

@@ -14,21 +14,23 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "UIKit/UIView.h"
-#include "UIKit/UIControl.h"
-#include "UIKit/UIColor.h"
-#include "UIKit/UIFont.h"
-#include "Foundation/NSString.h"
-#include "CoreGraphics/CGContext.h"
-#include "UISegment.h"
+#import "Starboard.h"
+#import "UIKit/UIView.h"
+#import "UIKit/UIControl.h"
+#import "UIKit/UIColor.h"
+#import "UIKit/UIFont.h"
+#import "Foundation/NSString.h"
+#import "CoreGraphics/CGContext.h"
+#import "UISegment.h"
+#import "UIViewInternal.h"
+#import "UISegmentedControlInternal.h"
 
 static idretain _buttonLeft[2];
 static idretain _buttonRight[2];
 static idretain _buttonFill[2];
 
 @implementation UISegment
-+ (id)initialize {
++ (instancetype)initialize {
     _buttonLeft[0] = [[UIImage imageNamed:@"/img/ButtonBarLeftNoSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
     _buttonLeft[1] = [[UIImage imageNamed:@"/img/ButtonBarLeftSelect@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
     _buttonRight[0] =
@@ -40,7 +42,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)initWithCoder:(id)coder {
+- (instancetype)initWithCoder:(NSCoder*)coder {
     id result = [super initWithCoder:coder];
     id info = [[coder decodeObjectForKey:@"UISegmentInfo"] retain];
     _position = [coder decodeInt32ForKey:@"UISegmentPosition"];
@@ -63,7 +65,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)initWithTitle:(id)title {
+- (instancetype)initWithTitle:(id)title {
     _title.attach([title copy]);
     _position = 0;
 
@@ -77,7 +79,7 @@ static idretain _buttonFill[2];
     return self;
 }
 
-- (id)initWithImage:(id)image {
+- (instancetype)initWithImage:(id)image {
     _image = image;
     _position = 0;
 
@@ -179,8 +181,8 @@ static idretain _buttonFill[2];
 
     bool isDisabled = false;
 
-    if ([[self superview] respondsToSelector:@selector(isEnabled)]) {
-        if (![[self superview] isEnabled]) {
+    if ([[self superview] respondsToSelector:@selector(_isEnabled)]) {
+        if (![[self superview] _isEnabled]) {
             isDisabled = true;
         }
     }
@@ -316,19 +318,19 @@ static idretain _buttonFill[2];
 }
 
 - (id)touchesBegan:(id)touchSet withEvent:(id)event {
-    [[self superview] segmentSelectedDown:self];
+    [[self superview] _segmentSelectedDown:self];
 
     return self;
 }
 
 - (id)touchesEnded:(id)touchSet withEvent:(id)event {
-    [[self superview] segmentSelectedUp:self];
+    [[self superview] _segmentSelectedUp:self];
 
     return self;
 }
 
 - (id)touchesCancelled:(id)touchSet withEvent:(id)event {
-    [[self superview] segmentSelectedCancelled:self];
+    [[self superview] _segmentSelectedCancelled:self];
 
     return self;
 }

@@ -62,8 +62,8 @@ UIKIT_EXPORT_CLASS
                                   UITraitEnvironment>
 
 - (BOOL)touchesShouldBegin:(NSSet*)touches withEvent:(UIEvent*)event inContentView:(UIView*)view STUB_METHOD;
-- (BOOL)touchesShouldCancelInContentView:(UIView*)view;
-- (void)flashScrollIndicators;
+- (BOOL)touchesShouldCancelInContentView:(UIView*)view STUB_METHOD;
+- (void)flashScrollIndicators STUB_METHOD;
 - (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
 - (void)setContentOffset:(CGPoint)theOffset animated:(BOOL)animated;
 - (void)setZoomScale:(CGFloat)scale animated:(BOOL)animated;
@@ -72,25 +72,25 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL alwaysBounceHorizontal;
 @property (nonatomic) BOOL alwaysBounceVertical;
 @property (nonatomic) BOOL bounces;
-@property (nonatomic) BOOL bouncesZoom;
-@property (nonatomic) BOOL canCancelContentTouches;
-@property (nonatomic) BOOL delaysContentTouches;
-@property (nonatomic) BOOL scrollsToTop;
-@property (nonatomic) BOOL showsHorizontalScrollIndicator;
+@property (nonatomic) BOOL bouncesZoom STUB_PROPERTY;
+@property (nonatomic) BOOL canCancelContentTouches STUB_PROPERTY;
+@property (nonatomic) BOOL delaysContentTouches STUB_PROPERTY;
+@property (nonatomic) BOOL scrollsToTop STUB_PROPERTY;
+@property (nonatomic) BOOL showsHorizontalScrollIndicator STUB_PROPERTY;
 @property (nonatomic) BOOL showsVerticalScrollIndicator;
-@property (nonatomic) CGFloat decelerationRate;
+@property (nonatomic) CGFloat decelerationRate STUB_PROPERTY;
 @property (nonatomic) CGFloat maximumZoomScale;
 @property (nonatomic) CGFloat minimumZoomScale;
 @property (nonatomic) CGFloat zoomScale;
 @property (nonatomic) CGPoint contentOffset;
 @property (nonatomic) CGSize contentSize;
 @property (nonatomic) UIEdgeInsets contentInset;
-@property (nonatomic) UIEdgeInsets scrollIndicatorInsets;
-@property (nonatomic) UIScrollViewIndicatorStyle indicatorStyle;
+@property (nonatomic) UIEdgeInsets scrollIndicatorInsets STUB_PROPERTY;
+@property (nonatomic) UIScrollViewIndicatorStyle indicatorStyle STUB_PROPERTY;
 @property (nonatomic) UIScrollViewKeyboardDismissMode keyboardDismissMode STUB_PROPERTY;
 @property (nonatomic, assign) BOOL pagingEnabled;
 @property (nonatomic, assign) id<UIScrollViewDelegate> delegate;
-@property (nonatomic, getter=isDirectionalLockEnabled) BOOL directionalLockEnabled;
+@property (nonatomic, getter=isDirectionalLockEnabled) BOOL directionalLockEnabled STUB_PROPERTY;
 @property (nonatomic, getter=isScrollEnabled) BOOL scrollEnabled;
 @property (nonatomic, readonly) UIPanGestureRecognizer* panGestureRecognizer;
 @property (nonatomic, readonly) UIScrollWheelGestureRecognizer* scrollWheelGestureRecognizer; // non-standard

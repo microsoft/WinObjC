@@ -16,7 +16,6 @@
 
 #include "gtest-api.h"
 #include "UIKit/UIApplication.h"
-typedef wchar_t WCHAR;
 #include "UWP/WindowsSystem.h"
 
 // Mock launcher allowing us to spoof launchUriAsync and queryUriSupportAsync behavior
@@ -81,6 +80,10 @@ static BOOL s_launchReady;
     _launchFailureFunction = nil;
     _querySuccessFunction = nil;
     _queryFailureFunction = nil;
+    [s_condition lock];
+    [s_condition unlock];
+    [s_condition2 lock];
+    [s_condition2 unlock];
     [s_condition release];
     [s_condition2 release];
     s_condition = nil;
@@ -315,5 +318,51 @@ TEST(UIKit, UIApplicationCanOpenURLDoubleCall) {
     ASSERT_EQ_MSG(NO, result, "openURL returned unexpected result");
     ASSERT_EQ_MSG(2, [MockWSLauncher count], "openURL resulted in unexpected success function call count");
 
+    [MockWSLauncher cleanUp];
+}
+
+@interface MockResponder : UIResponder {
+@public
+    BOOL didAction;
+    BOOL didActionFromSender;
+    BOOL didActionFromSenderForEvent;
+}
+
+- (void)doAction;
+- (void)doAction:(id)sender;
+- (void)doAction:(id)sender forEvent:(UIEvent*)event;
+@end
+
+@implementation MockResponder
+- (void)doAction {
+    didAction = YES;
+}
+
+- (void)doAction:(id)sender {
+    didActionFromSender = YES;
+}
+
+- (void)doAction:(id)sender forEvent:(UIEvent*)event {
+    didActionFromSenderForEvent = YES;
+}
+@end
+
+TEST(UIKit, UIApplicationSendAction) {
+    [MockWSLauncher setup];
+    UIApplication* testApplication = [[UIApplication alloc] _initForTestingWithLauncher:[MockWSLauncher class]];
+
+    MockResponder* responder = [MockResponder new];
+    EXPECT_TRUE([testApplication sendAction:@selector(doAction) to:responder from:nil forEvent:nil]);
+    EXPECT_TRUE(responder->didAction);
+
+    EXPECT_TRUE([testApplication sendAction:@selector(doAction:) to:responder from:nil forEvent:nil]);
+    EXPECT_TRUE(responder->didActionFromSender);
+
+    EXPECT_TRUE([testApplication sendAction:@selector(doAction:forEvent:) to:responder from:nil forEvent:nil]);
+    EXPECT_TRUE(responder->didActionFromSenderForEvent);
+
+    EXPECT_FALSE([testApplication sendAction:@selector(nonexistent) to:responder from:nil forEvent:nil]);
+
+    [responder release];
     [MockWSLauncher cleanUp];
 }

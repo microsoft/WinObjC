@@ -50,26 +50,38 @@ UIKIT_EXPORT_CLASS
 @interface UITextView : UIScrollView <UITextInputTraits, UITextInput, NSLayoutManagerDelegate>
 
 - (instancetype)initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)container;
-- (void)scrollRangeToVisible:(NSRange)range;
+- (void)scrollRangeToVisible:(NSRange)range STUB_METHOD;
 
-@property (nonatomic) UITextAlignment textAlignment; // stub, not yet implemented!
-@property (nonatomic) NSRange selectedRange;
+@property (nonatomic) UITextAlignment textAlignment STUB_PROPERTY;
+@property (nonatomic) NSRange selectedRange STUB_PROPERTY;
 @property (nonatomic, getter=isEditable) BOOL editable;
 @property (nonatomic, copy) NSString* text;
 @property (nonatomic, retain) UIColor* textColor;
 @property (nonatomic, retain) UIFont* font;
-@property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
+@property (nonatomic) UIDataDetectorTypes dataDetectorTypes STUB_PROPERTY;
 @property (nonatomic, assign) id<UITextViewDelegate> delegate;
 @property (nonatomic, readonly) NSLayoutManager* layoutManager;
 @property (nonatomic, readonly) NSTextStorage* textStorage;
 
-@property (nonatomic, readwrite, retain) UIView* inputAccessoryView;
-@property (nonatomic, readwrite, retain) UIView* inputView;
+@property (nonatomic, readwrite, retain) UIView* inputAccessoryView STUB_PROPERTY;
+@property (nonatomic, readwrite, retain) UIView* inputView STUB_PROPERTY;
 @property (nonatomic, copy) NSAttributedString* attributedText;
 @property (nonatomic, readonly) NSTextContainer* textContainer;
 @property (nonatomic, assign) UIEdgeInsets textContainerInset;
 @property (nonatomic, getter=isSelectable) BOOL selectable;
 
 - (BOOL)hasText;
+
+@property (nonatomic) UITextAutocapitalizationType autocapitalizationType STUB_PROPERTY;
+@property (nonatomic) UITextAutocorrectionType autocorrectionType STUB_PROPERTY;
+@property (nonatomic) BOOL enablesReturnKeyAutomatically STUB_PROPERTY;
+@property (nonatomic) UIKeyboardAppearance keyboardAppearance STUB_PROPERTY;
+@property (nonatomic, getter=isSecureTextEntry) BOOL secureTextEntry STUB_PROPERTY;
+@property (nonatomic) UITextSpellCheckingType spellCheckingType STUB_PROPERTY;
+@property (nonatomic) UIReturnKeyType returnKeyType STUB_PROPERTY;
+
+@property (nonatomic, readonly) UITextPosition* beginningOfDocument STUB_PROPERTY;
+@property (nonatomic, readonly) UITextPosition* endOfDocument STUB_PROPERTY;
+@property (readwrite, copy) UITextRange* selectedTextRange STUB_PROPERTY;
 
 @end

@@ -177,8 +177,15 @@
       Category="General"
       DisplayName="Enable C and Objective-C Modules"
       Description="Specifies whether to use Clang modules."
-      Switch="-fmodules"
+      Switch="-fmodules -fimplicit-module-maps"
       Name="ObjectiveCModules" />
+    <StringProperty
+      Visible="False"
+      Category="General"
+      DisplayName="Path to Objective-C modules"
+      Description="Path to the directory where the modules will be cached"
+      Switch="-fmodules-cache-path="
+      Name="ObjectiveCModulesCachePath" />
     <StringListProperty
       Visible="False"
       Category="Paths"
@@ -186,6 +193,12 @@
       Description="Hidden include Paths"
       Switch="-internal-isystem "
       Name="InternalSystemIncludePaths" />
+    <StringListProperty
+      IncludeInCommandLine="False"
+      Category="Paths"
+      DisplayName="Excluded Search Path Subdirectories"
+      Description="Wildcard pattern for subdirectories to exclude from recursive search"
+      Name="ExcludedSearchPathSubdirectories" />
     <StringListProperty
       Category="Paths"
       DisplayName="User Include Paths"
@@ -261,6 +274,12 @@
       Description="Specifies prefix header file to be included when compiling all source files."
       Switch="-include "
       Name="PrefixHeader" />
+    <IntProperty
+      IncludeInCommandLine="False"
+      Category="General"
+      DisplayName="Maximum Clang Processes"
+      Description="Specifies the maximum number of clang processes to run in parallel. The argument can be -1 or any positive integer. A positive property value limits the number of concurrent operations to the set value. If it is -1, there is no limit on the number of concurrently running operations."
+      Name="MaxClangProcesses" />
     <StringProperty
       IncludeInCommandLine="False"
       Category="Language"

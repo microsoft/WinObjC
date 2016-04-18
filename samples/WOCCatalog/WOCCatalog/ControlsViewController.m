@@ -15,7 +15,7 @@
 //******************************************************************************
 
 #import "ControlsViewController.h"
-#import "SingleImageViewController.h"
+#import "PopoverViewController.h"
 
 #define UIPOPOVERCONTROL_ROW 4
 
@@ -117,14 +117,22 @@
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
     if (indexPath.row == UIPOPOVERCONTROL_ROW) {
         // Note: presenting a UIViewController with the UIModalPresentationStyle of Popover does not yet present the view controller
-        // as a popover. This work will need to be completed as part of UIPopoverController and UIPresentation controller work.
-        SingleImageViewController* imvc = [[SingleImageViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
+        // as a popover. UIPopoverController has been depricated in ios9.0.
+        // This work will need to be completed as part of UIPopoverPresentationController work.
+        PopoverViewController* popover = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
 
-        assert(imvc.popoverPresentationController == nil);
+        assert(popover.popoverPresentationController == nil);
 
-        imvc.modalPresentationStyle = UIModalPresentationPopover;
-        [self presentViewController:imvc animated:YES completion:nil];
-        assert(imvc.popoverPresentationController != nil);
+        popover.modalPresentationStyle = UIModalPresentationPopover;
+        // Present the view controller using the popover style.
+        [self presentViewController:popover animated:YES completion:nil];
+
+        assert(popover.popoverPresentationController != nil);
+        // Get the popover presentation controller and configure it.
+        UIPopoverPresentationController* presentationController = [popover popoverPresentationController];
+        presentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
+        presentationController.sourceView = self.view;
+        presentationController.sourceRect = CGRectMake(100, 100, 100, 100);
     }
 }
 

@@ -16,7 +16,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 #define _NSDECIMAL_H_
 
 #include <limits.h>
-#import <StarboardExport.h>
 #import <Foundation/NSObjCRuntime.h>
 
 #define NSDecimalMaxSize (8)

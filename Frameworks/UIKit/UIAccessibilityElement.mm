@@ -26,20 +26,20 @@
 /**
  @Status Stub
 */
-- (id)initWithAccessibilityContainer:(UIView*)container {
+- (instancetype)initWithAccessibilityContainer:(UIView*)container {
     _accessibilityContainer = container;
     [self initAccessibility];
     return self;
 }
 
 /**
- @Status Stub
+ @Public No
 */
 - (void)initAccessibility {
 }
 
 /**
- @Status Stub
+ @Public No
 */
 - (void)updateAccessibility {
     IWUpdateAccessibility(self.accessibilityContainer.layer, self);

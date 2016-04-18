@@ -20,7 +20,11 @@
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
-int sched_yield();
-__END_DECLS
+struct sched_param {
+    int _schedPriority;
+};
 
+int sched_get_priority_max(int);
+int sched_get_priority_min(int);
+__END_DECLS
 #endif /* !_SCHED_H_ */

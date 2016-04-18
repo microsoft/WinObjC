@@ -15,6 +15,7 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSObject.h>
 #import <CoreAudio/CoreAudioTypes.h>
 
 typedef unsigned int uint;

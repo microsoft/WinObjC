@@ -41,7 +41,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -50,7 +50,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -60,7 +60,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -69,7 +69,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\libxml;$(StarboardBasePath)\deps\prebuilt\include\openssl</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DUNICODE -D_UNICODE -DSTARBOARD_PORT=1  "-DSC_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

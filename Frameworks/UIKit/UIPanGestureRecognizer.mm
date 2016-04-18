@@ -15,7 +15,6 @@
 //******************************************************************************
 
 #import <vector>
-
 #import "Starboard.h"
 #import <Foundation/NSMutableDictionary.h>
 #import <Foundation/NSValue.h>
@@ -24,8 +23,11 @@
 #import <UIKit/UIPanGestureRecognizer.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <UIKit/UITouch.h>
-
 #import "UIGestureRecognizerInternal.h"
+#import "LoggingNative.h"
+#import "UIScrollViewInternal.h"
+
+static const wchar_t* TAG = L"UIPanGestureRecognizer";
 
 // So we can allocate explicitly because otherwise constructors aren't called:
 struct TouchInfo {
@@ -59,7 +61,7 @@ NSArray* curPanList = nil;
     float _dragSlack;
     double _disableVelocity;
 
-    int _stage;
+    _UIPanGestureStage _stage;
     bool _didFireEnded;
     bool _lockVertical, _lockHorizontal;
 }
@@ -71,6 +73,9 @@ static void commonInit(UIPanGestureRecognizer* self) {
     self->_priv = new Private;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithTarget:(id)target action:(SEL)selector {
     if (self = [super initWithTarget:target action:selector]) {
         commonInit(self);
@@ -79,6 +84,9 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
     if (self = [super init]) {
         commonInit(self);
@@ -87,7 +95,11 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
-- (id)initWithCoder:(NSCoder*)coder {
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
         commonInit(self);
 
@@ -106,6 +118,9 @@ static void commonInit(UIPanGestureRecognizer* self) {
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     delete _priv;
     [super dealloc];
@@ -141,6 +156,9 @@ static void numTouchesChanged(UIPanGestureRecognizer* o) {
                     // If we have non-zero fingers down, we may still be able to match - we don't want to remove
                     // ourselves from the list of possible gestures.
                 }
+                break;
+            default:
+                UNIMPLEMENTED_WITH_MSG("Unsupported gesture recoginizer state (%d)", o->_state);
                 break;
         }
     }
@@ -214,10 +232,16 @@ static void deleteTouch(id touch, std::vector<TouchInfo>& touches) {
     assert(!"Trying to remove unmatched touch!");
 }
 
-- (unsigned)numberOfTouches {
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)numberOfTouches {
     return _priv->touches.size();
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)locationOfTouch:(NSUInteger)index inView:(UIView*)viewAddr {
     CGPoint ret;
     ret = [_priv->touches[index].touch locationInView:viewAddr];
@@ -225,6 +249,9 @@ static void deleteTouch(id touch, std::vector<TouchInfo>& touches) {
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if (_priv->touches.size() == 0) {
         _priv->currentTranslation.x = _priv->currentTranslation.y = 0.f;
@@ -267,6 +294,9 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
     return lastMidpoint;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
     CGPoint prevPos = lastMidpoint(_priv->touches);
 
@@ -297,7 +327,7 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
 
             if (start) {
                 _state = UIGestureRecognizerStateBegan;
-                EbrDebugLog("Pan gesture recognized\n");
+                TraceVerbose(TAG, L"Pan gesture recognized");
             } else {
                 _state = UIGestureRecognizerStateFailed;
             }
@@ -307,6 +337,9 @@ static CGPoint lastMidpoint(const std::vector<TouchInfo>& touches) {
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     // account for the timestamp and any final movement on the finger up event:
     for (UITouch* touch in touches) {
@@ -388,10 +421,16 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
     return _touchedView;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)_setDragSlack:(float)slack {
     _dragSlack = slack;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGPoint)locationInView:(id)viewAddr {
     CGPoint ret;
     ret = [[viewAddr window] convertPoint:_priv->lastCenter fromView:nil toView:viewAddr];
@@ -425,10 +464,13 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 /**
  @Status Interoperable
 */
-- (int)stage {
+- (_UIPanGestureStage)_stage {
     return _stage;
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)reset {
     _priv->touches.clear();
     _didFireEnded = false;
@@ -460,7 +502,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 
     curPanList = gestures;
 
-    for (int curstage = 0; curstage < 3; curstage++) {
+    for (int curstage = 0; curstage < _UIPanGestureStageNumStages; curstage++) {
         for (int i = count - 1; i >= 0; i--) {
             UIPanGestureRecognizer* curgesture = [gestures objectAtIndex:i];
 
@@ -474,7 +516,7 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
                     curgesture->_didFireEnded = true;
                 }
 
-                curgesture->_stage = curstage;
+                curgesture->_stage = static_cast<_UIPanGestureStage>(curstage);
 
                 if (curgesture->_state == UIGestureRecognizerStateBegan && curstage != 0) {
                     curgesture->_state = UIGestureRecognizerStateChanged;

@@ -18,7 +18,12 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import <UIKit/UIFont.h>
 
-@interface UIFont (Internal)
+@interface UIFont ()
++ (UIFont*)defaultFont;
++ (UIFont*)fontWithData:(NSData*)data;
++ (UIFont*)titleFont;
++ (UIFont*)messageFont;
+- (void)_setName:(NSString*)name;
 - (uint32_t)_sizingFontHandle;
 - (bool)_CTFontManagerRegisterGraphicsFont:(CGFontRef)font withError:(CFErrorRef*)error;
 - (bool)_CTFontManagerRegisterFontsForURL:(CFURLRef)fontURL withScope:(CTFontManagerScope)scope withError:(CFErrorRef*)error;

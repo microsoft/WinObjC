@@ -14,11 +14,11 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-
-#include "UIKit/UITouch.h"
-#include "UIKit/UIView.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "UIKit/UITouch.h"
+#import "UIKit/UIView.h"
+#import "UIViewInternal.h"
 
 @implementation UITouch
 
@@ -63,8 +63,6 @@
             ret.x = touchX - rect.origin.x;
             ret.y = touchY - rect.origin.y;
         }
-        // EbrDebugLog("Mapping %s (%f, %f -> %f, %f)\n", object_getClassName(viewAddr), touchX, touchY, ret->x,
-        // ret->y);
     } else {
         ret.x = touchX;
         ret.y = touchY;
@@ -126,7 +124,7 @@
     return ret;
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     UITouch* ret = [[self class] allocWithZone:zone];
 
     _timestamp = self.timestamp;

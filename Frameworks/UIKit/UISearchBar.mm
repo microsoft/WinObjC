@@ -23,7 +23,10 @@
 #include "UIKit/UIFont.h"
 #include "UIKit/UIImage.h"
 #include "UIKit/UISegmentedControl.h"
+#import "NSLogging.h"
+#include "StubReturn.h"
 
+static const wchar_t* TAG = L"UISearchBar";
 static const CGFloat c_marginBottom = 10;
 static const CGFloat c_marginLeftAndRight = 10;
 static const CGFloat c_defaultTextFieldHeight = 32;
@@ -58,6 +61,9 @@ static void initInternal(UISearchBar* self) {
     UIImageSetLayerContents([self layer], navGradient);
 }
 
+/**
+ @Status Interoperable
+*/
 - (BOOL)resignFirstResponder {
     return [_textField resignFirstResponder];
 }
@@ -80,6 +86,10 @@ static void initInternal(UISearchBar* self) {
     [self setNeedsDisplay];
 }
 
+/**
+ @Status Caveat
+ @Notes May not be fully implemented
+*/
 - (instancetype)initWithCoder:(NSCoder*)coder {
     id ret = [super initWithCoder:coder];
 
@@ -136,6 +146,9 @@ static void initInternal(UISearchBar* self) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)initWithFrame:(CGRect)frame {
     [super initWithFrame:frame];
     initInternal(self);
@@ -229,15 +242,15 @@ static void initInternal(UISearchBar* self) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setTranslucent:(BOOL)translucent {
     if (translucent) {
         [self setAlpha:0.75f];
     } else {
         [self setAlpha:1.0f];
     }
-}
-
-- (void)setShowsSearchResultsButton:(BOOL)shows {
 }
 
 /**
@@ -247,9 +260,16 @@ static void initInternal(UISearchBar* self) {
     UNIMPLEMENTED();
 }
 
-- (void)setScopeBarButtonTitleTextAttributes:(id)attributes forState:(DWORD)forState {
+/**
+ @Status Stub
+*/
+- (void)setScopeBarButtonTitleTextAttributes:(id)attributes forState:(UIControlState)forState {
+    UNIMPLEMENTED();
 }
 
+/**
+ @Public No
+*/
 - (void)layoutSubviews {
     // display the prompt
     CGRect promptFrame = CGRectMake(0, c_marginTopForPrompt, self.frame.size.width, c_defaultTextFieldHeight);
@@ -336,6 +356,87 @@ static void initInternal(UISearchBar* self) {
     UNIMPLEMENTED();
 }
 
+/**
+ @Status Stub
+*/
+- (UIImage*)backgroundImageForBarPosition:(UIBarPosition)barPosition barMetrics:(UIBarMetrics)barMetrics {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setBackgroundImage:(UIImage*)backgroundImage forBarPosition:(UIBarPosition)barPosition barMetrics:(UIBarMetrics)barMetrics {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)imageForSearchBarIcon:(UISearchBarIcon)icon state:(UIControlState)state {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (UIOffset)positionAdjustmentForSearchBarIcon:(UISearchBarIcon)icon {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setPositionAdjustment:(UIOffset)adjustment forSearchBarIcon:(UISearchBarIcon)icon {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)scopeBarButtonBackgroundImageForState:(UIControlState)state {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setScopeBarButtonBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIImage*)scopeBarButtonDividerImageForLeftSegmentState:(UIControlState)leftState rightSegmentState:(UIControlState)rightState {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setScopeBarButtonDividerImage:(UIImage*)dividerImage
+                  forLeftSegmentState:(UIControlState)leftState
+                    rightSegmentState:(UIControlState)rightState {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSDictionary*)scopeBarButtonTitleTextAttributesForState:(UIControlState)state {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     [_backgroundImage release];
     [super dealloc];
@@ -387,7 +488,7 @@ static void initInternal(UISearchBar* self) {
         [_textField setBackground:_backgroundImage];
         [self setNeedsDisplay];
     } else if (state == UIControlStateDisabled) {
-        NSLog(@"UIControlStateDisabled is not supported");
+        NSTraceWarning(TAG, @"UIControlStateDisabled is not supported");
     }
 }
 
@@ -401,7 +502,7 @@ static void initInternal(UISearchBar* self) {
     } else if (state == UIControlStateDisabled) {
         UNIMPLEMENTED();
     } else {
-        NSLog(@"Search field background image is only respected for UIControlStateNormal and UIControlStateDisabled.");
+        NSTraceWarning(TAG, @"Search field background image is only respected for UIControlStateNormal and UIControlStateDisabled.");
     }
     return nil;
 }

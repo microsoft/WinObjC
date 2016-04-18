@@ -41,6 +41,8 @@
 		4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861EA1B5997AD00682BDB /* whiteButton.png */; };
 		4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861F91B5997E400682BDB /* ImagesViewController.m */; };
 		4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */; };
+		77D71D9C1C8F5A6800ED26A3 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */; };
+		77D71D9E1C8F5A8C00ED26A3 /* CoreMotionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */; };
 		7B2A185A1BB5FF9B0004E097 /* AutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */; };
 		7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B363CFD1BF5CBFE001F08DD /* PageViewController.m */; };
 		7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B42BCF41B90ECFE00D45782 /* BezierViewController.m */; };
@@ -49,7 +51,10 @@
 		7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE481B70220300C31CF5 /* OpenGLES11Controller.m */; };
 		7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */; };
 		7BCEEE4F1B70225500C31CF5 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */; };
+		8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */; };
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
+		AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */; };
+		AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */; };
 		C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14942D01C77E1A700C2B67E /* Accelerate.framework */; };
 		C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */; };
 		D27357F21C6AD0E200CA31C4 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27357F11C6AD0E200CA31C4 /* CoreImage.framework */; };
@@ -131,6 +136,9 @@
 		4EE861F91B5997E400682BDB /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesViewController.m; sourceTree = "<group>"; };
 		4FBE9F561C0E518B00BF0B87 /* TextDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDisplayViewController.h; sourceTree = "<group>"; };
 		4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDisplayViewController.m; sourceTree = "<group>"; };
+		77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CoreMotionViewController.mm; sourceTree = "<group>"; };
+		77D71D9F1C8F5AA000ED26A3 /* CoreMotionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreMotionViewController.h; sourceTree = "<group>"; };
 		7B2A18571BB5FF020004E097 /* AutoLayoutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AutoLayoutViewController.h; sourceTree = "<group>"; };
 		7B2A18591BB5FF9B0004E097 /* AutoLayoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoLayoutViewController.m; sourceTree = "<group>"; };
 		7B363CFC1BF5CB4C001F08DD /* PageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PageViewController.h; sourceTree = "<group>"; };
@@ -145,7 +153,11 @@
 		7BCEEE491B70220300C31CF5 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLES20Controller.h; sourceTree = "<group>"; };
 		7BCEEE4A1B70220300C31CF5 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLES20Controller.m; sourceTree = "<group>"; };
 		7BCEEE4E1B70225500C31CF5 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		8252DB771CA9EDDE00A202B6 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopoverViewController.h; sourceTree = "<group>"; };
+		8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopoverViewController.m; sourceTree = "<group>"; };
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLDownloadCell.mm; sourceTree = "<group>"; };
+		AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLSessionViewController.mm; sourceTree = "<group>"; };
 		C14942D01C77E1A700C2B67E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerateViewController.h; sourceTree = "<group>"; };
 		C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerateViewController.m; sourceTree = "<group>"; };
@@ -170,6 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77D71D9C1C8F5A6800ED26A3 /* CoreMotion.framework in Frameworks */,
 				C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */,
 				D27357F21C6AD0E200CA31C4 /* CoreImage.framework in Frameworks */,
 				8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */,
@@ -190,6 +203,7 @@
 		4EE8614C1B5996BF00682BDB = {
 			isa = PBXGroup;
 			children = (
+				77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */,
 				C14942D01C77E1A700C2B67E /* Accelerate.framework */,
 				D27357F11C6AD0E200CA31C4 /* CoreImage.framework */,
 				8430AAC81BE7F2E500927545 /* GLKit.framework */,
@@ -213,7 +227,13 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */,
+				AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */,
+				77D71D9F1C8F5AA000ED26A3 /* CoreMotionViewController.h */,
+				77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */,
 				C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */,
+				8252DB771CA9EDDE00A202B6 /* PopoverViewController.h */,
+				8252DB781CA9EDDE00A202B6 /* PopoverViewController.m */,
 				C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */,
 				D2AC202F1C6972A600D54717 /* BasicAnimationViewController.m */,
 				D2AC202E1C69729C00D54717 /* BasicAnimationViewController.h */,
@@ -452,13 +472,16 @@
 				E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */,
 				7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */,
 				4EE8615B1B5996BF00682BDB /* main.m in Sources */,
+				AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */,
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
 				7BCEEE4B1B70220300C31CF5 /* DisplayModeViewController.m in Sources */,
 				4EE861CF1B5997A500682BDB /* AlertsViewController.m in Sources */,
+				8252DB791CA9EDDE00A202B6 /* PopoverViewController.m in Sources */,
 				F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */,
 				7B363CFE1BF5CBFE001F08DD /* PageViewController.m in Sources */,
 				49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */,
 				4ED640231B717E470092921E /* SingleImageViewController.m in Sources */,
+				AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */,
 				F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */,
 				7BCEEE4D1B70220300C31CF5 /* OpenGLES20Controller.m in Sources */,
 				4EE861D61B5997A500682BDB /* SegmentsViewController.m in Sources */,
@@ -466,6 +489,7 @@
 				D2AC20301C6972A600D54717 /* BasicAnimationViewController.m in Sources */,
 				4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */,
 				4EE861D21B5997A500682BDB /* ControlsViewController.m in Sources */,
+				77D71D9E1C8F5A8C00ED26A3 /* CoreMotionViewController.mm in Sources */,
 				4EE861D31B5997A500682BDB /* MenuTableViewController.m in Sources */,
 				7BCEEE4C1B70220300C31CF5 /* OpenGLES11Controller.m in Sources */,
 				4EE861D01B5997A500682BDB /* AppDelegate.m in Sources */,

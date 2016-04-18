@@ -16,6 +16,7 @@
 
 #import <StubReturn.h>
 #import <CloudKit/CKModifyRecordZonesOperation.h>
+#import "AssertARCEnabled.h"
 
 @implementation CKModifyRecordZonesOperation
 /**

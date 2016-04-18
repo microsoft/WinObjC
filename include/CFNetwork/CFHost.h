@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,48 +13,36 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _CFHOST_H_
-#define _CFHOST_H_
-
+#import <CFNetwork/CFNetworkExport.h>
 #import <CoreFoundation/CoreFoundation.h>
-#import <StarboardExport.h>
 
-typedef struct __CFHost* CFHostRef;
+typedef CF_ENUM(CFIndex, CFHostInfoType) { kCFHostAddresses = 0, kCFHostNames = 1, kCFHostReachability = 2 };
 
-enum CFHostInfoType {
-    kCFHostAddresses = 0,
-    kCFHostNames = 1,
-    kCFHostReachability = 2,
-};
-typedef enum CFHostInfoType CFHostInfoType;
-
-typedef void (*CFHostClientCallBack)(CFHostRef host, CFHostInfoType infoType, const CFStreamError* streamError, void* info);
-
-typedef struct CFHostClientContext {
+struct CFHostClientContext {
     CFIndex version;
     void* info;
     CFAllocatorRetainCallBack retain;
     CFAllocatorReleaseCallBack release;
     CFAllocatorCopyDescriptionCallBack copyDescription;
-} CFHostClientContext;
+};
 
-SB_EXPORT const SInt32 kCFStreamErrorDomainNetDB;
-SB_EXPORT const SInt32 kCFStreamErrorDomainSystemConfiguration;
+typedef struct __CFHost* CFHostRef;
+typedef void(CFHostClientCallBack)(CFHostRef theHost, CFHostInfoType typeInfo, const CFStreamError* error, void* info);
+typedef struct CFHostClientContext CFHostClientContext;
 
-SB_EXPORT CFTypeID CFHostGetTypeID();
-SB_EXPORT CFHostRef CFHostCreateCopy(CFAllocatorRef alloc, CFHostRef self);
-SB_EXPORT CFHostRef CFHostCreateWithAddress(CFAllocatorRef allocator, CFDataRef address);
-SB_EXPORT CFHostRef CFHostCreateWithName(CFAllocatorRef allocator, CFStringRef name);
-SB_EXPORT CFArrayRef CFHostGetAddressing(CFHostRef self, Boolean* hasBeenResolved);
-SB_EXPORT CFArrayRef CFHostGetNames(CFHostRef self, Boolean* hasBeenResolved);
-SB_EXPORT CFDataRef CFHostGetReachability(CFHostRef self, Boolean* hasBeenResolved);
-SB_EXPORT Boolean CFHostSetClient(CFHostRef self, CFHostClientCallBack callback, CFHostClientContext* context);
-
-SB_EXPORT Boolean CFHostStartInfoResolution(CFHostRef self, CFHostInfoType infoType, CFStreamError* streamError);
-SB_EXPORT void CFHostCancelInfoResolution(CFHostRef theHost, CFHostInfoType infoType);
-
-SB_EXPORT void CFHostScheduleWithRunLoop(CFHostRef self, CFRunLoopRef runLoop, CFStringRef mode);
-SB_EXPORT void CFHostUnscheduleFromRunLoop(CFHostRef self, CFRunLoopRef runLoop, CFStringRef mode);
-
-#endif /* _CFHOST_H_ */
+CFNETWORK_EXPORT CFHostRef CFHostCreateCopy(CFAllocatorRef alloc, CFHostRef host) STUB_METHOD;
+CFNETWORK_EXPORT CFHostRef CFHostCreateWithAddress(CFAllocatorRef allocator, CFDataRef addr) STUB_METHOD;
+CFNETWORK_EXPORT CFHostRef CFHostCreateWithName(CFAllocatorRef allocator, CFStringRef hostname) STUB_METHOD;
+CFNETWORK_EXPORT void CFHostCancelInfoResolution(CFHostRef theHost, CFHostInfoType info) STUB_METHOD;
+CFNETWORK_EXPORT CFArrayRef CFHostGetAddressing(CFHostRef theHost, Boolean* hasBeenResolved) STUB_METHOD;
+CFNETWORK_EXPORT CFArrayRef CFHostGetNames(CFHostRef theHost, Boolean* hasBeenResolved) STUB_METHOD;
+CFNETWORK_EXPORT CFDataRef CFHostGetReachability(CFHostRef theHost, Boolean* hasBeenResolved) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHostStartInfoResolution(CFHostRef theHost, CFHostInfoType info, CFStreamError* error) STUB_METHOD;
+CFNETWORK_EXPORT Boolean CFHostSetClient(CFHostRef theHost, CFHostClientCallBack clientCB, CFHostClientContext* clientContext) STUB_METHOD;
+CFNETWORK_EXPORT void CFHostScheduleWithRunLoop(CFHostRef theHost, CFRunLoopRef runLoop, CFStringRef runLoopMode) STUB_METHOD;
+CFNETWORK_EXPORT void CFHostUnscheduleFromRunLoop(CFHostRef theHost, CFRunLoopRef runLoop, CFStringRef runLoopMode) STUB_METHOD;
+CFNETWORK_EXPORT CFTypeID CFHostGetTypeID() STUB_METHOD;
+CFNETWORK_EXPORT const SInt32 kCFStreamErrorDomainNetDB;
+CFNETWORK_EXPORT const SInt32 kCFStreamErrorDomainSystemConfiguration;

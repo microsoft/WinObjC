@@ -1,3 +1,18 @@
+//******************************************************************************
+//
+// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+//
+// This code is licensed under the MIT License (MIT).
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+//******************************************************************************
 #pragma once
 
 #include <unordered_map>
@@ -18,11 +33,11 @@ struct UITableViewPriv {
     idretain _externalObjects;
     float _footerYPos;
     idretain _headerView;
-    idretaintype(UIView) _backgroundView;
+    StrongId<UIView> _backgroundView;
     std::unordered_map<std::string, std::vector<ReusableCell*>> _reusableCells;
-    idretaintype(NSMutableDictionary) _reusableCellNibs;
-    idretaintype(NSMutableDictionary) _reusableHeaderClasses;
-    idretaintype(NSMutableDictionary) _reusableCellClasses;
+    StrongId<NSMutableDictionary> _reusableCellNibs;
+    StrongId<NSMutableDictionary> _reusableHeaderClasses;
+    StrongId<NSMutableDictionary> _reusableCellClasses;
 
     float _defaultRowHeight;
     float _defaultSectionHeaderHeight;
@@ -50,7 +65,7 @@ struct UITableViewPriv {
     void addReusableCell(TableViewRow* row);
 };
 
-@interface UITableView () {
+@interface UITableView () <UITableViewDelegate> {
 @public
     id _dataSource;
     id<UICollectionViewDelegate> _collectionViewDelegate;
@@ -104,26 +119,36 @@ struct UITableViewPriv {
         unsigned int doneFirstLayout : 1;
     } _collectionViewFlags;
 }
+
+- (void)_forwardCellRemoval:(UITableViewCell*)cell;
+- (void)_cellSelectedUp:(UITableViewCell*)cell;
+- (void)_cellSelectedDown:(UITableViewCell*)cell;
+- (void)_cellSelectedCancelled:(UITableViewCell*)cell;
+- (void)_cellAccessoryTapped:(UITableViewCell*)cell;
+- (BOOL)_canEditCell:(UITableViewCell*)cell;
+
 @end
+
+@class _UIGroupEdgeView;
 
 @interface UITableViewCell () {
 @public
-    idretaint<UIView> _contentView;
-    idretaint<UIView> _curAccessoryView;
-    idretaint<UIStoryboardSegueTemplate> _selectionSegueTemplate;
+    StrongId<UIView> _contentView;
+    StrongId<UIView> _curAccessoryView;
+    StrongId<UIStoryboardSegueTemplate> _selectionSegueTemplate;
 
     BOOL _isSelected, _isHighlighted, _currentlyHighlighted;
     BOOL _isEditing;
-    unsigned _accessoryType;
+    UITableViewCellAccessoryType _accessoryType;
     float _indentationWidth;
     UITableViewCellStyle _style;
     UITableViewCellSelectionStyle _selectionStyle;
     BOOL _showsReorderControl;
-    idretaintype(UIView) _textLabel;
-    idretaintype(UIView) _secondaryLabel;
-    idretaintype(UIImageView) _imageView;
-    idretaintype(UIView) _backgroundView, _selectedbackgroundView;
-    idretain _deferredIndexPath, _indexPath;
+    StrongId<UILabel> _textLabel;
+    StrongId<UILabel> _secondaryLabel;
+    StrongId<UIImageView> _imageView;
+    StrongId<UIView> _backgroundView, _selectedbackgroundView;
+    StrongId<NSIndexPath> _deferredIndexPath, _indexPath;
     UIView *_accessoryView, *_editingAccessoryView;
     idretain _internalAccessoryView, _internalAccessoryButton;
     int _internalAccessoryType;
@@ -132,15 +157,22 @@ struct UITableViewPriv {
     int _indentationLevel;
 
     int _groupEdgeStyle;
-    idretaintype(UIView) _groupEdgeView;
+    StrongId<_UIGroupEdgeView> _groupEdgeView;
     idretain _cellBackgroundColor;
     idretain _cellOldBackgroundColor;
     BOOL _cellBackgroundColorSet;
 
     idretain _swipeGestureRecognizer;
-    idretaintype(UIView) _removeButton;
+    StrongId<UIButton> _removeButton;
 
-    idretaintype(UIView) _editSelectedView;
+    StrongId<UIView> _editSelectedView;
     BOOL _editSelectedViewVisible;
 }
+
+- (void)_setEditingMode:(BOOL)editingMode animated:(BOOL)animated;
+
+// TODO: these ought to be _names, but it's too difficult to locate all usages of indexPath currently
+- (void)setIndexPath:(NSIndexPath*)path;
+- (NSIndexPath*)indexPath;
+
 @end

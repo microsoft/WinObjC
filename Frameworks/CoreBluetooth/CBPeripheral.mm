@@ -16,6 +16,7 @@
 
 #import <CoreBluetooth/CBPeripheral.h>
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 @implementation CBPeripheral
 /**

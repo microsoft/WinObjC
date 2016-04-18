@@ -94,7 +94,7 @@ typedef unsigned WMMMediaMirroringOptions;
 
 @protocol WMMIMediaEncodingProperties
 @property (readonly) WMMMediaPropertySet* properties;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) NSString* type;
 @end
 
@@ -157,7 +157,7 @@ WINRT_EXPORT
 @property unsigned int channelCount;
 @property unsigned int bitsPerSample;
 @property unsigned int bitrate;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 - (void)setFormatUserData:(id<NSFastEnumeration> /* uint8_t */)value;
@@ -261,7 +261,7 @@ WINRT_EXPORT
 + (WMMVideoEncodingProperties*)createMpeg2;
 + (WMMVideoEncodingProperties*)createUncompressed:(NSString*)subtype width:(unsigned int)width height:(unsigned int)height;
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 @property unsigned int width;
@@ -290,7 +290,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property unsigned int width;
 @property unsigned int height;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 @end
@@ -304,7 +304,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMMContainerEncodingProperties : RTObject <WMMIMediaEncodingProperties>
 + (instancetype)make ACTIVATOR;
-@property (copy) NSString* subtype;
+@property (retain) NSString* subtype;
 @property (readonly) WMMMediaPropertySet* properties;
 @property (readonly) NSString* type;
 @end
@@ -331,9 +331,9 @@ WINRT_EXPORT
 + (WMMMediaEncodingProfile*)createWav:(WMMAudioEncodingQuality)quality;
 + (WMMMediaEncodingProfile*)createAvi:(WMMVideoEncodingQuality)quality;
 + (instancetype)make ACTIVATOR;
-@property (copy) WMMVideoEncodingProperties* video;
-@property (copy) WMMContainerEncodingProperties* container;
-@property (copy) WMMAudioEncodingProperties* audio;
+@property (retain) WMMVideoEncodingProperties* video;
+@property (retain) WMMContainerEncodingProperties* container;
+@property (retain) WMMAudioEncodingProperties* audio;
 @end
 
 #endif // __WMMMediaEncodingProfile_DEFINED__

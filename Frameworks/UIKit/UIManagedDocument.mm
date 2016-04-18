@@ -14,12 +14,20 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "StubReturn.h"
-
-#include "UIKit/UIManagedDocument.h"
+#import "Starboard.h"
+#import "StubReturn.h"
+#import "UIKit/UIManagedDocument.h"
 
 @implementation UIManagedDocument
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (instancetype)initWithFileURL:(NSURL*)url {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
 
 /*
  @Status Stub

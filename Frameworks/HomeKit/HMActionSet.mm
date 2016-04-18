@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMActionSet.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMActionSet
 

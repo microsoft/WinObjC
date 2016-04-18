@@ -14,10 +14,6 @@
 //
 //******************************************************************************
 
-#define CURL_STATICLIB
-
-#include <curl/curl.h>
-
 #include "Starboard.h"
 #include "UIKit/UIRuntimeEventConnection.h"
 #include "UIButtonContent.h"
@@ -28,7 +24,7 @@
 #include "UITableViewCellContentView.h"
 #include "UIClassSwapper.h"
 #include "../QuartzCore/CATransaction.h"
-#include "../UnifiedFoundation/Foundation/NSColor.h"
+#include "../Foundation/NSColor.h"
 
 extern "C" void NSObjForceinclude();
 void NSStringForceinclude();

@@ -66,7 +66,7 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version;
 @property (readonly) NSUInteger processorCount;
 @property (readonly) NSUInteger activeProcessorCount;
-@property (readonly) unsigned long long physicalMemory;
+@property (readonly) unsigned long long physicalMemory STUB_PROPERTY;
 @property (readonly) NSTimeInterval systemUptime;
 
 - (id<NSObject>)beginActivityWithOptions:(NSActivityOptions)options reason:(NSString*)reason STUB_METHOD;

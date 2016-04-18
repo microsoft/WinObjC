@@ -85,7 +85,7 @@ WINRT_EXPORT
 @interface WADDataPackagePropertySetView : RTObject
 @property (readonly) WFUri* applicationListingUri;
 @property (readonly) NSString* applicationName;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSArray* fileTypes;
 @property (readonly) WSSRandomAccessStreamReference* thumbnail;
 @property (readonly) NSString* title;
@@ -113,18 +113,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataPackagePropertySet : RTObject
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (copy) NSString* title;
-@property (copy) NSString* description;
-@property (copy) NSString* applicationName;
-@property (copy) WFUri* applicationListingUri;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
+@property (retain) NSString* title;
+@property (retain) NSString* Description;
+@property (retain) NSString* applicationName;
+@property (retain) WFUri* applicationListingUri;
 @property (readonly) NSMutableArray* fileTypes;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* square30x30Logo;
-@property (copy) NSString* packageFamilyName;
-@property (copy) WUColor* logoBackgroundColor;
-@property (copy) WFUri* contentSourceWebLink;
-@property (copy) WFUri* contentSourceApplicationLink;
-@property (copy) NSString* enterpriseId;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* square30x30Logo;
+@property (retain) NSString* packageFamilyName;
+@property (retain) WUColor* logoBackgroundColor;
+@property (retain) WFUri* contentSourceWebLink;
+@property (retain) WFUri* contentSourceApplicationLink;
+@property (retain) NSString* enterpriseId;
 @property (readonly) unsigned int size;
 - (id)objectForKey:(id)key;
 - (NSArray*)allKeys;
@@ -287,7 +287,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataRequest : RTObject
-@property (copy) WADDataPackage* data;
+@property (retain) WADDataPackage* data;
 @property (readonly) WFDateTime* deadline;
 - (void)failWithDisplayText:(NSString*)value;
 - (WADDataRequestDeferral*)getDeferral;

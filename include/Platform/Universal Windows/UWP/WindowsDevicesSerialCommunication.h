@@ -101,9 +101,9 @@ WINRT_EXPORT
 @property WDSSerialHandshake handshake;
 @property BOOL breakSignalState;
 @property unsigned int baudRate;
-@property (copy) WFTimeSpan* writeTimeout;
+@property (retain) WFTimeSpan* writeTimeout;
 @property WDSSerialStopBitCount stopBits;
-@property (copy) WFTimeSpan* readTimeout;
+@property (retain) WFTimeSpan* readTimeout;
 @property WDSSerialParity parity;
 @property BOOL isRequestToSendEnabled;
 @property (readonly) unsigned int bytesReceived;

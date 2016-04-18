@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -18,6 +19,25 @@
 #import <StubReturn.h>
 
 @implementation CMAttitude
+
+- (instancetype)initWithValues:(double)roll 
+                         pitch:(double)pitch 
+                           yaw:(double)yaw
+                rotationMatrix:(CMRotationMatrix)rotationMatrix 
+                    quaternion:(CMQuaternion)quaternion {
+                    
+    if (self = [super init]) {
+        _roll = roll;
+        _pitch = pitch;
+        _yaw = yaw;
+        _rotationMatrix = rotationMatrix;
+        _quaternion = quaternion;
+    }
+
+    return self;
+}
+
+
 /**
  @Status Stub
  @Notes

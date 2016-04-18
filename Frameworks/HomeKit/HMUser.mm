@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMUser.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMUser
 @end

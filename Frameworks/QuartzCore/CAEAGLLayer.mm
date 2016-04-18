@@ -16,7 +16,6 @@
 
 #include "Starboard.h"
 
-typedef wchar_t WCHAR;
 #include "UWP/WindowsUIXamlControls.h"
 #include "UWP/WindowsUIXamlMedia.h"
 #include "QuartzCore/CALayer.h"
@@ -24,6 +23,7 @@ typedef wchar_t WCHAR;
 #include "UIKit/UIView.h"
 #include "QuartzCore/CAEAGLLayer.h"
 #include "CACompositor.h"
+#include "CAEAGLLayerInternal.h"
 
 #include <d3d11.h>
 #include <d3d11_1.h>
@@ -49,6 +49,9 @@ typedef wchar_t WCHAR;
     }
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)setContentsScale:(float)factor {
     [super setContentsScale:factor];
 
@@ -60,11 +63,14 @@ typedef wchar_t WCHAR;
     [scaleTransform release];
 }
 
+/**
+ @Status Interoperable
+*/
 - (instancetype)init {
-    _swapChainPanel = [WXCSwapChainPanel make];
-    [super init];
-    self.contentsElement = _swapChainPanel;
-
+    if (self = [super init]) {
+        _swapChainPanel = [WXCSwapChainPanel make];
+        self.contentsElement = _swapChainPanel;
+    }
     return self;
 }
 
@@ -92,6 +98,9 @@ typedef wchar_t WCHAR;
 }
 
 - (void)_releaseContents {
+}
+
+- (void)_unlockTexture {
 }
 
 - (void)dealloc {

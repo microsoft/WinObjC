@@ -15,8 +15,8 @@
 //******************************************************************************
 
 #import <AddressBook/ABGroup.h>
-
 #import <StubReturn.h>
+#import "AssertARCEnabled.h"
 
 // Arbitrary value - reference platform has deprecated this constant
 // Possibly need to fix later

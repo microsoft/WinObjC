@@ -1,16 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <HasSharedItems>true</HasSharedItems>
     <ItemsRootNamespace>WOCCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <ItemsProjectGuid>{6117D215-F749-41BD-834E-B5CC22B1784C}</ItemsProjectGuid>
-    <SharedGUID>{4EEA45CE-6497-4CB8-91E8-CA8E1AD18FEF}</SharedGUID>
+    <ItemsProjectGuid>{F36FF2F2-7CC8-47AF-B4E2-8EB665225AFF}</ItemsProjectGuid>
+    <SharedGUID>{98EE3142-5F8F-47BC-89CE-EB3019046034}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreMotionViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\AccelerateViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BasicAnimationViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ApplicationViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\PopoverViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\TextDisplayViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\GLKitExampleController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\DisplayModeViewController.h" />

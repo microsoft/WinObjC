@@ -33,6 +33,7 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIDevice.h>
 #import <StarboardExport.h>
+#import <StarboardXamlExport.h>
 #import <stdint.h>
 
 UIKIT_EXPORT NSString* const UIApplicationStatusBarOrientationUserInfoKey;
@@ -199,12 +200,15 @@ typedef enum : NSInteger {
     UIUserInterfaceLayoutDirectionRightToLeft,
 } UIUserInterfaceLayoutDirection;
 
-//  UIApplicationMain is included in the static runtime component
-SB_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
+//  UIApplicationMain is included in the static runtime component, and is exported by StarboardXaml
+SBXAML_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
 
 UIKIT_EXPORT int UIApplicationMainInit(
     int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);
 UIKIT_EXPORT int UIApplicationMainLoop();
+
+UIKIT_EXPORT void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
+UIKIT_EXPORT void UIApplicationMainHandleHighMemoryUsageEvent();
 
 UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
@@ -248,14 +252,14 @@ UIKIT_EXPORT_CLASS
 - (void)sendEvent:(UIEvent*)event;
 - (void)setMinimumBackgroundFetchInterval:(NSTimeInterval)minimumBackgroundFetchInterval STUB_METHOD;
 - (void)setNewsstandIconImage:(UIImage*)image STUB_METHOD;
-- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated STUB_METHOD;
+- (void)setStatusBarHidden:(BOOL)hidden animated:(BOOL)animated;
 - (void)setStatusBarHidden:(BOOL)hidden withAnimation:(UIStatusBarAnimation)animation;
 - (void)setStatusBarOrientation:(UIInterfaceOrientation)interfaceOrientation animated:(BOOL)animated;
 - (void)setStatusBarStyle:(UIStatusBarStyle)statusBarStyle animated:(BOOL)animated STUB_METHOD;
 - (void)unregisterForRemoteNotifications STUB_METHOD;
 @property (copy, nonatomic) NSArray* scheduledLocalNotifications STUB_PROPERTY;
 @property (copy, nonatomic) NSArray* shortcutItems STUB_PROPERTY;
-@property (getter=isIdleTimerDisabled, nonatomic) BOOL idleTimerDisabled STUB_PROPERTY;
+@property (getter=isIdleTimerDisabled, nonatomic) BOOL idleTimerDisabled;
 @property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible STUB_PROPERTY;
 @property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled STUB_PROPERTY;
 @property (nonatomic) BOOL applicationSupportsShakeToEdit STUB_PROPERTY;
@@ -282,7 +286,6 @@ UIKIT_EXPORT_CLASS
 @end
 
 @interface UIApplication (UIApplicationStarboardAdditions)
-- (UIWindow*)_popupWindow;
 + (void)setStarboardInternalLoggingLevel:(int)level;
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(NSString*)id;
 @end
@@ -313,6 +316,9 @@ enum {
 };
 typedef uint32_t WOCDeviceType;
 
+/**
+ @Public No
+*/
 @interface WOCDisplayMode : NSObject
 
 @property (nonatomic) float magnification;

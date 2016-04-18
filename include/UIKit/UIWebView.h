@@ -68,8 +68,8 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, retain) NSURLRequest* request;
 @property (nonatomic) UIDataDetectorTypes dataDetectorTypes;
 @property (nonatomic, readonly, retain) UIScrollView* scrollView;
-@property (nonatomic) BOOL allowsInlineMediaPlayback;
-@property (nonatomic) BOOL mediaPlaybackRequiresUserAction;
+@property (nonatomic) BOOL allowsInlineMediaPlayback STUB_PROPERTY;
+@property (nonatomic) BOOL mediaPlaybackRequiresUserAction STUB_PROPERTY;
 @property (nonatomic) BOOL keyboardDisplayRequiresUserAction;
 
 @end

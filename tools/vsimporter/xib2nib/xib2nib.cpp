@@ -30,6 +30,7 @@
 #include "XIBDocument.h"
 #include "NIBWriter.h"
 #include "Plist.hpp"
+#include "miscutils.h"
 
 #include "..\WBITelemetry\WBITelemetry.h"
 
@@ -247,9 +248,23 @@ int main(int argc, char* argv[]) {
 
     TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
+    if (checkTelemetryOptIn())
+    {
+        TELEMETRY_ENABLE();
+    }
+    else
+    {
+        TELEMETRY_DISABLE();
+    }
+
     std::tr2::sys::path fName(argv[1]);
 
     TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
+    TELEMETRY_EVENT_DATA(L"IsInternal", isMSFTInternalMachine() ? "1" : "0");
+    string machineID = getMachineID();
+    if (!machineID.empty()) {
+        TELEMETRY_EVENT_DATA(L"MachineId", machineID.c_str());
+    }
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);

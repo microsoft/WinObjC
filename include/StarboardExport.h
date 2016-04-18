@@ -13,23 +13,24 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
-#ifndef _STARBOARDEXPORT_H_
-#define _STARBOARDEXPORT_H_
-
-#include <sys/cdefs.h>
+#pragma once
 
 #ifndef SB_IMPEXP
 #define SB_IMPEXP __declspec(dllimport)
+#define SB_IMPEXP_CLASS __declspec(dllimport)
+#else
+// This is used only by the EbrFile class, and new uses should not be added.
+// In general, C++ classes should not be exported, and EbrFile is tolerated
+// only for legacy reasons.
+#define SB_IMPEXP_CLASS __declspec(dllexport)
 #endif
 
 #ifndef SB_EXPORT
 #ifdef __cplusplus
-#define SB_EXPORT SB_IMPEXP extern "C"
-#define SB_EXPORT_CLASS SB_IMPEXP
+#define SB_EXPORT extern "C" SB_IMPEXP
+#define SB_EXPORT_CLASS SB_IMPEXP_CLASS
 #else
-#define SB_EXPORT SB_IMPEXP extern
-#define SB_EXPORT_CLASS SB_IMPEXP
+#define SB_EXPORT extern SB_IMPEXP
 #endif
 #endif
 
@@ -50,7 +51,3 @@
 #else
 #define SB_ALWAYS_INLINE static __inline
 #endif
-
-#define UIKIT_EXTERN SB_EXPORT
-
-#endif /* _STARBOARDEXPORT_H_ */

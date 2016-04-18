@@ -98,8 +98,8 @@ typedef unsigned WAWWalletItemKind;
 
 WINRT_EXPORT
 @interface WAWWalletBarcode : RTObject
-+ (WAWWalletBarcode*)createWalletBarcode:(WAWWalletBarcodeSymbology)symbology value:(NSString*)value ACTIVATOR;
-+ (WAWWalletBarcode*)createCustomWalletBarcode:(RTObject<WSSIRandomAccessStreamReference>*)streamToBarcodeImage ACTIVATOR;
++ (WAWWalletBarcode*)makeWalletBarcode:(WAWWalletBarcodeSymbology)symbology value:(NSString*)value ACTIVATOR;
++ (WAWWalletBarcode*)makeCustomWalletBarcode:(RTObject<WSSIRandomAccessStreamReference>*)streamToBarcodeImage ACTIVATOR;
 @property (readonly) WAWWalletBarcodeSymbology symbology;
 @property (readonly) NSString* value;
 - (void)getImageAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamReference>*))success failure:(void (^)(NSError*))failure;
@@ -114,12 +114,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletTransaction : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) id transactionDate;
+@property (retain) id transactionDate;
 @property BOOL isLaunchable;
 @property BOOL ignoreTimeOfDay;
-@property (copy) NSString* displayLocation;
-@property (copy) NSString* displayAmount;
-@property (copy) NSString* description;
+@property (retain) NSString* displayLocation;
+@property (retain) NSString* displayAmount;
+@property (retain) NSString* Description;
 @end
 
 #endif // __WAWWalletTransaction_DEFINED__
@@ -131,8 +131,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletRelevantLocation : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WDGBasicGeoposition* position;
-@property (copy) NSString* displayMessage;
+@property (retain) WDGBasicGeoposition* position;
+@property (retain) NSString* displayMessage;
 @end
 
 #endif // __WAWWalletRelevantLocation_DEFINED__
@@ -143,10 +143,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAWWalletItemCustomProperty : RTObject
-+ (WAWWalletItemCustomProperty*)createWalletItemCustomProperty:(NSString*)name value:(NSString*)value ACTIVATOR;
-@property (copy) NSString* value;
++ (WAWWalletItemCustomProperty*)makeWalletItemCustomProperty:(NSString*)name value:(NSString*)value ACTIVATOR;
+@property (retain) NSString* value;
 @property WAWWalletSummaryViewPosition summaryViewPosition;
-@property (copy) NSString* name;
+@property (retain) NSString* name;
 @property WAWWalletDetailViewPosition detailViewPosition;
 @property BOOL autoDetectLinks;
 @end
@@ -159,8 +159,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAWWalletVerb : RTObject
-+ (WAWWalletVerb*)createWalletVerb:(NSString*)name ACTIVATOR;
-@property (copy) NSString* name;
++ (WAWWalletVerb*)makeWalletVerb:(NSString*)name ACTIVATOR;
+@property (retain) NSString* name;
 @end
 
 #endif // __WAWWalletVerb_DEFINED__
@@ -171,30 +171,30 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAWWalletItem : RTObject
-+ (WAWWalletItem*)createWalletItem:(WAWWalletItemKind)kind displayName:(NSString*)displayName ACTIVATOR;
-@property (copy) NSString* displayName;
-@property (copy) NSString* displayMessage;
-@property (copy) WUColor* bodyFontColor;
-@property (copy) WUColor* bodyColor;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* bodyBackgroundImage;
++ (WAWWalletItem*)makeWalletItem:(WAWWalletItemKind)kind displayName:(NSString*)displayName ACTIVATOR;
+@property (retain) NSString* displayName;
+@property (retain) NSString* displayMessage;
+@property (retain) WUColor* bodyFontColor;
+@property (retain) WUColor* bodyColor;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* bodyBackgroundImage;
 @property BOOL isDisplayMessageLaunchable;
-@property (copy) WAWWalletBarcode* barcode;
+@property (retain) WAWWalletBarcode* barcode;
 @property BOOL isAcknowledged;
 @property BOOL isMoreTransactionHistoryLaunchable;
-@property (copy) WUColor* headerFontColor;
-@property (copy) WUColor* headerColor;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* headerBackgroundImage;
-@property (copy) id expirationDate;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* logo99x99;
-@property (copy) NSString* issuerDisplayName;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* promotionalImage;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* logo159x159;
-@property (copy) id lastUpdated;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* logoImage;
-@property (copy) NSString* relevantDateDisplayMessage;
-@property (copy) id relevantDate;
-@property (copy) RTObject<WSSIRandomAccessStreamReference>* logo336x336;
-@property (copy) NSString* logoText;
+@property (retain) WUColor* headerFontColor;
+@property (retain) WUColor* headerColor;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* headerBackgroundImage;
+@property (retain) id expirationDate;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* logo99x99;
+@property (retain) NSString* issuerDisplayName;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* promotionalImage;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* logo159x159;
+@property (retain) id lastUpdated;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* logoImage;
+@property (retain) NSString* relevantDateDisplayMessage;
+@property (retain) id relevantDate;
+@property (retain) RTObject<WSSIRandomAccessStreamReference>* logo336x336;
+@property (retain) NSString* logoText;
 @property (readonly) WAWWalletItemKind kind;
 @property (readonly) NSMutableDictionary* displayProperties;
 @property (readonly) NSString* id;

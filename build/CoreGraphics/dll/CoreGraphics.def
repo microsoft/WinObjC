@@ -397,6 +397,8 @@ LIBRARY CoreGraphics
 
         ;private export below
         _CGPathFitRect
+        _CGPathApplyPath
+        _CGPathGetBoundingBoxInternal
 
         ; CGPattern.mm
         CGPatternCreate

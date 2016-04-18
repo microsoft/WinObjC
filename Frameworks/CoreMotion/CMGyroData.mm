@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -16,8 +17,22 @@
 
 #import <CoreMotion/CMGyroData.h>
 #import <StubReturn.h>
+#import "CMLogItemInternal.h"
 
 @implementation CMGyroData
+
+-(instancetype)initWithValues:(double)x y:(double)y z:(double)z time:(double)time {
+
+    if (self = [super initWithTimestamp:time]) {
+        _rotationRate.x = x;
+        _rotationRate.y = y;
+        _rotationRate.z = z;
+    }
+
+    return self;
+}
+
+
 /**
 @Status Stub
 */

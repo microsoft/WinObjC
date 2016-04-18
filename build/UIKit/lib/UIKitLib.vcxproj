@@ -19,18 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\limbo\art.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\limbo\Stubs.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\art.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSMutableAttributedString+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString_Additions.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString+UIKitAdditions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSValue_Additions.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAccessibility.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActionSheet.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAlertView.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAnimationNotification.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAppearanceSetter.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplication.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivity.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivityViewController.mm" />
@@ -65,6 +64,7 @@
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationItem.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UINib.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINibUnarchiver.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
     <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPasteboard.mm" />
@@ -275,13 +275,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UIDeviceInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIEmptyController.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIImageCachedObject.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UINavigationControllerInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIProxyObject.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIProxyObjectPair.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletConnection.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UISegment.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UITabBarButton.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UITabBarControllerInternal.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UITabBarInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewContentView.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewDataSource.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewRow.h" />
@@ -291,13 +295,16 @@
     <ClInclude Include="..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewLayout+Internals.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutSection.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewCellInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletCollectionConnection.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UIScrollViewInternal.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UISegmentedControlInternal.h" />
+    <ClInclude Include="..\..\..\Frameworks\UIKit\UIStoryboardInternal.h" />
+    
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</ProjectGuid>
@@ -322,7 +329,7 @@
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -334,7 +341,7 @@
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -347,7 +354,7 @@
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -359,7 +366,7 @@
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DUIKIT_IMPEXP= " "-DGAMEKIT_IMPEXP= "  "-DSOCIAL_IMPEXP= " %(AdditionalOptions) -Wno-error</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

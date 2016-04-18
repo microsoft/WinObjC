@@ -97,7 +97,7 @@ WINRT_EXPORT
 @interface WSListingInformation : RTObject
 @property (readonly) unsigned int ageRating;
 @property (readonly) NSString* currentMarket;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) NSString* formattedPrice;
 @property (readonly) NSString* name;
 @property (readonly) NSDictionary* productListings;
@@ -126,10 +126,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
 + (instancetype)make ACTIVATOR;
-+ (WSProductPurchaseDisplayProperties*)createProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
-@property (copy) NSString* name;
-@property (copy) WFUri* image;
-@property (copy) NSString* description;
++ (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
+@property (retain) NSString* name;
+@property (retain) WFUri* image;
+@property (retain) NSString* Description;
 @end
 
 #endif // __WSProductPurchaseDisplayProperties_DEFINED__
@@ -170,7 +170,7 @@ WINRT_EXPORT
 @property (readonly) NSString* formattedPrice;
 @property (readonly) NSString* name;
 @property (readonly) NSString* productId;
-@property (readonly) NSString* description;
+@property (readonly) NSString* Description;
 @property (readonly) WFUri* imageUri;
 @property (readonly) id<NSFastEnumeration> keywords;
 @property (readonly) WSProductType productType;

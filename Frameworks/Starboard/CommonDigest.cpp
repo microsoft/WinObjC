@@ -17,6 +17,7 @@
 #include <Windows.h>
 #include <bcrypt.h>
 #include <CommonCrypto\CommonDigest.h>
+#include <CommonCrypto\CommonCryptor.h>
 #include <ErrorHandling.h>
 #include <assert.h>
 #include <StubReturn.h>
@@ -61,8 +62,10 @@ struct CC_Digest_State {
     }
 
     // internal implemention of update for all hash contexts
-    static int update(CC_Digest_State* state, const void* data, CC_LONG len) {
+    static int update(CC_Digest_State** ctx, const void* data, CC_LONG len) {
+        CC_Digest_State* state = ctx ? *ctx : nullptr;
         if (!_isValidState(state)) {
+            *ctx = nullptr;
             return -1;
         }
 
@@ -70,8 +73,10 @@ struct CC_Digest_State {
     }
 
     // internal implementaion of final for all hash contexts
-    static int final(unsigned char* digest, CC_Digest_State* state) {
+    static int final(unsigned char* digest, CC_Digest_State** ctx) {
+        CC_Digest_State* state = ctx ? *ctx : nullptr;
         if (!_isValidState(state)) {
+            *ctx = nullptr;
             return -1;
         }
 
@@ -162,11 +167,6 @@ private:
     PBYTE _pHashObject;
 };
 
-
-static inline CC_Digest_State* _getState(CC_Digest_State** ctx) {
-    return (ctx ? *ctx : nullptr);
-}
-
 /**
 @Status Interoperable
 */
@@ -178,16 +178,14 @@ extern "C" int CC_MD2_Init(CC_MD2_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_MD2_Update(CC_MD2_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_MD2_Final(unsigned char* digest, CC_MD2_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**
@@ -208,16 +206,14 @@ extern "C" int CC_MD4_Init(CC_MD4_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_MD4_Update(CC_MD4_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_MD4_Final(unsigned char* digest, CC_MD4_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**
@@ -238,16 +234,14 @@ extern "C" int CC_MD5_Init(CC_MD5_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_MD5_Update(CC_MD5_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_MD5_Final(unsigned char* digest, CC_MD5_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**
@@ -268,16 +262,14 @@ extern "C" int CC_SHA1_Init(CC_SHA1_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_SHA1_Update(CC_SHA1_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_SHA1_Final(unsigned char* digest, CC_SHA1_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**
@@ -330,16 +322,14 @@ extern "C" int CC_SHA256_Init(CC_SHA256_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_SHA256_Update(CC_SHA256_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_SHA256_Final(unsigned char* digest, CC_SHA256_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**
@@ -360,16 +350,14 @@ extern "C" int CC_SHA384_Init(CC_SHA384_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_SHA384_Update(CC_SHA384_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_SHA384_Final(unsigned char* digest, CC_SHA384_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**
@@ -390,16 +378,14 @@ extern "C" int CC_SHA512_Init(CC_SHA512_CTX* ctx) {
 @Status Interoperable
 */
 extern "C" int CC_SHA512_Update(CC_SHA512_CTX* ctx, const void* data, CC_LONG len) {
-    return CC_Digest_State::update(_getState(ctx), data, len);
+    return CC_Digest_State::update(ctx, data, len);
 }
 
 /**
 @Status Interoperable
 */
 extern "C" int CC_SHA512_Final(unsigned char* digest, CC_SHA512_CTX* ctx) {
-    CC_Digest_State* state = _getState(ctx);
-    *ctx = nullptr;
-    return CC_Digest_State::final(digest, state);
+    return CC_Digest_State::final(digest, ctx);
 }
 
 /**

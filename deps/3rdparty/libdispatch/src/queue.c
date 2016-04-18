@@ -1630,7 +1630,10 @@ _dispatch_worker_thread2(void *context)
 #if DISPATCH_COCOA_COMPAT
 	// ensure that high-level memory management techniques do not leak/crash
 	dispatch_begin_thread_4GC();
-	void *pool = _dispatch_begin_NSAutoReleasePool();
+#endif
+#if DISPATCH_COCOA_COMPAT || WINOBJC
+    // we don't support GC in WinOBJC because iOS doesnt support it.
+    void *pool = _dispatch_begin_NSAutoReleasePool();
 #endif
 
 #if DISPATCH_PERF_MON
@@ -1643,9 +1646,12 @@ _dispatch_worker_thread2(void *context)
 	_dispatch_queue_merge_stats(start);
 #endif
 
-#if DISPATCH_COCOA_COMPAT
+#if DISPATCH_COCOA_COMPAT || WINOBJC
 	_dispatch_end_NSAutoReleasePool(pool);
-	dispatch_end_thread_4GC();
+#endif
+
+#if DISPATCH_COCOA_COMPAT
+    dispatch_end_thread_4GC();
 #endif
 
 	_dispatch_thread_setspecific(dispatch_queue_key, NULL);

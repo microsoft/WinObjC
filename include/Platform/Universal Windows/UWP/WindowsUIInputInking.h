@@ -211,7 +211,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkPresenter : RTObject
-@property (copy) WUIIInkStrokeContainer* strokeContainer;
+@property (retain) WUIIInkStrokeContainer* strokeContainer;
 @property BOOL isInputEnabled;
 @property WUCCoreInputDeviceTypes inputDeviceTypes;
 @property (readonly) WUIIInkInputProcessingConfiguration* inputProcessingConfiguration;
@@ -257,7 +257,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUIIInkPoint : RTObject
-+ (WUIIInkPoint*)createInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
++ (WUIIInkPoint*)makeInkPoint:(WFPoint*)position pressure:(float)pressure ACTIVATOR;
 @property (readonly) WFPoint* position;
 @property (readonly) float pressure;
 @end
@@ -271,12 +271,12 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkDrawingAttributes : RTObject
 + (instancetype)make ACTIVATOR;
-@property (copy) WFSize* size;
+@property (retain) WFSize* size;
 @property WUIIPenTipShape penTip;
 @property BOOL ignorePressure;
 @property BOOL fitToCurve;
-@property (copy) WUColor* color;
-@property (copy) WFNMatrix3x2* penTipTransform;
+@property (retain) WUColor* color;
+@property (retain) WFNMatrix3x2* penTipTransform;
 @property BOOL drawAsHighlighter;
 @end
 
@@ -306,10 +306,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUIIInkStroke : RTObject
 @property BOOL selected;
-@property (copy) WUIIInkDrawingAttributes* drawingAttributes;
+@property (retain) WUIIInkDrawingAttributes* drawingAttributes;
 @property (readonly) WFRect* boundingRect;
 @property (readonly) BOOL recognized;
-@property (copy) WFNMatrix3x2* pointTransform;
+@property (retain) WFNMatrix3x2* pointTransform;
 - (NSArray*)getRenderingSegments;
 - (WUIIInkStroke*)clone;
 - (NSArray*)getInkPoints;

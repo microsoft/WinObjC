@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,6 +18,7 @@
 
 #include "SBLog.h"
 #include "sbassert.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 void sbAssert(bool condition, const std::string& cause)
 {
@@ -28,6 +29,8 @@ void sbAssert(bool condition, const std::string& cause)
 #ifdef _DEBUG
     abort();
 #else
+    // Due to issue 6715724, flush before exiting
+    TELEMETRY_FLUSH();
     exit(EXIT_FAILURE);
 #endif
   }
@@ -39,6 +42,8 @@ void sbValidate(bool condition, const std::string& cause)
     if (!cause.empty())
       SBLog::error() << cause << std::endl;
     SBLog::printLocation();
+    // Due to issue 6715724, flush before exiting
+    TELEMETRY_FLUSH();
     exit(EXIT_FAILURE);
   }
 }

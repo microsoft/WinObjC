@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\limbo\CATransform3D.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CATransform3D.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAAnimation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAAnimationGroup.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CABasicAnimation.mm" />
@@ -35,6 +35,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAMetalLayer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAPropertyAnimation.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAReplicatorLayer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CARenderer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAScrollLayer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CAShapeLayer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\QuartzCore\CATextLayer.mm" />
@@ -70,7 +71,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,7 +81,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -91,7 +92,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -101,7 +102,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>

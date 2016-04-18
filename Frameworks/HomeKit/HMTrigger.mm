@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMTrigger.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMTrigger
 

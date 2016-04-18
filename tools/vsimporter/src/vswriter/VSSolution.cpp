@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -23,6 +23,7 @@
 #include "VSBuildableSolutionProject.h"
 #include "VSSolutionFolderProject.h"
 #include "vshelpers.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 VSSolution::VSSolution(const std::string& absPath, unsigned version)
 : m_absFilePath(platformPath(sanitizePath(absPath))), m_version(version)
@@ -168,6 +169,13 @@ void VSSolution::writeProjectConfigurationPlatforms(std::ostream& out) const
   out << "\t" << "GlobalSection(ProjectConfigurationPlatforms) = postSolution" << std::endl;
   for (auto project : m_buildableProjects) {
     std::string projId = formatVSGUID(project.second->getId());
+
+	// Don't block for telemetry
+    if (projId.length() > 2)
+    {
+        std::string noBracketProjId = projId.substr(1, projId.length() - 2);
+        TELEMETRY_EVENT_DATA(L"VSImporterNewProject", noBracketProjId.c_str());
+    }
     bool isDeployable = project.second->getProject()->isDeployable();
     for (auto config : m_configurations) {
       for (auto platform : m_platforms) {

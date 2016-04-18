@@ -18,12 +18,28 @@
 #define _UIAPPLICATIONINTERNAL_H_
 #import <UIKit/UIApplication.h>
 
+@interface UIApplication (internal)
+- (UIWindow*)_popupWindow;
+- (void)_sendActiveStatus:(BOOL)isActive;
+- (void)_sendToBackground;
+- (void)_bringToForeground;
+- (void)_bringToForeground:(NSURL*)url;
+- (void)_sendHighMemoryWarning;
+@end
+
 @interface WOCDisplayMode (internal)
 - (float)currentWidth;
 - (float)currentHeight;
 - (void)_updateDisplaySettings;
 - (void)_setWindowSize:(CGSize)newSize;
 - (void)_setHostScrenWidth:(float)width height:(float)height scale:(float)scale xDpi:(float)xdpi yDpi:(float)yDpi;
+@end
+
+@interface UIApplication ()
+- (UIView*)_popupLayer;
+- (void)_setInternalOrientation:(UIInterfaceOrientation)orientation;
+- (id)_keyboardChanged;
+- (id)_evaluateKeyboard;
 @end
 
 #endif /* _UIAPPLICATIONINTERNAL_H_ */

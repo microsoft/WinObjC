@@ -309,6 +309,9 @@ inline GLKVector4 GLKVector4Make(float x, float y, float z, float w) {
     return res;
 }
 
+/**
+ @Status Interoperable
+*/
 inline GLKVector4 GLKVector4MakeFromVec3(GLKVector3 v) {
     GLKVector4 res;
 
@@ -779,6 +782,9 @@ inline BOOL GLKVector2AllEqualToVector2(GLKVector2 v1, GLKVector2 v2) {
     return FALSE;
 }
 
+/**
+ @Status Interoperable
+*/
 inline BOOL GLKVector4XYZEqualToScalar(GLKVector4 v, float scalar) {
     GLKVector4 o = GLKVector4SubtractScalar(v, scalar);
     if ((fabsf(o.x) + fabsf(o.y) + fabsf(o.z)) < (3.f * COMPARISON_EPSILON))
@@ -1236,12 +1242,24 @@ GLKIT_EXPORT GLKQuaternion GLKQuaternionMakeWithMatrix4(GLKMatrix4 mat);
 inline GLKVector3 GLKVector3Origin() {
     return GLKVector3Make(0.f, 0.f, 0.f);
 }
+
+/**
+ @Status Interoperable
+*/
 inline GLKVector3 GLKVector3XAxis() {
     return GLKVector3Make(1.f, 0.f, 0.f);
 }
+
+/**
+ @Status Interoperable
+*/
 inline GLKVector3 GLKVector3YAxis() {
     return GLKVector3Make(0.f, 1.f, 0.f);
 }
+
+/**
+ @Status Interoperable
+*/
 inline GLKVector3 GLKVector3ZAxis() {
     return GLKVector3Make(0.f, 0.f, 1.f);
 }
@@ -1259,6 +1277,10 @@ inline GLKVector4 GLKVector4Black() {
 inline GLKVector4 GLKVector4White() {
     return GLKVector4Make(1.f, 1.f, 1.f, 1.f);
 }
+
+/**
+ @Status Interoperable
+*/
 inline GLKVector4 GLKVector4Origin() {
     return GLKVector4Make(0.f, 0.f, 0.f, 0.f);
 }

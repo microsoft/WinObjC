@@ -14,9 +14,6 @@
 //
 //******************************************************************************
 
-// XamlCompositor.cpp : Defines the exported functions for the DLL application.
-//
-
 #include <wrl/client.h>
 #include <memory>
 #include <agile.h>
@@ -24,6 +21,7 @@
 #include <robuffer.h>
 #include <collection.h>
 #include <assert.h>
+#include "CALayerXaml.h"
 
 #include <windows.ui.xaml.automation.peers.h>
 #include <windows.ui.xaml.media.h>
@@ -32,11 +30,12 @@ using namespace Windows::Storage::Streams;
 using namespace Microsoft::WRL;
 
 #include "winobjc\winobjc.h"
+#include "ApplicationCompositor.h"
 #include "CompositorInterface.h"
 
 Windows::UI::Xaml::Controls::Grid ^ rootNode;
 Windows::UI::Xaml::Controls::Canvas ^ windowCollection;
-XamlCompositorCS::Controls::CAXamlDebugCounters ^ debugCounters;
+XamlCompositor::Controls::CAXamlDebugCounters ^ debugCounters;
 extern float screenWidth, screenHeight;
 void GridSizeChanged(float newWidth, float newHeight);
 
@@ -44,14 +43,14 @@ void IncrementCounter(const char* name) {
     return;
     std::string sname(name);
     std::wstring wname(sname.begin(), sname.end());
-    XamlCompositorCS::Controls::CAXamlDebugCounters::IncCounter(ref new Platform::String(wname.data()));
+    XamlCompositor::Controls::CAXamlDebugCounters::IncCounter(ref new Platform::String(wname.data()));
 }
 
 void DecrementCounter(const char* name) {
     return;
     std::string sname(name);
     std::wstring wname(sname.begin(), sname.end());
-    XamlCompositorCS::Controls::CAXamlDebugCounters::DecCounter(ref new Platform::String(wname.data()));
+    XamlCompositor::Controls::CAXamlDebugCounters::DecCounter(ref new Platform::String(wname.data()));
 }
 
 void OnGridSizeChanged(Platform::Object ^ sender, Windows::UI::Xaml::SizeChangedEventArgs ^ e) {
@@ -65,7 +64,7 @@ void SetRootGrid(winobjc::Id& root) {
     windowCollection->HorizontalAlignment = Windows::UI::Xaml::HorizontalAlignment::Center;
     windowCollection->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 
-    debugCounters = ref new XamlCompositorCS::Controls::CAXamlDebugCounters();
+    debugCounters = XamlCompositor::Controls::CAXamlDebugCounters::Instance;
     debugCounters->SetValue(Windows::UI::Xaml::Controls::Grid::ColumnProperty, 1);
     rootNode->Children->Append(debugCounters);
     rootNode->Children->Append(windowCollection);
@@ -125,7 +124,7 @@ void DisableRenderingListener() {
     renderListener->Stop();
 }
 
-ref class XamlUIEventHandler sealed : XamlCompositorCS::Controls::CALayerXamlInputEvents {
+ref class XamlUIEventHandler sealed : XamlCompositor::Controls::ICALayerXamlInputEvents {
 public:
     virtual void PointerDown(float x, float y, unsigned int pointerId, unsigned __int64 timestampMicro) {
         IWXamlTouch(x, y, pointerId, EVENT_DOWN, timestampMicro);
@@ -148,19 +147,19 @@ static XamlUIEventHandler ^ uiHandlerSingleton;
 
 void SetUIHandlers() {
     uiHandlerSingleton = ref new XamlUIEventHandler();
-    XamlCompositorCS::Controls::CALayerInputHandler::SetInputHandler(uiHandlerSingleton);
+    XamlCompositor::Controls::CALayerInputHandler::Instance->SetInputHandler(uiHandlerSingleton);
 }
 
-static XamlCompositorCS::Controls::CALayerXaml ^
-    GetCALayer(DisplayNode* node) { return (XamlCompositorCS::Controls::CALayerXaml ^ )(Platform::Object ^ )node->_xamlNode; };
+static XamlCompositor::Controls::CALayerXaml ^
+    GetCALayer(DisplayNode* node) { return (XamlCompositor::Controls::CALayerXaml ^ )(Platform::Object ^ )node->_xamlNode; };
 
-static XamlCompositorCS::Controls::EventedStoryboard ^
+static XamlCompositor::Controls::EventedStoryboard ^
     GetStoryboard(DisplayAnimation* anim) {
-        return (XamlCompositorCS::Controls::EventedStoryboard ^ )(Platform::Object ^ )anim->_xamlAnimation;
+        return (XamlCompositor::Controls::EventedStoryboard ^ )(Platform::Object ^ )anim->_xamlAnimation;
     }
 
     DisplayNode::DisplayNode() {
-    _xamlNode = (Platform::Object ^ )XamlCompositorCS::Controls::CALayerXaml::CreateLayer();
+    _xamlNode = (Platform::Object ^ )XamlCompositor::Controls::CALayerXaml::CreateLayer();
     isRoot = false;
     parent = NULL;
     currentTexture = NULL;
@@ -169,7 +168,7 @@ static XamlCompositorCS::Controls::EventedStoryboard ^
 
 DisplayNode::~DisplayNode() {
     auto xamlLayer = GetCALayer(this);
-    XamlCompositorCS::Controls::CALayerXaml::DestroyLayer(xamlLayer);
+    XamlCompositor::Controls::CALayerXaml::DestroyLayer(xamlLayer);
     for (auto curNode : _subnodes) {
         curNode->parent = NULL;
     }
@@ -183,7 +182,7 @@ DisplayAnimation::~DisplayAnimation() {
 }
 
 void DisplayAnimation::CreateXamlAnimation() {
-    auto xamlAnimation = ref new XamlCompositorCS::Controls::EventedStoryboard(
+    auto xamlAnimation = ref new XamlCompositor::Controls::EventedStoryboard(
         beginTime, duration, autoReverse, repeatCount, repeatDuration, speed, timeOffset);
 
     switch (easingFunction) {
@@ -220,14 +219,14 @@ void DisplayAnimation::CreateXamlAnimation() {
 }
 
 void DisplayAnimation::Start() {
-    XamlCompositorCS::Controls::EventedStoryboard ^ xamlAnimation =
-        (XamlCompositorCS::Controls::EventedStoryboard ^ )(Platform::Object ^ )_xamlAnimation;
+    XamlCompositor::Controls::EventedStoryboard ^ xamlAnimation =
+        (XamlCompositor::Controls::EventedStoryboard ^ )(Platform::Object ^ )_xamlAnimation;
 
     AddRef();
-    xamlAnimation->Completed = ref new XamlCompositorCS::Controls::AnimationMethod([this](Platform::Object ^ sender) {
+    xamlAnimation->Completed = ref new XamlCompositor::Controls::AnimationMethod([this](Platform::Object ^ sender) {
         this->Completed();
-        XamlCompositorCS::Controls::EventedStoryboard ^ xamlAnimation =
-            (XamlCompositorCS::Controls::EventedStoryboard ^ )(Platform::Object ^ ) this->_xamlAnimation;
+        XamlCompositor::Controls::EventedStoryboard ^ xamlAnimation =
+            (XamlCompositor::Controls::EventedStoryboard ^ )(Platform::Object ^ ) this->_xamlAnimation;
         xamlAnimation->Completed = nullptr;
         this->Release();
     });
@@ -235,8 +234,8 @@ void DisplayAnimation::Start() {
 }
 
 void DisplayAnimation::Stop() {
-    XamlCompositorCS::Controls::EventedStoryboard ^ xamlAnimation =
-        (XamlCompositorCS::Controls::EventedStoryboard ^ )(Platform::Object ^ )_xamlAnimation;
+    XamlCompositor::Controls::EventedStoryboard ^ xamlAnimation =
+        (XamlCompositor::Controls::EventedStoryboard ^ )(Platform::Object ^ )_xamlAnimation;
 
     Windows::UI::Xaml::Media::Animation::Storyboard ^ storyboard =
         (Windows::UI::Xaml::Media::Animation::Storyboard ^ )(Platform::Object ^ )xamlAnimation->GetStoryboard();
@@ -252,8 +251,6 @@ void DisplayAnimation::AddAnimation(DisplayNode* node, const wchar_t* propertyNa
                            fromValid ? (Platform::Object ^ )(double)from : nullptr,
                            toValid ? (Platform::Object ^ )(double)to : nullptr);
 }
-
-extern "C" unsigned int XamlWaitHandle(uintptr_t hEvent, unsigned int timeout);
 
 void DisplayAnimation::AddTransitionAnimation(DisplayNode* node, const char* type, const char* subtype) {
     auto xamlNode = GetCALayer(node);
@@ -272,7 +269,7 @@ void DisplayAnimation::AddTransitionAnimation(DisplayNode* node, const char* typ
 }
 
 void DisplayNode::AddToRoot() {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     windowCollection->Children->Append(xamlNode);
 
     SetMasksToBounds(true);
@@ -292,17 +289,17 @@ void DisplayNode::SetPropertyInt(const wchar_t* name, int value) {
 }
 
 void DisplayNode::SetHidden(bool hidden) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
-    xamlNode->hidden = hidden;
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    xamlNode->Hidden = hidden;
 }
 
 void DisplayNode::SetMasksToBounds(bool masksToBounds) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     xamlNode->Set("masksToBounds", (bool)masksToBounds);
 }
 
 float DisplayNode::GetPresentationPropertyValue(const char* name) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = (XamlCompositorCS::Controls::CALayerXaml ^ )(Platform::Object ^ )_xamlNode;
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = (XamlCompositor::Controls::CALayerXaml ^ )(Platform::Object ^ )_xamlNode;
     std::string str(name);
     std::wstring wstr(str.begin(), str.end());
 
@@ -310,18 +307,18 @@ float DisplayNode::GetPresentationPropertyValue(const char* name) {
 }
 
 void DisplayNode::SetContentsCenter(float x, float y, float width, float height) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     xamlNode->SetContentsCenter(Windows::Foundation::Rect(x, y, width, height));
 }
 
 void DisplayNode::SetTopMost() {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     topMost = true;
     xamlNode->SetTopMost();
 }
 
 void DisplayNode::SetBackgroundColor(float r, float g, float b, float a) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     if (!isRoot && !topMost) {
         xamlNode->SetBackgroundColor(r, g, b, a);
     }
@@ -329,18 +326,17 @@ void DisplayNode::SetBackgroundColor(float r, float g, float b, float a) {
 
 void DisplayNode::SetAccessibilityInfo(const IWAccessibilityInfo& info) {
     /* Disabled for now
-    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
     auto peer =
-    (XamlCompositorCS::Controls::CALayerXamlAutomationPeer^)Windows::UI::Xaml::Automation::Peers::FrameworkElementAutomationPeer::FromElement(xamlNode);
+    (XamlCompositor::Controls::CALayerXamlAutomationPeer^)Windows::UI::Xaml::Automation::Peers::FrameworkElementAutomationPeer::FromElement(xamlNode);
 
     assert(xamlNode != nullptr);
     assert(peer != nullptr);
     */
 }
 
-void DisplayNode::SetShouldRasterize(bool rasterize)
-{
-    XamlCompositorCS::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+void DisplayNode::SetShouldRasterize(bool rasterize) {
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     if (rasterize) {
         xamlNode->CacheMode = ref new Windows::UI::Xaml::Media::BitmapCache();
     } else {
@@ -359,13 +355,13 @@ void DisplayNode::AddSubnode(DisplayNode* node, DisplayNode* before, DisplayNode
     node->parent = this;
     _subnodes.insert(node);
 
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(node);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(node);
     Windows::UI::Xaml::Controls::Panel ^ xamlSuperNode = GetCALayer(this);
 
     if (before == NULL && after == NULL) {
         xamlSuperNode->Children->Append(xamlNode);
     } else if (before != NULL) {
-        XamlCompositorCS::Controls::CALayerXaml ^ xamlBeforeNode = GetCALayer(before);
+        XamlCompositor::Controls::CALayerXaml ^ xamlBeforeNode = GetCALayer(before);
         unsigned int idx = 0;
         if (xamlSuperNode->Children->IndexOf(xamlBeforeNode, &idx) == true) {
             xamlSuperNode->Children->InsertAt(idx, xamlNode);
@@ -373,7 +369,7 @@ void DisplayNode::AddSubnode(DisplayNode* node, DisplayNode* before, DisplayNode
             assert(0);
         }
     } else if (after != NULL) {
-        XamlCompositorCS::Controls::CALayerXaml ^ xamlAfterNode = GetCALayer(after);
+        XamlCompositor::Controls::CALayerXaml ^ xamlAfterNode = GetCALayer(after);
         unsigned int idx = 0;
         if (xamlSuperNode->Children->IndexOf(xamlAfterNode, &idx) == true) {
             xamlSuperNode->Children->InsertAt(idx + 1, xamlNode);
@@ -387,11 +383,11 @@ void DisplayNode::AddSubnode(DisplayNode* node, DisplayNode* before, DisplayNode
 void DisplayNode::MoveNode(DisplayNode* before, DisplayNode* after) {
     assert(parent != NULL);
 
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::Controls::Panel ^ xamlSuperNode = GetCALayer(parent);
 
     if (before != NULL) {
-        XamlCompositorCS::Controls::CALayerXaml ^ xamlBeforeNode = GetCALayer(before);
+        XamlCompositor::Controls::CALayerXaml ^ xamlBeforeNode = GetCALayer(before);
 
         unsigned int srcIdx = 0;
         if (xamlSuperNode->Children->IndexOf(xamlNode, &srcIdx) == true) {
@@ -414,7 +410,7 @@ void DisplayNode::MoveNode(DisplayNode* before, DisplayNode* after) {
     } else {
         assert(after != NULL);
 
-        XamlCompositorCS::Controls::CALayerXaml ^ xamlAfterNode = GetCALayer(after);
+        XamlCompositor::Controls::CALayerXaml ^ xamlAfterNode = GetCALayer(after);
         unsigned int srcIdx = 0;
         if (xamlSuperNode->Children->IndexOf(xamlNode, &srcIdx) == true) {
             unsigned int destIdx = 0;
@@ -437,7 +433,7 @@ void DisplayNode::MoveNode(DisplayNode* before, DisplayNode* after) {
 }
 
 void DisplayNode::RemoveFromSupernode() {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
 
     Windows::UI::Xaml::Controls::Panel ^ xamlSuperNode;
     if (isRoot) {
@@ -524,7 +520,7 @@ void UnlockWritableBitmap(winobjc::Id& bitmap, void* byteAccess) {
 }
 
 void DisplayNode::SetContents(winobjc::Id& bitmap, float width, float height, float scale) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     if (((void*)bitmap) != NULL) {
         Windows::UI::Xaml::Media::ImageSource ^ contents = (Windows::UI::Xaml::Media::ImageSource ^ )(Platform::Object ^ )bitmap;
 
@@ -535,16 +531,16 @@ void DisplayNode::SetContents(winobjc::Id& bitmap, float width, float height, fl
 }
 
 void DisplayNode::SetContentsElement(winobjc::Id& elem, float width, float height, float scale) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::FrameworkElement ^ contents = (Windows::UI::Xaml::FrameworkElement ^ )(Platform::Object ^ )elem;
     xamlNode->setContentElement(contents, width, height, scale);
 }
 
 void DisplayNode::SetContentsElement(winobjc::Id& elem) {
-    XamlCompositorCS::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
+    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::FrameworkElement ^ contents = (Windows::UI::Xaml::FrameworkElement ^ )(Platform::Object ^ )elem;
-    float width = contents->Width;
-    float height = contents->Height;
+    float width = static_cast<float>(contents->Width);
+    float height = static_cast<float>(contents->Height);
     float scale = 1.0f;
     xamlNode->setContentElement(contents, width, height, scale);
 }
@@ -561,22 +557,21 @@ DisplayTextureXamlGlyphs::DisplayTextureXamlGlyphs() {
     _color[3] = 1.0f;
     _fontSize = 14.0f;
 
-    auto textControl = XamlCompositorCS::Controls::CATextLayerXaml::CreateTextLayer();
+    auto textControl = XamlCompositor::Controls::CATextLayerXaml::CreateTextLayer();
     _xamlTextbox = (Platform::Object ^ )textControl;
 }
 
 DisplayTextureXamlGlyphs::~DisplayTextureXamlGlyphs() {
-    XamlCompositorCS::Controls::CATextLayerXaml ^ textControl =
-        (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
-    XamlCompositorCS::Controls::CATextLayerXaml::DestroyTextLayer(textControl);
+    XamlCompositor::Controls::CATextLayerXaml ^ textControl =
+        (XamlCompositor::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
+    XamlCompositor::Controls::CATextLayerXaml::DestroyTextLayer(textControl);
     _xamlTextbox = nullptr;
 }
 
 Platform::String ^ charToPlatformString(const char* str);
 
 void DisplayTextureXamlGlyphs::ConstructGlyphs(const char* fontName, const wchar_t* str, int length) {
-    XamlCompositorCS::Controls::CATextLayerXaml ^ textLayer =
-        (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
+    XamlCompositor::Controls::CATextLayerXaml ^ textLayer = (XamlCompositor::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
     Windows::UI::Xaml::Controls::TextBlock ^ textControl = textLayer->TextBlock;
     textControl->Text = ref new Platform::String(str, length);
     textControl->FontSize = _fontSize;
@@ -628,8 +623,7 @@ Platform::String ^
     }
 
     void DisplayTextureXamlGlyphs::Measure(float width, float height) {
-    XamlCompositorCS::Controls::CATextLayerXaml ^ textLayer =
-        (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
+    XamlCompositor::Controls::CATextLayerXaml ^ textLayer = (XamlCompositor::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
     Windows::UI::Xaml::Controls::TextBlock ^ textControl = textLayer->TextBlock;
 
     textControl->Measure(Windows::Foundation::Size(width, height));
@@ -643,8 +637,7 @@ Platform::String ^
 }
 
 void DisplayTextureXamlGlyphs::SetNodeContent(DisplayNode* node, float width, float height, float scale) {
-    XamlCompositorCS::Controls::CATextLayerXaml ^ textLayer =
-        (XamlCompositorCS::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
+    XamlCompositor::Controls::CATextLayerXaml ^ textLayer = (XamlCompositor::Controls::CATextLayerXaml ^ )(Platform::Object ^ )_xamlTextbox;
     winobjc::Id textControl = textLayer->TextBlock;
 
     float slackWidth = (width / scale) + 2.0f;
@@ -659,12 +652,12 @@ void SetScreenParameters(float width, float height, float magnification, float r
     windowCollection->InvalidateMeasure();
     rootNode->InvalidateArrange();
     rootNode->InvalidateMeasure();
-    XamlCompositorCS::Controls::CALayerXaml::ApplyMagnificationFactor(windowCollection, magnification, rotation);
+    XamlCompositor::Controls::CALayerXaml::ApplyMagnificationFactor(windowCollection, magnification, rotation);
 }
 
 void CreateXamlCompositor(winobjc::Id& root);
 
-extern "C" void IWSetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid) {
+extern "C" void SetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid) {
     winobjc::Id gridObj((Platform::Object ^ )grid);
     CreateXamlCompositor(gridObj);
 }

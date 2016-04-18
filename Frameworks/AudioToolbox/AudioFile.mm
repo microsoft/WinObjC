@@ -23,8 +23,12 @@
 #import "Platform/EbrPlatform.h"
 #import "Etc.h"
 #include "CAFDecoder.h"
+#include "LoggingNative.h"
+
+static const wchar_t* TAG = L"AudioFile";
 
 #import "stb_vorbis.h"
+#import <AudioToolbox/AudioFile.h>
 #import <AudioToolbox/AudioFileTypes.h>
 #import <AudioToolbox/ExtendedAudioFile.h>
 #import <StubReturn.h>
@@ -70,8 +74,9 @@ public:
 
 class AudioFileOGG : public OpaqueAudioFileID {
     stb_vorbis* _handle;
+    EbrFile* _file;
 
-    AudioFileOGG(stb_vorbis* handle) : _handle(handle) {
+    AudioFileOGG(stb_vorbis* handle, EbrFile* file) : _handle(handle), _file(file) {
     }
 
 public:
@@ -80,26 +85,44 @@ public:
             stb_vorbis_close(_handle);
             _handle = 0;
         }
+        if (_file) {
+            EbrFclose(_file);
+            _file = 0;
+        }
     }
 
     static OpaqueAudioFileID* openURL(char* url) {
-        int err = 0;
-        stb_vorbis* handle = stb_vorbis_open_filename(url, &err, 0);
+        //  Open the file using EbrFopen so that path mapping is applied
+        //  (since the url will often reference / as the root of the app directory)
+        EbrFile* file = EbrFopen(url, "rb");
+        if (file) {
+            int err = 0;
 
-        if (handle && err == 0) {
-            return new AudioFileOGG(handle);
+            //  Pass the FILE* handle directly to stb_vorbis
+            stb_vorbis* handle = stb_vorbis_open_file(EbrNativeFILE(file), 0, &err, 0);
+
+            if (handle && err == 0) {
+                return new AudioFileOGG(handle, file);
+            }
+
+            TraceError(TAG, L"[OGG] OGG open error: %d", err);
         }
         return 0;
     }
 
     virtual int read(u32* outFrameCount, AudioBufferList* buffers) {
         // Right now we only support reading into one buffer
-        assert(buffers->mNumberBuffers == 1);
+        if (buffers->mNumberBuffers != 1) {
+            UNIMPLEMENTED_WITH_MSG("OGG decoding only supported with 1 AudioBuffer");
+            *outFrameCount = 0;
+            return 0;
+        }
 
-        short* data = (short*)buffers->mBuffers[0].mData;
-        *outFrameCount = buffers->mBuffers[0].mDataByteSize / 2;
+        u32 numBytes = buffers->mBuffers[0].mDataByteSize;
+        int ret = readBytes(0, &numBytes, buffers->mBuffers[0].mData);
+        *outFrameCount = numBytes / 2;
 
-        return readBytes(0, outFrameCount, buffers->mBuffers[0].mData);
+        return ret;
     }
 
     int readBytes(i64 start, u32* numBytes, void* buffer) {
@@ -150,7 +173,7 @@ public:
             }
 
             default:
-                EbrDebugLog("[OGG] Unrecognized property for getProperty: %d\n", propID);
+                TraceError(TAG, L"[OGG] Unrecognized property for getProperty: %d", propID);
                 break;
         }
 
@@ -197,14 +220,14 @@ public:
         char id[4];
         EbrFread(id, sizeof(id), 1, f);
         if (strncmp(id, "RIFF", 4) != 0) {
-            EbrDebugLog("Tried to open %s as WAV, it's not\n", url);
+            TraceError(TAG, L"Tried to open %hs as WAV, it's not", url);
             EbrFclose(f);
             return 0;
         }
 
         OpaqueAudioFileID* ret = openFile(f);
         if (!ret) {
-            EbrDebugLog("Failed to open %s as a WAV\n", url);
+            TraceError(TAG, L"Failed to open %hs as a WAV", url);
             EbrFclose(f);
             return 0;
         }
@@ -218,14 +241,14 @@ public:
         EbrFread(&size, sizeof(size), 1, f);
         EbrFread(&id, 1, sizeof(id), f);
         if (strncmp(id, "WAVE", 4) != 0) {
-            EbrDebugLog("malformed WAV file\n");
+            TraceError(TAG, L"malformed WAV file");
             return 0;
         }
 
         ChunkHeader cheader;
         EbrFread(&cheader, sizeof(cheader), 1, f);
         if (strncmp(cheader.chunkId, "fmt ", 4) != 0) {
-            EbrDebugLog("WAV Expected to get a fmt tag first\n");
+            TraceError(TAG, L"WAV Expected to get a fmt tag first");
             return 0;
         }
 
@@ -242,12 +265,12 @@ public:
 
             int size = (int)dheader.dataSize;
             if (size < 0) {
-                EbrDebugLog("Bad data chunk size\n");
+                TraceError(TAG, L"Bad data chunk size");
                 return 0;
             }
             int ret = EbrFseek(f, dheader.dataSize, SEEK_CUR);
             if (ret != 0) {
-                EbrDebugLog("Error seeking in WAV file\n");
+                TraceError(TAG, L"Error seeking in WAV file");
                 return 0;
             }
         }
@@ -258,7 +281,7 @@ public:
 
     int readBytes(i64 start, u32* numBytes, void* buffer) {
         if (start != 0) {
-            EbrDebugLog("Attempting to read WAV with non-zero offset, unsupported.\n");
+            TraceError(TAG, L"Attempting to read WAV with non-zero offset, unsupported.");
             return -1;
         }
 
@@ -346,7 +369,7 @@ public:
             }
 
             default:
-                EbrDebugLog("[WAV] Unrecognized property for getProperty: %d\n", propID);
+                TraceError(TAG, L"[WAV] Unrecognized property for getProperty: %d", propID);
                 break;
         }
 
@@ -372,13 +395,13 @@ public:
     static OpaqueAudioFileID* openURL(char* url) {
         EbrFile* f = EbrFopen(url, "rb");
         if (!f) {
-            EbrDebugLog("CAF %s doesn't exist..\n", url);
+            TraceError(TAG, L"CAF %hs doesn't exist..", url);
             return NULL;
         }
 
         AudioFileCAF* self = new AudioFileCAF;
         if (!self->_decoder.InitForRead(f)) {
-            EbrDebugLog("CAF %s has an unsupported format..\n", url);
+            TraceError(TAG, L"CAF %hs has an unsupported format..", url);
             return NULL;
         }
 
@@ -405,14 +428,14 @@ public:
 
         switch (propID) {
             case kExtAudioFileProperty_FileLengthFrames: {
-                EbrDebugLog("CAF getting filelengthframes\n");
+                TraceVerbose(TAG, L"CAF getting filelengthframes");
                 *(i64*)out = _data.size() / outDesc.mChannelsPerFrame;
                 break;
             }
 
             case kExtAudioFileProperty_FileDataFormat:
             case kAudioFilePropertyDataFormat: {
-                EbrDebugLog("CAF getting data format\n");
+                TraceVerbose(TAG, L"CAF getting data format");
                 AudioStreamBasicDescription* desc = (AudioStreamBasicDescription*)out;
                 desc->mFormatID = 'lpcm';
                 desc->mChannelsPerFrame = outDesc.mChannelsPerFrame;
@@ -429,13 +452,13 @@ public:
             }
 
             case kAudioFilePropertyAudioDataByteCount: {
-                EbrDebugLog("CAF getting byte count\n");
+                TraceVerbose(TAG, L"CAF getting byte count");
                 *(u64*)out = _data.size() * sizeof(short);
                 break;
             }
 
             default:
-                EbrDebugLog("[CAF] Unrecognized property for getProperty: %d\n", propID);
+                TraceError(TAG, L"[CAF] Unrecognized property for getProperty: %d", propID);
                 break;
         }
 
@@ -448,7 +471,7 @@ public:
 
     int readBytes(i64 start, u32* numBytes, void* buffer) {
         if (start != 0) {
-            EbrDebugLog("Attempting to read CAF with non-zero offset, unsupported.\n");
+            TraceError(TAG, L"Attempting to read CAF with non-zero offset, unsupported.");
             return -1;
         }
 
@@ -481,11 +504,11 @@ public:
  @Status Caveat
  @Notes Only file:// URLs supported
 */
-OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID* out) {
+OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID _Nullable* out) {
     char* filename = (char*)[[url path] UTF8String];
     EbrFile* f = EbrFopen(filename, "rb");
     if (!f) {
-        EbrDebugLog("Could not find audio file %s\n", filename);
+        TraceError(TAG, L"Could not find audio file %hs", filename);
         return 0;
     }
 
@@ -494,18 +517,20 @@ OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioF
     EbrFclose(f);
 
     // Try to figure out what this is:
-    if (strncmp(header, "OggS", 4) == 0) {
-        *out = AudioFileOGG::openURL(filename);
-    } else if (strncmp(header, "RIFF", 4) == 0) {
-        *out = AudioFileWAV::openURL(filename);
-    } else if (strncmp(header, "caff", 4) == 0) {
-        *out = AudioFileCAF::openURL(filename);
-    } else if (strncmp(header, "ID3", 3) == 0) {
-        EbrDebugLog("MP3s not supported!\n");
-        return 1234;
-    } else {
-        EbrDebugLog("What is %s?!\n", filename);
-        return 1234;
+    if (out) {
+        if (strncmp(header, "OggS", 4) == 0) {
+            *out = AudioFileOGG::openURL(filename);
+        } else if (strncmp(header, "RIFF", 4) == 0) {
+            *out = AudioFileWAV::openURL(filename);
+        } else if (strncmp(header, "caff", 4) == 0) {
+            *out = AudioFileCAF::openURL(filename);
+        } else if (strncmp(header, "ID3", 3) == 0) {
+            TraceError(TAG, L"MP3s not supported!");
+            return 1234;
+        } else {
+            TraceError(TAG, L"What is %hs?!", filename);
+            return 1234;
+        }
     }
 
     return 0;
@@ -554,7 +579,7 @@ DWORD AudioFileOpenWithCallbacks(void* context,
                                  AudioFile_GetSizeProc getSizeFunc,
                                  AudioFile_SetSizeProc setSizeFunc,
                                  DWORD typeHint,
-                                 AudioFileID* out) {
+                                 AudioFileID _Nullable* out) {
     EbrCallbackFile* callbackFP = new EbrCallbackFile(context, readFunc, writeFunc, getSizeFunc, setSizeFunc);
     EbrFile* in = EbrAllocFile(callbackFP);
 
@@ -562,11 +587,13 @@ DWORD AudioFileOpenWithCallbacks(void* context,
     EbrFread(&header, sizeof(header), 1, in);
 
     // Try to figure out what this is:
-    if (strncmp(header, "RIFF", 4) == 0) {
-        *out = AudioFileWAV::openFile(in);
-    } else {
-        EbrDebugLog("What is this format?!\n");
-        return 1234;
+    if (out) {
+        if (strncmp(header, "RIFF", 4) == 0) {
+            *out = AudioFileWAV::openFile(in);
+        } else {
+            TraceError(TAG, L"What is this format?!");
+            return 1234;
+        }
     }
 
     return 0;
@@ -576,9 +603,11 @@ DWORD AudioFileOpenWithCallbacks(void* context,
  @Status Interoperable
 */
 OSStatus AudioFileCreateWithURL(
-    CFURLRef url, AudioFileTypeID type, const AudioStreamBasicDescription* format, UInt32 inFlags, AudioFileID* out) {
-    EbrDebugLog("_AudioFileCreateWithURL not supported\n");
-    *out = 0;
+    CFURLRef url, AudioFileTypeID type, const AudioStreamBasicDescription* format, UInt32 inFlags, AudioFileID _Nullable* out) {
+    TraceWarning(TAG, L"_AudioFileCreateWithURL not supported");
+    if (out) {
+        *out = 0;
+    }
 
     return 0;
 }
@@ -603,6 +632,10 @@ OSStatus AudioFileGetProperty(AudioFileID fileID, AudioFilePropertyID propID, UI
     return fileID->getProperty(propID, ioDataSize, propOutData);
 }
 
+/**
+ @Status Caveat
+ @Notes Limited properties supported depending on codec
+*/
 DWORD AudioFileGetPropertyInfo(AudioFileID fileID, DWORD propID, DWORD* outDataSize, DWORD* isWritable) {
     if (isWritable) {
         *isWritable = FALSE;
@@ -653,7 +686,7 @@ OSStatus AudioFileReadPacketData(AudioFileID fileID,
                                  UInt32* numPackets,
                                  void* outBuf) {
     UNIMPLEMENTED();
-    EbrDebugLog("AudioFileReadPacketData not supported\n");
+    TraceWarning(TAG, L"AudioFileReadPacketData not supported");
 
     *outNumBytes = 0;
     *numPackets = 0;

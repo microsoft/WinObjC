@@ -17,6 +17,7 @@
 #import <StubReturn.h>
 
 #import <HomeKit/HMHomeManager.h>
+#import "AssertARCEnabled.h"
 
 @implementation HMHomeManager
 

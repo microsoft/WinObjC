@@ -27,7 +27,7 @@ class CGContextCairo : public CGContextImpl {
 private:
     cairo_filter_t _filter;
 
-    // Filter is assigned for each pattern. If the pattern is getting destroyed we must 
+    // Filter is assigned for each pattern. If the pattern is getting destroyed we must
     // reset the filter as well.
     // pattern: The pattern for which current filter should be assigned.
     void _assignAndResetFilter(cairo_pattern_t* pattern);
@@ -91,7 +91,7 @@ public:
     virtual void CGContextAddEllipseInRect(CGRect rct);
     virtual void CGContextStrokeEllipseInRect(CGRect rct);
     virtual void CGContextFillEllipseInRect(CGRect rct);
-    virtual void CGContextAddPath(id path);
+    virtual void CGContextAddPath(CGPathRef path);
     virtual void CGContextStrokePath();
     virtual void CGContextStrokeRect(CGRect rct);
     virtual void CGContextStrokeRectWithWidth(CGRect rct, float width);

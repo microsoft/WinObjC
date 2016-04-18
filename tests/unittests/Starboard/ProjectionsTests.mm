@@ -45,9 +45,8 @@ ARM_DISABLED_TEST(Projections, BadCastTests) {
     bool exceptionThrown = false;
     try {
         rt_dynamic_cast<WDXDXmlDocument>(badge);
-    } catch (...) {
+    } catch (NSException* e) {
         exceptionThrown = true;
     }
     ASSERT_TRUE_MSG(exceptionThrown, "Bad cast didn't throw exception!");
-
 }

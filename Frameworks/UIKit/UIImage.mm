@@ -36,7 +36,13 @@
 #include "Wincodec.h"
 #include "COMIncludes_End.h"
 
-#include "BMPDecode.h"
+#include "LoggingNative.h"
+
+@interface UIImage ()
+- (CGRect)_imageStretch;
+@end
+
+static const wchar_t* TAG = L"UIImage";
 
 struct insetInfo {
     UIImage* img;
@@ -46,6 +52,9 @@ struct insetInfo {
 CFMutableDictionaryRef g_imageCache;
 static EbrLock imageCacheLock;
 
+/**
+ @Status Interoperable
+*/
 void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
     CGImageRef cgImage = (CGImageRef)[image CGImage];
     CGImageRef curImage = (CGImageRef)[layer contents];
@@ -136,7 +145,7 @@ imageCacheInfo imageInfo;
     bool _isFromCache;
     uint8_t* out;
     uint8_t** row_pointers;
-    idretaintype(NSData) _deferredImageData;
+    StrongId<NSData> _deferredImageData;
 }
 
 /**
@@ -295,19 +304,19 @@ static bool loadImageFromWICFrame(UIImage* dest, IWICImagingFactory* pFactory, I
                 if (SUCCEEDED(hr)) {
                     ret = true;
                 } else {
-                    EbrDebugLog("IWICFormatConverter::CopyPixels failed hr=%x\n", hr);
+                    TraceError(TAG, L"IWICFormatConverter::CopyPixels failed hr=%x", hr);
                     ret = false;
                 }
             } else {
-                EbrDebugLog("IWICFormatConverter::Initialize failed hr=%x\n", hr);
+                TraceError(TAG, L"IWICFormatConverter::Initialize failed hr=%x", hr);
                 ret = false;
             }
         } else {
-            EbrDebugLog("IWICImagingFactory::CreateFormatConverter failed hr=%x\n", hr);
+            TraceError(TAG, L"IWICImagingFactory::CreateFormatConverter failed hr=%x", hr);
             ret = false;
         }
     } else {
-        EbrDebugLog("IWICBitmapDecoder::GetFrame failed hr=%x\n", hr);
+        TraceError(TAG, L"IWICBitmapDecoder::GetFrame failed hr=%x", hr);
         ret = false;
     }
 
@@ -347,20 +356,20 @@ static bool loadImageWithWICDecoder(UIImage* dest, REFGUID decoderCls, void* byt
                     hr = pDecoder->GetFrame(0, &pFrame);
                     if (SUCCEEDED(hr)) {
                         if (!loadImageFromWICFrame(dest, pFactory, pFrame)) {
-                            EbrDebugLog("loadImageFromWICFrame failed\n");
+                            TraceError(TAG, L"loadImageFromWICFrame failed");
                             hr = E_FAIL;
                         }
                     } else {
-                        EbrDebugLog("IWICBitmapDecoder::GetFrame failed hr=%x\n", hr);
+                        TraceError(TAG, L"IWICBitmapDecoder::GetFrame failed hr=%x", hr);
                     }
                 } else {
-                    EbrDebugLog("IWICBitmapDecoder::Initialize failed hr=%x\n", hr);
+                    TraceError(TAG, L"IWICBitmapDecoder::Initialize failed hr=%x", hr);
                 }
             } else {
-                EbrDebugLog("IStream::Write failed hr=%x len=%d written=%d\n", hr, length, written);
+                TraceError(TAG, L"IStream::Write failed hr=%x len=%d written=%d", hr, length, written);
             }
         } else {
-            EbrDebugLog("CreateStreamOnHGlobal failed hr=%x\n", hr);
+            TraceError(TAG, L"CreateStreamOnHGlobal failed hr=%x", hr);
         }
     }
 
@@ -420,7 +429,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     char* pathStr = NULL;
 
     if (strlen(path) == 0) {
-        EbrDebugLog("UIImage: path is blank\n");
+        TraceVerbose(TAG, L"UIImage: path is blank");
         return nil;
     }
 
@@ -498,8 +507,10 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         EbrLockInit(&imageCacheLock);
     }
 
-    UIImageCachedObject* cachedImage = [g_imageCache objectForKey:[NSString stringWithCString:pathStr]];
-    if (cachedImage != nil) {
+    const UIImageCachedObject* cachedImage =
+        reinterpret_cast<const UIImageCachedObject*>(CFDictionaryGetValue(g_imageCache, [NSString stringWithCString:pathStr]));
+
+    if (cachedImage) {
         if (pathStr)
             IwFree(pathStr);
         m_pImage = cachedImage->m_pImage;
@@ -516,7 +527,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 
     fpIn = EbrFopen(pathStr, "rb");
     if (!fpIn) {
-        EbrDebugLog("Image %s not found\n", pathStr);
+        TraceVerbose(TAG, L"Image %hs not found", pathStr);
         // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
         return nil;
     }
@@ -538,7 +549,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 
         fpIn = EbrFopen(pathStr, "rb");
         if (!fpIn) {
-            EbrDebugLog("Image %s not found\n", pathStr);
+            TraceVerbose(TAG, L"Image %hs not found", pathStr);
             // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
             return nil;
         }
@@ -546,7 +557,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         EbrFseek(fpIn, 0, SEEK_END);
         int len = EbrFtell(fpIn);
         if (len <= 0) {
-            EbrDebugLog("Image %s invalid\n", pathStr);
+            TraceVerbose(TAG, L"Image %hs invalid", pathStr);
             // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
             EbrFclose(fpIn);
             return nil;
@@ -561,13 +572,13 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         if (!loadTIFF(self, in, len)) {
             if (!loadGIF(self, in, len)) {
                 if (!loadBMP(self, in, len)) {
-                    EbrDebugLog("Unrecognized image\n");
+                    TraceVerbose(TAG, L"Unrecognized image");
                     for (int i = 0; i < 64; i++) {
-                        EbrDebugLog("%02x ", in[i]);
+                        TraceVerbose(TAG, L"%02x ", in[i]);
                         if ((i + 1) % 16 == 0)
-                            EbrDebugLog("\n");
+                            TraceVerbose(TAG, L"");
                     }
-                    EbrDebugLog("Image type %s not recognized header=%x\n", pathStr, *((DWORD*)in));
+                    TraceVerbose(TAG, L"Image type %hs not recognized header=%x", pathStr, *((DWORD*)in));
                     // m_pImage = new CGBitmapImage(64, 64, surfaceFormat::_ColorRGBA, NULL);
                     return nil;
                 }
@@ -644,7 +655,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 */
 - (instancetype)initWithData:(NSData*)data scale:(float)scale {
     if (data == nil) {
-        EbrDebugLog("UIImage: imageWithData, data=nil!\n");
+        TraceVerbose(TAG, L"UIImage: imageWithData, data=nil!");
         return nil;
     }
 
@@ -705,11 +716,11 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 
     // Fall back on the less common cases:
     if (!loaded) {
-        EbrDebugLog("Unrecognized image\n");
+        TraceVerbose(TAG, L"Unrecognized image");
         for (int i = 0; i < 64; i++) {
-            EbrDebugLog("%02x ", in[i]);
+            TraceVerbose(TAG, L"%02x ", in[i]);
             if ((i + 1) % 16 == 0)
-                EbrDebugLog("\n");
+                TraceVerbose(TAG, L"");
         }
         return nil;
     }
@@ -730,7 +741,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 }
 
 - (void)draw1PartImageInRect:(CGRect)pos {
-    EbrDebugLog("UIImage::draw1PartImageInRect\n");
+    TraceVerbose(TAG, L"UIImage::draw1PartImageInRect");
 
     CGContextRef cur = UIGraphicsGetCurrentContext();
 
@@ -757,11 +768,11 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
 - (void)drawAtPoint:(CGPoint)point blendMode:(CGBlendMode)mode alpha:(float)alpha {
     CGContextRef cur = UIGraphicsGetCurrentContext();
     if (!cur) {
-        EbrDebugLog("CGContext = NULL!\n");
+        TraceVerbose(TAG, L"CGContext = NULL!");
         return;
     }
     if (!getImage(self)) {
-        EbrDebugLog("m_pImage = NULL!\n");
+        TraceVerbose(TAG, L"m_pImage = NULL!");
         return;
     }
 
@@ -784,6 +795,9 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     CGContextRestoreGState(cur);
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)drawAsPatternInRect:(CGRect)pos {
     [self drawAtPoint:pos.origin];
 }
@@ -1110,7 +1124,7 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     CGContextRef cur = UIGraphicsGetCurrentContext();
 
     if (!getImage(self)) {
-        EbrDebugLog("m_pImage = NULL!\n");
+        TraceWarning(TAG, L"m_pImage = NULL!");
         return;
     }
 
@@ -1118,11 +1132,11 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     CGContextSetBlendMode(cur, mode);
 
     if (alpha != 1.0) {
-        EbrDebugLog("Should draw with alpha\n");
+        TraceVerbose(TAG, L"Should draw with alpha");
     }
 
     if (_scale == 0) {
-        EbrDebugLog("Scale should be non-zero!\n");
+        TraceWarning(TAG, L"Scale should be non-zero!");
         return;
     }
 
@@ -1188,6 +1202,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return size;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CGRect)_imageStretch {
     return _imageStretch;
 }
@@ -1309,6 +1326,9 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     return [ret autorelease];
 }
 
+/**
+ @Status Interoperable
+*/
 - (void)dealloc {
     _cacheImage = nil;
     _deferredImageData = nil;
@@ -1332,7 +1352,7 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
 - (void)setAccessibilityLabel:(UILabel*)label {
 }
 
-- (id)copyWithZone:(NSZone*)zone {
+- (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }
 
@@ -1351,19 +1371,19 @@ static CGImageRef getImage(UIImage* self) {
 
         if (in[0] == 'G' && in[1] == 'I' && in[2] == 'F') {
             if (!loadGIF(self, in, len)) {
-                EbrDebugLog("Something looked like a GIF but wasn't!\n");
+                TraceVerbose(TAG, L"Something looked like a GIF but wasn't!");
             }
         }
 
         if ((in[0] == 'I' && in[1] == 'I') || (in[0] == 'M' && in[1] == 'M')) {
             if (!loadTIFF(self, in, len)) {
-                EbrDebugLog("Something looked like a TIFF but wasn't!\n");
+                TraceVerbose(TAG, L"Something looked like a TIFF but wasn't!");
             }
         }
 
         if (in[0] == 'B' && in[1] == 'M') {
             if (!loadBMP(self, in, len)) {
-                EbrDebugLog("Something looked like a BMP but wasn't!\n");
+                TraceVerbose(TAG, L"Something looked like a BMP but wasn't!");
             }
         }
 
@@ -1417,7 +1437,7 @@ static CGImageRef getImage(UIImage* self) {
  @Status Interoperable
 */
 NSData* UIImagePNGRepresentation(UIImage* img) {
-   return _CGImagePNGRepresentation(img);
+    return _CGImagePNGRepresentation(img);
 }
 
 /**
@@ -1442,9 +1462,7 @@ NSData* UIImageJPEGRepresentation(UIImage* img, CGFloat quality) {
 /**
  @Status Stub
 */
-+ (UIImage*)imageNamed:(NSString*)name
-                         inBundle:(NSBundle*)bundle
-    compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
++ (UIImage*)imageNamed:(NSString*)name inBundle:(NSBundle*)bundle compatibleWithTraitCollection:(UITraitCollection*)traitCollection {
     UNIMPLEMENTED();
     return StubReturn();
 }
