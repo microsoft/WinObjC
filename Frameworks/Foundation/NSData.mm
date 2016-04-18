@@ -26,6 +26,7 @@
 #include "Foundation/NSString.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSValue.h"
+#include <CoreFoundation/CFData.h>
 #include <UWP/WindowsStorageStreams.h>
 #include <UWP/WindowsSecurityCryptography.h>
 
@@ -479,11 +480,19 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSRange)rangeOfData:(NSData*)dataToFind options:(NSDataSearchOptions)mask range:(NSRange)searchRange {
-    UNIMPLEMENTED();
-    return NSMakeRange(0, 0);
+    // Safe to directly call into CF here, as the CF function only access this class's data through primitive functions
+    CFRange cfRange = CFDataFind(static_cast<CFDataRef>(self),
+                                 static_cast<CFDataRef>(dataToFind),
+                                 { searchRange.location, searchRange.length },
+                                 static_cast<CFDataSearchFlags>(mask));
+    if (cfRange.location < 0) {
+        return { NSNotFound, 0 };
+    } else {
+        return { cfRange.location, cfRange.length };
+    }
 }
 
 /**

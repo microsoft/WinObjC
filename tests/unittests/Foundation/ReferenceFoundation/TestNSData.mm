@@ -26,22 +26,24 @@
 #import <TestFramework.h>
 #import <vector>
 
-// TODO 6670024: Enable this (currently disabled since tests involving real files are tricky)
-// TEST(NSData, WriteToURLOptions) {
-//     NSData* saveData = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Test" withExtension:@"plist"]];
-//     auto savePath = @"/var/tmp/Test.plist";
-//     do {
-//         try
-//             saveData !.writeToFile(savePath, NSDataWritingOptions.DataWritingAtomic);
-//         auto fileManager = [NSFileManager defaultManager];
-//         ASSERT_TRUE([fileManager fileExistsAtPath:savePath]);
-//         try
-//             ![fileManager removeItemAtPath:savePath];
-//     }
-//     catch _ {
-//         ASSERT_TRUE_MSG(false, );
-//     }
-// }
+// TODO 6670035: This test has a dependency on NSBundle
+TEST(NSData, DISABLED_WriteToURLOptions) {
+    NSData* saveData = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Test" withExtension:@"plist"]];
+    auto savePath = @"/var/tmp/Test.plist";
+
+    NSError* error;
+    [saveData writeToFile:savePath options:NSDataWritingAtomic error:&error];
+    if (error) {
+        ASSERT_TRUE(false);
+    }
+
+    auto fileManager = [NSFileManager defaultManager];
+    ASSERT_TRUE([fileManager fileExistsAtPath:savePath]);
+    [fileManager removeItemAtPath:savePath error:&error];
+    if (error) {
+        ASSERT_TRUE(false);
+    }
+}
 
 TEST(NSData, EmptyDescription) {
     auto expected = @"<>";
@@ -410,60 +412,58 @@ TEST(NSData, Base64DecodeWithPadding2) {
     ASSERT_TRUE([dataPadding2 isEqualToData:decodedPadding2]);
 }
 
-// TODO 6670024: rangeOfData: is UNIMPLEMENTED()
-// TEST(NSData, RangeOfData) {
-//     std::vector<byte> baseData = { 0x00, 0x01, 0x02, 0x03, 0x04 };
-//     NSData* base = [NSData dataWithBytes:baseData.data() length:baseData.size()];
-//     NSRange baseFullRange = NSMakeRange(0, baseData.size());
-//     NSRange noPrefixRange = NSMakeRange(2, baseData.size() - 2);
-//     NSRange noSuffixRange = NSMakeRange(0, baseData.size() - 2);
-//     NSRange notFoundRange = NSMakeRange(NSNotFound, 0);
+TEST(NSData, RangeOfData) {
+    std::vector<byte> baseData = { 0x00, 0x01, 0x02, 0x03, 0x04 };
+    NSData* base = [NSData dataWithBytes:baseData.data() length:baseData.size()];
+    NSRange baseFullRange = NSMakeRange(0, baseData.size());
+    NSRange noPrefixRange = NSMakeRange(2, baseData.size() - 2);
+    NSRange noSuffixRange = NSMakeRange(0, baseData.size() - 2);
+    NSRange notFoundRange = NSMakeRange(NSNotFound, 0);
 
-//     std::vector<byte> prefixData = { 0x00, 0x01 };
-//     NSData* prefix = [NSData dataWithBytes:prefixData.data() length:prefixData.size()];
-//     NSRange prefixRange = NSMakeRange(0, prefixData.size());
+    std::vector<byte> prefixData = { 0x00, 0x01 };
+    NSData* prefix = [NSData dataWithBytes:prefixData.data() length:prefixData.size()];
+    NSRange prefixRange = NSMakeRange(0, prefixData.size());
 
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:baseFullRange], prefixRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchAnchored range:baseFullRange], prefixRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:baseFullRange], prefixRange));
-//     ASSERT_TRUE(
-//         NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange],
-//         notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:baseFullRange], prefixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchAnchored range:baseFullRange], prefixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:baseFullRange], prefixRange));
+    ASSERT_TRUE(
+        NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], notFoundRange));
 
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:noPrefixRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:noPrefixRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:noSuffixRange], prefixRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:noSuffixRange], prefixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:noPrefixRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:noPrefixRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:0 range:noSuffixRange], prefixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:prefix options:NSDataSearchBackwards range:noSuffixRange], prefixRange));
 
-//     std::vector<byte> suffixData = { 0x03, 0x04 };
-//     NSData* suffix = [NSData dataWithBytes:suffixData.data() length:suffixData.size()];
-//     NSRange suffixRange = NSMakeRange(3, suffixData.size());
+    std::vector<byte> suffixData = { 0x03, 0x04 };
+    NSData* suffix = [NSData dataWithBytes:suffixData.data() length:suffixData.size()];
+    NSRange suffixRange = NSMakeRange(3, suffixData.size());
 
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:baseFullRange], suffixRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchAnchored range:baseFullRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:baseFullRange], suffixRange));
-//     ASSERT_TRUE(
-//         NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], suffixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:baseFullRange], suffixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchAnchored range:baseFullRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:baseFullRange], suffixRange));
+    ASSERT_TRUE(
+        NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], suffixRange));
 
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:noPrefixRange], suffixRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:noPrefixRange], suffixRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:noSuffixRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:noSuffixRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:noPrefixRange], suffixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:noPrefixRange], suffixRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:0 range:noSuffixRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:suffix options:NSDataSearchBackwards range:noSuffixRange], notFoundRange));
 
-//     std::vector<byte> sliceData = { 0x02, 0x03 };
-//     NSData* slice = [NSData dataWithBytes:sliceData.data() length:sliceData.size()];
-//     NSRange sliceRange = NSMakeRange(2, sliceData.size());
+    std::vector<byte> sliceData = { 0x02, 0x03 };
+    NSData* slice = [NSData dataWithBytes:sliceData.data() length:sliceData.size()];
+    NSRange sliceRange = NSMakeRange(2, sliceData.size());
 
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:slice options:0 range:baseFullRange], sliceRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:slice options:NSDataSearchAnchored range:baseFullRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:slice options:NSDataSearchBackwards range:baseFullRange], sliceRange));
-//     ASSERT_TRUE(
-//         NSEqualRanges([base rangeOfData:slice options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:slice options:0 range:baseFullRange], sliceRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:slice options:NSDataSearchAnchored range:baseFullRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:slice options:NSDataSearchBackwards range:baseFullRange], sliceRange));
+    ASSERT_TRUE(
+        NSEqualRanges([base rangeOfData:slice options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], notFoundRange));
 
-//     NSData* empty = [NSData data];
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:empty options:0 range:baseFullRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:empty options:NSDataSearchAnchored range:baseFullRange], notFoundRange));
-//     ASSERT_TRUE(NSEqualRanges([base rangeOfData:empty options:NSDataSearchBackwards range:baseFullRange], notFoundRange));
-//     ASSERT_TRUE(
-//         NSEqualRanges([base rangeOfData:empty options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], notFoundRange));
-// }
+    NSData* empty = [NSData data];
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:empty options:0 range:baseFullRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:empty options:NSDataSearchAnchored range:baseFullRange], notFoundRange));
+    ASSERT_TRUE(NSEqualRanges([base rangeOfData:empty options:NSDataSearchBackwards range:baseFullRange], notFoundRange));
+    ASSERT_TRUE(
+        NSEqualRanges([base rangeOfData:empty options:NSDataSearchBackwards | NSDataSearchAnchored range:baseFullRange], notFoundRange));
+}

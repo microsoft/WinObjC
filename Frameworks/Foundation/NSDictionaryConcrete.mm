@@ -72,9 +72,7 @@ static const wchar_t* TAG = L"NSDictionary";
 }
 
 - (instancetype)initWithObjects:(id*)vals forKeys:(id*)keys count:(unsigned)count {
-    if (self = [super init]) {
-        _nscf.attach(reinterpret_cast<NSCFDictionary*>(static_cast<NSDictionary*>(
-            CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks))));
+    if (self = [self initWithCapacity:count]) {
         for (unsigned i = 0; i < count; i++) {
             [_nscf setObject:vals[i] forKey:keys[i]];
         }

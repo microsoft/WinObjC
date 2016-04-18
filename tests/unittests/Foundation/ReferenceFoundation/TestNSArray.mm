@@ -177,68 +177,65 @@ TEST(NSArray, BinarySearch) {
                     @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingFirstEqual are specified "
                     @"NSArray returns the lowest index of equal objects.");
 
-    // TODO 6670024: fix bug in indexOfObject:
-    // auto highestIndexToInsertNine = objectIndexInArray(array, 9, 7, 6, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    // ASSERT_TRUE_MSG(highestIndexToInsertNine == 13,
-    //                 @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingLastEqual are specified "
-    //                 @"NSArray returns the index of the least greater object...");
+    auto highestIndexToInsertNine = objectIndexInArray(array, 9, 7, 6, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
+    ASSERT_TRUE_MSG(highestIndexToInsertNine == 13,
+                    @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingLastEqual are specified "
+                    @"NSArray returns the index of the least greater object...");
 
-    // auto indexOfLeastGreaterObjectThanFive =
-    //     objectIndexInArray(array, 5, 0, 10, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    // ASSERT_TRUE_MSG(indexOfLeastGreaterObjectThanFive == 7,
-    //                 @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingLastEqual are "
-    //                 @"specified NSArray returns the index of the least greater object...");
+    auto indexOfLeastGreaterObjectThanFive =
+        objectIndexInArray(array, 5, 0, 10, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
+    ASSERT_TRUE_MSG(indexOfLeastGreaterObjectThanFive == 7,
+                    @"If both NSBinarySearchingInsertionIndex and NSBinarySearchingLastEqual are "
+                    @"specified NSArray returns the index of the least greater object...");
 
-    // auto rangeStart = 0;
-    // auto rangeLength = 13;
-    // auto endOfArray = objectIndexInArray(array, 10, rangeStart, rangeLength, NSBinarySearchingInsertionIndex |
-    // NSBinarySearchingLastEqual);
-    // ASSERT_TRUE_MSG(endOfArray == (rangeStart + rangeLength),
-    //                 @"...or the index at the end of the array if the object is larger than all other elements.");
+    auto rangeStart = 0;
+    auto rangeLength = 13;
+    auto endOfArray = objectIndexInArray(array, 10, rangeStart, rangeLength, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
+    ASSERT_TRUE_MSG(endOfArray == (rangeStart + rangeLength),
+                    @"...or the index at the end of the array if the object is larger than all other elements.");
 
-    // NSArray* arrayOfTwo = @[ [NSNumber numberWithInt:0], [NSNumber numberWithInt:2] ];
-    // auto indexInMiddle = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex | NSBinarySearchingFirstEqual);
-    // ASSERT_EQ_MSG(indexInMiddle, 1, @"If no match found item should be inserted before least greater object");
-    // auto indexInMiddle2 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
-    // ASSERT_EQ_MSG(indexInMiddle2, 1, @"If no match found item should be inserted before least greater object");
-    // auto indexInMiddle3 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex);
-    // ASSERT_EQ_MSG(indexInMiddle3, 1, @"If no match found item should be inserted before least greater object");
+    NSArray* arrayOfTwo = @[ [NSNumber numberWithInt:0], [NSNumber numberWithInt:2] ];
+    auto indexInMiddle = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex | NSBinarySearchingFirstEqual);
+    ASSERT_EQ_MSG(indexInMiddle, 1, @"If no match found item should be inserted before least greater object");
+    auto indexInMiddle2 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex | NSBinarySearchingLastEqual);
+    ASSERT_EQ_MSG(indexInMiddle2, 1, @"If no match found item should be inserted before least greater object");
+    auto indexInMiddle3 = objectIndexInArray(arrayOfTwo, 1, 0, 2, NSBinarySearchingInsertionIndex);
+    ASSERT_EQ_MSG(indexInMiddle3, 1, @"If no match found item should be inserted before least greater object");
 }
 
-// TODO 6670024: array replacement is not implemented
-// TEST(NSArray, ArrayReplacement) {
-//     NSMutableArray* array = [NSMutableArray arrayWithArray:@[
-//         [NSNumber numberWithInt:0],
-//         [NSNumber numberWithInt:1],
-//         [NSNumber numberWithInt:2],
-//         [NSNumber numberWithInt:3],
-//         [NSNumber numberWithInt:4],
-//         [NSNumber numberWithInt:5],
-//         [NSNumber numberWithInt:7]
-//     ]];
-//     [array replaceObjectsInRange:NSMakeRange(0, 2) withObjectsFromArray:@[ [NSNumber numberWithInt:8], [NSNumber numberWithInt:9] ]];
-//     ASSERT_TRUE(((NSNumber*)array[0]).integerValue == 8);
-//     ASSERT_TRUE(((NSNumber*)array[1]).integerValue == 9);
-//     ASSERT_TRUE(((NSNumber*)array[2]).integerValue == 2);
-// }
+TEST(NSArray, ArrayReplacement) {
+    NSMutableArray* array = [NSMutableArray arrayWithArray:@[
+        [NSNumber numberWithInt:0],
+        [NSNumber numberWithInt:1],
+        [NSNumber numberWithInt:2],
+        [NSNumber numberWithInt:3],
+        [NSNumber numberWithInt:4],
+        [NSNumber numberWithInt:5],
+        [NSNumber numberWithInt:7]
+    ]];
+    [array replaceObjectsInRange:NSMakeRange(0, 2) withObjectsFromArray:@[ [NSNumber numberWithInt:8], [NSNumber numberWithInt:9] ]];
+    ASSERT_TRUE(((NSNumber*)array[0]).integerValue == 8);
+    ASSERT_TRUE(((NSNumber*)array[1]).integerValue == 9);
+    ASSERT_TRUE(((NSNumber*)array[2]).integerValue == 2);
+}
 
-// TEST(NSArray, ArrayReplaceObjectsInRangeFromRange) {
-//     NSMutableArray* array = [NSMutableArray arrayWithArray:@[
-//         [NSNumber numberWithInt:0],
-//         [NSNumber numberWithInt:1],
-//         [NSNumber numberWithInt:2],
-//         [NSNumber numberWithInt:3],
-//         [NSNumber numberWithInt:4],
-//         [NSNumber numberWithInt:5],
-//         [NSNumber numberWithInt:7]
-//     ]];
-//     [array replaceObjectsInRange:NSMakeRange(0, 2)
-//             withObjectsFromArray:@[ [NSNumber numberWithInt:8], [NSNumber numberWithInt:9], [NSNumber numberWithInt:10] ]
-//                            range:NSMakeRange(1, 2)];
-//     ASSERT_TRUE(((NSNumber*)array[0]).integerValue == 9);
-//     ASSERT_TRUE(((NSNumber*)array[1]).integerValue == 10);
-//     ASSERT_TRUE(((NSNumber*)array[2]).integerValue == 2);
-// }
+TEST(NSArray, ArrayReplaceObjectsInRangeFromRange) {
+    NSMutableArray* array = [NSMutableArray arrayWithArray:@[
+        [NSNumber numberWithInt:0],
+        [NSNumber numberWithInt:1],
+        [NSNumber numberWithInt:2],
+        [NSNumber numberWithInt:3],
+        [NSNumber numberWithInt:4],
+        [NSNumber numberWithInt:5],
+        [NSNumber numberWithInt:7]
+    ]];
+    [array replaceObjectsInRange:NSMakeRange(0, 2)
+            withObjectsFromArray:@[ [NSNumber numberWithInt:8], [NSNumber numberWithInt:9], [NSNumber numberWithInt:10] ]
+                           range:NSMakeRange(1, 2)];
+    ASSERT_TRUE(((NSNumber*)array[0]).integerValue == 9);
+    ASSERT_TRUE(((NSNumber*)array[1]).integerValue == 10);
+    ASSERT_TRUE(((NSNumber*)array[2]).integerValue == 2);
+}
 
 TEST(NSArray, ReplaceObjectAtIndex) {
     NSMutableArray* array = [NSMutableArray arrayWithArray:@[
@@ -326,151 +323,149 @@ TEST(NSArray, BinarySearchFringeCases) {
     ASSERT_TRUE_MSG(greatestSearch == NSNotFound,
                     @"If object is greater than greatest object in the range then there is no change it could be found.");
 
-    // TODO 6670024: fix bug in indexOfObject:
-    // auto leastInsert = objectIndexInArray(array, -1, rangeStart, rangeLength, NSBinarySearchingInsertionIndex);
-    // ASSERT_TRUE_MSG(leastInsert == rangeStart,
-    //                 @"If object is less than least object in the range it should be inserted at range' location.");
+    auto leastInsert = objectIndexInArray(array, -1, rangeStart, rangeLength, NSBinarySearchingInsertionIndex);
+    ASSERT_TRUE_MSG(leastInsert == rangeStart,
+                    @"If object is less than least object in the range it should be inserted at range' location.");
 
-    // auto greatestInsert = objectIndexInArray(array, 15, rangeStart, rangeLength, NSBinarySearchingInsertionIndex);
-    // ASSERT_TRUE_MSG(greatestInsert == (rangeStart + rangeLength),
-    //                 @"If object is greater than greatest object in the range it should be inserted at range' end.");
+    auto greatestInsert = objectIndexInArray(array, 15, rangeStart, rangeLength, NSBinarySearchingInsertionIndex);
+    ASSERT_TRUE_MSG(greatestInsert == (rangeStart + rangeLength),
+                    @"If object is greater than greatest object in the range it should be inserted at range' end.");
 }
 
-// TODO 6670024: array replacement is not implemented
-// TEST(NSArray, ReplaceObjectsInRange_withObjectsFromArray) {
-//     NSMutableArray* array1 = [NSMutableArray arrayWithArray:@[ @"foo1", @"bar1", @"baz1" ]];
+TEST(NSArray, ReplaceObjectsInRange_withObjectsFromArray) {
+    NSMutableArray* array1 = [NSMutableArray arrayWithArray:@[ @"foo1", @"bar1", @"baz1" ]];
 
-//     NSArray* array2 = @[ @"foo2", @"bar2", @"baz2" ];
+    NSArray* array2 = @[ @"foo2", @"bar2", @"baz2" ];
 
-//     [array1 replaceObjectsInRange:NSMakeRange(0, 2) withObjectsFromArray:array2];
+    [array1 replaceObjectsInRange:NSMakeRange(0, 2) withObjectsFromArray:array2];
 
-//     ASSERT_OBJCEQ_MSG(([array1[0] isKindOfClass:[NSString class]] ? (NSString*)array1[0] : nil),
-//                       @"foo2",
-//                       @"Expected foo2 but was \(array1[0])");
-//     ASSERT_OBJCEQ_MSG(([array1[1] isKindOfClass:[NSString class]] ? (NSString*)array1[1] : nil),
-//                       @"bar2",
-//                       @"Expected bar2 but was \(array1[1])");
-//     ASSERT_OBJCEQ_MSG(([array1[2] isKindOfClass:[NSString class]] ? (NSString*)array1[2] : nil),
-//                       @"baz2",
-//                       @"Expected baz2 but was \(array1[2])");
-//     ASSERT_OBJCEQ_MSG(([array1[3] isKindOfClass:[NSString class]] ? (NSString*)array1[3] : nil),
-//                       @"baz1",
-//                       @"Expected baz1 but was \(array1[3])");
-// }
+    ASSERT_OBJCEQ_MSG(([array1[0] isKindOfClass:[NSString class]] ? (NSString*)array1[0] : nil),
+                      @"foo2",
+                      @"Expected foo2 but was \(array1[0])");
+    ASSERT_OBJCEQ_MSG(([array1[1] isKindOfClass:[NSString class]] ? (NSString*)array1[1] : nil),
+                      @"bar2",
+                      @"Expected bar2 but was \(array1[1])");
+    ASSERT_OBJCEQ_MSG(([array1[2] isKindOfClass:[NSString class]] ? (NSString*)array1[2] : nil),
+                      @"baz2",
+                      @"Expected baz2 but was \(array1[2])");
+    ASSERT_OBJCEQ_MSG(([array1[3] isKindOfClass:[NSString class]] ? (NSString*)array1[3] : nil),
+                      @"baz1",
+                      @"Expected baz1 but was \(array1[3])");
+}
 
-// TEST(NSArray, ReplaceObjectsInRange_withObjectsFromArray_range) {
-//     NSMutableArray* array1 = [NSMutableArray arrayWithArray:@[ @"foo1", @"bar1", @"baz1" ]];
+TEST(NSArray, ReplaceObjectsInRange_withObjectsFromArray_range) {
+    NSMutableArray* array1 = [NSMutableArray arrayWithArray:@[ @"foo1", @"bar1", @"baz1" ]];
 
-//     NSArray* array2 = @[ @"foo2", @"bar2", @"baz2" ];
+    NSArray* array2 = @[ @"foo2", @"bar2", @"baz2" ];
 
-//     [array1 replaceObjectsInRange:NSMakeRange(1, 1) withObjectsFromArray:array2 range:NSMakeRange(1, 2)];
+    [array1 replaceObjectsInRange:NSMakeRange(1, 1) withObjectsFromArray:array2 range:NSMakeRange(1, 2)];
 
-//     ASSERT_OBJCEQ_MSG(([array1[0] isKindOfClass:[NSString class]] ? (NSString*)array1[0] : nil),
-//                       @"foo1",
-//                       @"Expected foo1 but was \(array1[0])");
-//     ASSERT_OBJCEQ_MSG(([array1[1] isKindOfClass:[NSString class]] ? (NSString*)array1[1] : nil),
-//                       @"bar2",
-//                       @"Expected bar2 but was \(array1[1])");
-//     ASSERT_OBJCEQ_MSG(([array1[2] isKindOfClass:[NSString class]] ? (NSString*)array1[2] : nil),
-//                       @"baz2",
-//                       @"Expected baz2 but was \(array1[2])");
-//     ASSERT_OBJCEQ_MSG(([array1[3] isKindOfClass:[NSString class]] ? (NSString*)array1[3] : nil),
-//                       @"baz1",
-//                       @"Expected baz1 but was \(array1[3])");
-// }
+    ASSERT_OBJCEQ_MSG(([array1[0] isKindOfClass:[NSString class]] ? (NSString*)array1[0] : nil),
+                      @"foo1",
+                      @"Expected foo1 but was \(array1[0])");
+    ASSERT_OBJCEQ_MSG(([array1[1] isKindOfClass:[NSString class]] ? (NSString*)array1[1] : nil),
+                      @"bar2",
+                      @"Expected bar2 but was \(array1[1])");
+    ASSERT_OBJCEQ_MSG(([array1[2] isKindOfClass:[NSString class]] ? (NSString*)array1[2] : nil),
+                      @"baz2",
+                      @"Expected baz2 but was \(array1[2])");
+    ASSERT_OBJCEQ_MSG(([array1[3] isKindOfClass:[NSString class]] ? (NSString*)array1[3] : nil),
+                      @"baz1",
+                      @"Expected baz1 but was \(array1[3])");
+}
 
-// TODO 6670024: sorted array is not implemented
-// TEST(NSArray, SortedArrayUsingComparator) {
-//     // sort with localized caseInsensitive compare
-//     auto input = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
-//     auto expectedResult = [input sorted];
-//     auto result = [input sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
-//         NSString* l = (NSString*)left;
-//         NSString* r = (NSString*)right;
-//         return [l localizedCaseInsensitiveCompare:r];
-//     }];
-//     ASSERT_OBJCEQ(result, expectedResult);
+// TODO (7284899): This test has a dependency on the Locale subproj
+TEST(NSArray, DISABLED_SortedArrayUsingComparator) {
+    // sort with localized caseInsensitive compare
+    auto input = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
+    auto expectedResult = @[ @"a", @"is", @"of", @"sort", @"strings", @"test", @"this", @"with" ];
+    auto result = [input sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
+        NSString* l = (NSString*)left;
+        NSString* r = (NSString*)right;
+        return [l localizedCaseInsensitiveCompare:r];
+    }];
+    ASSERT_OBJCEQ(result, expectedResult);
 
-//     // sort empty array
-//     auto emptyArray = [[NSArray array] sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
-//         return NSOrderedSame;
-//     }];
-//     ASSERT_EQ(emptyArray.count, 0);
+    // sort empty array
+    auto emptyArray = [[NSArray array] sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
+        return NSOrderedSame;
+    }];
+    ASSERT_EQ(emptyArray.count, 0);
 
-//     // sort numbers
-//     auto inputNumbers = @[ @0, @10, @25, @100, @21, @22 ];
-//     auto expectedNumbers = [inputNumbers sorted];
-//     auto resultNumbers = [inputNumbers sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
-//         NSInteger l = ((NSNumber*)left).integerValue;
-//         NSInteger r = ((NSNumber*)right).integerValue;
-//         return l < r ? NSOrderedAscending : (l > r ? NSOrderedSame : NSOrderedDescending);
-//     }];
-//     ASSERT_OBJCEQ(resultNumbers, expectedNumbers);
-// }
+    // sort numbers
+    auto inputNumbers = @[ @0, @10, @25, @100, @21, @22 ];
+    auto expectedNumbers = @[ @0, @10, @21, @22, @25, @100 ];
+    auto resultNumbers = [inputNumbers sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
+        NSInteger l = ((NSNumber*)left).integerValue;
+        NSInteger r = ((NSNumber*)right).integerValue;
+        return l < r ? NSOrderedAscending : (l > r ? NSOrderedSame : NSOrderedDescending);
+    }];
+    ASSERT_OBJCEQ(resultNumbers, expectedNumbers);
+}
 
-// TEST(NSArray, SortedArrayWithOptionsUsingComparator) {
-//     // check that sortedArrayWithOptions:comparator: works in the way sortedArrayUsingComparator does
-//     auto input = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
-//     auto comparator = ^NSComparisonResult(id left, id right) {
-//         NSString* l = (NSString*)left;
-//         NSString* r = (NSString*)right;
-//         return [l localizedCaseInsensitiveCompare:r];
-//     };
+// TODO (7284899): This test has a dependency on the Locale subproj
+TEST(NSArray, DISABLED_SortedArrayWithOptionsUsingComparator) {
+    // check that sortedArrayWithOptions:comparator: works in the way sortedArrayUsingComparator does
+    auto input = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
+    auto comparator = ^NSComparisonResult(id left, id right) {
+        NSString* l = (NSString*)left;
+        NSString* r = (NSString*)right;
+        return [l localizedCaseInsensitiveCompare:r];
+    };
 
-//     auto result1 = [input sortedArrayUsingComparator:comparator];
-//     auto result2 = [input sortedArrayWithOptions:0 usingComparator:comparator];
+    auto result1 = [input sortedArrayUsingComparator:comparator];
+    auto result2 = [input sortedArrayWithOptions:0 usingComparator:comparator];
 
-//     ASSERT_TRUE([result1 isEqualToArray:result2]);
+    ASSERT_TRUE([result1 isEqualToArray:result2]);
 
-//     // sort empty array
-//     auto emptyArray = [[NSArray array] sortedArrayWithOptions:0] {
-//         _, _ in NSOrderedSame
-//     }
-//     ASSERT_EQ(emptyArray.count, 0);
-// }
+    // sort empty array
+    auto emptyArray = [[NSArray array] sortedArrayWithOptions:0 usingComparator:comparator];
+    ASSERT_EQ(emptyArray.count, 0);
+}
 
-// TEST(NSArray, SortUsingFunction) {
-//     auto inputNumbers = @[ @11, @120, @215, @11, @1, @-22, @35, @-89, @65 ];
-//     NSMutableArray* mutableInput = (NSMutableArray*)[inputNumbers mutableCopy];
-//     auto expectedNumbers = [inputNumbers sorted];
+static NSInteger sortUsingFunction_compare(id left, id right, void* context) {
+    NSInteger l = ((NSNumber*)left).integerValue;
+    NSInteger r = ((NSNumber*)right).integerValue;
+    return l < r ? NSOrderedAscending : (l > r ? NSOrderedDescending : NSOrderedSame);
+}
 
-//     int compare(id left, id right, void* context) {
-//         NSInteger l = ((NSNumber*)left).integerValue;
-//         NSInteger r = ((NSNumber*)right).integerValue;
-//         return l < r ? -1 : (l > r ? 0 : 1);
-//     }
-//     [mutableInput sortUsingFunction:compare context:nil];
+TEST(NSArray, SortUsingFunction) {
+    auto inputNumbers = @[ @11, @120, @215, @11, @1, @-22, @35, @-89, @65 ];
+    NSMutableArray* mutableInput = (NSMutableArray*)[inputNumbers mutableCopy];
+    auto expectedNumbers = @[ @-89, @-22, @1, @11, @11, @35, @65, @120, @215 ];
 
-//     ASSERT_OBJCEQ(mutableInput, expectedNumbers);
-// }
+    [mutableInput sortUsingFunction:sortUsingFunction_compare context:nil];
+    ASSERT_OBJCEQ(mutableInput, expectedNumbers);
+}
 
-// TEST(NSArray, SortUsingComparator) {
-//     // check behaviour with Array's sort method
-//     auto inputNumbers = @[ @11, @120, @215, @11, @1, @-22, @35, @-89, @65 ];
-//     NSMutableArray* mutableInput = (NSMutableArray*)[inputNumbers mutableCopy];
-//     auto expectedNumbers = [inputNumbers sorted];
+TEST(NSArray, SortUsingComparator) {
+    // check behaviour with Array's sort method
+    auto inputNumbers = @[ @11, @120, @215, @11, @1, @-22, @35, @-89, @65 ];
+    NSMutableArray* mutableInput = (NSMutableArray*)[inputNumbers mutableCopy];
+    auto expectedNumbers = @[ @-89, @-22, @1, @11, @11, @35, @65, @120, @215 ];
 
-//     [mutableInput sortUsingComparator:^NSComparisonResult(id left, id right) {
-//         NSInteger l = ((NSNumber*)left).integerValue;
-//         NSInteger r = ((NSNumber*)right).integerValue;
-//         return l < r ? NSOrderedAscending : (l > r ? NSOrderedSame : NSOrderedDescending);
-//     }];
+    [mutableInput sortUsingComparator:^NSComparisonResult(id left, id right) {
+        NSInteger l = ((NSNumber*)left).integerValue;
+        NSInteger r = ((NSNumber*)right).integerValue;
+        return l < r ? NSOrderedAscending : (l > r ? NSOrderedDescending : NSOrderedSame);
+    }];
 
-//     ASSERT_OBJCEQ(mutableInput, expectedNumbers);
+    ASSERT_OBJCEQ(mutableInput, expectedNumbers);
 
-//     // check that it works in the way [self sortWithOptions:[] usingComparator: cmptr] does
-//     auto inputStrings = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
-//     NSMutableArray* mutableStringsInput1 = (NSMutableArray*)[inputStrings mutableCopy];
-//     NSMutableArray* mutableStringsInput2 = (NSMutableArray*)[inputStrings mutableCopy];
-//     auto comparator = ^NSComparisonResult(id left, id right) {
-//         NSString* l = (NSString*)left;
-//         NSString* r = (NSString*)right;
-//         return [l localizedCaseInsensitiveCompare:r];
-//     };
-//     [mutableStringsInput1 sortUsingComparator:comparator];
-//     [mutableStringsInput2 sortWithOptions:0 usingComparator:comparator];
-//     ASSERT_TRUE([mutableStringsInput1 isEqualToArray:mutableStringsInput2]);
-// }
+    // TODO (7284899): This section has a dependency on the Locale subproj
+    // // check that it works in the way [self sortWithOptions:[] usingComparator: cmptr] does
+    // auto inputStrings = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
+    // NSMutableArray* mutableStringsInput1 = (NSMutableArray*)[inputStrings mutableCopy];
+    // NSMutableArray* mutableStringsInput2 = (NSMutableArray*)[inputStrings mutableCopy];
+    // auto comparator = ^NSComparisonResult(id left, id right) {
+    //     NSString* l = (NSString*)left;
+    //     NSString* r = (NSString*)right;
+    //     return [l localizedCaseInsensitiveCompare:r];
+    // };
+    // [mutableStringsInput1 sortUsingComparator:comparator];
+    // [mutableStringsInput2 sortWithOptions:0 usingComparator:comparator];
+    // ASSERT_TRUE([mutableStringsInput1 isEqualToArray:mutableStringsInput2]);
+}
 
 TEST(NSArray, Equality) {
     auto array1 = @[ @"this", @"is", @"a", @"test", @"of", @"equal", @"with", @"strings" ];

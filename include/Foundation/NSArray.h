@@ -97,7 +97,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)sortDescriptors;
 - (NSArray*)sortedArrayUsingSelector:(SEL)comparator;
 - (NSArray*)sortedArrayUsingComparator:(NSComparator)cmptr;
-- (NSArray*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
+- (NSArray*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
 - (NSString*)componentsJoinedByString:(NSString*)separator;
 @property (readonly, copy) NSString* description;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;

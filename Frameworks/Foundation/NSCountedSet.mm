@@ -16,83 +16,100 @@
 
 #include "Starboard.h"
 #include <Foundation/NSCountedSet.h>
-#include "NSCountedSetConcrete.h"
-#include "NSRaise.h"
+#include <Foundation/NSMutableDictionary.h>
 
-@implementation NSCountedSet
-
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSCountedSet, NSCountedSetConcrete);
+@implementation NSCountedSet {
+@private
+    StrongId<NSMutableSet> _internalSet;
+    StrongId<NSMutableDictionary> _counts; // id -> nsnumber
+}
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    return NSInvalidAbstractInvocationReturn();
+    if (self = [self initWithCapacity:count]) {
+        for (unsigned int i = 0; i < count; i++) {
+            [self addObject:objects[i]];
+        }
+    }
+    return self;
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(unsigned)capacity {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    return NSInvalidAbstractInvocationReturn();
+    if (self = [self init]) {
+        _internalSet = [NSMutableSet setWithCapacity:capacity];
+        _counts = [NSMutableDictionary dictionary];
+    }
+    return self;
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)countForObject:(id)object {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    return NSInvalidAbstractInvocationReturn();
+    NSNumber* count = [_counts objectForKey:object];
+    return count ? [count unsignedIntegerValue] : 0;
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned)count {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    return NSInvalidAbstractInvocationReturn();
+    return [_internalSet count];
 }
 
 /**
  @Status Interoperable
 */
 - (NSEnumerator*)objectEnumerator {
-    // TODO: As an optimization, create a parallel implementation of this function, so that subclasses will not have to override this
-    return NSInvalidAbstractInvocationReturn();
+    return [_internalSet objectEnumerator];
 }
 
 /**
  @Status Interoperable
 */
 - (id)member:(id)object {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    return NSInvalidAbstractInvocationReturn();
+    return [_internalSet member:object];
 }
 
 /**
  @Status Interoperable
 */
 - (void)addObject:(id)object {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    NSInvalidAbstractInvocation();
+    NSNumber* count = [_counts objectForKey:object];
+    if (count) {
+        [_counts setObject:[NSNumber numberWithInt:[count intValue] + 1] forKey:object];
+    } else {
+        [_internalSet addObject:object];
+        [_counts setObject:@1 forKey:object];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeObject:(id)object {
-    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
-    NSInvalidAbstractInvocation();
+    NSNumber* count = [_counts objectForKey:object];
+    if (count) {
+        if ([count isEqual:@1]) {
+            [_internalSet removeObject:object];
+            [_counts removeObjectForKey:object];
+        } else {
+            [_counts setObject:[NSNumber numberWithInt:[count intValue] - 1] forKey:object];
+        }
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeAllObjects {
-    // TODO: As an optimization, create a parallel implementation of this function, so that subclasses will not have to override this
-    NSInvalidAbstractInvocation();
+    [_counts removeAllObjects];
+    [_internalSet removeAllObjects];
 }
 
 /**

@@ -26,6 +26,8 @@
 #include "NSArrayConcrete.h"
 #include "BridgeHelpers.h"
 
+#include <algorithm>
+
 static const wchar_t* TAG = L"NSMutableArray";
 
 using NSCompareFunc = NSInteger (*)(id, id, void*);
@@ -474,9 +476,6 @@ recurse:
 /**
  @Status Interoperable
 */
-/**
- @Status Interoperable
-*/
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
     if (predicate == nil) {
         return;
@@ -517,27 +516,51 @@ recurse:
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray range:(NSRange)otherRange {
-    UNIMPLEMENTED();
+    // An inefficient naive implementation would be to remove all objects from aRange,
+    // then insert all objects from otherArray in otherRange.
+    // However, this forces a unnecessary number of array shifts, which are expensive.
+    // As an optimization, do as many direct replacements as possible.
+    NSUInteger replaceEnd = std::min(aRange.length, otherRange.length);
+
+    for (NSUInteger i = 0; i < replaceEnd; i++) {
+        [self replaceObjectAtIndex:(i + aRange.location) withObject:[otherArray objectAtIndex:(i + otherRange.location)]];
+    }
+
+    if (aRange.length < otherRange.length) {
+        // If aRange is smaller than otherRange, insert the remaining elements
+        for (NSUInteger i = aRange.length; i < otherRange.length; i++) {
+            [self insertObject:[otherArray objectAtIndex:(i + otherRange.location)] atIndex:(i + aRange.location)];
+        }
+
+    } else if (aRange.length > otherRange.length) {
+        // If aRange is larger than otherRange, remove excess elements remaining in aRange
+        NSUInteger removeIndex = aRange.location + otherRange.length;
+        for (NSUInteger i = otherRange.length; i < aRange.length; i++) {
+            [self removeObjectAtIndex:removeIndex];
+        }
+    }
+
+    // If ranges are equal, nothing else needs to be done
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray {
-    UNIMPLEMENTED();
+    [self replaceObjectsInRange:aRange withObjectsFromArray:otherArray range:{ 0, [otherArray count] }];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Options are currently ignored
 */
 - (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    UNIMPLEMENTED();
+    [self sortUsingFunction:CFNSBlockCompare context:cmptr];
 }
 
 @end

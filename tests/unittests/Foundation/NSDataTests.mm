@@ -265,3 +265,11 @@ TEST(NSData, MutableDataReplaceTests) {
     ASSERT_OBJCEQ_MSG(expectedHex, [originalData description], "Description must be equal");
     ASSERT_OBJCEQ_MSG(expectedHex, [mutableData description], "Description must be equal");
 }
+
+TEST(NSData, ExpandBeyondCapacity) {
+    NSMutableData* data = [NSMutableData dataWithCapacity:1];
+    std::string stringData = "winobjc";
+
+    [data appendBytes:stringData.data() length:stringData.length()];
+    ASSERT_EQ(stringData.length(), [data length]);
+}

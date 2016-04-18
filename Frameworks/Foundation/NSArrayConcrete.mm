@@ -20,8 +20,6 @@
 #include "NSArrayConcrete.h"
 #include <CoreFoundation/CFArray.h>
 
-#include "ForFoundationOnly.h"
-
 static const wchar_t* TAG = L"NSArray";
 
 #pragma region Immutable Concrete Subclass
@@ -59,8 +57,7 @@ static const wchar_t* TAG = L"NSArray";
 }
 
 - (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    if (self = [super init]) {
-        _nscf.attach(reinterpret_cast<NSCFArray*>(static_cast<NSArray*>((CFArrayCreateMutable(NULL, 0, &kCFTypeArrayCallBacks)))));
+    if (self = [self initWithCapacity:count]) {
         for (unsigned int i = 0; i < count; i++) {
             [_nscf addObject:objs[i]];
         }
@@ -70,8 +67,8 @@ static const wchar_t* TAG = L"NSArray";
 
 - (instancetype)initWithCapacity:(NSUInteger)numElements {
     if (self = [super init]) {
-        _nscf.attach(reinterpret_cast<NSCFArray*>(static_cast<NSArray*>((CFArrayCreateMutable(NULL, 0, &kCFTypeArrayCallBacks)))));
-        _CFArraySetCapacity(static_cast<CFMutableArrayRef>(_nscf), numElements);
+        _nscf.attach(
+            reinterpret_cast<NSCFArray*>(static_cast<NSArray*>((CFArrayCreateMutable(NULL, numElements, &kCFTypeArrayCallBacks)))));
     }
     return self;
 }

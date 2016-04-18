@@ -636,6 +636,12 @@ typedef NSInteger (*compFuncType)(id, id, void*);
     return ret;
 }
 
+// Helper that represents an NSComparator as a CFComparatorFunction
+static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, const void* val2, void* context) {
+    auto comparator = *reinterpret_cast<NSComparator*>(context);
+    return static_cast<CFComparisonResult>(comparator(static_cast<id>(val1), static_cast<id>(val2)));
+}
+
 /**
  @Status Interoperable
 */
@@ -643,73 +649,56 @@ typedef NSInteger (*compFuncType)(id, id, void*);
               inSortedRange:(NSRange)range
                     options:(NSBinarySearchingOptions)options
             usingComparator:(NSComparator)comparator {
-    if (range.length == 0) {
-        if (options & NSBinarySearchingInsertionIndex) {
-            return range.location;
-        }
-
-        return NSNotFound;
+    if ((options & NSBinarySearchingFirstEqual) && (options & NSBinarySearchingLastEqual)) {
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Both NSBinarySearchingFirstEqual and NSBinarySearchingLastEqual were specified."];
     }
-    if (range.length == 1) {
-        id value = [self objectAtIndex:range.location];
-        int cmp = comparator(obj, value);
 
-        if (cmp == NSOrderedSame) {
-            return range.location;
-        } else if (cmp <= NSOrderedAscending) {
-            if (options & NSBinarySearchingInsertionIndex) {
-                return range.location;
-            } else {
-                return NSNotFound;
+    if (range.location + range.length > [self count]) {
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Range {%d, %d} larger than array of size %d.", range.location, range.length, [self count]];
+    }
+
+    NSUInteger index = CFArrayBSearchValues(static_cast<CFArrayRef>(self),
+                                            { range.location, range.length },
+                                            obj,
+                                            _CFComparatorFunctionFromComparator,
+                                            &comparator);
+
+    if (([self count] > 0) && ([[self objectAtIndex:index] isEqual:obj])) {
+        if (options & NSBinarySearchingFirstEqual) {
+            while (NSLocationInRange(index - 1, range)) {
+                if ([[self objectAtIndex:index - 1] isEqual:obj]) {
+                    --index;
+                } else {
+                    break;
+                }
             }
-        } else {
-            //  NSOrderedDescending
+        } else if (options & NSBinarySearchingLastEqual) {
+            while (NSLocationInRange(index + 1, range)) {
+                if ([[self objectAtIndex:index + 1] isEqual:obj]) {
+                    ++index;
+                } else {
+                    break;
+                }
+            }
+
             if (options & NSBinarySearchingInsertionIndex) {
-                return range.location + 1;
-            } else {
-                return NSNotFound;
+                // LastEqual | InsertionIndex expects a return of the index _after_ the last equal
+                // This is guaranteed to be a valid index (<= [self count]) for insertObject:atIndex:
+                // index is at most, range.location + range.length - 1, and
+                // range.location + range.length <= [self count]
+                ++index;
             }
         }
+
+        return index;
     } else {
-        //  Not positive if the logic is right here .. need to run some tests (and also optimize properly)
-        int count = [self count];
-        int start = range.location;
-        int end = range.location + range.length;
-        int inc = 1;
-        int insertIdx = end;
-
-        if (options & NSBinarySearchingLastEqual) {
-            for (int i = end - 1; i < count && i >= start; i--) {
-                id value = [self objectAtIndex:i];
-                int cmp = comparator(obj, value);
-
-                if (cmp == 0) {
-                    return i;
-                }
-                if (cmp > 0) {
-                    insertIdx = i;
-                }
-            }
-        } else {
-            //  First equal
-            for (int i = start; i < count && i < end; i++) {
-                id value = [self objectAtIndex:i];
-                int cmp = comparator(obj, value);
-
-                if (cmp == 0) {
-                    return i;
-                }
-                if (cmp > 0 && insertIdx == end) {
-                    insertIdx = i;
-                }
-            }
-        }
-
         if (options & NSBinarySearchingInsertionIndex) {
-            return insertIdx;
+            return index;
+        } else {
+            return NSNotFound;
         }
-
-        return NSNotFound;
     }
 }
 
@@ -989,12 +978,14 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Options are currently ignored
 */
 - (NSArray*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
+    [ret sortWithOptions:opts usingComparator:cmptr];
+
+    return ret;
 }
 
 /**

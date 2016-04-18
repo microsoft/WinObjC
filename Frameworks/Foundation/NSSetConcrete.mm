@@ -58,8 +58,7 @@
 }
 
 - (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    if (self = [super init]) {
-        _nscf.attach(reinterpret_cast<NSCFSet*>(static_cast<NSSet*>((CFSetCreateMutable(NULL, count, &kCFTypeSetCallBacks)))));
+    if (self = [self initWithCapacity:count]) {
         for (unsigned i = 0; i < count; i++) {
             [_nscf addObject:objs[i]];
         }

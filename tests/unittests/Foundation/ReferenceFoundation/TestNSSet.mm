@@ -141,10 +141,9 @@ TEST(NSSet, CountedSetBasicConstruction) {
     NSCountedSet* set4 = [NSCountedSet setWithCapacity:4];
 
     ASSERT_EQ(set.count, 0);
-    // TODO 6670024: This following block fails, needs further investigation
-    // ASSERT_EQ(set2.count, 2);
-    // ASSERT_EQ(set3.count, 2);
-    // ASSERT_EQ(set4.count, 0);
+    ASSERT_EQ(set2.count, 2);
+    ASSERT_EQ(set3.count, 2);
+    ASSERT_EQ(set4.count, 0);
 }
 
 TEST(NSSet, CountedSetObjectCount) {

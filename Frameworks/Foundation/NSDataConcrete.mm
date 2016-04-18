@@ -56,7 +56,7 @@
 }
 
 - (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
-    if (self = [super init]) {
+    if (self = [self init]) {
         // NSMutableData is documented to make a copy of the input data on the reference platform,
         // despite of the name of this initializer
         _nscf.attach(reinterpret_cast<NSCFData*>(static_cast<NSData*>((CFDataCreateMutable(NULL, 0)))));
@@ -74,7 +74,6 @@
 - (instancetype)initWithCapacity:(NSUInteger)capacity {
     if (self = [super init]) {
         _nscf.attach(reinterpret_cast<NSCFData*>(static_cast<NSData*>((CFDataCreateMutable(NULL, 0)))));
-        [_nscf setLength:capacity];
     }
     return self;
 }
