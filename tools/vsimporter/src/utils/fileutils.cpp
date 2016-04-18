@@ -213,10 +213,15 @@ String sanitizePath(const String &path)
     start = separator + 1;
   } while (start < path.length());
 
-  // Figure out if we need to add a leading slash
+  // Add a prefix if this is a:
+  //  a) Windows network path
+  //  b) absolute path
   String prefix;
-  if (strBeginsWith(fixedPath, "/"))
+  if (PlatformPath == WindowsPath && strBeginsWith(fixedPath, "//")) {
+    prefix = "\\\\";
+  } else if (strBeginsWith(fixedPath, "/")) {
     prefix = "/";
+  }
 
   // Return reassembled path
   return prefix + joinStrings(pathComponents, "/");
@@ -286,16 +291,18 @@ void getRecursiveDirList(const String& baseDir, StringVec& dirVec, const StringV
 
 int mkpath(const String& dirPath, mode_t mode)
 {
+  // Avoid trying to create paths like "." and "\\share"
   String parentPath = sb_dirname(dirPath);
-  if (parentPath == "." || parentPath == dirPath)
+  if (parentPath == "\\\\" || parentPath == dirPath) {
     return 0;
+  }
 
   int rv = 0;
   if ((mkpath(parentPath, mode) == -1) && (errno != EEXIST))
     rv = -1;
 
 #if defined(_MSC_VER)
-  if ((rv == 0) && (mkdir(dirPath.c_str()) == -1) && (errno != EEXIST))
+  if ((rv == 0) && (CreateDirectory(dirPath.c_str(), NULL) == 0) && (GetLastError() != ERROR_ALREADY_EXISTS))
 #else
   if ((rv == 0) && (mkdir(dirPath.c_str(), mode) == -1) && (errno != EEXIST))
 #endif
