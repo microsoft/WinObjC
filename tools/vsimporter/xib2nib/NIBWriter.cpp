@@ -306,11 +306,10 @@ std::map<std::string, std::string> _g_exportedControllersbyStoryboardId;
 
 void NIBWriter::ExportAllControllers()
 {
-	viewControllerList::iterator cur = XIBObject::_viewControllerNames.begin();
-
-	for (; cur != XIBObject::_viewControllerNames.end(); cur++) {
-		ExportController(*(cur));
-	}
+    for (int i = 0; i < XIBObject::_viewControllerNames.size(); i++) {
+        const char *viewControllerName = XIBObject::_viewControllerNames[i];
+        ExportController(viewControllerName);
+    }
 }
 
 void NIBWriter::ExportController(const char *controllerId)
@@ -318,30 +317,31 @@ void NIBWriter::ExportController(const char *controllerId)
     std::string controllerName = std::string("UIViewController-") + controllerId;
     
 
-	char szFilename[255];
+    char szFilename[255];
     sprintf(szFilename, "UIViewController-%s.nib", controllerId);
 
     XIBObject *controller = XIBObject::findReference(controllerId);
-	UIViewController *uiViewController = (UIViewController *)controller;
-	if (!uiViewController)
-	{
-		//object isn't really a controller
-		return;
-	}
-	
-	//  Check if we've already written out the controller
-	if (_g_exportedControllers.find(controllerId) != _g_exportedControllers.end()) {
-		return;
-	}
-	
-	const char* controllerIdentifier = uiViewController->_storyboardIdentifier;
-	if (controllerIdentifier == NULL) {
-		//not all viewcontrollers will have an identifier. If they don't use the controller Id for the key.
-		controllerIdentifier = controllerId;
-	}
-	
-	_g_exportedControllers[controllerId] = controllerName;
-	_g_exportedControllersbyStoryboardId[controllerIdentifier] = controllerName;
+    UIViewController *uiViewController = (UIViewController *)controller;
+    if (!uiViewController)
+    {
+        //object isn't really a controller
+        printf("Expected UIViewController for object with id '%s' \n", controllerId);
+        return;
+    }
+    
+    //  Check if we've already written out the controller
+    if (_g_exportedControllers.find(controllerId) != _g_exportedControllers.end()) {
+        return;
+    }
+    
+    const char* controllerIdentifier = uiViewController->_storyboardIdentifier;
+    if (controllerIdentifier == NULL) {
+        //not all viewcontrollers will have an identifier. If they don't use the controller Id for the key.
+        controllerIdentifier = controllerId;
+    }
+    
+    _g_exportedControllers[controllerId] = controllerName;
+    _g_exportedControllersbyStoryboardId[controllerIdentifier] = controllerName;
 
     XIBArray *objects = (XIBArray *) controller->_parent;
 

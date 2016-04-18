@@ -74,7 +74,7 @@ public:
     XIBObject* _parent;
     xibList _variations;
 
-	static viewControllerList _viewControllerNames;
+    static viewControllerList _viewControllerNames;
     static xibList _allObjs;
     bool _ignoreUIObject;
 

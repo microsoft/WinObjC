@@ -276,11 +276,11 @@ void XIBObject::ScanStoryObjects(pugi::xml_node node) {
     _id = getAttrAndHandle("id");
     _className = node.name();
     _isStory = true;
-	
-	if (strstr(_className, "Controller") != NULL)
-	{
-		_viewControllerNames.push_back(_id);
-	}
+    
+    if (strcmp(_className, "viewController") == 0)
+    {
+        _viewControllerNames.push_back(_id);
+    }
 
     //  Go through all child nodes
     for (pugi::xml_node curNode : _node.children()) {

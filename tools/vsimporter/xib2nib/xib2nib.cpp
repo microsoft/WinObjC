@@ -62,8 +62,7 @@ void ConvertStoryboard(pugi::xml_document& doc) {
     // Print which XML nodes we did not handle during the parse for diagnostic purpose.
     XIBObject::getDocumentCoverage(doc);
 
-    //NIBWriter::ExportController(initialController);
-	NIBWriter::ExportAllControllers();
+    NIBWriter::ExportAllControllers();
 
     Plist::dictionary_type viewControllerInfo;
     viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] = std::string(initialController);
@@ -75,11 +74,11 @@ void ConvertStoryboard(pugi::xml_document& doc) {
     }
     viewControllerInfo[std::string("UIViewControllerIdentifiersToNibNames")] = viewControllerMappings;
 
-	Plist::dictionary_type viewControllerStoryboardIdMappings;
-	for (auto curController : _g_exportedControllersbyStoryboardId) {
-		viewControllerStoryboardIdMappings[curController.first] = curController.second;
-	}
-	viewControllerInfo[std::string("UIViewControllerStoryboardIdentifiersToNibNames")] = viewControllerStoryboardIdMappings;
+    Plist::dictionary_type viewControllerStoryboardIdMappings;
+    for (auto curController : _g_exportedControllersbyStoryboardId) {
+        viewControllerStoryboardIdMappings[curController.first] = curController.second;
+    }
+    viewControllerInfo[std::string("UIViewControllerStoryboardIdentifiersToNibNames")] = viewControllerStoryboardIdMappings;
 
 
     printf("Writing %s\n", GetOutputFilename("Info.plist").c_str());
