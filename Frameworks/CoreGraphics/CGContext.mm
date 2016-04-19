@@ -452,7 +452,11 @@ void CGContextFillEllipseInRect(CGContextRef ctx, CGRect rct) {
  @Status Interoperable
 */
 void CGContextAddPath(CGContextRef ctx, CGPathRef path) {
-    ctx->Backing()->CGContextAddPath(path);
+    // The Apple SDK docs imply that passing a NULL path is valid.
+    // So avoid calling into the backing if NULL.
+    if (path) {
+        ctx->Backing()->CGContextAddPath(path);
+    }
 }
 
 /**
