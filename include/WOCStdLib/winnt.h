@@ -15,4 +15,25 @@
 //******************************************************************************
 #pragma once
 
+#ifdef _ARM_
+
+// winnt.h includes some ARM intrinsics that aren't supported in
+// clang and cause front end compilation breaks. Because of this,
+// change the MSC version to be less than what is needed to
+// support that option.
+#pragma push_macro("_MSC_FULL_VER")
+
+#if (_MSC_FULL_VER >= 170040825)
+#undef _MSC_FULL_VER
+#define _MSC_FULL_VER 170040824
+#endif
+
 #include_next <winnt.h>
+
+#pragma pop_macro("_MSC_FULL_VER")
+
+#else // Not _ARM_
+
+#include_next <winnt.h>
+
+#endif
