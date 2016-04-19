@@ -14,6 +14,10 @@
 //
 //******************************************************************************
 
+#import <Foundation/Foundation.h>
+#import <Foundation/NSKeyValueCoding.h>
+#import <Starboard/String.h>
+
 #import "NSArrayInternal.h"
 #import "NSDelayedPerform.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"
@@ -23,14 +27,11 @@
 #import "NSValueTransformers.h"
 #import "Starboard.h"
 #include "StubReturn.h"
-#import <Foundation/Foundation.h>
-#import <Foundation/NSKeyValueCoding.h>
-#import <Starboard/String.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 #import <unicode/utf8.h>
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <functional>
 #include <memory>
 #include <unordered_set>
