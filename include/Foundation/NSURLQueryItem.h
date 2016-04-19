@@ -22,8 +22,8 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLQueryItem : NSObject <NSCopying, NSSecureCoding>
-+ (instancetype)queryItemWithName:(NSString*)name value:(NSString*)value STUB_METHOD;
-- (instancetype)initWithName:(NSString*)name value:(NSString*)value STUB_METHOD;
-@property (readonly) NSString* name STUB_PROPERTY;
-@property (readonly) NSString* value STUB_PROPERTY;
++ (instancetype)queryItemWithName:(NSString*)name value:(NSString*)value;
+- (instancetype)initWithName:(NSString*)name value:(NSString*)value;
+@property (readonly) NSString* name;
+@property (readonly) NSString* value;
 @end

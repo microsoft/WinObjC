@@ -988,9 +988,11 @@ typedef NSUInteger NSStringCompareOptions;
 + (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
     NSString* ret = [self alloc];
 
-    *usedEncoding = NSASCIIStringEncoding;
-    TraceVerbose(TAG, L"Encoding: ASCII?");
+    if (usedEncoding != nullptr) {
+        *usedEncoding = NSASCIIStringEncoding;
+    }
 
+    TraceVerbose(TAG, L"Encoding: ASCII?");
     return [[ret initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
 }
 
@@ -999,9 +1001,11 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available
 */
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
-    *usedEncoding = NSASCIIStringEncoding;
-    TraceVerbose(TAG, L"Encoding: ASCII?");
+    if (usedEncoding != nullptr) {
+        *usedEncoding = NSASCIIStringEncoding;
+    }
 
+    TraceVerbose(TAG, L"Encoding: ASCII?");
     return [self initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet];
 }
 
