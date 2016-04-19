@@ -17,7 +17,14 @@
 #import "ControlsViewController.h"
 #import "PopoverViewController.h"
 
-#define UIPOPOVERCONTROL_ROW 4
+static const int POPOVERCONTROL_ROW = 4;
+static const int MODALFORMSHEET_ROW = 5;
+
+@interface ControlsViewController ()
+
+@property (nonatomic) BOOL resizeModal;
+
+@end
 
 @implementation ControlsViewController
 
@@ -25,8 +32,15 @@
     [super viewDidLoad];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:(BOOL)animated];
+
+    // UIModalPresentationFormSheet shouldn't cover parent with tablet.
+    assert(!([[self presentedViewController] modalPresentationStyle] == UIModalPresentationFormSheet && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad));
+}
+
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return 6;
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath {
@@ -96,18 +110,35 @@
         cell.textLabel.text = @"UIProgressView";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-    } else if (indexPath.row == UIPOPOVERCONTROL_ROW) {
+    } else if (indexPath.row == POPOVERCONTROL_ROW) {
         // UIPopoverPresentationController
 
-        cell.textLabel.text = @"UIPopupPresentationController (press me)";
+        cell.textLabel.text = @"UIPopupPresentationController (press to launch)";
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    } else if (indexPath.row == MODALFORMSHEET_ROW) {
+        // form sheet modal
+
+        UITableViewCell* subtitleCell = [tableView dequeueReusableCellWithIdentifier:@"MenuSubtitleCell"];
+        if (!subtitleCell) {
+            subtitleCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MenuSubtitleCell"];
+        }
+
+        subtitleCell.textLabel.text = @"UIModalPresentationFormSheet (press to launch)";
+        subtitleCell.detailTextLabel.text = @"Toggle switch to resize (tablet only)";
+        subtitleCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        UISwitch* resizeSwitch = [[UISwitch alloc] init];
+        resizeSwitch.on = self.resizeModal;
+        [resizeSwitch addTarget:self action:@selector(toggleResizeModal) forControlEvents:UIControlEventValueChanged];
+        subtitleCell.accessoryView = resizeSwitch;
+
+        return subtitleCell;
     }
 
     return cell;
 }
 
 - (NSIndexPath*)tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (indexPath.row == UIPOPOVERCONTROL_ROW) {
+    if (indexPath.row == POPOVERCONTROL_ROW || indexPath.row == MODALFORMSHEET_ROW) {
         return indexPath;
     }
 
@@ -115,7 +146,7 @@
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (indexPath.row == UIPOPOVERCONTROL_ROW) {
+    if (indexPath.row == POPOVERCONTROL_ROW) {
         // Note: presenting a UIViewController with the UIModalPresentationStyle of Popover does not yet present the view controller
         // as a popover. UIPopoverController has been depricated in ios9.0.
         // This work will need to be completed as part of UIPopoverPresentationController work.
@@ -133,7 +164,22 @@
         presentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
         presentationController.sourceView = self.view;
         presentationController.sourceRect = CGRectMake(100, 100, 100, 100);
+    } else if (indexPath.row == MODALFORMSHEET_ROW) {
+        UIViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
+        viewController.modalPresentationStyle = UIModalPresentationFormSheet;
+
+        if (self.resizeModal) {
+            viewController.preferredContentSize = CGSizeMake(200, 200);
+        }
+
+        [self presentViewController:viewController animated:YES completion:^{
+            assert(!([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && self.view.hidden));
+        }];
     }
+}
+
+- (void)toggleResizeModal {
+    self.resizeModal = !self.resizeModal;
 }
 
 @end

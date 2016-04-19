@@ -37,6 +37,11 @@
     [UIApplication.displayMode updateDisplaySettings];
 }
 
+- (void)toggleTabletMode:(UISwitch*)sender {
+    UIApplication.displayMode.operationMode = sender.on ? WOCOperationModeTablet : WOCOperationModePhone;
+    [UIApplication.displayMode updateDisplaySettings];
+}
+
 - (void)toggleScreenAwake:(UISwitch*)sender {
     [[UIApplication sharedApplication] setIdleTimerDisabled:sender.on];
 }
@@ -260,6 +265,15 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     cell.accessoryView = enableScreenAwake;
     cell.textLabel.text = @"Disable idle screen timer";
+    [self.rows addObject:cell];
+
+    UISwitch* enableTabletMode = [UISwitch new];
+    enableTabletMode.on = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    [enableTabletMode addTarget:self action:@selector(toggleTabletMode:) forControlEvents:UIControlEventValueChanged];
+
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    cell.accessoryView = enableTabletMode;
+    cell.textLabel.text = @"Tablet Mode";
     [self.rows addObject:cell];
 
     fixedWidth = [[UITextField alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];

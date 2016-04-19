@@ -2578,6 +2578,7 @@ void UIShutdown() {
             break;
     }
 
+    GetCACompositor()->setTablet(_operationMode == WOCOperationModeTablet);
     GetCACompositor()->setScreenSize(newWidth, newHeight, newMagnification, newRotation);
     GetCACompositor()->setDeviceSize(newWidth, newHeight);
 

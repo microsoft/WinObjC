@@ -39,26 +39,6 @@ void SetCACompositorClient(CACompositorClientInterface* client) {
     _compositorClient = client;
 }
 
-struct ApplicationProperties {
-    float width;
-    float height;
-    float scale;
-    std::string name;
-    bool isTablet;
-    bool isLandscape;
-};
-
-ApplicationProperties g_applicationProperties;
-
-std::string GetAppNameFromPList() {
-    NSString* appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
-    if (appName != nil) {
-        return [appName UTF8String];
-    }
-
-    return "Starboard";
-}
-
 int ApplicationMainStart(
     int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight) {
     // Note: We must use nil rather than an empty string for these class names
@@ -67,11 +47,6 @@ int ApplicationMainStart(
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
-
-    float defaultWidth = GetCACompositor()->screenWidth();
-    float defaultHeight = GetCACompositor()->screenHeight();
-    float defaultScale = GetCACompositor()->screenScale();
-    bool defaultTablet = false;
 
     [NSBundle setMainBundlePath:@"."];
 
@@ -124,14 +99,7 @@ int ApplicationMainStart(
         [UIApplication setStartupDisplayMode:displayMode];
     }
 
-    g_applicationProperties.width = defaultWidth;
-    g_applicationProperties.height = defaultHeight;
-    g_applicationProperties.scale = defaultScale;
-    g_applicationProperties.name = GetAppNameFromPList();
-    g_applicationProperties.isTablet = defaultTablet;
-
     [displayMode _updateDisplaySettings];
-    GetCACompositor()->setTablet(g_applicationProperties.isTablet);
 
     UIApplicationMainInit(argc, argv, principalClassName, delegateClassName, defaultOrientation);
     return UIApplicationMainLoop();
