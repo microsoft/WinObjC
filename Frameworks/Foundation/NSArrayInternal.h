@@ -16,6 +16,8 @@
 
 #pragma once
 
+#import <Foundation/NSArray.h>
+
 NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state);
 
 @interface NSArray (Internal) {

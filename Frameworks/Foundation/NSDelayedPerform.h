@@ -14,11 +14,15 @@
 //
 //******************************************************************************
 
+#pragma once
+
+#import <Foundation/NSObject.h>
+
 @interface NSDelayedPerform : NSObject {
 @public
-    idt(NSObject) _object;
+    NSObject* _object;
     SEL _selector;
-    idt(NSObject) _argument;
+    NSObject* _argument;
     BOOL _releaseObjects;
 }
 - (NSDelayedPerform*)initWithObject:(NSObject*)object selector:(SEL)selector argument:(NSObject*)argument;
