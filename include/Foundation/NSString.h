@@ -127,12 +127,12 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
 + (instancetype)stringWithContentsOfFile:(NSString*)path;
 - (instancetype)initWithContentsOfFile:(NSString*)path;
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error STUB_METHOD;
-- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error STUB_METHOD;
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
-- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url STUB_METHOD;
-- (instancetype)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
++ (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
+- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
++ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
+- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
++ (instancetype)stringWithContentsOfURL:(NSURL*)url;
+- (instancetype)initWithContentsOfURL:(NSURL*)url;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile STUB_METHOD;
 - (BOOL)writeToURL:(NSURL*)url
@@ -225,10 +225,10 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)lowercaseStringWithLocale:(NSLocale*)locale;
 @property (readonly, copy) NSString* uppercaseString;
 - (NSString*)uppercaseStringWithLocale:(NSLocale*)locale;
-@property (readonly, copy) NSString* decomposedStringWithCanonicalMapping STUB_PROPERTY;
-@property (readonly, copy) NSString* decomposedStringWithCompatibilityMapping STUB_PROPERTY;
-@property (readonly, copy) NSString* precomposedStringWithCanonicalMapping STUB_PROPERTY;
-@property (readonly, copy) NSString* precomposedStringWithCompatibilityMapping STUB_PROPERTY;
+@property (readonly, copy) NSString* decomposedStringWithCanonicalMapping;
+@property (readonly, copy) NSString* decomposedStringWithCompatibilityMapping;
+@property (readonly, copy) NSString* precomposedStringWithCanonicalMapping;
+@property (readonly, copy) NSString* precomposedStringWithCompatibilityMapping;
 @property (readonly) double doubleValue;
 @property (readonly) float floatValue;
 @property (readonly) int intValue;
@@ -249,7 +249,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)completePathIntoString:(NSString* _Nonnull*)outputName
                        caseSensitive:(BOOL)flag
                     matchesIntoArray:(NSArray* _Nonnull*)outputArray
-                         filterTypes:(NSArray*)filterTypes STUB_METHOD;
+                         filterTypes:(NSArray*)filterTypes;
 @property (readonly) const char* fileSystemRepresentation;
 - (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxLength;
 @property (readonly, getter=isAbsolutePath) BOOL absolutePath;

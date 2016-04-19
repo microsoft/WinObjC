@@ -31,7 +31,6 @@
 #import "UIInterface.h"
 #import "CACompositorClient.h"
 #import "UIApplicationInternal.h"
-#import "NSBundleInternal.h"
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -72,8 +71,6 @@ int ApplicationMainStart(
     float defaultHeight = GetCACompositor()->screenHeight();
     float defaultScale = GetCACompositor()->screenScale();
     bool defaultTablet = false;
-
-    [NSBundle setMainBundlePath:@"."];
 
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 

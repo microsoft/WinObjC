@@ -334,4 +334,10 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.targets" />
   </ImportGroup>
+  <Target Name="CopyReferenceFoundationTestResourcesToOutput" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <ReferenceFoundationTestResourceFile Include="$(MSBuildThisFileDirectory)..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\Resources\*"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(ReferenceFoundationTestResourceFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="True" />
+  </Target>
 </Project>

@@ -35,9 +35,17 @@
 
 NSString* const NSLoadedClasses = @"NSLoadedClasses";
 
-static StrongId<NSString> g_mainBundlePath;
-static StrongId<NSMutableArray> g_allBundles;
-static StrongId<NSBundle> g_mainBundle;
+static NSMutableArray* _getAllBundles() {
+    static StrongId<NSMutableArray> s_AllBundles = [[NSMutableArray new] autorelease];
+
+    return s_AllBundles;
+}
+
+static NSBundle* _getMainBundle() {
+    static StrongId<NSBundle> s_mainBundle = [NSBundle bundleWithPath:@"."];
+
+    return s_mainBundle;
+}
 
 char g_globalExecutableName[255] = "";
 static const int c_maxPath = 4096;
@@ -658,7 +666,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Status Interoperable
 */
 + (NSArray*)allBundles {
-    return g_allBundles;
+    return _getAllBundles();
 }
 
 /**
@@ -673,15 +681,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
  @Status Interoperable
 */
 + (NSBundle*)mainBundle {
-    if (!g_allBundles) {
-        g_allBundles.attach([NSMutableArray new]);
-    }
-
-    if (!g_mainBundle && g_mainBundlePath) {
-        g_mainBundle = [self bundleWithPath:g_mainBundlePath];
-    }
-
-    return g_mainBundle;
+    return _getMainBundle();
 }
 
 /**
@@ -720,7 +720,7 @@ static NSArray* findFilesDirectory(NSBundle* self, NSString* bundlePath, NSStrin
     }
 
     if (self = [super init]) {
-        [g_allBundles addObject:self];
+        [_getAllBundles() addObject:self];
 
         if (![path hasSuffix:@"/"]) {
             _bundlePath = [[path stringByAppendingString:@"/"] retain];
@@ -1231,10 +1231,6 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 */
 - (id)classNamed:(NSString*)name {
     return NSStringFromClass(name);
-}
-
-+ (void)setMainBundlePath:(NSString*)path {
-    g_mainBundlePath.attach([path copy]);
 }
 
 /**

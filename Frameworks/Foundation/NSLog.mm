@@ -39,7 +39,7 @@ void NSLogv(NSString* format, va_list list) {
 
 // This prints to OutputDebugString only in release mode.
 #ifndef _DEBUG
-    OutputDebugStringW(wideBuffer);
+    OutputDebugStringW(wideBuffer.c_str());
     OutputDebugStringW(L"\n");
 #endif
 

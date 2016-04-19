@@ -25,11 +25,13 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include <Foundation/NSError.h>
+#include <Foundation/NSFileManager.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSLocale.h>
 #include <Foundation/NSMutableData.h>
 #include <Foundation/NSMutableDictionary.h>
 #include <Foundation/NSRegularExpression.h>
+#include <Foundation/NSSet.h>
 #include <CoreFoundation/CoreFoundation.h>
 
 #include "ForFoundationOnly.h"
@@ -46,6 +48,8 @@
 
 static const wchar_t* TAG = L"NSString";
 
+using FilePathPredicate = bool (^)(NSString*);
+
 NSString* const NSParseErrorException = @"NSParseErrorException";
 NSString* const NSCharacterConversionException = @"NSCharacterConversionException";
 
@@ -61,6 +65,162 @@ static unichar SwapWord(unichar c) {
 
 static unichar PickWord(unichar c) {
     return c;
+}
+
+NSString* _StringFromDataWithEncoding(NSString* self, NSData* data, NSStringEncoding encoding) {
+    if (!data) {
+        return nil;
+    }
+
+    if (encoding == NSUnicodeStringEncoding) {
+        // Check BOM (Byte Order Marker) to determine endian-ness.
+        const unichar* unicodeCharacters = reinterpret_cast<const unichar*>([data bytes]);
+        unsigned int length = [data length];
+
+        if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFEFF) {
+            return [self initWithBytes:&unicodeCharacters[1] length:(length - sizeof(unichar)) encoding:NSUnicodeStringEncoding];
+        } else if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFFFE) {
+            return [self initWithBytes:&unicodeCharacters[1] length:(length - sizeof(unichar)) encoding:NSUTF16BigEndianStringEncoding];
+        } else {
+            // No BOM. Assume normal UTF-16
+            return [self initWithBytes:&unicodeCharacters[0] length:(length) encoding:NSUnicodeStringEncoding];
+        }
+    } else if (encoding == NSUTF32StringEncoding) {
+        // Check BOM to determine endianness.
+        const uint32_t* unicodeCharacters = reinterpret_cast<const uint32_t*>([data bytes]);
+        unsigned int length = [data length];
+
+        if (length > sizeof(unichar) && unicodeCharacters[0] == 0x0000FEFF) {
+            return [self initWithBytes:&unicodeCharacters[1] length:(length - sizeof(uint32_t)) encoding:NSUTF32StringEncoding];
+        } else if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFFFE0000) {
+            return [self initWithBytes:&unicodeCharacters[1] length:(length - sizeof(uint32_t)) encoding:NSUTF32BigEndianStringEncoding];
+        } else {
+            // No BOM. Assume normal UTF-32
+            return [self initWithBytes:&unicodeCharacters[0] length:(length) encoding:NSUTF32StringEncoding];
+        }
+    }
+
+    return [self initWithData:data encoding:[NSString defaultCStringEncoding]];
+}
+
+NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive) {
+    if (strings == nil || [strings count] == 0) {
+        return nil;
+    } else if ([strings count] == 1) {
+        return strings[0];
+    }
+
+    NSString* firstString = strings[0];
+
+    NSString* stringToUse = caseSensitive ? firstString : firstString.lowercaseString;
+    unsigned int i;
+    for (i = 0; i < [stringToUse length]; i++) {
+        bool shouldContinue = true;
+        for (NSString* string in strings) {
+            NSString* stringToCompare = caseSensitive ? string : string.lowercaseString;
+            if ([stringToUse characterAtIndex:i] != [stringToCompare characterAtIndex:i]) {
+                shouldContinue = false;
+                break;
+            }
+        }
+
+        if (!shouldContinue) {
+            break;
+        }
+    }
+
+    return [strings[0] substringToIndex:i];
+}
+
+NSString* _ensureLastPathSeparator(NSString* path) {
+    if (path == nil || [path hasSuffix:static_cast<NSString*>(_CFGetSlashStr())] || [path isEqualToString:@""]) {
+        return path;
+    }
+
+    return [path stringByAppendingString:static_cast<NSString*>(_CFGetSlashStr())];
+}
+
+BOOL _stringIsPathToDirectory(NSString* path) {
+    if (![path hasSuffix:static_cast<NSString*>(_CFGetSlashStr())]) {
+        return false;
+    }
+
+    BOOL isDirectory = false;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+
+    return exists && isDirectory;
+}
+
+FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSensitive) {
+    if (!thePrefix) {
+        return ^(NSString*) {
+            return true;
+        };
+    }
+
+    if (caseSensitive) {
+        return Block_copy(^(NSString* input) {
+            return input != nil && [input hasPrefix:thePrefix];
+        });
+    } else {
+        return Block_copy(^(NSString* input) {
+            return (input != nil) && ([input rangeOfString:thePrefix
+                                                   options:(NSCaseInsensitiveSearch | NSAnchoredSearch)
+                                                     range:NSMakeRange(0, [thePrefix length])]
+                                          .location != NSNotFound);
+        });
+    }
+}
+
+FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitive) {
+    if (!exts) {
+        return Block_copy(^(NSString*) {
+            return true;
+        });
+    }
+
+    if (caseSensitive) {
+        NSSet* set = [NSSet setWithArray:exts];
+        return Block_copy(^(NSString* input) {
+            return input != nil && [set containsObject:input];
+        });
+    } else {
+        NSMutableArray* lowerCaseExts = [NSMutableArray arrayWithCapacity:[exts count]];
+        for (NSString* string in exts) {
+            [lowerCaseExts addObject:[string lowercaseString]];
+        }
+
+        NSSet* set = [NSSet setWithArray:lowerCaseExts];
+        return Block_copy(^(NSString* input) {
+            return input != nil && [set containsObject:[input lowercaseString]];
+        });
+    }
+}
+
+NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
+                               NSString* prependWith,
+                               FilePathPredicate namePredicate,
+                               FilePathPredicate typePredicate) {
+    NSMutableArray* result = [NSMutableArray array];
+    NSEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtURL:filePathURL
+                                                    includingPropertiesForKeys:nil
+                                                                       options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
+                                                                  errorHandler:nil];
+    if (enumerator != nil) {
+        for (NSURL* item in enumerator) {
+            NSString* itemName = [item lastPathComponent];
+
+            if (typePredicate([item pathExtension]) && namePredicate(itemName)) {
+                if (prependWith == nil || [prependWith isEqual:@""]) {
+                    [result addObject:itemName];
+                } else {
+                    [result addObject:[prependWith stringByAppendingPathComponent:itemName]];
+                }
+            }
+        }
+    }
+
+    return result;
 }
 
 @implementation NSString
@@ -293,106 +453,6 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-- (instancetype)initWithContentsOfFile:(NSString*)path {
-    if (path == nil) {
-        TraceVerbose(TAG, L"NSString: path = nil!");
-        return nil;
-    }
-
-    const char* fileName = (const char*)[path UTF8String];
-    TraceVerbose(TAG, L"NSString:opening %hs", fileName);
-
-    EbrFile* fpIn = EbrFopen(fileName, "rb");
-    if (!fpIn) {
-        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
-        return nil;
-    }
-
-    WORD type = 0;
-    NSStringEncoding encoding = NSASCIIStringEncoding;
-    EbrFread(&type, 1, 2, fpIn);
-
-    if (type == 0xFEFF) {
-        encoding = NSUnicodeStringEncoding;
-    } else if (type == 0xFFFE) {
-        encoding = NSUnicodeStringEncoding;
-        assert(0);
-        *((char*)0xBAADF00D) = 0;
-    } else {
-        EbrFseek(fpIn, 0, SEEK_SET);
-    }
-
-    int cur = EbrFseek(fpIn, 0, SEEK_CUR);
-    EbrFseek(fpIn, 0, SEEK_END);
-    int len = EbrFtell(fpIn);
-    EbrFseek(fpIn, cur, SEEK_SET);
-    std::vector<char> bytes(len);
-
-    len = EbrFread(&(bytes[0]), 1, len, fpIn);
-    EbrFclose(fpIn);
-
-    NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes.data() length:len freeWhenDone:FALSE];
-    NSString* ret = [self initWithData:data encoding:encoding];
-    [data release];
-
-    return ret;
-}
-
-/**
- @Status Caveat
- @Notes Limited encodings available.
-*/
-- (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
-    if (path == nil) {
-        TraceVerbose(TAG, L"initWithContentsOfFile: path = nil!");
-        return nil;
-    }
-
-    const char* fileName = (const char*)[path UTF8String];
-    TraceVerbose(TAG, L"NSString:opening %hs", fileName);
-
-    EbrFile* fpIn = EbrFopen(fileName, "rb");
-    if (!fpIn) {
-        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
-        if (errorRet) {
-            *errorRet = [NSError errorWithDomain:@"File not found" code:100 userInfo:nil];
-        }
-        return nil;
-    }
-
-    if (encoding == NSUnicodeStringEncoding) {
-        WORD type = 0;
-        EbrFread(&type, 1, 2, fpIn);
-
-        if (type == 0xFEFF) {
-        } else if (type == 0xFFFE) {
-            assert(0);
-            *((char*)0xBAADF00D) = 0;
-        } else {
-            EbrFseek(fpIn, 0, SEEK_SET);
-        }
-    }
-
-    int cur = EbrFseek(fpIn, 0, SEEK_CUR);
-    EbrFseek(fpIn, 0, SEEK_END);
-    int len = EbrFtell(fpIn);
-    EbrFseek(fpIn, cur, SEEK_SET);
-
-    std::vector<char> bytes(len);
-
-    len = EbrFread(&(bytes[0]), 1, len, fpIn);
-    EbrFclose(fpIn);
-
-    NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes.data() length:len freeWhenDone:FALSE];
-    NSString* ret = [self initWithData:data encoding:encoding];
-    [data release];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
 - (unichar)characterAtIndex:(unsigned)index {
     // NSString is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
     return NSInvalidAbstractInvocationReturn();
@@ -484,20 +544,17 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available
+ @Status Interoperable
 */
 + (instancetype)stringWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
-    NSString* ret = [[self alloc] initWithContentsOfFile:path encoding:encoding error:errorRet];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithContentsOfFile:path encoding:encoding error:errorRet] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)stringWithContentsOfURL:(NSURL*)url {
-    return [self stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nullptr];
+    return [[[self alloc] initWithContentsOfURL:url] autorelease];
 }
 
 /**
@@ -505,14 +562,7 @@ static unichar PickWord(unichar c) {
  @Notes Limited encodings available
 */
 + (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
-    NSString* ret = [self alloc];
-
-    NSData* data = [[NSData alloc] initWithContentsOfURL:url options:0 error:errorRet];
-
-    ret = [[ret initWithData:data encoding:encoding] autorelease];
-    [data release];
-
-    return ret;
+    return [[[self alloc] initWithContentsOfURL:url encoding:encoding error:errorRet] autorelease];
 }
 
 /**
@@ -523,29 +573,121 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available
+ @Status Interoperable
 */
 + (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
-    return [[[self alloc] initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
+    return [[[self alloc] initWithContentsOfFile:path usedEncoding:usedEncoding error:errorRet] autorelease];
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available
+ @Status Stub
+ @Notes
 */
-- (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
-    if (usedEncoding) {
-        *usedEncoding = NSASCIIStringEncoding;
-    }
+- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)encoding error:(NSError* _Nullable*)error {
+    NSData* data = [NSData dataWithContentsOfURL:url options:0 error:error];
 
-    TraceVerbose(TAG, L"Encoding: ASCII?");
-    return [self initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet];
+    return _StringFromDataWithEncoding(self, data, encoding);
 }
 
 /**
  @Status Interoperable
  @Notes
+*/
++ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError* _Nullable*)error {
+    return [[[self alloc] initWithContentsOfURL:url usedEncoding:usedEncoding error:error] autorelease];
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError* _Nullable*)error {
+    NSData* data = [NSData dataWithContentsOfURL:url options:0 error:error];
+
+    if (!data) {
+        return nil;
+    }
+
+    NSStringEncoding encoding = [NSString defaultCStringEncoding];
+    const void* bytes = [data bytes];
+    const unichar* unicodeCharacters = reinterpret_cast<const unichar*>(bytes);
+    unsigned int length = [data length];
+
+    if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFEFF) {
+        bytes = &unicodeCharacters[1];
+        encoding = NSUnicodeStringEncoding;
+        length = length - sizeof(unichar);
+    } else if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFFFE) {
+        bytes = &unicodeCharacters[1];
+        encoding = NSUTF16BigEndianStringEncoding;
+        length = length - sizeof(unichar);
+    }
+
+    if (usedEncoding) {
+        *usedEncoding = encoding;
+    }
+
+    return [self initWithBytes:bytes length:length encoding:encoding];
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url {
+    return [self initWithContentsOfURL:url usedEncoding:nullptr error:nullptr];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithContentsOfFile:(NSString*)path {
+    return [self initWithContentsOfFile:path usedEncoding:nullptr error:nullptr];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
+    NSData* data = [NSData dataWithContentsOfFile:path options:0 error:errorRet];
+
+    return _StringFromDataWithEncoding(self, data, encoding);
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
+    NSData* data = [NSData dataWithContentsOfFile:path options:0 error:errorRet];
+
+    if (!data) {
+        return nil;
+    }
+
+    NSStringEncoding encoding = [NSString defaultCStringEncoding];
+    const void* bytes = [data bytes];
+    const unichar* unicodeCharacters = reinterpret_cast<const unichar*>(bytes);
+    unsigned int length = [data length];
+
+    if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFEFF) {
+        bytes = &unicodeCharacters[1];
+        encoding = NSUnicodeStringEncoding;
+        length = length - sizeof(unichar);
+    } else if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFFFE) {
+        bytes = &unicodeCharacters[1];
+        encoding = NSUTF16BigEndianStringEncoding;
+        length = length - sizeof(unichar);
+    }
+
+    if (usedEncoding) {
+        *usedEncoding = encoding;
+    }
+
+    return [self initWithBytes:bytes length:length encoding:encoding];
+}
+
+/**
+ @Status Interoperable
 */
 - (const char*)cStringUsingEncoding:(NSStringEncoding)encoding {
     const char* toReturn = CFStringGetCStringPtr(static_cast<CFStringRef>(self), CFStringConvertNSStringEncodingToEncoding(encoding));
@@ -1235,7 +1377,7 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (NSArray*)pathComponents {
-    NSMutableArray* ret = [[[self componentsSeparatedByString:@"/"] mutableCopy] autorelease];
+    NSMutableArray* ret = [[[self componentsSeparatedByString:static_cast<NSString*>(_CFGetSlashStr())] mutableCopy] autorelease];
 
     int count = [ret count];
     for (int i = 0; i < count; i++) {
@@ -1248,7 +1390,7 @@ static unichar PickWord(unichar c) {
                 count--;
                 continue;
             } else {
-                [ret replaceObjectAtIndex:0 withObject:@"/"];
+                [ret replaceObjectAtIndex:0 withObject:static_cast<NSString*>(_CFGetSlashStr())];
             }
         }
     }
@@ -1338,53 +1480,56 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)stringByExpandingTildeInPath {
-    UNIMPLEMENTED();
-    return self;
+    if (![self hasPrefix:@"~"]) {
+        return self;
+    }
+
+    NSRange endOfUserName = [self rangeOfString:static_cast<NSString*>(_CFGetSlashStr())];
+    NSUInteger endIndex = endOfUserName.location == NSNotFound ? [self length] : endOfUserName.location;
+
+    // skip over ~
+    NSString* userName = [self substringWithRange:NSMakeRange(1, endIndex)];
+
+    userName = (userName == nil || [userName isEqualToString:@""]) ? nil : userName;
+
+    // TODO 7292268: NSFileManager doesn't implement this method. Ideally we could check for
+    // specific user's home directories but for WINOBJC it should be the case that everything is
+    // running under the same user so just use the other method for now.
+    // NSString* homeDir = NSHomeDirectoryForUser(userName);
+    NSString* homeDir = NSHomeDirectory();
+
+    if (homeDir == nil) {
+        // Not sure about this case. No homeDir found for user so nothing really to expand to. Just return self with the ~?
+        NSRange trailingSlash =
+            [self rangeOfString:static_cast<NSString*>(_CFGetSlashStr()) options:(NSBackwardsSearch | NSAnchoredSearch)];
+
+        if (trailingSlash.location == NSNotFound) {
+            return self;
+        } else {
+            return [self substringWithRange:NSMakeRange(0, trailingSlash.location)];
+        }
+    }
+
+    NSMutableString* result = [[self mutableCopy] autorelease];
+    [result replaceCharactersInRange:NSMakeRange(0, endIndex) withString:homeDir];
+
+    NSRange trailingSlash = [result rangeOfString:static_cast<NSString*>(_CFGetSlashStr()) options:(NSBackwardsSearch | NSAnchoredSearch)];
+
+    if (trailingSlash.location == NSNotFound) {
+        return result;
+    } else {
+        return [result substringWithRange:NSMakeRange(0, trailingSlash.location)];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)stringByStandardizingPath {
-    NSMutableArray* components = [NSMutableArray arrayWithArray:[self componentsSeparatedByString:@"/"]];
-    int componentsCount = [components count];
-    int lastComponentLen = 0;
-
-    int count = [components count];
-    for (int i = 0; i < count; i++) {
-        id curObj = [components objectAtIndex:i];
-        char* pComponent = (char*)[curObj UTF8String];
-        int componentLength = strlen(pComponent);
-
-        if (componentLength == 0) {
-            if (i == 0) {
-                [components replaceObjectAtIndex:i withObject:@"/"];
-                lastComponentLen = componentLength;
-                continue;
-            }
-
-            if (lastComponentLen == 0) {
-                [components removeObjectAtIndex:i];
-                i--;
-                count--;
-                lastComponentLen = componentLength;
-                continue;
-            }
-        }
-        lastComponentLen = componentLength;
-
-        if (strcmp(pComponent, ".") == 0) {
-            [components removeObjectAtIndex:i];
-            i--;
-            count--;
-            continue;
-        }
-    }
-
-    return [NSString pathWithComponents:components];
+    return [[self stringByExpandingTildeInPath] stringByResolvingSymlinksInPath];
 }
 
 /**
@@ -1823,15 +1968,6 @@ static unichar PickWord(unichar c) {
 
 /**
  @Status Stub
-*/
-- (NSString*)precomposedStringWithCanonicalMapping {
-    UNIMPLEMENTED();
-    TraceVerbose(TAG, L"precomposedStringWithCanonicalMapping??");
-    return [self retain];
-}
-
-/**
- @Status Stub
  @Notes
 */
 - (void)enumerateSubstringsInRange:(NSRange)range
@@ -1888,42 +2024,6 @@ static unichar PickWord(unichar c) {
  @Notes
 */
 - (instancetype)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithContentsOfURL:(NSURL*)url {
     UNIMPLEMENTED();
     return StubReturn();
 }
@@ -2142,15 +2242,63 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSUInteger)completePathIntoString:(NSString* _Nonnull*)outputName
                        caseSensitive:(BOOL)flag
                     matchesIntoArray:(NSArray* _Nonnull*)outputArray
                          filterTypes:(NSArray*)filterTypes {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if ([self isEqualToString:@""]) {
+        return 0;
+    }
+
+    NSURL* url = [NSURL fileURLWithPath:self];
+    BOOL searchAllFilesInDirectory = _stringIsPathToDirectory(self);
+    NSString* namePrefix = searchAllFilesInDirectory ? nil : [url lastPathComponent];
+    FilePathPredicate checkFileName = _getFileNamePredicate(namePrefix, flag);
+    FilePathPredicate checkExtension = _getExtensionPredicate(filterTypes, flag);
+
+    NSURL* urlWhereToSearch = searchAllFilesInDirectory ? url : [url URLByDeletingLastPathComponent];
+
+    NSMutableArray* matches = _getNamesAtURL(urlWhereToSearch, @"", checkFileName, checkExtension);
+
+    if ([matches count] == 1) {
+        NSURL* theFoundItem = [NSURL URLWithString:matches[0] relativeToURL:urlWhereToSearch];
+
+        if (CFURLHasDirectoryPath(static_cast<CFURLRef>(theFoundItem))) {
+            matches = _getNamesAtURL(theFoundItem,
+                                     matches[0],
+                                     ^(NSString*) {
+                                         return true;
+                                     },
+                                     checkExtension);
+        }
+    }
+
+    NSString* commonPath = searchAllFilesInDirectory ? self : _ensureLastPathSeparator([self stringByDeletingLastPathComponent]);
+
+    if (searchAllFilesInDirectory) {
+        if (outputName != nullptr) {
+            *outputName = static_cast<NSString*>(_CFGetSlashStr());
+        }
+    } else {
+        NSString* longestPrefix = _longestCommonPrefix(matches, flag);
+        if (longestPrefix != nil && outputName != nullptr) {
+            *outputName = [commonPath stringByAppendingString:longestPrefix];
+        }
+    }
+
+    if (outputArray != nullptr) {
+        NSMutableArray* toReturn = [NSMutableArray arrayWithCapacity:[matches count]];
+        for (NSString* item in matches) {
+            [toReturn addObject:[commonPath stringByAppendingString:item]];
+        }
+
+        *outputArray = toReturn;
+    }
+
+    return [matches count];
 }
 
 /**
@@ -2231,32 +2379,69 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)decomposedStringWithCanonicalMapping {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormD);
+    return mutableCopy;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)decomposedStringWithCompatibilityMapping {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormKD);
+    return mutableCopy;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)precomposedStringWithCompatibilityMapping {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormKC);
+    return mutableCopy;
 }
 
+/**
+ @Status Interoperable
+*/
+- (NSString*)precomposedStringWithCanonicalMapping {
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormC);
+    return mutableCopy;
+}
+
+/**
+ @Status Caveat
+ @Notes: assumes no actual symlinks to resolve
+*/
 - (NSString*)stringByResolvingSymlinksInPath {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSArray* components = [self pathComponents];
+
+    if (nil == components || [components count] == 0) {
+        return self;
+    }
+
+    BOOL isAbsolutePath = [static_cast<NSString*>(_CFGetSlashStr()) isEqualToString:static_cast<NSString*>([components objectAtIndex:0])];
+    NSString* resolvedPath = [components objectAtIndex:0];
+
+    for (int i = 1; i < [components count]; i++) {
+        NSString* component = [components objectAtIndex:i];
+        if ([component isEqualToString:@""] || [component isEqualToString:@"."]) {
+            continue;
+        }
+
+        if ([component isEqualToString:@".."] && isAbsolutePath) {
+            resolvedPath = [resolvedPath stringByDeletingLastPathComponent];
+        } else {
+            resolvedPath = [resolvedPath stringByAppendingPathComponent:component];
+        }
+    }
+
+    return resolvedPath;
 }
 
 // CF additions for fast paths.

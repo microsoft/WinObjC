@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<root>
+    <first>Hello world</first>
+    <second>
+        <third>I'm here</third>
+    </second>
+</root>

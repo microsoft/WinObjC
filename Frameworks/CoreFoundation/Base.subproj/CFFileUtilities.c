@@ -608,8 +608,12 @@ CF_PRIVATE SInt32 _CFGetFileProperties(CFAllocatorRef alloc, CFURLRef pathURL, B
 #endif
 
 #if defined(WINDOWS_PATH_SEMANTICS)
-    #define CFPreferredSlash    ((UniChar)'\\')
-    #define CFPreferredSlashStr CFSTR("\\")
+    // WINOBJC: A lot of foundation code seems to rely on slashes being / not \\ 
+    // i.e. they expect unix semantics translated to windows instead of windows directly.
+    // #define CFPreferredSlash    ((UniChar)'\\')
+    // #define CFPreferredSlashStr CFSTR("\\")
+    #define CFPreferredSlash    ((UniChar)'/')
+    #define CFPreferredSlashStr CFSTR("/")
 #elif defined(UNIX_PATH_SEMANTICS)
     #define CFPreferredSlash    ((UniChar)'/')
     #define CFPreferredSlashStr CFSTR("/")

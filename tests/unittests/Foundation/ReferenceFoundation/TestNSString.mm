@@ -21,12 +21,14 @@
 // See http://swift.org/LICENSE.txt for license information
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
-
+#import "Starboard.h"
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
 
 #import <CoreFoundation/CoreFoundation.h>
 #import "CFFoundationInternal.h"
+
+#include <vector>
 
 TEST(NSString, BOOLValue) {
     auto trueStrings = @[ @"t", @"true", @"TRUE", @"tRuE", @"yes", @"YES", @"1", @"+000009" ];
@@ -219,49 +221,36 @@ TEST(NSString, FromMalformedNullTerminatedCStringInUTF8) {
     ASSERT_OBJCEQ(string, nil);
 }
 
-/*
-WINOBJC: need test data file!!!
-
 TEST(NSString, FromContentsOfURL) {
-    guard auto testFileURL = testBundle [() URLForResource:@"NSStringTestData" withExtension:@"txt"] else {
-        ASSERT_TRUE_MSG(false, @"URL for NSStringTestData.txt is nil");
-        return;
-    }
+    NSURL* testFileURL = [[NSBundle mainBundle] URLForResource:@"NSStringTestData" withExtension:@"txt"];
+    ASSERT_OBJCNE_MSG(nil, testFileURL, "URL for NSStringTestData.txt is nil");
 
-    do {
-        auto string = try
-            [NSString stringWithContentsOfURL:testFileURL, encoding:NSUTF8StringEncoding];
-        ASSERT_OBJCEQ(string, @"swift-corelibs-foundation");
-    }
-    catch {
-        ASSERT_TRUE_MSG(false, @"Unable to init NSString from contentsOfURL:encoding:");
-    }
-    do {
-        auto string = try
-            [NSString stringWithContentsOfURL:testFileURL, encoding:NSUTF16StringEncoding];
-        ASSERT_NOTEQUAL(string,
-                        @"swift-corelibs-foundation",
-                        @"Wrong result when reading UTF-8 file with UTF-16 encoding in contentsOfURL:encoding");
-    }
-    catch {
-        ASSERT_TRUE_MSG(false, @"Unable to init NSString from contentsOfURL:encoding:");
-    }
+    NSString* string;
+    NSError* error = nil;
+    ASSERT_NO_THROW_MSG(string = [NSString stringWithContentsOfURL:testFileURL encoding:NSUTF8StringEncoding error:&error],
+                        "Unable to init NSString from contentsOfURL:encoding:");
+    ASSERT_OBJCEQ(error, nil);
+    ASSERT_OBJCEQ(string, @"swift-corelibs-foundation");
+
+    ASSERT_NO_THROW_MSG(string = [NSString stringWithContentsOfURL:testFileURL encoding:NSUTF16StringEncoding error:&error],
+                        "Unable to init NSString from contentsOfURL:encoding:");
+    ASSERT_OBJCEQ(error, nil);
+    ASSERT_OBJCNE_MSG(string,
+                      @"swift-corelibs-foundation",
+                      @"Wrong result when reading UTF-8 file with UTF-16 encoding in contentsOfURL:encoding");
 }
 
 TEST(NSString, FromContentOfFile) {
-    auto testFilePath = testBundle [() pathForResource:@"NSStringTestData" ofType:@"txt"];
+    NSString* testFilePath = [[NSBundle mainBundle] pathForResource:@"NSStringTestData" ofType:@"txt"];
     ASSERT_OBJCNE(nil, testFilePath);
 
-    do {
-        auto str = try
-            [NSString stringWithContentsOfFile:testFilePath !, encoding:NSUTF8StringEncoding];
-        ASSERT_OBJCEQ(str, @"swift-corelibs-foundation");
-    }
-    catch {
-        ASSERT_TRUE_MSG(false, @"Unable to init NSString from contentsOfFile:encoding:");
-    }
+    NSString* str;
+    NSError* error = nil;
+    ASSERT_NO_THROW_MSG(str = [NSString stringWithContentsOfFile:testFilePath encoding:NSUTF8StringEncoding error:&error],
+                        @"Unable to init NSString from contentsOfFile:encoding:");
+    ASSERT_OBJCEQ(error, nil);
+    ASSERT_OBJCEQ(str, @"swift-corelibs-foundation");
 }
-*/
 
 TEST(NSString, UppercaseString) {
     ASSERT_OBJCEQ(@"abcd".uppercaseString, @"ABCD");
@@ -269,13 +258,17 @@ TEST(NSString, UppercaseString) {
     ASSERT_OBJCEQ(@"абВГ".uppercaseString, @"АБВГ");
     ASSERT_OBJCEQ(@"たちつてと".uppercaseString, @"たちつてと");
 
+    ASSERT_OBJCEQ(@"\u00df".uppercaseString, @"\u0053\u0053");
+    ASSERT_OBJCEQ(@"\ufb01".uppercaseString, @"\u0046\u0049");
+}
+
+// TODO 7284899: Dependency on Locale.subproj
+TEST(NSString, DISABLED_UppercaseStringWithLocale) {
     // Special casing (see swift/validation-tests/stdlib/NSStringAPI.swift)
     ASSERT_OBJCEQ([@"\u0069" uppercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0049");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly
     // ASSERT_OBJCEQ([@"\u069"] uppercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"tr"]],
     // @"\u0130")
-    ASSERT_OBJCEQ(@"\u00df".uppercaseString, @"\u0053\u0053");
-    ASSERT_OBJCEQ(@"\u0b01".uppercaseString, @"\u0046\u0049");
 }
 
 TEST(NSString, LowercaseString) {
@@ -283,7 +276,10 @@ TEST(NSString, LowercaseString) {
     ASSERT_OBJCEQ(@"ＡＢＣＤ".lowercaseString, @"ａｂｃｄ"); // full-width;
     ASSERT_OBJCEQ(@"aБВГ".lowercaseString, @"aбвг");
     ASSERT_OBJCEQ(@"たちつてと".lowercaseString, @"たちつてと");
+}
 
+// TODO 7284899: Dependency on Locale.subproj
+TEST(NSString, DISABLED_LowercaseStringWithLocale) {
     // Special casing (see swift/validation-tests/stdlib/NSStringAPI.swift)
     ASSERT_OBJCEQ([@"\u0130" lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0069\u0307");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly
@@ -349,229 +345,64 @@ TEST(NSString, CFStringCreateMutableCopy) {
     ASSERT_OBJCEQ(nsstring, str);
 }
 
-/*
-
 // This test verifies that CFStringGetBytes with a UTF16 encoding works on an NSString backed by a Swift string
 TEST(NSString, SwiftStringUTF16) {
-#if os(OSX) || os(iOS)
-    auto kCFStringEncodingUTF16 = CFStringBuiltInEncodings.UTF16.rawValue;
-#endif
-
     auto testString = @"hello world";
     NSString* string = [NSString stringWithString:testString];
-    auto cfString = unsafeBitCast(string, CFString.self);
+    auto cfString = static_cast<CFStringRef>(string);
 
     // Get the bytes as UTF16
     auto reservedLength = 50;
-    var buf : [uint8_t] = [];
-    [buf reserveCapacity:reservedLength];
-    var usedLen : CFIndex = 0;
-    buf.withUnsafeMutableBufferPointer {
-        p in;
-        CFStringGetBytes(cfString,
-                         CFRangeMake(0, CFStringGetLength(cfString)),
-                         CFStringEncoding(kCFStringEncodingUTF16),
-                         0,
-                         false,
-                         p.baseAddress,
-                         reservedLength,
-                         &usedLen);
-    }
+    std::vector<uint8_t> buf(reservedLength);
+    CFIndex usedLen = 0;
+    CFStringGetBytes(
+        cfString, CFRangeMake(0, CFStringGetLength(cfString)), kCFStringEncodingUTF16, 0, false, &buf[0], reservedLength, &usedLen);
 
     // Make a new string out of it
-    auto newCFString = CFStringCreateWithBytes(nil, buf, usedLen, CFStringEncoding(kCFStringEncodingUTF16), false);
-    auto newString = unsafeBitCast(newCFString, NSString.self);
+    auto newCFString = CFStringCreateWithBytes(nullptr, &buf[0], usedLen, kCFStringEncodingUTF16, false);
+    auto newString = static_cast<NSString*>(newCFString);
 
     ASSERT_TRUE([newString isEqualToString:testString]);
 }
 
-*/
+BOOL ensureFiles(NSArray* fileNames) {
+    BOOL result = true;
+    NSFileManager* fm = [NSFileManager defaultManager];
+    for (NSString* name in fileNames) {
+        if ([fm fileExistsAtPath:name]) {
+            continue;
+        }
 
-/*
-TEST(NSString, CompletePathIntoString) {
-    auto fileNames =
-        @[
-           @"/tmp/Test_completePathIntoString_01",
-           @"/tmp/test_completePathIntoString_02",
-           @"/tmp/test_completePathIntoString_01.txt",
-           @"/tmp/test_completePathIntoString_01.dat",
-           @"/tmp/test_completePathIntoString_03.DAT";
-        ]
+        if ([name hasSuffix:@"/"]) {
+            try {
+                [fm createDirectoryAtPath:name withIntermediateDirectories:true attributes:nil error:nullptr];
+            } catch (...) {
+                return false;
+            }
+        } else {
+            BOOL isDir = false;
+            NSString* dir = [name stringByDeletingLastPathComponent];
+            if (![fm fileExistsAtPath:dir isDirectory:&isDir]) {
+                try {
+                    [fm createDirectoryAtPath:dir withIntermediateDirectories:true attributes:nil error:nullptr];
+                } catch (...) {
+                    return false;
+                }
+            } else if (!isDir) {
+                return false;
+            }
 
-        guard ensureFiles(fileNames) else {
-        ASSERT_TRUE_MSG(false, @"Could not create temp files for testing.");
-        return;
+            result = result && [fm createFileAtPath:name contents:nil attributes:nil];
+        }
     }
-
-    auto tmpPath = {(path : NSString)->NSString in;
-    return @"/tmp/\(path)";
+    return result;
 }
 
-do {
-    NSString* path = tmpPath(@"");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    _ = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    _ = try
-        [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL uRLWithString:path] !includingPropertiesForKeys:nil options:[]];
-    ASSERT_TRUE_MSG(outName == @"/", @"If NSString is valid path to directory which has '/' suffix then outName is '/'.");
-    // This assert fails on CI; https://bugs.swift.org/browse/SR-389
-    //            ASSERT_TRUE_MSG(matches.count == content.count && matches.count == count, @"If NSString is valid path to directory then
-    //            matches contain all content of directory. expected \(content) but got \(matches)")
-}
-catch {
-    ASSERT_TRUE_MSG(false, @"Could not finish test due to error");
+NSString* tmpPath(NSString* path) {
+    return [NSString stringWithFormat:@"/tmp/%@", path];
 }
 
-do {
-    NSString* path = @"/tmp";
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    _ = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    auto urlToTmp = [NSURL uRLWithFileURLWithPath:@"/private/tmp/"].URLByStandardizingPath !;
-    _ = try
-        [[NSFileManager defaultManager] contentsOfDirectoryAtURL:urlToTmp includingPropertiesForKeys:nil options:[]];
-    ASSERT_TRUE_MSG(outName == @"/tmp/", @"If path could be completed to existing directory then outName is a string itself plus '/'.");
-    // This assert fails on CI; https://bugs.swift.org/browse/SR-389
-    //            ASSERT_TRUE_MSG(matches.count == content.count && matches.count == count, @"If NSString is valid path to directory then
-    //            matches contain all content of directory. expected \(content) but got \(matches)")
-}
-catch {
-    ASSERT_TRUE_MSG(false, @"Could not finish test due to error");
-}
-
-auto fileNames2 = @[ @"/tmp/ABC/", @"/tmp/ABCD/", @"/tmp/abcde"; ]
-
-    guard ensureFiles(fileNames2) else {
-    ASSERT_TRUE_MSG(false, @"Could not create temp files for testing.");
-    return;
-}
-
-do {
-    NSString* path = tmpPath(@"ABC");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName !, path),
-                    @"If NSString is valid path to directory then outName is string itself.");
-    ASSERT_TRUE_MSG(matches.count == count && count == fileNames2.count, @"");
-}
-
-do {
-    NSString* path = tmpPath(@"Test_completePathIntoString_01");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(outName == path, @"If NSString is valid path to file and search is case sensitive then outName is string itself.");
-    ASSERT_TRUE_MSG(matches.count == 1 && count == 1 && stringsAreCaseInsensitivelyEqual(matches[0], path),
-                    @"If NSString is valid path to file and search is case sensitive then matches contain that file path only");
-}
-
-do {
-    NSString* path = tmpPath(@"Test_completePathIntoString_01");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName !, path),
-                    @"If NSString is valid path to file and search is case insensitive then outName is string equal to self.");
-    ASSERT_TRUE_MSG(matches.count == 3 && count == 3, @"Matches contain all files with similar name.");
-}
-
-do {
-    auto path = tmpPath(NSUUID().UUIDString);
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(outName == nil, @"If no matches found then outName is nil.");
-    ASSERT_TRUE_MSG(matches.count == 0 && count == 0, @"If no matches found then return 0 and matches is empty.");
-}
-
-do {
-    NSString* path = @"";
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(outName == nil, @"If no matches found then outName is nil.");
-    ASSERT_TRUE_MSG(matches.count == 0 && count == 0, @"If no matches found then return 0 and matches is empty.");
-}
-
-do {
-    NSString* path = tmpPath(@"test_c");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    // case insensetive
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName !, tmpPath(@"Test_completePathIntoString_0")),
-                    @"If there are matches then outName should be longest common prefix of all matches.");
-    ASSERT_TRUE_MSG(matches.count == fileNames.count && count == fileNames.count,
-                    @"If there are matches then matches array contains them.");
-}
-
-do {
-    NSString* path = tmpPath(@"test_c");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    // case sensetive
-    auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:nil];
-    ASSERT_TRUE_MSG(outName == tmpPath(@"test_completePathIntoString_0"),
-                    @"If there are matches then outName should be longest common prefix of all matches.");
-    ASSERT_TRUE_MSG(matches.count == 4 && count == 4, @"Supports case sensetive search");
-}
-
-do {
-    NSString* path = tmpPath(@"test_c");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    // case sensetive
-    auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:[@"DAT"]];
-    ASSERT_TRUE_MSG(outName == tmpPath(@"test_completePathIntoString_03.DAT"),
-                    @"If there are matches then outName should be longest common prefix of all matches.");
-    ASSERT_TRUE_MSG(matches.count == 1 && count == 1, @"Supports case sensetive search by extensions");
-}
-
-do {
-    NSString* path = tmpPath(@"test_c");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    // type by filter
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:@[ @"txt", @"dat" ]];
-    ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName !, tmpPath(@"test_completePathIntoString_0")),
-                    @"If there are matches then outName should be longest common prefix of all matches.");
-    ASSERT_TRUE_MSG(matches.count == 3 && count == 3, @"Supports filtration by type");
-}
-
-do {
-    // will be resolved against current working directory that is directory there results of build process are stored
-    NSString* path = @"TestFoundation";
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
-    // Build directory at least contains executable itself and *.swiftmodule directory
-    ASSERT_TRUE_MSG(matches.count == count && count >= 2, @"Supports relative paths.");
-    ASSERT_TRUE_MSG(startWith(path, matches), @"For relative paths matches are relative too.");
-}
-
-// Next check has no sense on Linux due to case sensitive file system.
-#if os(OSX)
-guard ensureFiles([@"/tmp/ABC/temp.txt"]) else {
-    ASSERT_TRUE_MSG(false, @"Could not create temp files for testing.");
-    return;
-}
-
-do {
-    NSString* path = tmpPath(@"aBc/t");
-    var outName : NSString ? ;
-    var matches : [NSString] = [];
-    // type by filter
-    auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:@[ @"txt", @"dat" ]];
-    ASSERT_TRUE_MSG(outName == tmpPath(@"aBc/temp.txt"), @"outName starts with receiver.");
-    ASSERT_TRUE_MSG(matches.count >= 1 && count >= 1, @"There are matches");
-}
-#endif
-}
-*/
-
-static BOOL startWith(NSString* prefix, NSArray* strings) {
+BOOL startWith(NSString* prefix, NSArray* strings) {
     for (NSString* item in strings) {
         if (![item hasPrefix:prefix]) {
             return false;
@@ -581,8 +412,189 @@ static BOOL startWith(NSString* prefix, NSArray* strings) {
     return true;
 }
 
-static BOOL stringsAreCaseInsensitivelyEqual(NSString* lhs, NSString* rhs) {
+BOOL stringsAreCaseInsensitivelyEqual(NSString* lhs, NSString* rhs) {
     return [lhs compare:rhs options:NSCaseInsensitiveSearch] == NSOrderedSame;
+}
+
+// TODO 7292268: Re-enable this test when NSFileManager correctly interoperates with
+// NSURL. Right now any NSURL created as a local file URL i.e. file://localhost/... will
+// fail when looking up its path. This makes this test obviously fail and the string code
+// untested.
+TEST(NSString, DISABLED_CompletePathIntoString) {
+    auto fileNames = @[
+        @"/tmp/Test_completePathIntoString_01",
+        @"/tmp/test_completePathIntoString_02",
+        @"/tmp/test_completePathIntoString_01.txt",
+        @"/tmp/test_completePathIntoString_01.dat",
+        @"/tmp/test_completePathIntoString_03.DAT"
+    ];
+
+    ASSERT_TRUE_MSG(ensureFiles(fileNames), @"Could not create temp files for testing.");
+
+    {
+        NSString* path = tmpPath(@"");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        NSUInteger numMatches = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        NSError* error = nil;
+        ASSERT_NO_THROW([[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL URLWithString:path]
+                                                      includingPropertiesForKeys:nil
+                                                                         options:static_cast<NSDirectoryEnumerationOptions>(0)
+                                                                           error:&error]);
+        ASSERT_OBJCEQ(nil, error);
+
+        ASSERT_OBJCEQ_MSG(outName, @"/", @"If NSString is valid path to directory which has '/' suffix then outName is '/'.");
+        // This assert fails on CI; https://bugs.swift.org/browse/SR-389
+        //            ASSERT_TRUE_MSG(matches.count == content.count && matches.count == count, @"If NSString is valid path to directory
+        //            then
+        //            matches contain all content of directory. expected \(content) but got \(matches)")
+    }
+
+    {
+        NSString* path = @"/tmp";
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        NSUInteger numMatches = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        // WINOBJC: /private/tmp doesn't exist // auto urlToTmp = [[[NSURL alloc] initFileURLWithPath:@"/private/tmp/"]
+        // autorelease].URLByStandardizingPath;
+        auto urlToTmp = [[[NSURL alloc] initFileURLWithPath:@"/tmp/"] autorelease].URLByStandardizingPath;
+        NSError* error;
+        ASSERT_NO_THROW([[NSFileManager defaultManager] contentsOfDirectoryAtURL:urlToTmp
+                                                      includingPropertiesForKeys:nil
+                                                                         options:static_cast<NSDirectoryEnumerationOptions>(0)
+                                                                           error:&error]);
+        ASSERT_OBJCEQ(nil, error);
+        ASSERT_OBJCEQ_MSG(outName, @"/tmp/", @"If path could be completed to existing directory then outName is a string itself plus '/'.");
+        // This assert fails on CI; https://bugs.swift.org/browse/SR-389
+        //            ASSERT_TRUE_MSG(matches.count == content.count && matches.count == count, @"If NSString is valid path to directory
+        //            then
+        //            matches contain all content of directory. expected \(content) but got \(matches)")
+    }
+
+    auto fileNames2 = @[ @"/tmp/ABC/", @"/tmp/ABCD/", @"/tmp/abcde" ];
+    ASSERT_TRUE_MSG(ensureFiles(fileNames2), @"Could not create temp files for testing.");
+
+    {
+        NSString* path = tmpPath(@"ABC");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName, path),
+                        @"If NSString is valid path to directory then outName is string itself.");
+        ASSERT_TRUE_MSG(matches.count == count && count == fileNames2.count, @"");
+    }
+
+    {
+        NSString* path = tmpPath(@"Test_completePathIntoString_01");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(outName == path, @"If NSString is valid path to file and search is case sensitive then outName is string itself.");
+        ASSERT_TRUE_MSG(matches.count == 1 && count == 1 && stringsAreCaseInsensitivelyEqual(matches[0], path),
+                        @"If NSString is valid path to file and search is case sensitive then matches contain that file path only");
+    }
+
+    {
+        NSString* path = tmpPath(@"Test_completePathIntoString_01");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName, path),
+                        @"If NSString is valid path to file and search is case insensitive then outName is string equal to self.");
+        ASSERT_TRUE_MSG(matches.count == 3 && count == 3, @"Matches contain all files with similar name.");
+    }
+
+    {
+        auto path = tmpPath([[NSUUID UUID] UUIDString]);
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(outName == nil, @"If no matches found then outName is nil.");
+        ASSERT_TRUE_MSG(matches.count == 0 && count == 0, @"If no matches found then return 0 and matches is empty.");
+    }
+
+    {
+        NSString* path = @"";
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(outName == nil, @"If no matches found then outName is nil.");
+        ASSERT_TRUE_MSG(matches.count == 0 && count == 0, @"If no matches found then return 0 and matches is empty.");
+    }
+
+    {
+        NSString* path = tmpPath(@"test_c");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        // case insensetive
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName, tmpPath(@"Test_completePathIntoString_0")),
+                        @"If there are matches then outName should be longest common prefix of all matches.");
+        ASSERT_TRUE_MSG(matches.count == fileNames.count && count == fileNames.count,
+                        @"If there are matches then matches array contains them.");
+    }
+
+    {
+        NSString* path = tmpPath(@"test_c");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        // case sensetive
+        auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:nil];
+        ASSERT_TRUE_MSG(outName == tmpPath(@"test_completePathIntoString_0"),
+                        @"If there are matches then outName should be longest common prefix of all matches.");
+        ASSERT_TRUE_MSG(matches.count == 4 && count == 4, @"Supports case sensetive search");
+    }
+
+    {
+        NSString* path = tmpPath(@"test_c");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        // case sensetive
+        auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:@[ @"DAT" ]];
+        ASSERT_TRUE_MSG(outName == tmpPath(@"test_completePathIntoString_03.DAT"),
+                        @"If there are matches then outName should be longest common prefix of all matches.");
+        ASSERT_TRUE_MSG(matches.count == 1 && count == 1, @"Supports case sensetive search by extensions");
+    }
+
+    {
+        NSString* path = tmpPath(@"test_c");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        // type by filter
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:@[ @"txt", @"dat" ]];
+        ASSERT_TRUE_MSG(stringsAreCaseInsensitivelyEqual(outName, tmpPath(@"test_completePathIntoString_0")),
+                        @"If there are matches then outName should be longest common prefix of all matches.");
+        ASSERT_TRUE_MSG(matches.count == 3 && count == 3, @"Supports filtration by type");
+    }
+
+    {
+        // will be resolved against current working directory that is directory there results of build process are stored
+        NSString* path = @"TestFoundation";
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        auto count = [path completePathIntoString:&outName caseSensitive:false matchesIntoArray:&matches filterTypes:nil];
+        // Build directory at least contains executable itself and *.swiftmodule directory
+        ASSERT_TRUE_MSG(matches.count == count && count >= 2, @"Supports relative paths.");
+        ASSERT_TRUE_MSG(startWith(path, matches), @"For relative paths matches are relative too.");
+    }
+
+// Next check has no sense on Linux due to case sensitive file system.
+#if 0 // WINOBJC: never true // #if os(OSX)
+    guard ensureFiles([@"/tmp/ABC/temp.txt"]) else {
+        ASSERT_TRUE_MSG(false, @"Could not create temp files for testing.");
+        return;
+    }
+
+    {
+        NSString* path = tmpPath(@"aBc/t");
+        NSString* outName;
+        NSArray* matches = [[NSArray new] autorelease];
+        // type by filter
+        auto count = [path completePathIntoString:&outName caseSensitive:true matchesIntoArray:&matches filterTypes:@[ @"txt", @"dat" ]];
+        ASSERT_TRUE_MSG(outName == tmpPath(@"aBc/temp.txt"), @"outName starts with receiver.");
+        ASSERT_TRUE_MSG(matches.count >= 1 && count >= 1, @"There are matches");
+    }
+#endif
 }
 
 TEST(NSString, StringByTrimmingCharactersInSet) {
@@ -648,7 +660,6 @@ TEST(NSString, StringByDeletingLastPathComponent) {
     }
 }
 
-/*
 TEST(NSString, StringByResolvingSymlinksInPath) {
     {
         NSString* path = @"foo/bar";
@@ -662,7 +673,7 @@ TEST(NSString, StringByResolvingSymlinksInPath) {
         NSString* path = @"/tmp/..";
         auto result = path.stringByResolvingSymlinksInPath;
 
-#if os(OSX)
+#if 0 // WINOBJC: never true // #if os(OSX)
         auto expected = @"/private";
 #else
         auto expected = @"/";
@@ -683,19 +694,18 @@ TEST(NSString, StringByResolvingSymlinksInPath) {
         ASSERT_OBJCEQ_MSG(result, @"/tmp", @"Result doesn't contain trailing slash.");
     }
 
-    do {
+    {
         NSString* path = @"http://google.com/search/..";
         auto result = path.stringByResolvingSymlinksInPath;
         ASSERT_OBJCEQ_MSG(result, @"http:/google.com/search/..", @"stringByResolvingSymlinksInPath treats receiver as file path always");
     }
 
-    do {
+    {
         NSString* path = @"file:///tmp/..";
         auto result = path.stringByResolvingSymlinksInPath;
         ASSERT_OBJCEQ_MSG(result, @"file:/tmp/..", @"stringByResolvingSymlinksInPath treats receiver as file path always");
     }
 }
-*/
 
 TEST(NSString, GetCString_simple) {
     NSString* str = @"foo";
@@ -725,17 +735,19 @@ TEST(NSString, GetCString_nonASCII_withASCIIAccessor) {
     }
 }
 
-/*
-TEST(NSString, NSHomeDirectoryForUser) {
-    NSString* homeDir = NSHomeDirectoryForUser(nil);
+// TODO 7292268: Re-enable this test when NSHomeDirectory doesn't just return nil / NSHomeDirectoryForUser is implemented
+TEST(NSString, DISABLED_NSHomeDirectoryForUser) {
+    // TODO 7292268: method not implemented.  // NSString* homeDir = NSHomeDirectoryForUser(nil);
+    NSString* homeDir = NSHomeDirectory();
     NSString* userName = NSUserName();
-    NSString* homeDir2 = NSHomeDirectoryForUser(userName);
+    // TODO 7292268: method not implemented. // NSString* homeDir2 = NSHomeDirectoryForUser(userName);
+    NSString* homeDir2 = NSHomeDirectory();
     NSString* homeDir3 = NSHomeDirectory();
     ASSERT_TRUE_MSG(homeDir != nil && homeDir == homeDir2 && homeDir == homeDir3, @"Could get user' home directory");
 }
-*/
 
-TEST(NSString, StringByExpandingTildeInPath) {
+// TODO 7292268: Re-enable this test when NSHomeDirectory doesn't just return nil
+TEST(NSString, DISABLED_StringByExpandingTildeInPath) {
     {
         NSString* path = @"~";
         auto result = path.stringByExpandingTildeInPath;
@@ -767,8 +779,8 @@ TEST(NSString, StringByExpandingTildeInPath) {
     }
 }
 
-/*
-TEST(NSString, StringByStandardizingPath) {
+// TODO 7292268: Re-enable this test when NSHomeDirectory works
+TEST(NSString, DISABLED_StringByStandardizingPath) {
     // tmp is special because it is symlinked to /private/tmp and this /private prefix should be dropped,
     // so tmp is tmp. On Linux tmp is not symlinked so it would be the same.
     {
@@ -780,14 +792,14 @@ TEST(NSString, StringByStandardizingPath) {
     {
         NSString* path = @"~";
         auto result = path.stringByStandardizingPath;
-        NSHomeDirectory* expected = NSHomeDirectory();
+        NSString* expected = NSHomeDirectory();
         ASSERT_OBJCEQ_MSG(result, expected, @"stringByStandardizingPath expanding initial tilde.");
     }
 
     {
         NSString* path = @"~/foo/bar/";
         auto result = path.stringByStandardizingPath;
-        NSHomeDirectory* expected = NSHomeDirectory() + @"/foo/bar";
+        NSString* expected = [NSHomeDirectory() stringByAppendingString:@"/foo/bar"];
         ASSERT_OBJCEQ_MSG(result, expected, @"stringByStandardizingPath expanding initial tilde.");
     }
 
@@ -799,8 +811,8 @@ TEST(NSString, StringByStandardizingPath) {
     }
 
 // tmp is symlinked on OS X only
-#if os(OSX)
-    do {
+#if 0 // WINOBJC: never true. // #if os(OSX)
+    {
         NSString* path = @"/tmp/..";
         auto result = path.stringByStandardizingPath;
         ASSERT_OBJCEQ(result, @"/private");
@@ -819,7 +831,6 @@ TEST(NSString, StringByStandardizingPath) {
         ASSERT_OBJCEQ_MSG(result, path, @"parent links could not be resolved for relative paths");
     }
 }
-*/
 
 TEST(NSString, StringByRemovingPercentEncoding) {
     auto s1 = @"a%20b".stringByRemovingPercentEncoding;
@@ -904,203 +915,218 @@ TEST(NSString, MutableStringConstructor) {
     ASSERT_OBJCEQ(mutableString, @"Test");
 }
 
-/*
-struct ComparisonTest {
-    auto lhs : NSString;
-    auto rhs : NSString;
-    auto loc : UInt;
-    auto reason : NSString;
-
-    var xfail : BOOL {
-        return !reason.isEmpty;
+static void checkHasPrefixHasSuffix(NSString* lhs, NSString* rhs, Boolean expectHasPrefix, Boolean expectHasSuffix) {
+    if ([lhs isEqual:@""]) {
+        ASSERT_FALSE([lhs hasPrefix:rhs]);
+        ASSERT_FALSE([lhs hasSuffix:rhs]);
+        return;
+    }
+    if ([rhs isEqual:@""]) {
+        ASSERT_FALSE([lhs hasPrefix:rhs]);
+        ASSERT_FALSE([lhs hasSuffix:rhs]);
+        return;
     }
 
-    init(; _ lhs : NSString, _ rhs : NSString, NSString = @"", UInt = #line;) {
-        self.lhs = lhs;
-        self.rhs = rhs;
-        self.reason = reason;
-        self.loc = line;
-    }
-}
-
-auto comparisonTests =
-    @{
-       ComparisonTest(@"", @""),
-       ComparisonTest(@"", @"a"),
-
-       // ASCII cases
-       ComparisonTest(@"t", @"tt"),
-       ComparisonTest(@"t", @"Tt"),
-       ComparisonTest(@"\u0", @""),
-       ComparisonTest(@"\u0", @"\u0", @"https://bugs.swift.org/browse/SR-332"),
-       ComparisonTest(@"\r\n", @"t"),
-       ComparisonTest(@"\r\n", @"\n", @"blocked on rdar://problem/19036555"),
-       ComparisonTest(@"\u0", @"\u0\u0", @"rdar://problem/19034601"),
-
-       // Whitespace
-       // U+000A LINE FEED (LF)
-       // U+000B LINE TABULATION
-       // U+000C FORM FEED (FF)
-       // U+0085 NEXT LINE (NEL)
-       // U+2028 LINE SEPARATOR
-       // U+2029 PARAGRAPH SEPARATOR
-       ComparisonTest(@"\u0085", @"\n"),
-       ComparisonTest(@"\u000b", @"\n"),
-       ComparisonTest(@"\u000c", @"\n"),
-       ComparisonTest(@"\u2028", @"\n"),
-       ComparisonTest(@"\u2029", @"\n"),
-       ComparisonTest(@"\r\n\r\n", @"\r\n"),
-
-       // U+0301 COMBINING ACUTE ACCENT
-       // U+00E1 LATIN SMALL LETTER A WITH ACUTE
-       ComparisonTest(@"a\u301", @"\ue1"),
-       ComparisonTest(@"a", @"a\u301"),
-       ComparisonTest(@"a", @"\ue1"),
-
-       // U+304B HIRAGANA LETTER KA
-       // U+304C HIRAGANA LETTER GA
-       // U+3099 COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK
-       ComparisonTest(@"\u304b", @"\u304b"),
-       ComparisonTest(@"\u304c", @"\u304c"),
-       ComparisonTest(@"\u304b", @"\u304c"),
-       ComparisonTest(@"\u304b", @"\u304c\u3099"),
-       ComparisonTest(@"\u304c", @"\u304b\u3099"),
-       ComparisonTest(@"\u304c", @"\u304c\u3099"),
-
-       // U+212B ANGSTROM SIGN
-       // U+030A COMBINING RING ABOVE
-       // U+00C5 LATIN CAPITAL LETTER A WITH RING ABOVE
-       ComparisonTest(@"\u212b", @"A\u30a"),
-       ComparisonTest(@"\u212b", @"\uc5"),
-       ComparisonTest(@"A\u30a", @"\uc5"),
-       ComparisonTest(@"A\u30a", @"a"),
-       ComparisonTest(@"A", @"A\u30a"),
-
-       // U+2126 OHM SIGN
-       // U+03A9 GREEK CAPITAL LETTER OMEGA
-       ComparisonTest(@"\u2126", @"\u03a9"),
-
-       // U+0323 COMBINING DOT BELOW
-       // U+0307 COMBINING DOT ABOVE
-       // U+1E63 LATIN SMALL LETTER S WITH DOT BELOW
-       // U+1E69 LATIN SMALL LETTER S WITH DOT BELOW AND DOT ABOVE
-       ComparisonTest(@"\u1e69", @"s\u323\u307"),
-       ComparisonTest(@"\u1e69", @"s\u307\u323"),
-       ComparisonTest(@"\u1e69", @"\u1e63\u307"),
-       ComparisonTest(@"\u1e63", @"s\u323"),
-       ComparisonTest(@"\u1e63\u307", @"s\u323\u307"),
-       ComparisonTest(@"\u1e63\u307", @"s\u307\u323"),
-       ComparisonTest(@"s\u323", @"\u1e69"),
-
-       // U+FB01 LATIN SMALL LIGATURE FI
-       ComparisonTest(@"\ufb01", @"\ufb01"),
-       ComparisonTest(@"fi", @"\ufb01"),
-
-       // U+1F1E7 REGIONAL INDICATOR SYMBOL LETTER B
-       // \u1F1E7\u1F1E7 Flag of Barbados
-       ComparisonTest(@"\u1F1E7", @"\u1F1E7\u1F1E7", @"https://bugs.swift.org/browse/SR-367"),
-
-       // Test that Unicode collation is performed in deterministic mode.
-       //
-       // U+0301 COMBINING ACUTE ACCENT
-       // U+0341 COMBINING ACUTE TONE MARK
-       // U+0954 DEVANAGARI ACUTE ACCENT
-       //
-       // Collation elements from DUCET:
-       // 0301  ; [.0000.0024.0002] # COMBINING ACUTE ACCENT
-       // 0341  ; [.0000.0024.0002] # COMBINING ACUTE TONE MARK
-       // 0954  ; [.0000.0024.0002] # DEVANAGARI ACUTE ACCENT
-       //
-       // U+0301 and U+0954 don't decompose in the canonical decomposition mapping.
-       // U+0341 has a canonical decomposition mapping of U+0301.
-       ComparisonTest(@"\u0301", @"\u0341", @"https://bugs.swift.org/browse/SR-243"),
-       ComparisonTest(@"\u0301", @"\u0954"),
-       ComparisonTest(@"\u0341", @"\u0954"),
-    }
-
-enum Stack : ErrorProtocol {
-    case Stack([UInt]);
-}
-
-static int checkHasPrefixHasSuffix(NSString lhs, _ NSString rhs, _ stack : [UInt]) {
-    if (lhs == @"") {
-        var failures = 0;
-        failures += [lhs hasPrefix:rhs] ? 1 : 0;
-        failures += [lhs hasSuffix:rhs] ? 1 : 0;
-        return failures;
-    }
-    if (rhs == @"") {
-        var failures = 0;
-        failures += [lhs hasPrefix:rhs] ? 1 : 0;
-        failures += [lhs hasSuffix:rhs] ? 1 : 0;
-        return failures;
-    }
-
+    // WINOBJC: normalizing the strings messes with the expected value from the reference platform.
+    // Instead, just check passed in expectation.
     // To determine the expected results, compare grapheme clusters,
     // scalar-to-scalar, of the NFD form of the strings.
-    auto lhsNFDGraphemeClusters = ;
-    lhs.decomposedStringWithCanonicalMapping.characters.map {
-        Array(NSString($0).unicodeScalars);
+    // NSString* lhsNFDGraphemeClusters = lhs.decomposedStringWithCanonicalMapping;
+    // NSString* rhsNFDGraphemeClusters = rhs.decomposedStringWithCanonicalMapping;
+
+    // bool expectHasPrefix = ([lhsNFDGraphemeClusters length] >= [rhsNFDGraphemeClusters length]);
+    // for (unsigned int i = 0; expectHasPrefix && i < [rhsNFDGraphemeClusters length]; i++) {
+    //     expectHasPrefix &= ([lhsNFDGraphemeClusters characterAtIndex:i] == [rhsNFDGraphemeClusters characterAtIndex:i]);
+    // }
+
+    // bool expectHasSuffix = ([lhsNFDGraphemeClusters length] >= [rhsNFDGraphemeClusters length]);
+    // for (unsigned int i = 1; expectHasSuffix && i <= [rhsNFDGraphemeClusters length]; i++) {
+    //     expectHasSuffix &= ([lhsNFDGraphemeClusters characterAtIndex:([lhsNFDGraphemeClusters length] - i)] ==
+    //                         [rhsNFDGraphemeClusters characterAtIndex:([rhsNFDGraphemeClusters length] - i)]);
+    // }
+
+    ASSERT_EQ_MSG(expectHasPrefix, [lhs hasPrefix:rhs], "%@ should have prefix of %@", lhs, rhs);
+    ASSERT_EQ_MSG(expectHasSuffix, [lhs hasSuffix:rhs], "%@ should have suffix of %@", lhs, rhs);
+}
+
+class ComparisonTests : public ::testing::TestWithParam<::testing::tuple<NSString*,
+                                                                         NSString*,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean,
+                                                                         Boolean>> {
+public:
+    explicit ComparisonTests()
+        : ::testing::TestWithParam<::testing::tuple<NSString*,
+                                                    NSString*,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean,
+                                                    Boolean>>() {
     }
-    auto rhsNFDGraphemeClusters = ;
-    rhs.decomposedStringWithCanonicalMapping.characters.map {
-        Array(NSString($0).unicodeScalars);
-    }
-    auto expectHasPrefix = [lhsNFDGraphemeClusters starts:; with:rhsNFDGraphemeClusters isEquivalent:(== )];
-    auto expectHasSuffix = ;
-    lhsNFDGraphemeClusters.[[lazy reversed] starts:; with:rhsNFDGraphemeClusters.[lazy reversed] isEquivalent:(== )];
 
-    static int testFailure(BOOL lhs, _ BOOL rhs, _ stack : [UInt]) {
-        guard lhs == rhs else {
-            // print(stack)
-            return 1;
-        }
-        return 0;
+protected:
+    virtual void SetUp() {
     }
 
-    var failures = 0;
-    failures += testFailure(expectHasPrefix, [lhs hasPrefix:rhs], stack + [#line]);
-    failures += testFailure(expectHasSuffix, [lhs hasSuffix:rhs], stack + [#line]);
-    return failures;
+    virtual void TearDown() {
+    }
+};
+
+TEST_P(ComparisonTests, PrefixSuffix) {
+    StrongId<NSString> lhs = ::testing::get<0>(GetParam());
+    StrongId<NSString> rhs = ::testing::get<1>(GetParam());
+
+    checkHasPrefixHasSuffix(lhs, rhs, ::testing::get<2>(GetParam()), ::testing::get<3>(GetParam()));
+    checkHasPrefixHasSuffix(rhs, lhs, ::testing::get<4>(GetParam()), ::testing::get<5>(GetParam()));
+
+    static NSString* fragment = @"abc";
+    static NSString* combiner = @"\u0301";
+
+    StrongId<NSMutableString> lhsWithFragment;
+    lhsWithFragment.attach([lhs mutableCopy]);
+    [lhsWithFragment appendString:fragment];
+
+    StrongId<NSMutableString> fragmentWithLhs;
+    fragmentWithLhs.attach([fragment mutableCopy]);
+    [fragmentWithLhs appendString:lhs];
+
+    StrongId<NSMutableString> lhsWithCombiner;
+    lhsWithCombiner.attach([lhs mutableCopy]);
+    [lhsWithCombiner appendString:combiner];
+
+    StrongId<NSMutableString> combinerWithLhs;
+    combinerWithLhs.attach([combiner mutableCopy]);
+    [combinerWithLhs appendString:lhs];
+
+    checkHasPrefixHasSuffix(lhsWithFragment, rhs, ::testing::get<6>(GetParam()), ::testing::get<7>(GetParam()));
+    checkHasPrefixHasSuffix(fragmentWithLhs, rhs, ::testing::get<8>(GetParam()), ::testing::get<9>(GetParam()));
+    checkHasPrefixHasSuffix(lhsWithCombiner, rhs, ::testing::get<10>(GetParam()), ::testing::get<11>(GetParam()));
+    checkHasPrefixHasSuffix(combinerWithLhs, rhs, ::testing::get<12>(GetParam()), ::testing::get<13>(GetParam()));
 }
 
-extension TestNSString{ TEST(NSString, PrefixSuffix){
-#if !_runtime(_ObjC)
-    for (test in comparisonTests){ var failures = 0;
-failures += checkHasPrefixHasSuffix(test.lhs, test.rhs, @[ test.loc, #line ]);
-failures += checkHasPrefixHasSuffix(test.rhs, test.lhs, @[ test.loc, #line ]);
+INSTANTIATE_TEST_CASE_P(
+    NSString,
+    ComparisonTests,
+    ::testing::Values(::testing::make_tuple(@"", @"", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"", @"a", NO, NO, NO, NO, YES, NO, YES, NO, NO, NO, NO, NO),
 
-auto fragment = @"abc";
-auto combiner = @"\u0301";
+                      // ASCII cases
+                      ::testing::make_tuple(@"t", @"tt", NO, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"t", @"Tt", NO, NO, NO, YES, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u0000", @"", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u0000", @"\u0000", YES, YES, YES, YES, YES, NO, NO, YES, YES, NO, NO, YES),
+                      ::testing::make_tuple(@"\r\n", @"t", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\r\n", @"\n", NO, YES, NO, NO, NO, NO, NO, YES, NO, NO, NO, YES),
+                      ::testing::make_tuple(@"\u0000", @"\u0000\u0000", YES, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO),
 
-failures += checkHasPrefixHasSuffix(test.lhs + fragment, test.rhs, @[ test.loc, #line ]);
-failures += checkHasPrefixHasSuffix(fragment + test.lhs, test.rhs, @[ test.loc, #line ]);
-failures += checkHasPrefixHasSuffix(test.lhs + combiner, test.rhs, @[ test.loc, #line ]);
-failures += checkHasPrefixHasSuffix(combiner + test.lhs, test.rhs, @[ test.loc, #line ]);
+                      // Whitespace
+                      // U+000A LINE FEED (LF)
+                      // U+000B LINE TABULATION
+                      // U+000C FORM FEED (FF)
+                      // U+0085 NEXT LINE (NEL)
+                      // U+2028 LINE SEPARATOR
+                      // U+2029 PARAGRAPH SEPARATOR
+                      ::testing::make_tuple(@"\u0085", @"\n", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u000b", @"\n", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u000c", @"\n", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u2028", @"\n", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u2029", @"\n", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\r\n\r\n", @"\r\n", YES, YES, NO, NO, YES, NO, NO, YES, YES, NO, NO, YES),
 
-auto fail = (failures > 0);
-if (fail) {
-    // print(@"Prefix/Suffix case \(test.loc): \(failures) failures")
-    // print(@"Failures were\(test.xfail ? "@" : " not@") expected")
-}
-ASSERT_TRUE_MSG(test.xfail == fail, @"Unexpected \(test.xfail ?" success @":" failure @"): \(test.loc)");
-}
-#endif
-}
-}
-* /
+                      // U+0301 COMBINING ACUTE ACCENT
+                      // U+00E1 LATIN SMALL LETTER A WITH ACUTE
+                      ::testing::make_tuple(@"a\u0301", @"\u00e1", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"a", @"a\u0301", NO, NO, YES, NO, NO, NO, NO, NO, YES, YES, NO, NO),
+                      ::testing::make_tuple(@"a", @"\u00e1", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
 
-    // WINOBJC: No playground support for ObjC
-    /*
-    TEST(NSString, Reflection) {
-        NSString* testString = @"some text here";
+                      // U+304B HIRAGANA LETTER KA
+                      // U+304C HIRAGANA LETTER GA
+                      // U+3099 COMBINING KATAKANA-HIRAGANA VOICED SOUND MARK
+                      ::testing::make_tuple(@"\u304b", @"\u304b", YES, YES, YES, YES, YES, NO, NO, YES, YES, NO, NO, YES),
+                      ::testing::make_tuple(@"\u304c", @"\u304c", YES, YES, YES, YES, YES, NO, NO, YES, YES, NO, NO, YES),
+                      ::testing::make_tuple(@"\u304b", @"\u304c", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u304b", @"\u304c\u3099", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u304c", @"\u304b\u3099", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u304c", @"\u304c\u3099", NO, NO, YES, NO, NO, NO, NO, NO, NO, NO, NO, NO),
 
-        auto ql = PlaygroundQuickLook(reflecting : testString);
+                      // U+212B ANGSTROM SIGN
+                      // U+030A COMBINING RING ABOVE
+                      // U+00C5 LATIN CAPITAL LETTER A WITH RING ABOVE
+                      ::testing::make_tuple(@"\u212b", @"A\u030a", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u212b", @"\u00c5", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"A\u030a", @"\u00c5", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"A\u030a", @"a", NO, NO, NO, NO, NO, NO, YES, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"A", @"A\u030a", NO, NO, YES, NO, NO, NO, NO, NO, NO, NO, NO, NO),
 
-        switch
-            ql {
-                case.text(let str):
-                    ASSERT_OBJCEQ(testString, str);
-        default: ASSERT_TRUE_MSG(false, @"mismatched quicklook");
-        }
-    */
+                      // U+2126 OHM SIGN
+                      // U+03A9 GREEK CAPITAL LETTER OMEGA
+                      ::testing::make_tuple(@"\u2126", @"\u03a9", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+
+                      // U+0323 COMBINING DOT BELOW
+                      // U+0307 COMBINING DOT ABOVE
+                      // U+1E63 LATIN SMALL LETTER S WITH DOT BELOW
+                      // U+1E69 LATIN SMALL LETTER S WITH DOT BELOW AND DOT ABOVE
+                      ::testing::make_tuple(@"\u1e69", @"s\u0323\u0307", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u1e69", @"s\u0307\u0323", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u1e69", @"\u1e63\u0307", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u1e63", @"s\u0323", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u1e63\u0307", @"s\u0323\u0307", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u1e63\u0307", @"s\u0307\u0323", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"s\u0323", @"\u1e69", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+
+                      // U+FB01 LATIN SMALL LIGATURE FI
+                      ::testing::make_tuple(@"\ufb01", @"\ufb01", YES, YES, YES, YES, YES, NO, NO, YES, YES, NO, NO, YES),
+                      ::testing::make_tuple(@"fi", @"\ufb01", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+
+                      // U+1F1E7 REGIONAL INDICATOR SYMBOL LETTER B
+                      // \u1F1E7\u1F1E7 Flag of Barbados
+                      ::testing::make_tuple(@"\u1F1E7", @"\u1F1E7\u1F1E7", NO, NO, YES, YES, NO, NO, NO, NO, NO, NO, NO, NO),
+
+                      // Test that Unicode collation is performed in deterministic mode.
+                      //
+                      // U+0301 COMBINING ACUTE ACCENT
+                      // U+0341 COMBINING ACUTE TONE MARK
+                      // U+0954 DEVANAGARI ACUTE ACCENT
+                      //
+                      // Collation elements from DUCET:
+                      // 0301  ; [.0000.0024.0002] # COMBINING ACUTE ACCENT
+                      // 0341  ; [.0000.0024.0002] # COMBINING ACUTE TONE MARK
+                      // 0954  ; [.0000.0024.0002] # DEVANAGARI ACUTE ACCENT
+                      //
+                      // U+0301 and U+0954 don't decompose in the canonical decomposition mapping.
+                      // U+0341 has a canonical decomposition mapping of U+0301.
+                      ::testing::make_tuple(@"\u0301", @"\u0341", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u0301", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO),
+                      ::testing::make_tuple(@"\u0341", @"\u0954", NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO, NO)));
+
+// WINOBJC: No playground support for ObjC
+/*
+TEST(NSString, Reflection) {
+    NSString* testString = @"some text here";
+
+    auto ql = PlaygroundQuickLook(reflecting : testString);
+
+    switch
+        ql {
+            case.text(let str):
+                ASSERT_OBJCEQ(testString, str);
+    default: ASSERT_TRUE_MSG(false, @"mismatched quicklook");
+    }
+*/
