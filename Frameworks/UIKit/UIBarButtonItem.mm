@@ -353,11 +353,6 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
-    _target = [connection obj];
-    _targetSel = (SEL)[connection sel];
-}
-
 /**
  @Status Interoperable
 */
@@ -671,6 +666,11 @@ static void initControls(UIBarButtonItem* self) {
 @end
 
 @implementation UIBarButtonItem (Internals)
+
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
+    _target = [connection obj];
+    _targetSel = (SEL)[connection sel];
+}
 
 - (UIView*)_view {
     if (_customView != nil) {

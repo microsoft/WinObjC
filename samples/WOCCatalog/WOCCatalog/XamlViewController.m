@@ -90,7 +90,7 @@
 
     if (indexPath.row == 0) {
         WXCDatePicker* datePicker = [WXCDatePicker make];
-        UIView* datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 400.0f, cell.frame.size.height)];
+        UIView* datePickerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 280.0f, cell.frame.size.height)];
         [datePickerView setNativeElement:datePicker];
         cell.textLabel.text = @"DatePicker";
         cell.accessoryView = datePickerView;
@@ -114,7 +114,7 @@
         cell.accessoryView = checkBoxView;
     } else if (indexPath.row == 3) {
         self.mediaElement = [WXCMediaElement make];
-        UIView* meView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 400.0f, 300.f)];
+        UIView* meView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 300.f)];
         self.mediaElement.autoPlay = YES;
         [meView setNativeElement:self.mediaElement];
         self.mediaElement.source = [WFUri makeUri:@"http://video.ch9.ms/ch9/189c/72816d8e-6ccb-4b42-aebd-325363c8189c/win10.mp4"];
