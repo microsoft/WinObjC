@@ -114,6 +114,7 @@ static void locking_function(int mode, int idx, const char* file, int line) {
 
 - (void)dealloc {
     [_properties release];
+    [_readBuffer release];
     SSL_free(_connection);
     IwFree(_stableBuffer);
     [super dealloc];

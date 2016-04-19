@@ -498,7 +498,7 @@ static id makeReference(unsigned ref) {
  @Status Interoperable
 */
 - (BOOL)allowsKeyedCoding {
-    return TRUE;
+    return YES;
 }
 
 /**
