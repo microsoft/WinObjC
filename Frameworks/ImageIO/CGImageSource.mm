@@ -426,9 +426,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/app1/ifd/exif/{ushort=37500}", &propertyValue)) && 
         propertyValue.vt == VT_BLOB) {
-        [exifProperties setObject:[NSData dataWithBytesNoCopy:propertyValue.blob.pBlobData 
-                                                       length:propertyValue.blob.cbSize 
-                                                 freeWhenDone:YES] 
+        [exifProperties setObject:[NSData dataWithBytes:propertyValue.blob.pBlobData length:propertyValue.blob.cbSize] 
                            forKey:(id)kCGImagePropertyExifMakerNote];
     }
 
@@ -458,8 +456,13 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/app1/ifd/exif/{ushort=36864}", &propertyValue)) && propertyValue.vt == VT_BLOB) {
-        [exifProperties setObject:[NSData dataWithBytesNoCopy:propertyValue.blob.pBlobData length:propertyValue.blob.cbSize freeWhenDone:YES] 
-                           forKey:(id)kCGImagePropertyExifVersion];
+        NSData* exifVersion = [NSData dataWithBytesNoCopy:propertyValue.blob.pBlobData length:propertyValue.blob.cbSize freeWhenDone:YES];
+        NSMutableArray* exifVersionArray = [NSMutableArray array];
+        char* exifVersionCharacters = (char*)[exifVersion bytes];
+        [exifVersionArray addObject:[NSNumber numberWithInt:exifVersionCharacters[1] - '0']];
+        [exifVersionArray addObject:[NSNumber numberWithInt:exifVersionCharacters[2] - '0']];
+        [exifVersionArray addObject:[NSNumber numberWithInt:exifVersionCharacters[3] - '0']];
+        [exifProperties setObject:exifVersionArray forKey:(id)kCGImagePropertyExifVersion];
     }
 
     PropVariantClear(&propertyValue);
@@ -856,7 +859,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/ifd/exif/{ushort=37500}", &propertyValue)) && propertyValue.vt == VT_BLOB) {
-        [exifProperties setObject:[NSData dataWithBytesNoCopy:propertyValue.blob.pBlobData length:propertyValue.blob.cbSize freeWhenDone:YES] 
+        [exifProperties setObject:[NSData dataWithBytes:propertyValue.blob.pBlobData length:propertyValue.blob.cbSize] 
                            forKey:(id)kCGImagePropertyExifMakerNote];
     }
 
@@ -886,10 +889,13 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/ifd/exif/{ushort=36864}", &propertyValue)) && propertyValue.vt == VT_BLOB) {
-        [exifProperties setObject:[NSData dataWithBytesNoCopy:propertyValue.blob.pBlobData 
-                                                       length:propertyValue.blob.cbSize 
-                                                 freeWhenDone:YES]
-                           forKey:(id)kCGImagePropertyExifVersion];
+        NSData* exifVersion = [NSData dataWithBytesNoCopy:propertyValue.blob.pBlobData length:propertyValue.blob.cbSize freeWhenDone:YES];
+        NSMutableArray* exifVersionArray = [NSMutableArray array];
+        char* exifVersionCharacters = (char*)[exifVersion bytes];
+        [exifVersionArray addObject:[NSNumber numberWithInt:exifVersionCharacters[1] - '0']];
+        [exifVersionArray addObject:[NSNumber numberWithInt:exifVersionCharacters[2] - '0']];
+        [exifVersionArray addObject:[NSNumber numberWithInt:exifVersionCharacters[3] - '0']];
+        [exifProperties setObject:exifVersionArray forKey:(id)kCGImagePropertyExifVersion];
     }
 
     PropVariantClear(&propertyValue);
