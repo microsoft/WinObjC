@@ -144,35 +144,31 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key STUB_METHOD {
-    UNIMPLEMENTED();
+- (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key {
+    [self encodeObject:[NSValue valueWithBytes:&vector objCType:@encode(CGVector)] forKey:key];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key {
-    UNIMPLEMENTED();
+    [self encodeObject:[NSValue valueWithBytes:&insets objCType:@encode(UIEdgeInsets)] forKey:key];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key {
-    UNIMPLEMENTED();
+    [self encodeObject:[NSValue valueWithBytes:&offset objCType:@encode(UIOffset)] forKey:key];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key {
-    UNIMPLEMENTED();
+    [self encodeObject:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:key];
 }
 @end
 
@@ -221,38 +217,54 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (CGVector)decodeCGVectorForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CGVector ret = CGVectorMake(0, 0);
+    id value = [self decodeObjectForKey:key];
+
+    if (value != nil) {
+        [value getValue:&ret];
+    }
+    return ret;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    UIEdgeInsets ret = UIEdgeInsetsMake(0, 0, 0, 0);
+    id value = [self decodeObjectForKey:key];
+
+    if (value != nil) {
+        [value getValue:&ret];
+    }
+    return ret;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (UIOffset)decodeUIOffsetForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    UIOffset ret = UIOffsetMake(0, 0);
+    id value = [self decodeObjectForKey:key];
+
+    if (value != nil) {
+        [value getValue:&ret];
+    }
+    return ret;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (CGAffineTransform)decodeCGAffineTransformForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CGAffineTransform ret = CGAffineTransformMake(0, 0, 0, 0, 0, 0);
+    id value = [self decodeObjectForKey:key];
+
+    if (value != nil) {
+        [value getValue:&ret];
+    }
+    return ret;
 }
 @end
