@@ -76,7 +76,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) BOOL canCancelContentTouches STUB_PROPERTY;
 @property (nonatomic) BOOL delaysContentTouches STUB_PROPERTY;
 @property (nonatomic) BOOL scrollsToTop STUB_PROPERTY;
-@property (nonatomic) BOOL showsHorizontalScrollIndicator STUB_PROPERTY;
+@property (nonatomic) BOOL showsHorizontalScrollIndicator;
 @property (nonatomic) BOOL showsVerticalScrollIndicator;
 @property (nonatomic) CGFloat decelerationRate STUB_PROPERTY;
 @property (nonatomic) CGFloat maximumZoomScale;
