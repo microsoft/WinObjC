@@ -166,11 +166,7 @@ void setVariantFromDictionary(CFDictionaryRef dictionary,
                               VARTYPE propertyType,
                               LPCWSTR path,
                               IWICMetadataQueryWriter* propertyWriter) {
-    if (!dictionary) {
-        return;
-    }
-    
-    if (CFDictionaryContainsKey(dictionary, key)) {
+    if (dictionary && CFDictionaryContainsKey(dictionary, key)) {
         PROPVARIANT propertyToWrite;
         PropVariantInit(&propertyToWrite);
         propertyToWrite.vt = propertyType;

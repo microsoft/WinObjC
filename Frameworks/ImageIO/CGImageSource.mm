@@ -118,7 +118,7 @@ const unsigned int c_secondsPerDegree = 3600;
 CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader) {
     PROPVARIANT propertyValue;
     PropVariantInit(&propertyValue);
-    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* properties = [[NSMutableDictionary alloc] init];
 
     // JPEG Properties - Common
     // DPIHeight and DPIWidth are saved in different places for different image formats, and these locations only represent
@@ -165,7 +165,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // JPEG Properties - Format-specific
-    NSMutableDictionary *jfifProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* jfifProperties = [[NSMutableDictionary alloc] init];
     PropVariantClear(&propertyValue);
 
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/app0/{ushort=0}", &propertyValue)) && propertyValue.vt == VT_UI2) {
@@ -198,7 +198,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // GPS Properties - JPEG
-    NSMutableDictionary *gpsProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* gpsProperties = [[NSMutableDictionary alloc] init];
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/app1/ifd/gps/{ushort=6}", &propertyValue)) && propertyValue.vt == VT_UI8) {
         [gpsProperties setObject:[NSNumber numberWithDouble:(double)propertyValue.uhVal.LowPart/propertyValue.uhVal.HighPart] 
@@ -317,7 +317,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Exif Properties - JPEG
-    NSMutableDictionary *exifProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* exifProperties = [[NSMutableDictionary alloc] init];
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/app1/ifd/exif/{ushort=40962}", &propertyValue)) && propertyValue.vt == VT_UI2) {
         // iOS can get both the general image dimension properties as well as Exif ones from this value
@@ -474,7 +474,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
 
     // The following properties are in TIFF property dictionary, but for /app1/ifd/, which is not a TIFF directory
     // This information gets read for JPEG files on iOS, and do in fact get added to a TIFF dictionary, even for a JPEG
-    NSMutableDictionary *tiffProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* tiffProperties = [[NSMutableDictionary alloc] init];
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/app1/ifd/{ushort=274}", &propertyValue)) && propertyValue.vt == VT_UI2) {
         [tiffProperties setObject:[NSNumber numberWithInt:propertyValue.uiVal] forKey:(id)kCGImagePropertyTIFFOrientation];
@@ -508,7 +508,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
 CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader) {
     PROPVARIANT propertyValue;
     PropVariantInit(&propertyValue);
-    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* properties = [[NSMutableDictionary alloc] init];
 
     // TIFF Properties - Common
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/ifd/{ushort=283}", &propertyValue)) && propertyValue.vt == VT_UI8) {
@@ -553,7 +553,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // TIFF Properties - Format-specific
-    NSMutableDictionary *tiffProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* tiffProperties = [[NSMutableDictionary alloc] init];
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/ifd/{ushort=259}", &propertyValue)) && propertyValue.vt == VT_UI2) {
         [tiffProperties setObject:[NSNumber numberWithInt:propertyValue.uiVal] forKey:(id)kCGImagePropertyTIFFCompression];
@@ -632,7 +632,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // GPS Properties - TIFF - This is a copy of TIFF properties for JPEG but with different paths.
-    NSMutableDictionary *gpsProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* gpsProperties = [[NSMutableDictionary alloc] init];
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/ifd/gps/{ushort=6}", &propertyValue)) && propertyValue.vt == VT_UI8) {
@@ -752,7 +752,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Exif Properties - TIFF - This is a copy of Exif properties for JPEG but with different paths.
-    NSMutableDictionary *exifProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* exifProperties = [[NSMutableDictionary alloc] init];
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/ifd/exif/{ushort=40962}", &propertyValue)) && propertyValue.vt == VT_UI2) {
@@ -909,7 +909,7 @@ CFDictionaryRef readGIFProperties(IWICMetadataQueryReader* imageMetadataReader) 
     // GIF Properties - Common
     PROPVARIANT propertyValue;
     PropVariantInit(&propertyValue);
-    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* properties = [[NSMutableDictionary alloc] init];
 
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/imgdesc/Width", &propertyValue)) && propertyValue.vt == VT_UI2) {
         [properties setObject:[NSNumber numberWithInt:propertyValue.uiVal] forKey:(id)kCGImagePropertyPixelWidth];
@@ -926,7 +926,7 @@ CFDictionaryRef readGIFProperties(IWICMetadataQueryReader* imageMetadataReader) 
     }
     
     // GIF Properties - Format-specific
-    NSMutableDictionary *gifProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* gifProperties = [[NSMutableDictionary alloc] init];
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/grctlext/Delay", &propertyValue)) && propertyValue.vt == VT_UI2) {
@@ -958,7 +958,7 @@ CFDictionaryRef readGIFProperties(IWICMetadataQueryReader* imageMetadataReader) 
 CFDictionaryRef readPNGProperties(IWICMetadataQueryReader* imageMetadataReader) {
     PROPVARIANT propertyValue;
     PropVariantInit(&propertyValue);
-    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* properties = [[NSMutableDictionary alloc] init];
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/iCCP/ProfileName", &propertyValue)) && propertyValue.vt == VT_LPSTR) {
@@ -966,7 +966,7 @@ CFDictionaryRef readPNGProperties(IWICMetadataQueryReader* imageMetadataReader) 
     }
 
     // PNG Properties - Format-specific
-    NSMutableDictionary *pngProperties = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary* pngProperties = [[NSMutableDictionary alloc] init];
 
     PropVariantClear(&propertyValue);
     if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/gAMA/ImageGamma", &propertyValue)) && propertyValue.vt == VT_UI4) {
@@ -1374,14 +1374,17 @@ size_t CGImageSourceGetCount(CGImageSourceRef isrc) {
  @Notes A limited subset of source container properties are supported currently  
 */
 CFDictionaryRef CGImageSourceCopyProperties(CGImageSourceRef isrc, CFDictionaryRef options) {
+    static const uint8_t c_gifDataIdentifier[2] = {3, 1};
+
     RETURN_NULL_IF(!isrc);
     NSData* imageData = ((ImageSource*)isrc).data;
     RETURN_NULL_IF(!imageData);
 
-    NSMutableDictionary *properties = [[NSMutableDictionary alloc] init]; 
+    NSMutableDictionary* properties = [[NSMutableDictionary alloc] init]; 
     [properties setObject:[NSNumber numberWithInt:[imageData length]] forKey:(id)kCGImagePropertyFileSize];
 
-    // Look for container-level metadata if the file is a GIF.
+    // Look for container-level metadata if the file is a GIF. Other image formats don't have container-level metadata
+    // and the metadata is read as part of CGImageSourceCopyPropertiesAtIndex.
     CFStringRef imageFormat = CGImageSourceGetType(isrc);
     if (imageFormat == kUTTypeGIF) {
         MULTI_QI imageQueryInterface = {0};
@@ -1409,11 +1412,13 @@ CFDictionaryRef CGImageSourceCopyProperties(CGImageSourceRef isrc, CFDictionaryR
 
         PROPVARIANT propertyValue;
         PropVariantInit(&propertyValue);
-        NSMutableDictionary *gifProperties = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary* gifProperties = [[NSMutableDictionary alloc] init];
 
+        // The GIF metadata can contain a Netcape 2.0 looping block in /appext/Data. It contains 0x3, representing 3 bytes
+        // of data, followed by 0x1, and then 2 bytes for the loop count in little-endian format.
         if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/appext/Data", &propertyValue)) &&
             propertyValue.vt == (VT_VECTOR | VT_UI1)) {
-            if (propertyValue.caub.pElems[0] == 3 && propertyValue.caub.pElems[1] == 1) {
+            if (propertyValue.caub.pElems[0] == c_gifDataIdentifier[0] && propertyValue.caub.pElems[1] == c_gifDataIdentifier[1]) {
                 NSNumber* loopCount = [NSNumber numberWithInt:propertyValue.caub.pElems[2] + (propertyValue.caub.pElems[3]<<8)];
                 [gifProperties setObject:loopCount forKey:(id)kCGImagePropertyGIFLoopCount];
             }
