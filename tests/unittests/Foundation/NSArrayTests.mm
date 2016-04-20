@@ -206,3 +206,21 @@ TEST(NSArray, Enumerate) {
 
     ASSERT_EQ(0, waitingCount);
 }
+
+TEST(NSArray, RemoveObjectsAtIndexes) {
+    NSMutableIndexSet* indexSet = [[NSMutableIndexSet new] autorelease];
+    [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+    [indexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
+
+    NSMutableArray* testArray = [[NSMutableArray new] autorelease];
+    for (NSUInteger i = 0; i < 10; i++) {
+        [testArray addObject:@(i)];
+    }
+
+    [testArray removeObjectsAtIndexes:indexSet];
+
+    NSArray* expectedArray = @[ @0, @1, @6, @9 ];
+
+    ASSERT_OBJCEQ(testArray, expectedArray);
+
+}

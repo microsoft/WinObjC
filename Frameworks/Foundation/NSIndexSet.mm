@@ -225,11 +225,6 @@
  @Notes NSEnumerationReverse not implemented.
 */
 - (void)enumerateIndexesWithOptions:(NSEnumerationOptions)options usingBlock:(void (^)(NSUInteger, BOOL*))block {
-    if (options & NSEnumerationReverse) {
-        UNIMPLEMENTED();
-        return;
-    }
-
     dispatch_queue_t queue;
     dispatch_group_t group;
 
@@ -240,22 +235,29 @@
     }
 
     __block BOOL stop = NO;
-    for (unsigned long i = 0; i < [(NSMutableIndexSet*)self _count] && !stop; i++) {
-        NSRange cur = [(NSMutableIndexSet*)self _itemAtIndex:i];
-
-        for (__block unsigned long j = cur.location; j < cur.location + cur.length && !stop; j++) {
+    BOOL reverse = options & NSEnumerationReverse;
+    unsigned long count = [(NSMutableIndexSet*)self _count];
+    unsigned long start = (reverse) ? count : 1;
+    unsigned long end = (reverse) ? 0 : count + 1;
+    long step = (reverse) ? -1 : 1;
+    for (unsigned long i = start; i != end && !stop; i += step) {
+        NSRange cur = [(NSMutableIndexSet*)self _itemAtIndex:(i - 1)];
+        __block unsigned long j;
+        unsigned long innerStart = (reverse) ? NSMaxRange(cur) - 1 : cur.location;
+        for (j = innerStart; NSLocationInRange(j, cur) && !stop; j += step) {
             if (options & NSEnumerationConcurrent) {
                 dispatch_group_async(group,
-                                     queue,
-                                     ^() {
-                                         block(j, &stop);
-                                     });
+                                        queue,
+                                        ^() {
+                                            block(j, &stop);
+                                        });
             } else {
                 block(j, &stop);
             }
         }
     }
 
+    // Wait for dispatch queue to execute
     if (options & NSEnumerationConcurrent) {
         dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         dispatch_release(group);

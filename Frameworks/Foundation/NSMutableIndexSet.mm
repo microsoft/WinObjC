@@ -282,19 +282,6 @@
     return [[self new] autorelease];
 }
 
-- (id)_removeFromArray:(id)array {
-    int i;
-
-    for (i = [self _count] - 1; i >= 0; i--) {
-        NSRange rself = [self _itemAtIndex:i];
-
-        for (int k = rself.location + rself.length - 1; k >= 0 && k >= int64_t(rself.location); k--) {
-            [array removeObjectAtIndex:k];
-        }
-    }
-    return self;
-}
-
 /**
  @Status Interoperable
 */
