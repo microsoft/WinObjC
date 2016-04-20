@@ -88,7 +88,7 @@ int viewCount = 0;
     return priv;
 }
 
-- (void)initPriv {
+- (void)_initPriv {
     if (self->priv)
         return;
 
@@ -141,14 +141,14 @@ int viewCount = 0;
 + (instancetype)allocWithZone:(NSZone*)zone {
     UIView* ret = [super allocWithZone:zone];
 
-    [ret initPriv];
+    [ret _initPriv];
     return ret;
 }
 
 static UIView* initInternal(UIView* self, CGRect pos) {
     TraceWarning(TAG, L"[%f,%f] @ %fx%f", (float)pos.origin.x, (float)pos.origin.y, (float)pos.size.width, (float)pos.size.height);
 
-    [self initPriv];
+    [self _initPriv];
     [self setOpaque:TRUE];
     [self setFrame:pos];
     [self setNeedsDisplay];

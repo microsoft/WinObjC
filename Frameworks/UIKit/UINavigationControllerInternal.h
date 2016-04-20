@@ -19,6 +19,7 @@
 @class UINavigationItem;
 @class UINavigationBar;
 
-@interface UINavigationController()
+@interface UINavigationController ()
 - (void)_navigationBar:(UINavigationBar*)bar didPopItem:(UINavigationItem*)item;
+- (void)_layoutContainer;
 @end

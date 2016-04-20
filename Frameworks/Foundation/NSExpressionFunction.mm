@@ -74,10 +74,6 @@
 - (id)expressionValueWithObject:(id)object context:(NSMutableDictionary*)context {
     NSObject* result = (NSObject*)[_target expressionValueWithObject:object context:context];
     // run the selector on the result.
-
-    if (_selector == nil) {
-        NSObject* s;
-    }
     NSMethodSignature* sig = [result methodSignatureForSelector:_selector];
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
     [invocation setSelector:_selector];
@@ -103,6 +99,19 @@
     [invocation getReturnValue:&invocationResult];
 
     return invocationResult;
+}
+
+- (NSExpression*)expressionWithSubstitutionVariables:(NSDictionary*)variables {
+    NSMutableArray* argsSub = [NSMutableArray arrayWithCapacity:[_args count]];
+
+    NSExpression* targetSub = (_target != nil) ? [_target expressionWithSubstitutionVariables:variables] : nil;
+
+    for (NSExpression* exp : _args) {
+        [argsSub addObject:[exp expressionWithSubstitutionVariables:variables]];
+    }
+
+    return [[[[self class] alloc] initWithExpressionTarget:targetSub selectorName:NSStringFromSelector(_selector) arguments:argsSub]
+        autorelease];
 }
 
 /**

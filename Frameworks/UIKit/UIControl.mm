@@ -23,6 +23,7 @@
 #import "Foundation/NSMutableSet.h"
 #import "LoggingNative.h"
 #import "StubReturn.h"
+#import "UIControl+Internal.h"
 
 static const wchar_t* TAG = L"UIControl";
 
@@ -78,7 +79,7 @@ static const wchar_t* TAG = L"UIControl";
     self.isAccessibilityElement = TRUE;
 }
 
-- (void)addEventConnection:(UIRuntimeEventConnection*)connection {
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
     [_registeredActions addObject:connection];
 }
 

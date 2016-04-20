@@ -128,12 +128,6 @@ static idretain _buttonFill[2];
     return _title;
 }
 
-- (id)buttonClicked:(id)button {
-    [_delegate segmentSelected:self];
-
-    return self;
-}
-
 - (id)_setType:(DWORD)type {
     if (_type == 4) {
         return self;
@@ -318,19 +312,19 @@ static idretain _buttonFill[2];
 }
 
 - (id)touchesBegan:(id)touchSet withEvent:(id)event {
-    [[self superview] _segmentSelectedDown:self];
+    [static_cast<UISegmentedControl*>(_delegate) _segmentSelectedDown:self];
 
     return self;
 }
 
 - (id)touchesEnded:(id)touchSet withEvent:(id)event {
-    [[self superview] _segmentSelectedUp:self];
+    [static_cast<UISegmentedControl*>(_delegate) _segmentSelectedUp:self];
 
     return self;
 }
 
 - (id)touchesCancelled:(id)touchSet withEvent:(id)event {
-    [[self superview] _segmentSelectedCancelled:self];
+    [static_cast<UISegmentedControl*>(_delegate) _segmentSelectedCancelled:self];
 
     return self;
 }

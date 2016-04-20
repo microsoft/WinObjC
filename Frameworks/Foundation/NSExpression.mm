@@ -15,14 +15,14 @@
 //******************************************************************************
 
 #import <Starboard.h>
-#import "StubReturn.h"
-#import <Foundation/NSExpression.h>
+#import <StubReturn.h>
+
 #import "ExpressionHelpers.h"
 
 @implementation NSExpression
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)initWithExpressionType:(NSExpressionType)type {
     if (self = [super init]) {
@@ -32,11 +32,36 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSExpression*)expressionWithFormat:(NSString*)expressionFormat, ... {
-    UNIMPLEMENTED();
-    return nil;
+    va_list args;
+    va_start(args, expressionFormat);
+    NSExpression* expression = [self expressionWithFormat:expressionFormat arguments:args];
+    va_end(args);
+
+    return expression;
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat arguments:(va_list)argList {
+    // Since NSPredicate parser uses NSExpression to build a NSComparisonPredicate,
+    // we will just take the right side of the resulting NSComparisonPredicate
+    NSPredicate* predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"0 == %@", expressionFormat] arguments:argList];
+    return [(NSComparisonPredicate*)predicate rightExpression];
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat argumentArray:(NSArray*)arguments {
+    // Since NSPredicate parser uses NSExpression to build a NSComparisonPredicate,
+    // we will just take the right side of the resulting NSComparisonPredicate
+    NSPredicate* predicate =
+        [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"0 == %@", expressionFormat] argumentArray:arguments];
+    return [(NSComparisonPredicate*)predicate rightExpression];
 }
 
 /**
@@ -44,22 +69,6 @@
 */
 + (NSExpression*)expressionForKeyPath:(NSString*)keyPath {
     return [[[NSExpressionKeyPath alloc] initWithKeyPath:keyPath] autorelease];
-}
-
-/**
- @Status Stub
-*/
-+ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat argumentArray:(NSArray*)arguments {
-    UNIMPLEMENTED();
-    return nil;
-}
-
-/**
- @Status Stub
-*/
-+ (NSExpression*)expressionWithFormat:(NSString*)expressionFormat arguments:(va_list)argList {
-    UNIMPLEMENTED();
-    return nil;
 }
 
 /**
@@ -81,6 +90,40 @@
 */
 + (NSExpression*)expressionForVariable:(NSString*)string {
     return [[[NSExpressionVariable alloc] initWithVariableName:string] autorelease];
+}
+
++ (NSExpression*)expressionForConstantValueTrue {
+    return [NSExpression expressionForConstantValue:@YES];
+}
+
++ (NSExpression*)expressionForConstantValueFalse {
+    return [NSExpression expressionForConstantValue:@NO];
+}
+
++ (NSExpression*)expressionforKeyValueAccess:(NSExpression*)rightExpression leftExpression:(NSExpression*)leftExpression {
+    // must be in the form of SELF.x or a.b where both are KVC
+    // if the left expression is SELF, then only right one matters for KVC
+    if ([leftExpression isKindOfClass:[NSExpressionEvaluatedObject class]]) {
+        if (![rightExpression isKindOfClass:[NSExpressionKeyPath class]]) {
+            [NSException raise:NSGenericException
+                        format:@"Not a valid expression for the following construct Expression.Expression, eg. self.foo"];
+        }
+
+        return rightExpression;
+    }
+
+    // Both expression should be KVC
+    if (![rightExpression isKindOfClass:[NSExpressionKeyPath class]] || ![leftExpression isKindOfClass:[NSExpressionKeyPath class]]) {
+        [NSException raise:NSGenericException
+                    format:@"Not a valid expression for the following construct Expression.Expression, eg. bar.foo"];
+    }
+
+    return [self expressionForKeyPath:[NSString stringWithFormat:@"%@.%@", [leftExpression keyPath], [rightExpression keyPath]]];
+}
+
+- (NSExpression*)expressionWithSubstitutionVariables:(NSDictionary*)variables {
+    // Sub classes should overwrite.
+    return [[self copy] autorelease];
 }
 
 /**
@@ -155,10 +198,10 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)expressionValueWithObject:(id)object context:(NSMutableDictionary*)context {
-    UNIMPLEMENTED();
+    // subclass will over write.
     return nil;
 }
 

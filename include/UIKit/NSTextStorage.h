@@ -41,7 +41,7 @@ UIKIT_EXPORT_CLASS
 - (void)ensureAttributesAreFixedInRange:(NSRange)range STUB_METHOD;
 @property (readonly, nonatomic) BOOL fixesAttributesLazily STUB_PROPERTY;
 - (void)invalidateAttributesInRange:(NSRange)range STUB_METHOD;
-- (void)processEditing STUB_METHOD;
+- (void)processEditing;
 - (void)addLayoutManager:(NSLayoutManager*)manager;
 - (void)removeLayoutManager:(NSLayoutManager*)aLayoutManager STUB_METHOD;
 @property (readonly, copy, nonatomic) NSArray* layoutManagers STUB_PROPERTY;

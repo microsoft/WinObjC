@@ -147,7 +147,7 @@ static const wchar_t* TAG = L"UITabBarController";
             [moreControllers addObject:curController];
         }
 
-        [_moreNavigationController setViewControllers:moreControllers animated:FALSE];
+        [static_cast<UINavigationController*>(_moreNavigationController) setViewControllers:moreControllers animated:FALSE];
         UITabBarItem* moreTab = [_moreNavigationController tabBarItem];
         [tabItems addObject:moreTab];
     }
@@ -337,7 +337,7 @@ static const wchar_t* TAG = L"UITabBarController";
         //  If the view is a navigation controller and is already selected, pop to the root
         if (_tabPane->_curController == controller) {
             if ([controller isKindOfClass:[UINavigationController class]]) {
-                [controller popToRootViewControllerAnimated:TRUE];
+                [static_cast<UINavigationController*>(controller) popToRootViewControllerAnimated:TRUE];
             }
         }
 

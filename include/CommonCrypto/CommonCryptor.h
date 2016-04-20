@@ -82,7 +82,7 @@ enum { kCCOptionPKCS7Padding = 1, kCCOptionECBMode = 2 };
 typedef int32_t CCOptions;
 
 struct CC_Cryptor_State;
-typedef CC_Cryptor_State* CCCryptorRef;
+typedef struct CC_Cryptor_State* CCCryptorRef;
 
 SB_EXTERNC_BEGIN
 

@@ -15,8 +15,27 @@
 //******************************************************************************
 #pragma once
 
+#import <Foundation/NSExpression.h>
+
 #import "NSExpressionConstantValue.h"
 #import "NSExpressionEvaluatedObject.h"
 #import "NSExpressionFunction.h"
 #import "NSExpressionKeyPath.h"
 #import "NSExpressionVariable.h"
+
+@class NSExpression;
+@class NSString;
+
+typedef NSExpression* (^nextArgument)(NSString* type);
+
+@interface NSExpression (Internal)
++ (NSExpression*)expressionForConstantValueTrue;
++ (NSExpression*)expressionForConstantValueFalse;
++ (NSExpression*)expressionforKeyValueAccess:(NSExpression*) rightExpression leftExpression:(NSExpression*) leftExpression;
+- (NSExpression*) expressionWithSubstitutionVariables:(NSDictionary*)variables;
+@end
+
+
+@interface NSComparisonPredicate (Internal)
++ (NSComparisonPredicateOptions)extractOptions:(NSString*)option;
+@end

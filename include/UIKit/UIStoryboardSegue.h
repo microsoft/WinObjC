@@ -26,4 +26,5 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly) id destinationViewController;
 @property (nonatomic, readonly) id sourceViewController;
 
+- (instancetype)initWithIdentifier:(id)identifier source:(id)source destination:(id)dest;
 @end

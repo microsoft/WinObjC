@@ -17,8 +17,11 @@
 #pragma once
 
 @class NSString;
+@class UITableView;
 
 @interface UITableViewCell ()
 - (void)_setReuseIdentifier:(NSString*)identifier;
 - (void)_setGroupEdgeStyle:(int)groupEdgeStyle;
+- (void)_performSelectionSegue;
+- (void)_addBottomBorder:(UITableView*)parentTable;
 @end

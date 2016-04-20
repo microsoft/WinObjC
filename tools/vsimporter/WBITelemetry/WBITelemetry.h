@@ -17,7 +17,6 @@
 
 #include "..\..\..\deps\3rdparty\AppInsights\src\core\TelemetryClient.h" //  ...\ApplicationInsights-CPP-master\src\core\TelemetryClient.h
 
-
 #define TELEMETRY_INIT(ikey) {\
         WBITelemetry::WBITelemetryManager::InitializeAppInsights(ikey);\
     }
@@ -28,6 +27,14 @@
 
 #define TELEMETRY_DISABLE() {\
         WBITelemetry::WBITelemetryManager::DisableTracking();\
+    }
+
+#define TELEMETRY_SET_MACHINEID(machineId) {\
+        WBITelemetry::WBITelemetryManager::SetMachineId(machineId);\
+    }
+
+#define TELEMETRY_SET_INTERNAL(isInternal) {\
+        WBITelemetry::WBITelemetryManager::SetIsInternal(isInternal);\
     }
 
 #define TELEMETRY_FLUSH() {\
@@ -72,6 +79,9 @@ namespace WBITelemetry
 
         static wstring m_iKey;
         static wstring m_endPoint;
+
+        static wstring s_machineId;
+        static bool s_isInternal;
         
         static ApplicationInsights::core::TelemetryClient m_tc;
 
@@ -79,6 +89,9 @@ namespace WBITelemetry
 
         static void EnableTracking();
         static void DisableTracking();
+
+        static void SetMachineId(const char* machineId);
+        static void SetIsInternal(bool isInternal);
 
         static void Flush();
 

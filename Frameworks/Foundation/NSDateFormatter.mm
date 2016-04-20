@@ -51,7 +51,7 @@ static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
 class ICUPropertyValue {
 public:
     bool _boolValue;
-    idretaintype(NSObject) _objValue;
+    StrongId<NSObject> _objValue;
 
     ICUPropertyValue() {
         _boolValue = false;
@@ -131,9 +131,7 @@ static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbol
         [symbolList addObject:string];
     }
 
-    NSArray* ret = [symbolList copy];
-    [symbolList release];
-    return ret;
+    return symbolList;
 }
 
 static void SetSymbolFromNSString(icu::DateFormat* formatter, NSString* value, UDateFormatSymbolType symbol, int index, UErrorCode& error) {

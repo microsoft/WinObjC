@@ -69,5 +69,6 @@ typedef NSUInteger UIPopoverArrowDirection;
 @property (nonatomic, readonly, getter=isPopoverVisible) BOOL popoverVisible;
 @property (nonatomic, copy) NSArray* passthroughViews;
 @property (nonatomic, readonly) UIPopoverArrowDirection popoverArrowDirection;
+@property (nonatomic, copy) UIColor* backgroundColor STUB_PROPERTY;
 
 @end

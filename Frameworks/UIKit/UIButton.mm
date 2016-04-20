@@ -18,6 +18,8 @@
 #import "Starboard.h"
 #import "LoggingNative.h"
 #import "CALayerInternal.h"
+#import "UIFontInternal.h"
+#import "UIButtonContent.h"
 
 static const wchar_t* TAG = L"UIButton";
 
@@ -206,7 +208,8 @@ static void createLabel(UIButton* self) {
         id objEnum = [stateContent objectEnumerator];
         id keyEnum = [stateContent keyEnumerator];
 
-        id curObj, curKey;
+        id curKey;
+        UIButtonContent* curObj;
 
         curKey = [keyEnum nextObject];
         curObj = [objEnum nextObject];

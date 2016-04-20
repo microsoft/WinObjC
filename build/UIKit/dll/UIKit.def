@@ -644,14 +644,13 @@ LIBRARY UIKit
         ;UIOffsetMake
         ;UIOffsetEqualToOffset
 
-        ; These are listed as in UIKit but make more sense being in CG, and are already there:
         ;CGAffineTransformFromString
         ;CGVectorFromString
-        ;NSStringFromCGAffineTransform
-        ;NSStringFromCGPoint
-        ;NSStringFromCGRect
-        ;NSStringFromCGSize
-        ;NSStringFromCGVector
+        NSStringFromCGAffineTransform
+        NSStringFromCGPoint
+        NSStringFromCGRect
+        NSStringFromCGSize
+        NSStringFromCGVector
         
         UIImageJPEGRepresentation
         UIImagePNGRepresentation

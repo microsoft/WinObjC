@@ -37,16 +37,20 @@ void validateNSExpressionFunction(NSExpression* obj, NSArray* args, NSExpression
 }
 
 @interface TestCoin : NSObject
-@property (assign) NSNumber* coinValue;
+@property (copy) NSNumber* coinValue;
 - (instancetype)initWithValue:(NSInteger)value;
 @end
 
 @implementation TestCoin
 - (instancetype)initWithValue:(NSInteger)value {
     if (self = [super init]) {
-        _coinValue = [NSNumber numberWithInt:value];
+        _coinValue = [[NSNumber numberWithInt:value] retain];
     }
     return self;
+}
+
+- (NSNumber*)coinValue {
+    return _coinValue;
 }
 
 - (id)copyWithZone:(NSZone*)zone {
@@ -54,6 +58,7 @@ void validateNSExpressionFunction(NSExpression* obj, NSArray* args, NSExpression
 }
 
 - (void)dealloc {
+    [_coinValue release];
     [super dealloc];
 }
 @end
@@ -144,4 +149,26 @@ TEST(NSExpression, NSExpressionFunction_Now) {
     ASSERT_TRUE_MSG(value != nil, "FAILED: value should be non-null!");
 
     ASSERT_TRUE_MSG([value isKindOfClass:[NSDate class]], "FAILED: value is not NSDate type.");
+}
+
+TEST(NSExpression, NSExpressionFunction_format) {
+    NSExpression* expression = [NSExpression expressionWithFormat:@"4 + 3"];
+    NSNumber* result = [expression expressionValueWithObject:nil context:nil];
+    ASSERT_EQ_MSG(7, [result intValue], @"Failed: 4+3");
+
+    expression = [NSExpression expressionWithFormat:@"%d*%f", 3, 3.5];
+    result = [expression expressionValueWithObject:nil context:nil];
+    ASSERT_EQ_MSG(10.5, [result doubleValue], @"Failed: 3*3.5");
+}
+
+TEST(NSExpression, NSExpressionFunction_format2) {
+    NSExpression* expression = [NSExpression expressionWithFormat:@"4 + 3 - 1 + 2"];
+    NSNumber* result = [expression expressionValueWithObject:nil context:nil];
+    ASSERT_EQ_MSG(8, [result intValue], @"Failed: 4 + 3 - 1 + 2");
+}
+
+TEST(NSExpression, NSExpressionFunction_format3) {
+    NSExpression* expression = [NSExpression expressionWithFormat:@"(4 + 3 - 1 + 2) * 10**2"];
+    NSNumber* result = [expression expressionValueWithObject:nil context:nil];
+    ASSERT_EQ_MSG(800, [result intValue], @"Failed: (4 + 3 - 1 + 2) * 10");
 }

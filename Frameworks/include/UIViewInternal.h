@@ -94,7 +94,8 @@ public:
 @public
     UIViewPrivateState* priv;
 }
-- (void)initPriv;
+- (void)_initPriv;
++ (void)_setPageTransitionForView:(UIView*)view fromLeft:(BOOL)fromLeft;
 - (UIViewPrivateState*)_privateState;
 
 - (void)_applyConstraints;

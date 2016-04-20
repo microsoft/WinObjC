@@ -377,7 +377,8 @@ static NSRange NSRangeFromCFRange(CFRange range) {
 /**
  @Status Caveat
 
- @Notes Only one text container is supported - this method returns text container zero.
+ @Notes Only one text container is supported - this method returns text container zero, effectiveRange is not supported, effectiveRange
+ parameter not supported.
 */
 
 - (NSTextContainer*)textContainerForGlyphAtIndex:(NSUInteger)glyphIndex effectiveRange:(NSRange*)effectiveRange {
@@ -387,8 +388,7 @@ static NSRange NSRangeFromCFRange(CFRange range) {
     NSTextContainer* ret = [_textContainers objectAtIndex:0];
 
     if (effectiveRange) {
-        effectiveRange->location = 0;
-        effectiveRange->length = [[ret string] length];
+        UNIMPLEMENTED_WITH_MSG("effectiveRange parameter not supported.");
     }
 
     return ret;

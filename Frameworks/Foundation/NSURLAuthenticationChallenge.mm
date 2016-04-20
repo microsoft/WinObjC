@@ -21,8 +21,8 @@
 #import "Foundation/NSURLProtectionSpace.h"
 
 @interface NSURLAuthenticationChallenge () {
-    id _protectionSpace;
-    id _sender;
+    StrongId<id> _protectionSpace;
+    StrongId<id> _sender;
 }
 @end
 
@@ -47,9 +47,10 @@
 /**
  @Status Interoperable
 */
-- (id)init {
-    _protectionSpace = [NSURLProtectionSpace new];
-
+- (instancetype)init {
+    if (self = [super init]) {
+        _protectionSpace.attach([NSURLProtectionSpace new]);
+    }
     return self;
 }
 
@@ -61,10 +62,8 @@
     return _sender;
 }
 
-- (id)setSender:(id)sender {
+- (void)setSender:(id)sender {
     _sender = sender;
-
-    return self;
 }
 
 /**

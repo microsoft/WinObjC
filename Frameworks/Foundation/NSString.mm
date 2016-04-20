@@ -1986,6 +1986,20 @@ typedef NSUInteger NSStringCompareOptions;
 
     if (options & NSBackwardsSearch) {
         pos = set->spanBack(str1, INT32_MAX, USET_SPAN_NOT_CONTAINED);
+
+        //  Since we are asking for the span of characters NOT contained
+        //  in the set, it will always return the index of the character
+        //  AFTER the character that was in the set
+        if (pos == 0) {
+            //  Character not found (entire span of the string was characters in the set)
+            //  Assign range.length to signify that the character wasn't found
+            //  (will return NSNotFound, below)
+            pos = range.length;
+        } else {
+            //  Decrement the index by one so that we return the location
+            //  of the character that was in the set
+            pos--;
+        }
     } else {
         pos = set->span(str1, 0, USET_SPAN_NOT_CONTAINED);
     }

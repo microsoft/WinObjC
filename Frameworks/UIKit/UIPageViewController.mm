@@ -93,6 +93,7 @@ NSString* const UIPageViewControllerOptionInterPageSpacingKey = @"PageSpacing";
     self.showsHorizontalScrollIndicator = NO;
     self.showsVerticalScrollIndicator = NO;
     self.pagingEnabled = YES;
+    self.scrollEnabled = NO;
 
     return self;
 }

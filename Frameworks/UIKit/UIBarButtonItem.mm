@@ -39,8 +39,8 @@ static const wchar_t* TAG = L"UIBarButtonItem";
 }
 
 static void initInternal(UIBarButtonItem* self) {
-	self->_font = [UIFont systemFontOfSize : 15];
-	self->_systemItem = (UIBarButtonSystemItem)-1;
+    self->_font = [UIFont systemFontOfSize:15];
+    self->_systemItem = (UIBarButtonSystemItem)-1;
 }
 
 static void initControls(UIBarButtonItem* self) {
@@ -353,7 +353,7 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (void)addEventConnection:(UIRuntimeEventConnection*)connection {
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
     _target = [connection obj];
     _targetSel = (SEL)[connection sel];
 }
@@ -501,17 +501,17 @@ static void initControls(UIBarButtonItem* self) {
     if (font != nil) {
         [_buttonView setFont:font];
         if ([_customView respondsToSelector:@selector(setFont:)]) {
-            [_customView setFont:font];
+            [_customView performSelector:@selector(setFont) withObject:font];
         }
     }
     if (textColor != nil) {
         [_buttonView setTitleColor:textColor forState:state];
         if ([_customView respondsToSelector:@selector(setTitleColor:forState:)]) {
-            [_customView setTitleColor:textColor forState:state];
+            [static_cast<UIButton*>(_customView) setTitleColor:textColor forState:state];
         }
     }
     if ([_customView respondsToSelector:@selector(setTitleTextAttributes:forState:)]) {
-        [_customView setTitleTextAttributes:attributes forState:state];
+        [static_cast<UISegmentedControl*>(_customView) setTitleTextAttributes:attributes forState:state];
     }
 }
 
@@ -520,12 +520,9 @@ static void initControls(UIBarButtonItem* self) {
 */
 - (void)setTintColor:(UIColor*)tintColor {
     UNIMPLEMENTED();
-    [super setTintColor:tintColor];
 
     [_buttonView setTintColor:tintColor];
-    if ([_customView respondsToSelector:@selector(setTintColor:)]) {
-        [_customView setTintColor:tintColor];
-    }
+    [_customView setTintColor:tintColor];
 }
 
 /**
@@ -533,7 +530,7 @@ static void initControls(UIBarButtonItem* self) {
 */
 - (UIColor*)tintColor {
     UNIMPLEMENTED();
-    return [super tintColor];
+    return [[self _view] tintColor];
 }
 
 /**
@@ -555,7 +552,7 @@ static void initControls(UIBarButtonItem* self) {
     }
 
     if (update) {
-        id view = [self view];
+        id view = [self _view];
         [[view superview] setNeedsLayout];
         if ([view respondsToSelector:@selector(setEnabled:)]) {
             [view setEnabled:_isDisabled == false];
@@ -588,7 +585,7 @@ static void initControls(UIBarButtonItem* self) {
     if (_target != nil && _targetSel != NULL) {
         [_target performSelector:_targetSel withObject:self withObject:event];
     } else {
-        id nextResponder = [self nextResponder];
+        id nextResponder = [[self _view] nextResponder];
 
         while (nextResponder != nil) {
             if ([nextResponder respondsToSelector:_targetSel]) {
@@ -646,17 +643,6 @@ static void initControls(UIBarButtonItem* self) {
 /**
  @Status Interoperable
 */
-- (BOOL)_isFlexibleWidth {
-    if (_systemItem == UIBarButtonSystemItemFlexibleSpace) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
-/**
- @Status Interoperable
-*/
 + (instancetype)appearance {
     return [UIAppearanceSetter _appearanceWhenContainedIn:nil forUIClass:self];
 }
@@ -686,11 +672,19 @@ static void initControls(UIBarButtonItem* self) {
 
 @implementation UIBarButtonItem (Internals)
 
-- (UIView*)view {
+- (UIView*)_view {
     if (_customView != nil) {
         return _customView;
     } else {
         return _buttonView;
+    }
+}
+
+- (BOOL)_isFlexibleWidth {
+    if (_systemItem == UIBarButtonSystemItemFlexibleSpace) {
+        return TRUE;
+    } else {
+        return FALSE;
     }
 }
 

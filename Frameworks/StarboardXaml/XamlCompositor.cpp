@@ -35,7 +35,6 @@ using namespace Microsoft::WRL;
 
 Windows::UI::Xaml::Controls::Grid ^ rootNode;
 Windows::UI::Xaml::Controls::Canvas ^ windowCollection;
-XamlCompositor::Controls::CAXamlDebugCounters ^ debugCounters;
 extern float screenWidth, screenHeight;
 void GridSizeChanged(float newWidth, float newHeight);
 
@@ -43,14 +42,12 @@ void IncrementCounter(const char* name) {
     return;
     std::string sname(name);
     std::wstring wname(sname.begin(), sname.end());
-    XamlCompositor::Controls::CAXamlDebugCounters::IncCounter(ref new Platform::String(wname.data()));
 }
 
 void DecrementCounter(const char* name) {
     return;
     std::string sname(name);
     std::wstring wname(sname.begin(), sname.end());
-    XamlCompositor::Controls::CAXamlDebugCounters::DecCounter(ref new Platform::String(wname.data()));
 }
 
 void OnGridSizeChanged(Platform::Object ^ sender, Windows::UI::Xaml::SizeChangedEventArgs ^ e) {
@@ -64,9 +61,6 @@ void SetRootGrid(winobjc::Id& root) {
     windowCollection->HorizontalAlignment = Windows::UI::Xaml::HorizontalAlignment::Center;
     windowCollection->VerticalAlignment = Windows::UI::Xaml::VerticalAlignment::Center;
 
-    debugCounters = XamlCompositor::Controls::CAXamlDebugCounters::Instance;
-    debugCounters->SetValue(Windows::UI::Xaml::Controls::Grid::ColumnProperty, 1);
-    rootNode->Children->Append(debugCounters);
     rootNode->Children->Append(windowCollection);
     rootNode->InvalidateArrange();
 

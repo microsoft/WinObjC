@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -302,9 +302,7 @@
     <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewCellInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletCollectionConnection.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIScrollViewInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UISegmentedControlInternal.h" />
     <ClInclude Include="..\..\..\Frameworks\UIKit\UIStoryboardInternal.h" />
-    
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</ProjectGuid>

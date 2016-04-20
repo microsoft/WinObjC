@@ -67,8 +67,13 @@ struct UIViewControllerPriv {
     idretaintype(NSMutableArray) _childViewControllers;
 };
 
-@interface _UIViewControllerContextTransitioning : NSObject <UIViewControllerContextTransitioning> {
-}
+@interface _UIViewControllerContextTransitioning : NSObject <UIViewControllerContextTransitioning>
+- (instancetype)initWithContainerView:containerView
+                         withFromView:oldControllerView
+                           withToView:curControllerView
+               withFromViewController:oldController
+                 withToViewController:curController
+                         withAnimator:animator;
 @end
 
 @interface UIViewController () {
@@ -85,6 +90,7 @@ struct UIViewControllerPriv {
 - (void)_doResizeToScreen;
 - (int)_edgesForExtendedLayout;
 - (void)_setRotation:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
+- (BOOL)_rotationLocked:(UIInterfaceOrientation)curOrientation;
 @end
 
 #endif

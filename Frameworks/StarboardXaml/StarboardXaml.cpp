@@ -33,6 +33,8 @@ static Platform::String^ g_delegateClassName;
 
 static const wchar_t* TAG = L"StarboardXaml";
 
+extern "C" void _ApplicationMainLaunch();
+
 ref class App : public Xaml::Application, Xaml::Markup::IXamlMetadataProvider {
     XamlTypeInfo::InfoProvider::XamlTypeInfoProvider ^ _provider;
 
@@ -75,17 +77,7 @@ public:
             return;
         }
 
-        auto uiElem = ref new Xaml::Controls::Grid();
-        auto rootFrame = ref new Xaml::Controls::Frame();
-        rootFrame->Content = uiElem;
-
-        SetXamlRoot(uiElem);
-
-        Xaml::Window::Current->Content = rootFrame;
-        Xaml::Window::Current->Activate();
-
-        auto startupRect = Xaml::Window::Current->Bounds;
-        RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
+        _ApplicationMainLaunch();
 
         _RegisterEventHandlers();
     }
@@ -117,6 +109,20 @@ private:
     }
 };
 
+extern "C" void _ApplicationMainLaunch() {
+    auto uiElem = ref new Xaml::Controls::Grid();
+    auto rootFrame = ref new Xaml::Controls::Frame();
+    rootFrame->Content = uiElem;
+
+    SetXamlRoot(uiElem);
+
+    Xaml::Window::Current->Content = rootFrame;
+    Xaml::Window::Current->Activate();
+
+    auto startupRect = Xaml::Window::Current->Bounds;
+    RunApplicationMain(g_principalClassName, g_delegateClassName, startupRect.Width, startupRect.Height);
+}
+
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.
 extern "C" int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
@@ -147,6 +153,16 @@ extern "C" int UIApplicationMain(int argc, char* argv[], void* principalClassNam
         }));
 
     return 0;
+}
+
+extern "C" void UIApplicationMainTest() {
+    // Initialize COM on this thread
+    ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+    // Register tracelogging
+    TraceRegister();
+
+    _ApplicationMainLaunch();
 }
 
 // clang-format on

@@ -39,6 +39,10 @@ typedef struct {
     CGAffineTransform curTextMatrix;
     CGBlendMode curBlendMode;
 
+    CGSize shadowOffset;
+    float shadowBlur;
+    CGColorRef shadowColor;
+
     id getCurFont();
     void setCurFont(id font);
 
@@ -157,6 +161,9 @@ public:
     virtual void CGContextSetRGBStrokeColor(float r, float g, float b, float a);
 
     virtual CGSize CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, float x, float y);
+
+    virtual void CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color);
+    virtual void CGContextSetShadow(CGSize offset, float blur);
 };
 
 #define LOCK_CAIRO() EbrLockEnter(_cairoLock);

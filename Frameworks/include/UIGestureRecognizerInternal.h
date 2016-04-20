@@ -32,11 +32,11 @@ typedef struct {
 // _UIPanGestureStageDeferred:
 //		All "stuck" UIScrollViews are given another chance to consume and transition to an unstuck state.
 // _UIPanGestureStageRemainder:
-//		Whatever unconsumed delta may be used for over-drag (dragging past content extents) 
+//		Whatever unconsumed delta may be used for over-drag (dragging past content extents)
 typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
-	_UIPanGestureStageImmediate,
-	_UIPanGestureStageDeferred,
-	_UIPanGestureStageRemainder,
+    _UIPanGestureStageImmediate,
+    _UIPanGestureStageDeferred,
+    _UIPanGestureStageRemainder,
 };
 
 #define _UIPanGestureStageNumStages 3
@@ -69,6 +69,7 @@ typedef NS_ENUM(NSUInteger, _UIPanGestureStage) {
 - (void)_fire;
 + (BOOL)_fireGestures:(id)gestures;
 + (void)_failActiveExcept:(UIGestureRecognizer*)gesture;
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
 @end
 
 @class UIView;

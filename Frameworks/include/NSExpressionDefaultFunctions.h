@@ -21,6 +21,11 @@
 @interface NSExpressionDefaultFunctions : NSObject
 - (NSNumber*)sum:(NSArray*)values;
 - (NSDate*)now;
+- (NSNumber*)plus:(NSNumber*)first second:(NSNumber*)second;
+- (NSNumber*)minus:(NSNumber*)first second:(NSNumber*)second;
+- (NSNumber*)multiply:(NSNumber*)first second:(NSNumber*)second;
+- (NSNumber*)divideBy:(NSNumber*)first second:(NSNumber*)second;
+- (NSNumber*)exp:(NSNumber*)base to:(NSNumber*)power;
 /*TODO: Add rest of the supported functions in documentation of + (NSExpression *)expressionForFunction:(NSString *)name
                               arguments:(NSArray *)parameters */
 @end

@@ -20,6 +20,7 @@
 #import "UIKit/UIImage.h"
 #import "LoggingNative.h"
 #import "UINibUnarchiver.h"
+#import "NSCoderInternal.h"
 
 static const wchar_t* TAG = L"UIImageNibPlaceholder";
 
@@ -40,7 +41,6 @@ static const wchar_t* TAG = L"UIImageNibPlaceholder";
         id ret = [[UIImage imageNamed:resourcePath] retain];
         if (ret == nil) {
             TraceError(TAG, L"**** Failed to initialize image ****");
-            ret = [[UIImage imageWithCGImage:NULL] retain];
         }
 
         if ([coder containsValueForKey:@"UIImageWidth"] || [coder containsValueForKey:@"UIImageHeight"]) {

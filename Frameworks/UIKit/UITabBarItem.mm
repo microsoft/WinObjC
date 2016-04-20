@@ -178,7 +178,7 @@ static const wchar_t* TAG = L"UITabBarItem";
 /**
  @Status Interoperable
 */
-- (BOOL)enabled {
+- (BOOL)isEnabled {
     return _enabled;
 }
 

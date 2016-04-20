@@ -39,6 +39,10 @@
     return _value;
 }
 
+- (NSExpression*) expressionWithSubstitutionVariables:(NSDictionary*)variables {
+    return [[self copy] autorelease];
+}
+
 /**
  @Status Interoperable
 */

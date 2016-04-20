@@ -14,26 +14,181 @@
 //
 //******************************************************************************
 
-#include <StubReturn.h>
-#include "Starboard.h"
-#include "Foundation/NSCalendar.h"
-#include "Foundation/NSCoder.h"
-#include "Foundation/NSDate.h"
-#include "Foundation/NSDictionary.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSTimeZone.h"
-#include "LoggingNative.h"
+#import <StubReturn.h>
+#import "Starboard.h"
+#import "Foundation/NSCalendar.h"
+#import "Foundation/NSCoder.h"
+#import "Foundation/NSDate.h"
+#import "Foundation/NSDictionary.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSTimeZone.h"
+#import "LoggingNative.h"
 
 static const wchar_t* TAG = L"UILocalNotification";
 
 NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefaultSoundName";
 
-@implementation UILocalNotification
+@implementation UILocalNotification {
+    StrongId<NSDate*> _fireDate;
+    StrongId<NSString*> _alertBody;
+    StrongId<NSTimeZone*> _timeZone;
+    StrongId<NSString*> _soundName;
+    StrongId<NSString*> _alertAction;
+    StrongId<NSDictionary*> _userInfo;
+    StrongId<NSString*> _category;
+
+    NSCalendarUnit _repeatInterval;
+    NSInteger _applicationIconBadgeNumber;
+}
 
 - (void)_setReceiver:(id)receiver {
 }
 
 - (void)_cancelAlarm {
+}
+
+/**
+   @Status Stub
+*/
+- (void)setFireDate:(NSDate*)fireDate {
+    UNIMPLEMENTED();
+    _fireDate.attach([fireDate copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (void)setAlertBody:(NSString*)alertBody {
+    UNIMPLEMENTED();
+    _alertBody.attach([alertBody copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (void)setTimeZone:(NSTimeZone*)timeZone {
+    UNIMPLEMENTED();
+    _timeZone.attach([timeZone copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (void)setSoundName:(NSString*)soundName {
+    UNIMPLEMENTED();
+    _soundName.attach([soundName copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (void)setApplicationIconBadgeNumber:(NSInteger)badgeNumber {
+    UNIMPLEMENTED();
+    _applicationIconBadgeNumber = badgeNumber;
+}
+
+/**
+   @Status Stub
+*/
+- (void)setAlertAction:(NSString*)alertAction {
+    UNIMPLEMENTED();
+    _alertAction.attach([alertAction copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (void)setRepeatInterval:(NSCalendarUnit)repeatInterval {
+    UNIMPLEMENTED();
+    _repeatInterval = repeatInterval;
+}
+
+/**
+   @Status Stub
+*/
+- (void)setUserInfo:(NSDictionary*)userInfo {
+    UNIMPLEMENTED();
+    _userInfo.attach([userInfo copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (void)setCategory:(NSString*)category {
+    UNIMPLEMENTED();
+    _category.attach([category copy]);
+}
+
+/**
+   @Status Stub
+*/
+- (NSDate*)fireDate {
+    UNIMPLEMENTED();
+    return [[_fireDate copy] autorelease];
+}
+
+/**
+   @Status Stub
+*/
+- (NSString*)alertBody {
+    UNIMPLEMENTED();
+    return [[_alertBody copy] autorelease];
+}
+
+/**
+   @Status Stub
+*/
+- (NSTimeZone*)timeZone {
+    UNIMPLEMENTED();
+    return [[_timeZone copy] autorelease];
+}
+
+/**
+   @Status Stub
+*/
+- (NSString*)soundName {
+    UNIMPLEMENTED();
+    return [[_soundName copy] autorelease];
+}
+
+/**
+   @Status Stub
+*/
+- (NSInteger) applicationIconBadgeNumber {
+    UNIMPLEMENTED();
+    return _applicationIconBadgeNumber;
+}
+
+/**
+   @Status Stub
+*/
+- (NSString*)alertAction {
+    UNIMPLEMENTED();
+    return [[_alertAction copy] autorelease];
+}
+
+/**
+   @Status Stub
+*/
+- (NSCalendarUnit) repeatInterval {
+    UNIMPLEMENTED();
+    return _repeatInterval;
+}
+
+/**
+   @Status Stub
+*/
+- (NSDictionary*)userInfo {
+    UNIMPLEMENTED();
+    return [[_userInfo copy] autorelease];
+}
+
+/**
+   @Status Stub
+*/
+- (NSString*)category {
+    UNIMPLEMENTED();
+    return [[_category copy] autorelease];
 }
 
 @end

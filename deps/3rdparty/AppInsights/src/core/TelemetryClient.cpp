@@ -263,7 +263,6 @@ void TelemetryClient::DisableTracking()
 		{
 			//Unable to set registry value
 			Utils::WriteDebugLine(L"ERROR: Failed to set reg key for disable tracking");
-			RegCloseKey(hKey);
 		}
 		RegCloseKey(hKey);
 	}	
@@ -292,7 +291,6 @@ void TelemetryClient::EnableTracking()
 		{
 			//Unable to set registry value
 			Utils::WriteDebugLine(L"ERROR: Failed to remove reg key for disable tracking");
-			RegCloseKey(hKey);
 		}
 		RegCloseKey(hKey);
 	}

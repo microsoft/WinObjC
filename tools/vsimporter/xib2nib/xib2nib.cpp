@@ -251,12 +251,14 @@ int main(int argc, char* argv[]) {
 
     std::tr2::sys::path fName(argv[1]);
 
-    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
-    TELEMETRY_EVENT_DATA(L"IsInternal", isMSFTInternalMachine() ? "1" : "0");
+    TELEMETRY_SET_INTERNAL(isMSFTInternalMachine());
     string machineID = getMachineID();
-    if (!machineID.empty()) {
-        TELEMETRY_EVENT_DATA(L"MachineId", machineID.c_str());
+    if (!machineID.empty())
+    {
+        TELEMETRY_SET_MACHINEID(machineID.c_str());
     }
+
+    TELEMETRY_EVENT_DATA(L"Xib2NibStart", fName.filename());
 
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(argv[1]);

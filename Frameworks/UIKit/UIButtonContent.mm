@@ -19,33 +19,12 @@
 
 @implementation UIButtonContent
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    image = [coder decodeObjectForKey:@"UIImage"];
-    backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
-    title = [coder decodeObjectForKey:@"UITitle"];
-    titleColor = [coder decodeObjectForKey:@"UITitleColor"];
-    shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
+    _image = [coder decodeObjectForKey:@"UIImage"];
+    _backgroundImage = [coder decodeObjectForKey:@"UIBackgroundImage"];
+    _title = [coder decodeObjectForKey:@"UITitle"];
+    _titleColor = [coder decodeObjectForKey:@"UITitleColor"];
+    _shadowColor = [coder decodeObjectForKey:@"UIShadowColor"];
 
     return self;
 }
-
-- (id) /* use typed version */ image {
-    return image;
-}
-
-- (id) /* use typed version */ backgroundImage {
-    return backgroundImage;
-}
-
-- (id) /* use typed version */ titleColor {
-    return titleColor;
-}
-
-- (id) /* use typed version */ shadowColor {
-    return shadowColor;
-}
-
-- (id) /* use typed version */ title {
-    return title;
-}
-
 @end
