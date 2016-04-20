@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{d719507a-8ad2-49ad-af65-6c4945fd1126}</UniqueIdentifier>
+      <UniqueIdentifier>{4172f0b1-faf6-4bb5-9af3-b42ac1f0bd6b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{5674ec61-6031-45e6-a522-fbdc1f2e1898}</UniqueIdentifier>
+      <UniqueIdentifier>{01c11b58-751c-43d0-9abc-10ea6150b297}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{B7219ADF-CBF4-4BFA-AC8F-BB96357F7259}</UniqueIdentifier>
+      <UniqueIdentifier>{5ED7B826-6C4A-459C-B881-01268A942062}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{0AD7A509-8945-49B8-A93D-2CFFA2B8AD32}</UniqueIdentifier>
+      <UniqueIdentifier>{EFC7B6ED-2601-4AD6-ACD8-41F21A9AB6CF}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{640ABC82-9206-4FBB-9392-FC339E5CB76B}</UniqueIdentifier>
+      <UniqueIdentifier>{60118EC8-288E-4AB4-97F1-1EFC88F458C2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{69A10FFC-B610-4CCC-AB0E-E5A71784145F}</UniqueIdentifier>
+      <UniqueIdentifier>{84C7F1D6-7773-4E2C-BD81-8AAC5F4FC21A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +66,9 @@
     <ClangCompile Include="..\..\WOCCatalog\main.m">
       <Filter>WOCCatalog\Supporting Files</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\URLDownloadCell.mm">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TransitionsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -73,6 +76,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\AlertsViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\PopoverViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\FoundationsViewController.m">
@@ -85,6 +91,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\SingleImageViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\URLSessionViewController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\MainViewController.m">
@@ -127,6 +136,9 @@
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\ShadowViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m">
@@ -199,11 +211,5 @@
     <Text Include="WOCCatalog-Release-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="WOCCatalog_TemporaryKey.pfx" />
   </ItemGroup>
 </Project>
