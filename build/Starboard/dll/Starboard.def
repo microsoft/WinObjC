@@ -102,6 +102,12 @@ LIBRARY Starboard
         if_indextoname
         host_page_size
         mach_task_self
+        sysctl
+        dlopen
+        dlsym
+        dlclose
+        NSVersionOfRunTimeLibrary
+        NSVersionOfLinkTimeLibrary
 
         ; DNS Service:
         DNSServiceGetAddrInfo

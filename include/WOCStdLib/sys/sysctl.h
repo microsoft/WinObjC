@@ -613,6 +613,7 @@ SYSCTL_ALLOWED_TYPES(UINT64, uint64_t *a; unsigned long long *b; );
 #define HW_REALMEM  12      /* int: 'real' memory */
 #define HW_BUS_FREQ 14
 #define HW_CPU_FREQ 15
+#define HW_AVAILCPU 25      /* int: number of available CPUs */
 
 /*
 * CTL_USER definitions
