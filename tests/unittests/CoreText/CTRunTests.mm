@@ -173,16 +173,16 @@ TEST(CoreText, CTRunGetAttributes) {
     CTRunRef run = (CTRunRef)CFArrayGetValueAtIndex(runsArray, 0);
 
     CFDictionaryRef dictionary = CTRunGetAttributes(run);
-    id font = [dictionary objectForKey:(NSString*)NSFontAttributeName];
+    UIFont* font = (UIFont*)CFDictionaryGetValue(dictionary, NSFontAttributeName);
     ASSERT_TRUE_MSG([font isKindOfClass:[UIFont class]], "Failed: Wrong object type in dictionary");
     NSString* fontName = ((UIFont*)font).fontName;
     ASSERT_OBJCEQ_MSG(fontName, @"Times New Roman", "Failed: Wrong data in dictionary");
 
-    id color = [dictionary objectForKey:NSForegroundColorAttributeName];
+    UIColor* color = (UIColor*)CFDictionaryGetValue(dictionary, NSForegroundColorAttributeName);
     ASSERT_TRUE_MSG([color isKindOfClass:[UIColor class]], "Failed: Wrong object type in dictionary");
     ASSERT_TRUE_MSG([color isEqual:[UIColor redColor]], "Failed: Wrong object type in dictionary");
 
-    color = [dictionary objectForKey:@"testKey"];
+    color = (UIColor*)CFDictionaryGetValue(dictionary, @"testKey");
     ASSERT_TRUE_MSG([color isKindOfClass:[UIColor class]], "Failed: Wrong object type in dictionary");
     ASSERT_TRUE_MSG([color isEqual:[UIColor blueColor]], "Failed: Wrong object type in dictionary");
 }

@@ -38,10 +38,10 @@ COREIMAGE_EXPORT_CLASS
 + (CIContext*)contextWithCGContext:(CGContextRef)ctx options:(NSDictionary*)dict STUB_METHOD;
 + (CIContext*)contextWithEAGLContext:(EAGLContext*)eaglContext STUB_METHOD;
 + (CIContext*)contextWithEAGLContext:(EAGLContext*)eaglContext options:(NSDictionary*)options STUB_METHOD;
-+ (CIContext*)contextWithOptions:(NSDictionary*)dict STUB_METHOD;
++ (CIContext*)contextWithOptions:(NSDictionary*)dict;
 + (CIContext*)contextWithMTLDevice:(id<MTLDevice>)device STUB_METHOD;
 + (CIContext*)contextWithMTLDevice:(id<MTLDevice>)device options:(NSDictionary*)options STUB_METHOD;
-- (CGImageRef)createCGImage:(CIImage*)im fromRect:(CGRect)r STUB_METHOD;
+- (CGImageRef)createCGImage:(CIImage*)im fromRect:(CGRect)r;
 - (CGImageRef)createCGImage:(CIImage*)im fromRect:(CGRect)r format:(CIFormat)f colorSpace:(CGColorSpaceRef)cs STUB_METHOD;
 - (void)drawImage:(CIImage*)im atPoint:(CGPoint)p fromRect:(CGRect)src STUB_METHOD;
 - (void)drawImage:(CIImage*)im inRect:(CGRect)dest fromRect:(CGRect)src STUB_METHOD;
