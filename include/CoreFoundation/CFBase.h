@@ -408,7 +408,7 @@ COREFOUNDATION_EXPORT Boolean CFEqual(CFTypeRef self, CFTypeRef other);
 COREFOUNDATION_EXPORT CFStringRef CFCopyTypeIDDescription(CFTypeID typeID);
 COREFOUNDATION_EXPORT CFTypeRef CFRetain(CFTypeRef self);
 COREFOUNDATION_EXPORT void CFRelease(CFTypeRef self);
-COREFOUNDATION_EXPORT void CFAutorelease(CFTypeRef self);
+COREFOUNDATION_EXPORT CFTypeRef CFAutorelease(CFTypeRef self);
 COREFOUNDATION_EXPORT CFIndex CFGetRetainCount(CFTypeRef self);
 COREFOUNDATION_EXPORT CFAllocatorRef CFGetAllocator(CFTypeRef self);
 

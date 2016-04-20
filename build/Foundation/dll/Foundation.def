@@ -342,6 +342,7 @@ LIBRARY Foundation
         CFBooleanGetValue
         CFCopyDescription
         CFDataGetBytePtr
+        CFDataGetTypeID
         CFDictionaryAddValue
         CFDictionaryApplyFunction
         CFDictionaryContainsKey
@@ -360,6 +361,7 @@ LIBRARY Foundation
         CFDictionarySetValueUnretained
         CFEqual
         CFGetRetainCount
+        CFGetTypeID
         CFHash
         CFMakeCollectable
         CFNumberGetType
