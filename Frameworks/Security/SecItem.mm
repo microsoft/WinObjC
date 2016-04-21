@@ -169,16 +169,28 @@ std::array<std::pair<NSString*, idretainp<id<SecItemHandler>>>, 1>& GetItemHandl
  @Notes Only GenericPassword items can be updated
 */
 OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate) {
+    NSUInteger numberUpdated = 0;
+
     // Each handler could have some matching items so go ahead and
     // forward along to all of them. This means that error handling
     // will get a little tricky though. Fail on the first error and
     // make no attempt to rollback or whatever. Whatever happens, happens.
     for (const auto& handlerPair : GetItemHandlers()) {
-        OSStatus status =
-            [handlerPair.second update:static_cast<NSDictionary*>(query) withAttributes:static_cast<NSDictionary*>(attributesToUpdate)];
+        NSUInteger currentUpdated = 0;
+
+        OSStatus status = [handlerPair.second update:static_cast<NSDictionary*>(query)
+                                      withAttributes:static_cast<NSDictionary*>(attributesToUpdate)
+                                   attributesUpdated:&currentUpdated];
+
         if (status != errSecSuccess) {
             return status;
         }
+
+        numberUpdated += currentUpdated;
+    }
+
+    if (numberUpdated < CFDictionaryGetCount(attributesToUpdate)) {
+        return errSecItemNotFound;
     }
 
     return errSecSuccess;
