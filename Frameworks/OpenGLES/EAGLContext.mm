@@ -383,8 +383,9 @@ static const wchar_t* TAG = L"EAGL";
         glRenderbufferStorage(target, renderBufferFormat, _rbWidth, _rbHeight);
     }
 
-    surface.swapChainPanel.width = _rbWidth;
-    surface.swapChainPanel.height = _rbHeight;
+    auto layerSize = surface.bounds.size;
+    surface.swapChainPanel.width = layerSize.width;
+    surface.swapChainPanel.height = layerSize.height;
 
     if (tlsCurContext == self) {
         eglMakeCurrent(eglDisplay, _eglSurface, _eglSurface, _eglContext);

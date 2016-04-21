@@ -215,7 +215,8 @@
         int width = (int)[(CAEAGLLayer*)self.layer _pixelWidth];
         int height = (int)[(CAEAGLLayer*)self.layer _pixelHeight];
         glViewport(0, 0, width, height);
-        [self.delegate glkView:self drawInRect:self.frame];
+
+        [self.delegate glkView:self drawInRect:CGRectMake(0, 0, (float)width, (float)height)];
         res = TRUE;
     }
 

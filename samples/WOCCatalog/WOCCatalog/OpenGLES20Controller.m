@@ -154,7 +154,7 @@ static void glPerspective(GLfloat fov, GLfloat aspect, GLfloat znear, GLfloat zf
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, rbWidth, rbHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthbuffer);
         glBindRenderbuffer(GL_RENDERBUFFER, _renderbuffer);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.0f, 0.25f, 0.55f, 1.0f);
         glClearDepthf(1.0f);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
@@ -221,12 +221,15 @@ static void glPerspective(GLfloat fov, GLfloat aspect, GLfloat znear, GLfloat zf
 -(void)viewWillDisappear:(BOOL)animated
 {
     [_displayLink removeFromRunLoop: [NSRunLoop currentRunLoop] forMode: NSDefaultRunLoopMode];
+    _curSize = CGSizeMake(0.f, 0.f);
 }
 
 -(void)render
 {
     [EAGLContext setCurrentContext: _ctx];
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glDisable(GL_CULL_FACE);
 
     glUseProgram(_programHandle);
     glEnableVertexAttribArray(_positionAttrib);
