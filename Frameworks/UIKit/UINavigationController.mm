@@ -21,6 +21,8 @@
 #import <UIKit/UIView.h>
 #import "LoggingNative.h"
 #import "UITabBarControllerInternal.h"
+#import "UINavigationBarInternal.h"
+#import "UIViewInternal.h"
 
 static const wchar_t* TAG = L"UINavigationController";
 
@@ -240,7 +242,7 @@ static void createMainView(UINavigationController* self, CGRect frame) {
     [_viewControllers addObject:controller];
     controller->priv->_parentViewController = self;
     id navigationItem = [controller navigationItem];
-    [_navigationBar pushNavigationItem:navigationItem];
+    [_navigationBar _pushNavigationItem:navigationItem];
 
     if (priv->_visibility != controllerNotVisible) {
         if (animated) {
@@ -722,7 +724,7 @@ static void rotateViewController(UINavigationController* self) {
     return _toolBarHidden;
 }
 
-- (void)layoutContainer {
+- (void)_layoutContainer {
     if (!_didLayout) {
         _didLayout = TRUE;
         CGRect bounds, containerRect;

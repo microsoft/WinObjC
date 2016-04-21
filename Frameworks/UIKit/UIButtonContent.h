@@ -15,8 +15,11 @@
 //******************************************************************************
 #pragma once
 
-@interface UIButtonContent : NSObject {
-@public
-    id image, backgroundImage, title, titleColor, shadowColor;
-}
+@interface UIButtonContent : NSObject
+
+@property (retain) UIImage* image;
+@property (retain) UIImage* backgroundImage;
+@property (retain) NSString* title;
+@property (retain) UIColor* titleColor;
+@property (retain) UIColor* shadowColor;
 @end

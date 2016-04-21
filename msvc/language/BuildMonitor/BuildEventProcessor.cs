@@ -224,9 +224,6 @@ namespace BuildMonitor
                                 ProcessTaskListItem(oneItem[0]);
                                 taskEnum.Next(1, oneItem, null);
                             }
-
-                            // send all events in case the Visual Studio instance is closed or solution unloaded
-                            BuildTelemetryClient.FlushEvents();
                         }
                     }
                     catch (Exception e)
@@ -239,6 +236,11 @@ namespace BuildMonitor
                         exceptionDetails.Add("InnerException", (e.InnerException == null ? "null" : e.InnerException.GetType().ToString()));
                         exceptionDetails.Add("InnerMessage", (e.InnerException == null ? "null" : e.InnerException.Message));
                         BuildTelemetryClient.TrackEvent("IslandwoodBuildMonitorException", exceptionDetails, null);
+                    }
+                    finally
+                    {
+                        // send all events in case the Visual Studio instance is closed or solution unloaded
+                        BuildTelemetryClient.FlushEvents();
                     }
                 }
 
@@ -338,26 +340,29 @@ namespace BuildMonitor
 
         private string ParseAndScrubErrorMessage(string message)
         {
-            // does it contain NS*, UI* or WU* class, protocol or interface
-            if (Regex.IsMatch(message, BuildEventProcessor.NextStepProtocolPattern) ||
-                Regex.IsMatch(message, BuildEventProcessor.UserInterfaceProtocolPattern) ||
-                Regex.IsMatch(message, BuildEventProcessor.WindowsUniversalProtocolPattern) ||
-                Regex.IsMatch(message, BuildEventProcessor.DeprecationPattern))
-            {
-                StringBuilder scrubbedMessage = new StringBuilder(message);
-                ScrubMessagePrivateInfo(scrubbedMessage, _localPathsMatcher);
-                ScrubMessagePrivateInfo(scrubbedMessage, _networkPathsMatcher);
-                ScrubMessagePrivateInfo(scrubbedMessage, _protocolsMatcher);
-                ScrubMessagePrivateInfo(scrubbedMessage, _identifierMatcher);
+            if (string.IsNullOrEmpty(message) == false)
+            { 
+                // does it contain NS*, UI* or WU* class, protocol or interface
+                if (Regex.IsMatch(message, BuildEventProcessor.NextStepProtocolPattern) ||
+                    Regex.IsMatch(message, BuildEventProcessor.UserInterfaceProtocolPattern) ||
+                    Regex.IsMatch(message, BuildEventProcessor.WindowsUniversalProtocolPattern) ||
+                    Regex.IsMatch(message, BuildEventProcessor.DeprecationPattern))
+                {
+                    StringBuilder scrubbedMessage = new StringBuilder(message);
+                    ScrubMessagePrivateInfo(scrubbedMessage, _localPathsMatcher);
+                    ScrubMessagePrivateInfo(scrubbedMessage, _networkPathsMatcher);
+                    ScrubMessagePrivateInfo(scrubbedMessage, _protocolsMatcher);
+                    ScrubMessagePrivateInfo(scrubbedMessage, _identifierMatcher);
 
-                // return scrubbed message with all other information intact
-                return scrubbedMessage.ToString();
-            }
+                    // return scrubbed message with all other information intact
+                    return scrubbedMessage.ToString();
+                }
 
-            // does it contain any other code constructs, e.g. method, class, protocol, et al.
-            if (Regex.IsMatch(message, BuildEventProcessor.CodeConstructsPattern))
-            {
-                return "Error unrelated to WinObjC.";
+                // does it contain any other code constructs, e.g. method, class, protocol, et al.
+                if (Regex.IsMatch(message, BuildEventProcessor.CodeConstructsPattern))
+                {
+                    return "Error unrelated to WinObjC.";
+                }
             }
 
             // return generic error message

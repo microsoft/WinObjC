@@ -442,60 +442,11 @@
  @Status Stub
  @Notes
 */
-- (void)encodeCGPoint:(CGPoint)point forKey:(NSString*)key {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)encodeCGRect:(CGRect)rect forKey:(NSString*)key {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)encodeCGSize:(CGSize)size forKey:(NSString*)key {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 - (id)decodePropertyListForKey:(NSString*)key {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
-/**
- @Status Stub
- @Notes
-*/
-- (CGPoint)decodeCGPointForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (CGRect)decodeCGRectForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (CGSize)decodeCGSizeForKey:(NSString*)key {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
 @end
+
+

@@ -538,8 +538,11 @@ void _CFArrayInitInternalWithObjects(CFArrayRef arr, const void** objects, int c
 }
 
 void _CFArrayDestroyInternal(CFArrayRef arr) {
-    ((NSArray*)arr)->arr->~__CFArray();
-    ((NSArray*)arr)->arr = NULL;
+    NSArray* pArr = (NSArray*)arr;
+    if (pArr && pArr->arr) {
+      pArr->arr->~__CFArray();
+      pArr->arr = NULL;
+    }
 }
 
 void** _CFArrayGetPtr(CFArrayRef array) {

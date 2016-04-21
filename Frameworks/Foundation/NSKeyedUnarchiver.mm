@@ -481,20 +481,6 @@ static id _valueForKey(NSKeyedUnarchiver* self, id key) {
 /**
  @Status Interoperable
 */
-- (CGPoint)decodeCGPointForKey:(NSString*)key {
-    CGPoint ret = { 0, 0 };
-    id value = _valueForKey(self, key);
-
-    if (value != nil) {
-        ret = [value CGPointValue];
-    }
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
 + (id)unarchiveObjectWithFile:(NSString*)file {
     id data = [NSData dataWithContentsOfFile:file];
 

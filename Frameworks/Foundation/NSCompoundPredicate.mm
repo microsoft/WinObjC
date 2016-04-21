@@ -35,21 +35,35 @@
  @Status Interoperable
 */
 + (NSCompoundPredicate*)notPredicateWithSubpredicate:(NSPredicate*)predicate {
-    return [[[self alloc] initWithType:NSNotPredicateType subpredicates:[NSArray arrayWithObject:predicate]] autorelease];
+    return [[[[self class] alloc] initWithType:NSNotPredicateType subpredicates:[NSArray arrayWithObject:predicate]] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (NSCompoundPredicate*)andPredicateWithSubpredicates:(NSArray*)subpredicates {
-    return [[[self alloc] initWithType:NSAndPredicateType subpredicates:subpredicates] autorelease];
+    return [[[[self class] alloc] initWithType:NSAndPredicateType subpredicates:subpredicates] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (NSCompoundPredicate*)orPredicateWithSubpredicates:(NSArray*)subpredicates {
-    return [[[self alloc] initWithType:NSOrPredicateType subpredicates:subpredicates] autorelease];
+    return [[[[self class] alloc] initWithType:NSOrPredicateType subpredicates:subpredicates] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)predicateWithSubstitutionVariables:(NSDictionary*)variables {
+    NSMutableArray* predicateWithSub = [NSMutableArray arrayWithCapacity:[_subpredicates count]];
+
+    for (NSPredicate* predicate : _subpredicates) {
+        id result = [predicate predicateWithSubstitutionVariables:variables];
+        [predicateWithSub addObject:result];
+    }
+
+    return [[[[self class] alloc] initWithType:_compoundPredicateType subpredicates:predicateWithSub] autorelease];
 }
 
 /**

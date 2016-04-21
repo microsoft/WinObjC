@@ -160,13 +160,6 @@ static id makeReference(unsigned ref) {
     [_enc setObject:[NSNumber numberWithDouble:aDouble] forKey:aKey];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)encodeCGPoint:(CGPoint)pt forKey:(NSString*)aKey {
-    _checkKey(aKey, _enc);
-    [_enc setObject:[NSValue valueWithCGPoint:pt] forKey:aKey];
-}
 
 /**
  @Status Interoperable

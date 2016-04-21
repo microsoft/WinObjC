@@ -88,6 +88,11 @@ CGContextImpl::CGContextImpl(CGContextRef base, CGImageRef destinationImage) {
     curState->curTransform = CGAffineTransformMakeTranslation(0.0f, 0.0f);
 
     _imgDest = destinationImage;
+
+    curState->shadowOffset = CGSizeMake(0, 0);
+    curState->shadowBlur = 0.0f;
+    curState->shadowColor = NULL;
+
     CGImageRetain(_imgDest);
 }
 
@@ -98,6 +103,9 @@ CGContextImpl::~CGContextImpl() {
         }
         if (states[i]._imgMask != NULL) {
             delete states[i]._imgMask;
+        }
+        if (states[i].shadowColor != NULL) {
+            CGColorRelease(states[i].shadowColor);
         }
     }
     ReleaseLock();
@@ -420,12 +428,18 @@ void CGContextImpl::CGContextSaveGState() {
     states[curStateNum].curBlendMode = curState->curBlendMode;
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
+    states[curStateNum].shadowOffset = curState->shadowOffset;
+    states[curStateNum].shadowBlur = curState->shadowBlur;
+    states[curStateNum].shadowColor = NULL;
 
     if (curState->_imgClip) {
         states[curStateNum]._imgClip = curState->_imgClip->Backing()->Copy();
     }
     if (curState->_imgMask) {
         states[curStateNum]._imgMask = curState->_imgMask->Backing()->Copy();
+    }
+    if (curState->shadowColor) {
+        states[curStateNum].shadowColor = CGColorCreateCopy(curState->shadowColor);
     }
 
     memcpy(&states[curStateNum].curTransform, &curState->curTransform, sizeof(curState->curTransform));
@@ -444,6 +458,9 @@ void CGContextImpl::CGContextRestoreGState() {
     }
     if (curState->_imgMask) {
         delete curState->_imgMask;
+    }
+    if (curState->shadowColor) {
+        CGColorRelease(curState->shadowColor);
     }
     curStateNum--;
     curState = &states[curStateNum];
@@ -709,4 +726,35 @@ CGSize CGContextImpl::CGFontDrawGlyphsToContext(WORD* glyphs, DWORD length, floa
     CGSize ret = { 0, 0 };
 
     return ret;
+}
+
+void CGContextImpl::CGContextSetShadowWithColor(CGSize offset, float blur, CGColorRef color) {
+    if (blur < 0) {
+        blur = 0;
+    }
+    curState->shadowOffset = offset;
+    curState->shadowBlur = blur;
+
+    CGColorRef old = curState->shadowColor;
+    if (color != NULL) {
+        curState->shadowColor = CGColorRetain(color);
+    } else {
+        curState->shadowColor = NULL;
+    }
+
+    if (old != NULL) {
+        CGColorRelease(old);
+    }
+}
+
+void CGContextImpl::CGContextSetShadow(CGSize offset, float blur) {
+    CGFloat components[4] = { 0, 0, 0, 1.0 / 3.0 };
+
+    CGColorSpaceRef clrRgb = CGColorSpaceCreateDeviceRGB();
+    CGColorRef shadowColor = (CGColorRef)CGColorCreate(clrRgb, components);
+    CGColorSpaceRelease(clrRgb);
+
+    CGContextSetShadowWithColor(offset, blur, shadowColor);
+
+    CGColorRelease(shadowColor);
 }

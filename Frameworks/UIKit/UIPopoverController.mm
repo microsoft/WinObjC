@@ -14,10 +14,13 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
 #import <UIKit/UIPopoverController.h>
 #import <StubReturn.h>
 
-@implementation UIPopoverController
+@implementation UIPopoverController {
+    StrongId<UIColor> _backgroundColor;
+}
 /**
  @Status Stub
  @Notes
@@ -70,6 +73,22 @@
 */
 - (void)setPopoverContentSize:(CGSize)size animated:(BOOL)animated {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIColor*)backgroundColor {
+    UNIMPLEMENTED();
+    return [[_backgroundColor copy] autorelease];
+}
+
+/**
+ @Status Stub
+*/
+- (void)setBackgroundColor:(UIColor*)color {
+    UNIMPLEMENTED();
+    _backgroundColor.attach([color copy]);
 }
 
 @end

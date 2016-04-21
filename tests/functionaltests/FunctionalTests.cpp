@@ -1,6 +1,6 @@
 ﻿//******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,10 +16,15 @@
 
 #include "pch.h"
 #include <gtest-api.h>
+#include "Framework/Framework.h"
 #include <WexTestClass.h>
+#include <ErrorHandling.h>
 
 using namespace WEX::Logging;
 using namespace WEX::TestExecution;
+
+// This is an internal method that UIKit exposes solely for the test frameworks' to use.
+extern "C" void UIApplicationMainTest();
 
 //
 // How is functional test organized?
@@ -67,11 +72,17 @@ extern void SampleTestFailure();
 // Notes:
 //     1. Give a unique test class name for every test category e.g. Location, URI etc.
 //     2. Use the same name in the BEGIN_TEST_CLASS macro.
+//     3. Use the appropriate TEST_CLASS_PROPERTY for your test and remember to remove the "Ignore" property.
 //
 class SampleTest {
 public:
     BEGIN_TEST_CLASS(SampleTest)
     TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    // Note: TAEF automatically generates a default manifest with no capabilities at runtime. If your test
+    // requires special capabilities, add your own custom manifest with the required capabilities.
+    // TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"xyz.AppxManifest.xml")
+    TEST_CLASS_PROPERTY(L"Ignore", L"true")
     END_TEST_CLASS()
 
     // SampleTest test class setup.
@@ -80,7 +91,7 @@ public:
     //     2. Use the same mechanism as in TEST_METHOD below to export a method from the WinObjC test file and call it here.
     //     3. If you do not need this functionality feel free to remove this for your test class.
     TEST_CLASS_SETUP(SampleTestClassSetup) {
-        return true;
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
     }
 
     // SampleTest test class cleanup.
@@ -136,3 +147,80 @@ public:
 // End Copy
 // ****************************************************************************************************************************************
 //
+
+//
+// NSURL Tests
+//
+
+extern void NSURLConnectionRequestWithURL();
+extern void NSURLConnectionRequestWithURL_Failure();
+
+extern void NSURLSessionDataTaskWithURL();
+extern void NSURLSessionDataTaskWithURL_Failure();
+extern void NSURLSessionDataTaskWithURL_WithCompletionHandler();
+extern void NSURLSessionDataTaskWithURL_WithCompletionHandler_Failure();
+extern void NSURLSessionDownloadTaskWithURL();
+extern void NSURLSessionDownloadTaskWithURL_Failure();
+extern void NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
+extern void NSURLSessionDownloadTaskWithURL_WithCancelResume();
+
+class NSURL {
+public:
+    BEGIN_TEST_CLASS(NSURL)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    TEST_CLASS_PROPERTY(L"UAP:AppXManifest", L"NSURL.AppxManifest.xml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+    }
+
+    //
+    // NSURLConnection
+    //
+
+    TEST_METHOD(NSURLConnection_RequestWithURL) {
+        NSURLConnectionRequestWithURL();
+    }
+
+    TEST_METHOD(NSURLConnection_RequestWithURL_Failure) {
+        NSURLConnectionRequestWithURL_Failure();
+    }
+
+    //
+    // NSURLSession
+    //
+
+    TEST_METHOD(NSURLSession_DataTaskWithURL) {
+        NSURLSessionDataTaskWithURL();
+    }
+
+    TEST_METHOD(NSURLSession_DataTaskWithURL_Failure) {
+        NSURLSessionDataTaskWithURL_Failure();
+    }
+
+    TEST_METHOD(NSURLSession_DataTaskWithURL_WithCompletionHandler) {
+        NSURLSessionDataTaskWithURL_WithCompletionHandler();
+    }
+
+    TEST_METHOD(NSURLSession_DataTaskWithURL_WithCompletionHandler_Failure) {
+        NSURLSessionDataTaskWithURL_WithCompletionHandler_Failure();
+    }
+
+    TEST_METHOD(NSURLSession_DownloadTaskWithURL) {
+        NSURLSessionDownloadTaskWithURL();
+    }
+
+    TEST_METHOD(NSURLSession_DownloadTaskWithURL_Failure) {
+        NSURLSessionDownloadTaskWithURL_Failure();
+    }
+
+    TEST_METHOD(NSURLSession_DownloadTaskWithURL_WithCompletionHandler) {
+        NSURLSessionDownloadTaskWithURL_WithCompletionHandler();
+    }
+
+    TEST_METHOD(NSURLSession_DownloadTaskWithURL_WithCancelResume) {
+        NSURLSessionDownloadTaskWithURL_WithCancelResume();
+    }
+}; /* class NSURL */

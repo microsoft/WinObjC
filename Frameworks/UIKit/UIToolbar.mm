@@ -144,13 +144,6 @@ void initInternal(UIToolbar* self) {
 /**
  @Status Interoperable
 */
-- (void)buttonClicked:(NSUInteger)button {
-    [_delegate buttonBarItemTapped:button];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setItems:(NSArray*)items {
     [self setItems:items animated:FALSE];
 }
@@ -287,7 +280,7 @@ void layoutItems(UIToolbar* self) {
             float margin = curButton.margin;
             float controlWidth = size.width + margin * 2.0f;
 
-            UIView* itemView = [curButton view];
+            UIView* itemView = [curButton _view];
             if (itemView) {
                 bool isCustom = false;
 

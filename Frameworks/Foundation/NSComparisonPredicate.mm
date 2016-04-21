@@ -16,6 +16,7 @@
 
 #import <Starboard.h>
 #import <Foundation/NSComparisonPredicate.h>
+#import <Foundation/NSLocale.h>
 
 @implementation NSComparisonPredicate
 
@@ -93,6 +94,25 @@
     return ([leftResult isKindOfClass:[NSString class]] && [rightResult isKindOfClass:[NSString class]]);
 }
 
++ (NSComparisonPredicateOptions)extractOptions:(NSString*)option {
+    // We can short to using obtainStringCompareOptionsWithComparisonPredicateOptions, but it would just make the code much more unreadable.
+    NSComparisonPredicateOptions options = 0;
+    if ([option rangeOfString:@"c"].location != NSNotFound) {
+        options |= NSCaseInsensitivePredicateOption;
+    }
+    if ([option rangeOfString:@"d"].location != NSNotFound) {
+        options |= NSDiacriticInsensitivePredicateOption;
+    }
+    if ([option rangeOfString:@"n"].location != NSNotFound) {
+        options |= NSNormalizedPredicateOption;
+    }
+
+    if ([option rangeOfString:@"l"].location != NSNotFound) {
+        options |= NSLocaleSensitivePredicateOption;
+    }
+    return options;
+}
+
 - (NSStringCompareOptions)obtainStringCompareOptionsWithComparisonPredicateOptions:(NSComparisonPredicateOptions)options {
     switch (options) {
         case NSCaseInsensitivePredicateOption:
@@ -109,6 +129,15 @@
     return NSCaseInsensitiveSearch;
 }
 
+- (NSLocale*)obtainLocaleForComparisonPredicateOptions:(NSComparisonPredicateOptions)options {
+    if (options & NSLocaleSensitivePredicateOption) {
+        return [NSLocale currentLocale];
+    }
+
+    // system locale
+    return nil;
+}
+
 - (BOOL)_InContainsPredicate:(id)leftResult rightResult:(id)rightResult {
     if (rightResult == nil) {
         return NO;
@@ -121,6 +150,15 @@
     if ([self _areResultsStrings:leftResult rightResult:rightResult]) {
         // Ensure NSComparisonPredicateOptions options are met. _comparisonPredicateModifier
         NSComparisonPredicateOptions option = [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
+
+        // VSO 7120611: when rangeOfString with locale is implemented
+        // NSRange range = NSMakeRange(0, [rightResult length])
+        //         return [rightResult rangeOfString:leftResult
+        //                   options:option
+        //                     range:range
+        //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
+        //    .location != NSNotFound;
+
         return [rightResult rangeOfString:leftResult options:option].location != NSNotFound;
     }
 
@@ -147,37 +185,53 @@
     return NO;
 }
 
-/**
- @Status Stub
-*/
+- (NSRegularExpressionOptions)obtainNSRegularExpressionOptions:(NSComparisonPredicateOptions)options {
+    if (options & NSCaseInsensitivePredicateOption) {
+        return NSRegularExpressionCaseInsensitive;
+    }
+
+    return 0;
+}
+
 - (BOOL)_matchesLikePredicate:(id)leftResult rightResult:(id)rightResult {
     if (![self _areResultsStrings:leftResult rightResult:rightResult]) {
         return NO;
     }
 
-    // TODO: Regex eval needs to be done. Like is a subset of Matches with simple regex.
-    UNIMPLEMENTED();
+    // Need to obtain the NSRegularExpressionOptions
+    // The right is the regex pattern, left is the string to validate.
+
+    NSError* error = NULL;
+    NSRegularExpression* regex =
+        [NSRegularExpression regularExpressionWithPattern:rightResult
+                                                  options:[self obtainNSRegularExpressionOptions:_comparisonPredicateModifier]
+                                                    error:&error];
+    if (error) {
+        [NSException raise:NSGenericException
+                    format:@"Unable to do the regex match, regex failure message:%@", [error localizedDescription]];
+    }
+
+    if ([[regex matchesInString:leftResult options:0 range:NSMakeRange(0, [leftResult length])] count] != 0) {
+        return YES;
+    }
+
     return NO;
 }
 
 - (BOOL)_directComparisonOfExpressionsWithObject:(id)leftResult rightResult:(id)rightResult {
-    // TODO: need to check behaviour for if one of them is null or both of them are null.
-
     switch (_predicateOperatorType) {
         case NSLessThanPredicateOperatorType:
             return ([leftResult compare:rightResult] == NSOrderedAscending);
 
         case NSLessThanOrEqualToPredicateOperatorType: {
-            NSComparisonResult result = [leftResult compare:rightResult];
-            return ((result == NSOrderedAscending) || (result == NSOrderedSame));
+            return ([leftResult compare:rightResult] != NSOrderedDescending);
         }
 
         case NSGreaterThanPredicateOperatorType:
             return ([leftResult compare:rightResult] == NSOrderedDescending);
 
         case NSGreaterThanOrEqualToPredicateOperatorType: {
-            NSComparisonResult result = [leftResult compare:rightResult];
-            return ((result == NSOrderedDescending) || (result == NSOrderedSame));
+            return ([leftResult compare:rightResult] != NSOrderedAscending);
         }
 
         case NSEqualToPredicateOperatorType:
@@ -189,11 +243,25 @@
         case NSBeginsWithPredicateOperatorType: {
             NSStringCompareOptions compareOption =
                 [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
+            // VSO:7120611 when rangeOfString with locale is implemented
+            // NSRange range = NSMakeRange(0, [leftResult length])
+            //         return [leftResult rangeOfString:rightResult options:(NSAnchoredSearch | compareOption)
+            //                     range:range
+            //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
+            //    .location != NSNotFound;
+
             return ([leftResult rangeOfString:rightResult options:(NSAnchoredSearch | compareOption)].location != NSNotFound);
         }
         case NSEndsWithPredicateOperatorType: {
             NSStringCompareOptions compareOption =
                 [self obtainStringCompareOptionsWithComparisonPredicateOptions:_comparisonPredicateModifier];
+            // VSO 7120611: when rangeOfString with locale is implemented
+            // NSRange range = NSMakeRange(0, [leftResult length])
+            //         return [leftResult rangeOfString:rightResult options:(NSBackwardsSearch | compareOption)
+            //                     range:range
+            //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
+            //    .location != NSNotFound;
+
             return ([leftResult rangeOfString:rightResult options:(NSBackwardsSearch | compareOption)].location != NSNotFound);
         }
         case NSInPredicateOperatorType:
@@ -205,11 +273,7 @@
             return [self _InContainsPredicate:rightResult rightResult:leftResult];
 
         case NSCustomSelectorPredicateOperatorType: {
-            // TODO: Need to verify edge cases etc.
-            if ([leftResult respondsToSelector:_customSelector]) {
-                return (BOOL)[leftResult performSelector:_customSelector withObject:rightResult];
-            }
-            [NSException raise:NSInvalidArgumentException format:@"Left expression does not respond to selector."];
+            return (BOOL)[leftResult performSelector:_customSelector withObject:rightResult];
         }
         case NSBetweenPredicateOperatorType:
             return [self _betweenPredicate:leftResult rightResult:rightResult];
@@ -226,7 +290,7 @@
 
 - (BOOL)_anyAllExpressionsWithObject:(id)leftResult rightResult:(id)rightResult object:(id)object context:(NSMutableDictionary*)context {
     // left is either a set or array.
-    // TODO: Add support for NSOrderedSet when ready.
+    // VSO 7120648: Add support for NSOrderedSet when ready.
 
     if ((leftResult == nil) || (![leftResult isKindOfClass:[NSArray class]] && ![leftResult isKindOfClass:[NSSet class]])) {
         return NO;
@@ -257,16 +321,14 @@
 }
 
 /**
- @Status Caveat
- @Notes: The following are not supported as of now: NSMatchesPredicateOperatorType & NSLikePredicateOperatorType.
+ @Status Interoperable
 */
 - (BOOL)evaluateWithObject:(id)object {
     return [self evaluateWithObject:object substitutionVariables:nil];
 }
 
 /**
- @Status Caveat
- @Notes: The following are not supported as of now: NSMatchesPredicateOperatorType & NSLikePredicateOperatorType.
+ @Status Interoperable
 */
 - (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary*)variables {
     NSMutableDictionary* vars = (NSMutableDictionary*)variables;
@@ -284,6 +346,24 @@
             break;
     }
     return NO;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)predicateWithSubstitutionVariables:(NSDictionary*)variables {
+    NSExpression* rightSub = [_rightExpression expressionWithSubstitutionVariables:variables];
+    NSExpression* leftSub = [_leftExpression expressionWithSubstitutionVariables:variables];
+
+    if (_predicateOperatorType == NSCustomSelectorPredicateOperatorType) {
+        return [NSComparisonPredicate predicateWithLeftExpression:leftSub rightExpression:rightSub customSelector:_customSelector];
+    }
+
+    return [NSComparisonPredicate predicateWithLeftExpression:leftSub
+                             rightExpression:rightSub
+                                    modifier:_comparisonPredicateModifier
+                                        type:_predicateOperatorType
+                                     options:_options];
 }
 
 /**

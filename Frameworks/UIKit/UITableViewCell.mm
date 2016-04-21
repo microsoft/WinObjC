@@ -506,8 +506,8 @@ static void initInternal(UITableViewCell* self) {
                 break;
 
             case UITableViewCellSelectionStyleNone:
-               UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", _selectionStyle);
-               break;
+                UNIMPLEMENTED_WITH_MSG("UITableViewCell style: %u is unhandled", _selectionStyle);
+                break;
 
             default:
                 TraceWarning(TAG, L"Invalid UITableViewCell selection style specified: %u", _selectionStyle);
@@ -843,7 +843,7 @@ static void setInternalAccessoryColor(UITableViewCell* self) {
             }
         }
 
-        CGColorRef color = 
+        CGColorRef color =
             static_cast<CGColorRef>([UIColor colorWithRed:contentColor.r green:contentColor.g blue:contentColor.b alpha:contentColor.a]);
         [[self->_internalAccessoryView layer] _setContentColor:color];
     }
@@ -1082,15 +1082,14 @@ static id getCurrentAccessoryView(UITableViewCell* self) {
     [super dealloc];
 }
 
-- (void)addBottomBorder:(UITableView*)parentTable {
+- (void)_addBottomBorder:(UITableView*)parentTable {
     if (_borderView == nil) {
-        ColorQuad color = {0};
+        ColorQuad color = { 0 };
 
         [[parentTable backgroundColor] getColors:&color];
         UIColor* backgroundColor = nil;
 
-        if ((color.a == 0.0f) ||
-            (color.r == 1.0f && color.g == 1.0f && color.b == 1.0f && color.a == 1.0f)) {
+        if ((color.a == 0.0f) || (color.r == 1.0f && color.g == 1.0f && color.b == 1.0f && color.a == 1.0f)) {
             backgroundColor = [UIColor grayColor];
         } else {
             backgroundColor = [UIColor whiteColor];
@@ -1462,7 +1461,7 @@ static void setupGroupView(UITableViewCell* self) {
     }
 }
 
-- (void)performSelectionSegue {
+- (void)_performSelectionSegue {
     if (_selectionSegueTemplate != nil) {
         [_selectionSegueTemplate perform:self];
     }
@@ -1549,6 +1548,22 @@ static void removeAllAnimationsFromLayers(CALayer* layer) {
 */
 - (void)didTransitionToState:(UITableViewCellStateMask)state {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMultipleSelectionBackgroundView:(UIView*)view {
+    UNIMPLEMENTED();
+    self->_multipleSelectionBackgroundView = view;
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)multipleSelectionBackgroundView {
+    UNIMPLEMENTED();
+    return self->_multipleSelectionBackgroundView;
 }
 
 @end

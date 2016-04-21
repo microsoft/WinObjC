@@ -55,5 +55,6 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, assign) BOOL hidesBackButton;
 @property (nonatomic, copy) NSArray* rightBarButtonItems;
 @property (nonatomic, copy) NSArray* leftBarButtonItems;
+@property (nonatomic, assign) BOOL leftItemsSupplementBackButton STUB_PROPERTY;
 
 @end

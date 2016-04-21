@@ -32,5 +32,4 @@
 - (id)expressionValueWithObject:(id)object context:(NSMutableDictionary*)context {
     return object;
 }
-
 @end

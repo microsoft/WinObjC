@@ -32,6 +32,9 @@ private:
     // pattern: The pattern for which current filter should be assigned.
     void _assignAndResetFilter(cairo_pattern_t* pattern);
 
+    void _cairoImageSurfaceBlur(cairo_surface_t* surface);
+    void _cairoContextStrokePathShadow();
+
 protected:
     cairo_t* _drawContext;
 

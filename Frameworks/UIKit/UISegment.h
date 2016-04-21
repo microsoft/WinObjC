@@ -43,7 +43,6 @@
 - (id)setImage:(id)image;
 - (id)image;
 - (id)title;
-- (id)buttonClicked:(id)button;
 - (id)_setType:(DWORD)type;
 - (id)_setSelected:(DWORD)selected;
 - (id)setEnabled:(DWORD)enabled;

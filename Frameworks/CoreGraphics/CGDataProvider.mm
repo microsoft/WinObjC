@@ -20,19 +20,11 @@
 #import <Foundation/NSString.h>
 #include "LoggingNative.h"
 #import <CoreGraphics/CGDataProvider.h>
+#import "CGDataProviderInternal.h"
 
 static const wchar_t* TAG = L"CGDataProvider";
 
-@interface CGDataProvider : NSData {
-@public
-    CGDataProviderReleaseDataCallback releaseFunc;
-    void* info;
-    size_t size;
-    const void* data;
-    StrongId<NSString> filename;
-}
-@end
-
+// TODO: Task 7188763-Reimplement CGDataProvider which does not inherit from NSData but rather uses it within itself.
 @implementation CGDataProvider : NSData
 - (void)dealloc {
     if (releaseFunc != 0) {

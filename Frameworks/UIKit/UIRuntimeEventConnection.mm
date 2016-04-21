@@ -18,6 +18,7 @@
 #import "UIKit/UIRuntimeEventConnection.h"
 #import "LoggingNative.h"
 #import "UIProxyObject.h"
+#import "UIControl+Internal.h"
 
 static const wchar_t* TAG = L"UIRuntimeEventConnection";
 
@@ -25,7 +26,7 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
 @synthesize mask = _mask;
 @synthesize sel = _sel;
 @synthesize obj = _obj;
-@synthesize targetControl = _targetControl;
+@synthesize target = _target;
 @synthesize isValid = _isValid;
 
 /**
@@ -33,7 +34,7 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    _targetControl = [coder decodeObjectForKey:@"UISource"];
+    _target = [coder decodeObjectForKey:@"UISource"];
     _obj = [coder decodeObjectForKey:@"UIDestination"];
     _sel = NSSelectorFromString([coder decodeObjectForKey:@"UILabel"]);
     _mask = [coder decodeInt32ForKey:@"UIEventMask"];
@@ -42,7 +43,7 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
 }
 
 - (void)_makeConnection {
-    TraceVerbose(TAG, L"Source: %hs", object_getClassName(_targetControl));
+    TraceVerbose(TAG, L"Source: %hs", object_getClassName(_target));
     TraceVerbose(TAG, L"Dest: %hs", _obj != nil ? object_getClassName(_obj) : "nil (first responder?)");
     TraceVerbose(TAG, L"Event label: %x", _sel);
     TraceVerbose(TAG, L"Event mask: %x", _mask);
@@ -54,8 +55,9 @@ static const wchar_t* TAG = L"UIRuntimeEventConnection";
             _obj = [_obj _getObject];
         }
     }
-
-    [_targetControl addEventConnection:self];
+    if ([_target respondsToSelector:@selector(_addEventConnection:)]) {
+        [_target _addEventConnection:self];
+    }
 }
 
 /**

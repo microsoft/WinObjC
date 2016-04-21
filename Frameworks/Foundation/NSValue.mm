@@ -674,7 +674,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
  @Status Interoperable
 */
 - (NSValue*)initWithCoder:(NSKeyedUnarchiver*)coder {
-    _valueType = (NSValueType)[coder decodeIntForKey:@"NSV.type"];
+    NSValueType valueType = (NSValueType)[coder decodeIntForKey:@"NSV.type"];
     unsigned size;
     void* data = (void*)[coder decodeBytesForKey:@"NSV.data" returnedLength:&size];
     assert(size != 0 && data != NULL);
@@ -682,7 +682,7 @@ static NSValueType valueTypeFromObjCType(const char* objcType) {
     const char* objcType = [[coder decodeObjectForKey:@"NSV.objcType"] UTF8String];
 
     [self release];
-    return [NSValue newWithZone:nil bytes:data valueType:_valueType objCType:objcType];
+    return [NSValue newWithZone:nil bytes:data valueType:valueType objCType:objcType];
 }
 
 /**

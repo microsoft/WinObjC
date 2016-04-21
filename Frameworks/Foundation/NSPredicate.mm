@@ -16,14 +16,21 @@
 
 #import <Starboard.h>
 #import <Foundation/NSPredicate.h>
+#import <Foundation/Foundation.h>
+#import <Foundation/NSComparisonPredicate.h>
+
 #import "NSBooleanPredicate.h"
+#import "ExpressionHelpers.h"
+#import "rules.tab.h"
+
+extern "C" NSPredicate* _parsePredicateFormatString(NSString* format, nextArgument nextArg);
 
 @implementation NSPredicate {
     BOOL (^_evaluationBlock)(id evaluatedObject, NSDictionary* bindings);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSPredicate*)predicateWithFormat:(NSString*)format, ... {
     va_list args;
@@ -35,19 +42,44 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSPredicate*)predicateWithFormat:(NSString*)format argumentArray:(NSArray*)arguments {
-    UNIMPLEMENTED();
-    return nil;
+    NSEnumerator* enumerator = [arguments objectEnumerator];
+
+    return _parsePredicateFormatString(format, ^id(NSString* type) {
+        return [enumerator nextObject];
+    });
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSPredicate*)predicateWithFormat:(NSString*)format arguments:(va_list)arguments {
-    UNIMPLEMENTED();
-    return nil;
+    __block va_list args = arguments;
+    return _parsePredicateFormatString(format, ^NSExpression*(NSString* type) {
+        if ([type isEqualToString:@"@"]) {
+            return [NSExpression expressionForConstantValue:va_arg(args, id)];
+        }
+
+        if ([type isEqualToString:@"K"]) {
+            // the attribute name must be a string.
+            id obj = va_arg(args, id);
+            if (![obj isKindOfClass:[NSString class]]) {
+                [NSException raise:NSInvalidArgumentException format:@"Key path must be a string."];
+            }
+            return [NSExpression expressionForKeyPath:obj];
+        }
+
+        if ([type isEqualToString:@"i"] || [type isEqualToString:@"d"]) {
+            return [NSExpression expressionForConstantValue:[NSNumber numberWithInt:va_arg(args, int)]];
+        }
+
+        if ([type compare:@"f" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+            return [NSExpression expressionForConstantValue:[NSNumber numberWithFloat:va_arg(args, double)]];
+        }
+        return va_arg(args, id);
+    });
 }
 
 /**
@@ -72,18 +104,17 @@
 }
 
 /**
- @Status Caveat
- @Notes: Only block evaluation is supported.
+ @Status Interoperable
 */
 - (BOOL)evaluateWithObject:(id)object {
     return [self evaluateWithObject:object substitutionVariables:nil];
 }
 
 /**
- @Status Caveat
- @Notes: Only block evaluation is supported.
+ @Status Interoperable
 */
 - (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary*)variables {
+    // Subclasses over write this, to implement their evaluation.
     if (_evaluationBlock) {
         return _evaluationBlock(object, variables);
     }
@@ -91,11 +122,10 @@
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)predicateWithSubstitutionVariables:(NSDictionary*)variables {
-    UNIMPLEMENTED();
-    return nil;
+    return [[self copy] autorelease];
 }
 
 /**

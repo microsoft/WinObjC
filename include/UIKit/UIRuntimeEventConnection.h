@@ -22,7 +22,8 @@
 @property (nonatomic, readonly, assign) NSUInteger mask;
 @property (nonatomic, readonly, assign) SEL sel;
 @property (nonatomic, readonly, assign) id obj;
-@property (nonatomic, readonly, assign) id targetControl;
+@property (nonatomic, readonly, assign) id target;
 @property (nonatomic, readonly, assign) BOOL isValid;
 - (void)invalidate;
+- (instancetype)initWithTarget:(id)target selector:(SEL)targetSel eventMask:(uint32_t)targetmask;
 @end

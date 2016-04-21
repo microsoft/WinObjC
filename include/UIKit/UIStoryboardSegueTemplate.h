@@ -19,4 +19,7 @@
 #import <Foundation/NSObject.h>
 
 @interface UIStoryboardSegueTemplate : NSObject
+- (id)destination;
+- (id)identifier;
+- (void)perform:(id)arg;
 @end

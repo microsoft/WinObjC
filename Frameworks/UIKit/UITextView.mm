@@ -515,9 +515,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 
     if (proceed) {
         bool setText = true;
-        if ([_delegate respondsToSelector:@selector(textView:shouldChangeCharactersInRange:replacementText:)]) {
-            setText = [_delegate textView:self shouldChangeCharactersInRange:range replacementText:character] != 0;
-        }
+
         if (setText) {
             if ([_delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
                 setText = [_delegate textView:self shouldChangeTextInRange:range replacementText:character] != 0;

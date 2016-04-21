@@ -19,11 +19,11 @@
 
 @interface UIBarButtonItem (Internals)
 
-@property (nonatomic, strong, readonly) UIView* view;
 @property (nonatomic, readonly) float margin;
 @property (nonatomic, readonly) CGSize idealSize;
 
 - (BOOL)_isFlexibleWidth;
+- (UIView*)_view;
 - (UIImage*)backButtonBackgroundImage;
-
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection;
 @end

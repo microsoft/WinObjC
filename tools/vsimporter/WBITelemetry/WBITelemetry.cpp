@@ -27,12 +27,15 @@ namespace WBITelemetry
     int     WBITelemetryManager::nTestVal   = 0;
     wstring WBITelemetryManager::m_iKey     = L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca"; // "AIF-" Vortex will reject if "AIF-" prefix is missing.
 
+    wstring WBITelemetryManager::s_machineId  = L"";
+    bool    WBITelemetryManager::s_isInternal = false;
+
     ApplicationInsights::core::TelemetryClient WBITelemetryManager::m_tc = ApplicationInsights::core::TelemetryClient(m_iKey);
 
     // Initialize AI with the Instrumentation Key.  Caller will provide.
     void WBITelemetryManager::InitializeAppInsights(wstring ikey)
     {
-        m_iKey     = ikey;
+        m_iKey = ikey;
         ApplicationInsights::core::TelemetryClientConfig* conf = m_tc.GetConfig();
         conf->SetIKey(m_iKey);
     }
@@ -45,6 +48,19 @@ namespace WBITelemetry
     void WBITelemetryManager::DisableTracking()
     {
         WBITelemetryManager::m_tc.DisableTracking();
+    }
+
+    void WBITelemetryManager::SetMachineId(const char* machineId)
+    {
+        std::string str = std::string(machineId);
+        std::wstring wsMachineId;
+        wsMachineId.assign(str.begin(), str.end());
+        WBITelemetryManager::s_machineId = wsMachineId;
+    }
+
+    void WBITelemetryManager::SetIsInternal(bool isInternal)
+    {
+        WBITelemetryManager::s_isInternal = isInternal;
     }
 
     // Flush the queued events.
@@ -65,6 +81,8 @@ namespace WBITelemetry
     {
         ApplicationInsights::core::wstring_wstring_map props; //typedef std::map<std::wstring, std::wstring> wstring_wstring_map;
         props.insert({ std::wstring(L"Data"), std::wstring(eventData) });
+        props.insert({ std::wstring(L"MachineId"), std::wstring(s_machineId) });
+        props.insert({ std::wstring(L"IsInternal"), s_isInternal ? L"1" : L"0" });
         WBITelemetryManager::m_tc.TrackEvent(eventName, props);
     }
 

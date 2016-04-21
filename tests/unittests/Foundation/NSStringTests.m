@@ -84,6 +84,16 @@ TEST(NSString, NSStringTests) {
     NSString* expectedString = @"Numbers: 1, 2";
     NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
     ASSERT_OBJCEQ(expectedString, actualString);
+
+    // rangeOfCharactersFromSet test
+    NSString* testString3 = @"Alpha Bravo Charlie";
+    NSCharacterSet *charSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSRange range;
+
+    range = [testString3 rangeOfCharacterFromSet: charSet options: 0];
+    ASSERT_EQ(5, range.location);
+    range = [testString3 rangeOfCharacterFromSet: charSet options: NSBackwardsSearch];
+    ASSERT_EQ(11, range.location);
 }
 
 TEST(NSString, NSString_FastestEncoding) {

@@ -54,6 +54,6 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, assign) NSInteger minuteInterval;
 @property (nonatomic, assign) NSTimeInterval countDownDuration;
 
-- (void)setDate:(NSDate*)date animated:(BOOL)animated STUB_METHOD;
+- (void)setDate:(NSDate*)date animated:(BOOL)animated;
 
 @end

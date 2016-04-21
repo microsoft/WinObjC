@@ -26,6 +26,7 @@
 #import "UIKit/UIFontDescriptor.h"
 #import "UIFontDescriptorInternal.h"
 #import "CoreText/CTFont.h"
+#import "UIFontInternal.h"
 
 extern "C" {
 #include <ft2build.h>
@@ -38,6 +39,7 @@ extern "C" {
 }
 
 #import "LoggingNative.h"
+#import "CGDataProviderInternal.h"
 
 static const wchar_t* g_logTag = L"UIFont";
 
@@ -195,7 +197,7 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     // assert(err == 0);
 
     if ([data respondsToSelector:@selector(_fileName)]) {
-        ret->_fileName = [[data _fileName] lastPathComponent];
+        ret->_fileName = [[static_cast<CGDataProvider*>(data) _fileName] lastPathComponent];
         if (ret->_fileName) {
             CFDictionarySetValue(_fontInstance, (const void*)(id)ret->_fileName, (void*)ret->_font);
             CFDictionarySetValue(_fontSizingInstance, (const void*)(id)ret->_fileName, (void*)ret->_sizingFont);

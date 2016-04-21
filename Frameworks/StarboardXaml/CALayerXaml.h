@@ -82,7 +82,6 @@ public
 ref class LayerContent sealed : Windows::UI::Xaml::Controls::Panel, ICacheableObject {
 public:
     LayerContent();
-    virtual ~LayerContent();
     virtual void Reset();
     static LayerContent^ CreateLayerContent();
     static void DestroyLayerContent(LayerContent^ content);
@@ -232,7 +231,6 @@ public:
     };
 
     CALayerXaml();
-    virtual ~CALayerXaml();
     virtual void Reset();
     void Set(Platform::String^ propertyName, Platform::Object^ value);
     Platform::Object^ Get(Platform::String^ propertyName);
@@ -409,43 +407,6 @@ private:
     std::list<Animation^> m_animations;
     CALayerXaml^ m_animatedLayer = nullptr;
     Windows::UI::Xaml::Media::Animation::EasingFunctionBase^ m_animationEase;
-};
-
-/// <summary>
-///
-/// </summary>
-public
-ref class CAXamlDebugCounters sealed : Windows::UI::Xaml::Controls::Canvas {
-    ref class Counter sealed {
-    public:
-        property Platform::String^ Name;
-        property int Count;
-        property Windows::UI::Xaml::Controls::TextBlock^ TextOutput;
-        property bool Updating;
-        property int Idx;
-
-        Counter();
-        void UpdateText();
-    };
-
-public:
-    static property CAXamlDebugCounters^ Instance {
-        CAXamlDebugCounters^ get() {
-           static CAXamlDebugCounters^ instance = ref new CAXamlDebugCounters();
-           return instance;
-        }
-    };
-
-    static void IncCounter(Platform::String^ name);
-    static void DecCounter(Platform::String^ name);
-    void IncrementCounter(Platform::String^ name);
-    void DecrementCounter(Platform::String^ name);
-
-private:
-    std::map<Platform::String^, Counter^> m_counters;
-
-    CAXamlDebugCounters() {};
-    Counter^ _GetCounter(Platform::String^ name);
 };
 
 /// <summary>

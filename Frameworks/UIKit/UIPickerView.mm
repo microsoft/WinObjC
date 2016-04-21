@@ -27,6 +27,7 @@
 #import <UIKit/UITableViewCell.h>
 #import <UIKit/UIView.h>
 #import <UIViewInternal.h>
+#import "UIDatePicker+Internal.h"
 
 struct RowData {
     float _yPos;
@@ -147,14 +148,15 @@ static void showVisibleCells(UIPickerSubView* self) {
             if (curRow->_rowCell == nil || (curRow->_rowCell != nil && curRow->_invalid)) {
                 CGRect frame = { 0.0, 0.0, 0.0, 0.0 };
                 if ([self->_dataSource respondsToSelector:@selector(pickerView:titleForRow:forComponent:)] ||
-                    [self->_dataSource respondsToSelector:@selector(pickerView:titleForRow:forComponent:withColor:)]) {
+                    [self->_dataSource respondsToSelector:@selector(_pickerView:titleForRow:forComponent:withColor:)]) {
                     id rowString;
                     id rowColor;
 
-                    if ([self->_dataSource respondsToSelector:@selector(pickerView:titleForRow:forComponent:withColor:)]) {
-                        rowString =
-                            [[static_cast<UIDatePicker*>(self->_dataSource) pickerView:self->_parent titleForRow:j forComponent:self->_componentNum withColor:&rowColor]
-                                retain];
+                    if ([self->_dataSource respondsToSelector:@selector(_pickerView:titleForRow:forComponent:withColor:)]) {
+                        rowString = [[static_cast<UIDatePicker*>(self->_dataSource) _pickerView:self->_parent
+                                                                                    titleForRow:j
+                                                                                   forComponent:self->_componentNum
+                                                                                      withColor:&rowColor] retain];
                     } else {
                         rowString = [[self->_dataSource pickerView:self->_parent titleForRow:j forComponent:self->_componentNum] retain];
                         rowColor = [UIColor blackColor];

@@ -14,13 +14,15 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
+#import "Starboard.h"
 
-#include <UIKit/UIView.h>
-#include <UIKit/UIDevice.h>
-#include <UIKit/UIApplication.h>
-#include <Foundation/NSArray.h>
-#include <UIKit/UIScreen.h>
+#import <UIKit/UIView.h>
+#import <UIKit/UIDevice.h>
+#import <UIKit/UIApplication.h>
+#import <Foundation/NSArray.h>
+#import <UIKit/UIScreen.h>
+
+#import "StubReturn.h"
 
 extern float statusBarHeight;
 
@@ -186,10 +188,21 @@ NSString* const UIScreenBrightnessDidChangeNotification = @"UIScreenBrightnessDi
     return ret;
 }
 
+/**
+ @Status Interoperable
+*/
 - (CADisplayLink*)displayLinkWithTarget:(NSObject*)target selector:(SEL)selector {
     id ret = [CADisplayLink displayLinkWithTarget:target selector:selector];
 
     return ret;
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 @end

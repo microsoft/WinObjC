@@ -126,7 +126,7 @@ public:
                     break;
             }
 
-            [item initPriv];
+            [item _initPriv];
 
             auto layoutProps = [item _privateState]->layoutProperties;
 

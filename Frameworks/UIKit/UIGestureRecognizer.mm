@@ -84,7 +84,7 @@ static void commonInit(UIGestureRecognizer* self) {
     UNIMPLEMENTED();
 }
 
-- (void)addEventConnection:(UIRuntimeEventConnection*)connection {
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
     id dest = [connection obj];
     SEL destSel = (SEL)[connection sel];
     [self addTarget:dest action:destSel];

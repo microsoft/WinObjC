@@ -71,6 +71,7 @@ enum {
 
 @protocol UIImagePickerControllerDelegate;
 
+UIKIT_EXPORT_CLASS
 @interface UIImagePickerController
     : UINavigationController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 

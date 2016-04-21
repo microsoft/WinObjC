@@ -40,10 +40,10 @@
 
 @interface UIBarItem : NSObject <NSCoding, UIAppearance, UIAccessibility>
 
-@property (nonatomic, getter=isEnabled) BOOL enabled STUB_PROPERTY;
+@property (nonatomic, getter=isEnabled) BOOL enabled;
 @property (nonatomic, retain) UIImage* image;
 @property (nonatomic, assign) UIEdgeInsets imageInsets STUB_PROPERTY;
-@property (nonatomic, copy) NSString* title STUB_PROPERTY;
+@property (nonatomic, copy) NSString* title;
 @property (nonatomic) NSInteger tag STUB_PROPERTY;
 
 // UIAccessibility properties.
