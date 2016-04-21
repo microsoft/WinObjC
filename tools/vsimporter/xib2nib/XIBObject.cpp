@@ -67,6 +67,7 @@ XIBMember::XIBMember() {
 }
 
 xibList XIBObject::_allObjs;
+viewControllerList XIBObject::_viewControllerNames;
 
 void XIBObject::AddOutputMember(NIBWriter* writer, const char* keyName, XIBObject* obj) {
     XIBMember* pNewMember = new XIBMember();
@@ -275,6 +276,11 @@ void XIBObject::ScanStoryObjects(pugi::xml_node node) {
     _id = getAttrAndHandle("id");
     _className = node.name();
     _isStory = true;
+    
+    if (strcmp(_className, "viewController") == 0)
+    {
+        _viewControllerNames.push_back(_id);
+    }
 
     //  Go through all child nodes
     for (pugi::xml_node curNode : _node.children()) {

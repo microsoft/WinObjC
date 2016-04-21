@@ -42,6 +42,7 @@ std::string GetOutputFilename(const char* filename) {
 }
 
 extern std::map<std::string, std::string> _g_exportedControllers;
+extern std::map<std::string, std::string> _g_exportedControllersbyStoryboardId;
 
 void ConvertStoryboard(pugi::xml_document& doc) {
     pugi::xml_node curNode = doc.first_child();
@@ -61,11 +62,10 @@ void ConvertStoryboard(pugi::xml_document& doc) {
     // Print which XML nodes we did not handle during the parse for diagnostic purpose.
     XIBObject::getDocumentCoverage(doc);
 
-    NIBWriter::ExportController(initialController);
+    NIBWriter::ExportAllControllers();
 
     Plist::dictionary_type viewControllerInfo;
-    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] =
-        std::string("UIViewController-") + std::string(initialController);
+    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] = std::string(initialController);
     viewControllerInfo[std::string("UIStoryboardVersion")] = (int)1;
 
     Plist::dictionary_type viewControllerMappings;
@@ -73,6 +73,13 @@ void ConvertStoryboard(pugi::xml_document& doc) {
         viewControllerMappings[curController.first] = curController.second;
     }
     viewControllerInfo[std::string("UIViewControllerIdentifiersToNibNames")] = viewControllerMappings;
+
+    Plist::dictionary_type viewControllerStoryboardIdMappings;
+    for (auto curController : _g_exportedControllersbyStoryboardId) {
+        viewControllerStoryboardIdMappings[curController.first] = curController.second;
+    }
+    viewControllerInfo[std::string("UIViewControllerStoryboardIdentifiersToNibNames")] = viewControllerStoryboardIdMappings;
+
 
     printf("Writing %s\n", GetOutputFilename("Info.plist").c_str());
     Plist::writePlistBinary(GetOutputFilename("Info.plist").c_str(), viewControllerInfo);
