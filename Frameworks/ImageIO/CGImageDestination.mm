@@ -33,6 +33,7 @@ const CFStringRef kUTTypeBMP = static_cast<const CFStringRef>(@"com.microsoft.bm
 
 const unsigned int c_minutesPerDegree = 60;
 const unsigned int c_secondsPerMinute = 60;
+const unsigned int c_bitsPerColorChannel = 8;
 
 enum imageTypes { typeJPEG,
                   typeTIFF,
@@ -55,7 +56,7 @@ enum destinationTypes { toData,
         RETURN_NULL_IF(url && ![(NSURL*)url isFileURL]);
         RETURN_NULL_IF(!data && !url);
 
-        self.maxCount = frames;
+        self.expectedCount = frames;
 
         MULTI_QI imageQueryInterface = {0};
         static const GUID IID_IWICImagingFactory = {0xec5ec8a9,0xc395,0x4314,0x9c,0x77,0x54,0xd7,0xa9,0x35,0xff,0x70};
@@ -66,41 +67,47 @@ enum destinationTypes { toData,
         _idFactory = (IWICImagingFactory*)imageQueryInterface.pItf;
         RETURN_NULL_IF_FAILED(_idFactory->CreateStream(&_idStream));
 
+        // Using NULL instead of nullptr because CGStringCompare does not compile with nullptr
         if (CFStringCompare(type, kUTTypeJPEG, NULL) == kCFCompareEqualTo) {
             _type = typeJPEG;
-            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatJpeg, NULL, &_idEncoder));
+            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatJpeg, nullptr, &_idEncoder));
         } else if (CFStringCompare(type, kUTTypeTIFF, NULL) == kCFCompareEqualTo) {
             _type = typeTIFF;
-            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatTiff, NULL, &_idEncoder));
+            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatTiff, nullptr, &_idEncoder));
         } else if (CFStringCompare(type, kUTTypeGIF, NULL) == kCFCompareEqualTo) {
             _type = typeGIF;
-            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatGif, NULL, &_idEncoder));
+            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatGif, nullptr, &_idEncoder));
         } else if (CFStringCompare(type, kUTTypePNG, NULL) == kCFCompareEqualTo) {
             _type = typePNG;
-            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatPng, NULL, &_idEncoder));
+            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatPng, nullptr, &_idEncoder));
         } else if (CFStringCompare(type, kUTTypeBMP, NULL) == kCFCompareEqualTo) {
             _type = typeBMP;
-            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatBmp, NULL, &_idEncoder));
+            RETURN_NULL_IF_FAILED(_idFactory->CreateEncoder(GUID_ContainerFormatBmp, nullptr, &_idEncoder));
         } else {
             _type = typeUnknown;
-            return NULL;
+            return nullptr;
         }
 
-        if (url && [(NSURL*)url path]) { // Make sure that the url path actually resolves to something to avoid causing an exception
-            NSString* urlNSString = [[(NSURL*)url path] substringFromIndex:1];
-            NSData* urlAsData = [urlNSString dataUsingEncoding:NSUnicodeStringEncoding];
-            std::wstring wideUrl((wchar_t*)[urlAsData bytes], [urlAsData length]/sizeof(wchar_t));
-            RETURN_NULL_IF_FAILED(_idStream->InitializeFromFilename(wideUrl.c_str(), GENERIC_WRITE));
+        if (url) {
+            if ([(NSURL*)url path]) { // Make sure that the url path actually resolves to something to avoid causing an exception
+                NSString* urlNSString = [[(NSURL*)url path] substringFromIndex:1];
+                NSData* urlAsData = [urlNSString dataUsingEncoding:NSUnicodeStringEncoding];
+                std::wstring wideUrl((wchar_t*)[urlAsData bytes], [urlAsData length]/sizeof(wchar_t));
+                RETURN_NULL_IF_FAILED(_idStream->InitializeFromFilename(wideUrl.c_str(), GENERIC_WRITE));
 
-            if (![(NSURL*)url checkResourceIsReachableAndReturnError:NULL]) {
-                return NULL;
+                if (![(NSURL*)url checkResourceIsReachableAndReturnError:nullptr]) {
+                    return nullptr;
+                }
+            } else {
+                NSTraceInfo(TAG, @"Encountered an invalid URL!\n");
+                return nullptr;
             }
         } else if (data) {
             _outData = data;
 
-            IStream* dataStream;
-            CreateStreamOnHGlobal(NULL, true, &dataStream);
-            RETURN_NULL_IF_FAILED(_idStream->InitializeFromIStream(dataStream));
+            ComPtr<IStream> dataStream;
+            CreateStreamOnHGlobal(nullptr, true, dataStream.GetAddressOf());
+            RETURN_NULL_IF_FAILED(_idStream->InitializeFromIStream(dataStream.Get()));
         } else {
             // We are not currently handling data consumer as destination because data consumer is not implemented in WinObjC
             UNIMPLEMENTED_WITH_MSG("Destination as Data Consumer is not handled right now");
@@ -178,11 +185,11 @@ void setVariantFromDictionary(CFDictionaryRef dictionary,
         } else if (propertyType == VT_UI4) {
             propertyToWrite.ulVal = (unsigned long)[(id)CFDictionaryGetValue(dictionary, key) unsignedLongValue];      
         } else if (propertyType == VT_UI8) {
-            double doubleOut = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
-            setHighLowPartsUnsigned(&propertyToWrite.uhVal, doubleOut);
+            double dictionaryValue = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
+            setHighLowPartsUnsigned(&propertyToWrite.uhVal, dictionaryValue);
         } else if (propertyType == VT_I8) {
-            double doubleOut = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
-            setHighLowPartsSigned(&propertyToWrite.hVal, doubleOut);
+            double dictionaryValue = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
+            setHighLowPartsSigned(&propertyToWrite.hVal, dictionaryValue);
         } else if (propertyType == VT_LPSTR) {
             propertyToWrite.pszVal = (char*)[(NSString*)CFDictionaryGetValue(dictionary, key) UTF8String];
         } else if (propertyType == VT_LPWSTR) {
@@ -193,7 +200,10 @@ void setVariantFromDictionary(CFDictionaryRef dictionary,
             propertyToWrite.blob.cbSize = [blobData length];
             propertyToWrite.blob.pBlobData = (unsigned char*)[blobData bytes];
         } else {
-            NSTraceInfo(TAG, @"Encountered unknown value type when attempting to write property\n");
+            NSString* pathNSString = [[NSString alloc] initWithBytes:path
+                                                              length:wcslen(path)*sizeof(wchar_t)
+                                                            encoding:NSUnicodeStringEncoding];
+            NSTraceInfo(TAG, @"Encountered unknown value type when attempting to write property %@\n", pathNSString);
             return;
         }
 
@@ -531,7 +541,7 @@ void writeJPEGProperties(IWICMetadataQueryWriter* propertyWriter, CFDictionaryRe
     // Manually writing constant values to properties when they don't come out of a dictionary
     PropVariantInit(&propertyToWrite);
     propertyToWrite.vt = VT_UI2;
-    propertyToWrite.uiVal = 8; // We are always using 8 bits per channel per pixel right now
+    propertyToWrite.uiVal = c_bitsPerColorChannel; // Images from CGImageSource are always 32bpp, or 8 bits per channel
     writePropertyToFrame(&propertyToWrite, L"/app1/ifd/{ushort=258}", propertyWriter);
 
     // For these properties, PropVariantInit nulls the fields for the propertyToWrite, which is the behavior we want when we pass it
@@ -671,7 +681,7 @@ void writeTIFFProperties(IWICMetadataQueryWriter* propertyWriter,
 
     PropVariantInit(&propertyToWrite);
     propertyToWrite.vt = VT_UI2;
-    propertyToWrite.uiVal = 8; // We are always using 8 bits per channel per pixel right now
+    propertyToWrite.uiVal = c_bitsPerColorChannel; // Images from CGImageSource are always 32bpp, or 8 bits per channel
     writePropertyToFrame(&propertyToWrite, L"/ifd/{ushort=258}", propertyWriter);
 
     PropVariantInit(&propertyToWrite);
@@ -861,19 +871,6 @@ void writePNGProperties(IWICMetadataQueryWriter* propertyWriter, CFDictionaryRef
                                  VT_UI1,
                                  L"/sRGB/RenderingIntent",
                                  propertyWriter);
-
-        if (CFDictionaryContainsKey(pngDictionary, kCGImagePropertyPNGChromaticities)) {
-            // Not handling this property at the moment
-            PropVariantInit(&propertyToWrite);
-            propertyToWrite.vt = VT_VECTOR | VT_UI1;
-            NSString* pngChromaticities = (NSString*)CFDictionaryGetValue(pngDictionary, kCGImagePropertyPNGChromaticities);
-            propertyToWrite.caub.cElems = 0;
-            for (int timeStampIndex = 0; timeStampIndex < propertyToWrite.cauh.cElems; timeStampIndex++) {
-                propertyToWrite.caub.pElems[timeStampIndex] = 0;
-            }
-            UNIMPLEMENTED_WITH_MSG("PNG Chromaticities are not supported right now.");
-            // Metadata name is L"/chrominance/TableEntry", not writing at the moment
-        }
     }
 }
 
@@ -898,7 +895,7 @@ CGImageDestinationRef CGImageDestinationCreateWithDataConsumer(CGDataConsumerRef
 CGImageDestinationRef CGImageDestinationCreateWithData(CFMutableDataRef data, CFStringRef type, size_t count, CFDictionaryRef options) {
     RETURN_NULL_IF(!data);
     
-    return (CGImageDestinationRef)[[ImageDestination alloc] initToDestination:count type:type data:data url:NULL];
+    return (CGImageDestinationRef)[[ImageDestination alloc] initToDestination:count type:type data:data url:nullptr];
 }
 
 /**
@@ -909,7 +906,7 @@ CGImageDestinationRef CGImageDestinationCreateWithData(CFMutableDataRef data, CF
 CGImageDestinationRef CGImageDestinationCreateWithURL(CFURLRef url, CFStringRef type, size_t count, CFDictionaryRef options) {
     RETURN_NULL_IF(!url);
     
-    return (CGImageDestinationRef)[[ImageDestination alloc] initToDestination:count type:type data:NULL url:url];
+    return (CGImageDestinationRef)[[ImageDestination alloc] initToDestination:count type:type data:nullptr url:url];
 }
 
 /**
@@ -929,13 +926,13 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     }
 
     ImageDestination* imageDestination = (ImageDestination*)idst;
-    if (imageDestination.count >= imageDestination.maxCount) {
+    if (imageDestination.count >= imageDestination.expectedCount) {
         NSTraceInfo(TAG, @"Max number of images in destination exceeded\n");
         return;
     }
 
     ComPtr<IWICBitmapFrameEncode> imageBitmapFrame;
-    IPropertyBag2* propertyBag = NULL;
+    ComPtr<IPropertyBag2> propertyBag;
     
     ComPtr<IWICBitmapEncoder> imageEncoder = imageDestination.idEncoder;
 
@@ -945,7 +942,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
         return;
     }
 
-    HRESULT status = imageEncoder->CreateNewFrame(&imageBitmapFrame, &propertyBag);
+    HRESULT status = imageEncoder->CreateNewFrame(&imageBitmapFrame, propertyBag.GetAddressOf());
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"CreateNewFrame failed with status=%x\n", status);
         return;
@@ -957,13 +954,12 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     if (properties && CFDictionaryContainsKey(properties, kCGImageDestinationLossyCompressionQuality) &&
             imageDestination.type == typeJPEG) {
         PROPBAG2 option = { 0 };
-        std::wstring quality(L"ImageQuality");
-        option.pstrName = (wchar_t*)quality.c_str();
+        option.pstrName = (wchar_t*)L"ImageQuality";
         VARIANT varValue;    
         VariantInit(&varValue);
         varValue.vt = VT_R4;
-        varValue.bVal = [(id)CFDictionaryGetValue(properties, kCGImageDestinationLossyCompressionQuality) doubleValue];
-        if (varValue.bVal >= 0.0 && varValue.bVal <= 1.0) {
+        varValue.fltVal = [(id)CFDictionaryGetValue(properties, kCGImageDestinationLossyCompressionQuality) doubleValue];
+        if (varValue.fltVal >= 0.0 && varValue.fltVal <= 1.0) {
             status = propertyBag->Write(1, &option, &varValue);
             if (!SUCCEEDED(status)) {
                 NSTraceInfo(TAG, @"Property Bag Write failed with status=%x\n", status);
@@ -972,7 +968,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
         }
     }
 
-    status = imageBitmapFrame->Initialize(propertyBag);
+    status = imageBitmapFrame->Initialize(propertyBag.Get());
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"Frame Initialize failed with status=%x\n", status);
         return;
@@ -986,17 +982,6 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"Set Frame Size failed with status=%x\n", status);
         return;
-    }
-
-    // TIFF on iOS will only set a resolution if both DPIWidth and DPIHeight are specified, with no default values
-    // This gets written as part of writing the frame metadata, so no else part here.
-    if (imageDestination.type != typeTIFF) {
-        // Using resolution of 72 dpi as standard for now, this seems to only affect metadata and not the image itself
-        status = imageBitmapFrame->SetResolution(72.0, 72.0);
-        if (!SUCCEEDED(status)) {
-            NSTraceInfo(TAG, @"Set Frame Resolution failed with status=%x\n", status);
-            return;
-        }
     }
 
     // Setting up writing properties to individual image frame, bitmaps cannot have metadata
@@ -1061,12 +1046,11 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
                                                   (unsigned char*)[imageByteData bytes],
                                                   &inputImage);
     [imageByteData release];
+    CGDataProviderRelease(provider);
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"CreateBitmapFromMemory failed with status=%x\n", status);
         return;
     }
-
-    CGDataProviderRelease(provider);
 
     ComPtr<IWICBitmapSource> inputBitmapSource;
     status = WICConvertBitmapSource(formatGUID, inputImage.Get(), &inputBitmapSource);
@@ -1075,7 +1059,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
         return;
     }
 
-    status = imageBitmapFrame->WriteSource(inputBitmapSource.Get(), NULL);
+    status = imageBitmapFrame->WriteSource(inputBitmapSource.Get(), nullptr);
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"Write Source failed with status=%x\n", status);
         return;
@@ -1185,7 +1169,7 @@ bool CGImageDestinationFinalize(CGImageDestinationRef idst) {
 
     ImageDestination* imageDestination = (ImageDestination*)idst;
 
-    if (imageDestination.count != imageDestination.maxCount) {
+    if (imageDestination.count != imageDestination.expectedCount) {
         NSTraceInfo(TAG, @"CGImageDestinationFinalize image destination does not have enough images\n");
         return false;
     }
@@ -1205,11 +1189,15 @@ bool CGImageDestinationFinalize(CGImageDestinationRef idst) {
         return false;
     }
 
+    // If we are writing an image to memory, it needs to be saved to an NSMutableData pointer passed in on init.
+    // If we create a stream on the mutable data object, it moves around in memory while being written to. To get around this,
+    // we save the image into a private IStream and just save the NSMutableData pointer. When finalizing, if we have
+    // anything in outData, then that means we saved an NSMutableData pointer, which we then copy the private buffer into.
     if (imageDestination.outData) {
         NSMutableData* dataNSPointer = static_cast<NSMutableData*>(imageDestination.outData);
 
         // Seek to beginning of stream after image data all written
-        status = imageStream->Seek({0}, STREAM_SEEK_SET, NULL);
+        status = imageStream->Seek({0}, STREAM_SEEK_SET, nullptr);
         if (!SUCCEEDED(status)) {
             NSTraceInfo(TAG, @"Stream Seek failed with status=%x\n", status);
             return false;

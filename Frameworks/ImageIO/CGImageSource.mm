@@ -193,7 +193,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Add the JFIF dictionary to the properties if there are any JFIF properties
-    if ([[jfifProperties allKeys] count] != 0) {
+    if ([jfifProperties count] != 0) {
         [properties setObject:jfifProperties forKey:(id)kCGImagePropertyJFIFDictionary];
     }
 
@@ -312,7 +312,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Add the GPS dictionary to the properties if there are any GPS properties
-    if ([[gpsProperties allKeys] count] != 0) {
+    if ([gpsProperties count] != 0) {
         [properties setObject:gpsProperties forKey:(id)kCGImagePropertyGPSDictionary];
     }
 
@@ -471,7 +471,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
     
     // Add the Exif dictionary to the properties if there are any Exif properties
-    if ([[exifProperties allKeys] count] != 0) {
+    if ([exifProperties count] != 0) {
         [properties setObject:exifProperties forKey:(id)kCGImagePropertyExifDictionary];
     }
 
@@ -501,7 +501,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Add the TIFF dictionary to the properties if there are any TIFF properties
-    if ([[tiffProperties allKeys] count] != 0) {
+    if ([tiffProperties count] != 0) {
         [properties setObject:tiffProperties forKey:(id)kCGImagePropertyTIFFDictionary];
     }
 
@@ -630,7 +630,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Add the TIFF dictionary to the properties if there are any TIFF properties
-    if ([[tiffProperties allKeys] count] != 0) {
+    if ([tiffProperties count] != 0) {
         [properties setObject:tiffProperties forKey:(id)kCGImagePropertyTIFFDictionary];
     }
 
@@ -750,7 +750,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
     
     // Add the GPS dictionary to the properties if there are any GPS properties
-    if ([[gpsProperties allKeys] count] != 0) {
+    if ([gpsProperties count] != 0) {
         [properties setObject:gpsProperties forKey:(id)kCGImagePropertyGPSDictionary];
     }
 
@@ -904,7 +904,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     }
 
     // Add the Exif dictionary to the properties if there are any Exif properties
-    if ([[exifProperties allKeys] count] != 0) {
+    if ([exifProperties count] != 0) {
         [properties setObject:exifProperties forKey:(id)kCGImagePropertyExifDictionary];
     }
 
@@ -954,7 +954,7 @@ CFDictionaryRef readGIFProperties(IWICMetadataQueryReader* imageMetadataReader) 
     }
 
     // Add the GIF dictionary to the properties if there are any GIF properties
-    if ([[gifProperties allKeys] count] != 0) {
+    if ([gifProperties count] != 0) {
         [properties setObject:gifProperties forKey:(id)kCGImagePropertyGIFDictionary];
     }
 
@@ -984,15 +984,8 @@ CFDictionaryRef readPNGProperties(IWICMetadataQueryReader* imageMetadataReader) 
         [pngProperties setObject:[NSNumber numberWithInt:propertyValue.bVal] forKey:(id)kCGImagePropertyPNGsRGBIntent];
     }
 
-    PropVariantClear(&propertyValue);
-    if (SUCCEEDED(imageMetadataReader->GetMetadataByName(L"/chrominance/TableEntry", &propertyValue)) && 
-        propertyValue.vt == (VT_VECTOR | VT_UI1)) {
-        // [pngProperties setObject:[NSArray arrayWithObjects:(id)propertyValue.caub.pElems count:propertyValue.caub.cElems] 
-        //                   forKey:(id)kCGImagePropertyPNGChromaticities];
-    }
-
     // Add the PNG dictionary to the properties if there are any PNG properties
-    if ([[pngProperties allKeys] count] != 0) {
+    if ([pngProperties count] != 0) {
         [properties setObject:pngProperties forKey:(id)kCGImagePropertyPNGDictionary];
     }
 
@@ -1349,7 +1342,7 @@ size_t CGImageSourceGetCount(CGImageSourceRef isrc) {
     if (!SUCCEEDED(status)) {
         NSTraceInfo(TAG, @"IWICImagingFactory::CreateStream failed with status=%x\n", status);
         return 0;
-    } 
+    }
 
     unsigned char* imageByteArray = (unsigned char*)[imageData bytes];
     int imageLength = [imageData length];
@@ -1430,7 +1423,7 @@ CFDictionaryRef CGImageSourceCopyProperties(CGImageSourceRef isrc, CFDictionaryR
             }
         }
 
-        if ([[gifProperties allKeys] count] != 0) {
+        if ([gifProperties count] != 0) {
             [properties setObject:gifProperties forKey:(id)kCGImagePropertyGIFDictionary];
         }
     }

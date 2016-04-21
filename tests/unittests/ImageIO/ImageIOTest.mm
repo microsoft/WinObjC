@@ -1154,9 +1154,9 @@ TEST(ImageIO, DestinationOptionsTest) {
     const wchar_t* outFile = L"outphotoLQ.jpg";
     CFURLRef imgUrl = getURLRefFromFilename(outFile);
 
-    // Note that to verify quality is much lower with quality = 0.0, you have to open the image file.
+    // Note that to verify quality is much lower with quality = 0.1, you have to open the image file.
     // There is no option for image quality stored with the file as that would not make sense.
-    float quality = 0.0;
+    float quality = 0.1;
     NSNumber* encodeQuality = [NSNumber numberWithFloat:quality];
     NSDictionary* encodeOptions = @{@"kCGImageDestinationLossyCompressionQuality":encodeQuality};
 
@@ -1428,7 +1428,7 @@ TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(jfifDictionary, kCGImagePropertyJFIFXDensity),
         "FAILED: ImageIOTest::JFIF dictionary does not contain XDensity");
     double actualXDensity = [(id)CFDictionaryGetValue(jfifDictionary, kCGImagePropertyJFIFXDensity) doubleValue];
-    ASSERT_NEAR_MSG(actualXDensity, 72.0, 0.01, "FAILED: ImageIOTest::XDensity mismatch");
+    ASSERT_NEAR_MSG(actualXDensity, 0.0, 0.01, "FAILED: ImageIOTest::XDensity mismatch"); // Not set, should be 0
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGPSDictionary),
         "FAILED: ImageIOTest::GPS dictionary not found");

@@ -34,7 +34,7 @@ using namespace Microsoft::WRL;
 @interface ImageDestination : NSObject
 @property (atomic)enum imageTypes type;
 @property (atomic)size_t count;
-@property (atomic)size_t maxCount;
+@property (atomic)size_t expectedCount;
 @property (atomic)CFMutableDataRef outData;
 @property (atomic)ComPtr<IWICImagingFactory> idFactory;
 @property (atomic)ComPtr<IWICStream> idStream;
