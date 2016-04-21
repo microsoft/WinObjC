@@ -517,7 +517,6 @@ void DisplayNode::SetContents(winobjc::Id& bitmap, float width, float height, fl
     XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     if (((void*)bitmap) != NULL) {
         Windows::UI::Xaml::Media::ImageSource ^ contents = (Windows::UI::Xaml::Media::ImageSource ^ )(Platform::Object ^ )bitmap;
-
         xamlNode->setContentImage(contents, width, height, scale);
     } else {
         xamlNode->setContentImage(nullptr, width, height, scale);
@@ -531,12 +530,8 @@ void DisplayNode::SetContentsElement(winobjc::Id& elem, float width, float heigh
 }
 
 void DisplayNode::SetContentsElement(winobjc::Id& elem) {
-    XamlCompositor::Controls::CALayerXaml ^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::FrameworkElement ^ contents = (Windows::UI::Xaml::FrameworkElement ^ )(Platform::Object ^ )elem;
-    float width = static_cast<float>(contents->Width);
-    float height = static_cast<float>(contents->Height);
-    float scale = 1.0f;
-    xamlNode->setContentElement(contents, width, height, scale);
+    SetContentsElement(elem, static_cast<float>(contents->Width), static_cast<float>(contents->Height), 1.0f);
 }
 
 DisplayTextureXamlGlyphs::DisplayTextureXamlGlyphs() {

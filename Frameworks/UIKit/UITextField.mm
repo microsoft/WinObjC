@@ -14,10 +14,13 @@
 //
 //******************************************************************************
 
+#import "AssertARCEnabled.h"
 #import <Starboard.h>
 #import <StubReturn.h>
-#import "CoreGraphics/CGContext.h"
+
+#import <CoreGraphics/CGContext.h>
 #import "CGContextInternal.h"
+
 #import <UIKit/UIView.h>
 #import <UIKit/UIControl.h>
 #import <Foundation/NSTimer.h>
@@ -30,8 +33,10 @@
 #import <UIKit/UIImageView.h>
 #import <UIKit/UITableViewCell.h>
 #import "NSMutableString+Internal.h"
-#import "UIResponderInternal.h"
-#import "UIApplicationInternal.h"
+
+#import <UWP/WindowsUIXamlControls.h>
+
+#import "XamlUtilities.h"
 
 static const wchar_t* TAG = L"UITextField";
 
@@ -39,47 +44,64 @@ NSString* const UITextFieldTextDidBeginEditingNotification = @"UITextFieldTextDi
 NSString* const UITextFieldTextDidChangeNotification = @"UITextFieldTextDidChangeNotification";
 NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidEndEditingNotification";
 
-extern float keyboardBaseHeight;
-static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
+// This is a hidden view control used to steal focus typically when a text field OSK (on screen keyboard) is dismissed.
+@interface _UIHiddenButtonView : UIView
+@end
+
+@implementation _UIHiddenButtonView
+@end
 
 @implementation UITextField {
-    idretaintype(NSString) _text;
-    idretaintype(UIFont) _font;
-    idretain _placeholder;
-    idretain _background;
-    idretaintype(UIColor) __textColor;
-    idretaintype(UIColor) _tintColor;
-    idretain _undoManager;
-    idretaintype(UIImageView) _cursorBlink;
-    idretain _popoverController, _inputController;
-    NSTimer* _cursorTimer;
-    id _delegate;
+    StrongId<NSString> _text;
+    StrongId<NSString> _placeHolder;
+    StrongId<UIFont> _font;
+    StrongId<UIColor> _textColor;
+    StrongId<UIColor> _backgroundColor;
     UITextAlignment _alignment;
-    idretaintype(UIView) _leftView, _rightView, _inputView, _inputAccessoryView;
     UITextBorderStyle _borderStyle;
-    CGRect _leftViewRect;
-    bool _notifiedBegin;
-    UITextFieldViewMode _clearButtonMode;
-    BOOL _isEditing;
     BOOL _secureTextMode;
-    unsigned _returnKeyType;
+    BOOL _isFirstResponder;
 
+    // backing keyboard Behavior
+    UITextAutocapitalizationType _autoCapitalizatonType;
     UIKeyboardType _keyboardType;
-    int _showLastCharLen;
-    int _showLastCharBlinkCount; //  Piggyback the disappearing password character on the cursor blink
-}
-- (void)setTextCentersHorizontally:(BOOL)center {
+    UITextAutocorrectionType _autoCorrectionType;
+    UITextSpellCheckingType _spellCheckingType;
+    BOOL _enablesReturnKeyAutomatically;
+
+    // backing xaml textbox and passwordBox
+    WXCTextBox* _textBox;
+    WXCPasswordBox* _passwordBox;
+
+    // lock use to access the properties
+    StrongId<NSRecursiveLock> _secureModeLock;
+
+    // dummy control to steal the focus
+    StrongId<WXCButton> _dummyButton;
+    StrongId<_UIHiddenButtonView> _hiddenView;
 }
 
+//
+// Properties Accessing the Text Attributes
+//
 /**
  @Status Interoperable
 */
 - (void)setText:(NSString*)text {
-    if (text != nil) {
-        _text = [text copy];
-        [self setNeedsDisplay];
-    } else {
-        _text = nil;
+    if (![_text isEqualToString:text]) {
+        if (text != nil) {
+            _text = [text copy];
+        } else {
+            _text = nil;
+        }
+
+        [_secureModeLock lock];
+        if (_secureTextMode) {
+            _passwordBox.password = _text;
+        } else {
+            _textBox.text = _text;
+        }
+        [_secureModeLock unlock];
     }
 }
 
@@ -91,10 +113,85 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 }
 
 /**
+ @Status Stub
+*/
+- (void)setAttributedText:(NSString*)attributedText {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSAttributedString*)attributedText {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
  @Status Interoperable
+*/
+- (void)setPlaceholder:(NSString*)placeholder {
+    if (![_placeHolder isEqualToString:placeholder]) {
+        if (placeholder != nil) {
+            _placeHolder = [placeholder copy];
+        } else {
+            _placeHolder = nil;
+        }
+
+        [_secureModeLock lock];
+        if (_secureTextMode) {
+            _passwordBox.placeholderText = _placeHolder;
+        } else {
+            _textBox.placeholderText = _placeHolder;
+        }
+        [_secureModeLock unlock];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)placeholder {
+    return _placeHolder;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setAttributedPlaceholder:(NSString*)atributedStr {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSAttributedString*)attributedPlaceholder {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setDefaultTextAttributes:(NSDictionary*)defaultAttributes {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSDictionary*)defaultTextAttributes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
 */
 - (void)setFont:(UIFont*)font {
     _font = font;
+    UNIMPLEMENTED();
+    // TODO: need map UIFont with fontFamily/FontSize/FontWeight/FontStyle on target
 }
 
 /**
@@ -105,120 +202,192 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 }
 
 /**
- @Status Caveat
- @Notes May not be fully implemented
-*/
-- (instancetype)initWithCoder:(NSCoder*)coder {
-    [super initWithCoder:coder];
-    _font = [coder decodeObjectForKey:@"UIFont"];
-    _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
-    UITextBorderStyle borderStyle = (UITextBorderStyle)[coder decodeInt32ForKey:@"UIBorderStyle"];
-    [self setBorderStyle:borderStyle];
-    _keyboardType = (UIKeyboardType)[coder decodeInt32ForKey:@"UIKeyboardType"];
-    _secureTextMode = [coder decodeInt32ForKey:@"UISecureTextEntry"];
-    //[self setBackgroundColor:[UIColor whiteColor]];
-    _text = [coder decodeObjectForKey:@"UIText"];
-    __textColor = [coder decodeObjectForKey:@"UITextColor"];
-    if (_text == nil) {
-        _text = @"";
-    }
-    if (__textColor == nil) {
-        __textColor = [UIColor blackColor];
-    }
-    _placeholder = [coder decodeObjectForKey:@"UIPlaceholder"];
-    _undoManager.attach([NSUndoManager new]);
-
-    id image = [[UIImage imageNamed:@"/img/TextFieldCursor@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(4, 0, 4, 0)];
-    _cursorBlink.attach([[UIImageView alloc] initWithImage:image]);
-    [_cursorBlink setHidden:TRUE];
-    [self addSubview:_cursorBlink];
-    [self setBackgroundColor:[UIColor clearColor]];
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithFrame:(CGRect)frame {
-    [super initWithFrame:frame];
-    _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
-    __textColor = [UIColor blackColor];
-    _text = @"";
-    [self setOpaque:FALSE];
-    _undoManager.attach([NSUndoManager new]);
-
-    id image = [[UIImage imageNamed:@"/img/TextFieldCursor@2x.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:8];
-    _cursorBlink.attach([[UIImageView alloc] initWithImage:image]);
-    [_cursorBlink setHidden:TRUE];
-    [self addSubview:_cursorBlink];
-    [self setBackgroundColor:[UIColor clearColor]];
-    return self;
-}
-
-/**
- @Status Stub
-*/
-- (void)setMinimumFontSize:(float)size {
-    UNIMPLEMENTED();
-}
-
-/**
  @Status Interoperable
 */
 - (void)setTextColor:(UIColor*)color {
-    __textColor = color;
-    [self setNeedsDisplay];
+    _textColor = color;
+
+    [_secureModeLock lock];
+    if (_secureTextMode) {
+        _passwordBox.foreground = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_textColor]];
+    } else {
+        _textBox.foreground = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_textColor]];
+    }
+    [_secureModeLock unlock];
 }
 
 /**
  @Status Interoperable
 */
-- (void)setDelegate:(id)delegate {
-    _delegate = delegate;
+- (UIColor*)textColor {
+    return _textColor;
 }
 
 /**
  @Status Interoperable
 */
-- (id)delegate {
-    return _delegate;
+- (void)setBackgroundColor:(UIColor*)color {
+    _backgroundColor = color;
+
+    [_secureModeLock lock];
+    if (_secureTextMode) {
+        _passwordBox.background = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+    } else {
+        _textBox.background = [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:_backgroundColor]];
+    }
+    [_secureModeLock unlock];
 }
 
 /**
  @Status Interoperable
 */
-- (void)setEditingDelegate:(id)delegate {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)setClearButtonMode:(UITextFieldViewMode)mode {
-    UNIMPLEMENTED();
-    _clearButtonMode = mode;
-}
-
-/**
- @Status Stub
-*/
-- (UITextFieldViewMode)clearButtonMode {
-    UNIMPLEMENTED();
-    return _clearButtonMode;
+- (UIColor*)backgroundColor {
+    return _backgroundColor;
 }
 
 /**
  @Status Interoperable
 */
 - (void)setTextAlignment:(UITextAlignment)alignment {
+    _alignment = alignment;
+
+    [_secureModeLock lock];
+    if (!_secureTextMode) {
+        // passwordBox does not support text alignment
+        _textBox.textAlignment = [XamlUtilities convertUITextAlignmentToWXTextAlignment:_alignment];
+    }
+    [_secureModeLock unlock];
 }
 
 /**
  @Status Interoperable
 */
+- (UITextAlignment)textAlignment {
+    return _alignment;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setTypingAttributes:(NSDictionary*)typingAttributes {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (NSDictionary*)typingAttributes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+//
+// Properties: Sizing the Text Field’s Text
+//
+/**
+ @Status Stub
+*/
+- (void)setAdjustsFontSizeToFitWidth:(BOOL)adjust {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)adjustsFontSizeToFitWidth:(BOOL)adjust {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setMinimumFontSize:(CGFloat)fontSize {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGFloat)minimumFontSize {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+//
+// Managing the Editing Behavior
+//
+/**
+ @Status Stub
+*/
+- (BOOL)isEditing {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setClearsOnBeginEditing:(BOOL)value {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)clearOnBeginEditing {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setclearsOnInsertion:(BOOL)value {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)clearsOnInsertion {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setAllowsEditingTextAttributes:(BOOL)value {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (BOOL)allowsEditingTextAttributes {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+//
+// Setting the View' Background Appearance
+//
+/**
+ @Status Caveat
+ @Notes does not support UITextBorderStyleBezel
+*/
 - (void)setBorderStyle:(UITextBorderStyle)style {
-    _borderStyle = style;
-    [self setNeedsDisplay];
+    if (_borderStyle != style) {
+        _borderStyle = style;
+
+        [_secureModeLock lock];
+        if (_secureTextMode) {
+            [XamlUtilities setControlBorderStyle:_passwordBox borderStyle:_borderStyle];
+        } else {
+            [XamlUtilities setControlBorderStyle:_textBox borderStyle:_borderStyle];
+        }
+        [_secureModeLock unlock];
+    }
 }
 
 /**
@@ -231,413 +400,64 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 /**
  @Status Stub
 */
-- (void)setAutocapitalizationType:(UITextAutocapitalizationType)type {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setKeyboardType:(UIKeyboardType)type {
-    _keyboardType = type;
-}
-
-/**
- @Status Interoperable
-*/
-- (UIKeyboardType)keyboardType {
-    return _keyboardType;
-}
-
-/**
- @Status Stub
-*/
-- (void)setKeyboardAppearance:(UIKeyboardAppearance)appearance {
-    UNIMPLEMENTED();
-}
-
-- (void)setReturnKeyType:(UIReturnKeyType)type {
-    _returnKeyType = type;
-}
-
-- (UIReturnKeyType)returnKeyType {
-    return (UIReturnKeyType)_returnKeyType;
-}
-
-/**
- @Status Stub
-*/
-- (void)setSpellCheckingType:(UITextSpellCheckingType)type {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setPlaceholder:(NSString*)str {
-    _placeholder = [str copy];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)placeholder {
-    return _placeholder;
-}
-
-/**
- @Status Stub
-*/
-- (void)setEnablesReturnKeyAutomatically:(BOOL)type {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)setClearsOnBeginEditing:(BOOL)type {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Stub
-*/
-- (void)setAutocorrectionType:(UITextAutocorrectionType)type {
-    UNIMPLEMENTED();
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setSecureTextEntry:(BOOL)secure {
-    _secureTextMode = secure;
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setBackground:(UIImage*)image {
-    _background = image;
-    [self setNeedsDisplay];
+    UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (UIImage*)background {
-    return _background;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)drawRect:(CGRect)rect {
-    id text = _text;
-    id textColor = __textColor;
-    bool _isPlaceholder = false;
-    if (_text == nil || [_text length] == 0) {
-        text = _placeholder;
-        textColor = [UIColor lightGrayColor];
-        _isPlaceholder = true;
-    } else {
-        if (_secureTextMode) {
-            WORD* chars = (WORD*)IwMalloc(([text length] + 1) * sizeof(WORD));
-            [text getCharacters:chars];
-            for (unsigned i = 0; i < [text length] - _showLastCharLen; i++) {
-                chars[i] = '*';
-            }
-            text = [NSString stringWithCharacters:chars length:[text length]];
-            IwFree(chars);
-        }
-    }
-
-    if (_borderStyle != UITextBorderStyleNone) {
-        if ([[self layer] borderWidth] == 0.0f || _borderStyle == UITextBorderStyleRoundedRect) {
-            switch (_borderStyle) {
-                case UITextBorderStyleLine: {
-                    // If a background image is set, it takes preference over all borderstyles and the background image is shown, except for
-                    // UITextBorderStyleRoundedRect.
-                    if (_background != nil) {
-                        break;
-                    }
-
-                    rect = [self bounds];
-                    rect.origin.x += 1.0f;
-                    rect.origin.y += 1.0f;
-                    rect.size.width -= 2.0f;
-                    rect.size.height -= 2.0f;
-
-                    CGContextRef curContext = UIGraphicsGetCurrentContext();
-
-                    if ([self isFirstResponder]) {
-                        CGContextSetStrokeColorWithColor(curContext,
-                                                         (CGColorRef)(_tintColor ? [_tintColor CGColor] :
-                                                                                   [[UIColor windowsControlFocusedColor] CGColor]));
-                    } else {
-                        CGContextSetStrokeColorWithColor(curContext, (CGColorRef)[UIColor blackColor]);
-                    }
-                    CGContextStrokeRect(curContext, rect);
-                    break;
-                }
-
-                case UITextBorderStyleRoundedRect: {
-                    rect = [self bounds];
-                    id image =
-                        [[UIImage imageNamed:@"/img/TextFieldRounded@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(16, 16, 16, 16)];
-                    rect = [self bounds];
-                    [image drawInRect:rect];
-                    break;
-                }
-
-                case UITextBorderStyleBezel: {
-                    // If a background image is set, it takes preference over all borderstyles and the background image is shown, except for
-                    // UITextBorderStyleRoundedRect.
-                    if (_background != nil) {
-                        break;
-                    }
-
-                    rect = [self bounds];
-                    id image =
-                        [[UIImage imageNamed:@"/img/TextFieldBezel@2x.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(8, 8, 8, 8)];
-                    rect = [self bounds];
-                    [image drawInRect:rect];
-                    break;
-                }
-
-                case UITextBorderStyleNone:
-                    // Required to suppress warning.
-                    // Execution never reaches here because of the outer if condition.
-                    break;
-
-                default:
-                    TraceWarning(TAG, L"Invalid border style specified: %u", _borderStyle);
-            }
-        }
-    }
-
-    // Out of the 4 border styles that ios supports now, UITextBorderStyleRoundedRect takes preference over background image, for all others
-    // borderstyles if there is a background image, it is shown and not the borderstyle. This is the default behaviour in ios.
-    if (_background != nil && _borderStyle != UITextBorderStyleRoundedRect) {
-        rect = [self bounds];
-        [_background drawInRect:rect];
-    }
-
-    CGContextSetFillColorWithColor(UIGraphicsGetCurrentContext(), (CGColorRef)textColor);
-
-    CGSize size;
-
-    rect = [self bounds];
-    rect.origin.x += 5.0f;
-    rect.size.width -= 10.0f;
-    size = rect.size;
-
-    if (text != nil) {
-        size = [text sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:UILineBreakModeClip];
-    } else {
-        size = [@"" sizeWithFont:_font constrainedToSize:CGSizeMake(size.width, size.height) lineBreakMode:UILineBreakModeClip];
-    }
-
-    rect.origin.x += _leftViewRect.size.width;
-    EbrCenterTextInRectVertically(&rect, &size, _font);
-    size = [text drawInRect:rect withFont:_font lineBreakMode:UILineBreakModeClip alignment:_alignment];
-
-    if (text == nil) {
-        size.width = 0;
-    }
-    switch (_alignment) {
-        case UITextAlignmentCenter:
-            rect.origin.x = rect.origin.x + rect.size.width / 2.0f - size.width / 2.0f;
-            break;
-
-        case UITextAlignmentRight:
-            rect.origin.x = rect.origin.x + rect.size.width - size.width;
-            break;
-    }
-
-    if (!_isPlaceholder) {
-        rect.origin.x += size.width;
-    }
-    rect.size.width = 2;
-    [_cursorBlink setFrame:rect];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-    if (_curState & UIControlStateDisabled) {
-        return;
-    }
-
-    [self becomeFirstResponder];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)deleteBackward {
-    NSRange range;
-    bool proceed = false;
-
-    _showLastCharLen = 0;
-    if (_text == nil) {
-        _text = [NSMutableString new];
-    }
-
-    id oldString = [_text copy];
-    id newString = [NSMutableString new];
-    [newString setString:_text];
-
-    id newChar = @"";
-
-    range.location = [newString length];
-    if (range.location > 0) {
-        range.length = 1;
-        range.location--;
-        [newString deleteCharactersInRange:range];
-        proceed = true;
-    }
-
-    if (proceed) {
-        bool setText = true;
-        if ([_delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)]) {
-            setText = [_delegate textField:self shouldChangeCharactersInRange:range replacementString:newChar] != FALSE;
-        }
-
-        if (setText) {
-            _text = newString;
-            [self sendActionsForControlEvents:UIControlEventEditingChanged];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidChangeNotification" object:self];
-            [self setNeedsDisplay];
-        }
-    }
-}
-
-- (void)_deleteRange:(NSNumber*)num {
-    int numToDelete = [num intValue];
-
-    for (int i = 0; i < numToDelete; i++) {
-        [self deleteBackward];
-    }
-}
-
-- (void)_keyPressed:(unsigned short)key {
-    _showLastCharLen = 0;
-
-    if (key != 13) {
-        if (key == 8) {
-            [self deleteBackward];
-            return;
-        }
-
-        NSRange range;
-
-        id newChar = [NSString stringWithCharacters:&key length:1];
-
-        if (_text == nil) {
-            _text = [NSMutableString new];
-        }
-
-        id oldString = [_text copy];
-        id newString = [NSMutableString new];
-        [newString setString:_text];
-
-        [newString appendString:newChar];
-
-        range.location = [newString length] - 1;
-        range.length = 1;
-
-        bool setText = true;
-        if ([_delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)]) {
-            setText = [_delegate textField:self shouldChangeCharactersInRange:range replacementString:newChar] != FALSE;
-        }
-
-        if (setText) {
-            _text = newString;
-            [self sendActionsForControlEvents:UIControlEventEditingChanged];
-            [self setNeedsDisplay];
-        }
-        _showLastCharLen = 1;
-        _showLastCharBlinkCount = 3;
-    } else {
-        BOOL dismiss = TRUE;
-
-        if ([_delegate respondsToSelector:@selector(textFieldShouldReturn:)]) {
-            dismiss = FALSE;
-            if ([_delegate textFieldShouldReturn:self]) {
-                dismiss = TRUE;
-            }
-        }
-
-        if (dismiss) {
-            if ([_delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
-                [_delegate textFieldDidEndEditing:self];
-            }
-            [self sendActionsForControlEvents:UIControlEventEditingDidEndOnExit];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification" object:self];
-
-            [self resignFirstResponder];
-        }
-    }
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Stub
 */
-- (void)setAdjustsFontSizeToFitWidth:(BOOL)adjust {
+- (void)setDisabledBackground:(UIImage*)image {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Interoperable
+ @Status Stub
+*/
+- (UIImage*)disabledBackground {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+//
+// Managing Overlay Views
+//
+/**
+ @Status Stub
+*/
+- (void)setClearButtonMode:(UITextFieldViewMode)mode {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UITextFieldViewMode)clearButtonMode {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
 */
 - (void)setLeftView:(UIView*)view {
-    _leftView = view;
-    [self setNeedsLayout];
-    [self setNeedsDisplay];
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Stub
-*/
-- (void)setInputAccessoryView:(UIView*)view {
-    UNIMPLEMENTED();
-    _inputAccessoryView = view;
-    [self setNeedsLayout];
-}
-
-/**
- @Status Stub
-*/
-- (UIView*)inputAccessoryView {
-    UNIMPLEMENTED();
-    return _inputAccessoryView;
-}
-
-/**
- @Status Stub
-*/
-- (void)setInputView:(UIView*)view {
-    UNIMPLEMENTED();
-    keyboardBaseHeight = INPUTVIEW_DEFAULT_HEIGHT;
-    _inputView = view;
-    [self setNeedsLayout];
-    [[UIApplication sharedApplication] _keyboardChanged];
-}
-
-/**
- @Status Stub
-*/
-- (UIView*)inputView {
-    UNIMPLEMENTED();
-    return _inputView;
-}
-
-/**
- @Status Interoperable
 */
 - (UIView*)leftView {
-    return _leftView;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -650,11 +470,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 /**
  @Status Stub
 */
+- (UITextFieldViewMode)leftViewMode {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
 - (void)setRightView:(UIView*)view {
     UNIMPLEMENTED();
-    _rightView = view;
-    [self setNeedsLayout];
-    [self setNeedsDisplay];
 }
 
 /**
@@ -662,7 +487,7 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 */
 - (UIView*)rightView {
     UNIMPLEMENTED();
-    return _rightView;
+    return StubReturn();
 }
 
 /**
@@ -673,215 +498,43 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
-- (void)dealloc {
-    _text = nil;
-    _font = nil;
-    _placeholder = nil;
-    __textColor = nil;
-    _background = nil;
-    _undoManager = nil;
-    _cursorBlink = nil;
-    [_cursorTimer invalidate];
-    _leftView = nil;
-    _rightView = nil;
-    _inputAccessoryView = nil;
-    _inputView = nil;
-    _inputController = nil;
-    _tintColor = nil;
-    [super dealloc];
+- (UITextFieldViewMode)rightViewMode {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
-/**
- @Status Interoperable
-*/
-- (void)layoutSubviews {
-    [self setNeedsDisplay];
-    if (_leftView != nil) {
-        CGRect ourBounds;
-        ourBounds = [self bounds];
-
-        CGSize viewSize = { 0.0f, 0.0f };
-        viewSize = [_leftView sizeThatFits:ourBounds.size];
-        _leftViewRect.origin.x = 5.0f;
-        _leftViewRect.size = viewSize;
-        _leftViewRect.origin.y = ourBounds.size.height / 2.0f - _leftViewRect.size.height / 2.0f;
-        [_leftView setFrame:_leftViewRect];
-        [self addSubview:_leftView];
-    }
-}
-
-- (void)_blinkCursor {
-    if ([_cursorBlink isHidden]) {
-        [_cursorBlink setHidden:FALSE];
-    } else {
-        [_cursorBlink setHidden:TRUE];
-    }
-    if (_showLastCharBlinkCount > 0) {
-        _showLastCharBlinkCount--;
-    } else {
-        if (_showLastCharLen != 0) {
-            _showLastCharLen = 0;
-            [self setNeedsDisplay];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)becomeFirstResponder {
-    if (_curState & UIControlStateDisabled) {
-        return FALSE;
-    }
-
-    if ([self isFirstResponder]) {
-        return TRUE;
-    }
-
-    if ([super becomeFirstResponder] == FALSE) {
-        return FALSE;
-    }
-
-    if ([_delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)]) {
-        if (![_delegate textFieldShouldBeginEditing:self]) {
-            return FALSE;
-        }
-    }
-
-    if (_inputView && [_inputView respondsToSelector:@selector(sendActionsForControlEvents:)]) {
-        [static_cast<UIControl*>(_inputView) sendActionsForControlEvents:UIControlEventValueChanged];
-    }
-
-    [[UIApplication sharedApplication] _keyboardChanged];
-
-    _cursorTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_blinkCursor) userInfo:0 repeats:TRUE];
-    [_cursorBlink setHidden:FALSE];
-
-    _isEditing = TRUE;
-
-    [self sendActionsForControlEvents:UIControlEventEditingDidBegin];
-    if ([_delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
-        [_delegate textFieldDidBeginEditing:self];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidBeginEditingNotification" object:self];
-    [self setNeedsDisplay];
-
-    return TRUE;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)resignFirstResponder {
-    if (![self isFirstResponder]) {
-        return TRUE;
-    }
-
-    if (_isEditing) {
-        if ([_delegate respondsToSelector:@selector(textFieldShouldEndEditing:)]) {
-            if ([_delegate textFieldShouldEndEditing:self] == FALSE) {
-                return FALSE;
-            }
-        }
-    }
-    [_cursorTimer invalidate];
-    _cursorTimer = nil;
-
-    [_cursorBlink setHidden:TRUE];
-
-    if (_isEditing) {
-        _showLastCharLen = 0;
-        [self setNeedsDisplay];
-
-        _isEditing = FALSE;
-        [self sendActionsForControlEvents:UIControlEventEditingDidEnd];
-        if ([_delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
-            [_delegate textFieldDidEndEditing:self];
-        }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UITextFieldTextDidEndEditingNotification" object:self];
-    }
-    [super resignFirstResponder];
-
-    [[UIApplication sharedApplication] _keyboardChanged];
-
-    return TRUE;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSUndoManager*)undoManager {
-    return _undoManager;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isEditing {
-    return _isEditing;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setTintColor:(UIColor*)color {
-    _tintColor = color;
-}
-
-/**
- @Status Interoperable
-*/
-- (UIColor*)tintColor {
-    return _tintColor;
-}
-
-/**
- @Status Interoperable
-*/
-- (CGSize)sizeThatFits:(CGSize)curSize {
-    CGSize ret = { 0, 0 };
-
-    if (_font == nil) {
-        [self setFont:[UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]]];
-    }
-
-    CGSize textSize = { 0 }, placeholderSize = { 0 };
-    if (_text != nil) {
-        textSize = [_text sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:UILineBreakModeClip];
-    }
-    if (_placeholder != nil) {
-        placeholderSize =
-            [_placeholder sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:UILineBreakModeClip];
-    }
-
-    if (textSize.width > placeholderSize.width) {
-        ret = textSize;
-    } else {
-        ret = placeholderSize;
-    }
-    if (ret.height == 0.0f) {
-        CGSize size;
-
-        size = [@" " sizeWithFont:_font constrainedToSize:CGSizeMake(curSize.width, curSize.height) lineBreakMode:UILineBreakModeClip];
-        ret.height = size.height;
-    }
-
-    return ret;
-}
-
+//
+// Drawing and positioning Overrides
+//
 /**
  @Status Stub
 */
-- (void)drawPlaceholderInRect:(CGRect)rect {
+- (CGRect)textRectForBounds:(CGRect)bounds {
     UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Stub
 */
 - (void)drawTextInRect:(CGRect)rect {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (CGRect)placeholderRectForBounds:(CGRect)bounds {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)drawPlaceholderInRect:(CGRect)rect {
     UNIMPLEMENTED();
 }
 
@@ -920,25 +573,323 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 /**
  @Status Stub
 */
-- (CGRect)placeholderRectForBounds:(CGRect)bounds {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
-*/
 - (CGRect)rightViewRectForBounds:(CGRect)bounds {
     UNIMPLEMENTED();
     return StubReturn();
 }
 
+//
+// Replacing the System Input Views
+//
 /**
  @Status Stub
 */
-- (CGRect)textRectForBounds:(CGRect)bounds {
+- (void)setInputView:(UIView*)view {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)inputView {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Stub
+*/
+- (void)setInputAccessoryView:(UIView*)view {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIView*)inputAccessoryView {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+//
+// UITextInputTraits protocol defined properties,  Managing the Keyboard Behavior
+//
+/**
+ @Status Stub
+*/
+- (void)setAutocapitalizationType:(UITextAutocapitalizationType)type {
+    _autoCapitalizatonType = type;
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UITextAutocapitalizationType)autocapitalizationType {
+    UNIMPLEMENTED();
+    return _autoCapitalizatonType;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setAutocorrectionType:(UITextAutocorrectionType)type {
+    _autoCorrectionType = type;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UITextAutocorrectionType)autocorrectionType {
+    return _autoCorrectionType;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setSpellCheckingType:(UITextSpellCheckingType)type {
+    _spellCheckingType = type;
+}
+
+/**
+ @Status Interoperable
+*/
+- (UITextSpellCheckingType)spellCheckingType {
+    return _spellCheckingType;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setEnablesReturnKeyAutomatically:(BOOL)enabled {
+    _enablesReturnKeyAutomatically = enabled;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)enablesReturnKeyAutomatically {
+    return _enablesReturnKeyAutomatically;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setKeyboardAppearance:(UIKeyboardAppearance)appearance {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIKeyboardAppearance)keyboardAppearance {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setKeyboardType:(UIKeyboardType)type {
+    _keyboardType = type;
+
+    [_secureModeLock lock];
+    if (_secureTextMode) {
+        _passwordBox.inputScope = [XamlUtilities convertKeyboardTypeToInputScope:_keyboardType secureTextMode:YES];
+    } else {
+        _textBox.inputScope = [XamlUtilities convertKeyboardTypeToInputScope:_keyboardType secureTextMode:NO];
+    }
+    [_secureModeLock unlock];
+}
+
+/**
+ @Status Interoperable
+*/
+- (UIKeyboardType)keyboardType {
+    return _keyboardType;
+}
+
+/**
+ @Status Stub.
+*/
+- (void)setReturnKeyType:(UIReturnKeyType)type {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIReturnKeyType)returnKeyType {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setSecureTextEntry:(BOOL)secure {
+    [_secureModeLock lock];
+    if (_secureTextMode != secure) {
+        _secureTextMode = secure;
+        if (_secureTextMode) {
+            [self _initPasswordBox];
+            [self layer].contentsElement = _passwordBox;
+        } else {
+            [self _initTextBox];
+            [self layer].contentsElement = _textBox;
+        }
+    }
+    [_secureModeLock unlock];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isSecureTextEntry {
+    return _secureTextMode;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCoder:(NSCoder*)coder {
+    if (self = [super initWithCoder:coder]) {
+        _font = [coder decodeObjectForKey:@"UIFont"];
+        _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
+        _borderStyle = (UITextBorderStyle)[coder decodeInt32ForKey:@"UIBorderStyle"];
+        _keyboardType = (UIKeyboardType)[coder decodeInt32ForKey:@"UIKeyboardType"];
+        _secureTextMode = [coder decodeInt32ForKey:@"UISecureTextEntry"];
+        _text = [coder decodeObjectForKey:@"UIText"];
+        _placeHolder = [coder decodeObjectForKey:@"UIPlaceholder"];
+        _textColor = [coder decodeObjectForKey:@"UITextColor"];
+        if (_textColor == nil) {
+            _textColor = [UIColor blackColor];
+        }
+        _backgroundColor = [UIColor lightGrayColor];
+        _isFirstResponder = NO;
+        [self _initTextField];
+    }
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        _font = [UIFont fontWithName:@"Helvetica" size:[UIFont labelFontSize]];
+        _textColor = [UIColor blackColor];
+        _backgroundColor = [UIColor lightGrayColor];
+        _alignment = UITextAlignmentLeft;
+        _secureTextMode = NO;
+        _borderStyle = UITextBorderStyleNone;
+        _spellCheckingType = UITextSpellCheckingTypeDefault;
+        _text = nil;
+        _isFirstResponder = NO;
+        [self _initTextField];
+    }
+
+    return self;
+}
+
+/**
+ @Status Stub
+*/
+- (void)layoutSubviews {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setEnabled:(BOOL)enabled {
+    if (self.secureTextEntry) {
+        self->_textBox.isEnabled = enabled;
+    } else {
+        self->_passwordBox.isEnabled = enabled;
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEnabled {
+    if (self.secureTextEntry) {
+        return self->_passwordBox.isEnabled;
+    } else {
+        return self->_textBox.isEnabled;
+    }
+}
+
+//
+// UIControl defined properties override
+//
+/**
+ @Status Interoperable
+*/
+- (BOOL)becomeFirstResponder {
+    if (_isFirstResponder) {
+        return YES;
+    }
+
+    // Try to become first responder by setting focus
+    if (self.secureTextEntry) {
+        _isFirstResponder = [self->_passwordBox focus:WXFocusStateProgrammatic];
+    } else {
+        _isFirstResponder = [self->_textBox focus:WXFocusStateProgrammatic];
+    }
+
+    return _isFirstResponder;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isFirstResponder {
+    return _isFirstResponder;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)resignFirstResponder {
+    if (![self isFirstResponder]) {
+        return YES;
+    }
+
+    // Lost focus will take care of firstResponder status
+    [self _killFocus];
+    return YES;
+}
+
+/**
+ @Status Stub
+*/
+- (void)setTintColor:(UIColor*)color {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (UIColor*)tintColor {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    [self becomeFirstResponder];
+}
+
+//
+// UIKeyInput Protocol related methods
+//
+/**
+ @Status Stub
+*/
+- (void)deleteBackward {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -986,6 +937,215 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 - (CGRect)caretRectForPosition:(UITextPosition*)position {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+// Kill the focus on this UITextField
+- (void)_killFocus {
+    [_dummyButton focus:WXFocusStateProgrammatic];
+}
+
+// Handler when control GotFocus
+- (void)_setupControlGotFocusHandler:(WXCControl*)control {
+    __weak UITextField* weakSelf = self;
+    [control addGotFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf) {
+            // when GotFocus, check delegate (if exits) to see if it allows start editing
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldBeginEditing:)] &&
+                ![strongSelf.delegate textFieldShouldBeginEditing:strongSelf]) {
+                // delegate says NO, but we already got the focus at this point, need to kill the focus on this control
+                [strongSelf _killFocus];
+                return;
+            }
+
+            // no one says NO, update first responder to YES
+            strongSelf->_isFirstResponder = YES;
+
+            // more delegate update
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldDidBeginEditing:)]) {
+                [strongSelf.delegate textFieldDidBeginEditing:strongSelf];
+            }
+
+            // more notification
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [strongSelf sendActionsForControlEvents:UIControlEventEditingDidBegin];
+                               [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidBeginEditingNotification
+                                                                                   object:strongSelf];
+                           });
+        }
+    }];
+}
+
+// Handler when control LostFocus
+- (void)_setupControlLostFocusHandler:(WXCControl*)control {
+    __weak WXCControl* weakControl = control;
+    __weak UITextField* weakSelf = self;
+    [control addLostFocusEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf) {
+            // when LostFocus, check delegate (if exits) to see if it allows end Editing
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldEndEditing:)] &&
+                ![strongSelf.delegate textFieldShouldEndEditing:strongSelf]) {
+                // delegate does not allow edting to be ended, but we already lost the focus
+                // we need re-setting the focus back. it will trigger GotFocusEvent again on this control
+                // and then it will update the firstResponder status as YES
+                [weakControl focus:WXFocusStateProgrammatic];
+                return;
+            }
+
+            // no delegate say no, update firstResponder status to be NO
+            strongSelf->_isFirstResponder = NO;
+
+            // more delegate update
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldDidEndEditing:)]) {
+                [strongSelf.delegate textFieldDidEndEditing:strongSelf];
+            }
+
+            // more notification
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [strongSelf sendActionsForControlEvents:UIControlEventEditingDidEnd];
+                               [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidEndEditingNotification
+                                                                                   object:strongSelf];
+                           });
+        }
+    }];
+}
+
+// Handler when KeyDown
+- (void)_setupControlKeyDownHandler:(WXCControl*)control {
+    __weak UITextField* weakSelf = self;
+
+    // hooking up keydown event to process ENTER key
+    [control addKeyDownEvent:^void(RTObject* sender, WUXIKeyRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf && e.key == WSVirtualKeyEnter) {
+            BOOL dismissKeyboard = TRUE;
+
+            // check with delegate if should resign firstResponder and dismiss the keyboard
+            if ([strongSelf.delegate respondsToSelector:@selector(textFieldShouldReturn:)]) {
+                dismissKeyboard = [strongSelf.delegate textFieldShouldReturn:strongSelf];
+            }
+
+            if (dismissKeyboard) {
+                [strongSelf resignFirstResponder];
+            }
+            e.handled = YES;
+        } else {
+            e.handled = NO;
+        }
+    }];
+}
+
+// Helper to Initialize textbox
+- (void)_initTextBox {
+    self->_textBox = [WXCTextBox make];
+    self->_passwordBox = nil;
+    __weak UITextField* weakSelf = self;
+
+    // setting up textbox properties, e.g., foreground, textalignment, border, and input scope, text content etc...
+    [self->_textBox addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf->_textBox.background =
+                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+            strongSelf->_textBox.foreground =
+                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.textColor]];
+            strongSelf->_textBox.textAlignment = [XamlUtilities convertUITextAlignmentToWXTextAlignment:strongSelf.textAlignment];
+            [XamlUtilities setControlBorderStyle:strongSelf->_textBox borderStyle:strongSelf.borderStyle];
+            strongSelf->_textBox.inputScope = [XamlUtilities convertKeyboardTypeToInputScope:strongSelf->_keyboardType secureTextMode:NO];
+            strongSelf->_textBox.text = strongSelf.text;
+            strongSelf->_textBox.placeholderText = strongSelf.placeholder;
+            strongSelf->_textBox.isSpellCheckEnabled = (strongSelf.spellCheckingType == UITextSpellCheckingTypeYes);
+        }
+    }];
+
+    // set up text change event handler
+    [self->_textBox addTextChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf.text = strongSelf->_textBox.text;
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [strongSelf sendActionsForControlEvents:UIControlEventEditingChanged];
+                               [[NSNotificationCenter defaultCenter] postNotificationName:UITextFieldTextDidChangeNotification
+                                                                                   object:strongSelf];
+                           });
+        }
+    }];
+
+    // set up focus and keydown handlers
+    [self _setupControlGotFocusHandler:_textBox];
+    [self _setupControlLostFocusHandler:_textBox];
+    [self _setupControlKeyDownHandler:_textBox];
+}
+
+// Helper to Initialize passwordBox
+- (void)_initPasswordBox {
+    self->_passwordBox = [WXCPasswordBox make];
+    self->_textBox = nil;
+
+    __weak UITextField* weakSelf = self;
+
+    // setting up loadedEvent to update properties
+    [self->_passwordBox addLoadedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf->_passwordBox.background =
+                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.backgroundColor]];
+            strongSelf->_passwordBox.foreground =
+                [WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:strongSelf.textColor]];
+            // passwordBox does not support textAlignment
+
+            // border manipulate the control tempate and must be done after loaded
+            [XamlUtilities setControlBorderStyle:strongSelf->_passwordBox borderStyle:strongSelf.borderStyle];
+            strongSelf->_passwordBox.inputScope =
+                [XamlUtilities convertKeyboardTypeToInputScope:strongSelf->_keyboardType secureTextMode:YES];
+            strongSelf->_passwordBox.password = strongSelf.text;
+            strongSelf->_passwordBox.placeholderText = strongSelf.placeholder;
+        }
+    }];
+
+    // set up password change handler
+    [self->_passwordBox addPasswordChangedEvent:^void(RTObject* sender, WXRoutedEventArgs* e) {
+        __strong UITextField* strongSelf = weakSelf;
+        if (strongSelf) {
+            strongSelf.text = strongSelf->_passwordBox.password;
+            dispatch_async(dispatch_get_main_queue(),
+                           ^{
+                               [strongSelf sendActionsForControlEvents:UIControlEventEditingChanged];
+                           });
+        }
+    }];
+
+    // set up focus and keydown handlers
+    [self _setupControlGotFocusHandler:_passwordBox];
+    [self _setupControlLostFocusHandler:_passwordBox];
+    [self _setupControlKeyDownHandler:_passwordBox];
+}
+
+// main entrance to initialize TextField
+- (void)_initTextField {
+    self->_secureModeLock = [NSRecursiveLock new];
+
+    // creating dummy button and hidden view so that it can be used to steal/kill the focus for this UITextField
+    self->_dummyButton = [WXCButton make];
+    self->_dummyButton.visibility = WXVisibilityVisible;
+    self->_dummyButton.isEnabled = YES;
+    self->_dummyButton.isTabStop = YES;
+
+    self->_hiddenView = [[_UIHiddenButtonView alloc] initWithFrame:{ 0, 0, 0, 0 }];
+    [self->_hiddenView setNativeElement:self->_dummyButton];
+    [self addSubview:self->_hiddenView];
+
+    if (self->_secureTextMode) {
+        [self _initPasswordBox];
+        [self layer].contentsElement = self->_passwordBox;
+    } else {
+        [self _initTextBox];
+        [self layer].contentsElement = self->_textBox;
+    }
 }
 
 @end

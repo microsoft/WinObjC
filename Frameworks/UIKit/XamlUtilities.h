@@ -14,8 +14,23 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#import <UIKit/UIControl.h>
+#import <UWP/WindowsUIXamlControls.h>
 
-@interface TextFieldsViewController : UITableViewController <UITextFieldDelegate>
+@interface XamlUtilities
+// convert UIColor to Color on windows
++ (WUColor*)convertUIColorToWUColor:(UIColor*)uiColor;
+
+// convert UITextAlignment to TextAlignment on windows
++ (WXTextAlignment)convertUITextAlignmentToWXTextAlignment:(UITextAlignment)alignment;
+
+// convert ios KeyboardType to Windows InputScope
++ (WUXIInputScope*)convertKeyboardTypeToInputScope:(UIKeyboardType)keyboardType secureTextMode:(BOOL)secureTextMode;
+
+// Find the named template child in control tempate of a xaml control
++ (WXFrameworkElement*)findTemplateChild:(WXCControl*)control name:(NSString*)name;
+
+// set up border style for a control
++ (void)setControlBorderStyle:(WXCControl*)control borderStyle:(UITextBorderStyle)style;
 
 @end

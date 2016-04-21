@@ -54,6 +54,10 @@ NSString* const kCAAlignmentJustified = @"kCAAlignmentJustified";
     if (self = [super init]) {
         __font = nil;
         _centerVertically = true;
+
+        // CATextLayer is the CALayer for UILabel. By default, when text is centered vertical,
+        // it will take left alignment as well. Thus we should set contentGravity to left
+        self.contentsGravity = kCAGravityLeft;
     }
     return self;
 }

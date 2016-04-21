@@ -88,7 +88,7 @@ public:
     void SetContentsCenter(Windows::Foundation::Rect rect);
     void SetGravity(ContentGravity imgGravity);
     void SetImageContent(Windows::UI::Xaml::Media::ImageSource^ source, float width, float height);
-    void SetImageParams(float width, float height, float scale);
+    void SetContentParams(float width, float height, float scale);
     void SetElementContent(Windows::UI::Xaml::FrameworkElement^ source);
 
 protected:
@@ -319,7 +319,7 @@ private:
     void _CALayerXaml_PointerCanceled(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
     void _CALayerXaml_PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
     void _SetContent(Windows::UI::Xaml::FrameworkElement^ element);
-    LayerContent^ _GetImageContent(bool create = false);
+    LayerContent^ _GetLayerContent(bool create = false);
 };
 
 /// <summary>
