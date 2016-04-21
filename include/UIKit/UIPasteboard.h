@@ -41,18 +41,18 @@ UIKIT_EXPORT NSString* const UIPasteboardRemovedNotification;
 
 UIKIT_EXPORT_CLASS
 @interface UIPasteboard : NSObject
-+ (UIPasteboard*)generalPasteboard STUB_METHOD;
-+ (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create STUB_METHOD;
-+ (UIPasteboard*)pasteboardWithUniqueName STUB_METHOD;
-+ (void)removePasteboardWithName:(NSString*)pasteboardName STUB_METHOD;
-@property (readonly, nonatomic) NSString* name STUB_PROPERTY;
++ (UIPasteboard*)generalPasteboard;
++ (UIPasteboard*)pasteboardWithName:(NSString*)pasteboardName create:(BOOL)create;
++ (UIPasteboard*)pasteboardWithUniqueName;
++ (void)removePasteboardWithName:(NSString*)pasteboardName;
+@property (readonly, nonatomic) NSString* name;
 @property (getter=isPersistent, nonatomic) BOOL persistent STUB_PROPERTY;
 @property (readonly, nonatomic) NSInteger changeCount STUB_PROPERTY;
 - (NSArray*)pasteboardTypes STUB_METHOD;
 - (BOOL)containsPasteboardTypes:(NSArray*)pasteboardTypes STUB_METHOD;
-- (NSData*)dataForPasteboardType:(NSString*)pasteboardType STUB_METHOD;
+- (NSData*)dataForPasteboardType:(NSString*)pasteboardType;
 - (id)valueForPasteboardType:(NSString*)pasteboardType STUB_METHOD;
-- (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType STUB_METHOD;
+- (void)setData:(NSData*)data forPasteboardType:(NSString*)pasteboardType;
 - (void)setValue:(id)value forPasteboardType:(NSString*)pasteboardType STUB_METHOD;
 @property (readonly, nonatomic) NSInteger numberOfItems STUB_PROPERTY;
 - (NSArray*)pasteboardTypesForItemSet:(NSIndexSet*)itemSet STUB_METHOD;
