@@ -106,7 +106,7 @@ enum destinationTypes { toData,
             _outData = data;
 
             ComPtr<IStream> dataStream;
-            CreateStreamOnHGlobal(nullptr, true, dataStream.GetAddressOf());
+            RETURN_NULL_IF_FAILED(CreateStreamOnHGlobal(nullptr, true, dataStream.GetAddressOf()));
             RETURN_NULL_IF_FAILED(_idStream->InitializeFromIStream(dataStream.Get()));
         } else {
             // We are not currently handling data consumer as destination because data consumer is not implemented in WinObjC
@@ -128,31 +128,15 @@ enum destinationTypes { toData,
 // Helper function for setting the property write values when formatting image metadata.
 // Image metadata stores decimal numbers as an integer divided by another integer.
 // The HighPart is a number representing what to divide the LowPart by to get the actual value.
-void setHighLowPartsUnsigned(ULARGE_INTEGER* valueLarge, double valueDouble) {
-    if (valueDouble < 0) {
-        NSTraceInfo(TAG, @"Tried to pass negative value to set unsigned long!\n");
-        return;
-    }
-
+template<typename T>
+void setHighLowParts(T* out, double value) {
     // Check to see if the value has a decimal component. If not, just divide by 1.
-    if (valueDouble == (unsigned int)valueDouble) {
-        (*valueLarge).LowPart = (unsigned int)valueDouble;
-        (*valueLarge).HighPart = 1;
+    if (value == (int)value) {
+        (*out).LowPart = (int)value;
+        (*out).HighPart = 1;
     } else {
-        (*valueLarge).LowPart = (unsigned int)(valueDouble * 100);
-        (*valueLarge).HighPart = 100;
-    }
-}
-
-// Signed version of the above
-void setHighLowPartsSigned(LARGE_INTEGER* valueLarge, double valueDouble) {
-    // Check to see if the value has a decimal component. If not, just divide by 1.
-    if (valueDouble == (int)valueDouble) {
-        (*valueLarge).LowPart = (int)valueDouble;
-        (*valueLarge).HighPart = 1;
-    } else {
-        (*valueLarge).LowPart = (int)(valueDouble * 100);
-        (*valueLarge).HighPart = 100;
+        (*out).LowPart = (int)(value * 100);
+        (*out).HighPart = 100;
     }
 }
 
@@ -186,10 +170,10 @@ void setVariantFromDictionary(CFDictionaryRef dictionary,
             propertyToWrite.ulVal = (unsigned long)[(id)CFDictionaryGetValue(dictionary, key) unsignedLongValue];      
         } else if (propertyType == VT_UI8) {
             double dictionaryValue = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
-            setHighLowPartsUnsigned(&propertyToWrite.uhVal, dictionaryValue);
+            setHighLowParts((ULARGE_INTEGER*)&propertyToWrite.uhVal, dictionaryValue);
         } else if (propertyType == VT_I8) {
             double dictionaryValue = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
-            setHighLowPartsSigned(&propertyToWrite.hVal, dictionaryValue);
+            setHighLowParts((LARGE_INTEGER*)&propertyToWrite.hVal, dictionaryValue);
         } else if (propertyType == VT_LPSTR) {
             propertyToWrite.pszVal = (char*)[(NSString*)CFDictionaryGetValue(dictionary, key) UTF8String];
         } else if (propertyType == VT_LPWSTR) {
@@ -273,7 +257,7 @@ void writeGPSProperties(IWICMetadataQueryWriter* propertyWriter, CFDictionaryRef
         gpsValues[0].HighPart = 1;
         gpsValues[1].LowPart = (int)gpsMinutes;
         gpsValues[1].HighPart = 1;
-        setHighLowPartsUnsigned(&gpsValues[2], gpsSeconds);
+        setHighLowParts(&gpsValues[2], gpsSeconds);
 
         propertyToWrite.cauh.cElems = 3;
         propertyToWrite.cauh.pElems = gpsValues;
@@ -300,7 +284,7 @@ void writeGPSProperties(IWICMetadataQueryWriter* propertyWriter, CFDictionaryRef
         gpsValues[0].HighPart = 1;
         gpsValues[1].LowPart = (int)gpsMinutes;
         gpsValues[1].HighPart = 1;
-        setHighLowPartsUnsigned(&gpsValues[2], gpsSeconds);
+        setHighLowParts(&gpsValues[2], gpsSeconds);
 
         propertyToWrite.cauh.cElems = 3;
         propertyToWrite.cauh.pElems = gpsValues;
@@ -340,7 +324,7 @@ void writeGPSProperties(IWICMetadataQueryWriter* propertyWriter, CFDictionaryRef
             gpsValues[0].HighPart = 1;
             gpsValues[1].LowPart = (int)[[splitTimeStamp objectAtIndex:1] intValue];
             gpsValues[1].HighPart = 1;
-            setHighLowPartsUnsigned(&gpsValues[2], [[splitTimeStamp objectAtIndex:2] doubleValue]);
+            setHighLowParts(&gpsValues[2], [[splitTimeStamp objectAtIndex:2] doubleValue]);
 
             propertyToWrite.cauh.cElems = 3;
             propertyToWrite.cauh.pElems = gpsValues;
@@ -800,7 +784,6 @@ void writeTIFFProperties(IWICMetadataQueryWriter* propertyWriter,
             HRESULT status = imageFrame->SetResolution(tiffDPIWidth, tiffDPIHeight);
             if (!SUCCEEDED(status)) {
                 NSTraceInfo(TAG, @"Set Frame Resolution failed with status=%x\n", status);
-                NSLog(@"Set Frame Resolution Failed!\n");
             }
 
             // Writing this in WIC does not seem to do anything, always 2 (unit of inches)
