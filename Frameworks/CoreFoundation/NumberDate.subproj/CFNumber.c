@@ -373,9 +373,16 @@ static void cvtFloat64ToSInt128(CFSInt128Struct *out, const Float64 *in) {
     }
     Float64 t = floor(d / FLOAT_POSITIVE_2_TO_THE_64);
     i.high = (int64_t)t;
-    // WINBOJC: this conversion doesn't work correctly, just use static_cast instead
+    // WINOBJC: c++ standard has undefined behavior for conversion out-of-range
+    // Modulo to a positive value between 0 and 2^64 -1 before converting to uint64_t
+    // This also has the side effect of increasing precision for negative numbers near zero
     // i.low = (uint64_t)(d - t * FLOAT_POSITIVE_2_TO_THE_64);
-    i.low = static_cast<uint64_t>(d);
+    if (d < 0) {
+        i.low = 0ULL - static_cast<uint64_t>(fmod(-d, FLOAT_POSITIVE_2_TO_THE_64));
+    } else {
+        i.low = static_cast<uint64_t>(fmod(d, FLOAT_POSITIVE_2_TO_THE_64));
+    }
+
     *out = i;
 }
 

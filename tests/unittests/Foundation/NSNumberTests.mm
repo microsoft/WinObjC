@@ -162,4 +162,8 @@ TEST(NSNumber, Compare) {
     ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-7.1]]);
     ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-8.0]]);
     ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-8.1]]);
+
+    // Test comparison with large numbers
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:pow(2, 66)]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:-pow(2, 66)]]);
 }
