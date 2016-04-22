@@ -196,6 +196,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([jfifProperties count] != 0) {
         [properties setObject:jfifProperties forKey:(id)kCGImagePropertyJFIFDictionary];
     }
+    CFRelease(jfifProperties);
 
     // GPS Properties - JPEG
     NSMutableDictionary* gpsProperties = [[NSMutableDictionary alloc] init];
@@ -315,6 +316,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([gpsProperties count] != 0) {
         [properties setObject:gpsProperties forKey:(id)kCGImagePropertyGPSDictionary];
     }
+    CFRelease(gpsProperties);
 
     // Exif Properties - JPEG
     NSMutableDictionary* exifProperties = [[NSMutableDictionary alloc] init];
@@ -474,6 +476,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([exifProperties count] != 0) {
         [properties setObject:exifProperties forKey:(id)kCGImagePropertyExifDictionary];
     }
+    CFRelease(exifProperties);
 
     // The following properties are in TIFF property dictionary, but for /app1/ifd/, which is not a TIFF directory
     // This information gets read for JPEG files on iOS, and do in fact get added to a TIFF dictionary, even for a JPEG
@@ -504,6 +507,7 @@ CFDictionaryRef readJPEGProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([tiffProperties count] != 0) {
         [properties setObject:tiffProperties forKey:(id)kCGImagePropertyTIFFDictionary];
     }
+    CFRelease(tiffProperties);
 
     return (CFDictionaryRef)properties;
 }
@@ -633,6 +637,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([tiffProperties count] != 0) {
         [properties setObject:tiffProperties forKey:(id)kCGImagePropertyTIFFDictionary];
     }
+    CFRelease(tiffProperties);
 
     // GPS Properties - TIFF - This is a copy of TIFF properties for JPEG but with different paths.
     NSMutableDictionary* gpsProperties = [[NSMutableDictionary alloc] init];
@@ -753,6 +758,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([gpsProperties count] != 0) {
         [properties setObject:gpsProperties forKey:(id)kCGImagePropertyGPSDictionary];
     }
+    CFRelease(gpsProperties);
 
     // Exif Properties - TIFF - This is a copy of Exif properties for JPEG but with different paths.
     NSMutableDictionary* exifProperties = [[NSMutableDictionary alloc] init];
@@ -907,6 +913,7 @@ CFDictionaryRef readTIFFProperties(IWICMetadataQueryReader* imageMetadataReader)
     if ([exifProperties count] != 0) {
         [properties setObject:exifProperties forKey:(id)kCGImagePropertyExifDictionary];
     }
+    CFRelease(exifProperties);
 
     return (CFDictionaryRef)properties;
 }
@@ -957,6 +964,7 @@ CFDictionaryRef readGIFProperties(IWICMetadataQueryReader* imageMetadataReader) 
     if ([gifProperties count] != 0) {
         [properties setObject:gifProperties forKey:(id)kCGImagePropertyGIFDictionary];
     }
+    CFRelease(gifProperties);
 
     return (CFDictionaryRef)properties;
 }
@@ -988,6 +996,7 @@ CFDictionaryRef readPNGProperties(IWICMetadataQueryReader* imageMetadataReader) 
     if ([pngProperties count] != 0) {
         [properties setObject:pngProperties forKey:(id)kCGImagePropertyPNGDictionary];
     }
+    CFRelease(pngProperties);
 
     return (CFDictionaryRef)properties;
 }
@@ -1426,6 +1435,7 @@ CFDictionaryRef CGImageSourceCopyProperties(CGImageSourceRef isrc, CFDictionaryR
         if ([gifProperties count] != 0) {
             [properties setObject:gifProperties forKey:(id)kCGImagePropertyGIFDictionary];
         }
+        CFRelease(gifProperties);
     }
 
     return (CFDictionaryRef)properties;

@@ -937,7 +937,7 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
     if (properties && CFDictionaryContainsKey(properties, kCGImageDestinationLossyCompressionQuality) &&
             imageDestination.type == typeJPEG) {
         PROPBAG2 option = { 0 };
-        option.pstrName = (wchar_t*)L"ImageQuality";
+        option.pstrName = const_cast<wchar_t*>(L"ImageQuality");
         VARIANT varValue;    
         VariantInit(&varValue);
         varValue.vt = VT_R4;
@@ -948,6 +948,8 @@ void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CF
                 NSTraceInfo(TAG, @"Property Bag Write failed with status=%x\n", status);
                 return;
             }
+        } else {
+            NSTraceInfo(TAG, @"Compression Quality value was %f, accepted range is 0.0-1.0!\n", varValue.fltVal);
         }
     }
 
