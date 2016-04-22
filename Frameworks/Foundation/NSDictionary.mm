@@ -763,8 +763,13 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     for (i = 0; (key = [state nextObject]) != nil; i++) {
         id value = [self objectForKey:key];
 
-        objects[i] = value;
-        keys[i] = key;
+        if (objects) {
+            objects[i] = value;
+        }
+
+        if (keys) {
+            keys[i] = key;
+        }
     }
 }
 
