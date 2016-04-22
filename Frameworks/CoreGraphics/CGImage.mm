@@ -54,7 +54,7 @@ static const wchar_t* TAG = L"CGImage";
 - (void)dealloc {
 #pragma diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-    // __CGImage is a C++ class massaged into an objc object. 
+    // __CGImage is a C++ class massaged into an objc object.
     delete (__CGImage*)self;
 #pragma diagnostic pop
 }
@@ -123,8 +123,10 @@ CGImageRef CGImageCreateWithJPEGDataProvider(CGDataProviderRef source,
                                              bool shouldInterpolate,
                                              CGColorRenderingIntent intent) {
     FAIL_FAST_IF_FALSE(decode == nullptr);
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
-    
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
+                              ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]),
+                              "CGDataProviderRef does not derive from NSData!");
+
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
     return (CGImageRef)[img CGImage];
 }
@@ -138,7 +140,9 @@ CGImageRef CGImageCreateWithPNGDataProvider(CGDataProviderRef source,
                                             bool shouldInterpolate,
                                             CGColorRenderingIntent intent) {
     FAIL_FAST_IF_FALSE(decode == nullptr);
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
+                              ((source == nullptr) || [(NSObject*)source isKindOfClass:[NSData class]]),
+                              "CGDataProviderRef does not derive from NSData!");
 
     id img = [[_LazyUIImage alloc] initWithData:(NSData*)source];
 
@@ -359,7 +363,9 @@ CGImageRef CGImageMaskCreate(size_t width,
                              const CGFloat* decode,
                              bool shouldInterpolate) {
     FAIL_FAST_HR_IF_FALSE(E_UNEXPECTED, ((bitsPerComponent == 8) && (bitsPerPixel == 32)));
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
+                              ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]),
+                              "CGDataProviderRef does not derive from NSData!");
 
     NSData* dataProvider = (__bridge NSData*)provider;
     char* pData = (char*)[dataProvider bytes];
@@ -432,12 +438,44 @@ CGImageAlphaInfo CGImageGetAlphaInfo(CGImageRef img) {
 @public
     CGImageRef _img;
 }
+
+- (instancetype)init;
+- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone;
+- (const void*)bytes;
+- (NSUInteger)length;
+
 @end
 
-@implementation CGImageDataProvider : NSData
+// TODO: Task 7188763 This class makes no sense to be derived from NSData as it exposes a public _img field
+// and apparently does all operations via that rather than actually acting like an NSData.
+// To make it work, just add in the appropriate NSData methods using an inner NSData to hold anything
+// with the assumption it is not used.
+@implementation CGImageDataProvider {
+@private
+    StrongId<NSData> _data;
+}
 - (void)dealloc {
     _img->Backing()->ReleaseImageData();
     [super dealloc];
+}
+
+- (instancetype)init {
+    return [self initWithBytes:"" length:0];
+}
+
+- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
+    if (self = [super init]) {
+        _data.attach([[NSData alloc] initWithBytesNoCopy:bytes length:length freeWhenDone:freeWhenDone]);
+    }
+    return self;
+}
+
+- (const void*)bytes {
+    return [_data bytes];
+}
+
+- (NSUInteger)length {
+    return [_data length];
 }
 
 @end
@@ -634,7 +672,9 @@ CGImageRef CGImageCreate(size_t width,
                          bool shouldInterpolate,
                          CGColorRenderingIntent intent) {
     CGBitmapImage* newImage;
-    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG, ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]), "CGDataProviderRef does not derive from NSData!");
+    FAIL_FAST_HR_IF_FALSE_MSG(E_INVALIDARG,
+                              ((provider == nullptr) || [(NSObject*)provider isKindOfClass:[NSData class]]),
+                              "CGDataProviderRef does not derive from NSData!");
     NSData* dataProvider = (__bridge NSData*)provider;
     DWORD alphaType = bitmapInfo & 0x1F;
 
@@ -857,7 +897,6 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
             // Any other backing formats are outside the scope of libpng, and extremely unlikely to be used.
             FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unsupported backing format!");
             break;
-
     }
 
     yStrideOut = xStrideOut * width;
@@ -884,62 +923,52 @@ NSData* _CGImagePNGRepresentation(UIImage* img) {
                     break;
 
                 // PIXMAN_b8g8r8
-                case _ColorRGB:
-                    {
-                        outSwizzle->r = pixelSwizzle->b;
-                        outSwizzle->g = pixelSwizzle->g;
-                        outSwizzle->b = pixelSwizzle->r;
-                    }
-                    break;
+                case _ColorRGB: {
+                    outSwizzle->r = pixelSwizzle->b;
+                    outSwizzle->g = pixelSwizzle->g;
+                    outSwizzle->b = pixelSwizzle->r;
+                } break;
 
                 // PIXMAN_r5g6b5
-                case _Color565:
-                    {
-                        unsigned short shortPixel = *reinterpret_cast<unsigned short*>(pixel);
+                case _Color565: {
+                    unsigned short shortPixel = *reinterpret_cast<unsigned short*>(pixel);
 
-                        // Mask out the RGB portions
-                        outSwizzle->r = (BYTE)(shortPixel >> 11);
-                        outSwizzle->g = (BYTE)((shortPixel >> 5) & 0x3F);
-                        outSwizzle->b = (BYTE)(shortPixel & 0x1F);
+                    // Mask out the RGB portions
+                    outSwizzle->r = (BYTE)(shortPixel >> 11);
+                    outSwizzle->g = (BYTE)((shortPixel >> 5) & 0x3F);
+                    outSwizzle->b = (BYTE)(shortPixel & 0x1F);
 
-                        // Scale component to BYTE with LSB extension. (00011b << 3 becomes 11111b, 00010b becomes 10000b)
-                        outSwizzle->r = (outSwizzle->r << 3) | (((outSwizzle->r & 0x1) << 3) - (outSwizzle->r & 0x1));
-                        outSwizzle->g = (outSwizzle->g << 2) | (((outSwizzle->g & 0x1) << 2) - (outSwizzle->g & 0x1));
-                        outSwizzle->b = (outSwizzle->b << 3) | (((outSwizzle->b & 0x1) << 3) - (outSwizzle->b & 0x1));
-                    }
-                    break;
-                    
+                    // Scale component to BYTE with LSB extension. (00011b << 3 becomes 11111b, 00010b becomes 10000b)
+                    outSwizzle->r = (outSwizzle->r << 3) | (((outSwizzle->r & 0x1) << 3) - (outSwizzle->r & 0x1));
+                    outSwizzle->g = (outSwizzle->g << 2) | (((outSwizzle->g & 0x1) << 2) - (outSwizzle->g & 0x1));
+                    outSwizzle->b = (outSwizzle->b << 3) | (((outSwizzle->b & 0x1) << 3) - (outSwizzle->b & 0x1));
+                } break;
+
                 // PIXMAN_a8r8g8b8
-                case _ColorARGB:
-                    {
-                        outSwizzle->r = pixelSwizzle->r;
-                        outSwizzle->g = pixelSwizzle->g;
-                        outSwizzle->b = pixelSwizzle->b;
-                        outSwizzle->a = pixelSwizzle->a;
-                    }
-                    break;
+                case _ColorARGB: {
+                    outSwizzle->r = pixelSwizzle->r;
+                    outSwizzle->g = pixelSwizzle->g;
+                    outSwizzle->b = pixelSwizzle->b;
+                    outSwizzle->a = pixelSwizzle->a;
+                } break;
 
                 // PIXMAN_x8b8g8r8 | PIXMAN_a8b8g8r8
                 case _ColorRGB32HE:
-                case _ColorRGBA:
-                    {
-                        outSwizzle->r = pixelSwizzle->b;
-                        outSwizzle->g = pixelSwizzle->g;
-                        outSwizzle->b = pixelSwizzle->r;
-                        outSwizzle->a = pixelSwizzle->a;
-                    }
-                    break;
+                case _ColorRGBA: {
+                    outSwizzle->r = pixelSwizzle->b;
+                    outSwizzle->g = pixelSwizzle->g;
+                    outSwizzle->b = pixelSwizzle->r;
+                    outSwizzle->a = pixelSwizzle->a;
+                } break;
 
                 // PIXMAN_b8g8r8x8
-                case _ColorRGB32:
-                    {
-                        outSwizzle->r = pixelSwizzle->b;
-                        outSwizzle->g = pixelSwizzle->g;
-                        outSwizzle->b = pixelSwizzle->r;
-                        outSwizzle->a = pixelSwizzle->a;
-                    }
-                    break;
-                
+                case _ColorRGB32: {
+                    outSwizzle->r = pixelSwizzle->b;
+                    outSwizzle->g = pixelSwizzle->g;
+                    outSwizzle->b = pixelSwizzle->r;
+                    outSwizzle->a = pixelSwizzle->a;
+                } break;
+
                 default:
                     // Impossible state, we should have failed higher up.
                     FAIL_FAST_HR(E_UNEXPECTED);
