@@ -33,12 +33,12 @@
 
 #import "CFFoundationInternal.h"
 
-static NSString* _NSGetSlashStr() {
+NSString* _NSGetSlashStr() {
     static StrongId<NSString> s_slashStr = static_cast<NSString*>(_CFGetSlashStr());
     return s_slashStr;
 }
 
-static NSString* _stringFromDataWithEncoding(NSString* self, NSData* data, NSStringEncoding encoding) {
+NSString* _stringFromDataWithEncoding(NSString* self, NSData* data, NSStringEncoding encoding) {
     if (!data) {
         return nil;
     }
@@ -74,7 +74,34 @@ static NSString* _stringFromDataWithEncoding(NSString* self, NSData* data, NSStr
     return [self initWithData:data encoding:[NSString defaultCStringEncoding]];
 }
 
-static NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive) {
+NSString* _stringFromDataByDeterminingEncoding(NSString* self, NSData* data, NSStringEncoding* usedEncoding) {
+    if (!data) {
+        return nil;
+    }
+
+    NSStringEncoding encoding = [NSString defaultCStringEncoding];
+    const void* bytes = [data bytes];
+    const unichar* unicodeCharacters = reinterpret_cast<const unichar*>(bytes);
+    unsigned int length = [data length];
+
+    if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFEFF) {
+        bytes = &unicodeCharacters[1];
+        encoding = NSUnicodeStringEncoding;
+        length = length - sizeof(unichar);
+    } else if (length > sizeof(unichar) && unicodeCharacters[0] == 0xFFFE) {
+        bytes = &unicodeCharacters[1];
+        encoding = NSUTF16BigEndianStringEncoding;
+        length = length - sizeof(unichar);
+    }
+
+    if (usedEncoding) {
+        *usedEncoding = encoding;
+    }
+
+    return [self initWithBytes:bytes length:length encoding:encoding];
+}
+
+NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive) {
     if (strings == nil || [strings count] == 0) {
         return nil;
     } else if ([strings count] == 1) {
@@ -103,7 +130,7 @@ static NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive) {
     return [strings[0] substringToIndex:i];
 }
 
-static NSString* _ensureLastPathSeparator(NSString* path) {
+NSString* _ensureLastPathSeparator(NSString* path) {
     if (path == nil || [path hasSuffix:static_cast<NSString*>(_CFGetSlashStr())] || [path isEqualToString:@""]) {
         return path;
     }
@@ -111,7 +138,7 @@ static NSString* _ensureLastPathSeparator(NSString* path) {
     return [path stringByAppendingString:static_cast<NSString*>(_CFGetSlashStr())];
 }
 
-static BOOL _stringIsPathToDirectory(NSString* path) {
+BOOL _stringIsPathToDirectory(NSString* path) {
     if (![path hasSuffix:static_cast<NSString*>(_CFGetSlashStr())]) {
         return false;
     }
@@ -122,7 +149,7 @@ static BOOL _stringIsPathToDirectory(NSString* path) {
     return exists && isDirectory;
 }
 
-static FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSensitive) {
+FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSensitive) {
     if (!thePrefix) {
         return ^(NSString*) {
             return true;
@@ -143,7 +170,7 @@ static FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSen
     }
 }
 
-static FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitive) {
+FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitive) {
     if (!exts) {
         return Block_copy(^(NSString*) {
             return true;
@@ -168,10 +195,10 @@ static FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitiv
     }
 }
 
-static NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
-                                      NSString* prependWith,
-                                      FilePathPredicate namePredicate,
-                                      FilePathPredicate typePredicate) {
+NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
+                               NSString* prependWith,
+                               FilePathPredicate namePredicate,
+                               FilePathPredicate typePredicate) {
     NSMutableArray* result = [NSMutableArray array];
     NSEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtURL:filePathURL
                                                     includingPropertiesForKeys:nil

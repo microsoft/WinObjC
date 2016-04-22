@@ -31,19 +31,20 @@
 @class NSMutableArray;
 
 // Helper that returns the path separator character
-static NSString* _NSGetSlashStr();
+extern NSString* _NSGetSlashStr();
 
 // Below helpers are based off of helpers from Foundation/NSPathUtilities.swift
 using FilePathPredicate = bool (^)(NSString*);
 
-static NSString* _stringFromDataWithEncoding(NSString* self, NSData* data, NSStringEncoding encoding);
-static NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive);
-static NSString* _ensureLastPathSeparator(NSString* path);
-static NSString* _ensureLastPathSeparator(NSString* path);
-static BOOL _stringIsPathToDirectory(NSString* path);
-static FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSensitive);
-static FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitive);
-static NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
+extern NSString* _stringFromDataWithEncoding(NSString* self, NSData* data, NSStringEncoding encoding);
+extern NSString* _stringFromDataByDeterminingEncoding(NSString* self, NSData* data, NSStringEncoding* usedEncoding);
+extern NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive);
+extern NSString* _ensureLastPathSeparator(NSString* path);
+extern NSString* _ensureLastPathSeparator(NSString* path);
+extern BOOL _stringIsPathToDirectory(NSString* path);
+extern FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSensitive);
+extern FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitive);
+extern NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
                                       NSString* prependWith,
                                       FilePathPredicate namePredicate,
                                       FilePathPredicate typePredicate);
