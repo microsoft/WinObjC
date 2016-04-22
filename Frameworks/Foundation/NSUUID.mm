@@ -43,7 +43,7 @@
  @Status Interoperable
 */
 - (id)init {
-    if ((self = [super init]) != nil) {
+    if (self = [super init]) {
         if (CoCreateGuid(&_guid) != S_OK) {
             [NSException raise:NSGenericException format:@"NSUUID failed to generate a unique ID."];
             [self release];
@@ -57,7 +57,7 @@
  @Status Interoperable
 */
 - (id)initWithUUIDString:(NSString*)string {
-    if ((self = [super init]) != nil) {
+    if (self = [super init]) {
         const char* rawString = [string UTF8String];
         unsigned components[11];
 
@@ -95,8 +95,11 @@
  @Status Interoperable
 */
 - (id)initWithUUIDBytes:(const void*)bytes {
-    if ((self = [super init]) != nil) {
-        memcpy(&_guid, bytes, 16);
+    if (self = [super init]) {
+        if (0 != memcpy_s(&_guid, 16, bytes, 16)) {
+            [self release];
+            return nil;
+        }
     }
     return self;
 }
@@ -156,7 +159,7 @@
  @Status Interoperable
 */
 - (void)getUUIDBytes:(void*)bytes {
-    memcpy(bytes, &_guid, 16);
+    memcpy_s(bytes, 16, &_guid, 16);
 }
 
 /**
