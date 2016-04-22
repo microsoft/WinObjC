@@ -738,7 +738,8 @@ CF_PRIVATE void _CFAppendTrailingPathSlash2(CFMutableStringRef path) {
             CFStringAppendCharacters(path, slash, 1);
         }
     } else if (len == 2) {
-        if (!_hasDrive(path) && !_hasNet(path)) {
+        // WINOBJC: still append slash if it's a drive if (!_hasDrive(path) && !_hasNet(path)) {
+        if (!_hasNet(path)) {
             CFStringAppendCharacters(path, slash, 1);
         }
     } else {

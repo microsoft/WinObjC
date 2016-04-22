@@ -42,9 +42,11 @@ extern NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive);
 extern NSString* _ensureLastPathSeparator(NSString* path);
 extern NSString* _ensureLastPathSeparator(NSString* path);
 extern BOOL _stringIsPathToDirectory(NSString* path);
+extern BOOL _stringLooksLikeOrIsPathToDirectory(NSString* path);
 extern FilePathPredicate _getFileNamePredicate(NSString* thePrefix, BOOL caseSensitive);
 extern FilePathPredicate _getExtensionPredicate(NSArray* exts, BOOL caseSensitive);
 extern NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
                                       NSString* prependWith,
                                       FilePathPredicate namePredicate,
                                       FilePathPredicate typePredicate);
+extern BOOL _isLetter(unichar character);

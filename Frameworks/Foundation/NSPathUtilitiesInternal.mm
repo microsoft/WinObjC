@@ -131,19 +131,30 @@ NSString* _longestCommonPrefix(NSArray* strings, BOOL caseSensitive) {
 }
 
 NSString* _ensureLastPathSeparator(NSString* path) {
-    if (path == nil || [path hasSuffix:static_cast<NSString*>(_CFGetSlashStr())] || [path isEqualToString:@""]) {
+    if (path == nil || [path hasSuffix:_NSGetSlashStr()] || [path isEqualToString:@""]) {
         return path;
     }
 
-    return [path stringByAppendingString:static_cast<NSString*>(_CFGetSlashStr())];
+    return [path stringByAppendingString:_NSGetSlashStr()];
 }
 
 BOOL _stringIsPathToDirectory(NSString* path) {
-    if (![path hasSuffix:static_cast<NSString*>(_CFGetSlashStr())]) {
-        return false;
+    if (![path hasSuffix:_NSGetSlashStr()]) {
+        return NO;
     }
 
-    BOOL isDirectory = false;
+    BOOL isDirectory = NO;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+
+    return exists && isDirectory;
+}
+
+BOOL _stringLooksLikeOrIsPathToDirectory(NSString* path) {
+    if ([path hasSuffix:_NSGetSlashStr()]) {
+        return YES;
+    }
+
+    BOOL isDirectory = NO;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
 
     return exists && isDirectory;
@@ -219,4 +230,8 @@ NSMutableArray* _getNamesAtURL(NSURL* filePathURL,
     }
 
     return result;
+}
+
+BOOL _isLetter(unichar character) {
+    return ((character >= 'A') && (character <= 'Z')) || ((character >= 'a') && (character <= 'z'));
 }

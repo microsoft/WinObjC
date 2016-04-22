@@ -43,9 +43,8 @@
 */
 - (instancetype)initWithURL:(NSURL*)theURL cachePolicy:(NSURLRequestCachePolicy)cachePolicy timeoutInterval:(NSTimeInterval)timeout {
     if (self = [super init]) {
-        _URL = [[theURL absoluteURL] retain];
+        _URL = [theURL copy];
         _timeoutInterval = timeout;
-        _allHTTPHeaderFields = [NSMutableDictionary new];
         _HTTPMethod = @"GET";
         _HTTPShouldHandleCookies = YES;
         _cachePolicy = cachePolicy;
@@ -112,21 +111,10 @@
 /**
  @Status Interoperable
 */
-- (NSDictionary*)getAllHTTPHeaderFields {
-    return _allHTTPHeaderFields;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)mutableCopy {
-    return [self mutableCopyWithZone:nil];
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)copyWithZone:(NSZone*)zone {
+    if ([self isKindOfClass:[NSMutableURLRequest class]]) {
+        return [[NSURLRequest alloc] _initWithURLRequest:self];
+    }
     return [self retain];
 }
 

@@ -10,9 +10,9 @@
 //
 
 
-/*	CFURLComponents.c
-	Copyright (c) 2015, Apple Inc. All rights reserved.
-	Responsibility: Jim Luther/Chris Linn
+/*  CFURLComponents.c
+    Copyright (c) 2015, Apple Inc. All rights reserved.
+    Responsibility: Jim Luther/Chris Linn
 */
 
 
@@ -42,14 +42,14 @@ struct __CFURLComponents {
      */
     
     // these flags indicate if the _schemeComponent through _fragmentComponent ivars are valid or not.
-    uint32_t	_schemeComponentValid	: 1;
-    uint32_t	_userComponentValid     : 1;
-    uint32_t	_passwordComponentValid	: 1;
-    uint32_t	_hostComponentValid     : 1;
-    uint32_t	_portComponentValid     : 1;
-    uint32_t	_pathComponentValid     : 1;
-    uint32_t	_queryComponentValid	: 1;
-    uint32_t	_fragmentComponentValid	: 1;
+    uint32_t    _schemeComponentValid   : 1;
+    uint32_t    _userComponentValid     : 1;
+    uint32_t    _passwordComponentValid : 1;
+    uint32_t    _hostComponentValid     : 1;
+    uint32_t    _portComponentValid     : 1;
+    uint32_t    _pathComponentValid     : 1;
+    uint32_t    _queryComponentValid    : 1;
+    uint32_t    _fragmentComponentValid : 1;
     
     // These ivars are used by the getters and by [NSURLComponents URL] and [NSURLComponents URLRelativeToURL:]. The values (if not nil) are always correctly percent-encoded.
     CFStringRef _schemeComponent;
@@ -657,7 +657,9 @@ CF_EXPORT Boolean _CFURLComponentsSetPort(CFURLComponentsRef components, CFNumbe
     } else {
         components->_portComponent = NULL;
     }
-    components->_passwordComponentValid = true;
+    // WINOBJC: should be _portComponentValid instead
+    // components->_passwordComponentValid = true;
+    components->_portComponentValid = true;
     __CFUnlock(&components->_lock);
     return true;
 }

@@ -10,8 +10,8 @@
 //
 
 
-/*	CFURLComponents.h
-	Copyright (c) 2015, Apple Inc. All rights reserved.
+/*  CFURLComponents.h
+    Copyright (c) 2015, Apple Inc. All rights reserved.
 */
 
 #ifndef __COREFOUNDATION_CFURLCOMPONENTS__

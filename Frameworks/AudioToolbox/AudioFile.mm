@@ -505,9 +505,7 @@ public:
  @Notes Only file:// URLs supported
 */
 OSStatus AudioFileOpenURL(CFURLRef url, AudioFilePermissions permissions, AudioFileTypeID type, AudioFileID _Nullable* out) {
-    //fix as part of 6669990
-    //NSURLFIX char* filename = (char*)[[url path] UTF8String];
-    char* filename = nullptr; //(char*)[[url path] UTF8String];
+    char* filename = (char*)[[static_cast<NSURL*>(url) path] UTF8String];
     EbrFile* f = EbrFopen(filename, "rb");
     if (!f) {
         TraceError(TAG, L"Could not find audio file %hs", filename);

@@ -30,7 +30,7 @@ TEST(NSMutableURLRequest, setValue) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != nil, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == nil, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 
@@ -55,7 +55,7 @@ TEST(NSMutableURLRequest, addValue) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != nil, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == nil, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 

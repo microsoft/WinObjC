@@ -158,7 +158,7 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initFileURLWithPath:(NSString*)path isDirectory:(BOOL)isDir;
 + (NSURL*)fileURLWithPath:(NSString*)path;
 - (instancetype)initFileURLWithPath:(NSString*)path;
-+ (NSURL*)fileURLWithPathComponents:(NSArray*)components STUB_METHOD;
++ (NSURL*)fileURLWithPathComponents:(NSArray*)components;
 + (instancetype)URLByResolvingAliasFileAtURL:(NSURL*)url
                                      options:(NSURLBookmarkResolutionOptions)options
                                        error:(NSError* _Nullable*)error STUB_METHOD;
@@ -172,9 +172,9 @@ FOUNDATION_EXPORT_CLASS
                               relativeToURL:(NSURL*)relativeURL
                         bookmarkDataIsStale:(BOOL*)isStale
                                       error:(NSError* _Nullable*)error STUB_METHOD;
-+ (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL STUB_METHOD;
++ (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL;
 - (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength;
-- (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL STUB_METHOD;
+- (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL;
 - (BOOL)isEqual:(id)anObject;
 - (BOOL)checkResourceIsReachableAndReturnError:(NSError* _Nullable*)error;
 - (BOOL)isFileReferenceURL;
@@ -212,21 +212,21 @@ FOUNDATION_EXPORT_CLASS
 - (NSData*)bookmarkDataWithOptions:(NSURLBookmarkCreationOptions)options
     includingResourceValuesForKeys:(NSArray*)keys
                      relativeToURL:(NSURL*)relativeURL
-                             error:(NSError* _Nullable*)error STUB_METHOD;
+                             error:(NSError* _Nullable*)error;
 + (NSDictionary*)resourceValuesForKeys:(NSArray*)keys fromBookmarkData:(NSData*)bookmarkData;
 + (BOOL)writeBookmarkData:(NSData*)bookmarkData
                     toURL:(NSURL*)bookmarkFileURL
                   options:(NSURLBookmarkFileCreationOptions)options
                     error:(NSError* _Nullable*)error;
-- (BOOL)startAccessingSecurityScopedResource STUB_METHOD;
-- (void)stopAccessingSecurityScopedResource STUB_METHOD;
-- (BOOL)getResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error STUB_METHOD;
-- (NSDictionary*)resourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error STUB_METHOD;
+- (BOOL)startAccessingSecurityScopedResource;
+- (void)stopAccessingSecurityScopedResource;
+- (BOOL)getResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error;
+- (NSDictionary*)resourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error;
 - (BOOL)setResourceValue:(id)value forKey:(NSString*)key error:(NSError* _Nullable*)error;
-- (BOOL)setResourceValues:(NSDictionary*)keyedValues error:(NSError* _Nullable*)error STUB_METHOD;
-- (void)removeAllCachedResourceValues STUB_METHOD;
-- (void)removeCachedResourceValueForKey:(NSString*)key STUB_METHOD;
-- (void)setTemporaryResourceValue:(id)value forKey:(NSString*)key STUB_METHOD;
+- (BOOL)setResourceValues:(NSDictionary*)keyedValues error:(NSError* _Nullable*)error;
+- (void)removeAllCachedResourceValues;
+- (void)removeCachedResourceValueForKey:(NSString*)key;
+- (void)setTemporaryResourceValue:(id)value forKey:(NSString*)key;
 - (BOOL)checkPromisedItemIsReachableAndReturnError:(NSError* _Nullable*)error STUB_METHOD;
 - (BOOL)getPromisedItemResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error STUB_METHOD;
 - (NSDictionary*)promisedItemResourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error STUB_METHOD;

@@ -22,6 +22,7 @@ LIBRARY CoreFoundation
         arc4random_uniform
         mach_timebase_info
         sysctlbyname
+        _CFURLCopyPasswordNotUnescaped
 
         ; WINOBJC: Expose a few private CF Helpers
         _CFAppendPathComponent2
@@ -1087,6 +1088,13 @@ LIBRARY CoreFoundation
         kCFURLVolumeURLForRemountingKey DATA
         kCFURLVolumeUUIDStringKey DATA
         kCFURLKeysOfUnsetValuesKey DATA
+        kCFURLUbiquitousItemDownloadingErrorKey DATA
+        kCFURLUbiquitousItemDownloadingStatusKey DATA
+        kCFURLUbiquitousItemUploadingErrorKey DATA
+        kCFURLUbiquitousItemDownloadingStatusCurrent DATA
+        kCFURLUbiquitousItemDownloadingStatusDownloaded DATA
+        kCFURLUbiquitousItemDownloadingStatusNotDownloaded DATA
+        kCFURLVolumeSupportsPersistentIDsKey DATA
         CFURLCopyAbsoluteURL
         CFURLCreateAbsoluteURLWithBytes
         CFURLCreateByResolvingBookmarkData
@@ -1120,6 +1128,7 @@ LIBRARY CoreFoundation
         CFURLCopyUserName
         CFURLGetPortNumber
         CFURLHasDirectoryPath
+        CFURLIsFileReferenceURL
         CFURLCreateData
         CFURLCreateStringByAddingPercentEscapes
         CFURLCreateStringByReplacingPercentEscapes

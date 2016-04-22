@@ -24,6 +24,7 @@
 #import "Starboard.h"
 #import <Foundation/Foundation.h>
 #import <TestFramework.h>
+#import "TestUtils.h"
 
 #import <CoreFoundation/CoreFoundation.h>
 #import "CFFoundationInternal.h"
@@ -361,39 +362,6 @@ TEST(NSString, SwiftStringUTF16) {
     auto newString = static_cast<NSString*>(newCFString);
 
     ASSERT_TRUE([newString isEqualToString:testString]);
-}
-
-BOOL ensureFiles(NSArray* fileNames) {
-    BOOL result = true;
-    NSFileManager* fm = [NSFileManager defaultManager];
-    for (NSString* name in fileNames) {
-        if ([fm fileExistsAtPath:name]) {
-            continue;
-        }
-
-        if ([name hasSuffix:@"/"]) {
-            try {
-                [fm createDirectoryAtPath:name withIntermediateDirectories:true attributes:nil error:nullptr];
-            } catch (...) {
-                return false;
-            }
-        } else {
-            BOOL isDir = false;
-            NSString* dir = [name stringByDeletingLastPathComponent];
-            if (![fm fileExistsAtPath:dir isDirectory:&isDir]) {
-                try {
-                    [fm createDirectoryAtPath:dir withIntermediateDirectories:true attributes:nil error:nullptr];
-                } catch (...) {
-                    return false;
-                }
-            } else if (!isDir) {
-                return false;
-            }
-
-            result = result && [fm createFileAtPath:name contents:nil attributes:nil];
-        }
-    }
-    return result;
 }
 
 NSString* tmpPath(NSString* path) {

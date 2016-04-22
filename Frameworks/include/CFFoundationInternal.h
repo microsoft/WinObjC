@@ -33,6 +33,9 @@ CF_EXPORT UniChar _CFGetSlash();
 CF_PRIVATE CFStringRef _CFGetSlashStr();
 CF_EXPORT const char* _CFProcessPath();
 
+// For [NSURL password], which does not unescape, unlike CFURLCopyPassword which does
+CF_PRIVATE CF_EXPORT CFStringRef _CFURLCopyPasswordNotUnescaped(CFURLRef url);
+
 // Miscellaneous - for collections.
 CF_EXPORT unsigned long _CFArrayFastEnumeration(CFArrayRef array, NSFastEnumerationState* state, void* stackbuffer, unsigned long count);
 CF_EXPORT unsigned long _CFDictionaryFastEnumeration(CFDictionaryRef dictionary,

@@ -63,6 +63,7 @@
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.dll" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.winmd" />
       <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.bitmap" />
+      <SBLibsWin10Win32 Include="..\Win32\$(Configuration)\Universal Windows\*.data" />
 
       <!-- Files in these directories ship both Debug and Release varieties -->
       <SBLibsWin10Win32 Include="..\Win32\Debug\Universal Windows\Debug\*.lib">
@@ -100,6 +101,7 @@
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.dll" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.winmd" />
       <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.bitmap" />
+      <SBLibsWin10ARM Include="..\ARM\$(Configuration)\Universal Windows\*.data" />
 
       <!-- Files in these directories ship both Debug and Release varieties -->
       <SBLibsWin10ARM Include="..\ARM\Debug\Universal Windows\Debug\*.lib">

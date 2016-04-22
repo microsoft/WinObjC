@@ -366,7 +366,6 @@ using namespace Windows::Foundation;
         TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
         return NO;
     }
-
     return [self writeToFile:[url path] options:options error:errorp];
 }
 

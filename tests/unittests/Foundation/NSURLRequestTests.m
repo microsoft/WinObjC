@@ -30,7 +30,7 @@ TEST(NSURLRequest, requestWithURL) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != NULL, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == NULL, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }
@@ -46,7 +46,7 @@ TEST(NSURLRequest, requestWithURLFull) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestReturnCacheDataElseLoad.");
     ASSERT_EQ_MSG(20.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 20.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != NULL, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == NULL, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }
@@ -59,7 +59,7 @@ TEST(NSURLRequest, defaultInit) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != NULL, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == NULL, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }

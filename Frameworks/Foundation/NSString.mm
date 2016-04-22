@@ -37,6 +37,7 @@
 #include "ForFoundationOnly.h"
 #include "LoggingNative.h"
 #include "NSCFString.h"
+#include "NSPathUtilitiesInternal.h"
 #include "NSRaise.h"
 #include "CFFoundationInternal.h"
 #include "BridgeHelpers.h"
@@ -675,12 +676,12 @@ static unichar PickWord(unichar c) {
 
     if (index == 0) {
         if ([self length] > 0 && IS_SLASH([self characterAtIndex:index])) {
-            return static_cast<NSString*>(_CFGetSlashStr());
+            return _NSGetSlashStr();
         } else {
             return @"";
         }
     } else if (index == 1) {
-        return static_cast<NSString*>(_CFGetSlashStr());
+        return _NSGetSlashStr();
     } else {
         // strip of the trailing slash (where the 2nd to last path component would end)
         return [self substringToIndex:(index - 1)];
@@ -1158,20 +1159,14 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (BOOL)isAbsolutePath {
-    char* pStr = (char*)[self UTF8String];
-
-    if (pStr[0] != '/') {
-        return NO;
-    } else {
-        return YES;
-    }
+    return ([self hasPrefix:_NSGetSlashStr()]) || ((_isLetter([self characterAtIndex:0])) && ([self characterAtIndex:1] == ':'));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)pathComponents {
-    NSMutableArray* ret = [[[self componentsSeparatedByString:static_cast<NSString*>(_CFGetSlashStr())] mutableCopy] autorelease];
+    NSMutableArray* ret = [[[self componentsSeparatedByString:_NSGetSlashStr()] mutableCopy] autorelease];
 
     int count = [ret count];
     for (int i = 0; i < count; i++) {
@@ -1184,7 +1179,7 @@ static unichar PickWord(unichar c) {
                 count--;
                 continue;
             } else {
-                [ret replaceObjectAtIndex:0 withObject:static_cast<NSString*>(_CFGetSlashStr())];
+                [ret replaceObjectAtIndex:0 withObject:_NSGetSlashStr()];
             }
         }
     }
@@ -1281,7 +1276,7 @@ static unichar PickWord(unichar c) {
         return self;
     }
 
-    NSRange endOfUserName = [self rangeOfString:static_cast<NSString*>(_CFGetSlashStr())];
+    NSRange endOfUserName = [self rangeOfString:_NSGetSlashStr()];
     NSUInteger endIndex = endOfUserName.location == NSNotFound ? [self length] : endOfUserName.location;
 
     // skip over ~
@@ -1297,8 +1292,7 @@ static unichar PickWord(unichar c) {
 
     if (homeDir == nil) {
         // Not sure about this case. No homeDir found for user so nothing really to expand to. Just return self with the ~?
-        NSRange trailingSlash =
-            [self rangeOfString:static_cast<NSString*>(_CFGetSlashStr()) options:(NSBackwardsSearch | NSAnchoredSearch)];
+        NSRange trailingSlash = [self rangeOfString:_NSGetSlashStr() options:(NSBackwardsSearch | NSAnchoredSearch)];
 
         if (trailingSlash.location == NSNotFound) {
             return self;
@@ -1310,7 +1304,7 @@ static unichar PickWord(unichar c) {
     NSMutableString* result = [[self mutableCopy] autorelease];
     [result replaceCharactersInRange:NSMakeRange(0, endIndex) withString:homeDir];
 
-    NSRange trailingSlash = [result rangeOfString:static_cast<NSString*>(_CFGetSlashStr()) options:(NSBackwardsSearch | NSAnchoredSearch)];
+    NSRange trailingSlash = [result rangeOfString:_NSGetSlashStr() options:(NSBackwardsSearch | NSAnchoredSearch)];
 
     if (trailingSlash.location == NSNotFound) {
         return result;
@@ -2074,7 +2068,7 @@ static unichar PickWord(unichar c) {
 
     if (searchAllFilesInDirectory) {
         if (outputName != nullptr) {
-            *outputName = static_cast<NSString*>(_CFGetSlashStr());
+            *outputName = _NSGetSlashStr();
         }
     } else {
         NSString* longestPrefix = _longestCommonPrefix(matches, flag);
@@ -2219,7 +2213,7 @@ static unichar PickWord(unichar c) {
         return self;
     }
 
-    BOOL isAbsolutePath = [static_cast<NSString*>(_CFGetSlashStr()) isEqualToString:static_cast<NSString*>([components objectAtIndex:0])];
+    BOOL isAbsolutePath = [self isAbsolutePath];
     NSString* resolvedPath = [components objectAtIndex:0];
 
     for (int i = 1; i < [components count]; i++) {

@@ -21,6 +21,15 @@
 #include <CoreFoundation/CFNumber.h>
 #include "CFInternal.h"
 #include "CFStringEncodingConverter.h"
+
+// WINOBJC: need UNIMPLEMENTED(), StubReturn()
+// TODO: 7491994: Can remove this include when all the UNIMPLEMENTED() functions are filled in
+#pragma push_macro("__OBJC__")
+#undef __OBJC__
+#include <ErrorHandling.h>
+#include <StubReturn.h>
+#pragma pop_macro("__OBJC__")
+
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -3467,7 +3476,8 @@ CFStringRef  CFURLCopyUserName(CFURLRef  anURL) {
     }
 }
 
-CFStringRef  CFURLCopyPassword(CFURLRef  anURL) {
+// WINOBJC: move the body of CFURLCopyPassword here, so that unescaping percent-encoded chars in the return value is optional
+static CFStringRef _copyPassword(CFURLRef anURL, Boolean unescape) {
     CFStringRef passwd;
     if (CF_IS_OBJC(CFURLGetTypeID(), anURL)) {
         passwd = (CFStringRef) CF_OBJC_CALLV((NSURL *)anURL, password);
@@ -3475,7 +3485,8 @@ CFStringRef  CFURLCopyPassword(CFURLRef  anURL) {
         return passwd;
     } 
     __CFGenericValidateType(anURL, CFURLGetTypeID());
-    passwd = _retainedComponentString(anURL, HAS_PASSWORD, true, true);
+    // WINOBJC: use unescape instead of true here
+    passwd = _retainedComponentString(anURL, HAS_PASSWORD, true, unescape);
     if (passwd) {
         return passwd;
     } else if (anURL->_base && !(anURL->_flags & NET_LOCATION_MASK) && !(anURL->_flags & HAS_SCHEME)) {
@@ -3483,6 +3494,15 @@ CFStringRef  CFURLCopyPassword(CFURLRef  anURL) {
     } else {
         return NULL;
     }
+}
+
+CFStringRef  CFURLCopyPassword(CFURLRef  anURL) {
+    return _copyPassword(anURL, true);
+}
+
+// WINOBJC: This function is for Foundation's benefit; no one else should use it.
+CF_PRIVATE CF_EXPORT CFStringRef _CFURLCopyPasswordNotUnescaped(CFURLRef anURL) {
+    return _copyPassword(anURL, false);
 }
 
 // The NSURL methods do not deal with escaping escape characters at all; therefore, in order to properly bridge NSURL methods, and still provide the escaping behavior that we want, we need to create functions that match the ObjC behavior exactly, and have the public CFURL... functions call these. -- REW, 10/29/98
@@ -4080,7 +4100,8 @@ static CFArrayRef WindowsPathToURLComponents(CFStringRef path, CFAllocatorRef al
     CFIndex c;
     for (c = CFArrayGetCount(urlComponents); i < c; i ++) {
         CFStringRef fileComp = (CFStringRef)CFArrayGetValueAtIndex(urlComponents,i);
-        CFStringRef urlComp = _replacePathIllegalCharacters(fileComp, alloc, false);
+        // WINOBJC: Call _replacePathIllegalCharacters with preserveSlashes = true
+        CFStringRef urlComp = _replacePathIllegalCharacters(fileComp, alloc, true); // false);
         if (!urlComp) {
             // Couldn't decode fileComp
             CFRelease(urlComponents);
@@ -4364,7 +4385,8 @@ static CFStringRef URLPathToWindowsPath(CFStringRef path, CFAllocatorRef allocat
             CFRelease(firstComponent);
         }
     }
-    newPath = CFStringCreateByCombiningStrings(allocator, components, CFSTR("\\"));
+    // WINOBJC: Use _CFGetSlashStr() here rather than "\\"
+    newPath = CFStringCreateByCombiningStrings(allocator, components, _CFGetSlashStr()); // CFSTR("\\"));
     CFRelease(components);
 // #pragma GCC diagnostic push
 // #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -5088,7 +5110,9 @@ CFURLRef _CFURLCreateFromPropertyListRepresentation(CFAllocatorRef alloc, CFProp
     return url;
 }
 
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+// WINOBJC: add win32 to the list of targets so that this can still be used from Foundation
+// #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS
 Boolean _CFURLIsFileReferenceURL(CFURLRef url)
 {
     return ( CFURLIsFileReferenceURL(url) );
@@ -5244,8 +5268,8 @@ CFURLRef CFURLCreateFileReferenceURL(CFAllocatorRef alloc, CFURLRef url, CFError
  @Notes
 */
 CF_EXPORT void CFURLClearResourcePropertyCacheForKey(CFURLRef url, CFStringRef key) { 
-    // HACKHACK: not implemented.
-    return;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
 }
 
 /**
@@ -5253,8 +5277,8 @@ CF_EXPORT void CFURLClearResourcePropertyCacheForKey(CFURLRef url, CFStringRef k
  @Notes
 */
 CF_EXPORT void CFURLClearResourcePropertyCache(CFURLRef url) {
-    // HACKHACK: not implemented.
-    return;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
 }
 
 /**
@@ -5262,8 +5286,9 @@ CF_EXPORT void CFURLClearResourcePropertyCache(CFURLRef url) {
  @Notes
 */
 CF_EXPORT CFDictionaryRef CFURLCopyResourcePropertiesForKeys(CFURLRef url, CFArrayRef keys, CFErrorRef *error) {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5271,8 +5296,9 @@ CF_EXPORT CFDictionaryRef CFURLCopyResourcePropertiesForKeys(CFURLRef url, CFArr
  @Notes
 */
 CF_EXPORT Boolean CFURLCopyResourcePropertyForKey(CFURLRef url, CFStringRef key, void *propertyValueTypeRefPtr, CFErrorRef *error) {
-    // HACKHACK: not implemented.
-    return false;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5280,8 +5306,9 @@ CF_EXPORT Boolean CFURLCopyResourcePropertyForKey(CFURLRef url, CFStringRef key,
  @Notes
 */
 CF_EXPORT CFDataRef CFURLCreateBookmarkData ( CFAllocatorRef allocator, CFURLRef url, CFURLBookmarkCreationOptions options, CFArrayRef resourcePropertiesToInclude, CFURLRef relativeToURL, CFErrorRef* error ) {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5289,8 +5316,9 @@ CF_EXPORT CFDataRef CFURLCreateBookmarkData ( CFAllocatorRef allocator, CFURLRef
  @Notes
 */
 CF_EXPORT CFURLRef CFURLCreateByResolvingBookmarkData ( CFAllocatorRef allocator, CFDataRef bookmark, CFURLBookmarkResolutionOptions options, CFURLRef relativeToURL, CFArrayRef resourcePropertiesToInclude, Boolean* isStale, CFErrorRef* error ) {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5298,8 +5326,9 @@ CF_EXPORT CFURLRef CFURLCreateByResolvingBookmarkData ( CFAllocatorRef allocator
  @Notes
 */
 CF_EXPORT CFDictionaryRef CFURLCreateResourcePropertiesForKeysFromBookmarkData ( CFAllocatorRef allocator, CFArrayRef resourcePropertiesToReturn, CFDataRef bookmark ) {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5307,8 +5336,9 @@ CF_EXPORT CFDictionaryRef CFURLCreateResourcePropertiesForKeysFromBookmarkData (
  @Notes
 */
 CF_EXPORT CFTypeRef  CFURLCreateResourcePropertyForKeyFromBookmarkData( CFAllocatorRef allocator, CFStringRef resourcePropertyKey, CFDataRef bookmark ) {
-        // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5316,17 +5346,19 @@ CF_EXPORT CFTypeRef  CFURLCreateResourcePropertyForKeyFromBookmarkData( CFAlloca
  @Notes
 */
 CF_EXPORT CFDataRef CFURLCreateBookmarkDataFromFile(CFAllocatorRef allocator, CFURLRef fileURL, CFErrorRef *errorRef ) {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
  @Status Stub
  @Notes
-*/CF_EXPORT
-Boolean CFURLWriteBookmarkDataToFile( CFDataRef bookmarkRef, CFURLRef fileURL, CFURLBookmarkFileCreationOptions options, CFErrorRef *errorRef ) {
-    // HACKHACK: not implemented.
-    return false;
+*/
+CF_EXPORT Boolean CFURLWriteBookmarkDataToFile( CFDataRef bookmarkRef, CFURLRef fileURL, CFURLBookmarkFileCreationOptions options, CFErrorRef *errorRef ) {
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5334,8 +5366,9 @@ Boolean CFURLWriteBookmarkDataToFile( CFDataRef bookmarkRef, CFURLRef fileURL, C
  @Notes
 */
 CF_EXPORT CFDataRef CFURLCreateBookmarkDataFromAliasRecord ( CFAllocatorRef allocatorRef, CFDataRef aliasRecordDataRef )  {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5343,8 +5376,9 @@ CF_EXPORT CFDataRef CFURLCreateBookmarkDataFromAliasRecord ( CFAllocatorRef allo
  @Notes
 */
 CF_EXPORT CFURLRef CFURLCreateFromFSRef(CFAllocatorRef allocator, const struct FSRef* fsRef) {
-    // HACKHACK: not implemented.
-    return nullptr;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5352,8 +5386,9 @@ CF_EXPORT CFURLRef CFURLCreateFromFSRef(CFAllocatorRef allocator, const struct F
  @Notes
 */
 CF_EXPORT Boolean CFURLResourceIsReachable(CFURLRef url, CFErrorRef* error) {
-    // HACKHACK: not implemented.
-    return false;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 
@@ -5362,8 +5397,9 @@ CF_EXPORT Boolean CFURLResourceIsReachable(CFURLRef url, CFErrorRef* error) {
  @Notes
 */
 CF_EXPORT Boolean CFURLSetResourcePropertiesForKeys(CFURLRef url, CFDictionaryRef keyedPropertyValues, CFErrorRef* error) {
-    // HACKHACK: not implemented.
-    return false;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5371,8 +5407,9 @@ CF_EXPORT Boolean CFURLSetResourcePropertiesForKeys(CFURLRef url, CFDictionaryRe
  @Notes
 */
 CF_EXPORT Boolean CFURLSetResourcePropertyForKey(CFURLRef url, CFStringRef key, CFTypeRef propertyValue, CFErrorRef* error) {
-    // HACKHACK: not implemented.
-    return false;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5380,8 +5417,8 @@ CF_EXPORT Boolean CFURLSetResourcePropertyForKey(CFURLRef url, CFStringRef key, 
  @Notes
 */
 CF_EXPORT void CFURLSetTemporaryResourcePropertyForKey(CFURLRef url, CFStringRef key, CFTypeRef propertyValue) {
-    // HACKHACK: not implemented.
-    return;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
 }
 
 /**
@@ -5389,8 +5426,9 @@ CF_EXPORT void CFURLSetTemporaryResourcePropertyForKey(CFURLRef url, CFStringRef
  @Notes
 */
 CF_EXPORT Boolean CFURLStartAccessingSecurityScopedResource(CFURLRef url) {
-    // HACKHACK: not implemented.
-    return false;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**
@@ -5398,8 +5436,8 @@ CF_EXPORT Boolean CFURLStartAccessingSecurityScopedResource(CFURLRef url) {
  @Notes
 */
 CF_EXPORT void CFURLStopAccessingSecurityScopedResource(CFURLRef url) {
-    // HACKHACK: not implemented.
-    return;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
 }
 
 /**
@@ -5407,11 +5445,13 @@ CF_EXPORT void CFURLStopAccessingSecurityScopedResource(CFURLRef url) {
  @Notes
 */
 CF_EXPORT Boolean CFURLGetFSRef(CFURLRef url, struct FSRef* fsRef) {
-    // HACKHACK: not implemented.
-    return false;
+    // TODO: 7491994: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
-// HACKHACK: reference platform does not have these constants defined. Just using the name of the variable.
+// WINOBJC: reference platform does not have these constants defined. Just using the name of the variable.
+CF_EXPORT const CFStringRef kCFURLAddedToDirectoryDateKey = CFSTR("kCFURLAddedToDirectoryDateKey");
 CF_EXPORT const CFStringRef kCFURLNameKey = CFSTR("kCFURLNameKey");
 CF_EXPORT const CFStringRef kCFURLLocalizedNameKey = CFSTR("kCFURLLocalizedNameKey");
 CF_EXPORT const CFStringRef kCFURLPathKey = CFSTR("kCFURLPathKey");
@@ -5431,6 +5471,8 @@ CF_EXPORT const CFStringRef kCFURLAttributeModificationDateKey = CFSTR("kCFURLAt
 CF_EXPORT const CFStringRef kCFURLLinkCountKey = CFSTR("kCFURLLinkCountKey");
 CF_EXPORT const CFStringRef kCFURLParentDirectoryURLKey = CFSTR("kCFURLParentDirectoryURLKey");
 CF_EXPORT const CFStringRef kCFURLVolumeURLKey = CFSTR("kCFURLVolumeURLKey");
+CF_EXPORT const CFStringRef kCFURLDocumentIdentifierKey = CFSTR("kCFURLDocumentIdentifierKey");
+CF_EXPORT const CFStringRef kCFURLGenerationIdentifierKey = CFSTR("kCFURLGenerationIdentifierKey");
 CF_EXPORT const CFStringRef kCFURLTypeIdentifierKey = CFSTR("kCFURLTypeIdentifierKey");
 CF_EXPORT const CFStringRef kCFURLLocalizedTypeDescriptionKey = CFSTR("kCFURLLocalizedTypeDescriptionKey");
 CF_EXPORT const CFStringRef kCFURLLabelNumberKey = CFSTR("kCFURLLabelNumberKey");
@@ -5469,6 +5511,12 @@ CF_EXPORT const CFStringRef kCFURLUbiquitousItemIsUploadedKey = CFSTR("kCFURLUbi
 CF_EXPORT const CFStringRef kCFURLUbiquitousItemIsUploadingKey = CFSTR("kCFURLUbiquitousItemIsUploadingKey");
 CF_EXPORT const CFStringRef kCFURLUbiquitousItemPercentDownloadedKey = CFSTR("kCFURLUbiquitousItemPercentDownloadedKey");
 CF_EXPORT const CFStringRef kCFURLUbiquitousItemPercentUploadedKey = CFSTR("kCFURLUbiquitousItemPercentUploadedKey");
+CF_EXPORT const CFStringRef kCFURLUbiquitousItemDownloadingErrorKey = CFSTR("kCFURLUbiquitousItemDownloadingErrorKey");
+CF_EXPORT const CFStringRef kCFURLUbiquitousItemDownloadingStatusKey = CFSTR("kCFURLUbiquitousItemDownloadingStatusKey");
+CF_EXPORT const CFStringRef kCFURLUbiquitousItemUploadingErrorKey = CFSTR("kCFURLUbiquitousItemUploadingErrorKey");
+CF_EXPORT const CFStringRef kCFURLUbiquitousItemDownloadingStatusCurrent = CFSTR("kCFURLUbiquitousItemDownloadingStatusCurrent");
+CF_EXPORT const CFStringRef kCFURLUbiquitousItemDownloadingStatusDownloaded = CFSTR("kCFURLUbiquitousItemDownloadingStatusDownloaded");
+CF_EXPORT const CFStringRef kCFURLUbiquitousItemDownloadingStatusNotDownloaded = CFSTR("kCFURLUbiquitousItemDownloadingStatusNotDownloaded");
 CF_EXPORT const CFStringRef kCFURLVolumeNameKey = CFSTR("kCFURLVolumeNameKey");
 CF_EXPORT const CFStringRef kCFURLVolumeLocalizedNameKey = CFSTR("kCFURLVolumeLocalizedNameKey");
 CF_EXPORT const CFStringRef kCFURLVolumeLocalizedFormatDescriptionKey = CFSTR("kCFURLVolumeLocalizedFormatDescriptionKey");
@@ -5488,6 +5536,7 @@ CF_EXPORT const CFStringRef kCFURLVolumeSupportsVolumeSizesKey = CFSTR("kCFURLVo
 CF_EXPORT const CFStringRef kCFURLVolumeSupportsRenamingKey = CFSTR("kCFURLVolumeSupportsRenamingKey");
 CF_EXPORT const CFStringRef kCFURLVolumeSupportsAdvisoryFileLockingKey = CFSTR("kCFURLVolumeSupportsAdvisoryFileLockingKey");
 CF_EXPORT const CFStringRef kCFURLVolumeSupportsExtendedSecurityKey = CFSTR("kCFURLVolumeSupportsExtendedSecurityKey");
+CF_EXPORT const CFStringRef kCFURLVolumeSupportsPersistentIDsKey = CFSTR("kCFURLVolumeSupportsPersistentIDsKey");
 CF_EXPORT const CFStringRef kCFURLVolumeIsBrowsableKey = CFSTR("kCFURLVolumeIsBrowsableKey");
 CF_EXPORT const CFStringRef kCFURLVolumeMaximumFileSizeKey = CFSTR("kCFURLVolumeMaximumFileSizeKey");
 CF_EXPORT const CFStringRef kCFURLVolumeIsEjectableKey = CFSTR("kCFURLVolumeIsEjectableKey");

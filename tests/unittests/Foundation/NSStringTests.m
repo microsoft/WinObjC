@@ -86,12 +86,12 @@ TEST(NSString, NSStringTests) {
 
     // rangeOfCharactersFromSet test
     NSString* testString3 = @"Alpha Bravo Charlie";
-    NSCharacterSet *charSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSCharacterSet* charSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     NSRange range;
 
-    range = [testString3 rangeOfCharacterFromSet: charSet options: 0];
+    range = [testString3 rangeOfCharacterFromSet:charSet options:0];
     ASSERT_EQ(5, range.location);
-    range = [testString3 rangeOfCharacterFromSet: charSet options: NSBackwardsSearch];
+    range = [testString3 rangeOfCharacterFromSet:charSet options:NSBackwardsSearch];
     ASSERT_EQ(11, range.location);
 }
 
@@ -119,4 +119,13 @@ TEST(NSString, UnownedDeepCopy) {
     buffer[0] = '\'';
     EXPECT_OBJCNE(firstString, secondString);
     free(buffer);
+}
+
+TEST(NSString, SubstringFromIndex) {
+    NSString* asciiStr = @"ObjectiveC";
+    NSString* extendedAsciiStr = @"ObjectiveC éééé";
+    NSString* chineseStr = @"中文";
+    ASSERT_OBJCEQ(@"tiveC", [asciiStr substringFromIndex:5]);
+    ASSERT_OBJCEQ(@"C éééé", [extendedAsciiStr substringFromIndex:9]);
+    ASSERT_OBJCEQ(@"文", [chineseStr substringFromIndex:1]);
 }
