@@ -24,7 +24,6 @@
 #import "Foundation/NSValue.h"
 #import "Foundation/NSPropertyListSerialization.h"
 #import "Foundation/NSKeyedArchiver.h"
-#import "Foundation/NSDate.h"
 #import "Foundation/NSAutoreleasePool.h"
 #import "Etc.h"
 #import "NSLogging.h"
@@ -333,7 +332,7 @@ static id makeReference(unsigned ref) {
                 id c = [anObject classForKeyedArchiver];
 
                 // FIXME ... exactly what classes are stored directly???
-                if (c == [NSString class] || c == [NSNumber class] || c == [NSDate class] || c == [NSData class]) {
+                if (c == [NSString class] || c == [NSNumber class] || c == [NSData class]) {
                     objectInfo = anObject;
                 } else {
                     // We store a dictionary describing the object.

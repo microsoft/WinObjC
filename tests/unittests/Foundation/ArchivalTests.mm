@@ -72,6 +72,7 @@ static NSData* createTestArchive() {
     [archiver encodeObject:@(40) forKey:@"number"];
     [archiver encodeObject:@{ @"a" : @"b" } forKey:@"dictionary"];
     [archiver encodeObject:@[ @"a" ] forKey:@"array"];
+    [archiver encodeObject:[NSDate dateWithTimeIntervalSince1970:20.0] forKey:@"date"];
 
     [archiver encodeObject:[[TestCreationSignallingClass alloc] init] forKey:@"creationSignalling"];
     [archiver encodeObject:@[
@@ -104,6 +105,7 @@ TEST(Foundation, NSKeyedUnarchiver) {
     EXPECT_ANY_THROW([insecureUnarchiver decodeIntForKey:@"number"]);
     EXPECT_OBJCEQ([insecureUnarchiver decodeObjectForKey:@"dictionary"], @{ @"a" : @"b" });
     EXPECT_OBJCEQ([insecureUnarchiver decodeObjectForKey:@"array"], @[ @"a" ]);
+    EXPECT_OBJCEQ([insecureUnarchiver decodeObjectForKey:@"date"], [NSDate dateWithTimeIntervalSince1970:20.0]);
 
     EXPECT_EQ_MSG([TestCreationSignallingClass class],
                   [[insecureUnarchiver decodeObjectOfClass:[NSString class] forKey:@"creationSignalling"] class],
