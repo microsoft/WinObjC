@@ -35,6 +35,7 @@
 
 UIKIT_EXPORT_CLASS
 @interface UIPinchGestureRecognizer : UIGestureRecognizer
+- (CGPoint)locationInView:(UIView*)viewAddr;
 @property (nonatomic) CGFloat scale;
 @property (nonatomic, readonly) CGFloat velocity;
 @end
