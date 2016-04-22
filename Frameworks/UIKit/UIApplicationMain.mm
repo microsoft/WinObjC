@@ -35,6 +35,7 @@
 #import "LoggingNative.h"
 #import "UIDeviceInternal.h"
 #import <MainDispatcher.h>
+#import <CACompositor.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
 

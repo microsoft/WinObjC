@@ -23,6 +23,7 @@
 #import <UIKit/UIScreen.h>
 
 #import "StubReturn.h"
+#import "CACompositor.h"
 
 extern float statusBarHeight;
 

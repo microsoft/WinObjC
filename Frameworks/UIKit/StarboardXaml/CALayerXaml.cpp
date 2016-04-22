@@ -13,7 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-// clang-format does not seem to like C++/CX
+// clang-format does not like C++/CX
 // clang-format off
 
 #include "ppltasks.h"
@@ -1683,147 +1683,74 @@ void EventedStoryboard::_CreateWoosh(CALayerXaml^ layer, bool fromRight, bool in
     m_container->Children->Append(wooshAnim);
 }
 
-IAsyncOperation<int>^ EventedStoryboard::AddTransition(CALayerXaml^ layer, String^ type, String^ subtype) {
-    RenderTargetBitmap^ copiedLayer = ref new RenderTargetBitmap();
-    double scale = CALayerXaml::s_screenScale;
-    /*
-    auto renderAsync = copiedLayer->RenderAsync(layer, (int)(layer->CurrentWidth * scale), 0);
-    // Note: Usage of PPL tasks is not recommened as it is a nightmare to debug. As part of fixing bug 7184543
-    // PPL tasks should be removed.
-    return create_async([this, layer, type, subtype, renderAsync, copiedLayer, scale, opacity]() {
-        return create_task(renderAsync)
-            .then(
-                [this, layer, type, subtype, copiedLayer, scale, opacity]() -> int {
-                    CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
-                    newLayer->_CopyPropertiesFrom(layer);
-                    int width = copiedLayer->PixelWidth;
-                    int height = copiedLayer->PixelHeight;
+concurrency::task<CALayerXaml^> EventedStoryboard::SnapshotLayer(CALayerXaml^ layer) {
+    if (((layer->m_size.Height == 0) && (layer->m_size.Width == 0)) || (layer->Opacity == 0)) {
+        return concurrency::task_from_result<CALayerXaml^>(nullptr);
+    }
+    else {
+        RenderTargetBitmap^ snapshot = ref new RenderTargetBitmap();
+        return concurrency::create_task(snapshot->RenderAsync(layer, (int)(layer->CurrentWidth * CALayerXaml::s_screenScale), 0))
+            .then([snapshot, layer](concurrency::task<void> result) {
+            // Return a new 'copy' layer with the rendered content
+            CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
+            newLayer->_CopyPropertiesFrom(layer);
 
-                    newLayer->setContentImage(copiedLayer, (float)width, (float)height, (float)scale);
+            newLayer->setContentImage(snapshot, (float)snapshot->PixelWidth, (float)snapshot->PixelHeight, (float)CALayerXaml::s_screenScale);
+            newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
 
-                    // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
-                    // If the UIViewController being transitioned away from has transparent content, the height returned is less the
-                    // navigation bar, as though Xaml sizes the buffer to the largest child Visual, and only expands where needed.
-                    // Top/bottom switched due to geometric origin of CALayer so read this as UIViewContentModeTopLeft
-                    newLayer->SetContentGravity(ContentGravity::BottomLeft);
+            return newLayer;
+        }, concurrency::task_continuation_context::use_current());
+    }
+}
 
-                    if (type == "kCATransitionFlip") {
-                        TimeSpan timeSpan = TimeSpan();
-                        timeSpan.Duration = (long long)(0.75 * c_hundredNanoSeconds);
-                        m_container->Duration = Duration(timeSpan);
-                        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(layer);
-                        unsigned int idx;
-                        parent->Children->IndexOf(layer, &idx);
-                        parent->Children->InsertAt(idx + 1, newLayer);
-                        parent->InvalidateArrange();
-                        layer->Opacity = 0;
-
-                        bool flipToLeft = true;
-                        if (subtype != "kCATransitionFromLeft") {
-                            flipToLeft = false;
-                        }
-
-                        _CreateFlip(newLayer, flipToLeft, false, true);
-                        _CreateFlip(layer, flipToLeft, true, false);
-                    } else {
-                        TimeSpan timeSpan = TimeSpan();
-                        timeSpan.Duration = (long long)(0.5 * c_hundredNanoSeconds);
-                        m_container->Duration = Duration(timeSpan);
-                        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(layer);
-                        unsigned int idx;
-                        parent->Children->IndexOf(layer, &idx);
-
-                        bool fromRight = true;
-                        if (subtype == "kCATransitionFromLeft") {
-                            fromRight = false;
-                        }
-
-                        if (fromRight) {
-                            parent->Children->InsertAt(idx, newLayer);
-                            parent->InvalidateArrange();
-                            _CreateWoosh(newLayer, fromRight, true, true);
-                            _CreateWoosh(layer, fromRight, false, false);
-                        } else {
-                            parent->Children->InsertAt(idx + 1, newLayer);
-                            parent->InvalidateArrange();
-                            _CreateWoosh(newLayer, fromRight, false, true);
-                            _CreateWoosh(layer, fromRight, true, false);
-                        }
-                    }
-
-                    return 0;
-
-                },
-                task_continuation_context::use_current());
-    });
-    */
-
-    // TODO::
-    // HACKHACK - remove this code
-    auto async = create_async([this]
-    {
-        return create_task([] { return 0; });
-    });
-
-    CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
-    newLayer->_CopyPropertiesFrom(layer);
-    int width = (int)(layer->CurrentWidth * scale);
-    int height = (int)(layer->CurrentHeight * scale);
-
-    newLayer->setContentImage(copiedLayer, (float)width, (float)height, (float)scale);
-    newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
-
+void EventedStoryboard::AddTransition(CALayerXaml^ realLayer, CALayerXaml^ snapshotLayer, String^ type, String^ subtype) {
     if (type == "kCATransitionFlip") {
         TimeSpan timeSpan = TimeSpan();
         timeSpan.Duration = (long long)(0.75 * c_hundredNanoSeconds);
         m_container->Duration = Duration(timeSpan);
-        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(layer);
-        if (parent != nullptr) {
-            unsigned int idx;
-            parent->Children->IndexOf(layer, &idx);
-            parent->Children->InsertAt(idx + 1, newLayer);
-            parent->InvalidateArrange();
-            layer->Opacity = 0;
+        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(realLayer);
+        unsigned int idx;
+        parent->Children->IndexOf(realLayer, &idx);
+        parent->Children->InsertAt(idx + 1, snapshotLayer);
+        parent->InvalidateArrange();
+        realLayer->Opacity = 0;
 
-            bool flipToLeft = true;
-            if (subtype != "kCATransitionFromLeft") {
-                flipToLeft = false;
-            }
-
-            _CreateFlip(newLayer, flipToLeft, false, true);
-            _CreateFlip(layer, flipToLeft, true, false);
+        bool flipToLeft = true;
+        if (subtype != "kCATransitionFromLeft") {
+            flipToLeft = false;
         }
+
+        _CreateFlip(snapshotLayer, flipToLeft, false, true);
+        _CreateFlip(realLayer, flipToLeft, true, false);
     }
     else {
         TimeSpan timeSpan = TimeSpan();
         timeSpan.Duration = (long long)(0.5 * c_hundredNanoSeconds);
         m_container->Duration = Duration(timeSpan);
-        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(layer);
-        if (parent != nullptr) {
-            unsigned int idx;
-            parent->Children->IndexOf(layer, &idx);
+        Panel^ parent = (Panel^)VisualTreeHelper::GetParent(realLayer);
+        unsigned int idx;
+        parent->Children->IndexOf(realLayer, &idx);
 
-            bool fromRight = true;
-            if (subtype == "kCATransitionFromLeft") {
-                fromRight = false;
-            }
+        bool fromRight = true;
+        if (subtype == "kCATransitionFromLeft") {
+            fromRight = false;
+        }
 
-            if (fromRight) {
-                parent->Children->InsertAt(idx, newLayer);
-                parent->InvalidateArrange();
-                _CreateWoosh(newLayer, fromRight, true, true);
-                _CreateWoosh(layer, fromRight, false, false);
-            }
-            else {
-                parent->Children->InsertAt(idx + 1, newLayer);
-                parent->InvalidateArrange();
-                _CreateWoosh(newLayer, fromRight, false, true);
-                _CreateWoosh(layer, fromRight, true, false);
-            }
+        if (fromRight) {
+            parent->Children->InsertAt(idx, snapshotLayer);
+            parent->InvalidateArrange();
+
+            _CreateWoosh(snapshotLayer, fromRight, true, true);
+            _CreateWoosh(realLayer, fromRight, false, false);
+        }
+        else {
+            parent->Children->InsertAt(idx + 1, snapshotLayer);
+            parent->InvalidateArrange();
+
+            _CreateWoosh(snapshotLayer, fromRight, false, true);
+            _CreateWoosh(realLayer, fromRight, true, false);
         }
     }
-
-    return async;
 }
 
 void EventedStoryboard::Animate(CALayerXaml^ layer, String^ propertyName, Object^ from, Object^ to) {

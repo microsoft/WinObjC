@@ -13,10 +13,11 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 class CACompositorClientInterface {
 public:
-    virtual void RequestRedraw() = 0;
+    virtual ~CACompositorClientInterface() {
+    }
     virtual void RequestTransactionProcessing() = 0;
-    virtual void SetLandscape(bool isLandscape) = 0;
 };

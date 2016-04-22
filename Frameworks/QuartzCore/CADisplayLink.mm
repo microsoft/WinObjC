@@ -26,6 +26,8 @@
 #import "NSRunLoopSource.h"
 #import "NSRunLoop+Internal.h"
 
+#import "CACompositor.h"
+
 EbrLock _displaySyncSocketLock = EBRLOCK_INITIALIZE;
 EbrEvent _displaySyncEvents[32];
 int _numDisplaySyncEvents = 0;

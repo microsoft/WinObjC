@@ -106,8 +106,6 @@ inline IWLazyClassLookup::operator id() {
 }
 #endif // __OBJC__
 
-#include "CACompositor.h"
-
 typedef unsigned int EbrLock;
 
 #define EBRLOCK_INITIALIZE 0xFAADEEEE

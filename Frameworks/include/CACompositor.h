@@ -17,6 +17,8 @@
 #if defined(__cplusplus) && defined(__OBJC__) && !defined(__CA_COMPOSITOR_H)
 #define __CA_COMPOSITOR_H
 
+#include <memory>
+
 class DisplayNode;
 class DisplayAnimation;
 class DisplayTexture;
@@ -35,25 +37,39 @@ public:
     virtual void DisplayTreeChanged() = 0;
     virtual void ProcessTransactions() = 0;
     virtual void RequestRedraw() = 0;
+
     virtual DisplayNode* CreateDisplayNode() = 0;
-    virtual DisplayTransaction* CreateDisplayTransaction() = 0;
-    virtual void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) = 0;
+    virtual std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() = 0;
+    virtual void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
+                                         const std::shared_ptr<DisplayTransaction>& onTransaction) = 0;
 
     virtual void sortWindowLevels() = 0;
 
-    virtual void addNode(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayNode* superNode, DisplayNode* beforeNode, DisplayNode* afterNode) = 0;
-    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) = 0;
-    virtual void removeNode(DisplayTransaction* transaction, DisplayNode* pNode) = 0;
+    virtual void addNode(const std::shared_ptr<DisplayTransaction>& transaction,
+                         DisplayNode* node,
+                         DisplayNode* superNode,
+                         DisplayNode* beforeNode,
+                         DisplayNode* afterNode) = 0;
 
-    virtual void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) = 0;
-    virtual void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) = 0;
-    virtual void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) = 0;
+    virtual void moveNode(const std::shared_ptr<DisplayTransaction>& transaction,
+                          DisplayNode* node,
+                          DisplayNode* beforeNode,
+                          DisplayNode* afterNode) = 0;
+    virtual void removeNode(const std::shared_ptr<DisplayTransaction>& transaction, DisplayNode* node) = 0;
 
-    virtual void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) = 0;
+    virtual void addAnimation(const std::shared_ptr<DisplayTransaction>& transaction, id layer, id animation, id forKey) = 0;
 
-    virtual void setNodeTexture(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) = 0;
+    virtual void setDisplayProperty(const std::shared_ptr<DisplayTransaction>& transaction,
+                                    DisplayNode* node,
+                                    const char* propertyName,
+                                    NSObject* newValue) = 0;
+
+    virtual void setNodeTexture(const std::shared_ptr<DisplayTransaction>& transaction,
+                                DisplayNode* node,
+                                DisplayTexture* newTexture,
+                                CGSize contentsSize,
+                                float contentsScale) = 0;
+
     virtual void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) = 0;
     virtual NSObject* getDisplayProperty(DisplayNode* node, const char* propertyName = NULL) = 0;
 
@@ -97,8 +113,6 @@ public:
     virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
     virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
 
-    // virtual CGPoint ConvertPoint(CGPoint point, CALayer *fromLayer, CALayer *toLayer) = 0;
-
     virtual void SortWindowLevels() = 0;
     virtual bool isTablet() = 0;
     virtual float screenWidth() = 0;
@@ -120,9 +134,6 @@ public:
 
     virtual void EnableDisplaySyncNotification() = 0;
     virtual void DisableDisplaySyncNotification() = 0;
-
-    virtual void IncrementCounter(const char* name) = 0;
-    virtual void DecrementCounter(const char* name) = 0;
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) = 0;
 

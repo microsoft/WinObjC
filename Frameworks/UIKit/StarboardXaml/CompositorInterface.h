@@ -13,12 +13,16 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #include "winobjc\winobjc.h"
+
+#include <ppltasks.h>
 
 class DisplayNode;
 class DisplayTexture;
 class DisplayAnimation;
+
 template <class T>
 class RefCounted;
 
@@ -34,9 +38,6 @@ protected:
     RefCountedType();
     virtual ~RefCountedType();
 };
-
-void IncrementCounter(const char* name);
-void DecrementCounter(const char* name);
 
 template <class T>
 class RefCounted {
@@ -118,23 +119,22 @@ public:
     virtual ~DisplayAnimation();
 
     virtual void Completed() = 0;
-    virtual void AddToNode(DisplayNode* node) = 0;
+    virtual concurrency::task<void> AddToNode(DisplayNode* node) = 0;
 
     void CreateXamlAnimation();
     void Start();
     void Stop();
 
-    void AddAnimation(DisplayNode* node, const wchar_t* propertyName, bool fromValid, float from, bool toValid, float to);
-    void AddTransitionAnimation(DisplayNode* node, const char* type, const char* subtype);
+    concurrency::task<void> AddAnimation(
+        DisplayNode* node, const wchar_t* propertyName, bool fromValid, float from, bool toValid, float to);
+    concurrency::task<void> AddTransitionAnimation(DisplayNode* node, const char* type, const char* subtype);
 };
 
 class DisplayTexture : public RefCountedType {
     friend class CAXamlCompositor;
 
 public:
-    DisplayTexture();
-    virtual ~DisplayTexture();
-
+    virtual ~DisplayTexture(){};
     virtual void SetNodeContent(DisplayNode* node, float contentWidth, float contentHeight, float contentScale) = 0;
 };
 
@@ -183,7 +183,7 @@ public:
     virtual ~DisplayNode();
 
     void SetTopMost();
-    void AddAnimation(DisplayAnimation* animation);
+    concurrency::task<void> AddAnimation(DisplayAnimation* animation);
     void SetProperty(const wchar_t* name, float value);
     void SetPropertyInt(const wchar_t* name, int value);
     void SetHidden(bool hidden);
@@ -207,3 +207,24 @@ public:
     void MoveNode(DisplayNode* before, DisplayNode* after);
     void RemoveFromSupernode();
 };
+
+struct ICompositorTransaction {
+public:
+    virtual ~ICompositorTransaction() {
+    }
+    virtual void Process() = 0;
+};
+
+struct ICompositorAnimationTransaction {
+public:
+    virtual ~ICompositorAnimationTransaction() {
+    }
+    virtual concurrency::task<void> Process() = 0;
+};
+
+// Dispatches the compositor transactions that have been queued up
+void DispatchCompositorTransactions(
+    std::deque<std::shared_ptr<ICompositorTransaction>>&& subTransactions,
+    std::deque<std::shared_ptr<ICompositorAnimationTransaction>>&& animationTransactions,
+    std::map<DisplayNode*, std::map<std::string, std::shared_ptr<ICompositorTransaction>>>&& propertyTransactions,
+    std::deque<std::shared_ptr<ICompositorTransaction>>&& movementTransactions);
