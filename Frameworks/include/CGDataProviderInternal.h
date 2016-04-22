@@ -22,6 +22,7 @@
     size_t size;
     const void* data;
     StrongId<NSString> filename;
+    StrongId<NSData> _data;
 }
 - (NSString*)_fileName;
 @end

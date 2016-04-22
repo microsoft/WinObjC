@@ -25,9 +25,6 @@
     <ProjectReference Include="..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9a6e-439b-a070-420a572af0c7}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\Starboard\lib\StarboardLib.vcxproj">
       <Project>{2a00fc26-2ecf-4df7-8ecf-2d18c5ac61c9}</Project>
     </ProjectReference>

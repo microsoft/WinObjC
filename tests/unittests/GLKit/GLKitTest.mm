@@ -15,8 +15,8 @@ NSString* stripSource(NSString* s, NSString* searchStr) {
     while ((r = [s rangeOfString:searchStr]).location != NSNotFound) {
         NSRange searchRange;
         searchRange.location = r.location + r.length;
-        searchRange.length = s.length;
-        NSRange endRange = [s rangeOfString:@"\n" options:0 range:searchRange];
+        searchRange.length = s.length - searchRange.location;
+        NSRange endRange = [s rangeOfString:@"\n" options:static_cast<NSStringCompareOptions>(0) range:searchRange];
         if (endRange.location != NSNotFound) {
             r.length = endRange.location - r.location;
         } else {
@@ -35,7 +35,7 @@ int countOccurrences(NSString* s, NSString* searchStr) {
     r.location = 0;
     r.length = s.length;
 
-    while ((r = [s rangeOfString:searchStr options:0 range:r]).location != NSNotFound) {
+    while ((r = [s rangeOfString:searchStr options:static_cast<NSStringCompareOptions>(0) range:r]).location != NSNotFound) {
         count++;
 
         r.location = r.location + r.length;
@@ -465,14 +465,13 @@ TEST(GLKit, BasicMath) {
     GLKMatrix2 m2 = GLKMatrix4GetMatrix2(m);
     GLKMatrix2 m2_2 = GLKMatrix3GetMatrix2(m3);
 
-    EXPECT_TRUE_MSG(m3.m00 == m.m00 && m3.m01 == m.m01 && m3.m02 == m.m02 &&
-                    m3.m10 == m.m10 && m3.m11 == m.m11 && m3.m12 == m.m12 &&
-                    m3.m20 == m.m20 && m3.m21 == m.m21 && m3.m22 == m.m22,
+    EXPECT_TRUE_MSG(m3.m00 == m.m00 && m3.m01 == m.m01 && m3.m02 == m.m02 && m3.m10 == m.m10 && m3.m11 == m.m11 && m3.m12 == m.m12 &&
+                        m3.m20 == m.m20 && m3.m21 == m.m21 && m3.m22 == m.m22,
                     "GLKMatrix4GetMatrix3 yielded unexpected result.");
 
     EXPECT_TRUE_MSG(m2.m00 == m.m00 && m2.m01 == m.m01 && m2.m10 == m.m10 && m2.m11 == m.m11,
                     "GLKMatrix4GetMatrix2 yielded unexpected result.");
-    
+
     EXPECT_TRUE_MSG(m2_2.m00 == m3.m00 && m2_2.m01 == m3.m01 && m2_2.m10 == m3.m10 && m2_2.m11 == m3.m11,
                     "GLKMatrix3GetMatrix2 yielded unexpected result.");
 }

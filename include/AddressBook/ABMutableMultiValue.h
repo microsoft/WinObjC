@@ -18,7 +18,7 @@
 #import <AddressBook/AddressBookExport.h>
 #import <AddressBook/ABRecord.h>
 #import <AddressBook/ABMultiValue.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFString.h>
 
 typedef CFTypeRef ABMutableMultiValueRef;

@@ -19,7 +19,7 @@
 #import <Foundation/NSURLRequest.h>
 #import <Foundation/NSURL.h>
 
-TEST(Foundation, NSURLRequest_requestWithURL) {
+TEST(NSURLRequest, requestWithURL) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -35,7 +35,7 @@ TEST(Foundation, NSURLRequest_requestWithURL) {
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }
 
-TEST(Foundation, NSURLRequest_requestWithURLFull) {
+TEST(NSURLRequest, requestWithURLFull) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -51,7 +51,7 @@ TEST(Foundation, NSURLRequest_requestWithURLFull) {
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }
 
-TEST(Foundation, NSURLRequest_defaultInit) {
+TEST(NSURLRequest, defaultInit) {
     NSURLRequest* urlRequest = [[NSURLRequest alloc] init];
     ASSERT_TRUE_MSG(urlRequest != NULL, "FAILED: urlRequest should be non-null!");
     ASSERT_OBJCEQ_MSG(NULL, [urlRequest URL], "FAILED: url is not null.");

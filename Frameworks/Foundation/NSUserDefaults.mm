@@ -278,7 +278,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 
     __int64 ret = 0;
     if ([number isKindOfClass:[NSString class]]) {
-        [static_cast<NSString*>(number) _longLongValuePtr:&ret];
+        ret = [static_cast<NSString*>(number) longLongValue];
     } else {
         if ([number isKindOfClass:[NSNumber class]]) {
             ret = [number longLongValue];

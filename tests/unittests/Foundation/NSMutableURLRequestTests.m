@@ -19,7 +19,7 @@
 #import <Foundation/NSMutableURLRequest.h>
 #import <Foundation/NSURL.h>
 
-TEST(Foundation, NSMutableURLRequest_setValue) {
+TEST(NSMutableURLRequest, setValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -44,7 +44,7 @@ TEST(Foundation, NSMutableURLRequest_setValue) {
     [content release];
 }
 
-TEST(Foundation, NSMutableURLRequest_addValue) {
+TEST(NSMutableURLRequest, addValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");

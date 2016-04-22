@@ -47,3 +47,14 @@ TEST(NSDictionary, Enumerate) {
 
     ASSERT_EQ(0, waitingCount);
 }
+
+TEST(NSDictionary, ExpandBeyondCapacity) {
+    NSMutableDictionary* dictionary = [NSMutableDictionary dictionaryWithCapacity:1];
+
+    NSUInteger expectedCount = 10;
+    for (NSUInteger i = 0; i < expectedCount; i++) {
+        [dictionary setObject:@1 forKey:[NSNumber numberWithInt:i]];
+    }
+
+    ASSERT_EQ(expectedCount, [dictionary count]);
+}

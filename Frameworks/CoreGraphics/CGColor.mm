@@ -26,7 +26,9 @@ static IWLazyClassLookup _LazyUIColor("UIColor");
  @Status Interoperable
 */
 void CGColorRelease(CGColorRef color) {
-    CFRelease(color);
+    if (color != nullptr) {
+        CFRelease(color);
+    }
 }
 
 /**

@@ -18,7 +18,7 @@
 #import <Foundation/NSObject.h>
 
 #import <CoreVideo/CoreVideoExport.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFBase.h>

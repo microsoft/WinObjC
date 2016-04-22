@@ -21,7 +21,6 @@
 
 #import <CoreFoundation/CFAttributedString.h>
 #import <CoreFoundation/CFDictionary.h>
-#import <CoreFoundation/CFType.h>
 
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGPath.h>

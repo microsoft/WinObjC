@@ -98,12 +98,9 @@ static bool _U_LogIfError(UErrorCode status) {
             icuRegexOptions |= UREGEX_UWORD;
         }
 
-        // Create backing ICU regex handle:
-        UStringHolder unicodePattern(_pattern);
         UErrorCode status = U_ZERO_ERROR;
         UParseError parseStatus;
-
-        _icuRegex.reset(RegexPattern::compile(unicodePattern.string(), icuRegexOptions, parseStatus, status));
+        _icuRegex.reset(RegexPattern::compile(UnicodeString([_pattern UTF8String]), icuRegexOptions, parseStatus, status));
 
         if (_U_LogIfError(status)) {
             if (error) {
@@ -345,9 +342,7 @@ struct CallBackContext {
                       usingBlock:(void (^)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop))block {
     UErrorCode status = U_ZERO_ERROR;
 
-    UStringHolder matchStr(string);
-
-    RegexMatcher* matcher = _icuRegex->matcher(matchStr.string(), status);
+    RegexMatcher* matcher = _icuRegex->matcher(UnicodeString([string UTF8String]), status);
     if (_U_LogIfError(status)) {
         return;
     }

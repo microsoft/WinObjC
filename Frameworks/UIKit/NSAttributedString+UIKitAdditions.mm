@@ -216,23 +216,22 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
  @Status Caveat
  @Notes Only implemented for HTML and plaintext currently. NSDocumentType must be specified.
 */
-- (NSAttributedString*)initWithData:(NSData*)data
-                            options:(NSDictionary*)options
-                 documentAttributes:(NSDictionary* _Nullable*)docAttrs // TODO: not sure what docAttrs is used for
-                              error:(NSError**)error {
+- (instancetype)initWithData:(NSData*)data
+                     options:(NSDictionary*)options
+          documentAttributes:(NSDictionary* _Nullable*)docAttrs // TODO: not sure what docAttrs is used for
+                       error:(NSError**)error {
     if (!data) {
         return nil;
     }
 
     // Get NSCharacterEncoding from options, if it exists
     NSNumber* encodingNumber = [options objectForKey:NSCharacterEncodingDocumentAttribute];
-    NSStringEncoding encoding = (encodingNumber) ? [encodingNumber intValue] : [NSString defaultCStringEncoding];
+    NSStringEncoding encoding =
+        static_cast<NSStringEncoding>((encodingNumber) ? [encodingNumber intValue] : [NSString defaultCStringEncoding]);
     // Decode the data
     NSString* stringData = [[NSString alloc] initWithData:data encoding:encoding];
 
     if (stringData) {
-        [self init];
-
         // Get NSDefaultAttributes from options
         NSDictionary* defaultAttributes = [options objectForKey:NSDefaultAttributesDocumentAttribute];
         if (!defaultAttributes) {
@@ -243,7 +242,9 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
         // Switch based on NSDocumentType
         id documentType = [options objectForKey:NSDocumentTypeDocumentAttribute];
         if ([documentType isEqual:NSHTMLTextDocumentType]) {
-            _initWithHtml(reinterpret_cast<NSMutableAttributedString*>(self), defaultAttributes, stringData, error);
+            NSMutableAttributedString* temporaryString = [[NSMutableAttributedString new] autorelease];
+            _initWithHtml(temporaryString, defaultAttributes, stringData, error);
+            return [self initWithAttributedString:temporaryString];
 
         } else if ([documentType isEqual:NSRTFTextDocumentType]) {
             if (error) {
@@ -258,7 +259,7 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
             }
 
         } else if ([documentType isEqual:NSPlainTextDocumentType]) {
-            [self initWithString:stringData];
+            return [self initWithString:stringData];
 
         } else {
             if (error) {
@@ -273,7 +274,7 @@ static void _initWithHtml(NSMutableAttributedString* self, NSDictionary* attribu
         *error = [NSError errorWithDomain:@"NSAttributedString: Unable to decode data" code:100 userInfo:nil];
     }
 
-    return self;
+    return nil;
 }
 
 /**

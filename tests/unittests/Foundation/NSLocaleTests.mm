@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSLocale_SanityTest) {
+TEST(NSLocale, SanityTest) {
     LOG_INFO("NSLocale sanity test: ");
 
     // Basic test to get preferredLanguages.
@@ -26,7 +26,7 @@ TEST(Foundation, NSLocale_SanityTest) {
     LOG_INFO("System has %d preferred language(s) set.", [preferredLanguages count]);
 }
 
-TEST(Foundation, NSLocale_ObjectForKey) {
+TEST(NSLocale, ObjectForKey) {
     LOG_INFO("NSLocale objectForKey method test: ");
 
     NSLocale* locale = [NSLocale currentLocale];
@@ -58,7 +58,7 @@ TEST(Foundation, NSLocale_ObjectForKey) {
     ASSERT_EQ_MSG([randomObject length], 0, "Random object for key should return nil!");
 }
 
-TEST(Foundation, NSLocale_ClassMethods) {
+TEST(NSLocale, ClassMethods) {
     LOG_INFO("NSLocale class method tests: ");
     int count;
 
@@ -113,7 +113,7 @@ TEST(Foundation, NSLocale_ClassMethods) {
     }
 }
 
-TEST(Foundation, NSLocale_ArchivingUnarchiving) {
+TEST(NSLocale, ArchivingUnarchiving) {
     LOG_INFO("NSLocale archiving and unarchiving test: ");
 
     NSLocale* locale = [NSLocale systemLocale];

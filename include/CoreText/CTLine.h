@@ -19,7 +19,6 @@
 
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFAttributedString.h>
-#import <CoreFoundation/CFType.h>
 
 #import <CoreGraphics/CGContext.h>
 #import <CoreGraphics/CGGeometry.h>

@@ -25,9 +25,6 @@
     <None Include="Metal.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\lib\MetalLib.vcxproj">
       <Project>{7b48e9ad-b809-4919-b9ea-822a87c269bc}</Project>
     </ProjectReference>

@@ -14,197 +14,46 @@
 //
 //******************************************************************************
 
-#include <limits>
 #import "Starboard.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
+#import "CFFoundationInternal.h"
+#import "NSNumberPlaceholder.h"
+#import "NSNumberInternal.h"
+#import "BridgeHelpers.h"
 
-static const size_t c_cacheIntsBelow = 16;
-static StrongId<NSNumber> s_cachedInts[c_cacheIntsBelow];
+#import <limits>
 
-template <typename T>
-static bool shouldStoreAsInt(T value) {
-    // Small integers should be stored as ints so we can satisfy requests out of the cache
-    return std::numeric_limits<T>::is_integer && (value >= 0) && (value < c_cacheIntsBelow);
-}
+@implementation NSNumber
 
-// Union for the internal storage of NSNumber
-union _NSNumberInternalValue {
-    // BOOL, NSInteger, and NSUInteger are typedefs of other types below
-    char charValue;
-    double doubleValue;
-    float floatValue;
-    int intValue;
-    long longValue;
-    long long longLongValue;
-    short shortValue;
-    unsigned char unsignedCharValue;
-    unsigned int unsignedIntValue;
-    unsigned long unsignedLongValue;
-    unsigned long long unsignedLongLongValue;
-    unsigned short unsignedShortValue;
-
-    // Default constructor for this union zeroes out the internal memory
-    _NSNumberInternalValue() : unsignedLongLongValue() {
-    }
-
-    // Returns a pointer to the appropriate primitive unionValue in the union, based on the template type
-    template <typename TNumberType>
-    TNumberType* _getRawValuePointer();
-
-    template <>
-    char* _getRawValuePointer() {
-        return &charValue;
-    }
-
-    template <>
-    double* _getRawValuePointer() {
-        return &doubleValue;
-    }
-
-    template <>
-    float* _getRawValuePointer() {
-        return &floatValue;
-    }
-
-    template <>
-    int* _getRawValuePointer() {
-        return &intValue;
-    }
-
-    template <>
-    long* _getRawValuePointer() {
-        return &longValue;
-    }
-
-    template <>
-    long long* _getRawValuePointer() {
-        return &longLongValue;
-    }
-
-    template <>
-    short* _getRawValuePointer() {
-        return &shortValue;
-    }
-
-    template <>
-    unsigned char* _getRawValuePointer() {
-        return &unsignedCharValue;
-    }
-
-    template <>
-    unsigned int* _getRawValuePointer() {
-        return &unsignedIntValue;
-    }
-
-    template <>
-    unsigned long* _getRawValuePointer() {
-        return &unsignedLongValue;
-    }
-
-    template <>
-    unsigned long long* _getRawValuePointer() {
-        return &unsignedLongLongValue;
-    }
-
-    template <>
-    unsigned short* _getRawValuePointer() {
-        return &unsignedShortValue;
-    }
-
-    // Getter and setter for the union
-    template <typename TNumberType>
-    TNumberType getRawValue() {
-        return *_getRawValuePointer<TNumberType>();
-    }
-
-    template <typename TNumberType>
-    void setRawValue(TNumberType num) {
-        *_getRawValuePointer<TNumberType>() = num;
-    }
-
-    // Helper for returning a casted version of the raw value
-    // The function name is meant to be read like: getRawValueAs<int>
-    template <typename TNumberType>
-    TNumberType getRawValueAs(const char* objCType) {
-        switch (objCType[0]) {
-            case 'c':
-                return static_cast<TNumberType>(getRawValue<char>());
-            case 'd':
-                return static_cast<TNumberType>(getRawValue<double>());
-            case 'f':
-                return static_cast<TNumberType>(getRawValue<float>());
-            case 'i':
-                return static_cast<TNumberType>(getRawValue<int>());
-            case 'l':
-                return static_cast<TNumberType>(getRawValue<long>());
-            case 'q':
-                return static_cast<TNumberType>(getRawValue<long long>());
-            case 's':
-                return static_cast<TNumberType>(getRawValue<short>());
-            case 'C':
-                return static_cast<TNumberType>(getRawValue<unsigned char>());
-            case 'I':
-                return static_cast<TNumberType>(getRawValue<unsigned int>());
-            case 'L':
-                return static_cast<TNumberType>(getRawValue<unsigned long>());
-            case 'Q':
-                return static_cast<TNumberType>(getRawValue<unsigned long long>());
-            case 'S':
-                return static_cast<TNumberType>(getRawValue<unsigned short>());
-            default:
-                assert(0);
-                return 0;
-        }
-    }
-};
-
-#pragma region NSNumber Initializer and Constructor Helpers
-
-template <typename TNumberType>
-static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unionValue, const char** pObjCType) {
-    unionValue.setRawValue(rawValue);
-    *pObjCType = @encode(TNumberType);
-}
-
-#define INIT_WITH_NUM_AND_RETURN(num)             \
-    if (self = [super init]) {                    \
-        _initWithRawValue(num, _val, &_objCType); \
-    }                                             \
-    return self
-
-#define RETURN_CACHED_IF_CACHED(num)                       \
-    if (shouldStoreAsInt(num)) {                           \
-        return [self numberWithInt:static_cast<int>(num)]; \
-    }
-
-#pragma endregion
-
-@implementation NSNumber {
-@private
-    _NSNumberInternalValue _val;
-    const char* _objCType;
-    BOOL _isBool;
-}
-
-/**
- @Status Interoperable
-*/
-+ (void)initialize {
++ (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSNumber class]) {
-        for (size_t i = 0; i < c_cacheIntsBelow; i++) {
-            s_cachedInts[i].attach([[NSNumber alloc] initWithInt:i]);
-        }
+        static StrongId<NSNumberPlaceholder> placeholder = [NSNumberPlaceholder allocWithZone:zone];
+        return placeholder;
     }
+
+    return [super allocWithZone:zone];
 }
+
+// Ignore class_setSuperClass being 'deprecated'
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
++ (void)load {
+    // Now that NSNumber is loaded, go ahead and reset _NSCFNumber's and _NSCFBoolean's superclass
+    // to be NSNumber. This is needed so that any CFNumber that was created *before*
+    // NSNumber was loaded (namely all the constants in CF) will be properly bridged.
+    class_setSuperclass(objc_getClass("_NSCFNumber"), self);
+    class_setSuperclass(objc_getClass("_NSCFBoolean"), self);
+}
+
+#pragma clang diagnostic pop
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder containsValueForKey:@"NS.intval"]) {
-        _val.intValue = (int)[coder decodeIntForKey:@"NS.intval"];
-        _objCType = @encode(int);
+        self = [self initWithInt:(int)[coder decodeIntForKey:@"NS.intval"]];
     } else {
         FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSNumber initWithCoder with non-integer unsupported");
     }
@@ -223,7 +72,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithChar:(char)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithChar:num] autorelease];
 }
 
@@ -231,7 +79,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithDouble:(double)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithDouble:num] autorelease];
 }
 
@@ -239,7 +86,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithFloat:(float)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithFloat:num] autorelease];
 }
 
@@ -247,9 +93,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithInt:(int)num {
-    if (num >= 0 && num < c_cacheIntsBelow) {
-        return s_cachedInts[num];
-    }
     return [[[self alloc] initWithInt:num] autorelease];
 }
 
@@ -257,7 +100,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithInteger:(NSInteger)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithInteger:num] autorelease];
 }
 
@@ -265,7 +107,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithLong:(long)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithLong:num] autorelease];
 }
 
@@ -273,7 +114,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithLongLong:(long long)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithLongLong:num] autorelease];
 }
 
@@ -281,7 +121,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithShort:(short)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithShort:num] autorelease];
 }
 
@@ -289,7 +128,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedChar:(unsigned char)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithUnsignedChar:num] autorelease];
 }
 
@@ -297,7 +135,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedInt:(unsigned int)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithUnsignedInt:num] autorelease];
 }
 
@@ -305,7 +142,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedInteger:(NSUInteger)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithUnsignedInteger:num] autorelease];
 }
 
@@ -313,7 +149,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedLong:(unsigned long)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithUnsignedLong:num] autorelease];
 }
 
@@ -321,7 +156,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedLongLong:(unsigned long long)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithUnsignedLongLong:num] autorelease];
 }
 
@@ -329,7 +163,6 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 + (instancetype)numberWithUnsignedShort:(unsigned short)num {
-    RETURN_CACHED_IF_CACHED(num);
     return [[[self alloc] initWithUnsignedShort:num] autorelease];
 }
 
@@ -351,107 +184,120 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
  @Status Interoperable
 */
 - (instancetype)initWithBool:(BOOL)num {
-    _initWithRawValue(num, _val, &_objCType);
-    _isBool = YES;
-    return self;
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithChar:(char)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithDouble:(double)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithFloat:(float)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithInt:(int)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithInteger:(NSInteger)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithLong:(long)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithLongLong:(long long)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithShort:(short)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithUnsignedChar:(unsigned char)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithUnsignedInt:(unsigned int)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithUnsignedInteger:(NSUInteger)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithUnsignedLong:(unsigned long)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithUnsignedLongLong:(unsigned long long)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithUnsignedShort:(unsigned short)num {
-    INIT_WITH_NUM_AND_RETURN(num);
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -473,28 +319,28 @@ static void _initWithRawValue(TNumberType rawValue, _NSNumberInternalValue& unio
 
 #pragma region NSNumber compare Helpers
 - (BOOL)_isUnsigned {
-    return isupper(_objCType[0]);
+    return isupper([self objCType][0]);
 }
 
 - (BOOL)_isFloatingPoint {
-    char objCTypeLowered = tolower(_objCType[0]);
+    char objCTypeLowered = tolower([self objCType][0]);
     return (objCTypeLowered == 'f') || (objCTypeLowered == 'd');
 }
 
 template <typename TNumberType>
-static int _NSNumberCompare(TNumberType selfValue, TNumberType otherValue) {
+static NSComparisonResult _NSNumberCompare(TNumberType selfValue, TNumberType otherValue) {
     if (selfValue > otherValue) {
-        return 1;
+        return NSOrderedDescending;
     } else if (selfValue < otherValue) {
-        return -1;
+        return NSOrderedAscending;
     } else {
-        return 0;
+        return NSOrderedSame;
     }
 }
 
-static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long long signedValue) {
+static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long long signedValue) {
     if (unsignedValue > LLONG_MAX) {
-        return 1;
+        return NSOrderedDescending;
     } else {
         return _NSNumberCompare(static_cast<long long>(unsignedValue), signedValue);
     }
@@ -504,9 +350,9 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
 /**
  @Status Interoperable
 */
-- (int)compare:(NSNumber*)other {
+- (NSComparisonResult)compare:(NSNumber*)other {
     if (other == self) {
-        return 0;
+        return NSOrderedSame;
     }
 
     if ([self _isFloatingPoint] || [other _isFloatingPoint]) {
@@ -539,110 +385,135 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
  @Status Interoperable
 */
 - (BOOL)boolValue {
-    return _val.getRawValueAs<BOOL>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (char)charValue {
-    return _val.getRawValueAs<char>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (double)doubleValue {
-    return _val.getRawValueAs<double>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (float)floatValue {
-    return _val.getRawValueAs<float>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (int)intValue {
-    return _val.getRawValueAs<int>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (NSInteger)integerValue {
-    return _val.getRawValueAs<NSInteger>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (long)longValue {
-    return _val.getRawValueAs<long>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (long long)longLongValue {
-    return _val.getRawValueAs<long long>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (short)shortValue {
-    return _val.getRawValueAs<short>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned char)unsignedCharValue {
-    return _val.getRawValueAs<unsigned char>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned int)unsignedIntValue {
-    return _val.getRawValueAs<unsigned int>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)unsignedIntegerValue {
-    return _val.getRawValueAs<NSUInteger>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned long)unsignedLongValue {
-    return _val.getRawValueAs<unsigned long>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned long long)unsignedLongLongValue {
-    return _val.getRawValueAs<unsigned long long>(_objCType);
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (unsigned short)unsignedShortValue {
-    return _val.getRawValueAs<unsigned short>(_objCType);
-}
-
-// Used for CFType
-- (BOOL)_isBool {
-    return _isBool;
+    // This class is a class cluster "interface".
+    // A concrete implementation (default or derived) MUST implement this, if its objCType matches.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -657,37 +528,31 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
  @Status Interoperable
 */
 - (NSString*)stringValue {
-    switch (_objCType[0]) {
+    switch ([self objCType][0]) {
         case 'c':
-            // TODO: 6546983 ideally using "%hhd", so we can get rid of (short) cast
-            // but it was not supported, so we cast the value to char and then short
-            // and then format the value using short
-            return [NSString stringWithFormat:@"%hd", static_cast<short>(_val.getRawValue<char>())];
+            return [NSString stringWithFormat:@"%hhd", [self charValue]];
         case 'd':
-            return [NSString stringWithFormat:@"%f", _val.getRawValue<double>()];
+            return [NSString stringWithFormat:@"%f", [self doubleValue]];
         case 'f':
-            return [NSString stringWithFormat:@"%f", _val.getRawValue<float>()];
+            return [NSString stringWithFormat:@"%f", [self floatValue]];
         case 'i':
-            return [NSString stringWithFormat:@"%d", _val.getRawValue<int>()];
+            return [NSString stringWithFormat:@"%d", [self intValue]];
         case 'l':
-            return [NSString stringWithFormat:@"%ld", _val.getRawValue<long>()];
+            return [NSString stringWithFormat:@"%ld", [self longValue]];
         case 'q':
-            return [NSString stringWithFormat:@"%lld", _val.getRawValue<long long>()];
+            return [NSString stringWithFormat:@"%lld", [self longLongValue]];
         case 's':
-            return [NSString stringWithFormat:@"%hd", _val.getRawValue<short>()];
+            return [NSString stringWithFormat:@"%hd", [self shortValue]];
         case 'C':
-            // TODO: 6546983 ideally using "%hhu", so we can get rid of (unsigned short) cast
-            // but it was not supported, so we cast the value to char and then usinged short
-            // and then format the value using unsigned short
-            return [NSString stringWithFormat:@"%hu", static_cast<short>(_val.getRawValue<unsigned char>())];
+            return [NSString stringWithFormat:@"%hhu", [self unsignedCharValue]];
         case 'I':
-            return [NSString stringWithFormat:@"%u", _val.getRawValue<unsigned int>()];
+            return [NSString stringWithFormat:@"%u", [self unsignedIntValue]];
         case 'L':
-            return [NSString stringWithFormat:@"%lu", _val.getRawValue<unsigned long>()];
+            return [NSString stringWithFormat:@"%lu", [self unsignedLongValue]];
         case 'Q':
-            return [NSString stringWithFormat:@"%llu", _val.getRawValue<unsigned long long>()];
+            return [NSString stringWithFormat:@"%llu", [self unsignedLongLongValue]];
         case 'S':
-            return [NSString stringWithFormat:@"%hu", _val.getRawValue<unsigned short>()];
+            return [NSString stringWithFormat:@"%hu", [self unsignedShortValue]];
         default:
             assert(0);
             return nil;
@@ -698,7 +563,8 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
  @Status Interoperable
 */
 - (const char*)objCType {
-    return _objCType;
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -734,46 +600,40 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
  @Status Interoperable
 */
 - (void)getValue:(void*)dest {
-    switch (_objCType[0]) {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    NSInvalidAbstractInvocation();
+}
+
+- (CFNumberType)_cfNumberType {
+    switch ([self objCType][0]) {
         case 'c':
-            *(char*)dest = _val.getRawValue<char>();
-            break;
+            return kCFNumberCharType;
         case 'd':
-            *(double*)dest = _val.getRawValue<double>();
-            break;
+            return kCFNumberDoubleType;
         case 'f':
-            *(float*)dest = _val.getRawValue<float>();
-            break;
+            return kCFNumberFloatType;
         case 'i':
-            *(int*)dest = _val.getRawValue<int>();
-            break;
+            return kCFNumberIntType;
         case 'l':
-            *(long*)dest = _val.getRawValue<long>();
-            break;
+            return kCFNumberLongType;
         case 'q':
-            *(long long*)dest = _val.getRawValue<long long>();
-            break;
+            return kCFNumberLongLongType;
         case 's':
-            *(short*)dest = _val.getRawValue<short>();
-            break;
+            return kCFNumberShortType;
         case 'C':
-            *(unsigned char*)dest = _val.getRawValue<unsigned char>();
-            break;
+            return kCFNumberSInt16Type;
         case 'I':
-            *(unsigned int*)dest = _val.getRawValue<unsigned int>();
-            break;
+            return kCFNumberSInt64Type;
         case 'L':
-            *(unsigned long*)dest = _val.getRawValue<unsigned long>();
-            break;
+            return kCFNumberSInt64Type;
         case 'Q':
-            *(unsigned long long*)dest = _val.getRawValue<unsigned long long>();
-            break;
+            // kCFNumberSInt128Type = 17
+            return static_cast<CFNumberType>(17);
         case 'S':
-            *(unsigned short*)dest = _val.getRawValue<unsigned short>();
-            break;
+            return kCFNumberSInt32Type;
         default:
             assert(0);
-            break;
+            return kCFNumberIntType;
     }
 }
 
@@ -782,7 +642,8 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
 /**
  @Status Stub
 */
-DWORD NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
+DWORD
+NSDecimalCompare(NSDecimal* num1, NSDecimal* num2) {
     UNIMPLEMENTED();
     if (num1->val < num2->val) {
         return -1;
@@ -858,40 +719,3 @@ NSString* NSDecimalString(NSDecimal* num, id locale) {
     sprintf_s(szVal, sizeof(szVal), "%f", num->val);
     return [NSString stringWithCString:szVal];
 }
-
-@interface NSCFBoolean : NSNumber {
-@public
-}
-@end
-
-@implementation NSCFBoolean
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wobjc-missing-super-calls"
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-}
-#pragma clang diagnostic pop
-
-/**
- @Status Interoperable
-*/
-- (instancetype)retain {
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (oneway void)release {
-}
-
-/**
- @Status Interoperable
-*/
-+ (void)load {
-    object_setClass(((NSCFBoolean*)kCFBooleanTrue), self);
-    object_setClass(((NSCFBoolean*)kCFBooleanFalse), self);
-}
-@end
