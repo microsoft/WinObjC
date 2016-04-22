@@ -373,7 +373,9 @@ static void cvtFloat64ToSInt128(CFSInt128Struct *out, const Float64 *in) {
     }
     Float64 t = floor(d / FLOAT_POSITIVE_2_TO_THE_64);
     i.high = (int64_t)t;
-    i.low = (uint64_t)(d - t * FLOAT_POSITIVE_2_TO_THE_64);
+    // WINBOJC: this conversion doesn't work correctly, just use static_cast instead
+    // i.low = (uint64_t)(d - t * FLOAT_POSITIVE_2_TO_THE_64);
+    i.low = static_cast<uint64_t>(d);
     *out = i;
 }
 
