@@ -1201,8 +1201,7 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 */
 - (id)standardizedURL {
     UNIMPLEMENTED();
-    TraceVerbose(TAG, L"standardizedURL needs attention");
-    return [self copy];
+    return [[self copy] autorelease];
 }
 
 /**

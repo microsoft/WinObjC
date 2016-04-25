@@ -27,7 +27,6 @@
 - (double)timeIntervalSinceDate:(id)ref;
 - (NSDate*)dateByAddingTimeInterval:(double)interval;
 - (NSDate*)initWithCoder:(NSCoder*)coder;
-- (NSDate*)initWithString:(NSString*)string;
 - (NSDate*)initWithTimeIntervalSince1970:(double)secondsSince1970;
 - (NSDate*)initWithTimeIntervalSinceNow:(double)secondsSinceNow;
 - (NSDate*)initWithTimeIntervalSinceReferenceDate:(double)ref;
@@ -43,7 +42,6 @@
 - (NSObject*)init;
 - (NSObject*)encodeWithCoder:(NSCoder*)coder;
 - (NSString*)description;
-+ (NSDate*)dateWithString:(NSString*)string;
 + (NSDate*)date;
 + (NSDate*)distantPast;
 + (NSDate*)distantFuture;

@@ -131,10 +131,9 @@ NSString* const NSCalendarDayChangedNotification = @"NSCalendarDayChangedNotific
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)calendarIdentifier {
-    UNIMPLEMENTED();
     return _identifier;
 }
 
@@ -410,11 +409,7 @@ static Calendar* calendarCopyWithTZAndDate(NSCalendar* self, NSDate* date) {
 */
 - (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)timep forDate:(NSDate*)date {
     UNIMPLEMENTED();
-    // HACK: implement me!
-    if (datep) {
-        *datep = [date retain];
-    }
-    return NO;
+    return StubReturn();
 }
 
 static UCalendarDateFields icuFieldFromUnit(NSCalendarUnit unit) {
@@ -454,27 +449,7 @@ static UCalendarDateFields icuFieldFromUnit(NSCalendarUnit unit) {
 */
 - (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date {
     UNIMPLEMENTED();
-    NSRange ret;
-
-    double time = [date timeIntervalSince1970];
-
-    UErrorCode status = U_ZERO_ERROR;
-    Calendar* copy = [self _getICUCalendar]->clone();
-    copy->setTime(time * 1000.0, status);
-
-    icu::TimeZone* tz = [_timeZone _createICUTimeZone];
-    copy->setTimeZone(*tz);
-    delete tz;
-
-    UCalendarDateFields icuSmaller = icuFieldFromUnit(smaller);
-    ret.location = copy->getActualMinimum(icuSmaller, status);
-    ret.length = copy->getActualMaximum(icuSmaller, status) - ret.location + 1;
-
-    if (smaller == NSMonthCalendarUnit) {
-        ret.location++;
-    }
-    delete copy;
-    return ret;
+    return StubReturn();
 }
 
 /**

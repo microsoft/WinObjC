@@ -1159,14 +1159,14 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 */
 - (NSString*)executablePath {
     UNIMPLEMENTED();
-    return [_bundlePath stringByAppendingPathComponent:[NSString stringWithCString:g_globalExecutableName]];
+    return StubReturn();
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Returns [en, Base, eng, English];
 */
 - (NSArray*)preferredLocalizations {
-    UNIMPLEMENTED();
     if (_preferredLocalizations == nil) {
         _preferredLocalizations = [[NSMutableArray arrayWithObject:@"en"] retain];
         [_preferredLocalizations addObject:@"Base"];
@@ -1186,10 +1186,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Adds only "en", "eng", and "English"
 */
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations {
-    UNIMPLEMENTED();
     NSMutableArray* ret = [NSMutableArray array];
 
     if ([localizations containsObject:@"en"]) {
@@ -1206,10 +1206,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Adds only "en", "eng", and "English"
 */
 + (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizations forPreferences:(NSArray*)preferences {
-    UNIMPLEMENTED();
     NSMutableArray* ret = [NSMutableArray array];
 
     if ([localizations containsObject:@"en"]) {
@@ -1267,10 +1267,10 @@ static NSString* checkPathNonLocal(NSString* name, NSString* extension, NSString
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Ignores localization
 */
 - (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath localization:(NSString*)localizationName {
-    UNIMPLEMENTED();
     return [self URLsForResourcesWithExtension:extension subdirectory:subpath];
 }
 

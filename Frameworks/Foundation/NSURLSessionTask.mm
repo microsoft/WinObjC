@@ -219,11 +219,11 @@ enum HttpStatus : int {
  @Status Stub
 */
 - (void)suspend {
+    UNIMPLEMENTED();
     @synchronized(self) {
         if (_state == NSURLSessionTaskStateSuspended) {
             return;
         }
-        UNIMPLEMENTED();
     }
 }
 

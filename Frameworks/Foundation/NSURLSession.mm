@@ -381,12 +381,12 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 - (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request
                                         fromData:(NSData*)data
                                completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler {
+    UNIMPLEMENTED();
     if (_invalidating) {
         return nil;
     }
 
     // stream data?
-    UNIMPLEMENTED();
     [self _dispatchUnsupportedFailureToCompletionBlock:completionHandler];
     return nil;
 }
@@ -404,11 +404,11 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 - (NSURLSessionUploadTask*)uploadTaskWithRequest:(NSURLRequest*)request
                                         fromFile:(NSURL*)fileURL
                                completionHandler:(NSURLSessionTaskCompletionHandler)completionHandler {
+    UNIMPLEMENTED();
     if (_invalidating) {
         return nil;
     }
 
-    UNIMPLEMENTED();
     [self _dispatchUnsupportedFailureToCompletionBlock:completionHandler];
     return nil;
 }
@@ -417,11 +417,11 @@ static bool dispatchDelegateOptional(NSOperationQueue* queue, id object, SEL cmd
 @Status Stub
 */
 - (NSURLSessionUploadTask*)uploadTaskWithStreamedRequest:(NSURLRequest*)request {
+    UNIMPLEMENTED();
     if (_invalidating) {
         return nil;
     }
 
-    UNIMPLEMENTED();
     [self _dispatchUnsupportedFailureToCompletionBlock:nil];
     return nil;
 }

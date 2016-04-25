@@ -47,3 +47,13 @@ TEST(NSDictionary, Enumerate) {
 
     ASSERT_EQ(0, waitingCount);
 }
+
+TEST(NSDictionary, keysSortedByValueUsingComparator) {
+    NSDictionary* testDict = @{ @"A" : @2, @"B" : @4, @"C" : @3, @"D" : @1 };
+    NSArray* actualArray = [testDict keysSortedByValueUsingComparator: ^(id obj1, id obj2) {
+        return [obj1 compare:obj2];
+    }];
+
+    NSArray* expectedArray = @[@"D", @"A", @"C", @"B" ];
+    ASSERT_OBJCEQ(expectedArray, actualArray);
+}

@@ -49,14 +49,6 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Stub
-*/
-+ (NSDate*)dateWithString:(NSString*)string {
-    UNIMPLEMENTED();
-    return [[[self alloc] initWithString:string] autorelease];
-}
-
-/**
  @Status Interoperable
 */
 - (double)timeIntervalSinceReferenceDate {
@@ -160,17 +152,6 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 - (NSDate*)initWithCoder:(NSCoder*)coder {
     double time = [coder decodeDoubleForKey:@"NS.time"];
     return [self initWithTimeIntervalSinceReferenceDate:time];
-}
-
-/**
- @Status Stub
-*/
-- (NSDate*)initWithString:(NSString*)string {
-    UNIMPLEMENTED();
-    TraceVerbose(TAG, L"NSDate initWithString not supported");
-    [self init];
-
-    return self;
 }
 
 /**
@@ -307,7 +288,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSObject*)init {
-    _curTime = TimeIntervalSinceReferenceDate();
+    if (self = [super init]) {
+        _curTime = TimeIntervalSinceReferenceDate();
+    }
 
     return self;
 }

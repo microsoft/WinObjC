@@ -776,10 +776,9 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSArray*)keysSortedByValueUsingComparator:(NSComparator)comparator {
-    UNIMPLEMENTED();
     SortedKeysHelperCtx ctx;
 
     ctx.dict = self;

@@ -152,10 +152,10 @@ NSCalculationError NSDecimalSubtract(NSDecimal* result,
 @implementation NSDecimalNumber
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes does not support locale using ',', does not support exponents
 */
 + (NSDecimalNumber*)decimalNumberWithString:(NSString*)str {
-    UNIMPLEMENTED();
     const char* pStr = [str UTF8String];
     if (strstr(pStr, ".") != NULL) {
         double fVal = strtod(pStr, NULL);

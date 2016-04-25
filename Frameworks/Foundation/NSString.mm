@@ -2976,11 +2976,11 @@ const int s_oneByte = 16;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Always returns YES
 */
 - (BOOL)canBeConvertedToEncoding:(NSStringEncoding)encoding {
-    UNIMPLEMENTED();
-    return TRUE; //  [BUG: Blatant lie]
+    return YES;
 }
 
 /**
@@ -3102,7 +3102,6 @@ const int s_oneByte = 16;
 */
 - (NSString*)precomposedStringWithCanonicalMapping {
     UNIMPLEMENTED();
-    TraceVerbose(TAG, L"precomposedStringWithCanonicalMapping??");
     return [self retain];
 }
 

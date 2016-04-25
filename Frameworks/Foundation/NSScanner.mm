@@ -85,14 +85,6 @@ typedef unsigned short unichar;
 }
 
 /**
- @Status Stub
-*/
-- (id)locale {
-    UNIMPLEMENTED();
-    return _locale;
-}
-
-/**
  @Status Interoperable
 */
 - (void)setCharactersToBeSkipped:(id)set {
@@ -108,18 +100,6 @@ typedef unsigned short unichar;
 */
 - (void)setCaseSensitive:(BOOL)flag {
     _isCaseSensitive = flag;
-}
-
-/**
- @Status Stub
-*/
-- (void)setLocale:(id)locale {
-    UNIMPLEMENTED();
-    if (locale != _locale) {
-        locale = [locale retain];
-        [_locale release];
-        _locale = locale;
-    }
 }
 
 /**

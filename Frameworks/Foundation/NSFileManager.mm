@@ -112,28 +112,19 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 // Locating System Directories
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Ignores appropriateForURL, create, and error. Calls URLsForDirectory and returns first result.
 */
 - (NSURL*)URLForDirectory:(NSSearchPathDirectory)directory
                  inDomain:(NSSearchPathDomainMask)domains
         appropriateForURL:(NSURL*)forURL
                    create:(BOOL)create
                     error:(NSError**)error {
-    UNIMPLEMENTED();
-    assert(forURL == nil);
-    id paths = NSSearchPathForDirectoriesInDomains(directory, domains, TRUE);
-
-    int count = [paths count];
-
-    for (int i = 0; i < count; i++) {
-        id curObj = [paths objectAtIndex:i];
-
-        id newUrl = [NSURL fileURLWithPath:curObj];
-
-        return newUrl;
+    
+    NSArray* urls = [self URLsForDirectory:directory inDomains:domains];
+    if ([urls count] > 0) {
+        return [urls objectAtIndex:0];
     }
-
-    assert(0);
 
     return nil;
 }
@@ -573,14 +564,11 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes does not resolve symlinks
 */
-- (id)destinationOfSymbolicLinkAtPath:(id)path error:(NSError**)error {
-    UNIMPLEMENTED();
-    const char* pPath = [path UTF8String];
-    TraceVerbose(TAG, L"destinationOfSymbolicLinkAtPath: %hs", pPath);
-
-    return [path retain];
+- (NSString*)destinationOfSymbolicLinkAtPath:(NSString*)path error:(NSError* _Nullable*)error {
+    return [[path copy] autorelease];
 }
 
 // Determining Access to Files
@@ -939,16 +927,11 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes returns hardcoded attributes
 */
 - (NSDictionary*)fileSystemAttributesAtPath:(NSString*)pathAddr {
-    UNIMPLEMENTED();
-    const char* path = [pathAddr UTF8String];
-
-    TraceVerbose(TAG, L"fileAttributesAtPath: %hs", path);
-
     id ret = [NSMutableDictionary dictionary];
-
     [ret setValue:[NSNumber numberWithInt:32 * 1024 * 1024] forKey:NSFileSystemFreeSize];
     [ret setValue:[NSNumber numberWithInt:64 * 1024 * 1024 * 1024] forKey:NSFileSystemSize];
 
