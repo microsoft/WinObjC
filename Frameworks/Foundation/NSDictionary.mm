@@ -249,7 +249,8 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
     const char* keyName = (const char*)[key UTF8String];
 
     if (keyName[0] == '@') {
-        assert(0);
+        TraceError(L"NSDictionary", L"Unsupported aggregate key %hs", keyName);
+        return nil;
     }
 
     id ret = [self objectForKey:key];
