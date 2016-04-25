@@ -154,6 +154,22 @@ SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
     return nullptr;
 }
 
+template <typename T>
+static id quickGet(id self, SEL getter) {
+    T ret = ((T(*)(id, SEL))objc_msgSend)(self, getter);
+    return woc::ValueTransformer<T>::get(&ret);
+}
+
+template <>
+id quickGet<id>(id self, SEL getter) {
+    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+}
+
+template <>
+id quickGet<Class>(id self, SEL getter) {
+    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+}
+
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
         return false;
@@ -163,8 +179,18 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
 
     const char* valueType = [sig methodReturnType];
     // We can't box or unbox char* or arbitrary pointers.
-    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
+    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?' || valueType[0] == ':') {
         return false;
+    }
+
+    if (0
+#define APPLY_TYPE(type, name, capitalizedName, encodingChar) || (valueType[0] == encodingChar && (*ret = quickGet<type>(self, getter)))
+        APPLY_TYPE(id, object, Object, '@')
+        APPLY_TYPE(Class, class, Class, '#')
+#include "type_encoding_cases.h"
+#undef APPLY_TYPE
+            ) {
+        return true;
     }
 
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -346,6 +372,30 @@ SEL KVCSetterForPropertyName(NSObject* self, const char* key) {
     return nullptr;
 }
 
+template <typename T>
+static bool quickSet(id self, SEL setter, id value, const char* valueType) {
+    uint8_t* data = static_cast<uint8_t*>(alloca(objc_sizeof_type(valueType)));
+    if (!woc::dataWithTypeFromValue(data, valueType, value)) {
+        return false;
+    }
+
+    T* typedData = (T*)data;
+    ((void (*)(id, SEL, T))objc_msgSend)(self, setter, *typedData);
+    return true;
+}
+
+template <>
+bool quickSet<id>(id self, SEL setter, id value, const char* valueType) {
+    ((void (*)(id, SEL, id))objc_msgSend)(self, setter, value);
+    return true;
+}
+
+template <>
+bool quickSet<Class>(id self, SEL setter, id value, const char* valueType) {
+    ((void (*)(id, SEL, Class))objc_msgSend)(self, setter, static_cast<Class>(value));
+    return true;
+}
+
 bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
     if (!setter) {
         return false;
@@ -355,17 +405,28 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
 
     // 3 arguments: self, selector, new value.
     if (sig && [sig numberOfArguments] == 3) {
-        NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
-
         const char* valueType = [sig getArgumentTypeAtIndex:2];
-        std::vector<uint8_t> data(objc_sizeof_type(valueType));
-        if (!woc::dataWithTypeFromValue(data.data(), valueType, value)) {
+
+        if (0
+#define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
+    || (valueType[0] == encodingChar && quickSet<type>(self, setter, value, valueType))
+            APPLY_TYPE(id, object, Object, '@')
+            APPLY_TYPE(Class, class, Class, '#')
+#include "type_encoding_cases.h"
+#undef APPLY_TYPE
+                ) {
+            return true;
+        }
+
+        uint8_t* data = static_cast<uint8_t*>(alloca(objc_sizeof_type(valueType)));
+        if (!woc::dataWithTypeFromValue(data, valueType, value)) {
             return false;
         }
+        NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
         [invocation setTarget:self];
         [invocation setSelector:setter];
-        [invocation setArgument:data.data() atIndex:2];
+        [invocation setArgument:data atIndex:2];
         [invocation invoke];
         return true;
     }
