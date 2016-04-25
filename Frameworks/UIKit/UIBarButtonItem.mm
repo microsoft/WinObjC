@@ -672,6 +672,12 @@ static void initControls(UIBarButtonItem* self) {
     _targetSel = (SEL)[connection sel];
 }
 
+// we need this shim because app are doing hack like following to get the view from UIBarButtonItem
+// [barButtonItem valueForKey:@"view"];
+- (UIView*)view {
+    return [self _view];
+}
+
 - (UIView*)_view {
     if (_customView != nil) {
         return _customView;
