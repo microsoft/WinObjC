@@ -170,10 +170,10 @@ void setVariantFromDictionary(CFDictionaryRef dictionary,
             propertyToWrite.ulVal = (unsigned long)[(id)CFDictionaryGetValue(dictionary, key) unsignedLongValue];      
         } else if (propertyType == VT_UI8) {
             double dictionaryValue = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
-            setHighLowParts((ULARGE_INTEGER*)&propertyToWrite.uhVal, dictionaryValue);
+            setHighLowParts(&propertyToWrite.uhVal, dictionaryValue);
         } else if (propertyType == VT_I8) {
             double dictionaryValue = [(id)CFDictionaryGetValue(dictionary, key) doubleValue];
-            setHighLowParts((LARGE_INTEGER*)&propertyToWrite.hVal, dictionaryValue);
+            setHighLowParts(&propertyToWrite.hVal, dictionaryValue);
         } else if (propertyType == VT_LPSTR) {
             propertyToWrite.pszVal = (char*)[(NSString*)CFDictionaryGetValue(dictionary, key) UTF8String];
         } else if (propertyType == VT_LPWSTR) {
