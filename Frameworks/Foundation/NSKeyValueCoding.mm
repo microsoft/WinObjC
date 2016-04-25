@@ -120,28 +120,39 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
     return nullptr;
 }
 
-// clang-format off
 SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
-    // The possible getter selectors for a key x are -getX, -x, and -isX.
-    // If we can't find any of these, we fall back to ivar lookup.
-    // Key length is caller-checked.
-    std::vector<SEL (^)()> possibleSelectors {
-        ^SEL{ return sel_registerName(woc::string::format("get%c%s", toupper(key[0]), &key[1]).c_str()); },
-        ^SEL{ return sel_registerName(key); },
-        ^SEL{ return sel_registerName(woc::string::format("is%c%s", toupper(key[0]), &key[1]).c_str()); },
-    };
+    SEL sel = nullptr;
+    auto len = strlen(key);
+    char* buf = (char*)alloca(3 + len + 1);
+    strcpy_s(buf + 4, len, key + 1);
 
-    Class cls = object_getClass(self);
-    for (auto& possibleSelGenerator : possibleSelectors) {
-        SEL possibleSelector = possibleSelGenerator();
-        if ([cls instancesRespondToSelector:possibleSelector]) {
-            return possibleSelector;
-        }
+    // getExample
+    buf[0] = 'g';
+    buf[1] = 'e';
+    buf[2] = 't';
+    buf[3] = toupper(key[0]);
+
+    sel = sel_getUid(buf);
+    if ([self respondsToSelector:sel]) {
+        return sel;
+    }
+
+    // example
+    sel = sel_getUid(key);
+    if ([self respondsToSelector:sel]) {
+        return sel;
+    }
+
+    // isExample
+    buf[1] = 'i';
+    buf[2] = 's';
+    sel = sel_getUid(buf + 1);
+    if ([self respondsToSelector:sel]) {
+        return sel;
     }
 
     return nullptr;
 }
-// clang-format on
 
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
@@ -313,9 +324,22 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
 }
 
 SEL KVCSetterForPropertyName(NSObject* self, const char* key) {
-    auto accessorName(woc::string::format("set%c%s:", toupper(key[0]), &key[1]));
-    auto sel = sel_registerName(accessorName.c_str());
-    if ([[self class] instancesRespondToSelector:sel]) {
+    SEL sel = nullptr;
+    auto len = strlen(key);
+    // For the key "example", we must construct the following buffer:
+    // _ _ _ _ x a m p l e _ \0
+    // and fill it with the following characters:
+    // s e t E x a m p l e : \0
+    char* buf = (char*)alloca(3 + len + 2);
+    strcpy_s(buf + 4, len, key + 1);
+    buf[0] = 's';
+    buf[1] = 'e';
+    buf[2] = 't';
+    buf[3] = toupper(key[0]);
+    buf[3 + len] = ':';
+    buf[3 + len + 1] = '\0';
+    sel = sel_getUid(buf);
+    if ([self respondsToSelector:sel]) {
         return sel;
     }
 
