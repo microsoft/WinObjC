@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -34,21 +35,20 @@ IMAGEIO_EXPORT const CFStringRef kCGImageDestinationLossyCompressionQuality;
 IMAGEIO_EXPORT const CFStringRef kCGImageDestinationBackgroundColor;
 
 IMAGEIO_EXPORT CGImageDestinationRef CGImageDestinationCreateWithDataConsumer(CGDataConsumerRef consumer,
-                                                                              CFStringRef type,
-                                                                              size_t count,
-                                                                              CFDictionaryRef options) STUB_METHOD;
+    CFStringRef type,
+    size_t count,
+    CFDictionaryRef options) STUB_METHOD;
 IMAGEIO_EXPORT CGImageDestinationRef CGImageDestinationCreateWithData(CFMutableDataRef data,
-                                                                      CFStringRef type,
-                                                                      size_t count,
-                                                                      CFDictionaryRef options) STUB_METHOD;
-IMAGEIO_EXPORT CGImageDestinationRef CGImageDestinationCreateWithURL(CFURLRef url, CFStringRef type, size_t count, CFDictionaryRef options)
-    STUB_METHOD;
-IMAGEIO_EXPORT void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CFDictionaryRef properties) STUB_METHOD;
+    CFStringRef type,
+    size_t count,
+    CFDictionaryRef options);
+IMAGEIO_EXPORT CGImageDestinationRef CGImageDestinationCreateWithURL(CFURLRef url, CFStringRef type, size_t count, CFDictionaryRef options);
+IMAGEIO_EXPORT void CGImageDestinationAddImage(CGImageDestinationRef idst, CGImageRef image, CFDictionaryRef properties);
 IMAGEIO_EXPORT void CGImageDestinationAddImageFromSource(CGImageDestinationRef idst,
-                                                         CGImageSourceRef isrc,
-                                                         size_t index,
-                                                         CFDictionaryRef properties) STUB_METHOD;
-IMAGEIO_EXPORT CFArrayRef CGImageDestinationCopyTypeIdentifiers() STUB_METHOD;
-IMAGEIO_EXPORT CFTypeID CGImageDestinationGetTypeID() STUB_METHOD;
-IMAGEIO_EXPORT void CGImageDestinationSetProperties(CGImageDestinationRef idst, CFDictionaryRef properties) STUB_METHOD;
-IMAGEIO_EXPORT bool CGImageDestinationFinalize(CGImageDestinationRef idst) STUB_METHOD;
+    CGImageSourceRef isrc,
+    size_t index,
+    CFDictionaryRef properties);
+IMAGEIO_EXPORT CFArrayRef CGImageDestinationCopyTypeIdentifiers();
+IMAGEIO_EXPORT CFTypeID CGImageDestinationGetTypeID();
+IMAGEIO_EXPORT void CGImageDestinationSetProperties(CGImageDestinationRef idst, CFDictionaryRef properties);
+IMAGEIO_EXPORT bool CGImageDestinationFinalize(CGImageDestinationRef idst);
