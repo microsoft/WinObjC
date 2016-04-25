@@ -1323,6 +1323,10 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
+    if ([self class] == [NSString class] && strType == NSConstructedString_NoOwn) {
+        // If we don't own the buffer, a deep copy must be made.
+        return [[[self class] alloc] initWithBytes:u->NoOwnString._address length:u->NoOwnString._length encoding:u->NoOwnString._encoding];
+    }
     return [self retain];
 }
 
