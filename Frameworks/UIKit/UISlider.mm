@@ -28,6 +28,7 @@
     idretaintype(UIImage) _sliderLeft, _sliderRight, _dot, _dotHighlighted;
     idretaintype(UIImageView) _sliderLeftView, _sliderRightView, _sliderThumbView;
     float _value, _max, _min, _trackVal;
+    BOOL _continuous;
 }
 static void sizeViews(UISlider* self, bool animated) {
     CGRect bounds, thumbSize;
@@ -114,6 +115,7 @@ static void initInternal(UISlider* self) {
     [panGesture setDelegate:(id<UIGestureRecognizerDelegate>)self];
     [panGesture _setDragSlack:0.0f];
     [self->_sliderThumbView addGestureRecognizer:(id)panGesture];
+    [self setContinuous:TRUE];
 
     sizeViews(self, false);
 }
@@ -213,7 +215,18 @@ static void initInternal(UISlider* self) {
     sizeViews(self, animated ? true : false);
 }
 
-- (void)setContinuous {
+/**
+ @Status Interoperable
+*/
+- (void)setContinuous:(BOOL)continous {
+    _continuous = continous;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isContinuous {
+    return _continuous;
 }
 
 /**
@@ -279,21 +292,25 @@ static void initInternal(UISlider* self) {
     [gesture setTranslation:CGPointMake(0, 0) inView:self];
 
     CGRect bounds;
+    bounds = [self bounds];
+
+    _trackVal = _value + (amt.x / bounds.size.width) * (_max - _min);
+    [self setValue:_trackVal];
 
     if (state == UIGestureRecognizerStateEnded) {
         [_sliderThumbView setHighlighted:FALSE];
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
+        [self sendActionsForControlEvents:UIControlEventTouchUpInside];
     } else if (state == UIGestureRecognizerStateBegan) {
-        _trackVal = _value;
         if ([_sliderThumbView highlightedImage] != nil) {
             [_sliderThumbView setHighlighted:TRUE];
         }
+        if (self.isContinuous == YES) {
+            [self sendActionsForControlEvents:UIControlEventValueChanged];
+        }
+    } else if ((self.isContinuous == YES) && (state == UIGestureRecognizerStateChanged)) {
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
     }
-
-    bounds = [self bounds];
-
-    _trackVal += (amt.x / bounds.size.width) * (_max - _min);
-    [self setValue:_trackVal];
-    [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 /**
