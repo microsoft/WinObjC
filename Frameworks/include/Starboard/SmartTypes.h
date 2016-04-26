@@ -20,9 +20,13 @@
 
 #if defined(__OBJC__)
 #include <Foundation/Foundation.h>
+#include <CoreFoundation/CFBase.h>
 #endif
 
 #if defined(__cplusplus)
+
+#include <memory>
+#include <type_traits>
 
 extern "C" id objc_storeStrong(id* object, id value); // Forward decl for non-objc.h users.
 
@@ -73,16 +77,16 @@ public:
     }
 
     // Constructor for id only when TCapturedObjPtr!=id, to break ambiguity with the following constructor.
-    template<
-        typename TCapturedObjPtr = TObjPointer,
-        typename = typename std::enable_if<!std::is_same<TCapturedObjPtr, id>::value, id>::type
-    >
-    explicit AutoId(id val) : _val(nil) {
+    template <typename TCapturedObjPtr = TObjPointer,
+              typename = typename std::enable_if<!std::is_same<TCapturedObjPtr, id>::value, id>::type>
+    explicit AutoId(id val)
+        : _val(nil) {
         TLifetimeTraits::store(&_val, val);
     }
 
     template <typename Any, typename = typename std::enable_if<TCanConvertFrom<Any>::value>::type>
-    AutoId(const Any& val) : _val(nil) {
+    AutoId(const Any& val)
+        : _val(nil) {
         TLifetimeTraits::store(&_val, val);
     }
 
@@ -101,7 +105,8 @@ public:
     // We can only move from the same lifetime, and only with convertible objects.
     template <typename TOtherObj, typename TOtherLifetime, typename = typename std::enable_if<TCanConvertFrom<TOtherObj>::value>::type>
     AutoId(AutoId<TOtherObj, TOtherLifetime>&& other) {
-        static_assert(std::is_same<TLifetimeTraits, TOtherLifetime>::value, "AutoId can only move from another AutoId&& with the same lifetime.");
+        static_assert(std::is_same<TLifetimeTraits, TOtherLifetime>::value,
+                      "AutoId can only move from another AutoId&& with the same lifetime.");
     }
 
     AutoId(AutoId<TObj, TLifetimeTraits>&& other) {
@@ -182,7 +187,8 @@ public:
     // the converse.
     template <typename TOtherObj, typename TOtherLifetime, typename = typename std::enable_if<TCanConvertFrom<TOtherObj>::value>::type>
     AutoId<TObj, TLifetimeTraits>& operator=(AutoId<TOtherObj, TOtherLifetime>&& other) {
-        static_assert(std::is_same<TLifetimeTraits, TOtherLifetime>::value, "AutoId can only move from another AutoId&& with the same lifetime.");
+        static_assert(std::is_same<TLifetimeTraits, TOtherLifetime>::value,
+                      "AutoId can only move from another AutoId&& with the same lifetime.");
         return *this;
     }
 
@@ -192,7 +198,7 @@ public:
         return *this;
     }
 
-    template <typename Any, typename = typename std::enable_if</*std::is_pointer<Any>::value && */TCanConvertFrom<Any>::value>::type>
+    template <typename Any, typename = typename std::enable_if</*std::is_pointer<Any>::value && */ TCanConvertFrom<Any>::value>::type>
     AutoId<TObj, TLifetimeTraits>& operator=(const Any& val) {
         id idValue = (id)val;
         if (idValue == _val) {
@@ -287,6 +293,20 @@ bool operator!=(const Any& other, const AutoId<TObj, TLifetimeTraits>& val) {
 
 #define idretaintype(type) AutoId<type>
 #define idretainproto(type) AutoId<id<type>>
+
+#if defined(__OBJC__)
+namespace woc {
+template <typename T>
+class unique_cf : public std::unique_ptr<std::remove_pointer<T>::type, decltype(&CFRelease)> {
+public:
+    unique_cf() : std::unique_ptr<std::remove_pointer<T>::type, decltype(&CFRelease)>(nullptr, CFRelease) {
+    }
+
+    explicit unique_cf(T&& val) : std::unique_ptr<std::remove_pointer<T>::type, decltype(&CFRelease)>(std::forward<T>(val), CFRelease) {
+    }
+};
+}
+#endif
 
 #else // else(!defined(__cplusplus))
 
