@@ -92,6 +92,12 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSCharacterSet.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDate.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDateFormatter.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />

@@ -13,64 +13,67 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+//
+// Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See http://swift.org/LICENSE.txt for license information
+// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
 
-#import <time.h>
 #import "Starboard.h"
 #import "StubReturn.h"
-#import "Foundation/NSDate.h"
+#import <Foundation/NSDate.h>
+#import <CoreFoundation/CoreFoundation.h>
+
 #import "LoggingNative.h"
-#import "NSTimeZoneInternal.h"
+#import "NSRaise.h"
+#import "BridgeHelpers.h"
+#import "NSCFDate.h"
 
-static const wchar_t* TAG = L"NSDate";
+NSDateFormatter* _getDescriptionFormatter() {
+    NSDateFormatter* formatter = [NSDateFormatter new];
+    [formatter setDateFormat:@"yyyy'-'MM'-'dd' 'HH':'mm':'ss Z"];
+    [formatter setTimeZone:static_cast<NSTimeZone*>(CFTimeZoneCreateWithTimeIntervalFromGMT(kCFAllocatorSystemDefault, 0.0))];
+    return formatter;
+}
 
-double TimeIntervalSinceReferenceDate() {
-    double result;
-    struct EbrTimeval tp;
+NSDateFormatter* _getLocaleDescriptionFormatter(NSLocale* locale) {
+    CFDateFormatterRef formatter = CFDateFormatterCreate(kCFAllocatorSystemDefault,
+                                                         static_cast<CFLocaleRef>(locale),
+                                                         kCFDateFormatterFullStyle,
+                                                         kCFDateFormatterFullStyle);
+    CFDateFormatterSetProperty(formatter, kCFDateFormatterTimeZone, CFTimeZoneCopySystem());
 
-    EbrGetTimeOfDay(&tp);
-    result = (((NSTimeInterval)tp.tv_sec) - NSTimeIntervalSince1970);
-    result += (((NSTimeInterval)tp.tv_usec) / ((NSTimeInterval)1000000.0));
-
-    return result;
+    return static_cast<NSDateFormatter*>(formatter);
 }
 
 @implementation NSDate
 
-// Number of seconds between Jan 1, 1601 UTC (Windows FILETIME) and Jan 1, 1970 UTC (POSIX/Epoch time)
-static const int64_t c_windowsToUnixNumSecondsOffset = 11644473600LL;
-// Ratio between 100ns (Windows FILETIME unit) and 1s (POSIX/Epoch time unit)
-static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
+/**
+ @Status Interoperable
+*/
++ ALLOC_PLACEHOLDER_SUBCLASS_WITH_ZONE(NSDate, NSDatePlaceholder);
 
 /**
  @Status Interoperable
 */
 + (double)timeIntervalSinceReferenceDate {
-    return TimeIntervalSinceReferenceDate();
-}
-
-/**
- @Status Stub
-*/
-+ (NSDate*)dateWithString:(NSString*)string {
-    UNIMPLEMENTED();
-    return [[[self alloc] initWithString:string] autorelease];
+    return CFAbsoluteTimeGetCurrent();
 }
 
 /**
  @Status Interoperable
 */
 - (double)timeIntervalSinceReferenceDate {
-    double ret = _curTime;
-    return ret;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (double)timeIntervalSinceNow {
-    double ret = [self timeIntervalSinceReferenceDate] - [NSDate timeIntervalSinceReferenceDate];
-
-    return ret;
+    return ([self timeIntervalSinceReferenceDate] - [NSDate timeIntervalSinceReferenceDate]);
 }
 
 /**
@@ -91,18 +94,15 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 + (NSDate*)date {
-    return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:TimeIntervalSinceReferenceDate()] autorelease];
+    return [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:[NSDate timeIntervalSinceReferenceDate]] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (NSDate*)distantPast {
-    static id staticInstance;
-    if (!staticInstance) {
-        staticInstance = [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-(2010.0L * 365 * 24 * 60 * 60)];
-    }
-
+    static StrongId<NSDate> staticInstance =
+        [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-(2010.0L * 365 * 24 * 60 * 60)];
     return staticInstance;
 }
 
@@ -110,11 +110,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 + (NSDate*)distantFuture {
-    static id staticInstance;
-    if (!staticInstance) {
-        staticInstance = [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:2010.0L * 365 * 24 * 60 * 60];
-    }
-
+    static StrongId<NSDate> staticInstance = [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:2010.0L * 365 * 24 * 60 * 60];
     return staticInstance;
 }
 
@@ -129,7 +125,8 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSDate*)dateByAddingTimeInterval:(double)interval {
-    return [[[NSDate allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:_curTime + interval] autorelease];
+    return
+        [[[NSDate allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:[self timeIntervalSinceReferenceDate] + interval] autorelease];
 }
 
 /**
@@ -163,14 +160,17 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
++ (NSDate*)dateWithString:(NSString*)string {
+    return [[[self alloc] initWithString:string] autorelease];
+}
+
+/**
+ @Status Interoperable
 */
 - (NSDate*)initWithString:(NSString*)string {
-    UNIMPLEMENTED();
-    TraceVerbose(TAG, L"NSDate initWithString not supported");
-    [self init];
-
-    return self;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -184,15 +184,14 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSDate*)initWithTimeIntervalSinceNow:(double)secondsSinceNow {
-    return [self initWithTimeIntervalSinceReferenceDate:TimeIntervalSinceReferenceDate() + secondsSinceNow];
+    return [self initWithTimeIntervalSinceReferenceDate:[NSDate timeIntervalSinceReferenceDate] + secondsSinceNow];
 }
 
 /**
  @Status Interoperable
 */
 - (NSDate*)initWithTimeIntervalSinceReferenceDate:(double)ref {
-    _curTime = ref;
-    return self;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -210,9 +209,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
         return -1;
     }
 
-    if (_curTime == toDate->_curTime) {
+    if ([self timeIntervalSinceReferenceDate] == [toDate timeIntervalSinceReferenceDate]) {
         return 0;
-    } else if (_curTime > toDate->_curTime) {
+    } else if ([self timeIntervalSinceReferenceDate] > [toDate timeIntervalSinceReferenceDate]) {
         return 1;
     } else {
         return -1;
@@ -227,7 +226,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
         return FALSE;
     }
 
-    if (_curTime == toDate->_curTime) {
+    if ([self timeIntervalSinceReferenceDate] == [toDate timeIntervalSinceReferenceDate]) {
         return TRUE;
     } else {
         return FALSE;
@@ -253,8 +252,8 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 */
 - (NSUInteger)hash {
     NSUInteger hashRet[2];
-
-    memcpy(hashRet, &_curTime, sizeof(double));
+    double interval = [self timeIntervalSinceReferenceDate];
+    memcpy(hashRet, &interval, sizeof(double));
     hashRet[0] ^= hashRet[1];
 
     return hashRet[0];
@@ -264,9 +263,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSDate*)earlierDate:(NSDate*)toDate {
-    if (_curTime == toDate->_curTime) {
+    if ([self timeIntervalSinceReferenceDate] == [toDate timeIntervalSinceReferenceDate]) {
         return self;
-    } else if (_curTime > toDate->_curTime) {
+    } else if ([self timeIntervalSinceReferenceDate] > [toDate timeIntervalSinceReferenceDate]) {
         return toDate;
     } else {
         return self;
@@ -277,9 +276,9 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSDate*)laterDate:(NSDate*)toDate {
-    if (_curTime == toDate->_curTime) {
+    if ([self timeIntervalSinceReferenceDate] == [toDate timeIntervalSinceReferenceDate]) {
         return self;
-    } else if (_curTime < toDate->_curTime) {
+    } else if ([self timeIntervalSinceReferenceDate] < [toDate timeIntervalSinceReferenceDate]) {
         return toDate;
     } else {
         return self;
@@ -297,19 +296,7 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSDate*)addTimeInterval:(double)seconds {
-    NSDate* ret = [[self class] alloc];
-    ret->_curTime = _curTime + seconds;
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSObject*)init {
-    _curTime = TimeIntervalSinceReferenceDate();
-
-    return self;
+    return [NSDate dateWithTimeIntervalSinceReferenceDate:[self timeIntervalSinceReferenceDate] + seconds];
 }
 
 /**
@@ -323,38 +310,21 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
  @Status Interoperable
 */
 - (NSString*)description {
-    static NSDateFormatter* formatter;
-
-    if (formatter == nil) {
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy'-'MM'-'dd' 'HH':'mm':'ss Z"];
-        [formatter setTimeZone:[[NSTimeZone _gmtTimeZone] retain]];
-    }
-
-    NSString* str = [formatter stringForObjectValue:self];
-
-    return str;
+    static StrongId<NSDateFormatter> formatter = _getDescriptionFormatter();
+    return [formatter stringFromDate:self];
 }
 
 /**
- * Converts a Windows Gps epoch to NSDate.
- * @param  {int64_t} windowsFileTime Windows file time
- * @return {NSDate*}
- */
-+ (NSDate*)_dateWithWindowsGPSTime:(int64_t)windowsFileTime {
-    // First convert Windows Gps epoch to Unix epoch.
-    // Note: this corrects for the 10 year base time difference between gps epoch (1980) and  posix epoch (1970)
-    int64_t posixEpoch = (windowsFileTime / c_windowsToUnixTimeUnitRatio) - c_windowsToUnixNumSecondsOffset * 1000LL;
-    return [NSDate dateWithTimeIntervalSince1970:(double)posixEpoch];
-}
-
-/**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSString*)descriptionWithLocale:(id)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (locale) {
+        static StrongId<NSDateFormatter> formatter = _getLocaleDescriptionFormatter(locale);
+        return [formatter stringFromDate:self];
+    } else {
+        return [self description];
+    }
 }
 
 /**
