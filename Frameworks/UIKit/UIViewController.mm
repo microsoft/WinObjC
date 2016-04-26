@@ -1116,7 +1116,6 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
     if (priv->_dismissCompletionBlock) {
         priv->_dismissCompletionBlock();
-        [priv->_dismissCompletionBlock release];
         priv->_dismissCompletionBlock = nil;
     }
 
