@@ -40,6 +40,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Media::Animation;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Windows::UI::Xaml::Shapes;
+using namespace Windows::Graphics::Display;
 
 namespace XamlCompositor {
 namespace Controls {
@@ -1689,14 +1690,25 @@ concurrency::task<CALayerXaml^> EventedStoryboard::SnapshotLayer(CALayerXaml^ la
     }
     else {
         RenderTargetBitmap^ snapshot = ref new RenderTargetBitmap();
+        double scale = CALayerXaml::s_screenScale;
+        
         return concurrency::create_task(snapshot->RenderAsync(layer, (int)(layer->CurrentWidth * CALayerXaml::s_screenScale), 0))
-            .then([snapshot, layer](concurrency::task<void> result) {
+            .then([snapshot, layer, &scale](concurrency::task<void> result) {
             // Return a new 'copy' layer with the rendered content
             CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
             newLayer->_CopyPropertiesFrom(layer);
+            
+            int width = copiedLayer->PixelWidth;
+            int height = copiedLayer->PixelHeight;
+            DisplayInformation^ dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 
-            newLayer->setContentImage(snapshot, (float)snapshot->PixelWidth, (float)snapshot->PixelHeight, (float)CALayerXaml::s_screenScale);
-            newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
+            newLayer->setContentImage(copiedLayer, (float)width, (float)height, (float)(scale * dispInfo->RawPixelsPerViewPixel));
+
+            // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
+            // If the UIViewController being transitioned away from has transparent content, the height returned is less the
+            // navigation bar, as though Xaml sizes the buffer to the largest child Visual, and only expands where needed.
+            // Top/bottom switched due to geometric origin of CALayer so read this as UIViewContentModeTopLeft
+            newLayer->SetContentGravity(ContentGravity::BottomLeft);
 
             return newLayer;
         }, concurrency::task_continuation_context::use_current());
