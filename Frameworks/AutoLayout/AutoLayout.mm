@@ -209,15 +209,15 @@ public:
 
         switch (self.relation) {
             case NSLayoutRelationEqual:
-                [self _privateState]->_constraints->_constraint = new ClLinearEquation(lex[0], lex[1], ClsRequired(), self.priority);
+                [self _privateState]->_constraints->_constraint = new ClLinearEquation(lex[0], lex[1], ClsMedium(), self.priority);
                 break;
             case NSLayoutRelationGreaterThanOrEqual:
                 [self _privateState]->_constraints->_constraint =
-                    new ClLinearInequality(lex[0], cnGEQ, lex[1], ClsRequired(), self.priority);
+                    new ClLinearInequality(lex[0], cnGEQ, lex[1], ClsMedium(), self.priority);
                 break;
             case NSLayoutRelationLessThanOrEqual:
                 [self _privateState]->_constraints->_constraint =
-                    new ClLinearInequality(lex[0], cnLEQ, lex[1], ClsRequired(), self.priority);
+                    new ClLinearInequality(lex[0], cnLEQ, lex[1], ClsMedium(), self.priority);
                 break;
             default:
                 assert(0);
