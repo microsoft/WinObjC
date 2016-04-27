@@ -224,3 +224,14 @@ TEST(NSArray, RemoveObjectsAtIndexes) {
     ASSERT_OBJCEQ(testArray, expectedArray);
 
 }
+
+TEST(NSArray, Description) {
+    NSArray* testArray = @[ @1, @2, @3 ];
+    ASSERT_OBJCEQ(@"(1, 2, 3)", [testArray description]);
+
+    NSArray* testArray2 = [[NSArray new] autorelease];
+    ASSERT_OBJCEQ(@"()", [testArray2 description]);
+
+    NSArray* testArray3 = @[ @1 ];
+    ASSERT_OBJCEQ(@"(1)", [testArray3 description]);
+}
