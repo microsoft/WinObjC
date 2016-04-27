@@ -710,7 +710,7 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 }
 
 /**
- @Status Stub.
+ @Status Stub
 */
 - (void)setReturnKeyType:(UIReturnKeyType)type {
     UNIMPLEMENTED();
