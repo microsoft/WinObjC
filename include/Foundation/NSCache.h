@@ -23,7 +23,7 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSCache <KeyType, ObjectType> : NSObject
-@property (copy) NSString* name STUB_METHOD;
+@property (copy) NSString* name STUB_PROPERTY;
 - (ObjectType)objectForKey:(KeyType)key STUB_METHOD;
 - (void)setObject:(ObjectType)obj forKey:(KeyType)key STUB_METHOD;
 - (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)num STUB_METHOD;

@@ -61,8 +61,8 @@ CA_EXPORT_CLASS
 @property CGFloat xAcceleration STUB_PROPERTY;
 @property CGFloat yAcceleration STUB_PROPERTY;
 @property CGFloat zAcceleration STUB_PROPERTY;
-+ (id)defaultValueForKey:(NSString*)key STUB_PROPERTY;
-- (BOOL)shouldArchiveValueForKey:(NSString*)key STUB_PROPERTY;
++ (id)defaultValueForKey:(NSString*)key STUB_METHOD;
+- (BOOL)shouldArchiveValueForKey:(NSString*)key STUB_METHOD;
 
 // CAMediaTiming
 @property BOOL autoreverses;
