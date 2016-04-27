@@ -22,6 +22,7 @@ static const CGFloat c_width = 260;
 static const CGFloat c_height = 40;
 
 @implementation TextFieldsViewController {
+@private 
     NSMutableArray* _textFields;
 }
 
@@ -178,18 +179,18 @@ static const CGFloat c_height = 40;
 }
 
 // Asks the delegate if editing should begin in the specified text field.
-- (BOOL)_textFieldshouldBeginEditing:(UITextField*)textField {
+- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField {
     if (textField == _textFields[3]) {
         return NO;
     }
     return YES;
 }
 
-- (BOOL)_textFieldshouldEndEditing:(UITextField*)textField {
+- (BOOL)textFieldShouldEndEditing:(UITextField*)textField {
     return YES;
 }
 
-- (BOOL)_textFieldshouldReturn:(UITextField*)textField {
+- (BOOL)textFieldShouldReturn:(UITextField*)textField {
     return YES;
 }
 

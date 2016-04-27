@@ -110,7 +110,6 @@
         checkBox.content = [WFPropertyValue createString:@"Check"];
         UIView* checkBoxView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100.0f, cell.frame.size.height)];
         [checkBoxView setNativeElement:checkBox];
-        checkBoxView.layer.contentsGravity = kCAGravityLeft;
         cell.textLabel.text = @"Check Box";
         cell.accessoryView = checkBoxView;
     } else if (indexPath.row == 3) {
