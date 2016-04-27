@@ -210,8 +210,12 @@
     </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSValueTransformer.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSZone.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\lex.yy.m" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\rules.tab.m" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\lex.yy.m">
+      <AdditionalOptions>-Wno-incompatible-pointer-types-discards-qualifiers -Wno-deprecated-declarations %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\rules.tab.m" >
+        <AdditionalOptions>-Wno-implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\CFDictionaryInternal.h" />
