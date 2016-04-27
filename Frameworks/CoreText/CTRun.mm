@@ -59,7 +59,7 @@ CFIndex CTRunGetGlyphCount(CTRunRef run) {
 }
 
 /**
- @Status Stub
+@Status Interoperable
 */
 CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
     if (run == nil) {
