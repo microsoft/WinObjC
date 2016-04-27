@@ -55,5 +55,5 @@ UIKIT_EXPORT_CLASS
 - (void)setThumbImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setMinimumTrackImage:(UIImage*)image forState:(UIControlState)state;
 - (void)setMaximumTrackImage:(UIImage*)image forState:(UIControlState)state;
-
+- (void)setValue:(float)value animated:(BOOL)animated;
 @end

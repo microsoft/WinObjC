@@ -19,8 +19,8 @@
 #import <Foundation/NSObject.h>
 
 @class NSString;
-@class NSArray;
-@class NSDictionary;
+@class NSArray<ObjectType>;
+@class NSDictionary<KeyType, ObjectType>;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSPredicate : NSObject <NSCopying, NSSecureCoding>
@@ -29,9 +29,9 @@ FOUNDATION_EXPORT_CLASS
 + (NSPredicate*)predicateWithFormat:(NSString*)format arguments:(va_list)argList;
 - (instancetype)predicateWithSubstitutionVariables:(NSDictionary*)variables;
 + (NSPredicate*)predicateWithValue:(BOOL)value;
-+ (NSPredicate*)predicateWithBlock:(BOOL (^)(id, NSDictionary*))block;
++ (NSPredicate*)predicateWithBlock:(BOOL (^)(id, NSDictionary<NSString*, id>*))block;
 - (BOOL)evaluateWithObject:(id)object;
-- (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary*)variables;
+- (BOOL)evaluateWithObject:(id)object substitutionVariables:(NSDictionary<NSString*, id>*)variables;
 - (void)allowEvaluation;
 @property (readonly, copy) NSString* predicateFormat;
 @end

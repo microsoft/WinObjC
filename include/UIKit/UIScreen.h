@@ -40,7 +40,13 @@ UIKIT_EXPORT NSString* const UIScreenDidDisconnectNotification;
 UIKIT_EXPORT NSString* const UIScreenModeDidChangeNotification;
 UIKIT_EXPORT NSString* const UIScreenBrightnessDidChangeNotification;
 
-@class UIImageView, CALayer, UIKitView, UIScreenMode, UIPopoverController;
+@class CALayer;
+@class CADisplayLink;
+@class UIImageView;
+@class UIKitView;
+@class UIScreenMode;
+@class UIPopoverController;
+@class UIView;
 
 UIKIT_EXPORT_CLASS
 @interface UIScreen : NSObject

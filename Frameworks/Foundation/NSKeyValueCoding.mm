@@ -14,24 +14,28 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#include "StubReturn.h"
-#include <stdio.h>
-#include <stdlib.h>
 #import <Foundation/Foundation.h>
 #import <Foundation/NSKeyValueCoding.h>
-#import "NSArrayInternal.h"
 #import <Starboard/String.h>
-#import "NSValueTransformers.h"
-#import "NSObject_NSKeyValueArrayAdapter-Internal.h"
+
+#import "NSArrayInternal.h"
 #import "NSDelayedPerform.h"
+#import "NSObject_NSKeyValueArrayAdapter-Internal.h"
+#import "NSObject_NSKeyValueCoding-Internal.h"
 #import "NSRunLoop+Internal.h"
 #import "NSThread-Internal.h"
+#import "NSValueTransformers.h"
+#import "Starboard.h"
+#include "StubReturn.h"
 
-#include <memory>
-#include <vector>
-#include <unordered_set>
+#import <unicode/utf8.h>
+
+#include <stdio.h>
+#include <stdlib.h>
 #include <functional>
+#include <memory>
+#include <unordered_set>
+#include <vector>
 
 NSString* const NSUndefinedKeyException = @"NSUndefinedKeyException";
 NSString* const NSTargetObjectUserInfoKey = @"NSTargetObjectUserInfoKey";
@@ -48,15 +52,38 @@ NSString* const NSUnionOfArraysKeyValueOperator = @"NSUnionOfArraysKeyValueOpera
 NSString* const NSUnionOfObjectsKeyValueOperator = @"NSUnionOfObjectsKeyValueOperator";
 NSString* const NSUnionOfSetsKeyValueOperator = @"NSUnionOfSetsKeyValueOperator";
 
+NSString* _NSKVCSplitKeypath(NSString* keyPath, NSString* __autoreleasing* pRemainder) {
+    NSData* utf8String = [keyPath dataUsingEncoding:NSUTF8StringEncoding];
+    const char* buffer = static_cast<const char*>(utf8String.bytes);
+    NSInteger length = utf8String.length;
+    int i = 0;
+    UChar32 currentCharacter = 0;
+    while (i < length) {
+        U8_NEXT(buffer, i, length, currentCharacter);
+        if (currentCharacter == '.') {
+            *pRemainder = [[[NSString alloc] initWithBytesNoCopy:const_cast<char*>(buffer + i)
+                                                          length:length - i
+                                                        encoding:NSUTF8StringEncoding
+                                                    freeWhenDone:NO] autorelease];
+            return
+                [[[NSString alloc] initWithBytesNoCopy:const_cast<char*>(buffer) length:i - 1 encoding:NSUTF8StringEncoding freeWhenDone:NO]
+                    autorelease];
+        }
+    }
+    *pRemainder = nil;
+    return keyPath;
+}
+
 @implementation NSObject (NSKeyValueCoding)
 
 /**
-@Status Interoperable
+ @Status Interoperable
 */
 + (BOOL)accessInstanceVariablesDirectly {
     return YES;
 }
 
+// clang-format off
 static bool _ivarIsKVCCompliant(Ivar ivar, const char* propName) {
     // For a given property x, our search order should be:
     // _x, _isX, x, isX.
@@ -64,16 +91,15 @@ static bool _ivarIsKVCCompliant(Ivar ivar, const char* propName) {
     // Key length is caller-checked.
     char upper = toupper(propName[0]);
     const char* ivarName = ivar_getName(ivar);
-    // clang-format off
     return (
-       /* (has _) */ ivarName[0] == '_' && (
-       /* _prop   */ (strcmp(ivarName + 1, propName) == 0)
-       /* _isProp */ || (ivarName[1] == 'i' && ivarName[2] == 's' && ivarName[3] == upper && (strcmp(ivarName + 4, propName + 1) == 0))
-       /* (no _)  */ ))
-       /* prop    */ || (strcmp(ivarName, propName) == 0
-       /* isProp  */ || (ivarName[0] == 'i' && ivarName[1] == 's' && ivarName[2] == upper && (strcmp(ivarName + 3, propName + 1) == 0)));
-    // clang-format on
+        /* (has _) */ ivarName[0] == '_' && (
+        /* _prop   */ (strcmp(ivarName + 1, propName) == 0)
+        /* _isProp */ || (ivarName[1] == 'i' && ivarName[2] == 's' && ivarName[3] == upper && (strcmp(ivarName + 4, propName + 1) == 0))
+        /* (no _)  */ ))
+        /* prop    */ || (strcmp(ivarName, propName) == 0
+        /* isProp  */ || (ivarName[0] == 'i' && ivarName[1] == 's' && ivarName[2] == upper && (strcmp(ivarName + 3, propName + 1) == 0)));
 }
+// clang-format on
 
 struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
     Class cls = object_getClass(self);
@@ -95,28 +121,28 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
     return nullptr;
 }
 
+// clang-format off
 SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
     // The possible getter selectors for a key x are -getX, -x, and -isX.
     // If we can't find any of these, we fall back to ivar lookup.
     // Key length is caller-checked.
-    // clang-format off
     std::vector<SEL (^)()> possibleSelectors {
         ^SEL{ return sel_registerName(woc::string::format("get%c%s", toupper(key[0]), &key[1]).c_str()); },
         ^SEL{ return sel_registerName(key); },
         ^SEL{ return sel_registerName(woc::string::format("is%c%s", toupper(key[0]), &key[1]).c_str()); },
     };
-// clang-format on
 
-Class cls = object_getClass(self);
-for (auto& possibleSelGenerator : possibleSelectors) {
-    SEL possibleSelector = possibleSelGenerator();
-    if ([cls instancesRespondToSelector:possibleSelector]) {
-        return possibleSelector;
+    Class cls = object_getClass(self);
+    for (auto& possibleSelGenerator : possibleSelectors) {
+        SEL possibleSelector = possibleSelGenerator();
+        if ([cls instancesRespondToSelector:possibleSelector]) {
+            return possibleSelector;
+        }
     }
-}
 
-return nullptr;
+    return nullptr;
 }
+// clang-format on
 
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
@@ -196,27 +222,23 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
     return true;
 }
 
-- (id)_valueForKeyPath:(NSString*)path finalGetter:(SEL)finalGetterSelector {
-    std::string keyPath([path UTF8String]);
-
-    auto pointPosition = keyPath.find('.');
-    if (pointPosition == std::string::npos && keyPath.find('@') == std::string::npos) {
-        return [self performSelector:finalGetterSelector withObject:path];
-    }
-
-    std::string keyComponent(keyPath, 0, pointPosition);
-    keyPath.erase(0, pointPosition + 1);
-
-    id subValue = [self valueForKey:[NSString stringWithUTF8String:keyComponent.c_str()]];
-    return [subValue _valueForKeyPath:[NSString stringWithUTF8String:keyPath.c_str()] finalGetter:finalGetterSelector];
-}
-
 /**
  @Status Caveat
  @Notes Does not support aggregate functions.
 */
-- (id)valueForKeyPath:(NSString*)path {
-    return [self _valueForKeyPath:path finalGetter:@selector(valueForKey:)];
+- (id)valueForKeyPath:(NSString*)keyPath {
+    NSString* key = nil;
+    NSString* restOfKeypath;
+    key = _NSKVCSplitKeypath(keyPath, &restOfKeypath);
+
+    id val = [self valueForKey:key];
+
+    if (restOfKeypath) {
+        // We must recurse here, as any class may override valueForKeyPath.
+        return [val valueForKeyPath:restOfKeypath];
+    }
+
+    return val;
 }
 
 /**
@@ -270,7 +292,16 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
  @Status Interoperable
 */
 - (NSMutableArray*)mutableArrayValueForKeyPath:(NSString*)keyPath {
-    return [self _valueForKeyPath:keyPath finalGetter:@selector(mutableArrayValueForKey:)];
+    NSString* key = nil;
+    NSString* restOfKeypath;
+    key = _NSKVCSplitKeypath(keyPath, &restOfKeypath);
+
+    if (restOfKeypath) {
+        id val = [self valueForKey:key];
+        return [val mutableArrayValueForKeyPath:restOfKeypath];
+    }
+
+    return [self mutableArrayValueForKey:key];
 }
 
 /**
@@ -375,19 +406,18 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 /**
  @Status Interoperable
 */
-- (void)setValue:(id)value forKeyPath:(NSString*)path {
-    std::string keyPath([path UTF8String]);
+- (void)setValue:(id)value forKeyPath:(NSString*)keyPath {
+    NSString* key = nil;
+    NSString* restOfKeypath;
+    key = _NSKVCSplitKeypath(keyPath, &restOfKeypath);
 
-    auto pointPosition = keyPath.find('.');
-    if (pointPosition == std::string::npos && keyPath.find('@') == std::string::npos) {
-        [self setValue:value forKey:path];
-        return;
+    if (restOfKeypath) {
+        // We must recurse here, as any class may override valueForKeyPath.
+        id val = [self valueForKey:key];
+        return [val setValue:value forKeyPath:restOfKeypath];
     }
 
-    std::string keyComponent(keyPath, 0, pointPosition);
-
-    id subValue = [self valueForKey:[NSString stringWithUTF8String:keyComponent.c_str()]];
-    [subValue setValue:value forKeyPath:[NSString stringWithUTF8String:keyPath.c_str() + pointPosition + 1]];
+    [self setValue:value forKey:key];
 }
 
 /**

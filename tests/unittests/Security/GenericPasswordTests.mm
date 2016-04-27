@@ -267,7 +267,10 @@ TEST(Security, GenericPasswordHandler_Update) {
         (__bridge id)(kSecMatchLimit) : (__bridge id)kSecMatchLimitOne,
     };
 
-    [handler update:updateQuery withAttributes:updateDictionary];
+    NSUInteger numUpdated = 0;
+    [handler update:updateQuery withAttributes:updateDictionary attributesUpdated:&numUpdated];
+
+    ASSERT_EQ(updateDictionary.count, numUpdated);
 
     // Query for results.
     NSDictionary* queryDictionary = @{

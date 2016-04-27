@@ -21,12 +21,12 @@
 
 #import <Foundation/NSEnumerator.h>
 
-@class NSDictionary;
+@class NSDictionary<KeyType, ObjectType>;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDirectoryEnumerator : NSEnumerator <NSFastEnumeration>
-@property (readonly, copy) NSDictionary* directoryAttributes;
-@property (readonly, copy) NSDictionary* fileAttributes;
+@interface NSDirectoryEnumerator <ObjectType> : NSEnumerator <NSFastEnumeration>
+@property (readonly, copy) NSDictionary<NSString*, id>* directoryAttributes;
+@property (readonly, copy) NSDictionary<NSString*, id>* fileAttributes;
 @property (readonly) NSUInteger level;
 - (void)skipDescendents;
 - (void)skipDescendants;

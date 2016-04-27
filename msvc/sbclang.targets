@@ -43,6 +43,8 @@
     <LibPathPattern>^,"([^"]*.\DLL)"</LibPathPattern>
   </PropertyGroup>
 
+  <Import Project="$(MSBuildThisFileDirectory)\middleware.targets" />
+
   <Target
     Name="HandleExplicitLibs"
     Condition="'$(CopyStarboardLibraries)' == 'true'"

@@ -41,11 +41,13 @@ static BOOL socketHasSpaceAvailable(id socket) {
 
 @implementation NSOutputStream_socket
 - (instancetype)initWithSocket:(NSSocket*)socket streamStatus:(DWORD)status {
-    _delegate = self;
-    _error = nil;
-    _status = status;
-    _socket = [socket retain];
-    _inputSource = nil;
+    if (self = [super init]) {
+        _delegate = self;
+        _error = nil;
+        _status = status;
+        _socket = [socket retain];
+        _inputSource = nil;
+    }
     return self;
 }
 
@@ -194,6 +196,7 @@ static BOOL socketHasSpaceAvailable(id socket) {
 
 - (void)dealloc {
     [_inputSource setDelegate:nil];
+    [_socket release];
     [super dealloc];
 }
 

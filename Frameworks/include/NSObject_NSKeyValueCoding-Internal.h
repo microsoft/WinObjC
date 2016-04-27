@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,6 +16,6 @@
 
 #pragma once
 
-@interface NSMutableIndexSet ()
-- (id)_removeFromArray:(id)array;
-@end
+#import <Foundation/NSString.h>
+
+NSString* _NSKVCSplitKeypath(NSString* keyPath, NSString* __autoreleasing* pRemainder);

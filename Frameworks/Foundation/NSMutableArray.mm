@@ -23,7 +23,6 @@
 #import "NSArrayInternal.h"
 #import "LoggingNative.h"
 #import "NSMutableArrayInternal.h"
-#import "NSMutableIndexSetInternal.h"
 
 static const wchar_t* TAG = L"NSMutableArray";
 
@@ -217,8 +216,10 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 /**
  @Status Interoperable
 */
-- (void)removeObjectsAtIndexes:(NSIndexSet*)index {
-    [index _removeFromArray:self];
+- (void)removeObjectsAtIndexes:(NSIndexSet*)indexSet {
+    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger index, BOOL* stop) {
+        [self removeObjectAtIndex:index];
+    }];
 }
 
 /**

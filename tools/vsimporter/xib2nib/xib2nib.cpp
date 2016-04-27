@@ -15,7 +15,6 @@
 //******************************************************************************
 
 // Xib2Nib.cpp.cpp : Defines the entry point for the console application.
-//
 
 #include <stdio.h>
 #include <string.h>
@@ -61,11 +60,10 @@ void ConvertStoryboard(pugi::xml_document& doc) {
     // Print which XML nodes we did not handle during the parse for diagnostic purpose.
     XIBObject::getDocumentCoverage(doc);
 
-    NIBWriter::ExportController(initialController);
+    NIBWriter::ExportAllControllers();
 
     Plist::dictionary_type viewControllerInfo;
-    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] =
-        std::string("UIViewController-") + std::string(initialController);
+    viewControllerInfo[std::string("UIStoryboardDesignatedEntryPointIdentifier")] = std::string(initialController);
     viewControllerInfo[std::string("UIStoryboardVersion")] = (int)1;
 
     Plist::dictionary_type viewControllerMappings;
@@ -73,7 +71,7 @@ void ConvertStoryboard(pugi::xml_document& doc) {
         viewControllerMappings[curController.first] = curController.second;
     }
     viewControllerInfo[std::string("UIViewControllerIdentifiersToNibNames")] = viewControllerMappings;
-
+    
     printf("Writing %s\n", GetOutputFilename("Info.plist").c_str());
     Plist::writePlistBinary(GetOutputFilename("Info.plist").c_str(), viewControllerInfo);
 }

@@ -25,7 +25,9 @@
 - (instancetype)init;
 - (instancetype)initWithVault:(WSCPasswordVault*)vault;
 
-- (OSStatus)update:(NSDictionary*)queryDictionary withAttributes:(NSDictionary*)attributesToUpdate;
+- (OSStatus)update:(NSDictionary*)queryDictionary
+    withAttributes:(NSDictionary*)attributesToUpdate
+ attributesUpdated:(NSUInteger*)attributesUpdated;
 - (OSStatus)add:(NSDictionary*)attributes withResult:(id*)result;
 - (OSStatus)remove:(NSDictionary*)queryDictionary;
 - (OSStatus)query:(NSDictionary*)queryDictionary withResult:(id*)result;

@@ -17,8 +17,8 @@ param(
     [string][ValidateSet("Debug", "Release")]
     $Config = "Debug",
 
-    [Parameter(HelpMessage="IP address of remote device to run tests on")]
-    [string]$IpAddress = "127.0.0.1",
+    [Parameter(HelpMessage="IP or MAC address of remote device to run tests on")]
+    [string]$Device = "127.0.0.1",
 
     [Parameter(HelpMessage="Regex of Tests to run")]
     [string]$TestFilter = $null,
@@ -44,7 +44,7 @@ function EnsureDeviceConnection
 
         # If the caller has already connected to the device, use the existing connection.
         # Otherwise, try connecting to device now.
-        Open-Device -ip $IpAddress
+        Open-Device $Device
     }
 }
 

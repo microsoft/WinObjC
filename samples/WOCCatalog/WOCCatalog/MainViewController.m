@@ -40,6 +40,7 @@
 #import "BasicAnimationViewController.h"
 #import "AccelerateViewController.h"
 #import "CoreMotionViewController.h"
+#import "ShadowViewController.h"
 
 #ifdef WINOBJC
 #import "XamlViewController.h"
@@ -129,6 +130,9 @@
     
     // Accelerate
     [self addMenuItemViewController:[[AccelerateViewController alloc] init] andTitle:@"Accelerate"];
+
+    // Shadow
+    [self addMenuItemViewController:[[ShadowViewController alloc] init] andTitle:@"Shadow"];
 }
 
 - (void)didReceiveMemoryWarning {

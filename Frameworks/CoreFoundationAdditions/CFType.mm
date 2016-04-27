@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include "Starboard.h"
+#include "StubReturn.h"
 #include "CoreFoundation/CFType.h"
 #include "Foundation/NSString.h"
 
@@ -37,8 +38,8 @@ void CFRelease(CFTypeRef obj) {
 /**
  @Status Interoperable
 */
-void CFAutorelease(CFTypeRef obj) {
-    objc_autorelease(static_cast<id>(obj));
+CFTypeRef CFAutorelease(CFTypeRef obj) {
+    return objc_autorelease(static_cast<id>(obj));
 }
 
 /**
@@ -119,119 +120,21 @@ DWORD _NSSetLogCStringFunction(DWORD func) {
     return 0;
 }
 
-#if 0
-enum {
-CFUnknownType,
-CFStringType,
-CFDictionaryType,
-CFArrayType,
-CFNumberType,
-CFBooleanType,
-CGLayerType,
-CFBundleType,
-CFBinaryHeap,
-} CFTypeIDs;
-
-DWORD CFGetTypeID(id cfobj)
-{
-id objType = cfobj;
-if ( [objType isKindOfClass:[NSString class]] ) {
-return CFStringType;
-}
-if ( [objType isKindOfClass:[NSDictionary class]] ) {
-return CFDictionaryType;
-}
-if ( [objType isKindOfClass:[CFBinaryHeap class]] ) {
-return CFBinaryHeap;
-}
-if ( [objType isKindOfClass:[NSArray class]] ) {
-return CFArrayType;
-}
-if ( [objType isKindOfClass:[NSNumber class]] ) {
-if ( [objType _isBool] ) {
-return CFBooleanType;
+/**
+ @Status Stub
+*/
+CFTypeID CFGetTypeID(CFTypeRef cfobj) {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
-return CFNumberType;
+/**
+ @Status Stub
+*/
+CFTypeID CFDataGetTypeID() {
+    UNIMPLEMENTED();
+    return StubReturn();
 }
-if ( [objType isKindOfClass:[CGLayer class]] ) {
-return CGLayerType;
-}
-if ( [objType isKindOfClass:[NSBundle class]] ) {
-return CFBundleType;
-}
-assert(0);
-
-return 0;
-}
-
-DWORD CFBinaryHeapGetTypeID()
-{
-return CFBinaryHeap;
-}
-
-DWORD CFDictionaryGetTypeID()
-{
-return CFDictionaryType;
-}
-
-DWORD CFArrayGetTypeID()
-{
-return CFArrayType;
-}
-
-DWORD CFStringGetTypeID()
-{
-return CFStringType;
-}
-
-DWORD CFBooleanGetTypeID()
-{
-return CFBooleanType;
-}
-
-DWORD CFNumberGetTypeID()
-{
-return CFNumberType;
-}
-
-DWORD CGLayerGetTypeID()
-{
-return CGLayerType;
-}
-
-DWORD CFBundleGetTypeID()
-{
-return CFBundleType;
-}
-
-DWORD CFDateCreate(id allocator, double abstime)
-{
-id ret = [[NSDate alloc] initWithTimeIntervalSinceReferenceDate:abstime];
-
-return ret;
-}
-
-static id defaultZone = nil;
-
-DWORD NSDefaultMallocZone()
-{
-if ( defaultZone == nil ) {
-defaultZone = [NSObject new];
-}
-
-return defaultZone;
-}
-
-DWORD NSZoneFromPointer(void *ptr)
-{
-if ( defaultZone == nil ) {
-defaultZone = [NSObject new];
-}
-
-return defaultZone;
-}
-#endif
 
 id CFNSRetain(id allocator, id obj) {
     return [obj retain];

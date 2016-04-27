@@ -510,10 +510,10 @@ std::map<String^, CALayerXaml::AnimatableProperty^> CALayerXaml::s_animatablePro
           ref new CALayerXaml::GetCurrentValue([](CALayerXaml^ target) -> Object^
                                                {
                                                     if (!target->m_createdTransforms) {
-                                                          return (double)target->m_position.X;
+                                                          return (double)target->m_position.Y;
                                                     }
                                                     return CALayerXaml::_GetAnimatedTransformIndex(
-                                                        target, 3, TranslateTransform::XProperty);
+                                                        target, 3, TranslateTransform::YProperty);
                                                 })) },
     { "position",
       ref new CALayerXaml::AnimatableProperty(
@@ -1628,7 +1628,11 @@ void EventedStoryboard::_CreateFlip(CALayerXaml^ layer, bool flipRight, bool inv
     if (removeFromParent) {
         fade1->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
             VisualTreeHelper::DisconnectChildrenRecursive(layer);
-            // CALayerXaml->DestroyLayer(layer);
+        });
+    } else {
+        rotateAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
+            // Using Projection transforms (even Identity) causes less-than-pixel-perfect rendering. 
+            layer->Projection = nullptr;
         });
     }
 
@@ -1640,45 +1644,50 @@ void EventedStoryboard::_CreateWoosh(CALayerXaml^ layer, bool fromRight, bool in
         layer->Projection = ref new PlaneProjection();
     }
 
-    DoubleAnimation^ rotateAnim = ref new DoubleAnimation();
-    rotateAnim->Duration = m_container->Duration;
-    rotateAnim->EasingFunction = ref new PowerEase();
-    rotateAnim->EasingFunction->EasingMode = EasingMode::EaseOut;
+    DoubleAnimation^ wooshAnim = ref new DoubleAnimation();
+    wooshAnim->Duration = m_container->Duration;
+    wooshAnim->EasingFunction = ref new PowerEase();
+    wooshAnim->EasingFunction->EasingMode = EasingMode::EaseOut;
 
     if (!invert) {
         if (fromRight) {
-            rotateAnim->From = (double)layer->CurrentWidth;
-            rotateAnim->To = 0.01;
+            wooshAnim->From = (double)layer->CurrentWidth;
+            wooshAnim->To = 0.01;
         } else {
-            rotateAnim->From = 0.01;
-            rotateAnim->To = (double)layer->CurrentWidth;
+            wooshAnim->From = 0.01;
+            wooshAnim->To = (double)layer->CurrentWidth;
         }
     } else {
         if (fromRight) {
-            rotateAnim->From = 0.01;
-            rotateAnim->To = (double)(-layer->CurrentWidth / 4);
+            wooshAnim->From = 0.01;
+            wooshAnim->To = (double)(-layer->CurrentWidth / 4);
         } else {
-            rotateAnim->From = (double)(-layer->CurrentWidth / 4);
-            rotateAnim->To = 0.01;
+            wooshAnim->From = (double)(-layer->CurrentWidth / 4);
+            wooshAnim->To = 0.01;
         }
     }
 
-    Storyboard::SetTargetProperty(rotateAnim, "(UIElement.Projection).(PlaneProjection.LocalOffsetX)");
-    Storyboard::SetTarget(rotateAnim, layer);
-
+    Storyboard::SetTargetProperty(wooshAnim, "(UIElement.Projection).(PlaneProjection.LocalOffsetX)");
+    Storyboard::SetTarget(wooshAnim, layer);
+    
     if (removeFromParent) {
-        rotateAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
+        wooshAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
             VisualTreeHelper::DisconnectChildrenRecursive(layer);
-            // CALayerXaml->DestroyLayer(layer);
+        });
+    } else {
+        wooshAnim->Completed += ref new EventHandler<Object^>([layer](Object^ sender, Object^ args) {
+            // Using Projection transforms (even Identity) causes less-than-pixel-perfect rendering. 
+            layer->Projection = nullptr;
         });
     }
 
-    m_container->Children->Append(rotateAnim);
+    m_container->Children->Append(wooshAnim);
 }
 
 IAsyncOperation<int>^ EventedStoryboard::AddTransition(CALayerXaml^ layer, String^ type, String^ subtype) {
     RenderTargetBitmap^ copiedLayer = ref new RenderTargetBitmap();
     double scale = CALayerXaml::s_screenScale;
+    
     auto renderAsync = copiedLayer->RenderAsync(layer, (int)(layer->CurrentWidth * scale), 0);
     return create_async([this, layer, type, subtype, renderAsync, copiedLayer, &scale]() {
         return create_task(renderAsync)
@@ -1690,7 +1699,12 @@ IAsyncOperation<int>^ EventedStoryboard::AddTransition(CALayerXaml^ layer, Strin
                     int height = copiedLayer->PixelHeight;
 
                     newLayer->setContentImage(copiedLayer, (float)width, (float)height, (float)scale);
-                    newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
+
+                    // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
+                    // If the UIViewController being transitioned away from has transparent content, the height returned is less the
+                    // navigation bar, as though Xaml sizes the buffer to the largest child Visual, and only expands where needed.
+                    // Top/bottom switched due to geometric origin of CALayer so read this as UIViewContentModeTopLeft
+                    newLayer->SetContentGravity(ContentGravity::BottomLeft);
 
                     if (type == "kCATransitionFlip") {
                         TimeSpan timeSpan = TimeSpan();

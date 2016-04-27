@@ -120,7 +120,6 @@ static void populateDates(UIDatePicker* self) {
 */
 - (void)setDatePickerMode:(UIDatePickerMode)mode {
     _mode = mode;
-    [_pickerView reloadAllComponents];
 
     id date = [self date];
     switch (_mode) {
@@ -138,6 +137,7 @@ static void populateDates(UIDatePicker* self) {
             setDay(self, date);
             break;
         case UIDatePickerModeCountDownTimer:
+            // UIDatePickerModeCountDownTimer doesn't behave when switched on-the-fly.
             [_pickerView _setAlignment:UITextAlignmentLeft forComponent:0];
             CGRect frame = { 100, 88, 50, 50 };
 
@@ -153,7 +153,10 @@ static void populateDates(UIDatePicker* self) {
             [_minutesLabel setText:@"min"];
 
             setTimer(self);
+            break;
     }
+
+    [_pickerView reloadAllComponents];
 
     _dayStartDate = nil;
 }

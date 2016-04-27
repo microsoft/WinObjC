@@ -19,12 +19,15 @@
 
 void verifyIndexSetEqualsArray(NSArray* expected, NSIndexSet* actual) {
     __block unsigned int callCount = 0;
+    NSMutableIndexSet* expectedIndexSet = [[[NSMutableIndexSet alloc] init] autorelease];
 
     [actual enumerateIndexesUsingBlock:^(NSUInteger index, BOOL* stop) {
         ASSERT_OBJCEQ([expected objectAtIndex:callCount++], [NSNumber numberWithUnsignedInt:index]);
+        [expectedIndexSet addIndex:index];
     }];
 
     ASSERT_EQ([expected count], callCount);
+    ASSERT_EQ(YES, [actual isEqualToIndexSet:expectedIndexSet]);
 }
 
 TEST(NSIndexSet, AddIndexesInRange) {
@@ -171,6 +174,18 @@ TEST(NSIndexSet, shiftIndexes) {
     // Test shiftIndexes with negative delta
     [indexSet shiftIndexesStartingAtIndex:12 by:-3];
     expected = @[ @2, @3, @4, @5, @8, @9, @10, @11, @12, @13 ];
+    verifyIndexSetEqualsArray(expected, indexSet);
+
+    // Test shiftIndexes with adjacent range
+    [indexSet addIndexesInRange:NSMakeRange(17, 2)]; // [17-18]
+    [indexSet shiftIndexesStartingAtIndex:17 by:-3];
+    expected = @[ @2, @3, @4, @5, @8, @9, @10, @11, @12, @13, @14, @15 ];
+    verifyIndexSetEqualsArray(expected, indexSet);
+
+    [indexSet removeAllIndexes];
+    [indexSet addIndexesInRange:NSMakeRange(1, 2)];
+    [indexSet shiftIndexesStartingAtIndex:2 by:-1];
+    expected = @[@1];
     verifyIndexSetEqualsArray(expected, indexSet);
 
     [indexSet release];

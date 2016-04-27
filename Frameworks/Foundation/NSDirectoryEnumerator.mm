@@ -271,7 +271,7 @@ static NSDictionary* fileAttributesForFilePath(const char* path) {
         return nil;
     }
 
-    NSDictionary* ret = [NSMutableDictionary dictionary];
+    NSMutableDictionary* ret = [NSMutableDictionary dictionary];
     [ret setValue:[NSNumber numberWithInt:st.st_size] forKey:NSFileSize];
     [ret setValue:NSFileTypeRegular forKey:NSFileType];
     [ret setValue:[NSDate dateWithTimeIntervalSince1970:st.st_ctime] forKey:NSFileCreationDate];

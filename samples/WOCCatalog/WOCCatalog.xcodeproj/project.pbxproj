@@ -63,6 +63,7 @@
 		D2AC20361C69734F00D54717 /* photo10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20351C69734F00D54717 /* photo10.jpg */; };
 		D2AC20381C69735900D54717 /* tf_bgimage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2AC20371C69735900D54717 /* tf_bgimage.jpg */; };
 		E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */; };
+		E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */; };
 		F01C22551C1A3B120007FF0B /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C22541C1A3B120007FF0B /* MainViewController.m */; };
 		F01C22581C1A540E0007FF0B /* FoundationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C22571C1A540E0007FF0B /* FoundationsViewController.m */; };
 		F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */; };
@@ -169,6 +170,8 @@
 		D2AC20371C69735900D54717 /* tf_bgimage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = tf_bgimage.jpg; path = WOCCatalog/Images/tf_bgimage.jpg; sourceTree = "<group>"; };
 		E19F61D01BCE9962005077C5 /* GLKitExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLKitExampleController.h; sourceTree = "<group>"; };
 		E19F61D11BCE9962005077C5 /* GLKitExampleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GLKitExampleController.mm; sourceTree = "<group>"; };
+		E789B2DE1CC59D320044F169 /* ShadowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadowViewController.h; sourceTree = "<group>"; };
+		E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowViewController.m; sourceTree = "<group>"; };
 		F01C22531C1A3B120007FF0B /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		F01C22541C1A3B120007FF0B /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		F01C22561C1A540E0007FF0B /* FoundationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationsViewController.h; sourceTree = "<group>"; };
@@ -227,6 +230,8 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */,
+				E789B2DE1CC59D320044F169 /* ShadowViewController.h */,
 				AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */,
 				AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */,
 				77D71D9F1C8F5AA000ED26A3 /* CoreMotionViewController.h */,
@@ -496,6 +501,7 @@
 				4EE861D51B5997A500682BDB /* SearchBarViewController.m in Sources */,
 				4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */,
 				F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */,
+				E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
 				C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */,
 				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,

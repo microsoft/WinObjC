@@ -22,6 +22,8 @@
 #import <UWP/WindowsFoundation.h>
 #import <UWP/WindowsGlobalization.h>
 
+#import "CALayerInternal.h"
+
 @protocol _GLKViewControllerInformal <NSObject>
 - (BOOL)_renderFrame;
 @end
@@ -122,7 +124,9 @@
 
     if (tryDirectRender) {
         if (_isGlkView && [dest respondsToSelector:@selector(glkView:drawInRect:)]) {
-            [dest glkView:(GLKView*)self.view drawInRect:self.view.frame];
+            GLKView* view = static_cast<GLKView*>(self.view);
+            CAEAGLLayer* layer = static_cast<CAEAGLLayer*>(view.layer);
+            [dest glkView:view drawInRect:CGRectMake(0, 0, [layer _pixelWidth], [layer _pixelHeight])];
         }
     }
 

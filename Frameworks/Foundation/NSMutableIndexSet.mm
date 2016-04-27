@@ -205,14 +205,15 @@
 
         NSUInteger count = [self _count];
 
-        while (--count >= pos) {
+        while (count > 0 && count > pos) {
+            count--;
             NSRange& rangeAtCount = [self _itemReferenceAtIndex:count];
 
             if (rangeAtCount.location >= index) { // if above index just move it down
                 rangeAtCount.location -= (unsigned)delta;
             } else if (NSMaxRange(rangeAtCount) <= index - (unsigned)delta) { // below area, ignore
                 ;
-            } else if (rangeAtCount.location < index - (unsigned)delta) { // if below, shorten
+            } else if (rangeAtCount.location <= index - (unsigned)delta) { // if below, shorten
                 if (NSMaxRange(rangeAtCount) >= (unsigned)delta + index) { // if deletion entirely inside
                     rangeAtCount.length -= delta;
                 } else {
@@ -222,6 +223,20 @@
                 [self _removeItemAtIndex:count];
             }
         }
+
+        // Remove overlap if necessary
+        pos ++;
+        if (pos < [self _count]) {
+            NSRange& rangeAtPos = [self _itemReferenceAtIndex:pos];
+            NSRange rangeBelowPos = [self _itemAtIndex:(pos - 1)];
+            if (NSMaxRange(rangeBelowPos) >= rangeAtPos.location) {
+                NSRange unionRange = NSUnionRange(rangeAtPos, rangeBelowPos);
+                rangeAtPos.location = unionRange.location;
+                rangeAtPos.length = unionRange.length;
+                [self _removeItemAtIndex:(pos - 1)];
+            }
+        }
+        
     } else {
         NSInteger pos = [self _positionOfRangeLessThanOrEqualToLocation:index];
 
@@ -265,19 +280,6 @@
 */
 + (instancetype)indexSet {
     return [[self new] autorelease];
-}
-
-- (id)_removeFromArray:(id)array {
-    int i;
-
-    for (i = [self _count] - 1; i >= 0; i--) {
-        NSRange rself = [self _itemAtIndex:i];
-
-        for (int k = rself.location + rself.length - 1; k >= 0 && k >= int64_t(rself.location); k--) {
-            [array removeObjectAtIndex:k];
-        }
-    }
-    return self;
 }
 
 /**

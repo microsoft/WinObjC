@@ -67,6 +67,19 @@ struct GenericPasswordPropertyHandler {
     GenericPasswordPropertyComparator comparator;
 };
 
+@implementation WSCPasswordCredential (Password)
+
+// The password property on WSCPasswordCredential is not valid unless you have
+// previously called retrievePassword. Since WSCPasswordCredential is an
+// auto-generated class, this can't be fixed at the source to make the interface
+// less error-prone. Instead, let the word go forth from this time: avoid the
+// password property getter and use _actualPassword instead.
+- (NSString*)_actualPassword {
+    [self retrievePassword];
+    return self.password;
+}
+@end
+
 // Default setter handler will store the object directly on the credential property bag.
 // NOTE: this property bag currently is not actually useful.
 void DefaultSetter(NSString* keyName, id value, WSCPasswordCredential* credential) {
@@ -156,7 +169,7 @@ void PasswordSetter(NSString* keyName, id value, WSCPasswordCredential* credenti
 // compared but note that the CredVault has no secret information. All passwords are freely accessible by the app
 // already so no security concern exists for this.
 bool PasswordComparator(NSString* keyName, id value, WSCPasswordCredential* credential, bool) {
-    NSString* password = credential.password;
+    NSString* password = [credential _actualPassword];
     password = [password isEqualToString:c_sentinelNullString] ? nil : password;
 
     return [password isEqual:[static_cast<NSData*>(value) base64EncodedStringWithOptions:0]];
@@ -312,9 +325,9 @@ std::vector<WSCPasswordCredential*> FindMatchingCredentials(NSDictionary* queryD
 // keys. This could be a dictionary of attributes, a data array for passwords, or a data array for a persistent ref. If more than one
 // is requested, a dictionary of all the requested ones is returned.
 id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttributes, bool returnData, bool returnPersistentRef) {
-    NSMutableDictionary* attributesDictionary;
-    NSData* data;
-    NSData* persistentRef;
+    NSMutableDictionary* attributesDictionary = nil;
+    NSData* data = nil;
+    NSData* persistentRef = nil;
 
     if (returnAttributes) {
         attributesDictionary = [[NSMutableDictionary new] autorelease];
@@ -332,12 +345,8 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         }
     }
 
-    if (returnPersistentRef) {
-        persistentRef = nil;
-    }
-
     if (returnData) {
-        NSString* password = credential.password;
+        NSString* password = [credential _actualPassword];
         if ((password != nil) && (![password isEqualToString:c_sentinelNullString])) {
             data = [[[NSData alloc] initWithBase64EncodedString:password options:0] autorelease];
         }
@@ -425,7 +434,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         credential.userName = c_sentinelNullString;
     }
 
-    if (credential.password == nil) {
+    if ([credential _actualPassword] == nil) {
         credential.password = c_sentinelNullString;
     }
 
@@ -458,7 +467,11 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
     return errSecSuccess;
 }
 
-- (OSStatus)update:(NSDictionary*)queryDictionary withAttributes:(NSDictionary*)attributesToUpdate {
+- (OSStatus)update:(NSDictionary*)queryDictionary
+    withAttributes:(NSDictionary*)attributesToUpdate
+ attributesUpdated:(NSUInteger*)attributesUpdated {
+    *attributesUpdated = 0;
+
     if (nil == queryDictionary) {
         return errSecParam;
     }
@@ -490,6 +503,7 @@ id ShapeResultForCredential(WSCPasswordCredential* credential, bool returnAttrib
         [_vault add:credential];
     }
 
+    *attributesUpdated = credentialsToUpdate.size();
     return errSecSuccess;
 }
 

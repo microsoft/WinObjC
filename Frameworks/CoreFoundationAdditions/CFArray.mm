@@ -20,7 +20,7 @@
 #include "CFArrayInternal.h"
 
 #include <Foundation/NSMutableArray.h>
-#include "../Foundation/NSMutableArrayInternal.h"
+#include "NSMutableArrayInternal.h"
 
 #include <sys/stat.h>
 

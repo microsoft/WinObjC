@@ -14,14 +14,15 @@
 //
 //******************************************************************************
 
-#pragma once
+#import <UIKit/UIKit.h>
+@interface ShadowDrawerView : UIView
 
-NSUInteger _NSArrayConcreteCountByEnumeratingWithState(NSArray* self, NSFastEnumerationState* state);
+- (void)drawRect:(CGRect)rect;
 
-@interface NSArray (Internal) {
+@end
+
+@interface ShadowViewController : UIViewController {
+    UIScrollView* scrollView;
+    ShadowDrawerView* shadowDrawerView;
 }
-
-- (instancetype)initWithObject:(NSObject*)obj;
-- (instancetype)_initWithObjectsTakeOwnership:(NSObject**)objs count:(NSUInteger)count;
-
 @end

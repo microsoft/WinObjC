@@ -353,11 +353,6 @@ static void initControls(UIBarButtonItem* self) {
     return self;
 }
 
-- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
-    _target = [connection obj];
-    _targetSel = (SEL)[connection sel];
-}
-
 /**
  @Status Interoperable
 */
@@ -671,6 +666,17 @@ static void initControls(UIBarButtonItem* self) {
 @end
 
 @implementation UIBarButtonItem (Internals)
+
+- (void)_addEventConnection:(UIRuntimeEventConnection*)connection {
+    _target = [connection obj];
+    _targetSel = (SEL)[connection sel];
+}
+
+// we need this shim because app are doing hack like following to get the view from UIBarButtonItem
+// [barButtonItem valueForKey:@"view"];
+- (UIView*)view {
+    return [self _view];
+}
 
 - (UIView*)_view {
     if (_customView != nil) {

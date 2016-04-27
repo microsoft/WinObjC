@@ -25,37 +25,38 @@
 @class NSURL;
 @class NSIndexSet;
 @class NSPredicate;
+@class NSSortDescriptor;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSMutableArray : NSArray <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
+@interface NSMutableArray <ObjectType> : NSArray <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>
 + (instancetype)arrayWithCapacity:(NSUInteger)numItems;
 - (instancetype)initWithCapacity:(NSUInteger)numItems;
-- (void)addObject:(id)anObject;
-- (void)addObjectsFromArray:(NSArray*)otherArray;
-- (void)insertObject:(id)anObject atIndex:(NSUInteger)index;
-- (void)insertObjects:(NSArray*)objects atIndexes:(NSIndexSet*)indexes;
+- (void)addObject:(ObjectType)anObject;
+- (void)addObjectsFromArray:(NSArray<ObjectType>*)otherArray;
+- (void)insertObject:(ObjectType)anObject atIndex:(NSUInteger)index;
+- (void)insertObjects:(NSArray<ObjectType>*)objects atIndexes:(NSIndexSet*)indexes;
 - (void)removeAllObjects;
 - (void)removeLastObject;
-- (void)removeObject:(id)anObject;
-- (void)removeObject:(id)anObject inRange:(NSRange)aRange;
+- (void)removeObject:(ObjectType)anObject;
+- (void)removeObject:(ObjectType)anObject inRange:(NSRange)aRange;
 - (void)removeObjectAtIndex:(NSUInteger)index;
 - (void)removeObjectsAtIndexes:(NSIndexSet*)indexes;
-- (void)removeObjectIdenticalTo:(id)anObject;
-- (void)removeObjectIdenticalTo:(id)anObject inRange:(NSRange)aRange STUB_METHOD;
+- (void)removeObjectIdenticalTo:(ObjectType)anObject;
+- (void)removeObjectIdenticalTo:(ObjectType)anObject inRange:(NSRange)aRange STUB_METHOD;
 - (void)removeObjectsFromIndices:(NSUInteger*)indices numIndices:(NSUInteger)count STUB_METHOD;
-- (void)removeObjectsInArray:(NSArray*)otherArray;
+- (void)removeObjectsInArray:(NSArray<ObjectType>*)otherArray;
 - (void)removeObjectsInRange:(NSRange)aRange;
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
-- (void)setObject:(id)anObject atIndexedSubscript:(NSUInteger)index;
-- (void)replaceObjectsAtIndexes:(NSIndexSet*)indexes withObjects:(NSArray*)objects STUB_METHOD;
-- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray range:(NSRange)otherRange STUB_METHOD;
-- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray STUB_METHOD;
-- (void)setArray:(NSArray*)otherArray;
+- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(ObjectType)anObject;
+- (void)setObject:(ObjectType)anObject atIndexedSubscript:(NSUInteger)index;
+- (void)replaceObjectsAtIndexes:(NSIndexSet*)indexes withObjects:(NSArray<ObjectType>*)objects STUB_METHOD;
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray<ObjectType>*)otherArray range:(NSRange)otherRange STUB_METHOD;
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray<ObjectType>*)otherArray STUB_METHOD;
+- (void)setArray:(NSArray<ObjectType>*)otherArray;
 - (void)filterUsingPredicate:(NSPredicate*)predicate;
 - (void)exchangeObjectAtIndex:(NSUInteger)idx1 withObjectAtIndex:(NSUInteger)idx2;
-- (void)sortUsingDescriptors:(NSArray*)sortDescriptors;
+- (void)sortUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 - (void)sortUsingComparator:(NSComparator)cmptr;
 - (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
-- (void)sortUsingFunction:(NSInteger (*)(id, id, void*))compare context:(void*)context;
+- (void)sortUsingFunction:(NSInteger (*)(ObjectType, ObjectType, void*))compare context:(void*)context;
 - (void)sortUsingSelector:(SEL)comparator;
 @end

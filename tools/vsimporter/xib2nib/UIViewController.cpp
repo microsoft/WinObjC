@@ -24,6 +24,7 @@ static PropertyMapper propertyMappings[] = {
     "IBUINibName", "UINibName", NULL, "IBUIResizesToFullScreen", "UIResizesToFullScreen", NULL, "IBUITitle", "UITitle", NULL,
 };
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
+viewControllerList UIViewController::_viewControllerNames;
 
 UIViewController::UIViewController() {
     _childViewControllers = new XIBArray();
@@ -33,6 +34,7 @@ UIViewController::UIViewController() {
     _navigationItem = NULL;
     _tabBarItem = NULL;
     _resizesToFullSize = true;
+    _storyboardIdentifier = NULL;
 }
 
 void UIViewController::InitFromXIB(XIBObject* obj) {
@@ -58,6 +60,12 @@ void UIViewController::InitFromXIB(XIBObject* obj) {
 void UIViewController::InitFromStory(XIBObject* obj) {
     ObjectConverterSwapper::InitFromStory(obj);
     _view = (UIView*)obj->FindMemberAndHandle("view");
+
+    _viewControllerNames.push_back(_id);
+
+    if (getAttrib("storyboardIdentifier")) {
+        _storyboardIdentifier = getAttrAndHandle("storyboardIdentifier");
+    }
 
     if (_connections) {
         for (int i = 0; i < _connections->count(); i++) {

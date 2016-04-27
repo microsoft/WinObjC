@@ -57,16 +57,16 @@
     <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\ucrtbased.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140d.dll" Condition="'$(Platform)'=='ARM'">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140d.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140d.dll" Condition="'$(Platform)'=='ARM'">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140d.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140.dll" Condition="'$(Platform)'=='ARM'">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\msvcp140.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
-    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140.dll" Condition="'$(Platform)'=='ARM'">
+    <SBResourceCopy Include="$(MSBuildThisFileDirectory)\..\..\..\tests\ContainerCRTDeps\$(ProcessorArchitecture)\vcruntime140.dll">
       <FileType>Document</FileType>
     </SBResourceCopy>
   </ItemGroup>

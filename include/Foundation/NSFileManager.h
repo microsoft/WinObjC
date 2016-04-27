@@ -23,12 +23,12 @@
 @protocol NSCoding;
 @protocol NSCopying;
 @class NSFileManager;
-@class NSDictionary;
+@class NSDictionary<KeyType, ObjectType>;
 @class NSString;
 @class NSURL;
 @class NSError;
-@class NSArray;
-@class NSDirectoryEnumerator;
+@class NSArray<ObjectType>;
+@class NSDirectoryEnumerator<ObjectType>;
 @class NSData;
 @class NSDate;
 @protocol NSFileManagerDelegate;
@@ -102,30 +102,31 @@ FOUNDATION_EXPORT_CLASS
         appropriateForURL:(NSURL*)url
                    create:(BOOL)shouldCreate
                     error:(NSError* _Nullable*)error;
-- (NSArray*)URLsForDirectory:(NSSearchPathDirectory)directory inDomains:(NSSearchPathDomainMask)domainMask;
+- (NSArray<NSURL*>*)URLsForDirectory:(NSSearchPathDirectory)directory inDomains:(NSSearchPathDomainMask)domainMask;
 - (NSURL*)containerURLForSecurityApplicationGroupIdentifier:(NSString*)groupIdentifier;
-- (NSArray*)contentsOfDirectoryAtURL:(NSURL*)url
-          includingPropertiesForKeys:(NSArray*)keys
-                             options:(NSDirectoryEnumerationOptions)mask
-                               error:(NSError* _Nullable*)error;
-- (NSArray*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError* _Nullable*)error;
-- (NSDirectoryEnumerator*)enumeratorAtURL:(NSURL*)url
-               includingPropertiesForKeys:(NSArray*)keys
-                                  options:(NSDirectoryEnumerationOptions)mask
-                             errorHandler:(BOOL (^)(NSURL*, NSError*))handler;
-- (NSDirectoryEnumerator*)enumeratorAtPath:(NSString*)path;
-- (NSArray*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray*)propertyKeys options:(NSVolumeEnumerationOptions)options;
-- (NSArray*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError* _Nullable*)error;
-- (NSArray*)subpathsAtPath:(NSString*)path;
+- (NSArray<NSURL*>*)contentsOfDirectoryAtURL:(NSURL*)url
+                  includingPropertiesForKeys:(NSArray<NSString*>*)keys
+                                     options:(NSDirectoryEnumerationOptions)mask
+                                       error:(NSError* _Nullable*)error;
+- (NSArray<NSURL*>*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError* _Nullable*)error;
+- (NSDirectoryEnumerator<NSURL*>*)enumeratorAtURL:(NSURL*)url
+                       includingPropertiesForKeys:(NSArray<NSString*>*)keys
+                                          options:(NSDirectoryEnumerationOptions)mask
+                                     errorHandler:(BOOL (^)(NSURL*, NSError*))handler;
+- (NSDirectoryEnumerator<NSString*>*)enumeratorAtPath:(NSString*)path;
+- (NSArray<NSURL*>*)mountedVolumeURLsIncludingResourceValuesForKeys:(NSArray<NSString*>*)propertyKeys
+                                                            options:(NSVolumeEnumerationOptions)options;
+- (NSArray<NSURL*>*)subpathsOfDirectoryAtPath:(NSString*)path error:(NSError* _Nullable*)error;
+- (NSArray<NSURL*>*)subpathsAtPath:(NSString*)path;
 - (BOOL)createDirectoryAtURL:(NSURL*)url
  withIntermediateDirectories:(BOOL)createIntermediates
-                  attributes:(NSDictionary*)attributes
+                  attributes:(NSDictionary<NSString*, id>*)attributes
                        error:(NSError* _Nullable*)error;
 - (BOOL)createDirectoryAtPath:(NSString*)path
   withIntermediateDirectories:(BOOL)createIntermediates
-                   attributes:(NSDictionary*)attributes
+                   attributes:(NSDictionary<NSString*, id>*)attributes
                         error:(NSError* _Nullable*)error;
-- (BOOL)createFileAtPath:(NSString*)path contents:(NSData*)contents attributes:(NSDictionary*)attributes;
+- (BOOL)createFileAtPath:(NSString*)path contents:(NSData*)contents attributes:(NSDictionary<NSString*, id>*)attributes;
 - (BOOL)removeItemAtURL:(NSURL*)URL error:(NSError* _Nullable*)error;
 - (BOOL)removeItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
 - (BOOL)replaceItemAtURL:(NSURL*)originalItemURL
@@ -156,11 +157,11 @@ FOUNDATION_EXPORT_CLASS
 - (BOOL)isWritableFileAtPath:(NSString*)path;
 - (BOOL)isExecutableFileAtPath:(NSString*)path;
 - (BOOL)isDeletableFileAtPath:(NSString*)path;
-- (NSArray*)componentsToDisplayForPath:(NSString*)path;
+- (NSArray<NSString*>*)componentsToDisplayForPath:(NSString*)path;
 - (NSString*)displayNameAtPath:(NSString*)path;
-- (NSDictionary*)attributesOfItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
-- (NSDictionary*)attributesOfFileSystemForPath:(NSString*)path error:(NSError* _Nullable*)error;
-- (BOOL)setAttributes:(NSDictionary*)attributes ofItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
+- (NSDictionary<NSString*, id>*)attributesOfItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
+- (NSDictionary<NSString*, id>*)attributesOfFileSystemForPath:(NSString*)path error:(NSError* _Nullable*)error;
+- (BOOL)setAttributes:(NSDictionary<NSString*, id>*)attributes ofItemAtPath:(NSString*)path error:(NSError* _Nullable*)error;
 - (NSData*)contentsAtPath:(NSString*)path;
 - (BOOL)contentsEqualAtPath:(NSString*)path1 andPath:(NSString*)path2;
 - (BOOL)getRelationship:(NSURLRelationship*)outRelationship
@@ -177,11 +178,11 @@ FOUNDATION_EXPORT_CLASS
 @property (assign) id<NSFileManagerDelegate> delegate;
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path;
 @property (readonly, copy) NSString* currentDirectoryPath;
-- (BOOL)changeFileAttributes:(NSDictionary*)attributes atPath:(NSString*)path;
-- (NSDictionary*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)flag;
-- (NSDictionary*)fileSystemAttributesAtPath:(NSString*)path;
-- (NSArray*)directoryContentsAtPath:(NSString*)path;
-- (BOOL)createDirectoryAtPath:(NSString*)path attributes:(NSDictionary*)attributes;
+- (BOOL)changeFileAttributes:(NSDictionary<NSString*, id>*)attributes atPath:(NSString*)path;
+- (NSDictionary<NSString*, id>*)fileAttributesAtPath:(NSString*)path traverseLink:(BOOL)flag;
+- (NSDictionary<NSString*, id>*)fileSystemAttributesAtPath:(NSString*)path;
+- (NSArray<NSURL*>*)directoryContentsAtPath:(NSString*)path;
+- (BOOL)createDirectoryAtPath:(NSString*)path attributes:(NSDictionary<NSString*, id>*)attributes;
 - (BOOL)createSymbolicLinkAtPath:(NSString*)path pathContent:(NSString*)otherPath;
 - (NSString*)pathContentOfSymbolicLinkAtPath:(NSString*)path;
 @end

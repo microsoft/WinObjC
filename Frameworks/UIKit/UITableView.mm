@@ -641,6 +641,14 @@ static void initInternal(UITableView* self) {
     self->_indexPathsForSelectedItems = [NSMutableSet new];
     self->_indexPathsForHighlightedItems = [NSMutableSet new];
     priv->_separatorStyle = 0;
+    self.showsHorizontalScrollIndicator = FALSE;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setShowsHorizontalScrollIndicator:(BOOL)show {
+    [super setShowsHorizontalScrollIndicator:FALSE];
 }
 
 /**

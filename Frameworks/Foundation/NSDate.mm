@@ -155,11 +155,11 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSDate*)initWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
-    return StubReturn();
+    double time = [coder decodeDoubleForKey:@"NS.time"];
+    return [self initWithTimeIntervalSinceReferenceDate:time];
 }
 
 /**
@@ -313,10 +313,10 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeDouble:_curTime forKey:@"NS.time"];
 }
 
 /**
@@ -358,12 +358,10 @@ static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 @end

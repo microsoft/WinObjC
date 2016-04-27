@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #include <Foundation/NSArray.h>
+#include <Foundation/NSMutableArray.h>
 
 @class _NSMutableKeyProxyArray;
 

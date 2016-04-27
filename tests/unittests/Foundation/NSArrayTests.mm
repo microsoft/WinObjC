@@ -155,16 +155,13 @@ TEST(NSArray, NSMutableArray_Subclassable) {
 }
 
 TEST(NSArray, NSArray_initWithContentsOfFile) {
-    NSArray* expectedArray = @[@1, @2, @3, @4, @5];
+    NSArray* expectedArray = @[ @1, @2, @3, @4, @5 ];
 
     NSArray* cachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSAllDomainsMask, YES);
     ASSERT_NE(0, [cachesPaths count]);
     NSString* path = cachesPaths[0];
     NSString* file = [path stringByAppendingPathComponent:@"array.data"];
-    [[NSFileManager defaultManager] createDirectoryAtPath:path
-        withIntermediateDirectories:YES
-        attributes:nil
-        error:nil];
+    [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     [expectedArray writeToFile:file atomically:NO];
     NSArray* actualArray = [[NSArray alloc] initWithContentsOfFile:file];
     ASSERT_OBJCEQ(expectedArray, actualArray);
@@ -208,4 +205,22 @@ TEST(NSArray, Enumerate) {
                                 }];
 
     ASSERT_EQ(0, waitingCount);
+}
+
+TEST(NSArray, RemoveObjectsAtIndexes) {
+    NSMutableIndexSet* indexSet = [[NSMutableIndexSet new] autorelease];
+    [indexSet addIndexesInRange:NSMakeRange(2, 4)]; // [2-5]
+    [indexSet addIndexesInRange:NSMakeRange(7, 2)]; // [7-8]
+
+    NSMutableArray* testArray = [[NSMutableArray new] autorelease];
+    for (NSUInteger i = 0; i < 10; i++) {
+        [testArray addObject:@(i)];
+    }
+
+    [testArray removeObjectsAtIndexes:indexSet];
+
+    NSArray* expectedArray = @[ @0, @1, @6, @9 ];
+
+    ASSERT_OBJCEQ(testArray, expectedArray);
+
 }

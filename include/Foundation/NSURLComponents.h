@@ -25,22 +25,22 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLComponents : NSObject <NSCopying>
-+ (instancetype)componentsWithString:(NSString*)URLString STUB_METHOD;
-+ (instancetype)componentsWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve STUB_METHOD;
-- (instancetype)init STUB_METHOD;
-- (instancetype)initWithString:(NSString*)URLString STUB_METHOD;
-- (instancetype)initWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve STUB_METHOD;
++ (instancetype)componentsWithString:(NSString*)URLString;
++ (instancetype)componentsWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve;
+- (instancetype)init;
+- (instancetype)initWithString:(NSString*)URLString;
+- (instancetype)initWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve;
 @property (readonly, copy) NSString* string STUB_PROPERTY;
-@property (readonly, copy) NSURL* URL STUB_PROPERTY;
+@property (readonly, copy) NSURL* URL;
 - (NSURL*)URLRelativeToURL:(NSURL*)baseURL STUB_METHOD;
 @property (copy) NSString* fragment STUB_PROPERTY;
-@property (copy) NSString* host STUB_PROPERTY;
+@property (copy) NSString* host;
 @property (copy) NSString* password STUB_PROPERTY;
-@property (copy) NSString* path STUB_PROPERTY;
+@property (copy) NSString* path;
 @property (copy) NSNumber* port STUB_PROPERTY;
 @property (copy) NSString* query STUB_PROPERTY;
-@property (copy) NSArray* queryItems STUB_PROPERTY;
-@property (copy) NSString* scheme STUB_PROPERTY;
+@property (copy) NSArray* queryItems;
+@property (copy) NSString* scheme;
 @property (copy) NSString* user STUB_PROPERTY;
 @property (copy) NSString* percentEncodedFragment STUB_PROPERTY;
 @property (copy) NSString* percentEncodedHost STUB_PROPERTY;

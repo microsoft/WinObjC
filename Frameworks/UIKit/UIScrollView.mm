@@ -110,6 +110,8 @@ const float UIScrollViewDecelerationRateFast = StubConstant();
 
     BOOL _showsVerticalScrollIndicator;
     idretain _verticalScroller;
+    BOOL _showsHorizontalScrollIndicator;
+    idretain _horizontalScroller;
     bool _shouldShowScroller;
     bool _scrollerVisible;
 
@@ -167,6 +169,7 @@ static void commonInit(UIScrollView* self) {
     self->_bounces = TRUE;
     self->_scrollEnabled = TRUE;
     self->_showsVerticalScrollIndicator = TRUE;
+    self->_showsHorizontalScrollIndicator = TRUE;
     self->_zoomScale = self->_maximumZoomScale = self->_minimumZoomScale = 1.0f;
     self->_alwaysBounceVertical = self->_alwaysBounceHorizontal = false;
 
@@ -183,6 +186,7 @@ static void commonInit(UIScrollView* self) {
 
 static void commonPostInit(UIScrollView* self) {
     self->_verticalScroller.attach([__UIScrollerPosition new]);
+    self->_horizontalScroller.attach([__UIScrollerPosition new]);
 }
 
 static void showScrollersAction(UIScrollView* self) {
@@ -195,54 +199,106 @@ static void hideScrollersAction(UIScrollView* self) {
 }
 
 static void positionScrollers(UIScrollView* self) {
-    if (self->_shouldShowScroller && self->_showsVerticalScrollIndicator) {
+    if (self->_shouldShowScroller) {
         if (!self->_scrollerVisible) {
-            [[self layer] addSublayer:self->_verticalScroller];
-            [self->_verticalScroller _show];
             self->_scrollerVisible = true;
+            if (self->_showsVerticalScrollIndicator) {
+                [[self layer] addSublayer:self->_verticalScroller];
+                [self->_verticalScroller _show];
+            }
+            if (self->_showsHorizontalScrollIndicator) {
+                [[self layer] addSublayer:self->_horizontalScroller];
+                [self->_horizontalScroller _show];
+            }
         }
     } else {
         if (self->_scrollerVisible) {
             [self->_verticalScroller _hide];
+            [self->_horizontalScroller _hide];
             self->_scrollerVisible = false;
         }
     }
 
     if (self->_scrollerVisible) {
-        CGPoint verticalPos = { 0, 0 };
-        CGRect verticalSize = { 0, 0, 6, 100 };
-        CGRect bounds;
-
-        bounds = [self bounds];
-
-        float scrollStart = self->_contentOffset.y;
-        float scrollEnd = self->_contentOffset.y + bounds.size.height;
-
-        const float margin = 6.0f;
-        const float halfmargin = margin / 2.0f;
-
-        float scaledHeight = 0.0f, scaledStart = margin;
-        if (self->_contentSize.height > 0.0f) {
-            scaledStart = scrollStart * (bounds.size.height - margin) / self->_contentSize.height;
-            float scaledEnd = scrollEnd * (bounds.size.height - margin) / self->_contentSize.height;
-
-            if (scaledStart < halfmargin) {
-                scaledStart = halfmargin;
-            }
-            if (scaledEnd > bounds.size.height - halfmargin) {
-                scaledEnd = bounds.size.height - halfmargin;
-            }
-            scaledHeight = scaledEnd - scaledStart;
-            verticalSize.size.height = scaledHeight;
+        if (self->_showsVerticalScrollIndicator) {
+            positoinVerticalScroller(self);
         }
-
-        verticalPos.x = (bounds.origin.x + bounds.size.width - 8.0f) + verticalSize.size.width / 2.0f;
-        verticalPos.y = (bounds.origin.y + scaledStart) + verticalSize.size.height / 2.0f;
-
-        [self->_verticalScroller setPosition:verticalPos];
-        [self->_verticalScroller setBounds:verticalSize];
-        [[self layer] bringSublayerToFront:(id)self->_verticalScroller];
+        if (self->_showsHorizontalScrollIndicator) {
+            positoinHorizontalScroller(self);
+        }
     }
+}
+
+static void positoinVerticalScroller(UIScrollView* self) {
+    CGPoint verticalPos = { 0, 0 };
+    CGRect verticalSize = { 0, 0, 6, 100 };
+    CGRect bounds;
+
+    bounds = [self bounds];
+
+    float scrollStart = self->_contentOffset.y;
+    float scrollEnd = self->_contentOffset.y + bounds.size.height;
+
+    const float margin = 6.0f;
+    const float halfmargin = margin / 2.0f;
+
+    float scaledHeight = 0.0f, scaledStart = margin;
+    if (self->_contentSize.height > 0.0f) {
+        scaledStart = scrollStart * (bounds.size.height - margin) / self->_contentSize.height;
+        float scaledEnd = scrollEnd * (bounds.size.height - margin) / self->_contentSize.height;
+
+        if (scaledStart < halfmargin) {
+            scaledStart = halfmargin;
+        }
+        if (scaledEnd > bounds.size.height - halfmargin) {
+            scaledEnd = bounds.size.height - halfmargin;
+        }
+        scaledHeight = scaledEnd - scaledStart;
+        verticalSize.size.height = scaledHeight;
+    }
+
+    verticalPos.x = (bounds.origin.x + bounds.size.width - 8.0f) + verticalSize.size.width / 2.0f;
+    verticalPos.y = (bounds.origin.y + scaledStart) + verticalSize.size.height / 2.0f;
+
+    [self->_verticalScroller setPosition:verticalPos];
+    [self->_verticalScroller setBounds:verticalSize];
+    [[self layer] bringSublayerToFront:(id)self->_verticalScroller];
+}
+
+static void positoinHorizontalScroller(UIScrollView* self) {
+    CGPoint horizontalPos = { 0, 0 };
+    CGRect horizontalSize = { 0, 0, 100, 6 };
+    CGRect bounds;
+
+    bounds = [self bounds];
+
+    float scrollStart = self->_contentOffset.x;
+    float scrollEnd = self->_contentOffset.x + bounds.size.width;
+
+    const float margin = 6.0f;
+    const float halfmargin = margin / 2.0f;
+
+    float scaledWidth = 0.0f, scaledStart = margin;
+    if (self->_contentSize.width > 0.0f) {
+        scaledStart = scrollStart * (bounds.size.width - margin) / self->_contentSize.width;
+        float scaledEnd = scrollEnd * (bounds.size.width - margin) / self->_contentSize.width;
+
+        if (scaledStart < halfmargin) {
+            scaledStart = halfmargin;
+        }
+        if (scaledEnd > bounds.size.width - halfmargin) {
+            scaledEnd = bounds.size.width - halfmargin;
+        }
+        scaledWidth = scaledEnd - scaledStart;
+        horizontalSize.size.width = scaledWidth;
+    }
+
+    horizontalPos.x = (bounds.origin.x + scaledStart) + horizontalSize.size.width / 2.0f;
+    horizontalPos.y = (bounds.origin.y + bounds.size.height - 8.0f) + horizontalSize.size.height / 2.0f;
+
+    [self->_horizontalScroller setPosition:horizontalPos];
+    [self->_horizontalScroller setBounds:horizontalSize];
+    [[self layer] bringSublayerToFront:(id)self->_horizontalScroller];
 }
 
 /**
@@ -274,6 +330,9 @@ static void positionScrollers(UIScrollView* self) {
     }
     if ([coder containsValueForKey:@"UIShowsVerticalScrollIndicator"]) {
         _showsVerticalScrollIndicator = [coder decodeBoolForKey:@"UIShowsVerticalScrollIndicator"] == 0;
+    }
+    if ([coder containsValueForKey:@"UIShowsHorizontalScrollIndicator"]) {
+        _showsHorizontalScrollIndicator = [coder decodeBoolForKey:@"UIShowsHorizontalScrollIndicator"] == 0;
     }
 
     CGRect bounds;
@@ -367,6 +426,12 @@ static void positionScrollers(UIScrollView* self) {
     _alwaysBounceHorizontal = enable;
 }
 
+/**
+ @Status Interoperable
+*/
+- (BOOL)alwaysBounceHorizontal {
+    return _alwaysBounceHorizontal;
+}
 /**
  @Status Stub
 */
@@ -555,10 +620,10 @@ static void changeContentOffset(UIScrollView* self, CGPoint offset, BOOL animate
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setShowsHorizontalScrollIndicator:(BOOL)show {
-    UNIMPLEMENTED();
+    _showsHorizontalScrollIndicator = show;
 }
 
 /**
@@ -1250,6 +1315,8 @@ static void cancelScrolling(UIScrollView* self) {
     _pinchGesture = nil;
     [_verticalScroller removeFromSuperlayer];
     _verticalScroller = nil;
+    [_horizontalScroller removeFromSuperlayer];
+    _horizontalScroller = nil;
 
     [super dealloc];
 }
@@ -1319,7 +1386,7 @@ static float findMinY(UIScrollView* o) {
                 _yStuck = false;
             }
 
-           // fall-through
+        // fall-through
 
         // Immediate: Only freewheeling
         case _UIPanGestureStageImmediate: {

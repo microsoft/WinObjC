@@ -20,11 +20,11 @@
 #import <Foundation/NSFastEnumeration.h>
 #import <Foundation/NSObject.h>
 
-@class NSArray;
+@class NSArray<ObjectType>;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSEnumerator : NSObject <NSFastEnumeration>
+@interface NSEnumerator <ObjectType> : NSObject <NSFastEnumeration>
 
-@property (readonly, copy) NSArray* allObjects;
-- (id)nextObject;
+@property (readonly, copy) NSArray<ObjectType>* allObjects;
+- (ObjectType)nextObject;
 @end
