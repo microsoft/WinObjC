@@ -25,13 +25,13 @@
 #import "Foundation/NSValue.h"
 #import <UWP/WindowsStorageStreams.h>
 #import <UWP/WindowsSecurityCryptography.h>
-#import <COMIncludes.h>
+#include <COMIncludes.h>
 #import "ErrorHandling.h"
 #import "RawBuffer.h"
 #import <wrl\wrappers\corewrappers.h>
 #import <windows.security.cryptography.h>
 #import <windows.storage.streams.h>
-#import <COMIncludes_End.h>
+#include <COMIncludes_End.h>
 #import <string>
 #import <sstream>
 #import <iomanip>

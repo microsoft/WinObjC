@@ -16,6 +16,12 @@
 
 #pragma once
 
+#if defined(__cplusplus)
+#include <COMIncludes.h>
+#include <wrl/client.h>
+#include <COMIncludes_End.h>
+#endif /*__cpluplus*/
+
 #include <Foundation/Foundation.h>
 #include <inttypes.h>
 #include <wchar.h>
@@ -27,18 +33,21 @@
 #define ACTIVATOR __attribute((ns_returns_retained))
 
 #ifdef __cplusplus
-class IInspectable;
 #define WINRT_EXPORT_FN extern "C" WINRT_EXPORT
 #else
-struct IInspectable;
-typedef struct IInspectable IInspectable;
 #define WINRT_EXPORT_FN WINRT_EXPORT
 #endif
 
-WINRT_EXPORT_FN
+WINRT_EXPORT
 @interface RTObject : NSObject
-- (id)internalObject;
-- (void)setComObj:(IInspectable*)obj;
+
+// Even with the #ifdefs we will not violate ODR, because of dynamic ivars provided by ObjectiveC modern runtime.
+#if defined(__cplusplus)
+@property (nonatomic) Microsoft::WRL::ComPtr<IInspectable> comObj;
+
+// For composable objects, this is the original interface.
+@property (nonatomic) Microsoft::WRL::ComPtr<IInspectable> innerInterface;
+#endif /*__cplusplus*/
 @end
 
 // Does a safe cast of rtObject into a derived projected class type. Throws if it is an invalid cast.
@@ -71,6 +80,7 @@ typedef struct _GUID {
 #endif
 #endif
 
+WINRT_EXPORT
 @interface WFGUID : NSObject
 @property unsigned long Data1;
 @property unsigned short Data2;
@@ -81,6 +91,7 @@ typedef struct _GUID {
 - initWithGUID:(const GUID)guid;
 @end
 
+WINRT_EXPORT
 @interface RTKeyValuePair : RTObject
 @property (readonly) id Key;
 @property (readonly) id Value;
