@@ -23,4 +23,7 @@
 
 - (id)initWithImage:(UIImage*)image;
 
+// for testing purposes
+@property (nonatomic) int numViewEventsFired;
+
 @end

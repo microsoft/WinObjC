@@ -43,5 +43,5 @@
 - (void)popoverPresentationControllerDidDismissPopover:(UIPopoverPresentationController*)popoverPresentationController;
 - (void)popoverPresentationController:(UIPopoverPresentationController*)popoverPresentationController
           willRepositionPopoverToRect:(CGRect*)rect
-                               inView:(UIView*)view;
+                               inView:(UIView**)view;
 @end

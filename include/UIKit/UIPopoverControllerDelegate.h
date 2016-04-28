@@ -24,9 +24,11 @@
 #import <CoreGraphics/CGGeometry.h>
 
 @protocol UIPopoverControllerDelegate <NSObject>
+@optional
+
 - (void)popoverController:(UIPopoverController*)popoverController
     willRepositionPopoverToRect:(inout CGRect*)rect
-                         inView:(inout UIView* _Nonnull*)view;
+                         inView:(inout UIView**)view;
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController*)popoverController;
 - (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController;
 @end

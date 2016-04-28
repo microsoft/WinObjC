@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,16 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#ifndef _UIPOPOVERCONTROLLERINTERNAL_H_
+#define _UIPOPOVERCONTROLLERINTERNAL_H_
 
-@interface ControlsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface UIPopoverController () {
+@public
+   dispatch_block_t _presentCompletion;
+}
+
+- (void)_dismissPopoverAnimated:(BOOL)animated completion:(dispatch_block_t)completion;
 
 @end
+
+#endif

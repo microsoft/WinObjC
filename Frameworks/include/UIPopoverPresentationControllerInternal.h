@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,19 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#ifndef _UIPOPOVERPRESENTATIONCONTROLLERINTERNAL_H_
+#define _UIPOPOVERPRESENTATIONCONTROLLERINTERNAL_H_
 
-@interface ControlsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface UIPopoverPresentationController () {
+@public
+    BOOL _managesPresentation;
+    dispatch_block_t _willDismissCompletion;
+}
+
+- (void)_prepareForPresentation;
+- (void)_presentAnimated:(BOOL)animated completion:(dispatch_block_t)presentCompletion;
+- (void)_dismissAnimated:(BOOL)animated completion:(dispatch_block_t)dismissCompletion;
 
 @end
+
+#endif

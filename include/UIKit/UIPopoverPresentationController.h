@@ -35,6 +35,7 @@
 #include <UIKit/UIPopoverPresentationControllerDelegate.h>
 #import <UIKit/UIPopoverController.h>
 
+UIKIT_EXPORT_CLASS
 @interface UIPopoverPresentationController : UIPresentationController
 
 @property (nonatomic, readwrite) UIEdgeInsets popoverLayoutMargins;
@@ -43,9 +44,9 @@
 @property (nonatomic, readwrite, retain) Class popoverBackgroundViewClass;
 @property (nonatomic, retain) UIBarButtonItem* barButtonItem;
 @property (nonatomic, retain) UIView* sourceView;
-@property (nonatomic, assign) CGRect sourceRect;
-@property (nonatomic) id<UIPopoverPresentationControllerDelegate> delegate;
-@property (nonatomic, assign) UIPopoverArrowDirection permittedArrowDirections;
+@property (nonatomic) CGRect sourceRect;
+@property (nonatomic, assign) id<UIPopoverPresentationControllerDelegate> delegate;
+@property (nonatomic) UIPopoverArrowDirection permittedArrowDirections;
 @property (nonatomic, readonly) UIPopoverArrowDirection arrowDirection;
 
 @end
