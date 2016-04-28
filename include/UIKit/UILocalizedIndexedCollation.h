@@ -17,9 +17,11 @@
 #pragma once
 
 #import <Foundation/NSObject.h>
+#import <UIKit/UIKitExport.h>
 
 @class NSArray;
 
+UIKIT_EXPORT_CLASS
 @interface UILocalizedIndexedCollation : NSObject
 
 @property (nonatomic, readonly) NSArray* sectionTitles;

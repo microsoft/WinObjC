@@ -48,6 +48,7 @@ typedef NSUInteger UIPopoverArrowDirection;
 @class UIView, UIPopoverController, UIBarButtonItem, UIPopoverView;
 @protocol UIPopoverControllerDelegate;
 
+UIKIT_EXPORT_CLASS
 @interface UIPopoverController : NSObject
 
 - (id)initWithContentViewController:(UIViewController*)viewController;

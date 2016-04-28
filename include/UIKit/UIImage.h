@@ -79,6 +79,9 @@ UIKIT_EXPORT_CLASS
 @property (readonly, nonatomic) UIImageOrientation imageOrientation;
 @property (readonly, nonatomic) UIImageResizingMode resizingMode STUB_PROPERTY;
 
+// UIAccessibility properties.
+@property (copy) NSString* accessibilityLabel STUB_PROPERTY;
+
 + (UIImage*)animatedImageNamed:(NSString*)name duration:(NSTimeInterval)duration STUB_METHOD;
 + (UIImage*)animatedImageWithImages:(NSArray*)images duration:(NSTimeInterval)duration;
 + (UIImage*)animatedResizableImageNamed:(NSString*)name capInsets:(UIEdgeInsets)capInsets duration:(NSTimeInterval)duration STUB_METHOD;

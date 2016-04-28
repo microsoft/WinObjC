@@ -17,6 +17,7 @@
 
 #import <AudioToolbox/AudioToolboxExport.h>
 #import <AudioToolbox/AudioConverter.h>
+#import <AudioToolbox/SystemSound.h>
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFString.h>
 

@@ -167,6 +167,14 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
++ (UIFont*)preferredFontForTextStyle:(NSString*)style {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 + (UIFont*)fontWithData:(NSData*)data {
     //  Load the font
     char* pFont = (char*)[data bytes];
