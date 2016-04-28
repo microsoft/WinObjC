@@ -47,7 +47,7 @@ static const wchar_t* TAG = L"UINavigationBar";
     CGSize _textShadowOffset;
     idretain _font, _textColor, _textShadowColor;
     idretaintype(UIImage) _navGradient;
-    UINavigationItem *_curItem, *_newItem;
+    idretaintype(UINavigationItem) _curItem, _newItem;
     idretaintype(UIBarButtonItem) _leftButton, _rightButton;
     idretaintype(UIBarButtonItem) _backButton;
     idretaintype(UIView) _titleView;
