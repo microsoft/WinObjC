@@ -42,6 +42,7 @@ public:
     virtual size_t Read(void* dest, size_t elem, size_t count);
     virtual size_t Write(void* dest, size_t elem, size_t count);
     virtual int Seek(long offset, int origin);
+    virtual int Seek64(__int64 offset, int origin);
     virtual size_t Tell();
     virtual int Eof();
     virtual int Putc(int c);
@@ -60,8 +61,9 @@ public:
     virtual int Stat(struct stat* ret);
     virtual int Read(void* dest, size_t count);
     virtual int Write(const void* src, size_t count);
-    virtual int Lseek(off_t pos, int whence);
+    virtual int Lseek(__int64 pos, int whence);
     virtual int Truncate(off_t size);
+    virtual int Truncate64(__int64 size);
     virtual int Dup();
 
     virtual void* Mmap(void* addr, size_t size, uint32_t prot, uint32_t flags, uint32_t offset);
@@ -82,6 +84,7 @@ SB_EXPORT int EbrFclose(EbrFile* file);
 SB_EXPORT size_t EbrFread(void* dest, size_t elem, size_t count, EbrFile* file);
 SB_EXPORT size_t EbrFwrite(void* dest, size_t elem, size_t count, EbrFile* file);
 SB_EXPORT int EbrFseek(EbrFile* fp, long offset, int origin);
+SB_EXPORT int EbrFseek64(EbrFile* fp, __int64 offset, int origin);
 SB_EXPORT size_t EbrFtell(EbrFile* fp);
 SB_EXPORT int EbrFeof(EbrFile* fp);
 SB_EXPORT int EbrStat(const char* filename, struct stat* ret);
@@ -102,13 +105,15 @@ SB_EXPORT int EbrFsetpos(EbrFile* fp, __int64* pos);
 SB_EXPORT int EbrFgetpos(EbrFile* fp, __int64* pos);
 
 SB_EXPORT int EbrOpen(const char* file, int mode, int share);
+SB_EXPORT int EbrOpenWithPermission(const char* file, int mode, int share, int pmode);
 SB_EXPORT int EbrClose(int fd);
 SB_EXPORT int EbrFd2Host(int fd);
 SB_EXPORT int EbrFstat(int fd, struct stat* ret);
 SB_EXPORT int EbrRead(int fd, void* dest, size_t count);
 SB_EXPORT int EbrWrite(int fd, const void* src, size_t count);
-SB_EXPORT int EbrLseek(int fd, off_t pos, int whence);
+SB_EXPORT int EbrLseek(int fd, __int64 pos, int whence);
 SB_EXPORT int EbrTruncate(int fd, off_t size);
+SB_EXPORT int EbrTruncate64(int fd, __int64 size);
 SB_EXPORT int EbrDup(int fd);
 
 SB_EXPORT bool EbrRename(const char* path1, const char* path2);

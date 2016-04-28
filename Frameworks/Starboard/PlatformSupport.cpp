@@ -111,6 +111,11 @@ int EbrFile::Seek(long offset, int origin) {
     return -1;
 }
 
+int EbrFile::Seek64(__int64 offset, int origin) {
+    assert(0);
+    return -1;
+}
+
 size_t EbrFile::Tell() {
     assert(0);
     return 0;
@@ -195,12 +200,17 @@ int EbrFile::Write(const void* src, size_t count) {
     return 0;
 }
 
-int EbrFile::Lseek(off_t pos, int whence) {
+int EbrFile::Lseek(__int64 pos, int whence) {
     assert(0);
     return 0;
 }
 
 int EbrFile::Truncate(off_t size) {
+    assert(0);
+    return 0;
+}
+
+int EbrFile::Truncate64(__int64 size) {
     assert(0);
     return 0;
 }
@@ -255,6 +265,7 @@ public:
     virtual size_t Read(void* dest, size_t elem, size_t count);
     virtual size_t Write(void* dest, size_t elem, size_t count);
     virtual int Seek(long offset, int origin);
+    virtual int Seek64(__int64 offset, int origin);
     virtual size_t Tell();
     virtual int Eof();
     virtual int Putc(int c);
@@ -273,8 +284,9 @@ public:
     virtual int Stat(struct stat* ret);
     virtual int Read(void* dest, size_t count);
     virtual int Write(const void* src, size_t count);
-    virtual int Lseek(off_t pos, int whence);
+    virtual int Lseek(__int64 pos, int whence);
     virtual int Truncate(off_t size);
+    virtual int Truncate64(__int64 size);
     virtual int Dup();
 };
 
@@ -469,19 +481,25 @@ EbrFile* EbrFopen(const char* filename, const char* mode) {
 }
 
 //  IO funcs
+
 int EbrOpen(const char* file, int mode, int share) {
+    return EbrOpenWithPermission(file, mode, share, 0);
+}
+
+int EbrOpenWithPermission(const char* file, int mode, int share, int pmode) {
     if (strcmp(file, "/dev/urandom") == 0) {
         EbrFileDevRandom* ret = new EbrFileDevRandom();
         EbrFile* addedFile = EbrAllocFile(ret);
 
         return addedFile->idx;
     }
+
     bool stop = false;
     if (stop) {
         return -1;
     }
     int ret = -1;
-    _sopen_s(&ret, CPathMapper(file), mode, share, 0);
+    _sopen_s(&ret, CPathMapper(file), mode, share, pmode);
     if (ret == -1) {
         return -1;
     }
@@ -540,6 +558,14 @@ int EbrIOFile::Seek(long offset, int origin) {
 
 int EbrFseek(EbrFile* fp, long offset, int origin) {
     return fp->Seek(offset, origin);
+}
+
+int EbrIOFile::Seek64(__int64 offset, int origin) {
+    return _fseeki64(fp, offset, origin);
+}
+
+int EbrFseek64(EbrFile* fp, __int64 offset, int origin) {
+    return fp->Seek64(offset, origin);
 }
 
 size_t EbrIOFile::Tell() {
@@ -727,11 +753,11 @@ int EbrWrite(int fd, const void* src, size_t count) {
     return _openFiles[fd]->Write(src, count);
 }
 
-int EbrIOFile::Lseek(off_t pos, int whence) {
+int EbrIOFile::Lseek(__int64 pos, int whence) {
     return _lseeki64(filefd, pos, whence);
 }
 
-int EbrLseek(int fd, off_t pos, int whence) {
+int EbrLseek(int fd, __int64 pos, int whence) {
     return _openFiles[fd]->Lseek(pos, whence);
 }
 
@@ -741,6 +767,14 @@ int EbrIOFile::Truncate(off_t size) {
 
 int EbrTruncate(int fd, off_t size) {
     return _openFiles[fd]->Truncate(size);
+}
+
+int EbrIOFile::Truncate64(__int64 size) {
+    return _chsize_s(filefd, size);
+}
+
+int EbrTruncate64(int fd, __int64 size) {
+    return _openFiles[fd]->Truncate64(size);
 }
 
 typedef struct {

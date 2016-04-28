@@ -282,6 +282,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSEnumeratorTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSExpressionTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileHandleTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSHttpCookieTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSJSONSerializationTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSLocaleTests.mm" />
@@ -318,6 +319,13 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Text</FileType>
+    </Text>
+  </ItemGroup>
+    <ItemGroup>
+    <Text Include="..\..\..\tests\unittests\Foundation\NSFileHandleTestFile.txt">
       <ExcludedFromBuild>true</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
       <FileType>Text</FileType>

@@ -34,26 +34,33 @@ FOUNDATION_EXPORT NSString* const NSFileHandleReadCompletionNotification;
 FOUNDATION_EXPORT NSString* const NSFileHandleReadToEndOfFileCompletionNotification;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSFileHandle : NSObject <NSSecureCoding>
-+ (instancetype)fileHandleForReadingAtPath:(NSString*)path STUB_METHOD;
-+ (instancetype)fileHandleForReadingFromURL:(NSURL*)url error:(NSError* _Nullable*)error STUB_METHOD;
-+ (instancetype)fileHandleForWritingAtPath:(NSString*)path STUB_METHOD;
-+ (instancetype)fileHandleForWritingToURL:(NSURL*)url error:(NSError* _Nullable*)error STUB_METHOD;
-+ (instancetype)fileHandleForUpdatingAtPath:(NSString*)path STUB_METHOD;
-+ (instancetype)fileHandleForUpdatingURL:(NSURL*)url error:(NSError* _Nullable*)error STUB_METHOD;
+@interface NSFileHandle : NSObject
+
+@property (readonly) int fileDescriptor;
+@property (readonly, copy) NSData* availableData;
+@property (copy, nonnull) void (^readabilityHandler)(NSFileHandle*) STUB_PROPERTY;
+@property (copy, nonnull) void (^writeabilityHandler)(NSFileHandle*) STUB_PROPERTY;
+@property (readonly) unsigned long long offsetInFile;
+
++ (instancetype)fileHandleForReadingAtPath:(NSString*)path;
++ (instancetype)fileHandleForReadingFromURL:(NSURL*)url error:(NSError* _Nullable*)error;
++ (instancetype)fileHandleForWritingAtPath:(NSString*)path;
++ (instancetype)fileHandleForWritingToURL:(NSURL*)url error:(NSError* _Nullable*)error;
++ (instancetype)fileHandleForUpdatingAtPath:(NSString*)path;
++ (instancetype)fileHandleForUpdatingURL:(NSURL*)url error:(NSError* _Nullable*)error;
+
 + (NSFileHandle*)fileHandleWithStandardError STUB_METHOD;
 + (NSFileHandle*)fileHandleWithStandardInput STUB_METHOD;
 + (NSFileHandle*)fileHandleWithStandardOutput STUB_METHOD;
-+ (NSFileHandle*)fileHandleWithNullDevice STUB_METHOD;
-- (instancetype)initWithFileDescriptor:(int)fileDescriptor STUB_METHOD;
-- (instancetype)initWithFileDescriptor:(int)fileDescriptor closeOnDealloc:(BOOL)flag STUB_METHOD;
-@property (readonly) int fileDescriptor STUB_PROPERTY;
-@property (readonly, copy) NSData* availableData STUB_PROPERTY;
-- (NSData*)readDataToEndOfFile STUB_METHOD;
-- (NSData*)readDataOfLength:(NSUInteger)length STUB_METHOD;
-- (void)writeData:(NSData*)data STUB_METHOD;
-@property (copy, nonnull) void (^readabilityHandler)(NSFileHandle*) STUB_PROPERTY;
-@property (copy, nonnull) void (^writeabilityHandler)(NSFileHandle*) STUB_PROPERTY;
++ (NSFileHandle*)fileHandleWithNullDevice;
+
+- (instancetype)initWithFileDescriptor:(int)fileDescriptor;
+- (instancetype)initWithFileDescriptor:(int)fileDescriptor closeOnDealloc:(BOOL)flag;
+
+- (NSData*)readDataToEndOfFile;
+- (NSData*)readDataOfLength:(NSUInteger)length;
+- (void)writeData:(NSData*)data;
+
 - (void)acceptConnectionInBackgroundAndNotify STUB_METHOD;
 - (void)acceptConnectionInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
 - (void)readInBackgroundAndNotify STUB_METHOD;
@@ -62,10 +69,10 @@ FOUNDATION_EXPORT_CLASS
 - (void)readToEndOfFileInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
 - (void)waitForDataInBackgroundAndNotify STUB_METHOD;
 - (void)waitForDataInBackgroundAndNotifyForModes:(NSArray*)modes STUB_METHOD;
-@property (readonly) unsigned long long offsetInFile STUB_PROPERTY;
-- (unsigned long long)seekToEndOfFile STUB_METHOD;
-- (void)seekToFileOffset:(unsigned long long)offset STUB_METHOD;
-- (void)closeFile STUB_METHOD;
-- (void)synchronizeFile STUB_METHOD;
-- (void)truncateFileAtOffset:(unsigned long long)offset STUB_METHOD;
+
+- (unsigned long long)seekToEndOfFile;
+- (void)seekToFileOffset:(unsigned long long)offset;
+- (void)closeFile;
+- (void)synchronizeFile;
+- (void)truncateFileAtOffset:(unsigned long long)offset;
 @end
