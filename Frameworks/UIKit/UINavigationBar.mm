@@ -568,24 +568,6 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
         [_curItem _setDelegate:nil];
     }
 
-    _items = nil;
-    _font = nil;
-    _textColor = nil;
-    _textShadowColor = nil;
-    _navGradient = nil;
-    _curItem = nil;
-    _newItem = nil;
-    _leftButton = nil;
-    _rightButton = nil;
-    _backButton = nil;
-    _titleView = nil;
-    _titleLabel = nil;
-    _titleTextAttributes = nil;
-    _tintColor = nil;
-    _barTintColor = nil;
-    _shadowImage = nil;
-    _shadowImageView = nil;
-
     [super dealloc];
 }
 
