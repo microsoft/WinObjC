@@ -71,7 +71,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, copy) NSString* placeholder;
 @property (nonatomic, copy) NSAttributedString* attributedPlaceholder STUB_PROPERTY;
 @property (nonatomic, copy) NSDictionary* defaultTextAttributes STUB_PROPERTY;
-@property (nonatomic, strong) UIFont* font STUB_PROPERTY;
+@property (nonatomic, strong) UIFont* font;
 @property (nonatomic, strong) UIColor* textColor;
 @property (nonatomic) NSTextAlignment textAlignment;
 @property (nonatomic, copy) NSDictionary* typingAttributes STUB_PROPERTY;

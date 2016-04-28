@@ -17,7 +17,7 @@
 #import <UIKit/UIControl.h>
 #import <UWP/WindowsUIXamlControls.h>
 
-@interface XamlUtilities
+@interface XamlUtilities : NSObject
 // convert UIColor to Color on windows
 + (WUColor*)convertUIColorToWUColor:(UIColor*)uiColor;
 

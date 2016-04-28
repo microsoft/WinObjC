@@ -186,12 +186,12 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes fonts can be set, but will be ignored for rendering, instead default font will be used.  
 */
 - (void)setFont:(UIFont*)font {
     _font = font;
-    UNIMPLEMENTED();
-    // TODO: need map UIFont with fontFamily/FontSize/FontWeight/FontStyle on target
+    // TODO 7374333: need map UIFont with fontFamily/FontSize/FontWeight/FontStyle on target
 }
 
 /**
