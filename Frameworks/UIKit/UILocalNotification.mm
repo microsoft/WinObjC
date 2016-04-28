@@ -56,10 +56,9 @@ NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefau
 }
 
 /**
-   @Status Stub
+   @Status Interoperable
 */
 - (void)setAlertBody:(NSString*)alertBody {
-    UNIMPLEMENTED();
     _alertBody.attach([alertBody copy]);
 }
 
@@ -88,10 +87,9 @@ NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefau
 }
 
 /**
-   @Status Stub
+   @Status Interoperable
 */
 - (void)setAlertAction:(NSString*)alertAction {
-    UNIMPLEMENTED();
     _alertAction.attach([alertAction copy]);
 }
 
@@ -128,10 +126,9 @@ NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefau
 }
 
 /**
-   @Status Stub
+   @Status Interoperable
 */
 - (NSString*)alertBody {
-    UNIMPLEMENTED();
     return [[_alertBody copy] autorelease];
 }
 
@@ -160,10 +157,9 @@ NSString* const UILocalNotificationDefaultSoundName = @"UILocalNotificationDefau
 }
 
 /**
-   @Status Stub
+   @Status Interoperable
 */
 - (NSString*)alertAction {
-    UNIMPLEMENTED();
     return [[_alertAction copy] autorelease];
 }
 
