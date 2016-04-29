@@ -38,6 +38,9 @@
   <ItemGroup>
     <None Include="CoreFoundation.def" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="CoreFoundation.natvis" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</ProjectGuid>
     <RootNamespace>CoreFoundation</RootNamespace>
