@@ -13,7 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
+#undef _WINOBJC_DO_NOT_USE_NSLOG
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 #include "Starboard.h"

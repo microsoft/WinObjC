@@ -27,6 +27,7 @@
 #import "UIGridLayoutSection.h"
 #import "UICollectionViewLayout+Internal.h"
 #import "AssertARCEnabled.h"
+#import "ErrorHandling.h"
 
 NSString* const UICollectionElementKindSectionHeader = @"UICollectionElementKindSectionHeader";
 NSString* const UICollectionElementKindSectionFooter = @"UICollectionElementKindSectionFooter";
@@ -441,7 +442,7 @@ static char kUICachedItemRectsKey;
  @Public No
 */
 - (void)getSizingInfos {
-    NSAssert(_data.sections.count == 0, @"Grid layout is already populated?");
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, _data.sections.count == 0, "Grid layout is already populated?");
 
     auto flowDataSource = static_cast<NSObject<UICollectionViewDelegateFlowLayout>*>(self.collectionView.delegate);
 
