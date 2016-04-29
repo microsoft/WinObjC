@@ -19,9 +19,7 @@
 #import <StubReturn.h>
 #import <NSLogging.h>
 #import "CMMotionManagerInternal.h"
-#import "UWP/WindowsDevicesSensors.h"
 #import "UWP/WindowsGraphicsDisplay.h"
-#import "UWP/WindowsFoundation.h"
 #import "Windows.h"
 
 // Timestamps for readings are in seconds for iOS and in 100-nanoseconds for WinRT
@@ -35,6 +33,9 @@ static const double c_secondToMilliseconds= 1000.0;
 
 // For gyrometer values iOS uses unit as radians per sec. while WinRT uses degrees per sec. 
 static const double c_degreeToRadian = M_PI / 180;
+
+// For converting quaternion from landscape to portrait reference frame.
+static const double c_cos45 = cos(-45 * c_degreeToRadian);
 
 static double _bootTime;
 
@@ -70,6 +71,15 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
 @property (readwrite, nonatomic, getter=isMagnetometerActive) BOOL magnetometerActive;
 @property (readwrite, nonatomic, getter=isMagnetometerAvailable) BOOL magnetometerAvailable;
 @property (readwrite) CMMagnetometerData* magnetometerData; 
+
+// The orientation sensors returns rotation matrix and quaternion.
+// We will use the rotation matrix to calculate pitch, roll and yaw values.
+@property WDSOrientationSensor* orientation;
+@property EventRegistrationToken deviceMotionToken;
+@property NSOperationQueue* deviceMotionQueue;  
+@property (readwrite, nonatomic, getter=isDeviceMotionActive) BOOL deviceMotionActive;
+@property (readwrite, nonatomic, getter=isDeviceMotionAvailable) BOOL deviceMotionAvailable;
+@property (readwrite) CMDeviceMotion* deviceMotion;
 
 @end
 
@@ -137,9 +147,47 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
             _magnetometerAvailable = false;
             NSTraceInfo(TAG, @"Magnetometer not found!");  
         }
+        
+       _orientation = [WDSOrientationSensor getDefault];
+       _deviceMotionActive = false;
+       _deviceMotionToken.value = 0;
+      
+       if (_orientation) {
+            _deviceMotionAvailable = true;
+
+            // The range for pitch and roll is different (and swapped) across iOS and WinRT. 
+            // Hence we set the reference orientation to landscape and then swap the readings to match iOS behaviour.
+            [_orientation setReadingTransform:WGDDisplayOrientationsLandscape];
+        } else {
+            _deviceMotionAvailable = false;
+            NSTraceInfo(TAG, @"DeviceMotion not found!");  
+        }
     } 
 
     return self;
+}
+
+
+// We convert the reference frame from landscape orientation to portrait orientation.
+// Conversion is based on  https://msdn.microsoft.com/en-us/library/windows/apps/dn440593.aspx
+// For the quaternion conversion we assume the x and y component of Qref are zero.
+// For roll and pitch we swap the values.
++ (CMAttitude*)toAttitude:(WDSSensorRotationMatrix*)rm quaternion:(WDSSensorQuaternion*)q {
+    CMRotationMatrix rotationMatrix = { rm.m21,  rm.m22,  rm.m23,
+                                       -rm.m11, -rm.m12, -rm.m13,
+                                        rm.m31,  rm.m32,  rm.m33};
+                                        
+    CMQuaternion quaternion = {(q.x + q.y) * c_cos45,
+                               (-q.x + q.y) * c_cos45,
+                               (q.z - q.w) * c_cos45,
+                               (q.z + q.w) * c_cos45};
+                               
+    CMAttitude* attitude = [[CMAttitude alloc] initWithValues:-atan2(rm.m32, rm.m33)
+                                                        pitch:atan2(-rm.m31, sqrt(rm.m32 * rm.m32 + rm.m33 * rm.m33))
+                                                          yaw:atan2(-rm.m11, rm.m21)
+                                               rotationMatrix:rotationMatrix
+                                                   quaternion:quaternion];
+    return attitude;
 }
 
 
@@ -473,13 +521,30 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
     UNIMPLEMENTED();
 }
 
+
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Only attitude property is supported currently.
 */
-- (void)startDeviceMotionUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMDeviceMotionHandler)handler {
-    UNIMPLEMENTED();
+- (void)startDeviceMotionUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMDeviceMotionHandler)handler { 
+   
+    if (self.deviceMotionAvailable) {
+        [self startDeviceMotionUpdates];
+        self.deviceMotionQueue = queue;
+        
+        self.deviceMotionToken = [self.orientation addReadingChangedEvent:
+            ^void(WDSOrientationSensor* sender, WDSOrientationSensorReadingChangedEventArgs* e) {
+                
+                WDSOrientationSensorReading* reading = e.reading;
+
+                CMDeviceMotion* deviceMotion = [[CMDeviceMotion alloc] initWithValues:[CMMotionManager toAttitude:reading.rotationMatrix
+                                                                                                       quaternion:reading.quaternion]
+                                                                                 time:toSecondsSinceBoot(reading.timestamp)];
+                [queue addOperationWithBlock:^{ handler(deviceMotion, nil); }];
+            }];
+    }
 }
+
 
 /**
  @Status Stub
@@ -489,21 +554,87 @@ NSString* const CMErrorDomain = @"CMErrorDomain";
     UNIMPLEMENTED();
 }
 
-/**
- @Status Stub
- @Notes
-*/
-- (void)startDeviceMotionUpdates {
-    UNIMPLEMENTED();
-}
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Only attitude property is supported currently.
+*/
+- (void)startDeviceMotionUpdates {
+    
+    @synchronized(self) {
+    
+        if (self.deviceMotionAvailable) {
+            
+            if (self.deviceMotionActive) {
+                [self stopDeviceMotionUpdates];
+            }
+            
+            self.deviceMotionActive = true;
+            self.orientation.reportInterval = static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds);
+        }
+    }
+}
+
+
+/**
+ @Status Interoperable
  @Notes
 */
 - (void)stopDeviceMotionUpdates {
-    UNIMPLEMENTED();
+    
+    @synchronized(self) {
+
+        if (self.deviceMotionAvailable) {
+            self.deviceMotionActive = false;
+            
+            // the reportInterval is set to 0, the default value.
+            self.orientation.reportInterval = 0;
+            
+            if (self.deviceMotionToken.value != 0) {
+                [self.orientation removeReadingChangedEvent:self.deviceMotionToken];
+                self.deviceMotionToken = {0};
+            }
+            
+            if (self.deviceMotionQueue) {
+                [self.deviceMotionQueue cancelAllOperations];
+                self.deviceMotionQueue = nil;
+            }
+        }
+    }        
 }
+
+
+/**
+ @Status Caveat
+ @Notes Only attitude property is supported currently.
+*/
+ -(CMDeviceMotion*)deviceMotion {
+     
+    WDSOrientationSensorReading* reading = [self.orientation getCurrentReading];
+
+    _deviceMotion = [[CMDeviceMotion alloc] initWithValues:[CMMotionManager toAttitude:reading.rotationMatrix 
+                                                                            quaternion:reading.quaternion]
+                                                      time:toSecondsSinceBoot(reading.timestamp)];
+    return _deviceMotion;
+ }
+ 
+ 
+ -(void)setDeviceMotionUpdateInterval:(NSTimeInterval)updateInterval {
+     
+    @synchronized(self) {
+        
+        // iOS uses seconds while WinRT uses milliseconds, hence the multiplication/division by c_secondToMilliseconds
+        if (updateInterval * c_secondToMilliseconds < self.orientation.minimumReportInterval) {
+            _deviceMotionUpdateInterval = self.orientation.minimumReportInterval / c_secondToMilliseconds;
+            self.orientation.reportInterval = self.orientation.minimumReportInterval;
+            NSTraceInfo(TAG, @"deviceMotionUpdateInterval capped to minimum supported value: %d", _deviceMotionUpdateInterval);
+        } else {
+            _deviceMotionUpdateInterval = updateInterval;
+            self.orientation.reportInterval = static_cast<unsigned int>(self.deviceMotionUpdateInterval * c_secondToMilliseconds);
+        } 
+    }
+}
+
 
 /**
  @Status Stub

@@ -75,17 +75,17 @@ COREMOTION_EXPORT_CLASS
 @property (readonly, nonatomic) CMMagnetometerData* magnetometerData;
 
 @property (assign, nonatomic) BOOL showsDeviceMovementDisplay STUB_PROPERTY;
-@property (assign, nonatomic) NSTimeInterval deviceMotionUpdateInterval STUB_PROPERTY;
+@property (assign, nonatomic) NSTimeInterval deviceMotionUpdateInterval;
 - (void)startDeviceMotionUpdatesUsingReferenceFrame:(CMAttitudeReferenceFrame)referenceFrame
                                             toQueue:(NSOperationQueue*)queue
                                         withHandler:(CMDeviceMotionHandler)handler STUB_METHOD;
-- (void)startDeviceMotionUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMDeviceMotionHandler)handler STUB_METHOD;
+- (void)startDeviceMotionUpdatesToQueue:(NSOperationQueue*)queue withHandler:(CMDeviceMotionHandler)handler;
 - (void)startDeviceMotionUpdatesUsingReferenceFrame:(CMAttitudeReferenceFrame)referenceFrame STUB_METHOD;
-- (void)startDeviceMotionUpdates STUB_METHOD;
-- (void)stopDeviceMotionUpdates STUB_METHOD;
+- (void)startDeviceMotionUpdates;
+- (void)stopDeviceMotionUpdates;
 @property (readonly, nonatomic) CMAttitudeReferenceFrame attitudeReferenceFrame STUB_PROPERTY;
 + (CMAttitudeReferenceFrame)availableAttitudeReferenceFrames STUB_METHOD;
-@property (readonly, nonatomic, getter=isDeviceMotionActive) BOOL deviceMotionActive STUB_PROPERTY;
-@property (readonly, nonatomic, getter=isDeviceMotionAvailable) BOOL deviceMotionAvailable STUB_PROPERTY;
-@property (readonly) CMDeviceMotion* deviceMotion STUB_PROPERTY;
+@property (readonly, nonatomic, getter=isDeviceMotionActive) BOOL deviceMotionActive;
+@property (readonly, nonatomic, getter=isDeviceMotionAvailable) BOOL deviceMotionAvailable;
+@property (readonly, nonatomic) CMDeviceMotion* deviceMotion;
 @end
