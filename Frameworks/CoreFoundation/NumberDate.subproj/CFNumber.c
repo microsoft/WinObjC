@@ -437,13 +437,15 @@ static struct __CFNumber __kCFNumberFloat64One = {
 };
 static const CFNumberRef kCFNumberFloat64One = &__kCFNumberFloat64One;
 
-static const struct {
+// WINOBJC: Deanonymize the type table member type so that the debugger can see it.
+struct _CFNumberTypeMapping {
     uint16_t canonicalType:5;   // canonical fixed-width type
     uint16_t floatBit:1;    // is float
     uint16_t storageBit:1;  // storage size (0: (float ? 4 : 8), 1: (float ? 8 : 16) bits)
     uint16_t lgByteSize:3;  // base-2 log byte size of public type
     uint16_t unused:6;
-} __CFNumberTypeTable[] = {
+};
+static const struct _CFNumberTypeMapping __CFNumberTypeTable[] = {
     /* 0 */         {0, 0, 0, 0},
 
     /* kCFNumberSInt8Type */    {kCFNumberSInt8Type, 0, 0, 0, 0},
