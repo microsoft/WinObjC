@@ -83,9 +83,8 @@ struct StringTraits<std::wstring> {
     static CreationType NarrowToWide(NSString* objcString, unsigned int codePage) {
         const UniChar* rawString = CFStringGetCharactersPtr(static_cast<CFStringRef>(objcString));
 
-        Microsoft::WRL::Wrappers::HString result;
         if (rawString) {
-            return std::wstring(reinterpret_cast<const wchar_t*>(rawString));
+            return std::wstring(reinterpret_cast<const wchar_t*>(rawString), CFStringGetLength(static_cast<CFStringRef>(objcString)));
         } else {
             std::wstring characters;
             characters.resize([objcString length]);
@@ -206,11 +205,15 @@ struct StringTraits<HSTRING> {
 
         Microsoft::WRL::Wrappers::HString result;
         if (rawString) {
-            result.Set(reinterpret_cast<const wchar_t*>(rawString));
+            result.Set(reinterpret_cast<const wchar_t*>(rawString), CFStringGetLength(static_cast<CFStringRef>(objcString)));
         } else {
-            std::vector<unichar*> characters([objcString length]);
-            [objcString getCharacters:reinterpret_cast<unichar*>(&characters[0])];
-            result.Set(reinterpret_cast<const wchar_t*>(characters.data()));
+            unsigned int length = [objcString length];
+
+            if (length > 0) {
+                std::vector<unichar*> characters(length);
+                [objcString getCharacters:reinterpret_cast<unichar*>(&characters[0])];
+                result.Set(reinterpret_cast<const wchar_t*>(characters.data()));
+            }
         }
 
         return result;

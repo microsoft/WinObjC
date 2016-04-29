@@ -680,11 +680,11 @@ extern void _CFRuntimeSetInstanceTypeIDAndIsa(CFTypeRef cf, CFTypeID newTypeID);
 
 #define CF_OBJC_CALLV(obj, ...) [(obj) __VA_ARGS__]
 #define CF_IS_OBJC(typeID, obj) ( \
-    (obj) && \
-    (((CFRuntimeBase*)(obj))->_cfisa != 0) && \
+    (!obj) || \
+    ((((CFRuntimeBase*)(obj))->_cfisa != 0) && \
     (((CFRuntimeBase*)(obj))->_cfisa != (uintptr_t)(&_OBJC_CLASS__NSCFString)) && \
     (__CFISAForTypeID(typeID) != ((CFRuntimeBase*)(obj))->_cfisa) && \
-    (![(id)(((CFRuntimeBase*)(obj)))->_cfisa isSubclassOfClass:(Class)__CFISAForTypeID(typeID)]))
+    (![(id)(((CFRuntimeBase*)(obj)))->_cfisa isSubclassOfClass:(Class)__CFISAForTypeID(typeID)])))
 
 #define CF_SWIFT_CALLV(obj, fn, ...) __CFSwiftBridge.fn((CFSwiftRef)obj, ##__VA_ARGS__)
 

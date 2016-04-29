@@ -22,7 +22,7 @@
 #include <Ws2tcpip.h>
 
 #include "Starboard.h"
-#include "Foundation/NSOperation.h"
+#include <Foundation/NSOperation.h>
 #include "SystemConfiguration/SystemConfiguration.h"
 #include "SystemConfiguration/SCNetworkReachability.h"
 
@@ -82,9 +82,9 @@ static NSLock* _allReachabilityOperationsLock;
 //  _performReachabilityTest is called on every SCNetworkReachability object
 //  when a network reachability condition is found
 @interface SCNetworkReachability : NSObject {
-@public
-    NSRunLoopSource* _availabilityChangedSource;
-    NSMutableDictionary* _runLoopsScheduled;
+@private
+    woc::unique_cf<CFRunLoopSourceRef> _availabilityChangedSource;
+    StrongId<NSMutableDictionary> _runLoopsScheduled;
 
     dispatch_queue_t _callbackQueue;
     BOOL _isPerformingCallback;
@@ -94,9 +94,9 @@ static NSLock* _allReachabilityOperationsLock;
     SCNetworkReachabilityContext _context;
     SCNetworkReachabilityFlags _reachabilityFlags;
 
-    NSConditionLock* _reachabilityFlagsValid;
+    StrongId<NSConditionLock> _reachabilityFlagsValid;
 
-    SCNetworkReachabilityWeakRef* _weakRef;
+    StrongId<SCNetworkReachabilityWeakRef> _weakRef;
 }
 
 - (void)_performReachabilityTest;
@@ -157,9 +157,29 @@ static NSLock* _allReachabilityOperationsLock;
 }
 
 - (instancetype)init {
-    _runLoopsScheduled = [NSMutableDictionary new];
-    _reachabilityFlagsValid = [NSConditionLock new];
-    _weakRef = [[SCNetworkReachabilityWeakRef alloc] initWithObject:self];
+    if (self = [super init]) {
+        _runLoopsScheduled.attach([NSMutableDictionary new]);
+        _reachabilityFlagsValid.attach([NSConditionLock new]);
+        _weakRef.attach([[SCNetworkReachabilityWeakRef alloc] initWithObject:self]);
+        _callbackQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
+
+        // clang-format off
+        CFRunLoopSourceContext ctxt{
+                0,
+                nullptr,
+                CFRetain,
+                CFRelease,
+                (CFStringRef(*)(const void *))CFCopyDescription,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr
+        };
+        // clang-format on
+
+        _availabilityChangedSource.reset(CFRunLoopSourceCreate(nullptr, 0, &ctxt));
+    }
 
     return self;
 }
@@ -177,7 +197,7 @@ static NSLock* _allReachabilityOperationsLock;
 - (bool)hasReachabilityFlags {
     bool ret = false;
     [_reachabilityFlagsValid lock];
-    if (_reachabilityFlagsValid.condition == TRUE) {
+    if ([_reachabilityFlagsValid condition] == TRUE) {
         ret = true;
     }
     [_reachabilityFlagsValid unlock];
@@ -205,7 +225,14 @@ static NSLock* _allReachabilityOperationsLock;
 - (void)_availabilityChanged {
     [_reachabilityFlagsValid lock];
 
-    [_availabilityChangedSource _trigger];
+    CFRunLoopSourceSignal(_availabilityChangedSource.get());
+
+    for (NSString* curMode in _runLoopsScheduled.get()) {
+        NSArray* runLoops = [_runLoopsScheduled objectForKey:curMode];
+        for (id curRunLoop in runLoops) {
+            CFRunLoopWakeUp((CFRunLoopRef)curRunLoop);
+        }
+    }
 
     if (_callbackQueue != NULL && _isPerformingCallback == FALSE) {
         _isPerformingCallback = TRUE;
@@ -264,21 +291,17 @@ static NSLock* _allReachabilityOperationsLock;
 
 - (void)scheduleInRunLoop:(CFRunLoopRef)runLoop forMode:(CFStringRef)mode {
     [_reachabilityFlagsValid lock];
-    if (_availabilityChangedSource == nil) {
-        _availabilityChangedSource = [NSRunLoopSource new];
-        [_availabilityChangedSource setSourceDelegate:self selector:@selector(_performCallback)];
-    }
 
-    NSMutableArray* runLoops = _runLoopsScheduled[(NSString*)mode];
+    NSMutableArray* runLoops = [_runLoopsScheduled objectForKey:static_cast<NSString*>(mode)];
     if (runLoops == nil) {
-        runLoops = [NSMutableArray new];
-        _runLoopsScheduled[(NSString*)mode] = runLoops;
-        [runLoops release];
+        StrongId<NSMutableArray> runLoops = [NSMutableArray array];
+        [_runLoopsScheduled objectForKey:static_cast<NSString*>(mode)];
+        [_runLoopsScheduled setObject:runLoops forKey:static_cast<NSString*>(mode)];
     }
 
-    if (![runLoops containsObject:(NSRunLoop*)runLoop]) {
-        [runLoops addObject:(NSRunLoop*)runLoop];
-        [(NSRunLoop*)runLoop _addInputSource:_availabilityChangedSource forMode:(NSString*)mode];
+    if (![runLoops containsObject:(id)runLoop]) {
+        [runLoops addObject:(id)runLoop];
+        CFRunLoopAddSource(runLoop, _availabilityChangedSource.get(), mode);
     }
 
     //  If we have a valid reachability status, signal it to all listeners
@@ -292,13 +315,12 @@ static NSLock* _allReachabilityOperationsLock;
     BOOL ret = FALSE;
     [_reachabilityFlagsValid lock];
 
-    if (_availabilityChangedSource != nil) {
-        NSMutableArray* runLoops = _runLoopsScheduled[(NSString*)mode];
+    if (_availabilityChangedSource) {
+        NSMutableArray* runLoops = [_runLoopsScheduled objectForKey:static_cast<NSString*>(mode)];
         if (runLoops != nil) {
-            if ([runLoops containsObject:(NSRunLoop*)runLoop]) {
-                [runLoops removeObject:(NSRunLoop*)runLoop];
-                [(NSRunLoop*)runLoop _removeInputSource:_availabilityChangedSource forMode:(NSString*)mode];
-
+            if ([runLoops containsObject:(id)runLoop]) {
+                [runLoops removeObject:(id)runLoop];
+                CFRunLoopRemoveSource(runLoop, _availabilityChangedSource.get(), mode);
                 ret = TRUE;
             }
         }
@@ -315,17 +337,14 @@ static NSLock* _allReachabilityOperationsLock;
             _context.release(_context.info);
         }
     }
-    if (_availabilityChangedSource != nil) {
-        for (NSString* curMode in _runLoopsScheduled) {
+    if (_availabilityChangedSource) {
+        for (NSString* curMode in _runLoopsScheduled.get()) {
             NSArray* runLoops = [_runLoopsScheduled objectForKey:curMode];
-            for (NSRunLoop* curRunLoop in runLoops) {
-                [curRunLoop _removeInputSource:_availabilityChangedSource forMode:curMode];
+            for (id curRunLoop in runLoops) {
+                CFRunLoopRemoveSource((CFRunLoopRef)curRunLoop, _availabilityChangedSource.get(), static_cast<CFStringRef>(curMode));
             }
         }
     }
-    [_runLoopsScheduled release];
-    [_reachabilityFlagsValid release];
-    [_weakRef release];
 
     if (_callbackQueue != NULL) {
         dispatch_release(_callbackQueue);

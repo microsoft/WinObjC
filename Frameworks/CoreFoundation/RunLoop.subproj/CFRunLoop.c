@@ -33,7 +33,7 @@
 #include <Foundation/NSDate.h>
 
 #if DEPLOYMENT_TARGET_WINDOWS
-// #include <typeinfo.h> // HACKHACK: something with exceptions is *not* happy. Remove for now.
+// #include <typeinfo.h> // WINOBJC: can't include RTTI and seems unnecessary anyway.
 #endif
 
 enum {
@@ -109,7 +109,7 @@ extern void _Block_release(const void *aBlock);
 #define USE_MK_TIMER_TOO 1
 #else
 #define USE_DISPATCH_SOURCE_FOR_TIMERS 0
-#define USE_MK_TIMER_TOO 1
+#define USE_MK_TIMER_TOO 0
 #endif
 
 
@@ -380,7 +380,7 @@ static __CFPortSet __CFPortSetAllocate(void) {
     result->used = 0;
     result->size = 4;
     result->handles = (HANDLE *)CFAllocatorAllocate(kCFAllocatorSystemDefault, result->size * sizeof(HANDLE), 0);
-    CF_LOCK_INIT_FOR_STRUCTS(result->lock); // CF_SPINLOCK_INIT_FOR_STRUCTS(result->lock); // HACKHACK: doens't exist using a normal lock
+    CF_LOCK_INIT_FOR_STRUCTS(result->lock); // CF_SPINLOCK_INIT_FOR_STRUCTS(result->lock); // WINOBJC: doens't exist, using a normal lock instead.
     return result;
 }
 
@@ -503,7 +503,7 @@ typedef struct UnsignedWide {
     UInt32      hi;
 } UnsignedWide;
 #endif
-// typedef UnsignedWide        AbsoluteTime; // HACKHACK: defined to LARGE_INTEGER elsewhere
+// typedef UnsignedWide        AbsoluteTime; // WINOBJC: defined to LARGE_INTEGER elsewhere
 #endif
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI
@@ -561,49 +561,26 @@ CF_INLINE int64_t __CFUInt64ToAbsoluteTime(int64_t x) {
 
 #elif DEPLOYMENT_TARGET_WINDOWS
 
-static HANDLE mk_timer_create(void) {
-    return NULL; // CreateWaitableTimer(NULL, FALSE, NULL); // HACKHACK: can't call from an appcontainer.
+// WINOBJC: waitable timers aren't available in an appcontainer. Instead use libdispatch manually.
+static dispatch_source_t mk_timer_create(void) {
+    return dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
 }
 
-static kern_return_t mk_timer_destroy(HANDLE name) {
-    BOOL res = CloseHandle(name);
-    if (!res) {
-        DWORD err = GetLastError();
-        CFLog(kCFLogLevelError, CFSTR("CFRunLoop: Unable to destroy timer: %d"), err);
-    }
-    return (int)res;
+static kern_return_t mk_timer_destroy(dispatch_source_t timer) {
+    dispatch_release(timer);
+    return KERN_SUCCESS;
 }
 
-static kern_return_t mk_timer_arm(HANDLE name, LARGE_INTEGER expire_time) {
-    LARGE_INTEGER result;
-    // There is a race we know about here, (timer fire time calculated -> thread suspended -> timer armed == late timer fire), but we don't have a way to avoid it at this time, since the only way to specify an absolute value to the timer is to calculate the relative time first. Fixing that would probably require not using the TSR for timers on Windows.
-    uint64_t now = mach_absolute_time();
-    if (now > expire_time.QuadPart) {
-        result.QuadPart = 0;
-    } else {
-        uint64_t timeDiff = static_cast<uint64_t>(expire_time.QuadPart) - now;
-        CFTimeInterval amountOfTimeToWait = __CFTSRToTimeInterval(timeDiff);
-        // Result is in 100 ns (10**-7 sec) units to be consistent with a FILETIME.
-        // CFTimeInterval is in seconds.
-        result.QuadPart = -(amountOfTimeToWait * 10000000);
-    }
-
-    BOOL res = FALSE; // SetWaitableTimer(name, &result, 0, NULL, NULL, FALSE); // HAKCHACK: Not available in an appcontainer
-    if (!res) {
-        DWORD err = GetLastError();
-        CFLog(kCFLogLevelError, CFSTR("CFRunLoop: Unable to set timer: %d"), err);
-    }
-    return (int)res;
+static kern_return_t mk_timer_arm(dispatch_source_t timer, uint64_t expire_time) {
+    dispatch_source_set_timer(timer, expire_time, 0, 0);
+    return KERN_SUCCESS;
 }
 
-static kern_return_t mk_timer_cancel(HANDLE name, LARGE_INTEGER *result_time) {
-    BOOL res = FALSE; // CancelWaitableTimer(name); // HACKHACK: Can't call from an app container.
-    if (!res) {
-        DWORD err = GetLastError();
-        CFLog(kCFLogLevelError, CFSTR("CFRunLoop: Unable to cancel timer: %d"), err);
-    }
-    return (int)res;
+static kern_return_t mk_timer_cancel(dispatch_source_t timer, LARGE_INTEGER *result_time) {
+    dispatch_source_cancel(timer);
+    return KERN_SUCCESS;
 }
+
 #endif
 
 #pragma mark -
@@ -2089,20 +2066,26 @@ static void __CFArmNextTimerInMode(CFRunLoopModeRef rlm, CFRunLoopRef rl) {
             _dispatch_source_set_runloop_timer_4CF(rlm->_timerSource, deadline, DISPATCH_TIME_FOREVER, leeway);
 #endif
 #else
+            // WINOBJC: USE_MK_TIMER_TOO controls the existence of these members. Must guard use.
+            #if USE_MK_TIMER_TOO
             if (rlm->_timerPort) {
                 LARGE_INTEGER deadline = {};
                 deadline.QuadPart = nextSoftDeadline;
                 mk_timer_arm(rlm->_timerPort, deadline);
             }
+            #endif
 #endif
         } else if (nextSoftDeadline == UINT64_MAX) {
             // Disarm the timers - there is no timer scheduled
             
+            // WINOBJC: USE_MK_TIMER_TOO controls the existence of these members. Must guard use.
+            #if USE_MK_TIMER_TOO
             if (rlm->_mkTimerArmed && rlm->_timerPort) {
                 AbsoluteTime dummy;
                 mk_timer_cancel(rlm->_timerPort, &dummy);
                 rlm->_mkTimerArmed = false;
             }
+            #endif
             
 #if USE_DISPATCH_SOURCE_FOR_TIMERS
             if (rlm->_dispatchTimerArmed) {

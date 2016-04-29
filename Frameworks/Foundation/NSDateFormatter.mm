@@ -187,7 +187,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setLocale:(NSLocale*)locale {
     woc::unique_cf<CFDateFormatterRef> formatterCopy(CFDateFormatterCreate(nullptr,

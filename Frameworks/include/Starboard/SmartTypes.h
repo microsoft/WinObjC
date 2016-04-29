@@ -226,6 +226,10 @@ public:
         return _val;
     }
 
+    TObjPointer get() {
+        return _val;
+    }
+
     // Since blocks are reference-counted, they can be stored in AutoIds.
     // This conditionally-enabled operator() provides block calling semantics to AutoIds wrapping blocks.
     template <typename... Args>

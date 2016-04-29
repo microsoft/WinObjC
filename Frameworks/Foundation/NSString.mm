@@ -489,47 +489,40 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (const char*)cStringUsingEncoding:(NSStringEncoding)encoding {
-    const char* toReturn = CFStringGetCStringPtr(static_cast<CFStringRef>(self), CFStringConvertNSStringEncodingToEncoding(encoding));
+    // Convert to a data and autorelease it to not leak.
+    // One key here is that dataUsingEncoding is NOT null terminated. This means an *almost* identical copy of
+    // that function is implemented to save the copy.
+    int len = [self length];
+    NSUInteger numBytes = 0;
 
-    if (toReturn != nullptr) {
-        // Huzzah. Great success. The string is null terminated and in the encoding we want.
-        return toReturn;
-    } else {
-        // Sadness. A conversion is needed. convert to a data and autorelease it to not leak.
-        // One key here is that dataUsingEncoding is NOT null terminated. This means an *almost* identical copy of
-        // that function is implemented to save the copy.
-        int len = [self length];
-        NSUInteger numBytes = 0;
+    NSStringEncodingConversionOptions options = static_cast<NSStringEncodingConversionOptions>(0);
 
-        NSStringEncodingConversionOptions options = static_cast<NSStringEncodingConversionOptions>(0);
+    [self getBytes:nullptr
+             maxLength:0x7FFFFFF
+            usedLength:&numBytes
+              encoding:encoding
+               options:options
+                 range:NSMakeRange(0, len)
+        remainingRange:nullptr];
 
-        [self getBytes:nullptr
-                 maxLength:0x7FFFFFF
-                usedLength:&numBytes
-                  encoding:encoding
-                   options:options
-                     range:NSMakeRange(0, len)
-            remainingRange:nullptr];
+    // Figure out how big the null terminator needs to be. Note this is a little inefficient as the null terminator is almost certainly
+    // smaller than the maximum single character size.
+    NSUInteger bytesToAlloc = numBytes + CFStringGetMaximumSizeForEncoding(1, CFStringConvertNSStringEncodingToEncoding(encoding));
 
-        // Figure out how big the null terminator needs to be. Note this is a little inefficient as the null terminator is almost certainly
-        // smaller than the maximum single character size.
-        NSUInteger bytesToAlloc = numBytes + CFStringGetMaximumSizeForEncoding(1, CFStringConvertNSStringEncodingToEncoding(encoding));
+    std::unique_ptr<char[], decltype(&IwFree)> data(static_cast<char*>(IwMalloc(bytesToAlloc)), IwFree);
+    [self getBytes:data.get()
+             maxLength:numBytes
+            usedLength:nullptr
+              encoding:encoding
+               options:options
+                 range:NSMakeRange(0, len)
+        remainingRange:nullptr];
 
-        std::unique_ptr<char[], decltype(&IwFree)> data(static_cast<char*>(IwMalloc(bytesToAlloc)), IwFree);
-        [self getBytes:data.get()
-                 maxLength:numBytes
-                usedLength:nullptr
-                  encoding:encoding
-                   options:options
-                     range:NSMakeRange(0, len)
-            remainingRange:nullptr];
+    // pad the end with \0s to make sure null terminator is correct size. Note that this assumes \0 or 0 is the null terminator in
+    // all encodings.
+    memset(&data[numBytes], '\0', bytesToAlloc - numBytes);
 
-        // pad the end with \0s to make sure null terminator is correct size. Note that this assumes \0 or 0 is the null terminator in
-        // all encodings.
-        memset(&data[numBytes], '\0', bytesToAlloc - numBytes);
-
-        return static_cast<const char*>([[NSData dataWithBytesNoCopy:data.release() length:(bytesToAlloc) freeWhenDone:YES] bytes]);
-    }
+    return static_cast<const char*>([[NSData dataWithBytesNoCopy:data.release() length:(bytesToAlloc) freeWhenDone:YES] bytes]);
 }
 
 /**
