@@ -20,6 +20,7 @@
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSURL.h"
+#import "Foundation/NSRange.h"
 #import "libxml/uri.h"
 #import "HashFn.h"
 #import "Etc.h"
@@ -1278,12 +1279,37 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Supported given the url is a file url.
 */
 - (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if ([self isFileURL] && buffer) {
+        NSUInteger numBytes = 0;
+        [[self path] getBytes:nullptr
+                    maxLength:maxBufferLength
+                   usedLength:&numBytes
+                     encoding:NSUTF8StringEncoding
+                      options:0
+                        range:NSMakeRange(0, [[self path] length])
+               remainingRange:nullptr];
+
+        if (maxBufferLength < numBytes + 1) {
+            return NO;
+        }
+
+        [[self path] getBytes:buffer
+                    maxLength:maxBufferLength
+                   usedLength:&numBytes
+                     encoding:NSUTF8StringEncoding
+                      options:0
+                        range:NSMakeRange(0, [[self path] length])
+               remainingRange:nullptr];
+
+        buffer[numBytes] = '\0';
+        return YES;
+    }
+
+    return NO;
 }
 
 /**
