@@ -47,7 +47,7 @@ static const wchar_t* TAG = L"UINavigationBar";
     CGSize _textShadowOffset;
     idretain _font, _textColor, _textShadowColor;
     idretaintype(UIImage) _navGradient;
-    UINavigationItem *_curItem, *_newItem;
+    idretaintype(UINavigationItem) _curItem, _newItem;
     idretaintype(UIBarButtonItem) _leftButton, _rightButton;
     idretaintype(UIBarButtonItem) _backButton;
     idretaintype(UIView) _titleView;
@@ -567,24 +567,6 @@ static void setTitleLabelAttributes(UINavigationBar* self) {
     if (_curItem != nil) {
         [_curItem _setDelegate:nil];
     }
-
-    _items = nil;
-    _font = nil;
-    _textColor = nil;
-    _textShadowColor = nil;
-    _navGradient = nil;
-    _curItem = nil;
-    _newItem = nil;
-    _leftButton = nil;
-    _rightButton = nil;
-    _backButton = nil;
-    _titleView = nil;
-    _titleLabel = nil;
-    _titleTextAttributes = nil;
-    _tintColor = nil;
-    _barTintColor = nil;
-    _shadowImage = nil;
-    _shadowImageView = nil;
 
     [super dealloc];
 }
