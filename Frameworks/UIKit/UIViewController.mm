@@ -343,15 +343,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
     appFrame = [[UIScreen mainScreen] applicationFrame];
 
-    if (priv->_presentationStyle == UIModalPresentationFormSheet) {
-        CGRect screenFrame;
-        screenFrame = [[UIScreen mainScreen] applicationFrame];
-
-        appFrame.size.width = 540;
-        appFrame.size.height = 575;
-
-        appFrame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - appFrame.size.width / 2.0f;
-        appFrame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - appFrame.size.height / 2.0f;
+    if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+        appFrame = [self _modalPresentationFormSheetFrame];
     }
 
     CGRect rect;
@@ -386,6 +379,35 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     return rect;
 }
 
+- (CGRect)_modalPresentationFormSheetFrame {
+    if (!GetCACompositor()->isTablet()) {
+        // fullscreen on non-tablets
+        return [[UIScreen mainScreen] applicationFrame];
+    }
+
+    CGRect frame;
+    if (!CGSizeEqualToSize([self preferredContentSize], CGSizeZero)) {
+        frame.size = [self preferredContentSize];
+    } else {
+        frame.size.width = 540;
+        frame.size.height = 620;
+    }
+
+    CGRect screenFrame = [[UIScreen mainScreen] applicationFrame];
+    frame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - frame.size.width / 2.0f;
+    frame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - frame.size.height / 2.0f;
+
+    return frame;
+}
+
+- (BOOL)_hidesParent {
+    if ([self modalPresentationStyle] == UIModalPresentationFormSheet && GetCACompositor()->isTablet()) {
+        return NO;
+    }
+
+    return YES;
+}
+
 - (void)_setResizeToScreen:(BOOL)resize {
     priv->_resizeToScreen = TRUE;
 }
@@ -402,20 +424,13 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
     [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:FALSE];
 
-    if (priv->_wantsFullScreenLayout) {
+    if ([self wantsFullScreenLayout]) {
         appFrame = [[UIScreen mainScreen] bounds];
     } else {
         appFrame = [[UIScreen mainScreen] applicationFrame];
     }
-    if (priv->_presentationStyle == UIModalPresentationFormSheet) {
-        CGRect screenFrame;
-        screenFrame = [[UIScreen mainScreen] applicationFrame];
-
-        appFrame.size.width = GetCACompositor()->screenWidth();
-        appFrame.size.height = GetCACompositor()->screenHeight();
-
-        appFrame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - appFrame.size.width / 2.0f;
-        appFrame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - appFrame.size.height / 2.0f;
+    if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+        appFrame = [self _modalPresentationFormSheetFrame];
     }
 
     switch (orientation) {
@@ -786,15 +801,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenWidth(), GetCACompositor()->screenHeight() };
 
         frame = [[UIScreen mainScreen] applicationFrame]; /** This is correct **/
-        if (priv->_presentationStyle == UIModalPresentationFormSheet) {
-            CGRect screenFrame;
-            screenFrame = [[UIScreen mainScreen] applicationFrame];
-
-            frame.size.width = 540;
-            frame.size.height = 575;
-
-            frame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - frame.size.width / 2.0f;
-            frame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - frame.size.height / 2.0f;
+        if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+            frame = [self _modalPresentationFormSheetFrame];
         }
 
         UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
@@ -807,24 +815,17 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 }
 
 - (void)_doResizeToScreen {
-    if ((priv->_resizeToScreen && priv->view && priv->_autoresize) || priv->_wantsFullScreenLayout) {
+    if ((priv->_resizeToScreen && priv->view && priv->_autoresize) || [self wantsFullScreenLayout]) {
         CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
 
-        if (priv->_wantsFullScreenLayout) {
+        if ([self wantsFullScreenLayout]) {
             frame = [[UIScreen mainScreen] bounds];
         } else {
             frame = [[UIScreen mainScreen] applicationFrame];
         }
 
-        if (priv->_presentationStyle == UIModalPresentationFormSheet) {
-            CGRect screenFrame;
-            screenFrame = [[UIScreen mainScreen] applicationFrame];
-
-            frame.size.width = 540;
-            frame.size.height = 575;
-
-            frame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - frame.size.width / 2.0f;
-            frame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - frame.size.height / 2.0f;
+        if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+            frame = [self _modalPresentationFormSheetFrame];
         }
         UIInterfaceOrientation curOrientation = (UIInterfaceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
 
@@ -857,15 +858,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             CGRect frame = { 0.0f, 0.0f, GetCACompositor()->screenHeight(), GetCACompositor()->screenWidth() };
 
             frame = [[UIScreen mainScreen] applicationFrame];
-            if (priv->_presentationStyle == UIModalPresentationFormSheet) {
-                CGRect screenFrame;
-                screenFrame = [[UIScreen mainScreen] applicationFrame];
-
-                frame.size.width = 540;
-                frame.size.height = 575;
-
-                frame.origin.x = screenFrame.origin.x + screenFrame.size.width / 2.0f - frame.size.width / 2.0f;
-                frame.origin.y = screenFrame.origin.y + screenFrame.size.height / 2.0f - frame.size.height / 2.0f;
+            if ([self modalPresentationStyle] == UIModalPresentationFormSheet) {
+                frame = [self _modalPresentationFormSheetFrame];
             }
 
             UIView* view = [[[UIEmptyController alloc] initWithFrame:frame] autorelease];
@@ -1046,7 +1040,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if (curController->priv->_visibility != controllerNotVisible) {
             shouldShow = true;
         }
-        curController = curController->priv->_parentViewController;
+        curController = [curController parentViewController];
     }
     if (!shouldShow) {
         TraceWarning(TAG, L"Controller is not visible!");
@@ -1069,7 +1063,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     }
 
-    [self _notifyViewWillDisappear:animated];
+    if ([controller _hidesParent]) {
+        [self _notifyViewWillDisappear:animated];
+    }
 
     priv->_modalViewController = controller;
     priv->_presentedViewController = controller;
@@ -1129,8 +1125,8 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 */
 - (void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion {
     if (priv->_modalViewController == nil) {
-        if (priv->_parentViewController) {
-            [priv->_parentViewController dismissViewControllerAnimated:animated completion:completion];
+        if ([self parentViewController] != nil) {
+            [[self parentViewController] dismissViewControllerAnimated:animated completion:completion];
             return;
         }
         TraceWarning(TAG, L"dismissModalViewController invalid!");
@@ -1225,7 +1221,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 - (void)_transitionStopped:(id)context {
     UIView* view = [self view];
 
-    [[priv->_parentViewController view] setHidden:TRUE];
+    if ([self _hidesParent]) {
+        [[[self parentViewController] view] setHidden:TRUE];
+    }
     [self _notifyDidAppearAnimated:view];
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 }
@@ -1235,18 +1233,18 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
     priv->_isRootView = true;
 
-    if (priv->_parentViewController != nil) {
+    if ([self parentViewController] != nil) {
         // TODO: This implementation satisfies the contract that the popoverPresentationController is not nil when presenting a
         // UIViewController with modalPresentationType equal to UIModalPresentationPopover.
         // The full implementation will need to utilize the UIPresentationController for UIViewController presentations
-        if (priv->_presentationStyle == UIModalPresentationPopover) {
+        if ([self modalPresentationStyle] == UIModalPresentationPopover) {
             if (priv->_popoverPresentationController != nil) {
                 [priv->_popoverPresentationController release];
             }
 
             priv->_popoverPresentationController =
                 [[UIPopoverPresentationController alloc] initWithPresentedViewController:self
-                                                                presentingViewController:priv->_parentViewController];
+                                                                presentingViewController:[self parentViewController]];
 
             if (priv->_presentationController != nil) {
                 [priv->_presentationController release];
@@ -1258,14 +1256,14 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         float endY = 0;
 
         UIView* view = [self view];
-        UIWindow* parentWindow = [[priv->_parentViewController view] window];
+        UIWindow* parentWindow = [[[self parentViewController] view] window];
 
         if (animated) {
             g_presentingAnimated = TRUE;
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             [self _notifyViewWillAppear:TRUE];
-        } else {
-            [[priv->_parentViewController view] setHidden:TRUE];
+        } else if ([self _hidesParent]) {
+            [[[self parentViewController] view] setHidden:TRUE];
         }
 
         if (parentWindow != nil) {
@@ -1331,7 +1329,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
             g_presentingAnimated = FALSE;
         }
 
-        [priv->_parentViewController _notifyViewDidDisappear:animated];
+        if ([self _hidesParent]) {
+            [[self parentViewController] _notifyViewDidDisappear:animated];
+        }
     } else {
         TraceVerbose(TAG, L"Modal controller doesn't have a parent!");
     }
@@ -1371,8 +1371,9 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
 static UIInterfaceOrientation findOrientation(UIViewController* self) {
     UIInterfaceOrientation orientation = (UIInterfaceOrientation)[[UIDevice currentDevice] orientation];
-    if (self->priv->_parentViewController != nil && [self->priv->_parentViewController _rotationLocked:orientation]) {
-        UIInterfaceOrientation parentOrientation = (UIInterfaceOrientation)[self->priv->_parentViewController interfaceOrientation];
+    UIViewController* parent = [self parentViewController];
+    if (parent != nil && [parent _rotationLocked:orientation]) {
+        UIInterfaceOrientation parentOrientation = (UIInterfaceOrientation)[parent interfaceOrientation];
         if (parentOrientation != 0) {
             orientation = parentOrientation;
         }

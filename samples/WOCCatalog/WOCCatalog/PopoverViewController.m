@@ -72,10 +72,12 @@
     scrollView.maximumZoomScale = 1.;
     scrollView.minimumZoomScale = minimumScale;
     scrollView.zoomScale = minimumScale;
+
+    imageView.center = CGPointMake(scrollView.contentSize.width * 0.5, scrollView.contentSize.height * 0.5);
 }
 
 - (void)createLayout {
-    [scrollView setBackgroundColor:[UIColor whiteColor]];
+    [scrollView setBackgroundColor:[UIColor lightGrayColor]];
 }
 
 - (void)scrollViewDidZoom:(UIScrollView*)aScrollView {
