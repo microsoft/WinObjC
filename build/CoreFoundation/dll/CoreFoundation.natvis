@@ -46,7 +46,7 @@
         <StringView>(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]na</StringView>
     </Type>
 
-    <Type Name="__CFString">
+    <Type Name="__CFString" IncludeView="CF">
         <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x00">{*this,view(InlineU8)}</DisplayString>
         <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x10">{*this,view(InlineU16)}</DisplayString>
         <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x00">{*this,view(HeapU8)}</DisplayString>
@@ -69,10 +69,10 @@
     </Type>
 
     <Type Name="_NSCFString">
-        <DisplayString>{*(CoreFoundation.dll!__CFString*)this,na}</DisplayString>
-        <StringView>*(CoreFoundation.dll!__CFString*)this,na</StringView>
+        <DisplayString>{*(CoreFoundation.dll!__CFString*)this,view(CF)na}</DisplayString>
+        <StringView>*(CoreFoundation.dll!__CFString*)this,view(CF)na</StringView>
         <Expand>
-            <ExpandedItem>*(CoreFoundation.dll!__CFString*)this</ExpandedItem>
+            <ExpandedItem>*(CoreFoundation.dll!__CFString*)this,view(CF)</ExpandedItem>
             <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFString*)this,!</Item>
         </Expand>
     </Type>
@@ -81,6 +81,18 @@
     <Type Name="NSConstantString">
         <DisplayString>{c_string,[len]s8}</DisplayString>
         <StringView>c_string,[len]s8</StringView>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!-- Since any CFStringRef can point to any NSString, we have to go through the NSObject renderer. -->
+    <Type Name="__CFString">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <StringView>*(NSObject*)this,na</StringView>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
     </Type>
 
     <!--
@@ -100,7 +112,7 @@
         <DisplayString>{*(float*)&amp;_pad}</DisplayString>
     </Type>
 
-    <Type Name="__CFNumber">
+    <Type Name="__CFNumber" IncludeView="CF">
         <DisplayString Condition="CoreFoundation.dll!__CFNumberTypeTable[_base._cfinfo[0] &amp; 0x1f].floatBit == 1">{*this,view(Float)}</DisplayString>
         <DisplayString Condition="CoreFoundation.dll!__CFNumberTypeTable[_base._cfinfo[0] &amp; 0x1f].storageBit == 1">{(unsigned long long)((CoreFoundation.dll!CFSInt128Struct*)&amp;_pad)->low}</DisplayString>
         <DisplayString Condition="(_base._cfinfo[0] &amp; 0x1f) &lt;= 4">{*(signed long long*)&amp;_pad}</DisplayString>
@@ -108,12 +120,20 @@
     </Type>
 
     <Type Name="_NSCFNumber">
-        <DisplayString>@{*(CoreFoundation.dll!__CFNumber*)this,na}</DisplayString>
+        <DisplayString>@{*(CoreFoundation.dll!__CFNumber*)this,view(CF)na}</DisplayString>
         <Expand>
             <!-- Uncomment this if __CFNumber ever gets any synthetic members.
-            <ExpandedItem>*(CoreFoundation.dll!__CFNumber*)this</ExpandedItem>
+            <ExpandedItem>*(CoreFoundation.dll!__CFNumber*)this,view(CF)</ExpandedItem>
             -->
             <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFNumber*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any CFNumberRef can point to any NSNumber, we have to go through the NSObject renderer. -->
+    <Type Name="__CFNumber">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
         </Expand>
     </Type>
 
@@ -131,7 +151,7 @@
         <DisplayString>@{*(CoreFoundation.dll!__CFBoolean*)this,view(ObjectiveC)na}</DisplayString>
         <Expand>
             <!-- Uncomment this if __CFBoolean ever gets any synthetic members.
-            <ExpandedItem>*(CoreFoundation.dll!__CFBoolean*)this</ExpandedItem>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBoolean*)this,view(ObjectiveC)</ExpandedItem>
             -->
             <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBoolean*)this,!</Item>
         </Expand>
@@ -160,7 +180,7 @@
 
         If we're being rendered outside an Objective-C context, display only opaque pointers.
     -->
-    <Type Name="__CFArray">
+    <Type Name="__CFArray" IncludeView="ObjectiveC;ObjectiveCSimple;CF">
         <Expand>
             <Item Name="[size]" ExcludeView="ObjectiveCSimple">_count</Item>
             <Synthetic Name="[mutable]" Condition="(_base._cfinfo[0] &amp; 0x03) == 0x02" ExcludeView="ObjectiveCSimple">
@@ -202,6 +222,14 @@
         <Expand>
             <ExpandedItem>*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveC)</ExpandedItem>
             <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFArray*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any CFArrayRef can point to any NSArray, we have to go through the NSObject renderer. -->
+    <Type Name="__CFArray">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
         </Expand>
     </Type>
 </AutoVisualizer>
