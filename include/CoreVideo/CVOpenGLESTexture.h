@@ -27,7 +27,7 @@ typedef unsigned int GLuint;
 typedef signed int GLint;
 typedef char GLchar;
 typedef float GLfloat;
-typedef size_t GLsizei;
+typedef int GLsizei;
 
 typedef CVImageBufferRef CVOpenGLESTextureRef;
 
