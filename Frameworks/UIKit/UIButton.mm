@@ -1013,8 +1013,9 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
     bounds = [self bounds];
     bounds = UIEdgeInsetsInsetRect(bounds, contentInsets);
 
-    CGRect textFrame = calcTitleRect(self, bounds);
-    CGRect imageFrame = calcImageRect(self, bounds);
+    CGRect contentFrame = [self contentRectForBounds:bounds];
+    CGRect textFrame = [self titleRectForContentRect:contentFrame];
+    CGRect imageFrame = [self imageRectForContentRect:contentFrame];
 
     [_label setFrame:textFrame];
     [_imageView setFrame:imageFrame];
@@ -1116,35 +1117,32 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Overriding this method has no effect
 */
 - (CGRect)backgroundRectForBounds:(CGRect)bounds {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return bounds;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGRect)contentRectForBounds:(CGRect)bounds {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return bounds;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return calcImageRect(self, contentRect);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return calcTitleRect(self, contentRect);
 }
 
 /**

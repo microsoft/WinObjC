@@ -53,6 +53,22 @@
 }
 
 /**
+ @Status Caveat
+ @Notes Setting this property has no effect
+*/
+- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
+    _lineBreakMode = lineBreakMode;
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (NSLineBreakMode)lineBreakMode {
+    return _lineBreakMode;
+}
+
+/**
 @Status Stub
 @Notes
 */
