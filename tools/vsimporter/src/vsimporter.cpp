@@ -197,11 +197,13 @@ int main(int argc, char* argv[])
   }
 
   TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
-  TELEMETRY_EVENT_DATA(L"IsInternal", isMSFTInternalMachine() ? "1" : "0");
-  string machineID = getMachineID();
-  if (!machineID.empty()) {
-      TELEMETRY_EVENT_DATA(L"MachineId", machineID.c_str());
+  TELEMETRY_SET_INTERNAL(isMSFTInternalMachine());
+  String machineID = getMachineID();
+  if (!machineID.empty())
+  {
+      TELEMETRY_SET_MACHINEID(machineID.c_str());
   }
+
   // Process non-option ARGV-elements
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
   while (optind < argc) {
