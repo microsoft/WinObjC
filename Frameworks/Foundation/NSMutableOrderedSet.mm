@@ -14,8 +14,9 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
 #import <Foundation/NSMutableOrderedSet.h>
+#import <NSOrderedSetInternal.h>
+#import <StubReturn.h>
 
 @implementation NSMutableOrderedSet
 /**
@@ -37,20 +38,17 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)init {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [super init];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)addObject:(id)object {
-    UNIMPLEMENTED();
+    [self insertObject:object atIndex:[self count]];
 }
 
 /**
@@ -70,11 +68,17 @@
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)insertObject:(id)object atIndex:(NSUInteger)idx {
-    UNIMPLEMENTED();
+    THROW_NS_IF_FALSE(E_INVALIDARG, object != nil);
+
+    if ([self containsObject:object]) {
+        return;
+    }
+
+    [_arrayContainer insertObject:object atIndex:idx];
+    [_setContainer addObject:object];
 }
 
 /**
@@ -275,6 +279,13 @@
 */
 - (void)unionSet:(NSSet*)other {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    return [[NSOrderedSet alloc] initWithOrderedSet:self];
 }
 
 @end
