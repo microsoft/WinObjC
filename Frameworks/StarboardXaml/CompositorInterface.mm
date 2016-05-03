@@ -1725,7 +1725,7 @@ public:
     }
 
     DisplayTexture* CreateDisplayTextureForElement(id xamlElement) override {
-        GenericControlXaml* genericControlTexture = new GenericControlXaml((IUnknown*)[(RTObject*)xamlElement internalObject]);
+        GenericControlXaml* genericControlTexture = new GenericControlXaml([(RTObject*)xamlElement comObj].Get());
         return genericControlTexture;
     }
 

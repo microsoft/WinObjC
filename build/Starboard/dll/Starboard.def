@@ -137,6 +137,7 @@ LIBRARY Starboard
         EbrFread
         EbrFwrite
         EbrFseek
+        EbrFseek64
         EbrFtell
         EbrFeof
         EbrStat
@@ -156,6 +157,7 @@ LIBRARY Starboard
         EbrFsetpos
         EbrFgetpos
         EbrOpen
+        EbrOpenWithPermission
         EbrClose
         EbrFd2Host
         EbrFstat
@@ -163,6 +165,7 @@ LIBRARY Starboard
         EbrWrite
         EbrLseek
         EbrTruncate
+        EbrTruncate64
         EbrDup
         EbrRename
         EbrUnlink

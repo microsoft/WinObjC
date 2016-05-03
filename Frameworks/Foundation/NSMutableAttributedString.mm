@@ -22,6 +22,7 @@
 
 /**
  @Status Stub
+ @Notes Not implemented on the concrete subclass.
 */
 - (NSMutableString*)mutableString {
     return NSInvalidAbstractInvocationReturn();

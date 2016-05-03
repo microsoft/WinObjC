@@ -184,11 +184,10 @@ static id _cachedColorsDict;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self retain];
 }
 
 /**

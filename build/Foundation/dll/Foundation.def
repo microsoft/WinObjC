@@ -406,6 +406,7 @@ LIBRARY Foundation
         OSSwapInt32
         OSSwapLittleToHostInt32
         arc4random
+        arc4random_uniform
         kCFAllocatorDefault DATA
         kCFBooleanFalse DATA
         kCFBooleanTrue DATA

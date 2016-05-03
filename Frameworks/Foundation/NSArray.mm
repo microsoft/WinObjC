@@ -824,8 +824,18 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSString*)description {
-    UNIMPLEMENTED();
-    return [super description];
+    NSMutableString* s = [NSMutableString string];
+    [s appendString:@"("];
+    for (id val in self) {
+        [s appendFormat:@"%@, ", val];
+    }
+
+    if ([self count] > 0) {
+        [s deleteCharactersInRange:{[s length] - 2, 2}];
+    }
+
+    [s appendString:@")"];
+    return s;
 }
 
 /**

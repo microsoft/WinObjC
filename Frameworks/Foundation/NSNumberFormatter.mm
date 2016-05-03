@@ -185,21 +185,6 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 /**
  @Status Interoperable
 */
-- (BOOL)alwaysShowsDecimalSeparator {
-    return _alwaysShowsDecimalSeparator;
-}
-
-/**
- @Status Stub
-*/
-- (void)setAlwaysShowsDecimalSeparator:(BOOL)value {
-    UNIMPLEMENTED();
-    _alwaysShowsDecimalSeparator = value;
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setGroupingSeparator:(id)value {
     value = [value copy];
     [_groupingSeparator release];

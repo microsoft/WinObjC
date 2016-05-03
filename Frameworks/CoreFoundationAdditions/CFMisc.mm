@@ -25,9 +25,8 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 
-#include <mach/mach_time.h>
-
 #include <algorithm>
+#include <mach/mach_time.h>
 #include "LoggingNative.h"
 
 static const wchar_t* TAG = L"CFMisc";
@@ -48,10 +47,28 @@ extern "C" uint32_t arc4random() {
     static ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics(GetBufferStatics());
 
     UINT32 randResult = 0;
-    if (!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult))) {
-        TraceVerbose(TAG, L"Unable to get random number!");
-    }
+    FAIL_FAST_IF(!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult)));
     return randResult;
+}
+
+extern "C" uint32_t arc4random_uniform(uint32_t upperbound) {
+    if (upperbound == 0) {
+        TraceError(TAG, L"arc4random_uniform: Invalid upper bound");
+        FAIL_FAST();
+    }
+
+    static ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics(GetBufferStatics());
+
+    UINT32 randResult = 0;
+    UINT32 highestMultipleOfUpperBound = ULONG_MAX - (ULONG_MAX % upperbound);
+
+    // Constrict the result so it is < upperbound. In order to get a uniform result distribution, we generate a new random number
+    // when the result of GenerateRandomNumber falls within the range [highestMultipleOfUpperBound, ULONG_MAX]
+    do {
+        FAIL_FAST_IF(!SUCCEEDED(bufferStatics->GenerateRandomNumber(&randResult)));
+    } while (randResult >= highestMultipleOfUpperBound);
+
+    return randResult % upperbound;
 }
 
 extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const void*, size_t) {

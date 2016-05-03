@@ -37,7 +37,7 @@
       <ObjectFileName Condition="'%(ClangCompile.ObjectFileName)' == ''">$(IntDir)</ObjectFileName>
       <ObjectiveCARC Condition="'%(ClangCompile.ObjectiveCARC)' == ''">false</ObjectiveCARC>
       <ObjectiveCModules Condition="'%(ClangCompile.ObjectiveCModules)' == ''">false</ObjectiveCModules>
-      <ObjectiveCModulesCachePath Condition="'%(ClangCompile.ObjectiveCModulesCachePath)' == ''">$(ProjectDir)ModuleCache</ObjectiveCModulesCachePath>
+      <ObjectiveCModulesCachePath Condition="'%(ClangCompile.ObjectiveCModulesCachePath)' == ''">$(IntDir)ModuleCache</ObjectiveCModulesCachePath>
       <OptimizationLevel Condition="'%(ClangCompile.OptimizationLevel)' == ''">Disabled</OptimizationLevel>
       <RuntimeLibrary Condition="'%(ClangCompile.RuntimeLibrary)' == ''">MultiThreadedDLL</RuntimeLibrary>
       <ReadTLogFile Condition="'%(ClangCompile.ReadTLogFile)' == ''">$(TLogLocation)clang.read.1.tlog</ReadTLogFile>
@@ -48,7 +48,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardDefaultLibs>Accelerate.lib;Accounts.lib;AddressBook.lib;AddressBookUI.lib;AdSupport.lib;AssetsLibrary.lib;AudioToolbox.lib;AudioUnit.lib;AVFoundation.lib;AVKit.lib;CFNetwork.lib;CloudKit.lib;Contacts.lib;CoreAudio.lib;CoreAudioKit.lib;CoreBluetooth.lib;CoreData.lib;CoreGraphics.lib;CoreImage.lib;CoreLocation.lib;CoreMedia.lib;CoreMIDI.lib;CoreMotion.lib;CoreTelephony.lib;CoreText.lib;CoreVideo.lib;EventKit.lib;EventKitUI.lib;Foundation.lib;GameController.lib;GameKit.lib;GameplayKit.lib;GLKit.lib;HealthKit.lib;HomeKit.lib;iAd.lib;ImageIO.lib;LocalAuthentication.lib;MapKit.lib;MediaAccessibility.lib;MediaPlayer.lib;MessageUI.lib;Metal.lib;MobileCoreServices.lib;OpenAL.lib;OpenGLES.lib;QuartzCore.lib;QuickLook.lib;Security.lib;Social.lib;Starboard.lib;StoreKit.lib;SystemConfiguration.lib;Twitter.lib;UIKit.lib;WebKit.lib;libdispatch.lib;objcuwp.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs>Accelerate.lib;Accounts.lib;AddressBook.lib;AddressBookUI.lib;AdSupport.lib;AssetsLibrary.lib;AudioToolbox.lib;AudioUnit.lib;AVFoundation.lib;AVKit.lib;CFNetwork.lib;CloudKit.lib;Contacts.lib;CoreAudio.lib;CoreAudioKit.lib;CoreBluetooth.lib;CoreData.lib;CoreGraphics.lib;CoreImage.lib;CoreLocation.lib;CoreMedia.lib;CoreMIDI.lib;CoreMotion.lib;CoreTelephony.lib;CoreText.lib;CoreVideo.lib;EventKit.lib;EventKitUI.lib;Foundation.lib;GameController.lib;GameKit.lib;GameplayKit.lib;GLKit.lib;HealthKit.lib;HomeKit.lib;iAd.lib;ImageIO.lib;LocalAuthentication.lib;MapKit.lib;MediaAccessibility.lib;MediaPlayer.lib;MessageUI.lib;Metal.lib;MobileCoreServices.lib;OpenAL.lib;OpenGLES.lib;QuartzCore.lib;QuickLook.lib;Security.lib;Social.lib;Starboard.lib;StoreKit.lib;SystemConfiguration.lib;Twitter.lib;UIKit.lib;WebKit.lib;libdispatch.lib;objcuwp.lib;RTObjCInterop.lib</StarboardDefaultLibs>
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>

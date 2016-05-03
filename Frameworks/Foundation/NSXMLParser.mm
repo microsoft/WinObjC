@@ -82,51 +82,6 @@
     return _delegate;
 }
 
-/**
- @Status Stub
-*/
-- (void)setShouldProcessNamespaces:(BOOL)flag {
-    UNIMPLEMENTED();
-    _shouldProcessNamespaces = flag;
-}
-
-/**
- @Status Stub
-*/
-- (void)setShouldReportNamespacePrefixes:(BOOL)flag {
-    UNIMPLEMENTED();
-    _shouldReportNamespacePrefixes = flag;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)shouldProcessNamespaces {
-    return _shouldProcessNamespaces;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)shouldReportNamespacePrefixes {
-    return _shouldReportNamespacePrefixes;
-}
-
-/**
- @Status Stub
-*/
-- (void)setShouldResolveExternalEntities:(BOOL)flag {
-    UNIMPLEMENTED();
-    _shouldResolveExternalEntities = flag;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)shouldResolveExternalEntities {
-    return _shouldResolveExternalEntities;
-}
-
 static void startDocumentCallback(void* ctx) {
     NSXMLParser* self = (NSXMLParser*)ctx;
 
@@ -252,33 +207,9 @@ void abortParsing__unused() {
 /**
  @Status Stub
 */
-- (NSError*)parserError {
-    UNIMPLEMENTED();
-    return _parserError;
-}
-
-/**
- @Status Stub
-*/
-- (NSString*)systemID {
-    UNIMPLEMENTED();
-    return _systemID;
-}
-
-/**
- @Status Stub
-*/
-- (NSString*)publicID {
-    UNIMPLEMENTED();
-    return _publicID;
-}
-
-/**
- @Status Stub
-*/
 - (int)columnNumber {
     UNIMPLEMENTED();
-    return xmlSAX2GetColumnNumber((void*)self);
+    return StubReturn();
 }
 
 /**
@@ -286,7 +217,7 @@ void abortParsing__unused() {
 */
 - (int)lineNumber {
     UNIMPLEMENTED();
-    return xmlSAX2GetColumnNumber((void*)self);
+    return StubReturn();
 }
 
 /**

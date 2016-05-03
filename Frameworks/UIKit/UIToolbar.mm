@@ -175,10 +175,10 @@ static void setBackground(UIToolbar* self, UIColor* color) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes May not be fully implemented
 */
 - (void)setTintColor:(id)color {
-    UNIMPLEMENTED();
     _tintColor = color;
 
     if (!isOSTarget(@"7.0")) {
@@ -199,10 +199,9 @@ static void setBackground(UIToolbar* self, UIColor* color) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIColor*)tintColor {
-    UNIMPLEMENTED();
     return _tintColor;
 }
 

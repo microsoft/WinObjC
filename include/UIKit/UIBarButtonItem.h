@@ -88,7 +88,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UIView* customView;
 @property (nonatomic, assign) id target;
 @property (nonatomic) SEL action;
-@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
+@property (nonatomic, retain) UIColor* tintColor;
 @property (nonatomic, copy) NSSet* possibleTitles;
 
 // ----------------------------------------------------------------------------------------------------------

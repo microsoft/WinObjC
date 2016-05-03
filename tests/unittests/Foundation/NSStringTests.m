@@ -109,3 +109,15 @@ TEST(NSString, NSString_FastestEncoding) {
     ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(extendedAsciiStr)));
     ASSERT_EQ(kCFStringEncodingUnicode, CFStringGetFastestEncoding(reinterpret_cast<CFStringRef>(chineseStr)));
 }
+
+TEST(NSString, UnownedDeepCopy) {
+    char* buffer = _strdup("Hello World");
+    NSString* firstString = [[[NSString alloc] initWithBytesNoCopy:buffer length:11 encoding:NSUTF8StringEncoding freeWhenDone:NO] autorelease];
+    NSString* secondString = [[firstString copy] autorelease];
+
+    EXPECT_OBJCEQ(firstString, secondString);
+
+    buffer[0] = '\'';
+    EXPECT_OBJCNE(firstString, secondString);
+    free(buffer);
+}

@@ -92,6 +92,7 @@
     <Import Project="$(StarboardBasePath)\msvc\starboard-cmdline.props" />
   </ImportGroup>
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(StarboardBasePath)\msvc\ut-build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\..\Tests.Shared\Tests.Shared.vcxitems" />

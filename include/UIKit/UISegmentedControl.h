@@ -46,7 +46,7 @@ UIKIT_EXPORT_CLASS
 @interface UISegmentedControl : UIControl
 
 @property (nonatomic) UISegmentedControlStyle segmentedControlStyle STUB_PROPERTY;
-@property (nonatomic, retain) UIColor* tintColor STUB_PROPERTY;
+@property (nonatomic, retain) UIColor* tintColor;
 @property (nonatomic, assign, readonly) NSUInteger numberOfSegments;
 @property (nonatomic, assign) NSInteger selectedSegmentIndex;
 @property (nonatomic, getter=isMomentary) BOOL momentary;

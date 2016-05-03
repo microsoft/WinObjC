@@ -511,20 +511,18 @@ static void initControls(UIBarButtonItem* self) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes May not be fully implemented
 */
 - (void)setTintColor:(UIColor*)tintColor {
-    UNIMPLEMENTED();
-
     [_buttonView setTintColor:tintColor];
     [_customView setTintColor:tintColor];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIColor*)tintColor {
-    UNIMPLEMENTED();
     return [[self _view] tintColor];
 }
 

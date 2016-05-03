@@ -24,6 +24,7 @@
 #import "UICollectionViewLayoutAttributes+Internal.h"
 #include "IwMalloc.h"
 #import "AssertARCEnabled.h"
+#import "ErrorHandling.h"
 
 @interface UICollectionViewData () {
     CGRect _validLayoutRect;
@@ -148,8 +149,8 @@
 - (NSInteger)numberOfItemsBeforeSection:(NSInteger)section {
     [self validateItemCounts];
 
-    NSAssert(section < _numSections,
-             @"request for number of items in section %ld when there are only %ld sections in the collection view",
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, section < _numSections,
+             "request for number of items in section %ld when there are only %ld sections in the collection view",
              (long)section,
              (long)_numSections);
 
@@ -191,8 +192,8 @@
 - (NSIndexPath*)indexPathForItemAtGlobalIndex:(NSInteger)index {
     [self validateItemCounts];
 
-    NSAssert(index < _numItems,
-             @"request for index path for global index %ld when there are only %ld items in the collection view",
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, index < _numItems,
+             "request for index path for global index %ld when there are only %ld items in the collection view",
              (long)index,
              (long)_numItems);
 

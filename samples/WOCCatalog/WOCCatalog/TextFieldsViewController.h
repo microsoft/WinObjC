@@ -16,8 +16,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TextFieldsViewController : UITableViewController
+@interface TextFieldsViewController : UITableViewController <UITextFieldDelegate>
 
 @end
-
-

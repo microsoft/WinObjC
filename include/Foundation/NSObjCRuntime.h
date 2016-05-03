@@ -170,8 +170,14 @@ typedef double NSTimeInterval;
 #warning ABS is already defined, ABS(a) may not behave as expected.
 #endif
 
-FOUNDATION_EXPORT void NSLog(NSString* format, ...);
-FOUNDATION_EXPORT void NSLogv(NSString* format, va_list args);
+#ifdef _WINOBJC_DO_NOT_USE_NSLOG
+#define NSLOG_ANNOTATION __attribute__((unavailable("NSLog should not be used internally.")))
+#else
+#define NSLOG_ANNOTATION
+#endif
+
+FOUNDATION_EXPORT void NSLog(NSString* format, ...) NSLOG_ANNOTATION;
+FOUNDATION_EXPORT void NSLogv(NSString* format, va_list args) NSLOG_ANNOTATION;
 
 FOUNDATION_EXPORT const char* NSGetSizeAndAlignment(const char* type, NSUInteger* size, NSUInteger* alignment);
 

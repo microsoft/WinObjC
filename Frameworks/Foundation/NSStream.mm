@@ -90,38 +90,6 @@ FOUNDATION_EXPORT NSString* const NSStreamNetworkServiceTypeVoice = @"NSStreamNe
 /**
  @Status Stub
 */
-+ (void)getStreamsToHost:(id)host
-                    port:(int)port
-             inputStream:(NSInputStream* _Nullable*)inputStreamp
-            outputStream:(NSOutputStream* _Nullable*)outputStreamp {
-    UNIMPLEMENTED();
-    id socket = [[[NSSocket alloc] initTCPStream] autorelease];
-    id error;
-    BOOL immediate;
-    id input;
-    id output;
-
-    if ((error = [socket connectToHost:host port:port immediate:&immediate]) != nil) {
-        if (inputStreamp) {
-            *inputStreamp = nil;
-        }
-        if (outputStreamp) {
-            *outputStreamp = nil;
-        }
-        return;
-    }
-
-    if (inputStreamp) {
-        *inputStreamp = input = [[[NSInputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
-    }
-    if (outputStreamp) {
-        *outputStreamp = output = [[[NSOutputStream_socket alloc] initWithSocket:socket streamStatus:NSStreamStatusNotOpen] autorelease];
-    }
-}
-
-/**
- @Status Stub
-*/
 - (id)propertyForKey:(NSString*)key {
     UNIMPLEMENTED();
     return StubReturn();

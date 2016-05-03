@@ -60,12 +60,11 @@ UIKIT_EXPORT_CLASS
                                  UIFocusEnvironment,
                                  UITraitEnvironment>
 
-+ (id)buttonWithType:(UIButtonType)buttonType;
-+ (instancetype)buttonWithType:(UIButtonType)buttonType STUB_METHOD;
-- (CGRect)backgroundRectForBounds:(CGRect)bounds STUB_METHOD;
-- (CGRect)contentRectForBounds:(CGRect)bounds STUB_METHOD;
-- (CGRect)imageRectForContentRect:(CGRect)contentRect STUB_METHOD;
-- (CGRect)titleRectForContentRect:(CGRect)contentRect STUB_METHOD;
++ (instancetype)buttonWithType:(UIButtonType)buttonType;
+- (CGRect)backgroundRectForBounds:(CGRect)bounds;
+- (CGRect)contentRectForBounds:(CGRect)bounds;
+- (CGRect)imageRectForContentRect:(CGRect)contentRect;
+- (CGRect)titleRectForContentRect:(CGRect)contentRect;
 - (NSAttributedString*)attributedTitleForState:(UIControlState)state STUB_METHOD;
 - (NSString*)titleForState:(UIControlState)state;
 - (UIColor*)titleColorForState:(UIControlState)state;

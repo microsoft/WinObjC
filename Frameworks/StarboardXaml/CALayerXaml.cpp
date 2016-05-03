@@ -388,7 +388,7 @@ void LayerContent::SetElementContent(FrameworkElement^ source) {
     }
 }
 
-void LayerContent::SetImageParams(float width, float height, float scale) {
+void LayerContent::SetContentParams(float width, float height, float scale) {
     Size oldSize = m_contentSize;
     float oldScale = scale;
 
@@ -1365,7 +1365,7 @@ void CALayerXaml::_SetContent(FrameworkElement^ element) {
     }
 }
 
-LayerContent^ CALayerXaml::_GetImageContent(bool create) {
+LayerContent^ CALayerXaml::_GetLayerContent(bool create) {
     if (!Util::isInstanceOf<LayerContent^>(m_content)) {
         if (!create) {
             return nullptr;
@@ -1387,7 +1387,7 @@ LayerContent^ CALayerXaml::_GetImageContent(bool create) {
 
 void CALayerXaml::SetContentGravity(ContentGravity gravity) {
     m_contentGravity = gravity;
-    auto layoutContent = _GetImageContent();
+    auto layoutContent = _GetLayerContent();
     if (layoutContent != nullptr) {
         layoutContent->SetGravity(gravity);
     }
@@ -1395,7 +1395,7 @@ void CALayerXaml::SetContentGravity(ContentGravity gravity) {
 
 void CALayerXaml::SetContentsCenter(Rect rect) {
     m_contentsCenter = rect;
-    auto layoutContent = _GetImageContent();
+    auto layoutContent = _GetLayerContent();
     if (layoutContent != nullptr) {
         layoutContent->SetContentsCenter(m_contentsCenter);
     }
@@ -1440,9 +1440,9 @@ void CALayerXaml::setContentImage(ImageSource^ source, float width, float height
             SetupBackground();
         }
     } else {
-        LayerContent^ c = _GetImageContent(true);
+        LayerContent^ c = _GetLayerContent(true);
         c->SetImageContent(source, width, height);
-        c->SetImageParams(width, height, scale);
+        c->SetContentParams(width, height, scale);
     }
 }
 
@@ -1453,10 +1453,9 @@ void CALayerXaml::setContentElement(FrameworkElement^ elem, float width, float h
             SetupBackground();
         }
     } else {
-        LayerContent^ c = _GetImageContent(true);
-        c->SetGravity(ContentGravity::Left);
+        LayerContent^ c = _GetLayerContent(true);
         c->SetElementContent(elem);
-        c->SetImageParams(width, height, scale);
+        c->SetContentParams(width, height, scale);
     }
 }
 

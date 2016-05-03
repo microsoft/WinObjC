@@ -299,7 +299,6 @@ LIBRARY CoreGraphics
         CGPointMakeWithDictionaryRepresentation
         CGSizeMakeWithDictionaryRepresentation
         CGRectMakeWithDictionaryRepresentation
-        CGVectorMake
         CGRectDivide
         CGRectIntegral
         CGRectIntersection

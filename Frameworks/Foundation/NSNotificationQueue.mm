@@ -21,10 +21,12 @@
 @implementation NSNotificationQueue
 
 /**
- @Status Interoperable
+ @Status Stub
+ @Notes
 */
 + (instancetype)defaultQueue {
-    return nil;
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 /**

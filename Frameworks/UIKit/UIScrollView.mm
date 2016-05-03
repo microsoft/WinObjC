@@ -362,7 +362,7 @@ static void positoinHorizontalScroller(UIScrollView* self) {
 - (instancetype)initWithFrame:(CGRect)pos {
     [super initWithFrame:pos];
     [self setClipsToBounds:1];
-    [self setDelaysContentTouches:1];
+    _delaysContentTouches = TRUE;
 
     commonInit(self);
     commonPostInit(self);
@@ -432,12 +432,20 @@ static void positoinHorizontalScroller(UIScrollView* self) {
 - (BOOL)alwaysBounceHorizontal {
     return _alwaysBounceHorizontal;
 }
+
 /**
  @Status Stub
 */
 - (void)setDelaysContentTouches:(BOOL)delay {
     UNIMPLEMENTED();
     _delaysContentTouches = delay;
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)delayContentTouches {
+    return _delaysContentTouches;
 }
 
 /**

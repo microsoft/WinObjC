@@ -513,10 +513,10 @@ static void positionSegments(UISegmentedControl* self) {
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes May not be fully implemented
 */
 - (void)setTintColor:(UIColor*)uiColor {
-    UNIMPLEMENTED();
     _tintColor = uiColor;
 
     if (isOSTarget(@"7.0")) {
@@ -525,10 +525,9 @@ static void positionSegments(UISegmentedControl* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (id)tintColor {
-    UNIMPLEMENTED();
     return _tintColor;
 }
 

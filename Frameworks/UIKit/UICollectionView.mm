@@ -29,6 +29,7 @@
 #import "UICollectionViewItemKey.h"
 #import "NSLogging.h"
 #import "AssertARCEnabled.h"
+#import "ErrorHandling.h"
 
 static const wchar_t* TAG = L"UICollectionView";
 static CGFloat UIAnimationDragCoefficient = 1.f;
@@ -491,8 +492,8 @@ static char kUIColletionViewExt;
  @Status Interoperable
 */
 - (void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString*)identifier {
-    NSParameterAssert(cellClass);
-    NSParameterAssert(identifier);
+    THROW_HR_IF_NULL(E_INVALIDARG, cellClass);
+    THROW_HR_IF_NULL(E_INVALIDARG, identifier);
     _cellClassDict[identifier] = cellClass;
 }
 
@@ -500,9 +501,9 @@ static char kUIColletionViewExt;
  @Status Interoperable
 */
 - (void)registerClass:(Class)viewClass forSupplementaryViewOfKind:(NSString*)elementKind withReuseIdentifier:(NSString*)identifier {
-    NSParameterAssert(viewClass);
-    NSParameterAssert(elementKind);
-    NSParameterAssert(identifier);
+    THROW_HR_IF_NULL(E_INVALIDARG, viewClass);
+    THROW_HR_IF_NULL(E_INVALIDARG, elementKind);
+    THROW_HR_IF_NULL(E_INVALIDARG, identifier);
     NSString* kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", elementKind, identifier];
     _supplementaryViewClassDict[kindAndIdentifier] = viewClass;
 }
@@ -513,8 +514,8 @@ static char kUIColletionViewExt;
 - (void)registerNib:(UINib*)nib forCellWithReuseIdentifier:(NSString*)identifier {
     NSArray* topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
-    NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:UICollectionViewCell.class],
-             @"must contain exactly 1 top level object which is a UICollectionViewCell");
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:UICollectionViewCell.class],
+             "must contain exactly 1 top level object which is a UICollectionViewCell");
 
     _cellNibDict[identifier] = nib;
 }
@@ -525,8 +526,8 @@ static char kUIColletionViewExt;
 - (void)registerNib:(UINib*)nib forSupplementaryViewOfKind:(NSString*)kind withReuseIdentifier:(NSString*)identifier {
     NSArray* topLevelObjects = [nib instantiateWithOwner:nil options:nil];
 #pragma unused(topLevelObjects)
-    NSAssert(topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:UICollectionReusableView.class],
-             @"must contain exactly 1 top level object which is a UICollectionReusableView");
+    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, topLevelObjects.count == 1 && [topLevelObjects[0] isKindOfClass:UICollectionReusableView.class],
+             "must contain exactly 1 top level object which is a UICollectionReusableView");
 
     NSString* kindAndIdentifier = [NSString stringWithFormat:@"%@/%@", kind, identifier];
     _supplementaryViewNibDict[kindAndIdentifier] = nib;
@@ -1783,7 +1784,7 @@ static char kUIColletionViewExt;
 
 // @steipete optimization
 - (void)queueReusableView:(UICollectionReusableView*)reusableView inQueue:(NSMutableDictionary*)queue withIdentifier:(NSString*)identifier {
-    NSParameterAssert(identifier.length > 0);
+    THROW_HR_IF_FALSE(E_INVALIDARG, identifier.length > 0);
 
     [reusableView removeFromSuperview];
     [reusableView prepareForReuse];
@@ -2175,15 +2176,15 @@ static char kUIColletionViewExt;
     NSMutableDictionary* operations = [[NSMutableDictionary alloc] init];
 
     for (UICollectionViewUpdateItem* updateItem in sortedMutableReloadItems) {
-        NSAssert(updateItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
-                 @"attempt to reload item (%@) that doesn't exist (there are only %ld sections before update)",
+        THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, updateItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
+                 "attempt to reload item (%@) that doesn't exist (there are only %ld sections before update)",
                  updateItem.indexPathBeforeUpdate,
                  (long)[oldCollectionViewData numberOfSections]);
 
         if (updateItem.indexPathBeforeUpdate.item != NSNotFound) {
-            NSAssert(updateItem.indexPathBeforeUpdate.item <
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, updateItem.indexPathBeforeUpdate.item <
                          [oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
-                     @"attempt to reload item (%@) that doesn't exist (there are only %ld items in section %ld before update)",
+                     "attempt to reload item (%@) that doesn't exist (there are only %ld items in section %ld before update)",
                      updateItem.indexPathBeforeUpdate,
                      (long)[oldCollectionViewData numberOfItemsInSection:updateItem.indexPathBeforeUpdate.section],
                      (long)updateItem.indexPathBeforeUpdate.section);
@@ -2200,36 +2201,36 @@ static char kUIColletionViewExt;
 
     for (UICollectionViewUpdateItem* deleteItem in sortedDeletedMutableItems) {
         if ([deleteItem isSectionOperation]) {
-            NSAssert(deleteItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
-                     @"attempt to delete section (%ld) that doesn't exist (there are only %ld sections before update)",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, deleteItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
+                     "attempt to delete section (%ld) that doesn't exist (there are only %ld sections before update)",
                      (long)deleteItem.indexPathBeforeUpdate.section,
                      (long)[oldCollectionViewData numberOfSections]);
 
             for (UICollectionViewUpdateItem* moveItem in sortedMutableMoveItems) {
                 if (moveItem.indexPathBeforeUpdate.section == deleteItem.indexPathBeforeUpdate.section) {
                     if (moveItem.isSectionOperation)
-                        NSAssert(NO,
-                                 @"attempt to delete and move from the same section %ld",
+                        THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, NO,
+                                 "attempt to delete and move from the same section %ld",
                                  (long)deleteItem.indexPathBeforeUpdate.section);
                     else
-                        NSAssert(NO, @"attempt to delete and move from the same section (%@)", moveItem.indexPathBeforeUpdate);
+                        THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, NO, "attempt to delete and move from the same section (%@)", moveItem.indexPathBeforeUpdate);
                 }
             }
         } else {
-            NSAssert(deleteItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
-                     @"attempt to delete item (%@) that doesn't exist (there are only %ld sections before update)",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, deleteItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
+                     "attempt to delete item (%@) that doesn't exist (there are only %ld sections before update)",
                      deleteItem.indexPathBeforeUpdate,
                      (long)[oldCollectionViewData numberOfSections]);
-            NSAssert(deleteItem.indexPathBeforeUpdate.item <
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, deleteItem.indexPathBeforeUpdate.item <
                          [oldCollectionViewData numberOfItemsInSection:deleteItem.indexPathBeforeUpdate.section],
-                     @"attempt to delete item (%@) that doesn't exist (there are only %ld items in section%ld before update)",
+                     "attempt to delete item (%@) that doesn't exist (there are only %ld items in section%ld before update)",
                      deleteItem.indexPathBeforeUpdate,
                      (long)[oldCollectionViewData numberOfItemsInSection:deleteItem.indexPathBeforeUpdate.section],
                      (long)deleteItem.indexPathBeforeUpdate.section);
 
             for (UICollectionViewUpdateItem* moveItem in sortedMutableMoveItems) {
-                NSAssert(![deleteItem.indexPathBeforeUpdate isEqual:moveItem.indexPathBeforeUpdate],
-                         @"attempt to delete and move the same item (%@)",
+                THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, ![deleteItem.indexPathBeforeUpdate isEqual:moveItem.indexPathBeforeUpdate],
+                         "attempt to delete and move the same item (%@)",
                          deleteItem.indexPathBeforeUpdate);
             }
 
@@ -2247,15 +2248,15 @@ static char kUIColletionViewExt;
 
         BOOL sectionOperation = [insertItem isSectionOperation];
         if (sectionOperation) {
-            NSAssert([indexPath section] < [_collectionViewData numberOfSections],
-                     @"attempt to insert %ld but there are only %ld sections after update",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, [indexPath section] < [_collectionViewData numberOfSections],
+                     "attempt to insert %ld but there are only %ld sections after update",
                      (long)[indexPath section],
                      (long)[_collectionViewData numberOfSections]);
 
             for (UICollectionViewUpdateItem* moveItem in sortedMutableMoveItems) {
                 if ([moveItem.indexPathAfterUpdate isEqual:indexPath]) {
                     if (moveItem.isSectionOperation)
-                        NSAssert(NO, @"attempt to perform an insert and a move to the same section (%ld)", (long)indexPath.section);
+                        THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, NO, "attempt to perform an insert and a move to the same section (%ld)", (long)indexPath.section);
                 }
             }
 
@@ -2264,8 +2265,8 @@ static char kUIColletionViewExt;
                 UICollectionViewUpdateItem* nextInsertItem = sortedInsertMutableItems[j];
 
                 if (nextInsertItem.indexPathAfterUpdate.section == indexPath.section) {
-                    NSAssert(nextInsertItem.indexPathAfterUpdate.item < [_collectionViewData numberOfItemsInSection:indexPath.section],
-                             @"attempt to insert item %ld into section %ld, but there are only %ld items in section %ld after the update",
+                    THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, nextInsertItem.indexPathAfterUpdate.item < [_collectionViewData numberOfItemsInSection:indexPath.section],
+                             "attempt to insert item %ld into section %ld, but there are only %ld items in section %ld after the update",
                              (long)nextInsertItem.indexPathAfterUpdate.item,
                              (long)indexPath.section,
                              (long)[_collectionViewData numberOfItemsInSection:indexPath.section],
@@ -2275,8 +2276,8 @@ static char kUIColletionViewExt;
                     break;
             }
         } else {
-            NSAssert(indexPath.item < [_collectionViewData numberOfItemsInSection:indexPath.section],
-                     @"attempt to insert item to (%@) but there are only %ld items in section %ld after update",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, indexPath.item < [_collectionViewData numberOfItemsInSection:indexPath.section],
+                     "attempt to insert item to (%@) but there are only %ld items in section %ld after update",
                      indexPath,
                      (long)[_collectionViewData numberOfItemsInSection:indexPath.section],
                      (long)indexPath.section);
@@ -2290,33 +2291,33 @@ static char kUIColletionViewExt;
 
     for (UICollectionViewUpdateItem* sortedItem in sortedMutableMoveItems) {
         if (sortedItem.isSectionOperation) {
-            NSAssert(sortedItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
-                     @"attempt to move section (%ld) that doesn't exist (%ld sections before update)",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, sortedItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
+                     "attempt to move section (%ld) that doesn't exist (%ld sections before update)",
                      (long)sortedItem.indexPathBeforeUpdate.section,
                      (long)[oldCollectionViewData numberOfSections]);
-            NSAssert(sortedItem.indexPathAfterUpdate.section < [_collectionViewData numberOfSections],
-                     @"attempt to move section to %ld but there are only %ld sections after update",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, sortedItem.indexPathAfterUpdate.section < [_collectionViewData numberOfSections],
+                     "attempt to move section to %ld but there are only %ld sections after update",
                      (long)sortedItem.indexPathAfterUpdate.section,
                      (long)[_collectionViewData numberOfSections]);
         } else {
-            NSAssert(sortedItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
-                     @"attempt to move item (%@) that doesn't exist (%ld sections before update)",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, sortedItem.indexPathBeforeUpdate.section < [oldCollectionViewData numberOfSections],
+                     "attempt to move item (%@) that doesn't exist (%ld sections before update)",
                      sortedItem,
                      (long)[oldCollectionViewData numberOfSections]);
-            NSAssert(sortedItem.indexPathBeforeUpdate.item <
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, sortedItem.indexPathBeforeUpdate.item <
                          [oldCollectionViewData numberOfItemsInSection:sortedItem.indexPathBeforeUpdate.section],
-                     @"attempt to move item (%@) that doesn't exist (%ld items in section %ld before update)",
+                     "attempt to move item (%@) that doesn't exist (%ld items in section %ld before update)",
                      sortedItem,
                      (long)[oldCollectionViewData numberOfItemsInSection:sortedItem.indexPathBeforeUpdate.section],
                      (long)sortedItem.indexPathBeforeUpdate.section);
 
-            NSAssert(sortedItem.indexPathAfterUpdate.section < [_collectionViewData numberOfSections],
-                     @"attempt to move item to (%@) but there are only %ld sections after update",
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, sortedItem.indexPathAfterUpdate.section < [_collectionViewData numberOfSections],
+                     "attempt to move item to (%@) but there are only %ld sections after update",
                      sortedItem.indexPathAfterUpdate,
                      (long)[_collectionViewData numberOfSections]);
-            NSAssert(sortedItem.indexPathAfterUpdate.item <
+            THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, sortedItem.indexPathAfterUpdate.item <
                          [_collectionViewData numberOfItemsInSection:sortedItem.indexPathAfterUpdate.section],
-                     @"attempt to move item to (%@) but there are only %ld items in section %ld after update",
+                     "attempt to move item to (%@) but there are only %ld items in section %ld after update",
                      sortedItem,
                      (long)[_collectionViewData numberOfItemsInSection:sortedItem.indexPathAfterUpdate.section],
                      (long)sortedItem.indexPathAfterUpdate.section);
@@ -2343,10 +2344,10 @@ static char kUIColletionViewExt;
         NSInteger movedInCount = [operations[sectionKey][@"movedIn"] integerValue];
         NSInteger movedOutCount = [operations[sectionKey][@"movedOut"] integerValue];
 
-        NSAssert(
+        THROW_HR_IF_FALSE_MSG(E_UNEXPECTED,
             [oldCollectionViewData numberOfItemsInSection:section] + insertedCount - deletedCount + movedInCount - movedOutCount ==
                 [_collectionViewData numberOfItemsInSection:section],
-            @"invalid update in section %ld: number of items after update (%ld) should be equal to the number of items before update (%ld) "
+            "invalid update in section %ld: number of items after update (%ld) should be equal to the number of items before update (%ld) "
              "plus count of inserted items (%ld), minus count of deleted items (%ld), plus count of items moved in (%ld), minus count of "
              "items moved out (%ld)",
             (long)section,

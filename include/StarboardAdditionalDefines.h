@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 uint arc4random(void);
+uint arc4random_uniform(uint upper_bound);
 unsigned random(void);
 
 #ifdef __cplusplus

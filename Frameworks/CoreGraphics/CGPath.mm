@@ -522,14 +522,22 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 }
 
 /**
- @Status Caveat
- @Notes transform property not supported
+ @Status Interoperable
+ @Notes
 */
 void CGPathAddCurveToPoint(
     CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
     CGPathRef pathObj = path;
 
-    assert(!m);
+    CGPoint cp1 = CGPointMake(cp1x, cp1y);
+    CGPoint cp2 = CGPointMake(cp2x, cp2y);
+    CGPoint end = CGPointMake(x, y);
+
+    if (m) {
+        cp1 = CGPointApplyAffineTransform(cp1, *m);
+        cp2 = CGPointApplyAffineTransform(cp2, *m);
+        end = CGPointApplyAffineTransform(end, *m);
+    }
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
@@ -539,12 +547,12 @@ void CGPathAddCurveToPoint(
     int count = pathObj->_count;
 
     pathObj->_components[count].type = pathComponentCurve;
-    pathObj->_components[count].ctp.x1 = cp1x;
-    pathObj->_components[count].ctp.y1 = cp1y;
-    pathObj->_components[count].ctp.x2 = cp2x;
-    pathObj->_components[count].ctp.y2 = cp2y;
-    pathObj->_components[count].ctp.x = x;
-    pathObj->_components[count].ctp.y = y;
+    pathObj->_components[count].ctp.x1 = cp1.x;
+    pathObj->_components[count].ctp.y1 = cp1.y;
+    pathObj->_components[count].ctp.x2 = cp2.x;
+    pathObj->_components[count].ctp.y2 = cp2.y;
+    pathObj->_components[count].ctp.x = end.x;
+    pathObj->_components[count].ctp.y = end.y;
 
     pathObj->_count++;
 }

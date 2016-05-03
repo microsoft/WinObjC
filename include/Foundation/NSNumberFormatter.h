@@ -125,7 +125,7 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSString* groupingSeparator;
 @property BOOL usesGroupingSeparator;
 @property (copy) NSString* decimalSeparator;
-@property BOOL alwaysShowsDecimalSeparator;
+@property BOOL alwaysShowsDecimalSeparator STUB_PROPERTY;
 @property (copy) NSString* currencyDecimalSeparator STUB_PROPERTY;
 @property NSUInteger groupingSize;
 @property NSUInteger secondaryGroupingSize;

@@ -104,17 +104,17 @@ UIKIT_EXPORT CGSize CGSizeFromString(NSString* string);
 - (void)encodeCGSize:(CGSize)size forKey:(NSString*)key;
 - (void)encodeCGPoint:(CGPoint)point forKey:(NSString*)key;
 - (void)encodeCGRect:(CGRect)rect forKey:(NSString*)key;
-- (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key STUB_METHOD;
-- (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key STUB_METHOD;
-- (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key STUB_METHOD;
-- (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key STUB_METHOD;
+- (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key;
+- (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key;
+- (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key;
+- (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key;
 - (CGSize)decodeCGSizeForKey:(NSString*)key;
 - (CGPoint)decodeCGPointForKey:(NSString*)key;
 - (CGRect)decodeCGRectForKey:(NSString*)key;
-- (CGVector)decodeCGVectorForKey:(NSString*)key STUB_METHOD;
-- (CGAffineTransform)decodeCGAffineTransformForKey:(NSString*)key STUB_METHOD;
-- (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString*)key STUB_METHOD;
-- (UIOffset)decodeUIOffsetForKey:(NSString*)key STUB_METHOD;
+- (CGVector)decodeCGVectorForKey:(NSString*)key;
+- (CGAffineTransform)decodeCGAffineTransformForKey:(NSString*)key;
+- (UIEdgeInsets)decodeUIEdgeInsetsForKey:(NSString*)key;
+- (UIOffset)decodeUIOffsetForKey:(NSString*)key;
 
 @end
 

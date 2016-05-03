@@ -13,7 +13,6 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #import "Starboard.h"
 #import "LoggingNative.h"
 #import <Foundation/NSString.h>

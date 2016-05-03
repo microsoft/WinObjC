@@ -90,15 +90,6 @@ bool CGRectMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGRect* rect) 
  @Status Stub
  @Notes
 */
-CGVector CGVectorMake(CGFloat dx, CGFloat dy) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 void CGRectDivide(CGRect rect, CGRect* slice, CGRect* remainder, CGFloat amount, CGRectEdge edge) {
     UNIMPLEMENTED();
 }

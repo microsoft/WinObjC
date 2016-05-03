@@ -319,14 +319,15 @@ static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuPropert
 static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehaviorDefault;
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 + (NSDateFormatterBehavior)defaultFormatterBehavior {
     return s_defaultFormatterBehavior;
 }
 
 /**
- @Status Stub
+ @Status Caveat
+ @Notes Setting this does not affect NSDateFormatter in the current implementation.
 */
 + (void)setDefaultFormatterBehavior:(NSDateFormatterBehavior)behavior {
     s_defaultFormatterBehavior = behavior;
@@ -419,7 +420,9 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 */
 - (instancetype)initWithDateFormat:(NSString*)format allowNaturalLanguage:(BOOL)flag locale:(NSLocale*)locale {
     if (flag == YES) {
-        [NSException raiseWithLogging:@"NSDateFormatterException" format:@"allowNatrualLanguage = YES not supported"];
+        [self release];
+        UNIMPLEMENTED_WITH_MSG("allowNaturalLanguage is unimplemented for initWithDateFormat");
+        return nil;
     }
 
     [super init];

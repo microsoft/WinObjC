@@ -71,6 +71,14 @@ static inline CGSize CGSizeMake(CGFloat x, CGFloat y) {
 /**
 @Status Interoperable
 */
+static inline CGVector CGVectorMake(CGFloat dx, CGFloat dy) {
+    CGVector result = { dx, dy };
+    return result;
+}
+
+/**
+@Status Interoperable
+*/
 static inline bool CGSizeEqualToSize(CGSize a, CGSize b) {
     return a.width == b.width && a.height == b.height;
 }
@@ -222,5 +230,4 @@ COREGRAPHICS_EXPORT CFDictionaryRef CGRectCreateDictionaryRepresentation(CGRect)
 COREGRAPHICS_EXPORT bool CGPointMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGPoint* point) STUB_METHOD;
 COREGRAPHICS_EXPORT bool CGSizeMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGSize* size) STUB_METHOD;
 COREGRAPHICS_EXPORT bool CGRectMakeWithDictionaryRepresentation(CFDictionaryRef dict, CGRect* rect) STUB_METHOD;
-COREGRAPHICS_EXPORT CGVector CGVectorMake(CGFloat dx, CGFloat dy) STUB_METHOD;
 COREGRAPHICS_EXPORT void CGRectDivide(CGRect rect, CGRect* slice, CGRect* remainder, CGFloat amount, CGRectEdge edge) STUB_METHOD;

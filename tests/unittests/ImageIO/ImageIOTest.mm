@@ -1328,7 +1328,7 @@ TEST(ImageIO, DestinationImageOptionsTIFFTest) {
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
     
     // Print the properties due to high number of properties written, only checking a few properties
-    NSLog(@"TIFF Dictionary - [%@]", (NSDictionary*)imageProperties);
+    LOG_INFO("TIFF Dictionary - [%@]", (NSDictionary*)imageProperties);
 
     // Note that this XResolution was actually passed in as 100. This field aliases with DPIWidth.
     // As observed on iOS, for TIFF, DPIWidth takes precedence, while for JPEG, XResolution takes precedence.
@@ -1420,7 +1420,7 @@ TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
     
     // Print the properties due to high number of properties written, only checking a few properties
-    NSLog(@"JPEG Dictionary - [%@]", (NSDictionary*)imageProperties);
+    LOG_INFO("JPEG Dictionary - [%@]", (NSDictionary*)imageProperties);
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyJFIFDictionary),
         "FAILED: ImageIOTest::JFIF dictionary not found");
@@ -1488,7 +1488,7 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
     
     // Print the properties due to high number of properties written, only checking a few properties
-    NSLog(@"GIF Dictionary - [%@]", (NSDictionary*)imageProperties);
+    LOG_INFO("GIF Dictionary - [%@]", (NSDictionary*)imageProperties);
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGIFDictionary),
         "FAILED: ImageIOTest::GIF dictionary not found");
@@ -1547,7 +1547,7 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
     
     // Print the properties due to high number of properties written, only checking a few properties
-    NSLog(@"PNG Dictionary - [%@]", (NSDictionary*)imageProperties);
+    LOG_INFO("PNG Dictionary - [%@]", (NSDictionary*)imageProperties);
 
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPNGDictionary),
         "FAILED: ImageIOTest::PNG dictionary not found");

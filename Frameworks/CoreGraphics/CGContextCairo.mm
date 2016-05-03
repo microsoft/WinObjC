@@ -753,12 +753,18 @@ void CGContextCairo::CGContextSaveGState() {
     states[curStateNum].curBlendMode = curState->curBlendMode;
     states[curStateNum]._imgClip = NULL;
     states[curStateNum]._imgMask = NULL;
+    states[curStateNum].shadowColor = NULL;
 
     if (curState->_imgClip) {
         states[curStateNum]._imgClip = curState->_imgClip->Backing()->Copy();
     }
+
     if (curState->_imgMask) {
         states[curStateNum]._imgMask = curState->_imgMask->Backing()->Copy();
+    }
+
+    if (curState->shadowColor) {
+        states[curStateNum].shadowColor = CGColorCreateCopy(curState->shadowColor);
     }
 
     memcpy(&states[curStateNum].curTransform, &curState->curTransform, sizeof(curState->curTransform));
@@ -777,9 +783,15 @@ void CGContextCairo::CGContextRestoreGState() {
     if (curState->_imgClip) {
         delete curState->_imgClip;
     }
+
     if (curState->_imgMask) {
         delete curState->_imgMask;
     }
+
+    if (curState->shadowColor) {
+        CGColorRelease(curState->shadowColor);
+    }
+
     curStateNum--;
     curState = &states[curStateNum];
 

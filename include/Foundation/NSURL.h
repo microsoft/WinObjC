@@ -173,7 +173,7 @@ FOUNDATION_EXPORT_CLASS
                         bookmarkDataIsStale:(BOOL*)isStale
                                       error:(NSError* _Nullable*)error STUB_METHOD;
 + (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL STUB_METHOD;
-- (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength STUB_METHOD;
+- (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength;
 - (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL STUB_METHOD;
 - (BOOL)isEqual:(id)anObject;
 - (BOOL)checkResourceIsReachableAndReturnError:(NSError* _Nullable*)error;

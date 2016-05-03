@@ -531,7 +531,6 @@ static id deepCopyValue(id obj) {
 */
 + (void)resetStandardUserDefaults {
     UNIMPLEMENTED();
-    TraceWarning(TAG, L"Warning: resetStandardUserDefaults not implemented");
 }
 
 /**

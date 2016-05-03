@@ -336,7 +336,7 @@ static const wchar_t* TAG = L"EAGL";
         { EGL_WIDTH, _rbWidth, EGL_HEIGHT, _rbHeight, EGL_ANGLE_SURFACE_RENDER_TO_BACK_BUFFER, EGL_TRUE, EGL_FIXED_SIZE_ANGLE,
           EGL_TRUE,  EGL_NONE };
 
-    IUnknown* pUnkRaw = (IUnknown*)[surface.swapChainPanel internalObject];
+    IUnknown* pUnkRaw = (IUnknown*)[surface.swapChainPanel comObj].Get();
 
     IInspectable* pSwapChainInspectable;
     pUnkRaw->QueryInterface(__uuidof(pSwapChainInspectable), (void**)&pSwapChainInspectable);

@@ -312,7 +312,6 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 */
 - (void)addPort:(id)port forMode:(id)mode {
     UNIMPLEMENTED();
-    TraceVerbose(TAG, L"NSRunLoop addPort not supported");
 }
 
 - (BOOL)containsTimer:(NSTimer*)timer forMode:(NSString*)mode {

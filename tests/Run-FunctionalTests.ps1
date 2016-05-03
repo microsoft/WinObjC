@@ -1,34 +1,82 @@
 <#
 .SYNOPSIS
     Runs Functional Tests for Islandwood project.
+
+.PARAMETER TAEFDirectory
+    The path to TAEF binaries
+
+.PARAMETER TestDirectory
+    The path to test binaries
+
+.PARAMETER Platform
+    platform to run tests on. Valid values are Win32 or ARM
+
+.PARAMETER Config
+    Test configuration to use for the test. Valid values are Debug or Release
+
+.PARAMETER Device
+    IP or MAC address of the device to run tests on
+
+.PARAMETER TestFilter
+    Test filter to use for the test. Supports wildcard characters
+
+.PARAMETER WTLOutputDirectory
+    Path to test output. If not set, no result file will be saved.
+
+.PARAMETER NoCopy
+    Switch to disable copying test to the device
+
+.PARAMETER TestWorkingDirectory
+    Path to the working test directory from where the tests will be run
+
+.PARAMETER PackageRootPath
+    Path to build share where the TAEF package can be found
+
+
+.EXAMPLE
+    Run-FunctionalTests.ps1 -TAEFDirectory D:\TAEF
+    Run-FunctionalTests.ps1 -TAEFDirectory \data\test\bin -Platform ARM
+
 #>
 param(
-    [Parameter(HelpMessage="Directory of TAEF binaries")]
     [string]$TAEFDirectory = "",
-    
-    [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
+
     [string]$TestDirectory = "",
 
-    [Parameter(HelpMessage="Architecture of tests to run")]
     [string][ValidateSet("Win32", "ARM")]
     $Platform = "Win32",
 
-    [Parameter(ParameterSetName="TestLocation", HelpMessage="Directory of Tests to run")]
     [string][ValidateSet("Debug", "Release")]
     $Config = "Debug",
 
-    [Parameter(HelpMessage="IP or MAC address of remote device to run tests on")]
     [string]$Device = "127.0.0.1",
 
-    [Parameter(HelpMessage="Regex of Tests to run")]
     [string]$TestFilter = $null,
 
-    [Parameter(HelpMessage="Location to place output wtl files. If not set, no result files will be saved.")]
     [string]$WTLOutputDirectory = $null,
-    
-    [Parameter(HelpMessage="TAEF package install path.")]
+
+    [switch]$NoCopy,
+
+    [string]$TestWorkingDirectory = "",
+
     [string]$PackageRootPath = $null
 )
+
+if ($NoCopy)
+{
+    if ($TestWorkingDirectory -eq "")
+    {
+         throw "Please specify -TestWorkingDirectory argument with -NoCopy option."
+    }
+}
+
+if ($TestWorkingDirectory -ne "")
+{
+    if (!$NoCopy)
+    {
+         throw "Please specify -NoCopy option when using -TestWorkingDirectory argument."
+    }
+}
 
 $TargetingDevice = ($Platform -eq "ARM")
 
@@ -59,10 +107,10 @@ function DeployTests
             dird \data\test\bin\TE.TestMode.UAP.dll | Out-Null
         }
         Catch
-        {           
+        {
             $TAEFPackageName = "Microsoft.Windows.Test.Taef"
-            
-            Write-Host -ForegroundColor Cyan "Installing $TAEFPackageName package - this may take a while... (about 5 minutes)"
+
+            Write-Host -ForegroundColor Cyan "Installing $TAEFPackageName package - this may take about a minute"
             if ($TAEFDirectory -eq [string]$null)
             {
                 deployd -Packages $TAEFPackageName -OnDevice
@@ -73,22 +121,25 @@ function DeployTests
             }
         }
 
-        # Copy the tests to the device
-        Write-Host -ForegroundColor Cyan "Copying tests to the device - this may take about a minute"
+        if (!$NoCopy)
+        {
 
-        Try 
-        {
-            mdd $TestDstDirectory
+            # Copy the tests to the device
+            Write-Host -ForegroundColor Cyan "Copying tests to the device - this may take about a minute"
+
+            Try
+            {
+                mdd $TestDstDirectory
+            }
+            Catch
+            {
+                # putd fails if the directory doesn't already exist.
+                # mdd fails if the directory does already exist.
+                # This is awkward.
+            }
+
+            putd -recurse $TestSrcDirectory\* $TestDstDirectory
         }
-        Catch
-        {
-            # putd fails if the directory doesn't already exist.
-            # mdd fails if the directory does already exist.
-            # This is awkward.
-        }
-        
-        
-        putd -recurse $TestSrcDirectory\* $TestDstDirectory
     }
     else
     {
@@ -99,7 +150,7 @@ function DeployTests
 function ExecTest($argList)
 {
     Write-Host -ForegroundColor Cyan "Starting test execution..."
-    
+
     if ($TAEFDirectory -eq "")
     {
         $taefPath = "te.exe"
@@ -108,17 +159,19 @@ function ExecTest($argList)
     {
         $taefPath = Join-Path $TAEFDirectory te.exe
     }
-    
+
     $testPath = Join-Path $TestDstDirectory $DefaultTestBinary
 
     if ($TargetingDevice)
     {
-        Write-Host $argList
         cmdd $taefPath $testPath $argList
 
-        # Fetch the output from the device
-        getd $outputRemoteName $outputLocalName
-        deld $outputRemoteName
+        if ($WTLOutputDirectory -ne [string]$null)
+        {
+            # Fetch the output from the device
+            getd $outputRemoteName $outputLocalName
+            deld $outputRemoteName
+        }
     }
     else
     {
@@ -127,23 +180,30 @@ function ExecTest($argList)
     }
 }
 
-if ($TestDirectory -eq "") 
+if (!$NoCopy)
 {
-    $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-    $TestSrcDirectory = Join-Path $MyPath "..\build\Tests\FunctionalTests\$Platform\$Config\FunctionalTests"
-}
-else
-{
-    $TestSrcDirectory = $TestDirectory
-}
+    if ($TestDirectory -eq "")
+    {
+        $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
+        $TestSrcDirectory = Join-Path $MyPath "..\build\Tests\FunctionalTests\$Platform\$Config\FunctionalTests"
+    }
+    else
+    {
+        $TestSrcDirectory = $TestDirectory
+    }
 
-if ($TargetingDevice)
-{
-    $TestDstDirectory = "\data\test\bin\islandwood\FunctionalTests"
+    if ($TargetingDevice)
+    {
+        $TestDstDirectory = "\data\test\bin\islandwood\FunctionalTests"
+    }
+    else
+    {
+        $TestDstDirectory = $TestSrcDirectory
+    }
 }
 else
 {
-    $TestDstDirectory = $TestSrcDirectory
+    $TestDstDirectory = $TestWorkingDirectory
 }
 
 if ($TargetingDevice)
@@ -162,29 +222,26 @@ if (($WTLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $WTLOutputDir
 
 $outputLocalName = $null;
 $outputRemoteName = $null;
+$argList = "";
 
-$outputFileName = [System.IO.Path]::GetRandomFileName() + ".wtl"
+$outputFileName = "FunctionalTestsResult.wtl"
 
 # Decide where the WTL output files will live
-if ($WTLOutputDirectory -eq [string]$null)
+if ($WTLOutputDirectory -ne [string]$null)
 {
-    $outputLocalName = $outputFileName
-}
-else
-{
-    $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
+    if ($TargetingDevice)
+    {
+        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
+    }
+    else
+    {
+        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
+        $outputRemoteName = $outputLocalName
+    }
+
+    $argList += " /logFile:$outputRemoteName /enableWttLogging"
 }
 
-if ($TargetingDevice)
-{
-    $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
-}
-else
-{
-    $outputRemoteName = $outputLocalName
-}
-
-$argList = " /logFile:$outputRemoteName"
 
 if($TestFilter -ne [string]$null)
 {

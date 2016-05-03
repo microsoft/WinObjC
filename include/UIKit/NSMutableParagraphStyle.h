@@ -30,7 +30,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) CGFloat firstLineHeadIndent STUB_PROPERTY;
 @property (nonatomic) CGFloat headIndent STUB_PROPERTY;
 @property (nonatomic) CGFloat tailIndent STUB_PROPERTY;
-@property (nonatomic) NSLineBreakMode lineBreakMode STUB_PROPERTY;
+@property (nonatomic) NSLineBreakMode lineBreakMode;
 @property (nonatomic) CGFloat maximumLineHeight STUB_PROPERTY;
 @property (nonatomic) CGFloat minimumLineHeight STUB_PROPERTY;
 @property (nonatomic) CGFloat lineSpacing STUB_PROPERTY;

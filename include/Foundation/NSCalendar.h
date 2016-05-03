@@ -122,8 +122,8 @@ FOUNDATION_EXPORT_CLASS
 @property NSUInteger minimumDaysInFirstWeek;
 - (NSRange)minimumRangeOfUnit:(NSCalendarUnit)unit STUB_METHOD;
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date;
-- (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date;
-- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip forDate:(NSDate*)date;
+- (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date STUB_METHOD;
+- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip forDate:(NSDate*)date STUB_METHOD;
 - (BOOL)rangeOfWeekendStartDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip containingDate:(NSDate*)date STUB_METHOD;
 @property (copy) NSTimeZone* timeZone;
 - (NSDate*)dateByAddingComponents:(NSDateComponents*)comps toDate:(NSDate*)date options:(NSCalendarOptions)opts;

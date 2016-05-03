@@ -23,6 +23,7 @@
 #import "UIGridLayoutItem.h"
 #import "UIGridLayoutRow.h"
 #import "UIGridLayoutInfo.h"
+#import "ErrorHandling.h"
 
 @interface UIGridLayoutSection () {
     NSMutableArray* _items;
@@ -75,7 +76,7 @@
 
 - (void)computeLayout {
     if (!_isValid) {
-        NSAssert(self.rows.count == 0, @"No rows shall be at this point.");
+        THROW_HR_IF_FALSE_MSG(E_UNEXPECTED, self.rows.count == 0, "No rows shall be at this point.");
 
         // iterate over all items, turning them into rows.
         CGSize sectionSize = CGSizeZero;

@@ -17,7 +17,7 @@
 #import <Foundation/NSURLProtocol.h>
 #import <Foundation/NSHTTPURLResponse.h>
 
-#import <COMIncludes.h>
+#include <COMIncludes.h>
 #import <wrl/client.h>
 #import <wrl/wrappers/corewrappers.h>
 #import <Windows.Foundation.Collections.h>
@@ -25,7 +25,7 @@
 #import <Windows.Web.Http.Filters.h>
 #import <Windows.Storage.Streams.h>
 #import <Windows.System.Threading.h>
-#import <COMIncludes_end.h>
+#include <COMIncludes_end.h>
 #import <mutex>
 
 #import "Starboard/SmartTypes.h"

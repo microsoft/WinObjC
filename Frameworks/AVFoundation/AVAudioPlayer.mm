@@ -25,10 +25,10 @@
 
 #include <UWP/WindowsUIXamlControls.h>
 
-#import <COMIncludes.h>
+#include <COMIncludes.h>
 #import <RawBuffer.h>
 #import <windows.storage.streams.h>
-#import <COMIncludes_End.h>
+#include <COMIncludes_End.h>
 #import "AssertARCEnabled.h"
 
 // 100 nanoseconds per tick
@@ -184,7 +184,7 @@ using namespace Microsoft::WRL;
 
         // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll 
         // open up StoreAsync.
-        IDataWriter* writer = (__bridge IDataWriter*)[rw internalObject];
+        IDataWriter* writer = (IDataWriter*)[rw comObj].Get();
         ComPtr<IAsyncOperation<UInt32>> comp;
         writer->WriteBuffer(buffer.Get());
         writer->StoreAsync(&comp);
