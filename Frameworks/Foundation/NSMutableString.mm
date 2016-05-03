@@ -16,8 +16,8 @@
 
 #include "Starboard.h"
 #include <Foundation/NSMutableString.h>
-#include "NSStringPlaceholder.h"
-#include "NSMutableStringPlaceholder.h"
+#include "NSStringPrototype.h"
+#include "NSMutableStringPrototype.h"
 #include "NSRaise.h"
 #include "BridgeHelpers.h"
 
@@ -38,7 +38,7 @@
 /**
  @Status Interoperable
 */
-+ ALLOC_PLACEHOLDER_SUBCLASS_WITH_ZONE(NSMutableString, NSMutableStringPlaceholder);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableString, NSMutableStringPrototype);
 
 /**
  @Status Interoperable

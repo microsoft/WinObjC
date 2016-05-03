@@ -22,7 +22,7 @@
 #include <CoreFoundation/CFDate.h>
 
 #pragma region Factory Class
-@implementation NSDatePlaceholder
+@implementation NSDatePrototype
 - (instancetype)initWithString:(NSString*)string {
     StrongId<NSDateFormatter> formatter;
     formatter.attach([NSDateFormatter new]);
@@ -33,7 +33,7 @@
 }
 
 - (instancetype)initWithTimeIntervalSinceReferenceDate:(double)ref {
-    return reinterpret_cast<NSDatePlaceholder*>(static_cast<NSDate*>(CFDateCreate(nullptr, ref)));
+    return reinterpret_cast<NSDatePrototype*>(static_cast<NSDate*>(CFDateCreate(nullptr, ref)));
 }
 
 - (instancetype)init {

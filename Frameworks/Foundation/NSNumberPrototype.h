@@ -17,7 +17,7 @@
 
 #import <Foundation/NSNumber.h>
 
-@interface NSNumberPlaceholder : NSNumber
+@interface NSNumberPrototype : NSNumber
 
 - (_Nullable instancetype)initWithBool:(BOOL)value;
 - (_Nullable instancetype)initWithChar:(char)value;

@@ -18,7 +18,7 @@
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
 #import "CFFoundationInternal.h"
-#import "NSNumberPlaceholder.h"
+#import "NSNumberPrototype.h"
 #import "NSNumberInternal.h"
 #import "BridgeHelpers.h"
 
@@ -28,8 +28,8 @@
 
 + (NSObject*)allocWithZone:(NSZone*)zone {
     if (self == [NSNumber class]) {
-        static StrongId<NSNumberPlaceholder> placeholder = [NSNumberPlaceholder allocWithZone:zone];
-        return placeholder;
+        static StrongId<NSNumberPrototype> prototype = [NSNumberPrototype allocWithZone:zone];
+        return prototype;
     }
 
     return [super allocWithZone:zone];

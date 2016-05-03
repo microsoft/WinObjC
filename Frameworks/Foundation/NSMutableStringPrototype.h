@@ -14,10 +14,10 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSString.h>
+#include <Foundation/NSMutableString.h>
 #include "NSStringAdditionsForCF.h"
 
-@interface NSStringPlaceholder : NSString
+@interface NSMutableStringPrototype : NSMutableString
 
 - (instancetype)init;
 - (instancetype)initWithCString:(const char*)cStr length:(NSUInteger)length;
@@ -32,5 +32,6 @@
 - (instancetype)initWithCharactersNoCopy:(unichar*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone;
 - (instancetype)initWithCString:(const char*)bytes encoding:(NSStringEncoding)encoding;
 - (instancetype)initWithString:(NSString*)otherStr;
+- (instancetype)initWithCapacity:(NSUInteger)capacity;
 
 @end

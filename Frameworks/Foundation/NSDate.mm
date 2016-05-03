@@ -53,7 +53,7 @@ NSDateFormatter* _getLocaleDescriptionFormatter(NSLocale* locale) {
 /**
  @Status Interoperable
 */
-+ ALLOC_PLACEHOLDER_SUBCLASS_WITH_ZONE(NSDate, NSDatePlaceholder);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSDate, NSDatePrototype);
 
 /**
  @Status Interoperable

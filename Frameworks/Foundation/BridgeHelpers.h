@@ -124,11 +124,11 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
     }
 
 // Helper macro for implementing allocWithZone
-#define ALLOC_PLACEHOLDER_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPlaceholderType)                              \
+#define ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPrototypeType)                              \
     (NSObject*) allocWithZone : (NSZone*)zone {                                                                    \
         if (self == [NSBridgedType class]) {                                                                       \
-            static StrongId<NSBridgedPlaceholderType> placeholder = [NSBridgedPlaceholderType allocWithZone:zone]; \
-            return placeholder;                                                                                    \
+            static StrongId<NSBridgedPrototypeType> prototype = [NSBridgedPrototypeType allocWithZone:zone]; \
+            return prototype;                                                                                    \
         }                                                                                                          \
                                                                                                                    \
         return [super allocWithZone:zone];                                                                         \

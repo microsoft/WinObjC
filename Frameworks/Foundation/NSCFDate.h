@@ -17,7 +17,7 @@
 #include <Foundation/NSDate.h>
 
 #pragma region Factory class
-@interface NSDatePlaceholder : NSDate
+@interface NSDatePrototype : NSDate
 
 - (instancetype)init;
 - (instancetype)initWithString:(NSString*)string;

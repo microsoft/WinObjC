@@ -18,7 +18,7 @@
 #import "BridgeHelpers.h"
 #import "CFHelpers.h"
 #import "CFFoundationInternal.h"
-#import "NSNumberPlaceholder.h"
+#import "NSNumberPrototype.h"
 #import "NSNumberInternal.h"
 #import <CoreFoundation/CFNumber.h>
 
@@ -31,13 +31,13 @@ typedef struct {
 // Matches private CFNumberType value in CFNumber
 enum { kCFNumberSInt128Type = 17 };
 
-@implementation NSNumberPlaceholder
+@implementation NSNumberPrototype
 
-// Helper macro for NSNumberPlaceholder initializers (signed)
+// Helper macro for NSNumberPrototype initializers (signed)
 // Var args are the signature of the initializer
 #define NS_NUMBER_INIT_IMPL(cfNumberType, ...)                                                                           \
     (instancetype) __VA_ARGS__ num {                                                                                     \
-        return reinterpret_cast<NSNumberPlaceholder*>(static_cast<NSNumber*>(CFNumberCreate(NULL, cfNumberType, &num))); \
+        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(NULL, cfNumberType, &num))); \
     }
 
 - NS_NUMBER_INIT_IMPL(kCFNumberCharType, initWithChar:(char));
@@ -49,7 +49,7 @@ enum { kCFNumberSInt128Type = 17 };
 - NS_NUMBER_INIT_IMPL(kCFNumberLongLongType, initWithLongLong:(long long));
 - NS_NUMBER_INIT_IMPL(kCFNumberShortType, initWithShort:(short));
 
-// Helper macro for NSNumberPlaceholder initializers (unsigned)
+// Helper macro for NSNumberPrototype initializers (unsigned)
 // Var args are the signature of the initializer
 // Unsigned requires an extra step of init, as CFNumber does not actually support unsigned types,
 // instead storing in a signed value of twice the size
@@ -57,7 +57,7 @@ enum { kCFNumberSInt128Type = 17 };
 #define NS_NUMBER_INIT_UNSIGNED_IMPL(cfNumberType, intermediateType, ...)                                                      \
     (instancetype) __VA_ARGS__ num {                                                                                           \
         intermediateType castedNum = static_cast<intermediateType>(num);                                                       \
-        return reinterpret_cast<NSNumberPlaceholder*>(static_cast<NSNumber*>(CFNumberCreate(NULL, cfNumberType, &castedNum))); \
+        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(NULL, cfNumberType, &castedNum))); \
     }
 
 - NS_NUMBER_INIT_UNSIGNED_IMPL(kCFNumberSInt16Type, int16_t, initWithUnsignedChar:(unsigned char));
@@ -70,13 +70,13 @@ enum { kCFNumberSInt128Type = 17 };
 - (instancetype)initWithUnsignedLongLong:(unsigned long long)num {
     CFSInt128Struct castedNum;
     castedNum.low = num;
-    return reinterpret_cast<NSNumberPlaceholder*>(
+    return reinterpret_cast<NSNumberPrototype*>(
         static_cast<NSNumber*>(CFNumberCreate(NULL, static_cast<CFNumberType>(kCFNumberSInt128Type), &castedNum)));
 }
 
 // For bool, return the extant constants
 - (instancetype)initWithBool:(BOOL)value {
-    return reinterpret_cast<NSNumberPlaceholder*>(static_cast<NSNumber*>(value ? kCFBooleanTrue : kCFBooleanFalse));
+    return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(value ? kCFBooleanTrue : kCFBooleanFalse));
 }
 
 @end

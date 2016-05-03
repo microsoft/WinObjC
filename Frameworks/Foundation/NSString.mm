@@ -36,7 +36,7 @@
 
 #include "ForFoundationOnly.h"
 #include "LoggingNative.h"
-#include "NSStringPlaceholder.h"
+#include "NSStringPrototype.h"
 #include "NSRaise.h"
 #include "CFFoundationInternal.h"
 #include "BridgeHelpers.h"
@@ -73,7 +73,7 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-+ ALLOC_PLACEHOLDER_SUBCLASS_WITH_ZONE(NSString, NSStringPlaceholder);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSString, NSStringPrototype);
 
 /**
  @Status Interoperable
