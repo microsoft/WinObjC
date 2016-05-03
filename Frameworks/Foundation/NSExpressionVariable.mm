@@ -52,7 +52,7 @@
 
     // ensure basic non-expression type is returned.
     if ([result isKindOfClass:[NSExpression class]]) {
-        return [result expressionValueWithObject:object contex:context];
+        return [result expressionValueWithObject:object context:context];
     }
 
     return result;
