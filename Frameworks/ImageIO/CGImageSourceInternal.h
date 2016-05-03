@@ -24,7 +24,7 @@
 @class NSData;
 
 @interface ImageSource : NSObject
-@property (nonatomic) NSData *data;
+@property (nonatomic, copy) NSData *data;
 - (instancetype)initWithData:(CFDataRef)data;
 - (instancetype)initWithURL:(CFURLRef)url;
 - (instancetype)initWithDataProvider:(CGDataProviderRef)provider;

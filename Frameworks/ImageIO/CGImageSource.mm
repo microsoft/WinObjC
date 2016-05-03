@@ -19,7 +19,7 @@
 #import <CoreGraphics/CGDataProvider.h>
 #import <ImageIO/ImageIO.h>
 #import <ImageIO/CGImageSource.h>
-#import <ImageIO/CGImageSourceInternal.h>
+#import "CGImageSourceInternal.h"
 #import <StubReturn.h>
 #import <objc/runtime.h>
 #import <Starboard.h>

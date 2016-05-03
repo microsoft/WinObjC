@@ -16,7 +16,7 @@
 //******************************************************************************
 
 #import <ImageIO/CGImageDestination.h>
-#import <ImageIO/CGImageDestinationInternal.h>
+#import "CGImageDestinationInternal.h"
 #import <StubReturn.h>
 #include <windows.h>
 #include <string>
