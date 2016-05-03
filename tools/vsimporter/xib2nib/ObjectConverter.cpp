@@ -63,6 +63,7 @@
 #include "_UILayoutGuide.h"
 #include "UIPanGestureRecognizer.h"
 #include "UISwipeGestureRecognizer.h"
+#include "UITapGestureRecognizer.h"
 #include <assert.h>
 
 #include "..\WBITelemetry\WBITelemetry.h"
@@ -183,8 +184,8 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "stepper", UIStepper)
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
+    IS_CONVERTER(ret, className, "tapGestureRecognizer", UITapGestureRecognizer)
     IS_CONVERTER(ret, className, "customObject", ObjectConverterSwapper)
-
 
     if (ret == NULL) {
 #ifdef _DEBUG

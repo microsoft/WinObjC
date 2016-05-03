@@ -1,17 +1,12 @@
+# Original list of files to ignore under GIT
 *.opensdf
 *.sdf
-*.suo
-*.user
 *.orig
 *.opendb
 *.pcm
 *.idx
 *.timestamp
 ipch
-Debug
-Release
-Generated
-Generated Files
 Doxygen
 AppPackages
 Packages.dgml
@@ -20,7 +15,6 @@ bin
 .nuget
 *~
 TAGS
-build/XamlCompositorCS/XamlCompositorCS.Universal/project.lock.json
 dirlistout
 filelist.bat
 filelistout
@@ -33,3 +27,29 @@ build/package/package.log
 tools/vsimporter/build/
 tools/vsimporter/include/version.h
 msvc/ClangCompileTask.pdb
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+BundleArtifacts/
+[Oo]bj/
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+*.lock.json
+.vscode/
+
+# Mac desktop service store files
+.DS_Store
+xcuserdata/
+project.xcworkspace/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Universal App
+Generated/
+Generated Files/

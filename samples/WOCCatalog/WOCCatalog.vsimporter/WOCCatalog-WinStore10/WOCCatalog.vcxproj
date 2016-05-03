@@ -233,6 +233,7 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo6.jpg" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\whiteButton.png" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png" />
+    <StoryboardCompile Include="..\..\WOCCatalog\XIBTest.storyboard" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png" />
     <SBInfoPlistCopy Include="..\..\WOCCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
