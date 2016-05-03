@@ -57,8 +57,6 @@ FOUNDATION_EXPORT_CLASS
 - (NSDecimalNumber*)decimalNumberByRaisingToPower:(NSUInteger)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
 - (NSDecimalNumber*)decimalNumberByMultiplyingByPowerOf10:(short)power withBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
 - (NSDecimalNumber*)decimalNumberByRoundingAccordingToBehavior:(id<NSDecimalNumberBehaviors>)behavior STUB_METHOD;
-@property (readonly) NSDecimal decimalValue STUB_PROPERTY;
-@property (readonly) double doubleValue STUB_PROPERTY;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
 @property (readonly) const char* objCType;
 + (id<NSDecimalNumberBehaviors>)defaultBehavior STUB_METHOD;

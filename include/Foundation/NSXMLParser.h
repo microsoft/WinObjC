@@ -130,9 +130,6 @@ FOUNDATION_EXPORT_CLASS
 @interface NSXMLParser : NSObject {
     id _data;
     id _delegate;
-    BOOL _shouldProcessNamespaces;
-    BOOL _shouldReportNamespacePrefixes;
-    BOOL _shouldResolveExternalEntities;
     id _parserError;
     id _systemID;
     id _publicID;

@@ -964,14 +964,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available
 */
 + (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
-    NSString* ret = [self alloc];
-
-    NSData* data = [[NSData alloc] initWithContentsOfURL:url options:0 error:errorRet];
-
-    ret = [[ret initWithData:data encoding:encoding] autorelease];
-    [data release];
-
-    return ret;
+    return [[[self alloc] initWithContentsOfURL:url encoding:encoding error:errorRet] autorelease];
 }
 
 /**
@@ -3308,12 +3301,12 @@ const int s_oneByte = 16;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes not all encodings are supported, only file URLs supported
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSData* data = [[[NSData alloc] initWithContentsOfURL:url options:0 error:error] autorelease];
+    return [self initWithData:data encoding:enc];
 }
 
 /**
@@ -3335,12 +3328,11 @@ const int s_oneByte = 16;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-- (id)initWithContentsOfURL:(NSURL*)url {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithContentsOfURL:(NSURL*)url {
+    return [self initWithContentsOfURL:url encoding:0 error:nullptr];
 }
 
 /**
