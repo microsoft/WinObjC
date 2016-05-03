@@ -14,7 +14,7 @@
 #define ClVariable_H
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
-#include <cassowary/config-inline.h>
+#include "config-inline.h"
 #define CONFIG_INLINE_H_INCLUDED
 #endif
 
@@ -125,7 +125,8 @@ inline ostream &operator<<(ostream &xo, const ClVariable &clv)
 { return clv.PrintOn(xo); }
 #endif
 
-#ifdef CL_USE_HASH_MAP_AND_SET
+#if defined(CL_USE_HASH_MAP_AND_SET) || defined(CL_USE_UNORDERED_MAP)
+template<>
 struct hash<ClVariable> { 
   size_t operator()(const ClVariable & v) const
     { return size_t((unsigned long)v.get_pclv()/CL_PTR_HASH_DIVISOR);  }

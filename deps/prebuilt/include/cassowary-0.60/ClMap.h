@@ -14,11 +14,14 @@
 #define CL_MAP_H
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
-#include <cassowary/config-inline.h>
+#include "config-inline.h"
 #define CONFIG_INLINE_H_INCLUDED
 #endif
 
-#ifdef CL_USE_HASH_MAP_AND_SET
+#if defined(CL_USE_UNORDERED_MAP)
+#include <unordered_map>
+#define ClMap unordered_map
+#elif defined(CL_USE_HASH_MAP_AND_SET)
 #include <hash_map>
 #define ClMap hash_map
 #else

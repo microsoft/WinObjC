@@ -93,10 +93,11 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CL_NO_IO;CL_NO_ID;WIN32;_DEBUG;_WINDOWS;_USRDLL;CASSOWARY060WINDOWS_EXPORTS;VERSION="0.60";%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;HAVE_CONFIG_H;CL_NO_IO;CL_NO_ID;WIN32;_DEBUG;_WINDOWS;_USRDLL;CASSOWARY060WINDOWS_EXPORTS;VERSION="0.60";%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,10 +110,11 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>CL_NO_IO;CL_NO_ID;WIN32;_DEBUG;_WINDOWS;_USRDLL;CASSOWARY060WINDOWS_EXPORTS;VERSION="0.60";%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;HAVE_CONFIG_H;CL_NO_IO;CL_NO_ID;WIN32;_DEBUG;_WINDOWS;_USRDLL;CASSOWARY060WINDOWS_EXPORTS;VERSION="0.60";%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
