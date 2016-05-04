@@ -18,37 +18,39 @@
 #include "StubReturn.h"
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
-#include "NSMutableStringPrototype.h"
+#include "NSCFString.h"
 #include <CoreFoundation/CFString.h>
 #include "BridgeHelpers.h"
 #include "ForFoundationOnly.h"
 
 @implementation NSMutableStringPrototype
 
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
 - (instancetype)init {
     return [self initWithCapacity:0];
 }
 
 - (instancetype)initWithCString:(const char*)cStr length:(NSUInteger)length {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
     CFStringAppendCString(mutableRef, cStr, CFStringConvertNSStringEncodingToEncoding([[self class] defaultCStringEncoding]));
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }
 
 - (instancetype)initWithUTF8String:(const char*)utf8str {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
     CFStringAppendCString(mutableRef, utf8str, kCFStringEncodingUTF8);
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }
 
 - (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
     CFStringAppendFormatAndArguments(mutableRef, nullptr, static_cast<CFStringRef>(formatStr), pReader);
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }
 
 - (instancetype)initWithBytes:(const void*)bytes length:(NSUInteger)length encoding:(NSStringEncoding)encoding {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
 
     // This really isn't the most efficient. Unfortunately though, there is no exposed CF append bytes method.
     CFStringAppend(mutableRef,
@@ -75,7 +77,7 @@
 }
 
 - (instancetype)initWithCharacters:(const unichar*)bytes length:(NSUInteger)length {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
     CFStringAppendCharacters(mutableRef, bytes, length);
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }
@@ -95,17 +97,17 @@
 }
 
 - (instancetype)initWithCString:(const char*)bytes encoding:(NSStringEncoding)encoding {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
     CFStringAppendCString(mutableRef, bytes, CFStringConvertNSStringEncodingToEncoding(encoding));
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }
 
 - (instancetype)initWithCapacity:(NSUInteger)capacity {
-    return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(CFStringCreateMutable(NULL, capacity)));
+    return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(CFStringCreateMutable(kCFAllocatorDefault, capacity)));
 }
 
 - (instancetype)initWithString:(NSString*)otherStr {
-    CFMutableStringRef mutableRef = CFStringCreateMutable(NULL, 0);
+    CFMutableStringRef mutableRef = CFStringCreateMutable(kCFAllocatorDefault, 0);
     CFStringAppend(mutableRef, static_cast<CFStringRef>(otherStr));
     return reinterpret_cast<NSMutableStringPrototype*>(static_cast<NSMutableString*>(mutableRef));
 }

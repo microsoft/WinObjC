@@ -29,7 +29,7 @@
 #import "NSPropertyListWriter_binary.h"
 #import "NSKeyedArchiverInternal.h"
 #import "VAListHelper.h"
-#import "NSDictionaryConcrete.h"
+#import "NSCFDictionary.h"
 #import "NSRaise.h"
 #import "BridgeHelpers.h"
 
@@ -113,7 +113,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
 
 @implementation NSDictionary
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSDictionary, NSDictionaryConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSDictionary, NSDictionaryPrototype);
 
 /**
  @Status Interoperable

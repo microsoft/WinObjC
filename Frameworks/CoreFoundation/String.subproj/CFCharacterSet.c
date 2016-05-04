@@ -136,7 +136,8 @@ CF_INLINE void __CFCSetPutIsInverted(CFMutableCharacterSetRef cset, Boolean isIn
 CF_INLINE void __CFCSetPutHasHashValue(CFMutableCharacterSetRef cset, Boolean hasHash) {(hasHash ? (cset->_base._cfinfo[CF_INFO_BITS] |= __kCFCharSetHasHashValue) : (cset->_base._cfinfo[CF_INFO_BITS] &= ~__kCFCharSetHasHashValue));}
 CF_INLINE void __CFCSetPutClassType(CFMutableCharacterSetRef cset, UInt32 classType) {cset->_base._cfinfo[CF_INFO_BITS] &= ~__kCFCharSetClassTypeMask;  cset->_base._cfinfo[CF_INFO_BITS] |= classType;}
 
-CF_PRIVATE Boolean __CFCharacterSetIsMutable(CFCharacterSetRef cset) {return __CFCSetIsMutable(cset);}
+// WINOBJC: This function is for Foundation's benefit; no one else should use it.
+CF_PRIVATE CF_EXPORT Boolean __CFCharacterSetIsMutable(CFCharacterSetRef cset) {return __CFCSetIsMutable(cset);}
 
 /* Inline contents accessor macros
 */

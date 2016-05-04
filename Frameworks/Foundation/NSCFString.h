@@ -14,7 +14,11 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSDate.h>
+#include <Foundation/NSString.h>
+#include "NSStringAdditionsForCF.h"
 
-@interface NSDatePrototype : NSDate
+@interface NSStringPrototype : NSString
+@end
+
+@interface NSMutableStringPrototype : NSMutableString
 @end

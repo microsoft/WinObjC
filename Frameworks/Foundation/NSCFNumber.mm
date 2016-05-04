@@ -18,7 +18,7 @@
 #import "BridgeHelpers.h"
 #import "CFHelpers.h"
 #import "CFFoundationInternal.h"
-#import "NSNumberPrototype.h"
+#import "NSCFNumber.h"
 #import "NSNumberInternal.h"
 #import <CoreFoundation/CFNumber.h>
 
@@ -33,11 +33,13 @@ enum { kCFNumberSInt128Type = 17 };
 
 @implementation NSNumberPrototype
 
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
 // Helper macro for NSNumberPrototype initializers (signed)
 // Var args are the signature of the initializer
 #define NS_NUMBER_INIT_IMPL(cfNumberType, ...)                                                                           \
     (instancetype) __VA_ARGS__ num {                                                                                     \
-        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(NULL, cfNumberType, &num))); \
+        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, cfNumberType, &num))); \
     }
 
 - NS_NUMBER_INIT_IMPL(kCFNumberCharType, initWithChar:(char));
@@ -57,7 +59,7 @@ enum { kCFNumberSInt128Type = 17 };
 #define NS_NUMBER_INIT_UNSIGNED_IMPL(cfNumberType, intermediateType, ...)                                                      \
     (instancetype) __VA_ARGS__ num {                                                                                           \
         intermediateType castedNum = static_cast<intermediateType>(num);                                                       \
-        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(NULL, cfNumberType, &castedNum))); \
+        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, cfNumberType, &castedNum))); \
     }
 
 - NS_NUMBER_INIT_UNSIGNED_IMPL(kCFNumberSInt16Type, int16_t, initWithUnsignedChar:(unsigned char));
@@ -71,7 +73,7 @@ enum { kCFNumberSInt128Type = 17 };
     CFSInt128Struct castedNum;
     castedNum.low = num;
     return reinterpret_cast<NSNumberPrototype*>(
-        static_cast<NSNumber*>(CFNumberCreate(NULL, static_cast<CFNumberType>(kCFNumberSInt128Type), &castedNum)));
+        static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, static_cast<CFNumberType>(kCFNumberSInt128Type), &castedNum)));
 }
 
 // For bool, return the extant constants

@@ -14,7 +14,11 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSDate.h>
+#include <Foundation/NSMutableAttributedString.h>
+#import "BridgeHelpers.h"
 
-@interface NSDatePrototype : NSDate
+@interface NSAttributedStringPrototype : NSAttributedString
+@end
+
+@interface NSMutableAttributedStringPrototype : NSMutableAttributedString
 @end

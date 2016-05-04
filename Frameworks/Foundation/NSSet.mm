@@ -22,14 +22,14 @@
 #include "Foundation/NSEnumerator.h"
 #include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
-#include "NSSetConcrete.h"
+#include "NSCFSet.h"
 #include "VAListHelper.h"
 #include "NSRaise.h"
 #include "BridgeHelpers.h"
 
 @implementation NSSet
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSSet, NSSetConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSSet, NSSetPrototype);
 
 /**
  @Status Interoperable

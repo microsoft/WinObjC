@@ -14,7 +14,11 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSDate.h>
+#import <Foundation/NSMutableDictionary.h>
+#import "BridgeHelpers.h"
 
-@interface NSDatePrototype : NSDate
+@interface NSDictionaryPrototype : NSDictionary
+@end
+
+@interface NSMutableDictionaryPrototype : NSMutableDictionary
 @end

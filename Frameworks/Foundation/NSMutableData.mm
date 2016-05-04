@@ -17,13 +17,13 @@
 #import <Starboard.h>
 #import <Foundation/NSMutableData.h>
 
-#import "NSDataConcrete.h"
+#import "NSCFData.h"
 
 #import <NSRaise.h>
 
 @implementation NSMutableData
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableData, NSMutableDataConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableData, NSMutableDataPrototype);
 
 /**
  @Status Interoperable

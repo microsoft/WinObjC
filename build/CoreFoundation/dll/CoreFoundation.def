@@ -106,6 +106,7 @@ LIBRARY CoreFoundation
         CFAttributedStringGetAttributeAndLongestEffectiveRange
         CFAttributedStringGetAttributesAndLongestEffectiveRange
         CFAttributedStringGetTypeID
+        _CFAttributedStringIsMutable
 
         ; CFBag.mm
         kCFTypeBagCallBacks DATA
@@ -335,6 +336,7 @@ LIBRARY CoreFoundation
         CFDictionaryGetValueIfPresent
         CFDictionaryApplyFunction
         CFDictionaryGetTypeID
+        _CFDictionaryIsMutable
 
         ; CFError.mm
         kCFErrorDomainPOSIX DATA
@@ -474,6 +476,7 @@ LIBRARY CoreFoundation
         CFArrayReplaceValues
         CFArraySetValueAtIndex
         CFArraySortValues
+        _CFArrayIsMutable
 
         ; CFMutableAttributedString.mm
         CFAttributedStringCreateMutable
@@ -516,6 +519,7 @@ LIBRARY CoreFoundation
         CFCharacterSetIntersect
         CFCharacterSetInvert
         CFCharacterSetUnion
+        __CFCharacterSetIsMutable
 
         ; CFMutableData.mm
         CFDataCreateMutable
@@ -526,6 +530,7 @@ LIBRARY CoreFoundation
         CFDataReplaceBytes
         CFDataIncreaseLength
         CFDataSetLength
+        _CFDataIsMutable
 
         ; CFMutableDictionary.mm
         CFDictionaryCreateMutable
@@ -544,6 +549,7 @@ LIBRARY CoreFoundation
         CFSetRemoveValue
         CFSetReplaceValue
         CFSetSetValue
+        _CFSetIsMutable
 
         ; CFMutableString.mm
         kCFStringTransformStripCombiningMarks DATA

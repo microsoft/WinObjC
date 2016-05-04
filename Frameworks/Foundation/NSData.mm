@@ -38,7 +38,7 @@
 #import <string>
 #import <sstream>
 #import <iomanip>
-#import "NSDataConcrete.h"
+#import "NSCFData.h"
 #import "NSRaise.h"
 #import "StringHelpers.h"
 #import "LoggingNative.h"
@@ -54,7 +54,7 @@ using namespace Windows::Foundation;
 
 @implementation NSData
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSData, NSDataConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSData, NSDataPrototype);
 
 /**
  @Status Interoperable

@@ -34,6 +34,9 @@ CF_INLINE Boolean __CFAttributedStringIsMutable(CFAttributedStringRef attrStr) {
     return __CFBitfieldGetValue(((const CFRuntimeBase *)attrStr)->_cfinfo[CF_INFO_BITS], 0, 0) ? false : true;
 }
 
+// WINOBJC: This function is for Foundation's benefit; no one else should use it.
+CF_EXPORT Boolean _CFAttributedStringIsMutable(CFAttributedStringRef attrStr) { return __CFAttributedStringIsMutable(attrStr); }
+
 CF_INLINE void __CFAttributedStringSetMutable(CFAttributedStringRef attrStr, Boolean flag) {
     __CFBitfieldSetValue(((CFRuntimeBase *)attrStr)->_cfinfo[CF_INFO_BITS], 0, 0, (flag ? 0 : 1));
 }

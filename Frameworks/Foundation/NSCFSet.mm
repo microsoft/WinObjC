@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -18,87 +18,60 @@
 #include "StubReturn.h"
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
-#include "NSSetConcrete.h"
+#include "NSCFSet.h"
 #include <CoreFoundation/CFSet.h>
 #include <vector>
 
-#pragma region Immutable Concrete Subclass
-@implementation NSSetConcrete {
-@private
-    StrongId<NSCFSet> _nscf;
-}
+#pragma region NSSetPrototype
+@implementation NSSetPrototype
 
-- (instancetype)init {
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
+- (_Nullable instancetype)init {
     return [self initWithObjects:nil count:0];
 }
 
-- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    if (self = [super init]) {
-        _nscf.attach(
-            reinterpret_cast<NSCFSet*>(static_cast<NSSet*>((CFSetCreate(NULL, (const void**)(objs), count, &kCFTypeSetCallBacks)))));
-    }
-    return self;
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    return reinterpret_cast<NSSetPrototype*>(static_cast<NSSet*>((CFSetCreate(kCFAllocatorDefault, (const void**)(objs), count, &kCFTypeSetCallBacks))));
 }
 
-- INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
-- INNER_BRIDGE_CALL(_nscf, id, member:(id)object);
-- INNER_BRIDGE_CALL(_nscf, NSEnumerator*, objectEnumerator);
+@end
 
-- INNER_BRIDGE_CALL(_nscf, NSUInteger, countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount);
+#pragma endregion
+
+#pragma region NSMutableSetPrototype
+
+@implementation NSMutableSetPrototype
+
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
+- (_Nullable instancetype)init {
+    return [self initWithObjects:nil count:0];
+}
+
+- (_Nullable instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
+    NSMutableSet* set = [self initWithCapacity:count];
+    for (unsigned i = 0; i < count; i++) {
+        [set addObject:objs[i]];
+    }
+
+    return reinterpret_cast<NSMutableSetPrototype*>(set);
+}
+
+- (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems {
+    return reinterpret_cast<NSMutableSetPrototype*>((CFSetCreateMutable(kCFAllocatorDefault, numItems, &kCFTypeSetCallBacks)));
+}
 
 @end
 #pragma endregion
 
-#pragma region Mutable Concrete Subclass
-@implementation NSMutableSetConcrete {
-@private
-    StrongId<NSCFSet> _nscf;
-}
-
-- (instancetype)init {
-    return [self initWithObjects:nil count:0];
-}
-
-- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    if (self = [self initWithCapacity:count]) {
-        for (unsigned i = 0; i < count; i++) {
-            [_nscf addObject:objs[i]];
-        }
-    }
-    return self;
-}
-
-- (instancetype)initWithCapacity:(NSUInteger)numItems {
-    if (self = [super init]) {
-        _nscf.attach(reinterpret_cast<NSCFSet*>(static_cast<NSSet*>((CFSetCreateMutable(NULL, numItems, &kCFTypeSetCallBacks)))));
-    }
-    return self;
-}
-
-- INNER_BRIDGE_CALL(_nscf, NSUInteger, count);
-- INNER_BRIDGE_CALL(_nscf, id, member:(id)object);
-- INNER_BRIDGE_CALL(_nscf, NSEnumerator*, objectEnumerator);
-- INNER_BRIDGE_CALL(_nscf, void, addObject:(id)object);
-- INNER_BRIDGE_CALL(_nscf, void, removeObject:(id)object);
-- INNER_BRIDGE_CALL(_nscf, void, removeAllObjects);
-
+@interface NSCFSet : NSMutableSet
 @end
-#pragma endregion
 
 #pragma region NSCF Bridged Class
 @implementation NSCFSet
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
-
-- (instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    FAIL_FAST();
-    return nil;
-}
-
-- (instancetype)initWithCapacity:(NSUInteger)numElements {
-    FAIL_FAST();
-    return nil;
-}
 
 - (unsigned)count {
     return CFSetGetCount(static_cast<CFSetRef>(self));
@@ -122,15 +95,30 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
 }
 
 - (void)addObject:(id)object {
+    BRIDGED_THROW_IF_IMMUTABLE(_CFSetIsMutable, CFSetRef);
     CFSetAddValue(static_cast<CFMutableSetRef>(self), object);
 }
 
 - (void)removeObject:(id)object {
+    BRIDGED_THROW_IF_IMMUTABLE(_CFSetIsMutable, CFSetRef);
     CFSetRemoveValue(static_cast<CFMutableSetRef>(self), object);
 }
 
 - (void)removeAllObjects {
+    BRIDGED_THROW_IF_IMMUTABLE(_CFSetIsMutable, CFSetRef);
     CFSetRemoveAllValues(static_cast<CFMutableSetRef>(self));
+}
+
+- (NSObject*)copyWithZone:(NSZone*)zone {
+    if (_CFSetIsMutable((CFSetRef)self)) {
+        return (NSObject*)CFSetCreateCopy(kCFAllocatorDefault, (CFSetRef)self);
+    }
+
+    return [self retain];
+}
+
+- (NSObject*)mutableCopyWithZone:(NSZone*)zone {
+    return (NSObject*)CFSetCreateMutableCopy(kCFAllocatorDefault, 0, (CFSetRef)self);
 }
 
 - BRIDGED_COLLECTION_FAST_ENUMERATION(CFSet);

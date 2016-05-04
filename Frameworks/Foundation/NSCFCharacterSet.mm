@@ -18,68 +18,40 @@
 #include "StubReturn.h"
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
-#include "NSCharacterSetConcrete.h"
+#include "NSCFCharacterSet.h"
 #include <CoreFoundation/CFURLComponents.h>
 #include <CoreFoundation/CFCharacterSet.h>
 #include <Foundation/NSData.h>
 
-#pragma region NSCharacterSetConcrete
+#pragma region NSCharacterSetPrototype
+@implementation NSCharacterSetPrototype
 
-@implementation NSCharacterSetConcrete {
-@private
-    StrongId<NSCharacterSet> _nscf;
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
+- (_Nullable instancetype)init {
+    return reinterpret_cast<NSCharacterSetPrototype*>(
+        static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(kCFAllocatorDefault, CFSTR(""))));
 }
-
-- (instancetype)init {
-    if (self = [super init]) {
-        _nscf.attach(static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(NULL, CFSTR(""))));
-    }
-    return self;
-}
-
-- INNER_BRIDGE_CALL(_nscf, BOOL, characterIsMember:(unichar)aCharacter);
-- INNER_BRIDGE_CALL(_nscf, BOOL, hasMemberInPlane:(uint8_t)thePlane);
-- INNER_BRIDGE_CALL(_nscf, BOOL, isSupersetOfSet:(NSCharacterSet*)theOtherSet);
-- INNER_BRIDGE_CALL(_nscf, BOOL, longCharacterIsMember:(UTF32Char)theLongChar);
-- INNER_BRIDGE_CALL(_nscf, NSData*, bitmapRepresentation);
 
 @end
-
 #pragma endregion
 
-#pragma region NSMutableCharacterSetConcrete
+#pragma region NSMutableCharacterSetPrototype
+@implementation NSMutableCharacterSetPrototype
 
-@implementation NSMutableCharacterSetConcrete {
-@private
-    StrongId<NSMutableCharacterSet> _nscf;
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
+- (_Nullable instancetype)init {
+    return reinterpret_cast<NSMutableCharacterSetPrototype*>(CFCharacterSetCreateMutable(kCFAllocatorDefault));
 }
-
-- (instancetype)init {
-    if (self = [super init]) {
-        _nscf.attach(static_cast<NSMutableCharacterSet*>(CFCharacterSetCreateMutable(NULL)));
-    }
-    return self;
-}
-
-- INNER_BRIDGE_CALL(_nscf, BOOL, characterIsMember:(unichar)aCharacter);
-- INNER_BRIDGE_CALL(_nscf, BOOL, hasMemberInPlane:(uint8_t)thePlane);
-- INNER_BRIDGE_CALL(_nscf, BOOL, isSupersetOfSet:(NSCharacterSet*)theOtherSet);
-- INNER_BRIDGE_CALL(_nscf, BOOL, longCharacterIsMember:(UTF32Char)theLongChar);
-- INNER_BRIDGE_CALL(_nscf, NSData*, bitmapRepresentation);
-
-- INNER_BRIDGE_CALL(_nscf, void, addCharactersInRange:(NSRange)aRange);
-- INNER_BRIDGE_CALL(_nscf, void, removeCharactersInRange:(NSRange)aRange);
-- INNER_BRIDGE_CALL(_nscf, void, addCharactersInString:(NSString*)aString);
-- INNER_BRIDGE_CALL(_nscf, void, removeCharactersInString:(NSString*)aString);
-- INNER_BRIDGE_CALL(_nscf, void, formIntersectionWithCharacterSet:(NSCharacterSet*)otherSet);
-- INNER_BRIDGE_CALL(_nscf, void, formUnionWithCharacterSet:(NSCharacterSet*)otherSet);
-- INNER_BRIDGE_CALL(_nscf, void, invert);
 
 @end
-
 #pragma endregion
 
 #pragma region NSCFCharacterSet
+
+@interface NSCFCharacterSet : NSMutableCharacterSet
+@end
 
 @implementation NSCFCharacterSet
 
@@ -106,39 +78,50 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFCharacterSetRef, CFCharacterSetGetTypeID, NSChara
 }
 
 - (void)addCharactersInRange:(NSRange)aRange {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetAddCharactersInRange(static_cast<CFMutableCharacterSetRef>(self), CFRange{ aRange.location, aRange.length });
 }
 
 - (void)removeCharactersInRange:(NSRange)aRange {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetRemoveCharactersInRange(static_cast<CFMutableCharacterSetRef>(self), CFRange{ aRange.location, aRange.length });
 }
 
 - (void)addCharactersInString:(NSString*)aString {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetAddCharactersInString(static_cast<CFMutableCharacterSetRef>(self), static_cast<CFStringRef>(aString));
 }
 
 - (void)removeCharactersInString:(NSString*)aString {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetRemoveCharactersInString(static_cast<CFMutableCharacterSetRef>(self), static_cast<CFStringRef>(aString));
 }
 
 - (void)formIntersectionWithCharacterSet:(NSCharacterSet*)otherSet {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetIntersect(static_cast<CFMutableCharacterSetRef>(self), static_cast<CFCharacterSetRef>(otherSet));
 }
 
 - (void)formUnionWithCharacterSet:(NSCharacterSet*)otherSet {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetUnion(static_cast<CFMutableCharacterSetRef>(self), static_cast<CFCharacterSetRef>(otherSet));
 }
 
 - (void)invert {
+    BRIDGED_THROW_IF_IMMUTABLE(__CFCharacterSetIsMutable, CFCharacterSetRef);
     CFCharacterSetInvert(static_cast<CFMutableCharacterSetRef>(self));
 }
 
-- (instancetype)copyWithZone:(NSZone*)zone {
-    return static_cast<NSCharacterSet*>(CFCharacterSetCreateCopy(nullptr, static_cast<CFCharacterSetRef>(self)));
+- (NSObject*)copyWithZone:(NSZone*)zone {
+    if (__CFCharacterSetIsMutable(static_cast<CFCharacterSetRef>(self))) {
+        return reinterpret_cast<NSCFCharacterSet*>(static_cast<NSMutableCharacterSet*>(CFCharacterSetCreateCopy(nullptr, static_cast<CFCharacterSetRef>(self))));
+    }
+
+    return [self retain];
 }
 
-- (instancetype)mutableCopyWithZone:(NSZone*)zone {
-    return static_cast<NSCharacterSet*>(CFCharacterSetCreateMutableCopy(nullptr, static_cast<CFCharacterSetRef>(self)));
+- (NSObject*)mutableCopyWithZone:(NSZone*)zone {
+    return reinterpret_cast<NSCFCharacterSet*>(static_cast<NSMutableCharacterSet*>(CFCharacterSetCreateMutableCopy(nullptr, static_cast<CFCharacterSetRef>(self))));
 }
 
 @end

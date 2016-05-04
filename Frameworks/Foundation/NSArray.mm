@@ -34,7 +34,8 @@
 #include "VAListHelper.h"
 #include "LoggingNative.h"
 #include "NSRaise.h"
-#include "NSArrayConcrete.h"
+#include "NSCFArray.h"
+#include "BridgeHelpers.h"
 
 static const wchar_t* TAG = L"NSArray";
 
@@ -42,7 +43,7 @@ static const wchar_t* TAG = L"NSArray";
 
 @implementation NSArray
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSArray, NSArrayConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSArray, NSArrayPrototype);
 
 /**
  @Status Interoperable
@@ -530,24 +531,22 @@ typedef NSInteger (*compFuncType)(id, id, void*);
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingSelector:(SEL)selector {
-    NSMutableArray* newArray = [NSMutableArray alloc];
-    [newArray initWithArray:self];
+    NSMutableArray* newArray = [NSMutableArray arrayWithArray:self];
 
     [newArray sortUsingSelector:selector];
 
-    return [newArray autorelease];
+    return newArray;
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)sortedArrayUsingDescriptors:(NSArray*)descriptors {
-    NSMutableArray* newArray = [NSMutableArray alloc];
-    [newArray initWithArray:self];
+    NSMutableArray* newArray = [NSMutableArray arrayWithArray:self];
 
     [newArray sortUsingDescriptors:descriptors];
 
-    return [newArray autorelease];
+    return newArray;
 }
 
 /**

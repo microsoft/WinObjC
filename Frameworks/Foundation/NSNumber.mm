@@ -18,7 +18,7 @@
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSString.h"
 #import "CFFoundationInternal.h"
-#import "NSNumberPrototype.h"
+#import "NSCFNumber.h"
 #import "NSNumberInternal.h"
 #import "BridgeHelpers.h"
 

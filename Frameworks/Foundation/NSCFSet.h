@@ -14,7 +14,13 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSDate.h>
+#import <Foundation/NSMutableSet.h>
+#import "BridgeHelpers.h"
 
-@interface NSDatePrototype : NSDate
+#pragma region NSSetPrototype
+@interface NSSetPrototype : NSSet
 @end
+
+@interface NSMutableSetPrototype : NSMutableSet
+@end
+#pragma endregion

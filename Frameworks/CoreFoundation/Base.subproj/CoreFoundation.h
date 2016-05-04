@@ -55,6 +55,7 @@
 
 #include <CoreFoundation/CFBase.h>
 #include <CoreFoundation/CFArray.h>
+#include <CoreFoundation/CFAttributedString.h>
 #include <CoreFoundation/CFBag.h>
 #include <CoreFoundation/CFBinaryHeap.h>
 #include <CoreFoundation/CFBitVector.h>

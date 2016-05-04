@@ -20,10 +20,12 @@
 #import "Foundation/NSMutableCharacterSet.h"
 #import "Foundation/NSMutableString.h"
 #import "CoreFoundation/CoreFoundation.h"
-#import "NSCharacterSetConcrete.h"
+#import "NSCFCharacterSet.h"
 #import "NSRaise.h"
 
 @implementation NSCharacterSet
+
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSCharacterSet, NSMutableCharacterSetPrototype);
 
 /**
  @Status Interoperable
@@ -176,21 +178,21 @@
  @Status Interoperable
 */
 + (instancetype)characterSetWithCharactersInString:(NSString*)aString {
-    return static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(nullptr, static_cast<CFStringRef>(aString)));
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(nullptr, static_cast<CFStringRef>(aString))) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)characterSetWithRange:(NSRange)aRange {
-    return static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInRange(nullptr, CFRange{ aRange.location, aRange.length }));
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInRange(nullptr, CFRange{ aRange.location, aRange.length })) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
-    return static_cast<NSCharacterSet*>(CFCharacterSetCreateWithBitmapRepresentation(nullptr, static_cast<CFDataRef>(data)));
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithBitmapRepresentation(nullptr, static_cast<CFDataRef>(data))) autorelease];
 }
 
 /**
@@ -198,17 +200,6 @@
 */
 + (instancetype)characterSetWithContentsOfFile:(NSString*)path {
     return [NSCharacterSet characterSetWithBitmapRepresentation:[NSData dataWithContentsOfFile:path]];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSCharacterSet class]) {
-        return [NSCharacterSetConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
 }
 
 /**

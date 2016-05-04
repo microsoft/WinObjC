@@ -20,9 +20,11 @@
 
 #import "unicode/uniset.h"
 #include "NSRaise.h"
-#include "NSCharacterSetConcrete.h"
+#include "NSCFCharacterSet.h"
 
 @implementation NSMutableCharacterSet
+
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableCharacterSet, NSMutableCharacterSetPrototype);
 
 + (instancetype)alphanumericCharacterSet {
     return [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
@@ -122,17 +124,6 @@
 
 + (instancetype)characterSetWithContentsOfFile:(NSString*)path {
     return [[NSCharacterSet characterSetWithContentsOfFile:path] mutableCopy];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSMutableCharacterSet class]) {
-        return [NSMutableCharacterSetConcrete allocWithZone:zone];
-    }
-
-    return [super allocWithZone:zone];
 }
 
 /**

@@ -21,7 +21,7 @@
 #import "LoggingNative.h"
 #import "CFHelpers.h"
 #import "NSRaise.h"
-#import "NSArrayConcrete.h"
+#import "NSCFArray.h"
 #import "BridgeHelpers.h"
 
 #include <algorithm>
@@ -32,7 +32,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 
 @implementation NSMutableArray
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableArray, NSMutableArrayConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableArray, NSMutableArrayPrototype);
 
 /**
  @Status Interoperable
@@ -212,9 +212,10 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)removeObjectsAtIndexes:(NSIndexSet*)indexSet {
-    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger index, BOOL* stop) {
-        [self removeObjectAtIndex:index];
-    }];
+    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse
+                               usingBlock:^(NSUInteger index, BOOL* stop) {
+                                   [self removeObjectAtIndex:index];
+                               }];
 }
 
 /**

@@ -39,6 +39,12 @@ CF_EXPORT unsigned long _CFDictionaryFastEnumeration(CFDictionaryRef dictionary,
                                                      void* stackbuffer,
                                                      unsigned long count);
 CF_EXPORT unsigned long _CFSetFastEnumeration(CFSetRef set, NSFastEnumerationState* state, void* stackbuffer, unsigned long count);
+CF_EXPORT Boolean _CFDictionaryIsMutable(CFDictionaryRef dictionary);
+CF_EXPORT Boolean _CFArrayIsMutable(CFArrayRef array);
+CF_PRIVATE CF_EXPORT Boolean __CFCharacterSetIsMutable(CFCharacterSetRef cset);
+CF_EXPORT Boolean _CFDataIsMutable(CFDataRef data);
+CF_EXPORT Boolean _CFAttributedStringIsMutable(CFAttributedStringRef attrStr);
+CF_EXPORT Boolean _CFSetIsMutable(CFSetRef hc);
 
 // Copied from CFFileUtilities.c
 #if DEPLOYMENT_TARGET_WINDOWS

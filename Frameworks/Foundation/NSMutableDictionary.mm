@@ -20,12 +20,12 @@
 #include "Foundation/NSMutableDictionary.h"
 #include "CoreFoundation/CFDictionary.h"
 #include "NSRaise.h"
-#include "NSDictionaryConcrete.h"
+#include "NSCFDictionary.h"
 #include "BridgeHelpers.h"
 
 @implementation NSMutableDictionary
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableDictionary, NSMutableDictionaryConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableDictionary, NSMutableDictionaryPrototype);
 
 /**
  @Status Interoperable

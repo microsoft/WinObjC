@@ -23,13 +23,16 @@
 
 #pragma region Factory Class
 @implementation NSDatePrototype
+
+PROTOTYPE_CLASS_REQUIRED_IMPLS
+
 - (instancetype)initWithString:(NSString*)string {
     StrongId<NSDateFormatter> formatter;
     formatter.attach([NSDateFormatter new]);
     [formatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"]];
     [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"];
     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    return [formatter dateFromString:string];
+    return static_cast<NSDatePrototype*>([formatter dateFromString:string]);
 }
 
 - (instancetype)initWithTimeIntervalSinceReferenceDate:(double)ref {
@@ -44,6 +47,9 @@
 #pragma endregion
 
 #pragma region NSCF Bridged Class
+@interface NSCFDate : NSDate
+@end
+
 @implementation NSCFDate
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDateRef, CFDateGetTypeID, NSDate, NSCFDate)

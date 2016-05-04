@@ -18,14 +18,14 @@
 #import <Foundation/NSMutableAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
 #import "NSRaise.h"
-#import "NSMutableAttributedStringConcrete.h"
+#import "NSCFAttributedString.h"
 #import "BridgeHelpers.h"
 
 #import <algorithm>
 
 @implementation NSAttributedString
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSAttributedString, NSAttributedStringConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSAttributedString, NSAttributedStringPrototype);
 
 /**
  @Status Interoperable

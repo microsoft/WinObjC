@@ -507,6 +507,8 @@ TEST(NSArray, MutableCopying) {
         ASSERT_TRUE([array indexOfObjectIdenticalTo:entry] != NSNotFound);
     }
 
+    ASSERT_NO_THROW([arrayMutableCopy1 addObject:@"testStringPleaseIgnore"]);
+
     NSMutableArray* arrayMutableCopy2 = (NSMutableArray*)[arrayMutableCopy1 mutableCopy];
     ASSERT_TRUE([arrayMutableCopy2 isKindOfClass:[NSMutableArray class]]);
     ASSERT_NE(arrayMutableCopy2, arrayMutableCopy1);

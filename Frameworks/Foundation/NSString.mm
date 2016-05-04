@@ -36,7 +36,7 @@
 
 #include "ForFoundationOnly.h"
 #include "LoggingNative.h"
-#include "NSStringPrototype.h"
+#include "NSCFString.h"
 #include "NSRaise.h"
 #include "CFFoundationInternal.h"
 #include "BridgeHelpers.h"

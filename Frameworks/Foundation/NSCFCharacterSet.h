@@ -14,7 +14,11 @@
 //
 //******************************************************************************
 #pragma once
-#include <Foundation/NSDate.h>
+#include "BridgeHelpers.h"
+#include <Foundation/NSMutableCharacterSet.h>
 
-@interface NSDatePrototype : NSDate
+@interface NSCharacterSetPrototype : NSCharacterSet
+@end
+
+@interface NSMutableCharacterSetPrototype : NSMutableCharacterSet
 @end

@@ -16,8 +16,7 @@
 
 #include "Starboard.h"
 #include <Foundation/NSMutableString.h>
-#include "NSStringPrototype.h"
-#include "NSMutableStringPrototype.h"
+#include "NSCFString.h"
 #include "NSRaise.h"
 #include "BridgeHelpers.h"
 

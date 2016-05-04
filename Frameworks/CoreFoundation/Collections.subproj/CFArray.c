@@ -96,6 +96,11 @@ CF_INLINE CFIndex __CFArrayGetType(CFArrayRef array) {
     return __CFBitfieldGetValue(((const CFRuntimeBase *)array)->_cfinfo[CF_INFO_BITS], 1, 0);
 }
 
+// WINOBJC: This function is for Foundation's benefit; no one else should use it.
+CF_EXPORT Boolean _CFArrayIsMutable(CFArrayRef array) {
+    return __kCFArrayDeque == __CFArrayGetType(array);
+}
+
 CF_INLINE CFIndex __CFArrayGetSizeOfType(CFIndex t) {
     CFIndex size = 0;
         size += sizeof(struct __CFArray);

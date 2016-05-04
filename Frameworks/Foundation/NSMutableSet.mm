@@ -19,12 +19,12 @@
 #include "Foundation/NSMutableSet.h"
 #include "Foundation/NSMutableArray.h"
 #include "NSRaise.h"
-#include "NSSetConcrete.h"
+#include "NSCFSet.h"
 #include "BridgeHelpers.h"
 
 @implementation NSMutableSet
 
-+ ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSMutableSet, NSMutableSetConcrete);
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableSet, NSMutableSetPrototype);
 
 /**
  @Status Interoperable

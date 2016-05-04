@@ -18,17 +18,6 @@
 #include "NSRaise.h"
 
 // Helper macro for toll-free bridged classes - all must override the following set of functions
-#define BRIDGED_CLASS_REQUIRED_DECLS                                  \
-    +(void)load;                                                      \
-    -(_Nonnull instancetype)retain;                                   \
-    -(oneway void)release;                                            \
-    -(_Nonnull instancetype)autorelease;                              \
-    -(NSUInteger)retainCount;                                         \
-    -(void)dealloc;                                                   \
-    +(_Nonnull instancetype)allocWithZone : (NSZone * _Nullable)zone; \
-    -(_Nonnull Class)classForCoder;
-
-// Helper macro for toll-free bridged classes - all must override the following set of functions
 // Provide our own implementations of retain and release so that the bridging works out.
 
 // CFBridgedTypeRef:        Name of CF version of a bridged class,                              ie:  CFArrayRef
@@ -90,6 +79,10 @@ __pragma(clang diagnostic pop) \
                                                \
     -(oneway void)release {                    \
         /* No-op, prototypes are singletons */ \
+    }                                          \
+                                               \
+    -(id)autorelease {                         \
+        return self;                           \
     }
 
 // Helper to determine if a concrete class should be used.
@@ -126,16 +119,6 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
     }
 
 // Helper macro for implementing allocWithZone
-#define ALLOC_CONCRETE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedConcreteType) \
-    (NSObject*) allocWithZone : (NSZone*)zone {                                 \
-        if (self == [NSBridgedType class]) {                                    \
-            return [NSBridgedConcreteType allocWithZone:zone];                  \
-        }                                                                       \
-                                                                                \
-        return [super allocWithZone:zone];                                      \
-    }
-
-// Helper macro for implementing allocWithZone
 #define ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPrototypeType)                            \
     (NSObject*) allocWithZone : (NSZone*)zone {                                                              \
         if (self == [NSBridgedType class]) {                                                                 \
@@ -149,4 +132,9 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
 #define BRIDGED_COLLECTION_FAST_ENUMERATION(CFBridgedType)                                                                           \
     (NSUInteger) countByEnumeratingWithState : (NSFastEnumerationState*)state objects : (id*)stackBuf count : (NSUInteger)maxCount { \
         return _##CFBridgedType##FastEnumeration((CFBridgedType##Ref)self, state, stackBuf, maxCount);                               \
+    }
+
+#define BRIDGED_THROW_IF_IMMUTABLE(ISMutableFN, CFBridgedType) \
+    if (!ISMutableFN((CFBridgedType)self)) { \
+        [self doesNotRecognizeSelector:_cmd]; \
     }
