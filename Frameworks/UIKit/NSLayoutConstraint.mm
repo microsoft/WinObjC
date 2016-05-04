@@ -18,6 +18,8 @@
 
 #include "UIKit/UIView.h"
 #include "UIViewInternal.h"
+#include "UIView+AutoLayout.h"
+#include "NSLayoutConstraint+AutoLayout.h"
 #include "AutoLayout.h"
 
 #include <regex>
@@ -375,7 +377,9 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return item;
 }
 
-@implementation NSLayoutConstraint
+@implementation NSLayoutConstraint {
+    __unsafe_unretained UIView* _view;
+}
 
 // Constraints are interleaved with predicates. There should be one more constraint than predicate.
 
@@ -619,9 +623,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 + (instancetype)allocWithZone:(NSZone*)zone {
     NSLayoutConstraint* ret = [super allocWithZone:zone];
     ret->priv = new NSLayoutConstraintPrivateState();
-    if ([ret conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-        [ret autoLayoutAlloc];
-    }
+    [ret autoLayoutAlloc];
     return ret;
 }
 
@@ -762,35 +764,87 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 */
 - (void)dealloc {
     TraceVerbose(TAG, L"Deallocing NSLayoutConstraint");
-    if ([self conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-        [self autoLayoutDealloc];
-    }
+    [self autoLayoutDealloc];
     delete self->priv;
     [super dealloc];
 }
 
-- (void)printConstraint {
+- (void)_printConstraint {
     printConstraint(self);
 }
 
-+ (void)printConstraints:(NSArray*)constraints {
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (BOOL)isActive {
+    return (_view != nil);
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (void)setActive:(BOOL)active {
+    if (active == self.isActive) {
+        return;
+    }
+
+    UIView* firstItem = (UIView*)self.firstItem;
+    UIView* secondItem = (UIView*)self.secondItem;
+
+    if (active) {
+        if (firstItem == nil && secondItem == nil) {
+            [NSException raise:NSInvalidArgumentException format:@"Both items cannot be nil!"];
+        } else if (firstItem == nil || secondItem == nil) {
+            // firstItem should not be nil, but I've seen it happen when coming from NIBs. Try to carry on.
+            [firstItem.superview addConstraint:self];
+            [secondItem.superview addConstraint:self];
+        } else if (firstItem.superview == secondItem.superview) {
+            [firstItem.superview addConstraint:self];
+        } else if (firstItem.superview == secondItem) {
+            [secondItem addConstraint:self];
+        } else if (secondItem.superview == firstItem) {
+            [firstItem addConstraint:self];
+        }
+    } else {
+        // _view is set by _setView, called by UIView add/removeConstraint
+        [_view removeConstraint:self];
+    }
+}
+
+- (void)_setView:(UIView*)view {
+    _view = view;
+}
+
++ (void)_printConstraints:(NSArray*)constraints {
     printConstraints(constraints);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (void)activateConstraints:(NSArray*)constraints {
-    UNIMPLEMENTED();
+    for (NSObject* constraint in constraints) {
+        if (![constraint isKindOfClass:[NSLayoutConstraint class]]) {
+            [NSException raise:NSInvalidArgumentException format:@"Not all objects in array of type NSLayoutConstraint!"];
+        }
+        ((NSLayoutConstraint*)constraint).active = YES;
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (void)deactivateConstraints:(NSArray*)constraints {
-    UNIMPLEMENTED();
+    for (NSObject* constraint in constraints) {
+        if (![constraint isKindOfClass:[NSLayoutConstraint class]]) {
+            [NSException raise:NSInvalidArgumentException format:@"Not all objects in array of type NSLayoutConstraint!"];
+        }
+        ((NSLayoutConstraint*)constraint).active = NO;
+    }
 }
 
 @end

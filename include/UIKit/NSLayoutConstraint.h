@@ -107,10 +107,10 @@ UIKIT_EXPORT_CLASS
                         multiplier:(CGFloat)multiplier
                           constant:(CGFloat)c;
 
-@property (getter=isActive) BOOL active STUB_PROPERTY;
+@property (getter=isActive) BOOL active;
 
-+ (void)activateConstraints:(NSArray*)constraints STUB_METHOD;
-+ (void)deactivateConstraints:(NSArray*)constraints STUB_METHOD;
++ (void)activateConstraints:(NSArray*)constraints;
++ (void)deactivateConstraints:(NSArray*)constraints;
 
 @property (copy) NSString* identifier STUB_PROPERTY;
 @property BOOL shouldBeArchived STUB_PROPERTY;

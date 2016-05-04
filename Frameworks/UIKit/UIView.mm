@@ -26,7 +26,9 @@
 #import "UIGestureRecognizerInternal.h"
 #import "CALayerInternal.h"
 #import "CAAnimationInternal.h"
-#import "AutoLayout.h"
+#import <AutoLayout.h>
+#import <NSLayoutConstraint+AutoLayout.h>
+#import <UIView+AutoLayout.h>
 #import <math.h>
 #import <Windows.h>
 #import <LoggingNative.h>
@@ -110,9 +112,7 @@ int viewCount = 0;
 
     static bool isAutoLayoutInitialized = InitializeAutoLayout();
 
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self autoLayoutAlloc];
-    }
+    [self autoLayoutAlloc];
 
     self->layer.attach([[[self class] layerClass] new]);
     [self->layer setDelegate:self];
@@ -272,9 +272,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
             ![coder decodeInt32ForKey:@"UIViewDoesNotTranslateAutoresizingMaskIntoConstraints"];
     }
 
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self autoLayoutInitWithCoder:coder];
-    }
+    [self autoLayoutInitWithCoder:coder];
 
     if ([coder containsValueForKey:@"UIViewAutolayoutConstraints"]) {
         NSArray* constraints = [coder decodeObjectForKey:@"UIViewAutolayoutConstraints"];
@@ -288,7 +286,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
                     NSLayoutConstraint* wayward = [removeConstraints objectAtIndex:i];
                     if (wayward == constraint) {
                         NSTraceVerbose(TAG, @"Removing constraint (%@)", [wayward description]);
-                        [wayward printConstraint];
+                        [wayward _printConstraint];
                         remove = true;
                         break;
                     }
@@ -296,9 +294,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 
                 if (![priv->constraints containsObject:constraint] && !remove) {
                     [priv->constraints addObject:constraint];
-                    if ([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-                        [constraint autoLayoutConstraintAddedToView:self];
-                    }
+                    [constraint autoLayoutConstraintAddedToView:self];
                 }
             } else {
                 NSTraceVerbose(TAG, @"Skipping unsupported constraint type: %@", [constraint description]);
@@ -306,7 +302,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         }
     }
 
-    [NSLayoutConstraint printConstraints:self.constraints];
+    [NSLayoutConstraint _printConstraints:self.constraints];
 
     [self setHidden:[coder decodeInt32ForKey:@"UIHidden"]];
 
@@ -389,9 +385,10 @@ static UIView* initInternal(UIView* self, CGRect pos) {
         UIViewController* controller = [UIViewController controllerForView:self];
         if (controller != nil) {
             [controller viewWillLayoutSubviews];
-            [controller updateViewConstraints];
         }
 
+        [self updateConstraintsIfNeeded];
+        [self autoLayoutUpdateConstraints];
         [self layoutSubviews];
         [self __didLayout];
 
@@ -407,9 +404,7 @@ static UIView* initInternal(UIView* self, CGRect pos) {
 */
 - (void)layoutSubviews {
     if (priv->autoresizesSubviews) {
-        if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-            [self autoLayoutLayoutSubviews];
-        }
+        [self autoLayoutLayoutSubviews];
     }
 }
 
@@ -684,18 +679,13 @@ static float doRound(float f) {
 
     [layer setBounds:curBounds];
 
-    // Baseline constraints don't share a superview, and thus messes up our assumption of a child/sibling hierarchy.
-    // We do our autolayout in screen space, so even if the frame/bounds of the children aren't updated, we need
-    // to update the new absolute constraint positions.
+    // Baseline UIViews don't share a superview with the view it's constraining.
+    // They must also be a direct relationship to its superview.
     for (UIView* child in [self subviews]) {
-        if (child->priv->translatesAutoresizingMaskIntoConstraints) {
-            [child autoLayoutUpdateConstraints];
-        }
+        [child autoLayoutUpdateConstraints];
     }
 
-    if (self->priv->translatesAutoresizingMaskIntoConstraints) {
-        [self autoLayoutUpdateConstraints];
-    }
+    [self autoLayoutUpdateConstraints];
 
     self.accessibilityFrame = self.frame;
 }
@@ -944,6 +934,8 @@ static float doRound(float f) {
         if ([self respondsToSelector:@selector(didAddSubview:)]) {
             [self didAddSubview:subview];
         }
+
+        [self setNeedsUpdateConstraints];
 
         [subview setNeedsDisplay];
     } else {
@@ -1686,6 +1678,7 @@ static float doRound(float f) {
 */
 - (void)setAutoresizingMask:(UIViewAutoresizing)mask {
     priv->autoresizingMask = mask;
+    [self setNeedsUpdateConstraints];
 }
 
 /**
@@ -1700,6 +1693,7 @@ static float doRound(float f) {
 */
 - (void)setAutoresizesSubviews:(BOOL)autoresize {
     priv->autoresizesSubviews = autoresize;
+    [self setNeedsUpdateConstraints];
 }
 
 /**
@@ -1714,6 +1708,7 @@ static float doRound(float f) {
 */
 - (void)setTranslatesAutoresizingMaskIntoConstraints:(BOOL)translate {
     self->priv->translatesAutoresizingMaskIntoConstraints = translate;
+    [self setNeedsUpdateConstraints];
 }
 
 /**
@@ -1748,25 +1743,29 @@ static float doRound(float f) {
     }
 
     [priv->constraints addObject:constraint];
+    
+    [constraint _setView:self];
+    [constraint autoLayoutConstraintAddedToView:self];
 
-    if ([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-        [constraint autoLayoutConstraintAddedToView:self];
-    }
+    [constraint.firstItem setNeedsUpdateConstraints];
+    [constraint.secondItem setNeedsUpdateConstraints];
 
-    [self setNeedsUpdateConstraints];
 }
 
 /**
  @Status Interoperable
 */
-- (void)removeConstraint:(id)constraint {
+- (void)removeConstraint:(NSLayoutConstraint*)constraint {
+    [[constraint retain] autorelease];
+    
+    [constraint _setView:nil];
+
     [priv->constraints removeObject:constraint];
 
-    if ([constraint conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-        [constraint autoLayoutConstraintRemovedFromView];
-    }
+    [constraint autoLayoutConstraintRemovedFromView];
 
-    [self setNeedsUpdateConstraints];
+    [constraint.firstItem setNeedsUpdateConstraints];
+    [constraint.secondItem setNeedsUpdateConstraints];
 }
 
 /**
@@ -1788,7 +1787,7 @@ static float doRound(float f) {
 }
 
 - (void)_applyConstraints {
-    [self updateConstraintsIfNeeded];
+    [self updateConstraints];
 
     for (UIView* child in [self subviews]) {
         [child _applyConstraints];
@@ -1800,19 +1799,22 @@ static float doRound(float f) {
  @Notes May need some validation.
 */
 - (void)updateConstraints {
-    priv->_constraintsNeedUpdate = false;
+    priv->_constraintsNeedUpdate = NO;
 
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self autoLayoutUpdateConstraints];
-    }
+    [self autoLayoutUpdateConstraints];
 }
 
 /**
  @Status Interoperable
 */
 - (void)updateConstraintsIfNeeded {
-    if (priv->_constraintsNeedUpdate) {
-        [self updateConstraints];
+    if (self.needsUpdateConstraints) {
+        UIViewController* controller = [UIViewController controllerForView:self];
+        if (controller != nil) {
+            [controller updateViewConstraints];
+        } else {
+            [self updateConstraints];
+        }
     }
 }
 
@@ -1827,16 +1829,8 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setNeedsUpdateConstraints {
-    for (NSLayoutConstraint* constraint in(NSArray*)priv->associatedConstraints) {
-        if ([constraint.firstItem isKindOfClass:[UIView class]]) {
-            UIView* view = (UIView*)constraint.firstItem;
-            view->priv->_constraintsNeedUpdate = true;
-        }
-        if ([constraint.secondItem isKindOfClass:[UIView class]]) {
-            UIView* view = (UIView*)constraint.secondItem;
-            view->priv->_constraintsNeedUpdate = true;
-        }
-    }
+    priv->_constraintsNeedUpdate = YES;
+    [self setNeedsLayout];
 }
 
 /**
@@ -2545,9 +2539,8 @@ static float doRound(float f) {
     [priv->currentTouches release];
     layer = nil;
 
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self autoLayoutDealloc];
-    }
+    [self autoLayoutDealloc];
+
     delete priv;
 
     [super dealloc];
@@ -2699,9 +2692,7 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)invalidateIntrinsicContentSize {
-    if ([self conformsToProtocol:@protocol(AutoLayoutView)]) {
-        [self invalidateContentSize];
-    }
+    [self autoLayoutInvalidateContentSize];
 }
 
 /**

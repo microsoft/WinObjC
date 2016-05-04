@@ -111,8 +111,9 @@ public:
     NSLayoutConstraintPrivateState* priv;
 }
 - (NSLayoutConstraintPrivateState*)_privateState;
-- (void)printConstraint;
-+ (void)printConstraints:(NSArray*)constraints;
+- (void)_setView:(UIView*)view;
+- (void)_printConstraint;
++ (void)_printConstraints:(NSArray*)constraints;
 @end
 
 @interface _UILayoutGuide : UIView <UILayoutSupport>

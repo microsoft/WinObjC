@@ -14,4 +14,13 @@
 //
 //******************************************************************************
 
-extern "C" bool InitializeAutoLayout();
+#import "UIKit/UIView.h"
+
+@interface UIView (AutoLayout)
+- (void)autoLayoutInvalidateContentSize;
+- (void)autoLayoutAlloc;
+- (void)autoLayoutDealloc;
+- (void)autoLayoutLayoutSubviews;
+- (void)autoLayoutInitWithCoder:(NSCoder*)coder;
+- (void)autoLayoutUpdateConstraints;
+@end

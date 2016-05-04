@@ -14,4 +14,11 @@
 //
 //******************************************************************************
 
-extern "C" bool InitializeAutoLayout();
+#import "UIKit/NSLayoutConstraint.h"
+
+@interface NSLayoutConstraint (AutoLayout)
+- (void)autoLayoutAlloc;
+- (void)autoLayoutDealloc;
+- (void)autoLayoutConstraintAddedToView:(UIView*)view;
+- (void)autoLayoutConstraintRemovedFromView;
+@end
