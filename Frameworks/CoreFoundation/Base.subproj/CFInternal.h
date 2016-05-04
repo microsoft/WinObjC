@@ -517,8 +517,10 @@ CF_INLINE void __CFLock(volatile CFLock_t *lock) {
 }
 
 CF_INLINE void __CFUnlock(volatile CFLock_t *lock) {
-    MemoryBarrier();
-    *lock = 0;
+    // WINOBJC: Can't call MemoryBarrier() in arm due to incorrect arm intrinsics.
+    // MemoryBarrier();
+    // *lock = 0;
+    InterlockedExchange((LONG volatile *)lock, 0);
 }
 
 CF_INLINE Boolean __CFLockTry(volatile CFLock_t *lock) {

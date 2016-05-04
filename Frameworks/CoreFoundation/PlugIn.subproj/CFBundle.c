@@ -1015,7 +1015,9 @@ static CFBundleRef _CFBundleCreate(CFAllocatorRef allocator, CFURLRef bundleURL,
     
     // Do this so that we can use the dispatch_once on the ivar of this bundle safely
     //OSMemoryBarrier();
-    MemoryBarrier();
+    // WINOBJC: cant call MemoryBarrier on ARM. Instead do an interlocked operation. // MemoryBarrier();
+    LONG barrier = 0;
+    InterlockedExchange(&barrier, 1);
     
     _CFBundleAddToTables(bundle, alreadyLocked);
 

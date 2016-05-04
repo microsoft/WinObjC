@@ -317,7 +317,9 @@ CF_INLINE void returnRegularExpression(URegularExpression *regex, int32_t *check
             if (reportProgress || anchored) uregex_setFindProgressCallback(regex, NULL, NULL, &errorCode);
             if (transparentBounds) uregex_useTransparentBounds(regex, 0, &errorCode);
             if (nonAnchoringBounds) uregex_useAnchoringBounds(regex, 1, &errorCode);
-            MemoryBarrier();
+            // WINOBJC: cant call MemoryBarrier on ARM. Instead do an interlocked operation. // MemoryBarrier();
+            LONG barrier = 0;
+            InterlockedExchange(&barrier, 1);
             *checkout = 0;
         } else {
             uregex_close(regex);

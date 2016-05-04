@@ -90,6 +90,9 @@ function DeployTests($testList)
           putd -recurse $testDirectory\*.dll $testOutputDirectory
           putd -recurse $testDirectory\*.exe $testOutputDirectory
           putd -recurse $testDirectory\*.txt $testOutputDirectory
+          putd -recurse $testDirectory\*.bitmap $testOutputDirectory
+          putd -recurse $testDirectory\*.mapping $testOutputDirectory
+          putd -recurse $testDirectory\*.data $testOutputDirectory
         }
     }
     else
