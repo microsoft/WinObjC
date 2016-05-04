@@ -21,7 +21,6 @@
 #import <CoreFoundation/CFAttributedString.h>
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFType.h>
 
 typedef const struct __CTTypesetter* CTTypesetterRef;
 

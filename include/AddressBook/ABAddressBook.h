@@ -21,7 +21,6 @@
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFError.h>
 #import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFType.h>
 
 typedef CFTypeRef ABAddressBookRef;
 typedef void (*ABExternalChangeCallback)(ABAddressBookRef addressBook, CFDictionaryRef info, void* context);

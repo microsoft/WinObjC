@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSCountedSet_SanityTest) {
+TEST(NSCountedSet, SanityTest) {
     LOG_INFO("NSCountedSet sanity test: ");
 
     LOG_INFO("Basic set compare test");
@@ -41,7 +41,7 @@ TEST(Foundation, NSCountedSet_SanityTest) {
     ASSERT_EQ_MSG(0, carCount, "FAILED: carCount should be 0!\n");
 }
 
-TEST(Foundation, NSCountedSet_AddToSetTest) {
+TEST(NSCountedSet, AddToSetTest) {
     LOG_INFO("NSCountedSet add to set test: ");
 
     NSCountedSet* colorSet = [[NSCountedSet alloc] initWithCapacity:1];
@@ -79,7 +79,7 @@ TEST(Foundation, NSCountedSet_AddToSetTest) {
     [colorSet release];
 }
 
-TEST(Foundation, NSCountedSet_RemoveFromSetTest) {
+TEST(NSCountedSet, RemoveFromSetTest) {
     LOG_INFO("NSCountedSet remove from set test: ");
 
     NSCountedSet* shapeSet = [[NSCountedSet alloc] initWithCapacity:5];

@@ -27,7 +27,7 @@
 #include "stdlib.h"
 #include "windows.h"
 
-TEST(Foundation, NSFileManagerGetAttributes) {
+TEST(NSFileManager, GetAttributes) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
     GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
@@ -71,7 +71,7 @@ TEST(Foundation, NSFileManagerGetAttributes) {
                     testFileFullPath);
 }
 
-TEST(Foundation, NSFileManagerEnumateDirectoryUsingURL) {
+TEST(NSFileManager, EnumateDirectoryUsingURL) {
     // get test startup full path
     wchar_t startUpPath[_MAX_PATH];
     GetModuleFileNameW(NULL, startUpPath, _MAX_PATH);

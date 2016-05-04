@@ -18,7 +18,6 @@
 #import <Foundation/NSKeyValueCoding.h>
 #import <Starboard/String.h>
 
-#import "NSArrayInternal.h"
 #import "NSDelayedPerform.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #import "NSObject_NSKeyValueCoding-Internal.h"

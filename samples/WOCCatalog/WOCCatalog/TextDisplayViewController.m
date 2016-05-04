@@ -466,7 +466,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
 
     // font 1
     NSURL* url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/KUNSTLER.TTF"];
-    bool result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    bool result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
     if (result) {
         UIFont* font = [UIFont fontWithName:@"Kunstler Script" size:22.0];
         CTTypesetterRef typesetter =
@@ -477,7 +477,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     }
     // font 2
     url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/GOUDYSTO.TTF"];
-    result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
     if (result) {
         UIFont* font = [UIFont fontWithName:@"Goudy Stout" size:22.0];
         CTTypesetterRef typesetter =
@@ -489,7 +489,7 @@ typedef enum { shapeRectangle, shapeTriangle } ShapeType;
     }
     // font 3
     url = [NSURL fileURLWithPath:@"C:/Windows/Fonts/HARLOWSI.TTF"];
-    result = CTFontManagerRegisterFontsForURL((CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
+    result = CTFontManagerRegisterFontsForURL((__bridge CFURLRef)(url), kCTFontManagerScopeProcess, NULL);
     if (result) {
         UIFont* font = [UIFont fontWithName:@"Harlow Solid Italic" size:22.0];
         CTTypesetterRef typesetter =

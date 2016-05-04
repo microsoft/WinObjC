@@ -1,3 +1,4 @@
+// clang-format off
 /*
  * Summary: the core parser module
  * Description: Interfaces, constants and types related to the XML parser
@@ -1108,6 +1109,7 @@ typedef enum {
     XML_PARSE_HUGE      = 1<<19,/* relax any hardcoded limit from the parser */
     XML_PARSE_OLDSAX    = 1<<20,/* parse using SAX2 interface before 2.7.0 */
     XML_PARSE_IGNORE_ENC= 1<<21 /* ignore internal document encoding hint */
+    XML_PARSE_BIG_LINES = 1 <<22,
 } xmlParserOption;
 
 XMLPUBFUN void XMLCALL
@@ -1235,3 +1237,4 @@ XMLPUBFUN int XMLCALL
 }
 #endif
 #endif /* __XML_PARSER_H__ */
+// clang-format on

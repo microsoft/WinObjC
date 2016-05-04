@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSURLCredential.h>
 
-TEST(Foundation, NSURLCredential_credentialWithUser) {
+TEST(NSURLCredential, credentialWithUser) {
     NSString* user = @"user";
     NSString* pass = @"pass";
     NSURLCredential* credential = [NSURLCredential credentialWithUser:user password:pass persistence:NSURLCredentialPersistenceForSession];
@@ -32,7 +32,7 @@ TEST(Foundation, NSURLCredential_credentialWithUser) {
     ASSERT_EQ_MSG(nil, [credential certificates], "FAILED: certificates not null");
 }
 
-TEST(Foundation, NSURLCredential_credentialWithIdentity) {
+TEST(NSURLCredential, credentialWithIdentity) {
     NSArray* certs = [NSMutableArray array];
     NSURLCredential* credential =
         [NSURLCredential credentialWithIdentity:nullptr certificates:(NSArray*)certs persistence:NSURLCredentialPersistencePermanent];
@@ -46,7 +46,7 @@ TEST(Foundation, NSURLCredential_credentialWithIdentity) {
     ASSERT_TRUE_MSG(([credential certificates] != nil), "FAILED: certificates should be non null");
 }
 
-TEST(Foundation, NSURLCredential_credentialForTrust) {
+TEST(NSURLCredential, credentialForTrust) {
     NSURLCredential* credential = [NSURLCredential credentialForTrust:nullptr];
 
     ASSERT_TRUE_MSG(credential != NULL, "FAILED: credential should be non-null!");

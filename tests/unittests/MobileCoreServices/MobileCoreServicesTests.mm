@@ -27,14 +27,14 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCreatePreferredIdentifierForTa
 
     // Query for a valid file name extension.
     CFStringRef UTIIsValidForFileExtension =
-        UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@".dll"), NULL);
-    ASSERT_OBJCEQ_MSG(@"com.microsoft.windows-​dynamic-link-library",
-                      static_cast<NSString*>(UTIIsValidForFileExtension),
-                      "Expected a valid UTI for file extension '.dll'!");
+        UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR(".dll")), NULL);
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(CFSTR("com.microsoft.windows-​dynamic-link-library"), UTIIsValidForFileExtension, 0),
+                  "Expected a valid UTI for file extension '.dll'!");
 
     // Query for an invalid file name extension.
     CFStringRef UTIIsNullForFileExtension =
-        UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@".12345"), NULL);
+        UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR(".12345")), NULL);
     EXPECT_TRUE_MSG((UTIIsNullForFileExtension == NULL), "Did not expect a valid UTI for file extension '.12345'!");
 
     //
@@ -43,14 +43,14 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCreatePreferredIdentifierForTa
 
     // Query for a valid MIME type.
     CFStringRef UTIIsValidForMimeType =
-        UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, static_cast<CFStringRef>(@"video/x-mpeg"), NULL);
-    ASSERT_OBJCEQ_MSG(static_cast<NSString*>(kUTTypeMPEG),
-                      static_cast<NSString*>(UTIIsValidForMimeType),
-                      "Expected a valid UTI for MIME 'video/x-mpeg'!");
+        UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, static_cast<CFStringRef>(CFSTR("video/x-mpeg")), NULL);
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(kUTTypeMPEG, UTIIsValidForMimeType, 0),
+                  "Expected a valid UTI for MIME 'video/x-mpeg'!");
 
     // Query for an invalid MIME type.
     CFStringRef UTIIsNullForMimeType =
-        UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@"ABC/DEF"), NULL);
+        UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR("ABC/DEF")), NULL);
     EXPECT_TRUE_MSG((UTIIsNullForMimeType == NULL), "Did not expect a valid UTI for MIME 'ABC/DEF'!");
 
     //
@@ -58,8 +58,7 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCreatePreferredIdentifierForTa
     //
 
     // Query for an invalid tag.
-    CFStringRef UTIIsNullForInvalidTag =
-        UTTypeCreatePreferredIdentifierForTag(static_cast<CFStringRef>(@"XYZ"), static_cast<CFStringRef>(@".html"), NULL);
+    CFStringRef UTIIsNullForInvalidTag = UTTypeCreatePreferredIdentifierForTag(CFSTR("XYZ"), CFSTR(".html"), NULL);
     EXPECT_TRUE_MSG((UTIIsNullForInvalidTag == NULL), "Did not expect a valid UTI for tag 'XYZ'!");
 }
 
@@ -72,21 +71,25 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCreateAllIdentifiersForTag) {
 
     // Query for a valid file name extension.
     CFArrayRef UTIsValidForFileExtension =
-        UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@".aiff"), NULL);
+        UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR(".aiff")), NULL);
     CFIndex UTICountForFileExtension = CFArrayGetCount(UTIsValidForFileExtension);
     EXPECT_TRUE_MSG((UTICountForFileExtension == 2), "Expected to get two UTIs mapped to '.aiff' file extension!");
 
     // Note for the below checks to pass the order in the static map in UTType+InternalMap.mm is important.
-    ASSERT_OBJCEQ_MSG(@"public.aifc-audio",
-                      static_cast<NSString*>(const_cast<void*>(CFArrayGetValueAtIndex(UTIsValidForFileExtension, 0))),
-                      "Expected the obtained UTI from index 0 to match!");
-    ASSERT_OBJCEQ_MSG(@"public.aiff-audio",
-                      static_cast<NSString*>(const_cast<void*>(CFArrayGetValueAtIndex(UTIsValidForFileExtension, 1))),
-                      "Expected the obtained UTI from index 1 to match!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(CFSTR("public.aifc-audio"),
+                                  static_cast<CFStringRef>(CFArrayGetValueAtIndex(UTIsValidForFileExtension, 0)),
+                                  0),
+                  "Expected the obtained UTI from index 0 to match!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(CFSTR("public.aiff-audio"),
+                                  static_cast<CFStringRef>(CFArrayGetValueAtIndex(UTIsValidForFileExtension, 1)),
+                                  0),
+                  "Expected the obtained UTI from index 1 to match!");
 
     // Query for an invalid file name extension.
     CFArrayRef UTIsIsNullForFileExtension =
-        UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@".ABCXYZ"), NULL);
+        UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR(".ABCXYZ")), NULL);
     EXPECT_TRUE_MSG((UTIsIsNullForFileExtension == NULL), "Did not expect valid UTIs for file extension '.ABCXYZ'!");
 
     //
@@ -95,21 +98,23 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCreateAllIdentifiersForTag) {
 
     // Query for a valid MIME type.
     CFArrayRef UTIsIsValidForMimeType =
-        UTTypeCreateAllIdentifiersForTag(kUTTagClassMIMEType, static_cast<CFStringRef>(@"image/x-quicktime"), NULL);
+        UTTypeCreateAllIdentifiersForTag(kUTTagClassMIMEType, static_cast<CFStringRef>(CFSTR("image/x-quicktime")), NULL);
     CFIndex UTICountForMimeType = CFArrayGetCount(UTIsIsValidForMimeType);
     EXPECT_TRUE_MSG((UTICountForMimeType == 2), "Expected to get two UTIs mapped to 'image/x-quicktime' MIME type!");
 
     // Note for the below checks to pass the order in the static map in UTType+InternalMap.mm is important.
-    ASSERT_OBJCEQ_MSG(@"public.xbitmap-image",
-                      static_cast<NSString*>(const_cast<void*>(CFArrayGetValueAtIndex(UTIsIsValidForMimeType, 0))),
-                      "Expected the obtained UTI from index 0 to match!");
-    ASSERT_OBJCEQ_MSG(static_cast<NSString*>(kUTTypeQuickTimeImage),
-                      static_cast<NSString*>(const_cast<void*>(CFArrayGetValueAtIndex(UTIsIsValidForMimeType, 1))),
-                      "Expected the obtained UTI from index 1 to match!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(CFSTR("public.xbitmap-image"),
+                                  static_cast<CFStringRef>(CFArrayGetValueAtIndex(UTIsIsValidForMimeType, 0)),
+                                  0),
+                  "Expected the obtained UTI from index 0 to match!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(kUTTypeQuickTimeImage, static_cast<CFStringRef>(CFArrayGetValueAtIndex(UTIsIsValidForMimeType, 1)), 0),
+                  "Expected the obtained UTI from index 1 to match!");
 
     // Query for an invalid MIME type.
     CFArrayRef UTIsIsNullForMimeType =
-        UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@"123/789"), NULL);
+        UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR("123/789")), NULL);
     EXPECT_TRUE_MSG((UTIsIsNullForMimeType == NULL), "Did not expect a valid UTI for MIME '123/789'!");
 
     //
@@ -117,8 +122,7 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCreateAllIdentifiersForTag) {
     //
 
     // Query for an invalid tag.
-    CFArrayRef UTIIsNullForInvalidTag =
-        UTTypeCreateAllIdentifiersForTag(static_cast<CFStringRef>(@"555"), static_cast<CFStringRef>(@"A1B2/C3D4E5"), NULL);
+    CFArrayRef UTIIsNullForInvalidTag = UTTypeCreateAllIdentifiersForTag(CFSTR("555"), CFSTR("A1B2/C3D4E5"), NULL);
     EXPECT_TRUE_MSG((UTIIsNullForInvalidTag == NULL), "Did not expect a valid UTI for tag 'A1B2/C3D4E5'!");
 }
 
@@ -132,10 +136,11 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCopyPreferredTagWithClass) {
     // Query for a valid file name extension.
     CFStringRef validFileExtension = UTTypeCopyPreferredTagWithClass(kUTTypeJPEG, kUTTagClassFilenameExtension);
     // Note only the first matching value from the map (vector) in UTType+InternalMap.mm will be returned.
-    ASSERT_OBJCEQ_MSG(@".jpg", static_cast<NSString*>(validFileExtension), "Expected a valid UTI for UTI '@kUTTypeJPEG'!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo, CFStringCompare(CFSTR(".jpg"), validFileExtension, 0), "Expected a valid UTI for UTI '@kUTTypeJPEG'!");
 
     // Query for a invalid file name extension.
-    CFStringRef inValidFileExtension = UTTypeCopyPreferredTagWithClass(static_cast<CFStringRef>(@"MY-123"), kUTTagClassFilenameExtension);
+    CFStringRef inValidFileExtension =
+        UTTypeCopyPreferredTagWithClass(static_cast<CFStringRef>(CFSTR("MY-123")), kUTTagClassFilenameExtension);
     EXPECT_TRUE_MSG((inValidFileExtension == NULL), "Did not expect valid UTIs for my tag 'MyTag-123'!");
 
     //
@@ -143,19 +148,21 @@ TEST(MobileCoreServices, MobileCoreServices_UTTypeCopyPreferredTagWithClass) {
     //
 
     // Query for a valid MIME type.
-    CFStringRef validMIMEType = UTTypeCopyPreferredTagWithClass(static_cast<CFStringRef>(@"public.php-script"), kUTTagClassMIMEType);
+    CFStringRef validMIMEType = UTTypeCopyPreferredTagWithClass(static_cast<CFStringRef>(CFSTR("public.php-script")), kUTTagClassMIMEType);
     // Note only the first matching value from the map (vector) in UTType+InternalMap.mm will be returned.
-    ASSERT_OBJCEQ_MSG(@"text/x-php-script", static_cast<NSString*>(validMIMEType), "Expected a valid UTI for UTI 'public.php-script'!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(CFSTR("text/x-php-script"), validMIMEType, 0),
+                  "Expected a valid UTI for UTI 'public.php-script'!");
 
     // Query for a invalid file name extension.
-    CFStringRef inValidMimeType = UTTypeCopyPreferredTagWithClass(static_cast<CFStringRef>(@"XYZ-UTI"), kUTTagClassFilenameExtension);
+    CFStringRef inValidMimeType = UTTypeCopyPreferredTagWithClass(static_cast<CFStringRef>(CFSTR("XYZ-UTI")), kUTTagClassFilenameExtension);
     EXPECT_TRUE_MSG((inValidMimeType == NULL), "Did not expect valid UTIs for my tag 'XYZ-UTI'!");
 
     //
     // Invalid tag tests.
     //
     // Query for a invalid tag.
-    CFStringRef inValidTag = UTTypeCopyPreferredTagWithClass(kUTTypeXML, static_cast<CFStringRef>(@"MyTag"));
+    CFStringRef inValidTag = UTTypeCopyPreferredTagWithClass(kUTTypeXML, static_cast<CFStringRef>(CFSTR("MyTag")));
     EXPECT_TRUE_MSG((inValidTag == NULL), "Did not expect valid UTIs for my tag 'MyTag'!");
 }
 
@@ -185,9 +192,11 @@ TEST(MobileCoreServices, MobileCoreServices_ValidateAPIUsage) {
     LOG_INFO("MobileCoreServices API usage test: ");
 
     // Query for a valid file name extension.
-    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(@".ph4"), NULL);
+    CFStringRef UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, static_cast<CFStringRef>(CFSTR(".ph4")), NULL);
     // Query for MIME type for the obtained UTI.
     CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType);
     // Verify we got the expected result.
-    ASSERT_OBJCEQ_MSG(@"text/x-php-script", static_cast<NSString*>(MIMEType), "Expected a valid UTI for file extension '.ph4'!");
+    ASSERT_EQ_MSG(kCFCompareEqualTo,
+                  CFStringCompare(CFSTR("text/x-php-script"), MIMEType, 0),
+                  "Expected a valid UTI for file extension '.ph4'!");
 }

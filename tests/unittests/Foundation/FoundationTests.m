@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <mach/mach_time.h>
 
-TEST(Foundation, SanityTest) {
+TEST(Sanity, SanityTest) {
     LOG_INFO("Foundation sanity test: ");
 
     /*** NSArray ***/
@@ -90,7 +90,7 @@ TEST(Foundation, SanityTest) {
                      comp1.year);
 }
 
-TEST(Foundation, NSUUID) {
+TEST(NSUUID, NSUUID) {
     NSUUID* uuidA = [NSUUID UUID];
     NSUUID* uuidB = [NSUUID UUID];
     NSUUID* uuidC = [NSUUID UUID];
@@ -966,7 +966,7 @@ TEST(Foundation, KeyValueObservation_RemoveUnregistered) { // Test removing an u
     [pool release];
 }
 
-TEST(Foundation, KeyValueObservation_SelfObservationDealloc) { // Test deallocation of an object that is its own observer
+TEST(KeyValueObservation, SelfObservationDealloc) { // Test deallocation of an object that is its own observer
     TestKVOSelfObserver* observed = [[TestKVOSelfObserver alloc] init];
     EXPECT_NO_THROW([observed release]);
 }
@@ -1035,7 +1035,7 @@ TEST(Foundation, KeyValueObservation_CascadeOfDerivedKey) {
 + (id)tryToReturnANonexistentThing;
 @end
 
-TEST(Foundation, NonFatalSelectors) {
+TEST(Sanity, NonFatalSelectors) {
     WinObjC_SetMissingSelectorFatal(NO);
     EXPECT_NO_THROW([NSObject nonexistentSelector]);
     EXPECT_OBJCEQ(nil, [NSObject tryToReturnANonexistentThing]);

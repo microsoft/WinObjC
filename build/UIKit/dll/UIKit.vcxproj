@@ -22,9 +22,6 @@
     <ProjectReference Include="..\..\CoreText\dll\CoreText.vcxproj">
       <Project>{36deec5d-f77b-4c94-a63c-86fb716833de}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\AutoLayout\dll\AutoLayout.vcxproj">
       <Project>{D036FDB1-F82C-40C7-B1B4-65F499EAE116}</Project>
     </ProjectReference>
@@ -36,6 +33,9 @@
     </ProjectReference>
     <ProjectReference Include="..\..\CoreData\dll\CoreData.vcxproj">
       <Project>{42F15337-A124-47EB-A6EB-AF6681416C86}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\UIKit\lib\UIKitLib.vcxproj">
       <Project>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</Project>

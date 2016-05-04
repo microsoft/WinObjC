@@ -23,14 +23,11 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Foundation\NSKeyValueCoding.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
     <ProjectReference Include="..\lib\FoundationLib.vcxproj">
       <Project>{7D635E25-0D8D-4B9A-B9DA-53185AB8A9E5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CoreFoundationAdditions\lib\CoreFoundationAdditionsLib.vcxproj">
-      <Project>{BC8C5D49-060C-4375-904C-FE472C757E58}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

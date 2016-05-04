@@ -315,6 +315,12 @@ FOUNDATION_EXPORT const double NSFoundationVersionNumber;
 #define NSFoundationVersionNumber_iOS_5_1 890.10
 #define NSFoundationVersionNumber_iOS_6_0 993.00
 #define NSFoundationVersionNumber_iOS_6_1 993.00
+#define NSFoundationVersionNumber_iOS_7_0 1047.20
+#define NSFoundationVersionNumber_iOS_7_1 1047.25
+#define NSFoundationVersionNumber_iOS_8_0 1140.11
+#define NSFoundationVersionNumber_iOS_8_1 1141.1
+#define NSFoundationVersionNumber_iOS_8_2 1142.14
+#define NSFoundationVersionNumber_iOS_8_3 1144.17
 
 #ifndef NS_VALID_UNTIL_END_OF_SCOPE
 #define NS_VALID_UNTIL_END_OF_SCOPE __attribute__((objc_precise_lifetime))

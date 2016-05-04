@@ -16,7 +16,7 @@
 #pragma once
 
 #import <CoreVideo/CoreVideoExport.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFBase.h>
 #import <CoreVideo/CVImageBuffer.h>
 

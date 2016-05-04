@@ -29,13 +29,9 @@
 @class NSDate;
 @class NSNumber;
 
-#define __CFDICTIONARY_SIZE_BYTES (0x54)
-
 FOUNDATION_EXPORT_CLASS
 @interface NSDictionary <__covariant KeyType, __covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
 @public
-    CFMutableDictionaryRef dict;
-    uint32_t _dictSpace[((__CFDICTIONARY_SIZE_BYTES + 3) & ~3) / 4];
 }
 
 + (instancetype)dictionary;
@@ -48,7 +44,6 @@ FOUNDATION_EXPORT_CLASS
                               forKeys:(const id<NSCopying> _Nonnull[])keys
                                 count:(NSUInteger)count;
 + (instancetype)dictionaryWithObjectsAndKeys:(ObjectType)firstObject, ...;
-- (instancetype)init;
 - (instancetype)initWithContentsOfFile:(NSString*)path;
 - (instancetype)initWithContentsOfURL:(NSURL*)aURL;
 - (instancetype)initWithDictionary:(NSDictionary<KeyType, ObjectType>*)otherDictionary;

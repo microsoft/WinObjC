@@ -235,3 +235,14 @@ TEST(NSArray, Description) {
     NSArray* testArray3 = @[ @1 ];
     ASSERT_OBJCEQ(@"(1)", [testArray3 description]);
 }
+
+TEST(NSArray, ExpandBeyondCapacity) {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:1];
+
+    NSUInteger expectedCount = 10;
+    for (NSUInteger i = 0; i < expectedCount; i++) {
+        [array addObject:[NSNumber numberWithInt:i]];
+    }
+
+    ASSERT_EQ(expectedCount, [array count]);
+}

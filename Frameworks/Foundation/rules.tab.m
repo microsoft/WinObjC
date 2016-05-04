@@ -155,7 +155,7 @@ extern int yydebug;
      PERCENT = 286,
      BETWEEN = 287,
      CONTAINS = 288,
-     IN = 289,
+     YY_IN = 289,
      BEGINS_WITH = 290,
      ENDS_WITH = 291,
      LIKE = 292,
@@ -172,7 +172,7 @@ extern int yydebug;
      SELF = 303,
      FIRST = 304,
      LAST = 305,
-     SIZE = 306
+     YY_SIZE = 306
    };
 #endif
 

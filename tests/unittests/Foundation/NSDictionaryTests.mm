@@ -57,3 +57,14 @@ TEST(NSDictionary, keysSortedByValueUsingComparator) {
     NSArray* expectedArray = @[@"D", @"A", @"C", @"B" ];
     ASSERT_OBJCEQ(expectedArray, actualArray);
 }
+
+TEST(NSDictionary, ExpandBeyondCapacity) {
+    NSMutableDictionary* dictionary = [NSMutableDictionary dictionaryWithCapacity:1];
+
+    NSUInteger expectedCount = 10;
+    for (NSUInteger i = 0; i < expectedCount; i++) {
+        [dictionary setObject:@1 forKey:[NSNumber numberWithInt:i]];
+    }
+
+    ASSERT_EQ(expectedCount, [dictionary count]);
+}

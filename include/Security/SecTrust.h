@@ -16,6 +16,7 @@
 #pragma once
 
 #include <dispatch/dispatch.h>
+#import <CoreFoundation/CFArray.h>
 #import <Security/SecBase.h>
 #import <Security/SecKey.h>
 #import <Security/SecCertificate.h>

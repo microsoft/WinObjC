@@ -24,9 +24,7 @@
 struct StubReturn {
     template <typename T>
     operator T() {
-        T ret;
-        ::memset(&ret, 0, sizeof(T));
-        return ret;
+        return T{};
     }
 };
 

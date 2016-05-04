@@ -26,6 +26,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import <unicode/decimfmt.h>
 #import <unicode/unum.h>
 
+#import "StringHelpers.h"
+
 static NSNumberFormatterBehavior _defaultFormatterBehavior = NSNumberFormatterBehavior10_4;
 
 const CFNumberRef kCFNumberNaN = nullptr; // = (CFNumberRef)&_kCFNumberNaN;
@@ -710,7 +712,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 
     assert(U_SUCCESS(status));
 
-    return NSStringFromICU(formatted);
+    std::string realStr;
+    formatted.toUTF8String(realStr);
+    return [NSString stringWithUTF8String:realStr.c_str()];
 }
 
 static id multipliedNumber(id number, id multiplierNumber) {
@@ -741,7 +745,9 @@ static BOOL numberIsNegative(id number) {
         UNumberFormat* nf = unum_open(UNUM_CURRENCY, NULL, -1, NULL, NULL, &status);
         int offset = 0;
         UChar currency[4];
-        double amt = unum_parseDoubleCurrency(nf, (const wchar_t*)[string rawCharacters], [string length], &offset, currency, &status);
+
+        std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(string);
+        double amt = unum_parseDoubleCurrency(nf, wideBuffer.c_str(), wideBuffer.length(), &offset, currency, &status);
         unum_close(nf);
         return [NSNumber numberWithDouble:amt];
     }

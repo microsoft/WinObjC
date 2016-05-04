@@ -23,7 +23,6 @@
 #import <CoreFoundation/CFNumber.h>
 #import <CoreFoundation/CFSet.h>
 #import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFType.h>
 
 typedef const struct __CTFontDescriptor* CTFontDescriptorRef;
 typedef uint32_t CTFontOrientation;

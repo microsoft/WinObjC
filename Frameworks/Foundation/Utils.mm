@@ -20,7 +20,7 @@
 #include "Foundation/NSArray.h"
 #include "Foundation/NSPathUtilities.h"
 
-const double NSFoundationVersionNumber = NSFoundationVersionNumber_iOS_6_0;
+const double NSFoundationVersionNumber = NSFoundationVersionNumber_iOS_8_3;
 
 /**
  @Status Interoperable

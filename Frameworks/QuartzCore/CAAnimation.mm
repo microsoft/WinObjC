@@ -22,7 +22,7 @@
 #include "QuartzCore/CAAnimation.h"
 #include "QuartzCore/CALayer.h"
 #include "Foundation/NSMutableDictionary.h"
-#include "CoreFoundation/CFType.h"
+
 #include "CACompositor.h"
 
 #include "CAAnimationInternal.h"

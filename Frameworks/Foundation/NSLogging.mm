@@ -14,10 +14,10 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import "NSLogging.h"
-#import "LoggingNative.h"
-#import "NSStringInternal.h"
+#include "Starboard.h"
+#include "NSLogging.h"
+#include "LoggingNative.h"
+#include "StringHelpers.h"
 
 static const wchar_t* g_TraceFormat = L"%ws";
 
@@ -25,7 +25,8 @@ void NSTraceVerbose(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
     StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
-    TraceVerbose(tag, g_TraceFormat, (const wchar_t*)[formattedString _rawTerminatedCharacters]);
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
+    TraceVerbose(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
 }
 
@@ -33,7 +34,8 @@ void NSTraceInfo(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
     StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
-    TraceInfo(tag, g_TraceFormat, (const wchar_t*)[formattedString _rawTerminatedCharacters]);
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
+    TraceInfo(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
 }
 
@@ -41,7 +43,8 @@ void NSTraceWarning(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
     StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
-    TraceWarning(tag, g_TraceFormat, (const wchar_t*)[formattedString _rawTerminatedCharacters]);
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
+    TraceWarning(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
 }
 
@@ -49,7 +52,8 @@ void NSTraceError(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
     StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
-    TraceError(tag, g_TraceFormat, (const wchar_t*)[formattedString _rawTerminatedCharacters]);
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
+    TraceError(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
 }
 
@@ -57,6 +61,7 @@ void NSTraceCritical(const wchar_t* tag, NSString* format, ...) {
     va_list list;
     va_start(list, format);
     StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
-    TraceCritical(tag, g_TraceFormat, (const wchar_t*)[formattedString _rawTerminatedCharacters]);
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
+    TraceCritical(tag, g_TraceFormat, wideBuffer.c_str());
     va_end(list);
 }

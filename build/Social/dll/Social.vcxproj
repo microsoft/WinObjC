@@ -25,9 +25,6 @@
     <None Include="Social.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
       <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
