@@ -232,4 +232,127 @@
             <ExpandedItem>*(NSObject*)this</ExpandedItem>
         </Expand>
     </Type>
+
+    <!--
+        CFBasicHash's low CFInfo bits (CFBasicHash.h:73)
+        32                            0
+        _ _ _ _ _ _ _ _ _ M _ _ _ _ _ _
+        _ - unknown/na/ignored
+        M - mutability bit
+          0x0 - mutable
+          0x1 - immutable
+
+        CF Hash tables are refreshingly straightforward.
+        The keys and values are stored in contiguous blocks which can be marked deleted/unused.
+    -->
+    <Type Name="__CFBasicHash" IncludeView="CF;Dictionary;Set">
+        <Expand>
+            <Item Name="[size]">bits.used_buckets</Item>
+            <Synthetic Name="[mutable]" Condition="(base._cfinfo[0] &amp; 0x40) != 0x40">
+                <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <CustomListItems IncludeView="Dictionary">
+                <Variable Name="index" InitialValue="0" />
+                <Variable Name="key" InitialValue="(void*)0" />
+                <Variable Name="value" InitialValue="(void*)0" />
+                <Size>bits.used_buckets</Size>
+                <Loop>
+                    <Exec>key = *((void**)pointers[bits.keys_offset] + index)</Exec>
+                    <Exec>value = *((void**)pointers[0] + index)</Exec>
+                    <Item Condition="value != 0 &amp;&amp; value != ~0UL" Name="{(NSObject*)key}">(NSObject*)value</Item>
+                    <Exec>index++</Exec>
+                </Loop>
+            </CustomListItems>
+            <CustomListItems IncludeView="Set">
+                <Variable Name="index" InitialValue="0" />
+                <Variable Name="key" InitialValue="(void*)0" />
+                <Variable Name="value" InitialValue="(void*)0" />
+                <Size>bits.used_buckets</Size>
+                <Loop>
+                    <Exec>value = *((void**)pointers[0] + index)</Exec>
+                    <Item Condition="value != 0 &amp;&amp; value != ~0UL">(NSObject*)value</Item>
+                    <Exec>index++</Exec>
+                </Loop>
+            </CustomListItems>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFDictionary">
+        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFSet">
+        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any __CFBasicHash can point to any NSDictionary/NSSet, we have to go through the NSObject renderer. -->
+    <Type Name="__CFBasicHash">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!--
+        CFData's low CFInfo bits (CFData.c:61)
+        32                            0
+        _ _ _ _ _ _ _ _ _ _ _ _ _ I M M
+        _ - unknown/na/ignored
+        M - mutability
+          0x00 - immutable
+          0x01 - fixed length, mutable
+          0x11 - variable length, mutable
+        I - bytes stored inline
+    -->
+    <Type Name="__CFData" IncludeView="CF">
+        <DisplayString>{{ binary data, {_length} bytes }}</DisplayString>
+        <Expand>
+            <Item Name="[size]">_length</Item>
+            <Synthetic Name="[mutable]" Condition="(_base._cfinfo[0] &amp; 0x01) == 0x01">
+                <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <Synthetic Condition="(_base._cfinfo[0] &amp; 0x4) != 0x0" Name="[Raw Bytes]">
+                <DisplayString>{(unsigned char*)((((unsigned long long)this + sizeof(CoreFoundation.dll!__CFData) + 15) &amp; ~0xF)),[_length]}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>_length</Size>
+                        <ValuePointer>(char*)(((unsigned long long)this + sizeof(CoreFoundation.dll!__CFData) + 15) &amp; ~0xF)</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Synthetic>
+            <Synthetic Condition="(_base._cfinfo[0] &amp; 0x4) == 0x0" Name="[Raw Bytes]">
+                <DisplayString>{_bytes,[_length]}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>_length</Size>
+                        <ValuePointer>_bytes</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Synthetic>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFData">
+        <DisplayString>{*(CoreFoundation.dll!__CFData*)this,view(CF)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFData*)this,view(CF)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFData*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any __CFData can point to any NSData, we have to go through the NSObject renderer. -->
+    <Type Name="__CFData">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
 </AutoVisualizer>
