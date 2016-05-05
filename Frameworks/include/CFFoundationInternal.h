@@ -31,9 +31,9 @@ CF_EXPORT UniChar _CFGetSlash();
 CF_PRIVATE CF_EXPORT CFStringRef _CFGetSlashStr();
 
 // Miscellaneous - for collections.
-CF_EXPORT unsigned long _CFArrayFastEnumeration(CFArrayRef array, NSFastEnumerationState *state, void *stackbuffer, unsigned long count);
-CF_EXPORT unsigned long _CFDictionaryFastEnumeration(CFDictionaryRef dictionary, NSFastEnumerationState *state, void *stackbuffer, unsigned long count);
-CF_EXPORT unsigned long _CFSetFastEnumeration(CFSetRef set, NSFastEnumerationState *state, void *stackbuffer, unsigned long count);
+CF_EXPORT unsigned long _CFArrayFastEnumeration(CFArrayRef array, void *state, void *stackbuffer, unsigned long count);
+CF_EXPORT unsigned long _CFDictionaryFastEnumeration(CFDictionaryRef dictionary, void *state, void *stackbuffer, unsigned long count);
+CF_EXPORT unsigned long _CFSetFastEnumeration(CFSetRef set, void *state, void *stackbuffer, unsigned long count);
 
 
 // Copied from CFFileUtilities.c
