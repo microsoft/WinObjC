@@ -13,8 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#include <CoreFoundation/CFBase.h>
-#include "CFInternal.h"
+
+#include <Starboard.h>
 
 #include <COMIncludes.h>
 #include <wrl\client.h>
@@ -23,13 +23,11 @@
 #include <wrl\wrappers\corewrappers.h>
 #include <COMIncludes_End.h>
 
-#import <CoreFoundation/CoreFoundation.h>
-
 #include <algorithm>
-#include <mach/mach_time.h>
+#include <mach/mach_defs.h>
 #include "LoggingNative.h"
 
-static const wchar_t* TAG = L"CFMisc";
+static const wchar_t* TAG = L"OSMisc";
 
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;
@@ -37,11 +35,9 @@ using namespace Microsoft::WRL::Wrappers;
 
 ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> GetBufferStatics() {
     ComPtr<ABI::Windows::Security::Cryptography::ICryptographicBufferStatics> bufferStatics;
-    if (FAILED(GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
-                                    &bufferStatics))) {
-        return nullptr;
-    }
-
+    RETURN_NULL_IF_FAILED(
+        GetActivationFactory(Wrappers::HStringReference(RuntimeClass_Windows_Security_Cryptography_CryptographicBuffer).Get(),
+                             &bufferStatics));
     return bufferStatics;
 }
 
@@ -95,21 +91,3 @@ extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const 
     return -1;
 }
 
-static int64_t _mach_get_timebase() {
-    LARGE_INTEGER performanceFrequency;
-    CFAssert(0 == QueryPerformanceFrequency(&performanceFrequency), __kCFLogAssertion, "QueryPerformanceFrequency failed");
-    return performanceFrequency.QuadPart;
-}
-
-static int64_t _mach_frequency = _mach_get_timebase();
-
-extern "C" kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
-    //  mach_absolute_time uses QueryPerformanceCounter which returns
-    //  the absolute number of cycles since boot in microseconds.
-    //
-    // Return a timebase representing the conversion between QPC counts and nanoseconds:
-    // 1,000,000,000 nanoseconds per every n counts.
-    *tinfo = { 1000000000, _mach_frequency };
-
-    return 0;
-}

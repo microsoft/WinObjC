@@ -17,7 +17,7 @@
 #ifndef __MACH_TIME_H
 #define __MACH_TIME_H
 
-#include <CoreFoundation/CFBase.h>
+#include "mach_defs.h"
 
 __BEGIN_DECLS
 
@@ -32,7 +32,7 @@ typedef struct mach_timebase_info* mach_timebase_info_t;
 __BEGIN_DECLS
 
 kern_return_t mach_timebase_info(mach_timebase_info_t tinfo);
-CF_INLINE uint64_t mach_absolute_time() {
+__inline uint64_t mach_absolute_time() {
     LARGE_INTEGER count;
     QueryPerformanceCounter(&count);
     // mach_absolute_time is unsigned, but this function returns a signed value.
