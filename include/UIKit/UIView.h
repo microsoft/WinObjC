@@ -34,6 +34,7 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIGeometry.h>
 #import <UIKit/UIAppearance.h>
+#import <UIKit/UIAppearanceContainer.h>
 #import <UIKit/NSLayoutConstraint.h>
 #import <UIKit/UIAccessibility.h>
 #import <UIKit/UICoordinateSpace.h>

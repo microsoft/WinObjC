@@ -20,7 +20,7 @@
 #import <MapKit/MKOverlay.h>
 #import <Foundation/NSObject.h>
 #import <MapKit/MKShape.h>
-#import <CoreLocation/CLLocation.h>
+#import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKitDataTypes.h>
 
 MAPKIT_EXPORT_CLASS
