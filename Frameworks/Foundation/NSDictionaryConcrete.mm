@@ -97,6 +97,8 @@ static const wchar_t* TAG = L"NSDictionary";
 - INNER_BRIDGE_CALL(_nscf, NSArray*, allValues);
 - INNER_BRIDGE_CALL(_nscf, NSArray*, allKeys);
 
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount);
+
 @end
 #pragma endregion
 
@@ -174,6 +176,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionar
 
     return [NSArray arrayWithObjects:keys.data() count:keys.size()];
 }
+
+- BRIDGED_COLLECTION_FAST_ENUMERATION(CFDictionary);
 
 @end
 #pragma endregion

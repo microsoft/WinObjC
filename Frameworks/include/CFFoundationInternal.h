@@ -30,6 +30,12 @@ CF_PRIVATE CF_EXPORT CFIndex _CFStartOfLastPathComponent2(CFStringRef path);
 CF_EXPORT UniChar _CFGetSlash();
 CF_PRIVATE CF_EXPORT CFStringRef _CFGetSlashStr();
 
+// Miscellaneous - for collections.
+CF_EXPORT unsigned long _CFArrayFastEnumeration(CFArrayRef array, NSFastEnumerationState *state, void *stackbuffer, unsigned long count);
+CF_EXPORT unsigned long _CFDictionaryFastEnumeration(CFDictionaryRef dictionary, NSFastEnumerationState *state, void *stackbuffer, unsigned long count);
+CF_EXPORT unsigned long _CFSetFastEnumeration(CFSetRef set, NSFastEnumerationState *state, void *stackbuffer, unsigned long count);
+
+
 // Copied from CFFileUtilities.c
 #if DEPLOYMENT_TARGET_WINDOWS
 #define WINDOWS_PATH_SEMANTICS

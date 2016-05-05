@@ -133,3 +133,8 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
                                                                                                                    \
         return [super allocWithZone:zone];                                                                         \
     }
+
+#define BRIDGED_COLLECTION_FAST_ENUMERATION(CFBridgedType) \
+    (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount { \
+        return _ ## CFBridgedType ## FastEnumeration((CFBridgedType ## Ref)self, state, stackBuf, maxCount); \
+    }

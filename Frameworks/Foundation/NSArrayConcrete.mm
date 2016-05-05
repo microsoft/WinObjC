@@ -83,6 +83,8 @@ static const wchar_t* TAG = L"NSArray";
 - INNER_BRIDGE_CALL(_nscf, void, removeAllObjects);
 - INNER_BRIDGE_CALL(_nscf, void, addObject:(NSObject*)objAddr);
 
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount);
+
 @end
 #pragma endregion
 
@@ -142,6 +144,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFArrayRef, CFArrayGetTypeID, NSArray, NSCFArray)
 - (void)addObject:(NSObject*)objAddr {
     CFArrayAppendValue((CFMutableArrayRef)self, (const void*)objAddr);
 }
+
+- BRIDGED_COLLECTION_FAST_ENUMERATION(CFArray);
 
 @end
 #pragma endregion

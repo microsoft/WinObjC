@@ -44,6 +44,8 @@
 - INNER_BRIDGE_CALL(_nscf, id, member:(id)object);
 - INNER_BRIDGE_CALL(_nscf, NSEnumerator*, objectEnumerator);
 
+- INNER_BRIDGE_CALL(_nscf, NSUInteger, countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount);
+
 @end
 #pragma endregion
 
@@ -130,6 +132,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
 - (void)removeAllObjects {
     CFSetRemoveAllValues(static_cast<CFMutableSetRef>(self));
 }
+
+- BRIDGED_COLLECTION_FAST_ENUMERATION(CFSet);
 
 @end
 #pragma endregion
