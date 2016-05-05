@@ -115,7 +115,7 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 + (NSString*)string {
-    return @"";
+    return [[self new] autorelease];
 }
 
 /**
