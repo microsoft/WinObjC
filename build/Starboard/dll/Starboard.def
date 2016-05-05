@@ -117,6 +117,20 @@ LIBRARY Starboard
         DNSServiceSetDispatchQueue
         DNSServiceBrowse
 
+        OSHostByteOrder
+        OSReadBigInt16
+        OSReadBigInt32
+        OSSwapBigToHostInt16
+        OSSwapBigToHostInt32
+        OSSwapInt16
+        OSSwapInt32
+        OSSwapLittleToHostInt32
+        arc4random
+        arc4random_uniform
+        mach_absolute_time
+        mach_timebase_info
+        sysctlbyname
+
         EbrLockInit
         EbrLockDestroy
         EbrLockEnter
