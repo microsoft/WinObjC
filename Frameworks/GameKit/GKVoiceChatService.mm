@@ -15,6 +15,7 @@
 //******************************************************************************
 
 #import <StubReturn.h>
+#import <GameKit/GKVoiceChatService.h>
 
 NSString* const GKVoiceChatServiceErrorDomain = @"GKVoiceChatServiceErrorDomain";
 
