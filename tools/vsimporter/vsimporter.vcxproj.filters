@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files\compat">
+      <UniqueIdentifier>{1bc02589-efad-4f62-8ff7-87fb7d63d430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{d912c881-dd9d-4724-91eb-16e194b04081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PBX">
+      <UniqueIdentifier>{65432c86-8d41-4ef1-a183-48c96317a483}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\vswriter">
+      <UniqueIdentifier>{56a8940d-d78d-4a25-ac6d-7d0958e57035}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PBX">
+      <UniqueIdentifier>{b16ea45b-0648-4a8e-8097-c6d38e481709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{ab9fa53f-553b-4293-b157-32b27bddd082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\vswriter">
+      <UniqueIdentifier>{521a5f65-ac93-4196-8a60-4c995956f7a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\compat">
+      <UniqueIdentifier>{14f72c79-7fb5-41c0-8e17-042e5589bca8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\BuildSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BuildSettingsInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EnvironmentVariableCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\query.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBAggregateTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBBuildPhase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBFrameworksBuildPhase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBLog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBNativeTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBProject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBResourcesBuildPhase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBSourcesBuildPhase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SBWorkspace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\settingmodifiers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleVariableCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VariableCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VariableCollectionHierarchy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VariableCollectionManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vsimporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\xcconfigparser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XCVariableExpander.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\windows\basename.c">
+      <Filter>Source Files\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\windows\dirname.c">
+      <Filter>Source Files\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\windows\getopt.c">
+      <Filter>Source Files\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\windows\realpath.c">
+      <Filter>Source Files\compat</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\ConditionalValue.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VCProject.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VCProjectConfiguration.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VCProjectConfigurationPlatform.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VCProjectItem.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VCSharedProject.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSBuildableSolutionProject.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\vshelpers.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSSolution.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSSolutionFolderProject.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSSolutionProject.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSTemplate.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSTemplateParameters.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\vswriter\VSTemplateProject.cpp">
+      <Filter>Source Files\vswriter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\ErrorReporter.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXAggregateTarget.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXBuildFile.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXBuildRule.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXContainerItemProxy.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXCopyFilesBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXDocument.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXFile.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXFileReference.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXFrameworksBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXGroup.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXHeadersBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXLegacyTarget.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXNativeTarget.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXObject.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXProject.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXReferenceProxy.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXResourcesBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXShellScriptBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXSourcesBuildPhase.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXTarget.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXTargetDependency.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PBXVariantGroup.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\PlistFuncs.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\XCBuildConfiguration.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\XCConfigurationList.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\XCScheme.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\XCVersionGroup.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\XCWorkspace.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PBX\XMLFuncs.cpp">
+      <Filter>Source Files\PBX</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\clangoptparser.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\fileutils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\hmapmaker.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\miscutils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\sbassert.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\stringutils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\tokenizer.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\wildcardmatch.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\xc2vs.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="third-party\sole\sole.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\windows\dirent.h">
+      <Filter>Header Files\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\getopt.h">
+      <Filter>Header Files\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\libgen.h">
+      <Filter>Header Files\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\posix_compat.h">
+      <Filter>Header Files\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\windows\unistd.h">
+      <Filter>Header Files\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BuildSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BuildSettingsInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnvironmentVariableCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\query.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBAggregateTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBBuildPhase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBFrameworksBuildPhase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBLog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBNativeTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBProject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBResourcesBuildPhase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBSourcesBuildPhase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SBWorkspace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\settingmodifiers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SimpleVariableCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SplitStream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VariableCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VariableCollectionHierarchy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VariableCollectionManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\xcconfigparser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\XCVariableExpander.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\ConditionalValue.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VCProject.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VCProjectConfiguration.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VCProjectConfigurationPlatform.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VCProjectItem.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VCSharedProject.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSBuildableSolutionProject.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\vshelpers.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSSolution.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSSolutionFolderProject.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSSolutionProject.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSTemplate.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSTemplateParameters.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vswriter\VSTemplateProject.h">
+      <Filter>Header Files\vswriter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\clangoptparser.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\fileutils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\hmapmaker.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\miscutils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\sbassert.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\stringutils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\tokenizer.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\wildcardmatch.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\xc2vs.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\ErrorReporter.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXAggregateTarget.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXBuildFile.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXBuildRule.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXContainerItemProxy.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXCopyFilesBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXDocument.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXFile.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXFileReference.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXFrameworksBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXGroup.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXHeadersBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXLegacyTarget.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXNativeTarget.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXObject.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXObjectIdConvert.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXProject.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXReferenceProxy.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXResourcesBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXShellScriptBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXSourcesBuildPhase.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXTarget.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXTargetDependency.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PBXVariantGroup.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\PlistFuncs.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\XCBuildConfiguration.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\XCConfigurationList.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\XCScheme.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\XCVersionGroup.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\XCWorkspace.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PBX\XMLFuncs.h">
+      <Filter>Header Files\PBX</Filter>
+    </ClInclude>
+    <ClInclude Include="third-party\sole\sole.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

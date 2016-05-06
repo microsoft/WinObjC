@@ -18,7 +18,6 @@
 #include <getopt.h>
 #include <dirent.h>
 
-#include "version.h"
 #include "sbassert.h"
 #include "types.h"
 #include "utils.h"
@@ -27,9 +26,6 @@
 #include "VariableCollectionManager.h"
 #include "SBWorkspace.h"
 #include "..\WBITelemetry\WBITelemetry.h"
-
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
 
 enum {
   GenerateMode = 0,
@@ -49,7 +45,7 @@ static void checkWinObjCSDK()
 
 void printVersion(const char *execName)
 {
-static String binaryVersion = String("1.0 (") + STR(VERSION_SHA) + ")";
+static String binaryVersion = "1.0";
   std::cout << sb_basename(execName) << " " << binaryVersion << std::endl;
   exit(EXIT_SUCCESS);
 }

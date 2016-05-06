@@ -1,0 +1,274 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6EAF3089-F641-4FC2-BEE5-512CB4C43DFF}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>vsimporter</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(Configuration)\$(TargetName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IntDir>$(Configuration)\$(TargetName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;include\utils;include\PBX;include\windows;include\vswriter;third-party;third-party\PlistCpp\src;third-party\PlistCpp\third-party</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>WinHttp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;include\utils;include\PBX;include\windows;include\vswriter;third-party;third-party\PlistCpp\src;third-party\PlistCpp\third-party</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>WinHttp.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\BuildSettings.cpp" />
+    <ClCompile Include="src\BuildSettingsInfo.cpp" />
+    <ClCompile Include="src\EnvironmentVariableCollection.cpp" />
+    <ClCompile Include="src\PBX\ErrorReporter.cpp" />
+    <ClCompile Include="src\PBX\PBXAggregateTarget.cpp" />
+    <ClCompile Include="src\PBX\PBXBuildFile.cpp" />
+    <ClCompile Include="src\PBX\PBXBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXBuildRule.cpp" />
+    <ClCompile Include="src\PBX\PBXContainerItemProxy.cpp" />
+    <ClCompile Include="src\PBX\PBXCopyFilesBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXDocument.cpp" />
+    <ClCompile Include="src\PBX\PBXFile.cpp" />
+    <ClCompile Include="src\PBX\PBXFileReference.cpp" />
+    <ClCompile Include="src\PBX\PBXFrameworksBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXGroup.cpp" />
+    <ClCompile Include="src\PBX\PBXHeadersBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXLegacyTarget.cpp" />
+    <ClCompile Include="src\PBX\PBXNativeTarget.cpp" />
+    <ClCompile Include="src\PBX\PBXObject.cpp" />
+    <ClCompile Include="src\PBX\PBXProject.cpp" />
+    <ClCompile Include="src\PBX\PBXReferenceProxy.cpp" />
+    <ClCompile Include="src\PBX\PBXResourcesBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXShellScriptBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXSourcesBuildPhase.cpp" />
+    <ClCompile Include="src\PBX\PBXTarget.cpp" />
+    <ClCompile Include="src\PBX\PBXTargetDependency.cpp" />
+    <ClCompile Include="src\PBX\PBXVariantGroup.cpp" />
+    <ClCompile Include="src\PBX\PlistFuncs.cpp" />
+    <ClCompile Include="src\PBX\XCBuildConfiguration.cpp" />
+    <ClCompile Include="src\PBX\XCConfigurationList.cpp" />
+    <ClCompile Include="src\PBX\XCScheme.cpp" />
+    <ClCompile Include="src\PBX\XCVersionGroup.cpp" />
+    <ClCompile Include="src\PBX\XCWorkspace.cpp" />
+    <ClCompile Include="src\PBX\XMLFuncs.cpp" />
+    <ClCompile Include="src\query.cpp" />
+    <ClCompile Include="src\SBAggregateTarget.cpp" />
+    <ClCompile Include="src\SBBuildPhase.cpp" />
+    <ClCompile Include="src\SBFrameworksBuildPhase.cpp" />
+    <ClCompile Include="src\SBLog.cpp" />
+    <ClCompile Include="src\SBNativeTarget.cpp" />
+    <ClCompile Include="src\SBProject.cpp" />
+    <ClCompile Include="src\SBResourcesBuildPhase.cpp" />
+    <ClCompile Include="src\SBSourcesBuildPhase.cpp" />
+    <ClCompile Include="src\SBTarget.cpp" />
+    <ClCompile Include="src\SBWorkspace.cpp" />
+    <ClCompile Include="src\settingmodifiers.cpp" />
+    <ClCompile Include="src\SimpleVariableCollection.cpp" />
+    <ClCompile Include="src\utils\clangoptparser.cpp" />
+    <ClCompile Include="src\utils\fileutils.cpp" />
+    <ClCompile Include="src\utils\hmapmaker.cpp" />
+    <ClCompile Include="src\utils\miscutils.cpp" />
+    <ClCompile Include="src\utils\sbassert.cpp" />
+    <ClCompile Include="src\utils\stringutils.cpp" />
+    <ClCompile Include="src\utils\tokenizer.cpp" />
+    <ClCompile Include="src\utils\wildcardmatch.cpp" />
+    <ClCompile Include="src\utils\xc2vs.cpp" />
+    <ClCompile Include="src\VariableCollection.cpp" />
+    <ClCompile Include="src\VariableCollectionHierarchy.cpp" />
+    <ClCompile Include="src\VariableCollectionManager.cpp" />
+    <ClCompile Include="src\vsimporter.cpp" />
+    <ClCompile Include="src\vswriter\ConditionalValue.cpp" />
+    <ClCompile Include="src\vswriter\VCProject.cpp" />
+    <ClCompile Include="src\vswriter\VCProjectConfiguration.cpp" />
+    <ClCompile Include="src\vswriter\VCProjectConfigurationPlatform.cpp" />
+    <ClCompile Include="src\vswriter\VCProjectItem.cpp" />
+    <ClCompile Include="src\vswriter\VCSharedProject.cpp" />
+    <ClCompile Include="src\vswriter\VSBuildableSolutionProject.cpp" />
+    <ClCompile Include="src\vswriter\vshelpers.cpp" />
+    <ClCompile Include="src\vswriter\VSSolution.cpp" />
+    <ClCompile Include="src\vswriter\VSSolutionFolderProject.cpp" />
+    <ClCompile Include="src\vswriter\VSSolutionProject.cpp" />
+    <ClCompile Include="src\vswriter\VSTemplate.cpp" />
+    <ClCompile Include="src\vswriter\VSTemplateParameters.cpp" />
+    <ClCompile Include="src\vswriter\VSTemplateProject.cpp" />
+    <ClCompile Include="src\windows\basename.c" />
+    <ClCompile Include="src\windows\dirname.c" />
+    <ClCompile Include="src\windows\getopt.c" />
+    <ClCompile Include="src\windows\realpath.c" />
+    <ClCompile Include="src\xcconfigparser.cpp" />
+    <ClCompile Include="src\XCVariableExpander.cpp" />
+    <ClCompile Include="third-party\sole\sole.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\BuildSettings.h" />
+    <ClInclude Include="include\BuildSettingsInfo.h" />
+    <ClInclude Include="include\EnvironmentVariableCollection.h" />
+    <ClInclude Include="include\PBX\ErrorReporter.h" />
+    <ClInclude Include="include\PBX\PBXAggregateTarget.h" />
+    <ClInclude Include="include\PBX\PBXBuildFile.h" />
+    <ClInclude Include="include\PBX\PBXBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXBuildRule.h" />
+    <ClInclude Include="include\PBX\PBXContainerItemProxy.h" />
+    <ClInclude Include="include\PBX\PBXCopyFilesBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXDocument.h" />
+    <ClInclude Include="include\PBX\PBXFile.h" />
+    <ClInclude Include="include\PBX\PBXFileReference.h" />
+    <ClInclude Include="include\PBX\PBXFrameworksBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXGroup.h" />
+    <ClInclude Include="include\PBX\PBXHeadersBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXLegacyTarget.h" />
+    <ClInclude Include="include\PBX\PBXNativeTarget.h" />
+    <ClInclude Include="include\PBX\PBXObject.h" />
+    <ClInclude Include="include\PBX\PBXObjectIdConvert.h" />
+    <ClInclude Include="include\PBX\PBXProject.h" />
+    <ClInclude Include="include\PBX\PBXReferenceProxy.h" />
+    <ClInclude Include="include\PBX\PBXResourcesBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXShellScriptBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXSourcesBuildPhase.h" />
+    <ClInclude Include="include\PBX\PBXTarget.h" />
+    <ClInclude Include="include\PBX\PBXTargetDependency.h" />
+    <ClInclude Include="include\PBX\PBXVariantGroup.h" />
+    <ClInclude Include="include\PBX\PlistFuncs.h" />
+    <ClInclude Include="include\PBX\XCBuildConfiguration.h" />
+    <ClInclude Include="include\PBX\XCConfigurationList.h" />
+    <ClInclude Include="include\PBX\XCScheme.h" />
+    <ClInclude Include="include\PBX\XCVersionGroup.h" />
+    <ClInclude Include="include\PBX\XCWorkspace.h" />
+    <ClInclude Include="include\PBX\XMLFuncs.h" />
+    <ClInclude Include="include\query.h" />
+    <ClInclude Include="include\SBAggregateTarget.h" />
+    <ClInclude Include="include\SBBuildPhase.h" />
+    <ClInclude Include="include\SBFrameworksBuildPhase.h" />
+    <ClInclude Include="include\SBLog.h" />
+    <ClInclude Include="include\SBNativeTarget.h" />
+    <ClInclude Include="include\SBProject.h" />
+    <ClInclude Include="include\SBResourcesBuildPhase.h" />
+    <ClInclude Include="include\SBSourcesBuildPhase.h" />
+    <ClInclude Include="include\SBTarget.h" />
+    <ClInclude Include="include\SBWorkspace.h" />
+    <ClInclude Include="include\settingmodifiers.h" />
+    <ClInclude Include="include\SimpleVariableCollection.h" />
+    <ClInclude Include="include\SplitStream.h" />
+    <ClInclude Include="include\types.h" />
+    <ClInclude Include="include\utils.h" />
+    <ClInclude Include="include\utils\clangoptparser.h" />
+    <ClInclude Include="include\utils\fileutils.h" />
+    <ClInclude Include="include\utils\hmapmaker.h" />
+    <ClInclude Include="include\utils\miscutils.h" />
+    <ClInclude Include="include\utils\sbassert.h" />
+    <ClInclude Include="include\utils\stringutils.h" />
+    <ClInclude Include="include\utils\tokenizer.h" />
+    <ClInclude Include="include\utils\wildcardmatch.h" />
+    <ClInclude Include="include\utils\xc2vs.h" />
+    <ClInclude Include="include\VariableCollection.h" />
+    <ClInclude Include="include\VariableCollectionHierarchy.h" />
+    <ClInclude Include="include\VariableCollectionManager.h" />
+    <ClInclude Include="include\vswriter\ConditionalValue.h" />
+    <ClInclude Include="include\vswriter\VCProject.h" />
+    <ClInclude Include="include\vswriter\VCProjectConfiguration.h" />
+    <ClInclude Include="include\vswriter\VCProjectConfigurationPlatform.h" />
+    <ClInclude Include="include\vswriter\VCProjectItem.h" />
+    <ClInclude Include="include\vswriter\VCSharedProject.h" />
+    <ClInclude Include="include\vswriter\VSBuildableSolutionProject.h" />
+    <ClInclude Include="include\vswriter\vshelpers.h" />
+    <ClInclude Include="include\vswriter\VSSolution.h" />
+    <ClInclude Include="include\vswriter\VSSolutionFolderProject.h" />
+    <ClInclude Include="include\vswriter\VSSolutionProject.h" />
+    <ClInclude Include="include\vswriter\VSTemplate.h" />
+    <ClInclude Include="include\vswriter\VSTemplateParameters.h" />
+    <ClInclude Include="include\vswriter\VSTemplateProject.h" />
+    <ClInclude Include="include\windows\dirent.h" />
+    <ClInclude Include="include\windows\getopt.h" />
+    <ClInclude Include="include\windows\libgen.h" />
+    <ClInclude Include="include\windows\posix_compat.h" />
+    <ClInclude Include="include\windows\unistd.h" />
+    <ClInclude Include="include\xcconfigparser.h" />
+    <ClInclude Include="include\XCVariableExpander.h" />
+    <ClInclude Include="third-party\sole\sole.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\deps\3rdparty\AppInsights\Projects\AppInsights_Win32\core\core.vcxproj">
+      <Project>{f2377726-d69d-4a26-a3af-969fd0399427}</Project>
+    </ProjectReference>
+    <ProjectReference Include="PlistCpp.vcxproj">
+      <Project>{b25dbff1-1138-4413-8dc0-a2eebb4a7c28}</Project>
+    </ProjectReference>
+    <ProjectReference Include="pugixml.vcxproj">
+      <Project>{07cf01c0-b887-499d-ad9c-799cb6a9fe64}</Project>
+    </ProjectReference>
+    <ProjectReference Include="WBITelemetry.vcxproj">
+      <Project>{23a635aa-6d82-4faa-b208-11c4c51bdb9d}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
