@@ -16,17 +16,29 @@
 //******************************************************************************
 #pragma once
 
-#import <Foundation/NSObject.h>
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFURL.h>
 #import <CoreGraphics/CoreGraphicsExport.h>
+#import <Foundation/NSObject.h>
 
 @class NSData;
 
 @interface ImageSource : NSObject
-@property (nonatomic) NSData *data;
+@property (atomic) NSData* data;
+@property (atomic) bool incrementalSource;
+@property (atomic) CGImageSourceStatus loadStatus;
+@property (atomic) int loadIndex;
+@property (atomic) bool isFinalIncrementalSet;
 - (instancetype)initWithData:(CFDataRef)data;
 - (instancetype)initWithURL:(CFURLRef)url;
 - (instancetype)initWithDataProvider:(CGDataProviderRef)provider;
-- (CFStringRef)getImageType;
+- (instancetype)initIncremental;
+- (CFStringRef)_getImageType;
+- (CGImageSourceStatus)_getJPEGStatusAtIndex:(size_t)index;
+- (CGImageSourceStatus)_getTIFFStatusAtIndex:(size_t)index;
+- (CGImageSourceStatus)_getGIFStatusAtIndex:(size_t)index;
+- (CGImageSourceStatus)_getBMPStatusAtIndex:(size_t)index;
+- (CGImageSourceStatus)_getPNGStatusAtIndex:(size_t)index;
+- (CGImageSourceStatus)_getICOStatusAtIndex:(size_t)index;
+- (CGImageSourceStatus)_getStatusAtIndex:(size_t)index;
 @end
