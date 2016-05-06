@@ -37,8 +37,6 @@
 #include "LoggingNative.h"
 #include "StringHelpers.h"
 
-static const wchar_t* TAG = L"NSDateFormatter";
-
 void _copyPropertiesToFormatter(CFDateFormatterRef source, CFDateFormatterRef destination) {
     static std::array<CFStringRef, 29> properties{ kCFDateFormatterIsLenient,
                                                    kCFDateFormatterTimeZone,
@@ -71,7 +69,7 @@ void _copyPropertiesToFormatter(CFDateFormatterRef source, CFDateFormatterRef de
                                                    kCFDateFormatterDoesRelativeDateFormattingKey };
 
     for (const auto& property : properties) {
-        CFTypeRef value = CFDateFormatterCopyProperty(source, property);
+        CFTypeRef value = CFAutorelease(CFDateFormatterCopyProperty(source, property));
 
         if (value) {
             CFDateFormatterSetProperty(destination, property, value);
@@ -87,10 +85,10 @@ void _copyPropertiesToFormatter(CFDateFormatterRef source, CFDateFormatterRef de
  @Status Interoperable
 */
 + (NSString*)dateFormatFromTemplate:(NSString*)dateTemplate options:(NSUInteger)options locale:(NSLocale*)locale {
-    return static_cast<NSString*>(CFDateFormatterCreateDateFormatFromTemplate(kCFAllocatorSystemDefault,
-                                                                              static_cast<CFStringRef>(dateTemplate),
-                                                                              options,
-                                                                              static_cast<CFLocaleRef>(locale)));
+    return static_cast<NSString*>(CFAutorelease(CFDateFormatterCreateDateFormatFromTemplate(kCFAllocatorSystemDefault,
+                                                                                            static_cast<CFStringRef>(dateTemplate),
+                                                                                            options,
+                                                                                            static_cast<CFLocaleRef>(locale))));
 }
 
 static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehaviorDefault;
@@ -172,7 +170,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSCalendar*)calendar {
-    return (NSCalendar*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterCalendar));
+    return (NSCalendar*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterCalendar)));
 }
 
 /**
@@ -186,7 +184,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSTimeZone*)timeZone {
-    return (NSTimeZone*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterTimeZone));
+    return (NSTimeZone*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterTimeZone)));
 }
 
 /**
@@ -220,7 +218,8 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (BOOL)isLenient {
-    return CFBooleanGetValue(reinterpret_cast<CFBooleanRef>(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterTimeZone)));
+    return CFBooleanGetValue(
+        reinterpret_cast<CFBooleanRef>(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterIsLenient))));
 }
 
 /**
@@ -279,7 +278,8 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSString*)stringFromDate:(NSDate*)date {
-    return static_cast<NSString*>(CFDateFormatterCreateStringWithDate(nullptr, _cfDateFormatter.get(), static_cast<CFDateRef>(date)));
+    return static_cast<NSString*>(
+        CFAutorelease(CFDateFormatterCreateStringWithDate(nullptr, _cfDateFormatter.get(), static_cast<CFDateRef>(date))));
 }
 
 /**
@@ -287,10 +287,11 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  */
 + (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle {
     woc::unique_cf<CFDateFormatterRef> cfFormatter(CFDateFormatterCreate(nullptr,
-                                                                         CFLocaleCopyCurrent(),
+                                                                         CFAutorelease(CFLocaleCopyCurrent()),
                                                                          static_cast<CFDateFormatterStyle>(dateStyle),
                                                                          static_cast<CFDateFormatterStyle>(timeStyle)));
-    return static_cast<NSString*>(CFDateFormatterCreateStringWithDate(nullptr, cfFormatter.get(), static_cast<CFDateRef>(date)));
+    return static_cast<NSString*>(
+        CFAutorelease(CFDateFormatterCreateStringWithDate(nullptr, cfFormatter.get(), static_cast<CFDateRef>(date))));
 }
 
 /**
@@ -299,7 +300,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 - (NSDate*)dateFromString:(NSString*)str {
     CFRange range = CFRange{ 0, [str length] };
     return static_cast<NSDate*>(
-        CFDateFormatterCreateDateFromString(nullptr, _cfDateFormatter.get(), static_cast<CFStringRef>(str), &range));
+        CFAutorelease(CFDateFormatterCreateDateFromString(nullptr, _cfDateFormatter.get(), static_cast<CFStringRef>(str), &range)));
 }
 
 /**
@@ -339,7 +340,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSString*)AMSymbol {
-    return (NSString*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterAMSymbol));
+    return (NSString*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterAMSymbol)));
 }
 
 /**
@@ -353,7 +354,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSString*)PMSymbol {
-    return (NSString*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterPMSymbol));
+    return (NSString*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterPMSymbol)));
 }
 
 /**
@@ -367,7 +368,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSArray*)shortStandaloneWeekdaySymbols {
-    return (NSArray*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterShortStandaloneWeekdaySymbols));
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterShortStandaloneWeekdaySymbols)));
 }
 
 /**
@@ -381,7 +382,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSArray*)weekdaySymbols {
-    return (NSArray*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterWeekdaySymbols));
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterWeekdaySymbols)));
 }
 
 /**
@@ -395,7 +396,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSArray*)shortWeekdaySymbols {
-    return (NSArray*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterShortWeekdaySymbols));
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterShortWeekdaySymbols)));
 }
 
 /**
@@ -409,7 +410,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSArray*)standaloneWeekdaySymbols {
-    return (NSArray*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneWeekdaySymbols));
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneWeekdaySymbols)));
 }
 
 /**
@@ -423,7 +424,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSArray*)standaloneMonthSymbols {
-    return (NSArray*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneMonthSymbols));
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneMonthSymbols)));
 }
 
 /**
@@ -437,7 +438,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (NSArray*)monthSymbols {
-    return (NSArray*)(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterMonthSymbols));
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterMonthSymbols)));
 }
 
 /**
