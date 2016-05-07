@@ -16,36 +16,43 @@
 
 #import "Starboard.h"
 #import "UIKit/UIKit.h"
+#import <UWP/WindowsUIXamlControls.h>
+
+#import "XamlUtilities.h"
 
 @implementation UIActivityIndicatorView {
-    BOOL hidesWhenStopped, isAnimating;
-    idretaintype(UIColor) _color;
-    BOOL startAnimating;
-    BOOL _addedAnimation;
+    BOOL _hidesWhenStopped;
+    BOOL _isAnimating;
+    BOOL _startAnimating;
+    StrongId<UIColor> _color;
+    StrongId<WXCProgressRing> _progressRing;
+    UIActivityIndicatorViewStyle _style;
 }
 
 /**
- @Status Caveat
- @Notes May not be fully implemented
+ @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    [super initWithCoder:coder];
-    _color = [UIColor whiteColor];
-    [self setUserInteractionEnabled:TRUE];
-    UIImage* image = [UIImage imageNamed:@"/img/activity@2x.png"];
-    [[self layer] setContents:(id)[image CGImage]];
-    [[self layer] setContentsScale:1.2f * [image scale]];
-    [[self layer] setContentsGravity:kCAGravityCenter];
+    if (self = [super initWithCoder:coder]) {
+        _progressRing = [WXCProgressRing make];
+        [self setNativeElement:_progressRing];
 
-    if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
-        [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
-    } else {
-        [self setHidesWhenStopped:TRUE];
-    }
-    if ([coder containsValueForKey:@"UIAnimating"]) {
-        startAnimating = [coder decodeInt32ForKey:@"UIAnimating"];
-    }
+        if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
+            [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
+        } else {
+            [self setHidesWhenStopped:TRUE];
+        }
 
+        _isAnimating = FALSE;
+        if ([coder containsValueForKey:@"UIAnimating"]) {
+            _startAnimating = [coder decodeInt32ForKey:@"UIAnimating"];
+        }
+        if ([coder containsValueForKey:@"UIActivityIndicatorViewStyle"]) {
+            [self setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)[coder decodeInt32ForKey:@"UIActivityIndicatorViewStyle"]];
+        } else {
+            [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
+        }
+    }
     return self;
 }
 
@@ -53,51 +60,39 @@
  @Status Interoperable
 */
 - (void)awakeFromNib {
-    if (startAnimating) {
+    if (_startAnimating) {
         [self startAnimating];
     }
     [super awakeFromNib];
 }
 
 /**
- @Status Caveat
- @Notes style parameter not supported
-*/
-- (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
-    CGRect frame;
-
-    frame.origin.x = 100;
-    frame.origin.y = 100;
-    frame.size.width = 100;
-    frame.size.height = 100;
-
-    return [self initWithFrame:frame];
-}
-
-/**
  @Status Interoperable
 */
-- (instancetype)initWithFrame:(CGRect)frame {
-    [super initWithFrame:frame];
+- (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
+    if (self = [super init]) {
+        _progressRing = [WXCProgressRing make];
+        [self setNativeElement:_progressRing];
 
-    [self setHidesWhenStopped:TRUE];
-    [self setUserInteractionEnabled:TRUE];
-    _color = [UIColor whiteColor];
-    UIImage* image = [UIImage imageNamed:@"/img/activity@2x.png"];
-    [[self layer] setContents:(id)[image CGImage]];
-    [[self layer] setContentsScale:[image scale]];
-    [[self layer] setContentsGravity:kCAGravityCenter];
+        [self setHidesWhenStopped:TRUE];
+        _isAnimating = FALSE;
 
+        [self setUserInteractionEnabled:TRUE];
+        [self setActivityIndicatorViewStyle:style];
+    }
     return self;
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes In iOS , when hideWhenStopped = False and isAnimating = False, it will show a pause UIAcivityIndicatroView. But, XAML don't have an
+ API to show a pause Progress Ring.
+ @Notes So when isAnimating = False, WinObjC can't show anything, but space is reserved.
 */
 - (void)setHidesWhenStopped:(BOOL)shouldhide {
-    hidesWhenStopped = shouldhide;
+    _hidesWhenStopped = shouldhide;
 
-    if (hidesWhenStopped && !isAnimating) {
+    if (_hidesWhenStopped && !_isAnimating) {
         [self setHidden:TRUE];
     }
 }
@@ -106,59 +101,56 @@
  @Status Interoperable
 */
 - (BOOL)hidesWhenStopped {
-    return hidesWhenStopped;
+    return _hidesWhenStopped;
 }
 
-static void addAnimation(UIActivityIndicatorView* self) {
-    if (!self->isAnimating) {
-        return;
+/**
+ @Status Interoperable
+*/
+- (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
+    _style = style;
+    if (style == UIActivityIndicatorViewStyleWhite || style == UIActivityIndicatorViewStyleGray) {
+        self.frame = CGRectMake(0, 0, 20, 20);
+    } else if (style == UIActivityIndicatorViewStyleWhiteLarge) {
+        self.frame = CGRectMake(0, 0, 40, 40);
     }
-
-    if (!self->_addedAnimation) {
-        CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
-        [animation setToValue:[NSNumber numberWithFloat:M_PI * 2]];
-        [animation setFromValue:[NSNumber numberWithFloat:0.0f]];
-        [animation setDuration:1.0f];
-        [animation setBeginTime:CACurrentMediaTime()];
-        [animation setRepeatCount:300000.0f];
-        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:@"kCAMediaTimingFunctionLinear"]];
-        [[self layer] addAnimation:animation forKey:@"RotateAnim"];
-        self->_addedAnimation = TRUE;
+    if (style == UIActivityIndicatorViewStyleGray) {
+        [self setColor:[UIColor grayColor]];
+    } else if (style == UIActivityIndicatorViewStyleWhite || style == UIActivityIndicatorViewStyleWhiteLarge) {
+        [self setColor:[UIColor whiteColor]];
     }
 }
 
-static void removeAnimation(UIActivityIndicatorView* self) {
-    if (self->_addedAnimation) {
-        [[self layer] removeAllAnimations];
-        self->_addedAnimation = FALSE;
-    }
+/**
+ @Status Interoperable
+*/
+- (UIActivityIndicatorViewStyle)activityIndicatorViewStyle {
+    return _style;
 }
 
 /**
  @Status Interoperable
 */
 - (void)startAnimating {
-    if (isAnimating) {
+    if (_isAnimating) {
         return;
     }
 
-    isAnimating = TRUE;
+    _isAnimating = TRUE;
     [self setHidden:FALSE];
-    if ([self window] != nil) {
-        addAnimation(self);
-    }
+    [_progressRing setIsActive:TRUE];
 }
 
 /**
  @Status Interoperable
 */
 - (void)stopAnimating {
-    if (isAnimating) {
-        isAnimating = FALSE;
-        removeAnimation(self);
+    if (_isAnimating) {
+        _isAnimating = FALSE;
     }
 
-    if (hidesWhenStopped) {
+    [_progressRing setIsActive:FALSE];
+    if (_hidesWhenStopped) {
         [self setHidden:TRUE];
     }
 }
@@ -167,18 +159,7 @@ static void removeAnimation(UIActivityIndicatorView* self) {
  @Status Interoperable
 */
 - (BOOL)isAnimating {
-    return isAnimating;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)willMoveToWindow:(UIWindow*)window {
-    if (window != nil) {
-        addAnimation(self);
-    } else {
-        removeAnimation(self);
-    }
+    return _isAnimating;
 }
 
 /**
@@ -203,18 +184,17 @@ static void removeAnimation(UIActivityIndicatorView* self) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (void)setColor:(UIColor*)color {
-    UNIMPLEMENTED();
+    [_progressRing setForeground:[WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:color]]];
     _color = color;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (UIColor*)color {
-    UNIMPLEMENTED();
     return _color;
 }
 
@@ -226,10 +206,4 @@ static void removeAnimation(UIActivityIndicatorView* self) {
     return NO;
 }
 
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    [super dealloc];
-}
 @end

@@ -26,7 +26,10 @@ static const int MODALFORMSHEET_ROW = 5;
 
 @end
 
-@implementation ControlsViewController
+@implementation ControlsViewController {
+    UISwitch* switchCtrl;
+    UIActivityIndicatorView* progressInd;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -36,7 +39,8 @@ static const int MODALFORMSHEET_ROW = 5;
     [super viewDidDisappear:(BOOL)animated];
 
     // UIModalPresentationFormSheet shouldn't cover parent with tablet.
-    assert(!([[self presentedViewController] modalPresentationStyle] == UIModalPresentationFormSheet && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad));
+    assert(!([[self presentedViewController] modalPresentationStyle] == UIModalPresentationFormSheet &&
+             [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad));
 }
 
 - (NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section {
@@ -56,10 +60,12 @@ static const int MODALFORMSHEET_ROW = 5;
     if (indexPath.row == 0) {
         // switch
         CGRect frame = CGRectMake(5.0, 12.0, 94.0, 27.0);
-        UISwitch* switchCtrl = [[UISwitch alloc] initWithFrame:frame];
+        switchCtrl = [[UISwitch alloc] initWithFrame:frame];
 
         // in case the parent view draws with a custom color or gradient, use a transparent color
         switchCtrl.backgroundColor = [UIColor clearColor];
+        [switchCtrl addTarget:self action:@selector(setUIActivityIndicatorView) forControlEvents:UIControlEventValueChanged];
+        switchCtrl.on = TRUE;
 
         cell.accessoryView = switchCtrl;
         cell.textLabel.text = @"UISwitch";
@@ -85,14 +91,9 @@ static const int MODALFORMSHEET_ROW = 5;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 2) {
         // activity indicator
-        CGRect frame = CGRectMake(5.0, 12.0, 40.0, 40.0);
-
-        UIActivityIndicatorView* progressInd =
-            [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        // self.progressIndSavedColor = progressInd.color;
-        progressInd.frame = frame;
+        progressInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [progressInd setColor:[UIColor brownColor]];
         [progressInd startAnimating];
-        progressInd.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         [progressInd sizeToFit];
 
         cell.accessoryView = progressInd;
@@ -172,14 +173,24 @@ static const int MODALFORMSHEET_ROW = 5;
             viewController.preferredContentSize = CGSizeMake(200, 200);
         }
 
-        [self presentViewController:viewController animated:YES completion:^{
-            assert(!([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && self.view.hidden));
-        }];
+        [self presentViewController:viewController
+                           animated:YES
+                         completion:^{
+                             assert(!([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad && self.view.hidden));
+                         }];
     }
 }
 
 - (void)toggleResizeModal {
     self.resizeModal = !self.resizeModal;
+}
+
+- (void)setUIActivityIndicatorView {
+    if (progressInd.isAnimating == TRUE) {
+        [progressInd stopAnimating];
+    } else {
+        [progressInd startAnimating];
+    }
 }
 
 @end
