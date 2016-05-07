@@ -15,8 +15,6 @@
 //******************************************************************************
 #pragma once
 
-// IOS application main startup path
-extern "C" int ApplicationMainStart(
-    int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight);
-extern "C" void ApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
-extern "C" void ApplicationMainHandleHighMemoryUsageEvent();
+extern "C" int UIApplicationMainLoop();
+extern "C" void UIApplicationMainHandleHighMemoryUsageEvent();
+extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);

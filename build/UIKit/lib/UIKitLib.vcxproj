@@ -19,295 +19,319 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\art.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSString+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSValue_Additions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAccessibility.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActionSheet.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAlertView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAnimationNotification.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAppearanceSetter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplication.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivity.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivityViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplicationMain.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBarButtonItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBarItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBezierPath.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIButton.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIButtonContent.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIClassSwapper.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIColor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIControl.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDevice.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDocument.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIEmptyController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIEvent.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIFont.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIFontDescriptor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGeometry.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGraphicsFunctions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImage.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImageCachedObject.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImageNibPlaceholder.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImageView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILabel.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILocalNotification.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIManagedDocument.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMotionEffect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationBar.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINib.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UINibUnarchiver.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPasteboard.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPickerView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPopoverPresentationController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPresentationController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIProxyObject.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIProxyObjectPair.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIResponder.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIRuntimeEventConnection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletConnection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIScreen.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIScrollView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISearchBar.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISegment.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISegmentedControl.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISlider.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStoryboard.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStoryboardModalSegueTemplate.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISwitch.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITabBar.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITabBarButton.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITabBarController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITabBarItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewCell.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewContentView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewDataSource.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewHeaderFooterView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewRow.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewSection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITabPane.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITapGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\XamlUtilities.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\art.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\ForceInclusion.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSAttributedString+UIKitAdditions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSString+UIKitAdditions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSValue_Additions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutConstraint.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAccessibility.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActionSheet.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAlertView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAppearanceSetter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIApplication.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActivity.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActivityViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIApplicationMain.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBarButtonItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBarItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBezierPath.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButton.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIButtonContent.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIClassSwapper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIColor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIControl.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDevice.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDocument.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEvent.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFont.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFontDescriptor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGeometry.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGraphicsFunctions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImage.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageCachedObject.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageNibPlaceholder.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILabel.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILocalNotification.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIManagedDocument.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMotionEffect.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationBar.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationPane.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINib.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINibUnarchiver.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPanGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPageViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPasteboard.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPickerView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverPresentationController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPresentationController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObject.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObjectPair.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIResponder.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRuntimeEventConnection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRuntimeOutletConnection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIScreen.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIScrollView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISearchBar.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISegment.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISegmentedControl.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISlider.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStoryboard.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStoryboardModalSegueTemplate.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISwitch.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBar.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBarButton.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBarController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBarItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewCell.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewContentView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewDataSource.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewHeaderFooterView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewRow.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewSection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabPane.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITapGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\XamlUtilities.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextField.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextField.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITouch.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIUserNotificationSettings.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIWindow.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\_UIGroupEdgeView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivityIndicatorView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDatePicker.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPinchGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIProgressView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewCellContentView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIToolbar.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIWebView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISwipeGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionView.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITouch.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIUserNotificationSettings.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIWindow.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGroupEdgeView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActivityIndicatorView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDatePicker.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPinchGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProgressView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewCellContentView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIToolbar.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIWebView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISwipeGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionView.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewCell.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewCell.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGridLayoutSection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewController.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewController.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewItemKey.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewFlowLayout.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewFlowLayout.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewData.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGridLayoutRow.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewLayout.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayout.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGridLayoutItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewUpdateItem.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UrlLauncher.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutManager.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSParagraphStyle.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextContainer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextStorage.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletCollectionConnection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSStringDrawingContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextRange.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSBundle+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSDataAsset.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSFileProviderExtension.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutAnchor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutDimension.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutXAxisAnchor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSLayoutYAxisAnchor.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSMutableParagraphStyle.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSObject+UIKitAdditions.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSShadow.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextAttachment.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\NSTextTab.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAcceleration.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAccelerometer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAccessibilityCustomAction.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAccessibilityElement.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIActivityItemProvider.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAlertAction.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAlertController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplicationShortcutIcon.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIApplicationShortcutItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIAttachmentBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBarButtonItemGroup.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIBlurEffect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionReusableView.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UrlLauncher.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutManager.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSParagraphStyle.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextContainer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextStorage.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRuntimeOutletCollectionConnection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSStringDrawingContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextRange.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSBundle+UIKitAdditions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSDataAsset.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSFileProviderExtension.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutAnchor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutDimension.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutXAxisAnchor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSLayoutYAxisAnchor.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSMutableParagraphStyle.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSObject+UIKitAdditions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSShadow.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextAttachment.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\NSTextTab.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAcceleration.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAccelerometer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAccessibilityCustomAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAccessibilityElement.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIActivityItemProvider.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAlertAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAlertController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIApplicationShortcutIcon.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIApplicationShortcutItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAttachmentBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBarButtonItemGroup.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIBlurEffect.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionReusableView.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewFlowLayoutInvalidationContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewFocusUpdateContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewLayoutAttributes.mm">
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewFlowLayoutInvalidationContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewFocusUpdateContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayoutAttributes.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewLayoutInvalidationContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollectionViewTransitionLayout.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UICollisionBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDictationPhrase.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDocumentInteractionController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDocumentMenuViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDocumentPickerExtensionViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDocumentPickerViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDynamicAnimator.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDynamicBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDynamicItemBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIDynamicItemGroup.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIFieldBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIFocusAnimationCoordinator.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIFocusGuide.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIFocusUpdateContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGraphics.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIGravityBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImageAsset.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImagePickerController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIImagePickerControllerDelegate.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIInputView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIInputViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIInterpolatingMotionEffect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIKeyCommand.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILayoutGuide.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILexicon.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILexiconEntry.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILocalizedIndexedCollation.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UILongPressGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMarkupTextPrintFormatter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMenuController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMenuItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMotionEffectGroup.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMutableApplicationShortcutItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMutableUserNotificationAction.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIMutableUserNotificationCategory.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPageControl.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPercentDrivenInteractiveTransition.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPopoverBackgroundView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPopoverController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPress.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPressesEvent.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPreviewAction.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPreviewActionGroup.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrinter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrinterPickerController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrintFormatter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrintInfo.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrintInteractionController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrintPageRenderer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPrintPaper.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIPushBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIReferenceLibraryViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIRefreshControl.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIRegion.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIRotationGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIScreenEdgePanGestureRecognizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIScreenMode.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISearchContainerViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISearchController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISearchDisplayController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISimpleTextPrintFormatter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISnapBehavior.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UISplitViewController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStackView.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStateRestoring.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStepper.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStoryboardPopoverSegue.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIStoryboardSegue.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewFocusUpdateContext.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITableViewRowAction.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextChecker.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextInput.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextInputAssistantItem.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextInputMode.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextInputStringTokenizer.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextPosition.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITextSelectionRect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UITraitCollection.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIUserNotificationAction.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIUserNotificationCategory.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIVibrancyEffect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIVideoEditorController.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIViewControllerContextTransitioning.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIViewPrintFormatter.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIVisualEffect.mm" />
-    <ClangCompile Include="..\..\..\Frameworks\UIKit\UIVisualEffectView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewLayoutInvalidationContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewTransitionLayout.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollisionBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDictationPhrase.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDocumentInteractionController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDocumentMenuViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDocumentPickerExtensionViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDocumentPickerViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDynamicAnimator.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDynamicBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDynamicItemBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDynamicItemGroup.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFieldBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFocusAnimationCoordinator.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFocusGuide.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIFocusUpdateContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGraphics.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGravityBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageAsset.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImagePickerController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImagePickerControllerDelegate.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIInputView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIInputViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIInterpolatingMotionEffect.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIKeyCommand.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILayoutGuide.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILexicon.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILexiconEntry.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILocalizedIndexedCollation.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UILongPressGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMarkupTextPrintFormatter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMenuController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMenuItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMotionEffectGroup.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMutableApplicationShortcutItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMutableUserNotificationAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIMutableUserNotificationCategory.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPageControl.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPercentDrivenInteractiveTransition.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverBackgroundView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPress.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPressesEvent.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPreviewAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPreviewActionGroup.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrinter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrinterPickerController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrintFormatter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrintInfo.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrintInteractionController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrintPageRenderer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPrintPaper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPushBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIReferenceLibraryViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRefreshControl.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRegion.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRotationGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIScreenEdgePanGestureRecognizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIScreenMode.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISearchContainerViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISearchController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISearchDisplayController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISimpleTextPrintFormatter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISnapBehavior.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISplitViewController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStackView.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStateRestoring.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStepper.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStoryboardPopoverSegue.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStoryboardSegue.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewFocusUpdateContext.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewRowAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextChecker.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextInput.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextInputAssistantItem.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextInputMode.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextInputStringTokenizer.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextPosition.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITextSelectionRect.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITraitCollection.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIUserNotificationAction.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIUserNotificationCategory.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVibrancyEffect.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVideoEditorController.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIViewControllerContextTransitioning.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIViewPrintFormatter.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVisualEffect.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIVisualEffectView.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIDeviceInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIEmptyController.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIImageCachedObject.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UINavigationControllerInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIProxyObject.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIProxyObjectPair.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletConnection.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UISegment.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITabBarButton.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITabBarControllerInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITabBarInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewContentView.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewDataSource.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewRow.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewSection.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITabPane.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIGridLayoutSection.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UITableViewCellInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIRuntimeOutletCollectionConnection.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIScrollViewInternal.h" />
-    <ClInclude Include="..\..\..\Frameworks\UIKit\UIStoryboardInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIAnimationNotification.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIDeviceInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIEmptyController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIImageCachedObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UINavigationControllerInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIProxyObjectPair.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRuntimeOutletConnection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UISegment.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBarButton.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBarControllerInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabBarInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewContentView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewDataSource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewRow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewSection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITabPane.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_TableCellAnimationHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\_UIGroupEdgeView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UICollectionViewItemKey.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutInfo.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutItem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutRow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIGridLayoutSection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UITableViewCellInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIRuntimeOutletCollectionConnection.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIScrollViewInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIStoryboardInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIApplicationMainInternal.h" />
+  </ItemGroup>
+  <!-- StarboardXaml files -->
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlCompositor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StarboardXaml.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerRegistration.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationCompositor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CALayerXaml.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CompositorInterface.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\Quaternion.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StringConversion.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\XamlUIWaiter.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CompositorInterface.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\LayerRegistration.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StringConversion.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationCompositor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CALayerXaml.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</ProjectGuid>
@@ -325,8 +349,9 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
@@ -337,8 +362,9 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
@@ -350,8 +376,9 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>
@@ -362,8 +389,9 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
-      <CompileAsWinRT>false</CompileAsWinRT>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <CompileAsWinRT>true</CompileAsWinRT>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(StarboardBasePath)\include;$(StarboardBasePath)\Frameworks\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UIKIT_IMPEXP=; %(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\..\common\include;$(StarboardBasePath)\build\include;$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\freetype;$(StarboardBasePath)\deps\3rdParty\icu\icu\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\deps\prebuilt\include\icu;</IncludePaths>

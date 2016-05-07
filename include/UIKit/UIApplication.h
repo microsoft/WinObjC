@@ -33,7 +33,6 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIDevice.h>
 #import <StarboardExport.h>
-#import <StarboardXamlExport.h>
 #import <stdint.h>
 
 UIKIT_EXPORT NSString* const UIApplicationStatusBarOrientationUserInfoKey;
@@ -200,15 +199,7 @@ typedef enum : NSInteger {
     UIUserInterfaceLayoutDirectionRightToLeft,
 } UIUserInterfaceLayoutDirection;
 
-//  UIApplicationMain is included in the static runtime component, and is exported by StarboardXaml
-SBXAML_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
-
-UIKIT_EXPORT int UIApplicationMainInit(
-    int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);
-UIKIT_EXPORT int UIApplicationMainLoop();
-
-UIKIT_EXPORT void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
-UIKIT_EXPORT void UIApplicationMainHandleHighMemoryUsageEvent();
+UIKIT_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
 
 UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;

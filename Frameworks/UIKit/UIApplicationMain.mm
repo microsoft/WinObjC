@@ -288,7 +288,7 @@ int UIApplicationMainInit(
 /**
  @Public No
 */
-int UIApplicationMainLoop() {
+extern "C" int UIApplicationMainLoop() {
     [[NSThread currentThread] _associateWithMainThread];
     NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
 
@@ -313,10 +313,10 @@ int UIApplicationMainLoop() {
     return 0;
 }
 
-void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
+extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
     [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
 }
 
-void UIApplicationMainHandleHighMemoryUsageEvent() {
+extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }

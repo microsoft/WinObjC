@@ -19,6 +19,7 @@
 #include "ApplicationMain.h"
 #include "StringHelpers.h"
 #include "ApplicationCompositor.h"
+#include "ApplicationMain.h"
 
 #include <assert.h>
 #include <string>
@@ -26,10 +27,6 @@
 using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
 using namespace Windows::System::Threading;
-
-void IWSetTemporaryFolder(const char* folder);
-void ApplicationMainHandleWindowVisibilityChangeEvent(bool visible);
-void ApplicationMainHandleHighMemoryUsageEvent();
 
 void* g_XamlUIFiber = nullptr;
 void* g_WinObjcUIFiber = nullptr;
@@ -139,7 +136,7 @@ void InitializeApp() {
 
     auto tempPathData = Windows::Storage::ApplicationData::Current->TemporaryFolder->Path;
     wcstombs_s(&outLen, writableFolder, tempPathData->Data(), sizeof(writableFolder) - 1);
-    IWSetTemporaryFolder(writableFolder);
+    SetTemporaryFolder(writableFolder);
 
     // Set the waiter routine for yielding waits to the XAML/UI thread
     SetXamlUIWaiter();

@@ -24,4 +24,3 @@ const wchar_t* _RawBufferFromNSString(void* str, uint32_t* len) {
     }
     return chars;
 }
-

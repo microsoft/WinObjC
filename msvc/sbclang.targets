@@ -12,10 +12,6 @@
     </AvailableItemName>
   </ItemGroup>
 
-  <PropertyGroup>
-    <IncludeXamlCompositor Condition="'$(AppContainerApplication)' == 'true'">true</IncludeXamlCompositor>
-  </PropertyGroup>
-
   <UsingTask
     TaskName="Clang"
     AssemblyFile="ClangCompileTask.dll"/>
@@ -380,10 +376,6 @@
   </Target>
 
   <Target Name="ComputeRuntimeInputs" DependsOnTargets="ComputeClangOptions">
-    <PropertyGroup>
-      <StarboardRuntimeLib Condition="'$(IncludeXamlCompositor)' == 'true'">StarboardXaml.lib</StarboardRuntimeLib>
-      <StarboardRuntimeLib Condition="'$(IncludeSwapChainCompositor)' == 'true'">StarboardSwapChain.lib</StarboardRuntimeLib>
-    </PropertyGroup>
     <ItemGroup>
       <Link Condition="'$(StarboardLinkObjCRuntime)' == 'true'" Include="$(StarboardObjCRuntimeLib)"/>
       <Link Condition="'$(StarboardRuntimeLib)' != '' And '$(IslandwoodDRT)' == 'true'" Include="$(StarboardRuntimeLib)"/>

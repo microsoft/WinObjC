@@ -13,9 +13,8 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-#ifndef _UIAPPLICATIONINTERNAL_H_
-#define _UIAPPLICATIONINTERNAL_H_
 #import <UIKit/UIApplication.h>
 
 @interface UIApplication (internal)
@@ -42,4 +41,7 @@
 - (id)_evaluateKeyboard;
 @end
 
-#endif /* _UIAPPLICATIONINTERNAL_H_ */
+// UIApplicationMainInit is declared here instead of UIApplicationMainInternal.h because it uses NS* types and cannot be defined in
+// in a file that gets included in C++/CX sources.
+UIKIT_EXPORT int UIApplicationMainInit(
+    int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);

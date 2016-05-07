@@ -32,6 +32,7 @@
 #import "CACompositorClient.h"
 #import "UIApplicationInternal.h"
 #import "NSBundleInternal.h"
+#import "..\UIApplicationMainInternal.h"
 
 static CACompositorClientInterface* _compositorClient = NULL;
 
@@ -105,14 +106,6 @@ int ApplicationMainStart(
     return UIApplicationMainLoop();
 }
 
-void IWSetTemporaryFolder(const char* folder) {
+void SetTemporaryFolder(const char* folder) {
     NSSetTemporaryDirectory([NSString stringWithCString:folder]);
-}
-
-void ApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
-    UIApplicationMainHandleWindowVisibilityChangeEvent(isVisible);
-}
-
-void ApplicationMainHandleHighMemoryUsageEvent() {
-    UIApplicationMainHandleHighMemoryUsageEvent();
 }
