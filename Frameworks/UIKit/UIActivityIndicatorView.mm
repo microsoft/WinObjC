@@ -15,9 +15,10 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "UIKit/UIKit.h"
+#import <UIKit/UIKit.h>
 #import <UWP/WindowsUIXamlControls.h>
 
+#import "AssertARCEnabled.h"
 #import "XamlUtilities.h"
 
 @implementation UIActivityIndicatorView {
@@ -34,26 +35,27 @@
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        _progressRing = [WXCProgressRing make];
-        [self setNativeElement:_progressRing];
+        [self _commonInit];
 
         if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
             [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
-        } else {
-            [self setHidesWhenStopped:TRUE];
         }
-
-        _isAnimating = FALSE;
         if ([coder containsValueForKey:@"UIAnimating"]) {
             _startAnimating = [coder decodeInt32ForKey:@"UIAnimating"];
         }
         if ([coder containsValueForKey:@"UIActivityIndicatorViewStyle"]) {
             [self setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)[coder decodeInt32ForKey:@"UIActivityIndicatorViewStyle"]];
-        } else {
-            [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
         }
     }
     return self;
+}
+
+/**
+ @Status Stub
+ @Notes
+*/
+- (void)encodeWithCoder:(NSCoder*)coder {
+    UNIMPLEMENTED();
 }
 
 /**
@@ -70,22 +72,33 @@
  @Status Interoperable
 */
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
-    if (self = [super init]) {
-        _progressRing = [WXCProgressRing make];
-        [self setNativeElement:_progressRing];
-
-        [self setHidesWhenStopped:TRUE];
-        _isAnimating = FALSE;
-
-        [self setUserInteractionEnabled:TRUE];
+    if (self = [super initWithFrame:CGRectMake(0, 0, 0, 0)]) {
+        [self _commonInit];
         [self setActivityIndicatorViewStyle:style];
     }
     return self;
 }
 
 /**
+ @Status Interoperable
+*/
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self _commonInit];
+    }
+    return self;
+}
+
+- (void)_commonInit {
+    _progressRing = [WXCProgressRing make];
+    [self setNativeElement:_progressRing];
+    _isAnimating = FALSE;
+    [self setHidesWhenStopped:TRUE];
+    [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
+}
+/**
  @Status Caveat
- @Notes In iOS , when hideWhenStopped = False and isAnimating = False, it will show a pause UIAcivityIndicatroView. But, XAML don't have an
+ @Notes In iOS , when hideWhenStopped = False and isAnimating = False, it will show a pause UIAcivityIndicatorView. But, XAML don't have an
  API to show a pause Progress Ring.
  @Notes So when isAnimating = False, WinObjC can't show anything, but space is reserved.
 */
@@ -142,7 +155,8 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes Same issue as setHidesWhenStopped.
 */
 - (void)stopAnimating {
     if (_isAnimating) {
@@ -165,27 +179,6 @@
 /**
  @Status Interoperable
 */
-- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
-    // No-op
-}
-
-/**
- @Status Interoperable
-*/
-- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
-    // No-op
-}
-
-/**
- @Status Interoperable
-*/
-- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
-    // No-op
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setColor:(UIColor*)color {
     [_progressRing setForeground:[WUXMSolidColorBrush makeInstanceWithColor:[XamlUtilities convertUIColorToWUColor:color]]];
     _color = color;
@@ -196,14 +189,6 @@
 */
 - (UIColor*)color {
     return _color;
-}
-
-/**
- @Status Interoperable
- @Notes Always returns NO
-*/
-- (BOOL)isUserInteractionEnabled {
-    return NO;
 }
 
 @end
