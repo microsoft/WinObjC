@@ -232,6 +232,7 @@ if ($WTLOutputDirectory -ne [string]$null)
     if ($TargetingDevice)
     {
         $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
+        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
     }
     else
     {
