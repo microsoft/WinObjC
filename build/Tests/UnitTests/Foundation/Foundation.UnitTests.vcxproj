@@ -322,6 +322,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSString.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDate.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSDateFormatter.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSErrorTests.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">
@@ -330,7 +331,7 @@
       <FileType>Text</FileType>
     </Text>
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileHandleTestFile.txt">
       <ExcludedFromBuild>true</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
