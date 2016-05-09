@@ -287,7 +287,7 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  */
 + (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle {
     woc::unique_cf<CFDateFormatterRef> cfFormatter(CFDateFormatterCreate(nullptr,
-                                                                         CFAutorelease(CFLocaleCopyCurrent()),
+                                                                         static_cast<CFLocaleRef>(CFAutorelease(CFLocaleCopyCurrent())),
                                                                          static_cast<CFDateFormatterStyle>(dateStyle),
                                                                          static_cast<CFDateFormatterStyle>(timeStyle)));
     return static_cast<NSString*>(
