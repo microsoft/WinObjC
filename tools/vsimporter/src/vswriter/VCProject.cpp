@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -24,6 +24,7 @@
 #include "utils.h"
 #include "sbassert.h"
 #include "SBLog.h"
+#include "..\WBITelemetry\WBITelemetry.h"
 
 #include <fstream>
 
@@ -44,7 +45,16 @@ VCProject::VCProject(VSTemplateProject* projTemplate, const std::string& id)
   else
     m_id = sole::uuid4().str();
 
-  addGlobalProperty("ProjectGuid", formatVSGUID(m_id));
+  string guid = formatVSGUID(m_id);
+  if (m_subType == VCShared)
+  {
+      TELEMETRY_EVENT_GUID(L"VSImporterSharedProjectGuid", guid);
+  }
+  else
+  {
+      TELEMETRY_EVENT_GUID(L"VSImporterProjectGuid", guid);
+  }
+  addGlobalProperty("ProjectGuid", guid);
 }
 
 VCProject::~VCProject() {}

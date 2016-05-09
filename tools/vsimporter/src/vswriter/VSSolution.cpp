@@ -170,20 +170,18 @@ void VSSolution::writeProjectConfigurationPlatforms(std::ostream& out) const
   for (auto project : m_buildableProjects) {
     std::string projId = formatVSGUID(project.second->getId());
 
-	// Don't block for telemetry
-    if (projId.length() > 2)
-    {
-        std::string noBracketProjId = projId.substr(1, projId.length() - 2);
-        TELEMETRY_EVENT_DATA(L"VSImporterNewProject", noBracketProjId.c_str());
-    }
+    // Keeping for now - will be phased out once we get enough traction on project tracking for
+    // solution folder, shared project, standard project
+    TELEMETRY_EVENT_GUID(L"VSImporterNewProject", projId);
+
+    // Ignore shared projects
+    if (project.second->getProject()->getSubType() == VCShared)
+        continue;
     bool isDeployable = project.second->getProject()->isDeployable();
     for (auto config : m_configurations) {
       for (auto platform : m_platforms) {
-        // Ignore shared projects
-        if (project.second->getProject()->getSubType() == VCShared)
-          continue;
 
-        std::string projConfig = project.second->getMappedConfiguration(config);
+          std::string projConfig = project.second->getMappedConfiguration(config);
         std::string projPlatform = project.second->getMappedPlatform(platform);
         out << "\t\t" << projId << "." << config << "|" << platform << ".ActiveCfg = "
                                                << projConfig << "|" << projPlatform << std::endl;

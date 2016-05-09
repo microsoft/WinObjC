@@ -49,6 +49,11 @@
         WBITelemetry::WBITelemetryManager::AITrackEventData(eventName, eventData);\
     }
 
+// Used to skim the leading and trailing braces from the GUID.
+#define TELEMETRY_EVENT_GUID(eventName, guid) {\
+        WBITelemetry::WBITelemetryManager::AITrackEventGuidData(eventName, guid);\
+    }
+
 #define TELEMETRY_EVENT_PARMS(msg, ...) {\
         WBITelemetry::WBITelemetryManager::AITrackEventParams(msg,__VA_ARGS__);\
     }
@@ -99,6 +104,8 @@ namespace WBITelemetry
 
         static void AITrackEventData(wstring eventName, wstring eventData);
         static void AITrackEventData(wstring eventName, const char* eventData);
+
+        static void AITrackEventGuidData(wstring eventName, string eventData);
 
         static void AITrackEventParams(wstring eventMessage, ...);
 
