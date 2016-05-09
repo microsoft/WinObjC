@@ -144,3 +144,21 @@ TEST(Foundation, NSObject_KVCArrayAutovivification) {
     EXPECT_EQ(1, [[dictionary objectForKey:@"new"] count]);
     EXPECT_OBJCEQ(@"Hello", [[dictionary objectForKey:@"new"] firstObject]);
 }
+
+@interface TestKVCObject : NSObject
+@property (nonatomic, retain) id key1;
+@property (nonatomic, retain) id key2;
+@end
+
+@implementation TestKVCObject
+@end
+
+TEST(Foundation, NSObject_KVCSetValuesForKeysWithDictionary) {
+    TestKVCObject* testObject = [[[TestKVCObject alloc] init] autorelease];
+    testObject.key2 = @"key2Value";
+    NSDictionary* dictionary = @{ @"key1" : @"key1Value", @"key2": [NSNull null] };
+
+    EXPECT_NO_THROW([testObject setValuesForKeysWithDictionary:dictionary]);
+    EXPECT_OBJCEQ(@"key1Value", testObject.key1);
+    EXPECT_EQ(nil, testObject.key2);
+}
