@@ -9,6 +9,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup VSImporterLabel="FilterItemDescriptions">
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="$projectname$_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>

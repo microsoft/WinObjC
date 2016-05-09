@@ -8,7 +8,7 @@
 
   <Identity
     Name="$guid9$"
-    Publisher="$XmlEscapedPublisherDistinguishedName$"
+    Publisher="islandwood"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="$guid9$" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
@@ -24,7 +24,7 @@
   </Dependencies>
 
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
 
   <Applications>
