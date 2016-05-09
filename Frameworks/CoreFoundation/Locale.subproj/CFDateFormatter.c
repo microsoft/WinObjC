@@ -637,7 +637,7 @@ static void __ResetUDateFormat(CFDateFormatterRef df, Boolean goingToHaveCustomF
     // <rdar://problem/15420462> "Yesterday" and "Today" now appear in lower case
     // ICU uses middle of sentence context for relative days by default. We need to have relative dates to be captalized by default for backward compatibility
     if (wantRelative) {
-        //__cficu_udat_setContext(icudf, UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU, &status); // HACKHACK: Don't have this symbol. Ignore for now.
+        //__cficu_udat_setContext(icudf, UDISPCTX_CAPITALIZATION_FOR_UI_LIST_OR_MENU, &status); // WINOBJC: Don't have this symbol. Ignore.
     }
     
     if (df->_property._IsLenient != NULL) {

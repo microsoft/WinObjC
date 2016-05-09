@@ -374,8 +374,7 @@ TEST(NSArray, ReplaceObjectsInRange_withObjectsFromArray_range) {
                       @"Expected baz1 but was \(array1[3])");
 }
 
-// TODO (7284899): This test has a dependency on the Locale subproj
-TEST(NSArray, DISABLED_SortedArrayUsingComparator) {
+TEST(NSArray, SortedArrayUsingComparator) {
     // sort with localized caseInsensitive compare
     auto input = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
     auto expectedResult = @[ @"a", @"is", @"of", @"sort", @"strings", @"test", @"this", @"with" ];
@@ -398,13 +397,12 @@ TEST(NSArray, DISABLED_SortedArrayUsingComparator) {
     auto resultNumbers = [inputNumbers sortedArrayUsingComparator:^NSComparisonResult(id left, id right) {
         NSInteger l = ((NSNumber*)left).integerValue;
         NSInteger r = ((NSNumber*)right).integerValue;
-        return l < r ? NSOrderedAscending : (l > r ? NSOrderedSame : NSOrderedDescending);
+        return l < r ? NSOrderedAscending : (l > r ? NSOrderedDescending : NSOrderedSame);
     }];
     ASSERT_OBJCEQ(resultNumbers, expectedNumbers);
 }
 
-// TODO (7284899): This test has a dependency on the Locale subproj
-TEST(NSArray, DISABLED_SortedArrayWithOptionsUsingComparator) {
+TEST(NSArray, SortedArrayWithOptionsUsingComparator) {
     // check that sortedArrayWithOptions:comparator: works in the way sortedArrayUsingComparator does
     auto input = @[ @"this", @"is", @"a", @"test", @"of", @"sort", @"with", @"strings" ];
     auto comparator = ^NSComparisonResult(id left, id right) {

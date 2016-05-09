@@ -43,6 +43,14 @@
 #include <Foundation/NSMutableString.h>
 #include "CFFoundationInternal.h"
 
+// WINOBJC: need UNIMPLEMENTED(), StubReturn()
+// TODO: 7495205: Can remove this include when all the UNIMPLEMENTED() functions are filled in
+#pragma push_macro("__OBJC__")
+#undef __OBJC__
+#include <ErrorHandling.h>
+#include <StubReturn.h>
+#pragma pop_macro("__OBJC__")
+
 #if defined(__GNUC__)
 #define LONG_DOUBLE_SUPPORT 1
 #else
@@ -6702,15 +6710,24 @@ void CFShowStr(CFStringRef str) {
 #undef HANGUL_TCOUNT
 #undef HANGUL_NCOUNT
 
-
+/**
+ @Status Stub
+ @Notes
+*/
 CF_EXPORT CFIndex CFStringGetHyphenationLocationBeforeIndex(CFStringRef string, CFIndex location, CFRange limitRange, CFOptionFlags options, CFLocaleRef locale, UTF32Char *character) {
-    // HACKHACK: not implemented
-    return static_cast<CFIndex>(0);
+    // TODO: 7495205: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
+/**
+ @Status Stub
+ @Notes
+*/
 CF_EXPORT Boolean CFStringIsHyphenationAvailableForLocale(CFLocaleRef locale) {
-    // HACKHACK: not implemented
-    return false;
+    // TODO: 7495205: Needs implementation
+    UNIMPLEMENTED();
+    return StubReturn();
 }
 
 // clang-format on

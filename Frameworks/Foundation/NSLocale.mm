@@ -547,4 +547,15 @@ static NSLocale* _currentLocale;
     return StubReturn();
 }
 
+- (NSDictionary*)_prefs {
+    return nil;
+}
+
+- (Boolean)_nullLocale {
+    return false;
+}
+
+- (void)_setNullLocale {
+}
+
 @end

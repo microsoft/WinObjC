@@ -30,8 +30,7 @@ TEST(NSDate, BasicConstruction) {
     ASSERT_OBJCNE(nil, d);
 }
 
-// TODO 7284899: Dependency on Locale.subproj
-TEST(NSDate, DISABLED_DescriptionWithLocale) {
+TEST(NSDate, DescriptionWithLocale) {
     NSDate* d = [NSDate dateWithTimeIntervalSince1970:0];
     ASSERT_OBJCEQ([d descriptionWithLocale:nil], @"1970-01-01 00:00:00 +0000");
     ASSERT_OBJCNE(nil, [d descriptionWithLocale:[NSLocale localeWithLocaleIdentifier:@"ja_JP"]]);

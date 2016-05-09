@@ -32,20 +32,19 @@
 #import "NSCFDate.h"
 
 NSDateFormatter* _getDescriptionFormatter() {
-    NSDateFormatter* formatter = [NSDateFormatter new];
+    NSDateFormatter* formatter = [[NSDateFormatter new] autorelease];
     [formatter setDateFormat:@"yyyy'-'MM'-'dd' 'HH':'mm':'ss Z"];
     [formatter setTimeZone:static_cast<NSTimeZone*>(CFTimeZoneCreateWithTimeIntervalFromGMT(kCFAllocatorSystemDefault, 0.0))];
     return formatter;
 }
 
-NSDateFormatter* _getLocaleDescriptionFormatter(NSLocale* locale) {
+CFDateFormatterRef _getLocaleDescriptionFormatter(NSLocale* locale) {
     CFDateFormatterRef formatter = CFDateFormatterCreate(kCFAllocatorSystemDefault,
                                                          static_cast<CFLocaleRef>(locale),
                                                          kCFDateFormatterFullStyle,
                                                          kCFDateFormatterFullStyle);
     CFDateFormatterSetProperty(formatter, kCFDateFormatterTimeZone, CFTimeZoneCopySystem());
-
-    return static_cast<NSDateFormatter*>(formatter);
+    return formatter;
 }
 
 @implementation NSDate
@@ -95,7 +94,7 @@ NSDateFormatter* _getLocaleDescriptionFormatter(NSLocale* locale) {
 */
 + (NSDate*)distantPast {
     static StrongId<NSDate> staticInstance =
-        [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-(2010.0L * 365 * 24 * 60 * 60)];
+        [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:-(2010.0L * 365 * 24 * 60 * 60)] autorelease];
     return staticInstance;
 }
 
@@ -103,7 +102,8 @@ NSDateFormatter* _getLocaleDescriptionFormatter(NSLocale* locale) {
  @Status Interoperable
 */
 + (NSDate*)distantFuture {
-    static StrongId<NSDate> staticInstance = [[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:2010.0L * 365 * 24 * 60 * 60];
+    static StrongId<NSDate> staticInstance =
+        [[[self allocWithZone:nil] initWithTimeIntervalSinceReferenceDate:2010.0L * 365 * 24 * 60 * 60] autorelease];
     return staticInstance;
 }
 
@@ -299,8 +299,9 @@ NSDateFormatter* _getLocaleDescriptionFormatter(NSLocale* locale) {
 */
 - (NSString*)descriptionWithLocale:(id)locale {
     if (locale) {
-        static StrongId<NSDateFormatter> formatter = _getLocaleDescriptionFormatter(locale);
-        return [formatter stringFromDate:self];
+        static woc::unique_cf<CFDateFormatterRef> formatter(_getLocaleDescriptionFormatter(locale));
+        return [static_cast<NSString*>(CFDateFormatterCreateStringWithDate(nullptr, formatter.get(), static_cast<CFDateRef>(self)))
+            autorelease];
     } else {
         return [self description];
     }

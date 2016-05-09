@@ -1363,8 +1363,9 @@ CFLog(kCFLogLevelWarning, CFSTR("*** TEST FAIL 2 in CFNumberGetValue: BYTES NOT 
 
 static CFComparisonResult CFNumberCompare_new(CFNumberRef number1, CFNumberRef number2, void *context) {
     CF_OBJC_FUNCDISPATCHV(CFNumberGetTypeID(), CFComparisonResult, (NSNumber *)number1, compare:(NSNumber *)number2);
-    // HACKHACK: _reverseCompare doesn't exist and its a little cumbersome to add a new objC method for this. Instead just don't use macro and
+    // WINOBJC: _reverseCompare doesn't exist and its a little cumbersome to add a new objC method for this. Instead just don't use macro and
     // reverse the result manually.
+    // CF_OBJC_FUNCDISPATCHV(CFNumberGetTypeID(), CFComparisonResult, (NSNumber *)number2, _reverseCompare:(NSNumber *)number1);
     if (CF_IS_OBJC(CFNumberGetTypeID(), number2)) { 
         CFComparisonResult result = (CFComparisonResult)CF_OBJC_CALLV((NSNumber *)number2, compare:(NSNumber *)number1); 
         return static_cast<CFComparisonResult>(-1 * static_cast<CFIndex>(result));

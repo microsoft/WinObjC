@@ -30,7 +30,7 @@
 #include <string.h>
 #include <unicode/ucal.h>
 #include <unicode/udat.h>
-// HACKHACK #include <unicode/ustring.h>
+// WINOBJC: unused // #include <unicode/ustring.h>
 #include <CoreFoundation/CFDateFormatter.h>
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_FREEBSD
 #include <dirent.h>
@@ -1492,7 +1492,7 @@ Boolean CFTimeZoneIsDaylightSavingTime(CFTimeZoneRef tz, CFAbsoluteTime at) {
 }
 
 CFTimeInterval CFTimeZoneGetDaylightSavingTimeOffset(CFTimeZoneRef tz, CFAbsoluteTime at) {
-    // HACKHACK: use publicly available method instead.
+    // WINOBJC: use publicly available method instead.
     // CF_OBJC_FUNCDISPATCHV(CFTimeZoneGetTypeID(), CFTimeInterval, (NSTimeZone *)tz, _daylightSavingTimeOffsetForAbsoluteTime:at);
     CF_OBJC_FUNCDISPATCHV(CFTimeZoneGetTypeID(), CFTimeInterval, (NSTimeZone *)tz, daylightSavingTimeOffsetForDate:(NSDate*)CFDateCreate(nullptr, at));
     __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
@@ -1509,7 +1509,7 @@ CFTimeInterval CFTimeZoneGetDaylightSavingTimeOffset(CFTimeZoneRef tz, CFAbsolut
 }
 
 CFAbsoluteTime CFTimeZoneGetNextDaylightSavingTimeTransition(CFTimeZoneRef tz, CFAbsoluteTime at) {
-    // HACKHACK: use public method instead.
+    // WINOBJC: use public method instead.
     // CF_OBJC_FUNCDISPATCHV(CFTimeZoneGetTypeID(), CFTimeInterval, (NSTimeZone *)tz, _nextDaylightSavingTimeTransitionAfterAbsoluteTime:at);
     if (CF_IS_OBJC(CFTimeZoneGetTypeID(), tz)) {
         NSDate* nextDate =  CF_OBJC_CALLV((NSTimeZone *)tz, nextDaylightSavingTimeTransitionAfterDate:(NSDate*)CFDateCreate(nullptr, at));

@@ -262,8 +262,7 @@ TEST(NSString, UppercaseString) {
     ASSERT_OBJCEQ(@"\ufb01".uppercaseString, @"\u0046\u0049");
 }
 
-// TODO 7284899: Dependency on Locale.subproj
-TEST(NSString, DISABLED_UppercaseStringWithLocale) {
+TEST(NSString, UppercaseStringWithLocale) {
     // Special casing (see swift/validation-tests/stdlib/NSStringAPI.swift)
     ASSERT_OBJCEQ([@"\u0069" uppercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0049");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly
@@ -278,8 +277,7 @@ TEST(NSString, LowercaseString) {
     ASSERT_OBJCEQ(@"たちつてと".lowercaseString, @"たちつてと");
 }
 
-// TODO 7284899: Dependency on Locale.subproj
-TEST(NSString, DISABLED_LowercaseStringWithLocale) {
+TEST(NSString, LowercaseStringWithLocale) {
     // Special casing (see swift/validation-tests/stdlib/NSStringAPI.swift)
     ASSERT_OBJCEQ([@"\u0130" lowercaseStringWithLocale:[NSLocale localeWithLocaleIdentifier:@"en"]], @"\u0069\u0307");
     // Currently fails; likely there are locale loading issues that are preventing this from functioning correctly

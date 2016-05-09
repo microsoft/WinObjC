@@ -27,22 +27,18 @@
 #import <vector>
 
 // TODO 6670035: This test has a dependency on NSBundle
-TEST(NSData, DISABLED_WriteToURLOptions) {
+TEST(NSData, WriteToURLOptions) {
     NSData* saveData = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Test" withExtension:@"plist"]];
-    auto savePath = @"/var/tmp/Test.plist";
+    auto savePath = @"/tmp/Test.plist";
 
-    NSError* error;
+    NSError* error = nil;
     [saveData writeToFile:savePath options:NSDataWritingAtomic error:&error];
-    if (error) {
-        ASSERT_TRUE(false);
-    }
+    ASSERT_OBJCEQ(error, nil);
 
     auto fileManager = [NSFileManager defaultManager];
     ASSERT_TRUE([fileManager fileExistsAtPath:savePath]);
     [fileManager removeItemAtPath:savePath error:&error];
-    if (error) {
-        ASSERT_TRUE(false);
-    }
+    ASSERT_OBJCEQ(error, nil);
 }
 
 TEST(NSData, EmptyDescription) {
