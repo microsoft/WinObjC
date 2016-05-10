@@ -78,7 +78,19 @@ __pragma(clang diagnostic pop) \
 -(Class)classForCoder { \
   return [NSBridgedType class];\
 }
+
 // clang-format on
+
+// Helper macro for prototype classes - they must not be retained or released
+#define PROTOTYPE_CLASS_REQUIRED_IMPLS         \
+    -(id)retain {                              \
+        /* No-op, prototypes are singletons */ \
+        return self;                           \
+    }                                          \
+                                               \
+    -(oneway void)release {                    \
+        /* No-op, prototypes are singletons */ \
+    }
 
 // Helper to determine if a concrete class should be used.
 // In order to determine if a concrete class should be used, the self pointer *must* be
@@ -124,17 +136,17 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
     }
 
 // Helper macro for implementing allocWithZone
-#define ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPrototypeType)                              \
-    (NSObject*) allocWithZone : (NSZone*)zone {                                                                    \
-        if (self == [NSBridgedType class]) {                                                                       \
+#define ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPrototypeType)                            \
+    (NSObject*) allocWithZone : (NSZone*)zone {                                                              \
+        if (self == [NSBridgedType class]) {                                                                 \
             static StrongId<NSBridgedPrototypeType> prototype = [NSBridgedPrototypeType allocWithZone:zone]; \
-            return prototype;                                                                                    \
-        }                                                                                                          \
-                                                                                                                   \
-        return [super allocWithZone:zone];                                                                         \
+            return prototype;                                                                                \
+        }                                                                                                    \
+                                                                                                             \
+        return [super allocWithZone:zone];                                                                   \
     }
 
-#define BRIDGED_COLLECTION_FAST_ENUMERATION(CFBridgedType) \
-    (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount { \
-        return _ ## CFBridgedType ## FastEnumeration((CFBridgedType ## Ref)self, state, stackBuf, maxCount); \
+#define BRIDGED_COLLECTION_FAST_ENUMERATION(CFBridgedType)                                                                           \
+    (NSUInteger) countByEnumeratingWithState : (NSFastEnumerationState*)state objects : (id*)stackBuf count : (NSUInteger)maxCount { \
+        return _##CFBridgedType##FastEnumeration((CFBridgedType##Ref)self, state, stackBuf, maxCount);                               \
     }
