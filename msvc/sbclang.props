@@ -3,7 +3,7 @@
   <PropertyGroup>
     <StarboardSdkRoot>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..'))</StarboardSdkRoot>
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM-3.6.0\</StarboardLLVMDirectory>
-    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
+    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$(StarboardSdkRoot)\deps\prebuilt\include\icu" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
     <ExtraStarboardOptions>-Werror=return-type -fconst-strings -fconstant-string-class CFConstantString -fblocks -include StubIncludes.h $(StarboardIncludes)</ExtraStarboardOptions>
   </PropertyGroup>
   <PropertyGroup Label="Clang CC1 Args">

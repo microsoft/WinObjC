@@ -169,6 +169,7 @@ typedef khronos_ssize_t  GLsizeiptr;
 #define GL_STACK_OVERFLOW                 0x0503
 #define GL_STACK_UNDERFLOW                0x0504
 #define GL_OUT_OF_MEMORY                  0x0505
+#define GL_TABLE_TOO_LARGE                0x8031
 
 /* FogMode */
 /*      GL_LINEAR */
