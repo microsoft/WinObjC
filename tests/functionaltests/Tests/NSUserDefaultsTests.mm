@@ -17,13 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(NSUserDefaults, NSUserDefaultsBasic) {
-    // WARNING: NSUserDefaults assumes that it can run code on the main thread.
-    // Fun Fact, there is no main thread in test land and UIKit typically sets it up
-    // (which is probably not the right design). This will use the test thread as the main thread
-    // but may mess up any tests that expect something different.
-    [[NSThread currentThread] _associateWithMainThread];
-
+TEST(NSUserDefaults, Basic) {
     NSUserDefaults* userDefault = [NSUserDefaults standardUserDefaults];
     ASSERT_TRUE(userDefault != nil);
 
@@ -45,4 +39,20 @@ TEST(NSUserDefaults, NSUserDefaultsBasic) {
 
     [url1 release];
     [url3 release];
+}
+
+TEST(NSUserDefaults, KVCArray) {
+    [[NSUserDefaults standardUserDefaults] setObject:@[ @"User Preference 1" ] forKey:@"userPref1"];
+    NSMutableArray* mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"userPref1"];
+    EXPECT_OBJCNE(nil, mutableSetting);
+    EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
+    EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"userPref1"] containsObject:@"Another"]);
+
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"nonexistentPreference"];
+    mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"nonexistentPreference"];
+    EXPECT_OBJCNE(nil, mutableSetting);
+    EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
+    EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"nonexistentPreference"] containsObject:@"Another"]);
+
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }

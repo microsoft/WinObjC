@@ -107,22 +107,6 @@ TEST(NSObject, KVCArrayMutableAdapters) {
     EXPECT_OBJCEQ(@"Hello", [[testObject valueForKey:@"backedByIvar"] firstObject]);
 }
 
-TEST(NSUserDefaults, NSUserDefaults_KVCArray) {
-    [[NSUserDefaults standardUserDefaults] setObject:@[ @"User Preference 1" ] forKey:@"userPref1"];
-    NSMutableArray* mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"userPref1"];
-    EXPECT_OBJCNE(nil, mutableSetting);
-    EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
-    EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"userPref1"] containsObject:@"Another"]);
-
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"nonexistentPreference"];
-    mutableSetting = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKeyPath:@"nonexistentPreference"];
-    EXPECT_OBJCNE(nil, mutableSetting);
-    EXPECT_NO_THROW([mutableSetting addObject:@"Another"]);
-    EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"nonexistentPreference"] containsObject:@"Another"]);
-
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 TEST(NSObject, KVCArrayChangePropagation) {
     NSMutableDictionary* dictionary = [NSMutableDictionary dictionary];
     [dictionary setObject:@[ @"1" ] forKey:@"array"];
