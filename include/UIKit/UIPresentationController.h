@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
 
-@interface UIPresentationController : NSObject
+@interface UIPresentationController : NSObject <UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
 - (instancetype)initWithPresentedViewController:(UIViewController*)presentedViewController
                        presentingViewController:(UIViewController*)presentingViewController;
@@ -55,5 +55,11 @@
 @property (nonatomic, readonly, retain) UIViewController* presentedViewController;
 @property (nonatomic, readonly, retain) UIView* containerView;
 @property (nonatomic, readonly) UIModalPresentationStyle presentationStyle;
+
+@property (nonatomic) CGSize preferredContentSize STUB_PROPERTY;
+@property (nonatomic) UIView* preferredFocusedView STUB_PROPERTY; // TODO: property should be weak, needs ARC
+@property (nonatomic, readonly) UITraitCollection* traitCollection STUB_PROPERTY;
+
+@property (nonatomic) id<UIAdaptivePresentationControllerDelegate> delegate STUB_PROPERTY; // TODO: property should be weak, needs ARC
 
 @end

@@ -103,7 +103,6 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray<ObjectType>*)sortedArrayUsingComparator:(NSComparator)cmptr STUB_METHOD;
 - (NSArray<ObjectType>*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
 - (NSOrderedSet<ObjectType>*)filteredOrderedSetUsingPredicate:(NSPredicate*)predicate STUB_METHOD;
-@property (readonly, copy) NSString* description STUB_PROPERTY;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
 - (NSString*)descriptionWithLocale:(id)locale indent:(NSUInteger)level STUB_METHOD;
 @property (readonly, strong) NSArray<ObjectType>* array STUB_PROPERTY;

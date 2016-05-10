@@ -24,7 +24,7 @@
 @class NSData;
 @class NSError;
 @class NSURL;
-@class NSArray;
+@class NSArray<ObjectType>;
 @class NSCharacterSet;
 @class NSLocale;
 @class NSDictionary;
@@ -150,12 +150,12 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
 + (id)stringWithContentsOfFile:(NSString*)path;
 - (id)initWithContentsOfFile:(NSString*)path;
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error STUB_METHOD;
-- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error STUB_METHOD;
++ (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
+- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 + (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
 - (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
-+ (id)stringWithContentsOfURL:(NSURL*)url STUB_METHOD;
-- (id)initWithContentsOfURL:(NSURL*)url STUB_METHOD;
++ (id)stringWithContentsOfURL:(NSURL*)url;
+- (id)initWithContentsOfURL:(NSURL*)url;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile STUB_METHOD;
 - (BOOL)writeToURL:(NSURL*)url
@@ -191,7 +191,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSString*)stringByAppendingFormat:(NSString*)format, ...;
 - (NSString*)stringByAppendingString:(NSString*)aString;
 - (NSString*)stringByPaddingToLength:(NSUInteger)newLength withString:(NSString*)padString startingAtIndex:(NSUInteger)padIndex;
-- (NSArray*)componentsSeparatedByString:(NSString*)separator;
+- (NSArray<NSString*>*)componentsSeparatedByString:(NSString*)separator;
 - (NSArray*)componentsSeparatedByCharactersInSet:(NSCharacterSet*)separator;
 - (NSString*)stringByTrimmingCharactersInSet:(NSCharacterSet*)set;
 - (NSString*)substringFromIndex:(NSUInteger)anIndex;

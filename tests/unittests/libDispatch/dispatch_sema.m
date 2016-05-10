@@ -53,3 +53,22 @@ TEST(Dispatch, DispatchSema) {
 
     test_stop();
 }
+
+TEST(Dispatch, DispatchSemaphoreWait) {
+    dispatch_time_t time_a_min, time_a, time_a_max, now_a;
+
+    test_start("Dispatch Semaphore Wait");
+
+    dispatch_semaphore_t dsema = dispatch_semaphore_create(0);
+
+    time_a_min = dispatch_time(DISPATCH_TIME_NOW, 2.5 * NSEC_PER_SEC);
+    time_a = dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC);
+    time_a_max = dispatch_time(DISPATCH_TIME_NOW, 3.5 * NSEC_PER_SEC);
+    long ret = dispatch_semaphore_wait(dsema, time_a);
+    now_a = dispatch_time(DISPATCH_TIME_NOW, 0);
+    ASSERT_TRUE_MSG((ret != 0), "dispatch_semaphore_wait should have timed out!");
+    test_long_less_than("Can't finish faster than 2.5s", 0, now_a - time_a_min);
+    test_long_less_than("Must finish faster than 3.5s", 0, time_a_max - now_a);
+
+    test_stop();
+}

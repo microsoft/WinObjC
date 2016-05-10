@@ -2,6 +2,7 @@
   <TemplateContent>
     <Project OutputDirectory="$projectname$-WinStore10" File="App.vcxproj" TargetFileName="$projectname$.vcxproj" Platforms="Win32;ARM" ReplaceParameters="true" Deployable="true">
       <ProjectItem ReplaceParameters="true" TargetFileName="$projectname$.vcxproj.filters">App.vcxproj.filters</ProjectItem>
+      <ProjectItem ReplaceParameters="false" TargetFileName="$projectname$_TemporaryKey.pfx">TemporaryKey.pfx</ProjectItem>
       <ProjectItem ReplaceParameters="true" TargetFileName="Package.appxmanifest">Package-native.appxmanifest</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="default.rd.xml">default.rd.xml</ProjectItem>
       <ProjectItem ReplaceParameters="false" TargetFileName="Assets\LockScreenLogo.scale-200.png">LockScreenLogo.scale-200.png</ProjectItem>

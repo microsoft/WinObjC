@@ -43,6 +43,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) CGPoint center;
 @property (nonatomic) CGSize size;
 @property (nonatomic) CATransform3D transform3D;
+@property (nonatomic) CGAffineTransform transform STUB_PROPERTY;
 @property (nonatomic) CGFloat alpha;
 @property (nonatomic) NSInteger zIndex;
 @property (nonatomic, getter=isHidden) BOOL hidden;

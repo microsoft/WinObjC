@@ -232,7 +232,7 @@ CORETEXT_EXPORT void CTFontDrawGlyphs(CTFontRef font, const CGGlyph glyphs[], co
     STUB_METHOD;
 CORETEXT_EXPORT CFIndex CTFontGetLigatureCaretPositions(CTFontRef font, CGGlyph glyph, CGFloat* positions, CFIndex maxPositions)
     STUB_METHOD;
-CORETEXT_EXPORT CGFontRef CTFontCopyGraphicsFont(CTFontRef font, CTFontDescriptorRef _Nullable* attributes) STUB_METHOD;
+CORETEXT_EXPORT CGFontRef CTFontCopyGraphicsFont(CTFontRef font, CTFontDescriptorRef _Nullable* attributes);
 CORETEXT_EXPORT CTFontRef CTFontCreateWithGraphicsFont(CGFontRef graphicsFont,
                                                        CGFloat size,
                                                        const CGAffineTransform* matrix,

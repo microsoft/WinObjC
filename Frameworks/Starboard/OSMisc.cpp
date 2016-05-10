@@ -23,13 +23,12 @@
 #include <wrl\wrappers\corewrappers.h>
 #include <COMIncludes_End.h>
 
-#import <CoreFoundation/CoreFoundation.h>
-
 #include <algorithm>
+#include <mach/mach_defs.h>
 #include <mach/mach_time.h>
 #include "LoggingNative.h"
 
-static const wchar_t* TAG = L"CFMisc";
+static const wchar_t* TAG = L"OSMisc";
 
 using namespace ABI::Windows::Foundation;
 using namespace Microsoft::WRL;

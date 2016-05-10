@@ -43,6 +43,7 @@ UIKIT_EXPORT_CLASS
 + (UIFont*)fontWithDescriptor:(UIFontDescriptor*)descriptor size:(CGFloat)fontSize;
 + (NSArray*)familyNames STUB_METHOD;
 + (NSArray*)fontNamesForFamilyName:(NSString*)familyName;
++ (UIFont*)preferredFontForTextStyle:(NSString*)style STUB_METHOD;
 
 + (UIFont*)systemFontOfSize:(CGFloat)fontSize;
 + (UIFont*)boldSystemFontOfSize:(CGFloat)fontSize;

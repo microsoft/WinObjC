@@ -148,7 +148,7 @@ SECURITY_EXPORT const CFStringRef kSecImportItemIdentity;
 SECURITY_EXPORT const CFTypeRef kSecPropertyTypeTitle;
 SECURITY_EXPORT const CFTypeRef kSecPropertyTypeError;
 
-SECURITY_EXPORT OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate) STUB_METHOD;
-SECURITY_EXPORT OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result) STUB_METHOD;
-SECURITY_EXPORT OSStatus SecItemDelete(CFDictionaryRef query) STUB_METHOD;
-SECURITY_EXPORT OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result) STUB_METHOD;
+SECURITY_EXPORT OSStatus SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
+SECURITY_EXPORT OSStatus SecItemAdd(CFDictionaryRef attributes, CFTypeRef* result);
+SECURITY_EXPORT OSStatus SecItemDelete(CFDictionaryRef query);
+SECURITY_EXPORT OSStatus SecItemCopyMatching(CFDictionaryRef query, CFTypeRef* result);

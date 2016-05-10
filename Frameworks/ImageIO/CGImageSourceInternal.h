@@ -24,7 +24,7 @@
 @class NSData;
 
 @interface ImageSource : NSObject
-@property (atomic) NSData* data;
+@property (atomic, copy) NSData* data;
 @property (atomic) bool incrementalSource;
 @property (atomic) CGImageSourceStatus loadStatus;
 @property (atomic) int loadIndex;

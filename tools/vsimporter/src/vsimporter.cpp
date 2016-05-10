@@ -18,7 +18,6 @@
 #include <getopt.h>
 #include <dirent.h>
 
-#include "version.h"
 #include "sbassert.h"
 #include "types.h"
 #include "utils.h"
@@ -27,9 +26,6 @@
 #include "VariableCollectionManager.h"
 #include "SBWorkspace.h"
 #include "..\WBITelemetry\WBITelemetry.h"
-
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
 
 enum {
   GenerateMode = 0,
@@ -49,7 +45,7 @@ static void checkWinObjCSDK()
 
 void printVersion(const char *execName)
 {
-static String binaryVersion = String("1.0 (") + STR(VERSION_SHA) + ")";
+static String binaryVersion = "1.0";
   std::cout << sb_basename(execName) << " " << binaryVersion << std::endl;
   exit(EXIT_SUCCESS);
 }
@@ -196,12 +192,15 @@ int main(int argc, char* argv[])
       TELEMETRY_DISABLE();
   }
 
-  TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
-  TELEMETRY_EVENT_DATA(L"IsInternal", isMSFTInternalMachine() ? "1" : "0");
-  string machineID = getMachineID();
-  if (!machineID.empty()) {
-      TELEMETRY_EVENT_DATA(L"MachineId", machineID.c_str());
+  TELEMETRY_SET_INTERNAL(isMSFTInternalMachine());
+  String machineID = getMachineID();
+  if (!machineID.empty())
+  {
+      TELEMETRY_SET_MACHINEID(machineID.c_str());
   }
+
+  TELEMETRY_EVENT_DATA(L"VSImporterStart", "WinStore10");
+
   // Process non-option ARGV-elements
   VariableCollectionManager& settingsManager = VariableCollectionManager::get();
   while (optind < argc) {

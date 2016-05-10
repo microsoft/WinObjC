@@ -424,9 +424,6 @@ LIBRARY Foundation
         kCFTypeArrayCallBacks DATA
         kCFTypeDictionaryKeyCallBacks DATA
         kCFTypeDictionaryValueCallBacks DATA
-        mach_absolute_time
-        mach_timebase_info
-        sysctlbyname
         NSClassFromString
         NSEqualRanges
         NSHomeDirectory

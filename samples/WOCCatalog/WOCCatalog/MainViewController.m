@@ -133,6 +133,12 @@
 
     // Shadow
     [self addMenuItemViewController:[[ShadowViewController alloc] init] andTitle:@"Shadow"];
+
+    // XIBTest
+    UIStoryboard *board = [UIStoryboard storyboardWithName:@"XIBTest" bundle:[NSBundle mainBundle]];
+    UIViewController *controller = [board instantiateInitialViewController];
+
+    [self addMenuItemViewController:controller andTitle:@"XIB Test"];
 }
 
 - (void)didReceiveMemoryWarning {

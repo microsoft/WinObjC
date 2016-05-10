@@ -1349,9 +1349,6 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
     _scale = scale;
 }
 
-- (void)setAccessibilityLabel:(UILabel*)label {
-}
-
 - (instancetype)copyWithZone:(NSZone*)zone {
     return [self retain];
 }

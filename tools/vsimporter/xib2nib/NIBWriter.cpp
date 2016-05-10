@@ -384,6 +384,7 @@ void NIBWriter::WriteData()
             printf("Unable to find class mapping for required object <%s>\n", pObject->_node.name());
             TELEMETRY_EVENT_DATA(L"MissingClassMapping", pObject->_node.name());
             TELEMETRY_FLUSH();
+
             exit(-1);
         }
         pObject->_outputClassNameIdx = classNames.AddString(pObject->_outputClassName);

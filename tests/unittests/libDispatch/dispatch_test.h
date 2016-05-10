@@ -45,12 +45,16 @@ void test_unblock(void);
 
 #define test_ptr(desc, actual, expected) ASSERT_EQ_MSG(actual, expected, desc)
 
-#define test_long(desc, actual, expected) EXPECT_EQ_MSG(actual, expected, desc)
+void _test_long(const char* file, long line, const char* desc, long actual, long expected);
+#define test_long(a, b, c) _test_long(__FILE__, __LINE__, a, b, c)
 
-#define test_long_less_than(desc, actual, expected) EXPECT_LT_MSG(actual, expected, desc)
+void _test_long_less_than(const char* file, long line, const char* desc, long actual, long max_expected);
+#define test_long_less_than(a, b, c) _test_long_less_than(__FILE__, __LINE__, a, b, c)
 
-#define test_double_less_than_or_equal(desc, actual, expected) EXPECT_LE_MSG(actual, expected, desc)
+void _test_double_less_than_or_equal(const char* file, long line, const char* desc, double val, double max_expected);
+#define test_double_less_than_or_equal(d, v, m) _test_double_less_than(__FILE__, __LINE__, d, v, m)
 
-#define test_double_less_than(desc, actual, expected) EXPECT_LT_MSG(actual, expected, desc)
+void _test_double_less_than(const char* file, long line, const char* desc, double val, double max_expected);
+#define test_double_less_than(d, v, m) _test_double_less_than(__FILE__, __LINE__, d, v, m)
 
 __DISPATCH_END_DECLS

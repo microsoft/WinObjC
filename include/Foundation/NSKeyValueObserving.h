@@ -43,6 +43,7 @@ FOUNDATION_EXPORT NSString* const NSKeyValueChangeKindKey;
 FOUNDATION_EXPORT NSString* const NSKeyValueChangeNewKey;
 FOUNDATION_EXPORT NSString* const NSKeyValueChangeOldKey;
 FOUNDATION_EXPORT NSString* const NSKeyValueChangeIndexesKey;
+FOUNDATION_EXPORT NSString* const NSKeyValueChangeIsPriorKey;
 FOUNDATION_EXPORT NSString* const NSKeyValueChangeNotificationIsPriorKey;
 
 @interface NSObject (NSKeyValueObserving)

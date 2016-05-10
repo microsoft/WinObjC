@@ -18,7 +18,7 @@
 #import <CoreGraphics/CGDataProvider.h>
 #import <Foundation/Foundation.h>
 #import <ImageIO/CGImageSource.h>
-#import <ImageIO/CGImageSourceInternal.h>
+#import "CGImageSourceInternal.h"
 #import <ImageIO/ImageIO.h>
 #include <NSLogging.h>
 #import <Starboard.h>

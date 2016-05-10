@@ -1,6 +1,7 @@
 //******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2006-2009 Johannes Fortmann, Cocotron Contributors et al.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -15,9 +16,16 @@
 //******************************************************************************
 
 #import "NSKeyValueObserving-Internal.h"
+#import "NSObject_NSKeyValueCoding-Internal.h"
+#import <objc/objc-arc.h>
+
+#import <Starboard/String.h>
+#import <Windows.h>
+#import <string>
+#import <tuple>
 
 /* Exported */
-// Apple once documented the KVO Change Kind key as the string "kind", and as such, the string literal became
+// NeXT once documented the KVO Change Kind key as the string "kind" and, as such, the string literal became
 // part of the public API. We have to mimic that in case an application was written under the assumption that
 // they could use @"kind" to divine the change type.
 NSString* const NSKeyValueChangeKindKey = @"kind";
@@ -26,500 +34,379 @@ NSString* const NSKeyValueChangeOldKey = @"NSKeyValueChangeOldKey";
 NSString* const NSKeyValueChangeIndexesKey = @"NSKeyValueChangeIndexesKey";
 NSString* const NSKeyValueChangeNotificationIsPriorKey = @"NSKeyValueChangeNotificationIsPriorKey";
 
-/*
-*  KVO Notifiers 101
-*
-*  Imagine we are observing a.b.c.d on a given object.
-*  Key d is declared as depending on the values of da and db.
-*
-*  The notification system creates 7 notifiers.
-*
-*                              +-----+
-*                              |     |
-*                              |  5  +--------+
-*                              |   da|        |
-*                              +--^--+        |
-*                                 :           |
-*                                 :           v
-*  +---+    +---+    +---+    +---+---+   +#######+
-*  |   |    |   |    |   |    |       |   #   7   #
-*  | 1 +--->| 2 +--->| 3 +--->|   4   +--># final #
-*  |  a|    |  b|    |  c|    |      d|   #       #
-*  +---+    +---+    +---+    +---+---+   +#######+
-*                                 :           ^
-*                                 :           |
-*                              +--v--+        |
-*                              |     |        |
-*                              |  6  +--------+
-*                              |   db|
-*                              +-----+
-*
-*  Notifiers 1 - 4 cascade the notification forward along the solid lines -- that is to say,
-*  if notifier 1 fires, it triggers notifier 2 (the 'b' key on the value of 'a'),
-*  if notifier 2 fires, it triggers notifier 3 (the 'c' key on the value of 'b'),
-*  and so on.
-*
-*  At the end of the chain is the final notifier (7): it stores the information required to
-*  dispatch a notification: the destination, context, keypath, pending data, etc.
-*
-*  'd' also has two "dependent" keys. If 5 (da) or 6 (db) change, they trigger the final notifier,
-*  dispatching a change notification on keypath a.b.c.d.
-*
-*  They are not notified by the change to 'd': the dotted lines show dependencies only.
-*
-*  Reconstruction:
-*  After every successful change notification, a notifier will reconstruct the hierarchy of nodes
-*  that follow it. The notifier on 'b' (2) is dependent on the value of 'a'; therefore, if 'a' changes,
-*  'b' and all subpaths need to be re-evaluated.
-*
-*  If 'a' were nil, we would end up with the following diagram:
-*
-*           +#######+
-*           #   2   #
-*        +-># final #
-*  +---+ |  #       #
-*  |   | |  +#######+
-*  | 1 +-+
-*  |  a| |  +:::::::+
-*  +---+ |  :       :
-*        +->: b.c.d :
-*           :       :
-*           +:::::::+
-*
-*  This expresses that we could not complete the keypath from a to d. Therefore, a change on 'a'
-*  will trigger two things. First, a final notification for the observer. Second, a re-registration
-*  of keypath b.c.d on the new value of 'a'.
-*
-*  Time willing, and with the presence of all objects in the chain, this diagram will eventually look
-*  like the one above.
-*
-*  Link updating is a bit of a hairy process. Each chained notifier stores what's necessary to reconstruct
-*  itself and the chain that follows it, given a new value. Therefore, when 'a' changes, it updates its chain
-*  by requesting that 'b' renew itself with a.valueOf('b'). The new notifier is therefore attached to the new value,
-*  and 'a' dispatches to that new notifier in the future.
-*/
-
-namespace {
-
-class NSKVOClassBroker {
-protected:
-    std::recursive_mutex _classMutex;
-
-    // Links a kvo-notifying to its NSKVOClass struct.
-    std::unordered_map<Class, std::shared_ptr<NSKVOClass>> _kvoClasses;
-
-    // This is a map from a class to its kvo-notifying counterpart.
-    std::unordered_map<Class, Class> _kvoNotifyingSubclasses;
-
-public:
-    static NSKVOClassBroker& globalBroker() {
-        // construct on first use
-        static NSKVOClassBroker broker;
-        return broker;
+#pragma region Key Observer
+@implementation _NSKVOKeyObserver
+- (instancetype)initWithObject:(id)object
+               keypathObserver:(_NSKVOKeypathObserver*)keypathObserver
+                           key:(NSString*)key
+                 restOfKeypath:(NSString*)restOfKeypath
+             affectedObservers:(NSArray*)affectedObservers {
+    if (self = [super init]) {
+        _object = object;
+        _keypathObserver = [keypathObserver retain];
+        _key = [key copy];
+        _restOfKeypath = [restOfKeypath copy];
+        _affectedObservers = [affectedObservers copy];
     }
+    return self;
+}
 
-    Class notifyingClassForClass(Class cls) {
-        std::lock_guard<std::recursive_mutex> lock(_classMutex);
+- (void)dealloc {
+    [_keypathObserver release];
+    [_key release];
+    [_restOfKeypath release];
+    [_dependentObservers release];
+    [_restOfKeypathObserver release];
+    [_affectedObservers release];
+    [super dealloc];
+}
+@end
+#pragma endregion
 
-        if (isKVOCapable(cls)) {
-            return cls;
-        }
+#pragma region Keypath Observer
+@interface _NSKVOKeypathObserver () {
+    long _changeDepth;
+}
+@end
 
-        auto it = _kvoNotifyingSubclasses.find(cls);
-        if (it != _kvoNotifyingSubclasses.end()) {
-            return it->second;
-        }
-
-        return NSKVOSwizzledNotifyingClassForClass(cls);
+@implementation _NSKVOKeypathObserver
+- (instancetype)initWithObject:(id)object
+                      observer:(id)observer
+                       keyPath:(NSString*)keypath
+                       options:(NSKeyValueObservingOptions)options
+                       context:(void*)context {
+    if (self = [super init]) {
+        _object = object;
+        objc_storeWeak(&_observer, observer);
+        _keypath = [keypath copy];
+        _options = options;
+        _context = context;
     }
+    return self;
+}
 
-    void registerClassPair(Class notifyingClass, Class originalClass, std::shared_ptr<NSKVOClass>&& attachedInfo) {
-        std::lock_guard<std::recursive_mutex> lock(_classMutex);
-        _kvoNotifyingSubclasses.emplace(originalClass, notifyingClass);
-        if (!attachedInfo) {
-            _kvoClasses.emplace(notifyingClass, std::make_shared<NSKVOClass>(originalClass, notifyingClass));
-        } else {
-            _kvoClasses.emplace(notifyingClass, std::move(attachedInfo));
-        }
-    }
+- (void)dealloc {
+    objc_destroyWeak(&_observer);
+    [_keypath release];
+    [_pendingChange release];
+    [super dealloc];
+}
 
-    bool isKVOCapable(Class cls) {
-        std::lock_guard<std::recursive_mutex> lock(_classMutex);
-        return _kvoClasses.find(cls) != _kvoClasses.end();
-    }
+- (id)observer {
+    return objc_loadWeak(&_observer);
+}
 
-    NSKVOClass& forClass(Class cls) {
-        std::lock_guard<std::recursive_mutex> lock(_classMutex);
-        return *(_kvoClasses[cls]);
-    }
-};
+- (bool)pushWillChange {
+    return InterlockedIncrementNoFence(&_changeDepth) == 1;
+}
 
-constexpr static NSKVOMatchAnyContextTag NSKVOMatchAnyContext{};
+- (bool)popDidChange {
+    return InterlockedDecrementNoFence(&_changeDepth) == 0;
+}
+@end
+#pragma endregion
 
-class NSKVOConcreteNotifier : public NSKVONotifier {
-protected:
-    std::function<void(const NSKVONotifier*)> _deregistrationHook;
-    std::vector<std::shared_ptr<NSKVONotifier>> _dependentNotifiers; // notifiers that were created on our behalf
-    std::vector<std::weak_ptr<NSKVONotifier>> _owningNotifiers; // notifiers that hold ownership stake in us
+#pragma region Object-level Observation Info
+@implementation _NSKVOObservationInfo
+- (instancetype)init {
+    if (self = [super init]) {
+        _keyObserverMap = [[NSMutableDictionary alloc] initWithCapacity:1];
+    }
+    return self;
+}
 
-public:
-    void setDeregistrationHook(std::function<void(const NSKVONotifier*)>&& hook) {
-        _deregistrationHook = std::move(hook);
-    }
-    void addOwningNotifier(const std::shared_ptr<NSKVONotifier>& owningNotifier) {
-        _owningNotifiers.emplace_back(owningNotifier);
-    }
-    void addDependentNotifier(const std::shared_ptr<NSKVONotifier>& dependentNotifier) override {
-        _dependentNotifiers.emplace_back(dependentNotifier);
-        NSKVOConcreteNotifier* concreteDependent = dynamic_cast<NSKVOConcreteNotifier*>(dependentNotifier.get());
-        if (concreteDependent) {
-            concreteDependent->addOwningNotifier(shared_from_this());
-        }
-    }
-    void updateLinks(id instance) override {
-        for (const auto& owningNotifier : _owningNotifiers) {
-            auto lockedOwner(owningNotifier.lock());
-            if (lockedOwner) {
-                lockedOwner->updateLinks(instance);
+- (void)dealloc {
+    if (![self isEmpty]) {
+        // We only want to flag for root observers: anything we created internally is fair game to be destroyed.
+        for (NSString* key in [_keyObserverMap keyEnumerator]) {
+            for (_NSKVOKeyObserver* keyObserver in [_keyObserverMap objectForKey:key]) {
+                if (keyObserver.root) {
+                    [NSException raise:NSInvalidArgumentException
+                                format:@"Object %@ deallocated with observers still registered.", keyObserver.object];
+                }
             }
         }
     }
-    void breakLink() override {
-        auto dependentNotifiersCopy = _dependentNotifiers;
-        for (const auto& dependentNotifier : dependentNotifiersCopy) {
-            dependentNotifier->breakLink();
-        }
-        if (_deregistrationHook) {
-            _deregistrationHook(this);
-        }
-    }
-};
+    [_keyObserverMap release];
+    [_existingDependentKeys release];
+    [super dealloc];
+}
 
-class NSKVOForwardingNotifier : public NSKVOConcreteNotifier {
-private:
-    std::string _key;
-    std::shared_ptr<NSKVONotifier> _chainedNotifier;
-    std::function<std::shared_ptr<NSKVONotifier>(id)> _replacementLink;
+- (void)pushDependencyStack {
+    @synchronized(self) {
+        if (_dependencyDepth == 0) {
+            _existingDependentKeys = [NSMutableSet new];
+        }
+        ++_dependencyDepth;
+    }
+}
 
-public:
-    NSKVOForwardingNotifier(const std::string& key,
-                            const std::shared_ptr<NSKVONotifier>& chainedNotifier,
-                            const std::function<std::shared_ptr<NSKVONotifier>(id)>& replacementLink)
-        : _key(key), _chainedNotifier(chainedNotifier), _replacementLink(replacementLink) {
+- (BOOL)lockDependentKeypath:(NSString*)keypath {
+    @synchronized(self) {
+        if ([_existingDependentKeys containsObject:keypath]) {
+            return NO;
+        }
+        [_existingDependentKeys addObject:keypath];
+        return YES;
     }
-    void dispatch(bool prior) override {
-        _chainedNotifier->dispatch(prior);
+}
+
+- (void)popDependencyStack {
+    @synchronized(self) {
+        --_dependencyDepth;
+        if (_dependencyDepth == 0) {
+            [_existingDependentKeys release];
+            _existingDependentKeys = nil;
+        }
     }
-    bool matches(id observer, const std::string& keypath, NSKVOMatchAnyContextTag) override {
-        return _chainedNotifier->matches(observer, keypath, NSKVOMatchAnyContext);
+}
+
+- (void)addObserver:(_NSKVOKeyObserver*)observer {
+    NSString* key = observer.key;
+    NSMutableArray* observersForKey = nil;
+    @synchronized(self) {
+        observersForKey = [_keyObserverMap objectForKey:key];
+        if (!observersForKey) {
+            observersForKey = [NSMutableArray array];
+            [_keyObserverMap setObject:observersForKey forKey:key];
+        }
+        [observersForKey addObject:observer];
     }
-    bool matches(id observer, const std::string& keypath, void* context) override {
-        return _chainedNotifier->matches(observer, keypath, context);
+}
+
+- (void)removeObserver:(_NSKVOKeyObserver*)observer {
+    @synchronized(self) {
+        NSString* key = observer.key;
+        NSMutableArray* observersForKey = [_keyObserverMap objectForKey:key];
+        [observersForKey removeObject:observer];
+        if (observersForKey.count == 0) {
+            [_keyObserverMap removeObjectForKey:key];
+        }
     }
-    void updateLinks(id instance) override {
-        // updateLinks bears the responsibility of maintaining the notification chain when object values change.
-        // When called with the new value of the key for which this notifier has notified, it will
-        // redirect its next notification to newValue, or [instance valueForKey:@"changedKey"].
-        // This is the effector of the process documented above in "Reconstruction".
-        if (_replacementLink) {
-            auto nextChainInChain = std::dynamic_pointer_cast<NSKVOForwardingNotifier>(_chainedNotifier);
-            if (nextChainInChain) {
-                nextChainInChain->breakLink();
+}
+
+- (NSArray*)observersForKey:(NSString*)key {
+    @synchronized(self) {
+        // This is a copy because most downstream consumers will mutate the original list.
+        return [[[_keyObserverMap objectForKey:key] copy] autorelease];
+    }
+}
+
+- (bool)isEmpty {
+    @synchronized(self) {
+        return _keyObserverMap.count == 0;
+    }
+}
+@end
+
+static _NSKVOObservationInfo* _createObservationInfoForObject(id object) {
+    @synchronized(object) {
+        _NSKVOObservationInfo* observationInfo = [_NSKVOObservationInfo new];
+        [object setObservationInfo:observationInfo];
+        [observationInfo release];
+        return observationInfo;
+    }
+}
+#pragma endregion
+
+#pragma region Observer / Key Registration
+static _NSKVOKeyObserver* _addKeypathObserver(id object,
+                                              NSString* keypath,
+                                              _NSKVOKeypathObserver* keyPathObserver,
+                                              NSArray* affectedObservers);
+static void _removeKeyObserver(_NSKVOKeyObserver* keyObserver);
+
+// Add all observers with declared dependencies on this one:
+// * All keypaths that could trigger a change (keypaths for values affecting us).
+// * The head of the remaining keypath.
+static void _addNestedObserversAndOptionallyDependents(_NSKVOKeyObserver* keyObserver, bool dependents) {
+    id object = keyObserver.object;
+    NSString* key = keyObserver.key;
+    _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
+    _NSKVOObservationInfo* observationInfo =
+        (__bridge _NSKVOObservationInfo*)[object observationInfo] ?: _createObservationInfoForObject(object);
+
+    // Aggregate all keys whose values will affect us.
+    if (dependents) {
+        NSSet* valueInfluencingKeys = [[object class] keyPathsForValuesAffectingValueForKey:key];
+        if (valueInfluencingKeys.count > 0) {
+            // affectedKeyObservers is the list of observers that must be notified of changes.
+            // If we have descendants, we have to add ourselves to the growing list of affected keys.
+            // If not, we must pass it along unmodified.
+            // (This is a minor optimization: we don't need to signal for our own reconstruction
+            //  if we have no subpath observers.)
+            NSArray* affectedKeyObservers =
+                (keyObserver.restOfKeypath ?
+                     [keyObserver.affectedObservers arrayByAddingObject:keyObserver] ?: [NSArray arrayWithObject:keyObserver] :
+                     keyObserver.affectedObservers);
+
+            [observationInfo pushDependencyStack];
+            [observationInfo lockDependentKeypath:keyObserver.key]; // Don't allow our own key to be recreated.
+
+            NSMutableArray* dependentObservers = [NSMutableArray arrayWithCapacity:[valueInfluencingKeys count]];
+            for (NSString* dependentKeypath in valueInfluencingKeys) {
+                if ([observationInfo lockDependentKeypath:dependentKeypath]) {
+                    _NSKVOKeyObserver* dependentObserver =
+                        _addKeypathObserver(object, dependentKeypath, keypathObserver, affectedKeyObservers);
+                    if (dependentObserver) {
+                        [dependentObservers addObject:dependentObserver];
+                    }
+                }
             }
-            id newValue = NSKVOClass::valueForKey(instance, _key);
-            _chainedNotifier = _replacementLink(newValue);
+            keyObserver.dependentObservers = dependentObservers;
+
+            [observationInfo popDependencyStack];
         }
-        __super ::updateLinks(instance);
-    }
-    void breakLink() override {
-        _chainedNotifier->breakLink();
-        NSKVOConcreteNotifier::breakLink();
-    }
-};
-
-struct NSKVOFinalNotifier : public NSKVOConcreteNotifier {
-    NSKVOClass& kvoClass;
-    id observer; // We do not retain our own observer, as that would create a retain cycle.
-    id instance;
-    NSKeyValueObservingOptions options;
-    void* context;
-    std::string keypath;
-    idretaint<NSMutableDictionary> notificationDictionary;
-
-    NSKVOFinalNotifier(
-        NSKVOClass& kvoClass, id observer, id instance, NSKeyValueObservingOptions options, void* context, const std::string& keypath)
-        : kvoClass(kvoClass), observer(observer), instance(instance), options(options), context(context), keypath(keypath) {
-        if (_hasOption(NSKeyValueObservingOptionInitial)) {
-            auto oldOptions = options;
-            options &= ~(NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionOld);
-            this->dispatch(false);
-            options = oldOptions;
-        }
-    }
-    bool _hasOption(NSKeyValueObservingOptions opt) const {
-        return (options & opt) > 0;
-    }
-
-    bool matches(id observer, const std::string& keypath, NSKVOMatchAnyContextTag) override {
-        return this->observer == observer && this->keypath == keypath;
-    }
-
-    bool matches(id observer, const std::string& keypath, void* context) override {
-        return this->observer == observer && this->keypath == keypath && this->context == context;
-    }
-
-    // As this is a terminal node, there are no further chained notifiers to renew.
-    void updateLinks(id instance) override {
-    }
-
-    void dispatch(bool prior) override {
-        if (!notificationDictionary) {
-            notificationDictionary = [NSMutableDictionary dictionary];
-            [notificationDictionary setObject:@(NSKeyValueChangeSetting) forKey:NSKeyValueChangeKindKey];
-        }
-
-        if (prior && _hasOption(NSKeyValueObservingOptionOld)) {
-            [notificationDictionary setObject:kvoClass.valueForKey(instance, keypath) ?: [NSNull null] forKey:NSKeyValueChangeOldKey];
-        }
-
-        if (!prior && _hasOption(NSKeyValueObservingOptionNew)) {
-            [notificationDictionary setObject:kvoClass.valueForKey(instance, keypath) ?: [NSNull null] forKey:NSKeyValueChangeNewKey];
-        }
-
-        // Notify if we are a prior notification and options requested that, or if we aren't prior.
-        bool shouldNotify = (prior && _hasOption(NSKeyValueObservingOptionPrior)) || !prior;
-
-        if (!shouldNotify) {
-            return;
-        }
-
-        if (prior) {
-            NSMutableDictionary* outgoing = [notificationDictionary mutableCopy];
-            [outgoing setObject:@(YES) forKey:NSKeyValueChangeNotificationIsPriorKey];
-            [observer observeValueForKeyPath:[NSString stringWithUTF8String:keypath.c_str()]
-                                    ofObject:instance
-                                      change:outgoing
-                                     context:context];
-        } else {
-            [observer observeValueForKeyPath:[NSString stringWithUTF8String:keypath.c_str()]
-                                    ofObject:instance
-                                      change:notificationDictionary
-                                     context:context];
-            notificationDictionary = nil;
-        }
-    }
-};
-}
-
-const std::unordered_set<std::string>& NSKVOClass::valueDependingKeys(const std::string& key) {
-    const auto found = _valueDependingKeys.find(key);
-    if (found == _valueDependingKeys.end()) {
-        auto& added = _valueDependingKeys[key];
-        if ([originalClass respondsToSelector:@selector(keyPathsForValuesAffectingValueForKey:)]) {
-            NSSet* dependingKeysFromClass =
-                [originalClass keyPathsForValuesAffectingValueForKey:[NSString stringWithUTF8String:key.c_str()]];
-            for (NSString* dependingKey in dependingKeysFromClass) {
-                added.emplace([dependingKey UTF8String]);
-            }
-        }
-        return added;
-    }
-    return found->second;
-}
-
-void NSKVOClass::dealloc(id instance) {
-    // WE CANNOT USE instance AS AN OBJECT IN HERE.
-    // It has been deallocated, and we are updating our bookkeeping.
-    std::lock_guard<std::recursive_mutex> lock(_mutex);
-    _notifiersByInstance.erase(instance);
-
-    auto copiedKeypathNotifiers(std::move(_keypathNotifiersByInstance[instance]));
-    _keypathNotifiersByInstance.erase(instance);
-    for (auto i = copiedKeypathNotifiers.begin(); i != copiedKeypathNotifiers.end(); ++i) {
-        if (i->second.size() > 0) {
-            [NSException raise:NSInvalidArgumentException
-                        format:@"Instance of %s deallocated with observers still registered.", class_getName(originalClass)];
-        }
-    }
-}
-
-/* static */
-void NSKVOClass::ensureObjectWillNotify(id object) {
-    auto notifyingClass = NSKVOClassBroker::globalBroker().notifyingClassForClass(object_getClass(object));
-    object_setClass(object, notifyingClass);
-}
-
-/* static */
-bool NSKVOClass::isKVOCapable(Class cls) {
-    return NSKVOClassBroker::globalBroker().isKVOCapable(cls);
-}
-/* static */
-bool NSKVOClass::isKVOCapable(id objcInstance) {
-    return isKVOCapable(object_getClass(objcInstance));
-}
-
-/* static */
-NSKVOClass& NSKVOClass::forClass(Class cls) {
-    return NSKVOClassBroker::globalBroker().forClass(cls);
-}
-
-/* static */
-NSKVOClass& NSKVOClass::forInstance(id objcInstance) {
-    ensureObjectWillNotify(objcInstance);
-    return forClass((id)object_getClass(objcInstance));
-}
-
-/* static */
-void NSKVOClass::registerClassPair(Class notifyingClass, Class originalClass, std::shared_ptr<NSKVOClass>&& attachedInfo) {
-    NSKVOClassBroker::globalBroker().registerClassPair(notifyingClass, originalClass, std::move(attachedInfo));
-}
-
-void NSKVOClass::_removeNotifier(id instance, const std::string& key, const NSKVONotifier* notifier) {
-    std::lock_guard<std::recursive_mutex> lock(_mutex);
-
-    auto& instanceNotifiers = _notifiersByInstance[instance];
-    auto& notifierSet = instanceNotifiers[key];
-    auto found = std::find_if(notifierSet.begin(),
-                              notifierSet.end(),
-                              [notifier](const std::weak_ptr<NSKVONotifier>& searchingNotifier) -> bool {
-                                  auto lockedSearchingNotifier(searchingNotifier.lock());
-                                  return lockedSearchingNotifier && notifier == lockedSearchingNotifier.get();
-                              });
-    if (found != notifierSet.end()) {
-        notifierSet.erase(found);
-    }
-}
-
-/* static */
-std::shared_ptr<NSKVONotifier> NSKVOClass::_notifierForSubkeyOnInstance(id newValue,
-                                                                        const std::string& keyComponent,
-                                                                        const std::string& keypath,
-                                                                        const std::shared_ptr<NSKVONotifier>& leafNotifier) {
-    if (keypath.size() == 0) {
-        return leafNotifier;
-    }
-
-    if (!newValue) {
-        return std::make_shared<NSKVOForwardingNotifier>(
-            keyComponent,
-            leafNotifier,
-            std::bind(&NSKVOClass::_notifierForSubkeyOnInstance, std::placeholders::_1, keyComponent, keypath, leafNotifier));
     } else {
-        return NSKVOClass::forInstance(newValue)._linkedNotifierForLeaf(newValue, keypath, leafNotifier);
+        // Our dependents still exist, but their leaves have been pruned. Give them the same treatment as us: recreate their leaves.
+        for (_NSKVOKeyObserver* dependentKeyObserver in keyObserver.dependentObservers) {
+            _addNestedObserversAndOptionallyDependents(dependentKeyObserver, false);
+        }
+    }
+
+    // If restOfKeypath is non-nil, we have to chain on further observers.
+    if (keyObserver.restOfKeypath) {
+        keyObserver.restOfKeypathObserver =
+            _addKeypathObserver([object valueForKey:key], keyObserver.restOfKeypath, keypathObserver, keyObserver.affectedObservers);
+    }
+
+    // Back-propagation of changes.
+    // This is where a value-affecting key signals to its dependent that it should be reconstructed.
+    for (_NSKVOKeyObserver* affectedObserver in keyObserver.affectedObservers) {
+        if (!affectedObserver.restOfKeypathObserver) {
+            affectedObserver.restOfKeypathObserver = _addKeypathObserver([affectedObserver.object valueForKey:affectedObserver.key],
+                                                                         affectedObserver.restOfKeypath,
+                                                                         affectedObserver.keypathObserver,
+                                                                         affectedObserver.affectedObservers);
+        }
     }
 }
 
-std::shared_ptr<NSKVONotifier> NSKVOClass::_linkedNotifierForLeaf(id instance,
-                                                                  const std::string& keypath,
-                                                                  const std::shared_ptr<NSKVONotifier>& leafNotifier) {
-    std::lock_guard<std::recursive_mutex> lock(_mutex);
+static void _addKeyObserver(_NSKVOKeyObserver* keyObserver) {
+    id object = keyObserver.object;
+    _NSKVOEnsureKeyWillNotify(object, keyObserver.key);
+    _NSKVOObservationInfo* observationInfo =
+        (__bridge _NSKVOObservationInfo*)[object observationInfo] ?: _createObservationInfoForObject(object);
+    [observationInfo addObserver:keyObserver];
+}
 
-    std::string remainingKeypath(keypath);
-    auto pointPosition = remainingKeypath.find('.');
-    std::string keyComponent(remainingKeypath, 0, pointPosition);
+static _NSKVOKeyObserver* _addKeypathObserver(id object,
+                                              NSString* keypath,
+                                              _NSKVOKeypathObserver* keyPathObserver,
+                                              NSArray* affectedObservers) {
+    if (!object) {
+        return nil;
+    }
+    NSString* key = nil;
+    NSString* restOfKeypath;
+    key = _NSKVCSplitKeypath(keypath, &restOfKeypath);
 
-    _currentlyManipulatingKeys.emplace(keyComponent);
+    _NSKVOKeyObserver* keyObserver = [[[_NSKVOKeyObserver alloc] initWithObject:object
+                                                                keypathObserver:keyPathObserver
+                                                                            key:key
+                                                                  restOfKeypath:restOfKeypath
+                                                              affectedObservers:affectedObservers] autorelease];
 
-    ensureKeyWillNotify(keyComponent);
+    if (object) {
+        _addNestedObserversAndOptionallyDependents(keyObserver, true);
+        _addKeyObserver(keyObserver);
+    }
 
-    std::shared_ptr<NSKVONotifier> chainedNotifier;
-    if (pointPosition == std::string::npos) {
-        // The notifier for a leaf entry:
-        //     1) chains the leaf notifier.
-        chainedNotifier = leafNotifier;
+    return keyObserver;
+}
+#pragma endregion
+
+#pragma region Observer / Key Deregistration
+static void _removeNestedObserversAndOptionallyDependents(_NSKVOKeyObserver* keyObserver, bool dependents) {
+    if (keyObserver.restOfKeypathObserver) {
+        // Destroy the subpath observer recursively.
+        _removeKeyObserver(keyObserver.restOfKeypathObserver);
+        keyObserver.restOfKeypathObserver = nil;
+    }
+
+    if (dependents) {
+        // Destroy each observer whose value affects ours, recursively.
+        for (_NSKVOKeyObserver* dependentKeyObserver in keyObserver.dependentObservers) {
+            _removeKeyObserver(dependentKeyObserver);
+        }
+
+        keyObserver.dependentObservers = nil;
     } else {
-        // The notifier for an intermediate entry:
-        //     1) Dispatches a notification towards the final notifier (as the value has changed)
-        //     2) Recreates the remainder of the notifier chain from this point with real values.
-        //     3) Removes its own entry.
-
-        id descentInstance = valueForKey(instance, keyComponent);
-        remainingKeypath.erase(0, pointPosition + 1);
-
-        chainedNotifier = _notifierForSubkeyOnInstance(descentInstance, keyComponent, remainingKeypath, leafNotifier);
-    }
-
-    auto notifier(std::make_shared<NSKVOForwardingNotifier>(
-        keyComponent,
-        chainedNotifier,
-        std::bind(&NSKVOClass::_notifierForSubkeyOnInstance, std::placeholders::_1, keyComponent, remainingKeypath, leafNotifier)));
-
-    const auto& dependingKeys = valueDependingKeys(keyComponent);
-    for (const auto& dependingKey : dependingKeys) {
-        if (_currentlyManipulatingKeys.count(dependingKey) == 0) {
-            notifier->addDependentNotifier(_linkedNotifierForLeaf(instance, dependingKey, leafNotifier));
+        // Our dependents must be kept alive but pruned.
+        for (_NSKVOKeyObserver* dependentKeyObserver in keyObserver.dependentObservers) {
+            _removeNestedObserversAndOptionallyDependents(dependentKeyObserver, false);
         }
     }
 
-    notifier->setDeregistrationHook(std::bind(&NSKVOClass::_removeNotifier, this, instance, keyComponent, std::placeholders::_1));
-
-    _notifiersByInstance[instance][keyComponent].emplace_back(notifier);
-
-    _currentlyManipulatingKeys.erase(keyComponent);
-
-    return notifier;
-}
-
-void NSKVOClass::addObserver(
-    id observedInstance, id observer, const std::string& keypath, NSKeyValueObservingOptions options, void* context) {
-    std::lock_guard<std::recursive_mutex> lock(_mutex);
-    std::shared_ptr<NSKVONotifier> finalNotifier(new NSKVOFinalNotifier{ *this, observer, observedInstance, options, context, keypath });
-
-    auto rootNotifier = _linkedNotifierForLeaf(observedInstance, keypath, finalNotifier);
-    _keypathNotifiersByInstance[observedInstance][keypath].emplace(std::move(rootNotifier));
-}
-
-template <typename TContext>
-void NSKVOClass::removeObserver(id instance, id observer, const std::string& keypath, TContext context) {
-    std::lock_guard<std::recursive_mutex> lock(_mutex);
-
-    auto& keypathNotifiers(_keypathNotifiersByInstance[instance][keypath]);
-    auto copiedNotifiers(keypathNotifiers);
-    for (const auto& notifier : copiedNotifiers) {
-        if (notifier->matches(observer, keypath, context)) {
-            notifier->breakLink();
-            keypathNotifiers.erase(notifier);
-
-            // We're only supposed to remove a single observer.
-            return;
+    if (keyObserver.affectedObservers) {
+        // Begin to reconstruct each observer that depends on our key's value (triggers in _addDependentAndNestedObservers).
+        for (_NSKVOKeyObserver* affectedObserver in keyObserver.affectedObservers) {
+            _removeKeyObserver(affectedObserver.restOfKeypathObserver);
+            affectedObserver.restOfKeypathObserver = nil;
         }
     }
-
-    [NSException raise:NSInvalidArgumentException
-                format:@"Cannot remove observer %@ for keypath \"%s\" from %@ as it is not a registered observer.",
-                       observer,
-                       keypath.c_str(),
-                       instance];
 }
 
-void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
-    std::lock_guard<std::recursive_mutex> lock(_mutex);
-
-    if (_currentlyManipulatingKeys.count(key) > 0) {
-        // Don't dispatch a notification for a key we are already notifying on.
+static void _removeKeyObserver(_NSKVOKeyObserver* keyObserver) {
+    if (!keyObserver) {
         return;
     }
-    _currentlyManipulatingKeys.emplace(key);
 
-    auto copiedNotifiers(_notifiersByInstance[instance][key]);
-    for (const auto& notifier : copiedNotifiers) {
-        auto lockedNotifier(notifier.lock());
-        if (lockedNotifier) {
-            lockedNotifier->dispatch(prior);
-            if (!prior) {
-                // TODO(DH): Look at caching these values, and only update if necessary.
-                lockedNotifier->updateLinks(instance);
-            }
+    _NSKVOObservationInfo* observationInfo = (_NSKVOObservationInfo*)[keyObserver.object observationInfo];
+
+    [keyObserver retain];
+
+    _removeNestedObserversAndOptionallyDependents(keyObserver, true);
+
+    // These are removed elsewhere; we're probably being cleared as a result of their deletion anyway.
+    keyObserver.affectedObservers = nil;
+
+    [observationInfo removeObserver:keyObserver];
+
+    [keyObserver release];
+}
+
+static void _removeKeypathObserver(id object, NSString* keypath, id observer, void* context) {
+    NSString* key = nil;
+    NSString* restOfKeypath;
+    key = _NSKVCSplitKeypath(keypath, &restOfKeypath);
+
+    _NSKVOObservationInfo* observationInfo = (_NSKVOObservationInfo*)[object observationInfo];
+    for (_NSKVOKeyObserver* keyObserver in [observationInfo observersForKey:key]) {
+        _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
+        if ([keypathObserver.keypath isEqual:keypath] && keypathObserver.object == object &&
+            (!context || keypathObserver.context == context)) {
+            _removeKeyObserver(keyObserver);
+            return;
         }
     }
 
-    _currentlyManipulatingKeys.erase(key);
+    [NSException
+         raise:NSInvalidArgumentException
+        format:@"Cannot remove observer %@ for keypath \"%@\" from %@ as it is not a registered observer.", observer, keypath, object];
 }
+#pragma endregion
 
+#pragma region KVO Core Implementation - NSObject category
 @implementation NSObject (NSKeyValueObservation)
+static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used as an association key.
 
 /**
- @Status Interoperable
+@Status Interoperable
+*/
+- (void*)observationInfo {
+    return (__bridge void*)objc_getAssociatedObject(self, &s_kvoObservationInfoAssociationKey);
+}
+
+/**
+@Status Interoperable
+*/
+- (void)setObservationInfo:(void*)observationInfo {
+    objc_setAssociatedObject(self, &s_kvoObservationInfoAssociationKey, (__bridge id)observationInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+/**
+@Status Interoperable
 */
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
     if ([key length] > 0) {
@@ -527,14 +414,14 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
         auto selectorName = woc::string::format("automaticallyNotifiesObserversOf%c%s", toupper(rawKey[0]), rawKey + 1);
         SEL sel = sel_registerName(selectorName.c_str());
         if ([self respondsToSelector:sel]) {
-            return ((BOOL (*)(id, SEL))objc_msgSend)(self, sel);
+            return ((BOOL(*)(id, SEL))objc_msgSend)(self, sel);
         }
     }
     return YES;
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
     if ([key length] > 0) {
@@ -549,63 +436,149 @@ void NSKVOClass::dispatch(id instance, const std::string& key, bool prior) {
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSInteger)options context:(void*)context {
-    auto& kvoClass = NSKVOClass::forInstance(self);
-    kvoClass.addObserver(self, observer, [keyPath UTF8String], options, context);
+    _NSKVOKeypathObserver* keypathObserver =
+        [[[_NSKVOKeypathObserver alloc] initWithObject:self observer:observer keyPath:keyPath options:options context:context] autorelease];
+    _NSKVOKeyObserver* rootObserver = _addKeypathObserver(self, keyPath, keypathObserver, nil);
+    rootObserver.root = true;
+
+    if ((options & NSKeyValueObservingOptionInitial)) {
+        NSMutableDictionary* change = [NSMutableDictionary dictionary];
+
+        if ((options & NSKeyValueObservingOptionNew)) {
+            id newValue = [self valueForKeyPath:keyPath] ?: [NSNull null];
+            [change setObject:newValue forKey:NSKeyValueChangeNewKey];
+        }
+
+        [observer observeValueForKeyPath:keyPath ofObject:self change:change context:context];
+    }
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath context:(void*)context {
-    auto& kvoClass = NSKVOClass::forInstance(self);
-    kvoClass.removeObserver(self, observer, [keyPath UTF8String], context);
+    _removeKeypathObserver(self, keyPath, observer, context);
+    _NSKVOObservationInfo* observationInfo = (__bridge _NSKVOObservationInfo*)[self observationInfo];
+    if ([observationInfo isEmpty]) {
+        [self setObservationInfo:nullptr];
+    }
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)removeObserver:(id)observer forKeyPath:(NSString*)keyPath {
-    auto& kvoClass = NSKVOClass::forInstance(self);
-    kvoClass.removeObserver(self, observer, [keyPath UTF8String], NSKVOMatchAnyContext);
+    [self removeObserver:observer forKeyPath:keyPath context:NULL];
+}
+
+static void _dispatchWillChange(id object, NSString* key, NSDictionary* changeSeed) {
+    _NSKVOObservationInfo* observationInfo = (__bridge _NSKVOObservationInfo*)[object observationInfo];
+    for (_NSKVOKeyObserver* keyObserver in [observationInfo observersForKey:key]) {
+        _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
+
+        if (![keypathObserver pushWillChange]) {
+            // Skip any keypaths that are in the process of changing.
+            continue;
+        }
+
+        NSKeyValueObservingOptions options = keypathObserver.options;
+        id object = keypathObserver.object;
+        id observer = keypathObserver.observer;
+        NSString* keypath = keypathObserver.keypath;
+        NSMutableDictionary* change = [[changeSeed mutableCopy] autorelease];
+        void* context = keypathObserver.context;
+
+        if ((options & NSKeyValueObservingOptionOld)) {
+            id oldValue = [object valueForKeyPath:keypath] ?: [NSNull null];
+            [change setObject:oldValue forKey:NSKeyValueChangeOldKey];
+
+            // VSO 5051216: Implement set mutation notifications.
+        }
+
+        if ((options & NSKeyValueObservingOptionPrior)) {
+            [change setObject:@(YES) forKey:NSKeyValueChangeNotificationIsPriorKey];
+            [observer observeValueForKeyPath:keypath ofObject:object change:change context:context];
+            [change removeObjectForKey:NSKeyValueChangeNotificationIsPriorKey];
+        }
+
+        _removeNestedObserversAndOptionallyDependents(keyObserver, false);
+
+        keypathObserver.pendingChange = change;
+    }
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)willChangeValueForKey:(NSString*)key {
-    if (!NSKVOClass::isKVOCapable((id)self)) {
+    if (![self observationInfo]) {
         return;
     }
-    auto& kvoClass(NSKVOClass::forInstance(self));
-    kvoClass.dispatch(self, [key UTF8String], true);
+    _dispatchWillChange(self, key, @{ NSKeyValueChangeKindKey : @(NSKeyValueChangeSetting) });
+}
+
+static void _dispatchDidChange(id object, NSString* key) {
+    _NSKVOObservationInfo* observationInfo = (__bridge _NSKVOObservationInfo*)[object observationInfo];
+    NSArray<_NSKVOKeyObserver*>* observers = [observationInfo observersForKey:key];
+    NSMutableDictionary* keypathValueCache = [NSMutableDictionary dictionaryWithCapacity:[observers count]];
+    for (_NSKVOKeyObserver* keyObserver in [observers reverseObjectEnumerator]) {
+        _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
+
+        if (![keypathObserver popDidChange]) {
+            // Skip any keypaths that are in the process of changing.
+            continue;
+        }
+
+        NSKeyValueObservingOptions options = keypathObserver.options;
+        id object = keypathObserver.object;
+        id observer = keypathObserver.observer;
+        NSString* keypath = keypathObserver.keypath;
+        NSMutableDictionary* change = keypathObserver.pendingChange;
+        void* context = keypathObserver.context;
+
+        if ((options & NSKeyValueObservingOptionNew)) {
+            id newValue = [keypathValueCache objectForKey:keypath];
+            if (!newValue) {
+                newValue = [object valueForKeyPath:keypath] ?: [NSNull null];
+                [keypathValueCache setObject:newValue forKey:keypath];
+            }
+            [change setObject:newValue forKey:NSKeyValueChangeNewKey];
+
+            // VSO 5051216: Implement set mutation notifications.
+        }
+
+        [observer observeValueForKeyPath:keypath ofObject:object change:change context:context];
+
+        _addNestedObserversAndOptionallyDependents(keyObserver, false);
+        keypathObserver.pendingChange = nil;
+    }
 }
 
 /**
- @Status Interoperable
+@Status Interoperable
 */
 - (void)didChangeValueForKey:(NSString*)key {
-    if (!NSKVOClass::isKVOCapable((id)self)) {
+    if (![self observationInfo]) {
         return;
     }
-    auto& kvoClass(NSKVOClass::forInstance(self));
-    kvoClass.dispatch(self, [key UTF8String], false);
+    _dispatchDidChange(self, key);
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)willChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet*)indexes forKey:(NSString*)key {
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
+@Status Stub
 */
 - (void)didChange:(NSKeyValueChange)change valuesAtIndexes:(NSIndexSet*)indexes forKey:(NSString*)key {
     UNIMPLEMENTED();
 }
-
 @end
+#pragma endregion

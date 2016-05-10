@@ -16,102 +16,41 @@
 
 #import <Foundation/Foundation.h>
 #include <Starboard.h>
-#include <Starboard/String.h>
 
-#include <new>
-#include <tuple>
-#include <mutex>
-#include <unordered_map>
-#include <unordered_set>
-#include <algorithm>
-#include <iterator>
-#include <memory>
+@class _NSKVOKeypathObserver;
 
-template <>
-struct std::hash<std::tuple<id, std::string>> {
-    size_t operator()(const std::tuple<id, std::string>& o) const {
-        return std::hash<id>()(std::get<0>(o)) ^ (std::hash<std::string>()(std::get<1>(o)) << 4);
-    }
-};
+@interface _NSKVOKeyObserver: NSObject
+- (instancetype)initWithObject:(id)object keypathObserver:(_NSKVOKeypathObserver*)keypathObserver key:(NSString*)key restOfKeypath:(NSString*)restOfKeypath affectedObservers:(NSArray*)affectedObservers;
+@property (nonatomic, retain) _NSKVOKeypathObserver* keypathObserver;
+@property (nonatomic, retain) _NSKVOKeyObserver* restOfKeypathObserver;
+@property (nonatomic, retain) NSArray* dependentObservers;
+@property (nonatomic, assign) id object;
+@property (nonatomic, copy) NSString* key;
+@property (nonatomic, copy) NSString* restOfKeypath;
+@property (nonatomic, retain) NSArray* affectedObservers;
+@property (nonatomic, assign) bool root;
+@end
 
-// NSKVOMatchAnyContextTag is an empty struct type tag used in notifier matching.
-// It signals that the first notifier that matches on everything regardless of context
-// should be removed.
-struct NSKVOMatchAnyContextTag {};
+@interface _NSKVOKeypathObserver: NSObject
+- (instancetype)initWithObject:(id)object observer:(id)observer keyPath:(NSString*)keypath options:(NSKeyValueObservingOptions)options context:(void*)context;
+@property (nonatomic, assign) id object;
+@property (nonatomic, assign) id observer;
+@property (nonatomic, copy) NSString* keypath;
+@property (nonatomic, assign) NSKeyValueObservingOptions options;
+@property (nonatomic, assign) void* context;
 
-class NSKVONotifier: public std::enable_shared_from_this<NSKVONotifier> {
-public:
-    // dispatch a notification towards the observer.
-    virtual void dispatch(bool) = 0;
+@property (atomic, retain) NSMutableDictionary* pendingChange;
+@end
 
-    // matches returns whether this notifier matches the provided observer, keypath, and context.
-    virtual bool matches(id observer, const std::string& keypath, NSKVOMatchAnyContextTag) = 0;
-    virtual bool matches(id observer, const std::string& keypath, void* context) = 0;
+@interface _NSKVOObservationInfo: NSObject {
+    NSMutableDictionary<NSString*, NSArray<_NSKVOKeyObserver*>*>* _keyObserverMap;
+    NSInteger _dependencyDepth;
+    NSMutableSet<NSString*>* _existingDependentKeys;
+}
+- (instancetype)init;
+- (NSArray*)observersForKey:(NSString*)key;
+- (void)addObserver:(_NSKVOKeyObserver*)observer;
+@end
 
-    // addDependentNotifier registers a dependent notifier for destruction when it is removed
-    virtual void addDependentNotifier(const std::shared_ptr<NSKVONotifier>& dependentNotifier) = 0;
-
-    // updateLinks will reconnect a notifier to a newly-changed value
-    virtual void updateLinks(id newValue) = 0;
-
-    // breakLink will remove a notifier's connection to its old instance
-    virtual void breakLink() = 0;
-
-    virtual ~NSKVONotifier() = default;
-};
-
-struct NSKVOClass {
-    Class originalClass;
-    Class notifyingClass;
-
-private:
-    std::recursive_mutex _mutex;
-    std::unordered_map<std::string, std::unordered_set<std::string>> _valueDependingKeys;
-    std::unordered_map<id, std::unordered_map<std::string, std::vector<std::weak_ptr<NSKVONotifier>>>> _notifiersByInstance;
-    std::unordered_map<id, std::unordered_map<std::string, std::unordered_set<std::shared_ptr<NSKVONotifier>>>> _keypathNotifiersByInstance;
-
-    std::unordered_set<std::string> _currentlyManipulatingKeys;
-
-    void _removeNotifier(id instance, const std::string& key, const NSKVONotifier* notifier);
-    static std::shared_ptr<NSKVONotifier> _notifierForSubkeyOnInstance(id newValue,
-                                                                       const std::string& keyComponent,
-                                                                       const std::string& keypath,
-                                                                       const std::shared_ptr<NSKVONotifier>& leafNotifier);
-    std::shared_ptr<NSKVONotifier> _linkedNotifierForLeaf(id instance,
-                                                          const std::string& keypath,
-                                                          const std::shared_ptr<NSKVONotifier>& leafNotifier);
-
-public:
-    NSKVOClass(Class originalClass, Class notifyingClass)
-        : originalClass(originalClass), notifyingClass(notifyingClass), _valueDependingKeys() {
-    }
-
-    const std::unordered_set<std::string>& valueDependingKeys(const std::string& key);
-
-    static id valueForKey(id instance, const std::string& key) {
-        return [instance valueForKeyPath:[NSString stringWithUTF8String:key.c_str()]];
-    }
-
-    virtual void ensureKeyWillNotify(const std::string&) {
-    }
-    virtual void dealloc(id instance);
-    void addObserver(id instance, id observer, const std::string& keypath, NSKeyValueObservingOptions options = 0, void* context = nullptr);
-    template <typename TContext>
-    void removeObserver(id instance, id observer, const std::string& keypath, TContext context);
-    void dispatch(id instance, const std::string& key, bool prior);
-
-    /* statics */
-public:
-    static bool isKVOCapable(Class cls);
-    static bool isKVOCapable(id objcInstance);
-
-    static NSKVOClass& forClass(Class cls);
-    static NSKVOClass& forInstance(id objcInstance);
-
-    static Class notifyingClassForClass(Class cls);
-    static void ensureObjectWillNotify(id objcInstance);
-
-    static void registerClassPair(Class notifyingClass, Class originalClass, std::shared_ptr<NSKVOClass>&& attachedInfo = nullptr);
-};
-
-Class NSKVOSwizzledNotifyingClassForClass(Class);
+// From NSKVOSwizzling
+void _NSKVOEnsureKeyWillNotify(id object, NSString* key);

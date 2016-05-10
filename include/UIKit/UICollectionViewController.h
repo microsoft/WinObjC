@@ -44,4 +44,7 @@ UIKIT_EXPORT_CLASS
 // Defaults to YES, and if YES, any selection is cleared in viewWillAppear:
 @property (nonatomic, assign) BOOL clearsSelectionOnViewWillAppear;
 
+@property(nonatomic, readonly) UICollectionViewLayout* collectionViewLayout STUB_PROPERTY;
+@property(nonatomic, assign) BOOL useLayoutToLayoutNavigationTransitions STUB_PROPERTY;
+
 @end

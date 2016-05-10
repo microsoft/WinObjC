@@ -17,7 +17,6 @@
 
 #import <MapKit/MapKitExport.h>
 #import <Foundation/NSObject.h>
-#import <UIKit/UIAppearance.h>
 #import <UIKit/UIView.h>
 
 @protocol MKAnnotation;
@@ -33,22 +32,6 @@ typedef enum MKAnnotationViewDragState {
 } MKAnnotationViewDragState;
 
 // Missing declaration of //apple_ref/c/data/MKAnnotationCalloutInfoDidChangeNotification
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UICoordinateSpace
-@end
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UIDynamicItem
-@end
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UIFocusEnvironment
-@end
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UITraitEnvironment
-@end
 
 MAPKIT_EXPORT_CLASS
 @interface MKAnnotationView

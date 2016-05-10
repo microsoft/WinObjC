@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23FB26311CD3ED56009020FB /* XIBTest.storyboard */; settings = {ASSET_TAGS = (); }; };
 		49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49FF82CE1C18BFED00798804 /* ApplicationViewController.m */; };
 		4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6401F1B712C0B0092921E /* PhotogridViewController.m */; };
 		4ED640231B717E470092921E /* SingleImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED640221B717E470092921E /* SingleImageViewController.m */; };
@@ -80,6 +81,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		23FB26311CD3ED56009020FB /* XIBTest.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = XIBTest.storyboard; sourceTree = "<group>"; };
 		49FF82CE1C18BFED00798804 /* ApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationViewController.m; sourceTree = "<group>"; };
 		49FF82D01C18BFF700798804 /* ApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationViewController.h; sourceTree = "<group>"; };
 		4ED6401F1B712C0B0092921E /* PhotogridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotogridViewController.m; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				F01C22571C1A540E0007FF0B /* FoundationsViewController.m */,
 				F01C22591C1A54450007FF0B /* TaskInfoViewController.h */,
 				F01C225A1C1A54450007FF0B /* TaskInfoViewController.m */,
+				23FB26311CD3ED56009020FB /* XIBTest.storyboard */,
 			);
 			path = WOCCatalog;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				4EE861F11B5997AD00682BDB /* photo6.jpg in Resources */,
 				4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */,
 				4EE861EB1B5997AD00682BDB /* blueButton.png in Resources */,
+				23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */,
 				4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

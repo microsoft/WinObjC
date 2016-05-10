@@ -41,7 +41,7 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)bundleWithURL:(NSURL*)url;
 + (instancetype)bundleWithPath:(NSString*)fullPath;
 
-- (instancetype)initWithURL:(NSURL*)url STUB_METHOD;
+- (instancetype)initWithURL:(NSURL*)url;
 - (instancetype)initWithPath:(NSString*)fullPath;
 
 + (NSBundle*)bundleForClass:(Class)aClass;

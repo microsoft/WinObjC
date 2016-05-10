@@ -292,8 +292,7 @@ static id _NSWeakLoad(id obj) {
  @Status Interoperable
 */
 - (IMP)methodForSelector:(SEL)selector {
-    IMP ret = class_getMethodImplementation(object_getClass(self), selector);
-    return ret;
+    return objc_msg_lookup(self, selector);
 }
 
 /**

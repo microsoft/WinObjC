@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
@@ -84,6 +84,34 @@ TEST(NSString, NSStringTests) {
     NSString* expectedString = @"Numbers: 1, 2";
     NSString* actualString = [testString2 stringByAppendingFormat:@"%d, %@", 1, @"2"];
     ASSERT_OBJCEQ(expectedString, actualString);
+
+    // stringWithFormat tests
+    actualString = [NSString stringWithFormat:@"%x %d %u %.1f %o %c", 10, 11, 12, 13.0f, 14, 'a'];
+    ASSERT_OBJCEQ(@"a 11 12 13.0 16 a", actualString);
+
+    // %i is undocumented, but apps use it
+    actualString = [NSString stringWithFormat:@"%i", -1];
+    ASSERT_OBJCEQ(@"-1", actualString);
+
+    actualString = [NSString stringWithFormat:@"%hhd %hd %ld %llX", (char)1, (short)2, 3L, -1ULL];
+    ASSERT_OBJCEQ(@"1 2 3 FFFFFFFFFFFFFFFF", actualString);
+
+    actualString = [NSString stringWithFormat:@"%zx %zd", SIZE_MAX, INT_MIN];
+    ASSERT_OBJCEQ(@"ffffffff -2147483648", actualString);
+
+    actualString = [NSString stringWithFormat:@"%tx %td", PTRDIFF_MAX, PTRDIFF_MIN];
+    ASSERT_OBJCEQ(@"7fffffff -2147483648", actualString);
+
+    actualString = [NSString stringWithFormat:@"%jx %jd", UINTMAX_MAX, INTMAX_MIN];
+    ASSERT_OBJCEQ(@"ffffffffffffffff -9223372036854775808", actualString);
+
+    actualString = [NSString stringWithFormat:@"%qx %qd", ULLONG_MAX, LLONG_MIN];
+    ASSERT_OBJCEQ(@"ffffffffffffffff -9223372036854775808", actualString);
+
+    // Formatting with %g looks like it's printing the wrong number of digits, but it matches
+    // the reference platform
+    actualString = [NSString stringWithFormat:@"%.1e %.1E %.1g %.1G", 1e10, 1e0, 1e10, 1e0];
+    ASSERT_OBJCEQ(@"1.0e+10 1.0E+00 1e+10 1", actualString);
 
     // rangeOfCharactersFromSet test
     NSString* testString3 = @"Alpha Bravo Charlie";

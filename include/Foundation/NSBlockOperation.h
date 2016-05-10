@@ -25,7 +25,7 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSBlockOperation : NSOperation
-+ (instancetype)blockOperationWithBlock:(void (^)(void))block STUB_METHOD;
-- (void)addExecutionBlock:(void (^)(void))block STUB_METHOD;
-@property (readonly, copy) NSArray* executionBlocks STUB_PROPERTY;
++ (instancetype)blockOperationWithBlock:(void (^)(void))block;
+- (void)addExecutionBlock:(void (^)(void))block;
+@property (readonly, copy) NSArray* executionBlocks;
 @end
