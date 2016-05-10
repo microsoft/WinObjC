@@ -28,6 +28,8 @@
 #import <Foundation/NSFileManager.h>
 #import <Foundation/NSException.h>
 
+#import "CFFoundationInternal.h"
+
 #include <sys/stat.h>
 
 #import <list>
@@ -42,7 +44,9 @@ static NSMutableArray* _getAllBundles() {
 }
 
 static NSBundle* _getMainBundle() {
-    static StrongId<NSBundle> s_mainBundle = [NSBundle bundleWithPath:@"."];
+    static StrongId<NSBundle> s_mainBundle = [NSBundle
+        bundleWithPath:[[static_cast<NSString*>(CFStringCreateWithFileSystemRepresentation(kCFAllocatorSystemDefault, _CFProcessPath()))
+                           autorelease] stringByDeletingLastPathComponent]];
 
     return s_mainBundle;
 }

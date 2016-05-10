@@ -15,14 +15,23 @@
 //******************************************************************************
 #pragma once
 
-// WINOBJC: Don't redfine timeval // #ifndef __TIMEVAL_REDEFINED
-#if 0
-#define __TIMEVAL_REDEFINED
-#define timeval __ws2_timeval
-#include_next <Winsock2.h>
+#ifdef _ARM_
 
-#undef timeval
-#undef __TIMEVAL_REDEFINED
-#else
-#include_next <Winsock2.h>
+// winnt.h includes some ARM intrinsics that cause *strange*
+// compilation failures. Work around by getting rid of the enum lookup
+// that had an "ambiguous" definition from a single definition (compiler
+// complained it was ambiguous with itself). winnt.h will define this
+// to work around the lookup but this file also defines it so undef it
+// for the definition.
+#pragma push_macro("_ARM_BARRIER_ISHST")
+
+#undef _ARM_BARRIER_ISHST
+#include_next <armintr.h>
+
+#pragma pop_macro("_ARM_BARRIER_ISHST")
+
+#else // Not _ARM_
+
+#include_next <armintr.h>
+
 #endif

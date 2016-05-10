@@ -37,19 +37,7 @@ typedef __suseconds_t suseconds_t;
 #define _SUSECONDS_T_DECLARED
 #endif
 
-#if 0 //  LIMBO
-#ifndef _TIME_T_DECLARED
-typedef __time_t    time_t;
-#define _TIME_T_DECLARED
-#endif
-#endif
-
-/*
- * Structure returned by gettimeofday(2) system call, and used in other calls. defined in winsock2.h
- */
-#ifndef WIN32
-#define __SHOULD_UNDEF_WIN32
-#endif
+#pragma push_macro("WIN32")
 
 #include <Winsock2.h>
 #undef far
@@ -59,9 +47,6 @@ typedef __time_t    time_t;
 #define FAR
 #define NEAR
 
-#ifdef __SHOULD_UNDEF_WIN32
-#undef __SHOULD_UNDEF_WIN32
-#undef WIN32
-#endif
+#pragma pop_macro("WIN32")
 
 #endif /* !_SYS__TIMEVAL_H_ */

@@ -31,6 +31,7 @@ LIBRARY CoreFoundation
         _CFStartOfPathExtension2
         _CFGetSlash
         _CFGetSlashStr
+        _CFProcessPath
 
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA

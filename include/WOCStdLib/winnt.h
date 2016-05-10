@@ -17,20 +17,17 @@
 
 #ifdef _ARM_
 
-// winnt.h includes some ARM intrinsics that aren't supported in
-// clang and cause front end compilation breaks. Because of this,
-// change the MSC version to be less than what is needed to
-// support that option.
-#pragma push_macro("_MSC_FULL_VER")
+// winnt.h includes some ARM intrinsics that cause *strange*
+// compilation failures. Work around by getting rid of the enum lookup
+// that had an "ambiguous" definition from a single definition (compiler
+// complained it was ambiguous with itself). #define the value to the matching
+// enum value instead.
+#pragma push_macro("_ARM_BARRIER_ISHST")
 
-#if (_MSC_FULL_VER >= 170040825)
-#undef _MSC_FULL_VER
-#define _MSC_FULL_VER 170040824
-#endif
-
+#define _ARM_BARRIER_ISHST 0xA
 #include_next <winnt.h>
 
-#pragma pop_macro("_MSC_FULL_VER")
+#pragma pop_macro("_ARM_BARRIER_ISHST")
 
 #else // Not _ARM_
 
