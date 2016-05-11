@@ -36,12 +36,12 @@ static inline OSVERSIONINFO winOsVersion() {
     if (!kernelModule)
         return result;
 
-    typedef HMODULE(WINAPI * GetModuleHandleFunction)(LPCTSTR);
+    typedef HMODULE(WINAPI * GetModuleHandleFunction)(LPCWSTR);
     GetModuleHandleFunction pGetModuleHandle = reinterpret_cast<GetModuleHandleFunction>(GetProcAddress(kernelModule, "GetModuleHandleW"));
     if (!pGetModuleHandle)
         return result;
 
-    HMODULE ntdll = pGetModuleHandle(TEXT("ntdll.dll"));
+    HMODULE ntdll = pGetModuleHandle(L"ntdll.dll");
     if (!ntdll)
         return result;
 
