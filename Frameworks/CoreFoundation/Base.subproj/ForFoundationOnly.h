@@ -17,6 +17,9 @@
 // The header file ForFoundationOnly.h is for the exclusive use of the
 // CoreFoundation and Foundation projects.  No other project should include it.
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnullability-completeness"
+
 #if !defined(__COREFOUNDATION_FORFOUNDATIONONLY__)
 #define __COREFOUNDATION_FORFOUNDATIONONLY__ 1
 
@@ -653,3 +656,4 @@ _CF_EXPORT_SCOPE_END
 #endif /* ! __COREFOUNDATION_FORFOUNDATIONONLY__ */
 
 // clang-format on
+#pragma clang diagnostic pop

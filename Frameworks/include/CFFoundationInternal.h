@@ -23,13 +23,14 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <Foundation/NSFastEnumeration.h>
 
-CF_PRIVATE CF_EXPORT void _CFRuntimeBridgeTypeToClass(CFTypeID type, const void* isa);
-CF_PRIVATE CF_EXPORT void _CFAppendPathComponent2(CFMutableStringRef path, CFStringRef component);
-CF_PRIVATE CF_EXPORT Boolean _CFAppendPathExtension2(CFMutableStringRef path, CFStringRef extension);
-CF_PRIVATE CF_EXPORT CFIndex _CFStartOfPathExtension2(CFStringRef path);
-CF_PRIVATE CF_EXPORT CFIndex _CFStartOfLastPathComponent2(CFStringRef path);
+CF_EXTERN_C_BEGIN
+CF_PRIVATE void _CFRuntimeBridgeTypeToClass(CFTypeID type, const void* isa);
+CF_PRIVATE void _CFAppendPathComponent2(CFMutableStringRef path, CFStringRef component);
+CF_PRIVATE Boolean _CFAppendPathExtension2(CFMutableStringRef path, CFStringRef extension);
+CF_PRIVATE CFIndex _CFStartOfPathExtension2(CFStringRef path);
+CF_PRIVATE CFIndex _CFStartOfLastPathComponent2(CFStringRef path);
 CF_EXPORT UniChar _CFGetSlash();
-CF_PRIVATE CF_EXPORT CFStringRef _CFGetSlashStr();
+CF_PRIVATE CFStringRef _CFGetSlashStr();
 CF_EXPORT const char* _CFProcessPath();
 
 // Miscellaneous - for collections.
@@ -41,10 +42,11 @@ CF_EXPORT unsigned long _CFDictionaryFastEnumeration(CFDictionaryRef dictionary,
 CF_EXPORT unsigned long _CFSetFastEnumeration(CFSetRef set, NSFastEnumerationState* state, void* stackbuffer, unsigned long count);
 CF_EXPORT Boolean _CFDictionaryIsMutable(CFDictionaryRef dictionary);
 CF_EXPORT Boolean _CFArrayIsMutable(CFArrayRef array);
-CF_PRIVATE CF_EXPORT Boolean __CFCharacterSetIsMutable(CFCharacterSetRef cset);
+CF_PRIVATE Boolean __CFCharacterSetIsMutable(CFCharacterSetRef cset);
 CF_EXPORT Boolean _CFDataIsMutable(CFDataRef data);
 CF_EXPORT Boolean _CFAttributedStringIsMutable(CFAttributedStringRef attrStr);
 CF_EXPORT Boolean _CFSetIsMutable(CFSetRef hc);
+CF_EXTERN_C_END
 
 // Copied from CFFileUtilities.c
 #if DEPLOYMENT_TARGET_WINDOWS

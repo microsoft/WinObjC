@@ -145,8 +145,6 @@ typedef double NSTimeInterval;
         __typeof__(b) _b = (b); \
         (_a < _b) ? _a : _b;    \
     })
-#else
-#warning MIN is already defined, MIN(a, b) may not behave as expected.
 #endif
 
 #ifndef MAX
@@ -156,8 +154,6 @@ typedef double NSTimeInterval;
         __typeof__(b) _b = (b); \
         (_a > _b) ? _a : _b;    \
     })
-#else
-#warning MAX is already defined, MAX(a, b) may not not behave as expected.
 #endif
 
 #ifndef ABS
@@ -166,8 +162,6 @@ typedef double NSTimeInterval;
         __typeof__(a) _a = (a); \
         (_a < 0) ? -_a : _a;    \
     })
-#else
-#warning ABS is already defined, ABS(a) may not behave as expected.
 #endif
 
 #ifdef _WINOBJC_DO_NOT_USE_NSLOG

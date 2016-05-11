@@ -28,7 +28,7 @@
 #include "NSPropertyListWriter_binary.h"
 #include "CoreFoundation/CFArray.h"
 #include "Foundation/NSMutableString.h"
-
+#include "NSKeyedArchiverInternal.h"
 #include "Foundation/NSIndexSet.h"
 #include "Foundation/NSNull.h"
 #include "VAListHelper.h"

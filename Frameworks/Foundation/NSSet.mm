@@ -22,6 +22,7 @@
 #include "Foundation/NSEnumerator.h"
 #include "NSEnumeratorInternal.h"
 #include "Foundation/NSKeyedArchiver.h"
+#include "NSKeyedArchiverInternal.h"
 #include "NSCFSet.h"
 #include "VAListHelper.h"
 #include "NSRaise.h"

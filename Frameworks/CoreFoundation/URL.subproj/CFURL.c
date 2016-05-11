@@ -36,6 +36,9 @@
 #include <CoreFoundation/CFURLPriv.h>
 #endif
 
+// WINOBJC: extra includes for bridging
+#include <Foundation/NSURL.h>
+
 #ifndef DEBUG_URL_MEMORY_USAGE
 // enables various statistical counters which can be displayed with __CFURLDumpMemRecord().
 #define DEBUG_URL_MEMORY_USAGE 0

@@ -396,9 +396,15 @@ CF_INLINE long long llabs(long long v) {
 #define strtoul_l(a,b,c,locale) strtoul(a,b,c)
 #define strtol_l(a,b,c,locale) strtol(a,b,c)
 #define strtoll_l(a,b,c,locale) _strtoi64(a,b,c)
+#ifndef strncasecmp
 #define strncasecmp(a, b, c) _strnicmp(a, b, c)
+#endif
+#ifndef strncasecmp_l
 #define strncasecmp_l(a, b, c, d) _strnicmp(a, b, c)
+#endif
+#ifndef snprintf
 #define snprintf _snprintf
+#endif
 
 #define fprintf_l(a,locale,b,...) fprintf(a, b, __VA_ARGS__)
 

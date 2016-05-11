@@ -22,7 +22,7 @@
 #include "CFPriv.h"
 #include <unicode/ucal.h>
 
-// HACKHACK: to make function dispatch work, add in the header for the class it bridges with.
+// WINOBJC: extra includes for bridging
 #include <Foundation/NSCalendar.h>
 
 #define BUFFER_SIZE 512

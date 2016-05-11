@@ -24,6 +24,8 @@
 #include <mach/mach_error.h>
 #endif
 
+// WINOBJC: extra includes for bridging
+#include <Foundation/NSError.h>
 
 #if DEPLOYMENT_RUNTIME_SWIFT
 // We don't have the right memory management semantics to handle storing Swift blocks right now
