@@ -1148,7 +1148,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
     [curController retain];
     [curController autorelease];
 
-    bool popoverPresented = [curController _popoverManagesPresentation];
+    BOOL popoverPresented = [curController _popoverManagesPresentation];
 
     if (!popoverPresented && curController->priv->_modalViewController) {
         [curController dismissViewControllerAnimated:animated completion:completion];
@@ -1253,7 +1253,7 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
 
     priv->_isRootView = true;
 
-    bool displayPopover = false;
+    BOOL displayPopover = NO;
 
     if ([self parentViewController] != nil) {
         if ([self modalPresentationStyle] == UIModalPresentationPopover) {

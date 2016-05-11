@@ -42,7 +42,7 @@
 
 - (void)popoverController:(UIPopoverController*)popoverController
     willRepositionPopoverToRect:(inout CGRect*)rect
-                         inView:(inout UIView**)view {
+                         inView:(inout UIView* _Nonnull*)view {
     if ([_delegate respondsToSelector:@selector(popoverPresentationController:willRepositionPopoverToRect:inView:)]) {
         [_delegate popoverPresentationController:_controller willRepositionPopoverToRect:rect inView:view];
     }

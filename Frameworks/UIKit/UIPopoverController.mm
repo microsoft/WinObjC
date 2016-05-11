@@ -28,8 +28,7 @@
 
 @end
 
-@implementation _WYPopoverDelegateInternal {
-}
+@implementation _WYPopoverDelegateInternal
 
 - (instancetype)initWithController:(UIPopoverController*)controller delegate:(id<UIPopoverControllerDelegate>)delegate {
     if (self = [super init]) {
@@ -52,7 +51,7 @@
     }
 }
 
-- (void)popoverController:(WYPopoverController*)popoverController willRepositionPopoverToRect:(inout CGRect*)rect inView:(inout UIView**)view {
+- (void)popoverController:(WYPopoverController*)popoverController willRepositionPopoverToRect:(inout CGRect*)rect inView:(inout UIView* _Nonnull*)view {
     if ([_delegate respondsToSelector:@selector(popoverController:willRepositionPopoverToRect:inView:)]) {
         [_delegate popoverController:_controller willRepositionPopoverToRect:rect inView:view];
     }
@@ -76,11 +75,11 @@
 @end
 
 @implementation UIPopoverController {
+    StrongId<UIColor> _backgroundColor;
+    StrongId<Class> _popoverBackgroundViewClass;
+    StrongId<_WYPopoverDelegateInternal> _delegateInternal;
     WYPopoverController* _popoverControllerInternal;
-    _WYPopoverDelegateInternal* _delegateInternal;
 }
-@synthesize backgroundColor=_backgroundColor;
-@synthesize popoverBackgroundViewClass=_popoverBackgroundViewClass;
 
 /**
  @Status Interoperable
@@ -209,7 +208,7 @@
 }
 
 /**
- @Status Interoperable
+ @Status Stub
 */
 - (UIPopoverArrowDirection)popoverArrowDirection {
     UNIMPLEMENTED();
@@ -235,7 +234,7 @@
 */
 - (Class)popoverBackgroundViewClass {
     UNIMPLEMENTED();
-    return _popoverBackgroundViewClass;
+    return [_popoverBackgroundViewClass autorelease];
 }
 
 /**
@@ -243,39 +242,34 @@
 */
 - (void)setPopoverBackgroundViewClass:(Class)popoverBackgroundViewClass {
     UNIMPLEMENTED();
-    [_popoverBackgroundViewClass release];
-    _popoverBackgroundViewClass = [popoverBackgroundViewClass retain];
+    _popoverBackgroundViewClass = popoverBackgroundViewClass;
 }
 
 /**
  @Status Interoperable
 */
 - (UIColor*)backgroundColor {
-    return _backgroundColor;
+    return [_backgroundColor autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setBackgroundColor:(UIColor*)color {
-    [_backgroundColor release];
-    _backgroundColor = [color copy];
-    if (color) {
+    _backgroundColor.attach([color copy]);
+    if (_backgroundColor) {
         [_popoverControllerInternal beginThemeUpdates];
-        _popoverControllerInternal.theme.fillTopColor = color;
-        _popoverControllerInternal.theme.fillBottomColor = color;
-        _popoverControllerInternal.theme.outerStrokeColor = color;
-        _popoverControllerInternal.theme.innerStrokeColor = color;
+        _popoverControllerInternal.theme.fillTopColor = _backgroundColor;
+        _popoverControllerInternal.theme.fillBottomColor = _backgroundColor;
+        _popoverControllerInternal.theme.outerStrokeColor = _backgroundColor;
+        _popoverControllerInternal.theme.innerStrokeColor = _backgroundColor;
         [_popoverControllerInternal endThemeUpdates];
     }
 }
 
 - (void)dealloc {
-    [_popoverControllerInternal release];
-    [_delegateInternal release];
     [_presentCompletion release];
-    [_popoverBackgroundViewClass release];
-    [_backgroundColor release];
+    [_popoverControllerInternal release];
     [super dealloc];
 }
 

@@ -28,7 +28,7 @@
 
 - (void)popoverController:(UIPopoverController*)popoverController
     willRepositionPopoverToRect:(inout CGRect*)rect
-                         inView:(inout UIView**)view;
+                         inView:(inout UIView* _Nonnull*)view;
 - (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController*)popoverController;
 - (void)popoverControllerDidDismissPopover:(UIPopoverController*)popoverController;
 @end

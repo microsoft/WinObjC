@@ -16,9 +16,4 @@
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\WYPopoverController.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\WYPopoverPrivate.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\WYStoryboardPopoverSegue.h" />
-  </ItemGroup>
 </Project>

@@ -14,8 +14,7 @@
 //
 //******************************************************************************
 
-#ifndef _UIPOPOVERCONTROLLERINTERNAL_H_
-#define _UIPOPOVERCONTROLLERINTERNAL_H_
+#pragma once
 
 @interface UIPopoverController () {
 @public
@@ -25,5 +24,3 @@
 - (void)_dismissPopoverAnimated:(BOOL)animated completion:(dispatch_block_t)completion;
 
 @end
-
-#endif

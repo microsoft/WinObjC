@@ -23,8 +23,7 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef WYPOPOVERPRIVATE_H
-#define WYPOPOVERPRIVATE_H
+#pragma once
 
 #define WYPopoverControllerDelegate _WYPopoverControllerDelegate
 #define WYPopoverBackgroundView _WYPopoverBackgroundView
@@ -37,5 +36,3 @@
 #define WYPopoverBackgroundInnerView _WYPopoverBackgroundInnerView
 #define WYPopoverOverlayView _WYPopoverOverlayView
 #define WYPopoverOverlayViewDelegate _WYPopoverOverlayViewDelegate
-
-#endif

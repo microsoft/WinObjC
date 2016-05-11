@@ -23,6 +23,8 @@
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#pragma once
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
@@ -211,7 +213,7 @@ typedef NS_OPTIONS(NSUInteger, WYPopoverAnimationOptions) {
 
 - (void)popoverControllerDidDismissPopover:(WYPopoverController *)popoverController;
 
-- (void)popoverController:(WYPopoverController *)popoverController willRepositionPopoverToRect:(inout CGRect *)rect inView:(inout UIView **)view;
+- (void)popoverController:(WYPopoverController *)popoverController willRepositionPopoverToRect:(inout CGRect *)rect inView:(inout UIView * _Nonnull*)view;
 
 - (BOOL)popoverControllerShouldIgnoreKeyboardBounds:(WYPopoverController *)popoverController;
 
