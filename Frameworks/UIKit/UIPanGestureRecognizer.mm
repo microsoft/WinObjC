@@ -251,7 +251,8 @@ static void deleteTouch(UITouch* touch, std::vector<TouchInfo>& touches) {
 */
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     if (_priv->touches.size() == 0) {
-        _priv->currentTranslation.x = _priv->currentTranslation.y = 0.f;
+        _priv->currentTranslation.x = 0.f;
+        _priv->currentTranslation.y = 0.f;
     }
 
     // Add each of the new presses to our list of tracked ones:
@@ -478,6 +479,8 @@ static CGPoint pointFromView(const CGPoint& pt, UIView* viewAddr) {
 */
 - (void)reset {
     _priv->touches.clear();
+    _priv->currentTranslation.x = 0.f;
+    _priv->currentTranslation.y = 0.f;
     _didFireEnded = false;
     _lockVertical = false;
     _lockHorizontal = false;
