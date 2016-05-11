@@ -50,6 +50,7 @@
       <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
       <SBXMLIncludes Include="..\..\deps\prebuilt\include\libxml\**" />
+      <SBICUUnicodeIncludes Include="..\..\deps\prebuilt\include\icu\unicode\**" />
       <SBDispatchIncludes Include="..\..\deps\prebuilt\include\dispatch\**" />
       <SBOpenALIncludes Include="..\..\deps\prebuilt\include\openal\**" />
       <SBSamples Include="..\..\samples\**\*" />
@@ -189,6 +190,7 @@
     <Message Importance="high" Text="Copying includes to destination" />
     <Copy SourceFiles="@(SBIncludes)" DestinationFiles="@(SBIncludes->'$(SBPackageDir)include\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBXMLIncludes)" DestinationFiles="@(SBXMLIncludes->'$(SBPackageDir)include\libxml\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(SBICUUnicodeIncludes)" DestinationFiles="@(SBICUUnicodeIncludes->'$(SBPackageDir)include\unicode\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBDispatchIncludes)" DestinationFiles="@(SBDispatchIncludes->'$(SBPackageDir)include\dispatch\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(SBOpenALIncludes)" DestinationFiles="@(SBOpenALIncludes->'$(SBPackageDir)include\OpenAL\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying binaries to destination" />
