@@ -254,7 +254,7 @@ UIKIT_EXPORT_CLASS
 @property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible STUB_PROPERTY;
 @property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled STUB_PROPERTY;
 @property (nonatomic) BOOL applicationSupportsShakeToEdit STUB_PROPERTY;
-@property (nonatomic) NSInteger applicationIconBadgeNumber STUB_PROPERTY;
+@property (nonatomic) NSInteger applicationIconBadgeNumber;
 @property (nonatomic) UIInterfaceOrientation statusBarOrientation;
 @property (nonatomic, assign) id<UIApplicationDelegate> delegate;
 @property (nonatomic, copy) NSString* preferredContentSizeCategory;

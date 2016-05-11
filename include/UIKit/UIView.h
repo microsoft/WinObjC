@@ -183,12 +183,12 @@ UIKIT_EXPORT_CLASS
 + (UIUserInterfaceLayoutDirection)userInterfaceLayoutDirectionForSemanticContentAttribute:(UISemanticContentAttribute)attribute STUB_METHOD;
 + (void)addKeyframeWithRelativeStartTime:(double)frameStartTime
                         relativeDuration:(double)frameDuration
-                              animations:(void (^)(void))animations STUB_METHOD;
+                              animations:(void (^)(void))animations;
 + (void)animateKeyframesWithDuration:(NSTimeInterval)duration
                                delay:(NSTimeInterval)delay
                              options:(UIViewKeyframeAnimationOptions)options
                           animations:(void (^)(void))animations
-                          completion:(void (^)(BOOL))completion STUB_METHOD;
+                          completion:(void (^)(BOOL))completion;
 + (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations completion:(void (^)(BOOL finished))completion;
 + (void)animateWithDuration:(NSTimeInterval)duration animations:(void (^)(void))animations;
 + (void)animateWithDuration:(NSTimeInterval)duration
@@ -210,7 +210,7 @@ UIKIT_EXPORT_CLASS
                        options:(UIViewAnimationOptions)options
                     animations:(void (^)(void))parallelAnimations
                     completion:(void (^)(BOOL))completion STUB_METHOD;
-+ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation STUB_METHOD;
++ (void)performWithoutAnimation:(void (^)(void))actionsWithoutAnimation;
 + (void)setAnimationBeginsFromCurrentState:(BOOL)beginFromCurrentState;
 + (void)setAnimationCurve:(UIViewAnimationCurve)curve;
 + (void)setAnimationDelay:(NSTimeInterval)delay;
@@ -258,10 +258,8 @@ UIKIT_EXPORT_CLASS
 - (UILayoutPriority)contentCompressionResistancePriorityForAxis:(UILayoutConstraintAxis)axis;
 - (UILayoutPriority)contentHuggingPriorityForAxis:(UILayoutConstraintAxis)axis;
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event;
-- (UIView*)resizableSnapshotViewFromRect:(CGRect)rect
-                      afterScreenUpdates:(BOOL)afterUpdates
-                           withCapInsets:(UIEdgeInsets)capInsets STUB_METHOD;
-- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates STUB_METHOD;
+- (UIView*)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets;
+- (UIView*)snapshotViewAfterScreenUpdates:(BOOL)afterUpdates;
 - (UIView*)viewForBaselineLayout;
 - (UIView*)viewWithTag:(NSInteger)tag;
 - (UIViewPrintFormatter*)viewPrintFormatter STUB_METHOD;

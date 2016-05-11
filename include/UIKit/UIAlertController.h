@@ -38,7 +38,7 @@ UIKIT_EXPORT_CLASS
 @interface UIAlertController
     : UIViewController <NSCoding, NSObject, UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
-@property (copy, nonatomic) NSString* title STUB_PROPERTY;
+@property (copy, nonatomic) NSString* title;
 @property (copy, nonatomic) NSString* message STUB_PROPERTY;
 @property (readonly, nonatomic) UIAlertControllerStyle preferredStyle STUB_PROPERTY;
 @property (readonly, nonatomic) NSArray* actions STUB_PROPERTY;

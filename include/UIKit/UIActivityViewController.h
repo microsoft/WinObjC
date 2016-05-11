@@ -31,6 +31,5 @@ UIKIT_EXPORT_CLASS
 
 @property (nonatomic, copy) UIActivityViewControllerCompletionHandler completionHandler STUB_PROPERTY;
 @property (nonatomic, copy) NSArray* excludedActivityTypes STUB_PROPERTY;
-@property (nonatomic, retain) UIPopoverPresentationController* popoverPresentationController STUB_PROPERTY;
 
 @end
