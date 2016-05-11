@@ -388,7 +388,15 @@ static void _removeKeypathObserver(id object, NSString* keypath, id observer, vo
 #pragma endregion
 
 #pragma region KVO Core Implementation - NSObject category
-@implementation NSObject (NSKeyValueObservation)
+
+@implementation NSObject (NSKeyValueObserving)
+/**
+@Status Interoperable
+*/
+- (void)observeValueForKeyPath:(NSString*)keyPath ofObject:(id)object change:(NSDictionary<NSString*, id>*)change context:(void*)context {
+    [NSException raise:NSInternalInconsistencyException format:@"A key-value observation notification fired, but nobody responded to it: object %@, keypath %@, change %@.", object, keyPath, change];
+}
+
 static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used as an association key.
 
 /**
@@ -438,7 +446,7 @@ static void* s_kvoObservationInfoAssociationKey; // has no value; pointer used a
 /**
 @Status Interoperable
 */
-- (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSInteger)options context:(void*)context {
+- (void)addObserver:(id)observer forKeyPath:(NSString*)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context {
     _NSKVOKeypathObserver* keypathObserver =
         [[[_NSKVOKeypathObserver alloc] initWithObject:self observer:observer keyPath:keyPath options:options context:context] autorelease];
     _NSKVOKeyObserver* rootObserver = _addKeypathObserver(self, keyPath, keypathObserver, nil);
@@ -617,6 +625,20 @@ static void _dispatchDidChange(id notifyingObject, NSString* key) {
         return;
     }
     _dispatchDidChange(self, key);
+}
+
+/**
+ @Status Stub
+*/
+- (void)willChangeValueForKey:(NSString*)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet*)options {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (void)didChangeValueForKey:(NSString*)key withSetMutation:(NSKeyValueSetMutationKind)mutationKind usingObjects:(NSSet*)options {
+    UNIMPLEMENTED();
 }
 @end
 #pragma endregion
