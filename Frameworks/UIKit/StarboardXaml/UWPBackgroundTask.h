@@ -13,14 +13,17 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-extern "C" int UIApplicationMainLoop();
-extern "C" void UIApplicationMainHandleHighMemoryUsageEvent();
-extern "C" void UIApplicationMainHandlePLMEvent(bool isActive);
-extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
-extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData);
-extern "C" void UIApplicationMainHandleVoiceCommandEvent(IInspectable* voiceCommandResult);
-extern "C" void UIApplicationMainHandleProtocolEvent(IInspectable* protocolUri, const wchar_t* sourceApplication);
-extern "C" void UIApplicationMainHandleSuspendEvent();
-extern "C" void UIApplicationMainHandleResumeEvent();
+static const wchar_t* c_backgroundTaskName = L"Windows.WinObjC.BackgroundTask";
+
+#ifndef __cplusplus_winrt
+@interface UWPBackgroundTask : NSObject
+- (instancetype)init __attribute__((unavailable("Use sharedInstance class method to initialize.")));
++ (instancetype)sharedInstance;
+- (void)isEnteringBackground;
+- (void)isEnteringForeground;
+- (double)timeRemaining;
+- (NSUInteger)requestBackgroundTask:(void (^)(void))handler;
+- (void)unregisterBackgroundTask:(NSUInteger)triggerId;
+@end
+#endif
