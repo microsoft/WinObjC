@@ -739,22 +739,24 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (instancetype)substringToIndex:(NSUInteger)anIndex {
-    return static_cast<NSString*>(CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ 0, anIndex }));
+    return
+        [static_cast<NSString*>(CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ 0, anIndex })) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)substringFromIndex:(NSUInteger)anIndex {
-    return static_cast<NSString*>(CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ anIndex, [self length] }));
+    return [static_cast<NSString*>(
+        CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ anIndex, [self length] - anIndex })) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)substringWithRange:(NSRange)range {
-    return static_cast<NSString*>(
-        CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ range.location, range.length }));
+    return [static_cast<NSString*>(
+        CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ range.location, range.length })) autorelease];
 }
 
 /**
@@ -2293,14 +2295,9 @@ static unichar PickWord(unichar c) {
     return kCFStringEncodingASCII;
 }
 
+// For compliance with CF - not sure what differences ought to exist with getCString yet
 - (Boolean)_getCString:(char*)buffer maxLength:(NSUInteger)bufferSize encoding:(NSStringEncoding)encoding {
-    return [self getBytes:buffer
-                maxLength:bufferSize
-               usedLength:nullptr
-                 encoding:encoding
-                  options:static_cast<NSStringEncodingConversionOptions>(0)
-                    range:NSMakeRange(0, [self length])
-           remainingRange:nullptr];
+    return [self getCString:buffer maxLength:bufferSize encoding:encoding];
 }
 
 - (const wchar_t*)rawCharacters {

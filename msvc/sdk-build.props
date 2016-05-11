@@ -146,5 +146,6 @@
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Base.subproj\CFRuntime.h"/>
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\PlugIn.subproj\CFBundlePriv.h"/>
     <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\Stream.subproj\CFStreamPriv.h"/>
+    <CoreFoundationPrivateHeader Include="$(MSBuildThisFileDirectory)..\Frameworks\CoreFoundation\String.subproj\CFRegularExpression.h"/>
   </ItemGroup>
 </Project>

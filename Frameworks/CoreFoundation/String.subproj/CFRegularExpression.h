@@ -9,8 +9,8 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
-/*	CFRegularExpression.h
-	Copyright (c) 2015 Apple Inc. and the Swift project authors
+/*  CFRegularExpression.h
+    Copyright (c) 2015 Apple Inc. and the Swift project authors
  */
 
 #if !defined(__COREFOUNDATION_CFREGULAREXPRESSION__)
@@ -54,6 +54,8 @@ typedef const struct CF_BRIDGED_TYPE(_NSCFRegex) ___CFRegularExpression * _CFReg
 
 typedef void (*_CFRegularExpressionMatch)(void *_Nullable context, CFRange * _Nullable ranges, CFIndex count, _CFRegularExpressionMatchingOptions options, Boolean *stop);
 
+// WINOBJC: added template escaping function
+CFStringRef _CFRegularExpressionCreateEscapedTemplate(CFStringRef pattern);
 CFStringRef _CFRegularExpressionCreateEscapedPattern(CFStringRef pattern);
 _CFRegularExpressionRef _Nullable _CFRegularExpressionCreate(CFAllocatorRef allocator, CFStringRef pattern, _CFRegularExpressionOptions options, CFErrorRef *errorPtr);
 void _CFRegularExpressionDestroy(_CFRegularExpressionRef regex);

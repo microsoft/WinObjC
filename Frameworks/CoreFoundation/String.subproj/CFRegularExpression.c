@@ -92,6 +92,35 @@ CFStringRef _CFRegularExpressionCreateEscapedPattern(CFStringRef pattern) {
     return static_cast<CFStringRef>(CFRetain(pattern));
 }
 
+// WINOBJC: also add template escaping function.
+CFStringRef _CFRegularExpressionCreateEscapedTemplate(CFStringRef pattern) {
+    static CFCharacterSetRef characterSet = NULL;
+    static dispatch_once_t once = 0L;
+    dispatch_once(&once, ^{
+        characterSet = CFCharacterSetCreateWithCharactersInString(kCFAllocatorSystemDefault, CFSTR("$\\"));
+    });
+    
+    CFRange range = CFRangeMake(0, CFStringGetLength(pattern));
+    CFIndex length;
+
+    if (CFStringFindCharacterFromSet(pattern, characterSet, range, 0, &range)) {
+        CFMutableStringRef mutableString = CFStringCreateMutableCopy(kCFAllocatorSystemDefault, 0, pattern);
+        while (range.length > 0) {
+            CFStringInsert(mutableString, range.location, CFSTR("\\"));
+            length = CFStringGetLength(mutableString);
+            if (range.location + range.length + 1 >= length) {
+                break;
+            }
+            if (!CFStringFindCharacterFromSet(mutableString, characterSet, CFRangeMake(range.location + range.length + 1, length - (range.location + range.length) - 1), 0, &range)) {
+                break;
+            }
+        }
+        return mutableString;
+    }
+    return static_cast<CFStringRef>(CFRetain(pattern));
+}
+
+
 _CFRegularExpressionRef _CFRegularExpressionCreate(CFAllocatorRef allocator, CFStringRef pattern, _CFRegularExpressionOptions options, CFErrorRef *errorPtr) {
     UniChar stackBuffer[STACK_BUFFER_SIZE], *patternBuffer = NULL;
     Boolean freePatternBuffer = false;

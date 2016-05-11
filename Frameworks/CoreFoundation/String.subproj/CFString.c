@@ -2144,7 +2144,7 @@ const char * CFStringGetCStringPtr(CFStringRef str, CFStringEncoding encoding) {
     
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, const char *, (CFSwiftRef)str, NSString._fastCStringContents);
     // WINOBJC: pass along encoding instead of hardcoded bool.
-    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, const char *, (NSString *)str, _fastCStringContents:encoding);
+    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, const char *, (NSString *)str, _fastCStringContents:CFStringConvertEncodingToNSStringEncoding(encoding));
 
     __CFAssertIsString(str);
 
@@ -2232,7 +2232,8 @@ Boolean CFStringGetCString(CFStringRef str, char *buffer, CFIndex bufferSize, CF
     __CFAssertIsNotNegative(bufferSize);
     if (bufferSize < 1) return false;
     // CF_SWIFT_FUNCDISPATCHV(__kCFStringTypeID, Boolean, (CFSwiftRef)str, NSString._getCString, buffer, bufferSize - 1, encoding);
-    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, Boolean, (NSString *)str, _getCString:buffer maxLength:(NSUInteger)bufferSize - 1 encoding:encoding);
+    // WINOBJC: call with bufferSize instead of bufferSize - 1, so that _getCString can return a null-terminated string
+    CF_OBJC_FUNCDISPATCHV(__kCFStringTypeID, Boolean, (NSString *)str, _getCString:buffer maxLength:(NSUInteger)bufferSize encoding:CFStringConvertEncodingToNSStringEncoding(encoding));
 
     __CFAssertIsString(str);
 

@@ -733,6 +733,15 @@ LIBRARY CoreFoundation
         CFReadStreamSetProperty
         CFReadStreamGetTypeID
 
+        ; CFRegularExpression.mm
+        _CFRegularExpressionCreateEscapedPattern
+        _CFRegularExpressionCreateEscapedTemplate
+        _CFRegularExpressionCreate
+        _CFRegularExpressionGetNumberOfCaptureGroups
+        _CFRegularExpressionEnumerateMatchesInString
+        _CFRegularExpressionGetPattern
+        _CFRegularExpressionGetOptions
+
         ; CFRunLoop.mm
         kCFRunLoopCommonModes DATA
         kCFRunLoopDefaultMode DATA

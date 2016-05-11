@@ -106,3 +106,4 @@ Frameworks/Include/CFBundlePriv.h
 Frameworks/Include/CFPriv.h
 Frameworks/Include/CFRuntime.h
 Frameworks/Include/CFStreamPriv.h
+Frameworks/Include/CFRegularExpression.h
