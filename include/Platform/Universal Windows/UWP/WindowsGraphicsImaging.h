@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WGIBitmapTransform, WGIBitmapTypedValue, WGIBitmapPropertySet, WGIBitmapPropertiesView, WGIBitmapProperties, WGIPixelDataProvider,
     WGIImageStream, WGIBitmapFrame, WGIBitmapCodecInformation, WGIBitmapDecoder, WGIBitmapEncoder, WGIBitmapBuffer, WGISoftwareBitmap;
 @class WGIBitmapBounds, WGIBitmapSize, WGIBitmapPlaneDescription;
@@ -312,7 +313,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapProperties : RTObject <WGIIBitmapPropertiesView>
-- (RTObject<WFIAsyncAction>*)setPropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSet;
+- (RTObject<WFIAsyncAction>*)setPropertiesAsync:
+    (id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, WGIBitmapTypedValue* > */)propertiesToSet;
 - (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
                    success:(void (^)(WGIBitmapPropertySet*))success
                    failure:(void (^)(NSError*))failure;
@@ -326,7 +328,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIPixelDataProvider : RTObject
-- (NSArray*)detachPixelData;
+- (NSArray* /* uint8_t */)detachPixelData;
 @end
 
 #endif // __WGIPixelDataProvider_DEFINED__
@@ -520,9 +522,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WGIBitmapCodecInformation : RTObject
 @property (readonly) WFGUID* codecId;
-@property (readonly) NSArray* fileExtensions;
+@property (readonly) NSArray* /* NSString * */ fileExtensions;
 @property (readonly) NSString* friendlyName;
-@property (readonly) NSArray* mimeTypes;
+@property (readonly) NSArray* /* NSString * */ mimeTypes;
 @end
 
 #endif // __WGIBitmapCodecInformation_DEFINED__
@@ -533,7 +535,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapDecoder : RTObject <WGIIBitmapFrame, WGIIBitmapFrameWithSoftwareBitmap>
-+ (NSArray*)getDecoderInformationEnumerator;
++ (NSArray* /* WGIBitmapCodecInformation* */)getDecoderInformationEnumerator;
 + (void)createAsync:(RTObject<WSSIRandomAccessStream>*)stream
             success:(void (^)(WGIBitmapDecoder*))success
             failure:(void (^)(NSError*))failure;
@@ -593,14 +595,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WGIBitmapEncoder : RTObject
-+ (NSArray*)getEncoderInformationEnumerator;
++ (NSArray* /* WGIBitmapCodecInformation* */)getEncoderInformationEnumerator;
 + (void)createAsync:(WFGUID*)encoderId
              stream:(RTObject<WSSIRandomAccessStream>*)stream
             success:(void (^)(WGIBitmapEncoder*))success
             failure:(void (^)(NSError*))failure;
 + (void)createWithEncodingOptionsAsync:(WFGUID*)encoderId
                                 stream:(RTObject<WSSIRandomAccessStream>*)stream
-                       encodingOptions:(id<NSFastEnumeration> /* RTKeyValuePair* */)encodingOptions
+                       encodingOptions:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, WGIBitmapTypedValue* > */)encodingOptions
                                success:(void (^)(WGIBitmapEncoder*))success
                                failure:(void (^)(NSError*))failure;
 + (void)createForTranscodingAsync:(RTObject<WSSIRandomAccessStream>*)stream
@@ -629,9 +631,10 @@ WINRT_EXPORT
               height:(unsigned int)height
                 dpiX:(double)dpiX
                 dpiY:(double)dpiY
-              pixels:(id<NSFastEnumeration> /* uint8_t */)pixels;
+              pixels:(NSArray* /* uint8_t */)pixels;
 - (RTObject<WFIAsyncAction>*)goToNextFrameAsync;
-- (RTObject<WFIAsyncAction>*)goToNextFrameWithEncodingOptionsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)encodingOptions;
+- (RTObject<WFIAsyncAction>*)goToNextFrameWithEncodingOptionsAsync:
+    (id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, WGIBitmapTypedValue* > */)encodingOptions;
 - (RTObject<WFIAsyncAction>*)flushAsync;
 - (void)setSoftwareBitmap:(WGISoftwareBitmap*)bitmap;
 @end

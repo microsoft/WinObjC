@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSPPowerManager, WSPBackgroundEnergyManager, WSPForegroundEnergyManager;
 @protocol WSPIPowerManagerStatics
 , WSPIBackgroundEnergyManagerStatics, WSPIForegroundEnergyManagerStatics;

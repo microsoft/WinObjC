@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WACChatMessageTransportConfiguration, WACChatMessage, WACChatMessageChange, WACChatMessageChangeReader, WACChatMessageAttachment,
     WACChatConversationThreadingInfo, WACChatRecipientDeliveryInfo, WACChatMessageChangeTracker, WACChatMessageReader,
     WACChatMessageValidationResult, WACChatMessageStore, WACChatMessageChangedEventArgs, WACChatConversation, WACChatConversationReader,
@@ -196,7 +197,7 @@ typedef unsigned WACChatItemKind;
 
 WINRT_EXPORT
 @interface WACChatMessageTransportConfiguration : RTObject
-@property (readonly) NSDictionary* extendedProperties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ extendedProperties;
 @property (readonly) int maxAttachmentCount;
 @property (readonly) int maxMessageSizeInKilobytes;
 @property (readonly) int maxRecipientCount;
@@ -222,9 +223,9 @@ WINRT_EXPORT
 @property (retain) NSString* from;
 @property (retain) NSString* body;
 @property WACChatMessageStatus status;
-@property (readonly) NSMutableArray* attachments;
-@property (readonly) NSDictionary* recipientSendStatuses;
-@property (readonly) NSMutableArray* recipients;
+@property (readonly) NSMutableArray* /* WACChatMessageAttachment* */ attachments;
+@property (readonly) NSDictionary* /* NSString *, WACChatMessageStatus */ recipientSendStatuses;
+@property (readonly) NSMutableArray* /* NSString * */ recipients;
 @property (readonly) NSString* transportFriendlyName;
 @property (readonly) NSString* id;
 @property (retain) WACChatConversationThreadingInfo* threadingInfo;
@@ -238,7 +239,7 @@ WINRT_EXPORT
 @property WACChatMessageKind messageKind;
 @property (readonly) BOOL isReplyDisabled;
 @property (readonly) BOOL isSimMessage;
-@property (readonly) NSMutableArray* recipientsDeliveryInfos;
+@property (readonly) NSMutableArray* /* WACChatRecipientDeliveryInfo* */ recipientsDeliveryInfos;
 @end
 
 #endif // __WACChatMessage_DEFINED__
@@ -263,7 +264,7 @@ WINRT_EXPORT
 @interface WACChatMessageChangeReader : RTObject
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WACChatMessageChange*)lastChangeToAcknowledge;
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageChange* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatMessageChangeReader_DEFINED__
@@ -298,7 +299,7 @@ WINRT_EXPORT
 @property (retain) NSString* custom;
 @property (retain) NSString* conversationId;
 @property (retain) NSString* contactId;
-@property (readonly) NSMutableArray* participants;
+@property (readonly) NSMutableArray* /* NSString * */ participants;
 @end
 
 #endif // __WACChatConversationThreadingInfo_DEFINED__
@@ -311,8 +312,8 @@ WINRT_EXPORT
 @interface WACChatRecipientDeliveryInfo : RTObject
 + (instancetype)make ACTIVATOR;
 @property (retain) NSString* transportAddress;
-@property (retain) id readTime;
-@property (retain) id deliveryTime;
+@property (retain) id /* WFDateTime* */ readTime;
+@property (retain) id /* WFDateTime* */ deliveryTime;
 @property (readonly) BOOL isErrorPermanent;
 @property (readonly) WACChatMessageStatus status;
 @property (readonly) int transportErrorCode;
@@ -341,8 +342,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessage* */))success failure:(void (^)(NSError*))failure;
+- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray* /* WACChatMessage* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatMessageReader_DEFINED__
@@ -353,9 +354,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageValidationResult : RTObject
-@property (readonly) id maxPartCount;
-@property (readonly) id partCount;
-@property (readonly) id remainingCharacterCountInPart;
+@property (readonly) id /* unsigned int */ maxPartCount;
+@property (readonly) id /* unsigned int */ partCount;
+@property (readonly) id /* unsigned int */ remainingCharacterCountInPart;
 @property (readonly) WACChatMessageValidationStatus status;
 @end
 
@@ -435,7 +436,7 @@ WINRT_EXPORT
 @property (readonly) BOOL hasUnreadMessages;
 @property (readonly) NSString* id;
 @property (readonly) NSString* mostRecentMessageId;
-@property (readonly) NSMutableArray* participants;
+@property (readonly) NSMutableArray* /* NSString * */ participants;
 @property (readonly) WACChatConversationThreadingInfo* threadingInfo;
 - (EventRegistrationToken)addRemoteParticipantComposingChangedEvent:(void (^)(WACChatConversation*,
                                                                               WACRemoteParticipantComposingChangedEventArgs*))del;
@@ -461,8 +462,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatConversationReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACChatConversation* */))success failure:(void (^)(NSError*))failure;
+- (void)readBatchWithCountAsync:(int)count
+                        success:(void (^)(NSArray* /* WACChatConversation* */))success
+                        failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatConversationReader_DEFINED__
@@ -485,8 +488,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatSearchReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)readBatchWithCountAsync:(int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WACIChatItem>* */))success failure:(void (^)(NSError*))failure;
+- (void)readBatchWithCountAsync:(int)count
+                        success:(void (^)(NSArray* /* RTObject<WACIChatItem>* */))success
+                        failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACChatSearchReader_DEFINED__
@@ -579,7 +584,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACRcsTransport : RTObject
 @property (readonly) WACRcsTransportConfiguration* configuration;
-@property (readonly) NSDictionary* extendedProperties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ extendedProperties;
 @property (readonly) BOOL isActive;
 @property (readonly) NSString* transportFriendlyName;
 @property (readonly) NSString* transportId;
@@ -647,7 +652,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACRcsEndUserMessage : RTObject
-@property (readonly) NSArray* actions;
+@property (readonly) NSArray* /* WACRcsEndUserMessageAction* */ actions;
 @property (readonly) BOOL isPinRequired;
 @property (readonly) NSString* text;
 @property (readonly) NSString* title;
@@ -664,13 +669,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACChatMessageManager : RTObject
-+ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageTransport* */))success failure:(void (^)(NSError*))failure;
 + (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage*)message;
 + (void)showSmsSettings;
 + (void)registerTransportAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (void)getTransportAsync:(NSString*)transportId success:(void (^)(WACChatMessageTransport*))success failure:(void (^)(NSError*))failure;
-+ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACChatMessageTransport* */))success failure:(void (^)(NSError*))failure;
 + (void)requestStoreAsyncWithSuccess:(void (^)(WACChatMessageStore*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showComposeSmsMessageAsync:(WACChatMessage*)message;
 + (void)showSmsSettings;
@@ -725,7 +730,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACRcsManager : RTObject
 + (WACRcsEndUserMessageManager*)getEndUserMessageManager;
-+ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getTransportsAsyncWithSuccess:(void (^)(NSArray* /* WACRcsTransport* */))success failure:(void (^)(NSError*))failure;
 + (void)getTransportAsync:(NSString*)transportId success:(void (^)(WACRcsTransport*))success failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)leaveConversationAsync:(WACChatConversation*)conversation;
 @end

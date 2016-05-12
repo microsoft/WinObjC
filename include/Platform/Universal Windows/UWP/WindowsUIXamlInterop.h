@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXINotifyCollectionChangedEventArgs;
 @class WUXITypeName;
 @protocol WUXIIBindableIterable

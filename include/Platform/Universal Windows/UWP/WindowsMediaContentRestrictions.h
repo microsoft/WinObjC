@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMCRatedContentDescription, WMCContentRestrictionsBrowsePolicy, WMCRatedContentRestrictions;
 @protocol WMCIRatedContentDescription
 , WMCIRatedContentDescriptionFactory, WMCIContentRestrictionsBrowsePolicy, WMCIRatedContentRestrictions,
@@ -59,7 +60,7 @@ WINRT_EXPORT
 @interface WMCRatedContentDescription : RTObject
 + (WMCRatedContentDescription*)make:(NSString*)id title:(NSString*)title category:(WMCRatedContentCategory)category ACTIVATOR;
 @property (retain) NSString* title;
-@property (retain) NSMutableArray* ratings;
+@property (retain) NSMutableArray* /* NSString * */ ratings;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* image;
 @property (retain) NSString* id;
 @property WMCRatedContentCategory category;
@@ -74,8 +75,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCContentRestrictionsBrowsePolicy : RTObject
 @property (readonly) NSString* geographicRegion;
-@property (readonly) id maxBrowsableAgeRating;
-@property (readonly) id preferredAgeRating;
+@property (readonly) id /* unsigned int */ maxBrowsableAgeRating;
+@property (readonly) id /* unsigned int */ preferredAgeRating;
 @end
 
 #endif // __WMCContentRestrictionsBrowsePolicy_DEFINED__
@@ -86,8 +87,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCRatedContentRestrictions : RTObject
-+ (instancetype)make ACTIVATOR;
 + (WMCRatedContentRestrictions*)makeWithMaxAgeRating:(unsigned int)maxAgeRating ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 - (EventRegistrationToken)addRestrictionsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeRestrictionsChangedEvent:(EventRegistrationToken)tok;
 - (void)getBrowsePolicyAsyncWithSuccess:(void (^)(WMCContentRestrictionsBrowsePolicy*))success failure:(void (^)(NSError*))failure;

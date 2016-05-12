@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WABAppointmentStoreNotificationTrigger, WABApplicationTrigger, WABApplicationTriggerDetails, WABBackgroundExecutionManager,
     WABMediaProcessingTrigger, WABBackgroundTaskRegistration, WABBackgroundTaskDeferral, WABBackgroundTaskProgressEventArgs,
     WABBackgroundTaskCompletedEventArgs, WABBackgroundTaskBuilder, WABBackgroundWorkCost, WABChatMessageNotificationTrigger,
@@ -375,7 +376,7 @@ WINRT_EXPORT
 @property (readonly) NSString* name;
 @property (readonly) WFGUID* taskId;
 @property (readonly) RTObject<WABIBackgroundTrigger>* trigger;
-+ (NSDictionary*)allTasks;
++ (NSDictionary* /* WFGUID*, RTObject<WABIBackgroundTaskRegistration>* */)allTasks;
 - (EventRegistrationToken)addCompletedEvent:(WABBackgroundTaskCompletedEventHandler)del;
 - (void)removeCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addProgressEvent:(WABBackgroundTaskProgressEventHandler)del;
@@ -499,8 +500,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABContentPrefetchTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)make ACTIVATOR;
 + (WABContentPrefetchTrigger*)make:(WFTimeSpan*)waitInterval ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (readonly) WFTimeSpan* waitInterval;
 @end
 
@@ -822,8 +823,8 @@ WINRT_EXPORT
 + (WABActivitySensorTrigger*)make:(unsigned int)reportIntervalInMilliseconds ACTIVATOR;
 @property (readonly) unsigned int minimumReportInterval;
 @property (readonly) unsigned int reportInterval;
-@property (readonly) NSMutableArray* subscribedActivities;
-@property (readonly) NSArray* supportedActivities;
+@property (readonly) NSMutableArray* /* WDSActivityType */ subscribedActivities;
+@property (readonly) NSArray* /* WDSActivityType */ supportedActivities;
 @end
 
 #endif // __WABActivitySensorTrigger_DEFINED__
@@ -856,8 +857,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABPushNotificationTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)make ACTIVATOR;
 + (WABPushNotificationTrigger*)make:(NSString*)applicationId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABPushNotificationTrigger_DEFINED__
@@ -868,8 +869,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABToastNotificationHistoryChangedTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)make ACTIVATOR;
 + (WABToastNotificationHistoryChangedTrigger*)make:(NSString*)applicationId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABToastNotificationHistoryChangedTrigger_DEFINED__
@@ -880,8 +881,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WABToastNotificationActionTrigger : RTObject <WABIBackgroundTrigger>
-+ (instancetype)make ACTIVATOR;
 + (WABToastNotificationActionTrigger*)make:(NSString*)applicationId ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @end
 
 #endif // __WABToastNotificationActionTrigger_DEFINED__

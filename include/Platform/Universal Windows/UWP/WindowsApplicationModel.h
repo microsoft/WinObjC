@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId,
     WAPackage, WADesignMode;
 @class WAPackageVersion;
@@ -186,7 +187,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAPackage : RTObject
-@property (readonly) NSArray* dependencies;
+@property (readonly) NSArray* /* WAPackage* */ dependencies;
 @property (readonly) WAPackageId* id;
 @property (readonly) WSStorageFolder* installedLocation;
 @property (readonly) BOOL isFramework;
@@ -201,7 +202,7 @@ WINRT_EXPORT
 @property (readonly) WAPackageStatus* status;
 @property (readonly) WFDateTime* installDate;
 + (WAPackage*)current;
-- (void)getAppListEntriesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getAppListEntriesAsyncWithSuccess:(void (^)(NSArray* /* WACAppListEntry* */))success failure:(void (^)(NSError*))failure;
 - (NSString*)getThumbnailToken;
 - (void)launch:(NSString*)parameters;
 @end

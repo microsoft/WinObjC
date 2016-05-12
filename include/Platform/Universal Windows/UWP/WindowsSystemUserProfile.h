@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings;
 @protocol WSUIAdvertisingManagerStatics
 , WSUIUserProfilePersonalizationSettings, WSUIUserProfilePersonalizationSettingsStatics, WSUIGlobalizationPreferencesStatics,
@@ -63,11 +64,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSUGlobalizationPreferences : RTObject
-+ (NSArray*)calendars;
-+ (NSArray*)clocks;
-+ (NSArray*)currencies;
++ (NSArray* /* NSString * */)calendars;
++ (NSArray* /* NSString * */)clocks;
++ (NSArray* /* NSString * */)currencies;
 + (NSString*)homeGeographicRegion;
-+ (NSArray*)languages;
++ (NSArray* /* NSString * */)languages;
 + (WGDayOfWeek)weekStartsOn;
 @end
 

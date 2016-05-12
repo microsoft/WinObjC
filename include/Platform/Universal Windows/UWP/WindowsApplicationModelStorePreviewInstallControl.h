@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WASPIAppInstallStatus, WASPIAppInstallItem, WASPIAppInstallManagerItemEventArgs, WASPIAppInstallManager;
 @protocol WASPIIAppInstallStatus
 , WASPIIAppInstallItem, WASPIIAppInstallManagerItemEventArgs, WASPIIAppInstallManager;
@@ -122,7 +123,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property WASPIAutoUpdateSetting autoUpdateSetting;
 @property (retain) NSString* acquisitionIdentity;
-@property (readonly) NSArray* appInstallItems;
+@property (readonly) NSArray* /* WASPIAppInstallItem* */ appInstallItems;
 - (EventRegistrationToken)addItemCompletedEvent:(void (^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
 - (void)removeItemCompletedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addItemStatusChangedEvent:(void (^)(WASPIAppInstallManager*, WASPIAppInstallManagerItemEventArgs*))del;
@@ -147,7 +148,7 @@ WINRT_EXPORT
                         skuId:(NSString*)skuId
                       success:(void (^)(WASPIAppInstallItem*))success
                       failure:(void (^)(NSError*))failure;
-- (void)searchForAllUpdatesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)searchForAllUpdatesAsyncWithSuccess:(void (^)(NSArray* /* WASPIAppInstallItem* */))success failure:(void (^)(NSError*))failure;
 - (void)isStoreBlockedByPolicyAsync:(NSString*)storeClientName
                storeClientPublisher:(NSString*)storeClientPublisher
                             success:(void (^)(BOOL))success

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription,
     WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
 @protocol WDHIHidDeviceStatics
@@ -100,8 +101,12 @@ WINRT_EXPORT
 - (void)sendFeatureReportAsync:(WDHHidFeatureReport*)featureReport
                        success:(void (^)(unsigned int))success
                        failure:(void (^)(NSError*))failure;
-- (NSArray*)getBooleanControlDescriptions:(WDHHidReportType)reportType usagePage:(unsigned short)usagePage usageId:(unsigned short)usageId;
-- (NSArray*)getNumericControlDescriptions:(WDHHidReportType)reportType usagePage:(unsigned short)usagePage usageId:(unsigned short)usageId;
+- (NSArray* /* WDHHidBooleanControlDescription* */)getBooleanControlDescriptions:(WDHHidReportType)reportType
+                                                                       usagePage:(unsigned short)usagePage
+                                                                         usageId:(unsigned short)usageId;
+- (NSArray* /* WDHHidNumericControlDescription* */)getNumericControlDescriptions:(WDHHidReportType)reportType
+                                                                       usagePage:(unsigned short)usagePage
+                                                                         usageId:(unsigned short)usageId;
 - (void)close;
 @end
 
@@ -113,10 +118,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDHHidInputReport : RTObject
-@property (readonly) NSArray* activatedBooleanControls;
+@property (readonly) NSArray* /* WDHHidBooleanControl* */ activatedBooleanControls;
 @property (readonly) RTObject<WSSIBuffer>* data;
 @property (readonly) unsigned short id;
-@property (readonly) NSArray* transitionedBooleanControls;
+@property (readonly) NSArray* /* WDHHidBooleanControl* */ transitionedBooleanControls;
 - (WDHHidBooleanControl*)getBooleanControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
 - (WDHHidBooleanControl*)getBooleanControlByDescription:(WDHHidBooleanControlDescription*)controlDescription;
 - (WDHHidNumericControl*)getNumericControl:(unsigned short)usagePage usageId:(unsigned short)usageId;
@@ -164,7 +169,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDHHidBooleanControlDescription : RTObject
 @property (readonly) unsigned int id;
-@property (readonly) NSArray* parentCollections;
+@property (readonly) NSArray* /* WDHHidCollection* */ parentCollections;
 @property (readonly) unsigned short reportId;
 @property (readonly) WDHHidReportType reportType;
 @property (readonly) unsigned short usageId;
@@ -184,7 +189,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isAbsolute;
 @property (readonly) int logicalMaximum;
 @property (readonly) int logicalMinimum;
-@property (readonly) NSArray* parentCollections;
+@property (readonly) NSArray* /* WDHHidCollection* */ parentCollections;
 @property (readonly) int physicalMaximum;
 @property (readonly) int physicalMinimum;
 @property (readonly) unsigned int reportCount;

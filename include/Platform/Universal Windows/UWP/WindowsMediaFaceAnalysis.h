@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMFDetectedFace, WMFFaceTracker, WMFFaceDetector;
 @protocol WMFIDetectedFace
 , WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
@@ -49,12 +50,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMFFaceTracker : RTObject
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceTracker*))success failure:(void (^)(NSError*))failure;
-+ (NSArray*)getSupportedBitmapPixelFormats;
++ (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
+- (void)processNextFrameAsync:(WMVideoFrame*)videoFrame
+                      success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
+                      failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WMFFaceTracker_DEFINED__
@@ -66,15 +69,17 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMFFaceDetector : RTObject
 + (void)createAsyncWithSuccess:(void (^)(WMFFaceDetector*))success failure:(void (^)(NSError*))failure;
-+ (NSArray*)getSupportedBitmapPixelFormats;
++ (NSArray* /* WGIBitmapPixelFormat */)getSupportedBitmapPixelFormats;
 + (BOOL)isBitmapPixelFormatSupported:(WGIBitmapPixelFormat)bitmapPixelFormat;
 @property (retain) WGIBitmapSize* minDetectableFaceSize;
 @property (retain) WGIBitmapSize* maxDetectableFaceSize;
 + (BOOL)isSupported;
-- (void)detectFacesAsync:(WGISoftwareBitmap*)image success:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
+- (void)detectFacesAsync:(WGISoftwareBitmap*)image
+                 success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
+                 failure:(void (^)(NSError*))failure;
 - (void)detectFacesWithSearchAreaAsync:(WGISoftwareBitmap*)image
                             searchArea:(WGIBitmapBounds*)searchArea
-                               success:(void (^)(NSMutableArray*))success
+                               success:(void (^)(NSMutableArray* /* WMFDetectedFace* */))success
                                failure:(void (^)(NSError*))failure;
 @end
 

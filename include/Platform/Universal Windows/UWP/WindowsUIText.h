@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUTTextConstants, WUTFontWeights;
 @class WUTFontWeight;
 @protocol WUTITextConstantsStatics

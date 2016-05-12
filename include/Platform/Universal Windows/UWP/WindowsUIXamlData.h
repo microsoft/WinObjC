@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXDCurrentChangingEventArgs, WUXDPropertyChangedEventArgs, WUXDBindingExpressionBase, WUXDBindingOperations, WUXDBindingBase,
     WUXDBindingExpression, WUXDCollectionViewSource, WUXDRelativeSource, WUXDBinding, WUXDItemIndexRange;
 @class WUXDLoadMoreItemsResult;
@@ -115,7 +116,7 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 #define __WUXDIItemsRangeInfo_DEFINED__
 
 @protocol WUXDIItemsRangeInfo <WFIClosable>
-- (void)rangesChanged:(WUXDItemIndexRange*)visibleRange trackedItems:(id<NSFastEnumeration> /* WUXDItemIndexRange* */)trackedItems;
+- (void)rangesChanged:(WUXDItemIndexRange*)visibleRange trackedItems:(NSArray* /* WUXDItemIndexRange* */)trackedItems;
 - (void)close;
 @end
 
@@ -129,7 +130,7 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 - (void)selectRange:(WUXDItemIndexRange*)itemIndexRange;
 - (void)deselectRange:(WUXDItemIndexRange*)itemIndexRange;
 - (BOOL)isSelected:(int)index;
-- (NSArray*)getSelectedRanges;
+- (NSArray* /* WUXDItemIndexRange* */)getSelectedRanges;
 @end
 
 #endif // __WUXDISelectionInfo_DEFINED__
@@ -139,7 +140,7 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 #define __WUXDICollectionView_DEFINED__
 
 @protocol WUXDICollectionView
-@property (readonly) NSMutableArray<RTObservableCollection>* collectionGroups;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject* */ collectionGroups;
 @property (readonly) RTObject* currentItem;
 @property (readonly) int currentPosition;
 @property (readonly) BOOL hasMoreItems;
@@ -188,7 +189,7 @@ typedef void (^WUXDPropertyChangedEventHandler)(RTObject* sender, WUXDPropertyCh
 
 @protocol WUXDICollectionViewGroup
 @property (readonly) RTObject* group;
-@property (readonly) NSMutableArray<RTObservableCollection>* groupItems;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject* */ groupItems;
 @end
 
 #endif // __WUXDICollectionViewGroup_DEFINED__

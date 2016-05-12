@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNBDownloadOperation, WNBUnconstrainedTransferRequestResult, WNBUploadOperation, WNBBackgroundTransferGroup,
     WNBBackgroundTransferCompletionGroup, WNBBackgroundTransferContentPart, WNBResponseInformation, WNBBackgroundDownloader,
     WNBBackgroundUploader, WNBBackgroundTransferError, WNBContentPrefetcher, WNBBackgroundTransferCompletionGroupTriggerDetails;
@@ -258,9 +259,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBBackgroundTransferContentPart : RTObject
++ (instancetype)make ACTIVATOR;
 + (WNBBackgroundTransferContentPart*)makeWithName:(NSString*)name ACTIVATOR;
 + (WNBBackgroundTransferContentPart*)makeWithNameAndFileName:(NSString*)name fileName:(NSString*)fileName ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
 - (void)setHeader:(NSString*)headerName headerValue:(NSString*)headerValue;
 - (void)setText:(NSString*)value;
 - (void)setFile:(RTObject<WSIStorageFile>*)value;
@@ -275,7 +276,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNBResponseInformation : RTObject
 @property (readonly) WFUri* actualUri;
-@property (readonly) NSDictionary* headers;
+@property (readonly) NSDictionary* /* NSString *, NSString * */ headers;
 @property (readonly) BOOL isResumable;
 @property (readonly) unsigned int statusCode;
 @end
@@ -289,15 +290,17 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNBBackgroundDownloader : RTObject <WNBIBackgroundTransferBase>
 + (void)getCurrentDownloadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group
-                                         success:(void (^)(NSArray*))success
+                                         success:(void (^)(NSArray* /* WNBDownloadOperation* */))success
                                          failure:(void (^)(NSError*))failure;
++ (void)getCurrentDownloadsAsyncWithSuccess:(void (^)(NSArray* /* WNBDownloadOperation* */))success failure:(void (^)(NSError*))failure;
++ (void)getCurrentDownloadsForGroupAsync:(NSString*)group
+                                 success:(void (^)(NSArray* /* WNBDownloadOperation* */))success
+                                 failure:(void (^)(NSError*))failure;
 + (void)requestUnconstrainedDownloadsAsync:(id<NSFastEnumeration> /* WNBDownloadOperation* */)operations
                                    success:(void (^)(WNBUnconstrainedTransferRequestResult*))success
                                    failure:(void (^)(NSError*))failure;
-+ (void)getCurrentDownloadsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)getCurrentDownloadsForGroupAsync:(NSString*)group success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (instancetype)make ACTIVATOR;
 + (WNBBackgroundDownloader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (retain) WUNToastNotification* failureToastNotification;
 @property (retain) WUNTileNotification* successTileNotification;
 @property (retain) WUNToastNotification* successToastNotification;
@@ -329,16 +332,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBBackgroundUploader : RTObject <WNBIBackgroundTransferBase>
-+ (void)getCurrentUploadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group
-                                       success:(void (^)(NSArray*))success
-                                       failure:(void (^)(NSError*))failure;
 + (void)requestUnconstrainedUploadsAsync:(id<NSFastEnumeration> /* WNBUploadOperation* */)operations
                                  success:(void (^)(WNBUnconstrainedTransferRequestResult*))success
                                  failure:(void (^)(NSError*))failure;
-+ (void)getCurrentUploadsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)getCurrentUploadsForGroupAsync:(NSString*)group success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (WNBBackgroundUploader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
++ (void)getCurrentUploadsAsyncWithSuccess:(void (^)(NSArray* /* WNBUploadOperation* */))success failure:(void (^)(NSError*))failure;
++ (void)getCurrentUploadsForGroupAsync:(NSString*)group
+                               success:(void (^)(NSArray* /* WNBUploadOperation* */))success
+                               failure:(void (^)(NSError*))failure;
++ (void)getCurrentUploadsForTransferGroupAsync:(WNBBackgroundTransferGroup*)group
+                                       success:(void (^)(NSArray* /* WNBUploadOperation* */))success
+                                       failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
++ (WNBBackgroundUploader*)makeWithCompletionGroup:(WNBBackgroundTransferCompletionGroup*)completionGroup ACTIVATOR;
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property (retain) NSString* method;
@@ -394,8 +399,8 @@ WINRT_EXPORT
 @interface WNBContentPrefetcher : RTObject
 + (WFUri*)indirectContentUri;
 + (void)setIndirectContentUri:(WFUri*)value;
-+ (NSMutableArray*)contentUris;
-+ (id)lastSuccessfulPrefetchTime;
++ (NSMutableArray* /* WFUri* */)contentUris;
++ (id /* WFDateTime* */)lastSuccessfulPrefetchTime;
 @end
 
 #endif // __WNBContentPrefetcher_DEFINED__
@@ -406,8 +411,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNBBackgroundTransferCompletionGroupTriggerDetails : RTObject
-@property (readonly) NSArray* downloads;
-@property (readonly) NSArray* uploads;
+@property (readonly) NSArray* /* WNBDownloadOperation* */ downloads;
+@property (readonly) NSArray* /* WNBUploadOperation* */ uploads;
 @end
 
 #endif // __WNBBackgroundTransferCompletionGroupTriggerDetails_DEFINED__

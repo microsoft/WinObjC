@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer,
     WDSInclinometerReading, WDSInclinometerReadingChangedEventArgs, WDSGyrometer, WDSGyrometerReading, WDSGyrometerReadingChangedEventArgs,
     WDSCompass, WDSCompassReading, WDSCompassReadingChangedEventArgs, WDSLightSensor, WDSLightSensorReading,
@@ -283,7 +284,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDSCompassReading : RTObject
 @property (readonly) double headingMagneticNorth;
-@property (readonly) id headingTrueNorth;
+@property (readonly) id /* double */ headingTrueNorth;
 @property (readonly) WFDateTime* timestamp;
 @property (readonly) WDSMagnetometerAccuracy headingAccuracy;
 @end
@@ -501,16 +502,18 @@ WINRT_EXPORT
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSActivitySensor*))success failure:(void (^)(NSError*))failure;
-+ (void)getSystemHistoryAsync:(WFDateTime*)fromTime success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getSystemHistoryAsync:(WFDateTime*)fromTime
+                      success:(void (^)(NSArray* /* WDSActivitySensorReading* */))success
+                      failure:(void (^)(NSError*))failure;
 + (void)getSystemHistoryWithDurationAsync:(WFDateTime*)fromTime
                                  duration:(WFTimeSpan*)duration
-                                  success:(void (^)(NSArray*))success
+                                  success:(void (^)(NSArray* /* WDSActivitySensorReading* */))success
                                   failure:(void (^)(NSError*))failure;
 @property (readonly) NSString* deviceId;
 @property (readonly) unsigned int minimumReportInterval;
 @property (readonly) double powerInMilliwatts;
-@property (readonly) NSMutableArray* subscribedActivities;
-@property (readonly) NSArray* supportedActivities;
+@property (readonly) NSMutableArray* /* WDSActivityType */ subscribedActivities;
+@property (readonly) NSArray* /* WDSActivityType */ supportedActivities;
 - (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSActivitySensor*, WDSActivitySensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (void)getCurrentReadingAsyncWithSuccess:(void (^)(WDSActivitySensorReading*))success failure:(void (^)(NSError*))failure;
@@ -559,7 +562,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSActivitySensorTriggerDetails : RTObject
-- (NSArray*)readReports;
+- (NSArray* /* WDSActivitySensorReadingChangeReport* */)readReports;
 @end
 
 #endif // __WDSActivitySensorTriggerDetails_DEFINED__
@@ -627,10 +630,12 @@ WINRT_EXPORT
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
 + (void)getDefaultAsyncWithSuccess:(void (^)(WDSPedometer*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
-+ (void)getSystemHistoryAsync:(WFDateTime*)fromTime success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getSystemHistoryAsync:(WFDateTime*)fromTime
+                      success:(void (^)(NSArray* /* WDSPedometerReading* */))success
+                      failure:(void (^)(NSError*))failure;
 + (void)getSystemHistoryWithDurationAsync:(WFDateTime*)fromTime
                                  duration:(WFTimeSpan*)duration
-                                  success:(void (^)(NSArray*))success
+                                  success:(void (^)(NSArray* /* WDSPedometerReading* */))success
                                   failure:(void (^)(NSError*))failure;
 @property unsigned int reportInterval;
 @property (readonly) NSString* deviceId;
@@ -662,8 +667,8 @@ WINRT_EXPORT
 + (NSString*)getDeviceSelector;
 + (WDSProximitySensor*)fromId:(NSString*)sensorId;
 @property (readonly) NSString* deviceId;
-@property (readonly) id maxDistanceInMillimeters;
-@property (readonly) id minDistanceInMillimeters;
+@property (readonly) id /* unsigned int */ maxDistanceInMillimeters;
+@property (readonly) id /* unsigned int */ minDistanceInMillimeters;
 - (EventRegistrationToken)addReadingChangedEvent:(void (^)(WDSProximitySensor*, WDSProximitySensorReadingChangedEventArgs*))del;
 - (void)removeReadingChangedEvent:(EventRegistrationToken)tok;
 - (WDSProximitySensorReading*)getCurrentReading;
@@ -678,7 +683,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSProximitySensorReading : RTObject
-@property (readonly) id distanceInMillimeters;
+@property (readonly) id /* unsigned int */ distanceInMillimeters;
 @property (readonly) BOOL isDetected;
 @property (readonly) WFDateTime* timestamp;
 @end

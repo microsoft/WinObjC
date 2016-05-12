@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint,
     WMSSpeechRecognitionListConstraint, WMSSpeechRecognitionGrammarFileConstraint, WMSSpeechRecognizerTimeouts,
     WMSSpeechRecognizerUIOptions, WMSSpeechRecognitionCompilationResult, WMSSpeechRecognizer, WMSSpeechRecognitionQualityDegradingEventArgs,
@@ -144,7 +145,7 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 
 WINRT_EXPORT
 @interface WMSSpeechRecognitionSemanticInterpretation : RTObject
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, NSArray* < NSString * > */ properties;
 @end
 
 #endif // __WMSSpeechRecognitionSemanticInterpretation_DEFINED__
@@ -158,13 +159,13 @@ WINRT_EXPORT
 @property (readonly) WMSSpeechRecognitionConfidence confidence;
 @property (readonly) RTObject<WMSISpeechRecognitionConstraint>* constraint;
 @property (readonly) double rawConfidence;
-@property (readonly) NSArray* rulePath;
+@property (readonly) NSArray* /* NSString * */ rulePath;
 @property (readonly) WMSSpeechRecognitionSemanticInterpretation* semanticInterpretation;
 @property (readonly) WMSSpeechRecognitionResultStatus status;
 @property (readonly) NSString* text;
 @property (readonly) WFTimeSpan* phraseDuration;
 @property (readonly) WFDateTime* phraseStartTime;
-- (NSArray*)getAlternates:(unsigned int)maxAlternates;
+- (NSArray* /* WMSSpeechRecognitionResult* */)getAlternates:(unsigned int)maxAlternates;
 @end
 
 #endif // __WMSSpeechRecognitionResult_DEFINED__
@@ -201,7 +202,7 @@ WINRT_EXPORT
 @property WMSSpeechRecognitionConstraintProbability probability;
 @property BOOL isEnabled;
 @property (readonly) WMSSpeechRecognitionConstraintType type;
-@property (readonly) NSMutableArray* commands;
+@property (readonly) NSMutableArray* /* NSString * */ commands;
 @end
 
 #endif // __WMSSpeechRecognitionListConstraint_DEFINED__
@@ -277,16 +278,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSSpeechRecognizer : RTObject <WFIClosable>
-+ (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
 + (instancetype)make ACTIVATOR;
-@property (readonly) NSMutableArray* constraints;
++ (WMSSpeechRecognizer*)make:(WGLanguage*)language ACTIVATOR;
+@property (readonly) NSMutableArray* /* RTObject<WMSISpeechRecognitionConstraint>* */ constraints;
 @property (readonly) WGLanguage* currentLanguage;
 @property (readonly) WMSSpeechRecognizerTimeouts* timeouts;
 @property (readonly) WMSSpeechRecognizerUIOptions* uIOptions;
 @property (readonly) WMSSpeechContinuousRecognitionSession* continuousRecognitionSession;
 @property (readonly) WMSSpeechRecognizerState state;
-+ (NSArray*)supportedGrammarLanguages;
-+ (NSArray*)supportedTopicLanguages;
++ (NSArray* /* WGLanguage* */)supportedGrammarLanguages;
++ (NSArray* /* WGLanguage* */)supportedTopicLanguages;
 + (WGLanguage*)systemSpeechLanguage;
 - (EventRegistrationToken)addRecognitionQualityDegradingEvent:(void (^)(WMSSpeechRecognizer*,
                                                                         WMSSpeechRecognitionQualityDegradingEventArgs*))del;

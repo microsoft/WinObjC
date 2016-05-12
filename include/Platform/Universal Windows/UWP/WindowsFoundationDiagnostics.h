@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDErrorDetails, WFDLoggingOptions,
     WFDLoggingChannelOptions, WFDLoggingFields, WFDLoggingActivity, WFDLoggingChannel, WFDLoggingSession, WFDLogFileGeneratedEventArgs,
     WFDFileLoggingSession;
@@ -351,169 +352,160 @@ WINRT_EXPORT
 - (void)addUInt8:(NSString*)name value:(uint8_t)value;
 - (void)addUInt8WithFormat:(NSString*)name value:(uint8_t)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt8WithFormatAndTags:(NSString*)name value:(uint8_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt8Array:(NSString*)name value:(id<NSFastEnumeration> /* uint8_t */)value;
-- (void)addUInt8ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* uint8_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt8Array:(NSString*)name value:(NSArray* /* uint8_t */)value;
+- (void)addUInt8ArrayWithFormat:(NSString*)name value:(NSArray* /* uint8_t */)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt8ArrayWithFormatAndTags:(NSString*)name
-                                 value:(id<NSFastEnumeration> /* uint8_t */)value
+                                 value:(NSArray* /* uint8_t */)value
                                 format:(WFDLoggingFieldFormat)format
                                   tags:(int)tags;
 - (void)addInt16:(NSString*)name value:(int16_t)value;
 - (void)addInt16WithFormat:(NSString*)name value:(int16_t)value format:(WFDLoggingFieldFormat)format;
 - (void)addInt16WithFormatAndTags:(NSString*)name value:(int16_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addInt16Array:(NSString*)name value:(id<NSFastEnumeration> /* int16_t */)value;
-- (void)addInt16ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* int16_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt16Array:(NSString*)name value:(NSArray* /* int16_t */)value;
+- (void)addInt16ArrayWithFormat:(NSString*)name value:(NSArray* /* int16_t */)value format:(WFDLoggingFieldFormat)format;
 - (void)addInt16ArrayWithFormatAndTags:(NSString*)name
-                                 value:(id<NSFastEnumeration> /* int16_t */)value
+                                 value:(NSArray* /* int16_t */)value
                                 format:(WFDLoggingFieldFormat)format
                                   tags:(int)tags;
 - (void)addUInt16:(NSString*)name value:(unsigned short)value;
 - (void)addUInt16WithFormat:(NSString*)name value:(unsigned short)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt16WithFormatAndTags:(NSString*)name value:(unsigned short)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt16Array:(NSString*)name value:(id<NSFastEnumeration> /* unsigned short */)value;
-- (void)addUInt16ArrayWithFormat:(NSString*)name
-                           value:(id<NSFastEnumeration> /* unsigned short */)value
-                          format:(WFDLoggingFieldFormat)format;
+- (void)addUInt16Array:(NSString*)name value:(NSArray* /* unsigned short */)value;
+- (void)addUInt16ArrayWithFormat:(NSString*)name value:(NSArray* /* unsigned short */)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt16ArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* unsigned short */)value
+                                  value:(NSArray* /* unsigned short */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addInt32:(NSString*)name value:(int)value;
 - (void)addInt32WithFormat:(NSString*)name value:(int)value format:(WFDLoggingFieldFormat)format;
 - (void)addInt32WithFormatAndTags:(NSString*)name value:(int)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addInt32Array:(NSString*)name value:(id<NSFastEnumeration> /* int */)value;
-- (void)addInt32ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* int */)value format:(WFDLoggingFieldFormat)format;
-- (void)addInt32ArrayWithFormatAndTags:(NSString*)name
-                                 value:(id<NSFastEnumeration> /* int */)value
-                                format:(WFDLoggingFieldFormat)format
-                                  tags:(int)tags;
+- (void)addInt32Array:(NSString*)name value:(NSArray* /* int */)value;
+- (void)addInt32ArrayWithFormat:(NSString*)name value:(NSArray* /* int */)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt32ArrayWithFormatAndTags:(NSString*)name value:(NSArray* /* int */)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
 - (void)addUInt32:(NSString*)name value:(unsigned int)value;
 - (void)addUInt32WithFormat:(NSString*)name value:(unsigned int)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt32WithFormatAndTags:(NSString*)name value:(unsigned int)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt32Array:(NSString*)name value:(id<NSFastEnumeration> /* unsigned int */)value;
-- (void)addUInt32ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* unsigned int */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt32Array:(NSString*)name value:(NSArray* /* unsigned int */)value;
+- (void)addUInt32ArrayWithFormat:(NSString*)name value:(NSArray* /* unsigned int */)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt32ArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* unsigned int */)value
+                                  value:(NSArray* /* unsigned int */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addInt64:(NSString*)name value:(int64_t)value;
 - (void)addInt64WithFormat:(NSString*)name value:(int64_t)value format:(WFDLoggingFieldFormat)format;
 - (void)addInt64WithFormatAndTags:(NSString*)name value:(int64_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addInt64Array:(NSString*)name value:(id<NSFastEnumeration> /* int64_t */)value;
-- (void)addInt64ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* int64_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addInt64Array:(NSString*)name value:(NSArray* /* int64_t */)value;
+- (void)addInt64ArrayWithFormat:(NSString*)name value:(NSArray* /* int64_t */)value format:(WFDLoggingFieldFormat)format;
 - (void)addInt64ArrayWithFormatAndTags:(NSString*)name
-                                 value:(id<NSFastEnumeration> /* int64_t */)value
+                                 value:(NSArray* /* int64_t */)value
                                 format:(WFDLoggingFieldFormat)format
                                   tags:(int)tags;
 - (void)addUInt64:(NSString*)name value:(uint64_t)value;
 - (void)addUInt64WithFormat:(NSString*)name value:(uint64_t)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt64WithFormatAndTags:(NSString*)name value:(uint64_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addUInt64Array:(NSString*)name value:(id<NSFastEnumeration> /* uint64_t */)value;
-- (void)addUInt64ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* uint64_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addUInt64Array:(NSString*)name value:(NSArray* /* uint64_t */)value;
+- (void)addUInt64ArrayWithFormat:(NSString*)name value:(NSArray* /* uint64_t */)value format:(WFDLoggingFieldFormat)format;
 - (void)addUInt64ArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* uint64_t */)value
+                                  value:(NSArray* /* uint64_t */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addSingle:(NSString*)name value:(float)value;
 - (void)addSingleWithFormat:(NSString*)name value:(float)value format:(WFDLoggingFieldFormat)format;
 - (void)addSingleWithFormatAndTags:(NSString*)name value:(float)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addSingleArray:(NSString*)name value:(id<NSFastEnumeration> /* float */)value;
-- (void)addSingleArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* float */)value format:(WFDLoggingFieldFormat)format;
+- (void)addSingleArray:(NSString*)name value:(NSArray* /* float */)value;
+- (void)addSingleArrayWithFormat:(NSString*)name value:(NSArray* /* float */)value format:(WFDLoggingFieldFormat)format;
 - (void)addSingleArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* float */)value
+                                  value:(NSArray* /* float */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addDouble:(NSString*)name value:(double)value;
 - (void)addDoubleWithFormat:(NSString*)name value:(double)value format:(WFDLoggingFieldFormat)format;
 - (void)addDoubleWithFormatAndTags:(NSString*)name value:(double)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addDoubleArray:(NSString*)name value:(id<NSFastEnumeration> /* double */)value;
-- (void)addDoubleArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* double */)value format:(WFDLoggingFieldFormat)format;
+- (void)addDoubleArray:(NSString*)name value:(NSArray* /* double */)value;
+- (void)addDoubleArrayWithFormat:(NSString*)name value:(NSArray* /* double */)value format:(WFDLoggingFieldFormat)format;
 - (void)addDoubleArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* double */)value
+                                  value:(NSArray* /* double */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addChar16:(NSString*)name value:(wchar_t)value;
 - (void)addChar16WithFormat:(NSString*)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format;
 - (void)addChar16WithFormatAndTags:(NSString*)name value:(wchar_t)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addChar16Array:(NSString*)name value:(id<NSFastEnumeration> /* wchar_t */)value;
-- (void)addChar16ArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* wchar_t */)value format:(WFDLoggingFieldFormat)format;
+- (void)addChar16Array:(NSString*)name value:(NSArray* /* wchar_t */)value;
+- (void)addChar16ArrayWithFormat:(NSString*)name value:(NSArray* /* wchar_t */)value format:(WFDLoggingFieldFormat)format;
 - (void)addChar16ArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* wchar_t */)value
+                                  value:(NSArray* /* wchar_t */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addBoolean:(NSString*)name value:(BOOL)value;
 - (void)addBooleanWithFormat:(NSString*)name value:(BOOL)value format:(WFDLoggingFieldFormat)format;
 - (void)addBooleanWithFormatAndTags:(NSString*)name value:(BOOL)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addBooleanArray:(NSString*)name value:(id<NSFastEnumeration> /* BOOL */)value;
-- (void)addBooleanArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* BOOL */)value format:(WFDLoggingFieldFormat)format;
+- (void)addBooleanArray:(NSString*)name value:(NSArray* /* BOOL */)value;
+- (void)addBooleanArrayWithFormat:(NSString*)name value:(NSArray* /* BOOL */)value format:(WFDLoggingFieldFormat)format;
 - (void)addBooleanArrayWithFormatAndTags:(NSString*)name
-                                   value:(id<NSFastEnumeration> /* BOOL */)value
+                                   value:(NSArray* /* BOOL */)value
                                   format:(WFDLoggingFieldFormat)format
                                     tags:(int)tags;
 - (void)addString:(NSString*)name value:(NSString*)value;
 - (void)addStringWithFormat:(NSString*)name value:(NSString*)value format:(WFDLoggingFieldFormat)format;
 - (void)addStringWithFormatAndTags:(NSString*)name value:(NSString*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addStringArray:(NSString*)name value:(id<NSFastEnumeration> /* NSString * */)value;
-- (void)addStringArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* NSString * */)value format:(WFDLoggingFieldFormat)format;
+- (void)addStringArray:(NSString*)name value:(NSArray* /* NSString * */)value;
+- (void)addStringArrayWithFormat:(NSString*)name value:(NSArray* /* NSString * */)value format:(WFDLoggingFieldFormat)format;
 - (void)addStringArrayWithFormatAndTags:(NSString*)name
-                                  value:(id<NSFastEnumeration> /* NSString * */)value
+                                  value:(NSArray* /* NSString * */)value
                                  format:(WFDLoggingFieldFormat)format
                                    tags:(int)tags;
 - (void)addGuid:(NSString*)name value:(WFGUID*)value;
 - (void)addGuidWithFormat:(NSString*)name value:(WFGUID*)value format:(WFDLoggingFieldFormat)format;
 - (void)addGuidWithFormatAndTags:(NSString*)name value:(WFGUID*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addGuidArray:(NSString*)name value:(id<NSFastEnumeration> /* WFGUID* */)value;
-- (void)addGuidArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* WFGUID* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addGuidArray:(NSString*)name value:(NSArray* /* WFGUID* */)value;
+- (void)addGuidArrayWithFormat:(NSString*)name value:(NSArray* /* WFGUID* */)value format:(WFDLoggingFieldFormat)format;
 - (void)addGuidArrayWithFormatAndTags:(NSString*)name
-                                value:(id<NSFastEnumeration> /* WFGUID* */)value
+                                value:(NSArray* /* WFGUID* */)value
                                format:(WFDLoggingFieldFormat)format
                                  tags:(int)tags;
 - (void)addDateTime:(NSString*)name value:(WFDateTime*)value;
 - (void)addDateTimeWithFormat:(NSString*)name value:(WFDateTime*)value format:(WFDLoggingFieldFormat)format;
 - (void)addDateTimeWithFormatAndTags:(NSString*)name value:(WFDateTime*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addDateTimeArray:(NSString*)name value:(id<NSFastEnumeration> /* WFDateTime* */)value;
-- (void)addDateTimeArrayWithFormat:(NSString*)name
-                             value:(id<NSFastEnumeration> /* WFDateTime* */)value
-                            format:(WFDLoggingFieldFormat)format;
+- (void)addDateTimeArray:(NSString*)name value:(NSArray* /* WFDateTime* */)value;
+- (void)addDateTimeArrayWithFormat:(NSString*)name value:(NSArray* /* WFDateTime* */)value format:(WFDLoggingFieldFormat)format;
 - (void)addDateTimeArrayWithFormatAndTags:(NSString*)name
-                                    value:(id<NSFastEnumeration> /* WFDateTime* */)value
+                                    value:(NSArray* /* WFDateTime* */)value
                                    format:(WFDLoggingFieldFormat)format
                                      tags:(int)tags;
 - (void)addTimeSpan:(NSString*)name value:(WFTimeSpan*)value;
 - (void)addTimeSpanWithFormat:(NSString*)name value:(WFTimeSpan*)value format:(WFDLoggingFieldFormat)format;
 - (void)addTimeSpanWithFormatAndTags:(NSString*)name value:(WFTimeSpan*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addTimeSpanArray:(NSString*)name value:(id<NSFastEnumeration> /* WFTimeSpan* */)value;
-- (void)addTimeSpanArrayWithFormat:(NSString*)name
-                             value:(id<NSFastEnumeration> /* WFTimeSpan* */)value
-                            format:(WFDLoggingFieldFormat)format;
+- (void)addTimeSpanArray:(NSString*)name value:(NSArray* /* WFTimeSpan* */)value;
+- (void)addTimeSpanArrayWithFormat:(NSString*)name value:(NSArray* /* WFTimeSpan* */)value format:(WFDLoggingFieldFormat)format;
 - (void)addTimeSpanArrayWithFormatAndTags:(NSString*)name
-                                    value:(id<NSFastEnumeration> /* WFTimeSpan* */)value
+                                    value:(NSArray* /* WFTimeSpan* */)value
                                    format:(WFDLoggingFieldFormat)format
                                      tags:(int)tags;
 - (void)addPoint:(NSString*)name value:(WFPoint*)value;
 - (void)addPointWithFormat:(NSString*)name value:(WFPoint*)value format:(WFDLoggingFieldFormat)format;
 - (void)addPointWithFormatAndTags:(NSString*)name value:(WFPoint*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addPointArray:(NSString*)name value:(id<NSFastEnumeration> /* WFPoint* */)value;
-- (void)addPointArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* WFPoint* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addPointArray:(NSString*)name value:(NSArray* /* WFPoint* */)value;
+- (void)addPointArrayWithFormat:(NSString*)name value:(NSArray* /* WFPoint* */)value format:(WFDLoggingFieldFormat)format;
 - (void)addPointArrayWithFormatAndTags:(NSString*)name
-                                 value:(id<NSFastEnumeration> /* WFPoint* */)value
+                                 value:(NSArray* /* WFPoint* */)value
                                 format:(WFDLoggingFieldFormat)format
                                   tags:(int)tags;
 - (void)addSize:(NSString*)name value:(WFSize*)value;
 - (void)addSizeWithFormat:(NSString*)name value:(WFSize*)value format:(WFDLoggingFieldFormat)format;
 - (void)addSizeWithFormatAndTags:(NSString*)name value:(WFSize*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addSizeArray:(NSString*)name value:(id<NSFastEnumeration> /* WFSize* */)value;
-- (void)addSizeArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* WFSize* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addSizeArray:(NSString*)name value:(NSArray* /* WFSize* */)value;
+- (void)addSizeArrayWithFormat:(NSString*)name value:(NSArray* /* WFSize* */)value format:(WFDLoggingFieldFormat)format;
 - (void)addSizeArrayWithFormatAndTags:(NSString*)name
-                                value:(id<NSFastEnumeration> /* WFSize* */)value
+                                value:(NSArray* /* WFSize* */)value
                                format:(WFDLoggingFieldFormat)format
                                  tags:(int)tags;
 - (void)addRect:(NSString*)name value:(WFRect*)value;
 - (void)addRectWithFormat:(NSString*)name value:(WFRect*)value format:(WFDLoggingFieldFormat)format;
 - (void)addRectWithFormatAndTags:(NSString*)name value:(WFRect*)value format:(WFDLoggingFieldFormat)format tags:(int)tags;
-- (void)addRectArray:(NSString*)name value:(id<NSFastEnumeration> /* WFRect* */)value;
-- (void)addRectArrayWithFormat:(NSString*)name value:(id<NSFastEnumeration> /* WFRect* */)value format:(WFDLoggingFieldFormat)format;
+- (void)addRectArray:(NSString*)name value:(NSArray* /* WFRect* */)value;
+- (void)addRectArrayWithFormat:(NSString*)name value:(NSArray* /* WFRect* */)value format:(WFDLoggingFieldFormat)format;
 - (void)addRectArrayWithFormatAndTags:(NSString*)name
-                                value:(id<NSFastEnumeration> /* WFRect* */)value
+                                value:(NSArray* /* WFRect* */)value
                                format:(WFDLoggingFieldFormat)format
                                  tags:(int)tags;
 @end
@@ -566,9 +558,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WFDLoggingChannel : RTObject <WFDILoggingChannel, WFIClosable, WFDILoggingTarget>
++ (WFDLoggingChannel*)make:(NSString*)name ACTIVATOR;
 + (WFDLoggingChannel*)makeWithOptions:(NSString*)name options:(WFDLoggingChannelOptions*)options ACTIVATOR;
 + (WFDLoggingChannel*)makeWithOptionsAndId:(NSString*)name options:(WFDLoggingChannelOptions*)options id:(WFGUID*)id ACTIVATOR;
-+ (WFDLoggingChannel*)make:(NSString*)name ACTIVATOR;
 @property (readonly) BOOL enabled;
 @property (readonly) WFDLoggingLevel level;
 @property (readonly) NSString* name;

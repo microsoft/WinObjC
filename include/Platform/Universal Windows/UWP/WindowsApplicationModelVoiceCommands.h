@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAVVoiceCommandDefinition, WAVVoiceCommandDefinitionManager, WAVVoiceCommandContentTile, WAVVoiceCommandUserMessage, WAVVoiceCommand,
     WAVVoiceCommandResponse, WAVVoiceCommandConfirmationResult, WAVVoiceCommandDisambiguationResult, WAVVoiceCommandServiceConnection,
     WAVVoiceCommandCompletedEventArgs;
@@ -82,7 +83,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommandDefinitionManager : RTObject
 + (RTObject<WFIAsyncAction>*)installCommandDefinitionsFromStorageFileAsync:(WSStorageFile*)file;
-+ (NSDictionary*)installedCommandDefinitions;
++ (NSDictionary* /* NSString *, WAVVoiceCommandDefinition* */)installedCommandDefinitions;
 @end
 
 #endif // __WAVVoiceCommandDefinitionManager_DEFINED__
@@ -126,7 +127,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAVVoiceCommand : RTObject
 @property (readonly) NSString* commandName;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, NSArray* < NSString * > */ properties;
 @property (readonly) WMSSpeechRecognitionResult* speechRecognitionResult;
 @end
 
@@ -149,7 +150,7 @@ WINRT_EXPORT
 @property (retain) WAVVoiceCommandUserMessage* repeatMessage;
 @property (retain) WAVVoiceCommandUserMessage* message;
 @property (retain) NSString* appLaunchArgument;
-@property (readonly) NSMutableArray* voiceCommandContentTiles;
+@property (readonly) NSMutableArray* /* WAVVoiceCommandContentTile* */ voiceCommandContentTiles;
 + (unsigned int)maxSupportedVoiceCommandContentTiles;
 @end
 

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSPDBackgroundEnergyDiagnostics, WSPDForegroundEnergyDiagnostics;
 @protocol WSPDIBackgroundEnergyDiagnosticsStatics
 , WSPDIForegroundEnergyDiagnosticsStatics;

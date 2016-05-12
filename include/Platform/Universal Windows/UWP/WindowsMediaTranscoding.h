@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMTPrepareTranscodeResult, WMTMediaTranscoder;
 @protocol WMTIMediaTranscoder2
 , WMTIMediaTranscoder, WMTIPrepareTranscodeResult;

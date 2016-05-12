@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager,
     WNNMobileBroadbandUiccApp, WNNNetworkOperatorTetheringAccessPointConfiguration, WNNNetworkOperatorTetheringOperationResult,
     WNNNetworkOperatorTetheringManager, WNNNetworkOperatorTetheringClient, WNNMobileBroadbandAccountEventArgs,
@@ -314,8 +315,8 @@ WINRT_EXPORT
 @property (readonly) NSString* networkAccountId;
 @property (readonly) WFGUID* serviceProviderGuid;
 @property (readonly) NSString* serviceProviderName;
-+ (NSArray*)availableNetworkAccountIds;
-- (NSArray*)getConnectionProfiles;
++ (NSArray* /* NSString * */)availableNetworkAccountIds;
+- (NSArray* /* WNCConnectionProfile* */)getConnectionProfiles;
 @end
 
 #endif // __WNNMobileBroadbandAccount_DEFINED__
@@ -335,7 +336,7 @@ WINRT_EXPORT
 @property (readonly) NSString* registeredProviderId;
 @property (readonly) NSString* registeredProviderName;
 @property (readonly) unsigned int registrationNetworkError;
-@property (readonly) NSArray* registrationUiccApps;
+@property (readonly) NSArray* /* WNNMobileBroadbandUiccApp* */ registrationUiccApps;
 - (void)showConnectionUI;
 - (void)getVoiceCallSupportAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 @end
@@ -361,7 +362,7 @@ WINRT_EXPORT
 @property (readonly) WNNNetworkDeviceStatus networkDeviceStatus;
 @property (readonly) NSString* simIccId;
 @property (readonly) NSString* subscriberId;
-@property (readonly) NSArray* telephoneNumbers;
+@property (readonly) NSArray* /* NSString * */ telephoneNumbers;
 @property (readonly) WNNMobileBroadbandPinManager* pinManager;
 @property (readonly) NSString* revision;
 @property (readonly) NSString* serialNumber;
@@ -375,7 +376,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandPinManager : RTObject
-@property (readonly) NSArray* supportedPins;
+@property (readonly) NSArray* /* WNNMobileBroadbandPinType */ supportedPins;
 - (WNNMobileBroadbandPin*)getPin:(WNNMobileBroadbandPinType)pinType;
 @end
 
@@ -442,7 +443,7 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)configureAccessPointAsync:(WNNNetworkOperatorTetheringAccessPointConfiguration*)configuration;
 - (void)startTetheringAsyncWithSuccess:(void (^)(WNNNetworkOperatorTetheringOperationResult*))success failure:(void (^)(NSError*))failure;
 - (void)stopTetheringAsyncWithSuccess:(void (^)(WNNNetworkOperatorTetheringOperationResult*))success failure:(void (^)(NSError*))failure;
-- (NSArray*)getTetheringClients;
+- (NSArray* /* WNNNetworkOperatorTetheringClient* */)getTetheringClients;
 @end
 
 #endif // __WNNNetworkOperatorTetheringManager_DEFINED__
@@ -453,7 +454,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNNetworkOperatorTetheringClient : RTObject
-@property (readonly) NSArray* hostNames;
+@property (readonly) NSArray* /* WNHostName* */ hostNames;
 @property (readonly) NSString* macAddress;
 @end
 
@@ -520,7 +521,7 @@ WINRT_EXPORT
 @property (readonly) WNNMobileBroadbandAccount* currentAccount;
 @property (readonly) WNNMobileBroadbandNetwork* currentNetwork;
 @property (readonly) WNNMobileBroadbandDeviceInformation* deviceInformation;
-@property (readonly) NSArray* deviceServices;
+@property (readonly) NSArray* /* WNNMobileBroadbandDeviceServiceInformation* */ deviceServices;
 @property (readonly) BOOL isResetSupported;
 @property (readonly) unsigned int maxDeviceServiceCommandSizeInBytes;
 @property (readonly) unsigned int maxDeviceServiceDataSizeInBytes;
@@ -577,7 +578,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandDeviceService : RTObject
 @property (readonly) WFGUID* deviceServiceId;
-@property (readonly) NSArray* supportedCommands;
+@property (readonly) NSArray* /* unsigned int */ supportedCommands;
 - (WNNMobileBroadbandDeviceServiceDataSession*)openDataSession;
 - (WNNMobileBroadbandDeviceServiceCommandSession*)openCommandSession;
 @end
@@ -694,7 +695,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNNMobileBroadbandUiccAppsResult : RTObject
 @property (readonly) WNNMobileBroadbandUiccAppOperationStatus status;
-@property (readonly) NSArray* uiccApps;
+@property (readonly) NSArray* /* WNNMobileBroadbandUiccApp* */ uiccApps;
 @end
 
 #endif // __WNNMobileBroadbandUiccAppsResult_DEFINED__
@@ -745,7 +746,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails : RTObject
-@property (readonly) NSArray* networkRegistrationStateChanges;
+@property (readonly) NSArray* /* WNNMobileBroadbandNetworkRegistrationStateChange* */ networkRegistrationStateChanges;
 @end
 
 #endif // __WNNMobileBroadbandNetworkRegistrationStateChangeTriggerDetails_DEFINED__
@@ -768,7 +769,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandRadioStateChangeTriggerDetails : RTObject
-@property (readonly) NSArray* radioStateChanges;
+@property (readonly) NSArray* /* WNNMobileBroadbandRadioStateChange* */ radioStateChanges;
 @end
 
 #endif // __WNNMobileBroadbandRadioStateChangeTriggerDetails_DEFINED__
@@ -792,7 +793,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNMobileBroadbandPinLockStateChangeTriggerDetails : RTObject
-@property (readonly) NSArray* pinLockStateChanges;
+@property (readonly) NSArray* /* WNNMobileBroadbandPinLockStateChange* */ pinLockStateChanges;
 @end
 
 #endif // __WNNMobileBroadbandPinLockStateChangeTriggerDetails_DEFINED__
@@ -816,9 +817,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownCSimFilePaths : RTObject
-+ (NSArray*)eFSpn;
-+ (NSArray*)gid1;
-+ (NSArray*)gid2;
++ (NSArray* /* unsigned int */)eFSpn;
++ (NSArray* /* unsigned int */)gid1;
++ (NSArray* /* unsigned int */)gid2;
 @end
 
 #endif // __WNNKnownCSimFilePaths_DEFINED__
@@ -829,9 +830,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownRuimFilePaths : RTObject
-+ (NSArray*)eFSpn;
-+ (NSArray*)gid1;
-+ (NSArray*)gid2;
++ (NSArray* /* unsigned int */)eFSpn;
++ (NSArray* /* unsigned int */)gid1;
++ (NSArray* /* unsigned int */)gid2;
 @end
 
 #endif // __WNNKnownRuimFilePaths_DEFINED__
@@ -842,10 +843,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownSimFilePaths : RTObject
-+ (NSArray*)eFOns;
-+ (NSArray*)eFSpn;
-+ (NSArray*)gid1;
-+ (NSArray*)gid2;
++ (NSArray* /* unsigned int */)eFOns;
++ (NSArray* /* unsigned int */)eFSpn;
++ (NSArray* /* unsigned int */)gid1;
++ (NSArray* /* unsigned int */)gid2;
 @end
 
 #endif // __WNNKnownSimFilePaths_DEFINED__
@@ -856,11 +857,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNNKnownUSimFilePaths : RTObject
-+ (NSArray*)eFOpl;
-+ (NSArray*)eFPnn;
-+ (NSArray*)eFSpn;
-+ (NSArray*)gid1;
-+ (NSArray*)gid2;
++ (NSArray* /* unsigned int */)eFOpl;
++ (NSArray* /* unsigned int */)eFPnn;
++ (NSArray* /* unsigned int */)eFSpn;
++ (NSArray* /* unsigned int */)gid1;
++ (NSArray* /* unsigned int */)gid2;
 @end
 
 #endif // __WNNKnownUSimFilePaths_DEFINED__
@@ -887,7 +888,7 @@ WINRT_EXPORT
 @property (readonly) WNCNetworkAdapter* networkAdapter;
 @property (readonly) WFUri* redirectMessageUrl;
 @property (readonly) WDXDXmlDocument* redirectMessageXml;
-@property (readonly) NSArray* wirelessNetworkId;
+@property (readonly) NSArray* /* uint8_t */ wirelessNetworkId;
 - (void)issueCredentials:(NSString*)userName
                         password:(NSString*)password
                  extraParameters:(NSString*)extraParameters
@@ -968,8 +969,8 @@ WINRT_EXPORT
 + (WNNUssdMessage*)makeMessage:(NSString*)messageText ACTIVATOR;
 @property (retain) NSString* payloadAsText;
 @property uint8_t dataCodingScheme;
-- (NSArray*)getPayload;
-- (void)setPayload:(id<NSFastEnumeration> /* uint8_t */)value;
+- (NSArray* /* uint8_t */)getPayload;
+- (void)setPayload:(NSArray* /* uint8_t */)value;
 @end
 
 #endif // __WNNUssdMessage_DEFINED__
