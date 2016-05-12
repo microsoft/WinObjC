@@ -363,3 +363,39 @@ TEST(KVO, ToMany_KVCMediatedArrayWithHelpers) {
         andExpectChangeCallbacks:@[ firstInsertCallback, secondInsertCallback, removalCallback, illegalChangeNotification ]];
     EXPECT_EQ(3, facade.hits);
 }
+
+TEST(KVO, ToMany_KVCMediatedArrayWithHelpers_AggregateFunction) {
+    auto insertCallbackPost = CHANGE_CB {
+        EXPECT_OBJCEQ(nil, change[NSKeyValueChangeNotificationIsPriorKey]);
+        EXPECT_OBJCEQ(@(NSKeyValueChangeSetting), change[NSKeyValueChangeKindKey]);
+        EXPECT_OBJCEQ(@(0), change[NSKeyValueChangeOldKey]);
+        EXPECT_OBJCEQ(@(1), change[NSKeyValueChangeNewKey]);
+        NSIndexSet* indexes = change[NSKeyValueChangeIndexesKey];
+        EXPECT_OBJCEQ(nil, indexes);
+    };
+    auto illegalChangeNotification = CHANGE_CB {
+        ADD_FAILURE();
+    };
+
+    TEST_IDENT(Facade)* facade = [[TEST_IDENT(Facade) new] autorelease];
+    [facade observeKeyPath:@"arrayWithHelpers.@count"
+                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM {
+                     // This array is assisted by setter functions, and should also dispatch one notification per change.
+                     NSMutableArray* mediatedVersionOfArray = [observee mutableArrayValueForKey:@"arrayWithHelpers"];
+                     [mediatedVersionOfArray addObject:@"object1"];
+                 }
+        andExpectChangeCallbacks:@[ insertCallbackPost, illegalChangeNotification ]];
+    EXPECT_EQ(1, facade.hits);
+
+    facade = [[TEST_IDENT(Facade) new] autorelease];
+    // In this test, we use the same arrayWithHelpers as above, but interact with it manually.
+    [facade observeKeyPath:@"arrayWithHelpers.@count"
+                     withOptions:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew
+                 performingBlock:PERFORM {
+                     // This array is assisted by setter functions, and should also dispatch one notification per change.
+                     [observee insertObject:@"object1" inArrayWithHelpersAtIndex:0];
+                 }
+        andExpectChangeCallbacks:@[ insertCallbackPost, illegalChangeNotification ]];
+    EXPECT_EQ(1, facade.hits);
+}
