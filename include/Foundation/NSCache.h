@@ -23,20 +23,19 @@
 
 FOUNDATION_EXPORT_CLASS
 @interface NSCache <KeyType, ObjectType> : NSObject
-@property (copy) NSString* name STUB_PROPERTY;
-- (ObjectType)objectForKey:(KeyType)key STUB_METHOD;
-- (void)setObject:(ObjectType)obj forKey:(KeyType)key STUB_METHOD;
-- (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)num STUB_METHOD;
-- (void)removeObjectForKey:(KeyType)key STUB_METHOD;
-- (void)removeAllObjects STUB_METHOD;
-@property NSUInteger countLimit STUB_PROPERTY;
-@property NSUInteger totalCostLimit STUB_PROPERTY;
-@property BOOL evictsObjectsWithDiscardedContent STUB_PROPERTY;
-@property (assign) id<NSCacheDelegate> delegate STUB_PROPERTY;
+@property (copy) NSString* name;
+- (ObjectType)objectForKey:(KeyType)key;
+- (void)setObject:(ObjectType)obj forKey:(KeyType)key;
+- (void)setObject:(ObjectType)obj forKey:(KeyType)key cost:(NSUInteger)num;
+- (void)removeObjectForKey:(KeyType)key;
+- (void)removeAllObjects;
+@property NSUInteger countLimit;
+@property NSUInteger totalCostLimit;
+@property BOOL evictsObjectsWithDiscardedContent;
+@property (assign) id<NSCacheDelegate> delegate;
 @end
 
 @protocol NSCacheDelegate <NSObject>
 @optional
 - (void)cache:(NSCache*)cache willEvictObject:(id)obj;
-
 @end
