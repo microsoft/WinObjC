@@ -245,11 +245,11 @@ bool ScanFilename(BundleFile* dest, char* pDirectory, char* pFilename) {
         }
         dest->pszPlatform = copyWithoutExtension("~iphone", "");
         szTemp[strlen(szTemp) - 7] = 0;
-    } else if (hasExtension(szTemp, "~iPad")) {
+    } else if (hasExtension(szTemp, "~ipad")) {
         if (!isTabletDevice()) {
             return false;
         }
-        dest->pszPlatform = copyWithoutExtension("~iPad", "");
+        dest->pszPlatform = copyWithoutExtension("~ipad", "");
         szTemp[strlen(szTemp) - 5] = 0;
     }
 
@@ -867,9 +867,9 @@ static NSString* makePath(NSBundle* self,
             memmove(pPos, pPos + 7, strlen(pPos + 7) + 1);
         }
     } else {
-        if (strstr(szPath, "~iPad") != NULL) {
-            char* pPos = strstr(szPath, "~iPad");
-            memmove(pPos, pPos + 4, strlen(pPos + 4) + 1);
+        if (strstr(szPath, "~ipad") != NULL) {
+            char* pPos = strstr(szPath, "~ipad");
+            memmove(pPos, pPos + 5, strlen(pPos + 5) + 1);
         }
     }
 
@@ -907,7 +907,7 @@ static NSString* checkPath(
         if (!isTabletDevice()) {
             ret = makePath(self, name, extension, directory, localization, sublocal, @"~iphone");
         } else {
-            ret = makePath(self, name, extension, directory, localization, sublocal, @"~iPad");
+            ret = makePath(self, name, extension, directory, localization, sublocal, @"~ipad");
         }
 
         path = (char*)[ret UTF8String];

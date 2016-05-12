@@ -161,6 +161,7 @@ NSString* const NSTextStorageWillProcessEditingNotification = @"NSTextStorageWil
 - (void)dealloc {
     [_layoutManagers release];
     [_defaultAttributes release];
+    [_composed release];
     [super dealloc];
 }
 
