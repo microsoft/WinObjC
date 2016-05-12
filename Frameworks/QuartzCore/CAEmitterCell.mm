@@ -341,15 +341,14 @@ static const CGFloat epsilon = .000001f;
 
 /**
  @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Notes Setting the property doesn't take effect.
 */
 - (void)setYAcceleration:(float)acceleration {
     _yAcceleration = acceleration;
 }
 
 /**
- @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Status Interoperable
 */
 - (float)yAcceleration {
     return _yAcceleration;
@@ -357,15 +356,14 @@ static const CGFloat epsilon = .000001f;
 
 /**
  @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Notes Setting the property doesn't take effect.
 */
 - (void)setSpin:(float)spin {
     _spin = spin;
 }
 
 /**
- @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Status Interoperable
 */
 - (float)spin {
     return _spin;
@@ -373,15 +371,14 @@ static const CGFloat epsilon = .000001f;
 
 /**
  @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Notes Setting the property doesn't take effect.
 */
 - (void)setRedRange:(float)range {
     _redRange = range;
 }
 
 /**
- @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Status Interoperable
 */
 - (float)redRange {
     return _redRange;
@@ -389,15 +386,14 @@ static const CGFloat epsilon = .000001f;
 
 /**
  @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Notes Setting the property doesn't take effect.
 */
 - (void)setBlueRange:(float)range {
     _blueRange = range;
 }
 
 /**
- @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Status Interoperable
 */
 - (float)blueRange {
     return _blueRange;
@@ -405,15 +401,14 @@ static const CGFloat epsilon = .000001f;
 
 /**
  @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Notes Setting the property doesn't take effect.
 */
 - (void)setGreenRange:(float)range {
     _greenRange = range;
 }
 
 /**
- @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Status Interoperable
 */
 - (float)greenRange {
     return _greenRange;
@@ -421,15 +416,14 @@ static const CGFloat epsilon = .000001f;
 
 /**
  @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Notes Setting the property doesn't take effect.
 */
 - (void)setAlphaRange:(float)range {
     _alphaRange = range;
 }
 
 /**
- @Status Caveat
- @Notes Does nothing yet. Waiting for UI.Composition integration.
+ @Status Interoperable
 */
 - (float)alphaRange {
     return _alphaRange;
