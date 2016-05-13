@@ -17,10 +17,12 @@
 #pragma once
 
 #import <SafariServices/SafariServicesExport.h>
+#import <Foundation/NSObjCRuntime.h>
 
 @class SFSafariViewController;
 @class NSURL;
 @class NSString;
+@class NSArray;
 
 @protocol SFSafariViewControllerDelegate
 - (void)safariViewController:(SFSafariViewController*)controller didCompleteInitialLoad:(BOOL)didLoadSuccessfully;
