@@ -192,7 +192,7 @@ static void DoDisplayList(CALayer* layer) {
             if (cur->maskLayer) {
                 CALayer* maskLayer = (CALayer*)cur->maskLayer;
                 DisplayTexture* maskTexture = (DisplayTexture*)[cur->maskLayer _getDisplayTexture];
-                GetCACompositor()->setNodeTexture((DisplayTransaction*)[CATransaction _currentDisplayTransaction],
+                GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction],
                                                   maskLayer->priv->_presentationNode,
                                                   maskTexture,
                                                   maskLayer->priv->contentsSize,
@@ -203,7 +203,7 @@ static void DoDisplayList(CALayer* layer) {
                 }
             }
 
-            GetCACompositor()->setNodeTexture((DisplayTransaction*)[CATransaction _currentDisplayTransaction],
+            GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction],
                                               cur->_presentationNode,
                                               newTexture,
                                               cur->contentsSize,
@@ -215,7 +215,7 @@ static void DoDisplayList(CALayer* layer) {
             cur->needsDisplay = FALSE;
             cur->hasNewContents = FALSE;
 
-            GetCACompositor()->setNodeTexture((DisplayTransaction*)[CATransaction _currentDisplayTransaction],
+            GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction],
                                               cur->_presentationNode,
                                               cur->_textureOverride,
                                               cur->contentsSize,
@@ -300,13 +300,9 @@ CAPrivateInfo::CAPrivateInfo(CALayer* self, bool bPresentationLayer) {
 
         _presentationNode = GetCACompositor()->CreateDisplayNode();
     }
-
-    GetCACompositor()->IncrementCounter("CALayer");
 }
 
 CAPrivateInfo::~CAPrivateInfo() {
-    GetCACompositor()->DecrementCounter("CALayer");
-
     _undefinedKeys = nil;
     _actions = nil;
     CGColorRelease(_backgroundColor);
@@ -1462,11 +1458,7 @@ static void doRecursiveAction(CALayer* layer, NSString* actionName) {
             priv->savedContext = NULL;
         }
     }
-    GetCACompositor()->setNodeTexture((DisplayTransaction*)[CATransaction _currentDisplayTransaction],
-                                      priv->_presentationNode,
-                                      NULL,
-                                      CGSizeMake(0, 0),
-                                      0.0f);
+    GetCACompositor()->setNodeTexture([CATransaction _currentDisplayTransaction], priv->_presentationNode, NULL, CGSizeMake(0, 0), 0.0f);
     priv->needsDisplay = TRUE;
 
     GetCACompositor()->DisplayTreeChanged();

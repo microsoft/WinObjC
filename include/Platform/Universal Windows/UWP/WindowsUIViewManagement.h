@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUVApplicationView, WUVApplicationViewConsolidatedEventArgs, WUVApplicationViewTitleBar, WUVApplicationViewSwitcher,
     WUVActivationViewSwitcher, WUVInputPaneVisibilityEventArgs, WUVInputPane, WUVProjectionManager, WUVUIViewSettings,
     WUVAccessibilitySettings, WUVUISettings;
@@ -149,10 +150,10 @@ typedef unsigned WUVUIElementType;
 
 WINRT_EXPORT
 @interface WUVApplicationView : RTObject
++ (WUVApplicationView*)getForCurrentView;
 + (BOOL)tryUnsnap;
 + (BOOL)tryUnsnapToFullscreen;
 + (int)getApplicationViewIdForWindow:(RTObject<WUCICoreWindow>*)window;
-+ (WUVApplicationView*)getForCurrentView;
 @property BOOL isScreenCaptureEnabled;
 @property (retain) NSString* title;
 @property (readonly) BOOL adjacentToRightDisplayEdge;
@@ -205,18 +206,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVApplicationViewTitleBar : RTObject
-@property (retain) id buttonInactiveBackgroundColor;
-@property (retain) id buttonHoverForegroundColor;
-@property (retain) id buttonHoverBackgroundColor;
-@property (retain) id buttonForegroundColor;
-@property (retain) id buttonBackgroundColor;
-@property (retain) id buttonInactiveForegroundColor;
-@property (retain) id backgroundColor;
-@property (retain) id inactiveForegroundColor;
-@property (retain) id inactiveBackgroundColor;
-@property (retain) id foregroundColor;
-@property (retain) id buttonPressedForegroundColor;
-@property (retain) id buttonPressedBackgroundColor;
+@property (retain) id /* WUColor* */ buttonInactiveBackgroundColor;
+@property (retain) id /* WUColor* */ buttonHoverForegroundColor;
+@property (retain) id /* WUColor* */ buttonHoverBackgroundColor;
+@property (retain) id /* WUColor* */ buttonForegroundColor;
+@property (retain) id /* WUColor* */ buttonBackgroundColor;
+@property (retain) id /* WUColor* */ buttonInactiveForegroundColor;
+@property (retain) id /* WUColor* */ backgroundColor;
+@property (retain) id /* WUColor* */ inactiveForegroundColor;
+@property (retain) id /* WUColor* */ inactiveBackgroundColor;
+@property (retain) id /* WUColor* */ foregroundColor;
+@property (retain) id /* WUColor* */ buttonPressedForegroundColor;
+@property (retain) id /* WUColor* */ buttonPressedBackgroundColor;
 @end
 
 #endif // __WUVApplicationViewTitleBar_DEFINED__
@@ -227,7 +228,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVApplicationViewSwitcher : RTObject
-+ (void)disableSystemViewActivationPolicy;
 + (void)disableShowingMainViewOnActivation;
 + (void)tryShowAsStandaloneAsync:(int)viewId success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)tryShowAsStandaloneWithSizePreferenceAsync:(int)viewId
@@ -250,6 +250,7 @@ WINRT_EXPORT
                                     options:(WUVApplicationViewSwitchingOptions)options
                                     success:(void (^)(BOOL))success
                                     failure:(void (^)(NSError*))failure;
++ (void)disableSystemViewActivationPolicy;
 @end
 
 #endif // __WUVApplicationViewSwitcher_DEFINED__
@@ -304,6 +305,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUVProjectionManager : RTObject
++ (RTObject<WFIAsyncAction>*)startProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
++ (RTObject<WFIAsyncAction>*)swapDisplaysForViewsAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
++ (RTObject<WFIAsyncAction>*)stopProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
 + (RTObject<WFIAsyncAction>*)startProjectingWithDeviceInfoAsync:(int)projectionViewId
                                                    anchorViewId:(int)anchorViewId
                                               displayDeviceInfo:(WDEDeviceInformation*)displayDeviceInfo;
@@ -319,9 +323,6 @@ WINRT_EXPORT
                                          success:(void (^)(BOOL))success
                                          failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
-+ (RTObject<WFIAsyncAction>*)startProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
-+ (RTObject<WFIAsyncAction>*)swapDisplaysForViewsAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
-+ (RTObject<WFIAsyncAction>*)stopProjectingAsync:(int)projectionViewId anchorViewId:(int)anchorViewId;
 + (BOOL)projectionDisplayAvailable;
 + (EventRegistrationToken)addProjectionDisplayAvailableChangedEvent:(void (^)(RTObject*, RTObject*))del;
 + (void)removeProjectionDisplayAvailableChangedEvent:(EventRegistrationToken)tok;

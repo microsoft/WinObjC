@@ -532,9 +532,9 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
         case 'c':
             return [NSString stringWithFormat:@"%hhd", [self charValue]];
         case 'd':
-            return [NSString stringWithFormat:@"%f", [self doubleValue]];
+            return [NSString stringWithFormat:@"%0.16g", [self doubleValue]];
         case 'f':
-            return [NSString stringWithFormat:@"%f", [self floatValue]];
+            return [NSString stringWithFormat:@"%0.7g", [self floatValue]];
         case 'i':
             return [NSString stringWithFormat:@"%d", [self intValue]];
         case 'l':

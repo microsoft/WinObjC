@@ -43,6 +43,7 @@ enum {
     NSURLErrorCallIsActive = -1019,
     NSURLErrorDataNotAllowed = -1020,
     NSURLErrorRequestBodyStreamExhausted = -1021,
+    NSURLErrorAppTransportSecurityRequiresSecureConnection = -1022,
     NSURLErrorFileDoesNotExist = -1100,
     NSURLErrorFileIsDirectory = -1101,
     NSURLErrorNoPermissionsToReadFile = -1102,

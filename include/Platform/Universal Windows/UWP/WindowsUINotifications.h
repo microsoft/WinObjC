@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUNTileUpdater, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater,
     WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs,
     WUNToastFailedEventArgs, WUNToastNotificationHistory, WUNTileUpdateManager, WUNBadgeUpdateManager, WUNTileFlyoutUpdateManager,
@@ -247,7 +248,7 @@ WINRT_EXPORT
 - (void)enableNotificationQueue:(BOOL)enable;
 - (void)addToSchedule:(WUNScheduledTileNotification*)scheduledTile;
 - (void)removeFromSchedule:(WUNScheduledTileNotification*)scheduledTile;
-- (NSArray*)getScheduledTileNotifications;
+- (NSArray* /* WUNScheduledTileNotification* */)getScheduledTileNotifications;
 - (void)startPeriodicUpdate:(WFUri*)tileContent requestedInterval:(WUNPeriodicUpdateRecurrence)requestedInterval;
 - (void)startPeriodicUpdateAtTime:(WFUri*)tileContent
                         startTime:(WFDateTime*)startTime
@@ -273,7 +274,7 @@ WINRT_EXPORT
 @interface WUNTileNotification : RTObject
 + (WUNTileNotification*)makeTileNotification:(WDXDXmlDocument*)content ACTIVATOR;
 @property (retain) NSString* tag;
-@property (retain) id expirationTime;
+@property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @end
 
@@ -288,7 +289,7 @@ WINRT_EXPORT
 + (WUNScheduledTileNotification*)makeScheduledTileNotification:(WDXDXmlDocument*)content deliveryTime:(WFDateTime*)deliveryTime ACTIVATOR;
 @property (retain) NSString* tag;
 @property (retain) NSString* id;
-@property (retain) id expirationTime;
+@property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @property (readonly) WFDateTime* deliveryTime;
 @end
@@ -320,7 +321,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNTileFlyoutNotification : RTObject
 + (WUNTileFlyoutNotification*)makeTileFlyoutNotification:(WDXDXmlDocument*)content ACTIVATOR;
-@property (retain) id expirationTime;
+@property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @end
 
@@ -350,7 +351,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNBadgeNotification : RTObject
 + (WUNBadgeNotification*)makeBadgeNotification:(WDXDXmlDocument*)content ACTIVATOR;
-@property (retain) id expirationTime;
+@property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @end
 
@@ -367,7 +368,7 @@ WINRT_EXPORT
 - (void)hide:(WUNToastNotification*)notification;
 - (void)addToSchedule:(WUNScheduledToastNotification*)scheduledToast;
 - (void)removeFromSchedule:(WUNScheduledToastNotification*)scheduledToast;
-- (NSArray*)getScheduledToastNotifications;
+- (NSArray* /* WUNScheduledToastNotification* */)getScheduledToastNotifications;
 @end
 
 #endif // __WUNToastNotifier_DEFINED__
@@ -379,7 +380,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUNToastNotification : RTObject
 + (WUNToastNotification*)makeToastNotification:(WDXDXmlDocument*)content ACTIVATOR;
-@property (retain) id expirationTime;
+@property (retain) id /* WFDateTime* */ expirationTime;
 @property (readonly) WDXDXmlDocument* content;
 @property (retain) NSString* tag;
 @property BOOL suppressPopup;
@@ -409,7 +410,7 @@ WINRT_EXPORT
 @property (readonly) WDXDXmlDocument* content;
 @property (readonly) WFDateTime* deliveryTime;
 @property (readonly) unsigned int maximumSnoozeCount;
-@property (readonly) id snoozeInterval;
+@property (readonly) id /* WFTimeSpan* */ snoozeInterval;
 @property (retain) NSString* tag;
 @property BOOL suppressPopup;
 @property (retain) NSString* group;
@@ -452,8 +453,8 @@ WINRT_EXPORT
 - (void)remove:(NSString*)tag;
 - (void)clear;
 - (void)clearWithId:(NSString*)applicationId;
-- (NSArray*)getHistory;
-- (NSArray*)getHistoryWithId:(NSString*)applicationId;
+- (NSArray* /* WUNToastNotification* */)getHistory;
+- (NSArray* /* WUNToastNotification* */)getHistoryWithId:(NSString*)applicationId;
 @end
 
 #endif // __WUNToastNotificationHistory_DEFINED__

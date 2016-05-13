@@ -14,7 +14,6 @@
 //
 //******************************************************************************
 
-#include "version.h"
 #include "utils.h"
 #include "sbassert.h"
 #include "xcconfigparser.h"
@@ -25,11 +24,9 @@
 #include <getopt.h>
 #include <fstream>
 
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
 void printVersion(const char *execName)
 {
-  static String binaryVersion = String("1.0 (") + STR(VERSION_SHA) + ")";
+  static String binaryVersion = "1.0";
   std::cout << sb_basename(execName) << " " << binaryVersion << std::endl;
   exit(EXIT_SUCCESS);
 }

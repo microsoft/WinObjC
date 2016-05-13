@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAAAppointment, WAAAppointmentStore, WAAAppointmentOrganizer, WAAAppointmentInvitee, WAAAppointmentRecurrence, WAAAppointmentManager,
     WAAFindAppointmentsOptions, WAAAppointmentException, WAAAppointmentCalendarSyncManager, WAAAppointmentCalendar,
     WAAAppointmentStoreChange, WAAAppointmentStoreChangeReader, WAAAppointmentStoreChangedDeferral, WAAAppointmentStoreChangeTracker,
@@ -221,12 +222,12 @@ WINRT_EXPORT
 @property (retain) NSString* subject;
 @property (retain) WFDateTime* startTime;
 @property WAAAppointmentSensitivity sensitivity;
-@property (retain) id reminder;
-@property (readonly) NSMutableArray* invitees;
+@property (retain) id /* WFTimeSpan* */ reminder;
+@property (readonly) NSMutableArray* /* WAAAppointmentInvitee* */ invitees;
 @property BOOL allowNewTimeProposal;
 @property WAAAppointmentParticipantResponse userResponse;
 @property (retain) NSString* roamingId;
-@property (retain) id replyTime;
+@property (retain) id /* WFDateTime* */ replyTime;
 @property BOOL isResponseRequested;
 @property BOOL isOrganizedByUser;
 @property BOOL isCanceledMeeting;
@@ -234,7 +235,7 @@ WINRT_EXPORT
 @property (readonly) BOOL hasInvitees;
 @property (readonly) NSString* calendarId;
 @property (readonly) NSString* localId;
-@property (readonly) id originalStartTime;
+@property (readonly) id /* WFDateTime* */ originalStartTime;
 @property uint64_t remoteChangeNumber;
 @property WAAAppointmentDetailsKind detailsKind;
 @property (readonly) uint64_t changeNumber;
@@ -262,18 +263,19 @@ WINRT_EXPORT
                   instanceStartTime:(WFDateTime*)instanceStartTime
                             success:(void (^)(WAAAppointment*))success
                             failure:(void (^)(NSError*))failure;
-- (void)findAppointmentCalendarsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findAppointmentCalendarsAsyncWithSuccess:(void (^)(NSArray* /* WAAAppointmentCalendar* */))success
+                                         failure:(void (^)(NSError*))failure;
 - (void)findAppointmentCalendarsAsyncWithOptions:(WAAFindAppointmentCalendarsOptions)options
-                                         success:(void (^)(NSArray*))success
+                                         success:(void (^)(NSArray* /* WAAAppointmentCalendar* */))success
                                          failure:(void (^)(NSError*))failure;
 - (void)findAppointmentsAsync:(WFDateTime*)rangeStart
                   rangeLength:(WFTimeSpan*)rangeLength
-                      success:(void (^)(NSArray*))success
+                      success:(void (^)(NSArray* /* WAAAppointment* */))success
                       failure:(void (^)(NSError*))failure;
 - (void)findAppointmentsAsyncWithOptions:(WFDateTime*)rangeStart
                              rangeLength:(WFTimeSpan*)rangeLength
                                  options:(WAAFindAppointmentsOptions*)options
-                                 success:(void (^)(NSArray*))success
+                                 success:(void (^)(NSArray* /* WAAAppointment* */))success
                                  failure:(void (^)(NSError*))failure;
 - (void)findConflictAsync:(WAAAppointment*)appointment
                   success:(void (^)(WAAAppointmentConflictResult*))success
@@ -313,7 +315,9 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)showAppointmentDetailsAsync:(NSString*)localId;
 - (RTObject<WFIAsyncAction>*)showAppointmentDetailsWithDateAsync:(NSString*)localId instanceStartDate:(WFDateTime*)instanceStartDate;
 - (void)showEditNewAppointmentAsync:(WAAAppointment*)appointment success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)findLocalIdsFromRoamingIdAsync:(NSString*)roamingId success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findLocalIdsFromRoamingIdAsync:(NSString*)roamingId
+                               success:(void (^)(NSArray* /* NSString * */))success
+                               failure:(void (^)(NSError*))failure;
 - (void)createAppointmentCalendarInAccountAsync:(NSString*)name
                               userDataAccountId:(NSString*)userDataAccountId
                                         success:(void (^)(WAAAppointmentCalendar*))success
@@ -358,13 +362,13 @@ WINRT_EXPORT
 @interface WAAAppointmentRecurrence : RTObject
 + (instancetype)make ACTIVATOR;
 @property WAAAppointmentRecurrenceUnit unit;
-@property (retain) id occurrences;
+@property (retain) id /* unsigned int */ occurrences;
 @property unsigned int month;
 @property unsigned int interval;
 @property WAAAppointmentDaysOfWeek daysOfWeek;
 @property unsigned int day;
 @property WAAAppointmentWeekOfMonth weekOfMonth;
-@property (retain) id until;
+@property (retain) id /* WFDateTime* */ until;
 @property (retain) NSString* timeZone;
 @property (readonly) WAARecurrenceType recurrenceType;
 @property (readonly) NSString* calendarIdentifier;
@@ -378,6 +382,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentManager : RTObject
++ (RTObject<WFIAsyncAction>*)showAppointmentDetailsAsync:(NSString*)appointmentId;
++ (RTObject<WFIAsyncAction>*)showAppointmentDetailsWithDateAsync:(NSString*)appointmentId instanceStartDate:(WFDateTime*)instanceStartDate;
++ (void)showEditNewAppointmentAsync:(WAAAppointment*)appointment success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)requestStoreAsync:(WAAAppointmentStoreAccessType)options
+                  success:(void (^)(WAAAppointmentStore*))success
+                  failure:(void (^)(NSError*))failure;
 + (void)showAddAppointmentAsync:(WAAAppointment*)appointment
                       selection:(WFRect*)selection
                         success:(void (^)(NSString*))success
@@ -421,12 +431,6 @@ WINRT_EXPORT
                                                success:(void (^)(BOOL))success
                                                failure:(void (^)(NSError*))failure;
 + (RTObject<WFIAsyncAction>*)showTimeFrameAsync:(WFDateTime*)timeToShow duration:(WFTimeSpan*)duration;
-+ (RTObject<WFIAsyncAction>*)showAppointmentDetailsAsync:(NSString*)appointmentId;
-+ (RTObject<WFIAsyncAction>*)showAppointmentDetailsWithDateAsync:(NSString*)appointmentId instanceStartDate:(WFDateTime*)instanceStartDate;
-+ (void)showEditNewAppointmentAsync:(WAAAppointment*)appointment success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)requestStoreAsync:(WAAAppointmentStoreAccessType)options
-                  success:(void (^)(WAAAppointmentStore*))success
-                  failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppointmentManager_DEFINED__
@@ -440,8 +444,8 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property unsigned int maxCount;
 @property BOOL includeHidden;
-@property (readonly) NSMutableArray* calendarIds;
-@property (readonly) NSMutableArray* fetchProperties;
+@property (readonly) NSMutableArray* /* NSString * */ calendarIds;
+@property (readonly) NSMutableArray* /* NSString * */ fetchProperties;
 @end
 
 #endif // __WAAFindAppointmentsOptions_DEFINED__
@@ -453,7 +457,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAAppointmentException : RTObject
 @property (readonly) WAAAppointment* appointment;
-@property (readonly) NSArray* exceptionProperties;
+@property (readonly) NSArray* /* NSString * */ exceptionProperties;
 @property (readonly) BOOL isDeleted;
 @end
 
@@ -501,33 +505,35 @@ WINRT_EXPORT
 @property (readonly) NSString* userDataAccountId;
 - (void)findAppointmentsAsync:(WFDateTime*)rangeStart
                   rangeLength:(WFTimeSpan*)rangeLength
-                      success:(void (^)(NSArray*))success
+                      success:(void (^)(NSArray* /* WAAAppointment* */))success
                       failure:(void (^)(NSError*))failure;
 - (void)findAppointmentsAsyncWithOptions:(WFDateTime*)rangeStart
                              rangeLength:(WFTimeSpan*)rangeLength
                                  options:(WAAFindAppointmentsOptions*)options
-                                 success:(void (^)(NSArray*))success
+                                 success:(void (^)(NSArray* /* WAAAppointment* */))success
                                  failure:(void (^)(NSError*))failure;
-- (void)findExceptionsFromMasterAsync:(NSString*)masterLocalId success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findExceptionsFromMasterAsync:(NSString*)masterLocalId
+                              success:(void (^)(NSArray* /* WAAAppointmentException* */))success
+                              failure:(void (^)(NSError*))failure;
 - (void)findAllInstancesAsync:(NSString*)masterLocalId
                    rangeStart:(WFDateTime*)rangeStart
                   rangeLength:(WFTimeSpan*)rangeLength
-                      success:(void (^)(NSArray*))success
+                      success:(void (^)(NSArray* /* WAAAppointment* */))success
                       failure:(void (^)(NSError*))failure;
 - (void)findAllInstancesAsyncWithOptions:(NSString*)masterLocalId
                               rangeStart:(WFDateTime*)rangeStart
                              rangeLength:(WFTimeSpan*)rangeLength
                                 pOptions:(WAAFindAppointmentsOptions*)pOptions
-                                 success:(void (^)(NSArray*))success
+                                 success:(void (^)(NSArray* /* WAAAppointment* */))success
                                  failure:(void (^)(NSError*))failure;
 - (void)getAppointmentAsync:(NSString*)localId success:(void (^)(WAAAppointment*))success failure:(void (^)(NSError*))failure;
 - (void)getAppointmentInstanceAsync:(NSString*)localId
                   instanceStartTime:(WFDateTime*)instanceStartTime
                             success:(void (^)(WAAAppointment*))success
                             failure:(void (^)(NSError*))failure;
-- (void)findUnexpandedAppointmentsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findUnexpandedAppointmentsAsyncWithSuccess:(void (^)(NSArray* /* WAAAppointment* */))success failure:(void (^)(NSError*))failure;
 - (void)findUnexpandedAppointmentsAsyncWithOptions:(WAAFindAppointmentsOptions*)options
-                                           success:(void (^)(NSArray*))success
+                                           success:(void (^)(NSArray* /* WAAAppointment* */))success
                                            failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAsync;
 - (RTObject<WFIAsyncAction>*)saveAsync;
@@ -588,7 +594,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppointmentStoreChangeReader : RTObject
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WAAAppointmentStoreChange* */))success failure:(void (^)(NSError*))failure;
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WAAAppointmentStoreChange*)lastChangeToAccept;
 @end
@@ -652,7 +658,7 @@ WINRT_EXPORT
 + (NSString*)allDay;
 + (NSString*)allowNewTimeProposal;
 + (NSString*)busyStatus;
-+ (NSMutableArray*)defaultProperties;
++ (NSMutableArray* /* NSString * */)defaultProperties;
 + (NSString*)details;
 + (NSString*)duration;
 + (NSString*)recurrence;

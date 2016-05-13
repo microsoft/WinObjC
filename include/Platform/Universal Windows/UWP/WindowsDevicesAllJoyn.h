@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDAAllJoynStatus, WDAAllJoynAboutData, WDAAllJoynBusAttachment, WDAAllJoynBusAttachmentStateChangedEventArgs,
     WDAAllJoynCredentialsRequestedEventArgs, WDAAllJoynCredentialsVerificationRequestedEventArgs, WDAAllJoynAuthenticationCompleteEventArgs,
     WDAAllJoynCredentials, WDAAllJoynServiceInfo, WDAAllJoynAboutDataView, WDAAllJoynAcceptSessionJoinerEventArgs,
@@ -131,16 +132,16 @@ WINRT_EXPORT
 @interface WDAAllJoynAboutData : RTObject
 @property (retain) NSString* defaultDescription;
 @property (retain) NSString* defaultAppName;
-@property (retain) id dateOfManufacture;
+@property (retain) id /* WFDateTime* */ dateOfManufacture;
 @property (retain) NSString* defaultManufacturer;
 @property WFGUID* appId;
 @property (retain) WFUri* supportUrl;
 @property (retain) NSString* softwareVersion;
 @property (retain) NSString* modelNumber;
 @property BOOL isEnabled;
-@property (readonly) NSMutableDictionary* appNames;
-@property (readonly) NSMutableDictionary* manufacturers;
-@property (readonly) NSMutableDictionary* descriptions;
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ appNames;
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ manufacturers;
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ descriptions;
 @end
 
 #endif // __WDAAllJoynAboutData_DEFINED__
@@ -154,7 +155,7 @@ WINRT_EXPORT
 + (WDAAllJoynBusAttachment*)make:(NSString*)connectionSpecification ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WDAAllJoynAboutData* aboutData;
-@property (readonly) NSMutableArray* authenticationMechanisms;
+@property (readonly) NSMutableArray* /* WDAAllJoynAuthenticationMechanism */ authenticationMechanisms;
 @property (readonly) NSString* connectionSpecification;
 @property (readonly) WDAAllJoynBusAttachmentState state;
 @property (readonly) NSString* uniqueName;
@@ -211,8 +212,8 @@ WINRT_EXPORT
 @property (readonly) WDAAllJoynAuthenticationMechanism authenticationMechanism;
 @property (readonly) WSCCCertificate* peerCertificate;
 @property (readonly) WNSSocketSslErrorSeverity peerCertificateErrorSeverity;
-@property (readonly) NSArray* peerCertificateErrors;
-@property (readonly) NSArray* peerIntermediateCertificates;
+@property (readonly) NSArray* /* WSCCChainValidationResult */ peerCertificateErrors;
+@property (readonly) NSArray* /* WSCCCertificate* */ peerIntermediateCertificates;
 @property (readonly) NSString* peerUniqueName;
 - (void)accept;
 - (WFDeferral*)getDeferral;
@@ -281,7 +282,7 @@ WINRT_EXPORT
 @property (readonly) NSString* aJSoftwareVersion;
 @property (readonly) WFGUID* appId;
 @property (readonly) NSString* appName;
-@property (readonly) id dateOfManufacture;
+@property (readonly) id /* WFDateTime* */ dateOfManufacture;
 @property (readonly) WGLanguage* defaultLanguage;
 @property (readonly) NSString* Description;
 @property (readonly) NSString* deviceId;
@@ -289,11 +290,11 @@ WINRT_EXPORT
 @property (readonly) NSString* hardwareVersion;
 @property (readonly) NSString* manufacturer;
 @property (readonly) NSString* modelNumber;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) NSString* softwareVersion;
 @property (readonly) int status;
 @property (readonly) WFUri* supportUrl;
-@property (readonly) NSArray* supportedLanguages;
+@property (readonly) NSArray* /* WGLanguage* */ supportedLanguages;
 @end
 
 #endif // __WDAAllJoynAboutDataView_DEFINED__

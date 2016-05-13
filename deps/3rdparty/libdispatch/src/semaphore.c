@@ -194,7 +194,7 @@ _dispatch_semaphore_wait_slow(dispatch_semaphore_t dsema, dispatch_time_t timeou
 #if USE_POSIX_SEM || USE_WIN32_SEM
 	int ret;
 #endif
-	size_t orig;
+	long orig;
 	
 again:
 	// Mach semaphores appear to sometimes spuriously wake up.  Therefore,

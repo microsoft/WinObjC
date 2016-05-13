@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation,
     WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral,
     WSKnownUserProperties, WSLaunchUriResult, WSLauncherUIOptions, WSLauncherOptions, WSFolderLauncherOptions, WSLauncher;
@@ -421,18 +422,18 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSUser : RTObject
 + (WSUserWatcher*)createWatcher;
-+ (void)findAllAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncByType:(WSUserType)type success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncWithSuccess:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncByType:(WSUserType)type success:(void (^)(NSArray* /* WSUser* */))success failure:(void (^)(NSError*))failure;
 + (void)findAllAsyncByTypeAndStatus:(WSUserType)type
                              status:(WSUserAuthenticationStatus)status
-                            success:(void (^)(NSArray*))success
+                            success:(void (^)(NSArray* /* WSUser* */))success
                             failure:(void (^)(NSError*))failure;
 + (WSUser*)getFromId:(NSString*)nonRoamableId;
 @property (readonly) WSUserAuthenticationStatus authenticationStatus;
 @property (readonly) NSString* nonRoamableId;
 @property (readonly) WSUserType type;
 - (void)getPropertyAsync:(NSString*)value success:(void (^)(RTObject*))success failure:(void (^)(NSError*))failure;
-- (void)getPropertiesAsync:(id<NSFastEnumeration> /* NSString * */)values
+- (void)getPropertiesAsync:(NSArray* /* NSString * */)values
                    success:(void (^)(RTObject<WFCIPropertySet>*))success
                    failure:(void (^)(NSError*))failure;
 - (void)getPictureAsync:(WSUserPictureSize)desiredSize
@@ -515,9 +516,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncherUIOptions : RTObject
-@property (retain) id selectionRect;
+@property (retain) id /* WFRect* */ selectionRect;
 @property WUPPlacement preferredPlacement;
-@property (retain) id invocationPoint;
+@property (retain) id /* WFPoint* */ invocationPoint;
 @end
 
 #endif // __WSLauncherUIOptions_DEFINED__
@@ -550,7 +551,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSFolderLauncherOptions : RTObject <WSILauncherViewOptions>
 + (instancetype)make ACTIVATOR;
-@property (readonly) NSMutableArray* itemsToSelect;
+@property (readonly) NSMutableArray* /* RTObject<WSIStorageItem>* */ itemsToSelect;
 @property WUVViewSizePreference desiredRemainingView;
 @end
 
@@ -562,16 +563,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSLauncher : RTObject
-+ (void)launchFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file
-                           options:(WSLauncherOptions*)options
-                           success:(void (^)(BOOL))success
-                           failure:(void (^)(NSError*))failure;
-+ (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)launchUriWithOptionsAsync:(WFUri*)uri
-                          options:(WSLauncherOptions*)options
-                          success:(void (^)(BOOL))success
-                          failure:(void (^)(NSError*))failure;
 + (void)launchFolderAsync:(RTObject<WSIStorageFolder>*)folder success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 + (void)launchFolderWithOptionsAsync:(RTObject<WSIStorageFolder>*)folder
                              options:(WSFolderLauncherOptions*)options
@@ -607,12 +598,24 @@ WINRT_EXPORT
                                  packageFamilyName:(NSString*)packageFamilyName
                                            success:(void (^)(WSLaunchQuerySupportStatus))success
                                            failure:(void (^)(NSError*))failure;
-+ (void)findUriSchemeHandlersAsync:(NSString*)scheme success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findUriSchemeHandlersAsync:(NSString*)scheme
+                           success:(void (^)(NSArray* /* WAAppInfo* */))success
+                           failure:(void (^)(NSError*))failure;
 + (void)findUriSchemeHandlersWithLaunchUriTypeAsync:(NSString*)scheme
                              launchQuerySupportType:(WSLaunchQuerySupportType)launchQuerySupportType
-                                            success:(void (^)(NSArray*))success
+                                            success:(void (^)(NSArray* /* WAAppInfo* */))success
                                             failure:(void (^)(NSError*))failure;
-+ (void)findFileHandlersAsync:(NSString*)extension success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findFileHandlersAsync:(NSString*)extension success:(void (^)(NSArray* /* WAAppInfo* */))success failure:(void (^)(NSError*))failure;
++ (void)launchFileAsync:(RTObject<WSIStorageFile>*)file success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchFileWithOptionsAsync:(RTObject<WSIStorageFile>*)file
+                           options:(WSLauncherOptions*)options
+                           success:(void (^)(BOOL))success
+                           failure:(void (^)(NSError*))failure;
++ (void)launchUriAsync:(WFUri*)uri success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)launchUriWithOptionsAsync:(WFUri*)uri
+                          options:(WSLauncherOptions*)options
+                          success:(void (^)(BOOL))success
+                          failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WSLauncher_DEFINED__

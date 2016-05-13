@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSDProcessDiagnosticInfo, WSDProcessDiskUsage, WSDProcessMemoryUsage, WSDProcessCpuUsage, WSDProcessMemoryUsageReport,
     WSDProcessDiskUsageReport, WSDProcessCpuUsageReport;
 @protocol WSDIProcessDiagnosticInfo
@@ -37,7 +38,7 @@
 
 WINRT_EXPORT
 @interface WSDProcessDiagnosticInfo : RTObject
-+ (NSArray*)getForProcesses;
++ (NSArray* /* WSDProcessDiagnosticInfo* */)getForProcesses;
 + (WSDProcessDiagnosticInfo*)getForCurrentProcess;
 @property (readonly) WSDProcessCpuUsage* cpuUsage;
 @property (readonly) WSDProcessDiskUsage* diskUsage;

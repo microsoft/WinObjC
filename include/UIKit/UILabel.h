@@ -42,11 +42,11 @@ UIKIT_EXPORT_CLASS
 - (void)drawTextInRect:(CGRect)rect;
 
 @property (getter=isUserInteractionEnabled, nonatomic) BOOL userInteractionEnabled;
-@property (nonatomic) BOOL adjustsFontSizeToFitWidth STUB_PROPERTY;
+@property (nonatomic) BOOL adjustsFontSizeToFitWidth;
 @property (nonatomic) BOOL adjustsLetterSpacingToFitWidth STUB_PROPERTY;
 @property (nonatomic) BOOL allowsDefaultTighteningForTruncation STUB_PROPERTY;
-@property (nonatomic) BOOL clipsToBounds STUB_PROPERTY;
-@property (nonatomic) CGFloat minimumFontSize STUB_PROPERTY;
+@property (nonatomic) BOOL clipsToBounds;
+@property (nonatomic) CGFloat minimumFontSize;
 @property (nonatomic) CGFloat minimumScaleFactor;
 @property (nonatomic) CGFloat preferredMaxLayoutWidth;
 @property (nonatomic) CGSize shadowOffset;

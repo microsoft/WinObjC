@@ -19,6 +19,7 @@
 #include "UIKit/UIKit.h"
 #include "CGContextInternal.h"
 #include "LoggingNative.h"
+#include "CACompositor.h"
 
 static const wchar_t* TAG = L"UIGraphicsFunctions";
 

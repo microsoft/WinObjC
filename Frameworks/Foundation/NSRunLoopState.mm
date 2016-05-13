@@ -31,7 +31,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 static const wchar_t* TAG = L"NSRunLoopState";
 
-int (*UIEventTimedMultipleWaitCallback)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets) = EbrEventTimedMultipleWait;
+int (*g_UIEventMainRunLoopTimedMultipleWaitCallback)(EbrEvent* events,
+                                                     int numEvents,
+                                                     double timeout,
+                                                     SocketWait* sockets) = EbrEventTimedMultipleWait;
 
 /* Source: http://cantrip.org/socketpair.c */
 /* socketpair.c
@@ -119,6 +122,14 @@ bool GetMainDispatchTimerTimeout(double* val) {
         return false;
     }
 }
+
+@interface NSRunLoopState () {
+    SocketWait _socks;
+    fd_set _read;
+    fd_set _write;
+    fd_set _error;
+}
+@end
 
 @implementation NSRunLoopState
 - (NSObject*)init {
@@ -366,34 +377,31 @@ bool GetMainDispatchTimerTimeout(double* val) {
 - (void)acceptInputForMode:(NSString*)mode beforeDate:(NSDate*)date {
     EbrBlockIfBackground();
 
-    SocketWait socks;
-    fd_set read, write, error;
-
     if (_numWaitSockets > 0) {
-        socks.max = 0;
-        socks.fdread = (void*)&read;
-        socks.fdwrite = (void*)&write;
-        socks.fderror = (void*)&error;
-        FD_ZERO(&read);
-        FD_ZERO(&write);
-        FD_ZERO(&error);
+        _socks.max = 0;
+        _socks.fdread = (void*)&_read;
+        _socks.fdwrite = (void*)&_write;
+        _socks.fderror = (void*)&_error;
+        FD_ZERO(&_read);
+        FD_ZERO(&_write);
+        FD_ZERO(&_error);
 
         for (int i = 0; i < _numWaitSockets; i++) {
             int mask = ((NSSelectInputSource*)_waitSocketObjects[i])->_eventMask;
             if (mask & NSSelectReadEvent) {
-                FD_SET(_waitSockets[i], &read);
-                if (_waitSockets[i] > socks.max)
-                    socks.max = _waitSockets[i];
+                FD_SET(_waitSockets[i], &_read);
+                if (_waitSockets[i] > _socks.max)
+                    _socks.max = _waitSockets[i];
             }
             if (mask & NSSelectWriteEvent) {
-                FD_SET(_waitSockets[i], &write);
-                if (_waitSockets[i] > socks.max)
-                    socks.max = _waitSockets[i];
+                FD_SET(_waitSockets[i], &_write);
+                if (_waitSockets[i] > _socks.max)
+                    _socks.max = _waitSockets[i];
             }
             if (mask & NSSelectExceptEvent) {
-                FD_SET(_waitSockets[i], &error);
-                if (_waitSockets[i] > socks.max)
-                    socks.max = _waitSockets[i];
+                FD_SET(_waitSockets[i], &_error);
+                if (_waitSockets[i] > _socks.max)
+                    _socks.max = _waitSockets[i];
             }
         }
 
@@ -401,11 +409,11 @@ bool GetMainDispatchTimerTimeout(double* val) {
             dumb_socketpair((SOCKET*)_wakeupSockets, 0);
             _builtWakeupSockets = true;
         }
-        socks.WakeupSocketRead = _wakeupSockets[0];
-        socks.WakeupSocketWrite = _wakeupSockets[1];
-        FD_SET(_wakeupSockets[0], &read);
-        if (_wakeupSockets[0] > socks.max) {
-            socks.max = _wakeupSockets[0];
+        _socks.WakeupSocketRead = _wakeupSockets[0];
+        _socks.WakeupSocketWrite = _wakeupSockets[1];
+        FD_SET(_wakeupSockets[0], &_read);
+        if (_wakeupSockets[0] > _socks.max) {
+            _socks.max = _wakeupSockets[0];
         }
     }
 
@@ -420,8 +428,8 @@ bool GetMainDispatchTimerTimeout(double* val) {
 
     if (didSignal) {
         if ([NSThread currentThread] == [NSThread mainThread]) {
-            // Yield to UI thread so it can continue XAML event loop:
-            UIEventTimedMultipleWaitCallback(nullptr, 0, 0, nullptr);
+            // Do an yield with zero timeout so the runloop can be scheduled again.
+            g_UIEventMainRunLoopTimedMultipleWaitCallback(nullptr, 0, 0, nullptr);
         }
         return;
     }
@@ -445,36 +453,35 @@ bool GetMainDispatchTimerTimeout(double* val) {
 
     int signaled = 0;
     if ([NSThread currentThread] == [NSThread mainThread]) {
-        //  If we're blocking on the UI thread, call UIEventTimedMultipleWait,
-        //  which will yield to any other UI dispatcher (such as Xaml)
-        signaled = UIEventTimedMultipleWaitCallback(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &socks : NULL);
+        //  If we're on the UI thread, call UIEventTimedMultipleWait, which will yield and schedule
+        // the runloop to run again.
+        g_UIEventMainRunLoopTimedMultipleWaitCallback(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &_socks : NULL);
     } else {
-        signaled = EbrEventTimedMultipleWait(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &socks : NULL);
+        signaled = EbrEventTimedMultipleWait(_waitSignals, _numWaitSignals, timeout, _numWaitSockets > 0 ? &_socks : NULL);
+        [self _handleSignaledInput:signaled];
     }
+}
 
-#ifdef USE_KHR_RENDERBUFFERS
-    EbrSignalsUnsafe();
-#endif
-
+- (void)_handleSignaledInput:(int)signaled {
     if (signaled != -1) {
         [_waitSignalObjects[signaled] fire];
     }
 
-    if (_numWaitSockets > 0 && socks.result > 0) {
+    if (_numWaitSockets > 0 && _socks.result > 0) {
         for (int i = 0; i < _numWaitSockets; i++) {
             int mask = ((NSSelectInputSource*)_waitSocketObjects[i])->_eventMask;
             if (mask & NSSelectReadEvent) {
-                if (FD_ISSET(_waitSockets[i], &read)) {
+                if (FD_ISSET(_waitSockets[i], &_read)) {
                     [_waitSocketObjects[i] processImmediateEvents:NSSelectReadEvent];
                 }
             }
             if (mask & NSSelectWriteEvent) {
-                if (FD_ISSET(_waitSockets[i], &write)) {
+                if (FD_ISSET(_waitSockets[i], &_write)) {
                     [_waitSocketObjects[i] processImmediateEvents:NSSelectWriteEvent];
                 }
             }
             if (mask & NSSelectExceptEvent) {
-                if (FD_ISSET(_waitSockets[i], &error)) {
+                if (FD_ISSET(_waitSockets[i], &_error)) {
                     [_waitSocketObjects[i] processImmediateEvents:NSSelectExceptEvent];
                 }
             }
@@ -486,7 +493,7 @@ bool GetMainDispatchTimerTimeout(double* val) {
     return [NSString stringWithFormat:@"%@, %i inputSources %i sockets", [super description], _numWaitSignals, _numWaitSockets];
 }
 
-+ (void)setUIThreadWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
-    UIEventTimedMultipleWaitCallback = callback;
++ (void)setUIThreadMainRunLoopWaitFunction:(int (*)(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets))callback {
+    g_UIEventMainRunLoopTimedMultipleWaitCallback = callback;
 }
 @end

@@ -30,6 +30,7 @@
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
 #include "CALayerInternal.h"
+#include "CACompositor.h"
 
 #include "Windows.h"
 #include "COMIncludes.h"
@@ -1347,9 +1348,6 @@ static void drawLeftAndTopCap(UIImage* self, CGContextRef ctx, CGRect rect) {
 
 - (void)_setScale:(float)scale {
     _scale = scale;
-}
-
-- (void)setAccessibilityLabel:(UILabel*)label {
 }
 
 - (instancetype)copyWithZone:(NSZone*)zone {

@@ -15,19 +15,18 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include "Starboard.h"
+#import "Starboard.h"
 
-#include "CATransactionInternal.h"
-#include "CALayerInternal.h"
-#include "QuartzCore/CAAnimation.h"
-#include "QuartzCore/CALayer.h"
-#include "Foundation/NSMutableDictionary.h"
+#import "CATransactionInternal.h"
+#import "CALayerInternal.h"
+#import "QuartzCore/CAAnimation.h"
+#import "QuartzCore/CALayer.h"
+#import "Foundation/NSMutableDictionary.h"
+#import "CACompositor.h"
 
-#include "CACompositor.h"
-
-#include "CAAnimationInternal.h"
-#include "LoggingNative.h"
-#include "UIAnimationNotification.h"
+#import "CAAnimationInternal.h"
+#import "LoggingNative.h"
+#import "UIAnimationNotification.h"
 
 static const wchar_t* TAG = L"CAAnimation";
 

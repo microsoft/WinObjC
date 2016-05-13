@@ -71,9 +71,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, strong) UIColor* barTintColor STUB_PROPERTY;
 @property (nonatomic) UISearchBarStyle searchBarStyle STUB_PROPERTY;
 @property (nonatomic, strong) UIColor* tintColor STUB_PROPERTY;
-@property (getter=isTranslucent, assign, nonatomic) BOOL translucent STUB_PROPERTY;
+@property (getter=isTranslucent, assign, nonatomic) BOOL translucent;
 @property (nonatomic) BOOL showsBookmarkButton STUB_PROPERTY;
-@property (nonatomic) BOOL showsCancelButton STUB_PROPERTY;
+@property (nonatomic) BOOL showsCancelButton;
 - (void)setShowsCancelButton:(BOOL)showsCancelButton animated:(BOOL)animated STUB_METHOD;
 @property (nonatomic) BOOL showsSearchResultsButton STUB_PROPERTY;
 @property (getter=isSearchResultsButtonSelected, nonatomic) BOOL searchResultsButtonSelected STUB_PROPERTY;
@@ -101,8 +101,8 @@ UIKIT_EXPORT_CLASS
                     rightSegmentState:(UIControlState)rightState STUB_METHOD;
 - (NSDictionary*)scopeBarButtonTitleTextAttributesForState:(UIControlState)state STUB_METHOD;
 - (void)setScopeBarButtonTitleTextAttributes:(NSDictionary*)attributes forState:(UIControlState)state STUB_METHOD;
-- (UIImage*)searchFieldBackgroundImageForState:(UIControlState)state STUB_METHOD;
-- (void)setSearchFieldBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state STUB_METHOD;
+- (UIImage*)searchFieldBackgroundImageForState:(UIControlState)state;
+- (void)setSearchFieldBackgroundImage:(UIImage*)backgroundImage forState:(UIControlState)state;
 @property (nonatomic) UIOffset searchFieldBackgroundPositionAdjustment STUB_PROPERTY;
 @property (nonatomic) UIOffset searchTextPositionAdjustment STUB_PROPERTY;
 

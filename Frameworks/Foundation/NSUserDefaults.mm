@@ -89,14 +89,6 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 /**
  @Status Interoperable
 */
-+ (BOOL)automaticallyNotifiesObserversForKey:(NSString*)key {
-    // This class uses setObject:forKey: as a setter, and has no key-specific setters.
-    return NO;
-}
-
-/**
- @Status Interoperable
-*/
 + (NSUserDefaults*)standardUserDefaults {
     static NSUserDefaults* standard;
 

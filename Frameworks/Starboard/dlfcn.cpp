@@ -56,6 +56,23 @@ void* dlopen(const char* path, int mode) {
 void* dlsym(void* handle, const char* symbol) {
     HMODULE module = static_cast<HMODULE>(handle);
 
+    // This platform doesn't represent Objective-C class symbols in the same way as
+    // the reference platform, so some mapping of symbols is necessary
+    static const char OUR_CLASS_PREFIX[] = "_OBJC_CLASS_";
+    static const char THEIR_CLASS_PREFIX[] = "OBJC_CLASS_$_";
+    static const size_t THEIR_CLASS_PREFIX_LENGTH = sizeof(THEIR_CLASS_PREFIX) - 1;
+
+    try {
+        if (0 == strncmp(symbol, THEIR_CLASS_PREFIX, THEIR_CLASS_PREFIX_LENGTH)) {
+            std::string transformedSymbol(OUR_CLASS_PREFIX);
+            transformedSymbol.append(symbol + THEIR_CLASS_PREFIX_LENGTH);
+
+            return GetProcAddress(module, transformedSymbol.c_str());
+        }
+    } catch (...) {
+        return nullptr;
+    }
+
     return GetProcAddress(module, symbol);
 }
 

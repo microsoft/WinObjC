@@ -60,7 +60,7 @@ UIKIT_EXPORT_CLASS
 + (UIColor*)darkTextColor;
 + (UIColor*)grayColor;
 + (UIColor*)greenColor;
-+ (UIColor*)groupTableViewBackgroundColor STUB_METHOD;
++ (UIColor*)groupTableViewBackgroundColor;
 + (UIColor*)lightGrayColor;
 + (UIColor*)lightTextColor;
 + (UIColor*)magentaColor;

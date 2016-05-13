@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXAPAutomationPeer, WUXAPAutomationPeerAnnotation, WUXAPFrameworkElementAutomationPeer, WUXAPButtonBaseAutomationPeer,
     WUXAPCaptureElementAutomationPeer, WUXAPComboBoxItemAutomationPeer, WUXAPFlipViewItemAutomationPeer, WUXAPGroupItemAutomationPeer,
     WUXAPImageAutomationPeer, WUXAPListBoxItemAutomationPeer, WUXAPMediaTransportControlsAutomationPeer, WUXAPPasswordBoxAutomationPeer,
@@ -303,7 +304,7 @@ WINRT_EXPORT
 - (WUXAPAutomationControlType)getAutomationControlTypeCore;
 - (NSString*)getAutomationIdCore;
 - (WFRect*)getBoundingRectangleCore;
-- (NSMutableArray*)getChildrenCore;
+- (NSMutableArray* /* WUXAPAutomationPeer* */)getChildrenCore;
 - (NSString*)getClassNameCore;
 - (WFPoint*)getClickablePointCore;
 - (NSString*)getHelpTextCore;
@@ -334,7 +335,7 @@ WINRT_EXPORT
 
 @protocol WUXAPIAutomationPeerOverrides2
 - (void)showContextMenuCore;
-- (NSArray*)getControlledPeersCore;
+- (NSArray* /* WUXAPAutomationPeer* */)getControlledPeersCore;
 @end
 
 #endif // __WUXAPIAutomationPeerOverrides2_DEFINED__
@@ -347,7 +348,7 @@ WINRT_EXPORT
 - (RTObject*)navigateCore:(WUXAPAutomationNavigationDirection)direction;
 - (RTObject*)getElementFromPointCore:(WFPoint*)pointInWindowCoordinates;
 - (RTObject*)getFocusedElementCore;
-- (NSMutableArray*)getAnnotationsCore;
+- (NSMutableArray* /* WUXAPAutomationPeerAnnotation* */)getAnnotationsCore;
 - (int)getPositionInSetCore;
 - (int)getSizeOfSetCore;
 - (int)getLevelCore;
@@ -380,8 +381,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAutomationPeer : WXDependencyObject
-+ (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
 + (BOOL)listenerExists:(WUXAPAutomationEvents)eventId;
++ (WUXAPRawElementProviderRuntimeId*)generateRawElementProviderRuntimeId;
 + (instancetype)make ACTIVATOR;
 @property (retain) WUXAPAutomationPeer* eventsSource;
 - (RTObject*)getPattern:(WUXAPPatternInterface)patternInterface;
@@ -392,7 +393,7 @@ WINRT_EXPORT
 - (WUXAPAutomationControlType)getAutomationControlType;
 - (NSString*)getAutomationId;
 - (WFRect*)getBoundingRectangle;
-- (NSMutableArray*)getChildren;
+- (NSMutableArray* /* WUXAPAutomationPeer* */)getChildren;
 - (NSString*)getClassName;
 - (WFPoint*)getClickablePoint;
 - (NSString*)getHelpText;
@@ -421,7 +422,7 @@ WINRT_EXPORT
 - (WUXAPAutomationControlType)getAutomationControlTypeCore;
 - (NSString*)getAutomationIdCore;
 - (WFRect*)getBoundingRectangleCore;
-- (NSMutableArray*)getChildrenCore;
+- (NSMutableArray* /* WUXAPAutomationPeer* */)getChildrenCore;
 - (NSString*)getClassNameCore;
 - (WFPoint*)getClickablePointCore;
 - (NSString*)getHelpTextCore;
@@ -445,16 +446,16 @@ WINRT_EXPORT
 - (WUXAPAutomationPeer*)peerFromProvider:(WUXAPIRawElementProviderSimple*)provider;
 - (WUXAPIRawElementProviderSimple*)providerFromPeer:(WUXAPAutomationPeer*)peer;
 - (void)showContextMenuCore;
-- (NSArray*)getControlledPeersCore;
+- (NSArray* /* WUXAPAutomationPeer* */)getControlledPeersCore;
 - (RTObject*)navigate:(WUXAPAutomationNavigationDirection)direction;
 - (RTObject*)getElementFromPoint:(WFPoint*)pointInWindowCoordinates;
 - (RTObject*)getFocusedElement;
 - (void)showContextMenu;
-- (NSArray*)getControlledPeers;
-- (NSMutableArray*)getAnnotations;
+- (NSArray* /* WUXAPAutomationPeer* */)getControlledPeers;
+- (NSMutableArray* /* WUXAPAutomationPeerAnnotation* */)getAnnotations;
 - (void)setParent:(WUXAPAutomationPeer*)peer;
 - (void)raiseTextEditTextChangedEvent:(WUXAAutomationTextEditChangeType)automationTextEditChangeType
-                          changedData:(id<NSFastEnumeration> /* NSString * */)changedData;
+                          changedData:(NSArray* /* NSString * */)changedData;
 - (int)getPositionInSet;
 - (int)getSizeOfSet;
 - (int)getLevel;
@@ -462,7 +463,7 @@ WINRT_EXPORT
 - (RTObject*)navigateCore:(WUXAPAutomationNavigationDirection)direction;
 - (RTObject*)getElementFromPointCore:(WFPoint*)pointInWindowCoordinates;
 - (RTObject*)getFocusedElementCore;
-- (NSMutableArray*)getAnnotationsCore;
+- (NSMutableArray* /* WUXAPAutomationPeerAnnotation* */)getAnnotationsCore;
 - (int)getPositionInSetCore;
 - (int)getSizeOfSetCore;
 - (int)getLevelCore;
@@ -476,9 +477,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAPAutomationPeerAnnotation : WXDependencyObject
-+ (instancetype)make ACTIVATOR;
 + (WUXAPAutomationPeerAnnotation*)makeInstance:(WUXAAnnotationType)type ACTIVATOR;
 + (WUXAPAutomationPeerAnnotation*)makeWithPeerParameter:(WUXAAnnotationType)type peer:(WUXAPAutomationPeer*)peer ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property WUXAAnnotationType type;
 @property (retain) WUXAPAutomationPeer* peer;
 + (WXDependencyProperty*)peerProperty;
@@ -1018,7 +1019,7 @@ WINRT_EXPORT
 @protocol WUXAPISelectionProvider
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
-- (NSArray*)getSelection;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
 #endif // __WUXAPISelectionProvider_DEFINED__
@@ -1031,7 +1032,7 @@ WINRT_EXPORT
 @interface WUXAPSelectorAutomationPeer : WUXAPItemsControlAutomationPeer <WUXAPISelectionProvider>
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
-- (NSArray*)getSelection;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
 #endif // __WUXAPSelectorAutomationPeer_DEFINED__
@@ -1062,7 +1063,7 @@ WINRT_EXPORT
 
 @protocol WUXAPIDropTargetProvider
 @property (readonly) NSString* dropEffect;
-@property (readonly) NSArray* dropEffects;
+@property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
 
 #endif // __WUXAPIDropTargetProvider_DEFINED__
@@ -1074,7 +1075,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXAPListViewBaseAutomationPeer : WUXAPSelectorAutomationPeer <WUXAPIDropTargetProvider>
 @property (readonly) NSString* dropEffect;
-@property (readonly) NSArray* dropEffects;
+@property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
 
 #endif // __WUXAPListViewBaseAutomationPeer_DEFINED__
@@ -1421,7 +1422,7 @@ WINRT_EXPORT
                                                 value:(RTObject*)value;
 - (void)scroll:(WUXAScrollAmount)horizontalAmount verticalAmount:(WUXAScrollAmount)verticalAmount;
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
-- (NSArray*)getSelection;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
 #endif // __WUXAPLoopingSelectorAutomationPeer_DEFINED__
@@ -1510,7 +1511,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isSelectionRequired;
 - (void)scroll:(WUXAScrollAmount)horizontalAmount verticalAmount:(WUXAScrollAmount)verticalAmount;
 - (void)setScrollPercent:(double)horizontalPercent verticalPercent:(double)verticalPercent;
-- (NSArray*)getSelection;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
 #endif // __WUXAPPivotAutomationPeer_DEFINED__

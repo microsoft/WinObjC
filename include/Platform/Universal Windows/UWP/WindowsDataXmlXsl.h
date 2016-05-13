@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDXXXsltProcessor;
 @protocol WDXXIXsltProcessor
 , WDXXIXsltProcessor2, WDXXIXsltProcessorFactory;

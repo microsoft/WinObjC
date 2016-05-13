@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -16,12 +16,17 @@
 
 #include "VSSolutionFolderProject.h"
 #include "VSSolution.h"
+#include "vshelpers.h"
 #include "sole/sole.hpp"
+#include "..\WBITelemetry\WBITelemetry.h"
+
 
 VSSolutionFolderProject::VSSolutionFolderProject(const std::string& name, VSSolution& parent)
 : VSSolutionProject(parent), m_name(name)
 {
   m_id = sole::uuid4().str();
+  std::string guid = formatVSGUID(m_id);
+  TELEMETRY_EVENT_GUID(L"VSImporterSolutionFolderGuid", guid);
 }
 
 std::string VSSolutionFolderProject::getName() const

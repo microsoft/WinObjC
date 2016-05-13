@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMOCurrentAppOrchestration, WMOSingleAppModeContext;
 @protocol WMOICurrentAppOrchestrationStatics
 , WMOICurrentAppOrchestration, WMOISingleAppModeContext;

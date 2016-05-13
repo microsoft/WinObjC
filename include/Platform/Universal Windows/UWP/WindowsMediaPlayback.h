@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMPPlaybackMediaMarker, WMPPlaybackMediaMarkerSequence, WMPMediaPlayerFailedEventArgs, WMPMediaPlayerRateChangedEventArgs,
     WMPPlaybackMediaMarkerReachedEventArgs, WMPMediaPlayerDataReceivedEventArgs, WMPMediaPlayer, WMPBackgroundMediaPlayer,
     WMPMediaPlaybackItem, WMPMediaPlaybackAudioTrackList, WMPMediaPlaybackVideoTrackList, WMPMediaPlaybackTimedMetadataTrackList,
@@ -394,7 +395,7 @@ WINRT_EXPORT
 @property BOOL autoRepeatEnabled;
 @property (readonly) WMPMediaPlaybackItem* currentItem;
 @property (readonly) unsigned int currentItemIndex;
-@property (readonly) NSMutableArray<RTObservableCollection>* items;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* WMPMediaPlaybackItem* */ items;
 - (EventRegistrationToken)addCurrentItemChangedEvent:(void (^)(WMPMediaPlaybackList*, WMPCurrentMediaPlaybackItemChangedEventArgs*))del;
 - (void)removeCurrentItemChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addItemFailedEvent:(void (^)(WMPMediaPlaybackList*, WMPMediaPlaybackItemFailedEventArgs*))del;

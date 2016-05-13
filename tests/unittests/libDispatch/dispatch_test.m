@@ -41,9 +41,32 @@
 static int _exitcode = 0;
 static bool _stopWait = false;
 
-/**
- *
- */
+#define _test_print(_file, _line, _desc, _expr, _fmt1, _val1, _fmt2, _val2)  \
+    do {                                                                     \
+        if (!_expr) {                                                        \
+            char _linestr[BUFSIZ];                                           \
+            snprintf(_linestr, sizeof(_linestr), " (%s:%ld)", _file, _line); \
+            if (_fmt2 == 0) {                                                \
+                LOG_ERROR("\tValue: " _fmt1                                  \
+                          "\n"                                               \
+                          "%s%s\n",                                          \
+                          _val1,                                             \
+                          _desc,                                             \
+                          _linestr);                                         \
+            } else {                                                         \
+                LOG_ERROR("\tActual: " _fmt1                                 \
+                          "\n"                                               \
+                          "\tExpected: " _fmt2                               \
+                          "\n"                                               \
+                          "%s%s\n",                                          \
+                          _val1,                                             \
+                          _val2,                                             \
+                          _desc,                                             \
+                          _linestr);                                         \
+            }                                                                \
+        }                                                                    \
+    } while (0);
+
 void test_start(const char* desc) {
     LOG_INFO("\n==================================================");
     LOG_INFO("[TEST] %s", desc);
@@ -107,4 +130,20 @@ void test_block_until_stopped(void) {
         }
         [runLoop run];
     }
+}
+
+void _test_long(const char* file, long line, const char* desc, long actual, long expected) {
+    _test_print(file, line, desc, (actual == expected), "%ld", actual, "%ld", expected);
+}
+
+void _test_long_less_than(const char* file, long line, const char* desc, long actual, long expected_max) {
+    _test_print(file, line, desc, (actual < expected_max), "%ld", actual, "<%ld", expected_max);
+}
+
+void _test_double_less_than(const char* file, long line, const char* desc, double val, double max_expected) {
+    _test_print(file, line, desc, (val < max_expected), "%f", val, "<%f", max_expected);
+}
+
+void _test_double_less_than_or_equal(const char* file, long line, const char* desc, double val, double max_expected) {
+    _test_print(file, line, desc, (val <= max_expected), "%f", val, "<%f", max_expected);
 }

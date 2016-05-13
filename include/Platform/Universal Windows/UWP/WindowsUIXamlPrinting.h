@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXPAddPagesEventArgs, WUXPGetPreviewPageEventArgs, WUXPPaginateEventArgs, WUXPPrintDocument;
 @protocol WUXPIAddPagesEventArgs
 , WUXPIGetPreviewPageEventArgs, WUXPIPaginateEventArgs, WUXPIPrintDocument, WUXPIPrintDocumentStatics, WUXPIPrintDocumentFactory;

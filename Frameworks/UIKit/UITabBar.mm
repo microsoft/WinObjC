@@ -29,6 +29,7 @@
 #import "UIAppearanceSetter.h"
 #import "UITabBarButton.h"
 #import "UIViewInternal.h"
+#import "CACompositor.h"
 
 static const wchar_t* TAG = L"UITabBar";
 

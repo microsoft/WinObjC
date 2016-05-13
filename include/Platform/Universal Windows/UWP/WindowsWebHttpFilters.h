@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter;
 @protocol WWHFIHttpFilter
 , WWHFIHttpCacheControl, WWHFIHttpBaseProtocolFilter, WWHFIHttpBaseProtocolFilter2;
@@ -99,7 +100,7 @@ WINRT_EXPORT
 @property BOOL allowUI;
 @property BOOL allowAutoRedirect;
 @property (readonly) WWHHttpCookieManager* cookieManager;
-@property (readonly) NSMutableArray* ignorableServerCertificateErrors;
+@property (readonly) NSMutableArray* /* WSCCChainValidationResult */ ignorableServerCertificateErrors;
 @property (readonly) WWHFHttpCacheControl* cacheControl;
 @property WWHHttpVersion maxVersion;
 - (void)sendRequestAsync:(WWHHttpRequestMessage*)request

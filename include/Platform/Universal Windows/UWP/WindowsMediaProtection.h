@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMPMediaProtectionManager, WMPServiceRequestedEventArgs, WMPComponentLoadFailedEventArgs, WMPMediaProtectionServiceCompletion,
     WMPRevocationAndRenewalInformation, WMPRevocationAndRenewalItem, WMPMediaProtectionPMPServer;
 @protocol WMPIMediaProtectionManager
@@ -170,7 +171,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMPRevocationAndRenewalInformation : RTObject
-@property (readonly) NSMutableArray* items;
+@property (readonly) NSMutableArray* /* WMPRevocationAndRenewalItem* */ items;
 @end
 
 #endif // __WMPRevocationAndRenewalInformation_DEFINED__

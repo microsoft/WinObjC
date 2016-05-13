@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXHElementCompositionPreview;
 @protocol WUXHIElementCompositionPreview
 , WUXHIElementCompositionPreviewStatics;

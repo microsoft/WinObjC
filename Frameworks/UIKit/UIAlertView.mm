@@ -30,6 +30,8 @@
 #import "UIApplicationInternal.h"
 #import <objc/objc-arc.h>
 
+#import "CACompositor.h"
+
 typedef struct {
     idretain _buttonText;
     idretain _buttonView;
@@ -89,10 +91,10 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
  @Status Interoperable
 */
 - (instancetype)initWithTitle:(NSString*)title
-            message:(NSString*)message
-           delegate:(id)delegate
-  cancelButtonTitle:(NSString*)cancelButtonTitle
-  otherButtonTitles:(NSString*)otherButtonTitles, ... {
+                      message:(NSString*)message
+                     delegate:(id)delegate
+            cancelButtonTitle:(NSString*)cancelButtonTitle
+            otherButtonTitles:(NSString*)otherButtonTitles, ... {
     va_list pReader;
     va_start(pReader, otherButtonTitles);
     [self setDelegate:delegate];
@@ -133,11 +135,11 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
  @Status Interoperable
 */
 - (instancetype)initWithTitle:(id)title
-            message:(id)message
-           delegate:(id)delegate
-      defaultButton:(id)defaultButton
-       cancelButton:(id)cancelButton
-       otherButtons:(id)otherButtons {
+                      message:(id)message
+                     delegate:(id)delegate
+                defaultButton:(id)defaultButton
+                 cancelButton:(id)cancelButton
+                 otherButtons:(id)otherButtons {
     [self setDelegate:delegate];
     if (title != nil) {
         alertPriv->_title.attach([title copy]);
@@ -178,9 +180,11 @@ static int addButton(UIAlertViewPriv* alertPriv, id text) {
 /**
  @Status Interoperable
 */
-- (instancetype) init {
-    alertPriv->_otherButtonIndex = -1;
-    alertPriv->_cancelButtonIndex = -1;
+- (instancetype)init {
+    if (self = [super init]) {
+        alertPriv->_otherButtonIndex = -1;
+        alertPriv->_cancelButtonIndex = -1;
+    }
 
     return self;
 }

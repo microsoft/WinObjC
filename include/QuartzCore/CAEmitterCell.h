@@ -32,10 +32,10 @@ CA_EXPORT_CLASS
 @property (copy) NSArray* emitterCells;
 @property (getter=isEnabled) BOOL enabled;
 @property CGColorRef color STUB_PROPERTY;
-@property float redRange STUB_PROPERTY;
-@property float greenRange STUB_PROPERTY;
-@property float blueRange STUB_PROPERTY;
-@property float alphaRange STUB_PROPERTY;
+@property float redRange;
+@property float greenRange;
+@property float blueRange;
+@property float alphaRange;
 @property float redSpeed STUB_PROPERTY;
 @property float greenSpeed STUB_PROPERTY;
 @property float blueSpeed STUB_PROPERTY;
@@ -47,7 +47,7 @@ CA_EXPORT_CLASS
 @property CGFloat scaleRange;
 @property (copy) NSString* name;
 @property (copy) NSDictionary* style STUB_PROPERTY;
-@property CGFloat spin STUB_PROPERTY;
+@property CGFloat spin;
 @property CGFloat spinRange STUB_PROPERTY;
 @property CGFloat emissionLatitude;
 @property CGFloat emissionLongitude;
@@ -59,7 +59,7 @@ CA_EXPORT_CLASS
 @property CGFloat velocity;
 @property CGFloat velocityRange;
 @property CGFloat xAcceleration STUB_PROPERTY;
-@property CGFloat yAcceleration STUB_PROPERTY;
+@property CGFloat yAcceleration;
 @property CGFloat zAcceleration STUB_PROPERTY;
 + (id)defaultValueForKey:(NSString*)key STUB_METHOD;
 - (BOOL)shouldArchiveValueForKey:(NSString*)key STUB_METHOD;

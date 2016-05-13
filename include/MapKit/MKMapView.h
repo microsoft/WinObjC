@@ -16,25 +16,8 @@
 #pragma once
 
 #import <MapKit/MapKitExport.h>
-#import <UIKit/UIAppearance.h>
 #import <UIKit/UIView.h>
 #import <MapKit/MapKitDataTypes.h>
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UICoordinateSpace
-@end
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UIDynamicItem
-@end
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UIFocusEnvironment
-@end
-
-// TODO: Remove me when the protocol exists in UIKit
-@protocol UITraitEnvironment
-@end
 
 @protocol MKMapViewDelegate;
 @class NSArray;

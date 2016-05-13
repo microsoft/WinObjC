@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDWSWiFiDirectServiceProvisioningInfo, WDWSWiFiDirectServiceSession, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs,
     WDWSWiFiDirectServiceRemotePortAddedEventArgs, WDWSWiFiDirectServiceSessionDeferredEventArgs, WDWSWiFiDirectServiceSessionRequest,
     WDWSWiFiDirectServiceSessionRequestedEventArgs, WDWSWiFiDirectServiceAdvertiser, WDWSWiFiDirectService;
@@ -140,7 +141,7 @@ WINRT_EXPORT
 - (void)removeRemotePortAddedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSessionStatusChangedEvent:(void (^)(WDWSWiFiDirectServiceSession*, RTObject*))del;
 - (void)removeSessionStatusChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getConnectionEndpointPairs;
+- (NSArray* /* WNEndpointPair* */)getConnectionEndpointPairs;
 - (RTObject<WFIAsyncAction>*)addStreamSocketListenerAsync:(WNSStreamSocketListener*)value;
 - (RTObject<WFIAsyncAction>*)addDatagramSocketAsync:(WNSDatagramSocket*)value;
 - (void)close;
@@ -166,7 +167,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWSWiFiDirectServiceRemotePortAddedEventArgs : RTObject
-@property (readonly) NSArray* endpointPairs;
+@property (readonly) NSArray* /* WNEndpointPair* */ endpointPairs;
 @property (readonly) WDWSWiFiDirectServiceIPProtocol protocol;
 @end
 
@@ -222,9 +223,9 @@ WINRT_EXPORT
 @property unsigned int customServiceStatusCode;
 @property BOOL autoAcceptSession;
 @property (readonly) WDWSWiFiDirectServiceError serviceError;
-@property (readonly) NSMutableArray* preferredConfigurationMethods;
+@property (readonly) NSMutableArray* /* WDWSWiFiDirectServiceConfigurationMethod */ preferredConfigurationMethods;
 @property (readonly) NSString* serviceName;
-@property (readonly) NSMutableArray* serviceNamePrefixes;
+@property (readonly) NSMutableArray* /* NSString * */ serviceNamePrefixes;
 @property (readonly) WDWSWiFiDirectServiceAdvertisementStatus advertisementStatus;
 - (EventRegistrationToken)addAdvertisementStatusChangedEvent:(void (^)(WDWSWiFiDirectServiceAdvertiser*, RTObject*))del;
 - (void)removeAdvertisementStatusChangedEvent:(EventRegistrationToken)tok;
@@ -260,7 +261,7 @@ WINRT_EXPORT
 @property BOOL preferGroupOwnerMode;
 @property (readonly) RTObject<WSSIBuffer>* remoteServiceInfo;
 @property (readonly) WDWSWiFiDirectServiceError serviceError;
-@property (readonly) NSArray* supportedConfigurationMethods;
+@property (readonly) NSArray* /* WDWSWiFiDirectServiceConfigurationMethod */ supportedConfigurationMethods;
 - (EventRegistrationToken)addSessionDeferredEvent:(void (^)(WDWSWiFiDirectService*, WDWSWiFiDirectServiceSessionDeferredEventArgs*))del;
 - (void)removeSessionDeferredEvent:(EventRegistrationToken)tok;
 - (void)getProvisioningInfoAsync:(WDWSWiFiDirectServiceConfigurationMethod)selectedConfigurationMethod

@@ -27,9 +27,7 @@ COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColorComponents(CGColorSpa
                                                                       const CGFloat* components,
                                                                       const CGFloat* locations,
                                                                       size_t count);
-COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef space,
-                                                             CFArrayRef colors,
-                                                             const CGFloat* locations) STUB_METHOD;
+COREGRAPHICS_EXPORT CGGradientRef CGGradientCreateWithColors(CGColorSpaceRef space, CFArrayRef colors, const CGFloat* locations);
 COREGRAPHICS_EXPORT void CGGradientRelease(CGGradientRef gradient);
 COREGRAPHICS_EXPORT CGGradientRef CGGradientRetain(CGGradientRef gradient);
 

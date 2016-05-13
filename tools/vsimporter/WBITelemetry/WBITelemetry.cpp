@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -86,13 +86,24 @@ namespace WBITelemetry
         WBITelemetryManager::m_tc.TrackEvent(eventName, props);
     }
 
-    // Logging function in the form of EventName, eventData.  This version accomodates incoming char* type.
+    // Logging function in the form of eventName, eventData.  This version accomodates incoming char* type.
     void WBITelemetryManager::AITrackEventData(wstring eventName, const char* eventData)
     {
         std::string str = std::string(eventData);
         std::wstring wsData;
         wsData.assign(str.begin(), str.end());
         AITrackEventData(eventName, wsData);
+    }
+
+    // Logging function that reports GUIDs with the format eventName, guid
+    // Used to skim the leading and trailing braces from the GUID.
+    void WBITelemetryManager::AITrackEventGuidData(wstring eventName, string guid) 
+    {
+        if (guid.length() > 2)
+        {
+            string noBracketProjId = guid.substr(1, guid.length() - 2);
+            AITrackEventData(eventName, noBracketProjId.c_str());
+        }
     }
 
     // Logging function that allows list of values.

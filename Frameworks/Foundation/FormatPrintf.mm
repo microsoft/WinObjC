@@ -103,6 +103,7 @@ static int PrintPutC(int c, PrintOutput* input) {
 #define FL_NOASSIGN 0x0800 /* do not assign (in scanf) */
 #define FL_NOMORE 0x1000 /* all flags collected */
 #define FL_LONGLONG 0x2000 /* long long */
+#define FL_CHAR 0x4000 /* char */
 
 struct mantissa {
     unsigned long h_32;
@@ -952,7 +953,14 @@ static PrintType* o_print(va_list* ap, int flags, PrintType* s, PrintType c, int
     PrintType* old_s = s;
     int base;
 
-    switch (flags & (FL_SHORT | FL_LONG)) {
+    switch (flags & (FL_SHORT | FL_LONG | FL_CHAR)) {
+        case FL_CHAR:
+            if (is_signed) {
+                signed_val = (signed char)EbrVal(*ap, int);
+            } else {
+                unsigned_val = (unsigned char)EbrVal(*ap, unsigned);
+            }
+            break;
         case FL_SHORT:
             if (is_signed) {
                 signed_val = (short)EbrVal(*ap, int);
@@ -963,11 +971,9 @@ static PrintType* o_print(va_list* ap, int flags, PrintType* s, PrintType c, int
         case FL_LONG:
             if (flags & FL_LONGLONG) {
                 if (is_signed) {
-                    *((unsigned long long*)&signed_val) = EbrVal(*ap, unsigned long);
-                    *((unsigned long long*)&signed_val) |= ((unsigned long long)EbrVal(*ap, unsigned long)) << 32;
+                    signed_val = EbrVal(*ap, long long);
                 } else {
-                    *((unsigned long long*)&unsigned_val) = EbrVal(*ap, unsigned long);
-                    *((unsigned long long*)&unsigned_val) |= ((unsigned long long)EbrVal(*ap, unsigned long)) << 32;
+                    unsigned_val = EbrVal(*ap, unsigned long long);
                 }
             } else {
                 if (is_signed) {
@@ -1126,8 +1132,15 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
 
         switch (*fmt) {
             case 'h':
-                flags |= FL_SHORT;
                 fmt++;
+
+                if (*fmt == 'h') {
+                    flags |= FL_CHAR;
+                    fmt++;
+                } else {
+                    flags |= FL_SHORT;
+                }
+
                 break;
             case 'l':
                 flags |= FL_LONG;
@@ -1137,9 +1150,25 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
                 flags |= FL_LONGDOUBLE;
                 fmt++;
                 break;
-            case 'z':
+
+#if SIZE_MAX != UINT_MAX
+#error Unexpected size_t size
+#elif PTRDIFF_MAX != INT_MAX
+#error Unexpected ptrdiff_t size
+#endif
+            case 'z': // size_t specifier
+            case 't': // ptrdiff_t specifier
                 fmt++;
-                break; //  size_t specifier
+                break;
+
+#if INTMAX_MAX != LLONG_MAX
+#error Unexpected intmax_t size
+#endif
+            case 'q': // long long specifier
+            case 'j': // intmax_t specifier
+                flags |= FL_LONG | FL_LONGLONG;
+                fmt++;
+                break;
         }
 
         if (*fmt == 'l') {

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WWHHttpRequestMessage, WWHHttpResponseMessage, WWHHttpClient, WWHHttpCookie, WWHHttpCookieCollection, WWHHttpMethod,
     WWHHttpTransportInformation, WWHHttpStringContent, WWHHttpBufferContent, WWHHttpStreamContent, WWHHttpFormUrlEncodedContent,
     WWHHttpMultipartContent, WWHHttpMultipartFormDataContent, WWHHttpCookieManager;
@@ -211,7 +212,7 @@ WINRT_EXPORT
 @property (retain) WWHHttpMethod* method;
 @property (retain) RTObject<WWHIHttpContent>* content;
 @property (readonly) WWHHHttpRequestHeaderCollection* headers;
-@property (readonly) NSMutableDictionary* properties;
+@property (readonly) NSMutableDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WWHHttpTransportInformation* transportInformation;
 - (void)close;
 - (NSString*)toString;
@@ -225,8 +226,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpResponseMessage : RTObject <WFIClosable, WFIStringable>
-+ (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WWHHttpResponseMessage*)make:(WWHHttpStatusCode)statusCode ACTIVATOR;
 @property WWHHttpVersion Version;
 @property WWHHttpStatusCode statusCode;
 @property WWHHttpResponseMessageSource source;
@@ -248,8 +249,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpClient : RTObject <WFIClosable, WFIStringable>
-+ (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WWHHttpClient*)make:(RTObject<WWHFIHttpFilter>*)filter ACTIVATOR;
 @property (readonly) WWHHHttpRequestHeaderCollection* defaultRequestHeaders;
 - (void)deleteAsync:(WFUri*)uri
             success:(void (^)(WWHHttpResponseMessage*))success
@@ -311,7 +312,7 @@ WINRT_EXPORT
 @property (retain) NSString* value;
 @property BOOL secure;
 @property BOOL httpOnly;
-@property (retain) id expires;
+@property (retain) id /* WFDateTime* */ expires;
 @property (readonly) NSString* domain;
 @property (readonly) NSString* name;
 @property (readonly) NSString* path;
@@ -363,8 +364,8 @@ WINRT_EXPORT
 @interface WWHHttpTransportInformation : RTObject <WFIStringable>
 @property (readonly) WSCCCertificate* serverCertificate;
 @property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
-@property (readonly) NSArray* serverCertificateErrors;
-@property (readonly) NSArray* serverIntermediateCertificates;
+@property (readonly) NSArray* /* WSCCChainValidationResult */ serverCertificateErrors;
+@property (readonly) NSArray* /* WSCCCertificate* */ serverIntermediateCertificates;
 - (NSString*)toString;
 @end
 
@@ -464,7 +465,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWHHttpFormUrlEncodedContent : RTObject <WWHIHttpContent, WFIClosable, WFIStringable>
-+ (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* */)content ACTIVATOR;
++ (WWHHttpFormUrlEncodedContent*)make:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)content ACTIVATOR;
 @property (readonly) WWHHHttpContentHeaderCollection* headers;
 - (void)bufferAllAsyncWithSuccess:(void (^)(uint64_t))success progress:(void (^)(uint64_t))progress failure:(void (^)(NSError*))failure;
 - (void)readAsBufferAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success

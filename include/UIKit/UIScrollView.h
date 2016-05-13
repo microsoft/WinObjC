@@ -99,5 +99,5 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, getter=isTracking) BOOL tracking; // always returns NO
 @property (nonatomic, readonly, getter=isZoomBouncing) BOOL zoomBouncing; // always NO
 @property (nonatomic, readonly, getter=isZooming) BOOL zooming;
-@property (readonly, nonatomic) UIPinchGestureRecognizer* pinchGestureRecognizer STUB_PROPERTY;
+@property (readonly, nonatomic) UIPinchGestureRecognizer* pinchGestureRecognizer;
 @end

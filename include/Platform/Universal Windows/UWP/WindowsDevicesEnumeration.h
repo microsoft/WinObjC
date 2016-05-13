@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDEDeviceConnectionChangeTriggerDetails, WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate,
     WDEDeviceInformationCollection, WDEDeviceWatcher, WDEDeviceInformation, WDEDevicePairingResult, WDEDeviceInformationPairing,
     WDEDeviceAccessChangedEventArgs, WDEDeviceAccessInformation, WDEDevicePickerAppearance, WDEDeviceSelectedEventArgs,
@@ -316,7 +317,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDEDeviceInformationUpdate : RTObject
 @property (readonly) NSString* id;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEDeviceInformationKind kind;
 @end
 
@@ -367,6 +368,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceInformation : RTObject
++ (NSString*)getAqsFilterFromDeviceClass:(WDEDeviceClass)deviceClass;
++ (void)createFromIdAsyncWithKindAndAdditionalProperties:(NSString*)deviceId
+                                    additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
+                                                    kind:(WDEDeviceInformationKind)kind
+                                                 success:(void (^)(WDEDeviceInformation*))success
+                                                 failure:(void (^)(NSError*))failure;
++ (void)findAllAsyncWithKindAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
+                                        additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
+                                                        kind:(WDEDeviceInformationKind)kind
+                                                     success:(void (^)(WDEDeviceInformationCollection*))success
+                                                     failure:(void (^)(NSError*))failure;
++ (WDEDeviceWatcher*)createWatcherWithKindAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
+                                                      additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
+                                                                      kind:(WDEDeviceInformationKind)kind;
 + (void)createFromIdAsync:(NSString*)deviceId success:(void (^)(WDEDeviceInformation*))success failure:(void (^)(NSError*))failure;
 + (void)createFromIdAsyncAdditionalProperties:(NSString*)deviceId
                          additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
@@ -388,26 +403,12 @@ WINRT_EXPORT
 + (WDEDeviceWatcher*)createWatcherAqsFilter:(NSString*)aqsFilter;
 + (WDEDeviceWatcher*)createWatcherAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
                                               additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties;
-+ (NSString*)getAqsFilterFromDeviceClass:(WDEDeviceClass)deviceClass;
-+ (void)createFromIdAsyncWithKindAndAdditionalProperties:(NSString*)deviceId
-                                    additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                                    kind:(WDEDeviceInformationKind)kind
-                                                 success:(void (^)(WDEDeviceInformation*))success
-                                                 failure:(void (^)(NSError*))failure;
-+ (void)findAllAsyncWithKindAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
-                                        additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                                        kind:(WDEDeviceInformationKind)kind
-                                                     success:(void (^)(WDEDeviceInformationCollection*))success
-                                                     failure:(void (^)(NSError*))failure;
-+ (WDEDeviceWatcher*)createWatcherWithKindAqsFilterAndAdditionalProperties:(NSString*)aqsFilter
-                                                      additionalProperties:(id<NSFastEnumeration> /* NSString * */)additionalProperties
-                                                                      kind:(WDEDeviceInformationKind)kind;
 @property (readonly) WDEEnclosureLocation* enclosureLocation;
 @property (readonly) NSString* id;
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isEnabled;
 @property (readonly) NSString* name;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEDeviceInformationKind kind;
 @property (readonly) WDEDeviceInformationPairing* pairing;
 - (void)update:(WDEDeviceInformationUpdate*)updateInfo;
@@ -517,8 +518,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDevicePickerFilter : RTObject
-@property (readonly) NSMutableArray* supportedDeviceClasses;
-@property (readonly) NSMutableArray* supportedDeviceSelectors;
+@property (readonly) NSMutableArray* /* WDEDeviceClass */ supportedDeviceClasses;
+@property (readonly) NSMutableArray* /* NSString * */ supportedDeviceSelectors;
 @end
 
 #endif // __WDEDevicePickerFilter_DEFINED__
@@ -532,7 +533,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property (readonly) WDEDevicePickerAppearance* appearance;
 @property (readonly) WDEDevicePickerFilter* filter;
-@property (readonly) NSMutableArray* requestedProperties;
+@property (readonly) NSMutableArray* /* NSString * */ requestedProperties;
 - (EventRegistrationToken)addDevicePickerDismissedEvent:(void (^)(WDEDevicePicker*, RTObject*))del;
 - (void)removeDevicePickerDismissedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addDeviceSelectedEvent:(void (^)(WDEDevicePicker*, WDEDeviceSelectedEventArgs*))del;
@@ -571,7 +572,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDEDeviceWatcherTriggerDetails : RTObject
-@property (readonly) NSArray* deviceWatcherEvents;
+@property (readonly) NSArray* /* WDEDeviceWatcherEvent* */ deviceWatcherEvents;
 @end
 
 #endif // __WDEDeviceWatcherTriggerDetails_DEFINED__

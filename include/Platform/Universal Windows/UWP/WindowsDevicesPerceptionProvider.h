@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDPPPerceptionFrameProviderInfo, WDPPPerceptionPropertyChangeRequest, WDPPPerceptionFaceAuthenticationGroup,
     WDPPPerceptionControlGroup, WDPPPerceptionCorrelationGroup, WDPPPerceptionFrame, WDPPPerceptionCorrelation,
     WDPPPerceptionVideoFrameAllocator, WDPPPerceptionFrameProviderManagerService, WDPPKnownPerceptionFrameKind;
@@ -138,7 +139,7 @@ WINRT_EXPORT
 + (WDPPPerceptionFaceAuthenticationGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids
                                   startHandler:(WDPPPerceptionStartFaceAuthenticationHandler)startHandler
                                    stopHandler:(WDPPPerceptionStopFaceAuthenticationHandler)stopHandler ACTIVATOR;
-@property (readonly) NSArray* frameProviderIds;
+@property (readonly) NSArray* /* NSString * */ frameProviderIds;
 @end
 
 #endif // __WDPPPerceptionFaceAuthenticationGroup_DEFINED__
@@ -150,7 +151,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPPPerceptionControlGroup : RTObject
 + (WDPPPerceptionControlGroup*)make:(id<NSFastEnumeration> /* NSString * */)ids ACTIVATOR;
-@property (readonly) NSArray* frameProviderIds;
+@property (readonly) NSArray* /* NSString * */ frameProviderIds;
 @end
 
 #endif // __WDPPPerceptionControlGroup_DEFINED__
@@ -162,7 +163,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDPPPerceptionCorrelationGroup : RTObject
 + (WDPPPerceptionCorrelationGroup*)make:(id<NSFastEnumeration> /* WDPPPerceptionCorrelation* */)relativeLocations ACTIVATOR;
-@property (readonly) NSArray* relativeLocations;
+@property (readonly) NSArray* /* WDPPPerceptionCorrelation* */ relativeLocations;
 @end
 
 #endif // __WDPPPerceptionCorrelationGroup_DEFINED__

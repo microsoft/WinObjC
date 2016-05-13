@@ -18,6 +18,7 @@
 #import <MapKit/MapKitExport.h>
 #import <CoreFoundation/CFBase.h>
 #import <CoreLocation/CLLocation.h>
+#import <Foundation/NSValue.h>
 
 typedef struct {
     CLLocationDegrees latitudeDelta;
@@ -45,3 +46,8 @@ typedef struct {
 } MKMapRect;
 
 typedef CGFloat MKZoomScale;
+
+@interface NSValue (NSValueMapKitAdditions)
++ (NSValue*)valueWithMKCoordinate:(CLLocationCoordinate2D)coordinate STUB_METHOD;
++ (NSValue*)valueWithMKCoordinateSpan:(MKCoordinateSpan)span STUB_METHOD;
+@end
