@@ -426,19 +426,19 @@ NSString* identifierForFormatAttribute(NSLayoutFormatOptions opts) {
     for (int i = 0; i < [items count]; i++) {
         id obj = [items objectAtIndex:i];
         if ([obj isKindOfClass:[UIView class]]) {
-            UIView* lSuper = [(UIView*)[items objectAtIndex:i] superview];
+            UIView* lSuper = [(UIView*)obj superview];
             if (!superview) {
                 superview = lSuper;
             } else if (lSuper && lSuper != superview) {
                 TraceVerbose(TAG, L"All views must share the same superview.");
             }
         } else if ([obj isKindOfClass:[UILayoutGuide class]]) {
-            UIView* lSuper = [(UILayoutGuide*)[items objectAtIndex:i] owningView];
+            UIView* lSuper = [(UILayoutGuide*)obj owningView];
             if (!superview) {
                 superview = lSuper;
             } else if (lSuper && lSuper != superview) {
                 TraceVerbose(TAG, L"All guides must share the same owningView.");
-            }            
+            }
         } else {
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Item does not conform to UIView or UILayoutGuide!" userInfo:nil];
         }

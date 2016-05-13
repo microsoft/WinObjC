@@ -1739,8 +1739,13 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setAutoresizingMask:(UIViewAutoresizing)mask {
-    priv->autoresizingMask = mask;
-    [self setNeedsUpdateConstraints];
+    if (mask != priv->autoresizingMask) {
+        if (mask >= (UIViewAutoresizingFlexibleBottomMargin << 1)) {
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Argument 'mask' out of range!" userInfo:nil];
+        }
+        priv->autoresizingMask = mask;
+        [self setNeedsUpdateConstraints];
+    }
 }
 
 /**
@@ -1754,8 +1759,10 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setAutoresizesSubviews:(BOOL)autoresize {
-    priv->autoresizesSubviews = autoresize;
-    [self setNeedsUpdateConstraints];
+    if (autoresize != priv->autoresizesSubviews) {
+        priv->autoresizesSubviews = autoresize;
+        [self setNeedsUpdateConstraints];
+    }
 }
 
 /**
@@ -1769,8 +1776,10 @@ static float doRound(float f) {
  @Status Interoperable
 */
 - (void)setTranslatesAutoresizingMaskIntoConstraints:(BOOL)translate {
-    self->priv->translatesAutoresizingMaskIntoConstraints = translate;
-    [self setNeedsUpdateConstraints];
+    if (translate != self->priv->translatesAutoresizingMaskIntoConstraints) {
+        self->priv->translatesAutoresizingMaskIntoConstraints = translate;
+        [self setNeedsUpdateConstraints];
+    }
 }
 
 /**
@@ -1778,13 +1787,6 @@ static float doRound(float f) {
 */
 - (NSArray*)constraints {
     return priv->constraints;
-}
-
-/**
- @Status Stub
-*/
-- (void)setConstraints:(NSArray*)constraints {
-    UNIMPLEMENTED();
 }
 
 /**

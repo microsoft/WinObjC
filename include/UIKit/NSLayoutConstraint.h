@@ -112,7 +112,7 @@ UIKIT_EXPORT_CLASS
 + (void)activateConstraints:(NSArray*)constraints;
 + (void)deactivateConstraints:(NSArray*)constraints;
 
-@property (copy) NSString* identifier STUB_PROPERTY;
+@property (copy) NSString* identifier;
 @property BOOL shouldBeArchived STUB_PROPERTY;
 
 @end
