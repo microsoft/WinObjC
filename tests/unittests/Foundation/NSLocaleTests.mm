@@ -17,10 +17,10 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(NSLocale, SanityTest) {
+TEST(NSLocale, PreferredLanguagesTest) {
     LOG_INFO("NSLocale sanity test: ");
 
-    // Basic test to get preferredLanguages.
+    // Basic test to get Preferred Languages.
     NSArray* preferredLanguages = [NSLocale preferredLanguages];
     ASSERT_GE_MSG([preferredLanguages count], 0, "There should always be atleast one default preferred language set!");
     LOG_INFO("System has %d preferred language(s) set.", [preferredLanguages count]);
@@ -116,7 +116,7 @@ TEST(NSLocale, ClassMethods) {
 TEST(NSLocale, ArchivingUnarchiving) {
     LOG_INFO("NSLocale archiving and unarchiving test: ");
 
-    NSLocale* locale = [NSLocale systemLocale];
+    NSLocale* locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
 
     //
     // Get the information from the system.
@@ -169,4 +169,32 @@ TEST(NSLocale, ArchivingUnarchiving) {
     NSString* localeCurrencyCodeUnarchived = [localeUnarchived objectForKey:NSLocaleCurrencyCode];
     LOG_INFO("NSLocaleCurrencyCodeUnarchived value is %@.", localeCurrencyCodeUnarchived);
     EXPECT_OBJCEQ_MSG(localeCurrencyCode, localeCurrencyCodeUnarchived, "localeCurrencyCodeUnarchived data does not match!");
+}
+
+TEST(NSLocale, BasicTests) {
+    //
+    // Basic tests to make sure various locales can be instantiated.
+    //
+    NSLocale* testLocale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+    ASSERT_OBJCEQ([testLocale localeIdentifier], @"en_US");
+
+    testLocale = [NSLocale localeWithLocaleIdentifier:@"tr"];
+    ASSERT_OBJCEQ([testLocale localeIdentifier], @"tr");
+
+    testLocale = [NSLocale localeWithLocaleIdentifier:@"de_DE"];
+    ASSERT_OBJCEQ([testLocale localeIdentifier], @"de_DE");
+
+    testLocale = [NSLocale localeWithLocaleIdentifier:@"en_GB"];
+    ASSERT_OBJCEQ([testLocale localeIdentifier], @"en_GB");
+
+    testLocale = [NSLocale localeWithLocaleIdentifier:@"gibberish"];
+    ASSERT_OBJCEQ([testLocale localeIdentifier], @"gibberish");
+
+    // Should legitimately be a blank identifier.
+    testLocale = [NSLocale systemLocale];
+    ASSERT_OBJCEQ([testLocale localeIdentifier], @"");
+
+    // Actual user setting locale, should not be empty.
+    testLocale = [NSLocale currentLocale];
+    ASSERT_OBJCNE([testLocale localeIdentifier], @"");
 }

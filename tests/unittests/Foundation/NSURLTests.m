@@ -258,3 +258,9 @@ TEST(NSURL, BridgedCast) {
         CFRelease(expected);
     }
 }
+
+TEST(NSURL, NonLatin) {
+    NSString* pathAsString = @"/temp/hello/world/中文/你好.txt";
+    NSURL* pathAsURL = [NSURL fileURLWithPath:pathAsString];
+    ASSERT_OBJCEQ(pathAsString, pathAsURL.path);
+}

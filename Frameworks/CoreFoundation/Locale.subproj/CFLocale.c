@@ -41,6 +41,11 @@
 #include <stdio.h>
 #include <string.h>
 
+//WINOBJC: Helper file for retrieving preferred languages from the windows globalization preferences. 
+//         The current implementation does not provide an adequate solution yet as some expected files are
+//         not currently in place.
+#include "_CFLocaleInternal.h"
+
 #if DEPLOYMENT_TARGET_EMBEDDED_MINI
 // Some compatability definitions
 #define ULOC_FULLNAME_CAPACITY 157
@@ -787,8 +792,12 @@ CFLocaleLanguageDirection CFLocaleGetLanguageLineDirection(CFStringRef isoLangCo
 }
 
 CFArrayRef CFLocaleCopyPreferredLanguages(void) {
+    //WINOBJC: Helper function for retrieving preferred languages from the windows globalization preferences. 
+    //         The current implementation does not provide an adequate solution yet as some expected files are
+    //         not currently in place.
+
     CFMutableArrayRef newArray = CFArrayCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeArrayCallBacks);
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
     CFArrayRef languagesArray = (CFArrayRef)CFPreferencesCopyAppValue(CFSTR("AppleLanguages"), kCFPreferencesCurrentApplication);
     if (languagesArray && (CFArrayGetTypeID() == CFGetTypeID(languagesArray))) {
 	for (CFIndex idx = 0, cnt = CFArrayGetCount(languagesArray); idx < cnt; idx++) {
@@ -801,6 +810,8 @@ CFArrayRef CFLocaleCopyPreferredLanguages(void) {
 	}
     }
     if (languagesArray)	CFRelease(languagesArray);
+#elif DEPLOYMENT_TARGET_WINDOWS
+    newArray = EnumerateUserPreferredLanguages();
 #endif
     return newArray;
 }

@@ -111,6 +111,9 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSURLComponentsTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSGenericsTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSErrorTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSLocale.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />
