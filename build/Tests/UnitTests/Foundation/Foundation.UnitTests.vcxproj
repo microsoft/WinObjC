@@ -249,6 +249,7 @@
     <ClangCompile Include="$(StarboardBasePath)\Frameworks\Foundation\NSKeyValueCoding.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_KeyValueObservationTests.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\TestNSLocale.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\TestNSNumberFormatter.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSRangeTests.mm" />

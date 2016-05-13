@@ -37,7 +37,11 @@ enum {
     NSNumberFormatterCurrencyStyle = kCFNumberFormatterCurrencyStyle,
     NSNumberFormatterPercentStyle = kCFNumberFormatterPercentStyle,
     NSNumberFormatterScientificStyle = kCFNumberFormatterScientificStyle,
-    NSNumberFormatterSpellOutStyle = kCFNumberFormatterSpellOutStyle
+    NSNumberFormatterSpellOutStyle = kCFNumberFormatterSpellOutStyle,
+    NSNumberFormatterOrdinalStyle = kCFNumberFormatterOrdinalStyle,
+    NSNumberFormatterCurrencyISOCodeStyle = kCFNumberFormatterCurrencyISOCodeStyle,
+    NSNumberFormatterCurrencyPluralStyle = kCFNumberFormatterCurrencyPluralStyle,
+    NSNumberFormatterCurrencyAccountingStyle = kCFNumberFormatterCurrencyAccountingStyle
 };
 
 enum {
@@ -71,34 +75,19 @@ FOUNDATION_EXPORT_CLASS
 @Notes NSNumberFormatterBehavior10_0 likely crashes.
 */
 @property NSNumberFormatterBehavior formatterBehavior;
-
-+ (void)setDefaultFormatterBehavior:(NSNumberFormatterBehavior)behavior STUB_METHOD;
-+ (NSNumberFormatterBehavior)defaultFormatterBehavior;
-
-/**
- @Status Caveat
- @Notes Not thoroughly implemented
-*/
 @property NSNumberFormatterStyle numberStyle;
-
 @property BOOL generatesDecimalNumbers;
-- (BOOL)getObjectValue:(id _Nullable*)anObject
-             forString:(NSString*)aString
-                 range:(NSRange*)rangep
-                 error:(NSError* _Nullable*)error STUB_METHOD;
-- (NSNumber*)numberFromString:(NSString*)string;
-- (NSString*)stringFromNumber:(NSNumber*)number;
-+ (NSString*)localizedStringFromNumber:(NSNumber*)num numberStyle:(NSNumberFormatterStyle)localizationStyle;
+
 @property (copy) NSLocale* locale;
 @property (copy) NSNumber* roundingIncrement;
-@property NSNumberFormatterRoundingMode roundingMode STUB_PROPERTY;
+@property NSNumberFormatterRoundingMode roundingMode;
 @property NSFormattingContext formattingContext;
 @property NSUInteger formatWidth;
 @property (copy) NSString* negativeFormat;
-@property (copy) NSString* positiveFormat STUB_PROPERTY;
+@property (copy) NSString* positiveFormat;
 @property (copy) NSNumber* multiplier;
 @property (copy) NSString* percentSymbol;
-@property (copy) NSString* perMillSymbol STUB_PROPERTY;
+@property (copy) NSString* perMillSymbol;
 @property (copy) NSString* minusSign;
 @property (copy) NSString* plusSign;
 @property (copy) NSString* exponentSymbol;
@@ -125,8 +114,8 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSString* groupingSeparator;
 @property BOOL usesGroupingSeparator;
 @property (copy) NSString* decimalSeparator;
-@property BOOL alwaysShowsDecimalSeparator STUB_PROPERTY;
-@property (copy) NSString* currencyDecimalSeparator STUB_PROPERTY;
+@property BOOL alwaysShowsDecimalSeparator;
+@property (copy) NSString* currencyDecimalSeparator;
 @property NSUInteger groupingSize;
 @property NSUInteger secondaryGroupingSize;
 @property (copy) NSString* paddingCharacter;
@@ -135,12 +124,20 @@ FOUNDATION_EXPORT_CLASS
 @property (copy) NSNumber* minimum;
 @property (copy) NSNumber* maximum;
 @property NSUInteger minimumIntegerDigits;
-@property NSUInteger minimumFractionDigits STUB_PROPERTY;
+@property NSUInteger minimumFractionDigits;
 @property NSUInteger maximumIntegerDigits;
 @property NSUInteger maximumFractionDigits;
-@property BOOL usesSignificantDigits STUB_PROPERTY;
-@property NSUInteger minimumSignificantDigits STUB_PROPERTY;
-@property NSUInteger maximumSignificantDigits STUB_PROPERTY;
+@property BOOL usesSignificantDigits;
+@property NSUInteger minimumSignificantDigits;
+@property NSUInteger maximumSignificantDigits;
 @property (getter=isLenient) BOOL lenient;
 @property (getter=isPartialStringValidationEnabled) BOOL partialStringValidationEnabled;
+
++ (void)setDefaultFormatterBehavior:(NSNumberFormatterBehavior)behavior;
++ (NSNumberFormatterBehavior)defaultFormatterBehavior;
++ (NSString*)localizedStringFromNumber:(NSNumber*)num numberStyle:(NSNumberFormatterStyle)localizationStyle;
+- (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)aString range:(NSRange*)rangep error:(NSError* _Nullable*)error;
+- (NSNumber*)numberFromString:(NSString*)string;
+- (NSString*)stringFromNumber:(NSNumber*)number;
+
 @end
