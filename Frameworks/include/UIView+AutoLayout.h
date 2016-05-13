@@ -14,13 +14,11 @@
 //
 //******************************************************************************
 
-#import "UIKit/UIView.h"
+#import <UIKit/UIView.h>
+#import <AutoLayout.h>
 
-@interface UIView (AutoLayout)
+@interface UIView (AutoLayout) <AutoLayoutable>
 - (void)autoLayoutInvalidateContentSize;
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
 - (void)autoLayoutLayoutSubviews;
-- (void)autoLayoutInitWithCoder:(NSCoder*)coder;
 - (void)autoLayoutUpdateConstraints;
 @end

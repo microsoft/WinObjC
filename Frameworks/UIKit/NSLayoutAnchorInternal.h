@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,13 @@
 //
 //******************************************************************************
 
-#import <UIKit/NSLayoutConstraint.h>
+@interface NSLayoutAnchor () {
+@public
+    NSLayoutAttribute _attr;
+    id _owner;
+}
 
-@interface NSLayoutConstraint (AutoLayout)
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
-- (void)autoLayoutConstraintAddedToView:(UIView*)view;
-- (void)autoLayoutConstraintRemovedFromView;
++ (instancetype)_anchorWithAttribute:(NSLayoutAttribute)attribute owner:(id)owner;
+- (void)_validateMayConstrainToAnchor:(NSLayoutAnchor*)anchor;
+
 @end

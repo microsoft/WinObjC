@@ -14,11 +14,8 @@
 //
 //******************************************************************************
 
-#import <UIKit/NSLayoutConstraint.h>
+#import "UIKit/UIView.h"
+#import "AutoLayout.h"
 
-@interface NSLayoutConstraint (AutoLayout)
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
-- (void)autoLayoutConstraintAddedToView:(UIView*)view;
-- (void)autoLayoutConstraintRemovedFromView;
+@interface UILayoutGuide (AutoLayout) <AutoLayoutable>
 @end

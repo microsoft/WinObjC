@@ -14,4 +14,14 @@
 //
 //******************************************************************************
 
+#include <CoreGraphics/CGGeometry.h>
+
 extern "C" bool InitializeAutoLayout();
+
+@protocol AutoLayoutable
+
+- (void)autoLayoutAlloc;
+- (void)autoLayoutDealloc;
+- (CGRect)autoLayoutGetRect;
+
+@end

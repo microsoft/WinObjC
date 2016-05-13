@@ -18,9 +18,6 @@
 
 #import "LinkedList.h"
 
-class AutoLayoutProperties;
-class ConstraintProperties;
-
 @class UIWindow;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
@@ -32,13 +29,25 @@ public:
     BOOL userInteractionEnabled;
     BOOL multipleTouchEnabled;
     UIViewContentMode contentMode;
-    AutoLayoutProperties* layoutProperties;
     id currentTouches;
     id gestures;
     StrongId<NSMutableArray> constraints;
-    StrongId<NSMutableArray> associatedConstraints;
     bool _isChangingParent;
     bool _constraintsNeedUpdate;
+
+    StrongId<NSMutableArray> _layoutGuides;
+    StrongId<NSLayoutDimension> _heightAnchor;
+    StrongId<NSLayoutDimension> _widthAnchor;
+    StrongId<NSLayoutXAxisAnchor> _centerXAnchor;
+    StrongId<NSLayoutXAxisAnchor> _leadingAnchor;
+    StrongId<NSLayoutXAxisAnchor> _leftAnchor;
+    StrongId<NSLayoutXAxisAnchor> _rightAnchor;
+    StrongId<NSLayoutXAxisAnchor> _trailingAnchor;
+    StrongId<NSLayoutYAxisAnchor> _bottomAnchor;
+    StrongId<NSLayoutYAxisAnchor> _centerYAnchor;
+    StrongId<NSLayoutYAxisAnchor> _firstBaselineAnchor;
+    StrongId<NSLayoutYAxisAnchor> _lastBaselineAnchor;
+    StrongId<NSLayoutYAxisAnchor> _topAnchor;
 
     UIViewAutoresizing autoresizingMask;
     CGSize _contentHuggingPriority;
@@ -60,28 +69,19 @@ public:
         currentTouches = nil;
         gestures = nil;
         constraints = nil;
-        associatedConstraints = nil;
         translatesAutoresizingMaskIntoConstraints = TRUE;
-        layoutProperties = NULL;
         _isChangingParent = false;
         _constraintsNeedUpdate = false;
         _contentHuggingPriority.height = 250.0f;
         _contentHuggingPriority.width = 250.0f;
         _contentCompressionResistancePriority.height = 750.0f;
         _contentCompressionResistancePriority.width = 750.0f;
+        _layoutGuides = nil;
 
         autoresizingMask = (UIViewAutoresizing)0;
         autoresizesSubviews = FALSE;
         memset(&_resizeRoundingError, 0, sizeof(_resizeRoundingError));
     }
-};
-
-class NSLayoutConstraintPrivateState {
-public:
-    NSLayoutConstraintPrivateState() : _constraints(NULL) {
-    }
-
-    ConstraintProperties* _constraints;
 };
 
 // This is a bit of a hack (since didMoveToWindow should only be in UIView-derived classes)
@@ -107,10 +107,7 @@ public:
 - (BOOL)_isEnabled;
 @end
 
-@interface NSLayoutConstraint () {
-    NSLayoutConstraintPrivateState* priv;
-}
-- (NSLayoutConstraintPrivateState*)_privateState;
+@interface NSLayoutConstraint () 
 - (void)_setView:(UIView*)view;
 - (void)_printConstraint;
 + (void)_printConstraints:(NSArray*)constraints;

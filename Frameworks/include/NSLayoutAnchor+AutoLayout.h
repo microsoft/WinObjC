@@ -14,11 +14,10 @@
 //
 //******************************************************************************
 
-#import <UIKit/NSLayoutConstraint.h>
+#import "UIKit/NSLayoutAnchor.h"
+#import "UIKit/NSLayoutConstraint.h"
 
-@interface NSLayoutConstraint (AutoLayout)
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
-- (void)autoLayoutConstraintAddedToView:(UIView*)view;
-- (void)autoLayoutConstraintRemovedFromView;
+@interface NSLayoutAnchor () {}
++ (instancetype)_anchorWithAttribute:(NSLayoutAttribute)attribute owner:(id)owner;
+- (void)_validateMayConstrainToAnchor:(NSLayoutAnchor*)anchor;
 @end

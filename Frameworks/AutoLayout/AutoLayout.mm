@@ -15,11 +15,10 @@
 //
 //******************************************************************************
 
-#include <Starboard.h>
 #include <AutoLayout.h>
+#include <UIKit/UILayoutGuide.h>
 #include <NSLayoutConstraint+AutoLayout.h>
 #include <UIView+AutoLayout.h>
-#include <UIViewInternal.h>
 
 #define CL_NO_IO
 #define CL_NO_ID
@@ -36,38 +35,34 @@ enum AutoLayoutDirection {
 
 static ClSimplexSolver c_solver;
 
-class ConstraintProperties {
-public:
-    ConstraintProperties() : _constraint(NULL) {
-    }
-    ClConstraint* _constraint;
-};
-
+// Just to ensure linkage
 extern "C" bool InitializeAutoLayout() {
     return true;
 }
 
 class AutoLayoutProperties {
 public:
-    AutoLayoutProperties(UIView* view)
-        : _view(view),
-          _contentHuggingConstraint{ ClLinearInequality(ClLinearExpression()), ClLinearInequality(ClLinearExpression()) },
+    AutoLayoutProperties()
+        : _contentHuggingConstraint{ ClLinearInequality(ClLinearExpression()), ClLinearInequality(ClLinearExpression()) },
           _contentCompressionResistanceConstraint{ ClLinearInequality(ClLinearExpression()), ClLinearInequality(ClLinearExpression()) },
-          _stays{ ClStayConstraint(_vars[0], ClsStrong()),
-                  ClStayConstraint(_vars[1], ClsStrong()),
-                  ClStayConstraint(_vars[2], ClsStrong()),
-                  ClStayConstraint(_vars[3], ClsStrong()) } {
+          _stays{ ClStayConstraint(_vars[Left], ClsStrong()),
+                  ClStayConstraint(_vars[Right], ClsStrong()),
+                  ClStayConstraint(_vars[Top], ClsStrong()),
+                  ClStayConstraint(_vars[Bottom], ClsStrong()) } {
         _staysAdded = false;
+        _associatedConstraints = [NSMutableArray new];
     }
 
     ~AutoLayoutProperties() {
-        // TODO: Do we need to remove stays? How would we do that?
+        RemoveStays();
         for (int i = 0; i < NumDirections; i++) {
             if (_contentHuggingConstraint[i].FIsInSolver()) {
                 c_solver.RemoveConstraint(&_contentHuggingConstraint[i]);
                 c_solver.RemoveConstraint(&_contentCompressionResistanceConstraint[i]);
             }
         }
+        [_associatedConstraints release];
+        _associatedConstraints = nil;
     }
 
     void AddStays() {
@@ -100,23 +95,60 @@ public:
         Bottom,
     };
 
-    UIView* _view;
     ClVariable _vars[4];
     ClStayConstraint _stays[4];
     bool _staysAdded;
     ClLinearInequality _contentHuggingConstraint[NumDirections];
     ClLinearInequality _contentCompressionResistanceConstraint[NumDirections];
+
+    NSMutableArray* _associatedConstraints;
 };
 
+// Since categories can't have ivars, we bundle up a couple C++ classes in NSObjects and associate them to the UIView/UILayoutGuide/NSLayoutConstraint
+@protocol _AutoLayoutProperties
+@property (readonly) AutoLayoutProperties* _autoLayoutProperties;
+@end
+
+@interface _AutoLayoutStorage : NSObject {
+@public
+    AutoLayoutProperties _autoLayoutProperties;
+}
+@end
+
+@implementation _AutoLayoutStorage
+@end 
+
+@interface _NSLayoutConstraintStorage : NSObject {
+@public
+    ClConstraint* _constraint;
+}
+@end
+
+@implementation _NSLayoutConstraintStorage
+@end 
+
+@interface UIView (AutoLayoutProperties) <_AutoLayoutProperties>
+@end
+
+@interface UILayoutGuide (AutoLayoutProperties) <_AutoLayoutProperties>
+@end
+
 @implementation NSLayoutConstraint (AutoLayout)
+
+- (_NSLayoutConstraintStorage*)_constraintStorage {
+    return ((_NSLayoutConstraintStorage*)objc_getAssociatedObject(self, @selector(_constraintStorage)));
+}
+
 - (void)autoLayoutAlloc {
-    [self _privateState]->_constraints = new ConstraintProperties();
+    objc_setAssociatedObject(self, @selector(_constraintStorage), [_NSLayoutConstraintStorage new], OBJC_ASSOCIATION_RETAIN);
 }
 
 - (void)autoLayoutConstraintAddedToView:(UIView*)view {
     assert(self.firstItem);
 
-    if (![self _privateState]->_constraints->_constraint) {
+    _NSLayoutConstraintStorage* constraintStorage = [self _constraintStorage];
+
+    if (!constraintStorage->_constraint) {
         // TODO: Care about reading direction.
         ClLinearExpression lex[2];
         UIView* items[] = { self.firstItem, self.secondItem };
@@ -139,9 +171,7 @@ public:
                     break;
             }
 
-            [item _initPriv];
-
-            auto layoutProps = [item _privateState]->layoutProperties;
+            auto layoutProps = item._autoLayoutProperties;
 
             switch (attribute) {
                 case NSLayoutAttributeLeading:
@@ -209,9 +239,7 @@ public:
             // This is to facilitate autoresizing masks. Whenever an auto-resizing happens due to a constraint changing a
             // frame, we need to poke the other views that may have been affected. This is in place until we actually
             // translate autoresize masks to constraints.
-            if ([item respondsToSelector:@selector(_privateState)]) {
-                [[item _privateState]->associatedConstraints addObject:self];
-            }
+            [layoutProps->_associatedConstraints addObject:self];
         }
 
         if (self.secondItem == nil) {
@@ -229,77 +257,120 @@ public:
 
         switch (self.relation) {
             case NSLayoutRelationEqual:
-                [self _privateState]->_constraints->_constraint = new ClLinearEquation(lex[0], lex[1], *strength, self.priority);
+                constraintStorage->_constraint = new ClLinearEquation(lex[0], lex[1], *strength, self.priority);
                 break;
             case NSLayoutRelationGreaterThanOrEqual:
-                [self _privateState]->_constraints->_constraint =
-                    new ClLinearInequality(lex[0], cnGEQ, lex[1], *strength, self.priority);
+                constraintStorage->_constraint = new ClLinearInequality(lex[0], cnGEQ, lex[1], *strength, self.priority);
                 break;
             case NSLayoutRelationLessThanOrEqual:
-                [self _privateState]->_constraints->_constraint =
-                    new ClLinearInequality(lex[0], cnLEQ, lex[1], *strength, self.priority);
+                constraintStorage->_constraint = new ClLinearInequality(lex[0], cnLEQ, lex[1], *strength, self.priority);
                 break;
             default:
                 assert(0);
         }
 
-        c_solver.AddConstraint([self _privateState]->_constraints->_constraint);
+        c_solver.AddConstraint(constraintStorage->_constraint);
 
     }
 }
 
 - (void)autoLayoutConstraintRemovedFromView {
     [self _removeFromSolver];
+    AutoLayoutProperties* firstItemProps = ((id<_AutoLayoutProperties>)self.firstItem)._autoLayoutProperties;
+    AutoLayoutProperties* secondItemProps = ((id<_AutoLayoutProperties>)self.secondItem)._autoLayoutProperties;
 
-    if (self.firstItem != nil && [self.firstItem respondsToSelector:@selector(_privateState)]) {
-        [[self.firstItem _privateState]->associatedConstraints removeObject:self];
-        if (![[self.firstItem _privateState]->associatedConstraints count]) {
-            [self.firstItem _privateState]->layoutProperties->RemoveStays();
+    if (self.firstItem != nil) {
+        [firstItemProps->_associatedConstraints removeObject:self];
+        if (![firstItemProps->_associatedConstraints count]) {
+            firstItemProps->RemoveStays();
         }
     }
-    if (self.secondItem != nil && [self.secondItem respondsToSelector:@selector(_privateState)]) {
-        [[self.secondItem _privateState]->associatedConstraints removeObject:self];
-        if (![[self.secondItem _privateState]->associatedConstraints count]) {
-            [self.secondItem _privateState]->layoutProperties->RemoveStays();
+    if (self.secondItem != nil) {
+        [secondItemProps->_associatedConstraints removeObject:self];
+        if (![secondItemProps->_associatedConstraints count]) {
+            secondItemProps->RemoveStays();
         }
     }
 }
 
 - (void)autoLayoutDealloc {
     [self _removeFromSolver];
-    delete[self _privateState]->_constraints;
 }
 
 - (void)_removeFromSolver {
-    if ([self _privateState]->_constraints->_constraint) {
-        if ([self _privateState]->_constraints->_constraint->FIsInSolver()) {
-            c_solver.RemoveConstraint([self _privateState]->_constraints->_constraint);
+    _NSLayoutConstraintStorage* constraintStorage = [self _constraintStorage];
+    if (constraintStorage->_constraint) {
+        if (constraintStorage->_constraint->FIsInSolver()) {
+            c_solver.RemoveConstraint(constraintStorage->_constraint);
         }
-        delete[self _privateState]->_constraints->_constraint;
-        [self _privateState]->_constraints->_constraint = NULL;
+        delete constraintStorage->_constraint;
+        constraintStorage->_constraint = NULL;
     }
 }
 @end
 
-@implementation UIView (AutoLayout)
+@implementation UILayoutGuide (AutoLayout)
+
 - (void)autoLayoutAlloc {
-    if (![self _privateState]->layoutProperties) {
-        [self _privateState]->layoutProperties = new AutoLayoutProperties(self);
-    }
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
+}
+
+- (CGRect)autoLayoutGetRect {
+    AutoLayoutProperties* autoLayoutProperties = self._autoLayoutProperties;
+
+    float left = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Left].Value();
+    float top = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Top].Value();
+    float right = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Right].Value();
+    float bottom = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Bottom].Value();
+
+    return CGRectMake(top, left, right - left, bottom - top);
+}
+
+- (AutoLayoutProperties*)_autoLayoutProperties {
+    _AutoLayoutStorage* storage = (_AutoLayoutStorage*)objc_getAssociatedObject(self, @selector(_autoLayoutProperties));
+    return &storage->_autoLayoutProperties;
+}
+
+- (void)autoLayoutDealloc {
+}
+
+@end
+
+@implementation UIView (AutoLayout)
+
+- (CGRect)autoLayoutGetRect {
+    AutoLayoutProperties* autoLayoutProperties = self._autoLayoutProperties;
+
+    float left = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Left].Value();
+    float top = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Top].Value();
+    float right = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Right].Value();
+    float bottom = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Bottom].Value();
+
+    return CGRectMake(top, left, right - left, bottom - top);
+}
+
+- (AutoLayoutProperties*)_autoLayoutProperties {
+    _AutoLayoutStorage* storage = (_AutoLayoutStorage*)objc_getAssociatedObject(self, @selector(_autoLayoutProperties));
+    return &storage->_autoLayoutProperties;
+}
+
+- (void)autoLayoutAlloc {
+    objc_setAssociatedObject(self, @selector(_autoLayoutProperties), [_AutoLayoutStorage new], OBJC_ASSOCIATION_RETAIN);
 }
 
 - (void)autoLayoutSetFrameToView:(UIView*)toView fromView:(UIView*)fromView {
-    UIViewPrivateState* viewPriv = [self _privateState];
     CGRect newFrame;
     CGPoint newPointTL;
     CGPoint newPointBR;
     CGPoint oldPointTL;
     CGPoint oldPointBR;
 
-    oldPointTL.x = (float)viewPriv->layoutProperties->_vars[AutoLayoutProperties::Left].Value();
-    oldPointTL.y = (float)viewPriv->layoutProperties->_vars[AutoLayoutProperties::Top].Value();
-    oldPointBR.x = (float)viewPriv->layoutProperties->_vars[AutoLayoutProperties::Right].Value();
-    oldPointBR.y = (float)viewPriv->layoutProperties->_vars[AutoLayoutProperties::Bottom].Value();
+    AutoLayoutProperties* autoLayoutProperties = self._autoLayoutProperties;
+
+    oldPointTL.x = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Left].Value();
+    oldPointTL.y = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Top].Value();
+    oldPointBR.x = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Right].Value();
+    oldPointBR.y = (float)autoLayoutProperties->_vars[AutoLayoutProperties::Bottom].Value();
 
     newPointTL = [toView convertPoint:oldPointTL fromView:fromView];
     newPointBR = [toView convertPoint:oldPointBR fromView:fromView];
@@ -317,9 +388,9 @@ public:
 
     for (int i = 0; i < [self.subviews count]; i++) {
         UIView* child = (UIView*)[self.subviews objectAtIndex:i];
-        UIViewPrivateState* childPriv = [child _privateState];
+        AutoLayoutProperties* childProps = child._autoLayoutProperties;
 
-        if ([childPriv->associatedConstraints count] && !childPriv->translatesAutoresizingMaskIntoConstraints) {
+        if ([childProps->_associatedConstraints count] && !child.translatesAutoresizingMaskIntoConstraints) {
             // Constraints that rely on autoresizing behaviour don't always follow a top-down layout order.
             // Baseline views can be autoresized, and are not always siblings to other constrained views.
             // We have to update them first, and this potentially can happen recursively. Ie, a view
@@ -327,7 +398,7 @@ public:
             // To facilitate this, we update frames for views we depend on (and thus their autosizing, and
             // constraints) before setting our own.
             // TODO: last baseline
-            for (NSLayoutConstraint* constraint in(NSArray*)childPriv->associatedConstraints) {
+            for (NSLayoutConstraint* constraint in childProps->_associatedConstraints) {
                 UIView* item = (UIView*)constraint.firstItem;
                 if (item != nil && item != self && constraint.firstAttribute == NSLayoutAttributeBaseline) {
                     [item autoLayoutSetFrameToView:self fromView:topView];
@@ -343,8 +414,7 @@ public:
 }
 
 - (void)autoLayoutInvalidateContentSize {
-    UIViewPrivateState* privState = [self _privateState];
-    AutoLayoutProperties* layoutProperties = privState->layoutProperties;
+    AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
     CGSize contentSize = [self intrinsicContentSize];
 
     if (contentSize.width == -1.0f /*UIViewNoIntrinsicMetric*/ || contentSize.width == 0) {
@@ -358,13 +428,13 @@ public:
                 layoutProperties->_contentHuggingConstraint[Horizontal].ChangeConstant(contentSize.width);
                 layoutProperties->_contentCompressionResistanceConstraint[Horizontal].ChangeConstant(contentSize.width);
             }
-            if (privState->_contentHuggingPriority.width != layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
-                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal], privState->_contentHuggingPriority.width);
+            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal] != layoutProperties->_contentHuggingConstraint[Horizontal].weight()) {
+                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Horizontal], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
             }
-            if (privState->_contentCompressionResistancePriority.width !=
+            if ([self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal] !=
                 layoutProperties->_contentCompressionResistanceConstraint[Horizontal].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal],
-                                     privState->_contentCompressionResistancePriority.width);
+                                     [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
             }
         }
         if (!layoutProperties->_contentHuggingConstraint[Horizontal].FIsInSolver()) {
@@ -374,14 +444,14 @@ public:
                                    cnLEQ,
                                    contentSize.width,
                                    ClsWeak(),
-                                   privState->_contentHuggingPriority.width);
+                                   [self contentHuggingPriorityForAxis:UILayoutConstraintAxisHorizontal]);
             layoutProperties->_contentCompressionResistanceConstraint[Horizontal] =
                 ClLinearInequality(ClLinearExpression(layoutProperties->_vars[AutoLayoutProperties::Right]) -
                                        layoutProperties->_vars[AutoLayoutProperties::Left],
                                    cnGEQ,
                                    contentSize.width,
                                    ClsWeak(),
-                                   privState->_contentCompressionResistancePriority.width);
+                                   [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisHorizontal]);
             c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Horizontal]);
             c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Horizontal]);
         }
@@ -397,13 +467,13 @@ public:
                 layoutProperties->_contentHuggingConstraint[Vertical].ChangeConstant(contentSize.height);
                 layoutProperties->_contentCompressionResistanceConstraint[Vertical].ChangeConstant(contentSize.height);
             }
-            if (privState->_contentHuggingPriority.height != layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
-                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical], privState->_contentHuggingPriority.height);
+            if ([self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical] != layoutProperties->_contentHuggingConstraint[Vertical].weight()) {
+                c_solver.ChangeWeight(&layoutProperties->_contentHuggingConstraint[Vertical], [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
             }
-            if (privState->_contentCompressionResistancePriority.height !=
+            if ([self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical] !=
                 layoutProperties->_contentCompressionResistanceConstraint[Vertical].weight()) {
                 c_solver.ChangeWeight(&layoutProperties->_contentCompressionResistanceConstraint[Vertical],
-                                     privState->_contentCompressionResistancePriority.height);
+                                     [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
             }
         }
         if (!layoutProperties->_contentHuggingConstraint[Vertical].FIsInSolver()) {
@@ -413,46 +483,16 @@ public:
                                    cnLEQ,
                                    contentSize.height,
                                    ClsWeak(),
-                                   privState->_contentHuggingPriority.height);
+                                   [self contentHuggingPriorityForAxis:UILayoutConstraintAxisVertical]);
             layoutProperties->_contentCompressionResistanceConstraint[Vertical] =
                 ClLinearInequality(ClLinearExpression(layoutProperties->_vars[AutoLayoutProperties::Bottom]) -
                                        layoutProperties->_vars[AutoLayoutProperties::Top],
                                    cnGEQ,
                                    contentSize.height,
                                    ClsWeak(),
-                                   privState->_contentCompressionResistancePriority.height);
+                                   [self contentCompressionResistancePriorityForAxis:UILayoutConstraintAxisVertical]);
             c_solver.AddConstraint(&layoutProperties->_contentHuggingConstraint[Vertical]);
             c_solver.AddConstraint(&layoutProperties->_contentCompressionResistanceConstraint[Vertical]);
-        }
-    }
-}
-
-- (void)autoLayoutInitWithCoder:(NSCoder*)coder {
-    if ([coder containsValueForKey:@"UIViewContentCompressionResistancePriority"]) {
-        id sizeObj = [coder decodeObjectForKey:@"UIViewContentCompressionResistancePriority"];
-        if ([sizeObj isKindOfClass:[NSString class]]) {
-            const char* stretchStr = [sizeObj UTF8String];
-            sscanf_s(stretchStr,
-                     "{%f, %f}",
-                     &[self _privateState]->_contentCompressionResistancePriority.width,
-                     &[self _privateState]->_contentCompressionResistancePriority.height);
-        } else {
-            CGSize* size = (CGSize*)[sizeObj bytes];
-            memcpy(&[self _privateState]->_contentCompressionResistancePriority, size, sizeof(CGRect));
-        }
-    }
-
-    if ([coder containsValueForKey:@"UIViewContentHuggingPriority"]) {
-        id sizeObj = [coder decodeObjectForKey:@"UIViewContentHuggingPriority"];
-        if ([sizeObj isKindOfClass:[NSString class]]) {
-            const char* stretchStr = [(NSString*)sizeObj UTF8String];
-            sscanf_s(stretchStr,
-                     "{%f, %f}",
-                     &[self _privateState]->_contentHuggingPriority.width,
-                     &[self _privateState]->_contentHuggingPriority.height);
-        } else {
-            CGSize* size = (CGSize*)[sizeObj bytes];
-            memcpy(&[self _privateState]->_contentHuggingPriority, size, sizeof(CGRect));
         }
     }
 }
@@ -461,7 +501,7 @@ public:
 - (UIView*)autolayoutRoot {
     UIView* ret = self;
     
-    while ([ret _privateState]->translatesAutoresizingMaskIntoConstraints == NO || ([ret.superview viewForBaselineLayout] == ret)) {
+    while (ret.translatesAutoresizingMaskIntoConstraints == NO || ([ret.superview viewForBaselineLayout] == ret)) {
         ret = ret.superview;
         if (ret == nil) {
             // Attempt to auto layout outside view hierarchy. May happen if someone adds the constraints out of order.
@@ -473,9 +513,9 @@ public:
 }
 
 - (void)autoLayoutUpdateConstraints {
-    AutoLayoutProperties* layoutProperties = [self _privateState]->layoutProperties;
+    AutoLayoutProperties* layoutProperties = self._autoLayoutProperties;
 
-    if (![[self _privateState]->associatedConstraints count]) {
+    if (![layoutProperties->_associatedConstraints count]) {
         return;
     }
 
@@ -483,7 +523,7 @@ public:
     // Note: translatesAutoresizingMaskIntoConstraints doesn't actually create constraints. We've
     //   opted to allow the autoresize path to run, and simply update the top-level views' variables
     //   in the solution.
-    if ([self _privateState]->translatesAutoresizingMaskIntoConstraints) {
+    if (self.translatesAutoresizingMaskIntoConstraints) {
         CGRect curBounds = [self bounds];
         CGRect convFrame;
 
@@ -523,8 +563,6 @@ public:
 }
 
 - (void)autoLayoutDealloc {
-    [self _privateState]->layoutProperties->RemoveStays();
-    delete[self _privateState]->layoutProperties;
-    [self _privateState]->layoutProperties = NULL;
 }
+
 @end
