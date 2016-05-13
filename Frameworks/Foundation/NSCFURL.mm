@@ -138,7 +138,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFURLRef, CFURLGetTypeID, NSURL, NSCFURL)
         }
 
         // CF version of this function doesn't unescape percent-encoded chars, while NS does
-        ret = [ret stringByReplacingPercentEscapesUsingEncoding:[ret fastestEncoding]];
+        ret = [ret stringByRemovingPercentEncoding];
 
         // Remove slashes from before drives
         if (([ret hasPrefix:_NSGetSlashStr()]) && (_isLetter([ret characterAtIndex:1])) && ([ret characterAtIndex:2] == ':')) {
