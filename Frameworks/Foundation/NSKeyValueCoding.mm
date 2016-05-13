@@ -429,6 +429,19 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 }
 
 /**
+ @Status Interoperable
+*/
+- (void)setValuesForKeysWithDictionary:(NSDictionary*)keyedValues {
+    for (NSString *key in keyedValues) {
+        id value = [keyedValues objectForKey:key];
+        if (value == [NSNull null]) {
+            value = nil;
+        }
+        [self setValue:value forKey:key];
+    }
+}
+
+/**
  @Status Stub
  @Notes
 */
@@ -471,14 +484,6 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 - (NSMutableOrderedSet*)mutableOrderedSetValueForKeyPath:(NSString*)keyPath {
     UNIMPLEMENTED();
     return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (void)setValuesForKeysWithDictionary:(NSDictionary*)keyedValues {
-    UNIMPLEMENTED();
 }
 
 /**
