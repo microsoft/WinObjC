@@ -99,8 +99,9 @@ static void initInternal(UISlider* self) {
 
     progressFrame.origin.x = 0;
     progressFrame.origin.y = 0;
-    progressFrame.size.width = 50;
-    progressFrame.size.height = 100;
+
+    progressFrame.size.width = [self->_dot size].width * 2; // Width of image, doubled for touch/tap slack
+    progressFrame.size.height = [self->_dot size].height * 2; // Height of image, doubled for touch/tap slack
     self->_sliderThumbView = [[[UIImageView alloc] initWithFrame:progressFrame] autorelease];
     [self->_sliderThumbView setContentMode:UIViewContentModeCenter];
     [self->_sliderThumbView setImage:(id)self->_dot];

@@ -1587,12 +1587,8 @@ public:
     }
 
     DisplayTexture* CreateDisplayTextureForElement(id xamlElement) override {
-        GenericControlXaml* genericControlTexture = new GenericControlXaml([(RTObject*)xamlElement comObj].Get());
+        GenericControlXaml* genericControlTexture = new GenericControlXaml([xamlElement comObj].Get());
         return genericControlTexture;
-    }
-
-    virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {
-        node->SetAccessibilityInfo(info);
     }
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) override {
@@ -1600,25 +1596,12 @@ public:
     }
 };
 
-void SetUIHandlers();
-
 void CreateXamlCompositor(winobjc::Id& root) {
     CGImageAddDestructionListener(UIReleaseDisplayTextureForCGImage);
     static CAXamlCompositor* compIntr = new CAXamlCompositor();
-
     SetCACompositor(compIntr);
-
     EbrGetMediaTime();
-    SetUIHandlers();
     SetRootGrid(root);
-}
-
-void IWXamlTouch(float x, float y, unsigned int touchID, int event, unsigned __int64 timestampMicro) {
-    UIQueueTouchInput(x, y, touchID, event, screenWidth, screenHeight, timestampMicro * 1000);
-}
-
-void IWXamlKeyInput(int key) {
-    UIQueueKeyInput(key);
 }
 
 void GridSizeChanged(float newWidth, float newHeight) {

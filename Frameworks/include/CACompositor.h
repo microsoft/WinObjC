@@ -31,8 +31,6 @@ struct CAMediaTimingProperties;
 #define CACompositorRotation180 180.0f
 #define CACompositorRotation90CounterClockwise 270.0f
 
-struct IWAccessibilityInfo;
-
 class CACompositorInterface {
 public:
     virtual void DisplayTreeChanged() = 0;
@@ -133,8 +131,6 @@ public:
 
     virtual void EnableDisplaySyncNotification() = 0;
     virtual void DisableDisplaySyncNotification() = 0;
-
-    virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) = 0;
 
     virtual void SetShouldRasterize(DisplayNode* node, bool rasterize) = 0;
 };

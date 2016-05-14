@@ -1158,8 +1158,6 @@ LIBRARY UIKit
 
         ; Extra stuff for WinObjC:
         UIShutdown
-        UIQueueTouchInput
-        UIQueueKeyInput
         UIRequestTransactionProcessing
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication

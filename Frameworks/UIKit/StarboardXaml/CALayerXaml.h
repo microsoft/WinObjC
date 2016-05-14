@@ -315,10 +315,6 @@ private:
     Windows::UI::Xaml::Media::TranslateTransform^ m_invOriginTransform;
     bool m_hidden = false;
 
-    void _CALayerXaml_PointerPressed(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
-    void _CALayerXaml_PointerReleased(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
-    void _CALayerXaml_PointerCanceled(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
-    void _CALayerXaml_PointerMoved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
     void _SetContent(Windows::UI::Xaml::FrameworkElement^ element);
     LayerContent^ _GetLayerContent(bool create = false);
 };
@@ -409,44 +405,6 @@ private:
     std::list<Animation^> m_animations;
     CALayerXaml^ m_animatedLayer = nullptr;
     Windows::UI::Xaml::Media::Animation::EasingFunctionBase^ m_animationEase;
-};
-
-/// <summary>
-///
-/// </summary>
-public
-interface class ICALayerXamlInputEvents {
-    virtual void PointerDown(float x, float y, unsigned int id, unsigned long long timestamp) = 0;
-    virtual void PointerUp(float x, float y, unsigned int id, unsigned long long timestamp) = 0;
-    virtual void PointerMoved(float x, float y, unsigned int id, unsigned long long timestamp) = 0;
-    virtual void KeyDown(unsigned int key) = 0;
-};
-
-/// <summary>
-///
-/// </summary>
-public
-ref class CALayerInputHandler sealed {
-public:
-    static property CALayerInputHandler^ Instance {
-        CALayerInputHandler^ get() {
-            static CALayerInputHandler^ instance = ref new CALayerInputHandler();
-            return instance;
-        }
-    };
-    void SetInputHandler(ICALayerXamlInputEvents^ handler);
-
-internal:
-    void _HandleDownInput(CALayerXaml^ layer, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
-    void _HandleUpInput(CALayerXaml^ layer, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
-    void _HandleMoveInput(CALayerXaml^ layer, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e);
-
-private:
-    ICALayerXamlInputEvents^ m_inputEventHandler;
-    Windows::UI::Xaml::Controls::Control^ m_dummyFocus;
-
-    CALayerInputHandler() {};
-    void _CoreWindow_CharacterReceived(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::CharacterReceivedEventArgs^ args);
 };
 
 /// <summary>

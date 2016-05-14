@@ -558,16 +558,18 @@ UIInterfaceOrientation supportedOrientationForOrientation(UIViewController* cont
         if ((orientation != priv->_curOrientation) || !priv->_didSetRotation ||
             orientation != [[UIApplication sharedApplication] statusBarOrientation]) {
             bool sendEvent = orientation != priv->_curOrientation;
-            if (sendEvent)
+            if (sendEvent) {
                 [self willRotateToInterfaceOrientation:orientation duration:0.25];
+            }
 
             UIInterfaceOrientation oldOrientation = priv->_curOrientation;
             priv->_curOrientation = orientation;
             priv->_didSetRotation = true;
             [self setOrientationInternal:orientation animated:animated];
 
-            if (sendEvent)
+            if (sendEvent) {
                 [self didRotateFromInterfaceOrientation:oldOrientation];
+            }
         }
     }
 }

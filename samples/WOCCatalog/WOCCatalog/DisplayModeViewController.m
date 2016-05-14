@@ -32,6 +32,10 @@
     [UIApplication.displayMode updateDisplaySettings];
 }
 
+- (void)useLegacyHitTesting:(UISwitch*)sender {
+    UIApplication.displayMode.useLegacyHitTesting = sender.on;
+}
+
 - (void)toggleAdjustWindowSize:(UISwitch*)sender {
     UIApplication.displayMode.sizeUIWindowToFit = sender.on;
     [UIApplication.displayMode updateDisplaySettings];
@@ -247,6 +251,15 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
     cell.accessoryView = fitToWindow;
     cell.textLabel.text = @"Auto magnification";
+    [self.rows addObject:cell];
+
+    UISwitch* useLegacyHitTesting = [UISwitch new];
+    useLegacyHitTesting.on = UIApplication.displayMode.useLegacyHitTesting;
+    [useLegacyHitTesting addTarget:self action:@selector(useLegacyHitTesting:) forControlEvents:UIControlEventValueChanged];
+
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+    cell.accessoryView = useLegacyHitTesting;
+    cell.textLabel.text = @"Use Legacy Hit Testing";
     [self.rows addObject:cell];
 
     UISwitch* adjustWindowSize = [UISwitch new];
