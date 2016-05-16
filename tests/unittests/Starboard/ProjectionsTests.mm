@@ -34,12 +34,7 @@ TEST(Projections, BasicTests) {
     ASSERT_TRUE_MSG(rt_dynamic_cast<WDXDXmlElement>(badge) != nil, "Our XML element isn't an element!");
 }
 
-// TODO 7143070:
-// Projections is depending on an older version of Foundation.dll where NSConstantString was named
-// CFConstantString. Despite the new version exporting an alias to CFConstantString, it appears that
-// the old stamped in string from here cannot be used interchanagably.
-// Re-enable test when projections no longer uses the old name.
-TEST(Projections, DISABLED_BadCastTests) {
+ARM_DISABLED_TEST(Projections, BadCastTests) {
     WDXDXmlDocument* doc = [WUNBadgeUpdateManager getTemplateContent:WUNBadgeTemplateTypeBadgeNumber];
     WDXDXmlNodeList* badges = [doc getElementsByTagName:@"badge"];
     ASSERT_TRUE_MSG(badges != nil, "Could not find our element!");
