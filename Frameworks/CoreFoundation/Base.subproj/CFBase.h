@@ -826,6 +826,11 @@ typedef struct CGRect {
 #import <MacTypes.h>
 #import <Block.h>
 
+#ifdef WOCSTDLIB
+#import <mach/mach_types.h>
+#endif
+
+
 // WINOBJC: End. Include old WinObjC additions to CFBase.h. Some might not really belong here but are still needed by other dependencies.
 
 CF_EXTERN_C_END

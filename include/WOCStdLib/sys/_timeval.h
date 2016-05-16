@@ -46,6 +46,8 @@ typedef __suseconds_t suseconds_t;
 #undef NEAR
 #define FAR
 #define NEAR
+#undef IN
+#undef OUT
 
 #pragma pop_macro("WIN32")
 
