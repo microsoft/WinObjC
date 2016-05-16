@@ -1690,19 +1690,18 @@ concurrency::task<CALayerXaml^> EventedStoryboard::SnapshotLayer(CALayerXaml^ la
     }
     else {
         RenderTargetBitmap^ snapshot = ref new RenderTargetBitmap();
-        double scale = CALayerXaml::s_screenScale;
         
         return concurrency::create_task(snapshot->RenderAsync(layer, (int)(layer->CurrentWidth * CALayerXaml::s_screenScale), 0))
-            .then([snapshot, layer, &scale](concurrency::task<void> result) {
+            .then([snapshot, layer](concurrency::task<void> result) {
             // Return a new 'copy' layer with the rendered content
             CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
             newLayer->_CopyPropertiesFrom(layer);
             
-            int width = copiedLayer->PixelWidth;
-            int height = copiedLayer->PixelHeight;
+            int width = snapshot->PixelWidth;
+            int height = snapshot->PixelHeight;
             DisplayInformation^ dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 
-            newLayer->setContentImage(copiedLayer, (float)width, (float)height, (float)(scale * dispInfo->RawPixelsPerViewPixel));
+            newLayer->setContentImage(snapshot, (float)width, (float)height, (float)(CALayerXaml::s_screenScale * dispInfo->RawPixelsPerViewPixel));
 
             // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
             // If the UIViewController being transitioned away from has transparent content, the height returned is less the
