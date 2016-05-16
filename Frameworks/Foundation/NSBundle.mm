@@ -29,6 +29,7 @@
 #import <Foundation/NSException.h>
 
 #import "CFFoundationInternal.h"
+#import "NSPathUtilitiesInternal.h"
 
 #include <sys/stat.h>
 
@@ -45,8 +46,9 @@ static NSMutableArray* _getAllBundles() {
 
 static NSBundle* _getMainBundle() {
     static StrongId<NSBundle> s_mainBundle = [NSBundle
-        bundleWithPath:[[static_cast<NSString*>(CFStringCreateWithFileSystemRepresentation(kCFAllocatorSystemDefault, _CFProcessPath()))
-                           autorelease] stringByDeletingLastPathComponent]];
+        bundleWithPath:[[[static_cast<NSString*>(CFStringCreateWithFileSystemRepresentation(kCFAllocatorSystemDefault, _CFProcessPath()))
+                           autorelease] stringByReplacingOccurrencesOfString:@"\\"
+                                                                  withString:_NSGetSlashStr()] stringByDeletingLastPathComponent]];
 
     return s_mainBundle;
 }
