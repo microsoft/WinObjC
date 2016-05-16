@@ -71,7 +71,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -81,7 +81,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
@@ -92,7 +92,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -102,7 +102,7 @@
     </ClCompile>
     <ClangCompile>
       <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\UIKit</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=protocol -Werror=objc-protocol-property-synthesis -Werror=objc-method-access -Werror=receiver-expr -Werror=mismatched-parameter-types -Werror=distributed-object-modifiers -Werror=property-attribute-mismatch -Werror=null-dereference -Werror=missing-selector-name</AdditionalOptions>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 "-DCA_IMPEXP= " %(AdditionalOptions)</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
     </ClangCompile>
   </ItemDefinitionGroup>
