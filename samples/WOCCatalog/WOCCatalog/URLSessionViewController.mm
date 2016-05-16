@@ -58,6 +58,8 @@
 #define BUTTON_ROW_ITEM_WIDTH (80.f)
 #define BUTTON_ROW_HEIGHT 34.f
 #define BUTTON_ROW_ITEM_X(n) ((float)((BUTTON_ROW_ITEM_WIDTH + 4.f) * (n)))
+#define BUTTON_ROW_ITEM_Y(n) ((float)(BUTTON_ROW_Y + (BUTTON_ROW_HEIGHT + 4.f) * (n)))
+#define BUTTON_NUM_IN_ROW 4
 
 - (void)loadView {
     [super loadView];
@@ -75,13 +77,13 @@
     int nbuttons = 0;
 
     UIButton* dataTaskButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    dataTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons++), BUTTON_ROW_Y, BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    dataTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
     [dataTaskButton setTitle:@"Data" forState:UIControlStateNormal];
     [dataTaskButton addTarget:self action:@selector(dataTaskButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:dataTaskButton];
 
     UIButton* downloadTaskButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    downloadTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons++), BUTTON_ROW_Y, BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    downloadTaskButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
     [downloadTaskButton setTitle:@"Download" forState:UIControlStateNormal];
     [downloadTaskButton addTarget:self action:@selector(downloadTaskButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:downloadTaskButton];
@@ -105,19 +107,19 @@
     [self.view addSubview:_blockSwitchContainer];
 
     UIButton* cancelLastButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    cancelLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons++), BUTTON_ROW_Y, BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    cancelLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
     [cancelLastButton setTitle:@"Cancel" forState:UIControlStateNormal];
     [cancelLastButton addTarget:self action:@selector(cancelLastButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelLastButton];
 
     UIButton* resumeLastButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    resumeLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons++), BUTTON_ROW_Y, BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    resumeLastButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
     [resumeLastButton setTitle:@"Resume" forState:UIControlStateNormal];
     [resumeLastButton addTarget:self action:@selector(resumeLastButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:resumeLastButton];
 
     UIButton* legacyDownloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    legacyDownloadButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons++), BUTTON_ROW_Y, BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
+    legacyDownloadButton.frame = (CGRect){ BUTTON_ROW_ITEM_X(nbuttons % BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_Y(nbuttons++ / BUTTON_NUM_IN_ROW), BUTTON_ROW_ITEM_WIDTH, BUTTON_ROW_HEIGHT };
     [legacyDownloadButton setTitle:@"Legacy" forState:UIControlStateNormal];
     [legacyDownloadButton addTarget:self action:@selector(legacyDownloadButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:legacyDownloadButton];
@@ -138,7 +140,7 @@
     _blockSwitchContainer.frame =
         (CGRect){ self.view.bounds.size.width - _blockSwitchContainer.bounds.size.width, 0, _blockSwitchContainer.bounds.size };
     _urlTextField.frame = (CGRect){ 0, 0, bounds.size.width - (_blockSwitchContainer.bounds.size.width + 4), URL_BAR_HEIGHT };
-    CGFloat contentOrigin = BUTTON_ROW_HEIGHT + 4 + URL_BAR_HEIGHT + 4;
+    CGFloat contentOrigin = 2 * (BUTTON_ROW_HEIGHT + 4) + URL_BAR_HEIGHT + 4;
     _delegateOutputTextView.frame =
         (CGRect){ 0, floorf(bounds.size.height - .25f * bounds.size.height), bounds.size.width, floorf(.25f * bounds.size.height) };
     _tableView.frame = (CGRect){ 0,
