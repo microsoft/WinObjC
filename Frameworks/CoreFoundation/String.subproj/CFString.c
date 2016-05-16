@@ -6341,6 +6341,9 @@ static void __CFStringAppendFormatCore(CFMutableStringRef outputString, CFString
                     for (idx = 0, cidx = 0; cidx < specs[curSpec].len; idx++, cidx++) {
                         if ('$' == cformat[loc + cidx]) {
                             for (idx--; '0' <= formatBuffer[idx] && formatBuffer[idx] <= '9'; idx--);
+                        } else if ('q' == cformat[loc + cidx]) { // WINOBJC: Microsoft CRT doesn't support 'q' format specifier for snprintf calls. To handle this replace with 'll'
+                            formatBuffer[idx] = 'l';
+                            formatBuffer[++idx] = 'l';
                         } else {
                             formatBuffer[idx] = cformat[loc + cidx];
                         }
@@ -6349,6 +6352,9 @@ static void __CFStringAppendFormatCore(CFMutableStringRef outputString, CFString
                     for (idx = 0, cidx = 0; cidx < specs[curSpec].len; idx++, cidx++) {
                         if ('$' == uformat[loc + cidx]) {
                             for (idx--; '0' <= formatBuffer[idx] && formatBuffer[idx] <= '9'; idx--);
+                        } else if ('q' == uformat[loc + cidx]) { // WINOBJC: Microsoft CRT doesn't support 'q' format specifier for snprintf calls. To handle this replace with 'll'
+                            formatBuffer[idx] = 'l';
+                            formatBuffer[++idx] = 'l';
                         } else {
                             formatBuffer[idx] = (int8_t)uformat[loc + cidx];
                         }
