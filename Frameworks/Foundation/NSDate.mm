@@ -315,4 +315,11 @@ CFDateFormatterRef _getLocaleDescriptionFormatter(NSLocale* locale) {
     return YES;
 }
 
+/**
+ @Status Interoperable
+*/
+- (double)timeIntervalSinceReferenceDate {
+    return NSInvalidAbstractInvocationReturn();
+}
+
 @end

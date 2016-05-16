@@ -10,9 +10,9 @@
 //
 
 
-/*	CFDate.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Christopher Kane
+/*  CFDate.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Christopher Kane
 */
 
 #include <CoreFoundation/CFDate.h>
@@ -93,7 +93,9 @@ CFAbsoluteTime CFAbsoluteTimeGetCurrent(void) {
     CFAbsoluteTime ret;
 
     auto timeSinceEpoch = std::chrono::system_clock::now().time_since_epoch();
-    auto timeSinceEpochSec = std::chrono::duration_cast<std::chrono::seconds>(timeSinceEpoch).count();
+
+    // WINOBJC: ensure that extra precision is maintained in the conversion to seconds.
+    auto timeSinceEpochSec = std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(timeSinceEpoch).count();
     ret = timeSinceEpochSec;
     return ret;
 }
@@ -237,7 +239,7 @@ static const uint16_t daysBeforeMonth[16] = {0, 0, 31, 59, 90, 120, 151, 181, 21
 static const uint16_t daysAfterMonth[16] = {365, 334, 306, 275, 245, 214, 184, 153, 122, 92, 61, 31, 0, 0, 0, 0};
 
 CF_INLINE bool isleap(int64_t year) {
-    int64_t y = (year + 1) % 400;	/* correct to nearest multiple-of-400 year, then find the remainder */
+    int64_t y = (year + 1) % 400;   /* correct to nearest multiple-of-400 year, then find the remainder */
     if (y < 0) y = -y;
     return (0 == (y & 3) && 100 != y && 200 != y && 300 != y);
 }
@@ -264,24 +266,24 @@ static void __CFYMDFromAbsolute(int64_t absolute, int64_t *year, int8_t *month, 
     uint16_t ydays;
     absolute -= b * 146097;
     while (absolute < 0) {
-	y -= 1;
-	absolute += __CFDaysAfterMonth(0, y, isleap(y));
+    y -= 1;
+    absolute += __CFDaysAfterMonth(0, y, isleap(y));
     }
     /* Now absolute is non-negative days to add to year */
     ydays = __CFDaysAfterMonth(0, y, isleap(y));
     while (ydays <= absolute) {
-	y += 1;
-	absolute -= ydays;
-	ydays = __CFDaysAfterMonth(0, y, isleap(y));
+    y += 1;
+    absolute -= ydays;
+    ydays = __CFDaysAfterMonth(0, y, isleap(y));
     }
     /* Now we have year and days-into-year */
     if (year) *year = y;
     if (month || day) {
-	int8_t m = absolute / 33 + 1; /* search from the approximation */
-	bool leap = isleap(y);
-	while (__CFDaysBeforeMonth(m + 1, y, leap) <= absolute) m++;
-	if (month) *month = m;
-	if (day) *day = absolute - __CFDaysBeforeMonth(m, y, leap) + 1;
+    int8_t m = absolute / 33 + 1; /* search from the approximation */
+    bool leap = isleap(y);
+    while (__CFDaysBeforeMonth(m + 1, y, leap) <= absolute) m++;
+    if (month) *month = m;
+    if (day) *day = absolute - __CFDaysBeforeMonth(m, y, leap) + 1;
     }
 }
 
@@ -293,11 +295,11 @@ static double __CFAbsoluteFromYMD(int64_t year, int8_t month, int8_t day) {
     absolute += b * 146097.0;
     year -= b * 400;
     if (year < 0) {
-	for (idx = year; idx < 0; idx++)
-	    absolute -= __CFDaysAfterMonth(0, idx, isleap(idx));
+    for (idx = year; idx < 0; idx++)
+        absolute -= __CFDaysAfterMonth(0, idx, isleap(idx));
     } else {
-	for (idx = 0; idx < year; idx++)
-	    absolute += __CFDaysAfterMonth(0, idx, isleap(idx));
+    for (idx = 0; idx < year; idx++)
+        absolute += __CFDaysAfterMonth(0, idx, isleap(idx));
     }
     /* Now add the days into the original year */
     absolute += __CFDaysBeforeMonth(month, year, isleap(year)) + day - 1;
@@ -321,13 +323,13 @@ CFAbsoluteTime CFGregorianDateGetAbsoluteTime(CFGregorianDate gdate, CFTimeZoneR
     at += 3600.0 * gdate.hour + 60.0 * gdate.minute + gdate.second;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (NULL != tz) {
-	__CFGenericValidateType(tz, CFTimeZoneGetTypeID());
+    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     }
     CFTimeInterval offset0, offset1;
     if (NULL != tz) {
-	offset0 = CFTimeZoneGetSecondsFromGMT(tz, at);
-	offset1 = CFTimeZoneGetSecondsFromGMT(tz, at - offset0);
-	at -= offset1;
+    offset0 = CFTimeZoneGetSecondsFromGMT(tz, at);
+    offset1 = CFTimeZoneGetSecondsFromGMT(tz, at - offset0);
+    at -= offset1;
     }
 #endif
     return at;
@@ -340,7 +342,7 @@ CFGregorianDate CFAbsoluteTimeGetGregorianDate(CFAbsoluteTime at, CFTimeZoneRef 
     CFAbsoluteTime fixedat;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (NULL != tz) {
-	__CFGenericValidateType(tz, CFTimeZoneGetTypeID());
+    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     }
     fixedat = at + (NULL != tz ? CFTimeZoneGetSecondsFromGMT(tz, at) : 0.0);
 #else
@@ -355,7 +357,7 @@ CFGregorianDate CFAbsoluteTimeGetGregorianDate(CFAbsoluteTime at, CFTimeZoneRef 
     gdate.hour = __CFDoubleModToInt(floor(fixedat / 3600.0), 24);
     gdate.minute = __CFDoubleModToInt(floor(fixedat / 60.0), 60);
     gdate.second = __CFDoubleMod(fixedat, 60);
-    if (0.0 == gdate.second) gdate.second = 0.0;	// stomp out possible -0.0
+    if (0.0 == gdate.second) gdate.second = 0.0;    // stomp out possible -0.0
     return gdate;
 }
 
@@ -368,33 +370,33 @@ CFAbsoluteTime CFAbsoluteTimeAddGregorianUnits(CFAbsoluteTime at, CFTimeZoneRef 
 
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (NULL != tz) {
-	__CFGenericValidateType(tz, CFTimeZoneGetTypeID());
+    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     }
 #endif
     
     /* Most people seem to expect years, then months, then days, etc.
-	to be added in that order.  Thus, 27 April + (4 days, 1 month)
-	= 31 May, and not 1 June. This is also relatively predictable.
+    to be added in that order.  Thus, 27 April + (4 days, 1 month)
+    = 31 May, and not 1 June. This is also relatively predictable.
 
-	On another issue, months not being equal length, people also
-	seem to expect late day-of-month clamping (don't clamp as you
-	go through months), but clamp before adding in the days. Late
-	clamping is also more predictable given random starting points
-	and random numbers of months added (ie Jan 31 + 2 months could
-	be March 28 or March 29 in different years with aggressive
-	clamping). Proportionality (28 Feb + 1 month = 31 March) is
-	also not expected.
+    On another issue, months not being equal length, people also
+    seem to expect late day-of-month clamping (don't clamp as you
+    go through months), but clamp before adding in the days. Late
+    clamping is also more predictable given random starting points
+    and random numbers of months added (ie Jan 31 + 2 months could
+    be March 28 or March 29 in different years with aggressive
+    clamping). Proportionality (28 Feb + 1 month = 31 March) is
+    also not expected.
 
-	Also, people don't expect time zone transitions to have any
-	effect when adding years and/or months and/or days, only.
-	Hours, minutes, and seconds, though, are added in as humans
-	would experience the passing of that time. What this means
-	is that if the date, after adding years, months, and days
-	lands on some date, and then adding hours, minutes, and
-	seconds crosses a time zone transition, the time zone
-	transition is accounted for. If adding years, months, and
-	days gets the date into a different time zone offset period,
-	that transition is not taken into account.
+    Also, people don't expect time zone transitions to have any
+    effect when adding years and/or months and/or days, only.
+    Hours, minutes, and seconds, though, are added in as humans
+    would experience the passing of that time. What this means
+    is that if the date, after adding years, months, and days
+    lands on some date, and then adding hours, minutes, and
+    seconds crosses a time zone transition, the time zone
+    transition is accounted for. If adding years, months, and
+    days gets the date into a different time zone offset period,
+    that transition is not taken into account.
     */
     gdate = CFAbsoluteTimeGetGregorianDate(at, tz);
     /* We must work in a CFGregorianUnits, because the fields in the CFGregorianDate can easily overflow */
@@ -404,35 +406,35 @@ CFAbsoluteTime CFAbsoluteTimeAddGregorianUnits(CFAbsoluteTime at, CFTimeZoneRef 
     working.years += units.years;
     working.months += units.months;
     while (12 < working.months) {
-	working.months -= 12;
-	working.years += 1;
+    working.months -= 12;
+    working.years += 1;
     }
     while (working.months < 1) {
-	working.months += 12;
-	working.years -= 1;
+    working.months += 12;
+    working.years -= 1;
     }
     monthdays = __CFDaysInMonth(working.months, working.years - 2001, isleap(working.years - 2001));
-    if (monthdays < working.days) {	/* Clamp day to new month */
-	working.days = monthdays;
+    if (monthdays < working.days) { /* Clamp day to new month */
+    working.days = monthdays;
     }
     working.days += units.days;
     while (monthdays < working.days) {
-	working.months += 1;
-	if (12 < working.months) {
-	    working.months -= 12;
-	    working.years += 1;
-	}
-	working.days -= monthdays;
-	monthdays = __CFDaysInMonth(working.months, working.years - 2001, isleap(working.years - 2001));
+    working.months += 1;
+    if (12 < working.months) {
+        working.months -= 12;
+        working.years += 1;
+    }
+    working.days -= monthdays;
+    monthdays = __CFDaysInMonth(working.months, working.years - 2001, isleap(working.years - 2001));
     }
     while (working.days < 1) {
-	working.months -= 1;
-	if (working.months < 1) {
-	    working.months += 12;
-	    working.years -= 1;
-	}
-	monthdays = __CFDaysInMonth(working.months, working.years - 2001, isleap(working.years - 2001));
-	working.days += monthdays;
+    working.months -= 1;
+    if (working.months < 1) {
+        working.months += 12;
+        working.years -= 1;
+    }
+    monthdays = __CFDaysInMonth(working.months, working.years - 2001, isleap(working.years - 2001));
+    working.days += monthdays;
     }
     gdate.year = working.years;
     gdate.month = working.months;
@@ -461,21 +463,21 @@ CFGregorianUnits CFAbsoluteTimeGetDifferenceAsGregorianUnits(CFAbsoluteTime at1,
     incr = (at2 < at1) ? 1 : -1;
     /* Successive approximation: years, then months, then days, then hours, then minutes. */
     for (idx = 0; idx < 5; idx++) {
-	if (unitFlags & (1 << idx)) {
-	    ((int32_t *)&units)[idx] = -3 * incr + (int32_t)((at1 - atnew) / seconds[idx]);
-	    do {
-		atold = atnew;
-		((int32_t *)&units)[idx] += incr;
-		atnew = CFAbsoluteTimeAddGregorianUnits(at2, tz, units);
-	    } while ((1 == incr && atnew <= at1) || (-1 == incr && at1 <= atnew));
-	    ((int32_t *)&units)[idx] -= incr;
-	    atnew = atold;
-	}
+    if (unitFlags & (1 << idx)) {
+        ((int32_t *)&units)[idx] = -3 * incr + (int32_t)((at1 - atnew) / seconds[idx]);
+        do {
+        atold = atnew;
+        ((int32_t *)&units)[idx] += incr;
+        atnew = CFAbsoluteTimeAddGregorianUnits(at2, tz, units);
+        } while ((1 == incr && atnew <= at1) || (-1 == incr && at1 <= atnew));
+        ((int32_t *)&units)[idx] -= incr;
+        atnew = atold;
+    }
     }
     if (unitFlags & kCFGregorianUnitsSeconds) {
-	units.seconds = at1 - atnew;
+    units.seconds = at1 - atnew;
     }
-    if (0.0 == units.seconds) units.seconds = 0.0;	// stomp out possible -0.0
+    if (0.0 == units.seconds) units.seconds = 0.0;  // stomp out possible -0.0
     return units;
 }
 
@@ -484,7 +486,7 @@ SInt32 CFAbsoluteTimeGetDayOfWeek(CFAbsoluteTime at, CFTimeZoneRef tz) {
     CFAbsoluteTime fixedat;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (NULL != tz) {
-	__CFGenericValidateType(tz, CFTimeZoneGetTypeID());
+    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     }
     fixedat = at + (NULL != tz ? CFTimeZoneGetSecondsFromGMT(tz, at) : 0.0);
 #else
@@ -500,7 +502,7 @@ SInt32 CFAbsoluteTimeGetDayOfYear(CFAbsoluteTime at, CFTimeZoneRef tz) {
     int8_t month, day;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (NULL != tz) {
-	__CFGenericValidateType(tz, CFTimeZoneGetTypeID());
+    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     }
     fixedat = at + (NULL != tz ? CFTimeZoneGetSecondsFromGMT(tz, at) : 0.0);
 #else
@@ -518,7 +520,7 @@ SInt32 CFAbsoluteTimeGetWeekOfYear(CFAbsoluteTime at, CFTimeZoneRef tz) {
     CFAbsoluteTime fixedat;
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX
     if (NULL != tz) {
-	__CFGenericValidateType(tz, CFTimeZoneGetTypeID());
+    __CFGenericValidateType(tz, CFTimeZoneGetTypeID());
     }
     fixedat = at + (NULL != tz ? CFTimeZoneGetSecondsFromGMT(tz, at) : 0.0);
 #else
@@ -530,16 +532,16 @@ SInt32 CFAbsoluteTimeGetWeekOfYear(CFAbsoluteTime at, CFTimeZoneRef tz) {
     int64_t dow0101 = __CFDoubleModToInt(absolute0101, 7) + 1;
     /* First three and last three days of a year can end up in a week of a different year */
     if (1 == month && day < 4) {
-	if ((day < 4 && 5 == dow0101) || (day < 3 && 6 == dow0101) || (day < 2 && 7 == dow0101)) {
-	    return 53;
-	}
+    if ((day < 4 && 5 == dow0101) || (day < 3 && 6 == dow0101) || (day < 2 && 7 == dow0101)) {
+        return 53;
+    }
     }
     if (12 == month && 28 < day) {
-	double absolute20101 = __CFAbsoluteFromYMD(year + 1, 1, 1);
-	int64_t dow20101 = __CFDoubleModToInt(absolute20101, 7) + 1;
-	if ((28 < day && 4 == dow20101) || (29 < day && 3 == dow20101) || (30 < day && 2 == dow20101)) {
-	    return 1;
-	}
+    double absolute20101 = __CFAbsoluteFromYMD(year + 1, 1, 1);
+    int64_t dow20101 = __CFDoubleModToInt(absolute20101, 7) + 1;
+    if ((28 < day && 4 == dow20101) || (29 < day && 3 == dow20101) || (30 < day && 2 == dow20101)) {
+        return 1;
+    }
     }
     /* Days into year, plus a week-shifting correction, divided by 7. First week is 1. */
     return (__CFDaysBeforeMonth(month, year, isleap(year)) + day + (dow0101 - 11) % 7 + 2) / 7 + 1;
