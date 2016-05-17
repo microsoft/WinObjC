@@ -70,6 +70,8 @@
     [self.collectionView setDelegate:self];
     [self.collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:@"photoCell"];
 
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+
     [self setTitle:@"Canada"];
 
     images = [NSArray arrayWithObjects:[[UIImage imageNamed:@"photo1.jpg"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal],

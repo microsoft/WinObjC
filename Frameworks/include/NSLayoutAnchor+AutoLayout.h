@@ -14,14 +14,10 @@
 //
 //******************************************************************************
 
-#include <CoreGraphics/CGGeometry.h>
+#import "UIKit/NSLayoutAnchor.h"
+#import "UIKit/NSLayoutConstraint.h"
 
-extern "C" bool InitializeAutoLayout();
-
-@protocol AutoLayoutable
-
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
-- (CGRect)autoLayoutGetRect;
-
+@interface NSLayoutAnchor () {}
++ (instancetype)_anchorWithAttribute:(NSLayoutAttribute)attribute owner:(id)owner;
+- (void)_validateMayConstrainToAnchor:(NSLayoutAnchor*)anchor;
 @end

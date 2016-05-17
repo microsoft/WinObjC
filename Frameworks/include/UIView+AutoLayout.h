@@ -14,14 +14,11 @@
 //
 //******************************************************************************
 
-#include <CoreGraphics/CGGeometry.h>
+#import <UIKit/UIView.h>
+#import <AutoLayout.h>
 
-extern "C" bool InitializeAutoLayout();
-
-@protocol AutoLayoutable
-
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
-- (CGRect)autoLayoutGetRect;
-
+@interface UIView (AutoLayout) <AutoLayoutable>
+- (void)autoLayoutInvalidateContentSize;
+- (void)autoLayoutLayoutSubviews;
+- (void)autoLayoutUpdateConstraints;
 @end

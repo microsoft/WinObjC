@@ -14,19 +14,13 @@
 //
 //******************************************************************************
 
-#pragma once
+@interface NSLayoutAnchor () {
+@public
+    NSLayoutAttribute _attr;
+    id _owner;
+}
 
-#import <UIKit/UIKitExport.h>
-#import <Foundation/NSObject.h>
++ (instancetype)_anchorWithAttribute:(NSLayoutAttribute)attribute owner:(id)owner;
+- (void)_validateMayConstrainToAnchor:(NSLayoutAnchor*)anchor;
 
-@class NSLayoutConstraint;
-
-UIKIT_EXPORT_CLASS
-@interface NSLayoutAnchor : NSObject
-- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor;
-- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c;
-- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor;
-- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutAnchor*)anchor;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c;
 @end
