@@ -551,16 +551,16 @@ typedef unsigned short unichar;
     if (_skipSet != nil) {
         // skip ahead to first valid character forward in the string.
         NSCharacterSet* invSkipSet = [_skipSet invertedSet];
-        NSRange range = [_string rangeOfCharacterFromSet:invSkipSet options:0 range:NSMakeRange(_location, length - _location)];
-        _location = range.length > 0 ? range.location : length;
+        NSRange range = [_string rangeOfCharacterFromSet:invSkipSet options:0 range:NSMakeRange(oldLocation, length - oldLocation)];
+        oldLocation = range.length > 0 ? range.location : length;
     }
 
-    NSRange foundRange = [_string rangeOfString:string options:compareOption range:NSMakeRange(_location, length - _location)];
+    NSRange foundRange = [_string rangeOfString:string options:compareOption range:NSMakeRange(oldLocation, length - oldLocation)];
     if (foundRange.length == 0) {
         foundRange.location = length;
     }
 
-    if (oldLocation == foundRange.location) {
+    if (oldLocation != foundRange.location) {
         if (intoString) {
             *intoString = [_string substringWithRange:NSMakeRange(oldLocation, foundRange.location - oldLocation)];
         }
