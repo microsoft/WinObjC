@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDXDXmlNodeList, WDXDXmlNamedNodeMap, WDXDXmlDocument, WDXDXmlAttribute, WDXDXmlDocumentType, WDXDXmlDomImplementation,
     WDXDXmlElement, WDXDXmlDocumentFragment, WDXDXmlText, WDXDXmlComment, WDXDXmlProcessingInstruction, WDXDXmlEntityReference,
     WDXDXmlCDataSection, WDXDXmlLoadSettings, WDXDDtdNotation, WDXDDtdEntity;

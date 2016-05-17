@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNVVpnRoute, WNVVpnNamespaceInfo, WNVVpnInterfaceId, WNVVpnRouteAssignment, WNVVpnNamespaceAssignment, WNVVpnPickedCredential,
     WNVVpnPacketBuffer, WNVVpnChannelConfiguration, WNVVpnChannel, WNVVpnChannelActivityEventArgs, WNVVpnSystemHealth,
     WNVVpnDomainNameAssignment, WNVVpnChannelActivityStateChangedArgs, WNVVpnCredential, WNVVpnTrafficFilterAssignment, WNVVpnAppId,
@@ -198,8 +199,8 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 @protocol WNVIVpnNamespaceInfoFactory
 - (WNVVpnNamespaceInfo*)createVpnNamespaceInfo:(NSString*)name
-                                 dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
-                               proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList;
+                                 dnsServerList:(NSMutableArray* /* WNHostName* */)dnsServerList
+                               proxyServerList:(NSMutableArray* /* WNHostName* */)proxyServerList;
 @end
 
 #endif // __WNVIVpnNamespaceInfoFactory_DEFINED__
@@ -209,7 +210,7 @@ typedef unsigned WNVVpnManagementErrorStatus;
 #define __WNVIVpnInterfaceIdFactory_DEFINED__
 
 @protocol WNVIVpnInterfaceIdFactory
-- (WNVVpnInterfaceId*)createVpnInterfaceId:(id<NSFastEnumeration> /* uint8_t */)address;
+- (WNVVpnInterfaceId*)createVpnInterfaceId:(NSArray* /* uint8_t */)address;
 @end
 
 #endif // __WNVIVpnInterfaceIdFactory_DEFINED__
@@ -278,12 +279,12 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 @protocol WNVIVpnProfile
 @property BOOL alwaysOn;
-@property (readonly) NSMutableArray* appTriggers;
-@property (readonly) NSMutableArray* domainNameInfoList;
+@property (readonly) NSMutableArray* /* WNVVpnAppId* */ appTriggers;
+@property (readonly) NSMutableArray* /* WNVVpnDomainNameInfo* */ domainNameInfoList;
 @property (retain) NSString* profileName;
 @property BOOL rememberCredentials;
-@property (readonly) NSMutableArray* routes;
-@property (readonly) NSMutableArray* trafficFilters;
+@property (readonly) NSMutableArray* /* WNVVpnRoute* */ routes;
+@property (readonly) NSMutableArray* /* WNVVpnTrafficFilter* */ trafficFilters;
 @end
 
 #endif // __WNVIVpnProfile_DEFINED__
@@ -308,11 +309,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnNamespaceInfo : RTObject
 + (WNVVpnNamespaceInfo*)makeVpnNamespaceInfo:(NSString*)name
-                               dnsServerList:(id<NSFastEnumeration> /* WNHostName* */)dnsServerList
-                             proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
-@property (retain) NSMutableArray* webProxyServers;
+                               dnsServerList:(NSMutableArray* /* WNHostName* */)dnsServerList
+                             proxyServerList:(NSMutableArray* /* WNHostName* */)proxyServerList ACTIVATOR;
+@property (retain) NSMutableArray* /* WNHostName* */ webProxyServers;
 @property (retain) NSString* Namespace;
-@property (retain) NSMutableArray* dnsServers;
+@property (retain) NSMutableArray* /* WNHostName* */ dnsServers;
 @end
 
 #endif // __WNVVpnNamespaceInfo_DEFINED__
@@ -323,8 +324,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNVVpnInterfaceId : RTObject
-+ (WNVVpnInterfaceId*)makeVpnInterfaceId:(id<NSFastEnumeration> /* uint8_t */)address ACTIVATOR;
-- (void)getAddressInfo:(id<NSFastEnumeration> /* uint8_t */*)id;
++ (WNVVpnInterfaceId*)makeVpnInterfaceId:(NSArray* /* uint8_t */)address ACTIVATOR;
+- (void)getAddressInfo:(NSArray* /* uint8_t */*)id;
 @end
 
 #endif // __WNVVpnInterfaceId_DEFINED__
@@ -336,10 +337,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnRouteAssignment : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) NSMutableArray* ipv6InclusionRoutes;
-@property (retain) NSMutableArray* ipv6ExclusionRoutes;
-@property (retain) NSMutableArray* ipv4InclusionRoutes;
-@property (retain) NSMutableArray* ipv4ExclusionRoutes;
+@property (retain) NSMutableArray* /* WNVVpnRoute* */ ipv6InclusionRoutes;
+@property (retain) NSMutableArray* /* WNVVpnRoute* */ ipv6ExclusionRoutes;
+@property (retain) NSMutableArray* /* WNVVpnRoute* */ ipv4InclusionRoutes;
+@property (retain) NSMutableArray* /* WNVVpnRoute* */ ipv4ExclusionRoutes;
 @property BOOL excludeLocalSubnets;
 @end
 
@@ -353,7 +354,7 @@ WINRT_EXPORT
 @interface WNVVpnNamespaceAssignment : RTObject
 + (instancetype)make ACTIVATOR;
 @property (retain) WFUri* proxyAutoConfigUri;
-@property (retain) NSMutableArray* namespaceList;
+@property (retain) NSMutableArray* /* WNVVpnNamespaceInfo* */ namespaceList;
 @end
 
 #endif // __WNVVpnNamespaceAssignment_DEFINED__
@@ -395,9 +396,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnChannelConfiguration : RTObject
 @property (readonly) NSString* customField;
-@property (readonly) NSArray* serverHostNameList;
+@property (readonly) NSArray* /* WNHostName* */ serverHostNameList;
 @property (readonly) NSString* serverServiceName;
-@property (readonly) NSArray* serverUris;
+@property (readonly) NSArray* /* WFUri* */ serverUris;
 @end
 
 #endif // __WNVVpnChannelConfiguration_DEFINED__
@@ -418,8 +419,8 @@ WINRT_EXPORT
 - (EventRegistrationToken)addActivityStateChangeEvent:(void (^)(WNVVpnChannel*, WNVVpnChannelActivityStateChangedArgs*))del;
 - (void)removeActivityStateChangeEvent:(EventRegistrationToken)tok;
 - (void)associateTransport:(RTObject*)mainOuterTunnelTransport optionalOuterTunnelTransport:(RTObject*)optionalOuterTunnelTransport;
-- (void)start:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIPv4list
-          assignedClientIPv6list:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIPv6list
+- (void)start:(NSArray* /* WNHostName* */)assignedClientIPv4list
+          assignedClientIPv6list:(NSArray* /* WNHostName* */)assignedClientIPv6list
                   vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
                       routeScope:(WNVVpnRouteAssignment*)routeScope
                   namespaceScope:(WNVVpnNamespaceAssignment*)namespaceScope
@@ -435,11 +436,11 @@ WINRT_EXPORT
                                   certificate:(WSCCCertificate*)certificate;
 - (void)requestVpnPacketBuffer:(WNVVpnDataPathType)type vpnPacketBuffer:(WNVVpnPacketBuffer**)vpnPacketBuffer;
 - (void)logDiagnosticMessage:(NSString*)message;
-- (void)requestCustomPrompt:(id<NSFastEnumeration> /* RTObject<WNVIVpnCustomPrompt>* */)customPrompt;
+- (void)requestCustomPrompt:(NSArray* /* RTObject<WNVIVpnCustomPrompt>* */)customPrompt;
 - (void)setErrorMessage:(NSString*)message;
 - (void)setAllowedSslTlsVersions:(RTObject*)tunnelTransport useTls12:(BOOL)useTls12;
-- (void)startWithMainTransport:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIPv4list
-        assignedClientIPv6list:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIPv6list
+- (void)startWithMainTransport:(NSArray* /* WNHostName* */)assignedClientIPv4list
+        assignedClientIPv6list:(NSArray* /* WNHostName* */)assignedClientIPv6list
                 vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
                 assignedRoutes:(WNVVpnRouteAssignment*)assignedRoutes
             assignedDomainName:(WNVVpnDomainNameAssignment*)assignedDomainName
@@ -447,8 +448,8 @@ WINRT_EXPORT
                   maxFrameSize:(unsigned int)maxFrameSize
                       Reserved:(BOOL)Reserved
       mainOuterTunnelTransport:(RTObject*)mainOuterTunnelTransport;
-- (void)startExistingTransports:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIPv4list
-         assignedClientIPv6list:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIPv6list
+- (void)startExistingTransports:(NSArray* /* WNHostName* */)assignedClientIPv4list
+         assignedClientIPv6list:(NSArray* /* WNHostName* */)assignedClientIPv6list
                  vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
                  assignedRoutes:(WNVVpnRouteAssignment*)assignedRoutes
              assignedDomainName:(WNVVpnDomainNameAssignment*)assignedDomainName
@@ -457,8 +458,7 @@ WINRT_EXPORT
                        Reserved:(BOOL)Reserved;
 - (WNVVpnPacketBuffer*)getVpnSendPacketBuffer;
 - (WNVVpnPacketBuffer*)getVpnReceivePacketBuffer;
-- (RTObject<WFIAsyncAction>*)requestCustomPromptAsync:
-    (id<NSFastEnumeration> /* RTObject<WNVIVpnCustomPromptElement>* */)customPromptElement;
+- (RTObject<WFIAsyncAction>*)requestCustomPromptAsync:(NSArray* /* RTObject<WNVIVpnCustomPromptElement>* */)customPromptElement;
 - (void)requestCredentialsWithCertificateAsync:(WNVVpnCredentialType)credType
                                    credOptions:(unsigned int)credOptions
                                    certificate:(WSCCCertificate*)certificate
@@ -472,8 +472,8 @@ WINRT_EXPORT
                               success:(void (^)(WNVVpnCredential*))success
                               failure:(void (^)(NSError*))failure;
 - (void)terminateConnection:(NSString*)message;
-- (void)startWithTrafficFilter:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIpv4List
-        assignedClientIpv6List:(id<NSFastEnumeration> /* WNHostName* */)assignedClientIpv6List
+- (void)startWithTrafficFilter:(NSArray* /* WNHostName* */)assignedClientIpv4List
+        assignedClientIpv6List:(NSArray* /* WNHostName* */)assignedClientIpv6List
                 vpnInterfaceId:(WNVVpnInterfaceId*)vpnInterfaceId
                 assignedRoutes:(WNVVpnRouteAssignment*)assignedRoutes
              assignedNamespace:(WNVVpnDomainNameAssignment*)assignedNamespace
@@ -517,7 +517,7 @@ WINRT_EXPORT
 @interface WNVVpnDomainNameAssignment : RTObject
 + (instancetype)make ACTIVATOR;
 @property (retain) WFUri* proxyAutoConfigurationUri;
-@property (readonly) NSMutableArray* domainNameList;
+@property (readonly) NSMutableArray* /* WNVVpnDomainNameInfo* */ domainNameList;
 @end
 
 #endif // __WNVVpnDomainNameAssignment_DEFINED__
@@ -556,7 +556,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property BOOL allowOutbound;
 @property BOOL allowInbound;
-@property (readonly) NSMutableArray* trafficFilterList;
+@property (readonly) NSMutableArray* /* WNVVpnTrafficFilter* */ trafficFilterList;
 @end
 
 #endif // __WNVVpnTrafficFilterAssignment_DEFINED__
@@ -586,8 +586,8 @@ WINRT_EXPORT
                                proxyServerList:(id<NSFastEnumeration> /* WNHostName* */)proxyServerList ACTIVATOR;
 @property WNVVpnDomainNameType domainNameType;
 @property (retain) WNHostName* domainName;
-@property (readonly) NSMutableArray* dnsServers;
-@property (readonly) NSMutableArray* webProxyServers;
+@property (readonly) NSMutableArray* /* WNHostName* */ dnsServers;
+@property (readonly) NSMutableArray* /* WNHostName* */ webProxyServers;
 @end
 
 #endif // __WNVVpnDomainNameInfo_DEFINED__
@@ -602,11 +602,11 @@ WINRT_EXPORT
 @property WNVVpnRoutingPolicyType routingPolicyType;
 @property WNVVpnIPProtocol protocol;
 @property (retain) WNVVpnAppId* appId;
-@property (readonly) NSMutableArray* appClaims;
-@property (readonly) NSMutableArray* localAddressRanges;
-@property (readonly) NSMutableArray* localPortRanges;
-@property (readonly) NSMutableArray* remoteAddressRanges;
-@property (readonly) NSMutableArray* remotePortRanges;
+@property (readonly) NSMutableArray* /* NSString * */ appClaims;
+@property (readonly) NSMutableArray* /* NSString * */ localAddressRanges;
+@property (readonly) NSMutableArray* /* NSString * */ localPortRanges;
+@property (readonly) NSMutableArray* /* NSString * */ remoteAddressRanges;
+@property (readonly) NSMutableArray* /* NSString * */ remotePortRanges;
 @end
 
 #endif // __WNVVpnTrafficFilter_DEFINED__
@@ -669,7 +669,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNVVpnCustomComboBox : RTObject <WNVIVpnCustomPrompt>
 + (instancetype)make ACTIVATOR;
-@property (retain) NSArray* optionsText;
+@property (retain) NSArray* /* NSString * */ optionsText;
 @property (readonly) unsigned int selected;
 @property (retain) NSString* label;
 @property BOOL compulsory;
@@ -688,7 +688,7 @@ WINRT_EXPORT
 @property BOOL emphasized;
 @property (retain) NSString* displayName;
 @property BOOL compulsory;
-@property (readonly) NSMutableArray* options;
+@property (readonly) NSMutableArray* /* NSString * */ options;
 @property (readonly) unsigned int selectedIndex;
 @end
 
@@ -779,14 +779,14 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property (retain) NSString* vpnPluginPackageFamilyName;
 @property (retain) NSString* customConfiguration;
-@property (readonly) NSMutableArray* serverUris;
+@property (readonly) NSMutableArray* /* WFUri* */ serverUris;
 @property BOOL rememberCredentials;
 @property (retain) NSString* profileName;
 @property BOOL alwaysOn;
-@property (readonly) NSMutableArray* appTriggers;
-@property (readonly) NSMutableArray* domainNameInfoList;
-@property (readonly) NSMutableArray* routes;
-@property (readonly) NSMutableArray* trafficFilters;
+@property (readonly) NSMutableArray* /* WNVVpnAppId* */ appTriggers;
+@property (readonly) NSMutableArray* /* WNVVpnDomainNameInfo* */ domainNameInfoList;
+@property (readonly) NSMutableArray* /* WNVVpnRoute* */ routes;
+@property (readonly) NSMutableArray* /* WNVVpnTrafficFilter* */ trafficFilters;
 @end
 
 #endif // __WNVVpnPlugInProfile_DEFINED__
@@ -803,14 +803,14 @@ WINRT_EXPORT
 @property WNVVpnRoutingPolicyType routingPolicyType;
 @property WNVVpnNativeProtocolType nativeProtocolType;
 @property (retain) NSString* eapConfiguration;
-@property (readonly) NSMutableArray* servers;
+@property (readonly) NSMutableArray* /* NSString * */ servers;
 @property BOOL alwaysOn;
 @property BOOL rememberCredentials;
 @property (retain) NSString* profileName;
-@property (readonly) NSMutableArray* appTriggers;
-@property (readonly) NSMutableArray* domainNameInfoList;
-@property (readonly) NSMutableArray* routes;
-@property (readonly) NSMutableArray* trafficFilters;
+@property (readonly) NSMutableArray* /* WNVVpnAppId* */ appTriggers;
+@property (readonly) NSMutableArray* /* WNVVpnDomainNameInfo* */ domainNameInfoList;
+@property (readonly) NSMutableArray* /* WNVVpnRoute* */ routes;
+@property (readonly) NSMutableArray* /* WNVVpnTrafficFilter* */ trafficFilters;
 @end
 
 #endif // __WNVVpnNativeProfile_DEFINED__
@@ -830,7 +830,7 @@ WINRT_EXPORT
 - (void)updateProfileFromObjectAsync:(RTObject<WNVIVpnProfile>*)profile
                              success:(void (^)(WNVVpnManagementErrorStatus))success
                              failure:(void (^)(NSError*))failure;
-- (void)getProfilesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getProfilesAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WNVIVpnProfile>* */))success failure:(void (^)(NSError*))failure;
 - (void)deleteProfileAsync:(RTObject<WNVIVpnProfile>*)profile
                    success:(void (^)(WNVVpnManagementErrorStatus))success
                    failure:(void (^)(NSError*))failure;

@@ -1,4 +1,0 @@
-LIBRARY StarboardXaml
-    EXPORTS
-        UIApplicationMain
-        UIApplicationMainTest

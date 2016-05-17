@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSAOOnlineIdServiceTicketRequest, WSAOOnlineIdServiceTicket, WSAOUserAuthenticationOperation, WSAOSignOutUserOperation,
     WSAOUserIdentity, WSAOOnlineIdAuthenticator;
 @protocol WSAOIOnlineIdServiceTicketRequest
@@ -145,7 +146,7 @@ WINRT_EXPORT
 @property (readonly) NSString* lastName;
 @property (readonly) NSString* safeCustomerId;
 @property (readonly) NSString* signInName;
-@property (readonly) NSArray* tickets;
+@property (readonly) NSArray* /* WSAOOnlineIdServiceTicket* */ tickets;
 @end
 
 #endif // __WSAOUserIdentity_DEFINED__

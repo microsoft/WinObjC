@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMDDeploymentResult, WMDPackageUserInformation, WMDPackageVolume, WMDPackageManager;
 @class WMDDeploymentProgress;
 @protocol WMDIDeploymentResult
@@ -138,30 +139,33 @@ WINRT_EXPORT
 @property (readonly) NSString* name;
 @property (readonly) NSString* packageStorePath;
 @property (readonly) BOOL supportsHardLinks;
-- (NSMutableArray*)findPackages;
-- (NSMutableArray*)findPackagesByNamePublisher:(NSString*)packageName packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray*)findPackagesByPackageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray*)findPackagesWithPackageTypes:(WMDPackageTypes)packageTypes;
-- (NSMutableArray*)findPackagesByNamePublisherWithPackagesTypes:(WMDPackageTypes)packageTypes
-                                                    packageName:(NSString*)packageName
-                                               packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray*)findPackagesByPackageFamilyNameWithPackageTypes:(WMDPackageTypes)packageTypes
-                                                 packageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray*)findPackageByPackageFullName:(NSString*)packageFullName;
-- (NSMutableArray*)findPackagesByUserSecurityId:(NSString*)userSecurityId;
-- (NSMutableArray*)findPackagesByUserSecurityIdNamePublisher:(NSString*)userSecurityId
-                                                 packageName:(NSString*)packageName
-                                            packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray*)findPackagesByUserSecurityIdPackageFamilyName:(NSString*)userSecurityId packageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray*)findPackagesByUserSecurityIdWithPackageTypes:(NSString*)userSecurityId packageTypes:(WMDPackageTypes)packageTypes;
-- (NSMutableArray*)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString*)userSecurityId
-                                                                packageTypes:(WMDPackageTypes)packageTypes
-                                                                 packageName:(NSString*)packageName
-                                                            packagePublisher:(NSString*)packagePublisher;
-- (NSMutableArray*)findPackagesByUserSecurityIdPackageFamilyNameWithPackagesTypes:(NSString*)userSecurityId
-                                                                     packageTypes:(WMDPackageTypes)packageTypes
+- (NSMutableArray* /* WAPackage* */)findPackages;
+- (NSMutableArray* /* WAPackage* */)findPackagesByNamePublisher:(NSString*)packageName packagePublisher:(NSString*)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByPackageFamilyName:(NSString*)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackagesWithPackageTypes:(WMDPackageTypes)packageTypes;
+- (NSMutableArray* /* WAPackage* */)findPackagesByNamePublisherWithPackagesTypes:(WMDPackageTypes)packageTypes
+                                                                     packageName:(NSString*)packageName
+                                                                packagePublisher:(NSString*)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByPackageFamilyNameWithPackageTypes:(WMDPackageTypes)packageTypes
+                                                                  packageFamilyName:(NSString*)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackageByPackageFullName:(NSString*)packageFullName;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityId:(NSString*)userSecurityId;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdNamePublisher:(NSString*)userSecurityId
+                                                                  packageName:(NSString*)packageName
+                                                             packagePublisher:(NSString*)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyName:(NSString*)userSecurityId
                                                                 packageFamilyName:(NSString*)packageFamilyName;
-- (NSMutableArray*)findPackageByUserSecurityIdPackageFullName:(NSString*)userSecurityId packageFullName:(NSString*)packageFullName;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdWithPackageTypes:(NSString*)userSecurityId
+                                                                    packageTypes:(WMDPackageTypes)packageTypes;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString*)userSecurityId
+                                                                                 packageTypes:(WMDPackageTypes)packageTypes
+                                                                                  packageName:(NSString*)packageName
+                                                                             packagePublisher:(NSString*)packagePublisher;
+- (NSMutableArray* /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyNameWithPackagesTypes:(NSString*)userSecurityId
+                                                                                      packageTypes:(WMDPackageTypes)packageTypes
+                                                                                 packageFamilyName:(NSString*)packageFamilyName;
+- (NSMutableArray* /* WAPackage* */)findPackageByUserSecurityIdPackageFullName:(NSString*)userSecurityId
+                                                               packageFullName:(NSString*)packageFullName;
 @end
 
 #endif // __WMDPackageVolume_DEFINED__
@@ -200,13 +204,13 @@ WINRT_EXPORT
                      success:(void (^)(WMDDeploymentResult*))success
                     progress:(void (^)(WMDDeploymentProgress*))progress
                      failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration>)findPackages;
-- (id<NSFastEnumeration>)findPackagesByUserSecurityId:(NSString*)userSecurityId;
-- (id<NSFastEnumeration>)findPackagesByNamePublisher:(NSString*)packageName packagePublisher:(NSString*)packagePublisher;
-- (id<NSFastEnumeration>)findPackagesByUserSecurityIdNamePublisher:(NSString*)userSecurityId
-                                                       packageName:(NSString*)packageName
-                                                  packagePublisher:(NSString*)packagePublisher;
-- (id<NSFastEnumeration>)findUsers:(NSString*)packageFullName;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackages;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityId:(NSString*)userSecurityId;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByNamePublisher:(NSString*)packageName packagePublisher:(NSString*)packagePublisher;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdNamePublisher:(NSString*)userSecurityId
+                                                                        packageName:(NSString*)packageName
+                                                                   packagePublisher:(NSString*)packagePublisher;
+- (id<NSFastEnumeration> /* WMDPackageUserInformation* */)findUsers:(NSString*)packageFullName;
 - (void)setPackageState:(NSString*)packageFullName packageState:(WMDPackageState)packageState;
 - (WAPackage*)findPackageByPackageFullName:(NSString*)packageFullName;
 - (void)cleanupPackageForUserAsync:(NSString*)packageName
@@ -214,9 +218,9 @@ WINRT_EXPORT
                            success:(void (^)(WMDDeploymentResult*))success
                           progress:(void (^)(WMDDeploymentProgress*))progress
                            failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration>)findPackagesByPackageFamilyName:(NSString*)packageFamilyName;
-- (id<NSFastEnumeration>)findPackagesByUserSecurityIdPackageFamilyName:(NSString*)userSecurityId
-                                                     packageFamilyName:(NSString*)packageFamilyName;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByPackageFamilyName:(NSString*)packageFamilyName;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyName:(NSString*)userSecurityId
+                                                                      packageFamilyName:(NSString*)packageFamilyName;
 - (WAPackage*)findPackageByUserSecurityIdPackageFullName:(NSString*)userSecurityId packageFullName:(NSString*)packageFullName;
 - (void)removePackageWithOptionsAsync:(NSString*)packageFullName
                        removalOptions:(WMDRemovalOptions)removalOptions
@@ -235,20 +239,21 @@ WINRT_EXPORT
                                success:(void (^)(WMDDeploymentResult*))success
                               progress:(void (^)(WMDDeploymentProgress*))progress
                                failure:(void (^)(NSError*))failure;
-- (id<NSFastEnumeration>)findPackagesWithPackageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration>)findPackagesByUserSecurityIdWithPackageTypes:(NSString*)userSecurityId packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration>)findPackagesByNamePublisherWithPackageTypes:(NSString*)packageName
-                                                    packagePublisher:(NSString*)packagePublisher
-                                                        packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration>)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString*)userSecurityId
-                                                                       packageName:(NSString*)packageName
-                                                                  packagePublisher:(NSString*)packagePublisher
-                                                                      packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration>)findPackagesByPackageFamilyNameWithPackageTypes:(NSString*)packageFamilyName
-                                                            packageTypes:(WMDPackageTypes)packageTypes;
-- (id<NSFastEnumeration>)findPackagesByUserSecurityIdPackageFamilyNameWithPackageTypes:(NSString*)userSecurityId
-                                                                     packageFamilyName:(NSString*)packageFamilyName
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesWithPackageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdWithPackageTypes:(NSString*)userSecurityId
                                                                           packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByNamePublisherWithPackageTypes:(NSString*)packageName
+                                                                     packagePublisher:(NSString*)packagePublisher
+                                                                         packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdNamePublisherWithPackageTypes:(NSString*)userSecurityId
+                                                                                        packageName:(NSString*)packageName
+                                                                                   packagePublisher:(NSString*)packagePublisher
+                                                                                       packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByPackageFamilyNameWithPackageTypes:(NSString*)packageFamilyName
+                                                                             packageTypes:(WMDPackageTypes)packageTypes;
+- (id<NSFastEnumeration> /* WAPackage* */)findPackagesByUserSecurityIdPackageFamilyNameWithPackageTypes:(NSString*)userSecurityId
+                                                                                      packageFamilyName:(NSString*)packageFamilyName
+                                                                                           packageTypes:(WMDPackageTypes)packageTypes;
 - (void)stageUserDataAsync:(NSString*)packageFullName
                    success:(void (^)(WMDDeploymentResult*))success
                   progress:(void (^)(WMDDeploymentProgress*))progress
@@ -270,7 +275,7 @@ WINRT_EXPORT
                                      progress:(void (^)(WMDDeploymentProgress*))progress
                                       failure:(void (^)(NSError*))failure;
 - (WMDPackageVolume*)findPackageVolumeByName:(NSString*)volumeName;
-- (id<NSFastEnumeration>)findPackageVolumes;
+- (id<NSFastEnumeration> /* WMDPackageVolume* */)findPackageVolumes;
 - (WMDPackageVolume*)getDefaultPackageVolume;
 - (void)movePackageToVolumeAsync:(NSString*)packageFullName
                deploymentOptions:(WMDDeploymentOptions)deploymentOptions

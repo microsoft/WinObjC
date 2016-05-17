@@ -13,6 +13,9 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
+
+#import "CACompositor.h"
 
 class NullCompositor : public CACompositorInterface {
 public:
@@ -25,38 +28,44 @@ public:
     DisplayNode* CreateDisplayNode() override {
         return nullptr;
     }
-    DisplayTransaction* CreateDisplayTransaction() override {
+    std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() override {
         return nullptr;
     }
-    void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) override {
+    void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
+                                 const std::shared_ptr<DisplayTransaction>& onTransaction) override {
     }
 
     void sortWindowLevels() override {
     }
 
-    void addNode(DisplayTransaction* transaction,
+    void addNode(const std::shared_ptr<DisplayTransaction>& transaction,
                  DisplayNode* node,
                  DisplayNode* superNode,
                  DisplayNode* beforeNode,
                  DisplayNode* afterNode) override {
     }
-    void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) override {
+    void moveNode(const std::shared_ptr<DisplayTransaction>& transaction,
+                  DisplayNode* node,
+                  DisplayNode* beforeNode,
+                  DisplayNode* afterNode) override {
     }
-    void removeNode(DisplayTransaction* transaction, DisplayNode* pNode) override {
-    }
-
-    void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) override {
-    }
-    void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
-    }
-    void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
+    void removeNode(const std::shared_ptr<DisplayTransaction>& transaction, DisplayNode* pNode) override {
     }
 
-    void setDisplayProperty(DisplayTransaction* transaction, DisplayNode* node, const char* propertyName, NSObject* newValue) override {
+    void addAnimation(const std::shared_ptr<DisplayTransaction>& transaction, id layer, id animation, id forKey) override {
     }
 
-    void setNodeTexture(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) override {
+    void setDisplayProperty(const std::shared_ptr<DisplayTransaction>& transaction,
+                            DisplayNode* node,
+                            const char* propertyName,
+                            NSObject* newValue) override {
+    }
+
+    void setNodeTexture(const std::shared_ptr<DisplayTransaction>& transaction,
+                        DisplayNode* node,
+                        DisplayTexture* newTexture,
+                        CGSize contentsSize,
+                        float contentsScale) override {
     }
     void setNodeMaskNode(DisplayNode* node, DisplayNode* maskNode) override {
     }
@@ -171,11 +180,6 @@ public:
     void EnableDisplaySyncNotification() override {
     }
     void DisableDisplaySyncNotification() override {
-    }
-
-    void IncrementCounter(const char* name) override {
-    }
-    void DecrementCounter(const char* name) override {
     }
 
     virtual void SetAccessibilityInfo(DisplayNode* node, const IWAccessibilityInfo& info) override {

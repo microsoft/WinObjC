@@ -32,6 +32,7 @@
 #import "UIScrollViewInternal.h"
 #import <UIKit/UITableViewDataSource.h>
 #import "UINibInternal.h"
+#import "CACompositor.h"
 
 typedef id idweak;
 

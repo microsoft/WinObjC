@@ -1,5 +1,9 @@
 LIBRARY UIKit
     EXPORTS
+        ; Application entry points (StarboardXAML)
+        UIApplicationMain
+        UIApplicationMainTest
+
         ; NSAttributedString
         NSFontAttributeName DATA
         NSParagraphStyleAttributeName DATA
@@ -651,7 +655,7 @@ LIBRARY UIKit
         NSStringFromCGRect
         NSStringFromCGSize
         NSStringFromCGVector
-        
+
         UIImageJPEGRepresentation
         UIImagePNGRepresentation
 
@@ -1153,13 +1157,9 @@ LIBRARY UIKit
         __objc_class_name_UIWindow CONSTANT
 
         ; Extra stuff for WinObjC:
-        UIApplicationMainLoop
         UIShutdown
         UIQueueTouchInput
         UIQueueKeyInput
         UIRequestTransactionProcessing
-        UIApplicationMainInit
         UIOrientationFromString
         UIApplicationDidChangeDisplayModeNofication
-        UIApplicationMainHandleWindowVisibilityChangeEvent
-        UIApplicationMainHandleHighMemoryUsageEvent

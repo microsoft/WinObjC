@@ -13,10 +13,14 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-// IOS application main startup path
-extern "C" int ApplicationMainStart(
-    int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight);
-extern "C" void ApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
-extern "C" void ApplicationMainHandleHighMemoryUsageEvent();
+#include "Starboard.h"
+#include "StringConversion.h"
+
+const wchar_t* _RawBufferFromNSString(void* str, uint32_t* len) {
+    const wchar_t* chars = reinterpret_cast<const wchar_t*>([static_cast<NSString*>(str) rawCharacters]);
+    if (len) {
+        *len = [static_cast<NSString*>(str) length];
+    }
+    return chars;
+}

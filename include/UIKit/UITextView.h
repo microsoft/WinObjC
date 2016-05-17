@@ -52,7 +52,7 @@ UIKIT_EXPORT_CLASS
 - (instancetype)initWithFrame:(CGRect)frame textContainer:(NSTextContainer*)container;
 - (void)scrollRangeToVisible:(NSRange)range STUB_METHOD;
 
-@property (nonatomic) UITextAlignment textAlignment STUB_PROPERTY;
+@property (nonatomic) UITextAlignment textAlignment;
 @property (nonatomic) NSRange selectedRange STUB_PROPERTY;
 @property (nonatomic, getter=isEditable) BOOL editable;
 @property (nonatomic, copy) NSString* text;

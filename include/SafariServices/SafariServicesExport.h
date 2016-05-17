@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,36 +13,19 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+
 #pragma once
 
-#ifndef SBXAML_IMPEXP
-#define SBXAML_IMPEXP __declspec(dllimport)
+#ifndef SAFARISERVICES_IMPEXP
+#define SAFARISERVICES_IMPEXP __declspec(dllimport)
 #endif
 
-#ifndef SBXAML_EXPORT
+#ifndef SAFARISERVICES_EXPORT
 #ifdef __cplusplus
-#define SBXAML_EXPORT extern "C" SBXAML_IMPEXP
-#define SBXAML_EXPORT_CLASS SBXAML_IMPEXP
+#define SAFARISERVICES_EXPORT SAFARISERVICES_IMPEXP extern "C"
+#define SAFARISERVICES_EXPORT_CLASS SAFARISERVICES_IMPEXP
 #else
-#define SBXAML_EXPORT extern SBXAML_IMPEXP
-#define SBXAML_EXPORT_CLASS SBXAML_IMPEXP
+#define SAFARISERVICES_EXPORT SAFARISERVICES_IMPEXP extern
+#define SAFARISERVICES_EXPORT_CLASS SAFARISERVICES_IMPEXP
 #endif
-#endif
-
-#ifndef SBXAML_EXTERNC_BEGIN
-#if defined(__cplusplus)
-#define SBXAML_EXTERNC_BEGIN extern "C" {
-#define SBXAML_EXTERNC_END }
-#else
-#define SBXAML_EXTERNC_BEGIN
-#define SBXAML_EXTERNC_END
-#endif
-#endif
-
-#define SBXAML_INLINE static __inline
-
-#if defined(__GNUC__)
-#define SBXAML_ALWAYS_INLINE static __inline __always_inline
-#else
-#define SBXAML_ALWAYS_INLINE static __inline
 #endif

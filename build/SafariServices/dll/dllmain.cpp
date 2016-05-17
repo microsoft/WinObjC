@@ -13,6 +13,13 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-#pragma once
 
-extern "C" void SetXamlRoot(Windows::UI::Xaml::Controls::Grid ^ grid);
+#include <windows.h>
+
+extern "C" BOOL WINAPI DllMain(_In_ HINSTANCE module, _In_ DWORD reason, _In_ LPVOID) {
+    if (reason == DLL_PROCESS_ATTACH) {
+        DisableThreadLibraryCalls(module);
+    }
+
+    return TRUE;
+}

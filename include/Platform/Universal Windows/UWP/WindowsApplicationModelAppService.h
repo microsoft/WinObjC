@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs,
     WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
 @protocol WAAIAppServiceDeferral
@@ -167,7 +168,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAAAppServiceCatalog : RTObject
-+ (void)findAppServiceProvidersAsync:(NSString*)appServiceName success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findAppServiceProvidersAsync:(NSString*)appServiceName
+                             success:(void (^)(NSArray* /* WAAppInfo* */))success
+                             failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAAAppServiceCatalog_DEFINED__

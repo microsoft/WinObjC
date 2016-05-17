@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy,
     WDSSmartCardChallengeContext, WDSSmartCardPinResetRequest, WDSSmartCardPinResetDeferral, WDSSmartCardConnection;
 @protocol WDSISmartCardReaderStatics
@@ -97,7 +98,7 @@ WINRT_EXPORT
 - (EventRegistrationToken)addCardRemovedEvent:(void (^)(WDSSmartCardReader*, WDSCardRemovedEventArgs*))del;
 - (void)removeCardRemovedEvent:(EventRegistrationToken)tok;
 - (void)getStatusAsyncWithSuccess:(void (^)(WDSSmartCardReaderStatus))success failure:(void (^)(NSError*))failure;
-- (void)findAllCardsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findAllCardsAsyncWithSuccess:(void (^)(NSArray* /* WDSSmartCard* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WDSSmartCardReader_DEFINED__
@@ -144,17 +145,6 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSSmartCardProvisioning : RTObject
-+ (void)requestAttestedVirtualSmartCardCreationAsync:(NSString*)friendlyName
-                                   administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
-                                           pinPolicy:(WDSSmartCardPinPolicy*)pinPolicy
-                                             success:(void (^)(WDSSmartCardProvisioning*))success
-                                             failure:(void (^)(NSError*))failure;
-+ (void)requestAttestedVirtualSmartCardCreationAsyncWithCardId:(NSString*)friendlyName
-                                             administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
-                                                     pinPolicy:(WDSSmartCardPinPolicy*)pinPolicy
-                                                        cardId:(WFGUID*)cardId
-                                                       success:(void (^)(WDSSmartCardProvisioning*))success
-                                                       failure:(void (^)(NSError*))failure;
 + (void)fromSmartCardAsync:(WDSSmartCard*)card success:(void (^)(WDSSmartCardProvisioning*))success failure:(void (^)(NSError*))failure;
 + (void)requestVirtualSmartCardCreationAsync:(NSString*)friendlyName
                            administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
@@ -168,6 +158,17 @@ WINRT_EXPORT
                                                success:(void (^)(WDSSmartCardProvisioning*))success
                                                failure:(void (^)(NSError*))failure;
 + (void)requestVirtualSmartCardDeletionAsync:(WDSSmartCard*)card success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
++ (void)requestAttestedVirtualSmartCardCreationAsync:(NSString*)friendlyName
+                                   administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
+                                           pinPolicy:(WDSSmartCardPinPolicy*)pinPolicy
+                                             success:(void (^)(WDSSmartCardProvisioning*))success
+                                             failure:(void (^)(NSError*))failure;
++ (void)requestAttestedVirtualSmartCardCreationAsyncWithCardId:(NSString*)friendlyName
+                                             administrativeKey:(RTObject<WSSIBuffer>*)administrativeKey
+                                                     pinPolicy:(WDSSmartCardPinPolicy*)pinPolicy
+                                                        cardId:(WFGUID*)cardId
+                                                       success:(void (^)(WDSSmartCardProvisioning*))success
+                                                       failure:(void (^)(NSError*))failure;
 @property (readonly) WDSSmartCard* smartCard;
 - (void)getIdAsyncWithSuccess:(void (^)(WFGUID*))success failure:(void (^)(NSError*))failure;
 - (void)getNameAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;

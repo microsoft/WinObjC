@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,17 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
-class ID3D11DeviceContext;
-class ID3D11RenderTargetView;
-
-class DXCompositorInterface {
-public:
-    virtual void ConnectDevice(ID3D11Device1* device) = 0;
-    virtual void SetRenderSize(int width, int height) = 0;
-    virtual void SetLandscape(bool bLandscape) = 0;
-    virtual void RenderFrame(ID3D11DeviceContext* context, ID3D11RenderTargetView* renderTarget) = 0;
-};
-
-class CACompositorClientInterface;
-DXCompositorInterface* CreateDXCompositor(CACompositorClientInterface* client);
+extern "C" void ScheduleMainRunLoop();
+extern "C" void SetupMainRunLoopTimedMultipleWaiter();

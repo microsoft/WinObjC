@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDGGeopoint, WDGGeopath, WDGGeoboundingBox, WDGGeocoordinateSatelliteData, WDGVenueData, WDGGeocoordinate, WDGCivicAddress,
     WDGGeoposition, WDGPositionChangedEventArgs, WDGStatusChangedEventArgs, WDGGeolocator, WDGGeocircle;
 @class WDGBasicGeoposition;
@@ -143,7 +144,7 @@ WINRT_EXPORT
 + (WDGGeopath*)makeWithAltitudeReferenceAndSpatialReference:(id<NSFastEnumeration> /* WDGBasicGeoposition* */)positions
                                     altitudeReferenceSystem:(WDGAltitudeReferenceSystem)altitudeReferenceSystem
                                          spatialReferenceId:(unsigned int)spatialReferenceId ACTIVATOR;
-@property (readonly) NSArray* positions;
+@property (readonly) NSArray* /* WDGBasicGeoposition* */ positions;
 @property (readonly) WDGAltitudeReferenceSystem altitudeReferenceSystem;
 @property (readonly) WDGGeoshapeType geoshapeType;
 @property (readonly) unsigned int spatialReferenceId;
@@ -189,9 +190,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDGGeocoordinateSatelliteData : RTObject
-@property (readonly) id horizontalDilutionOfPrecision;
-@property (readonly) id positionDilutionOfPrecision;
-@property (readonly) id verticalDilutionOfPrecision;
+@property (readonly) id /* double */ horizontalDilutionOfPrecision;
+@property (readonly) id /* double */ positionDilutionOfPrecision;
+@property (readonly) id /* double */ verticalDilutionOfPrecision;
 @end
 
 #endif // __WDGGeocoordinateSatelliteData_DEFINED__
@@ -215,17 +216,17 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGGeocoordinate : RTObject
 @property (readonly) double accuracy;
-@property (readonly) id altitude;
-@property (readonly) id altitudeAccuracy;
-@property (readonly) id heading;
+@property (readonly) id /* double */ altitude;
+@property (readonly) id /* double */ altitudeAccuracy;
+@property (readonly) id /* double */ heading;
 @property (readonly) double latitude;
 @property (readonly) double longitude;
-@property (readonly) id speed;
+@property (readonly) id /* double */ speed;
 @property (readonly) WFDateTime* timestamp;
 @property (readonly) WDGGeopoint* point;
 @property (readonly) WDGPositionSource positionSource;
 @property (readonly) WDGGeocoordinateSatelliteData* satelliteData;
-@property (readonly) id positionSourceTimestamp;
+@property (readonly) id /* WFDateTime* */ positionSourceTimestamp;
 @end
 
 #endif // __WDGGeocoordinate_DEFINED__
@@ -287,17 +288,19 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDGGeolocator : RTObject
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDGGeolocationAccessStatus))success failure:(void (^)(NSError*))failure;
-+ (void)getGeopositionHistoryAsync:(WFDateTime*)startTime success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getGeopositionHistoryAsync:(WFDateTime*)startTime
+                           success:(void (^)(NSArray* /* WDGGeoposition* */))success
+                           failure:(void (^)(NSError*))failure;
 + (void)getGeopositionHistoryWithDurationAsync:(WFDateTime*)startTime
                                       duration:(WFTimeSpan*)duration
-                                       success:(void (^)(NSArray*))success
+                                       success:(void (^)(NSArray* /* WDGGeoposition* */))success
                                        failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 @property unsigned int reportInterval;
 @property double movementThreshold;
 @property WDGPositionAccuracy desiredAccuracy;
 @property (readonly) WDGPositionStatus locationStatus;
-@property (retain) id desiredAccuracyInMeters;
+@property (retain) id /* unsigned int */ desiredAccuracyInMeters;
 - (EventRegistrationToken)addPositionChangedEvent:(void (^)(WDGGeolocator*, WDGPositionChangedEventArgs*))del;
 - (void)removePositionChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStatusChangedEvent:(void (^)(WDGGeolocator*, WDGStatusChangedEventArgs*))del;

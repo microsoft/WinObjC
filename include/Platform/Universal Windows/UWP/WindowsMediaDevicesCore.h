@@ -20,11 +20,11 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMDCCameraIntrinsics, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities,
     WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities,
     WMDCFrameExposureControl, WMDCFrameExposureCompensationControl, WMDCFrameIsoSpeedControl, WMDCFrameFocusControl, WMDCFrameFlashControl,
     WMDCFrameController;
-@class RTArray_C_WFNVector2, RTArray_C_WFPoint;
 @protocol WMDCICameraIntrinsicsFactory
 , WMDCICameraIntrinsics, WMDCIFrameExposureCapabilities, WMDCIFrameExposureCompensationCapabilities, WMDCIFrameIsoSpeedCapabilities,
     WMDCIFrameFocusCapabilities, WMDCIFrameFlashCapabilities, WMDCIFrameControlCapabilities, WMDCIFrameControlCapabilities2,
@@ -60,8 +60,8 @@ WINRT_EXPORT
 @property (readonly) WFNVector2* tangentialDistortion;
 - (WFPoint*)projectOntoFrame:(WFNVector3*)coordinate;
 - (WFNVector2*)unprojectAtUnitDepth:(WFPoint*)pixelCoordinate;
-- (void)projectManyOntoFrame:(id<NSFastEnumeration> /* WFNVector3* */)coordinates results:(RTArray_C_WFPoint*)results;
-- (void)unprojectPixelsAtUnitDepth:(id<NSFastEnumeration> /* WFPoint* */)pixelCoordinates results:(RTArray_C_WFNVector2*)results;
+- (void)projectManyOntoFrame:(NSArray* /* WFNVector3* */)coordinates results:(NSArray* /* WFPoint* */*)results;
+- (void)unprojectPixelsAtUnitDepth:(NSArray* /* WFPoint* */)pixelCoordinates results:(NSArray* /* WFNVector2* */*)results;
 @end
 
 #endif // __WMDCCameraIntrinsics_DEFINED__
@@ -73,7 +73,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDCVariablePhotoSequenceController : RTObject
 @property float photosPerSecondLimit;
-@property (readonly) NSMutableArray* desiredFrameControllers;
+@property (readonly) NSMutableArray* /* WMDCFrameController* */ desiredFrameControllers;
 @property (readonly) WMDCFrameControlCapabilities* frameCapabilities;
 @property (readonly) float maxPhotosPerSecond;
 @property (readonly) BOOL supported;
@@ -174,7 +174,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureControl : RTObject
-@property (retain) id value;
+@property (retain) id /* WFTimeSpan* */ value;
 @property BOOL Auto;
 @end
 
@@ -186,7 +186,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameExposureCompensationControl : RTObject
-@property (retain) id value;
+@property (retain) id /* float */ value;
 @end
 
 #endif // __WMDCFrameExposureCompensationControl_DEFINED__
@@ -197,7 +197,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameIsoSpeedControl : RTObject
-@property (retain) id value;
+@property (retain) id /* unsigned int */ value;
 @property BOOL Auto;
 @end
 
@@ -209,7 +209,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDCFrameFocusControl : RTObject
-@property (retain) id value;
+@property (retain) id /* unsigned int */ value;
 @end
 
 #endif // __WMDCFrameFocusControl_DEFINED__
@@ -235,7 +235,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMDCFrameController : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id photoConfirmationEnabled;
+@property (retain) id /* BOOL */ photoConfirmationEnabled;
 @property (readonly) WMDCFrameExposureCompensationControl* exposureCompensationControl;
 @property (readonly) WMDCFrameExposureControl* exposureControl;
 @property (readonly) WMDCFrameFocusControl* focusControl;

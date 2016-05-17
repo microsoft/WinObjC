@@ -3,8 +3,8 @@
   <PropertyGroup>
     <StarboardSdkRoot>$([System.IO.Path]::Combine('$(MSBuildThisFileDirectory)', '..'))</StarboardSdkRoot>
     <StarboardLLVMDirectory Condition="'$(StarboardLLVMDirectory)' == ''">$(MSBuildThisFileDirectory)LLVM-3.6.0\</StarboardLLVMDirectory>
-    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
-    <ExtraStarboardOptions>-Werror=return-type -fconst-strings -fconstant-string-class CFConstantString -fblocks -include StubIncludes.h $(StarboardIncludes)</ExtraStarboardOptions>
+    <StarboardIncludes>-I"$(StarboardSdkRoot)\deps\prebuilt\include" -I"$(StarboardSdkRoot)\deps\prebuilt\include\icu" -I"$([System.IO.Path]::Combine('$(StarboardSdkRoot)\include\Platform', '$(TargetOsAndVersion)'))"</StarboardIncludes>
+    <ExtraStarboardOptions>-fconst-strings -fconstant-string-class CFConstantString -fblocks -include StubIncludes.h $(StarboardIncludes)</ExtraStarboardOptions>
   </PropertyGroup>
   <PropertyGroup Label="Clang CC1 Args">
     <CC1PlatformArgs Condition="'$(ApplicationType)' == 'Windows Store'">-DWINAPI_FAMILY=WINAPI_FAMILY_APP -D_WINSOCK_DEPRECATED_NO_WARNINGS</CC1PlatformArgs>
@@ -48,7 +48,7 @@
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="SBAdditionalLibraries">
-    <StarboardDefaultLibs>Accelerate.lib;Accounts.lib;AddressBook.lib;AddressBookUI.lib;AdSupport.lib;AssetsLibrary.lib;AudioToolbox.lib;AudioUnit.lib;AVFoundation.lib;AVKit.lib;CFNetwork.lib;CloudKit.lib;Contacts.lib;CoreAudio.lib;CoreAudioKit.lib;CoreBluetooth.lib;CoreData.lib;CoreGraphics.lib;CoreImage.lib;CoreLocation.lib;CoreMedia.lib;CoreMIDI.lib;CoreMotion.lib;CoreTelephony.lib;CoreText.lib;CoreVideo.lib;EventKit.lib;EventKitUI.lib;Foundation.lib;GameController.lib;GameKit.lib;GameplayKit.lib;GLKit.lib;HealthKit.lib;HomeKit.lib;iAd.lib;ImageIO.lib;LocalAuthentication.lib;MapKit.lib;MediaAccessibility.lib;MediaPlayer.lib;MessageUI.lib;Metal.lib;MobileCoreServices.lib;OpenAL.lib;OpenGLES.lib;QuartzCore.lib;QuickLook.lib;Security.lib;Social.lib;Starboard.lib;StoreKit.lib;SystemConfiguration.lib;Twitter.lib;UIKit.lib;WebKit.lib;libdispatch.lib;objcuwp.lib;RTObjCInterop.lib</StarboardDefaultLibs>
+    <StarboardDefaultLibs>Accelerate.lib;Accounts.lib;AddressBook.lib;AddressBookUI.lib;AdSupport.lib;AssetsLibrary.lib;AudioToolbox.lib;AudioUnit.lib;AVFoundation.lib;AVKit.lib;CFNetwork.lib;CloudKit.lib;Contacts.lib;CoreAudio.lib;CoreAudioKit.lib;CoreBluetooth.lib;CoreData.lib;CoreGraphics.lib;CoreImage.lib;CoreLocation.lib;CoreMedia.lib;CoreMIDI.lib;CoreMotion.lib;CoreTelephony.lib;CoreText.lib;CoreVideo.lib;EventKit.lib;EventKitUI.lib;Foundation.lib;GameController.lib;GameKit.lib;GameplayKit.lib;GLKit.lib;HealthKit.lib;HomeKit.lib;iAd.lib;ImageIO.lib;LocalAuthentication.lib;MapKit.lib;MediaAccessibility.lib;MediaPlayer.lib;MessageUI.lib;Metal.lib;MobileCoreServices.lib;OpenAL.lib;OpenGLES.lib;QuartzCore.lib;QuickLook.lib;SafariServices.lib;Security.lib;Social.lib;Starboard.lib;StoreKit.lib;SystemConfiguration.lib;Twitter.lib;UIKit.lib;WebKit.lib;libdispatch.lib;objcuwp.lib;RTObjCInterop.lib</StarboardDefaultLibs>
     <StarboardLinkObjCRuntime Condition="'$(StarboardLinkObjCRuntime)' == ''">true</StarboardLinkObjCRuntime>
     <StarboardObjCRuntimeLib>libobjc2.lib</StarboardObjCRuntimeLib>
     <IslandwoodDRT Condition="'$(IslandwoodDRT)' == ''">true</IslandwoodDRT>

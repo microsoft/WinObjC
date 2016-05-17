@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSLicenseInformation, WSListingInformation, WSPurchaseResults, WSProductPurchaseDisplayProperties, WSUnfulfilledConsumable,
     WSProductLicense, WSProductListing, WSCurrentApp, WSCurrentAppSimulator;
 @protocol WSICurrentApp
@@ -82,7 +83,7 @@ WINRT_EXPORT
 @property (readonly) WFDateTime* expirationDate;
 @property (readonly) BOOL isActive;
 @property (readonly) BOOL isTrial;
-@property (readonly) NSDictionary* productLicenses;
+@property (readonly) NSDictionary* /* NSString *, WSProductLicense* */ productLicenses;
 - (EventRegistrationToken)addLicenseChangedEvent:(WSLicenseChangedEventHandler)del;
 - (void)removeLicenseChangedEvent:(EventRegistrationToken)tok;
 @end
@@ -100,7 +101,7 @@ WINRT_EXPORT
 @property (readonly) NSString* Description;
 @property (readonly) NSString* formattedPrice;
 @property (readonly) NSString* name;
-@property (readonly) NSDictionary* productListings;
+@property (readonly) NSDictionary* /* NSString *, WSProductListing* */ productListings;
 @end
 
 #endif // __WSListingInformation_DEFINED__
@@ -125,8 +126,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSProductPurchaseDisplayProperties : RTObject
-+ (instancetype)make ACTIVATOR;
 + (WSProductPurchaseDisplayProperties*)makeProductPurchaseDisplayProperties:(NSString*)name ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (retain) NSString* name;
 @property (retain) WFUri* image;
 @property (retain) NSString* Description;
@@ -172,7 +173,7 @@ WINRT_EXPORT
 @property (readonly) NSString* productId;
 @property (readonly) NSString* Description;
 @property (readonly) WFUri* imageUri;
-@property (readonly) id<NSFastEnumeration> keywords;
+@property (readonly) id<NSFastEnumeration> /* NSString * */ keywords;
 @property (readonly) WSProductType productType;
 @property (readonly) NSString* tag;
 @end
@@ -192,15 +193,6 @@ WINRT_EXPORT
                                       success:(void (^)(WSListingInformation*))success
                                       failure:(void (^)(NSError*))failure;
 + (void)reportProductFulfillment:(NSString*)productId;
-+ (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)requestAppPurchaseAsync:(BOOL)includeReceipt success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)requestProductPurchaseAsync:(NSString*)productId
-                     includeReceipt:(BOOL)includeReceipt
-                            success:(void (^)(NSString*))success
-                            failure:(void (^)(NSError*))failure;
-+ (void)loadListingInformationAsyncWithSuccess:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
-+ (void)getAppReceiptAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)getProductReceiptAsync:(NSString*)productId success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (void)reportConsumableFulfillmentAsync:(NSString*)productId
                            transactionId:(WFGUID*)transactionId
                                  success:(void (^)(WSFulfillmentResult))success
@@ -213,7 +205,17 @@ WINRT_EXPORT
                                        displayProperties:(WSProductPurchaseDisplayProperties*)displayProperties
                                                  success:(void (^)(WSPurchaseResults*))success
                                                  failure:(void (^)(NSError*))failure;
-+ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray* /* WSUnfulfilledConsumable* */))success
+                                          failure:(void (^)(NSError*))failure;
++ (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)requestAppPurchaseAsync:(BOOL)includeReceipt success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseAsync:(NSString*)productId
+                     includeReceipt:(BOOL)includeReceipt
+                            success:(void (^)(NSString*))success
+                            failure:(void (^)(NSError*))failure;
++ (void)loadListingInformationAsyncWithSuccess:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
++ (void)getAppReceiptAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)getProductReceiptAsync:(NSString*)productId success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (WFGUID*)appId;
 + (WSLicenseInformation*)licenseInformation;
 + (WFUri*)linkUri;
@@ -227,6 +229,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSCurrentAppSimulator : RTObject
++ (void)requestAppPurchaseAsync:(BOOL)includeReceipt success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)requestProductPurchaseAsync:(NSString*)productId
+                     includeReceipt:(BOOL)includeReceipt
+                            success:(void (^)(NSString*))success
+                            failure:(void (^)(NSError*))failure;
++ (void)loadListingInformationAsyncWithSuccess:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
++ (void)getAppReceiptAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (void)getProductReceiptAsync:(NSString*)productId success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
++ (RTObject<WFIAsyncAction>*)reloadSimulatorAsync:(WSStorageFile*)simulatorSettingsFile;
 + (void)reportConsumableFulfillmentAsync:(NSString*)productId
                            transactionId:(WFGUID*)transactionId
                                  success:(void (^)(WSFulfillmentResult))success
@@ -239,7 +250,8 @@ WINRT_EXPORT
                                        displayProperties:(WSProductPurchaseDisplayProperties*)displayProperties
                                                  success:(void (^)(WSPurchaseResults*))success
                                                  failure:(void (^)(NSError*))failure;
-+ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)getUnfulfilledConsumablesAsyncWithSuccess:(void (^)(NSArray* /* WSUnfulfilledConsumable* */))success
+                                          failure:(void (^)(NSError*))failure;
 + (void)getAppPurchaseCampaignIdAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 + (void)loadListingInformationByProductIdsAsync:(id<NSFastEnumeration> /* NSString * */)productIds
                                         success:(void (^)(WSListingInformation*))success
@@ -247,15 +259,6 @@ WINRT_EXPORT
 + (void)loadListingInformationByKeywordsAsync:(id<NSFastEnumeration> /* NSString * */)keywords
                                       success:(void (^)(WSListingInformation*))success
                                       failure:(void (^)(NSError*))failure;
-+ (void)requestAppPurchaseAsync:(BOOL)includeReceipt success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)requestProductPurchaseAsync:(NSString*)productId
-                     includeReceipt:(BOOL)includeReceipt
-                            success:(void (^)(NSString*))success
-                            failure:(void (^)(NSError*))failure;
-+ (void)loadListingInformationAsyncWithSuccess:(void (^)(WSListingInformation*))success failure:(void (^)(NSError*))failure;
-+ (void)getAppReceiptAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (void)getProductReceiptAsync:(NSString*)productId success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-+ (RTObject<WFIAsyncAction>*)reloadSimulatorAsync:(WSStorageFile*)simulatorSettingsFile;
 + (WFGUID*)appId;
 + (WSLicenseInformation*)licenseInformation;
 + (WFUri*)linkUri;

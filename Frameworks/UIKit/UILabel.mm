@@ -27,6 +27,8 @@
 #import "CATextLayerInternal.h"
 #import "QuartzCore/CATextLayer.h"
 
+#import "CACompositor.h"
+
 #define USE_TEXT_LAYER 1
 
 @implementation UILabel {

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WWAResourceCollection, WWAWorkspace, WWAServiceDocument, WWAAtomPubClient;
 @protocol WWAIResourceCollection
 , WWAIWorkspace, WWAIServiceDocument, WWAIAtomPubClient, WWAIAtomPubClientFactory;
@@ -38,9 +39,9 @@
 #define __WWSISyndicationNode_DEFINED__
 
 @protocol WWSISyndicationNode
-@property (readonly) NSMutableArray* attributeExtensions;
+@property (readonly) NSMutableArray* /* WWSSyndicationAttribute* */ attributeExtensions;
 @property (retain) WFUri* baseUri;
-@property (readonly) NSMutableArray* elementExtensions;
+@property (readonly) NSMutableArray* /* RTObject<WWSISyndicationNode>* */ elementExtensions;
 @property (retain) NSString* language;
 @property (retain) NSString* nodeName;
 @property (retain) NSString* nodeNamespace;
@@ -56,8 +57,8 @@
 
 WINRT_EXPORT
 @interface WWAResourceCollection : RTObject <WWSISyndicationNode>
-@property (readonly) NSArray* accepts;
-@property (readonly) NSArray* categories;
+@property (readonly) NSArray* /* NSString * */ accepts;
+@property (readonly) NSArray* /* WWSSyndicationCategory* */ categories;
 @property (readonly) RTObject<WWSISyndicationText>* title;
 @property (readonly) WFUri* uri;
 @property (retain) WFUri* baseUri;
@@ -65,8 +66,8 @@ WINRT_EXPORT
 @property (retain) NSString* nodeNamespace;
 @property (retain) NSString* nodeName;
 @property (retain) NSString* language;
-@property (readonly) NSMutableArray* attributeExtensions;
-@property (readonly) NSMutableArray* elementExtensions;
+@property (readonly) NSMutableArray* /* WWSSyndicationAttribute* */ attributeExtensions;
+@property (readonly) NSMutableArray* /* RTObject<WWSISyndicationNode>* */ elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -78,15 +79,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWAWorkspace : RTObject <WWSISyndicationNode>
-@property (readonly) NSArray* collections;
+@property (readonly) NSArray* /* WWAResourceCollection* */ collections;
 @property (readonly) RTObject<WWSISyndicationText>* title;
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
 @property (retain) NSString* nodeName;
 @property (retain) NSString* language;
 @property (retain) WFUri* baseUri;
-@property (readonly) NSMutableArray* attributeExtensions;
-@property (readonly) NSMutableArray* elementExtensions;
+@property (readonly) NSMutableArray* /* WWSSyndicationAttribute* */ attributeExtensions;
+@property (readonly) NSMutableArray* /* RTObject<WWSISyndicationNode>* */ elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 
@@ -98,14 +99,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WWAServiceDocument : RTObject <WWSISyndicationNode>
-@property (readonly) NSArray* workspaces;
+@property (readonly) NSArray* /* WWAWorkspace* */ workspaces;
 @property (retain) NSString* nodeValue;
 @property (retain) NSString* nodeNamespace;
 @property (retain) NSString* nodeName;
 @property (retain) NSString* language;
 @property (retain) WFUri* baseUri;
-@property (readonly) NSMutableArray* attributeExtensions;
-@property (readonly) NSMutableArray* elementExtensions;
+@property (readonly) NSMutableArray* /* WWSSyndicationAttribute* */ attributeExtensions;
+@property (readonly) NSMutableArray* /* RTObject<WWSISyndicationNode>* */ elementExtensions;
 - (WDXDXmlDocument*)getXmlDocument:(WWSSyndicationFormat)format;
 @end
 

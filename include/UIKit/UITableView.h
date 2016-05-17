@@ -84,7 +84,6 @@ UIKIT_EXPORT_CLASS
 - (NSIndexPath*)indexPathForCell:(UITableViewCell*)cell;
 - (NSIndexPath*)indexPathForRowAtPoint:(CGPoint)point;
 - (NSInteger)numberOfRowsInSection:(NSInteger)section;
-- (NSInteger)numberOfSections;
 - (UITableViewCell*)cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (UITableViewCell*)dequeueReusableCellWithIdentifier:(NSString*)identifier;
 - (UITableViewCell*)dequeueReusableCellWithIdentifier:(NSString*)identifier forIndexPath:(NSIndexPath*)indexPath;
@@ -93,7 +92,7 @@ UIKIT_EXPORT_CLASS
 - (UITableViewHeaderFooterView*)dequeueReusableHeaderFooterViewWithIdentifier:(NSString*)identifier;
 - (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
 - (void)beginUpdates;
-- (void)deleteRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation STUB_METHOD;
+- (void)deleteRowsAtIndexPaths:(NSArray*)indexPaths withRowAnimation:(UITableViewRowAnimation)animation;
 - (void)deleteSections:(NSIndexSet*)sections withRowAnimation:(UITableViewRowAnimation)animation;
 - (void)deselectRowAtIndexPath:(NSIndexPath*)indexPath animated:(BOOL)animated;
 - (void)endUpdates;
@@ -146,5 +145,5 @@ UIKIT_EXPORT_CLASS
 @property (readonly, nonatomic) NSArray* indexPathsForVisibleRows;
 @property (readonly, nonatomic) NSArray* visibleCells;
 @property (readonly, nonatomic) NSIndexPath* indexPathForSelectedRow;
-@property (readonly, nonatomic) NSInteger numberOfSections STUB_PROPERTY;
+@property (readonly, nonatomic) NSInteger numberOfSections;
 @end

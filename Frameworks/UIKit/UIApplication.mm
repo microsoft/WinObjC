@@ -55,6 +55,7 @@
 
 #include "UWP/WindowsUINotifications.h"
 #include "LoggingNative.h"
+#include "UIApplicationMainInternal.h"
 
 static const wchar_t* TAG = L"UIApplication";
 
@@ -865,6 +866,8 @@ static void printViews(id curView, int level) {
 + (void)_shutdownEvent {
     _doShutdown = TRUE;
     [[NSRunLoop mainRunLoop] _stop];
+    [[NSRunLoop mainRunLoop] _shutdown];
+    _UIApplicationShutdown();
 }
 
 - (void)newMouseEvent {
@@ -1575,9 +1578,6 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 }
 
 - (void)_sendActiveStatus:(BOOL)isActive {
-    // TODO::
-    // bug-nithishm-03172016 - Disabling PLM until bug 6910008 is root caused.
-    /*
     if (isActive) {
         [self _sendEnteringForegroundEvents];
 
@@ -1593,7 +1593,6 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
 
         [self _sendEnteringBackgroundEvents];
     }
-    */
 }
 
 - (void)_sendEnteringBackgroundEvents {

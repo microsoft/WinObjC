@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUCCompositionObject, WUCCompositionEffect, WUCCompositionEffectFactoryLoadResult, WUCCompositionEffectSourceParameter,
     WUCCompositionImageOptions, WUCCompositionImage, WUCCompositionImageLoadResult, WUCCompositor, WUCCompositionAnimation,
     WUCCompositionPropertyAnimator, WUCAnimationEndedEventArgs, WUCCompositionPropertySet, WUCCompositionGraphicsDevice,

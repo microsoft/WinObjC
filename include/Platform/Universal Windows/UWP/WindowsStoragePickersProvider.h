@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSPPFileRemovedEventArgs, WSPPFileOpenPickerUI, WSPPPickerClosingEventArgs, WSPPPickerClosingOperation, WSPPPickerClosingDeferral,
     WSPPFileSavePickerUI, WSPPTargetFileRequestedEventArgs, WSPPTargetFileRequest, WSPPTargetFileRequestDeferral;
 @protocol WSPPIFileRemovedEventArgs
@@ -74,7 +75,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPPFileOpenPickerUI : RTObject
 @property (retain) NSString* title;
-@property (readonly) NSArray* allowedFileTypes;
+@property (readonly) NSArray* /* NSString * */ allowedFileTypes;
 @property (readonly) WSPPFileSelectionMode selectionMode;
 @property (readonly) NSString* settingsIdentifier;
 - (EventRegistrationToken)addClosingEvent:(void (^)(WSPPFileOpenPickerUI*, WSPPPickerClosingEventArgs*))del;
@@ -131,7 +132,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WSPPFileSavePickerUI : RTObject
 @property (retain) NSString* title;
-@property (readonly) NSArray* allowedFileTypes;
+@property (readonly) NSArray* /* NSString * */ allowedFileTypes;
 @property (readonly) NSString* fileName;
 @property (readonly) NSString* settingsIdentifier;
 - (EventRegistrationToken)addFileNameChangedEvent:(void (^)(WSPPFileSavePickerUI*, RTObject*))del;

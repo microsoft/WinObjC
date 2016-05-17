@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection,
     WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame,
     WUXMADoubleKeyFrame, WUXMAEasingFunctionBase, WUXMAKeySpline, WUXMANavigationTransitionInfo, WUXMAObjectKeyFrame, WUXMAPointKeyFrame,
@@ -39,8 +40,6 @@
     WUXMADrillInNavigationTransitionInfo, WUXMAEntranceNavigationTransitionInfo, WUXMANavigationThemeTransition,
     WUXMASlideNavigationTransitionInfo, WUXMASuppressNavigationTransitionInfo;
 @class WUXMAKeyTime, WUXMARepeatBehavior;
-@class RTArray_C_WUXMAColorKeyFrame, RTArray_C_WUXMADoubleKeyFrame, RTArray_C_WUXMAObjectKeyFrame, RTArray_C_WUXMAPointKeyFrame,
-    RTArray_C_WUXMATimeline, RTArray_C_WUXMATransition;
 @protocol WUXMAIKeyTimeHelper
 , WUXMAIKeyTimeHelperStatics, WUXMAIRepeatBehaviorHelper, WUXMAIRepeatBehaviorHelperStatics, WUXMAIColorKeyFrame,
     WUXMAIColorKeyFrameStatics, WUXMAIColorKeyFrameFactory, WUXMAIDoubleKeyFrame, WUXMAIDoubleKeyFrameStatics, WUXMAIDoubleKeyFrameFactory,
@@ -437,7 +436,7 @@ WINRT_EXPORT
 @property (retain) WUXMARepeatBehavior* repeatBehavior;
 @property WUXMAFillBehavior fillBehavior;
 @property (retain) WXDuration* duration;
-@property (retain) id beginTime;
+@property (retain) id /* WFTimeSpan* */ beginTime;
 @property BOOL autoReverse;
 + (BOOL)allowDependentAnimations;
 + (void)setAllowDependentAnimations:(BOOL)value;
@@ -543,11 +542,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMAColorAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
-@property (retain) id to;
-@property (retain) id from;
+@property (retain) id /* WUColor* */ to;
+@property (retain) id /* WUColor* */ from;
 @property BOOL enableDependentAnimation;
 @property (retain) WUXMAEasingFunctionBase* easingFunction;
-@property (retain) id by;
+@property (retain) id /* WUColor* */ by;
 + (WXDependencyProperty*)byProperty;
 + (WXDependencyProperty*)easingFunctionProperty;
 + (WXDependencyProperty*)enableDependentAnimationProperty;
@@ -648,11 +647,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMADoubleAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
-@property (retain) id to;
-@property (retain) id from;
+@property (retain) id /* double */ to;
+@property (retain) id /* double */ from;
 @property BOOL enableDependentAnimation;
 @property (retain) WUXMAEasingFunctionBase* easingFunction;
-@property (retain) id by;
+@property (retain) id /* double */ by;
 + (WXDependencyProperty*)byProperty;
 + (WXDependencyProperty*)easingFunctionProperty;
 + (WXDependencyProperty*)enableDependentAnimationProperty;
@@ -947,11 +946,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXMAPointAnimation : WUXMATimeline
 + (instancetype)make ACTIVATOR;
-@property (retain) id to;
-@property (retain) id from;
+@property (retain) id /* WFPoint* */ to;
+@property (retain) id /* WFPoint* */ from;
 @property BOOL enableDependentAnimation;
 @property (retain) WUXMAEasingFunctionBase* easingFunction;
-@property (retain) id by;
+@property (retain) id /* WFPoint* */ by;
 + (WXDependencyProperty*)byProperty;
 + (WXDependencyProperty*)easingFunctionProperty;
 + (WXDependencyProperty*)enableDependentAnimationProperty;

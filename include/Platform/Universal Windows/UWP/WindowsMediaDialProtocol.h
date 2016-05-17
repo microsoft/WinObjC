@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMDDialAppStateDetails, WMDDialApp, WMDDialDevice, WMDDialDeviceSelectedEventArgs, WMDDialDisconnectButtonClickedEventArgs,
     WMDDialDevicePickerFilter, WMDDialDevicePicker;
 @protocol WMDIDialAppStateDetails
@@ -140,7 +141,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMDDialDevicePickerFilter : RTObject
-@property (readonly) NSMutableArray* supportedAppNames;
+@property (readonly) NSMutableArray* /* NSString * */ supportedAppNames;
 @end
 
 #endif // __WMDDialDevicePickerFilter_DEFINED__

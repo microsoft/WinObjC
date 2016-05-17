@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNPPushNotificationChannel, WNPPushNotificationReceivedEventArgs, WNPRawNotification, WNPPushNotificationChannelManager;
 @protocol WNPIPushNotificationChannelManagerStatics
 , WNPIPushNotificationChannel, WNPIPushNotificationReceivedEventArgs, WNPIRawNotification;

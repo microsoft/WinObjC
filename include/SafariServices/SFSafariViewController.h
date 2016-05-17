@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,11 +14,22 @@
 //
 //******************************************************************************
 
-#include "UIKit/UIKit.h"
-#include "NSRunLoop+Internal.h"
+#pragma once
 
-int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
+#import <UIKit/UIViewController.h>
+#import <SafariServices/SFSafariViewControllerDelegate.h>
 
-void SetXamlUIWaiter() {
-    [NSRunLoop setUIThreadWaitFunction:&XamlTimedMultipleWait];
-}
+@class NSURL;
+
+SAFARISERVICES_EXPORT_CLASS
+@interface SFSafariViewController : UIViewController
+@property (nonatomic, weak) id<SFSafariViewControllerDelegate> delegate;
+
+- (instancetype)initWithURL:(NSURL*)URL STUB_METHOD;
+- (instancetype)initWithURL:(NSURL*)URL entersReaderIfAvailable:(BOOL)entersReaderIfAvailable STUB_METHOD;
+@end
+
+// Microsoft extensions
+@interface SFSafariViewController (Microsoft)
+- (instancetype)initWithOAuthURL:(NSURL*)URL substituteRedirectURL:(NSURL*)redirectURL;
+@end

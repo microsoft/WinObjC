@@ -14,11 +14,11 @@
 //
 //******************************************************************************
 
-#import <StubReturn.h>
-#import "Starboard.h"
 #import "QuartzCore/CAEmitterCell.h"
 #import "CAEmitterCellInternal.h"
 #import "QuartzCore/CATransform3D.h"
+#import "Starboard.h"
+#import <StubReturn.h>
 #import <stdlib.h>
 
 @interface CAEmitterCALayer : CALayer <CAMediaTiming, NSCoding, NSObject>
@@ -63,6 +63,12 @@
 @synthesize repeatDuration;
 @synthesize speed;
 @synthesize timeOffset;
+@synthesize yAcceleration = _yAcceleration;
+@synthesize spin = _spin;
+@synthesize redRange = _redRange;
+@synthesize blueRange = _blueRange;
+@synthesize greenRange = _greenRange;
+@synthesize alphaRange = _alphaRange;
 static const wchar_t* TAG = L"CAEmitterCell";
 static const int MAX_BIRTHRATE = 100;
 static const CGFloat epsilon = .000001f;
@@ -288,7 +294,6 @@ static const CGFloat epsilon = .000001f;
     birthedCell.velocity = _velocity;
     birthedCell.velocityRange = _velocityRange;
     birthedCell.lifetime = _lifetime;
-    birthedCell.yAcceleration = _yAcceleration;
     birthedCell.enabled = _enabled;
     birthedCell.beginTime = beginTime + startOffset;
     birthedCell.duration = duration;
@@ -297,11 +302,6 @@ static const CGFloat epsilon = .000001f;
     birthedCell.emissionLatitude = _emissionLatitude;
     birthedCell.scale = _scale;
     birthedCell.scaleSpeed = _scaleSpeed;
-    birthedCell.spin = _spin;
-    birthedCell.redRange = _redRange;
-    birthedCell.greenRange = _greenRange;
-    birthedCell.blueRange = _blueRange;
-    birthedCell.alphaSpeed = _alphaSpeed;
     birthedCell.contentsRect = _contentsRect;
     birthedCell.name = babyName;
     return birthedCell;
@@ -337,6 +337,96 @@ static const CGFloat epsilon = .000001f;
 */
 + (id)defaultValueForKey:(NSString*)key {
     return nil;
+}
+
+/**
+ @Status Caveat
+ @Notes Setting the property doesn't take effect.
+*/
+- (void)setYAcceleration:(float)acceleration {
+    _yAcceleration = acceleration;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)yAcceleration {
+    return _yAcceleration;
+}
+
+/**
+ @Status Caveat
+ @Notes Setting the property doesn't take effect.
+*/
+- (void)setSpin:(float)spin {
+    _spin = spin;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)spin {
+    return _spin;
+}
+
+/**
+ @Status Caveat
+ @Notes Setting the property doesn't take effect.
+*/
+- (void)setRedRange:(float)range {
+    _redRange = range;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)redRange {
+    return _redRange;
+}
+
+/**
+ @Status Caveat
+ @Notes Setting the property doesn't take effect.
+*/
+- (void)setBlueRange:(float)range {
+    _blueRange = range;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)blueRange {
+    return _blueRange;
+}
+
+/**
+ @Status Caveat
+ @Notes Setting the property doesn't take effect.
+*/
+- (void)setGreenRange:(float)range {
+    _greenRange = range;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)greenRange {
+    return _greenRange;
+}
+
+/**
+ @Status Caveat
+ @Notes Setting the property doesn't take effect.
+*/
+- (void)setAlphaRange:(float)range {
+    _alphaRange = range;
+}
+
+/**
+ @Status Interoperable
+*/
+- (float)alphaRange {
+    return _alphaRange;
 }
 
 @end

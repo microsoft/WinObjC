@@ -7,11 +7,14 @@
     AfterTargets="Link">
 
     <ItemGroup>
-      <!-- The Facebook SDK depends on the Security framework, but this dynamic dependency
-           won't be picked up by the dependency walker, so add it explicitly -->
+      <!-- The Facebook SDK dynamically loads some frameworks. These dependencies won't be
+           picked up by the dependency walker, so add them explicitly. -->
       <SBResourceCopy
         Condition="$([System.Convert]::ToString(%(Link.AdditionalDependencies)).Contains('FBSDKCoreKit'))"
         Include="$(StarboardLibDirs)\Security.dll" />
+      <SBResourceCopy
+        Condition="$([System.Convert]::ToString(%(Link.AdditionalDependencies)).Contains('FBSDKCoreKit'))"
+        Include="$(StarboardLibDirs)\SafariServices.dll" />
     </ItemGroup>
   </Target>
 </Project>

@@ -53,6 +53,8 @@ typedef enum {
     UIUserInterfaceIdiomUnspecified = -1,
     UIUserInterfaceIdiomPhone,
     UIUserInterfaceIdiomPad,
+    UIUserInterfaceIdiomTV,
+    UIUserInterfaceIdiomCarPlay,
     UIUserInterfaceIdiomDesktop,
 } UIUserInterfaceIdiom;
 

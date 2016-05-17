@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNCIPInformation, WNCDataPlanUsage, WNCConnectionCost, WNCDataPlanStatus, WNCNetworkAdapter, WNCDataUsage,
     WNCNetworkSecuritySettings, WNCWlanConnectionProfileDetails, WNCNetworkUsage, WNCConnectivityInterval, WNCAttributedNetworkUsage,
     WNCLanIdentifierData, WNCConnectionProfile, WNCLanIdentifier, WNCProxyConfiguration, WNCConnectionProfileFilter, WNCNetworkItem,
@@ -198,7 +199,7 @@ typedef void (^WNCNetworkStatusChangedEventHandler)(RTObject* sender);
 WINRT_EXPORT
 @interface WNCIPInformation : RTObject
 @property (readonly) WNCNetworkAdapter* networkAdapter;
-@property (readonly) id prefixLength;
+@property (readonly) id /* uint8_t */ prefixLength;
 @end
 
 #endif // __WNCIPInformation_DEFINED__
@@ -236,12 +237,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCDataPlanStatus : RTObject
-@property (readonly) id dataLimitInMegabytes;
+@property (readonly) id /* unsigned int */ dataLimitInMegabytes;
 @property (readonly) WNCDataPlanUsage* dataPlanUsage;
-@property (readonly) id inboundBitsPerSecond;
-@property (readonly) id maxTransferSizeInMegabytes;
-@property (readonly) id nextBillingCycle;
-@property (readonly) id outboundBitsPerSecond;
+@property (readonly) id /* uint64_t */ inboundBitsPerSecond;
+@property (readonly) id /* unsigned int */ maxTransferSizeInMegabytes;
+@property (readonly) id /* WFDateTime* */ nextBillingCycle;
+@property (readonly) id /* uint64_t */ outboundBitsPerSecond;
 @end
 
 #endif // __WNCDataPlanStatus_DEFINED__
@@ -344,7 +345,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNCLanIdentifierData : RTObject
 @property (readonly) unsigned int type;
-@property (readonly) NSArray* value;
+@property (readonly) NSArray* /* uint8_t */ value;
 @end
 
 #endif // __WNCLanIdentifierData_DEFINED__
@@ -360,32 +361,32 @@ WINRT_EXPORT
 @property (readonly) NSString* profileName;
 @property (readonly) BOOL isWlanConnectionProfile;
 @property (readonly) BOOL isWwanConnectionProfile;
-@property (readonly) id serviceProviderGuid;
+@property (readonly) id /* WFGUID* */ serviceProviderGuid;
 @property (readonly) WNCWlanConnectionProfileDetails* wlanConnectionProfileDetails;
 @property (readonly) WNCWwanConnectionProfileDetails* wwanConnectionProfileDetails;
 - (WNCNetworkConnectivityLevel)getNetworkConnectivityLevel;
-- (NSArray*)getNetworkNames;
+- (NSArray* /* NSString * */)getNetworkNames;
 - (WNCConnectionCost*)getConnectionCost;
 - (WNCDataPlanStatus*)getDataPlanStatus;
 - (WNCDataUsage*)getLocalUsage:(WFDateTime*)StartTime EndTime:(WFDateTime*)EndTime;
 - (WNCDataUsage*)getLocalUsagePerRoamingStates:(WFDateTime*)StartTime EndTime:(WFDateTime*)EndTime States:(WNCRoamingStates)States;
-- (id)getSignalBars;
+- (id /* uint8_t */)getSignalBars;
 - (WNCDomainConnectivityLevel)getDomainConnectivityLevel;
 - (void)getNetworkUsageAsync:(WFDateTime*)startTime
                      endTime:(WFDateTime*)endTime
                  granularity:(WNCDataUsageGranularity)granularity
                       states:(WNCNetworkUsageStates*)states
-                     success:(void (^)(NSArray*))success
+                     success:(void (^)(NSArray* /* WNCNetworkUsage* */))success
                      failure:(void (^)(NSError*))failure;
 - (void)getConnectivityIntervalsAsync:(WFDateTime*)startTime
                               endTime:(WFDateTime*)endTime
                                states:(WNCNetworkUsageStates*)states
-                              success:(void (^)(NSArray*))success
+                              success:(void (^)(NSArray* /* WNCConnectivityInterval* */))success
                               failure:(void (^)(NSError*))failure;
 - (void)getAttributedNetworkUsageAsync:(WFDateTime*)startTime
                                endTime:(WFDateTime*)endTime
                                 states:(WNCNetworkUsageStates*)states
-                               success:(void (^)(NSArray*))success
+                               success:(void (^)(NSArray* /* WNCAttributedNetworkUsage* */))success
                                failure:(void (^)(NSError*))failure;
 @end
 
@@ -411,7 +412,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNCProxyConfiguration : RTObject
 @property (readonly) BOOL canConnectDirectly;
-@property (readonly) NSArray* proxyUris;
+@property (readonly) NSArray* /* WFUri* */ proxyUris;
 @end
 
 #endif // __WNCProxyConfiguration_DEFINED__
@@ -423,14 +424,14 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WNCConnectionProfileFilter : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id serviceProviderGuid;
+@property (retain) id /* WFGUID* */ serviceProviderGuid;
 @property WNCNetworkCostType networkCostType;
 @property BOOL isWwanConnectionProfile;
 @property BOOL isWlanConnectionProfile;
 @property BOOL isConnected;
-@property (retain) id isRoaming;
-@property (retain) id isOverDataLimit;
-@property (retain) id isBackgroundDataUsageRestricted;
+@property (retain) id /* BOOL */ isRoaming;
+@property (retain) id /* BOOL */ isOverDataLimit;
+@property (retain) id /* BOOL */ isBackgroundDataUsageRestricted;
 @property (readonly) RTObject<WSSIBuffer>* rawData;
 @end
 
@@ -509,16 +510,16 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WNCNetworkInformation : RTObject
-+ (void)findConnectionProfilesAsync:(WNCConnectionProfileFilter*)pProfileFilter
-                            success:(void (^)(NSArray*))success
-                            failure:(void (^)(NSError*))failure;
-+ (NSArray*)getConnectionProfiles;
++ (NSArray* /* WNCConnectionProfile* */)getConnectionProfiles;
 + (WNCConnectionProfile*)getInternetConnectionProfile;
-+ (NSArray*)getLanIdentifiers;
-+ (NSArray*)getHostNames;
++ (NSArray* /* WNCLanIdentifier* */)getLanIdentifiers;
++ (NSArray* /* WNHostName* */)getHostNames;
 + (void)getProxyConfigurationAsync:(WFUri*)uri success:(void (^)(WNCProxyConfiguration*))success failure:(void (^)(NSError*))failure;
-+ (NSArray*)getSortedEndpointPairs:(id<NSFastEnumeration> /* WNEndpointPair* */)destinationList
-                       sortOptions:(WNHostNameSortOptions)sortOptions;
++ (NSArray* /* WNEndpointPair* */)getSortedEndpointPairs:(id<NSFastEnumeration> /* WNEndpointPair* */)destinationList
+                                             sortOptions:(WNHostNameSortOptions)sortOptions;
++ (void)findConnectionProfilesAsync:(WNCConnectionProfileFilter*)pProfileFilter
+                            success:(void (^)(NSArray* /* WNCConnectionProfile* */))success
+                            failure:(void (^)(NSError*))failure;
 + (EventRegistrationToken)addNetworkStatusChangedEvent:(WNCNetworkStatusChangedEventHandler)del;
 + (void)removeNetworkStatusChangedEvent:(EventRegistrationToken)tok;
 @end

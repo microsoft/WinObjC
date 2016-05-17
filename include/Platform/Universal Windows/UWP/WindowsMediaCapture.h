@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMCCameraCaptureUIPhotoCaptureSettings, WMCCameraCaptureUIVideoCaptureSettings, WMCCameraCaptureUI, WMCMediaCaptureFailedEventArgs,
     WMCMediaCapture, WMCMediaCaptureVideoProfileMediaDescription, WMCMediaCaptureVideoProfile, WMCMediaCaptureInitializationSettings,
     WMCMediaCaptureSettings, WMCLowLagMediaRecording, WMCLowLagPhotoCapture, WMCLowLagPhotoSequenceCapture,
@@ -278,9 +279,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaCapture : RTObject <WFIClosable>
 + (BOOL)isVideoProfileSupported:(NSString*)videoDeviceId;
-+ (NSArray*)findAllVideoProfiles:(NSString*)videoDeviceId;
-+ (NSArray*)findConcurrentProfiles:(NSString*)videoDeviceId;
-+ (NSArray*)findKnownVideoProfiles:(NSString*)videoDeviceId name:(WMCKnownVideoProfile)name;
++ (NSArray* /* WMCMediaCaptureVideoProfile* */)findAllVideoProfiles:(NSString*)videoDeviceId;
++ (NSArray* /* WMCMediaCaptureVideoProfile* */)findConcurrentProfiles:(NSString*)videoDeviceId;
++ (NSArray* /* WMCMediaCaptureVideoProfile* */)findKnownVideoProfiles:(NSString*)videoDeviceId name:(WMCKnownVideoProfile)name;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WMDAudioDeviceController* audioDeviceController;
 @property (readonly) WMCMediaCaptureSettings* mediaCaptureSettings;
@@ -401,11 +402,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCMediaCaptureVideoProfile : RTObject
 @property (readonly) NSString* id;
-@property (readonly) NSArray* supportedPhotoMediaDescription;
-@property (readonly) NSArray* supportedPreviewMediaDescription;
-@property (readonly) NSArray* supportedRecordMediaDescription;
+@property (readonly) NSArray* /* WMCMediaCaptureVideoProfileMediaDescription* */ supportedPhotoMediaDescription;
+@property (readonly) NSArray* /* WMCMediaCaptureVideoProfileMediaDescription* */ supportedPreviewMediaDescription;
+@property (readonly) NSArray* /* WMCMediaCaptureVideoProfileMediaDescription* */ supportedRecordMediaDescription;
 @property (readonly) NSString* videoDeviceId;
-- (NSArray*)getConcurrency;
+- (NSArray* /* WMCMediaCaptureVideoProfile* */)getConcurrency;
 @end
 
 #endif // __WMCMediaCaptureVideoProfile_DEFINED__
@@ -448,10 +449,10 @@ WINRT_EXPORT
 @property (readonly) BOOL cameraSoundRequiredForRegion;
 @property (readonly) BOOL concurrentRecordAndPhotoSequenceSupported;
 @property (readonly) BOOL concurrentRecordAndPhotoSupported;
-@property (readonly) id horizontal35mmEquivalentFocalLength;
+@property (readonly) id /* unsigned int */ horizontal35mmEquivalentFocalLength;
 @property (readonly) WMCMediaCategory mediaCategory;
-@property (readonly) id pitchOffsetDegrees;
-@property (readonly) id vertical35mmEquivalentFocalLength;
+@property (readonly) id /* int */ pitchOffsetDegrees;
+@property (readonly) id /* unsigned int */ vertical35mmEquivalentFocalLength;
 @end
 
 #endif // __WMCMediaCaptureSettings_DEFINED__
@@ -730,20 +731,20 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCCapturedFrameControlValues : RTObject
-@property (readonly) id exposure;
-@property (readonly) id exposureCompensation;
-@property (readonly) id flashPowerPercent;
-@property (readonly) id flashed;
-@property (readonly) id focus;
-@property (readonly) id isoSpeed;
-@property (readonly) id sceneMode;
-@property (readonly) id whiteBalance;
-@property (readonly) id zoomFactor;
-@property (readonly) id focusState;
-@property (readonly) id isoAnalogGain;
-@property (readonly) id isoDigitalGain;
+@property (readonly) id /* WFTimeSpan* */ exposure;
+@property (readonly) id /* float */ exposureCompensation;
+@property (readonly) id /* float */ flashPowerPercent;
+@property (readonly) id /* BOOL */ flashed;
+@property (readonly) id /* unsigned int */ focus;
+@property (readonly) id /* unsigned int */ isoSpeed;
+@property (readonly) id /* WMDCaptureSceneMode */ sceneMode;
+@property (readonly) id /* unsigned int */ whiteBalance;
+@property (readonly) id /* float */ zoomFactor;
+@property (readonly) id /* WMDMediaCaptureFocusState */ focusState;
+@property (readonly) id /* double */ isoAnalogGain;
+@property (readonly) id /* double */ isoDigitalGain;
 @property (readonly) WMMMediaRatio* sensorFrameRate;
-@property (readonly) id whiteBalanceGain;
+@property (readonly) id /* WMCWhiteBalanceGain* */ whiteBalanceGain;
 @end
 
 #endif // __WMCCapturedFrameControlValues_DEFINED__

@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
 
+@protocol UIAdaptivePresentationControllerDelegate;
+
 @interface UIPresentationController : NSObject <UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
 - (instancetype)initWithPresentedViewController:(UIViewController*)presentedViewController

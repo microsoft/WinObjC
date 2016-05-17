@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDBBluetoothClassOfDevice, WDBBluetoothDevice, WDBBluetoothLEDevice, WDBBluetoothSignalStrengthFilter;
 @protocol WDBIBluetoothDevice
 , WDBIBluetoothDeviceStatics, WDBIBluetoothLEDevice, WDBIBluetoothLEDeviceStatics, WDBIBluetoothClassOfDevice,
@@ -210,8 +211,8 @@ WINRT_EXPORT
 @property (readonly) NSString* deviceId;
 @property (readonly) WNHostName* hostName;
 @property (readonly) NSString* name;
-@property (readonly) NSArray* rfcommServices;
-@property (readonly) NSArray* sdpRecords;
+@property (readonly) NSArray* /* WDBRRfcommDeviceService* */ rfcommServices;
+@property (readonly) NSArray* /* RTObject<WSSIBuffer>* */ sdpRecords;
 - (EventRegistrationToken)addConnectionStatusChangedEvent:(void (^)(WDBBluetoothDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addNameChangedEvent:(void (^)(WDBBluetoothDevice*, RTObject*))del;
@@ -237,7 +238,7 @@ WINRT_EXPORT
 @property (readonly) uint64_t bluetoothAddress;
 @property (readonly) WDBBluetoothConnectionStatus connectionStatus;
 @property (readonly) NSString* deviceId;
-@property (readonly) NSArray* gattServices;
+@property (readonly) NSArray* /* WDBGGattDeviceService* */ gattServices;
 @property (readonly) NSString* name;
 - (EventRegistrationToken)addConnectionStatusChangedEvent:(void (^)(WDBBluetoothLEDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
@@ -258,10 +259,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDBBluetoothSignalStrengthFilter : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id samplingInterval;
-@property (retain) id outOfRangeTimeout;
-@property (retain) id outOfRangeThresholdInDBm;
-@property (retain) id inRangeThresholdInDBm;
+@property (retain) id /* WFTimeSpan* */ samplingInterval;
+@property (retain) id /* WFTimeSpan* */ outOfRangeTimeout;
+@property (retain) id /* int16_t */ outOfRangeThresholdInDBm;
+@property (retain) id /* int16_t */ inRangeThresholdInDBm;
 @end
 
 #endif // __WDBBluetoothSignalStrengthFilter_DEFINED__

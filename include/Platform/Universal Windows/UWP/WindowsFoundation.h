@@ -20,9 +20,9 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WFPropertyValue, WFDeferral, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry, WFMemoryBuffer;
 @class WFPoint, WFSize, WFRect, WFDateTime, WFTimeSpan;
-@class RTArray_C_RTObject_WFIWwwFormUrlDecoderEntry;
 @protocol WFIClosable
 , WFIPropertyValue, WFIPropertyValueStatics, WFIStringable, WFIDeferral, WFIDeferralFactory, WFIAsyncInfo, WFIAsyncAction,
     WFIAsyncOperationWithProgress, WFIAsyncOperation, WFIAsyncActionWithProgress, WFIReference, WFIReferenceArray, WFIUriRuntimeClass,
@@ -143,19 +143,12 @@ typedef void (^WFAsyncActionCompletedHandler)(RTObject<WFIAsyncAction>* asyncInf
 typedef void (^WFDeferralCompletedHandler)();
 #endif // __WFDeferralCompletedHandler__DEFINED
 
-// Windows.Foundation.AsyncOperationWithProgressCompletedHandler`2
 // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<0,1>
-// Windows.Foundation.AsyncOperationCompletedHandler`1
 // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperation`1<0>
-// Windows.Foundation.AsyncActionWithProgressCompletedHandler`1
 // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<0>
-// Windows.Foundation.AsyncOperationProgressHandler`2
 // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncOperationWithProgress`2<0,1>
-// Windows.Foundation.AsyncActionProgressHandler`1
 // Could not generate delegate: Can't marshal Windows.Foundation.IAsyncActionWithProgress`1<0>
-// Windows.Foundation.TypedEventHandler`2
 // Could not generate delegate: Can't marshal 0
-// Windows.Foundation.EventHandler`1
 // Could not generate delegate: Can't marshal 0
 // Windows.Foundation.IClosable
 #ifndef __WFIClosable_DEFINED__
@@ -192,25 +185,25 @@ typedef void (^WFDeferralCompletedHandler)();
 - (WFPoint*)getPoint;
 - (WFSize*)getSize;
 - (WFRect*)getRect;
-- (void)getUInt8Array:(id<NSFastEnumeration> /* uint8_t */*)value;
-- (void)getInt16Array:(id<NSFastEnumeration> /* int16_t */*)value;
-- (void)getUInt16Array:(id<NSFastEnumeration> /* unsigned short */*)value;
-- (void)getInt32Array:(id<NSFastEnumeration> /* int */*)value;
-- (void)getUInt32Array:(id<NSFastEnumeration> /* unsigned int */*)value;
-- (void)getInt64Array:(id<NSFastEnumeration> /* int64_t */*)value;
-- (void)getUInt64Array:(id<NSFastEnumeration> /* uint64_t */*)value;
-- (void)getSingleArray:(id<NSFastEnumeration> /* float */*)value;
-- (void)getDoubleArray:(id<NSFastEnumeration> /* double */*)value;
-- (void)getChar16Array:(id<NSFastEnumeration> /* wchar_t */*)value;
-- (void)getBooleanArray:(id<NSFastEnumeration> /* BOOL */*)value;
-- (void)getStringArray:(id<NSFastEnumeration> /* NSString * */*)value;
-- (void)getInspectableArray:(id<NSFastEnumeration> /* RTObject* */*)value;
-- (void)getGuidArray:(id<NSFastEnumeration> /* WFGUID* */*)value;
-- (void)getDateTimeArray:(id<NSFastEnumeration> /* WFDateTime* */*)value;
-- (void)getTimeSpanArray:(id<NSFastEnumeration> /* WFTimeSpan* */*)value;
-- (void)getPointArray:(id<NSFastEnumeration> /* WFPoint* */*)value;
-- (void)getSizeArray:(id<NSFastEnumeration> /* WFSize* */*)value;
-- (void)getRectArray:(id<NSFastEnumeration> /* WFRect* */*)value;
+- (void)getUInt8Array:(NSArray* /* uint8_t */*)value;
+- (void)getInt16Array:(NSArray* /* int16_t */*)value;
+- (void)getUInt16Array:(NSArray* /* unsigned short */*)value;
+- (void)getInt32Array:(NSArray* /* int */*)value;
+- (void)getUInt32Array:(NSArray* /* unsigned int */*)value;
+- (void)getInt64Array:(NSArray* /* int64_t */*)value;
+- (void)getUInt64Array:(NSArray* /* uint64_t */*)value;
+- (void)getSingleArray:(NSArray* /* float */*)value;
+- (void)getDoubleArray:(NSArray* /* double */*)value;
+- (void)getChar16Array:(NSArray* /* wchar_t */*)value;
+- (void)getBooleanArray:(NSArray* /* BOOL */*)value;
+- (void)getStringArray:(NSArray* /* NSString * */*)value;
+- (void)getInspectableArray:(NSArray* /* RTObject* */*)value;
+- (void)getGuidArray:(NSArray* /* WFGUID* */*)value;
+- (void)getDateTimeArray:(NSArray* /* WFDateTime* */*)value;
+- (void)getTimeSpanArray:(NSArray* /* WFTimeSpan* */*)value;
+- (void)getPointArray:(NSArray* /* WFPoint* */*)value;
+- (void)getSizeArray:(NSArray* /* WFSize* */*)value;
+- (void)getRectArray:(NSArray* /* WFRect* */*)value;
 @end
 
 #endif // __WFIPropertyValue_DEFINED__
@@ -323,25 +316,25 @@ WINRT_EXPORT
 + (RTObject*)createPoint:(WFPoint*)value;
 + (RTObject*)createSize:(WFSize*)value;
 + (RTObject*)createRect:(WFRect*)value;
-+ (RTObject*)createUInt8Array:(id<NSFastEnumeration> /* uint8_t */)value;
-+ (RTObject*)createInt16Array:(id<NSFastEnumeration> /* int16_t */)value;
-+ (RTObject*)createUInt16Array:(id<NSFastEnumeration> /* unsigned short */)value;
-+ (RTObject*)createInt32Array:(id<NSFastEnumeration> /* int */)value;
-+ (RTObject*)createUInt32Array:(id<NSFastEnumeration> /* unsigned int */)value;
-+ (RTObject*)createInt64Array:(id<NSFastEnumeration> /* int64_t */)value;
-+ (RTObject*)createUInt64Array:(id<NSFastEnumeration> /* uint64_t */)value;
-+ (RTObject*)createSingleArray:(id<NSFastEnumeration> /* float */)value;
-+ (RTObject*)createDoubleArray:(id<NSFastEnumeration> /* double */)value;
-+ (RTObject*)createChar16Array:(id<NSFastEnumeration> /* wchar_t */)value;
-+ (RTObject*)createBooleanArray:(id<NSFastEnumeration> /* BOOL */)value;
-+ (RTObject*)createStringArray:(id<NSFastEnumeration> /* NSString * */)value;
-+ (RTObject*)createInspectableArray:(id<NSFastEnumeration> /* RTObject* */)value;
-+ (RTObject*)createGuidArray:(id<NSFastEnumeration> /* WFGUID* */)value;
-+ (RTObject*)createDateTimeArray:(id<NSFastEnumeration> /* WFDateTime* */)value;
-+ (RTObject*)createTimeSpanArray:(id<NSFastEnumeration> /* WFTimeSpan* */)value;
-+ (RTObject*)createPointArray:(id<NSFastEnumeration> /* WFPoint* */)value;
-+ (RTObject*)createSizeArray:(id<NSFastEnumeration> /* WFSize* */)value;
-+ (RTObject*)createRectArray:(id<NSFastEnumeration> /* WFRect* */)value;
++ (RTObject*)createUInt8Array:(NSArray* /* uint8_t */)value;
++ (RTObject*)createInt16Array:(NSArray* /* int16_t */)value;
++ (RTObject*)createUInt16Array:(NSArray* /* unsigned short */)value;
++ (RTObject*)createInt32Array:(NSArray* /* int */)value;
++ (RTObject*)createUInt32Array:(NSArray* /* unsigned int */)value;
++ (RTObject*)createInt64Array:(NSArray* /* int64_t */)value;
++ (RTObject*)createUInt64Array:(NSArray* /* uint64_t */)value;
++ (RTObject*)createSingleArray:(NSArray* /* float */)value;
++ (RTObject*)createDoubleArray:(NSArray* /* double */)value;
++ (RTObject*)createChar16Array:(NSArray* /* wchar_t */)value;
++ (RTObject*)createBooleanArray:(NSArray* /* BOOL */)value;
++ (RTObject*)createStringArray:(NSArray* /* NSString * */)value;
++ (RTObject*)createInspectableArray:(NSArray* /* RTObject* */)value;
++ (RTObject*)createGuidArray:(NSArray* /* WFGUID* */)value;
++ (RTObject*)createDateTimeArray:(NSArray* /* WFDateTime* */)value;
++ (RTObject*)createTimeSpanArray:(NSArray* /* WFTimeSpan* */)value;
++ (RTObject*)createPointArray:(NSArray* /* WFPoint* */)value;
++ (RTObject*)createSizeArray:(NSArray* /* WFSize* */)value;
++ (RTObject*)createRectArray:(NSArray* /* WFRect* */)value;
 @end
 
 #endif // __WFPropertyValue_DEFINED__

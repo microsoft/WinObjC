@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXMXamlBinaryWriter, WUXMXamlReader, WUXMXamlBindingHelper;
 @class WUXMXamlBinaryWriterErrorInformation, WUXMXmlnsDefinition;
 @protocol WUXMIComponentConnector
@@ -122,7 +123,7 @@ WINRT_EXPORT
 @protocol WUXMIXamlMetadataProvider
 - (RTObject<WUXMIXamlType>*)getXamlType:(WUXITypeName*)type;
 - (RTObject<WUXMIXamlType>*)getXamlTypeByFullName:(NSString*)fullName;
-- (NSArray*)getXmlnsDefinitions;
+- (NSArray* /* WUXMXmlnsDefinition* */)getXmlnsDefinitions;
 @end
 
 #endif // __WUXMIXamlMetadataProvider_DEFINED__
@@ -144,8 +145,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMXamlBinaryWriter : RTObject
-+ (WUXMXamlBinaryWriterErrorInformation*)write:(id<NSFastEnumeration> /* RTObject<WSSIRandomAccessStream>* */)inputStreams
-                                 outputStreams:(id<NSFastEnumeration> /* RTObject<WSSIRandomAccessStream>* */)outputStreams
++ (WUXMXamlBinaryWriterErrorInformation*)write:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)inputStreams
+                                 outputStreams:(NSMutableArray* /* RTObject<WSSIRandomAccessStream>* */)outputStreams
                           xamlMetadataProvider:(RTObject<WUXMIXamlMetadataProvider>*)xamlMetadataProvider;
 @end
 
