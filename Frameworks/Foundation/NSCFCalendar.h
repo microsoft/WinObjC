@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -13,11 +13,10 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
-
 #pragma once
 
-#include <unicode/gregocal.h>
+#import <Foundation/NSCalendar.h>
+#import "BridgeHelpers.h"
 
-@interface NSCalendar (Internal)
-- (icu::Calendar*)_createICUCalendar;
+@interface NSCalendarPrototype : NSCalendar
 @end

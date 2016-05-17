@@ -315,10 +315,7 @@ void CFCalendarSetLocale(CFCalendarRef calendar, CFLocaleRef locale) {
 }
 
 CFTimeZoneRef CFCalendarCopyTimeZone(CFCalendarRef calendar) {
-    // HACKHACK: this doesn't seem correct as written. calendar_copyTimeZone doesn't seem like a thing
-    // unless we splat together the name of the objc_message_call.
-    // CF_OBJC_FUNCDISPATCHV(CFCalendarGetTypeID(), CFTimeZoneRef, calendar_copyTimeZone);
-    CF_OBJC_FUNCDISPATCHV(CFCalendarGetTypeID(), CFTimeZoneRef, (NSCalendar*)calendar, timeZone);
+    CF_OBJC_FUNCDISPATCHV(CFCalendarGetTypeID(), CFTimeZoneRef, (NSCalendar*)calendar, _copyTimeZone);
     __CFGenericValidateType(calendar, CFCalendarGetTypeID());
     return (CFTimeZoneRef)CFRetain(calendar->_tz);
 }
@@ -467,7 +464,7 @@ static CFCalendarUnit __CFCalendarGetCalendarUnitFromChar(char ch) {
 
 CFRange CFCalendarGetMinimumRangeOfUnit(CFCalendarRef calendar, CFCalendarUnit unit) {
     // CF_OBJC_FUNCDISPATCHV(CFCalendarGetTypeID(), CFRange, (NSCalendar*)calendar, _minimumRangeOfUnit:unit);
-    // HACKHACK: this function isn't in the header so it assumes id return. change to the one that is available.
+    // WINOBJC: this function isn't in the header so it assumes id return. change to the one that is available.
     // Also don't use the dispatch macro since a NSRange != a CFRange exactly. Need to manually convert.
     if (CF_IS_OBJC(CFCalendarGetTypeID(), calendar)) { 
         NSRange nsRetVal = CF_OBJC_CALLV((NSCalendar*)calendar, minimumRangeOfUnit:unit);
@@ -490,7 +487,7 @@ CFRange CFCalendarGetMinimumRangeOfUnit(CFCalendarRef calendar, CFCalendarUnit u
 }
 
 CFRange CFCalendarGetMaximumRangeOfUnit(CFCalendarRef calendar, CFCalendarUnit unit) {
-    // HACKHACK: this function isn't in the header so it assumes id return. change to the one that is available.
+    // WINOBJC: this function isn't in the header so it assumes id return. change to the one that is available.
     // CF_OBJC_FUNCDISPATCHV(CFCalendarGetTypeID(), CFRange, (NSCalendar*)calendar, _maximumRangeOfUnit:unit);
     // Also don't use the dispatch macro since a NSRange != a CFRange exactly. Need to manually convert.
     if (CF_IS_OBJC(CFCalendarGetTypeID(), calendar)) { 
@@ -636,7 +633,7 @@ static Boolean __validUnits(CFCalendarUnit smaller, CFCalendarUnit bigger) {
 
 static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUnit smallerUnit, CFCalendarUnit biggerUnit, CFAbsoluteTime at) __attribute__((noinline));
 static CFRange __CFCalendarGetRangeOfUnit2(CFCalendarRef calendar, CFCalendarUnit smallerUnit, CFCalendarUnit biggerUnit, CFAbsoluteTime at) {
-    // HACKHACK: this function isn't in the header so it assumes id return. change to the one that is available.
+    // WINOBJC: this function isn't in the header so it assumes id return. change to the one that is available.
     // CF_OBJC_FUNCDISPATCHV(CFCalendarGetTypeID(), CFRange, (NSCalendar*)calendar, _rangeOfUnit:smallerUnit inUnit:biggerUnit forAT:at);
     // Also don't use the dispatch macro since a NSRange != a CFRange exactly. Need to manually convert.
     if (CF_IS_OBJC(CFCalendarGetTypeID(), calendar)) { 

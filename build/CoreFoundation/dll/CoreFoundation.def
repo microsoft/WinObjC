@@ -243,6 +243,10 @@ LIBRARY CoreFoundation
         CFCalendarGetMinimumDaysInFirstWeek
         CFCalendarSetMinimumDaysInFirstWeek
         CFCalendarGetTypeID
+        _CFCalendarComposeAbsoluteTimeV
+        _CFCalendarDecomposeAbsoluteTimeV
+        _CFCalendarAddComponentsV
+        _CFCalendarGetComponentDifferenceV
 
         ; CFCharacterSet.mm
         CFCharacterSetCreateCopy
