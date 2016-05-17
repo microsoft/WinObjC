@@ -526,7 +526,11 @@ static void DispatchMainRunLoopWakeup(void* arg) {
 
 - (void)_processMainRunLoop:(int)value {
     NSRunLoopState* state = [self _stateForMode:NSDefaultRunLoopMode];
+    // Wrap code in a autorelease pool so all the auto released objects from calling the event
+    // handlers can be manually released.
+    NSAutoreleasePool* pool = [NSAutoreleasePool new];
     [state _handleSignaledInput:value];
+    [pool release];
 }
 
 @end
