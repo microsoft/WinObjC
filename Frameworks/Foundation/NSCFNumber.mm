@@ -37,8 +37,8 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 // Helper macro for NSNumberPrototype initializers (signed)
 // Var args are the signature of the initializer
-#define NS_NUMBER_INIT_IMPL(cfNumberType, ...)                                                                           \
-    (instancetype) __VA_ARGS__ num {                                                                                     \
+#define NS_NUMBER_INIT_IMPL(cfNumberType, ...)                                                                                        \
+    (instancetype) __VA_ARGS__ num {                                                                                                  \
         return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, cfNumberType, &num))); \
     }
 
@@ -56,10 +56,11 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 // Unsigned requires an extra step of init, as CFNumber does not actually support unsigned types,
 // instead storing in a signed value of twice the size
 // Get around this by casting to an intermediate value
-#define NS_NUMBER_INIT_UNSIGNED_IMPL(cfNumberType, intermediateType, ...)                                                      \
-    (instancetype) __VA_ARGS__ num {                                                                                           \
-        intermediateType castedNum = static_cast<intermediateType>(num);                                                       \
-        return reinterpret_cast<NSNumberPrototype*>(static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, cfNumberType, &castedNum))); \
+#define NS_NUMBER_INIT_UNSIGNED_IMPL(cfNumberType, intermediateType, ...)                           \
+    (instancetype) __VA_ARGS__ num {                                                                \
+        intermediateType castedNum = static_cast<intermediateType>(num);                            \
+        return reinterpret_cast<NSNumberPrototype*>(                                                \
+            static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, cfNumberType, &castedNum))); \
     }
 
 - NS_NUMBER_INIT_UNSIGNED_IMPL(kCFNumberSInt16Type, int16_t, initWithUnsignedChar:(unsigned char));
@@ -70,7 +71,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 // Unsigned long long requires unique handling due to its 128-bit struct
 - (instancetype)initWithUnsignedLongLong:(unsigned long long)num {
-    CFSInt128Struct castedNum;
+    CFSInt128Struct castedNum{};
     castedNum.low = num;
     return reinterpret_cast<NSNumberPrototype*>(
         static_cast<NSNumber*>(CFNumberCreate(kCFAllocatorDefault, static_cast<CFNumberType>(kCFNumberSInt128Type), &castedNum)));
