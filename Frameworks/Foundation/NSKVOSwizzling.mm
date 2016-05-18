@@ -70,13 +70,38 @@ static void _NSKVOEnsureObjectIsKVOAware(id object) {
 }
 
 #pragma region Method Implementations
-static inline NSString* _keyFromSelector(id object, SEL selector) {
-    return objc_getAssociatedObject(object, const_cast<char*>(sel_getName(selector)));
+// Selector mappings: the class-level mapping from a selector (setX:) to the KVC key ("x")
+// to which it corresponds. This is necessary because both "X" and "x" map to setX:, but we need
+// to be cognizant of precisely which it was for any given observee.
+// The sole reason we can get away with keeping selector<->key mappings on the class is that,
+// through the lifetime of said class, it can never lose selectors. This mapping will be pertinent
+// to every instance of the class.
+static inline CFMutableDictionaryRef _selectorMappingsForObject(id object) {
+    static char s_selMapKey;
+    auto cls = object_getClass(object); // here we explicitly want the public (non-hidden) class associated with the object.
+    @synchronized(cls) {
+        CFMutableDictionaryRef selMappings = (CFMutableDictionaryRef)objc_getAssociatedObject(cls, &s_selMapKey);
+        if (!selMappings) {
+            selMappings = CFDictionaryCreateMutable(kCFAllocatorDefault, 16, NULL, &kCFTypeDictionaryValueCallBacks); // no key callbacks: they're selector names.
+            objc_setAssociatedObject(cls, &s_selMapKey, (id)selMappings, OBJC_ASSOCIATION_RETAIN);
+            CFRelease(selMappings);
+        }
+        return selMappings;
+    }
+}
+
+static inline NSString* _keyForSelector(id object, SEL selector) {
+    return (NSString*)CFDictionaryGetValue(_selectorMappingsForObject(object), sel_getName(selector));
+}
+
+
+static inline void _associateSelectorWithKey(id object, SEL selector, NSString* key) {
+    CFDictionarySetValue(_selectorMappingsForObject(object), sel_getName(selector), key);
 }
 
 template <typename T>
 static void notifyingSetImpl(id self, SEL _cmd, T val) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
 
     [self willChangeValueForKey:key];
 
@@ -91,7 +116,7 @@ static void notifyingSetImpl(id self, SEL _cmd, T val) {
 }
 
 static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
 
     // [Source: NSInvocation.mm]
     // This attempts to flatten the method's arguments (as determined by its type encoding)
@@ -148,7 +173,7 @@ static void notifyingVariadicSetImpl(id self, SEL _cmd, ...) {
 }
 
 static void NSKVONotifying$insertObject$inXxxAtIndex$(id self, SEL _cmd, id object, NSUInteger index) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
     NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
 
     [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:key];
@@ -163,7 +188,7 @@ static void NSKVONotifying$insertObject$inXxxAtIndex$(id self, SEL _cmd, id obje
 }
 
 static void NSKVONotifying$insertXxx$atIndexes$(id self, SEL _cmd, id object, NSIndexSet* indexes) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
 
     [self willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:key];
 
@@ -177,7 +202,7 @@ static void NSKVONotifying$insertXxx$atIndexes$(id self, SEL _cmd, id object, NS
 }
 
 static void NSKVONotifying$removeObjectFromXxxAtIndex$(id self, SEL _cmd, NSUInteger index) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
     NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
 
     [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:key];
@@ -192,7 +217,7 @@ static void NSKVONotifying$removeObjectFromXxxAtIndex$(id self, SEL _cmd, NSUInt
 }
 
 static void NSKVONotifying$removeXxxAtIndexes$(id self, SEL _cmd, NSIndexSet* indexes) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
 
     [self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:key];
 
@@ -206,7 +231,7 @@ static void NSKVONotifying$removeXxxAtIndexes$(id self, SEL _cmd, NSIndexSet* in
 }
 
 static void NSKVONotifying$replaceObjectInXxxAtIndex$withObject$(id self, SEL _cmd, NSUInteger index, id object) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
     NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
 
     [self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:key];
@@ -221,7 +246,7 @@ static void NSKVONotifying$replaceObjectInXxxAtIndex$withObject$(id self, SEL _c
 }
 
 static void NSKVONotifying$replaceXxxAtIndexes$withXxx$(id self, SEL _cmd, NSIndexSet* indexes, NSArray* objects) {
-    NSString* key = _keyFromSelector(self, _cmd);
+    NSString* key = _keyForSelector(self, _cmd);
 
     [self willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:key];
 
@@ -301,7 +326,7 @@ static void _NSKVOEnsureSimpleKeyWillNotify(id object, NSString* key, const char
             return;
     }
 
-    objc_setAssociatedObject(object, const_cast<char*>(sel_getName(sel)), key, OBJC_ASSOCIATION_RETAIN);
+    _associateSelectorWithKey(object, sel, key);
     object_addMethod_np(object, sel, newImpl, types);
 }
 
@@ -314,7 +339,7 @@ static void replaceAndAssociateWithKey(id object, SEL sel, NSString* key, IMP im
             return;
         }
 
-        objc_setAssociatedObject(object, const_cast<char*>(selName), key, OBJC_ASSOCIATION_RETAIN);
+        _associateSelectorWithKey(object, sel, key);
         object_replaceMethod_np(object, sel, imp, method_getTypeEncoding(method));
     }
 }
@@ -373,12 +398,12 @@ void _NSKVOEnsureKeyWillNotify(id object, NSString* key) {
         return;
     }
 
-    _NSKVOEnsureObjectIsKVOAware(object);
-
     std::unique_ptr<char[]> rawKey{std::move(mutableBufferFromString(key))};
     rawKey[0] = toupper(rawKey[0]);
 
     @synchronized(object) {
+        _NSKVOEnsureObjectIsKVOAware(object);
+
         _NSKVOEnsureSimpleKeyWillNotify(object, key, rawKey.get());
         _NSKVOEnsureCollectionWillNotify(object, key, rawKey.get());
     }
