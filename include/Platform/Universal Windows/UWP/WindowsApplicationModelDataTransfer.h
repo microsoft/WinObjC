@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest,
     WADOperationCompletedEventArgs, WADDataPackageView, WADDataPackage, WADHtmlFormatHelper, WADClipboard, WADDataRequestDeferral,
     WADDataRequest, WADDataRequestedEventArgs, WADTargetApplicationChosenEventArgs, WADDataTransferManager, WADSharedStorageAccessManager;
@@ -86,7 +87,7 @@ WINRT_EXPORT
 @property (readonly) WFUri* applicationListingUri;
 @property (readonly) NSString* applicationName;
 @property (readonly) NSString* Description;
-@property (readonly) NSArray* fileTypes;
+@property (readonly) NSArray* /* NSString * */ fileTypes;
 @property (readonly) WSSRandomAccessStreamReference* thumbnail;
 @property (readonly) NSString* title;
 @property (readonly) WFUri* contentSourceApplicationLink;
@@ -118,7 +119,7 @@ WINRT_EXPORT
 @property (retain) NSString* Description;
 @property (retain) NSString* applicationName;
 @property (retain) WFUri* applicationListingUri;
-@property (readonly) NSMutableArray* fileTypes;
+@property (readonly) NSMutableArray* /* NSString * */ fileTypes;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* square30x30Logo;
 @property (retain) NSString* packageFamilyName;
 @property (retain) WUColor* logoBackgroundColor;
@@ -187,7 +188,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WADDataPackageView : RTObject
-@property (readonly) NSArray* availableFormats;
+@property (readonly) NSArray* /* NSString * */ availableFormats;
 @property (readonly) WADDataPackagePropertySetView* properties;
 @property (readonly) WADDataPackageOperation requestedOperation;
 - (void)reportOperationCompleted:(WADDataPackageOperation)value;
@@ -197,10 +198,11 @@ WINRT_EXPORT
 - (void)getCustomTextAsync:(NSString*)formatId success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 - (void)getUriAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
 - (void)getHtmlFormatAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)getResourceMapAsyncWithSuccess:(void (^)(NSDictionary*))success failure:(void (^)(NSError*))failure;
+- (void)getResourceMapAsyncWithSuccess:(void (^)(NSDictionary* /* NSString *, WSSRandomAccessStreamReference* */))success
+                               failure:(void (^)(NSError*))failure;
 - (void)getRtfAsyncWithSuccess:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
 - (void)getBitmapAsyncWithSuccess:(void (^)(WSSRandomAccessStreamReference*))success failure:(void (^)(NSError*))failure;
-- (void)getStorageItemsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getStorageItemsAsyncWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success failure:(void (^)(NSError*))failure;
 - (void)getApplicationLinkAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
 - (void)getWebLinkAsyncWithSuccess:(void (^)(WFUri*))success failure:(void (^)(NSError*))failure;
 - (void)requestAccessAsyncWithSuccess:(void (^)(WSEProtectionPolicyEvaluationResult))success failure:(void (^)(NSError*))failure;
@@ -221,7 +223,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property WADDataPackageOperation requestedOperation;
 @property (readonly) WADDataPackagePropertySet* properties;
-@property (readonly) NSMutableDictionary* resourceMap;
+@property (readonly) NSMutableDictionary* /* NSString *, WSSRandomAccessStreamReference* */ resourceMap;
 - (EventRegistrationToken)addDestroyedEvent:(void (^)(WADDataPackage*, RTObject*))del;
 - (void)removeDestroyedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addOperationCompletedEvent:(void (^)(WADDataPackage*, WADOperationCompletedEventArgs*))del;

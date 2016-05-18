@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXAAutomationProperty, WUXAAnnotationPatternIdentifiers, WUXAAutomationElementIdentifiers, WUXAAutomationProperties,
     WUXADockPatternIdentifiers, WUXADragPatternIdentifiers, WUXADropTargetPatternIdentifiers, WUXAExpandCollapsePatternIdentifiers,
     WUXAGridItemPatternIdentifiers, WUXAGridPatternIdentifiers, WUXAMultipleViewPatternIdentifiers, WUXARangeValuePatternIdentifiers,
@@ -356,16 +357,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXAAutomationProperties : RTObject
-+ (int)getPositionInSet:(WXDependencyObject*)element;
-+ (void)setPositionInSet:(WXDependencyObject*)element value:(int)value;
-+ (int)getSizeOfSet:(WXDependencyObject*)element;
-+ (void)setSizeOfSet:(WXDependencyObject*)element value:(int)value;
-+ (int)getLevel:(WXDependencyObject*)element;
-+ (void)setLevel:(WXDependencyObject*)element value:(int)value;
-+ (NSMutableArray*)getAnnotations:(WXDependencyObject*)element;
 + (WUXAPAccessibilityView)getAccessibilityView:(WXDependencyObject*)element;
 + (void)setAccessibilityView:(WXDependencyObject*)element value:(WUXAPAccessibilityView)value;
-+ (NSMutableArray*)getControlledPeers:(WXDependencyObject*)element;
++ (NSMutableArray* /* WXUIElement* */)getControlledPeers:(WXDependencyObject*)element;
 + (NSString*)getAcceleratorKey:(WXDependencyObject*)element;
 + (void)setAcceleratorKey:(WXDependencyObject*)element value:(NSString*)value;
 + (NSString*)getAccessKey:(WXDependencyObject*)element;
@@ -386,6 +380,13 @@ WINRT_EXPORT
 + (void)setName:(WXDependencyObject*)element value:(NSString*)value;
 + (WUXAPAutomationLiveSetting)getLiveSetting:(WXDependencyObject*)element;
 + (void)setLiveSetting:(WXDependencyObject*)element value:(WUXAPAutomationLiveSetting)value;
++ (int)getPositionInSet:(WXDependencyObject*)element;
++ (void)setPositionInSet:(WXDependencyObject*)element value:(int)value;
++ (int)getSizeOfSet:(WXDependencyObject*)element;
++ (void)setSizeOfSet:(WXDependencyObject*)element value:(int)value;
++ (int)getLevel:(WXDependencyObject*)element;
++ (void)setLevel:(WXDependencyObject*)element value:(int)value;
++ (NSMutableArray* /* WUXAAutomationAnnotation* */)getAnnotations:(WXDependencyObject*)element;
 + (WXDependencyProperty*)itemTypeProperty;
 + (WXDependencyProperty*)acceleratorKeyProperty;
 + (WXDependencyProperty*)accessKeyProperty;

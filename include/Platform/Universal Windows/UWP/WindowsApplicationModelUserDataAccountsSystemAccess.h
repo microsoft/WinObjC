@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAUSDeviceAccountConfiguration, WAUSUserDataAccountSystemAccessManager;
 @protocol WAUSIDeviceAccountConfiguration
 , WAUSIUserDataAccountSystemAccessManagerStatics;
@@ -71,7 +72,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAUSUserDataAccountSystemAccessManager : RTObject
 + (void)addAndShowDeviceAccountsAsync:(id<NSFastEnumeration> /* WAUSDeviceAccountConfiguration* */)accounts
-                              success:(void (^)(NSArray*))success
+                              success:(void (^)(NSArray* /* NSString * */))success
                               failure:(void (^)(NSError*))failure;
 @end
 

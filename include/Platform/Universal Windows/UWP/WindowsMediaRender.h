@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 // Windows.Media.Render.AudioRenderCategory
 enum _WMRAudioRenderCategory {
     WMRAudioRenderCategoryOther = 0,

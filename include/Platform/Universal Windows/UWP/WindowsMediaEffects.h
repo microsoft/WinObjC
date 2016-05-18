@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMEVideoCompositorDefinition, WMECompositeVideoFrameContext, WMEAudioEffect, WMEAudioRenderEffectsManager,
     WMEAudioCaptureEffectsManager, WMEAudioEffectsManager, WMEVideoEffectDefinition, WMEAudioEffectDefinition, WMEProcessVideoFrameContext,
     WMEProcessAudioFrameContext, WMEVideoTransformEffectDefinition;
@@ -148,7 +149,7 @@ typedef unsigned WMEMediaEffectClosedReason;
 
 @protocol WMEIBasicVideoEffect <WMIMediaExtension>
 @property (readonly) BOOL isReadOnly;
-@property (readonly) NSArray* supportedEncodingProperties;
+@property (readonly) NSArray* /* WMMVideoEncodingProperties* */ supportedEncodingProperties;
 @property (readonly) WMEMediaMemoryTypes supportedMemoryTypes;
 @property (readonly) BOOL timeIndependent;
 - (void)setEncodingProperties:(WMMVideoEncodingProperties*)encodingProperties device:(RTObject<WGDDIDirect3DDevice>*)device;
@@ -165,7 +166,7 @@ typedef unsigned WMEMediaEffectClosedReason;
 #define __WMEIBasicAudioEffect_DEFINED__
 
 @protocol WMEIBasicAudioEffect <WMIMediaExtension>
-@property (readonly) NSArray* supportedEncodingProperties;
+@property (readonly) NSArray* /* WMMAudioEncodingProperties* */ supportedEncodingProperties;
 @property (readonly) BOOL useInputFrameForOutput;
 - (void)setEncodingProperties:(WMMAudioEncodingProperties*)encodingProperties;
 - (void)processFrame:(WMEProcessAudioFrameContext*)context;
@@ -198,7 +199,7 @@ WINRT_EXPORT
 @interface WMECompositeVideoFrameContext : RTObject
 @property (readonly) WMVideoFrame* backgroundFrame;
 @property (readonly) WMVideoFrame* outputFrame;
-@property (readonly) NSArray* surfacesToOverlay;
+@property (readonly) NSArray* /* RTObject<WGDDIDirect3DSurface>* */ surfacesToOverlay;
 - (WMEMediaOverlay*)getOverlayForSurface:(RTObject<WGDDIDirect3DSurface>*)surfaceToOverlay;
 @end
 
@@ -225,7 +226,7 @@ WINRT_EXPORT
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* effectsProviderThumbnail;
 - (EventRegistrationToken)addAudioRenderEffectsChangedEvent:(void (^)(WMEAudioRenderEffectsManager*, RTObject*))del;
 - (void)removeAudioRenderEffectsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getAudioRenderEffects;
+- (NSArray* /* WMEAudioEffect* */)getAudioRenderEffects;
 - (void)showSettingsUI;
 @end
 
@@ -239,7 +240,7 @@ WINRT_EXPORT
 @interface WMEAudioCaptureEffectsManager : RTObject
 - (EventRegistrationToken)addAudioCaptureEffectsChangedEvent:(void (^)(WMEAudioCaptureEffectsManager*, RTObject*))del;
 - (void)removeAudioCaptureEffectsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getAudioCaptureEffects;
+- (NSArray* /* WMEAudioEffect* */)getAudioCaptureEffects;
 @end
 
 #endif // __WMEAudioCaptureEffectsManager_DEFINED__

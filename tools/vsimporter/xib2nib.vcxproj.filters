@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\UIKit">
+      <UniqueIdentifier>{9bb847f6-80fc-4fd1-a546-df6757becb79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="xib2nib\_UILayoutGuide.h">
@@ -201,168 +204,15 @@
     <ClInclude Include="xib2nib\XIBObjectTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="xib2nib\UICollectionViewController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="xib2nib\_UILayoutGuide.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\MKMapView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="xib2nib\NIBWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="xib2nib\NSLayoutConstraint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="xib2nib\ObjectConverter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIActivityIndicatorView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIBarButtonItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UICollectionView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UICollectionViewCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIColor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UICustomResource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIDatePicker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIFont.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIGestureRecognizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIImageView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UILabel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UINavigationBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UINavigationController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UINavigationItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIPageControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIPanGestureRecognizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIPickerView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIProxyObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIRuntimeAccessibilityConfiguration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIRuntimeEventConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIRuntimeOutletCollectionConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIRuntimeOutletConnection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIScrollView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISearchBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISearchDisplayController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISegment.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISegmentedControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISlider.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIStepper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIStoryboardSegue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISwipeGestureRecognizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UISwitch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITabBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITabBarController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITabBarItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITableView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITableViewCell.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITableViewCellContentView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITableViewController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITapGestureRecognizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITextField.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UITextView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIToolbar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIViewController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIWebView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xib2nib\UIWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xib2nib\xib2nib.cpp">
@@ -394,6 +244,165 @@
     </ClCompile>
     <ClCompile Include="src\utils\miscutils.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIActivityIndicatorView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIBarButtonItem.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIButton.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UICollectionView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UICollectionViewCell.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIColor.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIControl.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UICustomResource.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIDatePicker.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIFont.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIGestureRecognizer.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIImageView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UILabel.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UINavigationBar.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UINavigationController.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UINavigationItem.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIPageControl.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIPanGestureRecognizer.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIPickerView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIProxyObject.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIRuntimeAccessibilityConfiguration.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIRuntimeEventConnection.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIRuntimeOutletCollectionConnection.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIRuntimeOutletConnection.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIScrollView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISearchBar.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISearchDisplayController.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISegment.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISegmentedControl.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISlider.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIStepper.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIStoryboardSegue.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISwipeGestureRecognizer.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UISwitch.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITabBar.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITabBarController.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITabBarItem.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITableView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITableViewCell.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITableViewCellContentView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITableViewController.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITapGestureRecognizer.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITextField.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UITextView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIToolbar.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIViewController.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIWebView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\_UILayoutGuide.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\MKMapView.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\NSLayoutConstraint.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIWindow.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UICollectionViewController.cpp">
+      <Filter>Source Files\UIKit</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

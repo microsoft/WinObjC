@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXRCustomXamlResourceLoader;
 @protocol WUXRICustomXamlResourceLoader
 , WUXRICustomXamlResourceLoaderOverrides, WUXRICustomXamlResourceLoaderStatics, WUXRICustomXamlResourceLoaderFactory;

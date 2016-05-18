@@ -14,16 +14,24 @@
 //
 //******************************************************************************
 
-class ID3D11DeviceContext;
-class ID3D11RenderTargetView;
+#pragma once
+#include "UIViewController.h"
+#include "UICollectionView.h"
 
-class DXCompositorInterface {
+class UICollectionViewController : public UIViewController
+{
 public:
-    virtual void ConnectDevice(ID3D11Device1* device) = 0;
-    virtual void SetRenderSize(int width, int height) = 0;
-    virtual void SetLandscape(bool bLandscape) = 0;
-    virtual void RenderFrame(ID3D11DeviceContext* context, ID3D11RenderTargetView* renderTarget) = 0;
+    UICollectionView* _collectionView;
+
+    bool _clearSelectionOnViewWillAppear;
+    bool _installStandardGestureForInteractiveMovement;
+    bool _useLayoutToLayoutNavigationTransitions;
+
+    virtual void InitFromXIB(XIBObject *obj);
+    virtual void InitFromStory(XIBObject *obj);
+    virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
+
+    UICollectionViewController();
+    virtual void Awaken();
 };
 
-class CACompositorClientInterface;
-DXCompositorInterface* CreateDXCompositor(CACompositorClientInterface* client);

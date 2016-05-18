@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WADDCCoreDragInfo, WADDCCoreDragUIOverride, WADDCCoreDragDropManager, WADDCCoreDropOperationTargetRequestedEventArgs,
     WADDCCoreDragOperation;
 @protocol WADDCICoreDragInfo

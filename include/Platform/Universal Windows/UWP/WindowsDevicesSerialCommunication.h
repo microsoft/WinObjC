@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDSSerialDevice, WDSErrorReceivedEventArgs, WDSPinChangedEventArgs;
 @protocol WDSISerialDeviceStatics
 , WDSIErrorReceivedEventArgs, WDSIPinChangedEventArgs, WDSISerialDevice;

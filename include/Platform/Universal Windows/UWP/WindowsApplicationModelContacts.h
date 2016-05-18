@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WACContact, WACContactCardDelayedDataLoader, WACContactStore, WACContactAnnotationStore, WACContactCardOptions,
     WACFullContactCardOptions, WACContactAnnotation, WACContactAnnotationList, WACContactChangeTracker, WACContactChangedEventArgs,
     WACAggregateContactManager, WACContactList, WACContactReader, WACContactQueryOptions, WACContactListSyncManager, WACContactPhone,
@@ -336,19 +337,19 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (retain) NSString* name;
-@property (readonly) NSMutableArray* fields;
+@property (readonly) NSMutableArray* /* RTObject<WACIContactField>* */ fields;
 @property (retain) NSString* id;
 @property (retain) NSString* notes;
-@property (readonly) NSMutableArray* connectedServiceAccounts;
-@property (readonly) NSMutableArray* emails;
-@property (readonly) NSMutableArray* addresses;
-@property (readonly) NSMutableArray* importantDates;
-@property (readonly) NSMutableArray* jobInfo;
-@property (readonly) NSMutableArray* dataSuppliers;
-@property (readonly) NSMutableArray* phones;
+@property (readonly) NSMutableArray* /* WACContactConnectedServiceAccount* */ connectedServiceAccounts;
+@property (readonly) NSMutableArray* /* WACContactEmail* */ emails;
+@property (readonly) NSMutableArray* /* WACContactAddress* */ addresses;
+@property (readonly) NSMutableArray* /* WACContactDate* */ importantDates;
+@property (readonly) NSMutableArray* /* WACContactJobInfo* */ jobInfo;
+@property (readonly) NSMutableArray* /* NSString * */ dataSuppliers;
+@property (readonly) NSMutableArray* /* WACContactPhone* */ phones;
 @property (readonly) RTObject<WFCIPropertySet>* providerProperties;
-@property (readonly) NSMutableArray* significantOthers;
-@property (readonly) NSMutableArray* websites;
+@property (readonly) NSMutableArray* /* WACContactSignificantOther* */ significantOthers;
+@property (readonly) NSMutableArray* /* WACContactWebsite* */ websites;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* sourceDisplayPicture;
 @property (retain) NSString* textToneToken;
 @property (retain) NSString* displayNameOverride;
@@ -410,10 +411,12 @@ WINRT_EXPORT
 @property (readonly) WACContactChangeTracker* changeTracker;
 - (EventRegistrationToken)addContactChangedEvent:(void (^)(WACContactStore*, WACContactChangedEventArgs*))del;
 - (void)removeContactChangedEvent:(EventRegistrationToken)tok;
-- (void)findContactsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)findContactsWithSearchTextAsync:(NSString*)searchText success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findContactsAsyncWithSuccess:(void (^)(NSArray* /* WACContact* */))success failure:(void (^)(NSError*))failure;
+- (void)findContactsWithSearchTextAsync:(NSString*)searchText
+                                success:(void (^)(NSArray* /* WACContact* */))success
+                                failure:(void (^)(NSError*))failure;
 - (void)getContactAsync:(NSString*)contactId success:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
-- (void)findContactListsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findContactListsAsyncWithSuccess:(void (^)(NSArray* /* WACContactList* */))success failure:(void (^)(NSError*))failure;
 - (void)getContactListAsync:(NSString*)contactListId success:(void (^)(WACContactList*))success failure:(void (^)(NSError*))failure;
 - (void)createContactListAsync:(NSString*)displayName success:(void (^)(WACContactList*))success failure:(void (^)(NSError*))failure;
 - (void)getMeContactAsyncWithSuccess:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
@@ -433,9 +436,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactAnnotationStore : RTObject
-- (void)findContactIdsByEmailAsync:(NSString*)emailAddress success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)findContactIdsByPhoneNumberAsync:(NSString*)phoneNumber success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)findAnnotationsForContactAsync:(WACContact*)contact success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findContactIdsByEmailAsync:(NSString*)emailAddress
+                           success:(void (^)(NSArray* /* NSString * */))success
+                           failure:(void (^)(NSError*))failure;
+- (void)findContactIdsByPhoneNumberAsync:(NSString*)phoneNumber
+                                 success:(void (^)(NSArray* /* NSString * */))success
+                                 failure:(void (^)(NSError*))failure;
+- (void)findAnnotationsForContactAsync:(WACContact*)contact
+                               success:(void (^)(NSArray* /* WACContactAnnotation* */))success
+                               failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)disableAnnotationAsync:(WACContactAnnotation*)annotation;
 - (void)createAnnotationListAsyncWithSuccess:(void (^)(WACContactAnnotationList*))success failure:(void (^)(NSError*))failure;
 - (void)createAnnotationListInAccountAsync:(NSString*)userDataAccountId
@@ -444,7 +453,7 @@ WINRT_EXPORT
 - (void)getAnnotationListAsync:(NSString*)annotationListId
                        success:(void (^)(WACContactAnnotationList*))success
                        failure:(void (^)(NSError*))failure;
-- (void)findAnnotationListsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findAnnotationListsAsyncWithSuccess:(void (^)(NSArray* /* WACContactAnnotationList* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACContactAnnotationStore_DEFINED__
@@ -504,8 +513,10 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)deleteAsync;
 - (void)trySaveAnnotationAsync:(WACContactAnnotation*)annotation success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)getAnnotationAsync:(NSString*)annotationId success:(void (^)(WACContactAnnotation*))success failure:(void (^)(NSError*))failure;
-- (void)findAnnotationsByRemoteIdAsync:(NSString*)remoteId success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)findAnnotationsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findAnnotationsByRemoteIdAsync:(NSString*)remoteId
+                               success:(void (^)(NSArray* /* WACContactAnnotation* */))success
+                               failure:(void (^)(NSError*))failure;
+- (void)findAnnotationsAsyncWithSuccess:(void (^)(NSArray* /* WACContactAnnotation* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAnnotationAsync:(WACContactAnnotation*)annotation;
 @end
 
@@ -541,7 +552,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACAggregateContactManager : RTObject
-- (void)findRawContactsAsync:(WACContact*)contact success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findRawContactsAsync:(WACContact*)contact success:(void (^)(NSArray* /* WACContact* */))success failure:(void (^)(NSError*))failure;
 - (void)tryLinkContactsAsync:(WACContact*)primaryContact
             secondaryContact:(WACContact*)secondaryContact
                      success:(void (^)(WACContact*))success
@@ -593,7 +604,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactReader : RTObject
 - (void)readBatchAsyncWithSuccess:(void (^)(WACContactBatch*))success failure:(void (^)(NSError*))failure;
-- (NSArray*)getMatchingPropertiesWithMatchReason:(WACContact*)contact;
+- (NSArray* /* WACContactMatchReason* */)getMatchingPropertiesWithMatchReason:(WACContact*)contact;
 @end
 
 #endif // __WACContactReader_DEFINED__
@@ -604,14 +615,14 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactQueryOptions : RTObject
++ (instancetype)make ACTIVATOR;
 + (WACContactQueryOptions*)makeWithText:(NSString*)text ACTIVATOR;
 + (WACContactQueryOptions*)makeWithTextAndFields:(NSString*)text fields:(WACContactQuerySearchFields)fields ACTIVATOR;
-+ (instancetype)make ACTIVATOR;
 @property BOOL includeContactsFromHiddenLists;
 @property WACContactAnnotationOperations desiredOperations;
 @property WACContactQueryDesiredFields desiredFields;
-@property (readonly) NSMutableArray* annotationListIds;
-@property (readonly) NSMutableArray* contactListIds;
+@property (readonly) NSMutableArray* /* NSString * */ annotationListIds;
+@property (readonly) NSMutableArray* /* NSString * */ contactListIds;
 @property (readonly) WACContactQueryTextSearch* textSearch;
 @end
 
@@ -699,11 +710,11 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactDate : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id year;
-@property (retain) id month;
+@property (retain) id /* int */ year;
+@property (retain) id /* unsigned int */ month;
 @property WACContactDateKind kind;
 @property (retain) NSString* Description;
-@property (retain) id day;
+@property (retain) id /* unsigned int */ day;
 @end
 
 #endif // __WACContactDate_DEFINED__
@@ -786,7 +797,7 @@ WINRT_EXPORT
 @interface WACContactChangeReader : RTObject
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WACContactChange*)lastChangeToAccept;
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WACContactChange* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACContactChangeReader_DEFINED__
@@ -797,7 +808,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactBatch : RTObject
-@property (readonly) NSArray* contacts;
+@property (readonly) NSArray* /* WACContact* */ contacts;
 @property (readonly) WACContactBatchStatus status;
 @end
 
@@ -810,7 +821,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WACContactMatchReason : RTObject
 @property (readonly) WACContactMatchReasonKind field;
-@property (readonly) NSArray* segments;
+@property (readonly) NSArray* /* WDTTextSegment* */ segments;
 @property (readonly) NSString* text;
 @end
 
@@ -845,12 +856,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactManager : RTObject
++ (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
 + (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
 + (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
 + (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact
                                                      selection:(WFRect*)selection
                                             preferredPlacement:(WUPPlacement)preferredPlacement;
-+ (void)requestStoreAsyncWithSuccess:(void (^)(WACContactStore*))success failure:(void (^)(NSError*))failure;
 + (void)showContactCard:(WACContact*)contact selection:(WFRect*)selection;
 + (void)showContactCardWithPlacement:(WACContact*)contact selection:(WFRect*)selection preferredPlacement:(WUPPlacement)preferredPlacement;
 + (WACContactCardDelayedDataLoader*)showDelayLoadedContactCard:(WACContact*)contact
@@ -1008,15 +1019,15 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WACContactInformation : RTObject
-@property (readonly) NSArray* customFields;
-@property (readonly) NSArray* emails;
-@property (readonly) NSArray* instantMessages;
-@property (readonly) NSArray* locations;
+@property (readonly) NSArray* /* WACContactField* */ customFields;
+@property (readonly) NSArray* /* WACContactField* */ emails;
+@property (readonly) NSArray* /* WACContactInstantMessageField* */ instantMessages;
+@property (readonly) NSArray* /* WACContactLocationField* */ locations;
 @property (readonly) NSString* name;
-@property (readonly) NSArray* phoneNumbers;
+@property (readonly) NSArray* /* WACContactField* */ phoneNumbers;
 - (void)getThumbnailAsyncWithSuccess:(void (^)(RTObject<WSSIRandomAccessStreamWithContentType>*))success
                              failure:(void (^)(NSError*))failure;
-- (NSArray*)queryCustomFields:(NSString*)customName;
+- (NSArray* /* WACContactField* */)queryCustomFields:(NSString*)customName;
 @end
 
 #endif // __WACContactInformation_DEFINED__
@@ -1064,12 +1075,12 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property WACContactSelectionMode selectionMode;
 @property (retain) NSString* commitButtonText;
-@property (readonly) NSMutableArray* desiredFields;
-@property (readonly) NSMutableArray* desiredFieldsWithContactFieldType;
+@property (readonly) NSMutableArray* /* NSString * */ desiredFields;
+@property (readonly) NSMutableArray* /* WACContactFieldType */ desiredFieldsWithContactFieldType;
 - (void)pickSingleContactAsyncWithSuccess:(void (^)(WACContactInformation*))success failure:(void (^)(NSError*))failure;
-- (void)pickMultipleContactsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)pickMultipleContactsAsyncWithSuccess:(void (^)(NSArray* /* WACContactInformation* */))success failure:(void (^)(NSError*))failure;
 - (void)pickContactAsyncWithSuccess:(void (^)(WACContact*))success failure:(void (^)(NSError*))failure;
-- (void)pickContactsAsyncWithSuccess:(void (^)(NSMutableArray*))success failure:(void (^)(NSError*))failure;
+- (void)pickContactsAsyncWithSuccess:(void (^)(NSMutableArray* /* WACContact* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WACContactPicker_DEFINED__

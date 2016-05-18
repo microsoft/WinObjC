@@ -23,6 +23,7 @@
 #import "UITabBarControllerInternal.h"
 #import "UINavigationBarInternal.h"
 #import "UIViewInternal.h"
+#import "CACompositor.h"
 
 static const wchar_t* TAG = L"UINavigationController";
 

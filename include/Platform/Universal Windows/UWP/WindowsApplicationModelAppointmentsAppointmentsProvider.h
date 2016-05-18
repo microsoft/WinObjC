@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAAAAppointmentsProviderLaunchActionVerbs, WAAAAddAppointmentOperation, WAAAReplaceAppointmentOperation,
     WAAARemoveAppointmentOperation;
 @protocol WAAAIAppointmentsProviderLaunchActionVerbsStatics
@@ -70,7 +71,7 @@ WINRT_EXPORT
 @interface WAAAReplaceAppointmentOperation : RTObject
 @property (readonly) NSString* appointmentId;
 @property (readonly) WAAAppointment* appointmentInformation;
-@property (readonly) id instanceStartDate;
+@property (readonly) id /* WFDateTime* */ instanceStartDate;
 @property (readonly) NSString* sourcePackageFamilyName;
 - (void)reportCompleted:(NSString*)itemId;
 - (void)reportCanceled;
@@ -87,7 +88,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAAARemoveAppointmentOperation : RTObject
 @property (readonly) NSString* appointmentId;
-@property (readonly) id instanceStartDate;
+@property (readonly) id /* WFDateTime* */ instanceStartDate;
 @property (readonly) NSString* sourcePackageFamilyName;
 - (void)reportCompleted;
 - (void)reportCanceled;

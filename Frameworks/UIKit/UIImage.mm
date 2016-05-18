@@ -30,6 +30,7 @@
 #include "UIKit/UIImage.h"
 #include "UIImageCachedObject.h"
 #include "CALayerInternal.h"
+#include "CACompositor.h"
 
 #include "Windows.h"
 #include "COMIncludes.h"

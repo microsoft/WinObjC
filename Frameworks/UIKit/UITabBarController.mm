@@ -26,6 +26,7 @@
 #import "LoggingNative.h"
 #import "UITabBarControllerInternal.h"
 #import "UITabBarInternal.h"
+#import "CACompositor.h"
 
 static const wchar_t* TAG = L"UITabBarController";
 

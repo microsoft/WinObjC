@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXIPointer, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior,
     WUXIManipulationPivot, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName,
     WUXIKeyRoutedEventArgs, WUXIManipulationCompletedRoutedEventArgs, WUXIManipulationDeltaRoutedEventArgs,
@@ -233,9 +234,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIFocusManager : RTObject
 + (BOOL)tryMoveFocus:(WUXIFocusNavigationDirection)focusNavigationDirection;
++ (RTObject*)getFocusedElement;
 + (WXUIElement*)findNextFocusableElement:(WUXIFocusNavigationDirection)focusNavigationDirection;
 + (WXUIElement*)findNextFocusableElementWithHint:(WUXIFocusNavigationDirection)focusNavigationDirection hintRect:(WFRect*)hintRect;
-+ (RTObject*)getFocusedElement;
 @end
 
 #endif // __WUXIFocusManager_DEFINED__
@@ -282,8 +283,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXIManipulationPivot : RTObject
-+ (instancetype)make ACTIVATOR;
 + (WUXIManipulationPivot*)makeInstanceWithCenterAndRadius:(WFPoint*)center radius:(double)radius ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property double radius;
 @property (retain) WFPoint* center;
 @end
@@ -357,7 +358,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUXIInputScope : WXDependencyObject
 + (instancetype)make ACTIVATOR;
-@property (readonly) NSMutableArray* names;
+@property (readonly) NSMutableArray* /* WUXIInputScopeName* */ names;
 @end
 
 #endif // __WUXIInputScope_DEFINED__
@@ -368,8 +369,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXIInputScopeName : WXDependencyObject
-+ (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WUXIInputScopeName*)makeInstance:(WUXIInputScopeNameValue)nameValue ACTIVATOR;
 @property WUXIInputScopeNameValue nameValue;
 @end
 
@@ -489,7 +490,7 @@ WINRT_EXPORT
 @property (readonly) WSVirtualKeyModifiers keyModifiers;
 @property (readonly) WUXIPointer* pointer;
 - (WUIPointerPoint*)getCurrentPoint:(WXUIElement*)relativeTo;
-- (NSMutableArray*)getIntermediatePoints:(WXUIElement*)relativeTo;
+- (NSMutableArray* /* WUIPointerPoint* */)getIntermediatePoints:(WXUIElement*)relativeTo;
 @end
 
 #endif // __WUXIPointerRoutedEventArgs_DEFINED__

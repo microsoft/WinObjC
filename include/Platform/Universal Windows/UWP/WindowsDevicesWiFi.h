@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDWWiFiAdapter, WDWWiFiNetworkReport, WDWWiFiAvailableNetwork, WDWWiFiConnectionResult;
 @protocol WDWIWiFiAdapterStatics
 , WDWIWiFiAdapter, WDWIWiFiNetworkReport, WDWIWiFiAvailableNetwork, WDWIWiFiConnectionResult;
@@ -87,7 +88,7 @@ typedef unsigned WDWWiFiConnectionStatus;
 
 WINRT_EXPORT
 @interface WDWWiFiAdapter : RTObject
-+ (void)findAllAdaptersAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
++ (void)findAllAdaptersAsyncWithSuccess:(void (^)(NSArray* /* WDWWiFiAdapter* */))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector;
 + (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiAdapter*))success failure:(void (^)(NSError*))failure;
 + (void)requestAccessAsyncWithSuccess:(void (^)(WDWWiFiAccessStatus))success failure:(void (^)(NSError*))failure;
@@ -122,7 +123,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiNetworkReport : RTObject
-@property (readonly) NSArray* availableNetworks;
+@property (readonly) NSArray* /* WDWWiFiAvailableNetwork* */ availableNetworks;
 @property (readonly) WFDateTime* timestamp;
 @end
 

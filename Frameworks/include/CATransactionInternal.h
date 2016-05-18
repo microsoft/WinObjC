@@ -15,9 +15,11 @@
 //******************************************************************************
 #pragma once
 
+#import "CACompositor.h"
+
 @interface CATransaction (Internal)
 
-+ (DisplayTransaction*)_currentDisplayTransaction;
++ (std::shared_ptr<DisplayTransaction>)_currentDisplayTransaction;
 
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer;
 + (void)_addSublayerToLayer:(CALayer*)layer sublayer:(CALayer*)sublayer before:(CALayer*)before;

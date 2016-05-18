@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUPMessageDialog, WUPUICommand, WUPUICommandSeparator, WUPPopupMenu;
 @protocol WUPIMessageDialog
 , WUPIMessageDialogFactory, WUPIUICommand, WUPIUICommandFactory, WUPIPopupMenu;
@@ -82,7 +83,7 @@ WINRT_EXPORT
 @property unsigned int defaultCommandIndex;
 @property (retain) NSString* content;
 @property unsigned int cancelCommandIndex;
-@property (readonly) NSMutableArray* commands;
+@property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsyncWithSuccess:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
 @end
 
@@ -126,7 +127,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WUPPopupMenu : RTObject
 + (instancetype)make ACTIVATOR;
-@property (readonly) NSMutableArray* commands;
+@property (readonly) NSMutableArray* /* RTObject<WUPIUICommand>* */ commands;
 - (void)showAsync:(WFPoint*)invocationPoint success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
 - (void)showAsyncWithRect:(WFRect*)selection success:(void (^)(RTObject<WUPIUICommand>*))success failure:(void (^)(NSError*))failure;
 - (void)showAsyncWithRectAndPlacement:(WFRect*)selection

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDWWiFiDirectDevice, WDWWiFiDirectConnectionParameters, WDWWiFiDirectInformationElement, WDWWiFiDirectLegacySettings,
     WDWWiFiDirectAdvertisement, WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWWiFiDirectAdvertisementPublisher,
     WDWWiFiDirectConnectionRequest, WDWWiFiDirectConnectionRequestedEventArgs, WDWWiFiDirectConnectionListener;
@@ -93,18 +94,18 @@ typedef unsigned WDWWiFiDirectAdvertisementPublisherStatus;
 
 WINRT_EXPORT
 @interface WDWWiFiDirectDevice : RTObject <WFIClosable>
++ (NSString*)getDeviceSelector;
++ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 + (NSString*)getDeviceSelector:(WDWWiFiDirectDeviceSelectorType)type;
 + (void)fromIdAsync:(NSString*)deviceId
     connectionParameters:(WDWWiFiDirectConnectionParameters*)connectionParameters
                  success:(void (^)(WDWWiFiDirectDevice*))success
                  failure:(void (^)(NSError*))failure;
-+ (NSString*)getDeviceSelector;
-+ (void)fromIdAsync:(NSString*)deviceId success:(void (^)(WDWWiFiDirectDevice*))success failure:(void (^)(NSError*))failure;
 @property (readonly) WDWWiFiDirectConnectionStatus connectionStatus;
 @property (readonly) NSString* deviceId;
 - (EventRegistrationToken)addConnectionStatusChangedEvent:(void (^)(WDWWiFiDirectDevice*, RTObject*))del;
 - (void)removeConnectionStatusChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getConnectionEndpointPairs;
+- (NSArray* /* WNEndpointPair* */)getConnectionEndpointPairs;
 - (void)close;
 @end
 
@@ -128,8 +129,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDWWiFiDirectInformationElement : RTObject
-+ (NSMutableArray*)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
-+ (NSMutableArray*)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
++ (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromBuffer:(RTObject<WSSIBuffer>*)buffer;
++ (NSMutableArray* /* WDWWiFiDirectInformationElement* */)createFromDeviceInformation:(WDEDeviceInformation*)deviceInformation;
 + (instancetype)make ACTIVATOR;
 @property (retain) RTObject<WSSIBuffer>* value;
 @property uint8_t ouiType;
@@ -159,7 +160,7 @@ WINRT_EXPORT
 @interface WDWWiFiDirectAdvertisement : RTObject
 @property WDWWiFiDirectAdvertisementListenStateDiscoverability listenStateDiscoverability;
 @property BOOL isAutonomousGroupOwnerEnabled;
-@property (retain) NSMutableArray* informationElements;
+@property (retain) NSMutableArray* /* WDWWiFiDirectInformationElement* */ informationElements;
 @property (readonly) WDWWiFiDirectLegacySettings* legacySettings;
 @end
 

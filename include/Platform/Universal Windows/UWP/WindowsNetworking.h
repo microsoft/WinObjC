@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNHostName, WNEndpointPair;
 @protocol WNIHostNameStatics
 , WNIHostName, WNIHostNameFactory, WNIEndpointPair, WNIEndpointPairFactory;

@@ -155,30 +155,7 @@
     <DisplayString>{_name,na}: {_reason,na}</DisplayString>
   </Type>
 
-  <Type Name="NSObject" Inheritable="false">
-    <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
-    members of the objects, as it would if this natvis entry did not exist.-->
-    <Expand HideRawView="true">
-      <!-- We're strictly adding nodes here, not removing any, so the 'raw view' node has no value.-->
-      <!-- Description node-->
-      <Synthetic Name="description" Expression="*this,ndexpand(0)">
-        <CustomVisualizer VisualizerId="7f4e0d61-4720-4dfb-aff7-b611935df606" />
-      </Synthetic>
-      <!-- debugDescription node-->
-      <Synthetic Name="debugDescription" Expression="*this,ndexpand(1)">
-        <CustomVisualizer VisualizerId="454155fb-921d-4eeb-a2dd-bce2bafdc89c" />
-      </Synthetic>
-      <!-- Now, show the raw fields of the object here.-->
-      <Item Name="isa">isa</Item>
-    </Expand>
-  </Type>
-
-  <!-- Alternate visualizer of NSObject for VS 2015, Update 2.  In general, the above visualizer is preferable because it avoids the need
-  to drill down extra times to see ivar's.  However, VS 2015 update 2 doesn't support combining the "nd" format specifier with the "expand" format specifier,
-  so a fallback visualizer is required for which all of the sub-expressions parse against update 2.  This alternate visualizer can be removed once VS 2015 Update 2
-  compatibility is no longer supported.
-  -->
-  <Type Name="NSObject" Priority="Low">
+  <Type Name="NSObject">
     <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
     members of the objects, as it would if this natvis entry did not exist.-->
     <DisplayString>{*this,!}</DisplayString>

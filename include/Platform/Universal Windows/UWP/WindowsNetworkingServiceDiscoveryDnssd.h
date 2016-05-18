@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNSDDnssdServiceWatcher, WNSDDnssdServiceInstance, WNSDDnssdRegistrationResult, WNSDDnssdServiceInstanceCollection;
 @protocol WNSDIDnssdServiceWatcher
 , WNSDIDnssdRegistrationResult, WNSDIDnssdServiceInstanceFactory, WNSDIDnssdServiceInstance;
@@ -93,7 +94,7 @@ WINRT_EXPORT
 @property unsigned short port;
 @property (retain) WNHostName* hostName;
 @property (retain) NSString* dnssdServiceInstanceName;
-@property (readonly) NSMutableDictionary* textAttributes;
+@property (readonly) NSMutableDictionary* /* NSString *, NSString * */ textAttributes;
 - (void)registerStreamSocketListenerAsync1:(WNSStreamSocketListener*)socket
                                    success:(void (^)(WNSDDnssdRegistrationResult*))success
                                    failure:(void (^)(NSError*))failure;

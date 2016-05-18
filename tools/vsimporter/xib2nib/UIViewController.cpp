@@ -21,8 +21,16 @@
 #include <assert.h>
 
 static PropertyMapper propertyMappings[] = {
-    "IBUINibName", "UINibName", NULL, "IBUIResizesToFullScreen", "UIResizesToFullScreen", NULL, "IBUITitle", "UITitle", NULL,
+    "IBUINibName",
+    "UINibName",
+    NULL,
+    "IBUIResizesToFullScreen",
+    "UIResizesToFullScreen",NULL,
+    "IBUITitle",
+    "UITitle",
+    NULL,
 };
+
 static const int numPropertyMappings = sizeof(propertyMappings) / sizeof(PropertyMapper);
 viewControllerList UIViewController::_viewControllerNames;
 
@@ -186,5 +194,6 @@ void UIViewController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) 
     if (_viewControllers->count() > 0) {
         AddOutputMember(writer, "UIViewControllers", _viewControllers);
     }
+
     ObjectConverterSwapper::ConvertStaticMappings(writer, obj);
 }

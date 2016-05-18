@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes,
     WMSystemMediaTransportControlsTimelineProperties, WMMusicDisplayProperties, WMVideoDisplayProperties, WMImageDisplayProperties,
     WMSystemMediaTransportControlsDisplayUpdater, WMSystemMediaTransportControlsButtonPressedEventArgs,
@@ -130,12 +131,12 @@ typedef unsigned WMAudioProcessing;
 #define __WMIMediaFrame_DEFINED__
 
 @protocol WMIMediaFrame <WFIClosable>
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property BOOL isDiscontinuous;
 @property (readonly) BOOL isReadOnly;
-@property (retain) id relativeTime;
-@property (retain) id systemRelativeTime;
+@property (retain) id /* WFTimeSpan* */ relativeTime;
+@property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (readonly) NSString* type;
 - (void)close;
 @end
@@ -159,7 +160,7 @@ typedef unsigned WMAudioProcessing;
 #define __WMIMediaMarkers_DEFINED__
 
 @protocol WMIMediaMarkers
-@property (readonly) NSArray* markers;
+@property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @end
 
 #endif // __WMIMediaMarkers_DEFINED__
@@ -193,10 +194,10 @@ WINRT_EXPORT
 @interface WMVideoFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMVideoFrame*)make:(WGIBitmapPixelFormat)format width:(int)width height:(int)height ACTIVATOR;
 + (WMVideoFrame*)makeWithAlpha:(WGIBitmapPixelFormat)format width:(int)width height:(int)height alpha:(WGIBitmapAlphaMode)alpha ACTIVATOR;
-@property (retain) id systemRelativeTime;
-@property (retain) id relativeTime;
+@property (retain) id /* WFTimeSpan* */ systemRelativeTime;
+@property (retain) id /* WFTimeSpan* */ relativeTime;
 @property BOOL isDiscontinuous;
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* type;
@@ -240,10 +241,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAudioFrame : RTObject <WMIMediaFrame, WFIClosable>
 + (WMAudioFrame*)make:(unsigned int)capacity ACTIVATOR;
-@property (retain) id systemRelativeTime;
-@property (retain) id relativeTime;
+@property (retain) id /* WFTimeSpan* */ systemRelativeTime;
+@property (retain) id /* WFTimeSpan* */ relativeTime;
 @property BOOL isDiscontinuous;
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* type;
@@ -291,7 +292,7 @@ WINRT_EXPORT
 @property (retain) NSString* albumArtist;
 @property unsigned int trackNumber;
 @property (retain) NSString* albumTitle;
-@property (readonly) NSMutableArray* genres;
+@property (readonly) NSMutableArray* /* NSString * */ genres;
 @end
 
 #endif // __WMMusicDisplayProperties_DEFINED__
@@ -304,7 +305,7 @@ WINRT_EXPORT
 @interface WMVideoDisplayProperties : RTObject
 @property (retain) NSString* title;
 @property (retain) NSString* subtitle;
-@property (readonly) NSMutableArray* genres;
+@property (readonly) NSMutableArray* /* NSString * */ genres;
 @end
 
 #endif // __WMVideoDisplayProperties_DEFINED__

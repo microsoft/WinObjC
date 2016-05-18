@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXAPIRawElementProviderSimple;
 @protocol WUXAPIAnnotationProvider
 , WUXAPIDockProvider, WUXAPIDragProvider, WUXAPIDropTargetProvider, WUXAPIExpandCollapseProvider, WUXAPIGridItemProvider,
@@ -77,9 +78,9 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIDragProvider
 @property (readonly) NSString* dropEffect;
-@property (readonly) NSArray* dropEffects;
+@property (readonly) NSArray* /* NSString * */ dropEffects;
 @property (readonly) BOOL isGrabbed;
-- (NSArray*)getGrabbedItems;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getGrabbedItems;
 @end
 
 #endif // __WUXAPIDragProvider_DEFINED__
@@ -90,7 +91,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIDropTargetProvider
 @property (readonly) NSString* dropEffect;
-@property (readonly) NSArray* dropEffects;
+@property (readonly) NSArray* /* NSString * */ dropEffects;
 @end
 
 #endif // __WUXAPIDropTargetProvider_DEFINED__
@@ -161,7 +162,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPIMultipleViewProvider
 @property (readonly) int currentView;
-- (NSArray*)getSupportedViews;
+- (NSArray* /* int */)getSupportedViews;
 - (NSString*)getViewName:(int)viewId;
 - (void)setCurrentView:(int)viewId;
 @end
@@ -242,7 +243,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPISelectionProvider
 @property (readonly) BOOL canSelectMultiple;
 @property (readonly) BOOL isSelectionRequired;
-- (NSArray*)getSelection;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getSelection;
 @end
 
 #endif // __WUXAPISelectionProvider_DEFINED__
@@ -253,8 +254,8 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPISpreadsheetItemProvider
 @property (readonly) NSString* formula;
-- (NSArray*)getAnnotationObjects;
-- (NSArray*)getAnnotationTypes;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getAnnotationObjects;
+- (NSArray* /* WUXAAnnotationType */)getAnnotationTypes;
 @end
 
 #endif // __WUXAPISpreadsheetItemProvider_DEFINED__
@@ -301,8 +302,8 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 #define __WUXAPITableItemProvider_DEFINED__
 
 @protocol WUXAPITableItemProvider
-- (NSArray*)getColumnHeaderItems;
-- (NSArray*)getRowHeaderItems;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getColumnHeaderItems;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getRowHeaderItems;
 @end
 
 #endif // __WUXAPITableItemProvider_DEFINED__
@@ -313,8 +314,8 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 
 @protocol WUXAPITableProvider
 @property (readonly) WUXARowOrColumnMajor rowOrColumnMajor;
-- (NSArray*)getColumnHeaders;
-- (NSArray*)getRowHeaders;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getColumnHeaders;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getRowHeaders;
 @end
 
 #endif // __WUXAPITableProvider_DEFINED__
@@ -344,7 +345,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (RTObject<WUXAPITextRangeProvider>*)findAttribute:(int)attributeId value:(RTObject*)value backward:(BOOL)backward;
 - (RTObject<WUXAPITextRangeProvider>*)findText:(NSString*)text backward:(BOOL)backward ignoreCase:(BOOL)ignoreCase;
 - (RTObject*)getAttributeValue:(int)attributeId;
-- (void)getBoundingRectangles:(id<NSFastEnumeration> /* double */*)returnValue;
+- (void)getBoundingRectangles:(NSArray* /* double */*)returnValue;
 - (WUXAPIRawElementProviderSimple*)getEnclosingElement;
 - (NSString*)getText:(int)maxLength;
 - (int)move:(WUXATTextUnit)unit count:(int)count;
@@ -356,7 +357,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)addToSelection;
 - (void)removeFromSelection;
 - (void)scrollIntoView:(BOOL)alignToTop;
-- (NSArray*)getChildren;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getChildren;
 @end
 
 #endif // __WUXAPITextRangeProvider_DEFINED__
@@ -368,8 +369,8 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPITextProvider
 @property (readonly) RTObject<WUXAPITextRangeProvider>* documentRange;
 @property (readonly) WUXASupportedTextSelection supportedTextSelection;
-- (NSArray*)getSelection;
-- (NSArray*)getVisibleRanges;
+- (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getSelection;
+- (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getVisibleRanges;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
@@ -383,8 +384,8 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPITextProvider2 <WUXAPITextProvider>
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromAnnotation:(WUXAPIRawElementProviderSimple*)annotationElement;
 - (RTObject<WUXAPITextRangeProvider>*)getCaretRange:(BOOL*)isActive;
-- (NSArray*)getSelection;
-- (NSArray*)getVisibleRanges;
+- (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getSelection;
+- (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getVisibleRanges;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end
@@ -406,7 +407,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (RTObject<WUXAPITextRangeProvider>*)findAttribute:(int)attributeId value:(RTObject*)value backward:(BOOL)backward;
 - (RTObject<WUXAPITextRangeProvider>*)findText:(NSString*)text backward:(BOOL)backward ignoreCase:(BOOL)ignoreCase;
 - (RTObject*)getAttributeValue:(int)attributeId;
-- (void)getBoundingRectangles:(id<NSFastEnumeration> /* double */*)returnValue;
+- (void)getBoundingRectangles:(NSArray* /* double */*)returnValue;
 - (WUXAPIRawElementProviderSimple*)getEnclosingElement;
 - (NSString*)getText:(int)maxLength;
 - (int)move:(WUXATTextUnit)unit count:(int)count;
@@ -418,7 +419,7 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 - (void)addToSelection;
 - (void)removeFromSelection;
 - (void)scrollIntoView:(BOOL)alignToTop;
-- (NSArray*)getChildren;
+- (NSArray* /* WUXAPIRawElementProviderSimple* */)getChildren;
 @end
 
 #endif // __WUXAPITextRangeProvider2_DEFINED__
@@ -524,8 +525,8 @@ typedef void (^WXDependencyPropertyChangedCallback)(WXDependencyObject* sender, 
 @protocol WUXAPITextEditProvider <WUXAPITextProvider>
 - (RTObject<WUXAPITextRangeProvider>*)getActiveComposition;
 - (RTObject<WUXAPITextRangeProvider>*)getConversionTarget;
-- (NSArray*)getSelection;
-- (NSArray*)getVisibleRanges;
+- (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getSelection;
+- (NSArray* /* RTObject<WUXAPITextRangeProvider>* */)getVisibleRanges;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromChild:(WUXAPIRawElementProviderSimple*)childElement;
 - (RTObject<WUXAPITextRangeProvider>*)rangeFromPoint:(WFPoint*)screenLocation;
 @end

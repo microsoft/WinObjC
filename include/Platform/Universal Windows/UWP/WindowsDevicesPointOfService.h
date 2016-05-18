@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDPUnifiedPosErrorData, WDPBarcodeScannerStatusUpdatedEventArgs, WDPBarcodeSymbologies, WDPBarcodeScannerReport,
     WDPBarcodeScannerDataReceivedEventArgs, WDPBarcodeScannerErrorOccurredEventArgs, WDPBarcodeScannerImagePreviewReceivedEventArgs,
     WDPBarcodeScannerCapabilities, WDPBarcodeScanner, WDPClaimedBarcodeScanner, WDPMagneticStripeReaderEncryptionAlgorithms,
@@ -327,7 +328,7 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 @property (readonly) BOOL isPaperNearEndSensorSupported;
 @property (readonly) BOOL isPrinterPresent;
 @property (readonly) BOOL isUnderlineSupported;
-@property (readonly) NSArray* supportedCharactersPerLine;
+@property (readonly) NSArray* /* unsigned int */ supportedCharactersPerLine;
 @end
 
 #endif // __WDPICommonPosPrintStationCapabilities_DEFINED__
@@ -344,8 +345,8 @@ typedef unsigned WDPMagneticStripeReaderTrackErrorType;
 @property (readonly) BOOL isPrintAreaSupported;
 @property (readonly) BOOL isRight90RotationSupported;
 @property (readonly) WDPPosPrinterRuledLineCapabilities ruledLineCapabilities;
-@property (readonly) NSArray* supportedBarcodeRotations;
-@property (readonly) NSArray* supportedBitmapRotations;
+@property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBarcodeRotations;
+@property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBitmapRotations;
 @end
 
 #endif // __WDPICommonReceiptSlipCapabilities_DEFINED__
@@ -654,12 +655,12 @@ WINRT_EXPORT
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
 - (void)claimScannerAsyncWithSuccess:(void (^)(WDPClaimedBarcodeScanner*))success failure:(void (^)(NSError*))failure;
 - (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
-- (void)getSupportedSymbologiesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getSupportedSymbologiesAsyncWithSuccess:(void (^)(NSArray* /* unsigned int */))success failure:(void (^)(NSError*))failure;
 - (void)isSymbologySupportedAsync:(unsigned int)barcodeSymbology success:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
 - (void)retrieveStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
                         success:(void (^)(RTObject<WSSIBuffer>*))success
                         failure:(void (^)(NSError*))failure;
-- (NSArray*)getSupportedProfiles;
+- (NSArray* /* NSString * */)getSupportedProfiles;
 - (BOOL)isProfileSupported:(NSString*)profile;
 @end
 
@@ -703,7 +704,7 @@ WINRT_EXPORT
 - (void)retainDevice;
 - (RTObject<WFIAsyncAction>*)setActiveSymbologiesAsync:(id<NSFastEnumeration> /* unsigned int */)symbologies;
 - (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories;
-- (RTObject<WFIAsyncAction>*)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)statistics;
+- (RTObject<WFIAsyncAction>*)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics;
 - (RTObject<WFIAsyncAction>*)setActiveProfileAsync:(NSString*)profile;
 - (void)close;
 - (RTObject<WFIAsyncAction>*)startSoftwareTriggerAsync;
@@ -762,7 +763,7 @@ WINRT_EXPORT
 @property (readonly) RTObject<WSSIBuffer>* cardAuthenticationData;
 @property (readonly) unsigned int cardAuthenticationDataLength;
 @property (readonly) unsigned int cardType;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, NSString * */ properties;
 @property (readonly) WDPMagneticStripeReaderTrackData* track1;
 @property (readonly) WDPMagneticStripeReaderTrackData* track2;
 @property (readonly) WDPMagneticStripeReaderTrackData* track3;
@@ -912,11 +913,11 @@ WINRT_EXPORT
 - (void)retainDevice;
 - (void)setErrorReportingType:(WDPMagneticStripeReaderErrorReportingType)value;
 - (void)retrieveDeviceAuthenticationDataAsyncWithSuccess:(void (^)(RTObject<WSSIBuffer>*))success failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)authenticateDeviceAsync:(id<NSFastEnumeration> /* uint8_t */)responseToken;
-- (RTObject<WFIAsyncAction>*)deAuthenticateDeviceAsync:(id<NSFastEnumeration> /* uint8_t */)responseToken;
+- (RTObject<WFIAsyncAction>*)authenticateDeviceAsync:(NSArray* /* uint8_t */)responseToken;
+- (RTObject<WFIAsyncAction>*)deAuthenticateDeviceAsync:(NSArray* /* uint8_t */)responseToken;
 - (RTObject<WFIAsyncAction>*)updateKeyAsync:(NSString*)key keyName:(NSString*)keyName;
 - (RTObject<WFIAsyncAction>*)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories;
-- (RTObject<WFIAsyncAction>*)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)statistics;
+- (RTObject<WFIAsyncAction>*)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics;
 - (void)close;
 @end
 
@@ -934,7 +935,7 @@ WINRT_EXPORT
 @property (readonly) WDPMagneticStripeReaderCapabilities* capabilities;
 @property (readonly) WDPMagneticStripeReaderAuthenticationProtocol deviceAuthenticationProtocol;
 @property (readonly) NSString* deviceId;
-@property (readonly) NSArray* supportedCardTypes;
+@property (readonly) NSArray* /* unsigned int */ supportedCardTypes;
 - (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPMagneticStripeReader*, WDPMagneticStripeReaderStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
 - (void)checkHealthAsync:(WDPUnifiedPosHealthCheckLevel)level success:(void (^)(NSString*))success failure:(void (^)(NSError*))failure;
@@ -977,11 +978,11 @@ WINRT_EXPORT
 @property (readonly) BOOL isPaperNearEndSensorSupported;
 @property (readonly) BOOL isPrinterPresent;
 @property (readonly) BOOL isUnderlineSupported;
-@property (readonly) NSArray* supportedCharactersPerLine;
+@property (readonly) NSArray* /* unsigned int */ supportedCharactersPerLine;
 @property (readonly) WDPPosPrinterCartridgeSensors cartridgeSensors;
 @property (readonly) BOOL is180RotationSupported;
-@property (readonly) NSArray* supportedBarcodeRotations;
-@property (readonly) NSArray* supportedBitmapRotations;
+@property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBarcodeRotations;
+@property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBitmapRotations;
 @property (readonly) BOOL isLeft90RotationSupported;
 @property (readonly) BOOL isBarcodeSupported;
 @property (readonly) BOOL isBitmapSupported;
@@ -1012,12 +1013,12 @@ WINRT_EXPORT
 @property (readonly) BOOL isPrinterPresent;
 @property (readonly) BOOL isUnderlineSupported;
 @property (readonly) WDPPosPrinterColorCapabilities colorCartridgeCapabilities;
-@property (readonly) NSArray* supportedCharactersPerLine;
+@property (readonly) NSArray* /* unsigned int */ supportedCharactersPerLine;
 @property (readonly) WDPPosPrinterCartridgeSensors cartridgeSensors;
 @property (readonly) BOOL isBarcodeSupported;
-@property (readonly) NSArray* supportedBitmapRotations;
+@property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBitmapRotations;
 @property (readonly) BOOL isPrintAreaSupported;
-@property (readonly) NSArray* supportedBarcodeRotations;
+@property (readonly) NSArray* /* WDPPosPrinterRotation */ supportedBarcodeRotations;
 @property (readonly) BOOL is180RotationSupported;
 @property (readonly) BOOL isBitmapSupported;
 @property (readonly) BOOL isLeft90RotationSupported;
@@ -1047,7 +1048,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isPaperNearEndSensorSupported;
 @property (readonly) BOOL isPrinterPresent;
 @property (readonly) BOOL isUnderlineSupported;
-@property (readonly) NSArray* supportedCharactersPerLine;
+@property (readonly) NSArray* /* unsigned int */ supportedCharactersPerLine;
 @end
 
 #endif // __WDPJournalPrinterCapabilities_DEFINED__
@@ -1117,8 +1118,8 @@ WINRT_EXPORT
 @property (readonly) WDPPosPrinterCapabilities* capabilities;
 @property (readonly) NSString* deviceId;
 @property (readonly) WDPPosPrinterStatus* status;
-@property (readonly) NSArray* supportedCharacterSets;
-@property (readonly) NSArray* supportedTypeFaces;
+@property (readonly) NSArray* /* unsigned int */ supportedCharacterSets;
+@property (readonly) NSArray* /* NSString * */ supportedTypeFaces;
 - (EventRegistrationToken)addStatusUpdatedEvent:(void (^)(WDPPosPrinter*, WDPPosPrinterStatusUpdatedEventArgs*))del;
 - (void)removeStatusUpdatedEvent:(EventRegistrationToken)tok;
 - (void)claimPrinterAsyncWithSuccess:(void (^)(WDPClaimedPosPrinter*))success failure:(void (^)(NSError*))failure;
@@ -1154,7 +1155,7 @@ WINRT_EXPORT
 - (void)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
                      success:(void (^)(BOOL))success
                      failure:(void (^)(NSError*))failure;
-- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)statistics
+- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics
                       success:(void (^)(BOOL))success
                       failure:(void (^)(NSError*))failure;
 - (void)close;
@@ -1492,7 +1493,7 @@ WINRT_EXPORT
 - (void)resetStatisticsAsync:(id<NSFastEnumeration> /* NSString * */)statisticsCategories
                      success:(void (^)(BOOL))success
                      failure:(void (^)(NSError*))failure;
-- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)statistics
+- (void)updateStatisticsAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, NSString * > */)statistics
                       success:(void (^)(BOOL))success
                       failure:(void (^)(NSError*))failure;
 - (void)close;

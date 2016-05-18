@@ -14,11 +14,11 @@
 //
 //******************************************************************************
 
-#include "UIKit/UIKit.h"
-#include "NSRunLoop+Internal.h"
+#import <UIKit/NSLayoutConstraint.h>
 
-int XamlTimedMultipleWait(EbrEvent* events, int numEvents, double timeout, SocketWait* sockets);
-
-void SetXamlUIWaiter() {
-    [NSRunLoop setUIThreadWaitFunction:&XamlTimedMultipleWait];
-}
+@interface NSLayoutConstraint (AutoLayout)
+- (void)autoLayoutAlloc;
+- (void)autoLayoutDealloc;
+- (void)autoLayoutConstraintAddedToView:(UIView*)view;
+- (void)autoLayoutConstraintRemovedFromView;
+@end

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDIPointerDevice, WDIMouseDevice, WDIMouseEventArgs, WDIMouseCapabilities, WDIKeyboardCapabilities, WDITouchCapabilities;
 @class WDIPointerDeviceUsage, WDIMouseDelta;
 @protocol WDIIMouseCapabilities
@@ -68,13 +69,13 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDIPointerDevice : RTObject
 + (WDIPointerDevice*)getPointerDevice:(unsigned int)pointerId;
-+ (NSArray*)getPointerDevices;
++ (NSArray* /* WDIPointerDevice* */)getPointerDevices;
 @property (readonly) BOOL isIntegrated;
 @property (readonly) unsigned int maxContacts;
 @property (readonly) WFRect* physicalDeviceRect;
 @property (readonly) WDIPointerDeviceType pointerDeviceType;
 @property (readonly) WFRect* screenRect;
-@property (readonly) NSArray* supportedUsages;
+@property (readonly) NSArray* /* WDIPointerDeviceUsage* */ supportedUsages;
 @property (readonly) unsigned int maxPointersWithZDistance;
 @end
 

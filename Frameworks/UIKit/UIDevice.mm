@@ -23,6 +23,7 @@
 #import "UIKit/UIView.h"
 #import "UWP/WindowsApplicationModel.h"
 #import "UIViewControllerInternal.h"
+#import "CACompositor.h"
 
 NSString* const UIDeviceBatteryLevelDidChangeNotification = @"UIDeviceBatteryLevelDidChangeNotification";
 NSString* const UIDeviceBatteryStateDidChangeNotification = @"UIDeviceBatteryStateDidChangeNotification";

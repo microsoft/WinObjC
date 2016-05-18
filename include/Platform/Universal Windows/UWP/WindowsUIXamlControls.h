@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WXCBackClickEventArgs, WXCDragItemsStartingEventArgs, WXCNotifyEventArgs, WXCSemanticZoomViewChangedEventArgs,
     WXCTextControlPasteEventArgs, WXCContainerContentChangingEventArgs, WXCSemanticZoomLocation, WXCCandidateWindowBoundsChangedEventArgs,
     WXCChoosingGroupHeaderContainerEventArgs, WXCChoosingItemContainerEventArgs, WXCColumnDefinitionCollection, WXCDataTemplateSelector,
@@ -1237,7 +1238,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property BOOL cancel;
 @property (readonly) WADDataPackage* data;
-@property (readonly) NSMutableArray* items;
+@property (readonly) NSMutableArray* /* RTObject* */ items;
 @end
 
 #endif // __WXCDragItemsStartingEventArgs_DEFINED__
@@ -1395,7 +1396,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXCDragItemsCompletedEventArgs : RTObject
 @property (readonly) WADDataPackageOperation dropResult;
-@property (readonly) NSArray* items;
+@property (readonly) NSArray* /* RTObject* */ items;
 @end
 
 #endif // __WXCDragItemsCompletedEventArgs_DEFINED__
@@ -1516,7 +1517,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCMediaTransportControlsHelper : RTObject
-+ (id)getDropoutOrder:(WXUIElement*)element;
++ (id /* int */)getDropoutOrder:(WXUIElement*)element;
 + (void)setDropoutOrder:(WXUIElement*)element value:(id /* int */)value;
 + (WXDependencyProperty*)dropoutOrderProperty;
 @end
@@ -1675,8 +1676,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSectionsInViewChangedEventArgs : RTObject
-@property (readonly) NSMutableArray* addedSections;
-@property (readonly) NSMutableArray* removedSections;
+@property (readonly) NSMutableArray* /* WXCHubSection* */ addedSections;
+@property (readonly) NSMutableArray* /* WXCHubSection* */ removedSections;
 @end
 
 #endif // __WXCSectionsInViewChangedEventArgs_DEFINED__
@@ -1699,8 +1700,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCalendarDatePickerDateChangedEventArgs : RTObject
-@property (readonly) id newDate;
-@property (readonly) id oldDate;
+@property (readonly) id /* WFDateTime* */ newDate;
+@property (readonly) id /* WFDateTime* */ oldDate;
 @end
 
 #endif // __WXCCalendarDatePickerDateChangedEventArgs_DEFINED__
@@ -1711,8 +1712,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCCalendarViewSelectedDatesChangedEventArgs : RTObject
-@property (readonly) NSArray* addedDates;
-@property (readonly) NSArray* removedDates;
+@property (readonly) NSArray* /* WFDateTime* */ addedDates;
+@property (readonly) NSArray* /* WFDateTime* */ removedDates;
 @end
 
 #endif // __WXCCalendarViewSelectedDatesChangedEventArgs_DEFINED__
@@ -2250,7 +2251,7 @@ WINRT_EXPORT
 @interface WXCMenuFlyout : WUXCPFlyoutBase
 + (instancetype)make ACTIVATOR;
 @property (retain) WXStyle* menuFlyoutPresenterStyle;
-@property (readonly) NSMutableArray* items;
+@property (readonly) NSMutableArray* /* WXCMenuFlyoutItemBase* */ items;
 + (WXDependencyProperty*)menuFlyoutPresenterStyleProperty;
 - (void)showAt:(WXUIElement*)targetElement point:(WFPoint*)point;
 @end
@@ -2313,8 +2314,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WXCSelectionChangedEventArgs : WXRoutedEventArgs
-@property (readonly) NSMutableArray* addedItems;
-@property (readonly) NSMutableArray* removedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ addedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ removedItems;
 @end
 
 #endif // __WXCSelectionChangedEventArgs_DEFINED__
@@ -2380,7 +2381,8 @@ WINRT_EXPORT
 @protocol WXIUIElementOverrides
 - (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration>)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
+                                                                                      boundingRect:(WFRect*)boundingRect;
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__
@@ -2409,7 +2411,7 @@ WINRT_EXPORT
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
-@property (readonly) NSArray* pointerCaptures;
+@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
 @property (retain) WUXMMTransform3D* transform3D;
@@ -2524,7 +2526,8 @@ WINRT_EXPORT
 - (void)updateLayout;
 - (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration>)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
+                                                                                      boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint
                success:(void (^)(WADDataPackageOperation))success
@@ -2759,7 +2762,7 @@ WINRT_EXPORT
 - (void)removeHorizontalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addVerticalSnapPointsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -2792,7 +2795,7 @@ WINRT_EXPORT
 - (void)removeHorizontalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addVerticalSnapPointsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -3129,7 +3132,7 @@ WINRT_EXPORT
 - (void)removeHorizontalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addVerticalSnapPointsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -3217,7 +3220,7 @@ WINRT_EXPORT
 - (void)setHorizontalOffset:(double)offset;
 - (void)setVerticalOffset:(double)offset;
 - (WFRect*)makeVisible:(WXUIElement*)visual rectangle:(WFRect*)rectangle;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -3279,7 +3282,7 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property double playbackRate;
 @property BOOL autoPlay;
-@property (retain) id audioStreamIndex;
+@property (retain) id /* int */ audioStreamIndex;
 @property BOOL isMuted;
 @property WUXMAudioCategory audioCategory;
 @property double defaultPlaybackRate;
@@ -3405,18 +3408,18 @@ WINRT_EXPORT
 + (WXCWebView*)makeInstanceWithExecutionMode:(WXCWebViewExecutionMode)executionMode ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 @property (retain) WFUri* source;
-@property (retain) NSMutableArray* allowedScriptNotifyUris;
+@property (retain) NSMutableArray* /* WFUri* */ allowedScriptNotifyUris;
 @property (readonly) WADDataPackage* dataTransferPackage;
 @property (retain) WUColor* defaultBackgroundColor;
 @property (readonly) BOOL canGoBack;
 @property (readonly) BOOL canGoForward;
 @property (readonly) NSString* documentTitle;
 @property (readonly) BOOL containsFullScreenElement;
-@property (readonly) NSMutableArray* deferredPermissionRequests;
+@property (readonly) NSMutableArray* /* WXCWebViewDeferredPermissionRequest* */ deferredPermissionRequests;
 @property (readonly) WXCWebViewExecutionMode executionMode;
 @property (readonly) WXCWebViewSettings* settings;
 + (WXDependencyProperty*)allowedScriptNotifyUrisProperty;
-+ (NSMutableArray*)anyScriptNotifyUri;
++ (NSMutableArray* /* WFUri* */)anyScriptNotifyUri;
 + (WXDependencyProperty*)dataTransferPackageProperty;
 + (WXDependencyProperty*)sourceProperty;
 + (WXDependencyProperty*)canGoBackProperty;
@@ -3462,7 +3465,7 @@ WINRT_EXPORT
 - (EventRegistrationToken)addUnsupportedUriSchemeIdentifiedEvent:(void (^)(WXCWebView*,
                                                                            WXCWebViewUnsupportedUriSchemeIdentifiedEventArgs*))del;
 - (void)removeUnsupportedUriSchemeIdentifiedEvent:(EventRegistrationToken)tok;
-- (NSString*)invokeScript:(NSString*)scriptName arguments:(id<NSFastEnumeration> /* NSString * */)arguments;
+- (NSString*)invokeScript:(NSString*)scriptName arguments:(NSArray* /* NSString * */)arguments;
 - (void)navigate:(WFUri*)source;
 - (void)navigateToString:(NSString*)text;
 - (void)goForward;
@@ -3926,7 +3929,7 @@ WINRT_EXPORT
 @property (retain) NSString* displayMemberPath;
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
 @property (readonly) WXCItemCollection* items;
-@property (readonly) NSMutableArray<RTObservableCollection>* groupStyle;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* WXCGroupStyle* */ groupStyle;
 @property (readonly) BOOL isGrouping;
 @property (readonly) WXCPanel* itemsPanelRoot;
 + (WXDependencyProperty*)displayMemberPathProperty;
@@ -4493,7 +4496,7 @@ WINRT_EXPORT
 @property (retain) RTObject* selectedValue;
 @property (retain) RTObject* selectedItem;
 @property int selectedIndex;
-@property (retain) id isSynchronizedWithCurrentItem;
+@property (retain) id /* BOOL */ isSynchronizedWithCurrentItem;
 + (WXDependencyProperty*)isSynchronizedWithCurrentItemProperty;
 + (WXDependencyProperty*)selectedIndexProperty;
 + (WXDependencyProperty*)selectedItemProperty;
@@ -4523,14 +4526,14 @@ WINRT_EXPORT
 @property double dataFetchSize;
 @property BOOL canReorderItems;
 @property WXCListViewSelectionMode selectionMode;
-@property (readonly) NSMutableArray* selectedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ selectedItems;
 @property (retain) RTObject* footer;
 @property BOOL showsScrollingPlaceholders;
 @property (retain) WUXMATransitionCollection* footerTransitions;
 @property (retain) WXDataTemplate* footerTemplate;
 @property WXCListViewReorderMode reorderMode;
 @property BOOL isMultiSelectCheckBoxEnabled;
-@property (readonly) NSArray* selectedRanges;
+@property (readonly) NSArray* /* WUXDItemIndexRange* */ selectedRanges;
 @property (retain) WXCSemanticZoom* semanticZoomOwner;
 @property BOOL isZoomedInView;
 @property BOOL isActiveView;
@@ -4637,7 +4640,7 @@ WINRT_EXPORT
 @interface WXCListBox : WUXCPSelector
 + (instancetype)make ACTIVATOR;
 @property WXCSelectionMode selectionMode;
-@property (readonly) NSMutableArray* selectedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ selectedItems;
 + (WXDependencyProperty*)selectionModeProperty;
 - (void)scrollIntoView:(RTObject*)item;
 - (void)selectAll;
@@ -4663,7 +4666,7 @@ WINRT_EXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 @property BOOL isThreeState;
-@property (retain) id isChecked;
+@property (retain) id /* BOOL */ isChecked;
 + (WXDependencyProperty*)isCheckedProperty;
 + (WXDependencyProperty*)isThreeStateProperty;
 - (EventRegistrationToken)addCheckedEvent:(WXRoutedEventHandler)del;
@@ -4757,7 +4760,7 @@ WINRT_EXPORT
 @property (retain) WUXMBrush* todayForeground;
 @property (retain) WUTFontWeight* todayFontWeight;
 @property WXCCalendarViewSelectionMode selectionMode;
-@property (readonly) NSMutableArray* selectedDates;
+@property (readonly) NSMutableArray* /* WFDateTime* */ selectedDates;
 @property (readonly) WUXCPCalendarViewTemplateSettings* templateSettings;
 + (WXDependencyProperty*)blackoutForegroundProperty;
 + (WXDependencyProperty*)calendarIdentifierProperty;
@@ -4895,7 +4898,7 @@ WINRT_EXPORT
 @property (retain) WXDataTemplate* headerTemplate;
 @property (retain) NSString* placeholderText;
 @property (retain) WFDateTime* minDate;
-@property (retain) id date;
+@property (retain) id /* WFDateTime* */ date;
 @property (retain) WFDateTime* maxDate;
 @property BOOL isTodayHighlighted;
 @property BOOL isOutOfScopeEnabled;
@@ -4981,9 +4984,9 @@ WINRT_EXPORT
 @property (retain) WXDataTemplate* headerTemplate;
 @property (retain) RTObject* header;
 @property int defaultSectionIndex;
-@property (readonly) NSMutableArray<RTObservableCollection>* sectionHeaders;
-@property (readonly) NSMutableArray* sections;
-@property (readonly) NSMutableArray* sectionsInView;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject* */ sectionHeaders;
+@property (readonly) NSMutableArray* /* WXCHubSection* */ sections;
+@property (readonly) NSMutableArray* /* WXCHubSection* */ sectionsInView;
 @property (retain) WXCSemanticZoom* semanticZoomOwner;
 @property BOOL isZoomedInView;
 @property BOOL isActiveView;
@@ -5247,8 +5250,8 @@ WINRT_EXPORT
 @property (readonly) BOOL canGoBack;
 @property (readonly) BOOL canGoForward;
 @property (readonly) WUXITypeName* currentSourcePageType;
-@property (readonly) NSMutableArray* backStack;
-@property (readonly) NSMutableArray* forwardStack;
+@property (readonly) NSMutableArray* /* WUXNPageStackEntry* */ backStack;
+@property (readonly) NSMutableArray* /* WUXNPageStackEntry* */ forwardStack;
 + (WXDependencyProperty*)backStackDepthProperty;
 + (WXDependencyProperty*)cacheSizeProperty;
 + (WXDependencyProperty*)canGoBackProperty;
@@ -5326,7 +5329,7 @@ WINRT_EXPORT
 @interface WXCMenuFlyoutSubItem : WXCMenuFlyoutItemBase
 + (instancetype)make ACTIVATOR;
 @property (retain) NSString* text;
-@property (readonly) NSMutableArray* items;
+@property (readonly) NSMutableArray* /* WXCMenuFlyoutItemBase* */ items;
 + (WXDependencyProperty*)textProperty;
 @end
 
@@ -5423,7 +5426,7 @@ WINRT_EXPORT
 @property (readonly) float zoomFactor;
 @property (readonly) WXVisibility computedHorizontalScrollBarVisibility;
 @property (readonly) double extentWidth;
-@property (readonly) NSMutableArray* zoomSnapPoints;
+@property (readonly) NSMutableArray* /* float */ zoomSnapPoints;
 @property (readonly) double horizontalOffset;
 @property (retain) WXUIElement* topHeader;
 @property (retain) WXUIElement* leftHeader;
@@ -5492,8 +5495,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXCCommandBar : WXCAppBar
 + (instancetype)make ACTIVATOR;
-@property (readonly) NSMutableArray<RTObservableCollection>* primaryCommands;
-@property (readonly) NSMutableArray<RTObservableCollection>* secondaryCommands;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject<WXCICommandBarElement>* */ primaryCommands;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* RTObject<WXCICommandBarElement>* */ secondaryCommands;
 @property (retain) WXStyle* commandBarOverflowPresenterStyle;
 @property (readonly) WUXCPCommandBarTemplateSettings* commandBarTemplateSettings;
 + (WXDependencyProperty*)primaryCommandsProperty;
@@ -5681,8 +5684,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WXCItemsPickedEventArgs : WXDependencyObject
 + (instancetype)make ACTIVATOR;
-@property (readonly) NSMutableArray* addedItems;
-@property (readonly) NSMutableArray* removedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ addedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ removedItems;
 @end
 
 #endif // __WXCItemsPickedEventArgs_DEFINED__
@@ -5864,7 +5867,7 @@ WINRT_EXPORT
 + (WXDependencyProperty*)yearFormatProperty;
 - (EventRegistrationToken)addDatePickedEvent:(void (^)(WXCDatePickerFlyout*, WXCDatePickedEventArgs*))del;
 - (void)removeDatePickedEvent:(EventRegistrationToken)tok;
-- (void)showAtAsync:(WXFrameworkElement*)target success:(void (^)(id))success failure:(void (^)(NSError*))failure;
+- (void)showAtAsync:(WXFrameworkElement*)target success:(void (^)(id /* WFDateTime* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WXCDatePickerFlyout_DEFINED__
@@ -5884,7 +5887,7 @@ WINRT_EXPORT
 @property (retain) RTObject* itemsSource;
 @property (retain) WXDataTemplate* itemTemplate;
 @property (retain) NSString* displayMemberPath;
-@property (readonly) NSMutableArray* selectedItems;
+@property (readonly) NSMutableArray* /* RTObject* */ selectedItems;
 + (WXDependencyProperty*)displayMemberPathProperty;
 + (WXDependencyProperty*)itemTemplateProperty;
 + (WXDependencyProperty*)itemsSourceProperty;
@@ -5895,7 +5898,7 @@ WINRT_EXPORT
 + (WXDependencyProperty*)selectionModeProperty;
 - (EventRegistrationToken)addItemsPickedEvent:(void (^)(WXCListPickerFlyout*, WXCItemsPickedEventArgs*))del;
 - (void)removeItemsPickedEvent:(EventRegistrationToken)tok;
-- (void)showAtAsync:(WXFrameworkElement*)target success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)showAtAsync:(WXFrameworkElement*)target success:(void (^)(NSArray* /* RTObject* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WXCListPickerFlyout_DEFINED__
@@ -5933,7 +5936,7 @@ WINRT_EXPORT
 + (WXDependencyProperty*)timeProperty;
 - (EventRegistrationToken)addTimePickedEvent:(void (^)(WXCTimePickerFlyout*, WXCTimePickedEventArgs*))del;
 - (void)removeTimePickedEvent:(EventRegistrationToken)tok;
-- (void)showAtAsync:(WXFrameworkElement*)target success:(void (^)(id))success failure:(void (^)(NSError*))failure;
+- (void)showAtAsync:(WXFrameworkElement*)target success:(void (^)(id /* WFTimeSpan* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WXCTimePickerFlyout_DEFINED__

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSTCSignalNotifier, WSTCPreallocatedWorkItem;
 @protocol WSTCISignalNotifierStatics
 , WSTCIPreallocatedWorkItemFactory, WSTCIPreallocatedWorkItem, WSTCISignalNotifier;

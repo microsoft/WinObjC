@@ -20,8 +20,8 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WGCCharacterGrouping, WGCCharacterGroupings;
-@class RTArray_C_WGCCharacterGrouping;
 @protocol WGCICharacterGrouping
 , WGCICharacterGroupings;
 

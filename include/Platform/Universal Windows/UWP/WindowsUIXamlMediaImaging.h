@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXMIDownloadProgressEventArgs, WUXMIXamlRenderingBackgroundTask, WUXMIBitmapSource, WUXMIRenderTargetBitmap,
     WUXMISurfaceImageSource, WUXMIBitmapImage, WUXMIVirtualSurfaceImageSource, WUXMIWriteableBitmap, WUXMISoftwareBitmapSource;
 @protocol WUXMIIDownloadProgressEventArgs
@@ -195,8 +196,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WUXMIBitmapImage : WUXMIBitmapSource
-+ (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WUXMIBitmapImage*)makeInstanceWithUriSource:(WFUri*)uriSource ACTIVATOR;
 @property (retain) WFUri* uriSource;
 @property int decodePixelWidth;
 @property int decodePixelHeight;

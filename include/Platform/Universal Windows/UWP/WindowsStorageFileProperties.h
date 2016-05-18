@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSFGeotagHelper, WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties,
     WSFStorageItemContentProperties, WSFBasicProperties;
 @protocol WSFIGeotagHelperStatics
@@ -101,9 +102,9 @@ typedef unsigned WSFVideoOrientation;
 
 @protocol WSFIStorageItemExtraProperties
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
@@ -283,17 +284,17 @@ WINRT_EXPORT
 @property unsigned int trackNumber;
 @property (retain) NSString* title;
 @property (retain) NSString* subtitle;
-@property (readonly) NSMutableArray* producers;
-@property (readonly) NSMutableArray* composers;
-@property (readonly) NSMutableArray* conductors;
+@property (readonly) NSMutableArray* /* NSString * */ producers;
+@property (readonly) NSMutableArray* /* NSString * */ composers;
+@property (readonly) NSMutableArray* /* NSString * */ conductors;
 @property (readonly) WFTimeSpan* duration;
-@property (readonly) NSMutableArray* writers;
-@property (readonly) NSMutableArray* genre;
+@property (readonly) NSMutableArray* /* NSString * */ writers;
+@property (readonly) NSMutableArray* /* NSString * */ genre;
 @property (readonly) unsigned int bitrate;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
@@ -310,21 +311,21 @@ WINRT_EXPORT
 @property (retain) NSString* subtitle;
 @property (retain) NSString* publisher;
 @property unsigned int rating;
-@property (readonly) id latitude;
+@property (readonly) id /* double */ latitude;
 @property (readonly) WSFVideoOrientation orientation;
 @property (readonly) WFTimeSpan* duration;
 @property (readonly) unsigned int bitrate;
-@property (readonly) NSMutableArray* producers;
-@property (readonly) NSMutableArray* directors;
+@property (readonly) NSMutableArray* /* NSString * */ producers;
+@property (readonly) NSMutableArray* /* NSString * */ directors;
 @property (readonly) unsigned int height;
 @property (readonly) unsigned int width;
-@property (readonly) id longitude;
-@property (readonly) NSMutableArray* writers;
-@property (readonly) NSMutableArray* keywords;
+@property (readonly) id /* double */ longitude;
+@property (readonly) NSMutableArray* /* NSString * */ writers;
+@property (readonly) NSMutableArray* /* NSString * */ keywords;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
@@ -341,17 +342,17 @@ WINRT_EXPORT
 @property (retain) WFDateTime* dateTaken;
 @property (retain) NSString* cameraModel;
 @property (retain) NSString* cameraManufacturer;
-@property (readonly) id latitude;
-@property (readonly) id longitude;
+@property (readonly) id /* double */ latitude;
+@property (readonly) id /* double */ longitude;
 @property (readonly) WSFPhotoOrientation orientation;
-@property (readonly) NSArray* peopleNames;
+@property (readonly) NSArray* /* NSString * */ peopleNames;
 @property (readonly) unsigned int height;
-@property (readonly) NSMutableArray* keywords;
+@property (readonly) NSMutableArray* /* NSString * */ keywords;
 @property (readonly) unsigned int width;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
@@ -365,12 +366,12 @@ WINRT_EXPORT
 @interface WSFDocumentProperties : RTObject <WSFIStorageItemExtraProperties>
 @property (retain) NSString* title;
 @property (retain) NSString* comment;
-@property (readonly) NSMutableArray* author;
-@property (readonly) NSMutableArray* keywords;
+@property (readonly) NSMutableArray* /* NSString * */ author;
+@property (readonly) NSMutableArray* /* NSString * */ keywords;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
@@ -387,9 +388,9 @@ WINRT_EXPORT
 - (void)getImagePropertiesAsyncWithSuccess:(void (^)(WSFImageProperties*))success failure:(void (^)(NSError*))failure;
 - (void)getDocumentPropertiesAsyncWithSuccess:(void (^)(WSFDocumentProperties*))success failure:(void (^)(NSError*))failure;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 
@@ -405,9 +406,9 @@ WINRT_EXPORT
 @property (readonly) WFDateTime* itemDate;
 @property (readonly) uint64_t size;
 - (void)retrievePropertiesAsync:(id<NSFastEnumeration> /* NSString * */)propertiesToRetrieve
-                        success:(void (^)(NSMutableDictionary*))success
+                        success:(void (^)(NSMutableDictionary* /* NSString *, RTObject* */))success
                         failure:(void (^)(NSError*))failure;
-- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* */)propertiesToSave;
+- (RTObject<WFIAsyncAction>*)savePropertiesAsync:(id<NSFastEnumeration> /* RTKeyValuePair* < NSString *, RTObject* > */)propertiesToSave;
 - (RTObject<WFIAsyncAction>*)savePropertiesAsyncOverloadDefault;
 @end
 

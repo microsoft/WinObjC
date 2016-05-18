@@ -59,6 +59,7 @@
 #include "NSLayoutConstraint.h"
 #include "UICollectionViewCell.h"
 #include "UICollectionView.h"
+#include "UICollectionViewController.h"
 #include "UIStepper.h"
 #include "_UILayoutGuide.h"
 #include "UIPanGestureRecognizer.h"
@@ -179,6 +180,7 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "collectionReusableView", UICollectionReusableView)
     IS_CONVERTER(ret, className, "collectionViewCell", UICollectionViewCell)
     IS_CONVERTER(ret, className, "collectionView", UICollectionView)
+    IS_CONVERTER(ret, className, "collectionViewController", UICollectionViewController)
     IS_CONVERTER(ret, className, "pickerView", UIPickerView)
     IS_CONVERTER(ret, className, "segmentedControl", UISegmentedControl)
     IS_CONVERTER(ret, className, "stepper", UIStepper)

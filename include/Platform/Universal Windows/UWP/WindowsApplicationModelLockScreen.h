@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WALLockScreenInfo, WALLockScreenBadge, WALLockScreenUnlockingDeferral, WALLockApplicationHost, WALLockScreenUnlockingEventArgs;
 @protocol WALILockScreenBadge
 , WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost,
@@ -38,8 +39,8 @@
 WINRT_EXPORT
 @interface WALLockScreenInfo : RTObject
 @property (readonly) RTObject<WSSIRandomAccessStream>* alarmIcon;
-@property (readonly) NSArray* badges;
-@property (readonly) NSArray* detailText;
+@property (readonly) NSArray* /* WALLockScreenBadge* */ badges;
+@property (readonly) NSArray* /* NSString * */ detailText;
 @property (readonly) RTObject<WSSIRandomAccessStream>* lockScreenImage;
 - (EventRegistrationToken)addAlarmIconChangedEvent:(void (^)(WALLockScreenInfo*, RTObject*))del;
 - (void)removeAlarmIconChangedEvent:(EventRegistrationToken)tok;
@@ -62,7 +63,7 @@ WINRT_EXPORT
 @property (readonly) NSString* automationName;
 @property (readonly) RTObject<WSSIRandomAccessStream>* glyph;
 @property (readonly) RTObject<WSSIRandomAccessStream>* logo;
-@property (readonly) id number;
+@property (readonly) id /* unsigned int */ number;
 - (void)launchApp;
 @end
 

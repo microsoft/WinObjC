@@ -184,8 +184,13 @@ using namespace Microsoft::WRL;
 
         // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll 
         // open up StoreAsync.
-        IDataWriter* writer = (IDataWriter*)[rw comObj].Get();
+        ComPtr<IDataWriter> writer;
         ComPtr<IAsyncOperation<UInt32>> comp;
+        
+        [rw comObj].As(&writer);
+        
+        FAIL_FAST_HR_IF_NULL_MSG(E_UNEXPECTED, writer.Get(), "WSSDataWriter does not confrom to IDataWriter");
+
         writer->WriteBuffer(buffer.Get());
         writer->StoreAsync(&comp);
         

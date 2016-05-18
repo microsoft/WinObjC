@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXMMMatrix3DHelper, WUXMMTransform3D, WUXMMCompositeTransform3D, WUXMMPerspectiveTransform3D;
 @class WUXMMMatrix3D;
 @protocol WUXMMIMatrix3DHelper

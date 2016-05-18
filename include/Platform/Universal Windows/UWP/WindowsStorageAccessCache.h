@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSAAccessListEntryView, WSAStorageItemMostRecentlyUsedList, WSAItemRemovedEventArgs, WSAStorageItemAccessList,
     WSAStorageApplicationPermissions;
 @class WSAAccessListEntry;

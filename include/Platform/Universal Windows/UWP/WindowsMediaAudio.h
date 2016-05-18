@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMAAudioGraph, WMACreateAudioGraphResult, WMAAudioGraphSettings, WMAAudioDeviceInputNode, WMACreateAudioDeviceInputNodeResult,
     WMAAudioDeviceOutputNode, WMACreateAudioDeviceOutputNodeResult, WMAAudioFileInputNode, WMACreateAudioFileInputNodeResult,
     WMAAudioFileOutputNode, WMACreateAudioFileOutputNodeResult, WMAAudioGraphUnrecoverableErrorOccurredEventArgs, WMAAudioFrameInputNode,
@@ -111,7 +112,7 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 
 @protocol WMAIAudioNode <WFIClosable>
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 @property double outgoingGain;
 - (void)start;
@@ -129,7 +130,7 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 #define __WMAIAudioInputNode_DEFINED__
 
 @protocol WMAIAudioInputNode <WMAIAudioNode, WFIClosable>
-@property (readonly) NSArray* outgoingConnections;
+@property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 - (void)addOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
 - (void)addOutgoingConnectionWithGain:(RTObject<WMAIAudioNode>*)destination gain:(double)gain;
 - (void)removeOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
@@ -238,10 +239,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAAudioDeviceInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
 @property (readonly) WDEDeviceInformation* device;
-@property (readonly) NSArray* outgoingConnections;
+@property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (void)addOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
 - (void)addOutgoingConnectionWithGain:(RTObject<WMAIAudioNode>*)destination gain:(double)gain;
@@ -277,7 +278,7 @@ WINRT_EXPORT
 @property (readonly) WDEDeviceInformation* device;
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (void)start;
 - (void)stop;
@@ -308,16 +309,16 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAAudioFileInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
 @property double playbackSpeedFactor;
-@property (retain) id loopCount;
-@property (retain) id endTime;
-@property (retain) id startTime;
+@property (retain) id /* int */ loopCount;
+@property (retain) id /* WFTimeSpan* */ endTime;
+@property (retain) id /* WFTimeSpan* */ startTime;
 @property (readonly) WFTimeSpan* position;
 @property (readonly) WSStorageFile* sourceFile;
 @property (readonly) WFTimeSpan* duration;
-@property (readonly) NSArray* outgoingConnections;
+@property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (EventRegistrationToken)addFileCompletedEvent:(void (^)(WMAAudioFileInputNode*, RTObject*))del;
 - (void)removeFileCompletedEvent:(EventRegistrationToken)tok;
@@ -357,7 +358,7 @@ WINRT_EXPORT
 @property (readonly) WMMMediaEncodingProfile* fileEncodingProfile;
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (void)finalizeAsyncWithSuccess:(void (^)(WMTTranscodeFailureReason))success failure:(void (^)(NSError*))failure;
 - (void)start;
@@ -401,10 +402,10 @@ WINRT_EXPORT
 @interface WMAAudioFrameInputNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
 @property double playbackSpeedFactor;
 @property (readonly) uint64_t queuedSampleCount;
-@property (readonly) NSArray* outgoingConnections;
+@property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (EventRegistrationToken)addAudioFrameCompletedEvent:(void (^)(WMAAudioFrameInputNode*, WMAAudioFrameCompletedEventArgs*))del;
 - (void)removeAudioFrameCompletedEvent:(EventRegistrationToken)tok;
@@ -433,7 +434,7 @@ WINRT_EXPORT
 @interface WMAAudioFrameOutputNode : RTObject <WMAIAudioNode, WFIClosable>
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (WMAudioFrame*)getFrame;
 - (void)start;
@@ -452,10 +453,10 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMAAudioSubmixNode : RTObject <WMAIAudioInputNode, WMAIAudioNode, WFIClosable>
-@property (readonly) NSArray* outgoingConnections;
+@property (readonly) NSArray* /* WMAAudioGraphConnection* */ outgoingConnections;
 @property double outgoingGain;
 @property BOOL consumeInput;
-@property (readonly) NSMutableArray* effectDefinitions;
+@property (readonly) NSMutableArray* /* RTObject<WMEIAudioEffectDefinition>* */ effectDefinitions;
 @property (readonly) WMMAudioEncodingProperties* encodingProperties;
 - (void)addOutgoingConnection:(RTObject<WMAIAudioNode>*)destination;
 - (void)addOutgoingConnectionWithGain:(RTObject<WMAIAudioNode>*)destination gain:(double)gain;
@@ -535,7 +536,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMAEqualizerEffectDefinition : RTObject <WMEIAudioEffectDefinition>
 + (WMAEqualizerEffectDefinition*)make:(WMAAudioGraph*)audioGraph ACTIVATOR;
-@property (readonly) NSArray* bands;
+@property (readonly) NSArray* /* WMAEqualizerBand* */ bands;
 @property (readonly) NSString* activatableClassId;
 @property (readonly) RTObject<WFCIPropertySet>* properties;
 @end

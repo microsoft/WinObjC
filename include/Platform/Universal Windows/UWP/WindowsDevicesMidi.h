@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDMMidiNoteOffMessage, WDMMidiNoteOnMessage, WDMMidiPolyphonicKeyPressureMessage, WDMMidiControlChangeMessage,
     WDMMidiProgramChangeMessage, WDMMidiChannelPressureMessage, WDMMidiPitchBendChangeMessage, WDMMidiSystemExclusiveMessage,
     WDMMidiTimeCodeMessage, WDMMidiSongPositionPointerMessage, WDMMidiSongSelectMessage, WDMMidiTuneRequestMessage,
