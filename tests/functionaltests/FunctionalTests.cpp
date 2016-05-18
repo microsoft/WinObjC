@@ -46,11 +46,12 @@ MODULE_SETUP(ModuleSetup) {
     char* argv[] = { "FunctionalTests" };
     testing::InitGoogleTest(&argc, argv);
 
-    return true;
+    // Keep the device active
+    return SUCCEEDED(FrameworkHelper::DisplayRequest(true));
 }
 
 MODULE_CLEANUP(ModuleCleanup) {
-    return true;
+    return SUCCEEDED(FrameworkHelper::DisplayRequest(false));
 }
 
 //

@@ -111,7 +111,7 @@ function DeployTests
             $TAEFPackageName = "Microsoft.Windows.Test.Taef"
 
             Write-Host -ForegroundColor Cyan "Installing $TAEFPackageName package - this may take about a minute"
-            if ($TAEFDirectory -eq [string]$null)
+            if ($PackageRootPath -eq [string]$null)
             {
                 deployd -Packages $TAEFPackageName -OnDevice
             }
