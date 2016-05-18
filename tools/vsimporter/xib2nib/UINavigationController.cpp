@@ -26,6 +26,7 @@ UINavigationController::UINavigationController() {
 
 void UINavigationController::InitFromXIB(XIBObject* obj) {
     UIViewController::InitFromXIB(obj);
+
     _navigationBar = (UINavigationBar*)FindMember("IBUINavigationBar");
     _toolBar = (UIToolbar*)FindMember("IBUIToolbar");
 
@@ -41,6 +42,7 @@ void UINavigationController::InitFromStory(XIBObject* obj) {
 
 void UINavigationController::Awaken() {
     UIViewController::Awaken();
+
     if (_navigationBar) {
         _navigationBar->_delegate = this;
         _navigationBar->_autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -63,6 +65,7 @@ void UINavigationController::Awaken() {
 
 void UINavigationController::ConvertStaticMappings(NIBWriter* writer, XIBObject* obj) {
     UIViewController::ConvertStaticMappings(writer, obj);
+
     if (_navigationBar)
         AddOutputMember(writer, "UINavigationBar", _navigationBar);
     if (_toolBar)

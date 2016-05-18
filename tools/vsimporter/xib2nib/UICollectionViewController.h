@@ -16,19 +16,22 @@
 
 #pragma once
 #include "UIViewController.h"
-#include "UITabBar.h"
+#include "UICollectionView.h"
 
-class UITabBarController : public UIViewController
+class UICollectionViewController : public UIViewController
 {
 public:
-    XIBObject *_customizableViewControllers;
-    UITabBar *_tabBar;
+    UICollectionView* _collectionView;
+
+    bool _clearSelectionOnViewWillAppear;
+    bool _installStandardGestureForInteractiveMovement;
+    bool _useLayoutToLayoutNavigationTransitions;
 
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
     virtual void ConvertStaticMappings(NIBWriter *writer, XIBObject *obj);
 
-    UITabBarController();
+    UICollectionViewController();
     virtual void Awaken();
 };
 
