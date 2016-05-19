@@ -526,6 +526,9 @@ int NSSetEnumeratorGetNextObject(NSSet* set, void* enumeratorHolder, id* ret, in
  @Status Interoperable
 */
 - (id)member:(id)obj {
+    if (obj == nil) {
+        return nil;
+    }
     return NSSetTableMember(self, obj);
 }
 
