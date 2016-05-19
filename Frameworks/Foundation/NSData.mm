@@ -225,7 +225,7 @@ using namespace Windows::Foundation;
 */
 - (instancetype)initWithBytes:(const void*)bytes length:(unsigned)length {
     // The created NSData takes ownership of freeing this
-    std::unique_ptr<uint8_t[], decltype(&IwFree)> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)), IwFree);
+    woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
     if (!copiedBytes) {
         [self release];
         return nil;
@@ -410,7 +410,7 @@ using namespace Windows::Foundation;
 
         if (length) {
             // The created NSData takes ownership of freeing this
-            std::unique_ptr<uint8_t[], decltype(&IwFree)> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)), IwFree);
+            woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
             if (!copiedBytes.get()) {
                 if (error) {
                     *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];

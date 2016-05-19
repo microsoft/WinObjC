@@ -25,6 +25,7 @@
 #import <assert.h>
 #import "LoggingNative.h"
 #include "StringHelpers.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
 
 static const wchar_t* TAG = L"NSString+UIKitAdditions";
 

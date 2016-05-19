@@ -28,6 +28,7 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIColor.h"
 #include "UIColorInternal.h"
+#include "UIKit/NSValue+UIKitAdditions.h"
 
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CATransaction.h"

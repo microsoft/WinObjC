@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,20 +14,24 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-#include "Foundation/NSValue.h"
+#import <CoreLocation/NSValue+CoreLocationAdditions.h>
 
-@implementation NSValue (UIKitAdditions)
-- (float)scale {
-    CATransform3D value = [self CATransform3DValue];
+@implementation NSValue (CoreLocationAdditions)
 
-    float scale[3];
-    CATransform3DGetScale(value, scale);
+- (id)initWithMKCoordinate:(CLLocationCoordinate2D)value {
+    return [self initWithBytes:(void*)&value objCType:@encode(CLLocationCoordinate2D)];
+}
 
-    return (scale[0] + scale[1] + scale[2]) / 3.0f;
++ (NSValue *)valueWithMKCoordinate:(CLLocationCoordinate2D)value {
+    return [[self alloc] initWithMKCoordinate:value];
+}
+
+- (CLLocationCoordinate2D)MKCoordinateValue {
+    CLLocationCoordinate2D val;
+    [self getValue:&val];
+    return val;
 }
 @end
 
-void NSValueForceinclude() {
-    [NSValue class];
+__attribute__((constructor)) static void _ForceTUInclusion() {
 }

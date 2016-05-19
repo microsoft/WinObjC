@@ -32,6 +32,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CLVisit.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CoreLocationConstants.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\CoreLocationFunctions.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreLocation\NSValue+CoreLocationAdditions.mm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{96CEAFB4-5BDC-4972-97D7-302840B3CDA0}</ProjectGuid>

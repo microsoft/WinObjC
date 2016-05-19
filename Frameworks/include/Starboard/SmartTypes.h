@@ -310,6 +310,19 @@ public:
     }
 };
 }
+
+namespace woc {
+    template <typename T>
+    class unique_iw : public std::unique_ptr<T, void(*)(T*)> {
+    public:
+        unique_iw() : std::unique_ptr<T, void(*)(T*)>(nullptr, (void(*)(T*))&IwFree) {
+        }
+
+        explicit unique_iw(T* val) : std::unique_ptr<T, void(*)(T*)>(val, (void(*)(T*))&IwFree) {
+        }
+    };
+}
+
 #endif
 
 #else // else(!defined(__cplusplus))
