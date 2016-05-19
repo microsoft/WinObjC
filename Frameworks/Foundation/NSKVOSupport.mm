@@ -509,6 +509,9 @@ static void _dispatchWillChange(id notifyingObject, NSString* key, NSDictionary*
     for (_NSKVOKeyObserver* keyObserver in [observationInfo observersForKey:key]) {
         _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
 
+        // This must happen regardless of whether we are currently notifying.
+        _removeNestedObserversAndOptionallyDependents(keyObserver, false);
+
         if (![keypathObserver pushWillChange]) {
             // Skip any keypaths that are in the process of changing.
             continue;
@@ -543,8 +546,6 @@ static void _dispatchWillChange(id notifyingObject, NSString* key, NSDictionary*
             [change removeObjectForKey:NSKeyValueChangeNotificationIsPriorKey];
         }
 
-        _removeNestedObserversAndOptionallyDependents(keyObserver, false);
-
         keypathObserver.pendingChange = change;
     }
 }
@@ -565,6 +566,9 @@ static void _dispatchDidChange(id notifyingObject, NSString* key) {
     NSMutableDictionary* keypathValueCache = [NSMutableDictionary dictionaryWithCapacity:[observers count]];
     for (_NSKVOKeyObserver* keyObserver in [observers reverseObjectEnumerator]) {
         _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
+
+        // This must happen regardless of whether we are currently notifying.
+        _addNestedObserversAndOptionallyDependents(keyObserver, false);
 
         if (![keypathObserver popDidChange]) {
             // Skip any keypaths that are in the process of changing.
@@ -592,7 +596,6 @@ static void _dispatchDidChange(id notifyingObject, NSString* key) {
 
         [observer observeValueForKeyPath:keypath ofObject:rootObject change:change context:context];
 
-        _addNestedObserversAndOptionallyDependents(keyObserver, false);
         keypathObserver.pendingChange = nil;
     }
 }
