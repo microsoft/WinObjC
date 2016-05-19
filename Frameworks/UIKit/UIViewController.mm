@@ -2220,7 +2220,7 @@ static UIInterfaceOrientation findOrientation(UIViewController* self) {
  @Status Interoperable
 */
 - (void)updateViewConstraints {
-    [((UIView*)(priv->view))_applyConstraints];
+    [priv->view _applyConstraints];
 }
 
 /**

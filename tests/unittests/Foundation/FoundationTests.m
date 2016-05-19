@@ -219,6 +219,10 @@ struct TestKVOStruct {
 
 @property (nonatomic, retain) NSMutableDictionary* dictionaryProperty;
 
+@property (nonatomic, retain) id boolTrigger1;
+@property (nonatomic, retain) id boolTrigger2;
+@property (nonatomic, readonly) bool dependsOnTwoKeys;
+
 // This modifies the internal integer property and notifies about it.
 - (void)incrementManualIntegerProperty;
 @end
@@ -251,6 +255,22 @@ struct TestKVOStruct {
 
 + (NSSet*)keyPathsForValuesAffectingKeyDerivedTwoTimes {
     return [NSSet setWithObject:@"derivedObjectProperty"];
+}
+
++ (NSSet*)keyPathsForValuesAffectingDependsOnTwoKeys {
+    return [NSSet setWithArray:@[@"boolTrigger1", @"boolTrigger2"]];
+}
+
++ (NSSet*)keyPathsForValuesAffectingDependsOnTwoSubKeys {
+    return [NSSet setWithArray:@[@"cascadableKey.boolTrigger1", @"cascadableKey.boolTrigger2"]];
+}
+
+- (bool)dependsOnTwoKeys {
+    return _boolTrigger1 != nil && _boolTrigger2 != nil;
+}
+
+- (bool)dependsOnTwoSubKeys {
+    return _cascadableKey.boolTrigger1 != nil && _cascadableKey.boolTrigger2 != nil;
 }
 
 - (id)keyDependentOnSubKeypath {
@@ -1134,6 +1154,56 @@ TEST(KVO, DerivedKeyDependentOnDerivedKey) {
                       @"---!!!$$$!!!---");
 
     [observed removeObserver:observer forKeyPath:@"keyDerivedTwoTimes"];
+    [pool release];
+}
+
+TEST(KVO, DerivedKeyDependentOnTwoKeys) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
+
+    [observed addObserver:observer forKeyPath:@"dependsOnTwoKeys" options:NSKeyValueObservingOptionNew context:nil];
+
+    observed.boolTrigger1 = @"firstObject";
+
+    EXPECT_EQ(1, [observer numberOfObservedChanges]);
+    EXPECT_OBJCEQ(@NO, [[[[observer changesForKeypath:@"dependsOnTwoKeys"] anyObject] info] objectForKey:NSKeyValueChangeNewKey]);
+
+    [observer clear];
+    observed.boolTrigger2 = @"secondObject";
+
+    EXPECT_EQ(1, [observer numberOfObservedChanges]);
+    EXPECT_OBJCEQ(@YES, [[[[observer changesForKeypath:@"dependsOnTwoKeys"] anyObject] info] objectForKey:NSKeyValueChangeNewKey]);
+
+    [observed removeObserver:observer forKeyPath:@"dependsOnTwoKeys"];
+    [pool release];
+}
+
+TEST(KVO, DerivedKeyDependentOnTwoSubKeys) {
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObject* child = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
+
+    [observed addObserver:observer forKeyPath:@"dependsOnTwoSubKeys" options:NSKeyValueObservingOptionNew context:nil];
+
+    observed.cascadableKey = child;
+    EXPECT_EQ(1, [observer numberOfObservedChanges]);
+    EXPECT_OBJCEQ(@NO, [[[[observer changesForKeypath:@"dependsOnTwoSubKeys"] anyObject] info] objectForKey:NSKeyValueChangeNewKey]);
+
+    [observer clear];
+    child.boolTrigger1 = @"firstObject";
+
+    EXPECT_EQ(1, [observer numberOfObservedChanges]);
+    EXPECT_OBJCEQ(@NO, [[[[observer changesForKeypath:@"dependsOnTwoSubKeys"] anyObject] info] objectForKey:NSKeyValueChangeNewKey]);
+
+    [observer clear];
+    child.boolTrigger2 = @"secondObject";
+
+    EXPECT_EQ(1, [observer numberOfObservedChanges]);
+    EXPECT_OBJCEQ(@YES, [[[[observer changesForKeypath:@"dependsOnTwoSubKeys"] anyObject] info] objectForKey:NSKeyValueChangeNewKey]);
+
+    [observed removeObserver:observer forKeyPath:@"dependsOnTwoSubKeys"];
     [pool release];
 }
 

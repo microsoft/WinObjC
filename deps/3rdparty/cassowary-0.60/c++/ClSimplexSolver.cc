@@ -24,7 +24,7 @@
 #include <queue>
 
 #ifdef HAVE_CONFIG_H
-#include <cassowary/config.h>
+#include "config.h"
 #define CONFIG_H_INCLUDED
 #endif
 
@@ -110,7 +110,7 @@ ClSimplexSolver::AddConstraint(ClConstraint *const pcn)
     // artificial variable.  After adding expr re-Optimize.
     fAddedOkDirectly = TryAddingDirectly(*pexpr);
     }
-  catch (ExCLRequiredFailure &error)
+  catch (ExCLRequiredFailure&)
     {
 #ifdef CL_TRACE
     cerr << "could not Add directly -- caught ExCLRequiredFailure error" << endl;
@@ -237,7 +237,7 @@ ClSimplexSolver::RemoveEditVarsTo(int n)
 #endif
     qclv.pop();
     }
-  while (_editInfoList.size() > n) {
+  while ((int)_editInfoList.size() > n) {
     _editInfoList.pop_back();
   }
   
@@ -583,7 +583,7 @@ void
 ClSimplexSolver::Resolve(const vector<Number> &newEditConstants)
 {
   ClEditInfoList::iterator it = _editInfoList.begin();
-  int i = 0;
+  unsigned int i = 0;
   for (; i < newEditConstants.size() && it != _editInfoList.end(); ++it, ++i)
     {
     ClEditInfo *pcei = (*it);

@@ -1,7 +1,7 @@
 // $Id: ClSolver.cc,v 1.3 1999/04/29 09:45:29 gjb Exp $
 
 #ifdef HAVE_CONFIG_H
-#include <cassowary/config.h>
+#include "config.h"
 #define CONFIG_H_INCLUDED
 #endif
 

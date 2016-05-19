@@ -24,14 +24,14 @@
 @implementation PhotoLayout
 
 - (id)init {
-    self = [super init];
+    if (self = [super init]) {
+        self.itemSize = CGSizeMake(140, 140);
+        self.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+        self.minimumInteritemSpacing = 5.0f;
+        self.minimumLineSpacing = 10.0f;
 
-    self.itemSize = CGSizeMake(140, 140);
-    self.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
-    self.minimumInteritemSpacing = 5.0f;
-    self.minimumLineSpacing = 10.0f;
-
-    [self setScrollDirection:UICollectionViewScrollDirectionVertical];
+        [self setScrollDirection:UICollectionViewScrollDirectionVertical];
+    }
 
     return self;
 }
@@ -41,16 +41,16 @@
 @implementation PhotoCell
 
 - (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+    if (self = [super initWithFrame:frame]) {
+        self.imageView = [[UIImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)), 5, 5)];
 
-    self.imageView = [[UIImageView alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)), 5, 5)];
+        self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.imageView.layer.masksToBounds = YES;
+        self.imageView.layer.contentsGravity = kCAGravityResizeAspectFill;
+        [self.contentView addSubview:self.imageView];
 
-    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.imageView.layer.masksToBounds = YES;
-    self.imageView.layer.contentsGravity = kCAGravityResizeAspectFill;
-    [self.contentView addSubview:self.imageView];
-
-    self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor whiteColor];
+    }
 
     return self;
 }
@@ -64,13 +64,16 @@
 @implementation PhotogridViewController
 
 - (id)init {
-    self = [super init];
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[PhotoLayout alloc] init]];
-    [self.collectionView setDataSource:self];
-    [self.collectionView setDelegate:self];
-    [self.collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:@"photoCell"];
+    if (self = [super init]) {
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[PhotoLayout alloc] init]];
 
-    [self setTitle:@"Canada"];
+        [self.collectionView setDataSource:self];
+        [self.collectionView setDelegate:self];
+        [self.collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:@"photoCell"];
+        self.collectionView.backgroundColor = [UIColor whiteColor];
+
+        [self setTitle:@"Canada"];
+    }
 
     images = [NSArray arrayWithObjects:[[UIImage imageNamed:@"photo1.jpg"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal],
                                        [UIImage imageNamed:@"photo2.jpg"],

@@ -28,17 +28,17 @@
 
 UIKIT_EXPORT_CLASS
 @interface UILayoutGuide : NSObject <NSCoding>
-@property (copy, nonatomic) NSString* identifier STUB_PROPERTY;
-@property (readonly, nonatomic) CGRect layoutFrame STUB_PROPERTY;
-@property (nonatomic) UIView* owningView STUB_PROPERTY;
-@property (readonly, strong) NSLayoutYAxisAnchor* bottomAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutXAxisAnchor* centerXAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutYAxisAnchor* centerYAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutDimension* heightAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutXAxisAnchor* leadingAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutXAxisAnchor* leftAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutXAxisAnchor* rightAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutYAxisAnchor* topAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutXAxisAnchor* trailingAnchor STUB_PROPERTY;
-@property (readonly, strong) NSLayoutDimension* widthAnchor STUB_PROPERTY;
+@property (copy, nonatomic) NSString* identifier;
+@property (readonly, nonatomic) CGRect layoutFrame;
+@property (nonatomic) UIView* owningView;
+@property (readonly, strong) NSLayoutYAxisAnchor* bottomAnchor;
+@property (readonly, strong) NSLayoutXAxisAnchor* centerXAnchor;
+@property (readonly, strong) NSLayoutYAxisAnchor* centerYAnchor;
+@property (readonly, strong) NSLayoutDimension* heightAnchor;
+@property (readonly, strong) NSLayoutXAxisAnchor* leadingAnchor;
+@property (readonly, strong) NSLayoutXAxisAnchor* leftAnchor;
+@property (readonly, strong) NSLayoutXAxisAnchor* rightAnchor;
+@property (readonly, strong) NSLayoutYAxisAnchor* topAnchor;
+@property (readonly, strong) NSLayoutXAxisAnchor* trailingAnchor;
+@property (readonly, strong) NSLayoutDimension* widthAnchor;
 @end
