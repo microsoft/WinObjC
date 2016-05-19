@@ -20,8 +20,17 @@
 #include <CoreFoundation/CFArray.h>
 #include "NSCFArray.h"
 #include "BridgeHelpers.h"
+#include "NSCFCollectionSupport.h"
 
 static const wchar_t* TAG = L"NSArray";
+
+static CFArrayCallBacks _NSCFArrayCallBacks = {
+    0,
+    _NSCFCallbackRetain,
+    _NSCFCallbackRelease,
+    _NSCFCallbackCopyDescription,
+    _NSCFCallbackEquals,
+};
 
 #pragma region NSArrayPrototype
 @implementation NSArrayPrototype
@@ -34,7 +43,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 - (_Nullable instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(NSUInteger)count {
     return reinterpret_cast<NSArrayPrototype*>(
-        static_cast<NSArray*>((CFArrayCreate(kCFAllocatorDefault, (const void**)(objects), count, &kCFTypeArrayCallBacks))));
+        static_cast<NSArray*>((CFArrayCreate(kCFAllocatorDefault, (const void**)(objects), count, &_NSCFArrayCallBacks))));
 }
 
 @end
@@ -57,7 +66,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems {
-    return reinterpret_cast<NSMutableArrayPrototype*>((CFArrayCreateMutable(kCFAllocatorDefault, numItems, &kCFTypeArrayCallBacks)));
+    return reinterpret_cast<NSMutableArrayPrototype*>((CFArrayCreateMutable(kCFAllocatorDefault, numItems, &_NSCFArrayCallBacks)));
 }
 
 @end

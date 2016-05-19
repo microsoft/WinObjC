@@ -18,11 +18,29 @@
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
 #include "NSCFDictionary.h"
+#include "NSCFCollectionSupport.h"
 #include <Foundation/NSDictionary.h>
 #include <CoreFoundation/CFDictionary.h>
 #include <vector>
 
 static const wchar_t* TAG = L"NSDictionary";
+
+static CFDictionaryKeyCallBacks _NSCFDictionaryKeyCallBacks = {
+    0,
+    _NSCFCallbackCopy,
+    _NSCFCallbackRelease,
+    _NSCFCallbackCopyDescription,
+    _NSCFCallbackEquals,
+    _NSCFCallbackHash,
+};
+
+static CFDictionaryValueCallBacks _NSCFDictionaryValueCallBacks = {
+    0,
+    _NSCFCallbackRetain,
+    _NSCFCallbackRelease,
+    _NSCFCallbackCopyDescription,
+    _NSCFCallbackEquals,
+};
 
 #pragma region NSDictionaryPrototype
 @implementation NSDictionaryPrototype
@@ -34,17 +52,12 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (_Nullable instancetype)initWithObjects:(const id*)vals forKeys:(const id<NSCopying> _Nonnull[])keys count:(NSUInteger)count {
-    std::vector<id> keyCopies(count);
-    for (unsigned i = 0; i < count; i++) {
-        keyCopies[i] = [[keys[i] copyWithZone:NULL] autorelease];
-    }
-
     NSDictionary* dictionary = static_cast<NSDictionary*>(CFDictionaryCreate(kCFAllocatorDefault,
-                                                                                                     (const void**)(keyCopies.data()),
+                                                                                                     (const void**)(keys),
                                                                                                      (const void**)(vals),
                                                                                                      count,
-                                                                                                     &kCFTypeDictionaryKeyCallBacks,
-                                                                                                     &kCFTypeDictionaryValueCallBacks));
+                                                                                                     &_NSCFDictionaryKeyCallBacks,
+                                                                                                     &_NSCFDictionaryValueCallBacks));
 
     return reinterpret_cast<NSDictionaryPrototype*>(dictionary);
 }
@@ -69,7 +82,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems {
-    return reinterpret_cast<NSMutableDictionaryPrototype*>(CFDictionaryCreateMutable(kCFAllocatorDefault, numItems, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks));
+    return reinterpret_cast<NSMutableDictionaryPrototype*>(CFDictionaryCreateMutable(kCFAllocatorDefault, numItems, &_NSCFDictionaryKeyCallBacks, &_NSCFDictionaryValueCallBacks));
 }
 
 @end
@@ -105,9 +118,7 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDictionaryRef, CFDictionaryGetTypeID, NSDictionar
 
 - (void)setObject:(id)object forKey:(id)key {
     BRIDGED_THROW_IF_IMMUTABLE(_CFDictionaryIsMutable, CFDictionaryRef);
-    key = [key copy];
     CFDictionarySetValue((CFMutableDictionaryRef)self, (const void*)key, (void*)object);
-    [key release];
 }
 
 - (void)removeObjectForKey:(id)key {

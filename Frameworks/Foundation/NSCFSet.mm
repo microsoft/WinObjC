@@ -19,8 +19,18 @@
 #include "CFHelpers.h"
 #include "CFFoundationInternal.h"
 #include "NSCFSet.h"
+#include "NSCFCollectionSupport.h"
 #include <CoreFoundation/CFSet.h>
 #include <vector>
+
+static CFSetCallBacks _NSCFSetCallBacks = {
+    0,
+    _NSCFCallbackRetain,
+    _NSCFCallbackRelease,
+    _NSCFCallbackCopyDescription,
+    _NSCFCallbackEquals,
+    _NSCFCallbackHash,
+};
 
 #pragma region NSSetPrototype
 @implementation NSSetPrototype
@@ -32,7 +42,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (_Nullable instancetype)initWithObjects:(id _Nonnull const*)objs count:(NSUInteger)count {
-    return reinterpret_cast<NSSetPrototype*>(static_cast<NSSet*>((CFSetCreate(kCFAllocatorDefault, (const void**)(objs), count, &kCFTypeSetCallBacks))));
+    return reinterpret_cast<NSSetPrototype*>(static_cast<NSSet*>((CFSetCreate(kCFAllocatorDefault, (const void**)(objs), count, &_NSCFSetCallBacks))));
 }
 
 @end
@@ -59,7 +69,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (_Nullable instancetype)initWithCapacity:(NSUInteger)numItems {
-    return reinterpret_cast<NSMutableSetPrototype*>((CFSetCreateMutable(kCFAllocatorDefault, numItems, &kCFTypeSetCallBacks)));
+    return reinterpret_cast<NSMutableSetPrototype*>((CFSetCreateMutable(kCFAllocatorDefault, numItems, &_NSCFSetCallBacks)));
 }
 
 @end
