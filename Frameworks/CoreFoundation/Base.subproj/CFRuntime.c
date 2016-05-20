@@ -645,9 +645,18 @@ CFTypeRef CFRetain(CFTypeRef cf) {
     return _CFRetain(cf, false);
 }
 
+// WINOBJC init order hack; make sure that the autorelease pool machinery is up and running.
+static void* _ensureAutoreleaseInit() {
+    void* pool = objc_autoreleasePoolPush();
+    objc_autoreleasePoolPop(pool);
+    return pool;
+}
+
 CFTypeRef CFAutorelease(CFTypeRef __attribute__((cf_consumed)) cf) {
     // WINOBJC: Add in handling for calling CFRetain and friends on a generic objective c object.
-    if (!cf || !__CF_IsCFObject(cf)) {
+    // Bridged classes need to be objc_autorelease'd too.
+    if (!cf || __CF_IsBridgedObject(cf) || !__CF_IsCFObject(cf)) {
+        static void* s_ensureAutoreleaseInit = _ensureAutoreleaseInit();
         return (CFTypeRef)objc_autorelease((id)cf);
     }
 
