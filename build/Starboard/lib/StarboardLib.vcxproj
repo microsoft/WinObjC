@@ -19,9 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
+
   </ItemGroup>
   <ItemGroup>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\Starboard\AssetFile.cpp" />
@@ -61,6 +59,7 @@
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
     <OutputName>StarboardLib</OutputName>
+    <StarboardIncludeDefaultLibs>false</StarboardIncludeDefaultLibs>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>

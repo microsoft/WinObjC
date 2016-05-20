@@ -32,11 +32,10 @@
 #import <UIKit/UIImage.h>
 #import <UIKit/UIImageView.h>
 #import <UIKit/UITableViewCell.h>
-#import "NSMutableString+Internal.h"
-
 #import <UWP/WindowsUIXamlControls.h>
-
 #import "XamlUtilities.h"
+#import "UIResponderInternal.h"
+#import "UIApplicationInternal.h"
 
 static const wchar_t* TAG = L"UITextField";
 

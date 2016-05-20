@@ -20,14 +20,6 @@
 /**
 @Status Interoperable
 */
-NSRange NSMakeRange(NSUInteger location, NSUInteger length) {
-    NSRange ret = { location, length };
-    return ret;
-}
-
-/**
-@Status Interoperable
-*/
 NSUInteger NSMaxRange(NSRange range) {
     return range.location + range.length;
 }

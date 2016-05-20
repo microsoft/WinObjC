@@ -31,7 +31,6 @@
 #import <UIInterface.h>
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
-#import <NSBundleInternal.h>
 #import <MainDispatcher.h>
 
 static CACompositorClientInterface* _compositorClient = NULL;
@@ -48,8 +47,6 @@ int ApplicationMainStart(
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
-
-    [NSBundle setMainBundlePath:@"."];
 
     NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
 

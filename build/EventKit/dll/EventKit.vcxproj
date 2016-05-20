@@ -25,9 +25,6 @@
     <None Include="EventKit.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\lib\EventKitLib.vcxproj">
       <Project>{8eca5e02-182f-4c5a-893b-3c83d3957073}</Project>
     </ProjectReference>

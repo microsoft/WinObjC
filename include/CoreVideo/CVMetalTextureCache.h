@@ -17,7 +17,7 @@
 
 #import <CoreVideo/CoreVideoExport.h>
 #import <CoreFoundation/CFBase.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreVideo/CVImageBuffer.h>
 #import <Metal/MetalConstants.h>

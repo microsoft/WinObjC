@@ -28,16 +28,9 @@
 @class NSString;
 @class NSSortDescriptor;
 
-struct NSSetTable {
-    CFMutableDictionaryRef dict;
-};
-
 FOUNDATION_EXPORT_CLASS
 @interface NSSet <__covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
-@public
-    struct NSSetTable _table;
 }
-
 + (instancetype)set;
 + (instancetype)setWithArray:(NSArray<ObjectType>*)array;
 + (instancetype)setWithObject:(ObjectType)object;
@@ -52,7 +45,6 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)cnt;
 - (instancetype)initWithSet:(NSSet<ObjectType>*)set;
 - (instancetype)initWithSet:(NSSet<ObjectType>*)set copyItems:(BOOL)flag STUB_METHOD;
-- (instancetype)init;
 @property (readonly) NSUInteger count;
 @property (readonly, copy) NSArray<ObjectType>* allObjects;
 - (ObjectType)anyObject;

@@ -18,31 +18,30 @@
 #import <Foundation/Foundation.h>
 #include <CoreFoundation/CFString.h>
 
-TEST(Foundation, CFStrings_ConvertEncodingToIANACharSetName) {
+TEST(CFStrings, ConvertEncodingToIANACharSetName) {
     CFStringRef charSetName;
 
     // Simple test to check a valid character set name is returned for kCFStringEncodingASCII.
     charSetName = CFStringConvertEncodingToIANACharSetName(kCFStringEncodingASCII);
     ASSERT_OBJCEQ_MSG((NSString*)charSetName,
-                      @"ANSI_X3.4-1968",
+                      @"us-ascii",
                       "Expected character set name does not match for kCFStringEncodingASCII encoding!");
 
-    // Simple test to check "ANSI_X3.4-1968" character set name is returned for unsupported encoding.
+    // Simple test to check "utf-16le" character set name is returned for kCFStringEncodingUTF16LE
     charSetName = CFStringConvertEncodingToIANACharSetName(kCFStringEncodingUTF16LE);
     ASSERT_OBJCEQ_MSG((NSString*)charSetName,
-                      @"ANSI_X3.4-1968",
-                      "Expected character set name does not match for kCFStringEncodingASCII encoding!");
+                      @"utf-16le",
+                      "Expected character set name does not match for kCFStringEncodingUTF16LE encoding!");
 }
 
-TEST(Foundation, CFStrings_ConvertIANACharSetNameToEncoding) {
+TEST(CFStrings, ConvertIANACharSetNameToEncoding) {
     CFStringEncoding encoding;
 
     // Simple test to check kCFStringEncodingASCII encoding is returned for the specified supported character set name.
-    encoding = CFStringConvertIANACharSetNameToEncoding(static_cast<CFStringRef>(@"ANSI_X3.4-1968"));
-    ASSERT_TRUE_MSG((encoding == kCFStringEncodingASCII),
-                    "Expected kCFStringEncodingASCII encoding for character set name ANSI_X3.4-1968!");
+    encoding = CFStringConvertIANACharSetNameToEncoding(static_cast<CFStringRef>(@"us-ascii"));
+    ASSERT_EQ_MSG(encoding, kCFStringEncodingASCII, "Expected kCFStringEncodingASCII encoding for character set name us-ascii!");
 
-    // Simple test to check kCFStringEncodingASCII encoding is returned for the specified unsupported character set name.
+    // Simple test to check kCFStringEncodingInvalidId encoding is returned for the specified unsupported character set name.
     encoding = CFStringConvertIANACharSetNameToEncoding(static_cast<CFStringRef>(@"ABC_XYZ_123"));
-    ASSERT_TRUE_MSG((encoding == kCFStringEncodingASCII), "Expected kCFStringEncodingASCII encoding for unsupported character set name!");
+    ASSERT_EQ_MSG(encoding, kCFStringEncodingInvalidId, "Expected kCFStringEncodingASCII encoding for unsupported character set name!");
 }

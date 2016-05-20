@@ -18,7 +18,6 @@
 #include <math.h>
 #include "CoreGraphics/CGContext.h"
 #include "CGContextInternal.h"
-#include "CoreFoundation/CFType.h"
 
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableDictionary.h"
@@ -29,6 +28,7 @@
 #include "UIKit/UIApplication.h"
 #include "UIKit/UIColor.h"
 #include "UIColorInternal.h"
+#include "UIKit/NSValue+UIKitAdditions.h"
 
 #include "QuartzCore/CALayer.h"
 #include "QuartzCore/CATransaction.h"

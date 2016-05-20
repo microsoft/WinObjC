@@ -1231,7 +1231,7 @@ int _doprnt(register const PrintType* fmt, va_list ap, PrintOutput* stream)
                 id ptr = EbrVal(ap, id);
                 id str = [ptr description];
 
-                s1 = (PrintType*)[str _quickStringUsingEncoding:PrintEncodingType];
+                s1 = (PrintType*)[str cStringUsingEncoding:PrintEncodingType];
                 if (s1 == NULL) {
                     s1 = PrintNullString; //"(null)";
                 }

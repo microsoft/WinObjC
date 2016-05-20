@@ -20,7 +20,7 @@
 #import <Foundation/NSURLCredential.h>
 #import <Foundation/NSURLProtectionSpace.h>
 
-TEST(Foundation, NSURLCredentialStorage_DefaultSharedSession) {
+TEST(NSURLCredentialStorage, DefaultSharedSession) {
     NSURLCredential* credential =
         [[NSURLCredential credentialWithUser:@"user" password:@"pass" persistence:NSURLCredentialPersistenceForSession] retain];
     ASSERT_TRUE_MSG(credential != NULL, "FAILED: credential should be non-null!");
@@ -43,7 +43,7 @@ TEST(Foundation, NSURLCredentialStorage_DefaultSharedSession) {
     [protectionSpace release];
 }
 
-TEST(Foundation, NSURLCredentialStorage_NonDefaultSession) {
+TEST(NSURLCredentialStorage, NonDefaultSession) {
     NSURLCredential* credential =
         [NSURLCredential credentialWithUser:@"user" password:@"word" persistence:NSURLCredentialPersistenceForSession];
     ASSERT_TRUE_MSG(credential != NULL, "FAILED: credential should be non-null!");

@@ -270,7 +270,7 @@ FOUNDATION_EXPORT NSString* const NSUserDefaultsDidChangeNotification = @"NSUser
 
     __int64 ret = 0;
     if ([number isKindOfClass:[NSString class]]) {
-        [static_cast<NSString*>(number) _longLongValuePtr:&ret];
+        ret = [static_cast<NSString*>(number) longLongValue];
     } else {
         if ([number isKindOfClass:[NSNumber class]]) {
             ret = [number longLongValue];
@@ -414,8 +414,8 @@ static id deepCopyValue(id obj) {
         // file reference URL case. we don't support it.
         UNIMPLEMENTED();
     } else {
-        // TODO: for now, file path URL, persist as NSString with path, but no abbreviation against home directory
-        [self setObject:[url path] forKey:defaultName];
+        // TODO: for now, just save the whole URL
+        [self setObject:[url absoluteString] forKey:defaultName];
     }
 }
 
@@ -435,7 +435,7 @@ static id deepCopyValue(id obj) {
             result = [NSKeyedUnarchiver unarchiveObjectWithData:obj];
         } else if ([obj isKindOfClass:[NSString class]]) {
             // TODO: file path URL, no expansion currently since no abbreviation in SetURL
-            result = [NSURL fileURLWithPath:obj];
+            result = [NSURL URLWithString:obj];
         } else {
             // we don't support file reference URL
             UNIMPLEMENTED();

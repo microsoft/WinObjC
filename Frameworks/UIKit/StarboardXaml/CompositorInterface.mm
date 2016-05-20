@@ -32,6 +32,7 @@
 #import "UIColorInternal.h"
 #import "QuartzCore\CATransform3D.h"
 #import "Quaternion.h"
+#import <algorithm>
 #import <deque>
 #import <map>
 #import <algorithm>
@@ -41,6 +42,7 @@
 #import "UWP/interopBase.h"
 #import "UIApplicationInternal.h"
 #import <LoggingNative.h>
+#import "StringHelpers.h"
 #import <MainDispatcher.h>
 
 #import <UWP/WindowsUIViewManagement.h>
@@ -339,7 +341,8 @@ public:
         int mask = [font fontDescriptor].symbolicTraits;
         _isBold = (mask & UIFontDescriptorTraitBold) > 0;
         _isItalic = (mask & UIFontDescriptorTraitItalic) > 0;
-        ConstructGlyphs([[font fontName] UTF8String], (const wchar_t*)[text rawCharacters], [text length]);
+        std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(text);
+        ConstructGlyphs([[font fontName] UTF8String], wideBuffer.c_str(), wideBuffer.length());
     }
 };
 
@@ -1487,13 +1490,14 @@ public:
                 for (int i = 0; i < [pointerDevices count]; i++) {
                     WFRect* screenRect = [(WDIPointerDevice*)[pointerDevices objectAtIndex:i] screenRect];
                     float hostScreenScale = [UIApplication displayMode].hostScreenScale;
-                    maxDimension = max(maxDimension, max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
+                    maxDimension =
+                        std::max(maxDimension, std::max(screenRect.width * hostScreenScale, screenRect.height * hostScreenScale));
                 }
 
                 // We can't know whether the app will be rotated, or moved from screen to screen. We have to take the
                 // worst case scenario, and set the scale using the maximum possible dimension.
 
-                float maxScreenDimension = max([UIApplication displayMode].fixedWidth, [UIApplication displayMode].fixedHeight);
+                float maxScreenDimension = std::max([UIApplication displayMode].fixedWidth, [UIApplication displayMode].fixedHeight);
 
                 if (maxDimension == 0) {
                     TraceWarning(TAG, L"Could not determine screen size, defaulting to a screenScale of 2!");

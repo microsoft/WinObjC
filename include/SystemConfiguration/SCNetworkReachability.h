@@ -18,6 +18,7 @@
 #define __SYSTEMCONFIGURATION_SCNETWORKREACHABILITY_H
 
 #include <sys/cdefs.h>
+#include <dispatch/dispatch.h>
 #include <SystemConfiguration/SCExport.h>
 #include <CoreFoundation/CoreFoundation.h>
 

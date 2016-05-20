@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\lib\AudioToolboxLib.vcxproj">
       <Project>{FBB81B8A-F021-4F71-9A07-E4DC835676FD}</Project>
     </ProjectReference>

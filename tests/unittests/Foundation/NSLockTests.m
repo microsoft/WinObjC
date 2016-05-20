@@ -22,7 +22,7 @@
 #import <chrono>
 #import "NSLock+Internal.h"
 
-TEST(Foundation, NSLock_initWithName) {
+TEST(NSLock, initWithName) {
     NSString* lockName = @"testLock";
     NSLock* lock = [[NSLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
@@ -33,7 +33,7 @@ TEST(Foundation, NSLock_initWithName) {
     [lockName release];
 }
 
-TEST(Foundation, NSLock_lockAndUnLock) {
+TEST(NSLock, lockAndUnLock) {
     NSLock* lock = [[NSLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
     [lock lock];
@@ -43,7 +43,7 @@ TEST(Foundation, NSLock_lockAndUnLock) {
     [lock release];
 }
 
-TEST(Foundation, NSLock_lockAndUnLockSanity) {
+TEST(NSLock, lockAndUnLockSanity) {
     NSLock* lock = [[NSLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
     int limit = 20;
@@ -57,7 +57,7 @@ TEST(Foundation, NSLock_lockAndUnLockSanity) {
     [lock release];
 }
 
-TEST(Foundation, NSLock_tryLock) {
+TEST(NSLock, tryLock) {
     NSLock* lock = [[NSLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
 
@@ -68,7 +68,7 @@ TEST(Foundation, NSLock_tryLock) {
     ASSERT_EQ_MSG(0, [lock _lockCount], "FAILED: the lock should not be locked.");
     [lock release];
 }
-TEST(Foundation, NSLock_lockBeforeDate) {
+TEST(NSLock, lockBeforeDate) {
     NSLock* lock = [[NSLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
 
@@ -80,7 +80,7 @@ TEST(Foundation, NSLock_lockBeforeDate) {
     [lock release];
 }
 
-TEST(Foundation, NSLock_lockAndUnlockWithThreads) {
+TEST(NSLock, lockAndUnlockWithThreads) {
     NSLock* lock = [[NSLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
 
@@ -100,7 +100,7 @@ TEST(Foundation, NSLock_lockAndUnlockWithThreads) {
         // notify the main thread, so it can move from the wait to spawn a producer.
         consumerCondition.notify_all();
         [lock unlock];
-		innerStartLock.unlock();
+        innerStartLock.unlock();
         // wait for the producer to come up.
         std::unique_lock<std::mutex> waitForProducerLock(waitForProducerMutex);
         consumerCondition.wait(waitForProducerLock, [&]() { return notified; });

@@ -18,7 +18,7 @@
 #import <Security/SecBase.h>
 #import <Security/SecKey.h>
 #import <Security/SecCertificate.h>
-
+#import <CoreFoundation/CFArray.h>
 // This header file is not yet fully implemented
 
 typedef struct __SecIdentity* SecIdentityRef;

@@ -19,7 +19,7 @@
 #include <string.h>
 #include <Foundation/NSProcessInfo.h>
 
-TEST(Foundation, NSProcessInfoGetProperties) {
+TEST(NSProcessInfo, NSProcessInfoGetProperties) {
     // get the process name/id/processor count from windows side
     wchar_t moduleFullPath[_MAX_PATH];
     NSString* processName;

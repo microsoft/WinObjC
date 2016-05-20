@@ -248,3 +248,14 @@ TEST(NSArray, Autorelease) {
 
     ASSERT_EQ(1, [object retainCount]);
 }
+
+TEST(NSArray, ExpandBeyondCapacity) {
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:1];
+
+    NSUInteger expectedCount = 10;
+    for (NSUInteger i = 0; i < expectedCount; i++) {
+        [array addObject:[NSNumber numberWithInt:i]];
+    }
+
+    ASSERT_EQ(expectedCount, [array count]);
+}

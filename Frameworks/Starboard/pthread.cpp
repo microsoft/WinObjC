@@ -323,14 +323,27 @@ extern "C" int pthread_mutex_init(pthread_mutex_t* mutex, const pthread_mutexatt
     return 0;
 }
 
+// Initialize mutex in a thread safe manner without locking
+static inline void _pthread_ensure_initialized(pthread_mutex_t* mutex) {
+    if (*mutex == PTHREAD_MUTEX_INITIALIZER) {
+        pthread_mutex_t tmp;
+        pthread_mutex_init(&tmp, nullptr);
+        if (PTHREAD_MUTEX_INITIALIZER != InterlockedCompareExchangePointer((void**)mutex, tmp, (void*)PTHREAD_MUTEX_INITIALIZER)) {
+            pthread_mutex_destroy(&tmp);
+        }
+    }
+
+    // Ensure that the reader thread observes the write to *mutex after it observes the writes to **mutex.
+    MemoryBarrier();
+}
+
 /**
 @Status Caveat
 @Notes Ignores return value errors
 */
 extern "C" int pthread_mutex_lock(pthread_mutex_t* mutex) {
-    if (*mutex == PTHREAD_MUTEX_INITIALIZER) {
-        pthread_mutex_init(mutex, nullptr);
-    }
+    _pthread_ensure_initialized(mutex);
+
     EnterCriticalSection((CRITICAL_SECTION*)*mutex);
     return 0;
 }
@@ -401,9 +414,7 @@ extern "C" int pthread_attr_getstacksize(const pthread_attr_t* attrs, size_t* si
 @Status Interoperable
 */
 extern "C" int pthread_mutex_trylock(pthread_mutex_t* mutex) {
-    if (*mutex == PTHREAD_MUTEX_INITIALIZER) {
-        pthread_mutex_init(mutex, 0);
-    }
+    _pthread_ensure_initialized(mutex);
 
     BOOL success = TryEnterCriticalSection((CRITICAL_SECTION*)*mutex);
     if (success) {
@@ -698,6 +709,14 @@ extern "C" int pthread_rwlock_rdlock(pthread_rwlock_t* mutex) {
 @Status Stub
 */
 extern "C" int pthread_rwlock_unlock(pthread_rwlock_t* mutex) {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+@Status Stub
+*/
+extern "C" int pthread_attr_setdetachstate(pthread_attr_t*, int) {
     UNIMPLEMENTED();
     return StubReturn();
 }

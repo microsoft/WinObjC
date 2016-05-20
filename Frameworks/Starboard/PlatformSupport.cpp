@@ -101,7 +101,7 @@ size_t EbrFile::Read(void* dest, size_t elem, size_t count) {
     return 0;
 }
 
-size_t EbrFile::Write(void* dest, size_t elem, size_t count) {
+size_t EbrFile::Write(const void* dest, size_t elem, size_t count) {
     assert(0);
     return 0;
 }
@@ -263,7 +263,7 @@ public:
 
     virtual int Close();
     virtual size_t Read(void* dest, size_t elem, size_t count);
-    virtual size_t Write(void* dest, size_t elem, size_t count);
+    virtual size_t Write(const void* dest, size_t elem, size_t count);
     virtual int Seek(long offset, int origin);
     virtual int Seek64(__int64 offset, int origin);
     virtual size_t Tell();
@@ -544,11 +544,11 @@ size_t EbrFread(void* dest, size_t elem, size_t count, EbrFile* file) {
     return file->Read(dest, elem, count);
 }
 
-size_t EbrIOFile::Write(void* dest, size_t elem, size_t count) {
+size_t EbrIOFile::Write(const void* dest, size_t elem, size_t count) {
     return fwrite(dest, elem, count, fp);
 }
 
-size_t EbrFwrite(void* dest, size_t elem, size_t count, EbrFile* file) {
+size_t EbrFwrite(const void* dest, size_t elem, size_t count, EbrFile* file) {
     return file->Write(dest, elem, count);
 }
 

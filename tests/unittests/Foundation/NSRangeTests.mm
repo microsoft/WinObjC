@@ -23,7 +23,7 @@ void testStringFromRange(NSString* testString, NSRange expectedRange) {
     ASSERT_EQ(expectedRange.length, actualRange.length);
 }
 
-TEST(Foundation, NSRangeTests) {
+TEST(NSRange, NSRangeTests) {
     testStringFromRange(@"{1, 2}", { 1, 2 });
     testStringFromRange(@"1, 2}", { 0, 0 });
     testStringFromRange(@"{1, 2", { 0, 0 });

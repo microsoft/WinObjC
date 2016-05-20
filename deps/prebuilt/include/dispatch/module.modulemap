@@ -1,0 +1,4 @@
+module Dispatch [extern_c] {
+    umbrella header "dispatch.h"
+    export *
+}

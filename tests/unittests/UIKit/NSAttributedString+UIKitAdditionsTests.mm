@@ -102,10 +102,14 @@ TEST(NSAttributedString, InitWithData_HtmlFontTraitsAndBreak) {
     assertFontTraitAt(aStr, 0, 3, UIFontDescriptorTraitBold);
     assertFontTraitNotAt(aStr, 0, 3, UIFontDescriptorTraitItalic);
 
-    assertFontTraitAt(aStr, 3, 4, UIFontDescriptorTraitBold);
-    assertFontTraitAt(aStr, 3, 4, UIFontDescriptorTraitItalic);
+    assertFontTraitAt(aStr, 3, 3, UIFontDescriptorTraitBold);
+    assertFontTraitAt(aStr, 3, 3, UIFontDescriptorTraitItalic);
 
-    assertAttributeAt(aStr, NSUnderlineStyleAttributeName, @(NSUnderlineStyleSingle), 6, 1);
+    // Hilariously, the attributes still apply to non visible characters so that is
+    // a bold, italic, and underlined \r\n
+    assertFontTraitAt(aStr, 6, 3, UIFontDescriptorTraitBold);
+    assertFontTraitAt(aStr, 6, 3, UIFontDescriptorTraitItalic);
+    assertAttributeAt(aStr, NSUnderlineStyleAttributeName, @(NSUnderlineStyleSingle), 6, 3);
 
     assertFontTraitAt(aStr, 9, 4, UIFontDescriptorTraitBold);
     assertFontTraitNotAt(aStr, 9, 4, UIFontDescriptorTraitItalic);
@@ -162,7 +166,8 @@ TEST(NSAttributedString, ReplaceUsingSubclass) {
 
         assertAttributeAt(aStr, @"key1", @"value1", 2, 2);
         assertAttributeAt(aStr, @"key1", @"value1", 5, 2);
-        assertAttributeAt(aStr, @"key2", @"value2", 2, 3);
+        assertAttributeAt(aStr, @"key2", @"value2", 2, 2);
+        assertAttributeAt(aStr, @"key2", @"value2", 4, 1);
         ASSERT_OBJCEQ(@"AAOBJAA", [aStr string]);
     }
 

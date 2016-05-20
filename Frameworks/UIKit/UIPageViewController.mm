@@ -21,6 +21,7 @@
 #import <Foundation/NSException.h>
 #import <UIKit/UIPageViewController.h>
 #import "NSLogging.h"
+#import <objc/blocks_runtime.h>
 
 #include <algorithm>
 

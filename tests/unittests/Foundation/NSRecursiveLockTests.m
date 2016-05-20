@@ -24,7 +24,7 @@
 
 #import "NSRecursiveLock+Internal.h"
 
-TEST(Foundation, NSRecursiveLock_initWithName) {
+TEST(NSRecursiveLock, initWithName) {
     NSString* lockName = @"testLock";
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
@@ -34,7 +34,7 @@ TEST(Foundation, NSRecursiveLock_initWithName) {
     [lock release];
 }
 
-TEST(Foundation, NSRecursiveLock_lockAndUnLock) {
+TEST(NSRecursiveLock, lockAndUnLock) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
     [lock lock];
@@ -44,7 +44,7 @@ TEST(Foundation, NSRecursiveLock_lockAndUnLock) {
     [lock release];
 }
 
-TEST(Foundation, NSRecursiveLock_MultipleLockCounts) {
+TEST(NSRecursiveLock, MultipleLockCounts) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
     [lock lock];
@@ -68,7 +68,7 @@ TEST(Foundation, NSRecursiveLock_MultipleLockCounts) {
     [lock release];
 }
 
-TEST(Foundation, NSRecursiveLock_MultipleLockSanity) {
+TEST(NSRecursiveLock, MultipleLockSanity) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
     int limit = 20;
@@ -85,7 +85,7 @@ TEST(Foundation, NSRecursiveLock_MultipleLockSanity) {
     [lock release];
 }
 
-TEST(Foundation, NSRecursiveLock_MultipleLockOnSeperateThreads) {
+TEST(NSRecursiveLock, MultipleLockOnSeperateThreads) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
     [lock lock];
@@ -135,7 +135,7 @@ TEST(Foundation, NSRecursiveLock_MultipleLockOnSeperateThreads) {
     [lock release];
 }
 
-TEST(Foundation, NSRecursiveLock_tryLock) {
+TEST(NSRecursiveLock, tryLock) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
 
@@ -146,7 +146,7 @@ TEST(Foundation, NSRecursiveLock_tryLock) {
     ASSERT_EQ_MSG(0, [lock _lockCount], "FAILED: the lock should not be locked.");
     [lock release];
 }
-TEST(Foundation, NSRecursiveLock_lockBeforeDate) {
+TEST(NSRecursiveLock, lockBeforeDate) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
 
@@ -158,7 +158,7 @@ TEST(Foundation, NSRecursiveLock_lockBeforeDate) {
     [lock release];
 }
 
-TEST(Foundation, NSRecursiveLock_lockAndUnlockWithThreads) {
+TEST(NSRecursiveLock, lockAndUnlockWithThreads) {
     NSRecursiveLock* lock = [[NSRecursiveLock alloc] init];
     ASSERT_TRUE_MSG(lock != nil, "FAILED: lock should be non-null!");
 
@@ -178,7 +178,7 @@ TEST(Foundation, NSRecursiveLock_lockAndUnlockWithThreads) {
         // notify the main thread, so it can move from the wait to spawn a producer.
         consumerCondition.notify_all();
         [lock unlock];
-	    innerStartLock.unlock();
+        innerStartLock.unlock();
         // wait for the producer to come up.
         std::unique_lock<std::mutex> waitForProducerLock(waitForProducerMutex);
         consumerCondition.wait(waitForProducerLock, [&]() { return notified; });

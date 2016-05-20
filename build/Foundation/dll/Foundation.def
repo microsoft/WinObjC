@@ -1,8 +1,12 @@
 LIBRARY Foundation
     EXPORTS
-        ; CF ObjC classes
-        _OBJC_CLASS_CFConstantString CONSTANT ; This needs to be CONSTANT because CFConstantString is special for @"" syntax
-        __objc_class_name_CFConstantString CONSTANT
+        ; Constant String class
+        _OBJC_CLASS_NSConstantString CONSTANT ; This needs to be CONSTANT because NSConstantString is special for @"" syntax
+        __objc_class_name_NSConstantString CONSTANT
+
+        ; TODO 7143070: Remove temporary exports for projections interop
+        _OBJC_CLASS_CFConstantString=_OBJC_CLASS_NSConstantString CONSTANT
+        __objc_class_name_CFConstantString=__objc_class_name_NSConstantString CONSTANT
 
         ; Foundation ObjC classes
         _OBJC_CLASS_NSArray DATA
@@ -294,136 +298,8 @@ LIBRARY Foundation
         __objc_class_name_NSValueTransformer CONSTANT
         __objc_class_name_NSXMLParser CONSTANT
         isOSTarget
-        CFAbsoluteTimeGetCurrent
-        CFArrayAppendArray
-        CFArrayAppendValue
-        CFArrayContainsValue
-        CFArrayCreate
-        CFArrayCreateCopy
-        CFArrayCreateMutable
-        CFArrayCreateMutableCopy
-        CFArrayGetCount
-        CFArrayGetNextValue
-        CFArrayGetValueAtIndex
-        CFArrayGetValueEnumerator
-        CFArrayInsertValueAtIndex
-        CFArrayRemoveAllValues
-        CFArrayRemoveValueAtIndex
-        CFArrayReplaceValues
-        CFArraySetValueAtIndex
-        CFAttributedStringBeginEditing
-        CFAttributedStringCreate
-        CFAttributedStringCreateCopy
-        CFAttributedStringCreateMutable
-        CFAttributedStringCreateMutableCopy
-        CFAttributedStringCreateWithSubstring
-        CFAttributedStringEndEditing
-        CFAttributedStringGetAttribute
-        CFAttributedStringGetAttributeAndLongestEffectiveRange
-        CFAttributedStringGetAttributes
-        CFAttributedStringGetAttributesAndLongestEffectiveRange
-        CFAttributedStringGetLength
-        CFAttributedStringGetMutableString
-        CFAttributedStringGetString
-        CFAttributedStringRemoveAttribute
-        CFAttributedStringReplaceAttributedString
-        CFAttributedStringReplaceString
-        CFAttributedStringSetAttribute
-        CFAttributedStringSetAttributes
-        CFAutorelease
-        CFBinaryHeapAddValue
-        CFBinaryHeapContainsValue
-        CFBinaryHeapCreate
-        CFBinaryHeapGetCount
-        CFBinaryHeapGetCountOfValue
-        CFBinaryHeapGetMinimum
-        CFBinaryHeapRemoveAllValues
-        CFBinaryHeapRemoveMinimumValue
-        CFBooleanGetValue
-        CFCopyDescription
-        CFDataGetBytePtr
-        CFDataGetTypeID
-        CFDictionaryAddValue
-        CFDictionaryApplyFunction
-        CFDictionaryContainsKey
-        CFDictionaryCreateMutable
-        CFDictionaryGetCount
-        CFDictionaryGetKeyEnumerator
-        CFDictionaryGetKeysAndValues
-        CFDictionaryGetNextKey
-        CFDictionaryGetNextValue
-        CFDictionaryGetValue
-        CFDictionaryGetValueEnumerator
-        CFDictionaryGetValueIfPresent
-        CFDictionaryRemoveAllValues
-        CFDictionaryRemoveValue
-        CFDictionarySetValue
-        CFDictionarySetValueUnretained
-        CFEqual
-        CFGetRetainCount
-        CFGetTypeID
-        CFHash
-        CFMakeCollectable
-        CFNumberGetType
-        CFRelease
-        CFRetain
-        CFRunLoopGetCurrent
-        CFRunLoopGetMain
-        CFRunLoopRunInMode
-        CFShow
-        CFStringAppend
-        CFStringAppendCharacters
-        CFStringCompare
-        CFStringTransform
-        CFStringConvertEncodingToIANACharSetName
-        CFStringConvertIANACharSetNameToEncoding
-        CFStringConvertNSStringEncodingToEncoding
-        CFStringConvertEncodingToNSStringEncoding
-        CFStringGetCStringPtr
-        CFStringGetFastestEncoding
-        CFStringGetLength
-        CFStringReplace
-        CFURLCopyPath
-        CFURLCopyPathExtension
-        CFURLCreateStringByAddingPercentEscapes
-        CFURLCreateStringByReplacingPercentEscapes
-        CFURLCreateStringByReplacingPercentEscapesUsingEncoding
-        CFUUIDCreate
-        CFUUIDCreateFromString
-        CFUUIDCreateFromUUIDBytes
-        CFUUIDCreateString
-        CFUUIDCreateWithBytes
-        CFUUIDGetConstantUUIDWithBytes
-        CFUUIDGetUUIDBytes
         NSAllocateObject
         NSDeallocateObject
-        OSHostByteOrder
-        OSReadBigInt16
-        OSReadBigInt32
-        OSSwapBigToHostInt16
-        OSSwapBigToHostInt32
-        OSSwapInt16
-        OSSwapInt32
-        OSSwapLittleToHostInt32
-        arc4random
-        arc4random_uniform
-        kCFAllocatorDefault DATA
-        kCFBooleanFalse DATA
-        kCFBooleanTrue DATA
-        kCFBundleNameKey DATA
-        kCFBundleVersionKey DATA
-        kCFBundleIdentifierKey DATA
-        kCFBundleInfoDictionaryVersionKey DATA
-        kCFBundleLocalizationsKey DATA
-        kCFBundleExecutableKey DATA
-        kCFBundleDevelopmentRegionKey DATA
-        kCFCoreFoundationVersionNumber DATA
-        kCFRunLoopCommonModes DATA
-        kCFRunLoopDefaultMode DATA
-        kCFStreamPropertySSLSettings DATA
-        kCFTypeArrayCallBacks DATA
-        kCFTypeDictionaryKeyCallBacks DATA
-        kCFTypeDictionaryValueCallBacks DATA
         NSClassFromString
         NSEqualRanges
         NSHomeDirectory
@@ -431,7 +307,6 @@ LIBRARY Foundation
         NSLocationInRange
         NSLog
         NSLogv
-        NSMakeRange
         NSMaxRange
         NSRangeFromString
         NSSearchPathForDirectoriesInDomains

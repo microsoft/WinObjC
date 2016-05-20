@@ -24,17 +24,23 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  @Status Interoperable
 */
 - (instancetype)init {
-    _era = NSUndefinedDateComponent;
-    _year = NSUndefinedDateComponent;
-    _quarter = NSUndefinedDateComponent;
-    _month = NSUndefinedDateComponent;
-    _week = NSUndefinedDateComponent;
-    _weekday = NSUndefinedDateComponent;
-    _weekdayOrdinal = NSUndefinedDateComponent;
-    _day = NSUndefinedDateComponent;
-    _hour = NSUndefinedDateComponent;
-    _minute = NSUndefinedDateComponent;
-    _second = NSUndefinedDateComponent;
+    if (self = [super init]) {
+        _era = NSUndefinedDateComponent;
+        _year = NSUndefinedDateComponent;
+        _month = NSUndefinedDateComponent;
+        _day = NSUndefinedDateComponent;
+        _hour = NSUndefinedDateComponent;
+        _minute = NSUndefinedDateComponent;
+        _second = NSUndefinedDateComponent;
+        _nanosecond = NSUndefinedDateComponent;
+        _week = NSUndefinedDateComponent;
+        _weekday = NSUndefinedDateComponent;
+        _weekdayOrdinal = NSUndefinedDateComponent;
+        _quarter = NSUndefinedDateComponent;
+        _weekOfMonth = NSUndefinedDateComponent;
+        _weekOfYear = NSUndefinedDateComponent;
+        _yearForWeekOfYear = NSUndefinedDateComponent;
+    }
     return self;
 }
 

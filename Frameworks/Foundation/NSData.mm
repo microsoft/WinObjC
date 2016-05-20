@@ -16,6 +16,8 @@
 
 #import "Starboard.h"
 #import "StubReturn.h"
+#import <algorithm>
+#import <memory>
 #import <string>
 #import "Foundation/NSMutableData.h"
 #import "Foundation/NSError.h"
@@ -23,6 +25,7 @@
 #import "Foundation/NSString.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSValue.h"
+#import <CoreFoundation/CFData.h>
 #import <UWP/WindowsStorageStreams.h>
 #import <UWP/WindowsSecurityCryptography.h>
 #include <COMIncludes.h>
@@ -35,6 +38,8 @@
 #import <string>
 #import <sstream>
 #import <iomanip>
+#import "NSCFData.h"
+#import "NSRaise.h"
 #import "StringHelpers.h"
 #import "LoggingNative.h"
 
@@ -49,6 +54,8 @@ using namespace Windows::Foundation;
 
 @implementation NSData
 
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSData, NSDataPrototype);
+
 /**
  @Status Interoperable
 */
@@ -57,7 +64,7 @@ using namespace Windows::Foundation;
     IBuffer* rawBuffer = nullptr;
     HRESULT result;
 
-    result = BufferFromRawData(&rawBuffer, _bytes, _length);
+    result = BufferFromRawData(&rawBuffer, const_cast<byte*>(reinterpret_cast<const byte*>([self bytes])), [self length]);
 
     if (FAILED(result)) {
         return nil;
@@ -195,7 +202,7 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 + (instancetype)dataWithBytesNoCopy:(void*)bytes length:(unsigned)length {
-    return [[[self alloc] initWithBytesNoCopy:(void*)bytes length:length freeWhenDone:TRUE] autorelease];
+    return [[[self alloc] initWithBytesNoCopy:(void*)bytes length:length freeWhenDone:YES] autorelease];
 }
 
 /**
@@ -209,13 +216,6 @@ using namespace Windows::Foundation;
 /**
  @Status Interoperable
 */
-- (instancetype)init {
-    return [self initWithBytes:"" length:0];
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)initWithData:(NSData*)data {
     return [self initWithBytes:[data bytes] length:[data length]];
 }
@@ -224,22 +224,15 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (instancetype)initWithBytes:(const void*)bytes length:(unsigned)length {
-    _bytes = nullptr;
-    _freeWhenDone = TRUE;
-    _length = length;
-
-    if (_length) {
-        _bytes = (uint8_t*)IwMalloc(_length);
-        if (!_bytes) {
-            [self release];
-            return nil;
-        }
+    // The created NSData takes ownership of freeing this
+    woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
+    if (!copiedBytes) {
+        [self release];
+        return nil;
     }
 
-    if (_length && _bytes) {
-        memcpy(_bytes, bytes, _length);
-    }
-
+    memcpy_s(copiedBytes.get(), length, bytes, length);
+    self = [self initWithBytesNoCopy:copiedBytes.release() length:length];
     return self;
 }
 
@@ -247,65 +240,49 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeBytes:_bytes length:_length forKey:@"NS.data"];
+    [coder encodeBytes:reinterpret_cast<const unsigned char*>([self bytes]) length:[self length] forKey:@"NS.data"];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    NSData* nsData = [coder decodeObjectForKey:@"NS.data"];
-
-    return [self initWithData:nsData];
+    return [self initWithData:[coder decodeObjectForKey:@"NS.data"]];
 }
 
 /**
  @Status Caveat
  @Notes The CRT used between Islandwood and the application must match if freeWhenDone=TRUE
+        Designated initializer
 */
 - (instancetype)initWithBytesNoCopy:(void*)bytes length:(unsigned)length freeWhenDone:(BOOL)freeWhenDone {
-    _bytes = (uint8_t*)bytes;
-    _length = length;
-    _freeWhenDone = freeWhenDone;
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithBytesNoCopy:(void*)bytes length:(unsigned)length {
-    _bytes = (uint8_t*)bytes;
-    _length = length;
-    _freeWhenDone = TRUE;
-
-    return self;
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)getBytes:(void*)dest {
-    memcpy(dest, _bytes, _length);
+    [self getBytes:dest length:[self length]];
 }
 
 /**
  @Status Interoperable
 */
 - (void)getBytes:(void*)dest length:(unsigned)length {
-    if (length > _length) {
-        length = _length;
-    }
-    memcpy(dest, _bytes, length);
+    [self getBytes:dest range:{ 0, length }];
 }
 
 /**
  @Status Interoperable
 */
 - (void)getBytes:(void*)dest range:(NSRange)range {
-    assert(range.location + range.length <= _length);
-
-    memcpy(dest, &_bytes[range.location], range.length);
+    if (range.location + range.length > [self length]) {
+        [NSException raise:NSRangeException
+                    format:@"Specified range { %d, %d } exceeds data's length %d", range.location, range.length, [self length]];
+    }
+    memcpy_s(dest, range.length, reinterpret_cast<const void*>(reinterpret_cast<const byte*>(self.bytes) + range.location), range.length);
 }
 
 /**
@@ -331,14 +308,14 @@ using namespace Windows::Foundation;
 - (BOOL)writeToFile:(NSString*)filename atomically:(BOOL)atomically {
     char* fname = (char*)[filename UTF8String];
 
-    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, _length);
+    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, [self length]);
     if (!fname) {
         TraceVerbose(TAG, L"Filename is null!");
         return FALSE;
     }
     EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
     if (fpOut) {
-        EbrFwrite(_bytes, 1, _length, fpOut);
+        EbrFwrite([self bytes], 1, [self length], fpOut);
         EbrFclose(fpOut);
 
         return TRUE;
@@ -367,10 +344,10 @@ using namespace Windows::Foundation;
 - (BOOL)writeToFile:(NSString*)filename options:(NSDataWritingOptions)options error:(NSError**)error {
     char* fname = (char*)[filename UTF8String];
 
-    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, _length);
+    TraceVerbose(TAG, L"NSData writing %hs (%d bytes)", fname, [self length]);
     EbrFile* fpOut = EbrFopen((const char*)fname, "wb");
     if (fpOut) {
-        EbrFwrite(_bytes, 1, _length, fpOut);
+        EbrFwrite([self bytes], 1, [self length], fpOut);
         EbrFclose(fpOut);
 
         return TRUE;
@@ -389,7 +366,6 @@ using namespace Windows::Foundation;
         TraceVerbose(TAG, L"-[NSData::writeToURL]: Only file: URLs are supported. (%hs)", [[url absoluteString] UTF8String]);
         return NO;
     }
-
     return [self writeToFile:[url path] options:options error:errorp];
 }
 
@@ -413,10 +389,7 @@ using namespace Windows::Foundation;
  @Notes options parameter not supported
 */
 - (instancetype)initWithContentsOfFile:(NSString*)filename options:(NSDataReadingOptions)options error:(NSError**)error {
-    _bytes = nullptr;
-    _length = 0;
-
-    if (filename == nil) {
+    if (!filename) {
         if (error) {
             *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
         }
@@ -436,8 +409,9 @@ using namespace Windows::Foundation;
         EbrFseek(fpIn, 0, SEEK_SET);
 
         if (length) {
-            _bytes = (uint8_t*)IwMalloc(length);
-            if (!_bytes) {
+            // The created NSData takes ownership of freeing this
+            woc::unique_iw<uint8_t> copiedBytes(static_cast<uint8_t*>(IwMalloc(length)));
+            if (!copiedBytes.get()) {
                 if (error) {
                     *error = [NSError errorWithDomain:@"NSData" code:100 userInfo:nil];
                 }
@@ -445,9 +419,10 @@ using namespace Windows::Foundation;
                 return nil;
             }
 
-            _freeWhenDone = TRUE;
-            _length = EbrFread(_bytes, 1, length, fpIn);
+            size_t fileLength = EbrFread(copiedBytes.get(), 1, length, fpIn);
+            self = [self initWithBytesNoCopy:copiedBytes.release() length:fileLength];
         }
+
     } else {
         TraceVerbose(TAG, L"NSData couldn't open %hs for read (extended)", fname);
         if (error) {
@@ -487,6 +462,13 @@ using namespace Windows::Foundation;
 }
 
 /**
+ @Status Interoperable
+*/
+- (instancetype)initWithBytesNoCopy:(void*)bytes length:(unsigned)length {
+    return [self initWithBytesNoCopy:bytes length:length freeWhenDone:YES];
+}
+
+/**
  @Status Stub
 */
 - (void)enumerateByteRangesUsingBlock:(void (^)(const void* bytes, NSRange byteRange, BOOL* stop))block {
@@ -494,11 +476,19 @@ using namespace Windows::Foundation;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSRange)rangeOfData:(NSData*)dataToFind options:(NSDataSearchOptions)mask range:(NSRange)searchRange {
-    UNIMPLEMENTED();
-    return NSMakeRange(0, 0);
+    // Safe to directly call into CF here, as the CF function only access this class's data through primitive functions
+    CFRange cfRange = CFDataFind(static_cast<CFDataRef>(self),
+                                 static_cast<CFDataRef>(dataToFind),
+                                 { searchRange.location, searchRange.length },
+                                 static_cast<CFDataSearchFlags>(mask));
+    if (cfRange.location < 0) {
+        return { NSNotFound, 0 };
+    } else {
+        return { cfRange.location, cfRange.length };
+    }
 }
 
 /**
@@ -528,16 +518,14 @@ using namespace Windows::Foundation;
  @Notes options parameter not supported
 */
 + (instancetype)dataWithContentsOfURL:(NSURL*)url options:(NSDataReadingOptions)options error:(NSError**)error {
-    id ret = [self alloc];
-    return [[ret initWithContentsOfURL:url options:options error:error] autorelease];
+    return [[[self alloc] initWithContentsOfURL:url options:options error:error] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)dataWithContentsOfURL:(NSURL*)url {
-    id ret = [self alloc];
-    return [[ret initWithContentsOfURL:url] autorelease];
+    return [[[self alloc] initWithContentsOfURL:url] autorelease];
 }
 
 /**
@@ -569,7 +557,8 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (instancetype)subdataWithRange:(NSRange)range {
-    return [NSData dataWithBytes:_bytes + range.location length:range.length];
+    return [NSData dataWithBytes:reinterpret_cast<const void*>(reinterpret_cast<const byte*>(self.bytes) + range.location)
+                          length:range.length];
 }
 
 /**
@@ -591,10 +580,10 @@ using namespace Windows::Foundation;
 */
 - (BOOL)isEqualToData:(NSData*)data {
     NSData* other = (NSData*)data;
-    if (_length != other->_length) {
+    if ([self length] != [other length]) {
         return false;
     }
-    return memcmp(_bytes, other->_bytes, _length) == 0;
+    return memcmp([self bytes], [other bytes], [self length]) == 0;
 }
 
 /**
@@ -618,25 +607,42 @@ using namespace Windows::Foundation;
     const char* bytes = (const char*)[self bytes];
     NSUInteger length = [self length];
 
-    const int tmpBufSize = 16 + length * 2 + (length / 4);
+    // length * 2   = 2 chars (hex representation) for each byte
+    // length / 4   = spaces - one every 4 bytes
+    // 16           = <> and misc
+    // if the length > 1024, describe only the first 512 bytes and the last 512 bytes,
+    // and add a "... " (4 bytes) in the middle
+    const NSUInteger lengthToUse = std::min(1024u, length);
+    const int tmpBufSize = 16 + lengthToUse * 2 + (lengthToUse / 4) + (length > 1024 ? 4 : 0);
+
     std::vector<char> tmpBuf(tmpBufSize);
     int tmpBufLen = 0;
 
     tmpBuf[tmpBufLen++] = '<';
 
     for (auto i = 0; i < length;) {
+        // skip the middle portion, if length > 1024, and go directly to the last 512 bytes
+        if ((length > 1024) && (i == 512)) {
+            tmpBuf[tmpBufLen++] = '.';
+            tmpBuf[tmpBufLen++] = '.';
+            tmpBuf[tmpBufLen++] = '.';
+            tmpBuf[tmpBufLen++] = ' ';
+            i = length - 512;
+            continue;
+        }
+
         int outDigit = ((bytes[i] & 0xF0) >> 4);
         if (outDigit < 10) {
             tmpBuf[tmpBufLen++] = '0' + outDigit;
         } else {
-            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
+            tmpBuf[tmpBufLen++] = 'a' + outDigit - 10;
         }
         assert(tmpBufLen < tmpBufSize);
         outDigit = bytes[i] & 0xF;
         if (outDigit < 10) {
             tmpBuf[tmpBufLen++] = '0' + outDigit;
         } else {
-            tmpBuf[tmpBufLen++] = 'A' + outDigit - 10;
+            tmpBuf[tmpBufLen++] = 'a' + outDigit - 10;
         }
         assert(tmpBufLen < tmpBufSize);
         i++;
@@ -657,35 +663,30 @@ using namespace Windows::Foundation;
  @Status Interoperable
 */
 - (const void*)bytes {
-    return _bytes;
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)length {
-    return _length;
+- (NSUInteger)length {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    if (_freeWhenDone && _bytes) {
-        IwFree(_bytes);
-        _bytes = nullptr;
-    }
-
     [super dealloc];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 @end

@@ -18,7 +18,7 @@
 #import <Foundation/Foundation.h>
 #import <Foundation/NSURLProtectionSpace.h>
 
-TEST(Foundation, NSURLProtectionSpace_initWithHost) {
+TEST(NSURLProtectionSpace, initWithHost) {
     NSString* host = @"microsoft";
     NSURLProtectionSpace* protectionSpace =
         [[NSURLProtectionSpace alloc] initWithHost:host port:8080 protocol:NSURLProtectionSpaceHTTP realm:nil authenticationMethod:nil];
@@ -35,7 +35,7 @@ TEST(Foundation, NSURLProtectionSpace_initWithHost) {
     [protectionSpace release];
 }
 
-TEST(Foundation, NSURLProtectionSpace_initWithProxyHost) {
+TEST(NSURLProtectionSpace, initWithProxyHost) {
     NSString* host = @"microsoft";
     NSURLProtectionSpace* protectionSpace = [[NSURLProtectionSpace alloc] initWithProxyHost:host
                                                                                        port:8080
