@@ -21,7 +21,7 @@
 @class NSString;
 @class NSURL;
 @class NSNumber;
-@class NSArray;
+@class NSArray<ObjectType>;
 @class NSURLQueryItem;
 
 FOUNDATION_EXPORT_CLASS
