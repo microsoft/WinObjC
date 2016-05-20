@@ -4,18 +4,25 @@
   <ImportGroup>
     <Import Project="$(MSBuildThisFileDirectory)starboard.targets" />
   </ImportGroup>
-  <Target Name="CopyCoreFoundationPublicHeadersToIncludes" BeforeTargets="Build">
+  <Target Name="CopyCoreFoundationPublicHeadersToIncludes">
     <Copy
         SourceFiles="@(CoreFoundationPublicHeader)" 
         DestinationFolder="$(MSBuildThisFileDirectory)..\Include\CoreFoundation\" 
         ContinueOnError="true" 
         SkipUnchangedFiles="true"/>
   </Target>
-  <Target Name="CopyCoreFoundationPrivateHeadersToIncludes" BeforeTargets="Build">
+  <Target Name="CopyCoreFoundationPrivateHeadersToIncludes">
     <Copy
         SourceFiles="@(CoreFoundationPrivateHeader)" 
         DestinationFolder="$(MSBuildThisFileDirectory)..\Frameworks\include\" 
         ContinueOnError="true" 
         SkipUnchangedFiles="true"/>
   </Target>
+  <PropertyGroup>
+    <BuildGenerateSourcesTargets>
+      $(BuildGenerateSourcesTargets);
+      CopyCoreFoundationPrivateHeadersToIncludes;
+      CopyCoreFoundationPublicHeadersToIncludes;
+    </BuildGenerateSourcesTargets>
+  </PropertyGroup>
 </Project>
