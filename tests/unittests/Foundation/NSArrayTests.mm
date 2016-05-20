@@ -235,3 +235,16 @@ TEST(NSArray, Description) {
     NSArray* testArray3 = @[ @1 ];
     ASSERT_OBJCEQ(@"(1)", [testArray3 description]);
 }
+
+TEST(NSArray, Autorelease) {
+    NSArray* array;
+    NSObject* object = [NSObject new];
+    ASSERT_EQ(1, [object retainCount]);
+    {
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+        array = [NSArray arrayWithObject:object];
+        [pool release];
+    }
+
+    ASSERT_EQ(1, [object retainCount]);
+}
