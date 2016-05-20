@@ -685,7 +685,7 @@ NSString* const NSURLThumbnailDictionaryKey = @"NSURLThumbnailDictionaryKey";
  @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    return [NSURL URLWithString:[self relativeString] relativeToURL:[self baseURL]];
+    return [[NSURL alloc] initWithString:[self relativeString] relativeToURL:[self baseURL]];
 }
 
 /**
