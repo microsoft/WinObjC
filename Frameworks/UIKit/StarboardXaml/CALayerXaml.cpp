@@ -1709,18 +1709,22 @@ void EventedStoryboard::AddTransition(CALayerXaml^ realLayer, CALayerXaml^ snaps
         timeSpan.Duration = (long long)(0.75 * c_hundredNanoSeconds);
         m_container->Duration = Duration(timeSpan);
         Panel^ parent = (Panel^)VisualTreeHelper::GetParent(realLayer);
-        unsigned int idx;
-        parent->Children->IndexOf(realLayer, &idx);
-        parent->Children->InsertAt(idx + 1, snapshotLayer);
-        parent->InvalidateArrange();
-        realLayer->Opacity = 0;
 
         bool flipToLeft = true;
         if (subtype != "kCATransitionFromLeft") {
             flipToLeft = false;
         }
 
-        _CreateFlip(snapshotLayer, flipToLeft, false, true);
+        // We don't need to animate a snapshot if it doesn't exist
+        if (snapshotLayer) {
+            unsigned int idx;
+            parent->Children->IndexOf(realLayer, &idx);
+            parent->Children->InsertAt(idx + 1, snapshotLayer);
+            parent->InvalidateArrange();
+            realLayer->Opacity = 0;
+            _CreateFlip(snapshotLayer, flipToLeft, false, true);
+        }
+
         _CreateFlip(realLayer, flipToLeft, true, false);
     }
     else {
@@ -1728,8 +1732,6 @@ void EventedStoryboard::AddTransition(CALayerXaml^ realLayer, CALayerXaml^ snaps
         timeSpan.Duration = (long long)(0.5 * c_hundredNanoSeconds);
         m_container->Duration = Duration(timeSpan);
         Panel^ parent = (Panel^)VisualTreeHelper::GetParent(realLayer);
-        unsigned int idx;
-        parent->Children->IndexOf(realLayer, &idx);
 
         bool fromRight = true;
         if (subtype == "kCATransitionFromLeft") {
@@ -1737,17 +1739,27 @@ void EventedStoryboard::AddTransition(CALayerXaml^ realLayer, CALayerXaml^ snaps
         }
 
         if (fromRight) {
-            parent->Children->InsertAt(idx, snapshotLayer);
-            parent->InvalidateArrange();
+            // We don't need to animate a snapshot if it doesn't exist
+            if (snapshotLayer) {
+                unsigned int idx;
+                parent->Children->IndexOf(realLayer, &idx);
+                parent->Children->InsertAt(idx, snapshotLayer);
+                parent->InvalidateArrange();
+                _CreateWoosh(snapshotLayer, fromRight, true, true);
+            }
 
-            _CreateWoosh(snapshotLayer, fromRight, true, true);
             _CreateWoosh(realLayer, fromRight, false, false);
         }
         else {
-            parent->Children->InsertAt(idx + 1, snapshotLayer);
-            parent->InvalidateArrange();
+            // We don't need to animate a snapshot if it doesn't exist
+            if (snapshotLayer) {
+                unsigned int idx;
+                parent->Children->IndexOf(realLayer, &idx);
+                parent->Children->InsertAt(idx + 1, snapshotLayer);
+                parent->InvalidateArrange();
+                _CreateWoosh(snapshotLayer, fromRight, false, true);
+            }
 
-            _CreateWoosh(snapshotLayer, fromRight, false, true);
             _CreateWoosh(realLayer, fromRight, true, false);
         }
     }

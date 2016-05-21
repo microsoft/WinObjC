@@ -249,16 +249,14 @@ concurrency::task<void> DisplayAnimation::AddTransitionAnimation(DisplayNode* no
     return xamlAnimation->SnapshotLayer(xamlNode)
         .then([this, xamlAnimation, xamlNode, wtype, wsubtype](XamlCompositor::Controls::CALayerXaml^ snapshotLayer) {
 
-        if (snapshotLayer != nullptr) {
-            xamlAnimation->AddTransition(
-                xamlNode,
-                snapshotLayer,
-                ref new Platform::String(wtype.data()),
-                ref new Platform::String(wsubtype.data()));
+        xamlAnimation->AddTransition(
+            xamlNode,
+            snapshotLayer,
+            ref new Platform::String(wtype.data()),
+            ref new Platform::String(wsubtype.data()));
 
-            Start();
-        }
-    }, concurrency::task_continuation_context::use_current());
+        Start();
+    } , concurrency::task_continuation_context::use_current());
 }
 
 void DisplayNode::AddToRoot() {
@@ -669,9 +667,9 @@ void DispatchCompositorTransactions(
     // Walk and process the map of queued properties per DisplayNode and the list of node movements as a single distinct task
     s_compositorTransactions = s_compositorTransactions
         .then([movementTransactions = std::move(movementTransactions),
-               propertyTransactions = std::move(propertyTransactions)]() noexcept {
+            propertyTransactions = std::move(propertyTransactions)]() noexcept {
         for (auto& nodeMovement : movementTransactions) {
-                nodeMovement->Process();
+            nodeMovement->Process();
         }
 
         for (auto& nodeProperties : propertyTransactions) {
