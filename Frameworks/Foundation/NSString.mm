@@ -1256,7 +1256,7 @@ static unichar PickWord(unichar c) {
                  range:NSMakeRange(0, len)
         remainingRange:nullptr];
 
-    std::unique_ptr<char[]> data(static_cast<char*>(IwMalloc(numBytes)));
+    std::unique_ptr<char[], decltype(&IwFree)> data(static_cast<char*>(IwMalloc(numBytes)), IwFree);
     [self getBytes:data.get()
              maxLength:numBytes
             usedLength:nullptr
@@ -1338,7 +1338,7 @@ static unichar PickWord(unichar c) {
     id value;
 
     unsigned int index, c, strSize = 0, strMax = 2048;
-    std::unique_ptr<char[]> strBuf(static_cast<char*>(IwMalloc(strMax)));
+    std::unique_ptr<char[], decltype(&IwFree)> strBuf(static_cast<char*>(IwMalloc(strMax)), IwFree);
 
     enum {
         STATE_WHITESPACE,
@@ -1612,8 +1612,8 @@ static unichar PickWord(unichar c) {
 */
 - (NSString*)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
-    std::unique_ptr<unichar[]> unicode(static_cast<unichar*>(IwMalloc(length * 2)));
-    std::unique_ptr<unichar[]> result(static_cast<unichar*>(IwMalloc(length * 3 * 2)));
+    std::unique_ptr<unichar[], decltype(&IwFree)> unicode(static_cast<unichar*>(IwMalloc(length * 2)), IwFree);
+    std::unique_ptr<unichar[], decltype(&IwFree)> result(static_cast<unichar*>(IwMalloc(length * 3 * 2)), IwFree);
     const char* hex = "0123456789ABCDEF";
 
     [self getCharacters:unicode.get()];
