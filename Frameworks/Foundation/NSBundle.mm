@@ -161,7 +161,7 @@ static NSString* _pathFromNSURL(NSURL* url) {
  @Status Interoperable
 */
 + (NSBundle*)bundleWithIdentifier:(NSString*)identifier {
-    return [self _bundleWithCFBundle:CFBundleGetBundleWithIdentifier(static_cast<CFStringRef>(identifier))];
+    return [[[self alloc] _initWithCFBundle:CFBundleGetBundleWithIdentifier(static_cast<CFStringRef>(identifier))] autorelease];
 }
 
 /**
@@ -580,6 +580,32 @@ static NSString* _pathFromNSURL(NSURL* url) {
 - (double)preservationPriorityForTag:(NSString*)tag {
     UNIMPLEMENTED();
     return 0.0;
+}
+
+@end
+
+@implementation NSBundle (Internal)
+
+// Converts a URL into a ms-appx:// URL
+// Intended for URLs returned from [NSBundle URLForResource:]
+// URLs not returned from [NSBundle URLForResource:] just return the same URL with the scheme changed
+- (NSURL*)_msAppxURLForResourceWithURL:(NSURL*)url {
+    NSString* scheme = [url scheme];
+    NSString* path = [url path];
+
+    if (scheme == nil || [scheme isEqualToString:NSURLFileScheme]) {
+        NSString* appxRoot = [[[self bundlePath] stringByDeletingLastPathComponent] stringByAppendingString:_NSGetSlashStr()];
+        NSRange range = [path rangeOfString:appxRoot];
+
+        // If a URL was returned from URLForResource, it ought to have appxRoot in it
+        if (range.location != NSNotFound) {
+            path = [path substringFromIndex:range.location + range.length];
+        }
+
+        return [[[NSURL alloc] initWithScheme:@"ms-appx" host:nil path:path] autorelease];
+    } else {
+        return [[url copy] autorelease];
+    }
 }
 
 @end
