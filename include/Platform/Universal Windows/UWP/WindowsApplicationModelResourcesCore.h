@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WARCResourceMap, WARCResourceContext, WARCNamedResource, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate,
     WARCResourceMapIterator, WARCResourceMapMapView, WARCResourceMapMapViewIterator, WARCResourceQualifierObservableMap,
@@ -37,9 +37,8 @@ enum _WARCResourceQualifierPersistence {
 };
 typedef unsigned WARCResourceQualifierPersistence;
 
-#include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
+#include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

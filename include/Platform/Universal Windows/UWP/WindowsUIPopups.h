@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUPMessageDialog, WUPUICommand, WUPUICommandSeparator, WUPPopupMenu;
 @protocol WUPIMessageDialog
@@ -43,7 +43,6 @@ enum _WUPPlacement {
 typedef unsigned WUPPlacement;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 // Windows.UI.Popups.UICommandInvokedHandler
 #ifndef __WUPUICommandInvokedHandler__DEFINED
 #define __WUPUICommandInvokedHandler__DEFINED

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMDDefaultAudioCaptureDeviceChangedEventArgs, WMDDefaultAudioRenderDeviceChangedEventArgs, WMDMediaDevice, WMDAudioDeviceController,
     WMDVideoDeviceController, WMDSceneModeControl, WMDTorchControl, WMDFlashControl, WMDExposureCompensationControl, WMDIsoSpeedControl,
@@ -214,7 +214,6 @@ enum _WMDMediaCaptureOptimization {
 typedef unsigned WMDMediaCaptureOptimization;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsMediaCapture.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsMediaDevicesCore.h"

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSPFilePickerSelectedFilesArray, WSPFilePickerFileTypesOrderedMap, WSPFileExtensionVector, WSPFileOpenPicker, WSPFileSavePicker,
     WSPFolderPicker;
@@ -49,9 +49,8 @@ enum _WSPPickerLocationId {
 };
 typedef unsigned WSPPickerLocationId;
 
-#include "WindowsFoundationCollections.h"
-#include "WindowsFoundation.h"
 #include "WindowsStorage.h"
+#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

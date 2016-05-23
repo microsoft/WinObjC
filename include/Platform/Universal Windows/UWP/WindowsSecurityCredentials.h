@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSCWebAccountProvider, WSCWebAccount, WSCKeyCredentialRetrievalResult, WSCKeyCredentialOperationResult,
     WSCKeyCredentialAttestationResult, WSCKeyCredential, WSCKeyCredentialManager, WSCPasswordCredential, WSCPasswordVault,
@@ -74,8 +74,8 @@ enum _WSCKeyCredentialCreationOption {
 };
 typedef unsigned WSCKeyCredentialCreationOption;
 
-#include "WindowsStorageStreams.h"
 #include "WindowsFoundationCollections.h"
+#include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsSystem.h"
 

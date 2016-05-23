@@ -19,14 +19,13 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WALLockScreenInfo, WALLockScreenBadge, WALLockScreenUnlockingDeferral, WALLockApplicationHost, WALLockScreenUnlockingEventArgs;
 @protocol WALILockScreenBadge
 , WALILockScreenInfo, WALILockScreenUnlockingDeferral, WALILockScreenUnlockingEventArgs, WALILockApplicationHost,
     WALILockApplicationHostStatics;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 

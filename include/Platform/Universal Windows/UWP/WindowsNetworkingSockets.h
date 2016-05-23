@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation,
     WNSDatagramSocketControl, WNSDatagramSocketInformation, WNSDatagramSocketMessageReceivedEventArgs, WNSStreamSocketControl,
@@ -144,10 +144,9 @@ typedef unsigned WNSSocketActivityConnectedStandbyAction;
 #include "WindowsSecurityCredentials.h"
 #include "WindowsWeb.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
-#include "WindowsNetworkingConnectivity.h"
 #include "WindowsApplicationModelBackground.h"
+#include "WindowsNetworkingConnectivity.h"
 
 #import <Foundation/Foundation.h>
 

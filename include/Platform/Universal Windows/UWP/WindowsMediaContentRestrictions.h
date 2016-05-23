@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMCRatedContentDescription, WMCContentRestrictionsBrowsePolicy, WMCRatedContentRestrictions;
 @protocol WMCIRatedContentDescription
@@ -46,7 +46,6 @@ enum _WMCContentAccessRestrictionLevel {
 };
 typedef unsigned WMCContentAccessRestrictionLevel;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 

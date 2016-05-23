@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAASplashScreen, WAALaunchActivatedEventArgs, WAASearchActivatedEventArgs, WAAShareTargetActivatedEventArgs,
     WAAFileActivatedEventArgs, WAAProtocolActivatedEventArgs, WAAProtocolForResultsActivatedEventArgs, WAAFileOpenPickerActivatedEventArgs,
@@ -98,9 +98,9 @@ typedef unsigned WAAActivationKind;
 #include "WindowsMediaSpeechRecognition.h"
 #include "WindowsApplicationModelSearch.h"
 #include "WindowsApplicationModelDataTransferShareTarget.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageSearch.h"
 #include "WindowsStorage.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsStorageProvider.h"
 #include "WindowsApplicationModelAppointmentsAppointmentsProvider.h"
 #include "WindowsSecurityAuthenticationWeb.h"

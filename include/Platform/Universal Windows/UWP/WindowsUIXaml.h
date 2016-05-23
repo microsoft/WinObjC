@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WXDispatcherTimer, WXCornerRadiusHelper, WXDurationHelper, WXGridLengthHelper, WXThicknessHelper,
     WXApplicationInitializationCallbackParams, WXDependencyObject, WXDependencyProperty, WXDependencyPropertyChangedEventArgs,
@@ -309,13 +309,12 @@ typedef unsigned WXAutomationTextAttributesEnum;
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsUIXamlControls.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsGraphicsImaging.h"
 #include "WindowsUICore.h"
+#include "WindowsApplicationModelDataTransferDragDrop.h"
 #include "WindowsUIXamlInterop.h"
 #include "WindowsUIXamlMediaImaging.h"
-#include "WindowsApplicationModelDataTransferDragDrop.h"
 #include "WindowsUIXamlInput.h"
 #include "WindowsUIInput.h"
 #include "WindowsUIXamlAutomationPeers.h"

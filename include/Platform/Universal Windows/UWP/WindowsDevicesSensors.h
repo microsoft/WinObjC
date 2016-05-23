@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDSAccelerometer, WDSAccelerometerReading, WDSAccelerometerReadingChangedEventArgs, WDSAccelerometerShakenEventArgs, WDSInclinometer,
     WDSInclinometerReading, WDSInclinometerReadingChangedEventArgs, WDSGyrometer, WDSGyrometerReading, WDSGyrometerReadingChangedEventArgs,
@@ -106,7 +106,6 @@ enum _WDSPedometerStepKind {
 };
 typedef unsigned WDSPedometerStepKind;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsGraphicsDisplay.h"
 

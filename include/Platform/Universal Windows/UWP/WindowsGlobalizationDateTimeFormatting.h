@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGDDateTimeFormatter;
 @protocol WGDIDateTimeFormatter
@@ -81,7 +81,6 @@ enum _WGDSecondFormat {
 };
 typedef unsigned WGDSecondFormat;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

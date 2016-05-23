@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUIIInkUnprocessedInput, WUIIInkStrokeInput, WUIIInkInputProcessingConfiguration, WUIIInkSynchronizer, WUIIInkPresenter,
     WUIIInkStrokesCollectedEventArgs, WUIIInkStrokesErasedEventArgs, WUIIInkPoint, WUIIInkDrawingAttributes, WUIIInkStrokeRenderingSegment,
@@ -77,13 +77,12 @@ enum _WUIIPenTipShape {
 };
 typedef unsigned WUIIPenTipShape;
 
-#include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUICore.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIInput.h"
 #include "WindowsUI.h"
 #include "WindowsFoundationNumerics.h"
+#include "WindowsStorageStreams.h"
 
 #import <Foundation/Foundation.h>
 

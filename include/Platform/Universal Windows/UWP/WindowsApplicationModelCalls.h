@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WACPhoneCallHistoryEntryAddress, WACPhoneCallHistoryEntry, WACPhoneCallHistoryEntryReader, WACPhoneCallHistoryEntryQueryOptions,
     WACPhoneCallHistoryStore, WACPhoneCallHistoryManager;
@@ -73,7 +73,6 @@ enum _WACPhoneCallHistorySourceIdKind {
 typedef unsigned WACPhoneCallHistorySourceIdKind;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

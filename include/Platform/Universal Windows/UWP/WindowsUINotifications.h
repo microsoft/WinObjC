@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUNTileUpdater, WUNTileNotification, WUNScheduledTileNotification, WUNTileFlyoutUpdater, WUNTileFlyoutNotification, WUNBadgeUpdater,
     WUNBadgeNotification, WUNToastNotifier, WUNToastNotification, WUNScheduledToastNotification, WUNToastDismissedEventArgs,

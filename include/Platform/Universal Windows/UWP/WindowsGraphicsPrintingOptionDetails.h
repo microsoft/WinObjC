@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGPOPrintCopiesOptionDetails, WGPOPrintMediaSizeOptionDetails, WGPOPrintMediaTypeOptionDetails, WGPOPrintOrientationOptionDetails,
     WGPOPrintQualityOptionDetails, WGPOPrintColorModeOptionDetails, WGPOPrintDuplexOptionDetails, WGPOPrintCollationOptionDetails,
@@ -47,7 +47,6 @@ enum _WGPOPrintOptionType {
 };
 typedef unsigned WGPOPrintOptionType;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsGraphicsPrinting.h"
 

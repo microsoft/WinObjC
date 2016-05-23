@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUASettingsCommand, WUAWebAccountProviderCommand, WUAWebAccountCommand, WUAWebAccountInvokedArgs, WUACredentialCommand,
     WUAAccountsSettingsPaneEventDeferral, WUAAccountsSettingsPaneCommandsRequestedEventArgs, WUAAccountsSettingsPane;
@@ -52,7 +52,6 @@ typedef unsigned WUASupportedWebAccountActions;
 
 #include "WindowsFoundation.h"
 #include "WindowsUIPopups.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsSecurityCredentials.h"
 // Windows.UI.ApplicationSettings.CredentialCommandCredentialDeletedHandler
 #ifndef __WUACredentialCommandCredentialDeletedHandler__DEFINED

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSUAdvertisingManager, WSUUserProfilePersonalizationSettings, WSUGlobalizationPreferences, WSUFirstSignInSettings;
 @protocol WSUIAdvertisingManagerStatics
@@ -27,8 +27,6 @@
     WSUIFirstSignInSettings, WSUIFirstSignInSettingsStatics;
 
 #include "WindowsStorage.h"
-#include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsGlobalization.h"
 
 #import <Foundation/Foundation.h>

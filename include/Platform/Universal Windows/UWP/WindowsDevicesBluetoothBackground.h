@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails,
     WDBBGattCharacteristicNotificationTriggerDetails, WDBBBluetoothLEAdvertisementWatcherTriggerDetails,
@@ -31,7 +31,6 @@
 #include "WindowsDevicesBluetoothGenericAttributeProfile.h"
 #include "WindowsDevicesBluetooth.h"
 #include "WindowsDevicesBluetoothAdvertisement.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesBluetoothRfcomm.h"
 #include "WindowsNetworkingSockets.h"

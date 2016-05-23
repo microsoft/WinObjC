@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUTCCoreTextTextRequest, WUTCCoreTextSelectionRequest, WUTCCoreTextLayoutBounds, WUTCCoreTextLayoutRequest,
     WUTCCoreTextCompositionSegment, WUTCCoreTextEditContext, WUTCCoreTextTextRequestedEventArgs, WUTCCoreTextSelectionRequestedEventArgs,
@@ -144,7 +144,6 @@ typedef unsigned WUTCCoreTextFormatUpdatingReason;
 #include "WindowsGlobalization.h"
 #include "WindowsUIViewManagement.h"
 #include "WindowsUIText.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

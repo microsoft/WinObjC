@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAWWalletBarcode, WAWWalletTransaction, WAWWalletRelevantLocation, WAWWalletItemCustomProperty, WAWWalletVerb, WAWWalletItem,
     WAWWalletItemStore, WAWWalletManager;
@@ -86,9 +86,8 @@ enum _WAWWalletItemKind {
 typedef unsigned WAWWalletItemKind;
 
 #include "WindowsUI.h"
-#include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
+#include "WindowsFoundation.h"
 #include "WindowsDevicesGeolocation.h"
 
 #import <Foundation/Foundation.h>

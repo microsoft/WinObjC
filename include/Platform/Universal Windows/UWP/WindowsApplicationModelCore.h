@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WACAppListEntry, WACCoreApplication, WACCoreApplicationView, WACCoreApplicationViewTitleBar, WACUnhandledErrorDetectedEventArgs,
     WACHostedViewClosingEventArgs, WACUnhandledError;
@@ -31,8 +31,8 @@
 
 #include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModel.h"
-#include "WindowsFoundation.h"
 #include "WindowsUICore.h"
+#include "WindowsFoundation.h"
 #include "WindowsApplicationModelActivation.h"
 
 #import <Foundation/Foundation.h>

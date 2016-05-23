@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs,
     WMCMediaStreamSourceStartingEventArgs, WMCMediaStreamSourceSampleRequestedEventArgs,
@@ -212,7 +212,6 @@ typedef unsigned WMCTimedTextFlowDirection;
 #include "WindowsMediaProtection.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsStorageFileProperties.h"
 #include "WindowsMediaDevicesCore.h"
@@ -223,6 +222,7 @@ typedef unsigned WMCTimedTextFlowDirection;
 #include "WindowsMediaStreamingAdaptive.h"
 #include "WindowsStorage.h"
 #include "WindowsMediaPlayback.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsUI.h"
 
 #import <Foundation/Foundation.h>

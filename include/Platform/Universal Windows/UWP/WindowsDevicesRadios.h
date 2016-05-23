@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDRRadio;
 @protocol WDRIRadioStatics
@@ -54,7 +54,6 @@ enum _WDRRadioAccessStatus {
 typedef unsigned WDRRadioAccessStatus;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

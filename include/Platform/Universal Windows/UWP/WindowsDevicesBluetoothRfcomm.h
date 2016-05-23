@@ -19,19 +19,18 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDBRRfcommDeviceService, WDBRRfcommServiceId, WDBRRfcommServiceProvider;
 @protocol WDBRIRfcommServiceIdStatics
 , WDBRIRfcommServiceId, WDBRIRfcommDeviceServiceStatics, WDBRIRfcommDeviceService, WDBRIRfcommDeviceService2,
     WDBRIRfcommServiceProviderStatics, WDBRIRfcommServiceProvider;
 
-#include "WindowsDevicesBluetooth.h"
-#include "WindowsFoundation.h"
 #include "WindowsNetworkingSockets.h"
 #include "WindowsNetworking.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
+#include "WindowsFoundation.h"
+#include "WindowsDevicesBluetooth.h"
 
 #import <Foundation/Foundation.h>
 

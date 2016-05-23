@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDBBluetoothClassOfDevice, WDBBluetoothDevice, WDBBluetoothLEDevice, WDBBluetoothSignalStrengthFilter;
 @protocol WDBIBluetoothDevice
@@ -162,7 +162,6 @@ typedef unsigned WDBBluetoothError;
 #include "WindowsFoundation.h"
 #include "WindowsNetworking.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsDevicesBluetoothRfcomm.h"
 
 #import <Foundation/Foundation.h>

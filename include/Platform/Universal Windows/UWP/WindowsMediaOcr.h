@@ -19,14 +19,13 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMOOcrWord, WMOOcrLine, WMOOcrResult, WMOOcrEngine;
 @protocol WMOIOcrWord
 , WMOIOcrLine, WMOIOcrResult, WMOIOcrEngine, WMOIOcrEngineStatics;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsGraphicsImaging.h"
 #include "WindowsGlobalization.h"
 

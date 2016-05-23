@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMDDialAppStateDetails, WMDDialApp, WMDDialDevice, WMDDialDeviceSelectedEventArgs, WMDDialDisconnectButtonClickedEventArgs,
     WMDDialDevicePickerFilter, WMDDialDevicePicker;
@@ -68,7 +68,6 @@ typedef unsigned WMDDialDeviceDisplayStatus;
 #include "WindowsDevicesEnumeration.h"
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

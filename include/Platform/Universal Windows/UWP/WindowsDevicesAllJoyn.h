@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDAAllJoynStatus, WDAAllJoynAboutData, WDAAllJoynBusAttachment, WDAAllJoynBusAttachmentStateChangedEventArgs,
     WDAAllJoynCredentialsRequestedEventArgs, WDAAllJoynCredentialsVerificationRequestedEventArgs, WDAAllJoynAuthenticationCompleteEventArgs,
@@ -81,7 +81,6 @@ typedef unsigned WDAAllJoynSessionLostReason;
 #include "WindowsSecurityCryptographyCertificates.h"
 #include "WindowsFoundation.h"
 #include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsGlobalization.h"
 
 #import <Foundation/Foundation.h>

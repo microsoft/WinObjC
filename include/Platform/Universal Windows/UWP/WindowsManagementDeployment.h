@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMDDeploymentResult, WMDPackageUserInformation, WMDPackageVolume, WMDPackageManager;
 @class WMDDeploymentProgress;
@@ -89,7 +89,6 @@ enum _WMDPackageStatus {
 typedef unsigned WMDPackageStatus;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModel.h"
 
 #import <Foundation/Foundation.h>

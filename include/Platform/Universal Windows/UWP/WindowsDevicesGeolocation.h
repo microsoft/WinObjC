@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDGGeopoint, WDGGeopath, WDGGeoboundingBox, WDGGeocoordinateSatelliteData, WDGVenueData, WDGGeocoordinate, WDGCivicAddress,
     WDGGeoposition, WDGPositionChangedEventArgs, WDGStatusChangedEventArgs, WDGGeolocator, WDGGeocircle;
@@ -86,7 +86,6 @@ enum _WDGGeolocationAccessStatus {
 };
 typedef unsigned WDGGeolocationAccessStatus;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
