@@ -19,6 +19,7 @@
 #import "LinkedList.h"
 
 @class UIWindow;
+@class WXFrameworkElement;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
 public:
@@ -56,31 +57,35 @@ public:
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
 
-    UIViewPrivateState() {
+    StrongId<WXFrameworkElement> _xamlInputElement; // The XAML element receiving touch input for this view
+
+    UIViewPrivateState(UIView* owner) {
+        setSelf(owner);
         superview = nil;
         backgroundColor = nil;
         curTouch = nil;
         curTouchEvent = nil;
         curTouchSet = nil;
         tag = 0;
-        userInteractionEnabled = 0;
-        multipleTouchEnabled = 0;
+        userInteractionEnabled = YES;
+        multipleTouchEnabled = NO;
         contentMode = UIViewContentModeScaleToFill;
-        currentTouches = nil;
-        gestures = nil;
-        constraints = nil;
-        translatesAutoresizingMaskIntoConstraints = TRUE;
+        currentTouches = [[NSMutableArray alloc] initWithCapacity:16];
+        gestures = [NSMutableArray new];
+        constraints.attach([NSMutableArray new]);
+        translatesAutoresizingMaskIntoConstraints = YES;
         _isChangingParent = false;
         _constraintsNeedUpdate = false;
         _contentHuggingPriority.height = 250.0f;
         _contentHuggingPriority.width = 250.0f;
         _contentCompressionResistancePriority.height = 750.0f;
         _contentCompressionResistancePriority.width = 750.0f;
-        _layoutGuides = nil;
+        _layoutGuides.attach([NSMutableArray new]);
 
-        autoresizingMask = (UIViewAutoresizing)0;
-        autoresizesSubviews = FALSE;
         memset(&_resizeRoundingError, 0, sizeof(_resizeRoundingError));
+
+        autoresizesSubviews = YES;
+        autoresizingMask = UIViewAutoresizingNone;
     }
 };
 

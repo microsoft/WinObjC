@@ -30,11 +30,13 @@
 #import <NSLayoutConstraint+AutoLayout.h>
 #import <UIView+AutoLayout.h>
 #import "NSLayoutAnchorInternal.h"
+#import "CACompositor.h"
 #import <math.h>
 #import <Windows.h>
 #import <LoggingNative.h>
 #import <NSLogging.h>
 #import <objc/blocks_runtime.h>
+#include "UWP/WindowsUIXamlControls.h"
 
 @class UIAppearanceSetter;
 
@@ -92,33 +94,42 @@ int viewCount = 0;
     return priv;
 }
 
+// TODO: GitHub issue 508 and 509
+// We need a type-safe way to do this with projections.  This is copied verbatim from the projections
+// code and works perfectly for this limited usage, but we don't do any type validation below.
+inline id _createRtProxy(Class cls, IInspectable* iface) {
+    // Oddly, WinRT can hand us back NULL objects from successful function calls. Plumb these through as nil.
+    if (!iface) {
+        return nil;
+    }
+
+    RTObject* ret = [NSAllocateObject(cls, 0, 0) init];
+    [ret setComObj:iface];
+    return [ret autorelease];
+}
+
 - (void)_initPriv {
-    if (self->priv)
+    if (self->priv) {
         return;
+    }
 
     viewCount++;
-    self->priv = new UIViewPrivateState();
-    self->priv->setSelf(self);
-    self->priv->autoresizesSubviews = TRUE;
-    self->priv->autoresizingMask = UIViewAutoresizingNone;
-    self->priv->translatesAutoresizingMaskIntoConstraints = TRUE;
-    self->priv->userInteractionEnabled = 1;
-    self->priv->multipleTouchEnabled = 0;
-    self->priv->superview = 0;
-    self->priv->backgroundColor = nil;
-    self->priv->currentTouches = [[NSMutableArray alloc] initWithCapacity:16];
-    self->priv->contentMode = UIViewContentModeScaleToFill;
-    self->priv->gestures = [NSMutableArray new];
-    self->priv->constraints.attach([NSMutableArray new]);
-    self->priv->_layoutGuides.attach([NSMutableArray new]);
 
+    // Create the private backing object
+    self->priv = new UIViewPrivateState(self);
+
+    // Configure autolayout
     static bool isAutoLayoutInitialized = InitializeAutoLayout();
-
     [self autoLayoutAlloc];
 
+    // Create and initialize our backing presentation layer
     self->layer.attach([[[self class] layerClass] new]);
     [self->layer setDelegate:self];
-    // TraceWarning(TAG,L"%d: Allocing %hs (%x)", viewCount, object_getClassName(self), (id) self);
+
+    // Grab the layer's backing XAML node
+    // Note: Derived UIKit controls will eventually override this with their own XAML element; Button, TextBox, ScrollViewer etc.
+    Microsoft::WRL::ComPtr<IInspectable> inspectableNode(GetCACompositor()->GetXamlLayoutElement([self->layer _presentationNode]));
+    self->priv->_xamlInputElement = _createRtProxy([WXFrameworkElement class], inspectableNode.Get());
 }
 
 /**

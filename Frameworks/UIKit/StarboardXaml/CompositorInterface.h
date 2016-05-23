@@ -15,8 +15,8 @@
 //******************************************************************************
 #pragma once
 
+#include "CACompositor.h"
 #include "winobjc\winobjc.h"
-
 #include <ppltasks.h>
 
 class DisplayNode;

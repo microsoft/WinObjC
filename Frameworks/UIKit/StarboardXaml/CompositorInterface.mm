@@ -1273,6 +1273,13 @@ public:
         return ret;
     }
 
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode* displayNode) override {
+        Microsoft::WRL::ComPtr<IUnknown> xamlNode(static_cast<IUnknown*>(displayNode->_xamlNode));
+        Microsoft::WRL::ComPtr<IInspectable> inspectableNode;
+        xamlNode.As(&inspectableNode);
+        return inspectableNode;
+    }
+
     std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() override {
         return std::make_shared<DisplayTransaction>();
     }
