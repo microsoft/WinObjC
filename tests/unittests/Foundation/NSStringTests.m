@@ -158,3 +158,11 @@ TEST(NSString, SubstringFromIndex) {
     ASSERT_OBJCEQ(@"C éééé", [extendedAsciiStr substringFromIndex:9]);
     ASSERT_OBJCEQ(@"文", [chineseStr substringFromIndex:1]);
 }
+
+TEST(NSString, PositionalFormatSpecifiers) {
+    NSString* formattedString1 = [NSString stringWithFormat:@"%2$@ %1$@", @"Hello", @"World"];
+    ASSERT_OBJCEQ(@"World Hello", formattedString1);
+
+    NSString* formattedString2 = [NSString stringWithFormat:@"%4$d %3$d %2$d %1$d", 1, 2, 3, 4];
+    ASSERT_OBJCEQ(@"4 3 2 1", formattedString2);
+}
