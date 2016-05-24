@@ -342,7 +342,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [ret addObject:node];
                 curNode = curNode->next;
             }
@@ -351,7 +351,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [ret addObject:node];
                 curNode = curNode->next;
             }
@@ -409,7 +409,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [node cancel];
                 curNode = curNode->next;
             }
@@ -418,7 +418,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [node cancel];
                 curNode = curNode->next;
             }

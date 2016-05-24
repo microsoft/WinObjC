@@ -66,7 +66,7 @@ CFDictionaryRef CTRunGetAttributes(CTRunRef run) {
         return nil;
     }
 
-    return static_cast<CFDictionaryRef>((static_cast<_CTRun*>(run))->_attributes);
+    return (__bridge CFDictionaryRef)(NSDictionary*)(static_cast<_CTRun*>(run))->_attributes;
 }
 
 /**

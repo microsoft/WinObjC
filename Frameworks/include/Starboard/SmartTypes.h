@@ -61,10 +61,10 @@ private:
     using TObjPointer = typename TypeTraits::MakeObjcPointer<TObj>::type;
 
     template <typename TOther>
-    using TCanConvertFrom = std::is_convertible<typename TypeTraits::MakeObjcPointer<TObj>::type, TObjPointer>;
+    using TCanConvertFrom = std::is_convertible<TOther, TObjPointer>;
 
     template <typename TOther>
-    using TCanConvertTo = std::is_convertible<TObjPointer, typename TypeTraits::MakeObjcPointer<TObj>::type>;
+    using TCanConvertTo = std::is_convertible<TObjPointer, TOther>;
 
     id _val = reinterpret_cast<id>(0);
 
