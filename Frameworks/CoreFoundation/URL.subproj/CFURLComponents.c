@@ -1210,7 +1210,8 @@ CF_EXPORT void _CFURLComponentsSetQueryItems(CFURLComponentsRef components, CFAr
                     chars[0] = '=';
                     CFStringAppendCharactersToAppendBuffer(&buf, chars, 1);
                     CFStringRef stringWithPercentEncoding = _CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorSystemDefault, static_cast<CFStringRef>(value), queryNameValueAllowed);
-                    CFStringAppendStringToAppendBuffer(&buf, static_cast<CFStringRef>(value));
+                    // WINOBJC: Make sure the string we append is percent-encoded
+                    CFStringAppendStringToAppendBuffer(&buf, stringWithPercentEncoding);
                     CFRelease(stringWithPercentEncoding);
                 }
                 // else the query item string will be simply "name"
