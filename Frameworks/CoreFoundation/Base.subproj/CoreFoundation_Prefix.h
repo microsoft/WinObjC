@@ -316,9 +316,10 @@ CF_EXPORT int _NS_access(const char *name, int amode);
 #ifndef WINVER
 #define WINVER  0x0603
 #endif
-    
+
+// WINOBJC: support win 10.
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0603
+#define _WIN32_WINNT 0x0A00
 #endif
 
 // The order of these includes is important
