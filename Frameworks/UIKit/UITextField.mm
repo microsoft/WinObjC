@@ -809,9 +809,9 @@ NSString* const UITextFieldTextDidEndEditingNotification = @"UITextFieldTextDidE
 */
 - (void)setEnabled:(BOOL)enabled {
     if (self.secureTextEntry) {
-        self->_textBox.isEnabled = enabled;
-    } else {
         self->_passwordBox.isEnabled = enabled;
+    } else {
+        self->_textBox.isEnabled = enabled;
     }
 }
 
