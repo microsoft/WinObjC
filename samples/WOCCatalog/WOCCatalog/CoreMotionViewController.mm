@@ -42,7 +42,6 @@
         [self setupAccelerometer];
     } else {
         accLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, accHeight, 300, 50)];
-        [accLabel setBackgroundColor:nil];
         [accLabel setText:@"Accelerometer Not Available!"];
         [accLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:accLabel];
@@ -54,7 +53,6 @@
         [self setupGyrometer];
     } else {
         gyroLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, gyroHeight, 300, 50)];
-        [gyroLabel setBackgroundColor:nil];
         [gyroLabel setText:@"Gyrometer Not Available!"];
         [gyroLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:gyroLabel];
@@ -66,7 +64,6 @@
         [self setupMagnetometer];
     } else {
         magnetoLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, magnetoHeight, 300, 50)];
-        [magnetoLabel setBackgroundColor:nil];
         [magnetoLabel setText:@"Magnetometer Not Available!"];
         [magnetoLabel setTextAlignment:NSTextAlignmentLeft];
         [scrollView addSubview:magnetoLabel];
