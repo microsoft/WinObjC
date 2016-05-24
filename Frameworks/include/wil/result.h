@@ -1132,6 +1132,12 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
             __RETURN_NULL_FAIL(E_OUTOFMEMORY, #ptr); \
         }                                            \
     } while (0, 0)
+#define RETURN_FALSE_IF(condition) \
+    do {                           \
+        if(condition) {            \
+            return false;          \
+        }                          \
+    } while (0, 0)                 \
 
 //*****************************************************************************
 // Macros for logging failures (ignore or pass-through)

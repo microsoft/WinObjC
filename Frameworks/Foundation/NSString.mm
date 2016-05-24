@@ -30,6 +30,7 @@
 #include <Foundation/NSLocale.h>
 #include <Foundation/NSMutableData.h>
 #include <Foundation/NSMutableDictionary.h>
+#include <Foundation/NSRange.h>
 #include <Foundation/NSRegularExpression.h>
 #include <Foundation/NSSet.h>
 #include <CoreFoundation/CoreFoundation.h>
@@ -68,6 +69,11 @@ static unichar SwapWord(unichar c) {
 static unichar PickWord(unichar c) {
     return c;
 }
+
+typedef enum {
+    NEW_LINE = 0x0a,
+    CARRIAGE_RETURN = 0x0d,
+} _NSStringCharacterType;
 
 @implementation NSString
 
@@ -109,7 +115,7 @@ static unichar PickWord(unichar c) {
 */
 - (NSString*)stringByAbbreviatingWithTildeInPath {
     UNIMPLEMENTED();
-    return [[self copy] autorelease];
+    return StubReturn();
 }
 
 /**
@@ -171,22 +177,8 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-- (id)initWithCoder:(NSCoder*)coder {
-    NSString* str = [coder decodeObjectForKey:@"NS.string"];
-
-    if (str != nil) {
-        return [self initWithString:str];
-    } else {
-        return [self init];
-    }
-}
-
-/**
- @Status Interoperable
-*/
 - (instancetype)init {
-    self = [super init];
-    return self;
+    return [super init];
 }
 
 /**
@@ -307,7 +299,7 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-- (unsigned)length {
+- (NSUInteger)length {
     // NSString is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
     return NSInvalidAbstractInvocationReturn();
 }
@@ -317,62 +309,6 @@ static unichar PickWord(unichar c) {
 */
 + (NSStringEncoding)defaultCStringEncoding {
     return static_cast<NSStringEncoding>(CFStringConvertEncodingToNSStringEncoding(__CFStringGetEightBitStringEncoding()));
-}
-
-/**
- @Status Caveat
- @Notes atomically parameter not supported
-*/
-- (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
-    if (!file) {
-        TraceVerbose(TAG, L"WriteToFile: nil!");
-        return NO;
-    }
-
-    const char* fileName = (const char*)[file UTF8String];
-    TraceVerbose(TAG, L"NSString: writing %hs", fileName);
-
-    EbrFile* fpOut = EbrFopen(fileName, "wb");
-    if (!fpOut) {
-        if (err) {
-            assert(0); //  Write NSError
-        }
-        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
-        return NO;
-    }
-
-    switch (encoding) {
-        case NSUTF8StringEncoding:
-        case NSASCIIStringEncoding: {
-            int len = [self length];
-            for (int i = 0; i < len; i++) {
-                WORD out = [self characterAtIndex:i];
-
-                EbrFwrite(&out, 1, 1, fpOut);
-            }
-            break;
-        }
-
-        case NSUnicodeStringEncoding: {
-            int len = [self length];
-
-            EbrFputc(0xFF, fpOut);
-            EbrFputc(0xFE, fpOut);
-            for (int i = 0; i < len; i++) {
-                WORD out = [self characterAtIndex:i];
-
-                EbrFwrite(&out, 2, 1, fpOut);
-            }
-            break;
-        }
-
-        default:
-            assert(0);
-    }
-
-    EbrFclose(fpOut);
-
-    return YES;
 }
 
 /**
@@ -426,8 +362,7 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)encoding error:(NSError* _Nullable*)error {
     NSData* data = [NSData dataWithContentsOfURL:url options:0 error:error];
@@ -597,7 +532,7 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-- (void)getCharacters:(unsigned short*)dest range:(NSRange)range {
+- (void)getCharacters:(unichar*)dest range:(NSRange)range {
     for (unsigned int i = 0; i < range.length; i++) {
         dest[i] = [self characterAtIndex:(i + range.location)];
     }
@@ -606,7 +541,7 @@ static unichar PickWord(unichar c) {
 /**
  @Status Interoperable
 */
-- (void)getCharacters:(unsigned short*)dest {
+- (void)getCharacters:(unichar*)dest {
     [self getCharacters:dest range:NSMakeRange(0, [self length])];
 }
 
@@ -646,7 +581,7 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)stringByDeletingPathExtension {
     CFIndex index = _CFStartOfPathExtension2(static_cast<CFStringRef>(self));
@@ -669,7 +604,7 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)stringByDeletingLastPathComponent {
     CFIndex index = _CFStartOfLastPathComponent2(static_cast<CFStringRef>(self));
@@ -689,7 +624,7 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)stringByAppendingPathComponent:(NSString*)pathStr {
     NSMutableString* mutableString = [self mutableCopy];
@@ -723,14 +658,14 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)pathExtension {
     return [self substringFromIndex:_CFStartOfPathExtension2(static_cast<CFStringRef>(self))];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (instancetype)lastPathComponent {
     return [self substringFromIndex:_CFStartOfLastPathComponent2(static_cast<CFStringRef>(self))];
@@ -771,8 +706,7 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (BOOL)isEqualToString:(NSString*)compStr {
-    if (compStr == nil)
-        return FALSE;
+    RETURN_FALSE_IF(!compStr);
 
     if ([compStr isKindOfClass:[NSString class]]) {
         return [self compare:compStr options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])] == 0;
@@ -835,7 +769,6 @@ static unichar PickWord(unichar c) {
 */
 - (int)intValue {
     char* str = (char*)[self UTF8String];
-
     return strtol(str, nullptr, 10);
 }
 
@@ -888,10 +821,7 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet {
-    NSRange range;
-    range = [self rangeOfCharacterFromSet:charSet options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])];
-
-    return range;
+    return [self rangeOfCharacterFromSet:charSet options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])];
 }
 
 /**
@@ -899,10 +829,7 @@ static unichar PickWord(unichar c) {
  @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
 */
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(NSStringCompareOptions)options {
-    NSRange range;
-    range = [self rangeOfCharacterFromSet:charSet options:options range:NSMakeRange(0, [self length])];
-
-    return range;
+    return [self rangeOfCharacterFromSet:charSet options:options range:NSMakeRange(0, [self length])];
 }
 
 /**
@@ -910,9 +837,8 @@ static unichar PickWord(unichar c) {
  @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
 */
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(NSStringCompareOptions)options range:(NSRange)range {
-    unsigned int length = [self length];
-
-    THROW_NS_IF_FALSE(E_INVALIDARG, (range.length <= length) && (range.location <= (length - range.length)));
+    NSUInteger length = [self length];
+    THROW_NS_IF_FALSE(E_BOUNDS, (range.length <= length) && (range.location <= (length - range.length)));
 
     CFRange result{};
     if (CFStringFindCharacterFromSet(static_cast<CFStringRef>(self),
@@ -961,9 +887,9 @@ static unichar PickWord(unichar c) {
     }
 
     if (usedRange.location == len) {
-        return TRUE;
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 
@@ -1581,10 +1507,121 @@ static unichar PickWord(unichar c) {
     return [ret autorelease];
 }
 
+BOOL _isAParagraphSeparatorTypeCharacter(unichar ch) {
+    return (ch == NEW_LINE || ch == CARRIAGE_RETURN || ch == 0x2029);
+}
+
+BOOL _isALineSeparatorTypeCharacter(unichar ch) {
+    return (ch == NEW_LINE || ch == CARRIAGE_RETURN || ch == 0x0085 || ch == 0x2028 || ch == 0x2029);
+}
+
+- (unichar)_getCharAtIndex:(NSInteger)index {
+    if (index >= 0 && index < [self length]) {
+        return [self characterAtIndex:index];
+    }
+    return '\0';
+}
+
+- (void)_getBlockStart:(NSUInteger*)startPtr
+                   end:(NSUInteger*)endPtr
+           contentsEnd:(NSUInteger*)contentsEndPtr
+              forRange:(NSRange)range
+  stopAtLineSeparators:(BOOL)line {
+    NSUInteger len = [self length];
+    unichar ch;
+
+    THROW_NS_IF_FALSE(E_INVALIDARG, (range.location <= len) && (NSMaxRange(range) <= len));
+
+    if (range.location == 0 && range.length == len && contentsEndPtr == nil) { // This occurs often
+        if (startPtr) {
+            *startPtr = 0;
+        }
+        if (endPtr) {
+            *endPtr = range.length;
+        }
+        return;
+    }
+    /* Find the starting point first */
+    if (startPtr != nil) {
+        NSUInteger start = 0;
+        if (range.location == 0) {
+            start = 0;
+        } else {
+            // Take care of the special case where start happens to fall right between \r and \n
+            NSInteger index = range.location;
+
+            ch = [self _getCharAtIndex:index];
+            index--;
+            if (([self _getCharAtIndex:index] == CARRIAGE_RETURN) && (ch == NEW_LINE)) {
+                index--;
+            }
+
+            while (true) {
+                if (index < 0) {
+                    start = 0;
+                    break;
+                }
+
+                if (line ? _isALineSeparatorTypeCharacter([self _getCharAtIndex:index]) :
+                           _isAParagraphSeparatorTypeCharacter([self _getCharAtIndex:index])) {
+                    start = index + 1;
+                    break;
+                } else {
+                    index--;
+                }
+            }
+        }
+        *startPtr = start;
+    }
+
+    if (endPtr != nil || contentsEndPtr != nil) {
+        NSUInteger endOfContents = 1;
+        NSUInteger lineSeparatorLength = 1;
+        NSInteger index = NSMaxRange(range) - (range.length > 0 ? 1 : 0);
+        // First look at the last char in the range (if the range is zero length, the char after the range) to see if we're already on or
+        // within a end of line sequence...
+        ch = [self _getCharAtIndex:index];
+
+        if (ch == NEW_LINE) {
+            endOfContents = index;
+            index--;
+            if ([self _getCharAtIndex:index] == CARRIAGE_RETURN) {
+                lineSeparatorLength = 2;
+                endOfContents -= 1;
+            }
+        } else {
+            while (true) {
+                if (line ? _isALineSeparatorTypeCharacter(ch) : _isAParagraphSeparatorTypeCharacter(ch)) {
+                    endOfContents = index; // This is actually end of contentsRange
+                    index++;
+                    if ((ch == CARRIAGE_RETURN) && ([self _getCharAtIndex:index] == NEW_LINE)) {
+                        lineSeparatorLength = 2;
+                    }
+                    break;
+                } else if (index >= len) {
+                    endOfContents = len;
+                    lineSeparatorLength = 0;
+                    break;
+                } else {
+                    index++;
+                    ch = [self _getCharAtIndex:index];
+                }
+            }
+        }
+
+        if (contentsEndPtr) {
+            *contentsEndPtr = endOfContents;
+        }
+        if (endPtr) {
+            *endPtr = endOfContents + lineSeparatorLength;
+        }
+    }
+}
+
 /**
  @Status Interoperable
 */
-- (unsigned)hash {
+- (NSUInteger)hash {
     return CFStringHashNSString(static_cast<CFStringRef>(self));
 }
 
@@ -1607,8 +1644,7 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Caveat
- @Notes encoding parameter not supported
+ @Status Interoperable
 */
 - (NSString*)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
@@ -1643,7 +1679,7 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (NSString*)stringByAddingPercentEncodingWithAllowedCharacters:(NSCharacterSet*)set {
-    return [static_cast<NSString*>(_CFStringCreateByAddingPercentEncodingWithAllowedCharacters(nullptr,
+    return [static_cast<NSString*>(_CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorDefault,
                                                                                                static_cast<CFStringRef>(self),
                                                                                                static_cast<CFCharacterSetRef>(set)))
         autorelease];
@@ -1662,7 +1698,8 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (NSString*)stringByRemovingPercentEncoding {
-    return [static_cast<NSString*>(_CFStringCreateByRemovingPercentEncoding(nullptr, static_cast<CFStringRef>(self))) autorelease];
+    return
+        [static_cast<NSString*>(_CFStringCreateByRemovingPercentEncoding(kCFAllocatorDefault, static_cast<CFStringRef>(self))) autorelease];
 }
 
 /**
@@ -1700,58 +1737,7 @@ static unichar PickWord(unichar c) {
  @Status Interoperable
 */
 - (void)getParagraphStart:(NSUInteger*)startp end:(NSUInteger*)endp contentsEnd:(NSUInteger*)contentsEndp forRange:(NSRange)range {
-    /*
-    Documentation does not specify exact getParagraphStart: behavior, only mentioning it is similar to getLineStart:
-    The difference is that getParagraphStart: does not delimit on line terminators 0x0085 and 0x2028
-    */
-    NSUInteger start = range.location;
-    NSUInteger end = NSMaxRange(range);
-    NSUInteger contentsEnd = end;
-    NSUInteger length = [self length];
-    enum { scanning, gotR, done } state = scanning;
-
-    for (; start != 0; start--) {
-        unichar check = [self characterAtIndex:(start - 1)];
-
-        if (check == 0x2028 || check == 0x000A || check == 0x2029)
-            break;
-
-        if (check == 0x000D && [self characterAtIndex:(start)] != 0x000A)
-            break;
-    }
-
-    for (; end < length && state != done; end++) {
-        unichar check = [self characterAtIndex:(end)];
-
-        if (state == scanning) {
-            if (check == 0x000D) {
-                contentsEnd = end;
-                state = gotR;
-            } else if (check == 0x000A || check == 0x2029) {
-                contentsEnd = end;
-                state = done;
-            }
-        } else if (state == gotR) {
-            if (check != 0x000A) {
-                end--;
-            }
-            state = done;
-        }
-    }
-
-    if ((end >= length) && (state != done)) {
-        contentsEnd = end;
-    }
-
-    if (startp) {
-        *startp = start;
-    }
-    if (endp) {
-        *endp = end;
-    }
-    if (contentsEndp) {
-        *contentsEndp = contentsEnd;
-    }
+    [self _getBlockStart:startp end:endp contentsEnd:contentsEndp forRange:range stopAtLineSeparators:NO];
 }
 
 /**
@@ -1790,57 +1776,79 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ... {
-    UNIMPLEMENTED();
-    return StubReturn();
+    va_list reader;
+    va_start(reader, locale);
+
+    self = [self initWithFormat:format locale:locale arguments:reader];
+    va_end(reader);
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
- @Notes
-*/
-- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes atomically parameter not supported
 */
 - (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self writeToURL:url atomically:atomically encoding:[[self class] defaultCStringEncoding] error:nil];
+}
+
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
+    NSData* data = [static_cast<NSData*>(CFStringCreateExternalRepresentation(kCFAllocatorDefault,
+                                                                              static_cast<CFStringRef>(self),
+                                                                              CFStringConvertNSStringEncodingToEncoding(enc),
+                                                                              0)) autorelease];
+    if (data == nil) {
+        [NSException raise:NSGenericException format:@"unable to write data."];
+    }
+
+    return [data writeToURL:url options:(atomically ? NSDataWritingAtomic : 0) error:error];
+}
+
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
+- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)atomically {
+    return [self writeToFile:path atomically:atomically encoding:[[self class] defaultCStringEncoding] error:nil];
+}
+
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
+- (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
+    NSData* data = [static_cast<NSData*>(CFStringCreateExternalRepresentation(kCFAllocatorDefault,
+                                                                              static_cast<CFStringRef>(self),
+                                                                              CFStringConvertNSStringEncodingToEncoding(encoding),
+                                                                              0)) autorelease];
+    if (data == nil) {
+        [NSException raise:NSGenericException format:@"unable to write data."];
+    }
+
+    return [data writeToFile:file options:(atomically ? NSDataWritingAtomic : 0) error:err];
 }
 
 /**
@@ -1893,67 +1901,100 @@ static unichar PickWord(unichar c) {
  @Notes
 */
 - (void)enumerateLinesUsingBlock:(void (^)(NSString*, BOOL*))block {
+    [self enumerateSubstringsInRange:NSMakeRange(0, [self length])
+                             options:NSStringEnumerationByLines
+                          usingBlock:^(NSString* substring, NSRange substringRange, NSRange enclosingRange, BOOL* stop) {
+                              block(substring, stop);
+                          }];
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)getLineStart:(NSUInteger*)startIndex
                  end:(NSUInteger*)lineEndIndex
          contentsEnd:(NSUInteger*)contentsEndIndex
             forRange:(NSRange)aRange {
-    // HACKHACK: Actually implement this guy now. should share common impl with paragraph one.
-    UNIMPLEMENTED();
+    [self _getBlockStart:startIndex end:lineEndIndex contentsEnd:contentsEndIndex forRange:aRange stopAtLineSeparators:YES];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRange)paragraphRangeForRange:(NSRange)aRange {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSUInteger start = 0;
+    NSUInteger parEnd = 0;
+    [self getParagraphStart:&start end:&parEnd contentsEnd:nil forRange:aRange];
+    return NSMakeRange(start, parEnd - start);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFRange range = CFStringGetRangeOfCharacterClusterAtIndex((CFStringRef)self, anIndex, kCFStringComposedCharacterCluster);
+    return NSMakeRange(range.location, range.length);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRange)rangeOfComposedCharacterSequencesForRange:(NSRange)range {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSUInteger length = [self length];
+    NSUInteger start, end;
+
+    if (range.location == length) {
+        start = length;
+    } else {
+        start = [self rangeOfComposedCharacterSequenceAtIndex:range.location].location;
+    }
+
+    NSUInteger endOfRange = NSMaxRange(range);
+    if (endOfRange == length) {
+        end = length;
+    } else {
+        if (range.length > 0) {
+            endOfRange = endOfRange - 1; // We want 0-length range to be treated same as 1-length range.
+        }
+
+        end = NSMaxRange([self rangeOfComposedCharacterSequenceAtIndex:endOfRange]);
+    }
+
+    return NSMakeRange(start, end - start);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)propertyList {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFErrorRef error;
+    CFPropertyListRef propertyList = CFPropertyListCreateWithData(kCFAllocatorDefault,
+                                                                  static_cast<CFDataRef>([self dataUsingEncoding:NSUTF8StringEncoding]),
+                                                                  kCFPropertyListImmutable,
+                                                                  NULL,
+                                                                  &error);
+    if (propertyList == NULL) {
+        [NSException raise:NSParseErrorException format:@"unable to parse string into property list. error: %@", error];
+        return nil;
+    }
+
+    return [(id)propertyList autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isEqual:(NSString*)objAddr {
-    if (objAddr == self)
+    if (objAddr == self) {
         return YES;
-    if (objAddr == nil)
-        return NO;
+    }
 
-    if (objAddr != nil && [objAddr isKindOfClass:[NSString class]]) {
+    if (objAddr == nil) {
+        return NO;
+    }
+
+    if ([objAddr isKindOfClass:[NSString class]]) {
         return [self isEqualToString:objAddr];
     }
 
@@ -1973,21 +2014,22 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSComparisonResult)localizedStandardCompare:(NSString*)string {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self compare:string
+                 options:(NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch)
+                   range:NSMakeRange(0, [self length])
+                  locale:[NSLocale currentLocale]];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSString*)stringByFoldingWithOptions:(NSStringCompareOptions)options locale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* string = [self mutableCopy];
+    CFStringFold(static_cast<CFMutableStringRef>(string), static_cast<CFStringCompareFlags>(options), static_cast<CFLocaleRef>(locale));
+    return [string autorelease];
 }
 
 /**
@@ -2000,11 +2042,11 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSString*)capitalizedStringWithLocale:(NSLocale*)locale {
-    NSMutableString* mutableCopy = [self mutableCopy];
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
     CFStringCapitalize(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFLocaleRef>(locale));
     return mutableCopy;
 }
@@ -2014,7 +2056,7 @@ static unichar PickWord(unichar c) {
  @Notes
 */
 - (NSString*)lowercaseStringWithLocale:(NSLocale*)locale {
-    NSMutableString* mutableCopy = [self mutableCopy];
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
     CFStringLowercase(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFLocaleRef>(locale));
     return mutableCopy;
 }
@@ -2024,7 +2066,7 @@ static unichar PickWord(unichar c) {
  @Notes
 */
 - (NSString*)uppercaseStringWithLocale:(NSLocale*)locale {
-    NSMutableString* mutableCopy = [self mutableCopy];
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
     CFStringUppercase(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFLocaleRef>(locale));
     return mutableCopy;
 }
@@ -2124,21 +2166,37 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)localizedStringWithFormat:(NSString*)format, ... {
-    UNIMPLEMENTED();
-    return StubReturn();
+    va_list reader;
+    va_start(reader, format);
+    NSString* ret = [[self alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:reader];
+    va_end(reader);
+
+    return [ret autorelease];
+}
+
+static std::vector<NSStringEncoding> _getNSStringEncodings() {
+    static const CFStringEncoding* cfEncodings = CFStringGetListOfAvailableEncodings();
+
+    std::vector<NSStringEncoding> encodings;
+    int index = 0;
+    while (cfEncodings[index] != kCFStringEncodingInvalidId) {
+        encodings.push_back(static_cast<NSStringEncoding>(CFStringConvertEncodingToNSStringEncoding(cfEncodings[index])));
+        index++;
+    }
+
+    encodings.push_back(static_cast<NSStringEncoding>(0));
+    return encodings;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (const NSStringEncoding*)availableStringEncodings {
-    UNIMPLEMENTED();
-    return StubReturn();
+    static std::vector<NSStringEncoding> ret = _getNSStringEncodings();
+    return static_cast<NSStringEncoding*>(ret.data());
 }
 
 /**
@@ -2150,20 +2208,30 @@ static unichar PickWord(unichar c) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
+- (id)initWithCoder:(NSCoder*)coder {
+    NSString* str = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.string"];
+
+    if (str != nil) {
+        return [self initWithString:str];
+    } else {
+        return [self init];
+    }
+}
+
+/**
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeObject:self forKey:@"NS.string"];
 }
 
 /**
