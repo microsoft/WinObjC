@@ -27,6 +27,7 @@ LIBRARY CoreFoundation
         ; WINOBJC: Expose a few private CF Helpers
         _CFAppendPathComponent2
         _CFAppendPathExtension2
+        _CFApplicationPreferencesCopyRepresentation
         _CFRuntimeBridgeTypeToClass
         _CFStartOfLastPathComponent2
         _CFStartOfPathExtension2

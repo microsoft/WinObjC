@@ -37,6 +37,13 @@
 #include "../Tests/CFCountingAllocator.c"
 #endif
 
+// WINOBJC
+#if DEPLOYMENT_TARGET_WINDOWS
+#include <WinSock2.h>
+#include <CoreFoundation/CFSocket.h>
+#include <CoreFoundation/CFPropertyList.h>
+#endif
+
 static CFURLRef _CFPreferencesURLForStandardDomainWithSafetyLevel(CFStringRef domainName, CFStringRef userName, CFStringRef hostName, unsigned long safeLevel);
 
 struct __CFPreferencesDomain {
@@ -151,10 +158,12 @@ CF_PRIVATE CFStringRef _CFPreferencesGetByHostIdentifierString(void) {
     return __byHostIdentifierString;
 }
 
-#else
+#elif DEPLOYMENT_TARGET_WINDOWS
 
+// WINOBJC: _CFPreferencesGetByHostIdentifierString returns value of GetHostNameW
 CF_PRIVATE CFStringRef _CFPreferencesGetByHostIdentifierString(void) {
-    return CFSTR("");
+    static CFStringRef __byHostIdentifierString = _CFStringCreateHostName();
+    return __byHostIdentifierString;
 }
 
 #endif
@@ -179,6 +188,7 @@ if (completePath) {
     // append "Preferences\" and make the CFURL
     CFStringAppend(completePath, CFSTR("Preferences\\"));
     url = CFURLCreateWithFileSystemPath(alloc, completePath, kCFURLWindowsPathStyle, true);
+    _CFCreateDirectory(CFStringGetCStringPtr(completePath, kCFStringEncodingUTF8)); // WINOBJC: ensure directory exists
     CFRelease(completePath);
 }
 
@@ -506,10 +516,6 @@ static CFURLRef _CFPreferencesURLForStandardDomain(CFStringRef domainName, CFStr
     return _CFPreferencesURLForStandardDomainWithSafetyLevel(domainName, userName, hostName, __CFSafeLaunchLevel);
 }
 
-const _CFPreferencesDomainCallBacks __kCFXMLPropertyListDomainCallBacks = {
-    
-};
-
 CFPreferencesDomainRef _CFPreferencesStandardDomain(CFStringRef  domainName, CFStringRef  userName, CFStringRef  hostName) {
     CFPreferencesDomainRef domain;
     CFStringRef  domainKey;
@@ -824,5 +830,70 @@ static CFDictionaryRef copyVolatileDomainDictionary(CFTypeRef context, void *vol
 }
 
 const _CFPreferencesDomainCallBacks __kCFVolatileDomainCallBacks = {createVolatileDomain, freeVolatileDomain, fetchVolatileValue, writeVolatileValue, synchronizeVolatileDomain, getVolatileKeysAndValues, copyVolatileDomainDictionary, NULL};
+
+// WINOBJC: Create the domain, first by looking for cached domains with the same context, then by loading from file, or finally by creating new
+static CFMutableDictionaryRef _domainContextCache = NULL;
+static void *createApplicationDomain(CFAllocatorRef allocator, CFTypeRef context) {
+
+    // Store a cache of domain dictionary references by context
+    if (!_domainContextCache) {
+        _domainContextCache = CFDictionaryCreateMutable(kCFAllocatorSystemDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    }
+
+    // Attempt to find the cached domain dictionary
+    CFPropertyListRef propertyList = CFDictionaryGetValue(_domainContextCache, context);
+
+    if (!propertyList) {
+        // Attempt to load the domain from file
+        CFDataRef data = _CFDataCreateFromURL((CFURLRef)context, NULL);
+        if (data) {
+            CFErrorRef error = NULL;
+            propertyList = CFPropertyListCreateWithData(allocator, data, kCFPropertyListMutableContainersAndLeaves, NULL, &error);
+            if (error) {
+                CFLog(kCFLogLevelWarning, CFSTR("createApplicationDomain: %@"), error);
+                CFRelease(error);
+            }
+
+            CFDictionaryAddValue(_domainContextCache, context, propertyList);
+            CFRelease(data);
+        }
+
+        if (!propertyList) {
+            // Create a new dictionary for the domain
+            propertyList = CFDictionaryCreateMutable(allocator, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+            CFDictionaryAddValue(_domainContextCache, context, propertyList);
+        }
+    } else {
+        // If the dictionary was found in the cache, retain it.
+        [propertyList retain];
+    }
+
+    return const_cast<void*>(propertyList);
+}
+
+// WINOBJC: Store the domain data to disk
+static Boolean synchronizeApplicationDomain(CFTypeRef context, void *domain) {
+
+    CFDataRef data = CFPropertyListCreateData(__CFPreferencesAllocator(), (CFPropertyListRef)domain, kCFPropertyListXMLFormat_v1_0, 0, NULL);
+    Boolean success = false;
+    if (data) {
+        success = _CFWriteBytesToFile((CFURLRef)context, CFDataGetBytePtr(data), CFDataGetLength(data));
+        CFRelease(data);
+    }
+
+    return success;
+}
+
+// WINOBJC: remove the domain from cache and release its dictionary
+static void freeApplicationDomain(CFAllocatorRef allocator, CFTypeRef context, void *domain) {
+    if (_domainContextCache) {
+        CFDictionaryRemoveValue(_domainContextCache, context);
+    }
+
+    CFRelease((CFTypeRef)domain);
+}
+
+// WINOBJC: implement previously empty __kCFXMLPropertyListDomainCallBacks with a mixture of existing callbacks where behavior does not differ volatile and custom callbacks for create, free, and synchronize
+const _CFPreferencesDomainCallBacks __kCFXMLPropertyListDomainCallBacks = { createApplicationDomain, freeApplicationDomain, fetchVolatileValue, writeVolatileValue, synchronizeApplicationDomain, getVolatileKeysAndValues, copyVolatileDomainDictionary, NULL };
 
 // clang-format on

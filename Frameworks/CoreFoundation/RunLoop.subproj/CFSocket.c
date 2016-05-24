@@ -1048,7 +1048,7 @@ CF_INLINE CFIndex __CFSocketFdGetSize(CFDataRef fdSet) {
     return NBBY * CFDataGetLength(fdSet);
 }
 
-// WinObjC: ignore -Wtautological-compare as sock is unsigned but we have INVALID_SOCKET checks
+// WINOBJC: ignore -Wtautological-compare as sock is unsigned but we have INVALID_SOCKET checks
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wtautological-compare"
 
@@ -2391,7 +2391,7 @@ static const CFRuntimeClass __CFSocketClass = {
     __CFSocketCopyDescription
 };
 
-#pragma clang diagnostic pop // WinObjC ignore -Wtautological-compare
+#pragma clang diagnostic pop // WINOBJC ignore -Wtautological-compare
 
 CFTypeID CFSocketGetTypeID(void) {
     static dispatch_once_t initOnce = 0;
