@@ -271,6 +271,11 @@ void DisplayNode::AddToRoot() {
     isRoot = true;
 }
 
+void DisplayNode::SetNodeZIndex(int zIndex) {
+    XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
+    xamlNode->SetZIndex(zIndex);
+}
+
 void DisplayNode::SetProperty(const wchar_t* name, float value) {
     auto xamlNode = GetCALayer(this);
     xamlNode->Set(ref new Platform::String(name), (double)value);

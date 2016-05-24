@@ -1059,6 +1059,9 @@ public:
                 toPosition = 90;
             }
             SetProperty(L"transform.rotation", toPosition);
+        } else if (strcmp(name, "zIndex") == 0) {
+            int value = [(NSNumber*)newValue intValue];
+            SetNodeZIndex(value);
         } else if (strcmp(name, "contentsSize") == 0) {
             UNIMPLEMENTED_WITH_MSG("contentsSize not implemented");
         } else if (strcmp(name, "gravity") == 0) {

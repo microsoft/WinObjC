@@ -2503,6 +2503,12 @@ void GetLayerTransform(CALayer* layer, CGAffineTransform* outTransform) {
     GetCACompositor()->SetAccessibilityInfo([self _presentationNode], *info);
 }
 
+- (void)_setZIndex:(int)zIndex {
+    NSNumber* newZIndex = [[NSNumber alloc] initWithInt:zIndex];
+    [CATransaction _setPropertyForLayer:self name:@"zIndex" value:newZIndex];
+    [newZIndex release];
+}
+
 /**
  @Status Stub
  @Notes

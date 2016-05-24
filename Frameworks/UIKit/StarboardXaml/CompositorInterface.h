@@ -200,6 +200,7 @@ public:
 
     float GetPresentationPropertyValue(const char* name);
     void AddToRoot();
+    void SetNodeZIndex(int zIndex);
 
     virtual void* GetProperty(const char* name) = 0;
     virtual void UpdateProperty(const char* name, void* value) = 0;
