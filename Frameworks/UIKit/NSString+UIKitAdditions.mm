@@ -24,6 +24,8 @@
 #import "CGFontInternal.h"
 #import <assert.h>
 #import "LoggingNative.h"
+#include "StringHelpers.h"
+#import <UIKit/NSValue+UIKitAdditions.h>
 
 static const wchar_t* TAG = L"NSString+UIKitAdditions";
 
@@ -388,7 +390,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, UILineBreakModeWordWrap, UITextAlignmentLeft, &fontExtent);
 
@@ -431,7 +434,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode alignment:(UITextAlignment)alignment {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, lineBreakMode, alignment, &fontExtent);
 
@@ -443,7 +447,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)drawInRect:(CGRect)rct withFont:(UIFont*)font lineBreakMode:(UILineBreakMode)lineBreakMode {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     drawString(font, UIGraphicsGetCurrentContext(), str, [self length], rct, lineBreakMode, UITextAlignmentLeft, &fontExtent);
 
@@ -455,7 +460,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)drawAtPoint:(CGPoint)pt withFont:(UIFont*)font {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
 
@@ -502,7 +508,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 
 - (CGSize)drawAtPoint:(CGPoint)pt forWidth:(float)forWidth withFont:(UIFont*)font {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
 
@@ -527,7 +534,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
         lineBreakMode:(UILineBreakMode)lineBreak
    baselineAdjustment:(UIBaselineAdjustment)baseline {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
 
@@ -554,7 +562,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
         lineBreakMode:(UILineBreakMode)lineBreak
    baselineAdjustment:(UIBaselineAdjustment)baseline {
     CGSize fontExtent;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
 
@@ -575,7 +584,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size lineBreakMode:(UILineBreakMode)lineBreakMode {
     CGSize ret;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
     rct.origin.x = 0;
@@ -592,7 +602,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)sizeWithFont:(UIFont*)font constrainedToSize:(CGSize)size {
     CGSize ret;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
     rct.origin.x = 0;
@@ -609,7 +620,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 */
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode {
     CGSize ret;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct = { 0 };
     rct.origin.x = 0;
@@ -623,7 +635,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
 
 - (CGSize)sizeWithFont:(UIFont*)font forWidth:(float)width lineBreakMode:(UILineBreakMode)lineBreakMode lastCharPos:(CGPoint*)lastCharPos {
     CGSize ret;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct = { 0 };
     rct.origin.x = 0;
@@ -644,7 +657,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
               forWidth:(float)forWidth
          lineBreakMode:(UILineBreakMode)lineBreak {
     CGSize ret;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
 
@@ -670,7 +684,8 @@ static NSDictionary* _getDefaultUITextAttributes() {
     }
 
     CGSize ret;
-    WORD* str = (WORD*)[self rawCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(self);
+    WORD* str = (WORD*)wideBuffer.c_str();
 
     CGRect rct;
     rct.origin.x = 0;

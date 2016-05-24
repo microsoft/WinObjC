@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGNSignificantDigitsNumberRounder, WGNIncrementNumberRounder, WGNDecimalFormatter, WGNPercentFormatter, WGNPermilleFormatter,
     WGNCurrencyFormatter, WGNNumeralSystemTranslator;
@@ -51,9 +51,6 @@ enum _WGNCurrencyFormatterMode {
     WGNCurrencyFormatterModeUseCurrencyCode = 1,
 };
 typedef unsigned WGNCurrencyFormatterMode;
-
-#include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

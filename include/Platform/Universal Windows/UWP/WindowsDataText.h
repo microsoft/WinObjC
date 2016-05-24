@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDTSemanticTextQuery, WDTUnicodeCharacters, WDTAlternateWordForm, WDTWordSegment, WDTWordsSegmenter, WDTSelectableWordSegment,
     WDTSelectableWordsSegmenter, WDTTextPredictionGenerator, WDTTextConversionGenerator, WDTTextReverseConversionGenerator;
@@ -84,8 +84,6 @@ enum _WDTAlternateNormalizationFormat {
 };
 typedef unsigned WDTAlternateNormalizationFormat;
 
-#include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 // Windows.Data.Text.SelectableWordSegmentsTokenizingHandler
 #ifndef __WDTSelectableWordSegmentsTokenizingHandler__DEFINED
 #define __WDTSelectableWordSegmentsTokenizingHandler__DEFINED

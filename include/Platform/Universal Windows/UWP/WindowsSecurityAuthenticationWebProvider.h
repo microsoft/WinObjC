@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSAWPWebProviderTokenRequest, WSAWPWebProviderTokenResponse, WSAWPWebAccountClientView, WSAWPWebAccountManager,
     WSAWPWebAccountProviderRequestTokenOperation, WSAWPWebAccountProviderGetTokenSilentOperation,
@@ -67,12 +67,11 @@ enum _WSAWPWebAccountScope {
 };
 typedef unsigned WSAWPWebAccountScope;
 
-#include "WindowsSecurityAuthenticationWebCore.h"
 #include "WindowsSecurityCryptographyCore.h"
 #include "WindowsFoundation.h"
+#include "WindowsSecurityAuthenticationWebCore.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsWebHttp.h"
 #include "WindowsSecurityAuthenticationWeb.h"
 

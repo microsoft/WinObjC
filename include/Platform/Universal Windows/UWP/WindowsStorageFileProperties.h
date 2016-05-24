@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSFGeotagHelper, WSFStorageItemThumbnail, WSFMusicProperties, WSFVideoProperties, WSFImageProperties, WSFDocumentProperties,
     WSFStorageItemContentProperties, WSFBasicProperties;
@@ -89,10 +89,9 @@ enum _WSFVideoOrientation {
 typedef unsigned WSFVideoOrientation;
 
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
-#include "WindowsFoundation.h"
 #include "WindowsDevicesGeolocation.h"
+#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
 

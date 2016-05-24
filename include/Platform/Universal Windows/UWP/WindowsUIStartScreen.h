@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUSSecondaryTileVisualElements, WUSSecondaryTile, WUSVisualElementsRequestedEventArgs, WUSVisualElementsRequest,
     WUSVisualElementsRequestDeferral;
@@ -60,7 +60,6 @@ typedef unsigned WUSForegroundText;
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
 #include "WindowsUI.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

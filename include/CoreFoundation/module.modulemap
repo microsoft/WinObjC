@@ -1,8 +1,0 @@
-module CoreFoundation [extern_c] {
-    umbrella header "CoreFoundation.h"
-    export *
-    
-    module * {
-        export *
-    }
-}

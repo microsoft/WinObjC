@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult,
     WDBGGattReadClientCharacteristicConfigurationDescriptorResult, WDBGGattValueChangedEventArgs, WDBGGattServiceUuids,
@@ -78,10 +78,9 @@ enum _WDBGGattCommunicationStatus {
 };
 typedef unsigned WDBGGattCommunicationStatus;
 
-#include "WindowsDevicesBluetooth.h"
 #include "WindowsFoundation.h"
+#include "WindowsDevicesBluetooth.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

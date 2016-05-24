@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings,
     WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
@@ -28,7 +28,6 @@
     WASISearchQueryLinguisticDetails, WASISearchSuggestionsRequestDeferral, WASISearchSuggestionsRequest;
 
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
 
 #import <Foundation/Foundation.h>

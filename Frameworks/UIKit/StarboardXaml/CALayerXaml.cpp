@@ -1262,6 +1262,10 @@ void CALayerXaml::SetOpacity() {
     }
 };
 
+void CALayerXaml::SetZIndex(int zIndex) {
+    __super::SetValue(Canvas::ZIndexProperty, zIndex);
+}
+
 /* Disable for now
 AutomationPeer^ CALayerXaml::OnCreateAutomationPeer()
 {

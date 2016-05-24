@@ -224,3 +224,29 @@ public:
         NSURLSessionDownloadTaskWithURL_WithCancelResume();
     }
 }; /* class NSURL */
+
+//
+// NSUserDefaults Tests
+//
+extern void NSUserDefaultsBasic();
+extern void NSUserDefaultsKVCArray();
+
+class NSUserDefaults {
+public:
+    BEGIN_TEST_CLASS(NSUserDefaults)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+    }
+
+    TEST_METHOD(NSUserDefaults_Basic) {
+        NSUserDefaultsBasic();
+    }
+
+    TEST_METHOD(NSUserDefaults_KVCArray) {
+        NSUserDefaultsKVCArray();
+    }
+}; /* class NSUserDefaults */

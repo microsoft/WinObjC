@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDWWiFiAdapter, WDWWiFiNetworkReport, WDWWiFiAvailableNetwork, WDWWiFiConnectionResult;
 @protocol WDWIWiFiAdapterStatics
@@ -75,10 +75,9 @@ enum _WDWWiFiConnectionStatus {
 };
 typedef unsigned WDWWiFiConnectionStatus;
 
+#include "WindowsNetworkingConnectivity.h"
 #include "WindowsFoundation.h"
 #include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
-#include "WindowsNetworkingConnectivity.h"
 
 #import <Foundation/Foundation.h>
 

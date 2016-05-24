@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WXCBackClickEventArgs, WXCDragItemsStartingEventArgs, WXCNotifyEventArgs, WXCSemanticZoomViewChangedEventArgs,
     WXCTextControlPasteEventArgs, WXCContainerContentChangingEventArgs, WXCSemanticZoomLocation, WXCCandidateWindowBoundsChangedEventArgs,

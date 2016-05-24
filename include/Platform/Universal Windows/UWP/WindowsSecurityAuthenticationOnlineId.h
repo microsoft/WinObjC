@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSAOOnlineIdServiceTicketRequest, WSAOOnlineIdServiceTicket, WSAOUserAuthenticationOperation, WSAOSignOutUserOperation,
     WSAOUserIdentity, WSAOOnlineIdAuthenticator;
@@ -34,7 +34,6 @@ enum _WSAOCredentialPromptType {
 };
 typedef unsigned WSAOCredentialPromptType;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 // Windows.Foundation.AsyncActionCompletedHandler
 #ifndef __WFAsyncActionCompletedHandler__DEFINED

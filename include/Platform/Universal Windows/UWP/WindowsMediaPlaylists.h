@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMPPlaylist;
 @protocol WMPIPlaylist
@@ -33,7 +33,6 @@ enum _WMPPlaylistFormat {
 };
 typedef unsigned WMPPlaylistFormat;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
 #include "WindowsFoundation.h"
 

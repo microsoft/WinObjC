@@ -34,7 +34,7 @@ static void _addFakeCacheResponse(NSURLCache* cache, NSCachedURLResponse* respon
     [cache storeCachedResponse:response forRequest:[NSURLRequest requestWithURL:[[response response] URL]]];
 }
 
-TEST(Foundation, NSURLCache_StorageAndRetrieval) {
+TEST(NSURLCache, StorageAndRetrieval) {
     NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:16 diskCapacity:0 diskPath:nil];
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://one.com", 4))); // 4 bytes
 
@@ -45,7 +45,7 @@ TEST(Foundation, NSURLCache_StorageAndRetrieval) {
     EXPECT_OBJCNE(nil, oneComCached);
 }
 
-TEST(Foundation, NSURLCache_Eviction) {
+TEST(NSURLCache, Eviction) {
     NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:16 diskCapacity:0 diskPath:nil];
 
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://one.com", 4))); // 4 bytes
@@ -63,7 +63,7 @@ TEST(Foundation, NSURLCache_Eviction) {
     EXPECT_EQ(0, [cache currentMemoryUsage]);
 }
 
-TEST(Foundation, NSURLCache_Promotion) {
+TEST(NSURLCache, Promotion) {
     NSURLCache* cache = [[NSURLCache alloc] initWithMemoryCapacity:16 diskCapacity:0 diskPath:nil];
 
     EXPECT_NO_THROW(_addFakeCacheResponse(cache, _fakeCachedResponse("http://one.com", 4))); // 4 bytes

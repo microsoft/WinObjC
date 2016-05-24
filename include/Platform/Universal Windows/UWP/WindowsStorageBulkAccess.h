@@ -19,14 +19,13 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSBFileInformationFactory, WSBFileInformation, WSBFolderInformation;
 @protocol WSBIStorageItemInformation
 , WSBIFileInformationFactoryFactory, WSBIFileInformationFactory;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsStorageFileProperties.h"
 #include "WindowsStorage.h"

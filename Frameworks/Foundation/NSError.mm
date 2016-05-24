@@ -17,12 +17,8 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "Foundation/NSError.h"
-#include "Foundation/NSString.h"
-
-#include <time.h>
-#include "LoggingNative.h"
-
-static const wchar_t* TAG = L"NSError";
+#include "NSCFError.h"
+#include "BridgeHelpers.h"
 
 /* Error Domains */
 NSString* const NSOSStatusErrorDomain = @"NSOSStatusErrorDomain";
@@ -49,99 +45,23 @@ NSString* const NSURLErrorFailingURLErrorKey = @"NSURLErrorFailingURLErrorKey";
 NSString* const NSURLErrorFailingURLStringErrorKey = @"NSURLErrorFailingURLStringErrorKey";
 NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPeerTrustErrorKey";
 
-@implementation NSError {
-    idretaintype(NSString) _domain;
-    idretaintype(NSDictionary) _userInfo;
-    int _code;
-    idretaintype(NSString) _description;
-}
+@implementation NSError
+
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSError, NSErrorPrototype);
 
 /**
  @Status Interoperable
 */
 + (instancetype)errorWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
-    NSError* ret = [self alloc];
-    ret = [ret initWithDomain:domain code:code userInfo:dict];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithDomain:domain code:code userInfo:dict] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithDomain:(NSString*)domain code:(NSInteger)code userInfo:(NSDictionary*)dict {
-    _domain.attach([domain copy]);
-    _code = code;
-
-    const char* err = [domain UTF8String];
-
-    TraceError(TAG, L"failure %hs: %d", err, code);
-
-    _userInfo = dict;
-
-    id values = [dict allValues];
-    id keys = [dict allKeys];
-
-    DWORD count = [dict count];
-
-    for (int i = 0; i < count; i++) {
-        const char* pVal = [[[values objectAtIndex:i] description] UTF8String];
-        const char* pKey = [[[keys objectAtIndex:i] description] UTF8String];
-
-        TraceVerbose(TAG, L"%d: Key=%hs Val=%hs", i, pVal, pKey);
-    }
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)domain {
-    return _domain;
-}
-
-/**
- @Status Interoperable
-*/
-- (int)code {
-    return _code;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSDictionary*)userInfo {
-    return _userInfo;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)localizedDescription {
-    id ret;
-
-    if ((ret = [_userInfo objectForKey:NSLocalizedDescriptionKey]) != nil) {
-        return ret;
-    }
-
-    if (_description) {
-        return _description;
-    }
-    return @"Generic error";
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)localizedFailureReason {
-    id ret;
-
-    if ((ret = [_userInfo objectForKey:NSLocalizedFailureReasonErrorKey]) != nil) {
-        return ret;
-    }
-
-    return @"Generic failure";
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -151,25 +71,39 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
     return [self localizedDescription];
 }
 
-- (void)_setDescription:(id)description {
-    _description.attach([description copy]);
+/**
+ @Status Interoperable
+*/
+- (NSString*)domain {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)copyWithZone:(NSZone*)zone {
-    return [self retain];
+- (int)code {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    _domain = nil;
-    _userInfo = nil;
-    _description = nil;
-    [super dealloc];
+- (NSDictionary*)userInfo {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)localizedDescription {
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)localizedFailureReason {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -196,6 +130,38 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
     UNIMPLEMENTED();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [self retain];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)other {
+    if (self == other) {
+        return YES;
+    }
+
+    if (![other isKindOfClass:[NSError class]]) {
+        return NO;
+    }
+
+    return ([[self domain] isEqual:[other domain]] &&
+        [self code] == [other code] &&
+        [[self userInfo] isEqual:[other userInfo]] &&
+        [[self localizedDescription] isEqual:[other localizedDescription]]);
+}
+
+/**
+ @Status Interoperable
+*/
+- (unsigned int)hash {
+    return [self code] + [[self domain] hash];
 }
 
 @end

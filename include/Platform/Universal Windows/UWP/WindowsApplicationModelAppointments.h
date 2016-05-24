@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAAAppointment, WAAAppointmentStore, WAAAppointmentOrganizer, WAAAppointmentInvitee, WAAAppointmentRecurrence, WAAAppointmentManager,
     WAAFindAppointmentsOptions, WAAAppointmentException, WAAAppointmentCalendarSyncManager, WAAAppointmentCalendar,
@@ -188,7 +188,6 @@ typedef unsigned WAAAppointmentStoreChangeType;
 
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUI.h"
 
 #import <Foundation/Foundation.h>

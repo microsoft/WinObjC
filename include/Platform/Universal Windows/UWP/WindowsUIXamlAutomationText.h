@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 // Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint
 enum _WUXATTextPatternRangeEndpoint {

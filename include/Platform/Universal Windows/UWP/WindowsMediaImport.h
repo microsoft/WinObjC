@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMIPhotoImportSource, WMIPhotoImportOperation, WMIPhotoImportManager, WMIPhotoImportSession, WMIPhotoImportFindItemsResult,
     WMIPhotoImportImportItemsResult, WMIPhotoImportDeleteImportedItemsFromSourceResult, WMIPhotoImportStorageMedium, WMIPhotoImportSidecar,
@@ -127,10 +127,9 @@ enum _WMIPhotoImportSubfolderCreationMode {
 };
 typedef unsigned WMIPhotoImportSubfolderCreationMode;
 
+#include "WindowsStorage.h"
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
-#include "WindowsStorage.h"
 
 #import <Foundation/Foundation.h>
 

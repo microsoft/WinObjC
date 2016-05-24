@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDEDeviceConnectionChangeTriggerDetails, WDEDeviceThumbnail, WDEEnclosureLocation, WDEDeviceInformationUpdate,
     WDEDeviceInformationCollection, WDEDeviceWatcher, WDEDeviceInformation, WDEDevicePairingResult, WDEDeviceInformationPairing,
@@ -136,11 +136,10 @@ enum _WDEDevicePickerDisplayStatusOptions {
 typedef unsigned WDEDevicePickerDisplayStatusOptions;
 
 #include "WindowsUI.h"
-#include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
 #include "WindowsApplicationModelBackground.h"
+#include "WindowsStorageStreams.h"
 
 #import <Foundation/Foundation.h>
 

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSAppMemoryUsageLimitChangingEventArgs, WSAppMemoryReport, WSProcessMemoryReport, WSMemoryManager, WSProtocolForResultsOperation,
     WSUserWatcher, WSUser, WSUserChangedEventArgs, WSUserAuthenticationStatusChangingEventArgs, WSUserAuthenticationStatusChangeDeferral,

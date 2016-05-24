@@ -159,7 +159,7 @@
         //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
         //    .location != NSNotFound;
 
-        return [rightResult rangeOfString:leftResult options:option].location != NSNotFound;
+        return [rightResult rangeOfString:leftResult options:static_cast<NSStringCompareOptions>(option)].location != NSNotFound;
     }
 
     return NO;
@@ -250,7 +250,8 @@
             //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
             //    .location != NSNotFound;
 
-            return ([leftResult rangeOfString:rightResult options:(NSAnchoredSearch | compareOption)].location != NSNotFound);
+            return ([leftResult rangeOfString:rightResult options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | compareOption)]
+                        .location != NSNotFound);
         }
         case NSEndsWithPredicateOperatorType: {
             NSStringCompareOptions compareOption =
@@ -262,7 +263,8 @@
             //                    locale:[self obtainLocaleForComparisonPredicateOptions:_comparisonPredicateModifier]]
             //    .location != NSNotFound;
 
-            return ([leftResult rangeOfString:rightResult options:(NSBackwardsSearch | compareOption)].location != NSNotFound);
+            return ([leftResult rangeOfString:rightResult options:static_cast<NSStringCompareOptions>(NSBackwardsSearch | compareOption)]
+                        .location != NSNotFound);
         }
         case NSInPredicateOperatorType:
             // check if right contains left

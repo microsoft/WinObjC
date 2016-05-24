@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUWWebUIVoiceCommandActivatedEventArgs, WUWActivatedDeferral, WUWActivatedOperation, WUWWebUILaunchActivatedEventArgs,
     WUWWebUIShareTargetActivatedEventArgs, WUWWebUIFileActivatedEventArgs, WUWWebUIProtocolActivatedEventArgs,
@@ -53,9 +53,9 @@ typedef unsigned WUWPrintContent;
 #include "WindowsGraphicsPrinting.h"
 #include "WindowsApplicationModelActivation.h"
 #include "WindowsMediaSpeechRecognition.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageSearch.h"
 #include "WindowsStorage.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsStoragePickersProvider.h"
 #include "WindowsSystem.h"
 #include "WindowsStorageProvider.h"

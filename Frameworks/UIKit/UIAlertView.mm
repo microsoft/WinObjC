@@ -24,7 +24,7 @@
 #import "Foundation/NSString.h"
 #import "Foundation/NSMutableArray.h"
 #import "CoreGraphics/CGAffineTransform.h"
-#import "CoreFoundation/CFType.h"
+
 #import "UIKit/UIImage.h"
 #import "UIFontInternal.h"
 #import "UIApplicationInternal.h"

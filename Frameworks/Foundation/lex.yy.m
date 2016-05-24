@@ -1175,7 +1175,7 @@ YY_RULE_SETUP
 case 9:
 YY_RULE_SETUP
 #line 38 "scanner.l"
-{ return IN; }
+{ return YY_IN; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
@@ -1256,7 +1256,7 @@ YY_RULE_SETUP
 case 27:
 YY_RULE_SETUP
 #line 60 "scanner.l"
-{ return SIZE; }
+{ return YY_SIZE; }
 	YY_BREAK
 case 28:
 #line 63 "scanner.l"

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMAAudioGraph, WMACreateAudioGraphResult, WMAAudioGraphSettings, WMAAudioDeviceInputNode, WMACreateAudioDeviceInputNodeResult,
     WMAAudioDeviceOutputNode, WMACreateAudioDeviceOutputNodeResult, WMAAudioFileInputNode, WMACreateAudioFileInputNodeResult,
@@ -85,14 +85,14 @@ typedef unsigned WMAAudioGraphUnrecoverableError;
 
 #include "WindowsMedia.h"
 #include "WindowsDevicesEnumeration.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsMediaRender.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsFoundation.h"
+#include "WindowsMediaEffects.h"
 #include "WindowsMediaCapture.h"
 #include "WindowsStorage.h"
-#include "WindowsMediaEffects.h"
 #include "WindowsMediaTranscoding.h"
+#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

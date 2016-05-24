@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection,
     WMCCastingDeviceSelectedEventArgs, WMCCastingDevicePickerFilter, WMCCastingDevicePicker;
@@ -60,7 +60,6 @@ typedef unsigned WMCCastingConnectionState;
 
 #include "WindowsUIPopups.h"
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesEnumeration.h"
 

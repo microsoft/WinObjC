@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 // Windows.Security.EnterpriseData.ProtectionPolicyEvaluationResult
 enum _WSEProtectionPolicyEvaluationResult {

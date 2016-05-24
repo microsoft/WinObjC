@@ -16,7 +16,6 @@
 
 #import <StubReturn.h>
 #import <Starboard.h>
-#import <NSDateInternal.h>
 #import <CoreLocation/CLLocation.h>
 #import <CoreLocation/CLLocationManager.h>
 #import <CoreLocation/CLLocationManagerDelegate.h>
@@ -374,6 +373,16 @@ static const int64_t c_timeoutInSeconds = 15LL;
 
         CLLocation* previousLocation = self.location;
 
+        // Number of seconds between Jan 1, 1601 UTC (Windows FILETIME) and Jan 1, 1970 UTC (POSIX/Epoch time)
+        static const int64_t c_windowsToUnixNumSecondsOffset = 11644473600LL;
+        // Ratio between 100ns (Windows FILETIME unit) and 1s (POSIX/Epoch time unit)
+        static const int64_t c_windowsToUnixTimeUnitRatio = 10000LL;
+
+        // First convert Windows Gps epoch to Unix epoch.
+        // Note: this corrects for the 10 year base time difference between gps epoch (1980) and  posix epoch (1970)
+        int64_t posixEpoch =
+            (geocoordinator.timestamp.universalTime / c_windowsToUnixTimeUnitRatio) - c_windowsToUnixNumSecondsOffset * 1000LL;
+
         // TODO::
         // todo-nithishm-11062015 -
         //     1. Bug 5381942 prevents us from fetching the speed value from IReference<double>. Harcoding for now as a workaround.
@@ -385,7 +394,7 @@ static const int64_t c_timeoutInSeconds = 15LL;
                                               verticalAccuracy:[geocoordinator.altitudeAccuracy doubleValue]
                                                         course:0
                                                          speed:0
-                                                     timestamp:[NSDate _dateWithWindowsGPSTime:geocoordinator.timestamp.universalTime]];
+                                                     timestamp:[NSDate dateWithTimeIntervalSince1970:(double)posixEpoch]];
 
         // Deliver location to the appropriate location manager delegate
         if (_periodicLocationUpdateRequested) {

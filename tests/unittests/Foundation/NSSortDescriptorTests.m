@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSSortDescriptor_InitDescriptorWithKey) {
+TEST(NSSortDescriptor, InitDescriptorWithKey) {
     NSString* key = @"FooBar";
     NSSortDescriptor* sortDesc = [NSSortDescriptor sortDescriptorWithKey:key ascending:YES];
     ASSERT_TRUE_MSG(sortDesc != nullptr, "FAILED: sortDesc should be non-null!");
@@ -33,7 +33,7 @@ TEST(Foundation, NSSortDescriptor_InitDescriptorWithKey) {
     [key release];
 }
 
-TEST(Foundation, NSSortDescriptor_SortDescriptorWithNilKey) {
+TEST(NSSortDescriptor, SortDescriptorWithNilKey) {
     NSArray* data = @[ @"B", @"D", @"F", @"E", @"A", @"C" ];
     NSSortDescriptor* sortDesc = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
     ASSERT_TRUE_MSG(sortDesc != nullptr, "FAILED: sortDesc should be non-null!");
@@ -74,7 +74,7 @@ TEST(Foundation, NSSortDescriptor_SortDescriptorWithNilKey) {
 
 @end
 
-TEST(Foundation, NSSortDescriptor_SortDescriptorWithCustomObjectAndKey) {
+TEST(NSSortDescriptor, SortDescriptorWithCustomObjectAndKey) {
     NSMutableArray* data = [[NSMutableArray alloc] init];
     NSString* key = @"xCord";
     int size = 10;
@@ -105,7 +105,7 @@ TEST(Foundation, NSSortDescriptor_SortDescriptorWithCustomObjectAndKey) {
     [data release];
 }
 
-TEST(Foundation, NSSortDescriptor_SortDescriptorWithCustomObjectAndSelector) {
+TEST(NSSortDescriptor, SortDescriptorWithCustomObjectAndSelector) {
     NSMutableArray* data = [[NSMutableArray alloc] init];
     NSString* key = @"xCord";
     int size = 20;
@@ -135,7 +135,7 @@ TEST(Foundation, NSSortDescriptor_SortDescriptorWithCustomObjectAndSelector) {
     [data release];
 }
 
-TEST(Foundation, NSSortDescriptor_SortDescriptorWithCustomObjectAndComparator) {
+TEST(NSSortDescriptor, SortDescriptorWithCustomObjectAndComparator) {
     NSMutableArray* data = [[NSMutableArray alloc] init];
     int size = 40;
     NSString* key = @"xCord";
@@ -176,7 +176,7 @@ TEST(Foundation, NSSortDescriptor_SortDescriptorWithCustomObjectAndComparator) {
     [data release];
 }
 
-TEST(Foundation, NSSortDescriptor_copy) {
+TEST(NSSortDescriptor, copy) {
     NSString* key = @"FooBar";
     NSSortDescriptor* sortDesc = [NSSortDescriptor sortDescriptorWithKey:key ascending:YES];
     ASSERT_TRUE_MSG(sortDesc != nullptr, "FAILED: sortDesc should be non-null!");
@@ -196,7 +196,7 @@ TEST(Foundation, NSSortDescriptor_copy) {
     [sortCopy release];
 }
 
-TEST(Foundation, NSSortDescriptor_ReversedSortDescriptor) {
+TEST(NSSortDescriptor, ReversedSortDescriptor) {
     NSString* key = @"FooBar";
     NSSortDescriptor* sortDesc = [NSSortDescriptor sortDescriptorWithKey:key ascending:YES];
     ASSERT_TRUE_MSG(sortDesc != nullptr, "FAILED: sortDesc should be non-null!");
@@ -209,7 +209,7 @@ TEST(Foundation, NSSortDescriptor_ReversedSortDescriptor) {
     ASSERT_OBJCEQ_MSG(key, [reverseSortDesc key], "FAILED: key does not match the supplied key.");
 }
 
-TEST(Foundation, NSSortDescriptor_ArchiveAndUnarchiveObject) {
+TEST(NSSortDescriptor, ArchiveAndUnarchiveObject) {
     NSString* key = @"FooBar";
     NSSortDescriptor* sortDesc = [NSSortDescriptor sortDescriptorWithKey:key ascending:YES];
     ASSERT_TRUE_MSG(sortDesc != nullptr, "FAILED: sortDesc should be non-null!");

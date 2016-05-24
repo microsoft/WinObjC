@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNVVpnRoute, WNVVpnNamespaceInfo, WNVVpnInterfaceId, WNVVpnRouteAssignment, WNVVpnNamespaceAssignment, WNVVpnPickedCredential,
     WNVVpnPacketBuffer, WNVVpnChannelConfiguration, WNVVpnChannel, WNVVpnChannelActivityEventArgs, WNVVpnSystemHealth,
@@ -145,7 +145,6 @@ typedef unsigned WNVVpnManagementErrorStatus;
 
 #include "WindowsStorageStreams.h"
 #include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsSecurityCryptographyCertificates.h"
 #include "WindowsNetworking.h"
 #include "WindowsFoundation.h"

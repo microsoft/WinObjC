@@ -235,6 +235,7 @@ public:
     void Set(Platform::String^ propertyName, Platform::Object^ value);
     Platform::Object^ Get(Platform::String^ propertyName);
     void SetOpacity();
+    void SetZIndex(int zIndex);
     static CALayerXaml^ CreateLayer();
     static void DestroyLayer(CALayerXaml^ layer);
     static void ApplyMagnificationFactor(Windows::UI::Xaml::Controls::Canvas^ windowContainer, float scale, float rotation);

@@ -37,3 +37,17 @@
 #define FOUNDATION_EXTERNC_END
 #endif
 #endif
+
+#if !defined(FOUNDATION_INLINE)
+#if defined(__GNUC__) && (__GNUC__ == 4) && !defined(DEBUG)
+#define FOUNDATION_INLINE static __inline__ __attribute__((always_inline))
+#elif defined(__GNUC__)
+#define FOUNDATION_INLINE static __inline__
+#elif defined(__cplusplus)
+#define FOUNDATION_INLINE static inline
+#elif defined(_MSC_VER)
+#define FOUNDATION_INLINE static __inline
+#elif TARGET_OS_WIN32
+#define FOUNDATION_INLINE static __inline__
+#endif
+#endif

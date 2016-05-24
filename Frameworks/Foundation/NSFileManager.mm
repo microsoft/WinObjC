@@ -104,8 +104,10 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Status Interoperable
 */
 - (instancetype)init {
-    // on init, current Directory path is specified as "/" for current working directory
-    _currentDirectoryPath = [NSString stringWithCString:"/"];
+    if (self = [super init]) {
+        // on init, current Directory path is specified as NSHomeDirectory() for current working directory
+        _currentDirectoryPath = NSHomeDirectory();
+    }
     return self;
 }
 
@@ -120,7 +122,6 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
         appropriateForURL:(NSURL*)forURL
                    create:(BOOL)create
                     error:(NSError**)error {
-    
     NSArray* urls = [self URLsForDirectory:directory inDomains:domains];
     if ([urls count] > 0) {
         return [urls objectAtIndex:0];
@@ -177,7 +178,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
 
     // check existence of target dir
     auto isDir = NO;
-    if (![self fileExistsAtPath:url.absoluteString isDirectory:&isDir]) {
+    if (![self fileExistsAtPath:url.path isDirectory:&isDir]) {
         if (error) {
             // TODO: standardize the error code and message
             *error = [NSError errorWithDomain:@"Target path does not exist" code:100 userInfo:nil];

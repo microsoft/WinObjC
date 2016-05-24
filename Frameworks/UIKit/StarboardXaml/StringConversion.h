@@ -17,7 +17,4 @@
 
 #include "winobjc\winobjc.h"
 
-// Takes an NSString* that's passed to us by the app as a void*, and returns its raw backing buffer.
-// Note; it's unsafe to use the returned buffer beyond the scope of the void* that's passed to you,
-// so be sure to copy it out if necessary. Returned bytes are NOT null terminated.
-extern "C" const wchar_t* _RawBufferFromNSString(void* str, uint32_t* len);
+extern "C" const char* _RawBufferFromNSString(void* str);

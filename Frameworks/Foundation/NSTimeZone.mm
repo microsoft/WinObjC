@@ -14,19 +14,31 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-#import "StubReturn.h"
-#import "Foundation/NSData.h"
-#import "Foundation/NSString.h"
-#import "Foundation/NSArray.h"
-#import "Etc.h"
-#import "Foundation/NSTimeZone.h"
-#import "NSTimeZoneInternal.h"
-#import <unicode/gregocal.h>
-#import <windows.h>
+#include "Starboard.h"
+#include "StubReturn.h"
+#include "Foundation/NSData.h"
+#include "Foundation/NSString.h"
+#include "Foundation/NSArray.h"
+#include "Etc.h"
+#include "Foundation/NSTimeZone.h"
+#include "NSTimeZoneInternal.h"
+
+#include <unicode/gregocal.h>
+#include <windows.h>
+
 #import <vector>
-#import "NSDateInternal.h"
-#import "NSLocaleInternal.h"
+#import <string>
+
+@interface NSTimeZone ()
+@property (nonatomic, readwrite, copy) NSString* description;
+@property (nonatomic, readwrite, copy) NSDate* nextDaylightSavingTimeTransition;
+@property (nonatomic, readwrite, copy) NSString* abbreviation;
+@property (nonatomic, readwrite, copy) NSString* name;
+@property (nonatomic, readwrite, copy) NSData* data;
+@property (nonatomic, readwrite) NSTimeInterval daylightSavingTimeOffset;
+@property (nonatomic, readwrite) BOOL isDaylightSavingTime;
+@property (nonatomic, readwrite) NSInteger secondsFromGMT;
+@end
 
 static const wchar_t* TAG = L"NSTimeZone";
 
@@ -71,9 +83,6 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     icu::TimeZone* _icuTZ;
 }
 
-// We are providing our own accessor so it is necessary to synthesize the ivars.
-@synthesize data = _data;
-
 /**
  @Status Interoperable
 */
@@ -85,7 +94,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 + (void)_setTimeZoneToSystemSettings:(NSTimeZone*)timeZone {
     @synchronized(self) {
         s_systemTimeZone = timeZone;
-        s_systemTimeZone->_daylightSavingTimeOffset = [timeZone daylightSavingTimeOffsetForDate:[NSDate date]];
+        [s_systemTimeZone setDaylightSavingTimeOffset:[timeZone daylightSavingTimeOffsetForDate:[NSDate date]]];
     }
 }
 
@@ -93,7 +102,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     @synchronized(self) {
         if (!s_systemTimeZone) {
             // Get current locale.
-            NSString* countryCode = [NSLocale _currentNSLocaleCountryCode];
+            NSString* countryCode = [[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
 
             // Get time zone info from system.
             DYNAMIC_TIME_ZONE_INFORMATION dtz;
@@ -274,8 +283,12 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     if (self = [super init]) {
         // Can't encode/decode ICU object. Potentially recreate system TZ?
         _nextDaylightSavingTimeTransition = [[coder decodeObjectOfClass:[NSDate class] forKey:@"nextDaylightSavingTimeTransition"] retain];
+        _abbreviation = [[coder decodeObjectForKey:@"abbreviation"] retain];
+        _name = [[coder decodeObjectForKey:@"name"] retain];
         _data = [[coder decodeObjectOfClass:[NSData class] forKey:@"data"] retain];
         _daylightSavingTimeOffset = [coder decodeDoubleForKey:@"daylightSavingTimeOffset"];
+        _isDaylightSavingTime = [coder decodeBoolForKey:@"isDaylightSavingTime"];
+        _secondsFromGMT = [coder decodeInt64ForKey:@"secondsFromGMT"];
     }
     return self;
 }
@@ -287,8 +300,12 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     // Can't encode/decode ICU object. Potentially recreate system TZ?
     [coder encodeObject:[self description] forKey:@"description"];
     [coder encodeObject:_nextDaylightSavingTimeTransition forKey:@"nextDaylightSavingTimeTransition"];
+    [coder encodeObject:_abbreviation forKey:@"abbreviation"];
+    [coder encodeObject:_name forKey:@"name"];
     [coder encodeObject:_data forKey:@"data"];
     [coder encodeDouble:_daylightSavingTimeOffset forKey:@"daylightSavingTimeOffset"];
+    [coder encodeBool:_isDaylightSavingTime forKey:@"isDaylightSavingTime"];
+    [coder encodeInt64:_secondsFromGMT forKey:@"secondsFromGMT"];
 }
 
 /**
@@ -352,7 +369,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 + (NSTimeZone*)timeZoneWithName:(NSString*)name data:(NSData*)data {
     NSTimeZone* ret = [NSTimeZone timeZoneWithName:name];
-    ret->_data = data;
+    ret.data = data;
     return ret;
 }
 
@@ -371,7 +388,7 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 */
 - (instancetype)initWithName:(NSString*)name data:(NSData*)data {
     if (self = [self initWithName:name]) {
-        self->_data = data;
+        self.data = data;
     }
     return self;
 }
@@ -419,7 +436,9 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 - (NSString*)name {
     icu_48::UnicodeString n;
     _icuTZ->getID(n);
-    return NSStringFromICU(n);
+    std::string realStr;
+    n.toUTF8String(realStr);
+    return [NSString stringWithUTF8String:realStr.c_str()];
 }
 
 /**
@@ -430,7 +449,9 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
     icu_48::UnicodeString n;
     UBool useDaylight = [self isDaylightSavingTime];
     _icuTZ->getDisplayName(useDaylight, icu::TimeZone::EDisplayType::SHORT, n);
-    return NSStringFromICU(n);
+    std::string realStr;
+    n.toUTF8String(realStr);
+    return [NSString stringWithUTF8String:realStr.c_str()];
 }
 
 /**
@@ -454,7 +475,9 @@ icu::TimeZone::EDisplayType _convertNSTimeZoneNameStyleToICUEDisplayType(NSTimeZ
 
     _icuTZ->getDisplayName(daylight, type, icuLocale, ret);
 
-    return NSStringFromICU(ret);
+    std::string realStr;
+    ret.toUTF8String(realStr);
+    return [NSString stringWithUTF8String:realStr.c_str()];
 }
 
 /**

@@ -36,7 +36,7 @@ static const wchar_t* TAG = L"NSTimer";
     double _nextFireTime;
     SEL _sel;
     NSObject* _userInfo;
-    NSMutableArray* _addedToModes;
+    StrongId<NSMutableArray> _addedToModes;
     BOOL _canFire;
 }
 
@@ -59,7 +59,7 @@ static const wchar_t* TAG = L"NSTimer";
 }
 
 - (void)_addedToMode:(NSRunLoopState*)runLoopState {
-    CFArrayAppendValue((CFMutableArrayRef)_addedToModes, (const void*)runLoopState);
+    [_addedToModes addObject:runLoopState];
 }
 
 - (void)_removedFromMode:(NSRunLoopState*)runLoopState {
@@ -76,14 +76,13 @@ static const wchar_t* TAG = L"NSTimer";
     }
 
     _isDestroying = YES;
-    int count = CFArrayGetCount((CFArrayRef)_addedToModes) - 1;
+    int count = [_addedToModes count] - 1;
     while (count >= 0) {
-        NSRunLoopState* runLoopState = (NSRunLoopState*)CFArrayGetValueAtIndex((CFArrayRef)_addedToModes, count);
+        NSRunLoopState* runLoopState = [_addedToModes objectForIndex:count];
         [runLoopState removeTimer:self];
         count--;
     }
-    [_addedToModes release];
-    _addedToModes = nil;
+
     if (!_timerTargetReleased) {
         _timerTargetReleased = YES;
         [_timerTarget release];

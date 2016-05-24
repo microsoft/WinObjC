@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAAAppServiceRequest, WAAAppServiceDeferral, WAAAppServiceResponse, WAAAppServiceConnection, WAAAppServiceRequestReceivedEventArgs,
     WAAAppServiceClosedEventArgs, WAAAppServiceTriggerDetails, WAAAppServiceCatalog;
@@ -56,8 +56,8 @@ enum _WAAAppServiceResponseStatus {
 typedef unsigned WAAAppServiceResponseStatus;
 
 #include "WindowsFoundationCollections.h"
-#include "WindowsFoundation.h"
 #include "WindowsApplicationModel.h"
+#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
 

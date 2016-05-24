@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXDBlockCollection, WUXDInlineCollection, WUXDTextPointer, WUXDTypography, WUXDTextElement, WUXDBlock, WUXDInline,
     WUXDInlineUIContainer, WUXDLineBreak, WUXDParagraph, WUXDRun, WUXDSpan, WUXDBold, WUXDItalic, WUXDUnderline, WUXDHyperlink,
@@ -45,7 +45,6 @@ enum _WUXDUnderlineStyle {
 };
 typedef unsigned WUXDUnderlineStyle;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsUIXamlMedia.h"

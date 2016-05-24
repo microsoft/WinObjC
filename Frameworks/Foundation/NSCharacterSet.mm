@@ -19,353 +19,203 @@
 #import "Foundation/NSCharacterSet.h"
 #import "Foundation/NSMutableCharacterSet.h"
 #import "Foundation/NSMutableString.h"
-#import "unicode/uniset.h"
+#import "CoreFoundation/CoreFoundation.h"
+#import "NSCFCharacterSet.h"
+#import "NSRaise.h"
 
 @implementation NSCharacterSet
 
-// We provide our own accessors so we also have to synthesize the ivar backing our property.
-@synthesize invertedSet = _invertedSet;
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSCharacterSet, NSMutableCharacterSetPrototype);
 
 /**
  @Status Interoperable
-*/
-+ (instancetype)characterSetWithICUCharacterSet:(const char*)chars {
-    NSCharacterSet* ret = [self alloc];
-
-    ret->_icuSet = setWithCharacters(chars);
-    ret->_icuSet->freeze();
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)characterSetWithCharactersInString:(NSString*)str {
-    NSCharacterSet* ret = [self alloc];
-
-    UStringHolder s1(str);
-    UnicodeString& str1 = s1.string();
-    int strLen = str1.length();
-
-    ret->_icuSet = new UnicodeSet();
-
-    for (int i = 0; i < strLen; i++) {
-        ret->_icuSet->add(str1.charAt(i));
-    }
-
-    ret->_icuSet->freeze();
-
-    return [ret autorelease];
-}
-
-static UnicodeSet* setWithCharacters(const char* chars) {
-    int len = strlen(chars);
-
-    UnicodeSet* ret = new UnicodeSet();
-
-    for (int i = 0; i < len; i++) {
-        ret->add(chars[i]);
-    }
-
-    return ret;
-}
-
-/**
- @Status Caveat
- @Notes English characters only
 */
 + (instancetype)alphanumericCharacterSet {
-    return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetAlphaNumeric));
 }
 
 /**
  @Status Interoperable
-*/
-- (instancetype)init {
-    _icuSet = new UnicodeSet();
-
-    return self;
-}
-
-/**
-@Status Stub
-@Notes
 */
 + (instancetype)capitalizedLetterCharacterSet {
-    UNIMPLEMENTED();
-
-    return [[[self alloc] init] autorelease];
-}
-
-/**
- @Status Interoperable
- @Notes English characters only
-*/
-+ (instancetype)uppercaseLetterCharacterSet {
-    return [self characterSetWithICUCharacterSet:"ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetCapitalizedLetter));
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)controlCharacterSet {
-    NSCharacterSet* ret = [self alloc];
-
-    ret->_icuSet = new UnicodeSet();
-    ret->_icuSet->add(0, 0x20);
-    ret->_icuSet->add(0x7F, 0xA0);
-
-    ret->_icuSet->freeze();
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
- @Notes English characters only
-*/
-+ (instancetype)lowercaseLetterCharacterSet {
-    return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyz"];
-}
-
-/**
- @Status Interoperable
- @Notes English characters only
-*/
-+ (instancetype)letterCharacterSet {
-    return [self characterSetWithICUCharacterSet:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"];
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)whitespaceAndNewlineCharacterSet {
-    // Special-case for immutable NSCharacterSet
-    if (self == [NSCharacterSet class]) {
-        static id cachedRet;
-
-        if (cachedRet == nil) {
-            NSCharacterSet* ret = [NSCharacterSet alloc];
-            ret->_icuSet = setWithCharacters(" \t\r\n");
-            ret->_icuSet->freeze();
-            cachedRet = ret;
-        }
-
-        return cachedRet;
-    }
-
-    // Polymorphic creation
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters(" \t\r\n");
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)punctuationCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!\"%'(),-./:;?[\\]{}"];
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetControl));
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)decimalDigitCharacterSet {
-    return [self characterSetWithICUCharacterSet:"0123456789"];
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetDecimalDigit));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)decomposableCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetDecomposable));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)illegalCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetIllegal));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)letterCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetLetter));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)lowercaseLetterCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetLowercaseLetter));
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)newlineCharacterSet {
-    return [self characterSetWithICUCharacterSet:"\r\n"];
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetNewline));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)nonBaseCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetNonBase));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)punctuationCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetPunctuation));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)symbolCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetSymbol));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)uppercaseLetterCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetUppercaseLetter));
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)whitespaceAndNewlineCharacterSet {
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetWhitespaceAndNewline));
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)whitespaceCharacterSet {
-    // Special-case for immutable NSCharacterSet
-    if (self == [NSCharacterSet class]) {
-        static id cachedRet;
-
-        if (cachedRet == nil) {
-            NSCharacterSet* ret = [NSCharacterSet alloc];
-            ret->_icuSet = setWithCharacters(" \t");
-            ret->_icuSet->freeze();
-            cachedRet = ret;
-        }
-
-        return cachedRet;
-    }
-
-    // Polymorphic creation
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = setWithCharacters(" \t");
-    ret->_icuSet->freeze();
-
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
- @Notes This is not the correct character set. There are many more symbols that are used.
-*/
-+ (instancetype)symbolCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!@#$%^&*()-+"];
+    return static_cast<NSCharacterSet*>(CFCharacterSetGetPredefined(kCFCharacterSetWhitespace));
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)URLFragmentAllowedCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+    return static_cast<NSCharacterSet*>(_CFURLComponentsGetURLFragmentAllowedCharacterSet());
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)URLHostAllowedCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789:;=ABCDEFGHIJKLMNOPQRSTUVWXYZ[]_abcdefghijklmnopqrstuvwxyz~"];
+    return static_cast<NSCharacterSet*>(_CFURLComponentsGetURLHostAllowedCharacterSet());
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)URLPasswordAllowedCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+    return static_cast<NSCharacterSet*>(_CFURLComponentsGetURLPasswordAllowedCharacterSet());
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)URLPathAllowedCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!$&'()*+,-./0123456789:=@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+    return static_cast<NSCharacterSet*>(_CFURLComponentsGetURLPathAllowedCharacterSet());
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)URLQueryAllowedCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!$&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+    return static_cast<NSCharacterSet*>(_CFURLComponentsGetURLQueryAllowedCharacterSet());
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)URLUserAllowedCharacterSet {
-    return [self characterSetWithICUCharacterSet:"!$&'()*+,-.0123456789;=ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz~"];
+    return static_cast<NSCharacterSet*>(_CFURLComponentsGetURLUserAllowedCharacterSet());
 }
 
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    assert(_icuSet != NULL);
-    delete _icuSet;
-    [_invertedSet release];
-    [super dealloc];
++ (instancetype)characterSetWithCharactersInString:(NSString*)aString {
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(nullptr, static_cast<CFStringRef>(aString))) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)characterSetWithRange:(NSRange)aRange {
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInRange(nullptr, CFRange{ aRange.location, aRange.length })) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithBitmapRepresentation(nullptr, static_cast<CFDataRef>(data))) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
++ (instancetype)characterSetWithContentsOfFile:(NSString*)path {
+    return [NSCharacterSet characterSetWithBitmapRepresentation:[NSData dataWithContentsOfFile:path]];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)characterIsMember:(unichar)member {
-    if (_icuSet->contains(member)) {
-        return TRUE;
-    }
-    return FALSE;
+    // NSCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isSupersetOfSet:(NSCharacterSet*)set {
-    if (_icuSet->containsAll(*set->_icuSet)) {
-        return TRUE;
-    }
-    return FALSE;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSUInteger)count {
-    return _icuSet->size();
-}
-
-/**
- @Status Interoperable
-*/
-- (unichar)characterAtIndex:(NSUInteger)idx {
-    return _icuSet->charAt(idx);
-}
-
-/**
- @Status Stub
-*/
-+ (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
-    UNIMPLEMENTED();
-
-    NSCharacterSet* ret = [[self alloc] init];
-    ret->_bitmapRepresentation = data;
-    return [ret autorelease];
-}
-
-/**
- @Status Stub
-*/
-+ (instancetype)characterSetWithContentsOfFile:(NSString*)path {
-    UNIMPLEMENTED();
-
-    return [[[self alloc] init] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)characterSetWithRange:(NSRange)range {
-    NSCharacterSet* ret = [self alloc];
-    ret->_icuSet = new UnicodeSet(range.location, range.location + range.length - 1);
-    ret->_icuSet->freeze();
-    return [ret autorelease];
-}
-
-/**
- @Status Stub
-*/
-+ (instancetype)decomposableCharacterSet {
-    UNIMPLEMENTED();
-
-    // There are 220 characters that are in this character set that should not be.
-    // This is also assuming that the character set only includes values < 65535 or 0xffff
-    // Todo: determine a better way of insantiating this set.
-    NSRange decomposeRange;
-
-    decomposeRange.location = 192;
-    decomposeRange.length = 64334;
-    NSCharacterSet* ret = [self characterSetWithRange:decomposeRange];
-    return ret;
-}
-
-/**
- @Status Stub
-*/
-+ (instancetype)illegalCharacterSet {
-    UNIMPLEMENTED();
-
-    return [[[self alloc] init] autorelease];
-}
-
-/**
- @Status Stub
-*/
-+ (instancetype)nonBaseCharacterSet {
-    UNIMPLEMENTED();
-
-    return [[[self alloc] init] autorelease];
+    // NSCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -379,12 +229,10 @@ static UnicodeSet* setWithCharacters(const char* chars) {
  @Status Interoperable
 */
 - (instancetype)mutableCopyWithZone:(NSZone*)zone {
-    NSMutableCharacterSet* copy = [[NSMutableCharacterSet class] allocWithZone:zone];
-    copy->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
+    NSMutableCharacterSet* toRet = [NSMutableCharacterSet new];
+    [toRet formUnionWithCharacterSet:self];
 
-    static_cast<NSCharacterSet*>(copy)->_bitmapRepresentation = [_bitmapRepresentation mutableCopyWithZone:zone];
-
-    return copy;
+    return toRet;
 }
 
 /**
@@ -392,16 +240,8 @@ static UnicodeSet* setWithCharacters(const char* chars) {
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super init]) {
-        _icuSet = new UnicodeSet();
-        NSString* stringSet = [[coder decodeObjectForKey:@"characterSet"] retain];
-
-        const UnicodeString* str1 = new UnicodeString([stringSet UTF8String]);
-        UErrorCode status = U_ZERO_ERROR;
-        _icuSet = new UnicodeSet(*str1, status);
-
-        _icuSet->freeze();
-
-        _bitmapRepresentation = [[coder decodeObjectOfClass:[NSData class] forKey:@"bitmapRepresentation"] retain];
+        self = [[NSCharacterSet
+            characterSetWithBitmapRepresentation:[coder decodeObjectOfClass:[NSData class] forKey:@"bitmapRepresentation"]] retain];
     }
     return self;
 }
@@ -410,14 +250,7 @@ static UnicodeSet* setWithCharacters(const char* chars) {
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UnicodeString* str1 = new UnicodeString();
-    _icuSet->toPattern(*str1, false);
-    std::string utf8String;
-    utf8String = str1->toUTF8String(utf8String);
-    NSString* stringSet = [NSString stringWithCString:utf8String.c_str() encoding:[NSString defaultCStringEncoding]];
-    [coder encodeObject:stringSet forKey:@"characterSet"];
-
-    [coder encodeObject:_bitmapRepresentation forKey:@"bitmapRepresentation"];
+    [coder encodeObject:[self bitmapRepresentation] forKey:@"bitmapRepresentation"];
 }
 
 /**
@@ -431,35 +264,34 @@ static UnicodeSet* setWithCharacters(const char* chars) {
  @Status Interoperable
 */
 - (BOOL)longCharacterIsMember:(UTF32Char)theLongChar {
-    return _icuSet->contains(theLongChar);
+    // NSCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Stub
 */
 - (BOOL)hasMemberInPlane:(uint8_t)thePlane {
-    UNIMPLEMENTED();
-    return false;
+    // NSCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
  */
 - (NSCharacterSet*)invertedSet {
-    @synchronized(self) {
-        if (_invertedSet == nil) {
-            _invertedSet = [[NSCharacterSet alloc] init];
-            _invertedSet->_icuSet = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
-            _invertedSet->_icuSet->complement();
-            _invertedSet->_icuSet->freeze();
+    NSMutableCharacterSet* toRet = [self mutableCopy];
+    [toRet invert];
 
-            // This will prevent a retain cycle:
-            // If the invertedSet property of this invertedSet object is requested then we
-            // simply create a new NSCharacterSet object to hold the inverse and return that.
-            _invertedSet->_invertedSet = nil;
-        }
-        return [[_invertedSet retain] autorelease];
-    }
+    return toRet;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSData*)bitmapRepresentation {
+    // NSCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 @end

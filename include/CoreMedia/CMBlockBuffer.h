@@ -17,7 +17,7 @@
 #pragma once
 
 #import <CoreMedia/CoreMediaExport.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFBase.h>
 
 typedef struct OpaqueCMBlockBuffer* CMBlockBufferRef;

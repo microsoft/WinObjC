@@ -28,6 +28,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\data\misc\icudata.rc" />
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stubdata.c" />

@@ -22,6 +22,9 @@
     <ProjectReference Include="..\..\..\Foundation\dll\Foundation.vcxproj">
       <Project>{86127226-9A6E-439B-A070-420A572AF0C7}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>
@@ -248,6 +251,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSLayoutConstraint.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIApplication.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIViewTest.mm" />
+    <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
     <ClangCompile Include="UIFontTests.mm" />
   </ItemGroup>
   <ItemGroup>

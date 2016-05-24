@@ -28,7 +28,7 @@ static NSString* c_defaultAttributeName = @"defaultAttributeName";
 
 void assertAttributeAt(
     NSAttributedString* aStr, NSString* attrName, id expectedValue, NSUInteger expectedLocation, NSUInteger expectedLength) {
-    NSRange outRange;
+    NSRange outRange{};
 
     id attribute = [aStr attribute:attrName atIndex:expectedLocation effectiveRange:&outRange];
     ASSERT_EQ(expectedValue, attribute);
@@ -214,7 +214,7 @@ TEST(NSAttributedString, ReplaceExpandOuter) {
     ASSERT_OBJCEQ(@"AACCCCBBBA", [aStr string]);
 
     [aStr replaceCharactersInRange:NSMakeRange(0, 10) withString:@"DDDDDDDDDDDD"]; // 12 chars now
-    assertAttributeAt(aStr, c_defaultAttributeName, @"value1", 0, 12);
+    assertAttributeAt(aStr, c_defaultAttributeName, nil, 0, 12);
     ASSERT_OBJCEQ(@"DDDDDDDDDDDD", [aStr string]);
 }
 
@@ -412,7 +412,8 @@ TEST(NSAttributedString, AppendAttributedString) {
 
     [aStr appendAttributedString:aStr2];
 
-    assertAttributeAt(aStr, @"key1", @"value1", 2, 7);
+    assertAttributeAt(aStr, @"key1", @"value1", 2, 4);
+    assertAttributeAt(aStr, @"key1", @"value1", 6, 3);
     assertAttributeAt(aStr, @"key2", @"value2", 6, 3);
     assertAttributeAt(aStr, @"key3", @"value3", 2, 4);
     assertAttributeAt(aStr, @"key3", @"notvalue3", 6, 3);
@@ -446,9 +447,11 @@ TEST(NSAttributedString, InsertAttributedString) {
 
     [aStr insertAttributedString:aStr2 atIndex:5];
 
-    assertAttributeAt(aStr, @"key1", @"value1", 2, 5);
+    assertAttributeAt(aStr, @"key1", @"value1", 2, 3);
+    assertAttributeAt(aStr, @"key1", @"value1", 5, 2);
     assertAttributeAt(aStr, @"key1", @"value1", 8, 1);
-    assertAttributeAt(aStr, @"key2", @"value2", 5, 3);
+    assertAttributeAt(aStr, @"key2", @"value2", 5, 2);
+    assertAttributeAt(aStr, @"key2", @"value2", 7, 1);
     ASSERT_OBJCEQ(@"AAAAAOBJA", [aStr string]);
 }
 
@@ -487,7 +490,8 @@ TEST(NSAttributedString, ReplaceCharactersInRangeWithAttributedString) {
 
     assertAttributeAt(aStr, @"key1", @"value1", 2, 2);
     assertAttributeAt(aStr, @"key1", @"value1", 5, 2);
-    assertAttributeAt(aStr, @"key2", @"value2", 2, 3);
+    assertAttributeAt(aStr, @"key2", @"value2", 2, 2);
+    assertAttributeAt(aStr, @"key2", @"value2", 4, 1);
     ASSERT_OBJCEQ(@"AAOBJAA", [aStr string]);
 }
 
@@ -503,8 +507,10 @@ TEST(NSAttributedString, SetAttributedString) {
     [aStr setAttributedString:aStr2];
 
     assertAttributeAt(aStr, @"key1", @"value1", 0, 2);
-    assertAttributeAt(aStr, @"key2", @"value2", 0, 3);
-    assertAttributeAt(aStr, @"key3", nil, 0, 3);
+    assertAttributeAt(aStr, @"key2", @"value2", 0, 2);
+    assertAttributeAt(aStr, @"key2", @"value2", 2, 1);
+    assertAttributeAt(aStr, @"key3", nil, 0, 2);
+    assertAttributeAt(aStr, @"key3", nil, 2, 1);
     ASSERT_OBJCEQ(@"OBJ", [aStr string]);
 }
 
@@ -529,7 +535,8 @@ TEST(NSAttributedString, AttributedSubstringFromRange) {
     NSAttributedString* testString = [aStr attributedSubstringFromRange:NSMakeRange(1, 3)];
 
     ASSERT_OBJCEQ(@"AAA", [testString string]);
-    assertAttributeAt(testString, @"key1", @"value1", 1, 2);
+    assertAttributeAt(testString, @"key1", @"value1", 1, 1);
+    assertAttributeAt(testString, @"key1", @"value1", 2, 1);
     assertAttributeAt(testString, @"key2", @"value2", 2, 1);
 }
 

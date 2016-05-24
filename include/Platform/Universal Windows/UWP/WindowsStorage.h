@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSStorageLibrary, WSStorageFolder, WSKnownFolders, WSStorageFile, WSDownloadsFolder, WSStreamedFileDataRequest,
     WSStorageStreamTransaction, WSStorageProvider, WSFileIO, WSPathIO, WSCachedFileManager, WSSystemAudioProperties, WSSystemGPSProperties,
@@ -128,9 +128,9 @@ typedef unsigned WSApplicationDataCreateDisposition;
 
 #include "WindowsStorageSearch.h"
 #include "WindowsFoundation.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsStorageFileProperties.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageProvider.h"
 #include "WindowsSystem.h"
 // Windows.Storage.ApplicationDataSetVersionHandler

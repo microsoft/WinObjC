@@ -25,7 +25,6 @@
 
 #include <algorithm>
 #include <mach/mach_defs.h>
-#include <mach/mach_time.h>
 #include "LoggingNative.h"
 
 static const wchar_t* TAG = L"OSMisc";
@@ -92,28 +91,3 @@ extern "C" int sysctlbyname(const char* name, void* out, size_t* outSize, const 
     return -1;
 }
 
-static int64_t _mach_get_timebase() {
-    LARGE_INTEGER performanceFrequency;
-    FAIL_FAST_IF(0 == QueryPerformanceFrequency(&performanceFrequency));
-    return performanceFrequency.QuadPart;
-}
-
-static int64_t _mach_frequency = _mach_get_timebase();
-
-extern "C" uint64_t mach_absolute_time() {
-    LARGE_INTEGER current;
-    FAIL_FAST_IF(0 == QueryPerformanceCounter(&current));
-
-    return static_cast<uint64_t>(current.QuadPart);
-}
-
-extern "C" kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
-    //  mach_absolute_time uses QueryPerformanceCounter which returns
-    //  the absolute number of cycles since boot in microseconds.
-    //
-    // Return a timebase representing the conversion between QPC counts and nanoseconds:
-    // 1,000,000,000 nanoseconds per every n counts.
-    *tinfo = { 1000000000, _mach_frequency };
-
-    return 0;
-}

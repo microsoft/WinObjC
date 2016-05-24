@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXAPAutomationPeer, WUXAPAutomationPeerAnnotation, WUXAPFrameworkElementAutomationPeer, WUXAPButtonBaseAutomationPeer,
     WUXAPCaptureElementAutomationPeer, WUXAPComboBoxItemAutomationPeer, WUXAPFlipViewItemAutomationPeer, WUXAPGroupItemAutomationPeer,
@@ -262,7 +262,6 @@ typedef unsigned WUXAPPatternInterface;
 #include "WindowsUIXamlAutomationProvider.h"
 #include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUIXamlControls.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIXamlAutomation.h"
 #include "WindowsUIXaml.h"

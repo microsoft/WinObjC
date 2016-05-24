@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAUUserDataAccount, WAUUserDataAccountStore, WAUUserDataAccountManager;
 @protocol WAUIUserDataAccount
@@ -48,7 +48,6 @@ enum _WAUUserDataAccountContentKinds {
 typedef unsigned WAUUserDataAccountContentKinds;
 
 #include "WindowsApplicationModelContacts.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsApplicationModelEmail.h"

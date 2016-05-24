@@ -17,7 +17,7 @@
 
 #import <CoreVideo/CoreVideoExport.h>
 #import <CoreFoundation/CFBase.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreVideo/CVImageBuffer.h>
 
 @protocol MTLTexture;

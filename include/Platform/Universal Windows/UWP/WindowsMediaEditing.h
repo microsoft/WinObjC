@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMEMediaOverlay, WMEMediaClip, WMEEmbeddedAudioTrack, WMEBackgroundAudioTrack, WMEMediaComposition, WMEMediaOverlayLayer;
 @protocol WMEIMediaClip
@@ -43,13 +43,12 @@ typedef unsigned WMEMediaTrimmingPreference;
 
 #include "WindowsMediaEffects.h"
 #include "WindowsFoundation.h"
-#include "WindowsStorageStreams.h"
-#include "WindowsMediaTranscoding.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsMediaMediaProperties.h"
+#include "WindowsMediaCore.h"
 #include "WindowsGraphicsImaging.h"
 #include "WindowsStorage.h"
-#include "WindowsMediaCore.h"
+#include "WindowsStorageStreams.h"
+#include "WindowsMediaTranscoding.h"
 #include "WindowsUI.h"
 #include "WindowsGraphicsDirectXDirect3D11.h"
 

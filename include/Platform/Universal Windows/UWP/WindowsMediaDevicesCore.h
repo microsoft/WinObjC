@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMDCCameraIntrinsics, WMDCVariablePhotoSequenceController, WMDCFrameExposureCapabilities, WMDCFrameExposureCompensationCapabilities,
     WMDCFrameIsoSpeedCapabilities, WMDCFrameFocusCapabilities, WMDCFrameFlashCapabilities, WMDCFrameControlCapabilities,
@@ -42,7 +42,6 @@ typedef unsigned WMDCFrameFlashMode;
 #include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
 #include "WindowsMediaMediaProperties.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

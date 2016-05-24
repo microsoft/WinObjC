@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNSDDnssdServiceWatcher, WNSDDnssdServiceInstance, WNSDDnssdRegistrationResult, WNSDDnssdServiceInstanceCollection;
 @protocol WNSDIDnssdServiceWatcher
@@ -48,7 +48,6 @@ typedef unsigned WNSDDnssdServiceWatcherStatus;
 #include "WindowsFoundation.h"
 #include "WindowsNetworkingSockets.h"
 #include "WindowsNetworking.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsNetworkingConnectivity.h"
 
 #import <Foundation/Foundation.h>

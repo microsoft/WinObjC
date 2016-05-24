@@ -61,7 +61,7 @@ bool isSupportedLocaleAndTimeZone(NSLocale* locale, NSTimeZone* timezone) {
     return supportedTestCase;
 }
 
-TEST(Foundation, NSDateFormatter) {
+TEST(NSDateFormatter, NSDateFormatter) {
     NSLocale* currentLocale = [NSLocale currentLocale];
     NSTimeZone* systemTimeZone = [NSTimeZone systemTimeZone];
 
@@ -83,18 +83,7 @@ TEST(Foundation, NSDateFormatter) {
     // Need to offset the expected constant date by our system time offset.
     // A constant date should be used. 1970-01-01 00:00:00 +0000, This should never change.
     NSDate* someConstantDate = [NSDate dateWithTimeIntervalSince1970:(-1 * [timeZoneToTest secondsFromGMT])];
-
     NSString* formattedDateString;
-    for (int i = 0; i < 5; i++) {
-        formattedDateString = [NSDateFormatter _formatDateForLocale:someConstantDate
-                                                             locale:localeToTest
-                                                          dateStyle:((NSDateFormatterStyle)i)
-                                                          timeStyle:((NSDateFormatterStyle)i)
-                                                           timeZone:timeZoneToTest];
-
-        testSpecificFormat(i, formattedDateString, testCase);
-    }
-
     NSDateFormatter* dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 
     // Test setting properties individually.

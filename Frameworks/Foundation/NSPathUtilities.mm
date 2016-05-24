@@ -180,8 +180,7 @@ NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearch
  @Status Interoperable
 */
 NSString* NSHomeDirectory(void) {
-    // We expect this call to only return a single directory
-    return [NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, 0, FALSE) lastObject];
+    return [NSString stringWithFormat:@"%hs", EbrGetWritableFolder()];
 }
 
 NSString* temporaryDirectory = @"/tmp";

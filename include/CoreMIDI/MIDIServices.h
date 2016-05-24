@@ -117,6 +117,9 @@ enum {
     kMIDIMsgIOError = 7
 };
 
+typedef UInt64 ByteCount;
+typedef UInt64 ItemCount;
+
 COREMIDI_EXPORT OSStatus
 MIDIInputPortCreate(MIDIClientRef client, CFStringRef portName, MIDIReadProc readProc, void* refCon, MIDIPortRef* outPort) STUB_METHOD;
 COREMIDI_EXPORT OSStatus MIDIOutputPortCreate(MIDIClientRef client, CFStringRef portName, MIDIPortRef* outPort) STUB_METHOD;

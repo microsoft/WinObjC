@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGIBitmapTransform, WGIBitmapTypedValue, WGIBitmapPropertySet, WGIBitmapPropertiesView, WGIBitmapProperties, WGIPixelDataProvider,
     WGIImageStream, WGIBitmapFrame, WGIBitmapCodecInformation, WGIBitmapDecoder, WGIBitmapEncoder, WGIBitmapBuffer, WGISoftwareBitmap;
@@ -135,7 +135,6 @@ typedef unsigned WGIBitmapBufferAccessMode;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsGraphicsDirectXDirect3D11.h"
 
 #import <Foundation/Foundation.h>
