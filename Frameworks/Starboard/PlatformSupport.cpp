@@ -27,7 +27,7 @@
 
 #include "Platform/EbrPlatform.h"
 #include "Starboard.h"
-
+#include <pthread.h>
 #include "pevents.h"
 #include "PathMapper.h"
 #include "LoggingNative.h"
@@ -325,9 +325,9 @@ int EbrIOFile::Close() {
 
 static EbrFile* _openFiles[MAX_OPEN_EBRFILES];
 static int EbrFileHead = 0;
-static EbrLock _EbrFilesLock = EBRLOCK_INITIALIZE;
+static pthread_mutex_t _EbrFilesLock = PTHREAD_MUTEX_INITIALIZER;
 EbrFile* EbrAllocFile(EbrFile* ioInterface) {
-    EbrLockEnter(_EbrFilesLock);
+    pthread_mutex_lock(&_EbrFilesLock);
     int start = EbrFileHead;
 
     do {
@@ -335,7 +335,7 @@ EbrFile* EbrAllocFile(EbrFile* ioInterface) {
             _openFiles[EbrFileHead] = ioInterface;
             _openFiles[EbrFileHead]->idx = EbrFileHead;
 
-            EbrLockLeave(_EbrFilesLock);
+            pthread_mutex_unlock(&_EbrFilesLock);
             return _openFiles[EbrFileHead];
         }
 
@@ -382,57 +382,6 @@ int EbrCompareExchange(int volatile* Destination, int Exchange, int Comperand) {
 void EbrSleep(__int64 nanoseconds) {
     EbrBlockIfBackground();
     Sleep((DWORD)(nanoseconds / 1000000LL));
-}
-
-void EbrLockInit(EbrLock* pLock) {
-    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)IwMalloc(sizeof(CRITICAL_SECTION));
-
-    InitializeCriticalSectionEx(pCrit, 0, 0);
-
-    *pLock = (EbrLock)pCrit;
-}
-
-static void EbrLockInitializeOnce(EbrLock& pLock) {
-    for (;;) {
-        DWORD curValue = EbrCompareExchange((volatile int*)&pLock, EBRLOCK_INITIALIZING, EBRLOCK_INITIALIZE);
-        if (curValue == EBRLOCK_INITIALIZING) {
-            EbrSleep(10);
-            continue;
-        }
-        if (curValue == EBRLOCK_INITIALIZE) {
-            EbrLockInit(&pLock);
-        }
-        break;
-    }
-}
-
-void EbrLockEnter(EbrLock& pLock) {
-    EbrLockInitializeOnce(pLock);
-    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)pLock;
-
-    EnterCriticalSection(pCrit);
-}
-
-bool EbrLockTryEnter(EbrLock& pLock) {
-    EbrLockInitializeOnce(pLock);
-    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)pLock;
-
-    BOOL ret = TryEnterCriticalSection(pCrit);
-
-    return ret;
-}
-
-void EbrLockLeave(EbrLock pLock) {
-    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)pLock;
-
-    LeaveCriticalSection(pCrit);
-}
-
-void EbrLockDestroy(EbrLock pLock) {
-    CRITICAL_SECTION* pCrit = (CRITICAL_SECTION*)pLock;
-
-    DeleteCriticalSection(pCrit);
-    IwFree(pCrit);
 }
 
 #define PTW32_TIMESPEC_TO_FILETIME_OFFSET (((LONGLONG)27111902 << 32) + (LONGLONG)3577643008)
