@@ -15,13 +15,15 @@
 //******************************************************************************
 
 #import <StubReturn.h>
-#include "Starboard.h"
-#include "Foundation/NSString.h"
-#include "Foundation/NSThread.h"
-#include "QuartzCore/CATransaction.h"
-#include "QuartzCore/CABasicAnimation.h"
-#include "CALayerInternal.h"
-#include "LoggingNative.h"
+#import "Starboard.h"
+#import "Foundation/NSString.h"
+#import "Foundation/NSThread.h"
+#import "QuartzCore/CATransaction.h"
+#import "QuartzCore/CABasicAnimation.h"
+#import "CALayerInternal.h"
+#import "LoggingNative.h"
+
+#import "CACompositor.h"
 
 static const wchar_t* TAG = L"CATransaction";
 
@@ -34,7 +36,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 
 @implementation CATransaction {
     CATransaction* _parent;
-    DisplayTransaction* _transactionQueue;
+    std::shared_ptr<DisplayTransaction> _transactionQueue;
 
     BOOL _disableActions;
     double _duration;
@@ -196,7 +198,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
                                           newValue);
 }
 
-+ (DisplayTransaction*)_currentDisplayTransaction {
++ (std::shared_ptr<DisplayTransaction>)_currentDisplayTransaction {
     return [self _currentTransaction]->_transactionQueue;
 }
 
@@ -252,7 +254,7 @@ __declspec(thread) CATransaction* _curTransaction, *_rootTransaction;
 { GetCACompositor()->addAnimation([self _currentTransaction]->_transactionQueue, layer, anim, key); }
 
 + (void)_removeAnimationFromLayer:(CALayer*)layer animation:(DisplayAnimation*)anim {
-    GetCACompositor()->removeAnimationRaw([self _currentTransaction]->_transactionQueue, [layer _priv]->_presentationNode, anim);
+    UNIMPLEMENTED_WITH_MSG("_removeAnimationFromLayer not currently supported.");
 }
 
 /**

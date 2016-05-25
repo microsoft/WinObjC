@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WARCResourceMap, WARCResourceContext, WARCNamedResource, WARCResourceManager, WARCResourceQualifier, WARCResourceCandidate,
     WARCResourceMapIterator, WARCResourceMapMapView, WARCResourceMapMapViewIterator, WARCResourceQualifierObservableMap,
     WARCResourceQualifierMapView, WARCResourceQualifierVectorView, WARCResourceCandidateVectorView, WARCResourceContextLanguagesVectorView;
@@ -82,18 +83,18 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceContext : RTObject
++ (void)setGlobalQualifierValueWithPersistence:(NSString*)key
+                                         value:(NSString*)value
+                                   persistence:(WARCResourceQualifierPersistence)persistence;
++ (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
 + (WARCResourceContext*)getForCurrentView;
 + (void)setGlobalQualifierValue:(NSString*)key value:(NSString*)value;
 + (void)resetGlobalQualifierValues;
 + (void)resetGlobalQualifierValuesForSpecifiedQualifiers:(id<NSFastEnumeration> /* NSString * */)qualifierNames;
 + (WARCResourceContext*)getForViewIndependentUse;
-+ (void)setGlobalQualifierValueWithPersistence:(NSString*)key
-                                         value:(NSString*)value
-                                   persistence:(WARCResourceQualifierPersistence)persistence;
-+ (WARCResourceContext*)createMatchingContext:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
 + (instancetype)make ACTIVATOR;
-@property (retain) NSArray* languages;
-@property (readonly) NSMutableDictionary<RTObservableCollection>* qualifierValues;
+@property (retain) NSArray* /* NSString * */ languages;
+@property (readonly) NSMutableDictionary<RTObservableCollection>* /* NSString *, NSString * */ qualifierValues;
 - (void)reset;
 - (void)resetQualifierValues:(id<NSFastEnumeration> /* NSString * */)qualifierNames;
 - (void)overrideToMatch:(id<NSFastEnumeration> /* WARCResourceQualifier* */)result;
@@ -108,12 +109,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCNamedResource : RTObject
-@property (readonly) NSArray* candidates;
+@property (readonly) NSArray* /* WARCResourceCandidate* */ candidates;
 @property (readonly) WFUri* uri;
 - (WARCResourceCandidate*)resolve;
 - (WARCResourceCandidate*)resolveForContext:(WARCResourceContext*)resourceContext;
-- (NSArray*)resolveAll;
-- (NSArray*)resolveAllForContext:(WARCResourceContext*)resourceContext;
+- (NSArray* /* WARCResourceCandidate* */)resolveAll;
+- (NSArray* /* WARCResourceCandidate* */)resolveAllForContext:(WARCResourceContext*)resourceContext;
 @end
 
 #endif // __WARCNamedResource_DEFINED__
@@ -125,14 +126,16 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WARCResourceManager : RTObject
 + (BOOL)isResourceReference:(NSString*)resourceReference;
-@property (readonly) NSDictionary* allResourceMaps;
+@property (readonly) NSDictionary* /* NSString *, WARCResourceMap* */ allResourceMaps;
 @property (readonly) WARCResourceContext* defaultContext;
 @property (readonly) WARCResourceMap* mainResourceMap;
 + (WARCResourceManager*)current;
 - (void)loadPriFiles:(id<NSFastEnumeration> /* RTObject<WSIStorageFile>* */)files;
 - (void)unloadPriFiles:(id<NSFastEnumeration> /* RTObject<WSIStorageFile>* */)files;
-- (NSArray*)getAllNamedResourcesForPackage:(NSString*)packageName resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
-- (NSArray*)getAllSubtreesForPackage:(NSString*)packageName resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
+- (NSArray* /* WARCNamedResource* */)getAllNamedResourcesForPackage:(NSString*)packageName
+                                                 resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
+- (NSArray* /* WARCResourceMap* */)getAllSubtreesForPackage:(NSString*)packageName
+                                         resourceLayoutInfo:(WARCResourceLayoutInfo*)resourceLayoutInfo;
 @end
 
 #endif // __WARCResourceManager_DEFINED__
@@ -161,7 +164,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isDefault;
 @property (readonly) BOOL isMatch;
 @property (readonly) BOOL isMatchAsDefault;
-@property (readonly) NSArray* qualifiers;
+@property (readonly) NSArray* /* WARCResourceQualifier* */ qualifiers;
 @property (readonly) NSString* valueAsString;
 - (void)getValueAsFileAsyncWithSuccess:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (NSString*)getQualifierValue:(NSString*)qualifierName;
@@ -176,7 +179,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceMapIterator : RTObject
-@property (readonly) RTKeyValuePair* current;
+@property (readonly) RTKeyValuePair* /* NSString *, WARCNamedResource* */ current;
 @property (readonly) BOOL hasCurrent;
 // Could not find base class
 // Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.NamedResource>>
@@ -209,7 +212,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WARCResourceMapMapViewIterator : RTObject
-@property (readonly) RTKeyValuePair* current;
+@property (readonly) RTKeyValuePair* /* NSString *, WARCResourceMap* */ current;
 @property (readonly) BOOL hasCurrent;
 // Could not find base class
 // Windows.Foundation.Collections.IIterator`1<Windows.Foundation.Collections.IKeyValuePair`2<String,Windows.ApplicationModel.Resources.Core.ResourceMap>>

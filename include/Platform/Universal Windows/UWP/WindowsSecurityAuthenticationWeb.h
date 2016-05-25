@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSAWWebAuthenticationResult, WSAWWebAuthenticationBroker;
 @protocol WSAWIWebAuthenticationResult
 , WSAWIWebAuthenticationBrokerStatics, WSAWIWebAuthenticationBrokerStatics2;

@@ -34,6 +34,8 @@
 #import "UIInterface.h"
 #import "LoggingNative.h"
 #import "UIDeviceInternal.h"
+#import <MainDispatcher.h>
+#import <CACompositor.h>
 
 static const wchar_t* TAG = L"UIApplicationMain";
 
@@ -252,13 +254,6 @@ int UIApplicationMainInit(
         rootController = nil;
     }
 
-    // TODO::
-    // bug-nithishm-03172016 -  Sending applicationDidBecomeActive as part of application launch until 6910008 is root caused.
-    if ([curDelegate respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-        [curDelegate applicationDidBecomeActive:uiApplication];
-    }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidBecomeActiveNotification" object:uiApplication];
-
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setOrientation:) withObject:0 waitUntilDone:FALSE];
     [[UIDevice currentDevice] performSelectorOnMainThread:@selector(_setInitialOrientation) withObject:0 waitUntilDone:FALSE];
     g_uiMainRunning = true;
@@ -276,29 +271,12 @@ int UIApplicationMainInit(
         [curWindow setHidden:FALSE];
     }
 
-    //  Cycle through the runloop once before releasing our pool,
-    //  so that any layouts or selectors get a chance to retain before
-    //  objects get destroyed
-    [runLoop runMode:@"kCFRunLoopDefaultMode" beforeDate:[NSDate distantPast]];
     [pool release];
 
     return 0;
 }
 
-/**
- @Public No
-*/
-int UIApplicationMainLoop() {
-    [[NSThread currentThread] _associateWithMainThread];
-    NSRunLoop* runLoop = [NSRunLoop currentRunLoop];
-
-    for (;;) {
-        [runLoop run];
-        TraceWarning(TAG, L"Warning: CFRunLoop stopped");
-        if (_doShutdown) {
-            break;
-        }
-    }
+void _UIApplicationShutdown() {
     UIBecomeInactive();
     if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(applicationWillTerminate:)]) {
         [[[UIApplication sharedApplication] delegate] applicationWillTerminate:[UIApplication sharedApplication]];
@@ -309,14 +287,12 @@ int UIApplicationMainLoop() {
     TraceVerbose(TAG, L"Exiting uncleanly.");
     EbrShutdownAV();
     [outerPool release];
-
-    return 0;
 }
 
-void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
+extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible) {
     [[UIApplication sharedApplication] _sendActiveStatus:((isVisible) ? YES : NO)];
 }
 
-void UIApplicationMainHandleHighMemoryUsageEvent() {
+extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
 }

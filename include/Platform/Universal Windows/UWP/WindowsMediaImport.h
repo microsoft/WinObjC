@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMIPhotoImportSource, WMIPhotoImportOperation, WMIPhotoImportManager, WMIPhotoImportSession, WMIPhotoImportFindItemsResult,
     WMIPhotoImportImportItemsResult, WMIPhotoImportDeleteImportedItemsFromSourceResult, WMIPhotoImportStorageMedium, WMIPhotoImportSidecar,
     WMIPhotoImportVideoSegment, WMIPhotoImportItem, WMIPhotoImportSelectionChangedEventArgs, WMIPhotoImportItemImportedEventArgs;
@@ -154,20 +155,20 @@ WINRT_EXPORT
 + (void)fromFolderAsync:(RTObject<WSIStorageFolder>*)sourceRootFolder
                 success:(void (^)(WMIPhotoImportSource*))success
                 failure:(void (^)(NSError*))failure;
-@property (readonly) id batteryLevelPercent;
+@property (readonly) id /* unsigned int */ batteryLevelPercent;
 @property (readonly) NSString* connectionProtocol;
 @property (readonly) WMIPhotoImportConnectionTransport connectionTransport;
-@property (readonly) id dateTime;
+@property (readonly) id /* WFDateTime* */ dateTime;
 @property (readonly) NSString* Description;
 @property (readonly) NSString* displayName;
 @property (readonly) NSString* id;
-@property (readonly) id isLocked;
+@property (readonly) id /* BOOL */ isLocked;
 @property (readonly) BOOL isMassStorage;
 @property (readonly) NSString* manufacturer;
 @property (readonly) NSString* model;
 @property (readonly) WMIPhotoImportPowerSource powerSource;
 @property (readonly) NSString* serialNumber;
-@property (readonly) NSArray* storageMedia;
+@property (readonly) NSArray* /* WMIPhotoImportStorageMedium* */ storageMedia;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (readonly) WMIPhotoImportSourceType type;
 - (WMIPhotoImportSession*)createImportSession;
@@ -181,9 +182,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMIPhotoImportOperation : RTObject
-;
-;
-;
+// Failed to generate property ContinueDeletingImportedItemsFromSourceAsync (Cannot marshal
+// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportDeleteImportedItemsFromSourceResult,Double>)
+// Failed to generate property ContinueFindingItemsAsync (Cannot marshal
+// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportFindItemsResult,UInt32>)
+// Failed to generate property ContinueImportingItemsAsync (Cannot marshal
+// Windows.Foundation.IAsyncOperationWithProgress`2<Windows.Media.Import.PhotoImportImportItemsResult,Windows.Media.Import.PhotoImportProgress>)
 @property (readonly) WMIPhotoImportSession* session;
 @property (readonly) WMIPhotoImportStage stage;
 @end
@@ -197,8 +201,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportManager : RTObject
 + (void)isSupportedAsyncWithSuccess:(void (^)(BOOL))success failure:(void (^)(NSError*))failure;
-+ (void)findAllSourcesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-+ (NSArray*)getPendingOperations;
++ (void)findAllSourcesAsyncWithSuccess:(void (^)(NSArray* /* WMIPhotoImportSource* */))success failure:(void (^)(NSError*))failure;
++ (NSArray* /* WMIPhotoImportOperation* */)getPendingOperations;
 @end
 
 #endif // __WMIPhotoImportManager_DEFINED__
@@ -241,7 +245,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMIPhotoImportFindItemsResult : RTObject
-@property (readonly) NSArray* foundItems;
+@property (readonly) NSArray* /* WMIPhotoImportItem* */ foundItems;
 @property (readonly) BOOL hasSucceeded;
 @property (readonly) WMIPhotoImportImportMode importMode;
 @property (readonly) unsigned int photosCount;
@@ -287,7 +291,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMIPhotoImportImportItemsResult : RTObject
 @property (readonly) BOOL hasSucceeded;
-@property (readonly) NSArray* importedItems;
+@property (readonly) NSArray* /* WMIPhotoImportItem* */ importedItems;
 @property (readonly) unsigned int photosCount;
 @property (readonly) uint64_t photosSizeInBytes;
 @property (readonly) WMIPhotoImportSession* session;
@@ -312,7 +316,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMIPhotoImportDeleteImportedItemsFromSourceResult : RTObject
-@property (readonly) NSArray* deletedItems;
+@property (readonly) NSArray* /* WMIPhotoImportItem* */ deletedItems;
 @property (readonly) BOOL hasSucceeded;
 @property (readonly) unsigned int photosCount;
 @property (readonly) uint64_t photosSizeInBytes;
@@ -369,7 +373,7 @@ WINRT_EXPORT
 @property (readonly) WFDateTime* date;
 @property (readonly) NSString* name;
 @property (readonly) WMIPhotoImportSidecar* sibling;
-@property (readonly) NSArray* sidecars;
+@property (readonly) NSArray* /* WMIPhotoImportSidecar* */ sidecars;
 @property (readonly) uint64_t sizeInBytes;
 @end
 
@@ -384,15 +388,15 @@ WINRT_EXPORT
 @property BOOL isSelected;
 @property (readonly) WMIPhotoImportContentType contentType;
 @property (readonly) WFDateTime* date;
-@property (readonly) NSArray* deletedFileNames;
-@property (readonly) NSArray* importedFileNames;
+@property (readonly) NSArray* /* NSString * */ deletedFileNames;
+@property (readonly) NSArray* /* NSString * */ importedFileNames;
 @property (readonly) uint64_t itemKey;
 @property (readonly) NSString* name;
 @property (readonly) WMIPhotoImportSidecar* sibling;
-@property (readonly) NSArray* sidecars;
+@property (readonly) NSArray* /* WMIPhotoImportSidecar* */ sidecars;
 @property (readonly) uint64_t sizeInBytes;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
-@property (readonly) NSArray* videoSegments;
+@property (readonly) NSArray* /* WMIPhotoImportVideoSegment* */ videoSegments;
 @end
 
 #endif // __WMIPhotoImportItem_DEFINED__

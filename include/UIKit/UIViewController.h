@@ -115,7 +115,7 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic) id<UIViewControllerTransitioningDelegate> transitioningDelegate STUB_PROPERTY;
 @property (readonly, copy, nonatomic) NSString* nibName;
 @property (readonly, nonatomic, strong) NSExtensionContext* extensionContext STUB_PROPERTY;
-@property (readonly, nonatomic, strong) UISearchDisplayController* searchDisplayController STUB_PROPERTY;
+@property (readonly, nonatomic, strong) UISearchDisplayController* searchDisplayController;
 @property (readonly, nonatomic, strong) UIView* viewIfLoaded STUB_PROPERTY;
 
 @property (copy) UIBezierPath* accessibilityPath;
@@ -152,7 +152,7 @@ UIKIT_EXPORT_CLASS
 - (NSArray*)allowedChildViewControllersForUnwindingFromSource:(UIStoryboardUnwindSegueSource*)source STUB_METHOD;
 - (NSArray*)previewActionItems STUB_METHOD;
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations;
-- (UIBarButtonItem*)editButtonItem STUB_METHOD;
+- (UIBarButtonItem*)editButtonItem;
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation;
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation STUB_METHOD;
 - (UIStatusBarStyle)preferredStatusBarStyle STUB_METHOD;
@@ -209,7 +209,7 @@ UIKIT_EXPORT_CLASS
                             duration:(NSTimeInterval)duration
                              options:(UIViewAnimationOptions)options
                           animations:(void (^)(void))animations
-                          completion:(void (^)(BOOL))completion STUB_METHOD;
+                          completion:(void (^)(BOOL))completion;
 - (void)unregisterForPreviewingWithContext:(id<UIViewControllerPreviewing>)previewing STUB_METHOD;
 - (void)unwindForSegue:(UIStoryboardSegue*)unwindSegue towardsViewController:(UIViewController*)subsequentVC STUB_METHOD;
 - (void)updateViewConstraints;

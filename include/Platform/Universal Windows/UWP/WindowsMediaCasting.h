@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMCCastingSource, WMCCastingConnectionErrorOccurredEventArgs, WMCCastingDevice, WMCCastingConnection,
     WMCCastingDeviceSelectedEventArgs, WMCCastingDevicePickerFilter, WMCCastingDevicePicker;
 @protocol WMCICastingSource
@@ -161,7 +162,7 @@ WINRT_EXPORT
 @property BOOL supportsVideo;
 @property BOOL supportsPictures;
 @property BOOL supportsAudio;
-@property (readonly) NSMutableArray* supportedCastingSources;
+@property (readonly) NSMutableArray* /* WMCCastingSource* */ supportedCastingSources;
 @end
 
 #endif // __WMCCastingDevicePickerFilter_DEFINED__

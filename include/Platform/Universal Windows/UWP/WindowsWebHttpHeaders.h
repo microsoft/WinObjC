@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WWHHHttpContentHeaderCollection, WWHHHttpRequestHeaderCollection, WWHHHttpResponseHeaderCollection,
     WWHHHttpContentDispositionHeaderValue, WWHHHttpContentCodingHeaderValueCollection, WWHHHttpLanguageHeaderValueCollection,
     WWHHHttpContentRangeHeaderValue, WWHHHttpMediaTypeHeaderValue, WWHHHttpMediaTypeWithQualityHeaderValueCollection,
@@ -83,12 +84,12 @@ WINRT_EXPORT
 @interface WWHHHttpContentHeaderCollection : RTObject <WFIStringable>
 + (instancetype)make ACTIVATOR;
 @property (readonly) unsigned int size;
-@property (retain) id contentLength;
+@property (retain) id /* uint64_t */ contentLength;
 @property (retain) RTObject<WSSIBuffer>* contentMD5;
 @property (retain) WFUri* contentLocation;
 @property (retain) WWHHHttpContentDispositionHeaderValue* contentDisposition;
-@property (retain) id lastModified;
-@property (retain) id expires;
+@property (retain) id /* WFDateTime* */ lastModified;
+@property (retain) id /* WFDateTime* */ expires;
 @property (retain) WWHHHttpMediaTypeHeaderValue* contentType;
 @property (retain) WWHHHttpContentRangeHeaderValue* contentRange;
 @property (readonly) WWHHHttpContentCodingHeaderValueCollection* contentEncoding;
@@ -126,11 +127,11 @@ WINRT_EXPORT
 @property (retain) WWHHHttpCredentialsHeaderValue* proxyAuthorization;
 @property (retain) NSString* from;
 @property (retain) WFUri* referer;
-@property (retain) id ifUnmodifiedSince;
-@property (retain) id date;
+@property (retain) id /* WFDateTime* */ ifUnmodifiedSince;
+@property (retain) id /* WFDateTime* */ date;
 @property (retain) WNHostName* host;
-@property (retain) id maxForwards;
-@property (retain) id ifModifiedSince;
+@property (retain) id /* unsigned int */ maxForwards;
+@property (retain) id /* WFDateTime* */ ifModifiedSince;
 @property (readonly) WWHHHttpCookiePairHeaderValueCollection* cookie;
 @property (readonly) WWHHHttpMediaTypeWithQualityHeaderValueCollection* accept;
 @property (readonly) WWHHHttpContentCodingWithQualityHeaderValueCollection* acceptEncoding;
@@ -169,9 +170,9 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHHttpResponseHeaderCollection : RTObject <WFIStringable>
 @property (readonly) unsigned int size;
-@property (retain) id date;
+@property (retain) id /* WFDateTime* */ date;
 @property (retain) WFUri* location;
-@property (retain) id age;
+@property (retain) id /* WFTimeSpan* */ age;
 @property (retain) WWHHHttpDateOrDeltaHeaderValue* retryAfter;
 @property (readonly) WWHHHttpMethodHeaderValueCollection* allow;
 @property (readonly) WWHHHttpCacheDirectiveHeaderValueCollection* cacheControl;
@@ -210,12 +211,12 @@ WINRT_EXPORT
 + (WWHHHttpContentDispositionHeaderValue*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input contentDispositionHeaderValue:(WWHHHttpContentDispositionHeaderValue**)contentDispositionHeaderValue;
 + (WWHHHttpContentDispositionHeaderValue*)make:(NSString*)dispositionType ACTIVATOR;
-@property (retain) id size;
+@property (retain) id /* uint64_t */ size;
 @property (retain) NSString* name;
 @property (retain) NSString* fileNameStar;
 @property (retain) NSString* fileName;
 @property (retain) NSString* dispositionType;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 - (NSString*)toString;
 @end
 
@@ -281,9 +282,9 @@ WINRT_EXPORT
 + (WWHHHttpContentRangeHeaderValue*)makeFromRange:(uint64_t)from to:(uint64_t)to ACTIVATOR;
 + (WWHHHttpContentRangeHeaderValue*)makeFromRangeWithLength:(uint64_t)from to:(uint64_t)to length:(uint64_t)length ACTIVATOR;
 @property (retain) NSString* unit;
-@property (readonly) id firstBytePosition;
-@property (readonly) id lastBytePosition;
-@property (readonly) id length;
+@property (readonly) id /* uint64_t */ firstBytePosition;
+@property (readonly) id /* uint64_t */ lastBytePosition;
+@property (readonly) id /* uint64_t */ length;
 - (NSString*)toString;
 @end
 
@@ -300,7 +301,7 @@ WINRT_EXPORT
 + (WWHHHttpMediaTypeHeaderValue*)make:(NSString*)mediaType ACTIVATOR;
 @property (retain) NSString* mediaType;
 @property (retain) NSString* charSet;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 - (NSString*)toString;
 @end
 
@@ -388,7 +389,7 @@ WINRT_EXPORT
 + (BOOL)tryParse:(NSString*)input credentialsHeaderValue:(WWHHHttpCredentialsHeaderValue**)credentialsHeaderValue;
 + (WWHHHttpCredentialsHeaderValue*)makeFromScheme:(NSString*)scheme ACTIVATOR;
 + (WWHHHttpCredentialsHeaderValue*)makeFromSchemeWithToken:(NSString*)scheme token:(NSString*)token ACTIVATOR;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 @property (readonly) NSString* scheme;
 @property (readonly) NSString* token;
 - (NSString*)toString;
@@ -403,10 +404,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WWHHHttpCacheDirectiveHeaderValueCollection : RTObject <WFIStringable>
 @property (readonly) unsigned int size;
-@property (retain) id sharedMaxAge;
-@property (retain) id minFresh;
-@property (retain) id maxStale;
-@property (retain) id maxAge;
+@property (retain) id /* WFTimeSpan* */ sharedMaxAge;
+@property (retain) id /* WFTimeSpan* */ minFresh;
+@property (retain) id /* WFTimeSpan* */ maxStale;
+@property (retain) id /* WFTimeSpan* */ maxAge;
 - (unsigned int)count;
 - (id)objectAtIndex:(unsigned)idx;
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id __unsafe_unretained[])buffer count:(NSUInteger)len;
@@ -600,8 +601,8 @@ WINRT_EXPORT
 @interface WWHHHttpDateOrDeltaHeaderValue : RTObject <WFIStringable>
 + (WWHHHttpDateOrDeltaHeaderValue*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input dateOrDeltaHeaderValue:(WWHHHttpDateOrDeltaHeaderValue**)dateOrDeltaHeaderValue;
-@property (readonly) id date;
-@property (readonly) id delta;
+@property (readonly) id /* WFDateTime* */ date;
+@property (readonly) id /* WFTimeSpan* */ delta;
 - (NSString*)toString;
 @end
 
@@ -634,7 +635,7 @@ WINRT_EXPORT
 + (BOOL)tryParse:(NSString*)input challengeHeaderValue:(WWHHHttpChallengeHeaderValue**)challengeHeaderValue;
 + (WWHHHttpChallengeHeaderValue*)makeFromScheme:(NSString*)scheme ACTIVATOR;
 + (WWHHHttpChallengeHeaderValue*)makeFromSchemeWithToken:(NSString*)scheme token:(NSString*)token ACTIVATOR;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 @property (readonly) NSString* scheme;
 @property (readonly) NSString* token;
 - (NSString*)toString;
@@ -701,7 +702,7 @@ WINRT_EXPORT
 + (WWHHHttpExpectationHeaderValue*)makeFromNameWithValue:(NSString*)name value:(NSString*)value ACTIVATOR;
 @property (retain) NSString* value;
 @property (readonly) NSString* name;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 - (NSString*)toString;
 @end
 
@@ -719,7 +720,7 @@ WINRT_EXPORT
 + (WWHHHttpLanguageRangeWithQualityHeaderValue*)makeFromLanguageRange:(NSString*)languageRange ACTIVATOR;
 + (WWHHHttpLanguageRangeWithQualityHeaderValue*)makeFromLanguageRangeWithQuality:(NSString*)languageRange quality:(double)quality ACTIVATOR;
 @property (readonly) NSString* languageRange;
-@property (readonly) id quality;
+@property (readonly) id /* double */ quality;
 - (NSString*)toString;
 @end
 
@@ -736,10 +737,10 @@ WINRT_EXPORT
     mediaTypeWithQualityHeaderValue:(WWHHHttpMediaTypeWithQualityHeaderValue**)mediaTypeWithQualityHeaderValue;
 + (WWHHHttpMediaTypeWithQualityHeaderValue*)makeFromMediaType:(NSString*)mediaType ACTIVATOR;
 + (WWHHHttpMediaTypeWithQualityHeaderValue*)makeFromMediaTypeWithQuality:(NSString*)mediaType quality:(double)quality ACTIVATOR;
-@property (retain) id quality;
+@property (retain) id /* double */ quality;
 @property (retain) NSString* mediaType;
 @property (retain) NSString* charSet;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 - (NSString*)toString;
 @end
 
@@ -791,7 +792,7 @@ WINRT_EXPORT
 + (WWHHHttpContentCodingWithQualityHeaderValue*)makeFromValue:(NSString*)contentCoding ACTIVATOR;
 + (WWHHHttpContentCodingWithQualityHeaderValue*)makeFromValueWithQuality:(NSString*)contentCoding quality:(double)quality ACTIVATOR;
 @property (readonly) NSString* contentCoding;
-@property (readonly) id quality;
+@property (readonly) id /* double */ quality;
 - (NSString*)toString;
 @end
 
@@ -806,7 +807,7 @@ WINRT_EXPORT
 + (WWHHHttpTransferCodingHeaderValue*)parse:(NSString*)input;
 + (BOOL)tryParse:(NSString*)input transferCodingHeaderValue:(WWHHHttpTransferCodingHeaderValue**)transferCodingHeaderValue;
 + (WWHHHttpTransferCodingHeaderValue*)make:(NSString*)input ACTIVATOR;
-@property (readonly) NSMutableArray* parameters;
+@property (readonly) NSMutableArray* /* WWHHHttpNameValueHeaderValue* */ parameters;
 @property (readonly) NSString* value;
 - (NSString*)toString;
 @end

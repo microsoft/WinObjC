@@ -27,4 +27,19 @@
     return StubReturn();
 }
 
+/**
+ @Status Stub
+*/
+- (void)setDelegate:(id<UINavigationControllerDelegate, UIVideoEditorControllerDelegate>)delegate {
+    UNIMPLEMENTED();
+}
+
+/**
+ @Status Stub
+*/
+- (id<UINavigationControllerDelegate, UIVideoEditorControllerDelegate>)delegate {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
 @end

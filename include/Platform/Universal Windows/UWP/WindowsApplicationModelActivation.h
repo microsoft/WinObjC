@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAASplashScreen, WAALaunchActivatedEventArgs, WAASearchActivatedEventArgs, WAAShareTargetActivatedEventArgs,
     WAAFileActivatedEventArgs, WAAProtocolActivatedEventArgs, WAAProtocolForResultsActivatedEventArgs, WAAFileOpenPickerActivatedEventArgs,
     WAAFileSavePickerActivatedEventArgs, WAACachedFileUpdaterActivatedEventArgs, WAADeviceActivatedEventArgs,
@@ -196,7 +197,7 @@ typedef unsigned WAAActivationKind;
 #define __WAAIFileActivatedEventArgs_DEFINED__
 
 @protocol WAAIFileActivatedEventArgs <WAAIActivatedEventArgs>
-@property (readonly) NSArray* files;
+@property (readonly) NSArray* /* RTObject<WSIStorageItem>* */ files;
 @property (readonly) NSString* verb;
 @end
 
@@ -371,7 +372,7 @@ typedef unsigned WAAActivationKind;
 
 @protocol
     WAAIAppointmentsProviderShowAppointmentDetailsActivatedEventArgs <WAAIAppointmentsProviderActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) id instanceStartDate;
+@property (readonly) id /* WFDateTime* */ instanceStartDate;
 @property (readonly) NSString* localId;
 @property (readonly) NSString* roamingId;
 @end
@@ -424,7 +425,7 @@ typedef unsigned WAAActivationKind;
 #define __WAAIFileOpenPickerContinuationEventArgs_DEFINED__
 
 @protocol WAAIFileOpenPickerContinuationEventArgs <WAAIContinuationActivatedEventArgs, WAAIActivatedEventArgs>
-@property (readonly) NSArray* files;
+@property (readonly) NSArray* /* WSStorageFile* */ files;
 @end
 
 #endif // __WAAIFileOpenPickerContinuationEventArgs_DEFINED__
@@ -586,7 +587,7 @@ WINRT_EXPORT
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
 @property (readonly) int currentlyShownApplicationViewId;
-@property (readonly) NSArray* files;
+@property (readonly) NSArray* /* RTObject<WSIStorageItem>* */ files;
 @property (readonly) NSString* verb;
 @property (readonly) NSString* callerPackageFamilyName;
 @property (readonly) WSSStorageFileQueryResult* neighboringFilesQuery;
@@ -786,7 +787,7 @@ WINRT_EXPORT
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
 @property (readonly) NSString* verb;
-@property (readonly) id instanceStartDate;
+@property (readonly) id /* WFDateTime* */ instanceStartDate;
 @property (readonly) NSString* localId;
 @property (readonly) NSString* roamingId;
 @end
@@ -849,7 +850,7 @@ WINRT_EXPORT
 @property (readonly) WAAApplicationExecutionState previousExecutionState;
 @property (readonly) WAASplashScreen* splashScreen;
 @property (readonly) WFCValueSet* continuationData;
-@property (readonly) NSArray* files;
+@property (readonly) NSArray* /* WSStorageFile* */ files;
 @end
 
 #endif // __WAAFileOpenPickerContinuationEventArgs_DEFINED__

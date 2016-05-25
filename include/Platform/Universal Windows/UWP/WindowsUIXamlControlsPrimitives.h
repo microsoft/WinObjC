@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WUXCPItemsChangedEventArgs, WUXCPLayoutInformation, WUXCPGeneratorPositionHelper, WUXCPProgressRingTemplateSettings,
     WUXCPToggleSwitchTemplateSettings, WUXCPProgressBarTemplateSettings, WUXCPSettingsFlyoutTemplateSettings, WUXCPToolTipTemplateSettings,
     WUXCPFlyoutBase, WUXCPComboBoxTemplateSettings, WUXCPGridViewItemTemplateSettings, WUXCPListViewItemTemplateSettings,
@@ -369,7 +370,7 @@ typedef void (^WUXCPScrollEventHandler)(RTObject* sender, WUXCPScrollEventArgs* 
 - (void)removeHorizontalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addVerticalSnapPointsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -791,7 +792,8 @@ WINRT_EXPORT
 @protocol WXIUIElementOverrides
 - (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration>)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
+                                                                                      boundingRect:(WFRect*)boundingRect;
 @end
 
 #endif // __WXIUIElementOverrides_DEFINED__
@@ -820,7 +822,7 @@ WINRT_EXPORT
 @property BOOL isHoldingEnabled;
 @property WUXIManipulationModes manipulationMode;
 @property (readonly) WFSize* renderSize;
-@property (readonly) NSArray* pointerCaptures;
+@property (readonly) NSArray* /* WUXIPointer* */ pointerCaptures;
 @property (readonly) WFSize* desiredSize;
 @property WUXMElementCompositeMode compositeMode;
 @property (retain) WUXMMTransform3D* transform3D;
@@ -935,7 +937,8 @@ WINRT_EXPORT
 - (void)updateLayout;
 - (WUXAPAutomationPeer*)onCreateAutomationPeer;
 - (void)onDisconnectVisualChildren;
-- (id<NSFastEnumeration>)findSubElementsForTouchTargeting:(WFPoint*)point boundingRect:(WFRect*)boundingRect;
+- (id<NSFastEnumeration> /* id<NSFastEnumeration> < WFPoint* > */)findSubElementsForTouchTargeting:(WFPoint*)point
+                                                                                      boundingRect:(WFRect*)boundingRect;
 - (BOOL)cancelDirectManipulations;
 - (void)startDragAsync:(WUIPointerPoint*)pointerPoint
                success:(void (^)(WADDataPackageOperation))success
@@ -1138,7 +1141,7 @@ WINRT_EXPORT
 - (void)setHorizontalOffset:(double)offset;
 - (void)setVerticalOffset:(double)offset;
 - (WFRect*)makeVisible:(WXUIElement*)visual rectangle:(WFRect*)rectangle;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -1180,7 +1183,7 @@ WINRT_EXPORT
 - (void)setHorizontalOffset:(double)offset;
 - (void)setVerticalOffset:(double)offset;
 - (WFRect*)makeVisible:(WXUIElement*)visual rectangle:(WFRect*)rectangle;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -1710,7 +1713,7 @@ WINRT_EXPORT
 @property (retain) NSString* displayMemberPath;
 @property (readonly) WXCItemContainerGenerator* itemContainerGenerator;
 @property (readonly) WXCItemCollection* items;
-@property (readonly) NSMutableArray<RTObservableCollection>* groupStyle;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* WXCGroupStyle* */ groupStyle;
 @property (readonly) BOOL isGrouping;
 @property (readonly) WXCPanel* itemsPanelRoot;
 + (WXDependencyProperty*)displayMemberPathProperty;
@@ -1756,7 +1759,7 @@ WINRT_EXPORT
 @property (retain) RTObject* selectedValue;
 @property (retain) RTObject* selectedItem;
 @property int selectedIndex;
-@property (retain) id isSynchronizedWithCurrentItem;
+@property (retain) id /* BOOL */ isSynchronizedWithCurrentItem;
 + (WXDependencyProperty*)isSynchronizedWithCurrentItemProperty;
 + (WXDependencyProperty*)selectedIndexProperty;
 + (WXDependencyProperty*)selectedItemProperty;
@@ -1791,7 +1794,7 @@ WINRT_EXPORT
 @interface WUXCPToggleButton : WUXCPButtonBase
 + (instancetype)make ACTIVATOR;
 @property BOOL isThreeState;
-@property (retain) id isChecked;
+@property (retain) id /* BOOL */ isChecked;
 + (WXDependencyProperty*)isCheckedProperty;
 + (WXDependencyProperty*)isThreeStateProperty;
 - (EventRegistrationToken)addCheckedEvent:(WXRoutedEventHandler)del;
@@ -1875,7 +1878,7 @@ WINRT_EXPORT
 @property BOOL shouldLoop;
 @property (retain) RTObject* selectedItem;
 @property int selectedIndex;
-@property (retain) NSMutableArray* items;
+@property (retain) NSMutableArray* /* RTObject* */ items;
 @property int itemWidth;
 @property (retain) WXDataTemplate* itemTemplate;
 @property int itemHeight;
@@ -1905,7 +1908,7 @@ WINRT_EXPORT
 - (void)removeHorizontalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addVerticalSnapPointsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 
@@ -1953,7 +1956,7 @@ WINRT_EXPORT
 - (void)removeHorizontalSnapPointsChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addVerticalSnapPointsChangedEvent:(void (^)(RTObject*, RTObject*))del;
 - (void)removeVerticalSnapPointsChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
+- (NSArray* /* float */)getIrregularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment;
 - (float)getRegularSnapPoints:(WXCOrientation)orientation alignment:(WUXCPSnapPointsAlignment)alignment offset:(float*)offset;
 @end
 

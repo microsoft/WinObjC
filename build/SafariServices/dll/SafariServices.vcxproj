@@ -19,37 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
-      <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
-      <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
+      <Project>{8e79930b-7ef6-4a4e-b46c-efc0a49c55d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
-      <Project>{26DA08DA-D0B9-4579-B168-E7F0A5F20E57}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\UIKit\dll\UIKit.vcxproj">
-      <Project>{8E79930B-7EF6-4A4E-B46C-EFC0A49C55D9}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\StarboardXaml\lib\StarboardXamlLib.vcxproj">
-      <Project>{FBE5FFE4-A9D3-40E3-B9AB-75841D3F8CDD}</Project>
+    <ProjectReference Include="..\..\SafariServices\lib\SafariServicesLib.vcxproj">
+      <Project>{926fbb0b-874f-4f88-84eb-4352d41cf810}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)\dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="StarboardXaml.def" />
+    <None Include="SafariServices.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FB5A4C28-7B19-4800-B933-5EB4C3049F84}</ProjectGuid>
-    <RootNamespace>StarboardXaml</RootNamespace>
+    <ProjectGuid>{85ae5ec2-24a1-4a23-b176-d89b79e85804}</ProjectGuid>
+    <RootNamespace>SafariServices</RootNamespace>
     <AppContainerApplication>true</AppContainerApplication>
     <StarboardBasePath>..\..\..</StarboardBasePath>
-    <OutputName>StarboardXaml</OutputName>
+    <OutputName>SafariServices</OutputName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -59,53 +47,49 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <CompileAsWinRT>true</CompileAsWinRT>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <CompileAsWinRT>true</CompileAsWinRT>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
     <ClCompile>
-      <CompileAsWinRT>true</CompileAsWinRT>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
     <ClCompile>
-      <CompileAsWinRT>true</CompileAsWinRT>
+      <CompileAsWinRT>false</CompileAsWinRT>
     </ClCompile>
     <Link>
-      <ModuleDefinitionFile>StarboardXaml.def</ModuleDefinitionFile>
-      <AdditionalDependencies>ObjCUWP.lib;libdispatch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>SafariServices.def</ModuleDefinitionFile>
+      <AdditionalDependencies>ObjCUWP.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\Frameworks\include</IncludePaths>
       <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions)</AdditionalOptions>
     </ClangCompile>
   </ItemDefinitionGroup>

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDSCCustomSensor, WDSCCustomSensorReading, WDSCCustomSensorReadingChangedEventArgs;
 @protocol WDSCICustomSensorStatics
 , WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
@@ -53,7 +54,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDSCCustomSensorReading : RTObject
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WFDateTime* timestamp;
 @end
 

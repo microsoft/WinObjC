@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WGFLanguageFont, WGFLanguageFontGroup;
 @protocol WGFILanguageFontGroup
 , WGFILanguageFontGroupFactory, WGFILanguageFont;

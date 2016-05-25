@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDEPPnpObjectUpdate, WDEPPnpObjectCollection, WDEPPnpObjectWatcher, WDEPPnpObject;
 @protocol WDEPIPnpObjectUpdate
 , WDEPIPnpObjectWatcher, WDEPIPnpObjectStatics, WDEPIPnpObject;
@@ -50,7 +51,7 @@ typedef unsigned WDEPPnpObjectType;
 WINRT_EXPORT
 @interface WDEPPnpObjectUpdate : RTObject
 @property (readonly) NSString* id;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEPPnpObjectType type;
 @end
 
@@ -120,7 +121,7 @@ WINRT_EXPORT
                             requestedProperties:(id<NSFastEnumeration> /* NSString * */)requestedProperties
                                       aqsFilter:(NSString*)aqsFilter;
 @property (readonly) NSString* id;
-@property (readonly) NSDictionary* properties;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
 @property (readonly) WDEPPnpObjectType type;
 - (void)update:(WDEPPnpObjectUpdate*)updateInfo;
 @end

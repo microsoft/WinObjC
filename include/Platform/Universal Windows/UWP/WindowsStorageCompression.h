@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSCCompressor, WSCDecompressor;
 @protocol WSCICompressor
 , WSCIDecompressor, WSCICompressorFactory, WSCIDecompressorFactory;

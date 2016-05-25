@@ -39,6 +39,7 @@
 #import "UITouchInternal.h"
 #import "UIViewInternal.h"
 #import <cmath>
+#import "CACompositor.h"
 
 const wchar_t* TAG = L"UIScrollView";
 

@@ -62,19 +62,19 @@ COREGRAPHICS_EXPORT int CGFontGetAscent(CGFontRef font);
 COREGRAPHICS_EXPORT int CGFontGetDescent(CGFontRef font);
 
 COREGRAPHICS_EXPORT int CGFontGetLeading(CGFontRef font) STUB_METHOD;
-COREGRAPHICS_EXPORT int CGFontGetCapHeight(CGFontRef font) STUB_METHOD;
+COREGRAPHICS_EXPORT int CGFontGetCapHeight(CGFontRef font);
 
 COREGRAPHICS_EXPORT int CGFontGetXHeight(CGFontRef font);
 COREGRAPHICS_EXPORT CGRect CGFontGetFontBBox(CGFontRef font);
 
 COREGRAPHICS_EXPORT CGFloat CGFontGetItalicAngle(CGFontRef font) STUB_METHOD;
 COREGRAPHICS_EXPORT CGFloat CGFontGetStemV(CGFontRef font) STUB_METHOD;
-COREGRAPHICS_EXPORT bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, CGRect* bboxes) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGFontGetGlyphBBoxes(CGFontRef font, const CGGlyph* glyphs, size_t count, CGRect* bboxes);
 COREGRAPHICS_EXPORT CGGlyph CGFontGetGlyphWithGlyphName(CGFontRef font, CFStringRef name) STUB_METHOD;
 COREGRAPHICS_EXPORT CFStringRef CGFontCopyGlyphNameForGlyph(CGFontRef font, CGGlyph glyph) STUB_METHOD;
 COREGRAPHICS_EXPORT size_t CGFontGetNumberOfGlyphs(CGFontRef font) STUB_METHOD;
-COREGRAPHICS_EXPORT bool CGFontGetGlyphAdvances(CGFontRef font, const CGGlyph* glyphs, size_t count, int* advances) STUB_METHOD;
-COREGRAPHICS_EXPORT int CGFontGetUnitsPerEm(CGFontRef font) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGFontGetGlyphAdvances(CGFontRef font, const CGGlyph* glyphs, size_t count, int* advances);
+COREGRAPHICS_EXPORT int CGFontGetUnitsPerEm(CGFontRef font);
 
 enum { kCGFontIndexMax = ((1 << 16) - 2), kCGFontIndexInvalid = ((1 << 16) - 1), kCGGlyphMax = kCGFontIndexMax };
 

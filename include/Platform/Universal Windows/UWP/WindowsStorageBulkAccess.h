@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSBFileInformationFactory, WSBFileInformation, WSBFolderInformation;
 @protocol WSBIStorageItemInformation
 , WSBIFileInformationFactoryFactory, WSBIFileInformationFactory;
@@ -73,19 +74,22 @@ WINRT_EXPORT
                                                           delayLoad:(BOOL)delayLoad ACTIVATOR;
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray*))success
+              success:(void (^)(NSArray* /* RTObject<WSBIStorageItemInformation>* */))success
               failure:(void (^)(NSError*))failure;
-- (void)getItemsAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSBIStorageItemInformation>* */))success
+                                             failure:(void (^)(NSError*))failure;
 - (void)getFilesAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray*))success
+              success:(void (^)(NSArray* /* WSBFileInformation* */))success
               failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* WSBFileInformation* */))success
+                                             failure:(void (^)(NSError*))failure;
 - (void)getFoldersAsync:(unsigned int)startIndex
      maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-                success:(void (^)(NSArray*))success
+                success:(void (^)(NSArray* /* WSBFolderInformation* */))success
                 failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* WSBFolderInformation* */))success
+                                               failure:(void (^)(NSError*))failure;
 - (RTObject*)getVirtualizedItemsVector;
 - (RTObject*)getVirtualizedFilesVector;
 - (RTObject*)getVirtualizedFoldersVector;
@@ -381,9 +385,12 @@ WINRT_EXPORT
 - (void)getFileAsync:(NSString*)name success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)getFolderAsync:(NSString*)name success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (void)getItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success
+                                                            failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFolder* */))success
+                                                              failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
+                                                     failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
 - (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
@@ -411,22 +418,22 @@ WINRT_EXPORT
 - (void)getFilesAsync:(WSSCommonFileQuery)query
            startIndex:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray*))success
+              success:(void (^)(NSArray* /* WSStorageFile* */))success
               failure:(void (^)(NSError*))failure;
 - (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query
-                                          success:(void (^)(NSArray*))success
+                                          success:(void (^)(NSArray* /* WSStorageFile* */))success
                                           failure:(void (^)(NSError*))failure;
 - (void)getFoldersAsync:(WSSCommonFolderQuery)query
              startIndex:(unsigned int)startIndex
      maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-                success:(void (^)(NSArray*))success
+                success:(void (^)(NSArray* /* WSStorageFolder* */))success
                 failure:(void (^)(NSError*))failure;
 - (void)getFoldersAsyncOverloadDefaultStartAndCount:(WSSCommonFolderQuery)query
-                                            success:(void (^)(NSArray*))success
+                                            success:(void (^)(NSArray* /* WSStorageFolder* */))success
                                             failure:(void (^)(NSError*))failure;
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray*))success
+              success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
               failure:(void (^)(NSError*))failure;
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;
@@ -494,9 +501,12 @@ WINRT_EXPORT
 - (void)getFileAsync:(NSString*)name success:(void (^)(WSStorageFile*))success failure:(void (^)(NSError*))failure;
 - (void)getFolderAsync:(NSString*)name success:(void (^)(WSStorageFolder*))success failure:(void (^)(NSError*))failure;
 - (void)getItemAsync:(NSString*)name success:(void (^)(RTObject<WSIStorageItem>*))success failure:(void (^)(NSError*))failure;
-- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getFilesAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFile* */))success
+                                                            failure:(void (^)(NSError*))failure;
+- (void)getFoldersAsyncOverloadDefaultOptionsStartAndCountWithSuccess:(void (^)(NSArray* /* WSStorageFolder* */))success
+                                                              failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncOverloadDefaultStartAndCountWithSuccess:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
+                                                     failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)renameAsyncOverloadDefaultOptions:(NSString*)desiredName;
 - (RTObject<WFIAsyncAction>*)renameAsync:(NSString*)desiredName option:(WSNameCollisionOption)option;
 - (RTObject<WFIAsyncAction>*)deleteAsyncOverloadDefaultOptions;
@@ -527,22 +537,22 @@ WINRT_EXPORT
 - (void)getFilesAsync:(WSSCommonFileQuery)query
            startIndex:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray*))success
+              success:(void (^)(NSArray* /* WSStorageFile* */))success
               failure:(void (^)(NSError*))failure;
 - (void)getFilesAsyncOverloadDefaultStartAndCount:(WSSCommonFileQuery)query
-                                          success:(void (^)(NSArray*))success
+                                          success:(void (^)(NSArray* /* WSStorageFile* */))success
                                           failure:(void (^)(NSError*))failure;
 - (void)getFoldersAsync:(WSSCommonFolderQuery)query
              startIndex:(unsigned int)startIndex
      maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-                success:(void (^)(NSArray*))success
+                success:(void (^)(NSArray* /* WSStorageFolder* */))success
                 failure:(void (^)(NSError*))failure;
 - (void)getFoldersAsyncOverloadDefaultStartAndCount:(WSSCommonFolderQuery)query
-                                            success:(void (^)(NSArray*))success
+                                            success:(void (^)(NSArray* /* WSStorageFolder* */))success
                                             failure:(void (^)(NSError*))failure;
 - (void)getItemsAsync:(unsigned int)startIndex
    maxItemsToRetrieve:(unsigned int)maxItemsToRetrieve
-              success:(void (^)(NSArray*))success
+              success:(void (^)(NSArray* /* RTObject<WSIStorageItem>* */))success
               failure:(void (^)(NSError*))failure;
 - (BOOL)areQueryOptionsSupported:(WSSQueryOptions*)queryOptions;
 - (BOOL)isCommonFolderQuerySupported:(WSSCommonFolderQuery)query;

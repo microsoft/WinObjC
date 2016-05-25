@@ -241,16 +241,27 @@ struct ProxyInfo {
             return;
         }
 
+        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
+        [_target willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
+
         _getMutateAndSet(@selector(insertObject:atIndex:), object, index);
+
+        [_target didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
     }
 
     void removeObjectAtIndex(NSUInteger index) {
+
         if (_targetSelectors.removeAtOne) {
             _call<void>(_targetSelectors.removeAtOne, index);
             return;
         }
 
+        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:index];
+        [_target willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
+
         _getMutateAndSet(@selector(removeObjectAtIndex:), index);
+
+        [_target didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
     }
 
     void addObject(id object) {
@@ -259,7 +270,12 @@ struct ProxyInfo {
             return;
         }
 
+        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:count()];
+        [_target willChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
+
         _getMutateAndSet(@selector(addObject:), object);
+
+        [_target didChange:NSKeyValueChangeInsertion valuesAtIndexes:indexes forKey:_key];
     }
 
     void removeLastObject() {
@@ -268,7 +284,12 @@ struct ProxyInfo {
             return;
         }
 
+        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:count() - 1];
+        [_target willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
+
         _getMutateAndSet(@selector(removeLastObject));
+
+        [_target didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexes forKey:_key];
     }
 
     void replaceObjectAtIndexWithObject(NSUInteger index, id object) {
@@ -281,7 +302,12 @@ struct ProxyInfo {
             return;
         }
 
+        NSIndexSet* indexes = [NSIndexSet indexSetWithIndex:count() - 1];
+        [_target willChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:_key];
+
         _getMutateAndSet(@selector(replaceObjectAtIndex:withObject:), index, object);
+
+        [_target didChange:NSKeyValueChangeReplacement valuesAtIndexes:indexes forKey:_key];
     }
 };
 }

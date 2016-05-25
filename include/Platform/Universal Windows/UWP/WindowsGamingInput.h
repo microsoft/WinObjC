@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WGIHeadset, WGIGamepad;
 @class WGIGamepadReading, WGIGamepadVibration;
 @protocol WGIIGameController
@@ -115,7 +116,7 @@ WINRT_EXPORT
 @property (readonly) BOOL isWireless;
 @property (readonly) WSUser* user;
 @property (retain) WGIGamepadVibration* vibration;
-+ (NSArray*)gamepads;
++ (NSArray* /* WGIGamepad* */)gamepads;
 - (EventRegistrationToken)addHeadsetConnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;
 - (void)removeHeadsetConnectedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addHeadsetDisconnectedEvent:(void (^)(RTObject<WGIIGameController>*, WGIHeadset*))del;

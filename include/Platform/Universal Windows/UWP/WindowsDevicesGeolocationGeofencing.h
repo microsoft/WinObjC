@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDGGGeofence, WDGGGeofenceMonitor, WDGGGeofenceStateChangeReport;
 @protocol WDGGIGeofenceFactory
 , WDGGIGeofence, WDGGIGeofenceStateChangeReport, WDGGIGeofenceMonitorStatics, WDGGIGeofenceMonitor;
@@ -106,7 +107,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDGGGeofenceMonitor : RTObject
-@property (readonly) NSMutableArray* geofences;
+@property (readonly) NSMutableArray* /* WDGGGeofence* */ geofences;
 @property (readonly) WDGGeoposition* lastKnownGeoposition;
 @property (readonly) WDGGGeofenceMonitorStatus status;
 + (WDGGGeofenceMonitor*)current;
@@ -114,7 +115,7 @@ WINRT_EXPORT
 - (void)removeGeofenceStateChangedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addStatusChangedEvent:(void (^)(WDGGGeofenceMonitor*, RTObject*))del;
 - (void)removeStatusChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)readReports;
+- (NSArray* /* WDGGGeofenceStateChangeReport* */)readReports;
 @end
 
 #endif // __WDGGGeofenceMonitor_DEFINED__

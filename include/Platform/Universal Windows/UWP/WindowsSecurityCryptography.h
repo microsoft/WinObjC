@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSCCryptographicBuffer;
 @protocol WSCICryptographicBufferStatics;
 
@@ -44,8 +45,8 @@ WINRT_EXPORT
 + (BOOL)compare:(RTObject<WSSIBuffer>*)object1 object2:(RTObject<WSSIBuffer>*)object2;
 + (RTObject<WSSIBuffer>*)generateRandom:(unsigned int)length;
 + (unsigned int)generateRandomNumber;
-+ (RTObject<WSSIBuffer>*)createFromByteArray:(id<NSFastEnumeration> /* uint8_t */)value;
-+ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(id<NSFastEnumeration> /* uint8_t */*)value;
++ (RTObject<WSSIBuffer>*)createFromByteArray:(NSArray* /* uint8_t */)value;
++ (void)copyToByteArray:(RTObject<WSSIBuffer>*)buffer value:(NSArray* /* uint8_t */*)value;
 + (RTObject<WSSIBuffer>*)decodeFromHexString:(NSString*)value;
 + (NSString*)encodeToHexString:(RTObject<WSSIBuffer>*)buffer;
 + (RTObject<WSSIBuffer>*)decodeFromBase64String:(NSString*)value;

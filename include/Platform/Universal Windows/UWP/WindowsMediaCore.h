@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMCAudioStreamDescriptor, WMCVideoStreamDescriptor, WMCMediaStreamSource, WMCMediaStreamSourceClosedEventArgs,
     WMCMediaStreamSourceStartingEventArgs, WMCMediaStreamSourceSampleRequestedEventArgs,
     WMCMediaStreamSourceSwitchStreamsRequestedEventArgs, WMCMediaStreamSamplePropertySet, WMCMediaStreamSample,
@@ -390,8 +391,8 @@ WINRT_EXPORT
 - (void)addStreamDescriptor:(RTObject<WMCIMediaStreamDescriptor>*)descriptor;
 - (void)setBufferedRange:(WFTimeSpan*)startOffset endOffset:(WFTimeSpan*)endOffset;
 - (void)addProtectionKey:(RTObject<WMCIMediaStreamDescriptor>*)streamDescriptor
-           keyIdentifier:(id<NSFastEnumeration> /* uint8_t */)keyIdentifier
-             licenseData:(id<NSFastEnumeration> /* uint8_t */)licenseData;
+           keyIdentifier:(NSArray* /* uint8_t */)keyIdentifier
+             licenseData:(NSArray* /* uint8_t */)licenseData;
 @end
 
 #endif // __WMCMediaStreamSource_DEFINED__
@@ -498,12 +499,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSampleProtectionProperties : RTObject
-- (void)setKeyIdentifier:(id<NSFastEnumeration> /* uint8_t */)value;
-- (void)getKeyIdentifier:(id<NSFastEnumeration> /* uint8_t */*)value;
-- (void)setInitializationVector:(id<NSFastEnumeration> /* uint8_t */)value;
-- (void)getInitializationVector:(id<NSFastEnumeration> /* uint8_t */*)value;
-- (void)setSubSampleMapping:(id<NSFastEnumeration> /* uint8_t */)value;
-- (void)getSubSampleMapping:(id<NSFastEnumeration> /* uint8_t */*)value;
+- (void)setKeyIdentifier:(NSArray* /* uint8_t */)value;
+- (void)getKeyIdentifier:(NSArray* /* uint8_t */*)value;
+- (void)setInitializationVector:(NSArray* /* uint8_t */)value;
+- (void)getInitializationVector:(NSArray* /* uint8_t */*)value;
+- (void)setSubSampleMapping:(NSArray* /* uint8_t */)value;
+- (void)getSubSampleMapping:(NSArray* /* uint8_t */*)value;
 @end
 
 #endif // __WMCMediaStreamSampleProtectionProperties_DEFINED__
@@ -536,7 +537,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMediaStreamSourceStartingRequest : RTObject
-@property (readonly) id startPosition;
+@property (readonly) id /* WFTimeSpan* */ startPosition;
 - (WMCMediaStreamSourceStartingRequestDeferral*)getDeferral;
 - (void)setActualStartPosition:(WFTimeSpan*)position;
 @end
@@ -600,7 +601,7 @@ WINRT_EXPORT
 @interface WMCMseStreamSource : RTObject <WMCIMediaSource>
 + (BOOL)isContentTypeSupported:(NSString*)contentType;
 + (instancetype)make ACTIVATOR;
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) WMCMseSourceBufferList* activeSourceBuffers;
 @property (readonly) WMCMseReadyState readyState;
 @property (readonly) WMCMseSourceBufferList* sourceBuffers;
@@ -623,7 +624,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCMseSourceBufferList : RTObject
-@property (readonly) NSArray* buffers;
+@property (readonly) NSArray* /* WMCMseSourceBuffer* */ buffers;
 - (EventRegistrationToken)addSourceBufferAddedEvent:(void (^)(WMCMseSourceBufferList*, RTObject*))del;
 - (void)removeSourceBufferAddedEvent:(EventRegistrationToken)tok;
 - (EventRegistrationToken)addSourceBufferRemovedEvent:(void (^)(WMCMseSourceBufferList*, RTObject*))del;
@@ -641,8 +642,8 @@ WINRT_EXPORT
 @property (retain) WFTimeSpan* timestampOffset;
 @property WMCMseAppendMode mode;
 @property (retain) WFTimeSpan* appendWindowStart;
-@property (retain) id appendWindowEnd;
-@property (readonly) NSArray* buffered;
+@property (retain) id /* WFTimeSpan* */ appendWindowEnd;
+@property (readonly) NSArray* /* WMCMseTimeRange* */ buffered;
 @property (readonly) BOOL isUpdating;
 - (EventRegistrationToken)addAbortedEvent:(void (^)(WMCMseSourceBuffer*, RTObject*))del;
 - (void)removeAbortedEvent:(EventRegistrationToken)tok;
@@ -717,7 +718,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCHighDynamicRangeOutput : RTObject
 @property (readonly) double certainty;
-@property (readonly) NSArray* frameControllers;
+@property (readonly) NSArray* /* WMDCFrameController* */ frameControllers;
 @end
 
 #endif // __WMCHighDynamicRangeOutput_DEFINED__
@@ -737,12 +738,12 @@ WINRT_EXPORT
 #define __WMIMediaFrame_DEFINED__
 
 @protocol WMIMediaFrame <WFIClosable>
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property BOOL isDiscontinuous;
 @property (readonly) BOOL isReadOnly;
-@property (retain) id relativeTime;
-@property (retain) id systemRelativeTime;
+@property (retain) id /* WFTimeSpan* */ relativeTime;
+@property (retain) id /* WFTimeSpan* */ systemRelativeTime;
 @property (readonly) NSString* type;
 - (void)close;
 @end
@@ -757,10 +758,10 @@ WINRT_EXPORT
 @interface WMCSceneAnalysisEffectFrame : RTObject <WMIMediaFrame, WFIClosable>
 @property (readonly) WMCCapturedFrameControlValues* frameControlValues;
 @property (readonly) WMCHighDynamicRangeOutput* highDynamicRange;
-@property (retain) id systemRelativeTime;
-@property (retain) id relativeTime;
+@property (retain) id /* WFTimeSpan* */ systemRelativeTime;
+@property (retain) id /* WFTimeSpan* */ relativeTime;
 @property BOOL isDiscontinuous;
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* type;
@@ -799,11 +800,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMCFaceDetectionEffectFrame : RTObject <WMIMediaFrame, WFIClosable>
-@property (readonly) NSArray* detectedFaces;
-@property (retain) id systemRelativeTime;
-@property (retain) id relativeTime;
+@property (readonly) NSArray* /* WMFDetectedFace* */ detectedFaces;
+@property (retain) id /* WFTimeSpan* */ systemRelativeTime;
+@property (retain) id /* WFTimeSpan* */ relativeTime;
 @property BOOL isDiscontinuous;
-@property (retain) id duration;
+@property (retain) id /* WFTimeSpan* */ duration;
 @property (readonly) RTObject<WFCIPropertySet>* extendedProperties;
 @property (readonly) BOOL isReadOnly;
 @property (readonly) NSString* type;
@@ -929,9 +930,9 @@ WINRT_EXPORT
 + (WMCMediaSource*)createFromStreamReference:(RTObject<WSSIRandomAccessStreamReference>*)stream contentType:(NSString*)contentType;
 + (WMCMediaSource*)createFromUri:(WFUri*)uri;
 @property (readonly) WFCValueSet* customProperties;
-@property (readonly) id duration;
-@property (readonly) NSMutableArray<RTObservableCollection>* externalTimedMetadataTracks;
-@property (readonly) NSMutableArray<RTObservableCollection>* externalTimedTextSources;
+@property (readonly) id /* WFTimeSpan* */ duration;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* WMCTimedMetadataTrack* */ externalTimedMetadataTracks;
+@property (readonly) NSMutableArray<RTObservableCollection>* /* WMCTimedTextSource* */ externalTimedTextSources;
 @property (readonly) BOOL isOpen;
 - (EventRegistrationToken)addOpenOperationCompletedEvent:(void (^)(WMCMediaSource*, WMCMediaSourceOpenOperationCompletedEventArgs*))del;
 - (void)removeOpenOperationCompletedEvent:(EventRegistrationToken)tok;
@@ -978,8 +979,8 @@ WINRT_EXPORT
 @property (readonly) NSString* id;
 @property (readonly) NSString* language;
 @property (readonly) WMCMediaTrackKind trackKind;
-@property (readonly) NSArray* activeCues;
-@property (readonly) NSArray* cues;
+@property (readonly) NSArray* /* RTObject<WMCIMediaCue>* */ activeCues;
+@property (readonly) NSArray* /* RTObject<WMCIMediaCue>* */ cues;
 @property (readonly) NSString* dispatchType;
 @property (readonly) WMCTimedMetadataKind timedMetadataKind;
 - (EventRegistrationToken)addCueEnteredEvent:(void (^)(WMCTimedMetadataTrack*, WMCMediaCueEventArgs*))del;
@@ -1048,7 +1049,7 @@ WINRT_EXPORT
 @interface WMCTimedTextLine : RTObject
 + (instancetype)make ACTIVATOR;
 @property (retain) NSString* text;
-@property (readonly) NSMutableArray* subformats;
+@property (readonly) NSMutableArray* /* WMCTimedTextSubformat* */ subformats;
 @end
 
 #endif // __WMCTimedTextLine_DEFINED__
@@ -1108,7 +1109,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMCTimedTextSourceResolveResultEventArgs : RTObject
 @property (readonly) WMCTimedMetadataTrackError* error;
-@property (readonly) NSArray* tracks;
+@property (readonly) NSArray* /* WMCTimedMetadataTrack* */ tracks;
 @end
 
 #endif // __WMCTimedTextSourceResolveResultEventArgs_DEFINED__
@@ -1125,7 +1126,7 @@ WINRT_EXPORT
 @property (retain) WFTimeSpan* duration;
 @property (retain) WMCTimedTextStyle* cueStyle;
 @property (retain) WMCTimedTextRegion* cueRegion;
-@property (readonly) NSMutableArray* lines;
+@property (readonly) NSMutableArray* /* WMCTimedTextLine* */ lines;
 @end
 
 #endif // __WMCTimedTextCue_DEFINED__

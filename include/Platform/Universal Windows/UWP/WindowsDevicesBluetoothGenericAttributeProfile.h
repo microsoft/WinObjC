@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDBGGattDeviceService, WDBGGattCharacteristic, WDBGGattDescriptor, WDBGGattPresentationFormat, WDBGGattReadResult,
     WDBGGattReadClientCharacteristicConfigurationDescriptorResult, WDBGGattValueChangedEventArgs, WDBGGattServiceUuids,
     WDBGGattCharacteristicUuids, WDBGGattDescriptorUuids, WDBGGattReliableWriteTransaction, WDBGGattPresentationFormatTypes;
@@ -108,12 +109,12 @@ WINRT_EXPORT
 @property (readonly) NSString* deviceId;
 @property (readonly) WFGUID* uuid;
 @property (readonly) WDBBluetoothLEDevice* device;
-@property (readonly) NSArray* parentServices;
-- (NSArray*)getCharacteristics:(WFGUID*)characteristicUuid;
-- (NSArray*)getIncludedServices:(WFGUID*)serviceUuid;
+@property (readonly) NSArray* /* WDBGGattDeviceService* */ parentServices;
+- (NSArray* /* WDBGGattCharacteristic* */)getCharacteristics:(WFGUID*)characteristicUuid;
+- (NSArray* /* WDBGGattDeviceService* */)getIncludedServices:(WFGUID*)serviceUuid;
 - (void)close;
-- (NSArray*)getAllCharacteristics;
-- (NSArray*)getAllIncludedServices;
+- (NSArray* /* WDBGGattCharacteristic* */)getAllCharacteristics;
+- (NSArray* /* WDBGGattDeviceService* */)getAllIncludedServices;
 @end
 
 #endif // __WDBGGattDeviceService_DEFINED__
@@ -128,13 +129,13 @@ WINRT_EXPORT
 @property WDBGGattProtectionLevel protectionLevel;
 @property (readonly) unsigned short attributeHandle;
 @property (readonly) WDBGGattCharacteristicProperties characteristicProperties;
-@property (readonly) NSArray* presentationFormats;
+@property (readonly) NSArray* /* WDBGGattPresentationFormat* */ presentationFormats;
 @property (readonly) NSString* userDescription;
 @property (readonly) WFGUID* uuid;
 @property (readonly) WDBGGattDeviceService* service;
 - (EventRegistrationToken)addValueChangedEvent:(void (^)(WDBGGattCharacteristic*, WDBGGattValueChangedEventArgs*))del;
 - (void)removeValueChangedEvent:(EventRegistrationToken)tok;
-- (NSArray*)getDescriptors:(WFGUID*)descriptorUuid;
+- (NSArray* /* WDBGGattDescriptor* */)getDescriptors:(WFGUID*)descriptorUuid;
 - (void)readValueAsyncWithSuccess:(void (^)(WDBGGattReadResult*))success failure:(void (^)(NSError*))failure;
 - (void)readValueWithCacheModeAsync:(WDBBluetoothCacheMode)cacheMode
                             success:(void (^)(WDBGGattReadResult*))success
@@ -153,7 +154,7 @@ WINRT_EXPORT
             (WDBGGattClientCharacteristicConfigurationDescriptorValue)clientCharacteristicConfigurationDescriptorValue
                                                       success:(void (^)(WDBGGattCommunicationStatus))success
                                                       failure:(void (^)(NSError*))failure;
-- (NSArray*)getAllDescriptors;
+- (NSArray* /* WDBGGattDescriptor* */)getAllDescriptors;
 @end
 
 #endif // __WDBGGattCharacteristic_DEFINED__

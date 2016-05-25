@@ -391,7 +391,6 @@ public:
         double beginTime, double duration, bool autoReverse, float repeatCount, float repeatDuration, float speed, double timeOffset);
     void Start();
     void Abort();
-    Windows::Foundation::IAsyncOperation<int>^ AddTransition(CALayerXaml^ layer, Platform::String^ type, Platform::String^ subtype);
     void Animate(CALayerXaml^ layer, Platform::String^ propertyName, Platform::Object^ from, Platform::Object^ to);
     Platform::Object^ GetStoryboard();
 
@@ -399,6 +398,8 @@ internal:
     AnimationMethod^ m_completed;
     AnimationMethod^ m_started;
 
+    concurrency::task<CALayerXaml^> SnapshotLayer(CALayerXaml^ layer);
+    void AddTransition(CALayerXaml^ realLayer, CALayerXaml^ snapshotLayer, Platform::String^ type, Platform::String^ subtype);
     void _CreateFlip(CALayerXaml^ layer, bool flipRight, bool invert, bool removeFromParent);
     void _CreateWoosh(CALayerXaml^ layer, bool fromRight, bool invert, bool removeFromParent);
 

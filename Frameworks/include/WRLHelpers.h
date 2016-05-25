@@ -263,17 +263,16 @@ HRESULT AwaitResult(TI* pThing,
                     HRESULT (STDMETHODCALLTYPE TI::*pfn)(P1, ABI::Windows::Foundation::IAsyncOperation<OI>**),
                     A1&& p1,
                     RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>(
+        [&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) { return (pThing->*pfn)(std::forward<A1>(p1), ppOp); }, out);
 }
 
 template <typename TI, typename OI, typename P1, typename P2, typename A1, typename A2, typename RI>
 HRESULT AwaitResult(
     TI* pThing, HRESULT (STDMETHODCALLTYPE TI::*pfn)(P1, P2, ABI::Windows::Foundation::IAsyncOperation<OI>**), A1&& p1, A2&& p2, RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>**
+                                         ppOp) { return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), ppOp); },
+                                 out);
 }
 
 template <typename TI, typename OI, typename P1, typename P2, typename P3, typename A1, typename A2, typename A3, typename RI>
@@ -283,9 +282,11 @@ HRESULT AwaitResult(TI* pThing,
                     A2&& p2,
                     A3&& p3,
                     RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>(
+        [&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
+            return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), ppOp);
+        },
+        out);
 }
 
 template <typename OI,
@@ -307,9 +308,12 @@ HRESULT AwaitStaticResult(HRESULT(STDMETHODCALLTYPE* pfn)(P1, P2, P3, P4, P5, AB
                           A4&& p4,
                           A5&& p5,
                           RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), std::forward<A4>(p4), std::forward<A5>(p5), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>(
+        [&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
+            return (
+                *pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), std::forward<A4>(p4), std::forward<A5>(p5), ppOp);
+        },
+        out);
 }
 
 template <typename TI,
@@ -330,9 +334,11 @@ HRESULT AwaitResult(TI* pThing,
                     A3&& p3,
                     A4&& p4,
                     RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), std::forward<A4>(p4), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>(
+        [&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
+            return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), std::forward<A4>(p4), ppOp);
+        },
+        out);
 }
 
 template <typename OI, typename RI>
@@ -351,17 +357,17 @@ HRESULT AwaitStaticResult(HRESULT(STDMETHODCALLTYPE* pfn)(P1, P2, ABI::Windows::
                           A1&& p1,
                           A2&& p2,
                           RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>(
+        [&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) { return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), ppOp); },
+        out);
 }
 
 template <typename OI, typename P1, typename P2, typename P3, typename A1, typename A2, typename A3, typename RI>
 HRESULT AwaitStaticResult(
     HRESULT(STDMETHODCALLTYPE* pfn)(P1, P2, P3, ABI::Windows::Foundation::IAsyncOperation<OI>**), A1&& p1, A2&& p2, A3&& p3, RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>**
+                                         ppOp) { return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), ppOp); },
+                                 out);
 }
 
 template <typename OI, typename P1, typename P2, typename P3, typename P4, typename A1, typename A2, typename A3, typename A4, typename RI>
@@ -371,9 +377,11 @@ HRESULT AwaitStaticResult(HRESULT(STDMETHODCALLTYPE* pfn)(P1, P2, P3, P4, ABI::W
                           A3&& p3,
                           A4&& p4,
                           RI&& out) {
-    return AwaitResultHelper<OI>([&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
-        return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), std::forward<A4>(p4), ppOp);
-    }, out);
+    return AwaitResultHelper<OI>(
+        [&](ABI::Windows::Foundation::IAsyncOperation<OI>** ppOp) {
+            return (*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), std::forward<A4>(p4), ppOp);
+        },
+        out);
 }
 
 template <typename T, typename Q>
@@ -432,9 +440,8 @@ template <typename TI, typename OI, typename PI, typename RI>
 HRESULT AwaitProgressComplete(TI* pThing,
                               HRESULT (STDMETHODCALLTYPE TI::*pfn)(ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>**),
                               RI&& out) {
-    return AwaitProgressCompleteHelper<OI, PI>([&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) {
-        return (pThing->*pfn)(ppOp);
-    }, out);
+    return AwaitProgressCompleteHelper<OI, PI>(
+        [&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) { return (pThing->*pfn)(ppOp); }, out);
 }
 
 template <typename TI, typename OI, typename PI, typename P1, typename A1, typename RI>
@@ -442,9 +449,9 @@ HRESULT AwaitProgressComplete(TI* pThing,
                               HRESULT (STDMETHODCALLTYPE TI::*pfn)(P1, ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>**),
                               A1&& p1,
                               RI&& out) {
-    return AwaitProgressCompleteHelper<OI, PI>([&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), ppOp);
-    }, out);
+    return AwaitProgressCompleteHelper<OI, PI>(
+        [&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) { return (pThing->*pfn)(std::forward<A1>(p1), ppOp); },
+        out);
 }
 
 template <typename TI, typename OI, typename PI, typename P1, typename P2, typename A1, typename A2, typename RI>
@@ -453,9 +460,9 @@ HRESULT AwaitProgressComplete(TI* pThing,
                               A1&& p1,
                               A2&& p2,
                               RI&& out) {
-    return AwaitProgressCompleteHelper<OI, PI>([&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), ppOp);
-    }, out);
+    return AwaitProgressCompleteHelper<OI, PI>([&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>**
+                                                       ppOp) { return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), ppOp); },
+                                               out);
 }
 
 template <typename TI, typename OI, typename PI, typename P1, typename P2, typename P3, typename A1, typename A2, typename A3, typename RI>
@@ -466,10 +473,25 @@ HRESULT AwaitProgressComplete(
     A2&& p2,
     A3&& p3,
     RI&& out) {
-    return AwaitProgressCompleteHelper<OI, PI>([&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) {
-        return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), ppOp);
+    return AwaitProgressCompleteHelper<OI, PI>(
+        [&](ABI::Windows::Foundation::IAsyncOperationWithProgress<OI, PI>** ppOp) {
+            return (pThing->*pfn)(std::forward<A1>(p1), std::forward<A2>(p2), std::forward<A3>(p3), ppOp);
 
-    }, out);
+        },
+        out);
+}
+
+template <typename TDelegateInterface, typename... Args>
+::Microsoft::WRL::ComPtr<TDelegateInterface> MakeAgileCallbackNoThrow(Args&&... args) WI_NOEXCEPT {
+    using namespace Microsoft::WRL;
+    return Callback<Implements<RuntimeClassFlags<ClassicCom>, TDelegateInterface, FtmBase>>(wistd::forward<Args>(args)...);
+}
+
+template <typename TDelegateInterface, typename... Args>
+::Microsoft::WRL::ComPtr<TDelegateInterface> MakeAgileCallback(Args&&... args) {
+    auto result = MakeAgileCallbackNoThrow<TDelegateInterface, Args...>(wistd::forward<Args>(args)...);
+    THROW_IF_NULL_ALLOC(result);
+    return result;
 }
 
 #pragma endregion

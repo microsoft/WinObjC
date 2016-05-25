@@ -664,9 +664,9 @@ static int _NSNumberCompareUnsignedSigned(unsigned long long unsignedValue, long
             // and then format the value using short
             return [NSString stringWithFormat:@"%hd", static_cast<short>(_val.getRawValue<char>())];
         case 'd':
-            return [NSString stringWithFormat:@"%f", _val.getRawValue<double>()];
+            return [NSString stringWithFormat:@"%0.16g", _val.getRawValue<double>()];
         case 'f':
-            return [NSString stringWithFormat:@"%f", _val.getRawValue<float>()];
+            return [NSString stringWithFormat:@"%0.7g", _val.getRawValue<float>()];
         case 'i':
             return [NSString stringWithFormat:@"%d", _val.getRawValue<int>()];
         case 'l':

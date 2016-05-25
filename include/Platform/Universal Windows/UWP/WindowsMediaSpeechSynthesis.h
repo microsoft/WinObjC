@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMSVoiceInformation, WMSSpeechSynthesisStream, WMSSpeechSynthesizer;
 @protocol WMSIVoiceInformation
 , WMSIInstalledVoicesStatic, WMSISpeechSynthesisStream, WMSISpeechSynthesizer;
@@ -170,7 +171,7 @@ WINRT_EXPORT
                                                 WSSIOutputStream,
                                                 WFIClosable,
                                                 WSSIInputStream>
-@property (readonly) NSArray* markers;
+@property (readonly) NSArray* /* RTObject<WMIMediaMarker>* */ markers;
 @property (readonly) NSString* contentType;
 @property uint64_t size;
 @property (readonly) BOOL canRead;
@@ -204,7 +205,7 @@ WINRT_EXPORT
 @interface WMSSpeechSynthesizer : RTObject <WFIClosable>
 + (instancetype)make ACTIVATOR;
 @property (retain) WMSVoiceInformation* voice;
-+ (NSArray*)allVoices;
++ (NSArray* /* WMSVoiceInformation* */)allVoices;
 + (WMSVoiceInformation*)defaultVoice;
 - (void)synthesizeTextToStreamAsync:(NSString*)text
                             success:(void (^)(WMSSpeechSynthesisStream*))success

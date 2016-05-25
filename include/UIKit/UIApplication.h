@@ -33,7 +33,6 @@
 #import <UIKit/UIResponder.h>
 #import <UIKit/UIDevice.h>
 #import <StarboardExport.h>
-#import <StarboardXamlExport.h>
 #import <stdint.h>
 
 UIKIT_EXPORT NSString* const UIApplicationStatusBarOrientationUserInfoKey;
@@ -200,16 +199,7 @@ typedef enum : NSInteger {
     UIUserInterfaceLayoutDirectionRightToLeft,
 } UIUserInterfaceLayoutDirection;
 
-//  UIApplicationMain is included in the static runtime component, and is exported by StarboardXaml
-SBXAML_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
-
-UIKIT_EXPORT int UIApplicationMainInit(
-    int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);
-UIKIT_EXPORT int UIApplicationMainLoop();
-
-UIKIT_EXPORT void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
-UIKIT_EXPORT void UIApplicationMainHandleHighMemoryUsageEvent();
-
+UIKIT_EXPORT int UIApplicationMain(int argc, char* argv[], NSString* pClassName, NSString* dClassName);
 UIKIT_EXPORT const UIBackgroundTaskIdentifier UIBackgroundTaskInvalid;
 UIKIT_EXPORT const NSTimeInterval UIMinimumKeepAliveTimeout;
 
@@ -263,7 +253,7 @@ UIKIT_EXPORT_CLASS
 @property (getter=isNetworkActivityIndicatorVisible, nonatomic) BOOL networkActivityIndicatorVisible STUB_PROPERTY;
 @property (getter=isProximitySensingEnabled, nonatomic) BOOL proximitySensingEnabled STUB_PROPERTY;
 @property (nonatomic) BOOL applicationSupportsShakeToEdit STUB_PROPERTY;
-@property (nonatomic) NSInteger applicationIconBadgeNumber STUB_PROPERTY;
+@property (nonatomic) NSInteger applicationIconBadgeNumber;
 @property (nonatomic) UIInterfaceOrientation statusBarOrientation;
 @property (nonatomic, assign) id<UIApplicationDelegate> delegate;
 @property (nonatomic, copy) NSString* preferredContentSizeCategory;

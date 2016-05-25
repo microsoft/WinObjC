@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 // Windows.UI.Xaml.Automation.Text.TextPatternRangeEndpoint
 enum _WUXATTextPatternRangeEndpoint {
     WUXATTextPatternRangeEndpointStart = 0,

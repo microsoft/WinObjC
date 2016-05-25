@@ -20,10 +20,10 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSSDataReaderLoadOperation, WSSDataReader, WSSDataWriterStoreOperation, WSSDataWriter, WSSRandomAccessStream, WSSBuffer,
     WSSRandomAccessStreamReference, WSSFileRandomAccessStream, WSSFileInputStream, WSSFileOutputStream, WSSRandomAccessStreamOverStream,
     WSSInputStreamOverStream, WSSOutputStreamOverStream, WSSInMemoryRandomAccessStream;
-@class RTArray_C_UInt8;
 @protocol WSSIDataReader
 , WSSIDataReaderFactory, WSSIDataReaderStatics, WSSIDataWriter, WSSIDataWriterFactory, WSSIRandomAccessStreamStatics, WSSIBufferFactory,
     WSSIBuffer, WSSIBufferStatics, WSSIContentTypeProvider, WSSIRandomAccessStreamReference, WSSIInputStreamReference,
@@ -68,7 +68,7 @@ typedef unsigned WSSInputStreamOptions;
 @property (readonly) unsigned int unconsumedBufferLength;
 @property WSSUnicodeEncoding unicodeEncoding;
 - (uint8_t)readByte;
-- (void)readBytes:(RTArray_C_UInt8*)value;
+- (void)readBytes:(NSArray* /* uint8_t */*)value;
 - (RTObject<WSSIBuffer>*)readBuffer:(unsigned int)length;
 - (BOOL)readBoolean;
 - (WFGUID*)readGuid;
@@ -99,7 +99,7 @@ typedef unsigned WSSInputStreamOptions;
 @property WSSUnicodeEncoding unicodeEncoding;
 @property (readonly) unsigned int unstoredBufferLength;
 - (void)writeByte:(uint8_t)value;
-- (void)writeBytes:(id<NSFastEnumeration> /* uint8_t */)value;
+- (void)writeBytes:(NSArray* /* uint8_t */)value;
 - (void)writeBuffer:(RTObject<WSSIBuffer>*)buffer;
 - (void)writeBufferRange:(RTObject<WSSIBuffer>*)buffer start:(unsigned int)start count:(unsigned int)count;
 - (void)writeBoolean:(BOOL)value;
@@ -305,7 +305,7 @@ WINRT_EXPORT
 @property WSSByteOrder byteOrder;
 @property (readonly) unsigned int unconsumedBufferLength;
 - (uint8_t)readByte;
-- (void)readBytes:(RTArray_C_UInt8*)value;
+- (void)readBytes:(NSArray* /* uint8_t */*)value;
 - (RTObject<WSSIBuffer>*)readBuffer:(unsigned int)length;
 - (BOOL)readBoolean;
 - (WFGUID*)readGuid;
@@ -357,7 +357,7 @@ WINRT_EXPORT
 @property WSSByteOrder byteOrder;
 @property (readonly) unsigned int unstoredBufferLength;
 - (void)writeByte:(uint8_t)value;
-- (void)writeBytes:(id<NSFastEnumeration> /* uint8_t */)value;
+- (void)writeBytes:(NSArray* /* uint8_t */)value;
 - (void)writeBuffer:(RTObject<WSSIBuffer>*)buffer;
 - (void)writeBufferRange:(RTObject<WSSIBuffer>*)buffer start:(unsigned int)start count:(unsigned int)count;
 - (void)writeBoolean:(BOOL)value;

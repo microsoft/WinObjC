@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 // Windows.Security.EnterpriseData.ProtectionPolicyEvaluationResult
 enum _WSEProtectionPolicyEvaluationResult {
     WSEProtectionPolicyEvaluationResultAllowed = 0,

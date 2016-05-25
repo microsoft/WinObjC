@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDBBRfcommInboundConnectionInformation, WDBBRfcommOutboundConnectionInformation, WDBBRfcommConnectionTriggerDetails,
     WDBBGattCharacteristicNotificationTriggerDetails, WDBBBluetoothLEAdvertisementWatcherTriggerDetails,
     WDBBBluetoothLEAdvertisementPublisherTriggerDetails;
@@ -92,7 +93,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDBBBluetoothLEAdvertisementWatcherTriggerDetails : RTObject
-@property (readonly) NSArray* advertisements;
+@property (readonly) NSArray* /* WDBABluetoothLEAdvertisementReceivedEventArgs* */ advertisements;
 @property (readonly) WDBBluetoothError error;
 @property (readonly) WDBBluetoothSignalStrengthFilter* signalStrengthFilter;
 @end

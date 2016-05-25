@@ -14,9 +14,9 @@
 //
 //******************************************************************************
 
-#include "Starboard.h"
-
+#import "Starboard.h"
 #import <UIKit/UIScreenMode.h>
+#import "CACompositor.h"
 
 @implementation UIScreenMode
 

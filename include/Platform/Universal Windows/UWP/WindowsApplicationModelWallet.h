@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAWWalletBarcode, WAWWalletTransaction, WAWWalletRelevantLocation, WAWWalletItemCustomProperty, WAWWalletVerb, WAWWalletItem,
     WAWWalletItemStore, WAWWalletManager;
 @protocol WAWIWalletBarcode
@@ -114,7 +115,7 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAWWalletTransaction : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id transactionDate;
+@property (retain) id /* WFDateTime* */ transactionDate;
 @property BOOL isLaunchable;
 @property BOOL ignoreTimeOfDay;
 @property (retain) NSString* displayLocation;
@@ -184,23 +185,23 @@ WINRT_EXPORT
 @property (retain) WUColor* headerFontColor;
 @property (retain) WUColor* headerColor;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* headerBackgroundImage;
-@property (retain) id expirationDate;
+@property (retain) id /* WFDateTime* */ expirationDate;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* logo99x99;
 @property (retain) NSString* issuerDisplayName;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* promotionalImage;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* logo159x159;
-@property (retain) id lastUpdated;
+@property (retain) id /* WFDateTime* */ lastUpdated;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* logoImage;
 @property (retain) NSString* relevantDateDisplayMessage;
-@property (retain) id relevantDate;
+@property (retain) id /* WFDateTime* */ relevantDate;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* logo336x336;
 @property (retain) NSString* logoText;
 @property (readonly) WAWWalletItemKind kind;
-@property (readonly) NSMutableDictionary* displayProperties;
+@property (readonly) NSMutableDictionary* /* NSString *, WAWWalletItemCustomProperty* */ displayProperties;
 @property (readonly) NSString* id;
-@property (readonly) NSMutableDictionary* relevantLocations;
-@property (readonly) NSMutableDictionary* transactionHistory;
-@property (readonly) NSMutableDictionary* verbs;
+@property (readonly) NSMutableDictionary* /* NSString *, WAWWalletRelevantLocation* */ relevantLocations;
+@property (readonly) NSMutableDictionary* /* NSString *, WAWWalletTransaction* */ transactionHistory;
+@property (readonly) NSMutableDictionary* /* NSString *, WAWWalletVerb* */ verbs;
 @end
 
 #endif // __WAWWalletItem_DEFINED__
@@ -214,8 +215,10 @@ WINRT_EXPORT
 - (RTObject<WFIAsyncAction>*)addAsync:(NSString*)id item:(WAWWalletItem*)item;
 - (RTObject<WFIAsyncAction>*)clearAsync;
 - (void)getWalletItemAsync:(NSString*)id success:(void (^)(WAWWalletItem*))success failure:(void (^)(NSError*))failure;
-- (void)getItemsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)getItemsWithKindAsync:(WAWWalletItemKind)kind success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncWithSuccess:(void (^)(NSArray* /* WAWWalletItem* */))success failure:(void (^)(NSError*))failure;
+- (void)getItemsWithKindAsync:(WAWWalletItemKind)kind
+                      success:(void (^)(NSArray* /* WAWWalletItem* */))success
+                      failure:(void (^)(NSError*))failure;
 - (void)importItemAsync:(RTObject<WSSIRandomAccessStreamReference>*)stream
                 success:(void (^)(WAWWalletItem*))success
                 failure:(void (^)(NSError*))failure;

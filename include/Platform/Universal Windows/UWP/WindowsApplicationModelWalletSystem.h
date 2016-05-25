@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAWSWalletItemSystemStore, WAWSWalletManagerSystem;
 @protocol WAWSIWalletItemSystemStore
 , WAWSIWalletItemSystemStore2, WAWSIWalletManagerSystemStatics;
@@ -47,7 +48,7 @@ WINRT_EXPORT
 @interface WAWSWalletItemSystemStore : RTObject
 - (EventRegistrationToken)addItemsChangedEvent:(void (^)(WAWSWalletItemSystemStore*, RTObject*))del;
 - (void)removeItemsChangedEvent:(EventRegistrationToken)tok;
-- (void)getItemsAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)getItemsAsyncWithSuccess:(void (^)(NSArray* /* WAWWalletItem* */))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAsync:(WAWWalletItem*)item;
 - (void)importItemAsync:(RTObject<WSSIRandomAccessStreamReference>*)stream
                 success:(void (^)(WAWWalletItem*))success

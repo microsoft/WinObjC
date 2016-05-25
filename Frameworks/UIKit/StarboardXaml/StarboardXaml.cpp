@@ -21,8 +21,10 @@
 #include "StringConversion.h"
 
 #include "ApplicationCompositor.h"
-#include "LoggingNative.h"
 #include "XamlCompositor.h"
+#include <LoggingNative.h>
+#include <UIKit\UIKitExport.h>
+#include "..\UIApplicationMainInternal.h"
 
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::UI;
@@ -95,7 +97,7 @@ private:
     void _OnAppVisibilityChanged(Platform::Object^ sender, Core::VisibilityChangedEventArgs^ args)
     {
         TraceVerbose(TAG, L"VisibilityChanged event received - %d", args->Visible);
-        ApplicationMainHandleWindowVisibilityChangeEvent(args->Visible);
+        UIApplicationMainHandleWindowVisibilityChangeEvent(args->Visible);
     }
 
     void _OnAppMemoryUsageChanged(Platform::Object^ sender, Platform::Object^ args)
@@ -104,7 +106,7 @@ private:
 
         TraceVerbose(TAG, L"AppMemoryUsageIncreased event received - %d", level);
         if (level == AppMemoryUsageLevel::High) {
-            ApplicationMainHandleHighMemoryUsageEvent();
+            UIApplicationMainHandleHighMemoryUsageEvent();
         }
     }
 };
@@ -125,7 +127,8 @@ extern "C" void _ApplicationMainLaunch() {
 
 // This is the actual entry point from the app into our framework.
 // Note: principalClassName and delegateClassName are actually NSString*s.
-extern "C" int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
+UIKIT_EXPORT
+int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* delegateClassName) {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
@@ -155,7 +158,8 @@ extern "C" int UIApplicationMain(int argc, char* argv[], void* principalClassNam
     return 0;
 }
 
-extern "C" void UIApplicationMainTest() {
+UIKIT_EXPORT
+void UIApplicationMainTest() {
     // Initialize COM on this thread
     ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 

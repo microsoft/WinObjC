@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMSAAdaptiveMediaSource, WMSAAdaptiveMediaSourceCreationResult, WMSAAdaptiveMediaSourceDownloadBitrateChangedEventArgs,
     WMSAAdaptiveMediaSourcePlaybackBitrateChangedEventArgs, WMSAAdaptiveMediaSourceDownloadRequestedEventArgs,
     WMSAAdaptiveMediaSourceDownloadCompletedEventArgs, WMSAAdaptiveMediaSourceDownloadFailedEventArgs,
@@ -96,11 +97,11 @@ WINRT_EXPORT
                                     failure:(void (^)(NSError*))failure;
 @property unsigned int initialBitrate;
 @property (retain) WFTimeSpan* inboundBitsPerSecondWindow;
-@property (retain) id desiredMinBitrate;
+@property (retain) id /* unsigned int */ desiredMinBitrate;
 @property (retain) WFTimeSpan* desiredLiveOffset;
-@property (retain) id desiredMaxBitrate;
+@property (retain) id /* unsigned int */ desiredMaxBitrate;
 @property (readonly) BOOL audioOnlyPlayback;
-@property (readonly) NSArray* availableBitrates;
+@property (readonly) NSArray* /* unsigned int */ availableBitrates;
 @property (readonly) uint64_t inboundBitsPerSecond;
 @property (readonly) unsigned int currentDownloadBitrate;
 @property (readonly) unsigned int currentPlaybackBitrate;
@@ -167,8 +168,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadRequestedEventArgs : RTObject
-@property (readonly) id resourceByteRangeLength;
-@property (readonly) id resourceByteRangeOffset;
+@property (readonly) id /* uint64_t */ resourceByteRangeLength;
+@property (readonly) id /* uint64_t */ resourceByteRangeOffset;
 @property (readonly) WMSAAdaptiveMediaSourceResourceType resourceType;
 @property (readonly) WFUri* resourceUri;
 @property (readonly) WMSAAdaptiveMediaSourceDownloadResult* result;
@@ -184,8 +185,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadCompletedEventArgs : RTObject
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
-@property (readonly) id resourceByteRangeLength;
-@property (readonly) id resourceByteRangeOffset;
+@property (readonly) id /* uint64_t */ resourceByteRangeLength;
+@property (readonly) id /* uint64_t */ resourceByteRangeOffset;
 @property (readonly) WMSAAdaptiveMediaSourceResourceType resourceType;
 @property (readonly) WFUri* resourceUri;
 @end
@@ -199,8 +200,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WMSAAdaptiveMediaSourceDownloadFailedEventArgs : RTObject
 @property (readonly) WWHHttpResponseMessage* httpResponseMessage;
-@property (readonly) id resourceByteRangeLength;
-@property (readonly) id resourceByteRangeOffset;
+@property (readonly) id /* uint64_t */ resourceByteRangeLength;
+@property (readonly) id /* uint64_t */ resourceByteRangeOffset;
 @property (readonly) WMSAAdaptiveMediaSourceResourceType resourceType;
 @property (readonly) WFUri* resourceUri;
 @end

@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WASSearchPaneQueryLinguisticDetails, WASSearchSuggestionCollection, WASLocalContentSuggestionSettings,
     WASSearchQueryLinguisticDetails, WASSearchSuggestionsRequestDeferral, WASSearchSuggestionsRequest;
 @protocol WASISearchPaneQueryLinguisticDetails
@@ -38,7 +39,7 @@
 
 WINRT_EXPORT
 @interface WASSearchPaneQueryLinguisticDetails : RTObject
-@property (readonly) NSArray* queryTextAlternatives;
+@property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
 @property (readonly) unsigned int queryTextCompositionStart;
 @end
@@ -73,8 +74,8 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property BOOL enabled;
 @property (retain) NSString* aqsFilter;
-@property (readonly) NSMutableArray* locations;
-@property (readonly) NSMutableArray* propertiesToMatch;
+@property (readonly) NSMutableArray* /* WSStorageFolder* */ locations;
+@property (readonly) NSMutableArray* /* NSString * */ propertiesToMatch;
 @end
 
 #endif // __WASLocalContentSuggestionSettings_DEFINED__
@@ -88,7 +89,7 @@ WINRT_EXPORT
 + (WASSearchQueryLinguisticDetails*)makeInstance:(id<NSFastEnumeration> /* NSString * */)queryTextAlternatives
                        queryTextCompositionStart:(unsigned int)queryTextCompositionStart
                       queryTextCompositionLength:(unsigned int)queryTextCompositionLength ACTIVATOR;
-@property (readonly) NSArray* queryTextAlternatives;
+@property (readonly) NSArray* /* NSString * */ queryTextAlternatives;
 @property (readonly) unsigned int queryTextCompositionLength;
 @property (readonly) unsigned int queryTextCompositionStart;
 @end

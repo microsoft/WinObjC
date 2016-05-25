@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WARResourceLoader;
 @protocol WARIResourceLoader
 , WARIResourceLoader2, WARIResourceLoaderStatics, WARIResourceLoaderStatics2, WARIResourceLoaderFactory;
@@ -39,8 +40,8 @@ WINRT_EXPORT
 + (WARResourceLoader*)getForViewIndependentUse;
 + (WARResourceLoader*)getForViewIndependentUseWithName:(NSString*)name;
 + (NSString*)getStringForReference:(WFUri*)uri;
-+ (WARResourceLoader*)makeResourceLoaderByName:(NSString*)name ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WARResourceLoader*)makeResourceLoaderByName:(NSString*)name ACTIVATOR;
 - (NSString*)getString:(NSString*)resource;
 - (NSString*)getStringForUri:(WFUri*)uri;
 @end

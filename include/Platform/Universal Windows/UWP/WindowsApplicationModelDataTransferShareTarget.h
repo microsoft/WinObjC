@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WADSQuickLink, WADSShareOperation;
 @protocol WADSIQuickLink
 , WADSIShareOperation, WADSIShareOperation2;
@@ -40,8 +41,8 @@ WINRT_EXPORT
 @property (retain) NSString* title;
 @property (retain) WSSRandomAccessStreamReference* thumbnail;
 @property (retain) NSString* id;
-@property (readonly) NSMutableArray* supportedDataFormats;
-@property (readonly) NSMutableArray* supportedFileTypes;
+@property (readonly) NSMutableArray* /* NSString * */ supportedDataFormats;
+@property (readonly) NSMutableArray* /* NSString * */ supportedFileTypes;
 @end
 
 #endif // __WADSQuickLink_DEFINED__

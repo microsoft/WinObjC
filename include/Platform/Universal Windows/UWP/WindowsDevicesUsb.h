@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDUUsbControlRequestType, WDUUsbSetupPacket, WDUUsbDeviceClass, WDUUsbDeviceClasses, WDUUsbDevice, WDUUsbInterface,
     WDUUsbDeviceDescriptor, WDUUsbConfiguration, WDUUsbDescriptor, WDUUsbConfigurationDescriptor, WDUUsbInterfaceDescriptor,
     WDUUsbBulkInEndpointDescriptor, WDUUsbInterruptInEndpointDescriptor, WDUUsbBulkOutEndpointDescriptor,
@@ -130,8 +131,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbDeviceClass : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id subclassCode;
-@property (retain) id protocolCode;
+@property (retain) id /* uint8_t */ subclassCode;
+@property (retain) id /* uint8_t */ protocolCode;
 @property uint8_t classCode;
 @end
 
@@ -205,13 +206,13 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbInterface : RTObject
-@property (readonly) NSArray* bulkInPipes;
-@property (readonly) NSArray* bulkOutPipes;
-@property (readonly) NSArray* descriptors;
+@property (readonly) NSArray* /* WDUUsbBulkInPipe* */ bulkInPipes;
+@property (readonly) NSArray* /* WDUUsbBulkOutPipe* */ bulkOutPipes;
+@property (readonly) NSArray* /* WDUUsbDescriptor* */ descriptors;
 @property (readonly) uint8_t interfaceNumber;
-@property (readonly) NSArray* interfaceSettings;
-@property (readonly) NSArray* interruptInPipes;
-@property (readonly) NSArray* interruptOutPipes;
+@property (readonly) NSArray* /* WDUUsbInterfaceSetting* */ interfaceSettings;
+@property (readonly) NSArray* /* WDUUsbInterruptInPipe* */ interruptInPipes;
+@property (readonly) NSArray* /* WDUUsbInterruptOutPipe* */ interruptOutPipes;
 @end
 
 #endif // __WDUUsbInterface_DEFINED__
@@ -239,8 +240,8 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WDUUsbConfiguration : RTObject
 @property (readonly) WDUUsbConfigurationDescriptor* configurationDescriptor;
-@property (readonly) NSArray* descriptors;
-@property (readonly) NSArray* usbInterfaces;
+@property (readonly) NSArray* /* WDUUsbDescriptor* */ descriptors;
+@property (readonly) NSArray* /* WDUUsbInterface* */ usbInterfaces;
 @end
 
 #endif // __WDUUsbConfiguration_DEFINED__
@@ -439,12 +440,12 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WDUUsbInterfaceSetting : RTObject
-@property (readonly) NSArray* bulkInEndpoints;
-@property (readonly) NSArray* bulkOutEndpoints;
-@property (readonly) NSArray* descriptors;
+@property (readonly) NSArray* /* WDUUsbBulkInEndpointDescriptor* */ bulkInEndpoints;
+@property (readonly) NSArray* /* WDUUsbBulkOutEndpointDescriptor* */ bulkOutEndpoints;
+@property (readonly) NSArray* /* WDUUsbDescriptor* */ descriptors;
 @property (readonly) WDUUsbInterfaceDescriptor* interfaceDescriptor;
-@property (readonly) NSArray* interruptInEndpoints;
-@property (readonly) NSArray* interruptOutEndpoints;
+@property (readonly) NSArray* /* WDUUsbInterruptInEndpointDescriptor* */ interruptInEndpoints;
+@property (readonly) NSArray* /* WDUUsbInterruptOutEndpointDescriptor* */ interruptOutEndpoints;
 @property (readonly) BOOL selected;
 - (RTObject<WFIAsyncAction>*)selectSettingAsync;
 @end

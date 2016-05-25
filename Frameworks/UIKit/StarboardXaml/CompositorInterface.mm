@@ -15,8 +15,17 @@
 //******************************************************************************
 
 #import "Starboard.h"
+#include <COMIncludes.h>
+#import <WRLHelpers.h>
+#import <ErrorHandling.h>
+#import <RawBuffer.h>
+#import <wrl/client.h>
+#import <wrl/implements.h>
+#import <wrl/async.h>
+#import <wrl/wrappers/corewrappers.h>
+#import <windows.foundation.h>
+#include <COMIncludes_end.h>
 #import "CACompositor.h"
-#import "CACompositorClient.h"
 #import "QuartzCore\CALayer.h"
 #import "CGContextInternal.h"
 #import "UIInterface.h"
@@ -25,13 +34,14 @@
 #import "Quaternion.h"
 #import <deque>
 #import <map>
-#import <memory>
+#import <algorithm>
 #import "CompositorInterface.h"
 #import "CAAnimationInternal.h"
 #import "CALayerInternal.h"
 #import "UWP/interopBase.h"
 #import "UIApplicationInternal.h"
-#import "LoggingNative.h"
+#import <LoggingNative.h>
+#import <MainDispatcher.h>
 
 #import <UWP/WindowsUIViewManagement.h>
 #import <UWP/WindowsDevicesInput.h>
@@ -39,9 +49,6 @@
 static const wchar_t* TAG = L"CompositorInterface";
 
 @class RTObject;
-
-CACompositorClientInterface* _client;
-void UpdateRootNode();
 
 bool dxLandscape = false;
 
@@ -128,21 +135,12 @@ RefCountedType::RefCountedType() {
 RefCountedType::~RefCountedType() {
 }
 
-DisplayTexture::DisplayTexture() {
-}
-
-DisplayTexture::~DisplayTexture() {
-}
-
 class GenericControlXaml : public DisplayTexture {
 public:
     winobjc::Id _xamlView;
 
     GenericControlXaml(const Microsoft::WRL::ComPtr<IUnknown>& view) {
         _xamlView = view;
-    }
-
-    ~GenericControlXaml() {
     }
 
     void SetNodeContent(DisplayNode* node, float width, float height, float scale) {
@@ -155,13 +153,7 @@ class DisplayTextureContent : public DisplayTexture {
     const char* name;
 
 public:
-    ~DisplayTextureContent() {
-        DecrementCounter(name);
-    }
-
     DisplayTextureContent(CGImageRef img) : name("TextureBitmap") {
-        IncrementCounter(name);
-
         if (img->_imgType == CGImageTypePNG || img->_imgType == CGImageTypeJPEG) {
             const void* data = NULL;
             bool freeData = false;
@@ -282,7 +274,6 @@ public:
     }
 
     DisplayTextureContent(int width, int height) : name("TextureDirect") {
-        IncrementCounter(name);
         lockPtr = NULL;
         _xamlImage = CreateWritableBitmap(width, height);
     }
@@ -307,14 +298,6 @@ public:
 
 class DisplayTextureText : public DisplayTextureXamlGlyphs {
 public:
-    DisplayTextureText() {
-        IncrementCounter("TextureText");
-    }
-
-    ~DisplayTextureText() {
-        DecrementCounter("TextureText");
-    }
-
     void SetParams(UIFont* font,
                    NSString* text,
                    UIColor* color,
@@ -375,8 +358,6 @@ public:
     }
 
     DisplayAnimationTransition(id animHandler, NSString* type, NSString* subType) {
-        IncrementCounter("TransitionAnimation");
-
         _animHandler = [animHandler retain];
 
         _type = [type retain];
@@ -391,17 +372,14 @@ public:
     }
 
     ~DisplayAnimationTransition() {
-        DecrementCounter("TransitionAnimation");
-
         [_animHandler release];
         [_type release];
         [_subType release];
     }
 
-    void AddToNode(DisplayNode* node) {
+    concurrency::task<void> AddToNode(DisplayNode* node) {
         CreateXamlAnimation();
-        AddTransitionAnimation(node, [_type UTF8String], [_subType UTF8String]);
-        Start();
+        return AddTransitionAnimation(node, [_type UTF8String], [_subType UTF8String]);
     }
 };
 
@@ -752,8 +730,6 @@ public:
                           NSObject* toValue,
                           NSObject* byValue,
                           CAMediaTimingProperties* timingProperties) {
-        IncrementCounter("BasicAnimation");
-
         CAMediaTimingFunction* mediaTiming = timingProperties->_timingFunction;
         float p1[2] = { 0 }, p2[2] = { 0 };
         [mediaTiming getControlPointAtIndex:0 values:p1];
@@ -792,7 +768,6 @@ public:
     }
 
     ~DisplayAnimationBasic() {
-        DecrementCounter("BasicAnimation");
         [_animHandler release];
         [_propertyName release];
         [_fromValue release];
@@ -800,7 +775,7 @@ public:
         [_byValue release];
     }
 
-    void AddToNode(DisplayNode* node) {
+    concurrency::task<void> AddToNode(DisplayNode* node) {
         CreateXamlAnimation();
 
         const char* propName = [_propertyName UTF8String];
@@ -920,12 +895,18 @@ public:
         } else {
             UNIMPLEMENTED_WITH_MSG("Stubbed function called! Unsupported property name: %hs", propName);
         }
+
+        // No specialized task needed for basic animations
+        return concurrency::task_from_result();
     }
 };
 
-void DisplayNode::AddAnimation(DisplayAnimation* anim) {
-    if (anim)
-        anim->AddToNode(this);
+concurrency::task<void> DisplayNode::AddAnimation(DisplayAnimation* anim) {
+    if (anim) {
+        return anim->AddToNode(this);
+    }
+
+    return concurrency::task_from_result();
 }
 
 void DisplayNode::SetContents(DisplayTexture* tex, float width, float height, float contentScale) {
@@ -942,14 +923,6 @@ void DisplayNode::SetContents(DisplayTexture* tex, float width, float height, fl
 
 class DisplayNodeXaml : public DisplayNode {
 public:
-    DisplayNodeXaml() {
-        IncrementCounter("DisplayNodeXaml");
-    }
-
-    ~DisplayNodeXaml() {
-        DecrementCounter("DisplayNodeXaml");
-    }
-
     void* GetProperty(const char* name) {
         NSObject* ret = nil;
 
@@ -1100,24 +1073,10 @@ public:
         } else {
             FAIL_FAST_HR(E_NOTIMPL);
         }
-
-        if (isRoot)
-            ::UpdateRootNode();
     }
 };
 
-class Transaction {
-public:
-    Transaction() {
-    }
-
-    virtual ~Transaction() {
-    }
-
-    virtual void Process() = 0;
-};
-
-class QueuedAnimation : public Transaction {
+class QueuedAnimation : public ICompositorAnimationTransaction {
 public:
     id _layer, _animation, _key;
     DisplayAnimationRef abortAnimation;
@@ -1145,7 +1104,7 @@ public:
         [_key release];
     }
 
-    void Process() {
+    concurrency::task<void> Process() override {
         if (_abort) {
             abortAnimation->Stop();
         } else {
@@ -1156,16 +1115,18 @@ public:
 
                 if (newAnimation) {
                     DisplayNode* node = (DisplayNode*)[_layer _presentationNode];
-                    node->AddAnimation(newAnimation);
+                    return node->AddAnimation(newAnimation);
                 } else {
                     [_animation animationDidStop:FALSE];
                 }
             }
         }
+
+        return concurrency::task_from_result();
     }
 };
 
-class QueuedProperty : public Transaction {
+class QueuedProperty : public ICompositorTransaction {
 public:
     DisplayNodeRef _node;
     char* _propertyName;
@@ -1176,7 +1137,6 @@ public:
     bool _applyingTexture;
 
     QueuedProperty(DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) {
-        IncrementCounter("QueuedProperty");
         _node = node;
         _propertyName = IwStrDup("contents");
         _propertyValue = NULL;
@@ -1187,7 +1147,6 @@ public:
     }
 
     QueuedProperty(DisplayNode* node, const char* propertyName, NSObject* propertyValue) {
-        IncrementCounter("QueuedProperty");
         _node = node;
         _propertyName = IwStrDup(propertyName);
         _propertyValue = [propertyValue retain];
@@ -1196,17 +1155,16 @@ public:
     }
 
     ~QueuedProperty() {
-        DecrementCounter("QueuedProperty");
         if (_propertyName) {
             IwFree(_propertyName);
         }
-        [_propertyValue release];
 
+        [_propertyValue release];
         _propertyName = nullptr;
         _propertyValue = nullptr;
     }
 
-    void Process() {
+    void Process() override {
         if (_applyingTexture) {
             _node->SetContents(_newTexture.Get(), _contentsSize.width, _contentsSize.height, _contentsScale);
         } else {
@@ -1215,7 +1173,7 @@ public:
     }
 };
 
-class QueuedNodeMovement : public Transaction {
+class QueuedNodeMovement : public ICompositorTransaction {
 public:
     DisplayNodeRef _node;
     DisplayNodeRef _before, _after;
@@ -1226,7 +1184,6 @@ public:
     MovementType _type;
 
     QueuedNodeMovement(MovementType type, DisplayNode* node, DisplayNode* before, DisplayNode* after, DisplayNode* supernode) {
-        IncrementCounter("QueuedNodeMovement");
         _type = type;
         _node = node;
         _before = before;
@@ -1234,11 +1191,7 @@ public:
         _supernode = supernode;
     }
 
-    ~QueuedNodeMovement() {
-        DecrementCounter("QueuedNodeMovement");
-    }
-
-    void Process() {
+    void Process() override {
         switch (_type) {
             case Add:
                 if (!_supernode) {
@@ -1261,197 +1214,110 @@ public:
 
 using namespace std;
 
-typedef shared_ptr<map<std::string, QueuedProperty*>> NodeUpdates;
-typedef deque<QueuedAnimation*> AnimationQueue;
-typedef map<DisplayNode*, NodeUpdates> PropertyQueue;
-typedef deque<QueuedNodeMovement*> NodeMovementQueue;
-typedef deque<Transaction*> TransactionQueue;
-
-class DisplayTransaction : public Transaction {
-    AnimationQueue* _queuedAnimations;
-    PropertyQueue* _queuedProperties;
-    NodeMovementQueue* _queuedNodeMovements;
-    TransactionQueue* _queuedTransactions;
+class DisplayTransaction : public ICompositorTransaction {
+    std::deque<std::shared_ptr<ICompositorTransaction>> _queuedTransactions;
+    std::deque<std::shared_ptr<ICompositorAnimationTransaction>> _queuedAnimations;
+    std::map<DisplayNode*, std::map<std::string, std::shared_ptr<ICompositorTransaction>>> _queuedProperties;
+    std::deque<std::shared_ptr<ICompositorTransaction>> _queuedNodeMovements;
 
 public:
-    DisplayTransaction() {
-        _queuedAnimations = NULL;
-        _queuedProperties = NULL;
-        _queuedNodeMovements = NULL;
-        _queuedTransactions = NULL;
+    void QueueProperty(const std::shared_ptr<QueuedProperty> property) {
+        auto& currentUpdates = _queuedProperties[property->_node.Get()];
+        currentUpdates[property->_propertyName] = property;
     }
 
-    ~DisplayTransaction() {
-        if (_queuedAnimations)
-            delete _queuedAnimations;
-        if (_queuedProperties)
-            delete _queuedProperties;
-        if (_queuedNodeMovements)
-            delete _queuedNodeMovements;
-        if (_queuedTransactions)
-            delete _queuedTransactions;
+    void QueueNodeMovement(const std::shared_ptr<QueuedNodeMovement>& nodeMovement) {
+        _queuedNodeMovements.push_back(nodeMovement);
     }
 
-    void QueueProperty(QueuedProperty* prop) {
-        if (_queuedProperties == NULL) {
-            _queuedProperties = new PropertyQueue();
-        }
-
-        NodeUpdates curUpdates = (*_queuedProperties)[prop->_node.Get()];
-        std::string propName(prop->_propertyName);
-        if (curUpdates != NULL) {
-            auto existingProperty = curUpdates->find(propName);
-            if (existingProperty != curUpdates->end()) {
-                QueuedProperty* cur = existingProperty->second;
-                curUpdates->erase(existingProperty);
-                delete cur;
-            }
-        } else {
-            curUpdates = make_shared<map<std::string, QueuedProperty*>>();
-            (*_queuedProperties)[prop->_node.Get()] = curUpdates;
-        }
-        (*curUpdates)[propName] = prop;
+    void QueueAnimation(const std::shared_ptr<QueuedAnimation>& animation) {
+        _queuedAnimations.push_back(animation);
     }
 
-    void QueueNodeMovement(QueuedNodeMovement* movement) {
-        if (_queuedNodeMovements == NULL) {
-            _queuedNodeMovements = new NodeMovementQueue();
-        }
-        _queuedNodeMovements->push_back(movement);
-    }
-
-    void QueueAnimation(QueuedAnimation* anim) {
-        if (_queuedAnimations == NULL) {
-            _queuedAnimations = new AnimationQueue();
-        }
-        _queuedAnimations->push_back(anim);
-    }
-
-    void Process() {
-        if (_queuedTransactions) {
-            for (auto& curTransaction : *_queuedTransactions) {
-                curTransaction->Process();
-                delete curTransaction;
-            }
-        }
-        if (_queuedAnimations) {
-            for (auto& curAnimation : *_queuedAnimations) {
-                curAnimation->Process();
-                delete curAnimation;
-            }
-        }
-        if (_queuedNodeMovements) {
-            for (auto& curMovement : *_queuedNodeMovements) {
-                curMovement->Process();
-                delete curMovement;
-            }
-        }
-        if (_queuedProperties) {
-            for (auto& curNode : *_queuedProperties) {
-                for (auto& curProperty : *(curNode.second)) {
-                    curProperty.second->Process();
-                    delete curProperty.second;
-                }
-            }
-        }
-    }
-
-    void QueueTransaction(Transaction* transaction) {
-        if (_queuedTransactions == NULL) {
-            _queuedTransactions = new TransactionQueue();
-        }
+    void QueueTransaction(const std::shared_ptr<DisplayTransaction>& transaction) {
         //  Move all of our existing queues into a new transaction
-        if (_queuedAnimations != NULL || _queuedProperties != NULL || _queuedNodeMovements != NULL) {
-            DisplayTransaction* currentPropChanges = new DisplayTransaction();
-            currentPropChanges->_queuedAnimations = _queuedAnimations;
-            currentPropChanges->_queuedProperties = _queuedProperties;
-            currentPropChanges->_queuedNodeMovements = _queuedNodeMovements;
+        if (!_queuedAnimations.empty() || !_queuedProperties.empty() || !_queuedNodeMovements.empty()) {
+            auto currentChanges = std::make_shared<DisplayTransaction>();
+            currentChanges->_queuedAnimations = std::move(_queuedAnimations);
+            currentChanges->_queuedProperties = std::move(_queuedProperties);
+            currentChanges->_queuedNodeMovements = std::move(_queuedNodeMovements);
 
-            _queuedAnimations = NULL;
-            _queuedProperties = NULL;
-            _queuedNodeMovements = NULL;
-
-            _queuedTransactions->push_back(currentPropChanges);
+            _queuedTransactions.push_back(currentChanges);
         }
 
-        _queuedTransactions->push_back(transaction);
+        _queuedTransactions.push_back(transaction);
+    }
+
+    void Process() override {
+        DispatchCompositorTransactions(std::move(_queuedTransactions),
+                                       std::move(_queuedAnimations),
+                                       std::move(_queuedProperties),
+                                       std::move(_queuedNodeMovements));
     }
 };
 
-deque<DisplayTransaction*> _queuedTransactions;
+deque<std::shared_ptr<DisplayTransaction>> s_queuedTransactions;
 
 class CAXamlCompositor : public CACompositorInterface {
 public:
     virtual void DisplayTreeChanged() override {
-        _client->RequestTransactionProcessing();
+        // Trigger a UI update
+        UIRequestTransactionProcessing();
     }
+
     virtual DisplayNode* CreateDisplayNode() override {
         DisplayNode* ret = new DisplayNodeXaml();
         return ret;
     }
 
-    DisplayTransaction* CreateDisplayTransaction() override {
-        return new DisplayTransaction();
+    std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() override {
+        return std::make_shared<DisplayTransaction>();
     }
 
-    void QueueDisplayTransaction(DisplayTransaction* transaction, DisplayTransaction* onTransaction) override {
+    void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
+                                 const std::shared_ptr<DisplayTransaction>& onTransaction) override {
         if (onTransaction) {
             onTransaction->QueueTransaction(transaction);
         } else {
-            _queuedTransactions.push_back(transaction);
+            s_queuedTransactions.push_back(transaction);
         }
     }
 
-    void CommitDisplayTransaction(DisplayTransaction* transaction) {
-    }
-
-    virtual void addNode(DisplayTransaction* transaction,
+    virtual void addNode(const std::shared_ptr<DisplayTransaction>& transaction,
                          DisplayNode* node,
                          DisplayNode* superNode,
                          DisplayNode* beforeNode,
                          DisplayNode* afterNode) override {
-        QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode);
-        transaction->QueueNodeMovement(newNode);
+        transaction->QueueNodeMovement(
+            std::make_shared<QueuedNodeMovement>(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode));
     }
 
     virtual void sortWindowLevels() override {
     }
 
-    virtual void moveNode(DisplayTransaction* transaction, DisplayNode* node, DisplayNode* beforeNode, DisplayNode* afterNode) override {
-        QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Move, node, beforeNode, afterNode, NULL);
-        transaction->QueueNodeMovement(newNode);
+    virtual void moveNode(const std::shared_ptr<DisplayTransaction>& transaction,
+                          DisplayNode* node,
+                          DisplayNode* beforeNode,
+                          DisplayNode* afterNode) override {
+        transaction->QueueNodeMovement(
+            std::make_shared<QueuedNodeMovement>(QueuedNodeMovement::Move, node, beforeNode, afterNode, nullptr));
     }
 
-    virtual void removeNode(DisplayTransaction* transaction, DisplayNode* node) override {
-        QueuedNodeMovement* newNode = new QueuedNodeMovement(QueuedNodeMovement::Remove, node, NULL, NULL, NULL);
-        transaction->QueueNodeMovement(newNode);
+    virtual void removeNode(const std::shared_ptr<DisplayTransaction>& transaction, DisplayNode* node) override {
+        transaction->QueueNodeMovement(std::make_shared<QueuedNodeMovement>(QueuedNodeMovement::Remove, node, nullptr, nullptr, nullptr));
     }
 
-    virtual void addAnimation(DisplayTransaction* transaction, id layer, id animation, id forKey) override {
-        QueuedAnimation* newAnim = new QueuedAnimation(layer, animation, forKey);
-
-        transaction->QueueAnimation(newAnim);
+    virtual void addAnimation(const std::shared_ptr<DisplayTransaction>& transaction, id layer, id animation, id forKey) override {
+        transaction->QueueAnimation(std::make_shared<QueuedAnimation>(layer, animation, forKey));
         DisplayTreeChanged();
     }
 
-    virtual void addAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
-    }
-
-    virtual void removeAnimationRaw(DisplayTransaction* transaction, DisplayNode* pNode, DisplayAnimation* pAnimation) override {
-        //  Removing animations while they're playing doesn't jibe well with the xaml compositor
-        /*
-        QueuedAnimation *newAnim = new QueuedAnimation(pAnimation);
-
-        transaction->QueueAnimation(newAnim);
-        DisplayTreeChanged();
-        */
-    }
-
-    virtual void setNodeTexture(
-        DisplayTransaction* transaction, DisplayNode* node, DisplayTexture* newTexture, CGSize contentsSize, float contentsScale) override {
-        QueuedProperty* newPropChange = new QueuedProperty(node, newTexture, contentsSize, contentsScale);
-
-        transaction->QueueProperty(newPropChange);
+    virtual void setNodeTexture(const std::shared_ptr<DisplayTransaction>& transaction,
+                                DisplayNode* node,
+                                DisplayTexture* newTexture,
+                                CGSize contentsSize,
+                                float contentsScale) override {
+        transaction->QueueProperty(std::make_shared<QueuedProperty>(node, newTexture, contentsSize, contentsScale));
         DisplayTreeChanged();
     }
 
@@ -1461,13 +1327,11 @@ public:
     virtual void setNewPatternBackground(id layer) {
     }
 
-    virtual void setDisplayProperty(DisplayTransaction* transaction,
+    virtual void setDisplayProperty(const std::shared_ptr<DisplayTransaction>& transaction,
                                     DisplayNode* node,
                                     const char* propertyName,
                                     NSObject* newValue) override {
-        QueuedProperty* newPropChange = new QueuedProperty(node, propertyName, newValue);
-
-        transaction->QueueProperty(newPropChange);
+        transaction->QueueProperty(std::make_shared<QueuedProperty>(node, propertyName, newValue));
         DisplayTreeChanged();
     }
 
@@ -1671,15 +1535,13 @@ public:
     }
 
     virtual void ProcessTransactions() override {
-        for (auto& cur : _queuedTransactions) {
-            cur->Process();
-            delete cur;
+        for (auto& transaction : s_queuedTransactions) {
+            transaction->Process();
         }
-        _queuedTransactions.clear();
+        s_queuedTransactions.clear();
     }
 
     virtual void RequestRedraw() override {
-        _client->RequestRedraw();
         CASignalDisplayLink();
     }
 
@@ -1716,14 +1578,6 @@ public:
         return (NSObject*)node->GetProperty(propertyName);
     }
 
-    void IncrementCounter(const char* name) override {
-        ::IncrementCounter(name);
-    }
-
-    void DecrementCounter(const char* name) override {
-        ::DecrementCounter(name);
-    }
-
     DisplayTexture* CreateDisplayTextureForElement(id xamlElement) override {
         GenericControlXaml* genericControlTexture = new GenericControlXaml([(RTObject*)xamlElement comObj].Get());
         return genericControlTexture;
@@ -1740,35 +1594,14 @@ public:
 
 void SetUIHandlers();
 
-class XamlCompositorClient : public CACompositorClientInterface {
-public:
-    XamlCompositorClient() {
-    }
-
-    void RequestRedraw() {
-    }
-
-    void RequestTransactionProcessing() {
-        UIRequestTransactionProcessing();
-    }
-
-    void SetLandscape(bool isLandscape) {
-    }
-};
-
-void SetCACompositorClient(CACompositorClientInterface* client);
-
 void CreateXamlCompositor(winobjc::Id& root) {
     CGImageAddDestructionListener(UIReleaseDisplayTextureForCGImage);
     static CAXamlCompositor* compIntr = new CAXamlCompositor();
-    static XamlCompositorClient* client = new XamlCompositorClient();
 
     SetCACompositor(compIntr);
-    SetCACompositorClient(client);
 
     EbrGetMediaTime();
     SetUIHandlers();
-    _client = client;
     SetRootGrid(root);
 }
 

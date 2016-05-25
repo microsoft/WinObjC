@@ -123,6 +123,6 @@ COREGRAPHICS_EXPORT CGRect CGPathGetPathBoundingBox(CGPathRef path) STUB_METHOD;
 COREGRAPHICS_EXPORT CGPoint CGPathGetCurrentPoint(CGPathRef path) STUB_METHOD;
 COREGRAPHICS_EXPORT CFTypeID CGPathGetTypeID() STUB_METHOD;
 
-COREGRAPHICS_EXPORT bool CGPathIsEmpty(CGPathRef path) STUB_METHOD;
+COREGRAPHICS_EXPORT bool CGPathIsEmpty(CGPathRef path);
 COREGRAPHICS_EXPORT bool CGPathIsRect(CGPathRef path, CGRect* rect) STUB_METHOD;
 COREGRAPHICS_EXPORT bool CGPathContainsPoint(CGPathRef path, const CGAffineTransform* m, CGPoint point, bool eoFill) STUB_METHOD;

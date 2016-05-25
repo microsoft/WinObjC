@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSCUCredentialPickerOptions, WSCUCredentialPickerResults, WSCUCredentialPicker, WSCUUserConsentVerifier;
 @protocol WSCUICredentialPickerOptions
 , WSCUICredentialPickerStatics, WSCUICredentialPickerResults, WSCUIUserConsentVerifierStatics;

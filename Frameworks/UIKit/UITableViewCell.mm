@@ -25,6 +25,7 @@
 #import "CALayerInternal.h"
 #import "UITableViewInternal.h"
 #import "UIColorInternal.h"
+#import "CACompositor.h"
 
 #import <algorithm>
 

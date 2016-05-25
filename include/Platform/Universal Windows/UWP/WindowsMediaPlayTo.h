@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WMPSourceChangeRequestedEventArgs, WMPPlaybackRateChangeRequestedEventArgs, WMPCurrentTimeChangeRequestedEventArgs,
     WMPMuteChangeRequestedEventArgs, WMPVolumeChangeRequestedEventArgs, WMPPlayToReceiver, WMPPlayToConnection, WMPPlayToSource,
     WMPPlayToConnectionStateChangedEventArgs, WMPPlayToConnectionTransferredEventArgs, WMPPlayToConnectionErrorEventArgs,
@@ -63,11 +64,11 @@ WINRT_EXPORT
 @interface WMPSourceChangeRequestedEventArgs : RTObject
 @property (readonly) NSString* album;
 @property (readonly) NSString* author;
-@property (readonly) id date;
+@property (readonly) id /* WFDateTime* */ date;
 @property (readonly) NSString* Description;
 @property (readonly) NSString* genre;
-@property (readonly) NSDictionary* properties;
-@property (readonly) id rating;
+@property (readonly) NSDictionary* /* NSString *, RTObject* */ properties;
+@property (readonly) id /* unsigned int */ rating;
 @property (readonly) RTObject<WSSIRandomAccessStreamWithContentType>* stream;
 @property (readonly) RTObject<WSSIRandomAccessStreamReference>* thumbnail;
 @property (readonly) NSString* title;

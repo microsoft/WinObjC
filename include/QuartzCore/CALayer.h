@@ -170,8 +170,8 @@ CA_EXPORT_CLASS
 - (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval fromLayer:(CALayer*)layer;
 - (CFTimeInterval)convertTime:(CFTimeInterval)timeInterval toLayer:(CALayer*)layer STUB_METHOD;
 
-- (CALayer*)hitTest:(CGPoint)thePoint STUB_METHOD;
-- (BOOL)containsPoint:(CGPoint)thePoint STUB_METHOD;
+- (CALayer*)hitTest:(CGPoint)thePoint;
+- (BOOL)containsPoint:(CGPoint)thePoint;
 
 @property (readonly) CGRect visibleRect;
 - (void)scrollPoint:(CGPoint)thePoint STUB_METHOD;

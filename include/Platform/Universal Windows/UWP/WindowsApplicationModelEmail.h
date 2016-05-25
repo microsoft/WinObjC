@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WAEEmailMessage, WAEEmailStore, WAEEmailMailbox, WAEEmailConversationReader, WAEEmailQueryOptions, WAEEmailMessageReader,
     WAEEmailConversation, WAEEmailFolder, WAEEmailRecipient, WAEEmailIrmTemplate, WAEEmailIrmInfo, WAEEmailAttachment, WAEEmailMeetingInfo,
     WAEEmailMailboxChangedDeferral, WAEEmailMailboxCapabilities, WAEEmailMailboxChangeTracker, WAEEmailMailboxPolicies,
@@ -267,16 +268,16 @@ WINRT_EXPORT
 + (instancetype)make ACTIVATOR;
 @property (retain) NSString* body;
 @property (retain) NSString* subject;
-@property (readonly) NSMutableArray* bcc;
-@property (readonly) NSMutableArray* cC;
-@property (readonly) NSMutableArray* attachments;
-@property (readonly) NSMutableArray* to;
+@property (readonly) NSMutableArray* /* WAEEmailRecipient* */ bcc;
+@property (readonly) NSMutableArray* /* WAEEmailRecipient* */ cC;
+@property (readonly) NSMutableArray* /* WAEEmailAttachment* */ attachments;
+@property (readonly) NSMutableArray* /* WAEEmailRecipient* */ to;
 @property WAEEmailFlagState flagState;
 @property unsigned int estimatedDownloadSizeInBytes;
 @property WAEEmailMessageDownloadState downloadState;
 @property WAEEmailImportance importance;
 @property BOOL allowInternetImages;
-@property (retain) id sentTime;
+@property (retain) id /* WFDateTime* */ sentTime;
 @property (retain) WAEEmailRecipient* sender;
 @property (retain) NSString* preview;
 @property int originalCodePage;
@@ -310,7 +311,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailStore : RTObject
-- (void)findMailboxesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findMailboxesAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMailbox* */))success failure:(void (^)(NSError*))failure;
 - (WAEEmailConversationReader*)getConversationReader;
 - (WAEEmailConversationReader*)getConversationReaderWithOptions:(WAEEmailQueryOptions*)options;
 - (WAEEmailMessageReader*)getMessageReader;
@@ -345,7 +346,7 @@ WINRT_EXPORT
 @property (readonly) NSString* id;
 @property (readonly) BOOL isDataEncryptedUnderLock;
 @property (readonly) BOOL isOwnedByCurrentApp;
-@property (readonly) NSMutableArray* mailAddressAliases;
+@property (readonly) NSMutableArray* /* NSString * */ mailAddressAliases;
 @property (readonly) WAEEmailMailboxCapabilities* capabilities;
 @property (readonly) WAEEmailMailboxChangeTracker* changeTracker;
 @property (readonly) WAEEmailMailboxPolicies* policies;
@@ -455,7 +456,7 @@ WINRT_EXPORT
 @property WAEEmailQuerySortProperty sortProperty;
 @property WAEEmailQuerySortDirection sortDirection;
 @property WAEEmailQueryKind kind;
-@property (readonly) NSMutableArray* folderIds;
+@property (readonly) NSMutableArray* /* NSString * */ folderIds;
 @property (readonly) WAEEmailQueryTextSearch* textSearch;
 @end
 
@@ -491,8 +492,10 @@ WINRT_EXPORT
 @property (readonly) NSString* preview;
 @property (readonly) NSString* subject;
 @property (readonly) unsigned int unreadMessageCount;
-- (void)findMessagesAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
-- (void)findMessagesWithCountAsync:(unsigned int)count success:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findMessagesAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMessage* */))success failure:(void (^)(NSError*))failure;
+- (void)findMessagesWithCountAsync:(unsigned int)count
+                           success:(void (^)(NSArray* /* WAEEmailMessage* */))success
+                           failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAEEmailConversation_DEFINED__
@@ -513,7 +516,7 @@ WINRT_EXPORT
 @property (readonly) NSString* parentFolderId;
 - (void)createFolderAsync:(NSString*)name success:(void (^)(WAEEmailFolder*))success failure:(void (^)(NSError*))failure;
 - (RTObject<WFIAsyncAction>*)deleteAsync;
-- (void)findChildFoldersAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)findChildFoldersAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailFolder* */))success failure:(void (^)(NSError*))failure;
 - (WAEEmailConversationReader*)getConversationReader;
 - (WAEEmailConversationReader*)getConversationReaderWithOptions:(WAEEmailQueryOptions*)options;
 - (void)getMessageAsync:(NSString*)id success:(void (^)(WAEEmailMessage*))success failure:(void (^)(NSError*))failure;
@@ -537,9 +540,9 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailRecipient : RTObject
-+ (instancetype)make ACTIVATOR;
 + (WAEEmailRecipient*)make:(NSString*)address ACTIVATOR;
 + (WAEEmailRecipient*)makeWithName:(NSString*)address name:(NSString*)name ACTIVATOR;
++ (instancetype)make ACTIVATOR;
 @property (retain) NSString* name;
 @property (retain) NSString* address;
 @end
@@ -567,8 +570,8 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailIrmInfo : RTObject
-+ (WAEEmailIrmInfo*)make:(WFDateTime*)expiration irmTemplate:(WAEEmailIrmTemplate*)irmTemplate ACTIVATOR;
 + (instancetype)make ACTIVATOR;
++ (WAEEmailIrmInfo*)make:(WFDateTime*)expiration irmTemplate:(WAEEmailIrmTemplate*)irmTemplate ACTIVATOR;
 @property BOOL canRemoveIrmOnResponse;
 @property BOOL canPrintData;
 @property BOOL canModifyRecipientsOnResponse;
@@ -591,11 +594,11 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailAttachment : RTObject
++ (WAEEmailAttachment*)make:(NSString*)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data ACTIVATOR;
 + (instancetype)make ACTIVATOR;
 + (WAEEmailAttachment*)make:(NSString*)fileName
                        data:(RTObject<WSSIRandomAccessStreamReference>*)data
                    mimeType:(NSString*)mimeType ACTIVATOR;
-+ (WAEEmailAttachment*)make:(NSString*)fileName data:(RTObject<WSSIRandomAccessStreamReference>*)data ACTIVATOR;
 @property (retain) NSString* fileName;
 @property (retain) RTObject<WSSIRandomAccessStreamReference>* data;
 @property (retain) NSString* mimeType;
@@ -622,14 +625,14 @@ WINRT_EXPORT
 @property BOOL isAllDay;
 @property (retain) WFTimeSpan* duration;
 @property (retain) NSString* appointmentRoamingId;
-@property (retain) id appointmentOriginalStartTime;
+@property (retain) id /* WFDateTime* */ appointmentOriginalStartTime;
 @property BOOL allowNewTimeProposal;
 @property (retain) WFDateTime* startTime;
 @property uint64_t remoteChangeNumber;
-@property (retain) id recurrenceStartTime;
+@property (retain) id /* WFDateTime* */ recurrenceStartTime;
 @property (retain) WAAAppointmentRecurrence* recurrence;
-@property (retain) id proposedStartTime;
-@property (retain) id proposedDuration;
+@property (retain) id /* WFDateTime* */ proposedStartTime;
+@property (retain) id /* WFTimeSpan* */ proposedDuration;
 @end
 
 #endif // __WAEEmailMeetingInfo_DEFINED__
@@ -685,8 +688,8 @@ WINRT_EXPORT
 @interface WAEEmailMailboxPolicies : RTObject
 @property (readonly) BOOL allowSmimeSoftCertificates;
 @property (readonly) WAEEmailMailboxAllowedSmimeEncryptionAlgorithmNegotiation allowedSmimeEncryptionAlgorithmNegotiation;
-@property (readonly) id requiredSmimeEncryptionAlgorithm;
-@property (readonly) id requiredSmimeSigningAlgorithm;
+@property (readonly) id /* WAEEmailMailboxSmimeEncryptionAlgorithm */ requiredSmimeEncryptionAlgorithm;
+@property (readonly) id /* WAEEmailMailboxSmimeSigningAlgorithm */ requiredSmimeSigningAlgorithm;
 @end
 
 #endif // __WAEEmailMailboxPolicies_DEFINED__
@@ -725,10 +728,10 @@ WINRT_EXPORT
 WINRT_EXPORT
 @interface WAEEmailMailboxAutoReplySettings : RTObject
 + (instancetype)make ACTIVATOR;
-@property (retain) id startTime;
+@property (retain) id /* WFDateTime* */ startTime;
 @property WAEEmailMailboxAutoReplyMessageResponseKind responseKind;
 @property BOOL isEnabled;
-@property (retain) id endTime;
+@property (retain) id /* WFDateTime* */ endTime;
 @property (readonly) WAEEmailMailboxAutoReply* internalReply;
 @property (readonly) WAEEmailMailboxAutoReply* knownExternalReply;
 @property (readonly) WAEEmailMailboxAutoReply* unknownExternalReply;
@@ -781,7 +784,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailConversationBatch : RTObject
-@property (readonly) NSArray* conversations;
+@property (readonly) NSArray* /* WAEEmailConversation* */ conversations;
 @property (readonly) WAEEmailBatchStatus status;
 @end
 
@@ -793,7 +796,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WAEEmailMessageBatch : RTObject
-@property (readonly) NSArray* messages;
+@property (readonly) NSArray* /* WAEEmailMessage* */ messages;
 @property (readonly) WAEEmailBatchStatus status;
 @end
 
@@ -819,7 +822,7 @@ WINRT_EXPORT
 @interface WAEEmailMailboxChange : RTObject
 @property (readonly) WAEEmailMailboxChangeType changeType;
 @property (readonly) WAEEmailFolder* folder;
-@property (readonly) NSMutableArray* mailboxActions;
+@property (readonly) NSMutableArray* /* WAEEmailMailboxAction* */ mailboxActions;
 @property (readonly) WAEEmailMessage* message;
 @end
 
@@ -833,7 +836,7 @@ WINRT_EXPORT
 @interface WAEEmailMailboxChangeReader : RTObject
 - (void)acceptChanges;
 - (void)acceptChangesThrough:(WAEEmailMailboxChange*)lastChangeToAcknowledge;
-- (void)readBatchAsyncWithSuccess:(void (^)(NSArray*))success failure:(void (^)(NSError*))failure;
+- (void)readBatchAsyncWithSuccess:(void (^)(NSArray* /* WAEEmailMailboxChange* */))success failure:(void (^)(NSError*))failure;
 @end
 
 #endif // __WAEEmailMailboxChangeReader_DEFINED__

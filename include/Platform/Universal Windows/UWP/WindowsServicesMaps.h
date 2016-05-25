@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WSMMapAddress, WSMMapLocation, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMMapLocationFinderResult, WSMMapRouteFinderResult,
     WSMMapRouteDrivingOptions, WSMMapLocationFinder, WSMMapRouteFinder, WSMMapService, WSMMapManager;
 @protocol WSMIMapRouteDrivingOptions
@@ -186,7 +187,7 @@ WINRT_EXPORT
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) WFTimeSpan* estimatedDuration;
 @property (readonly) double lengthInMeters;
-@property (readonly) NSArray* maneuvers;
+@property (readonly) NSArray* /* WSMMapRouteManeuver* */ maneuvers;
 @property (readonly) WDGGeopath* path;
 @end
 
@@ -201,7 +202,7 @@ WINRT_EXPORT
 @property (readonly) WDGGeoboundingBox* boundingBox;
 @property (readonly) WFTimeSpan* estimatedDuration;
 @property (readonly) BOOL isTrafficBased;
-@property (readonly) NSArray* legs;
+@property (readonly) NSArray* /* WSMMapRouteLeg* */ legs;
 @property (readonly) double lengthInMeters;
 @property (readonly) WDGGeopath* path;
 @property (readonly) BOOL hasBlockedRoads;
@@ -216,7 +217,7 @@ WINRT_EXPORT
 
 WINRT_EXPORT
 @interface WSMMapLocationFinderResult : RTObject
-@property (readonly) NSArray* locations;
+@property (readonly) NSArray* /* WSMMapLocation* */ locations;
 @property (readonly) WSMMapLocationFinderStatus status;
 @end
 
@@ -230,7 +231,7 @@ WINRT_EXPORT
 @interface WSMMapRouteFinderResult : RTObject
 @property (readonly) WSMMapRoute* route;
 @property (readonly) WSMMapRouteFinderStatus status;
-@property (readonly) NSArray* alternateRoutes;
+@property (readonly) NSArray* /* WSMMapRoute* */ alternateRoutes;
 @end
 
 #endif // __WSMMapRouteFinderResult_DEFINED__
@@ -245,7 +246,7 @@ WINRT_EXPORT
 @property WSMMapRouteRestrictions routeRestrictions;
 @property WSMMapRouteOptimization routeOptimization;
 @property unsigned int maxAlternateRouteCount;
-@property (retain) id initialHeading;
+@property (retain) id /* double */ initialHeading;
 @end
 
 #endif // __WSMMapRouteDrivingOptions_DEFINED__

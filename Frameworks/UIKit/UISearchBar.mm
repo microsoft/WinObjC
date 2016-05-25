@@ -246,7 +246,8 @@ static void initInternal(UISearchBar* self) {
  @Status Interoperable
 */
 - (void)setTranslucent:(BOOL)translucent {
-    if (translucent) {
+    _translucent = translucent;
+    if (_translucent) {
         [self setAlpha:0.75f];
     } else {
         [self setAlpha:1.0f];

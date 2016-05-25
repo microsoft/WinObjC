@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 // Windows.Graphics.DirectX.DirectXPixelFormat
 enum _WGDDirectXPixelFormat {
     WGDDirectXPixelFormatUnknown = 0,

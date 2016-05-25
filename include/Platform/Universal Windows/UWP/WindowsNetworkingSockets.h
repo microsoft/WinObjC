@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WNSSocketActivityContext, WNSDatagramSocket, WNSStreamSocket, WNSStreamSocketListener, WNSSocketActivityInformation,
     WNSDatagramSocketControl, WNSDatagramSocketInformation, WNSDatagramSocketMessageReceivedEventArgs, WNSStreamSocketControl,
     WNSStreamSocketInformation, WNSStreamSocketListenerControl, WNSStreamSocketListenerInformation,
@@ -180,7 +181,7 @@ WINRT_EXPORT
 @property unsigned int outboundBufferSizeInBytes;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property (retain) WSCPasswordCredential* serverCredential;
-@property (readonly) NSMutableArray* supportedProtocols;
+@property (readonly) NSMutableArray* /* NSString * */ supportedProtocols;
 @end
 
 #endif // __WNSIWebSocketControl_DEFINED__
@@ -243,12 +244,12 @@ WINRT_EXPORT
 @interface WNSDatagramSocket : RTObject <WFIClosable>
 + (void)getEndpointPairsAsync:(WNHostName*)remoteHostName
             remoteServiceName:(NSString*)remoteServiceName
-                      success:(void (^)(NSArray*))success
+                      success:(void (^)(NSArray* /* WNEndpointPair* */))success
                       failure:(void (^)(NSError*))failure;
 + (void)getEndpointPairsWithSortOptionsAsync:(WNHostName*)remoteHostName
                            remoteServiceName:(NSString*)remoteServiceName
                                  sortOptions:(WNHostNameSortOptions)sortOptions
-                                     success:(void (^)(NSArray*))success
+                                     success:(void (^)(NSArray* /* WNEndpointPair* */))success
                                      failure:(void (^)(NSError*))failure;
 + (instancetype)make ACTIVATOR;
 @property (readonly) WNSDatagramSocketControl* control;
@@ -363,7 +364,7 @@ WINRT_EXPORT
 @property (readonly) WNSStreamSocket* streamSocket;
 @property (readonly) WNSStreamSocketListener* streamSocketListener;
 @property (readonly) WFGUID* taskId;
-+ (NSDictionary*)allSockets;
++ (NSDictionary* /* NSString *, WNSSocketActivityInformation* */)allSockets;
 @end
 
 #endif // __WNSSocketActivityInformation_DEFINED__
@@ -423,7 +424,7 @@ WINRT_EXPORT
 @property unsigned int outboundBufferSizeInBytes;
 @property BOOL noDelay;
 @property BOOL keepAlive;
-@property (readonly) NSMutableArray* ignorableServerCertificateErrors;
+@property (readonly) NSMutableArray* /* WSCCChainValidationResult */ ignorableServerCertificateErrors;
 @property BOOL serializeConnectionAttempts;
 @property (retain) WSCCCertificate* clientCertificate;
 @end
@@ -448,8 +449,8 @@ WINRT_EXPORT
 @property (readonly) RTObject<WSSIBuffer>* sessionKey;
 @property (readonly) WSCCCertificate* serverCertificate;
 @property (readonly) WNSSocketSslErrorSeverity serverCertificateErrorSeverity;
-@property (readonly) NSArray* serverCertificateErrors;
-@property (readonly) NSArray* serverIntermediateCertificates;
+@property (readonly) NSArray* /* WSCCChainValidationResult */ serverCertificateErrors;
+@property (readonly) NSArray* /* WSCCCertificate* */ serverIntermediateCertificates;
 @end
 
 #endif // __WNSStreamSocketInformation_DEFINED__
@@ -514,7 +515,7 @@ WINRT_EXPORT
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
-@property (readonly) NSMutableArray* supportedProtocols;
+@property (readonly) NSMutableArray* /* NSString * */ supportedProtocols;
 @end
 
 #endif // __WNSMessageWebSocketControl_DEFINED__
@@ -577,7 +578,7 @@ WINRT_EXPORT
 @property (retain) WSCPasswordCredential* serverCredential;
 @property (retain) WSCPasswordCredential* proxyCredential;
 @property unsigned int outboundBufferSizeInBytes;
-@property (readonly) NSMutableArray* supportedProtocols;
+@property (readonly) NSMutableArray* /* NSString * */ supportedProtocols;
 @end
 
 #endif // __WNSStreamWebSocketControl_DEFINED__

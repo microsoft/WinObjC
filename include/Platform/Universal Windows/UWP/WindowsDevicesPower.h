@@ -20,6 +20,7 @@
 #pragma once
 
 #include "interopBase.h"
+
 @class WDPBatteryReport, WDPBattery;
 @protocol WDPIBattery
 , WDPIBatteryReport, WDPIBatteryStatics;
@@ -35,10 +36,10 @@
 
 WINRT_EXPORT
 @interface WDPBatteryReport : RTObject
-@property (readonly) id chargeRateInMilliwatts;
-@property (readonly) id designCapacityInMilliwattHours;
-@property (readonly) id fullChargeCapacityInMilliwattHours;
-@property (readonly) id remainingCapacityInMilliwattHours;
+@property (readonly) id /* int */ chargeRateInMilliwatts;
+@property (readonly) id /* int */ designCapacityInMilliwattHours;
+@property (readonly) id /* int */ fullChargeCapacityInMilliwattHours;
+@property (readonly) id /* int */ remainingCapacityInMilliwattHours;
 @property (readonly) WSPBatteryStatus status;
 @end
 
