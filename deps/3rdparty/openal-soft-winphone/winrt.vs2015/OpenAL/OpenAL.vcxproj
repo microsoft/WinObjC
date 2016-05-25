@@ -267,4 +267,20 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">..\..\..\..\prebuilt\Universal Windows\$(PlatformTarget)\Debug\\</PrebuiltPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">..\..\..\..\prebuilt\Universal Windows\$(PlatformTarget)\\</PrebuiltPath>
+  </PropertyGroup>
+  <Target Name="CopyContent" AfterTargets="Build">
+    <ItemGroup>
+      <LibraryOutput Include="$(OutDir)\*.lib" />
+      <LibraryOutput Include="$(OutDir)\*.dll" />
+      <LibraryOutput Include="$(OutDir)\*.pdb" />
+      <Headers Include="..\..\include\AL\*.h" />
+    </ItemGroup>
+    <Copy DestinationFolder="$(PrebuiltPath)" SkipUnchangedFiles="True" SourceFiles="@(LibraryOutput)" />
+    <Copy DestinationFolder="..\..\..\..\prebuilt\include\OpenAL\\" SkipUnchangedFiles="True" SourceFiles="@(Headers)" />
+  </Target>
 </Project>

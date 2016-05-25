@@ -1,2 +1,2 @@
 MSBUILD_PATH = C:\program files (x86)\msbuild\14.0\bin\msbuild.exe
-CMAKE_PATH = E:\work\cmake\bin\debug\cmake.exe
+CMAKE_PATH = C:\Program Files (x86)\CMake\bin\cmake.exe
