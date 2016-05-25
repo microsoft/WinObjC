@@ -23,7 +23,7 @@ void testUrlCharacterSetEncoding(NSString* decodedString, NSString* encodedStrin
 }
 
 TEST(NSString, NSStringTests) {
-    // NSString* PercentEncoding methods.
+    // NSString PercentEncoding methods.
     NSString* decodedString = @"Space "
                               @"DoubleQuotes\"Hash#Percent%LessThan<GreaterThan>OpeningBracket[Backslash\\ClosingBracket]Caret^"
                               @"GraveAccent`OpeningBrace{VerticalBar|ClosingBrace}";
@@ -171,13 +171,13 @@ TEST(NSString, InitWithFormat) {
     NSString* string = [[[NSString alloc] initWithFormat:@"Default value is %d (%.1f)" locale:nil, 1000, 42.0] autorelease];
     ASSERT_OBJCEQ(string, @"Default value is 1000 (42.0)");
 
-    // string = [[[NSString alloc] initWithFormat:@"en_GB value is %d (%.1f)"
-    //    locale:[NSLocale localeWithLocaleIdentifier:@"en_GB"], 1000, 42.0] autorelease];
-    // ASSERT_OBJCEQ(string, @"en_GB value is 1000 (42.0)");
+    string = [[[NSString alloc] initWithFormat:@"en_GB value is %d (%.1f)"
+                                        locale:[NSLocale localeWithLocaleIdentifier:@"en_GB"], 1000, 42.0] autorelease];
+    ASSERT_OBJCEQ(string, @"en_GB value is 1,000 (42.0)");
 
-    // string = [[[NSString alloc] initWithFormat:@"de_DE value is %d (%.1f)"
-    //                                             locale:[NSLocale localeWithLocaleIdentifier:@"de_DE"], 1000, 42.0] autorelease];
-    // ASSERT_OBJCEQ(string, @"de_DE value is 1000 (42,0)");
+    string = [[[NSString alloc] initWithFormat:@"de_DE value is %d (%.1f)"
+                                        locale:[NSLocale localeWithLocaleIdentifier:@"de_DE"], 1000, 42.0] autorelease];
+    ASSERT_OBJCEQ(string, @"de_DE value is 1.000 (42,0)");
 
     string = [[[NSString alloc] initWithFormat:@"Default value is %d (%.1f)" locale:nil, 1000, 42.0] autorelease];
     ASSERT_OBJCEQ(string, @"Default value is 1000 (42.0)");
