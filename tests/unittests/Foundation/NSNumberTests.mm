@@ -166,3 +166,40 @@ TEST(NSNumber, Compare) {
     ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:pow(2, 66)]]);
     ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:-pow(2, 66)]]);
 }
+
+@interface TestNSNumberSubclass : NSNumber
+@end
+
+@implementation TestNSNumberSubclass {
+    long long _value;
+}
+
+- (instancetype)initWithLongLong:(long long)val {
+    if (self = [super init]) {
+        _value = val;
+    }
+    return self;
+}
+
+- (long long)longLongValue {
+    return _value;
+}
+
+- (const char*)objCType {
+    return @encode(long long);
+}
+
+@end
+
+TEST(NSNumber, Derived_CFNumberGetValue) {
+    long long expected = LLONG_MAX;
+    NSNumber* num = [TestNSNumberSubclass numberWithLongLong:expected];
+
+    long long result;
+    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongLongType, &result));
+    ASSERT_EQ(expected, result);
+
+    // Too small an output type should fail
+    long tooSmallResult;
+    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongType, &tooSmallResult));
+}
