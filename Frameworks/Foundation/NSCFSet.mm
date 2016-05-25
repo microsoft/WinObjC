@@ -95,6 +95,10 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFSetRef, CFSetGetTypeID, NSSet, NSCFSet)
 }
 
 - (id)member:(id)object {
+    if (object == nil) {
+        return nil;
+    }
+
     id objectToReturn = nil;
 
     if (CFSetGetValueIfPresent(static_cast<CFSetRef>(self), (void*)object, (const void**)&objectToReturn)) {

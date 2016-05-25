@@ -27,3 +27,9 @@ TEST(NSSet, ExpandBeyondCapacity) {
 
     ASSERT_EQ(expectedCount, [set count]);
 }
+
+TEST(NSSet, ContainsObject) {
+    NSSet* set = [NSSet setWithObjects:@1, @2, @3, nil];
+    ASSERT_NE(nil, set);
+    ASSERT_FALSE([set containsObject:nil]);
+}
