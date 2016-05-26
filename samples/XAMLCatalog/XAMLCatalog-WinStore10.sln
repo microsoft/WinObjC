@@ -1,0 +1,43 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "XAMLCatalog", "XAMLCatalog", "{0F92E531-ABF7-4FDB-B61A-54E821B6B417}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog-Headers", "XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems", "{3CA8B829-47CE-484D-B16C-37B6A749D46D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XAMLCatalog", "XAMLCatalog.vsimporter\XAMLCatalog-WinStore10\XAMLCatalog.vcxproj", "{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{3CA8B829-47CE-484D-B16C-37B6A749D46D}*SharedItemsImports = 9
+		XAMLCatalog.vsimporter\XAMLCatalog-Headers-WinStore10\XAMLCatalog-Headers.vcxitems*{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}*SharedItemsImports = 4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Debug|ARM.Build.0 = Debug|ARM
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Debug|ARM.Deploy.0 = Debug|ARM
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Debug|Win32.Build.0 = Debug|Win32
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Debug|Win32.Deploy.0 = Debug|Win32
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Release|ARM.ActiveCfg = Release|ARM
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Release|ARM.Build.0 = Release|ARM
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Release|ARM.Deploy.0 = Release|ARM
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Release|Win32.ActiveCfg = Release|Win32
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Release|Win32.Build.0 = Release|Win32
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3CA8B829-47CE-484D-B16C-37B6A749D46D} = {0F92E531-ABF7-4FDB-B61A-54E821B6B417}
+		{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE} = {0F92E531-ABF7-4FDB-B61A-54E821B6B417}
+	EndGlobalSection
+EndGlobal

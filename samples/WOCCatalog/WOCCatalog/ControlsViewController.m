@@ -27,8 +27,7 @@ static const int MODALFORMSHEET_ROW = 5;
 @end
 
 @implementation ControlsViewController {
-    UISwitch* switchCtrl;
-    UIActivityIndicatorView* progressInd;
+    UIActivityIndicatorView* _progressInd;
 }
 
 - (void)viewDidLoad {
@@ -60,7 +59,7 @@ static const int MODALFORMSHEET_ROW = 5;
     if (indexPath.row == 0) {
         // switch
         CGRect frame = CGRectMake(5.0, 12.0, 94.0, 27.0);
-        switchCtrl = [[UISwitch alloc] initWithFrame:frame];
+        UISwitch* switchCtrl = [[UISwitch alloc] initWithFrame:frame];
 
         // in case the parent view draws with a custom color or gradient, use a transparent color
         switchCtrl.backgroundColor = [UIColor clearColor];
@@ -91,12 +90,12 @@ static const int MODALFORMSHEET_ROW = 5;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 2) {
         // activity indicator
-        progressInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [progressInd setColor:[UIColor brownColor]];
-        [progressInd startAnimating];
-        [progressInd sizeToFit];
+        _progressInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [_progressInd setColor:[UIColor brownColor]];
+        [_progressInd startAnimating];
+        [_progressInd sizeToFit];
 
-        cell.accessoryView = progressInd;
+        cell.accessoryView = _progressInd;
         cell.textLabel.text = @"UIActivityIndicator";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (indexPath.row == 3) {
@@ -186,10 +185,10 @@ static const int MODALFORMSHEET_ROW = 5;
 }
 
 - (void)setUIActivityIndicatorView {
-    if (progressInd.isAnimating == TRUE) {
-        [progressInd stopAnimating];
+    if (_progressInd.isAnimating == TRUE) {
+        [_progressInd stopAnimating];
     } else {
-        [progressInd startAnimating];
+        [_progressInd startAnimating];
     }
 }
 

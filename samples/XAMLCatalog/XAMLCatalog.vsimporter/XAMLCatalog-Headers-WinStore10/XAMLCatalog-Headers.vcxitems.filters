@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="XAMLCatalog">
+      <UniqueIdentifier>{BB46C543-901F-4EAF-B9D8-5B7D29EE1456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XAMLCatalog\LegacyControls">
+      <UniqueIdentifier>{E678E08C-9509-4A0B-AD34-A8D3218306F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XAMLCatalog\UIKitControls">
+      <UniqueIdentifier>{FD3C951E-6169-4BC3-9601-705E7B7084CC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\AppDelegate.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MenuTableViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\ProgrammaticViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\StoryBoardViewController.h">
+      <Filter>XAMLCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\AccelerateViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\AlertsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ApplicationViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\AutoLayoutViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\BasicAnimationViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\BezierViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ButtonsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ControlsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\CoreMotionViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\DisplayModeViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\FoundationsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\GLKitExampleController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ImagesViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\MainViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\OpenGLES11Controller.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\OpenGLES20Controller.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PageViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PhotogridViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PickersViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PopoverViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\SearchBarViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\SegmentsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ShadowViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\SingleImageViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TaskInfoViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TextDisplayViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TextFieldsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ToolbarsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TransitionsViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\URLDownloadCell.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\URLSessionViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\WebViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\XamlViewController.h">
+      <Filter>XAMLCatalog\LegacyControls</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h">
+      <Filter>XAMLCatalog\UIKitControls</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

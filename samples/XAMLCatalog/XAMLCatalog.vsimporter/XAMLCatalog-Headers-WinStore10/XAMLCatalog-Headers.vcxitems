@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsRootNamespace>XAMLCatalog_Headers</ItemsRootNamespace>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <Keyword>IslandwoodProj</Keyword>
+    <ItemsProjectGuid>{3CA8B829-47CE-484D-B16C-37B6A749D46D}</ItemsProjectGuid>
+    <SharedGUID>{0FFE4A5E-42DF-42E4-9035-42BA8213CFFB}</SharedGUID>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\AppDelegate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\MenuTableViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\ProgrammaticViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\StoryBoardViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\AccelerateViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\AlertsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ApplicationViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\AutoLayoutViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\BasicAnimationViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\BezierViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ButtonsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ControlsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\CoreMotionViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\DisplayModeViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\FoundationsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\GLKitExampleController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ImagesViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\MainViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\OpenGLES11Controller.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\OpenGLES20Controller.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PageViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PhotogridViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PickersViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\PopoverViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\SearchBarViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\SegmentsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ShadowViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\SingleImageViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TaskInfoViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TextDisplayViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TextFieldsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ToolbarsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\TransitionsViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\URLDownloadCell.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\URLSessionViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\ViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\WebViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\WOCCatalog\WOCCatalog\XamlViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+</Project>

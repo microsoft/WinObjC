@@ -43,7 +43,8 @@
     if (self = [super init]) {
         _delegateQueue = [[NSOperationQueue alloc] init];
         [_delegateQueue setMaxConcurrentOperationCount:5];
-        _urlSession = [NSURLSession sessionWithConfiguration:nil delegate:self delegateQueue:_delegateQueue];
+
+        _urlSession = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration new] delegate:self delegateQueue:_delegateQueue];
         _tasks = [NSMutableArray new];
     }
     return self;
@@ -277,9 +278,8 @@
 
 - (void)legacyDownloadButtonPressed:(id)sender {
     [self _clear];
+
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:_urlTextField.text]];
-    __autoreleasing NSError* error = nil;
-    __autoreleasing NSURLResponse* response = nil;
     NSURLConnection* conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:NO];
     [conn scheduleInRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     [conn start];

@@ -55,7 +55,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.menuItems = [NSMutableArray array];
     
     //CoreMotion
     [self addMenuItemViewController:[[CoreMotionViewController alloc] init] andTitle:@"CoreMotion"];

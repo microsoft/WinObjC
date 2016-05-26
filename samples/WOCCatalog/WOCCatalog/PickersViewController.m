@@ -131,7 +131,6 @@
 
 - (CGRect)calcFrameForPicker:(CGSize)size
 {
-    CGRect screenRect = [[UIScreen mainScreen] applicationFrame];
     CGRect pickerRect = CGRectMake( 0.0,
                                    100.0,
                                    size.width,

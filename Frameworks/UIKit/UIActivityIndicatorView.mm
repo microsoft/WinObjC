@@ -89,6 +89,20 @@
     return self;
 }
 
+/**
+ @Status Interoperable
+*/
+- (void)setFrame:(CGRect)frame {
+    if (_style == UIActivityIndicatorViewStyleWhite || _style == UIActivityIndicatorViewStyleGray) {
+        frame.size.width = 32;
+        frame.size.height = 32;
+    } else if (_style == UIActivityIndicatorViewStyleWhiteLarge) {
+        frame.size.width = 40;
+        frame.size.height = 40;
+    }
+    [super setFrame:frame];
+}
+
 - (void)_commonInit {
     _progressRing = [WXCProgressRing make];
     [self setNativeElement:_progressRing];
@@ -96,6 +110,7 @@
     [self setHidesWhenStopped:TRUE];
     [self setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
 }
+
 /**
  @Status Caveat
  @Notes In iOS , when hideWhenStopped = False and isAnimating = False, it will show a pause UIAcivityIndicatorView. But, XAML don't have an
@@ -123,12 +138,12 @@
 - (void)setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)style {
     _style = style;
     if (style == UIActivityIndicatorViewStyleWhite || style == UIActivityIndicatorViewStyleGray) {
-        self.frame = CGRectMake(0, 0, 20, 20);
+        self.frame = CGRectMake(0, 0, 32, 32);
     } else if (style == UIActivityIndicatorViewStyleWhiteLarge) {
         self.frame = CGRectMake(0, 0, 40, 40);
     }
     if (style == UIActivityIndicatorViewStyleGray) {
-        [self setColor:[UIColor grayColor]];
+        [self setColor:[UIColor blackColor]];
     } else if (style == UIActivityIndicatorViewStyleWhite || style == UIActivityIndicatorViewStyleWhiteLarge) {
         [self setColor:[UIColor whiteColor]];
     }
