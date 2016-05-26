@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KVOPerf", "KVOPerf", "{13FFB877-5317-4581-BA9C-32E4201D44B2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KVOPerf", "KVOPerf.vsimporter\KVOPerf-WinStore10\KVOPerf.vcxproj", "{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|Win32 = Debug|Win32
+		Release|ARM = Release|ARM
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Debug|ARM.ActiveCfg = Debug|ARM
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Debug|ARM.Build.0 = Debug|ARM
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Debug|ARM.Deploy.0 = Debug|ARM
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Debug|Win32.Build.0 = Debug|Win32
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Debug|Win32.Deploy.0 = Debug|Win32
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Release|ARM.ActiveCfg = Release|ARM
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Release|ARM.Build.0 = Release|ARM
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Release|ARM.Deploy.0 = Release|ARM
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Release|Win32.ActiveCfg = Release|Win32
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Release|Win32.Build.0 = Release|Win32
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4EB34FDE-1B6C-4B1D-BEEF-33D300ABD49C} = {13FFB877-5317-4581-BA9C-32E4201D44B2}
+	EndGlobalSection
+EndGlobal
