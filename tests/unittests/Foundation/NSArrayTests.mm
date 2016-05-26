@@ -263,3 +263,14 @@ TEST(NSArray, ExpandBeyondCapacity) {
 TEST(NSArray, AddingObjects) {
     assertArrayContents([@[@1, @2] arrayByAddingObjectsFromArray:@[@3, @4]], @1, @2, @3, @4, nil);
 }
+
+TEST(NSArray, MutateDuringEnumeration) {
+    __block NSMutableArray* array = [NSMutableArray arrayWithObjects:@"A", @"B", @"C", nil];
+    void (^enumerate)() = ^{
+        for(id object in array) {
+            [array addObject:@"<sound effects reminiscent of explosions>"];
+        }
+    };
+
+    ASSERT_ANY_THROW(enumerate());
+}

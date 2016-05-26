@@ -39,6 +39,10 @@
 
 #import "ForFoundationOnly.h"
 
+static void _NSObjCEnumerationMutation(id object) {
+    [NSException raise:NSInternalInconsistencyException format:@"Collection <%s %p> mutated while being enumerated!", object_getClassName(object), object];
+}
+
 static BOOL _NSSelectorNotFoundIsNonFatal;
 static const wchar_t* TAG = L"Objective-C";
 
@@ -525,6 +529,7 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
     __objc_msg_forward2 = _NSIMPForward;
     __objc_msg_forward3 = _NSSlotForward;
     _objc_weak_load = _NSWeakLoad;
+    _objc_enumeration_mutation = _NSObjCEnumerationMutation;
 
 #if defined(OBJC_APP_BRINGUP)
     _NSSelectorNotFoundIsNonFatal = YES;
