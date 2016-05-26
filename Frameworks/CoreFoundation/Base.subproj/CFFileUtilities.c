@@ -1030,7 +1030,6 @@ CF_PRIVATE void _CFIterateDirectory(CFStringRef directoryPath, Boolean appendSla
     if (!CFStringGetFileSystemRepresentation(directoryPath, directoryPathBuf, CFMaxPathSize)) return;
     
 #if DEPLOYMENT_TARGET_WINDOWS
-// WINOBJC: #error this path does not support calculateFullResultPath but it must do so someday
     CFIndex cpathLen = strlen(directoryPathBuf);
     // Make sure there is room for the additional space we need in the win32 api
     if (cpathLen + 2 < CFMaxPathSize) {
@@ -1066,9 +1065,51 @@ CF_PRIVATE void _CFIterateDirectory(CFStringRef directoryPath, Boolean appendSla
                 }
                 
                 Boolean isDirectory = file.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
-                // WINOBJC: using filename for fullpath.
-                Boolean result = fileHandler(fileName, fileName, isDirectory ? DT_DIR : DT_REG);
+
+                // WINOBJC: Compute fileNameWithPrefix
+                CFMutableStringRef fullPathToFile = CFStringCreateMutable(kCFAllocatorSystemDefault, 0);
+
+                // Prefix anything as requested
+                if (stuffToPrefix) {
+                    for (CFIndex i = 0; i < CFArrayGetCount(stuffToPrefix); i++) {
+                        CFStringRef onePrefix = (CFStringRef)CFArrayGetValueAtIndex(stuffToPrefix, i);
+                        if (CFStringGetLength(onePrefix) > 0) {
+                            CFStringAppend(fullPathToFile, onePrefix);
+                            // Add a / if the string did not have one
+                            if (!CFStringHasSuffix(fullPathToFile, _CFGetSlashStr())) {
+                                CFStringAppend(fullPathToFile, _CFGetSlashStr());
+                            }
+                        }
+                    }
+                }
+                
+                if (isDirectory) {
+                    // Append the file name and the trailing /
+                    CFStringAppend(fullPathToFile, fileName);
+                    CFStringAppend(fullPathToFile, _CFGetSlashStr());
+                } else if (stuffToPrefix) {
+                    // Append just the file name to our previously-used buffer
+                    CFStringAppend(fullPathToFile, fileName);
+                }
+                
+                CFStringRef fileNameWithPrefix = NULL;
+                if (CFStringGetLength(fullPathToFile) > 0) {
+                    fileNameWithPrefix = fullPathToFile;
+                } else if (fullPathToFile) {
+                    // Can't be used, just toss it away
+                    CFRelease(fullPathToFile);
+                }
+
+                if (!fileNameWithPrefix) {
+                    // Don't call the block with a NULL fileNameWithPrefix - but here we can fallback to the fileName
+                    fileNameWithPrefix = (CFStringRef) CFRetain(fileName);
+                }
+
+                Boolean result = fileHandler(fileName, fileNameWithPrefix, isDirectory ? DT_DIR : DT_REG);
                 CFRelease(fileName);
+                CFRelease(fileNameWithPrefix);
+                // end WINOBJC
+                
                 if (!result) break;
             } while (FindNextFileW(handle, &file));
             
