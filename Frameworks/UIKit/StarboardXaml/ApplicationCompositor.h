@@ -13,11 +13,19 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// clang-format does not seem to like C++/CX
+// clang-format off
 #pragma once
 
+#include "StarboardXaml.h"
+
 #ifdef __cplusplus_winrt
-extern "C" void RunApplicationMain(Platform::String ^ principalClassName,
-                                   Platform::String ^ delegateClassName,
+extern "C" void RunApplicationMain(Platform::String^ principalClassName,
+                                   Platform::String^ delegateClassName,
                                    float windowWidth,
-                                   float windowHeight);
+                                   float windowHeight,
+                                   ActivationType type,
+                                   Platform::String^ activationArg);
 #endif
+
+// clang-format on

@@ -24,6 +24,7 @@
 - (void)_bringToForeground;
 - (void)_bringToForeground:(NSURL*)url;
 - (void)_sendHighMemoryWarning;
+- (void)_sendNotificationReceivedEvent:(NSString*)notificationData;
 @end
 
 @interface WOCDisplayMode (internal)
@@ -44,5 +45,5 @@
 // UIApplicationMainInit is declared here instead of UIApplicationMainInternal.h because it uses NS* types and cannot be defined in
 // in a file that gets included in C++/CX sources.
 UIKIT_EXPORT int UIApplicationMainInit(
-    int argc, char* argv[], NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation);
+    NSString* pClassName, NSString* dClassName, UIInterfaceOrientation defaultOrientation, int activationType, NSString* activationArg);
 void _UIApplicationShutdown();

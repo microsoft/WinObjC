@@ -28,6 +28,7 @@
 #import <d3d11_2.h>
 
 #import <Starboard.h>
+#import <StringHelpers.h>
 #import <UIInterface.h>
 #import <CACompositorClient.h>
 #import <UIApplicationInternal.h>
@@ -39,11 +40,17 @@ void SetCACompositorClient(CACompositorClientInterface* client) {
     _compositorClient = client;
 }
 
-int ApplicationMainStart(
-    int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight) {
+int ApplicationMainStart(const char* principalName,
+                         const char* delegateName,
+                         float windowWidth,
+                         float windowHeight,
+                         ActivationType activationType,
+                         const char* activationArg) {
     // Note: We must use nil rather than an empty string for these class names
-    NSString* principalClassName = (principalName && *principalName != '\0') ? [[NSString alloc] initWithCString:principalName] : nil;
-    NSString* delegateClassName = (delegateName && *delegateName != '\0') ? [[NSString alloc] initWithCString:delegateName] : nil;
+    NSString* principalClassName = Strings::IsEmpty<const char*>(principalName) ? nil : [[NSString alloc] initWithCString:principalName];
+    NSString* delegateClassName = Strings::IsEmpty<const char*>(delegateName) ? nil : [[NSString alloc] initWithCString:delegateName];
+
+    NSString* activationArgument = Strings::IsEmpty<const char*>(activationArg) ? nil : [[NSString alloc] initWithCString:activationArg];
 
     WOCDisplayMode* displayMode = [UIApplication displayMode];
     [displayMode _setWindowSize:CGSizeMake(windowWidth, windowHeight)];
@@ -99,7 +106,7 @@ int ApplicationMainStart(
 
     [displayMode _updateDisplaySettings];
 
-    UIApplicationMainInit(argc, argv, principalClassName, delegateClassName, defaultOrientation);
+    UIApplicationMainInit(principalClassName, delegateClassName, defaultOrientation, (int)activationType, activationArgument);
     ScheduleMainRunLoop();
 
     return 0;

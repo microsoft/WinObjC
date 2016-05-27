@@ -27,7 +27,9 @@
 #import <UIKit/UIFont.h>
 #import <UIKit/UINib.h>
 #import <UIKit/UIApplicationDelegate.h>
+#import <StringHelpers.h>
 #import "NSThread-Internal.h"
+#import "StarboardXaml/StarboardXaml.h"
 #import "UIApplicationInternal.h"
 #import "UIFontInternal.h"
 #import "UIViewControllerInternal.h"
@@ -112,8 +114,11 @@ static NSAutoreleasePoolWarn* outerPool;
 /**
  @Public No
 */
-int UIApplicationMainInit(
-    int argc, char* argv[], NSString* principalClassName, NSString* delegateClassName, UIInterfaceOrientation defaultOrientation) {
+int UIApplicationMainInit(NSString* principalClassName,
+                          NSString* delegateClassName,
+                          UIInterfaceOrientation defaultOrientation,
+                          int activationType,
+                          NSString* activationArg) {
     // Make sure we reference classes we need:
     void ForceInclusion();
     ForceInclusion();
@@ -234,19 +239,29 @@ int UIApplicationMainInit(
         [uiApplication setDelegate:static_cast<id<UIApplicationDelegate>>(uiApplication)];
     }
 
-    // VSO 5762132: Temporarily call -application:willFinishLaunchingWithOptions: here (before did(...):)
+    NSMutableDictionary* launchOption = [NSMutableDictionary dictionary];
+    switch (activationType) {
+        case ActivationTypeToast:
+            // As there is now way to distinguish remote notification from local, set both keys for now.
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            [launchOption setValue:activationArg forKey:UIApplicationLaunchOptionsLocalNotificationKey];
+            break;
+        default:
+            break;
+    }
+
     if ([curDelegate respondsToSelector:@selector(application:willFinishLaunchingWithOptions:)]) {
-        [curDelegate application:uiApplication willFinishLaunchingWithOptions:nil];
+        [curDelegate application:uiApplication willFinishLaunchingWithOptions:launchOption];
     }
 
     if ([curDelegate respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
-        NSMutableDictionary* options = [NSMutableDictionary dictionary];
-
-        [curDelegate application:uiApplication didFinishLaunchingWithOptions:nil];
+        [curDelegate application:uiApplication didFinishLaunchingWithOptions:launchOption];
     } else if ([curDelegate respondsToSelector:@selector(applicationDidFinishLaunching:)]) {
         [curDelegate applicationDidFinishLaunching:uiApplication];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification" object:uiApplication];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UIApplicationDidFinishLaunchingNotification"
+                                                        object:uiApplication
+                                                      userInfo:launchOption];
 
     if (rootController != nil) {
         [[uiApplication _popupWindow] setRootViewController:rootController];
@@ -295,4 +310,9 @@ extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisibl
 
 extern "C" void UIApplicationMainHandleHighMemoryUsageEvent() {
     [[UIApplication sharedApplication] _sendHighMemoryWarning];
+}
+
+extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData) {
+    NSString* data = Strings::IsEmpty<const char*>(notificationData) ? nil : [[NSString alloc] initWithCString:notificationData];
+    [[UIApplication sharedApplication] _sendNotificationReceivedEvent:data];
 }
