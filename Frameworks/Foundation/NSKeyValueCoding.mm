@@ -123,7 +123,7 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
 SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
     SEL sel = nullptr;
     auto len = strlen(key);
-    char* buf = (char*)alloca(3 + len + 1);
+    char* buf = (char*)_alloca(3 + len + 1);
     strcpy_s(buf + 4, len, key + 1);
 
     // getExample
@@ -356,7 +356,7 @@ SEL KVCSetterForPropertyName(NSObject* self, const char* key) {
     // _ _ _ _ x a m p l e _ \0
     // and fill it with the following characters:
     // s e t E x a m p l e : \0
-    char* buf = (char*)alloca(3 + len + 2);
+    char* buf = (char*)_alloca(3 + len + 2);
     strcpy_s(buf + 4, len, key + 1);
     buf[0] = 's';
     buf[1] = 'e';
@@ -374,7 +374,7 @@ SEL KVCSetterForPropertyName(NSObject* self, const char* key) {
 
 template <typename T>
 static bool quickSet(id self, SEL setter, id value, const char* valueType) {
-    uint8_t* data = static_cast<uint8_t*>(alloca(objc_sizeof_type(valueType)));
+    uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
     if (!woc::dataWithTypeFromValue(data, valueType, value)) {
         return false;
     }
@@ -418,7 +418,7 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
             return true;
         }
 
-        uint8_t* data = static_cast<uint8_t*>(alloca(objc_sizeof_type(valueType)));
+        uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
         if (!woc::dataWithTypeFromValue(data, valueType, value)) {
             return false;
         }
