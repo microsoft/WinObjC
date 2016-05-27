@@ -106,17 +106,6 @@ inline IWLazyClassLookup::operator id() {
 }
 #endif // __OBJC__
 
-typedef unsigned int EbrLock;
-
-#define EBRLOCK_INITIALIZE 0xFAADEEEE
-#define EBRLOCK_INITIALIZING 0xFAAAEEEE
-
-SB_EXPORT void EbrLockInit(EbrLock* pLock);
-SB_EXPORT void EbrLockDestroy(EbrLock pLock);
-SB_EXPORT void EbrLockEnter(EbrLock& pLock);
-SB_EXPORT bool EbrLockTryEnter(EbrLock& pLock);
-SB_EXPORT void EbrLockLeave(EbrLock pLock);
-
 enum surfaceFormat { _Color565, _ColorARGB, _ColorRGBA, _ColorRGB32, _ColorRGB32HE, _ColorGrayscale, _ColorRGB, _ColorA8, _ColorIndexed };
 
 #ifdef __cplusplus

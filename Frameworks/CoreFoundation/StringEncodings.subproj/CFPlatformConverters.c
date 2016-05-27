@@ -10,9 +10,9 @@
 //
 
 
-/*	CFPlatformConverters.c
-	Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
-	Responsibility: Foundation Team
+/*  CFPlatformConverters.c
+    Copyright (c) 1998 - 2015 Apple Inc. and the Swift project authors
+    Responsibility: Foundation Team
 */
 
 #include "CFInternal.h"
@@ -98,6 +98,8 @@ CF_PRIVATE CFStringEncoding *__CFStringEncodingCreateListOfAvailablePlatformConv
 
     EnumSystemCodePages((CODEPAGE_ENUMPROC)&__CFWin32EnumCodePageProc, CP_INSTALLED);
     __CFWin32EncodingList = (uint32_t *)CFAllocatorAllocate(allocator, sizeof(uint32_t) * __CFWin32EncodingIndex, 0);
+    // WINOBJC: counter is not being reset to 0, causing heap corruption. 
+    __CFWin32EncodingIndex = 0;
     EnumSystemCodePages((CODEPAGE_ENUMPROC)&__CFWin32EnumCodePageProc, CP_INSTALLED);
 
     *numberOfConverters = __CFWin32EncodingIndex;

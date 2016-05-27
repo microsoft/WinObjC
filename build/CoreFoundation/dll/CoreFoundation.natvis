@@ -11,38 +11,50 @@
         U - UTF-16 flag (mask 0x10)
         L - length inline flag (mask 0x4)
           0x4 - length stored as first character of string
+                length can be 0 and this flag could still be on
           0x0 - length stored in sizeof(CFIndex) bytes before string
         M - mutability flag (mask 0x1)
+          mutable strings always have an explicit length, but they may ALSO have
+          a length byte. If so, we treat it as though it were a normal string with
+          a normal length byte.
     -->
     <Type Name="__CFString" IncludeView="InlineU16">
-        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((wchar_t*)&amp;variants+1),[(int)*(char*)&amp;variants]su}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">{((wchar_t*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]su}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((wchar_t*)&amp;variants+1),[variants.inline1.length]su}</DisplayString>
         <DisplayString>{(((long*)(&amp;variants))+1),[variants.inline1.length]su}</DisplayString>
 
-        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((wchar_t*)&amp;variants+1),[(int)*(char*)&amp;variants]su</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">((wchar_t*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]su</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((wchar_t*)&amp;variants+1),[variants.inline1.length]su</StringView>
         <StringView>(((long*)(&amp;variants))+1),[variants.inline1.length]su</StringView>
     </Type>
 
     <Type Name="__CFString" IncludeView="InlineU8">
-        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)&amp;variants+1),[(int)*(char*)&amp;variants]na}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">{((char*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]na}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)&amp;variants+1),[variants.inline1.length]na}</DisplayString>
         <DisplayString>{(((long*)(&amp;variants))+1),[variants.inline1.length]na}</DisplayString>
 
-        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)&amp;variants+1),[(int)*(char*)&amp;variants]na</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">((char*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]na</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)&amp;variants+1),[variants.inline1.length]na</StringView>
         <StringView>(((long*)(&amp;variants))+1),[variants.inline1.length]na</StringView>
     </Type>
 
     <Type Name="__CFString" IncludeView="HeapU16">
-        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)(variants.notInlineImmutable1.buffer)+1),[(int)*(char*)(variants.notInlineImmutable1.buffer)]su}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">{((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]su}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]su}</DisplayString>
         <DisplayString>{variants.notInlineImmutable1.buffer,[variants.notInlineImmutable1.length]su}</DisplayString>
 
-        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)(variants.notInlineImmutable1.buffer)+1),[(int)*(char*)(variants.notInlineImmutable1.buffer)]su</StringView>
-        <StringView>variants.notInlineImmutable1.buffer,[variants.notInlineImmutable1.length]su</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]su</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]su</StringView>
+        <StringView>(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]su</StringView>
     </Type>
 
     <Type Name="__CFString" IncludeView="HeapU8">
-        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)(variants.notInlineImmutable1.buffer)+1),[(int)*(char*)(variants.notInlineImmutable1.buffer)]na}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">{((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]na}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]na}</DisplayString>
         <DisplayString>{(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]na}</DisplayString>
 
-        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)(variants.notInlineImmutable1.buffer)+1),[(int)*(char*)(variants.notInlineImmutable1.buffer)]na</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]na</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]na</StringView>
         <StringView>(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]na</StringView>
     </Type>
 
@@ -60,6 +72,12 @@
         <Expand>
             <Synthetic Name="[mutable]" Condition="(base._cfinfo[0] &amp; 0x01) == 0x01">
                 <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <Synthetic Name="[length]">
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) == 0x4">{(*(unsigned char*)&amp;variants > 0 ? (unsigned int)*(unsigned char*)&amp;variants : variants.inline1.length),d}</DisplayString>
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) == 0x4">{(*(unsigned char*)(variants.notInlineImmutable1.buffer) > 0 ? (unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer) : variants.notInlineImmutable1.length),d}</DisplayString>
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) != 0x4">{variants.inline1.length,d}</DisplayString>
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) != 0x4">{variants.notInlineImmutable1.length,d}</DisplayString>
             </Synthetic>
             <Synthetic Name="[encoding]">
                 <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0x00">8-bit</DisplayString>

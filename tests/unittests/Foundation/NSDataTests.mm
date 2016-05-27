@@ -40,7 +40,7 @@ TEST(NSData, Base64EncodeWithOptions) {
     StrongId<NSData> testData48Chars = [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
     StrongId<NSData> testData49Chars = [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
     StrongId<NSData> testData50Chars = [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
-    StrongId<NSString> testData58Chars =
+    StrongId<NSData> testData58Chars =
         [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
 
     // "QUFB" is the base64 encoded representation of "AAA"

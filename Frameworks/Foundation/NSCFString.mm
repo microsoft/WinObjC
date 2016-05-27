@@ -33,21 +33,24 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 - (instancetype)initWithCString:(const char*)cStr length:(NSUInteger)length {
     return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(
-        CFStringCreateWithCString(kCFAllocatorDefault, cStr, CFStringConvertNSStringEncodingToEncoding([[self class] defaultCStringEncoding]))));
+        CFStringCreateWithCString(kCFAllocatorDefault,
+                                  cStr,
+                                  CFStringConvertNSStringEncodingToEncoding([[self class] defaultCStringEncoding]))));
 }
 
 - (instancetype)initWithUTF8String:(const char*)utf8str {
-    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(CFStringCreateWithCString(kCFAllocatorDefault, utf8str, kCFStringEncodingUTF8)));
+    return reinterpret_cast<NSStringPrototype*>(
+        static_cast<NSString*>(CFStringCreateWithCString(kCFAllocatorDefault, utf8str, kCFStringEncodingUTF8)));
 }
 
 - (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
-    return reinterpret_cast<NSStringPrototype*>(
-        static_cast<NSString*>(CFStringCreateWithFormatAndArguments(nullptr, nullptr, static_cast<CFStringRef>(formatStr), pReader)));
+    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(
+        CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, nullptr, static_cast<CFStringRef>(formatStr), pReader)));
 }
 
 - (instancetype)initWithBytes:(const void*)bytes length:(NSUInteger)length encoding:(NSStringEncoding)encoding {
-    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(
-        CFStringCreateWithBytes(nullptr, (const UInt8*)bytes, length, CFStringConvertNSStringEncodingToEncoding(encoding), false)));
+    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(CFStringCreateWithBytes(
+        kCFAllocatorDefault, (const UInt8*)bytes, length, CFStringConvertNSStringEncodingToEncoding(encoding), false)));
 }
 
 - (instancetype)initWithBytesNoCopy:(void*)bytes
@@ -55,7 +58,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
                            encoding:(NSStringEncoding)encoding
                        freeWhenDone:(BOOL)freeWhenDone {
     return reinterpret_cast<NSStringPrototype*>(
-        static_cast<NSString*>(CFStringCreateWithBytesNoCopy(nullptr,
+        static_cast<NSString*>(CFStringCreateWithBytesNoCopy(kCFAllocatorDefault,
                                                              (const UInt8*)bytes,
                                                              length,
                                                              CFStringConvertNSStringEncodingToEncoding(encoding),
@@ -64,12 +67,12 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (instancetype)initWithCharacters:(const unichar*)bytes length:(NSUInteger)length {
-    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(CFStringCreateWithCharacters(nullptr, bytes, length)));
+    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(CFStringCreateWithCharacters(kCFAllocatorDefault, bytes, length)));
 }
 
 - (instancetype)initWithCharactersNoCopy:(unichar*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
     return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(
-        CFStringCreateWithCharactersNoCopy(nullptr, bytes, length, (freeWhenDone) ? (nullptr) : (kCFAllocatorNull))));
+        CFStringCreateWithCharactersNoCopy(kCFAllocatorDefault, bytes, length, (freeWhenDone) ? (nullptr) : (kCFAllocatorNull))));
 }
 
 - (instancetype)initWithCString:(const char*)bytes encoding:(NSStringEncoding)encoding {
@@ -78,8 +81,29 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 }
 
 - (instancetype)initWithString:(NSString*)otherStr {
-    return reinterpret_cast<NSStringPrototype*>(
-        static_cast<NSString*>(CFStringCreateWithSubstring(kCFAllocatorDefault, static_cast<CFStringRef>(otherStr), { 0, [otherStr length] })));
+    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(
+        CFStringCreateWithSubstring(kCFAllocatorDefault, static_cast<CFStringRef>(otherStr), { 0, [otherStr length] })));
+}
+
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList {
+    CFStringRef str;
+
+    if (locale == nil) {
+        str = CFStringCreateWithFormatAndArguments(nullptr, nullptr, static_cast<CFStringRef>(format), argList);
+    } else if ([locale isKindOfClass:[NSLocale class]] || [locale isKindOfClass:[NSDictionary class]]) {
+        str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault,
+                                                   static_cast<CFDictionaryRef>(locale),
+                                                   static_cast<CFStringRef>(format),
+                                                   argList);
+    } else {
+        [NSException raise:NSInvalidArgumentException format:@"Locale parameter must be a NSLocale or a NSDictionary."];
+    }
+    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(str));
+}
+
+- (instancetype)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer {
+    return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(CFStringCreateWithCStringNoCopy(
+        kCFAllocatorDefault, bytes, CFStringGetSystemEncoding(), freeBuffer ? kCFAllocatorDefault : kCFAllocatorNull)));
 }
 
 @end

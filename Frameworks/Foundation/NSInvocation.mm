@@ -433,6 +433,24 @@ static uniformAggregate<UniformType> callUniformAggregateImp(IMP imp, id target,
                     *((unsigned*)returnValue) = retVal;
                 } break;
 
+                case 9: {
+                    unsigned retVal;
+
+                    retVal = imp(
+                        target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5], stackParams[6], stackParams[7], stackParams[8]);
+                    returnValue = IwMalloc(returnSize + 4);
+                    *((unsigned*)returnValue) = retVal;
+                } break;
+
+                case 10: {
+                    unsigned retVal;
+
+                    retVal = imp(
+                        target, (SEL)sel, stackParams[2], stackParams[3], stackParams[4], stackParams[5], stackParams[6], stackParams[7], stackParams[8], stackParams[9]);
+                    returnValue = IwMalloc(returnSize + 4);
+                    *((unsigned*)returnValue) = retVal;
+                } break;
+
                 default:
                     FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unhandled # of args: %d", stackParamsLen);
                     break;

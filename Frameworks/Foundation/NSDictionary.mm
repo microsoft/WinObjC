@@ -323,8 +323,7 @@ static int _NSDict_SortedKeysHelper(id key1, id key2, void* context) {
         return nil;
     }
 
-    const char* file = (const char*)[filename UTF8String];
-    id data = [NSData dataWithContentsOfFile:[NSString stringWithCString:file]];
+    NSData* data = [NSData dataWithContentsOfFile:filename];
 
     NSDictionary* deserializedDict = nil;
     if (data) {

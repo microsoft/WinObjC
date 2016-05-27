@@ -131,11 +131,6 @@ LIBRARY Starboard
         mach_timebase_info
         sysctlbyname
 
-        EbrLockInit
-        EbrLockDestroy
-        EbrLockEnter
-        EbrLockTryEnter
-        EbrLockLeave
         EbrIncrement
         EbrDecrement
         EbrCompareExchange

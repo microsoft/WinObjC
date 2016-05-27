@@ -156,6 +156,7 @@ bool dataWithTypeFromValue(void* data, const char* objcType, id value) {
         case '*':
         case '^':
         case '?':
+        case ':':
             // We cannot box/unbox arbitrary pointers or char*.
             return false;
         case '{':
@@ -215,6 +216,10 @@ id woc::ValueTransformer<long>::get(long data) {
 template <>
 id woc::ValueTransformer<long long>::get(long long data) {
     return [NSNumber numberWithLongLong:data];
+}
+template <>
+id woc::ValueTransformer<signed char>::get(signed char data) {
+    return [NSNumber numberWithChar:data];
 }
 template <>
 id woc::ValueTransformer<unsigned char>::get(unsigned char data) {

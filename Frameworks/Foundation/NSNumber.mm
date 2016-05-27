@@ -554,7 +554,7 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
         case 'S':
             return [NSString stringWithFormat:@"%hu", [self unsignedShortValue]];
         default:
-            assert(0);
+            FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSNumber has unexpected objCType %hs", [self objCType]);
             return nil;
     }
 }
@@ -604,6 +604,7 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
     NSInvalidAbstractInvocation();
 }
 
+// Private function for CF only
 - (CFNumberType)_cfNumberType {
     switch ([self objCType][0]) {
         case 'c':
@@ -632,9 +633,59 @@ static NSComparisonResult _NSNumberCompareUnsignedSigned(unsigned long long unsi
         case 'S':
             return kCFNumberSInt32Type;
         default:
-            assert(0);
+            FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSNumber derived class has unexpected objCType %hs", [self objCType]);
             return kCFNumberIntType;
     }
+}
+
+// Private function for CF only
+- (Boolean)_getValue:(void*)valuePtr forType:(CFNumberType)type {
+    // Since figuring out whether a conversion would lose precision is quite complicated,
+    // create a new NSNumber and pass it to CF
+    NSNumber* num;
+    switch ([self objCType][0]) {
+        case 'c':
+            num = [NSNumber numberWithChar:[self charValue]];
+            break;
+        case 'd':
+            num = [NSNumber numberWithDouble:[self doubleValue]];
+            break;
+        case 'f':
+            num = [NSNumber numberWithFloat:[self floatValue]];
+            break;
+        case 'i':
+            num = [NSNumber numberWithInt:[self intValue]];
+            break;
+        case 'l':
+            num = [NSNumber numberWithLong:[self longValue]];
+            break;
+        case 'q':
+            num = [NSNumber numberWithLongLong:[self longLongValue]];
+            break;
+        case 's':
+            num = [NSNumber numberWithShort:[self shortValue]];
+            break;
+        case 'C':
+            num = [NSNumber numberWithUnsignedChar:[self unsignedCharValue]];
+            break;
+        case 'I':
+            num = [NSNumber numberWithUnsignedInt:[self unsignedIntValue]];
+            break;
+        case 'L':
+            num = [NSNumber numberWithUnsignedLong:[self unsignedLongValue]];
+            break;
+        case 'Q':
+            num = [NSNumber numberWithUnsignedLongLong:[self unsignedLongLongValue]];
+            break;
+        case 'S':
+            num = [NSNumber numberWithUnsignedShort:[self unsignedShortValue]];
+            break;
+        default:
+            FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSNumber derived class has unexpected objCType %hs", [self objCType]);
+            return false;
+    }
+
+    return CFNumberGetValue(static_cast<CFNumberRef>(num), type, valuePtr);
 }
 
 @end

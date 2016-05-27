@@ -270,7 +270,7 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 
     ret->_extent = rect;
     if (self->_cgImage != nil) {
-        CGImageRef croppedImage = CGImageCreateWithImageInRect(static_cast<CGImageRef>(self->_cgImage), rect);
+        CGImageRef croppedImage = CGImageCreateWithImageInRect(static_cast<CGImageRef>((id)self->_cgImage), rect);
         ret->_cgImage.attach([static_cast<id>(croppedImage) copy]);
     } else if (self->_color != nil) {
         ret->_color.attach([self->_color copy]);
@@ -548,7 +548,7 @@ NSString* const kCIImageAutoAdjustLevel = @"kCIImageAutoAdjustLevel";
 
 - (CGImageRef)_CGImageFromRect:(CGRect)rect {
     CIImage* croppedImage = [self imageByCroppingToRect:rect];
-    return static_cast<CGImageRef>(croppedImage->_cgImage);
+    return static_cast<CGImageRef>((id)croppedImage->_cgImage);
 }
 
 /**

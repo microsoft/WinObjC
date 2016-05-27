@@ -51,7 +51,7 @@ struct insetInfo {
 };
 
 CFMutableDictionaryRef g_imageCache;
-static EbrLock imageCacheLock;
+static pthread_mutex_t imageCacheLock = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  @Status Interoperable
@@ -505,7 +505,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     //  Check if it's already loaded
     if (g_imageCache == nil) {
         g_imageCache = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, NULL);
-        EbrLockInit(&imageCacheLock);
     }
 
     const UIImageCachedObject* cachedImage =

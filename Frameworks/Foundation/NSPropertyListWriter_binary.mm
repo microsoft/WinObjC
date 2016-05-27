@@ -371,11 +371,10 @@ void appendBytes(NSPropertyListWriter_Binary* self, const void* data, int len) {
         case 'Q': {
             unsigned long long val = [number unsignedLongLongValue];
 
-            // FIXME: We need a better way to determine boolean values!
-            if ((val == 0) && ((*type == 'c') || (*type == 'C'))) {
+            if (number == static_cast<NSNumber*>(kCFBooleanFalse)) {
                 code = BOOLTAG_FALSE;
                 appendBytes(self, &code, 1);
-            } else if ((val == 1) && ((*type == 'c') || (*type == 'C'))) {
+            } else if (number == static_cast<NSNumber*>(kCFBooleanTrue)) {
                 code = BOOLTAG_TRUE;
                 appendBytes(self, &code, 1);
             } else if (val < 256) {
