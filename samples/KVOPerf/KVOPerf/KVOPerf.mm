@@ -225,7 +225,7 @@ static long _numberOfHits = 0;
     [self beginTestWithStartDelay:startDelay
                            length:testLength
                   numberOfThreads:numberOfThreads
-                  completionBlock:^(int setterCalls, int kvoNotifications) {
+                  completionBlock:^(long setterCalls, int kvoNotifications) {
                       [self _clear];
                       [self _printOutput:@"%lu KVO notifications; %lu setter calls\n", kvoNotifications, setterCalls];
                       if (setterCalls > 0) {
@@ -243,8 +243,8 @@ static long _numberOfHits = 0;
 - (void)beginTestWithStartDelay:(NSTimeInterval)startDelay
                          length:(NSTimeInterval)testLength
                 numberOfThreads:(NSUInteger)numberOfThreads
-                completionBlock:(void (^)(int setterCalls, int kvoNotifications))completionBlock {
-    __block unsigned long setterCalls = 0;
+                completionBlock:(void (^)(long setterCalls, int kvoNotifications))completionBlock {
+    __block long setterCalls = 0;
     dispatch_group_t execGroup = dispatch_group_create();
     [KVOKeyBinding resetCounters];
     void (^setterBlock)(double value) = ^(double value) {
