@@ -47,13 +47,13 @@ void soundCompletion(SystemSoundID ssID, void* self);
     [scrollView addSubview:systemSoundLabel];
 
     playAlertSound = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [playAlertSound setTitle:@"System Sound" forState:UIControlStateNormal];
+    [playAlertSound setTitle:@"Alert Sound" forState:UIControlStateNormal];
     playAlertSound.frame = CGRectMake(210, 50, 230, 40);
     [playAlertSound addTarget:self action:@selector(playAlertSoundPressed:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:playAlertSound];
 
     playSystemSound = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [playSystemSound setTitle:@"Alert Sound" forState:UIControlStateNormal];
+    [playSystemSound setTitle:@"System Sound" forState:UIControlStateNormal];
     playSystemSound.frame = CGRectMake(210, 100, 230, 40);
     [playSystemSound addTarget:self action:@selector(playSystemSoundPressed:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:playSystemSound];
