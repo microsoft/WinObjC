@@ -247,7 +247,7 @@ concurrency::task<void> DisplayAnimation::AddTransitionAnimation(DisplayNode* no
 
     // Render a layer snapshot, then kick off the animation
     return xamlAnimation->SnapshotLayer(xamlNode)
-        .then([this, xamlAnimation, xamlNode, wtype, wsubtype](XamlCompositor::Controls::CALayerXaml^ snapshotLayer) {
+        .then([this, xamlAnimation, xamlNode, wtype, wsubtype](XamlCompositor::Controls::CALayerXaml^ snapshotLayer) noexcept {
 
         xamlAnimation->AddTransition(
             xamlNode,
@@ -513,16 +513,16 @@ void DisplayNode::SetContents(winobjc::Id& bitmap, float width, float height, fl
     XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
     if (((void*)bitmap) != NULL) {
         auto contents = (Windows::UI::Xaml::Media::ImageSource^)(Platform::Object^)bitmap;
-        xamlNode->setContentImage(contents, width, height, scale);
+        xamlNode->SetContentImage(contents, width, height, scale);
     } else {
-        xamlNode->setContentImage(nullptr, width, height, scale);
+        xamlNode->SetContentImage(nullptr, width, height, scale);
     }
 }
 
 void DisplayNode::SetContentsElement(winobjc::Id& elem, float width, float height, float scale) {
     XamlCompositor::Controls::CALayerXaml^ xamlNode = GetCALayer(this);
     Windows::UI::Xaml::FrameworkElement^ contents = (Windows::UI::Xaml::FrameworkElement^)(Platform::Object^)elem;
-    xamlNode->setContentElement(contents, width, height, scale);
+    xamlNode->SetContentElement(contents, width, height, scale);
 }
 
 void DisplayNode::SetContentsElement(winobjc::Id& elem) {
@@ -531,7 +531,7 @@ void DisplayNode::SetContentsElement(winobjc::Id& elem) {
     float width = static_cast<float>(contents->Width);
     float height = static_cast<float>(contents->Height);
     float scale = 1.0f;
-    xamlNode->setContentElement(contents, width, height, scale);
+    xamlNode->SetContentElement(contents, width, height, scale);
 }
 
 DisplayTextureXamlGlyphs::DisplayTextureXamlGlyphs() {
