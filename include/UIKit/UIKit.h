@@ -46,6 +46,7 @@
 #import <UIKit/NSTextStorage.h>
 #import <UIKit/NSTextStorageDelegate.h>
 #import <UIKit/NSTextTab.h>
+#import <UIKit/NSValue+UIKitAdditions.h>
 #import <UIKit/UIAcceleration.h>
 #import <UIKit/UIAccelerometer.h>
 #import <UIKit/UIAccelerometerDelegate.h>

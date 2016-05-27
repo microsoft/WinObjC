@@ -82,19 +82,6 @@ UIKIT_EXPORT NSString* NSStringFromUIEdgeInsets(UIEdgeInsets insets);
 
 UIKIT_EXPORT NSString* NSStringFromUIOffset(UIOffset offset);
 
-@interface NSValue (NSValueUIGeometryExtensions)
-+ (NSValue*)valueWithCGPoint:(CGPoint)point;
-+ (NSValue*)valueWithCGRect:(CGRect)rect;
-+ (NSValue*)valueWithCGSize:(CGSize)size;
-+ (NSValue*)valueWithUIEdgeInsets:(UIEdgeInsets)insets;
-+ (NSValue*)valueWithUIOffset:(UIOffset)offset;
-- (CGPoint)CGPointValue;
-- (CGRect)CGRectValue;
-- (CGSize)CGSizeValue;
-- (UIEdgeInsets)UIEdgeInsetsValue;
-- (UIOffset)UIOffsetValue;
-@end
-
 UIKIT_EXPORT CGRect CGRectFromString(NSString* string);
 UIKIT_EXPORT CGPoint CGPointFromString(NSString* string);
 UIKIT_EXPORT CGSize CGSizeFromString(NSString* string);

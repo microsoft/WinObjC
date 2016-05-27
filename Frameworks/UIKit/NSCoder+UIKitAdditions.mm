@@ -16,6 +16,7 @@
 
 #import "NSRaise.h"
 #include <StubReturn.h>
+#import <UIKit/NSValue+UIKitAdditions.h>
 #import <UIKit/UIGeometry.h>
 
 @implementation NSCoder (UIGeometryKeyedCoding)
@@ -147,28 +148,28 @@
  @Status Interoperable
 */
 - (void)encodeCGVector:(CGVector)vector forKey:(NSString*)key {
-    [self encodeObject:[NSValue valueWithBytes:&vector objCType:@encode(CGVector)] forKey:key];
+    [self encodeObject:[NSValue valueWithCGVector:vector] forKey:key];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeUIEdgeInsets:(UIEdgeInsets)insets forKey:(NSString*)key {
-    [self encodeObject:[NSValue valueWithBytes:&insets objCType:@encode(UIEdgeInsets)] forKey:key];
+    [self encodeObject:[NSValue valueWithUIEdgeInsets:insets] forKey:key];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeUIOffset:(UIOffset)offset forKey:(NSString*)key {
-    [self encodeObject:[NSValue valueWithBytes:&offset objCType:@encode(UIOffset)] forKey:key];
+    [self encodeObject:[NSValue valueWithUIOffset:offset] forKey:key];
 }
 
 /**
  @Status Interoperable
 */
 - (void)encodeCGAffineTransform:(CGAffineTransform)transform forKey:(NSString*)key {
-    [self encodeObject:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:key];
+    [self encodeObject:[NSValue valueWithCGAffineTransform:transform] forKey:key];
 }
 @end
 
@@ -224,7 +225,7 @@
     id value = [self decodeObjectForKey:key];
 
     if (value != nil) {
-        [value getValue:&ret];
+        ret = [value CGVectorValue];
     }
     return ret;
 }
@@ -237,7 +238,7 @@
     id value = [self decodeObjectForKey:key];
 
     if (value != nil) {
-        [value getValue:&ret];
+        ret = [value UIEdgeInsetsValue];
     }
     return ret;
 }
@@ -250,7 +251,7 @@
     id value = [self decodeObjectForKey:key];
 
     if (value != nil) {
-        [value getValue:&ret];
+        ret = [value UIOffsetValue];
     }
     return ret;
 }
@@ -263,7 +264,7 @@
     id value = [self decodeObjectForKey:key];
 
     if (value != nil) {
-        [value getValue:&ret];
+        ret = [value CGAffineTransformValue];
     }
     return ret;
 }
