@@ -30,10 +30,10 @@
 
 #import <unicode/utf8.h>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <functional>
 #include <memory>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unordered_set>
 #include <vector>
 
@@ -432,7 +432,7 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
  @Status Interoperable
 */
 - (void)setValuesForKeysWithDictionary:(NSDictionary*)keyedValues {
-    for (NSString *key in keyedValues) {
+    for (NSString* key in keyedValues) {
         id value = [keyedValues objectForKey:key];
         if (value == [NSNull null]) {
             value = nil;
@@ -442,12 +442,17 @@ bool KVCSetViaIvar(NSObject* self, struct objc_ivar* ivar, id value) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSDictionary*)dictionaryWithValuesForKeys:(NSArray*)keys {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSDictionary* results = [NSMutableDictionary dictionaryWithCapacity:keys.count];
+
+    for (NSString* key in keys) {
+        id retValue = [self valueForKey:key];
+        [results setValue:(retValue ?: [NSNull null]) forKey:key];
+    }
+
+    return [[results copy] autorelease];
 }
 
 /**

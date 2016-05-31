@@ -14,8 +14,8 @@
 //
 //******************************************************************************
 
-#include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#include <TestFramework.h>
 
 @interface TestArrayAdapterObject : NSObject {
     NSMutableArray* alreadyMutable;
@@ -156,9 +156,22 @@ TEST(Foundation, NSObject_KVCArrayAutovivification) {
 TEST(Foundation, NSObject_KVCSetValuesForKeysWithDictionary) {
     TestKVCObject* testObject = [[[TestKVCObject alloc] init] autorelease];
     testObject.key2 = @"key2Value";
-    NSDictionary* dictionary = @{ @"key1" : @"key1Value", @"key2": [NSNull null] };
+    NSDictionary* dictionary = @{ @"key1" : @"key1Value", @"key2" : [NSNull null] };
 
     EXPECT_NO_THROW([testObject setValuesForKeysWithDictionary:dictionary]);
     EXPECT_OBJCEQ(@"key1Value", testObject.key1);
     EXPECT_EQ(nil, testObject.key2);
+}
+
+TEST(Foundation, NSObject_KVCDictionaryWithValuesForKeys) {
+    TestKVCObject* testObject = [[[TestKVCObject alloc] init] autorelease];
+    NSDictionary* dictionary = @{ @"key1" : @"key1Value", @"key2" : [NSNull null] };
+
+    EXPECT_NO_THROW([testObject setValuesForKeysWithDictionary:dictionary]);
+
+    NSArray* array = @[ @"key1", @"key2" ];
+    NSDictionary* results = [testObject dictionaryWithValuesForKeys:array];
+
+    ASSERT_OBJCEQ(results[@"key1"], @"key1Value");
+    ASSERT_OBJCEQ(results[@"key2"], [NSNull null]);
 }

@@ -44,7 +44,7 @@ FOUNDATION_EXPORT NSString* const NSUnionOfSetsKeyValueOperator;
 @interface NSObject (NSKeyValueCoding)
 - (id)valueForKey:(NSString*)key;
 - (id)valueForKeyPath:(NSString*)keyPath;
-- (NSDictionary*)dictionaryWithValuesForKeys:(NSArray*)keys STUB_METHOD;
+- (NSDictionary*)dictionaryWithValuesForKeys:(NSArray*)keys;
 - (id)valueForUndefinedKey:(NSString*)key;
 - (NSMutableArray*)mutableArrayValueForKey:(NSString*)key;
 - (NSMutableArray*)mutableArrayValueForKeyPath:(NSString*)keyPath;
