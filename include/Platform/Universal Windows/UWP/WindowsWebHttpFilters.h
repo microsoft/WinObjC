@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WWHFHttpCacheControl, WWHFHttpBaseProtocolFilter;
 @protocol WWHFIHttpFilter
@@ -44,7 +44,6 @@ typedef unsigned WWHFHttpCacheWriteBehavior;
 #include "WindowsSecurityCryptographyCertificates.h"
 #include "WindowsWebHttp.h"
 #include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

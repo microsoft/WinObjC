@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDHHidDevice, WDHHidInputReport, WDHHidFeatureReport, WDHHidOutputReport, WDHHidBooleanControlDescription,
     WDHHidNumericControlDescription, WDHHidInputReportReceivedEventArgs, WDHHidCollection, WDHHidBooleanControl, WDHHidNumericControl;
@@ -49,9 +49,8 @@ enum _WDHHidCollectionType {
 typedef unsigned WDHHidCollectionType;
 
 #include "WindowsStorage.h"
-#include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
+#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
 

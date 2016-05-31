@@ -53,3 +53,57 @@ ehthumbs.db
 # Universal App
 Generated/
 Generated Files/
+
+# Ignore all CF public headers. They get copied in from the Frameworks directory as a pre build step. 
+Include/CoreFoundation/CFStream.h
+Include/CoreFoundation/CFStringEncodingExt.h
+Include/CoreFoundation/CoreFoundation.h
+Include/CoreFoundation/TargetConditionals.h
+Include/CoreFoundation/CFMessagePort.h
+Include/CoreFoundation/CFBinaryHeap.h
+Include/CoreFoundation/CFBundle.h
+Include/CoreFoundation/CFCalendar.h
+Include/CoreFoundation/CFBitVector.h
+Include/CoreFoundation/CFAvailability.h
+Include/CoreFoundation/CFTree.h
+Include/CoreFoundation/CFTimeZone.h
+Include/CoreFoundation/CFError.h
+Include/CoreFoundation/CFBag.h
+Include/CoreFoundation/CFPlugIn.h
+Include/CoreFoundation/CFXMLParser.h
+Include/CoreFoundation/CFString.h
+Include/CoreFoundation/CFSet.h
+Include/CoreFoundation/CFUUID.h
+Include/CoreFoundation/CFDate.h
+Include/CoreFoundation/CFDictionary.h
+Include/CoreFoundation/CFByteOrder.h
+Include/CoreFoundation/CFUserNotification.h
+Include/CoreFoundation/CFBase.h
+Include/CoreFoundation/CFPreferences.h
+Include/CoreFoundation/CFLocale.h
+Include/CoreFoundation/CFSocket.h
+Include/CoreFoundation/CFPropertyList.h
+Include/CoreFoundation/CFArray.h
+Include/CoreFoundation/CFRunLoop.h
+Include/CoreFoundation/CFURLAccess.h
+Include/CoreFoundation/CFDateFormatter.h
+Include/CoreFoundation/CFMachPort.h
+Include/CoreFoundation/CFPlugInCOM.h
+Include/CoreFoundation/CFUtilities.h
+Include/CoreFoundation/CFXMLNode.h
+Include/CoreFoundation/CFURLComponents.h
+Include/CoreFoundation/CFURL.h
+Include/CoreFoundation/CFNumberFormatter.h
+Include/CoreFoundation/CFCharacterSet.h
+Include/CoreFoundation/CFNumber.h
+Include/CoreFoundation/CFData.h
+Include/CoreFoundation/CFAttributedString.h
+Include/CoreFoundation/module.modulemap
+
+# Ignore all CF shared private headers. They get copied in from the Frameworks directory as a pre build step. 
+Frameworks/Include/ForFoundationOnly.h
+Frameworks/Include/CFBundlePriv.h
+Frameworks/Include/CFPriv.h
+Frameworks/Include/CFRuntime.h
+Frameworks/Include/CFStreamPriv.h
+Frameworks/Include/CFRegularExpression.h

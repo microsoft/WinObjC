@@ -17,7 +17,10 @@
 #include "Starboard.h"
 
 #include "UIKit/UIView.h"
+#include "UIKit/UILayoutGuide.h"
 #include "UIViewInternal.h"
+#include "UIView+AutoLayout.h"
+#include "NSLayoutConstraint+AutoLayout.h"
 #include "AutoLayout.h"
 
 #include <regex>
@@ -121,16 +124,18 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
     }
 
     for (int i = 0; i < predicates.size(); i++) {
-        UIView* target = nil;
+        id target = nil;
         CGFloat priority = 1000.0;
         NSLayoutRelation relation;
         CGFloat constant = 0;
+        UIView* item1Superview = [item1 isKindOfClass:[UIView class]] ? item1.superview : [(UILayoutGuide*)item1 owningView];
+        UIView* item2Superview = [item2 isKindOfClass:[UIView class]] ? item2.superview : [(UILayoutGuide*)item2 owningView];
 
         // Connector target predicates cannot be objects.
         if (predicates[i].target != "") {
             NSString* targStr = [NSString stringWithUTF8String:predicates[i].target.c_str()];
             NSNumber* metric = [metrics objectForKey:targStr];
-            target = (UIView*)[views objectForKey:targStr];
+            target = [views objectForKey:targStr];
 
             // If item2 is nil, this is a size constraint
             if (target && item2) {
@@ -145,7 +150,7 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
                     [ret release];
                     return nil;
                 } else {
-                    if ([item1 superview] == [item2 superview]) {
+                    if (item1Superview == item2Superview) {
                         constant = 8.0f;
                     } else {
                         constant = 20.0f;
@@ -206,9 +211,9 @@ NSArray* constraintsFromPredicates(PredicateList& predicates,
         if (item2) {
             NSLayoutAttribute a1 = vertical ? NSLayoutAttributeBottom : item1Attribute;
             NSLayoutAttribute a2 = vertical ? NSLayoutAttributeTop : item2Attribute;
-            if (item1 == [item2 superview]) {
+            if (item1 == item2Superview) {
                 a1 = vertical ? NSLayoutAttributeTop : item2Attribute;
-            } else if (item2 == [item1 superview]) {
+            } else if (item2 == item1Superview) {
                 a2 = vertical ? NSLayoutAttributeBottom : item1Attribute;
             }
             NSLayoutConstraint* c = [NSLayoutConstraint constraintWithItem:item1
@@ -320,23 +325,21 @@ const char* constraintType(NSLayoutAttribute attribute) {
 // Todo: Be more descriptive.
 void printConstraint(NSLayoutConstraint* constraint) {
     if (constraint.firstItem != nil) {
-        CGRect itmBounds;
+        CGRect itmBounds = [constraint.firstItem isKindOfClass:[UIView class]] ? [constraint.firstItem bounds] : [constraint.firstItem layoutFrame];
         TraceVerbose(TAG, L"%hs from (%hs) Type: %hs",
                     [[[constraint class] description] UTF8String],
                     [[constraint.firstItem description] UTF8String],
                     constraintType(constraint.firstAttribute));
-        itmBounds = [constraint.firstItem bounds];
         TraceVerbose(TAG, L"Bounds (%f)(%f), (%f)(%f)", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
     } else {
         TraceVerbose(TAG, L"%hs from (NONE) Type: %hs", [[[constraint class] description] UTF8String], constraintType(constraint.firstAttribute));
     }
     if (constraint.secondItem != nil) {
-        CGRect itmBounds;
+        CGRect itmBounds = [constraint.secondItem isKindOfClass:[UIView class]] ? [constraint.secondItem bounds] : [constraint.secondItem layoutFrame];
         TraceVerbose(TAG, L"%hs to   (%hs) Type: %hs",
                     [[[constraint class] description] UTF8String],
                     [[constraint.secondItem description] UTF8String],
                     constraintType(constraint.secondAttribute));
-        itmBounds = [constraint.secondItem bounds];
         TraceVerbose(TAG, L"Bounds (%f)(%f), (%f)(%f)", itmBounds.origin.x, itmBounds.origin.y, itmBounds.size.width, itmBounds.size.height);
     } else {
         TraceVerbose(TAG, L"%hs to   (NONE) Type: %hs", [[[constraint class] description] UTF8String], constraintType(constraint.secondAttribute));
@@ -375,7 +378,34 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     return item;
 }
 
-@implementation NSLayoutConstraint
+NSString* identifierForFormatAttribute(NSLayoutFormatOptions opts) {
+    switch (opts & NSLayoutFormatAlignmentMask) {
+        case NSLayoutFormatAlignAllLeft:
+            return @"NSLayoutFormatAlignAllLeft";
+        case NSLayoutFormatAlignAllRight:
+            return @"NSLayoutFormatAlignAllRight";
+        case NSLayoutFormatAlignAllTop:
+            return @"NSLayoutFormatAlignAllTop";
+        case NSLayoutFormatAlignAllBottom:
+            return @"NSLayoutFormatAlignAllBottom";
+        case NSLayoutFormatAlignAllLeading:
+            return @"NSLayoutFormatAlignAllLeading";
+        case NSLayoutFormatAlignAllTrailing:
+            return @"NSLayoutFormatAlignAllTrailing";
+        case NSLayoutFormatAlignAllCenterX:
+            return @"NSLayoutFormatAlignAllCenterX";
+        case NSLayoutFormatAlignAllCenterY:
+            return @"NSLayoutFormatAlignAllCenterY";
+        case NSLayoutFormatAlignAllBaseline:
+            return @"NSLayoutFormatAlignAllBaseline";
+        default: 
+            FAIL_FAST_HR(E_UNEXPECTED);
+    }
+}
+
+@implementation NSLayoutConstraint {
+    __unsafe_unretained UIView* _view;
+}
 
 // Constraints are interleaved with predicates. There should be one more constraint than predicate.
 
@@ -394,11 +424,23 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     // superview.
     // TODO: Top and bottom superview might point to topLayoutGuide and bottomLayoutGuide
     for (int i = 0; i < [items count]; i++) {
-        UIView* lSuper = [(UIView*)[items objectAtIndex:i] superview];
-        if (!superview) {
-            superview = lSuper;
-        } else if (lSuper && lSuper != superview) {
-            TraceVerbose(TAG, L"All views must share the same superview.");
+        id obj = [items objectAtIndex:i];
+        if ([obj isKindOfClass:[UIView class]]) {
+            UIView* lSuper = [(UIView*)obj superview];
+            if (!superview) {
+                superview = lSuper;
+            } else if (lSuper && lSuper != superview) {
+                TraceVerbose(TAG, L"All views must share the same superview.");
+            }
+        } else if ([obj isKindOfClass:[UILayoutGuide class]]) {
+            UIView* lSuper = [(UILayoutGuide*)obj owningView];
+            if (!superview) {
+                superview = lSuper;
+            } else if (lSuper && lSuper != superview) {
+                TraceVerbose(TAG, L"All guides must share the same owningView.");
+            }
+        } else {
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Item does not conform to UIView or UILayoutGuide!" userInfo:nil];
         }
     }
 
@@ -568,6 +610,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
     }
 
     if (opts && constraints.size()) {
+        // First validate the options
         switch (opts & NSLayoutFormatAlignmentMask) {
             case NSLayoutFormatAlignAllLeft:
             case NSLayoutFormatAlignAllRight:
@@ -595,9 +638,15 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
                 [nsConstraints release];
                 return nil;
         }
+
+        // And apply them
         for (int i = 0; i < constraints.size() - 1; i++) {
-            UIView* item1 = viewForString(constraints[i].target, views, superview);
-            UIView* item2 = viewForString(constraints[i + 1].target, views, superview);
+            id item1 = viewForString(constraints[i].target, views, superview);
+            id item2 = viewForString(constraints[i + 1].target, views, superview);
+
+            if ((item1 == superview) || (item2 == superview)) {
+                continue;
+            }
 
             NSLayoutConstraint* alignConst = [NSLayoutConstraint constraintWithItem:item1
                                                                           attribute:(NSLayoutAttribute)(opts & NSLayoutFormatAlignmentMask)
@@ -618,10 +667,7 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 */
 + (instancetype)allocWithZone:(NSZone*)zone {
     NSLayoutConstraint* ret = [super allocWithZone:zone];
-    ret->priv = new NSLayoutConstraintPrivateState();
-    if ([ret conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-        [ret autoLayoutAlloc];
-    }
+    [ret autoLayoutAlloc];
     return ret;
 }
 
@@ -674,10 +720,6 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 - (void)encodeWithCoder:(NSCoder*)coder {
     UNIMPLEMENTED_WITH_MSG("Unsupported attempt to encode an NSLayoutConstraint");
     THROW_NS_HR(E_NOTIMPL);
-}
-
-- (NSLayoutConstraintPrivateState*)_privateState {
-    return priv;
 }
 
 /**
@@ -762,35 +804,99 @@ UIView* viewForString(string target, NSDictionary* items, UIView* superview) {
 */
 - (void)dealloc {
     TraceVerbose(TAG, L"Deallocing NSLayoutConstraint");
-    if ([self conformsToProtocol:@protocol(AutoLayoutConstraint)]) {
-        [self autoLayoutDealloc];
-    }
-    delete self->priv;
+    [self autoLayoutDealloc];
     [super dealloc];
 }
 
-- (void)printConstraint {
+- (void)_printConstraint {
     printConstraint(self);
 }
 
-+ (void)printConstraints:(NSArray*)constraints {
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (BOOL)isActive {
+    return (_view != nil);
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (void)setActive:(BOOL)active {
+    if (active == self.isActive) {
+        return;
+    }
+
+    UIView* firstItemOwner = [self.firstItem isKindOfClass:[UIView class]] ? [(UIView*)self.firstItem superview] : [(UILayoutGuide*)self.firstItem owningView];
+    UIView* secondItemOwner = [self.secondItem isKindOfClass:[UIView class]] ? [(UIView*)self.secondItem superview] : [(UILayoutGuide*)self.secondItem owningView];
+
+    if (active) {
+        if (self.firstItem == nil && self.secondItem == nil) {
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Both items cannot be nil." userInfo:nil];
+        } 
+
+        UIView* owner = firstItemOwner;
+        
+        if (firstItemOwner) {
+            if (firstItemOwner == self.secondItem) {
+                owner = (UIView*)self.secondItem;
+            }
+        } else if (secondItemOwner) {
+            if (secondItemOwner == self.firstItem) {
+                owner = (UIView*)self.firstItem;
+            }
+        } else if (self.firstItem == self.secondItem) {
+            if (![self.firstItem isKindOfClass:[UIView class]]) {
+                @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Layout guides must have an owning view before activation." userInfo:nil];
+            }
+            owner = (UIView*)self.firstItem;
+        } 
+
+        if (!owner) {
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Unknown relationship between constraint items." userInfo:nil];
+        }
+
+        [owner addConstraint:self];
+    } else {
+        // _view is set by _setView, called by UIView add/removeConstraint
+        [_view removeConstraint:self];
+    }
+}
+
+- (void)_setView:(UIView*)view {
+    _view = view;
+}
+
++ (void)_printConstraints:(NSArray*)constraints {
     printConstraints(constraints);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (void)activateConstraints:(NSArray*)constraints {
-    UNIMPLEMENTED();
+    for (NSObject* constraint in constraints) {
+        if (![constraint isKindOfClass:[NSLayoutConstraint class]]) {
+            [NSException raise:NSInvalidArgumentException format:@"Not all objects in array of type NSLayoutConstraint!"];
+        }
+        ((NSLayoutConstraint*)constraint).active = YES;
+    }
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 + (void)deactivateConstraints:(NSArray*)constraints {
-    UNIMPLEMENTED();
+    for (NSObject* constraint in constraints) {
+        if (![constraint isKindOfClass:[NSLayoutConstraint class]]) {
+            [NSException raise:NSInvalidArgumentException format:@"Not all objects in array of type NSLayoutConstraint!"];
+        }
+        ((NSLayoutConstraint*)constraint).active = NO;
+    }
 }
 
 @end

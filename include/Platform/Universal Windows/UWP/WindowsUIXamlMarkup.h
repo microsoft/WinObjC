@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXMXamlBinaryWriter, WUXMXamlReader, WUXMXamlBindingHelper;
 @class WUXMXamlBinaryWriterErrorInformation, WUXMXmlnsDefinition;
@@ -29,7 +29,6 @@
 
 #include "WindowsUIXamlInterop.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUIXaml.h"
 #include "WindowsFoundation.h"
 

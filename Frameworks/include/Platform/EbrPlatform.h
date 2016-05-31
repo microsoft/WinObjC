@@ -40,7 +40,7 @@ public:
 
     virtual int Close();
     virtual size_t Read(void* dest, size_t elem, size_t count);
-    virtual size_t Write(void* dest, size_t elem, size_t count);
+    virtual size_t Write(const void* dest, size_t elem, size_t count);
     virtual int Seek(long offset, int origin);
     virtual int Seek64(__int64 offset, int origin);
     virtual size_t Tell();
@@ -82,7 +82,7 @@ SB_EXPORT EbrFile* EbrFopen(const char* filename, const char* mode);
 SB_EXPORT EbrFile* EbrFdopen(int handle, const char* mode);
 SB_EXPORT int EbrFclose(EbrFile* file);
 SB_EXPORT size_t EbrFread(void* dest, size_t elem, size_t count, EbrFile* file);
-SB_EXPORT size_t EbrFwrite(void* dest, size_t elem, size_t count, EbrFile* file);
+SB_EXPORT size_t EbrFwrite(const void* dest, size_t elem, size_t count, EbrFile* file);
 SB_EXPORT int EbrFseek(EbrFile* fp, long offset, int origin);
 SB_EXPORT int EbrFseek64(EbrFile* fp, __int64 offset, int origin);
 SB_EXPORT size_t EbrFtell(EbrFile* fp);

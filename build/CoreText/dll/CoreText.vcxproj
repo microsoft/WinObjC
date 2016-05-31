@@ -28,8 +28,8 @@
     <ProjectReference Include="..\..\CoreGraphics\dll\CoreGraphics.vcxproj">
       <Project>{26da08da-d0b9-4579-b168-e7f0a5f20e57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
+    <ProjectReference Include="..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
     </ProjectReference>
     <ProjectReference Include="..\lib\CoreTextLib.vcxproj">
       <Project>{39d93f30-f8f9-4d8e-a428-c188e918aa48}</Project>

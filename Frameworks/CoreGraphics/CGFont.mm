@@ -791,12 +791,12 @@ float CGFontGetAscentAtSize(id font, float size) {
     return ret;
 }
 
-static EbrLock _fontLock = EBRLOCK_INITIALIZE;
+static pthread_mutex_t _fontLock = PTHREAD_MUTEX_INITIALIZER;
 
 void _CGFontLock() {
-    EbrLockEnter(_fontLock);
+    pthread_mutex_lock(&_fontLock);
 }
 
 void _CGFontUnlock() {
-    EbrLockLeave(_fontLock);
+    pthread_mutex_unlock(&_fontLock);
 }

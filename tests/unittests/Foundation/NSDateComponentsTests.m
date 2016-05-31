@@ -17,7 +17,7 @@
 #include "gtest-api.h"
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSDateComponents_ComponentsTimeZoneTest) {
+TEST(NSDateComponents, ComponentsTimeZoneTest) {
     LOG_INFO("NSDateComponents components with time zone test: ");
 
     NSTimeZone* estTimeZone = [NSTimeZone timeZoneWithName:@"EST"];
@@ -46,7 +46,7 @@ TEST(Foundation, NSDateComponents_ComponentsTimeZoneTest) {
     ASSERT_EQ_MSG(secondsBetween, 3600, "FAILED: dates should differ by one hour");
 }
 
-TEST(Foundation, NSDateComponents_CalendarTimeZoneTest) {
+TEST(NSDateComponents, CalendarTimeZoneTest) {
     LOG_INFO("NSDateComponents calendar with time zone test: ");
 
     NSTimeZone* estTimeZone = [NSTimeZone timeZoneWithName:@"EST"];

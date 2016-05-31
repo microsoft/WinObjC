@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXIPointer, WUXIFocusManager, WUXIInertiaExpansionBehavior, WUXIInertiaRotationBehavior, WUXIInertiaTranslationBehavior,
     WUXIManipulationPivot, WUXIDoubleTappedRoutedEventArgs, WUXIHoldingRoutedEventArgs, WUXIInputScope, WUXIInputScopeName,
@@ -123,7 +123,6 @@ typedef unsigned WUXIManipulationModes;
 #include "WindowsDevicesInput.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIInput.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsSystem.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback

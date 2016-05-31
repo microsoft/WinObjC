@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -36,8 +36,8 @@
     <AppContainerApplication>true</AppContainerApplication>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>8.2</ApplicationTypeRevision>
-    <TargetPlatformVersion>10.0.10069.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10069.0</TargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -250,6 +250,8 @@
     <ClCompile Include="..\..\pixman\pixman-image.c" />
     <ClCompile Include="..\..\pixman\pixman-implementation.c" />
     <ClCompile Include="..\..\pixman\pixman-linear-gradient.c" />
+    <ClCompile Include="..\..\pixman\pixman-matrix.c" />
+    <ClCompile Include="..\..\pixman\pixman-radial-gradient.c" />
     <ClCompile Include="..\..\pixman\pixman-region16.c" />
     <ClCompile Include="..\..\pixman\pixman-region32.c" />
     <ClCompile Include="..\..\pixman\pixman-solid-fill.c" />
@@ -269,4 +271,21 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">..\..\..\..\prebuilt\Universal Windows\$(PlatformTarget)\Debug\\</PrebuiltPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">..\..\..\..\prebuilt\Universal Windows\$(PlatformTarget)\\</PrebuiltPath>
+  </PropertyGroup>
+  <Target Name="CopyContent" AfterTargets="Build">
+    <ItemGroup>
+      <LibraryOutput Include="$(OutDir)\*.lib" />
+      <LibraryOutput Include="$(OutDir)\*.dll" />
+      <LibraryOutput Include="$(OutDir)\*.pdb" />
+      <Headers Include="..\..\pixman\pixman.h" />
+      <Headers Include="..\..\pixman\pixman-version.h" />
+    </ItemGroup>
+    <Copy DestinationFolder="$(PrebuiltPath)" SkipUnchangedFiles="True" SourceFiles="@(LibraryOutput)" />
+    <Copy DestinationFolder="..\..\..\..\prebuilt\include\\" SkipUnchangedFiles="True" SourceFiles="@(Headers)" />
+  </Target>
 </Project>

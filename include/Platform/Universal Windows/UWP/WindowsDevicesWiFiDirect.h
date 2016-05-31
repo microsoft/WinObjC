@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDWWiFiDirectDevice, WDWWiFiDirectConnectionParameters, WDWWiFiDirectInformationElement, WDWWiFiDirectLegacySettings,
     WDWWiFiDirectAdvertisement, WDWWiFiDirectAdvertisementPublisherStatusChangedEventArgs, WDWWiFiDirectAdvertisementPublisher,
@@ -69,11 +69,10 @@ enum _WDWWiFiDirectAdvertisementPublisherStatus {
 };
 typedef unsigned WDWWiFiDirectAdvertisementPublisherStatus;
 
-#include "WindowsFoundation.h"
 #include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesEnumeration.h"
+#include "WindowsFoundation.h"
 #include "WindowsNetworking.h"
 
 #import <Foundation/Foundation.h>

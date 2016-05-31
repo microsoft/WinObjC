@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDSSmartCardReader, WDSSmartCard, WDSCardAddedEventArgs, WDSCardRemovedEventArgs, WDSSmartCardProvisioning, WDSSmartCardPinPolicy,
     WDSSmartCardChallengeContext, WDSSmartCardPinResetRequest, WDSSmartCardPinResetDeferral, WDSSmartCardConnection;
@@ -66,7 +66,6 @@ typedef unsigned WDSSmartCardPinCharacterPolicyOption;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 // Windows.Devices.SmartCards.SmartCardPinResetHandler
 #ifndef __WDSSmartCardPinResetHandler__DEFINED
 #define __WDSSmartCardPinResetHandler__DEFINED

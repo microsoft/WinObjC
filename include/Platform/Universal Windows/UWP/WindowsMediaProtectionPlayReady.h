@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMPPPlayReadyContentHeader, WMPPPlayReadySoapMessage, WMPPPlayReadyContentResolver, WMPPPlayReadyIndividualizationServiceRequest,
     WMPPPlayReadyDomainJoinServiceRequest, WMPPPlayReadyDomainLeaveServiceRequest, WMPPPlayReadyLicenseAcquisitionServiceRequest,

@@ -53,6 +53,12 @@
       <SBResourceCopy Include="$(StarboardLibDirs)\ApplicationInsights.dll" />
       <SBResourceCopy Include="$(StarboardLibDirs)\AppInsights_Win10-UAP.dll" />
     </ItemGroup>
+
+    <ItemGroup>
+      <!-- CoreFoundation resource files -->
+      <SBResourceCopy Include="$(StarboardLibDirs)\CFCharacterSetBitmaps.bitmap" />
+      <SBResourceCopy Include="$(StarboardLibDirs)\CFUniCharPropertyDatabase.data" />
+    </ItemGroup>
   </Target>
 
   <Target

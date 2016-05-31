@@ -18,6 +18,7 @@
 #include "StubReturn.h"
 
 #import <Foundation/NSZone.h>
+#import <objc/objc-arc.h>
 
 /**
  @Status Stub
@@ -218,4 +219,20 @@ id NSCopyObject(id object, NSUInteger extraBytes, NSZone* zone) {
 BOOL NSShouldRetainWithZone(id anObject, NSZone* requestedZone) {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+/**
+ @Status Interoperable
+ @Notes As on the reference platform, NSZone is ignored.
+*/
+id NSAllocateObject(Class classRef, NSUInteger extraBytes, NSZone* zone) {
+    return class_createInstance(classRef, extraBytes);
+}
+
+/**
+ @Status Interoperable
+*/
+void NSDeallocateObject(id obj) {
+    objc_delete_weak_refs(obj);
+    object_dispose(obj);
 }

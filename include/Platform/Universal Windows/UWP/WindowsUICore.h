@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUCCoreDispatcher, WUCCoreCursor, WUCCoreWindow, WUCWindowActivatedEventArgs, WUCAutomationProviderRequestedEventArgs,
     WUCCharacterReceivedEventArgs, WUCCoreWindowEventArgs, WUCInputEnabledEventArgs, WUCKeyEventArgs, WUCPointerEventArgs,
@@ -136,8 +136,8 @@ typedef unsigned WUCAppViewBackButtonVisibility;
 
 #include "WindowsSystem.h"
 #include "WindowsUIInput.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
+#include "WindowsFoundationCollections.h"
 // Windows.UI.Core.DispatchedHandler
 #ifndef __WUCDispatchedHandler__DEFINED
 #define __WUCDispatchedHandler__DEFINED

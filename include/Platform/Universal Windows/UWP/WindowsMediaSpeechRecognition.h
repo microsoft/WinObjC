@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMSSpeechRecognitionSemanticInterpretation, WMSSpeechRecognitionResult, WMSSpeechRecognitionTopicConstraint,
     WMSSpeechRecognitionListConstraint, WMSSpeechRecognitionGrammarFileConstraint, WMSSpeechRecognizerTimeouts,
@@ -121,7 +121,6 @@ typedef unsigned WMSSpeechContinuousRecognitionMode;
 
 #include "WindowsGlobalization.h"
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
 
 #import <Foundation/Foundation.h>

@@ -46,11 +46,12 @@ MODULE_SETUP(ModuleSetup) {
     char* argv[] = { "FunctionalTests" };
     testing::InitGoogleTest(&argc, argv);
 
-    return true;
+    // Keep the device active
+    return SUCCEEDED(FrameworkHelper::DisplayRequest(true));
 }
 
 MODULE_CLEANUP(ModuleCleanup) {
-    return true;
+    return SUCCEEDED(FrameworkHelper::DisplayRequest(false));
 }
 
 //
@@ -224,3 +225,29 @@ public:
         NSURLSessionDownloadTaskWithURL_WithCancelResume();
     }
 }; /* class NSURL */
+
+//
+// NSUserDefaults Tests
+//
+extern void NSUserDefaultsBasic();
+extern void NSUserDefaultsKVCArray();
+
+class NSUserDefaults {
+public:
+    BEGIN_TEST_CLASS(NSUserDefaults)
+    TEST_CLASS_PROPERTY(L"RunAs", L"UAP")
+    TEST_CLASS_PROPERTY(L"UAP:Host", L"Xaml")
+    END_TEST_CLASS()
+
+    TEST_CLASS_SETUP(NSURLClassSetup) {
+        return SUCCEEDED(FrameworkHelper::RunOnUIThread(&UIApplicationMainTest));
+    }
+
+    TEST_METHOD(NSUserDefaults_Basic) {
+        NSUserDefaultsBasic();
+    }
+
+    TEST_METHOD(NSUserDefaults_KVCArray) {
+        NSUserDefaultsKVCArray();
+    }
+}; /* class NSUserDefaults */

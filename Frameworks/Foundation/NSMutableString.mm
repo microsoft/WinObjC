@@ -14,26 +14,30 @@
 //
 //******************************************************************************
 
-#import "Starboard.h"
-
-#define U_STATIC_IMPLEMENTATION 1
-#import <unicode/unistr.h>
-#import "NSMutableString+Internal.h"
-
-void setToUnicode(NSString* inst, UnicodeString& str);
+#include "Starboard.h"
+#include <Foundation/NSMutableString.h>
+#include "NSCFString.h"
+#include "NSRaise.h"
+#include "BridgeHelpers.h"
 
 @implementation NSMutableString
+
++ (void)load {
+    // Now that NSString is loaded, go ahead and reset _NSCFString's superclass
+    // to be NSString. This is needed so that any CFString that was created *before*
+    // NSString was loaded (namely all the constants in CF) will be properly bridged.
+    Class nscfClass = objc_getClass("_NSCFString");
+    Class nscfMetaClass = objc_getMetaClass("_NSCFString");
+
+    class_setSuperclass(nscfClass, self);
+    object_setClass(nscfMetaClass, object_getClass(object_getClass(self)));
+    class_setSuperclass(nscfMetaClass, object_getClass(self));
+}
 
 /**
  @Status Interoperable
 */
-- (NSObject*)init {
-    if (self = [super init]) {
-        UnicodeString str(16, 0, 0);
-        setToUnicode(self, str);
-    }
-    return self;
-}
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableString, NSMutableStringPrototype);
 
 /**
  @Status Interoperable
@@ -46,70 +50,40 @@ void setToUnicode(NSString* inst, UnicodeString& str);
  @Status Interoperable
 */
 - (instancetype)initWithCapacity:(NSUInteger)capacity {
-    if (self = [super init]) {
-        if (capacity < 16) {
-            capacity = 16;
-        }
-
-        UnicodeString str(capacity, 0, 0);
-        setToUnicode(self, str);
-    }
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)string {
-    return [[self new] autorelease];
+    // Derived classes are required to implement this initializer
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)insertString:(NSString*)str atIndex:(NSUInteger)idx {
-    UStringHolder s1(self);
-    UStringHolder s2(str);
-    UnicodeString& curStr = s1.string();
-
-    curStr.insert(idx, s2.string());
-    setToUnicode(self, curStr);
+    [self replaceCharactersInRange:NSMakeRange(idx, 0) withString:str];
 }
 
 /**
  @Status Interoperable
 */
 - (void)replaceCharactersInRange:(NSRange)range withString:(NSString*)str {
-    UStringHolder s1(self);
-    UStringHolder s2(str);
-    UnicodeString& curStr = s1.string();
-
-    curStr.replace(range.location, range.length, s2.string());
-    setToUnicode(self, curStr);
+    // NSMutableString is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)deleteCharactersInRange:(NSRange)range {
-    UStringHolder s1(self);
-    UnicodeString& curStr = s1.string();
-
-    curStr.remove(range.location, range.length);
-    setToUnicode(self, curStr);
+    [self replaceCharactersInRange:range withString:@""];
 }
 
 /**
  @Status Interoperable
 */
 - (void)appendFormat:(NSString*)formatStr, ... {
-    void setToFormat(NSString * inst, NSString * format, va_list list, NSString * string);
-
     va_list reader;
     va_start(reader, formatStr);
 
-    NSString* endStr = [[self class] alloc];
-    setToFormat(self, formatStr, reader, endStr);
+    NSString* endStr = [[NSString alloc] initWithFormat:formatStr arguments:reader];
     va_end(reader);
 
     [self appendString:endStr];
@@ -119,44 +93,14 @@ void setToUnicode(NSString* inst, UnicodeString& str);
  @Status Interoperable
 */
 - (void)appendString:(NSString*)str {
-    UStringHolder s1(self);
-    UStringHolder s2(str);
-    UnicodeString& curStr = s1.string();
-
-    curStr.append(s2.string());
-    setToUnicode(self, curStr);
-}
-
-- (void)__appendCharacter:(WORD)character {
-    UStringHolder s1(self);
-    UnicodeString& curStr = s1.string();
-
-    curStr.append((UChar)character);
-    setToUnicode(self, curStr);
-}
-
-- (void)__appendCharacters:(const WORD*)characters length:(int)length {
-    UStringHolder s1(self);
-    UnicodeString& curStr = s1.string();
-
-    curStr.append((const UChar*)characters, length);
-    setToUnicode(self, curStr);
-}
-
-- (void)__appendLocale:(NSLocale*)locale key:(NSString*)key index:(int)index {
-    id array = [locale objectForKey:key];
-
-    if (array != nil)
-        [self appendString:[array objectAtIndex:index]];
+    [self insertString:str atIndex:[self length]];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setString:(NSString*)str {
-    UStringHolder s1(str);
-
-    setToUnicode(self, s1.string());
+    [self replaceCharactersInRange:NSMakeRange(0, [self length]) withString:str];
 }
 
 /**
@@ -166,19 +110,13 @@ void setToUnicode(NSString* inst, UnicodeString& str);
                               withString:(id)replacement
                                  options:(NSStringCompareOptions)options
                                    range:(NSRange)range {
-    if (target == nil) {
-        // NSRaiseException(NSInvalidArgumentException,self,_cmd,@"nil target object");
-        assert(0);
-    }
-    if (replacement == nil) {
-        // NSRaiseException(NSInvalidArgumentException,self,_cmd,@"nil replacement object");
-        assert(0);
-    }
-    if (range.location + range.length > [self length]) {
-        // NSRaiseException(NSRangeException,self,_cmd,@"end of search range %d beyond length %d",
-        // searchRange.location+searchRange.length, [self length]);
-        assert(0);
-    }
+    THROW_NS_IF_NULL_MSG(E_INVALIDARG, target, "nil target object");
+    THROW_NS_IF_NULL_MSG(E_INVALIDARG, replacement, "nil replacement object");
+    THROW_NS_IF_FALSE_MSG(E_BOUNDS,
+                          range.location + range.length <= [self length],
+                          "end of search range %d beyond length %d",
+                          range.location + range.length,
+                          [self length]);
 
     if (options & NSRegularExpressionSearch) {
         NSRegularExpressionOptions regOptions = 0;
@@ -191,10 +129,9 @@ void setToUnicode(NSString* inst, UnicodeString& str);
             searchOptions = NSMatchingAnchored;
         }
 
-        NSRegularExpression* regExp = [[NSRegularExpression alloc] initWithPattern:target options:regOptions error:NULL];
-
+        StrongId<NSRegularExpression> regExp;
+        regExp.attach([[NSRegularExpression alloc] initWithPattern:target options:regOptions error:NULL]);
         int count = [regExp replaceMatchesInString:self options:searchOptions range:range withTemplate:replacement];
-        [regExp release];
 
         return count;
     }
@@ -204,7 +141,7 @@ void setToUnicode(NSString* inst, UnicodeString& str);
     NSRange subrange;
 
     NSUInteger n = 0;
-    subrange = [self rangeOfString:target options:options range:range];
+    subrange = [self rangeOfString:target options:static_cast<NSStringCompareOptions>(options) range:range];
     while (subrange.location != 0x7fffffff) {
         [self replaceCharactersInRange:subrange withString:replacement];
 
@@ -216,7 +153,7 @@ void setToUnicode(NSString* inst, UnicodeString& str);
         }
 
         n++;
-        subrange = [self rangeOfString:target options:options range:range];
+        subrange = [self rangeOfString:target options:static_cast<NSStringCompareOptions>(options) range:range];
     }
 
     return n;
@@ -226,9 +163,109 @@ void setToUnicode(NSString* inst, UnicodeString& str);
  @Status Interoperable
 */
 - (NSObject*)copyWithZone:(NSZone*)zone {
-    NSString* newStr = [[NSString alloc] initWithString:self];
+    return [[NSString alloc] initWithString:self];
+}
 
-    return newStr;
+- (void)_cfAppendCString:(const unsigned char*)cString length:(NSInteger)length {
+    [self appendString:[NSString stringWithCString:(const char*)cString length:length]];
+}
+
+- (void)_cfPad:(NSString*)padString length:(uint32_t)length padIndex:(uint32_t)indexIntoPad {
+    if (length <= [self length]) {
+        [self deleteCharactersInRange:{ length, [self length] }];
+    } else {
+        // Not so efficient but will get the job done.
+        NSString* replacement = [padString substringWithRange:{ indexIntoPad, 1 }];
+        for (int i = 0; i < (length - [self length]); i++) {
+            [self appendString:replacement];
+        }
+    }
+}
+
+- (void)_cfTrim:(NSString*)trimString {
+    // Start searching forward for matching range anchored at start.
+    NSInteger newStartIndex = 0;
+    NSRange range;
+    range = [self rangeOfString:trimString options:NSAnchoredSearch range:{ newStartIndex, [self length] }];
+    while (range.location != NSNotFound) {
+        newStartIndex = range.location + range.length;
+        range = [self rangeOfString:trimString options:NSAnchoredSearch range:{ newStartIndex, [self length] }];
+    }
+
+    if (newStartIndex < [self length] && newStartIndex > 0) {
+        // valid trim region at the start.
+        [self deleteCharactersInRange:{ 0, newStartIndex }];
+    }
+
+    // Now search backwards.
+    NSInteger newEndIndex = [self length];
+    range = [self rangeOfString:trimString
+                        options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | NSBackwardsSearch)
+                          range:{ 0, newEndIndex }];
+    while (range.location != NSNotFound) {
+        newEndIndex = range.location;
+        range = [self rangeOfString:trimString
+                            options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | NSBackwardsSearch)
+                              range:{ 0, newEndIndex }];
+    }
+
+    if (newEndIndex < [self length] && newEndIndex > 0) {
+        // valid trim region at the end.
+        [self deleteCharactersInRange:{ newEndIndex, [self length] }];
+    }
+}
+
+- (void)_cfTrimWS {
+    // Start searching forward for matching range anchored at start.
+    NSInteger newStartIndex = 0;
+    NSRange range;
+    NSCharacterSet* whitespace = [NSCharacterSet whitespaceCharacterSet];
+    range = [self rangeOfCharacterFromSet:whitespace options:NSAnchoredSearch range:{ newStartIndex, [self length] }];
+    while (range.location != NSNotFound) {
+        newStartIndex = range.location + range.length;
+        range = [self rangeOfCharacterFromSet:whitespace options:NSAnchoredSearch range:{ newStartIndex, [self length] }];
+    }
+
+    if (newStartIndex < [self length] && newStartIndex > 0) {
+        // valid trim region at the start.
+        [self deleteCharactersInRange:{ 0, newStartIndex }];
+    }
+
+    // Now search backwards.
+    NSInteger newEndIndex = [self length];
+    range = [self rangeOfCharacterFromSet:whitespace
+                                  options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | NSBackwardsSearch)
+                                    range:{ 0, newEndIndex }];
+    while (range.location != NSNotFound) {
+        newEndIndex = range.location;
+        range = [self rangeOfCharacterFromSet:whitespace
+                                      options:static_cast<NSStringCompareOptions>(NSAnchoredSearch | NSBackwardsSearch)
+                                        range:{ 0, newEndIndex }];
+    }
+
+    if (newEndIndex < [self length] && newEndIndex > 0) {
+        // valid trim region at the end.
+        [self deleteCharactersInRange:{ newEndIndex, [self length] }];
+    }
+}
+
+- (void)_cfNormalize:(CFStringNormalizationForm)form {
+    // This isn't the most efficient but to ensure that its a CF string (and therefore will bridge properly) make a copy and try again.
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), form);
+    [self setString:mutableCopy];
+}
+
+- (void)_cfLowercase:(NSLocale*)locale {
+    return [self setString:[self lowercaseStringWithLocale:locale]];
+}
+
+- (void)_cfUppercase:(NSLocale*)locale {
+    return [self setString:[self uppercaseStringWithLocale:locale]];
+}
+
+- (void)_cfCapitalize:(NSLocale*)locale {
+    return [self setString:[self capitalizedStringWithLocale:locale]];
 }
 
 @end

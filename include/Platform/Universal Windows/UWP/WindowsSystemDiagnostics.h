@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSDProcessDiagnosticInfo, WSDProcessDiskUsage, WSDProcessMemoryUsage, WSDProcessCpuUsage, WSDProcessMemoryUsageReport,
     WSDProcessDiskUsageReport, WSDProcessCpuUsageReport;
@@ -28,7 +28,6 @@
     WSDIProcessCpuUsage, WSDIProcessCpuUsageReport;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

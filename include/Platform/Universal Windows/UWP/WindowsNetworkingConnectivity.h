@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNCIPInformation, WNCDataPlanUsage, WNCConnectionCost, WNCDataPlanStatus, WNCNetworkAdapter, WNCDataUsage,
     WNCNetworkSecuritySettings, WNCWlanConnectionProfileDetails, WNCNetworkUsage, WNCConnectivityInterval, WNCAttributedNetworkUsage,
@@ -168,7 +168,6 @@ typedef unsigned WNCWwanDataClass;
 
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsNetworking.h"
 // Windows.Networking.Connectivity.NetworkStatusChangedEventHandler
 #ifndef __WNCNetworkStatusChangedEventHandler__DEFINED

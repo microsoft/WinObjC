@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGIHeadset, WGIGamepad;
 @class WGIGamepadReading, WGIGamepadVibration;
@@ -48,7 +48,6 @@ typedef unsigned WGIGamepadButtons;
 
 #include "WindowsFoundation.h"
 #include "WindowsSystem.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

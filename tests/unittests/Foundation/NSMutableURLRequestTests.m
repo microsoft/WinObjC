@@ -19,7 +19,7 @@
 #import <Foundation/NSMutableURLRequest.h>
 #import <Foundation/NSURL.h>
 
-TEST(Foundation, NSMutableURLRequest_setValue) {
+TEST(NSMutableURLRequest, setValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -30,7 +30,7 @@ TEST(Foundation, NSMutableURLRequest_setValue) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != nil, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == nil, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 
@@ -44,7 +44,7 @@ TEST(Foundation, NSMutableURLRequest_setValue) {
     [content release];
 }
 
-TEST(Foundation, NSMutableURLRequest_addValue) {
+TEST(NSMutableURLRequest, addValue) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -55,7 +55,7 @@ TEST(Foundation, NSMutableURLRequest_addValue) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != nil, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == nil, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 

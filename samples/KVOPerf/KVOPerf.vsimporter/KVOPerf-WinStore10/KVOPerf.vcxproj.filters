@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Common">
+      <UniqueIdentifier>{8db2c930-f5b7-42ed-9c1d-f81218dc719f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{eae09327-af84-4a99-b801-cd4790a50d44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelloUI">
+      <UniqueIdentifier>{A745B41B-2C32-4E2C-9B50-93A65372A8B6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HelloUI\Supporting Files">
+      <UniqueIdentifier>{FCC940D2-9B02-4CA3-AEE1-0A57FACE9950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xcode Variable Files">
+      <UniqueIdentifier>{4CE8EE8F-2E83-4AAC-9732-4FCA8E74E95C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square150x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Wide310x150Logo.scale-200.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="KVOPerf_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="default.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <SBInfoPlistCopy Include="..\..\KVOPerf\Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssetCatalogCompile Include="..\..\KVOPerf\Images.xcassets" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClangCompile Include="..\..\KVOPerf\main.m" />
+    <ClangCompile Include="..\..\KVOPerf\KVOPerf.mm" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="KVOPerf-Debug-xcvars.txt" />
+    <Text Include="KVOPerf-Release-xcvars.txt" />
+  </ItemGroup>
+</Project>

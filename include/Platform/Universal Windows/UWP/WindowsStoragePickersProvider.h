@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSPPFileRemovedEventArgs, WSPPFileOpenPickerUI, WSPPPickerClosingEventArgs, WSPPPickerClosingOperation, WSPPPickerClosingDeferral,
     WSPPFileSavePickerUI, WSPPTargetFileRequestedEventArgs, WSPPTargetFileRequest, WSPPTargetFileRequestDeferral;
@@ -52,7 +52,6 @@ enum _WSPPSetFileNameResult {
 typedef unsigned WSPPSetFileNameResult;
 
 #include "WindowsStorage.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

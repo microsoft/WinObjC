@@ -1,0 +1,20 @@
+<?xml version='1.0'?>
+<!DOCTYPE root [
+    <!NOTATION myNotation SYSTEM 'http://www.example.com' >
+    <!ELEMENT root (foo | bar | baz)> <!ELEMENT foo (string, bar)>
+    <!ELEMENT bar (#PCDATA)> <!ELEMENT baz (#PCDATA)>
+    <!ELEMENT string (#PCDATA)>
+    <!ELEMENT fooBar (foo | bar)*>
+    <!ELEMENT img EMPTY>
+    <!ATTLIST foo
+        src CDATA   #REQUIRED
+        id  ID      #IMPLIED
+        print (yes | no) "yes"
+    >
+]>
+<root>
+    <foo src='hello'>
+        <string>Hello</string>
+        <bar>world</bar>
+    </foo>
+</root>

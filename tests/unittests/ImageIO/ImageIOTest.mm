@@ -34,7 +34,7 @@ static void checkInt(int res, int expected, const char* name) {
     ASSERT_NEAR_MSG(res, expected, 0, "TEST FAILED: %s \nEXPECTED: %i\nFOUND: %i", name, expected, res);
 }
 
-static NSData* getDataFromImageFile(const wchar_t* imageFilename) {
+static NSString* getPathForFile(const wchar_t* fileName) {
     // get test startup full path
     wchar_t fullPath[_MAX_PATH];
     GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
@@ -48,8 +48,14 @@ static NSData* getDataFromImageFile(const wchar_t* imageFilename) {
     wcscpy_s(fullPath, _countof(fullPath), drive);
     wcscat_s(fullPath, _countof(fullPath), directory);
     wcscat_s(fullPath, _countof(fullPath), L"data\\");
-    wcscat_s(fullPath, _countof(fullPath), imageFilename);
-    NSString* testFileFullPath = [NSString stringWithCharacters:(const unichar*)fullPath length:_MAX_PATH];
+    wcscat_s(fullPath, _countof(fullPath), fileName);
+
+    return [NSString stringWithCharacters:(const unichar*)fullPath length:wcsnlen_s(fullPath, _MAX_PATH)];
+}
+
+static NSData* getDataFromImageFile(const wchar_t* imageFilename) {
+    NSString* testFileFullPath = getPathForFile(imageFilename);
+
     EbrFile* fp = EbrFopen([testFileFullPath UTF8String], "rb");
     if (!fp) {
         return nil;
@@ -68,22 +74,14 @@ static NSData* getDataFromImageFile(const wchar_t* imageFilename) {
 }
 
 static CFURLRef getURLRefFromFilename(const wchar_t* filename) {
-    // get test startup full path
-    wchar_t fullPath[_MAX_PATH];
-    GetModuleFileNameW(NULL, fullPath, _MAX_PATH);
-
-    // split test startup full path into components like drive, directory, filename and ext etc.
-    wchar_t drive[_MAX_DRIVE];
-    wchar_t directory[_MAX_DIR];
-    ::_wsplitpath_s(fullPath, drive, _countof(drive), directory, _countof(directory), NULL, 0, NULL, 0);
-
-    // reconstruct fullpath for test artifact file. e.g., C:\WinObjc\WinObjC\build\Debug\data\photo6_1024x670.jpg
-    wcscpy_s(fullPath, _countof(fullPath), drive);
-    wcscat_s(fullPath, _countof(fullPath), directory);
-    wcscat_s(fullPath, _countof(fullPath), L"data\\");
-    wcscat_s(fullPath, _countof(fullPath), filename);
-    NSString* directoryWithFile = [NSString stringWithCharacters:(const unichar*)fullPath length:_MAX_PATH];
+    NSString* directoryWithFile = getPathForFile(filename);
     return (CFURLRef)[NSURL fileURLWithPath:directoryWithFile];
+}
+
+static CFURLRef getURLRefForOutFile(const wchar_t* filename) {
+    NSString* testFileFullPath = getPathForFile(filename);
+    EbrRemove([testFileFullPath UTF8String]);
+    return (CFURLRef)[NSURL fileURLWithPath:testFileFullPath];
 }
 
 TEST(ImageIO, ImageAtIndexWithData) {
@@ -450,7 +448,7 @@ TEST(ImageIO, NegativeScenarioTest) {
     wcscat_s(fullPath, _countof(fullPath), directory);
     wcscat_s(fullPath, _countof(fullPath), L"data\\");
     wcscat_s(fullPath, _countof(fullPath), imageFile);
-    NSString* directoryWithFile = [NSString stringWithCharacters:(const unichar*)fullPath length:_MAX_PATH];
+    NSString* directoryWithFile = [NSString stringWithCharacters:(const unichar*)fullPath length:wcsnlen_s(fullPath, _MAX_PATH)];
 
     CFURLRef imgUrl = (CFURLRef)[NSURL fileURLWithPath:directoryWithFile];
     imageSource = CGImageSourceCreateWithURL(nullptr, (CFDictionaryRef)options);
@@ -718,7 +716,7 @@ TEST(ImageIO, DestinationTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile = L"outphoto.tif";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     // Here we do not release myImageDest right after use to check that images can be read immediately after Finalize
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeTIFF, 1, NULL);
@@ -744,7 +742,7 @@ TEST(ImageIO, DestinationTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile2 = L"outphoto.jpg";
-    imgUrl = getURLRefFromFilename(outFile2);
+    imgUrl = getURLRefForOutFile(outFile2);
 
     CFRelease(myImageDest);
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeJPEG, 1, NULL);
@@ -770,7 +768,7 @@ TEST(ImageIO, DestinationTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile3 = L"outphoto.png";
-    imgUrl = getURLRefFromFilename(outFile3);
+    imgUrl = getURLRefForOutFile(outFile3);
 
     CFRelease(myImageDest);
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypePNG, 1, NULL);
@@ -796,7 +794,7 @@ TEST(ImageIO, DestinationTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile4 = L"outphoto.bmp";
-    imgUrl = getURLRefFromFilename(outFile4);
+    imgUrl = getURLRefForOutFile(outFile4);
 
     CFRelease(myImageDest);
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeBMP, 1, NULL);
@@ -822,7 +820,7 @@ TEST(ImageIO, DestinationTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile5 = L"outphoto.gif";
-    imgUrl = getURLRefFromFilename(outFile5);
+    imgUrl = getURLRefForOutFile(outFile5);
 
     CFRelease(myImageDest);
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeGIF, 1, NULL);
@@ -855,7 +853,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((CFDataRef)imageData, NULL);
 
     const wchar_t* outFile = L"outphoto2.tif";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeTIFF, 1, NULL);
     CGImageDestinationAddImageFromSource(myImageDest, imageSource, 0, NULL);
@@ -881,7 +879,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     checkInt(frameCount, 1, "FrameCount");
 
     const wchar_t* outFile2 = L"outphoto2.jpg";
-    imgUrl = getURLRefFromFilename(outFile2);
+    imgUrl = getURLRefForOutFile(outFile2);
 
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeJPEG, 1, NULL);
     CGImageDestinationAddImageFromSource(myImageDest, imageSource, 0, NULL);
@@ -907,7 +905,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     checkInt(frameCount, 1, "FrameCount");
 
     const wchar_t* outFile3 = L"outphoto2.png";
-    imgUrl = getURLRefFromFilename(outFile3);
+    imgUrl = getURLRefForOutFile(outFile3);
 
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypePNG, 1, NULL);
     CGImageDestinationAddImageFromSource(myImageDest, imageSource, 0, NULL);
@@ -933,7 +931,7 @@ TEST(ImageIO, DestinationFromSourceTest) {
     checkInt(frameCount, 1, "FrameCount");
 
     const wchar_t* outFile4 = L"outphoto2.bmp";
-    imgUrl = getURLRefFromFilename(outFile4);
+    imgUrl = getURLRefForOutFile(outFile4);
 
     myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeBMP, 1, NULL);
     CGImageDestinationAddImageFromSource(myImageDest, imageSource, 0, NULL);
@@ -972,7 +970,7 @@ TEST(ImageIO, DestinationMultiFrameTest) {
     CGImageRef imageRef2 = CGImageSourceCreateImageAtIndex(imageSource2, 0, NULL);
 
     const wchar_t* outFile = L"outphoto_multiframe.tif";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeTIFF, 3, NULL);
     CGImageDestinationAddImage(myImageDest, imageRef, NULL);
@@ -1036,7 +1034,7 @@ TEST(ImageIO, DestinationMultiFrameGifTest) {
     CGImageRef imageRef2 = CGImageSourceCreateImageAtIndex(imageSource2, 0, NULL);
 
     const wchar_t* outFile = L"outphoto_multiframe.gif";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     CGImageDestinationRef myImageDest = CGImageDestinationCreateWithURL(imgUrl, kUTTypeGIF, 3, NULL);
     CGImageDestinationAddImage(myImageDest, imageRef, NULL);
@@ -1188,7 +1186,7 @@ TEST(ImageIO, DestinationOptionsTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile = L"outphotoLQ.jpg";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     // Note that to verify quality is much lower with quality = 0.1, you have to open the image file.
     // There is no option for image quality stored with the file as that would not make sense.
@@ -1230,7 +1228,7 @@ TEST(ImageIO, DestinationOptionsTest) {
     CGImageRef imageRef2 = CGImageSourceCreateImageAtIndex(imageSource2, 0, NULL);
 
     const wchar_t* outFile2 = L"outphoto_loopcount.gif";
-    imgUrl = getURLRefFromFilename(outFile2);
+    imgUrl = getURLRefForOutFile(outFile2);
 
     int loopCount = 15;
     float delayTime = 0.5;
@@ -1449,7 +1447,7 @@ TEST(ImageIO, DestinationImageOptionsJPEGTest) {
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
-    
+
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyJFIFDictionary),
                     "FAILED: ImageIOTest::JFIF dictionary not found");
     CFDictionaryRef jfifDictionary = (CFDictionaryRef)CFDictionaryGetValue(imageProperties, kCGImagePropertyJFIFDictionary);
@@ -1485,10 +1483,11 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile = L"outphoto_options.gif";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* gifOptions = @{
-        (id)kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:0.05],
+        (id) kCGImagePropertyGIFDelayTime : [NSNumber numberWithFloat:0.05],
     };
 
     int orientation = 2;
@@ -1512,7 +1511,7 @@ TEST(ImageIO, DestinationImageOptionsGIFTest) {
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
-    
+
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyGIFDictionary),
                     "FAILED: ImageIOTest::GIF dictionary not found");
     CFDictionaryRef gifDictionary = (CFDictionaryRef)CFDictionaryGetValue(imageProperties, kCGImagePropertyGIFDictionary);
@@ -1540,10 +1539,11 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
     CFRelease(imageSource);
 
     const wchar_t* outFile = L"outphoto_options.png";
-    CFURLRef imgUrl = getURLRefFromFilename(outFile);
+
+    CFURLRef imgUrl = getURLRefForOutFile(outFile);
 
     NSDictionary* pngOtions = @{
-        (id)kCGImagePropertyPNGGamma : [NSNumber numberWithInt:45045],
+        (id) kCGImagePropertyPNGGamma : [NSNumber numberWithInt:45045],
     };
 
     int orientation = 2;
@@ -1567,7 +1567,7 @@ TEST(ImageIO, DestinationImageOptionsPNGTest) {
     ASSERT_TRUE_MSG(imageSource != nil, "FAILED: ImageIOTest::CGImageSourceCreateWithData returned nullptr");
     CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
     ASSERT_TRUE_MSG(imageProperties != nil, "FAILED: ImageIOTest::CGImageSourceCopyPropertiesAtIndex returned nullptr");
-    
+
     ASSERT_TRUE_MSG(CFDictionaryContainsKey(imageProperties, kCGImagePropertyPNGDictionary),
                     "FAILED: ImageIOTest::PNG dictionary not found");
     CFDictionaryRef pngDictionary = (CFDictionaryRef)CFDictionaryGetValue(imageProperties, kCGImagePropertyPNGDictionary);

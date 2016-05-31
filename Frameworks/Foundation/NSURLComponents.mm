@@ -14,13 +14,17 @@
 //
 //******************************************************************************
 
+#import <Starboard.h>
 #import <StubReturn.h>
-#import <NSLogging.h>
 #import <Foundation/Foundation.h>
 
-static const wchar_t* TAG = L"NSURLComponents";
+#import <Corefoundation/CFURLComponents.h>
 
-@implementation NSURLComponents
+@implementation NSURLComponents {
+@private
+    woc::unique_cf<CFURLComponentsRef> _cf;
+}
+
 /**
  @Status Interoperable
  @Notes
@@ -30,8 +34,7 @@ static const wchar_t* TAG = L"NSURLComponents";
 }
 
 /**
- @Status Caveat
- @Notes resolvingAgainstBaseURL is not supported
+ @Status Interoperable
 */
 + (instancetype)componentsWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve {
     return [[[NSURLComponents alloc] initWithURL:url resolvingAgainstBaseURL:resolve] autorelease];
@@ -42,7 +45,10 @@ static const wchar_t* TAG = L"NSURLComponents";
  @Notes
 */
 - (instancetype)init {
-    return [super init];
+    if (self = [super init]) {
+        _cf.reset(_CFURLComponentsCreate(kCFAllocatorDefault));
+    }
+    return self;
 }
 
 /**
@@ -50,120 +56,283 @@ static const wchar_t* TAG = L"NSURLComponents";
  @Notes
 */
 - (instancetype)initWithString:(NSString*)URLString {
-    NSURL* url = [NSURL URLWithString:URLString];
-    return [self initWithURL:url resolvingAgainstBaseURL:NO];
-}
-
-/**
- @Status Caveat
- @Notes resolvingAgainstBaseURL is not supported
-*/
-- (instancetype)initWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve {
-    if (resolve) {
-        UNIMPLEMENTED_WITH_MSG("resolvingAgainstBaseURL not supported");
-        [self release];
-        return StubReturn();
-    }
-
     if (self = [super init]) {
-        _scheme = [url.scheme copy];
-        _host = [url.host copy];
-        _path = [url.path copy];
-        _queryItems = [[self _parseQuery:url.query] retain];
+        _cf.reset(_CFURLComponentsCreateWithString(kCFAllocatorDefault, static_cast<CFStringRef>(URLString)));
     }
-
     return self;
 }
 
-- (NSArray*)_parseQuery:(NSString*)query {
-    NSMutableArray* queryItems = [NSMutableArray array];
-
-    NSArray* nameValuePairs = [query componentsSeparatedByString:@"&"];
-
-    for (NSString* nameValuePair in nameValuePairs) {
-        NSArray* nameAndValue = [nameValuePair componentsSeparatedByString:@"="];
-
-        NSString* name = static_cast<NSString*>(nameAndValue[0]);
-        NSString* value = nil;
-
-        if ([nameAndValue count] > 1) {
-            NSArray* values = [nameAndValue subarrayWithRange:NSMakeRange(1, [nameAndValue count] - 1)];
-            value = [values componentsJoinedByString:@"="];
-        }
-
-        name = name.stringByRemovingPercentEncoding;
-        value = value.stringByRemovingPercentEncoding;
-
-        NSURLQueryItem* queryItem = [NSURLQueryItem queryItemWithName:name value:value];
-        [queryItems addObject:queryItem];
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve {
+    if (self = [super init]) {
+        _cf.reset(_CFURLComponentsCreateWithURL(kCFAllocatorDefault, static_cast<CFURLRef>(url), resolve));
     }
-
-    return queryItems;
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (NSURL*)URLRelativeToURL:(NSURL*)baseURL {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSString*)string {
+    return [static_cast<NSString*>(_CFURLComponentsCopyString(_cf.get())) autorelease];
 }
 
 /**
- @Status Stub
- @Notes
-*/
-- (id)copyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- These are the characters that won't be percent-encoded in a URL query string
- */
-+ (NSCharacterSet*)_unencodedQueryCharacters {
-    return [NSCharacterSet characterSetWithCharactersInString:@"*-._abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"];
-}
-
-/**
- @Status Caveat
- @Notes Only the scheme, host, path, and query URL components are supported
+ @Status Interoperable
 */
 - (NSURL*)URL {
-    @synchronized(self) {
-        NSCharacterSet* unencodedChars = [NSURLComponents _unencodedQueryCharacters];
-        NSMutableString* urlString = [NSMutableString stringWithCapacity:100];
+    return [static_cast<NSURL*>(_CFURLComponentsCopyURL(_cf.get())) autorelease];
+}
 
-        // Scheme
-        [urlString appendFormat:@"%@:", _scheme];
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLRelativeToURL:(NSURL*)baseURL {
+    return [static_cast<NSURL*>(_CFURLComponentsCopyURLRelativeToURL(_cf.get(), static_cast<CFURLRef>(baseURL))) autorelease];
+}
 
-        // Host
-        if (_host != nil) {
-            [urlString appendFormat:@"//%@", _host];
-        }
-        
-        // Path
-        NSString* encodedPath = [_path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLPathAllowedCharacterSet]];
-        [urlString appendString:encodedPath];
+/**
+ @Status Interoperable
+*/
+- (NSString*)fragment {
+    return [static_cast<NSString*>(_CFURLComponentsCopyFragment(_cf.get())) autorelease];
+}
 
-        // Query
-        BOOL firstItem = YES;
+/**
+ @Status Interoperable
+*/
+- (void)setFragment:(NSString*)fragment {
+    _CFURLComponentsSetFragment(_cf.get(), static_cast<CFStringRef>(fragment));
+}
 
-        for (NSURLQueryItem* item in _queryItems) {
-            [urlString appendFormat:@"%c%@",
-                                    (firstItem ? '?' : '&'),
-                                    [item.name stringByAddingPercentEncodingWithAllowedCharacters:unencodedChars]];
+/**
+ @Status Interoperable
+*/
+- (NSString*)host {
+    return [static_cast<NSString*>(_CFURLComponentsCopyHost(_cf.get())) autorelease];
+}
 
-            if (item.value != nil) {
-                [urlString appendFormat:@"=%@", [item.value stringByAddingPercentEncodingWithAllowedCharacters:unencodedChars]];
-            }
+/**
+ @Status Interoperable
+*/
+- (void)setHost:(NSString*)host {
+    _CFURLComponentsSetHost(_cf.get(), static_cast<CFStringRef>(host));
+}
 
-            firstItem = NO;
-        }
+/**
+ @Status Interoperable
+*/
+- (NSString*)password {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPassword(_cf.get())) autorelease];
+}
 
-        return [NSURL URLWithString:urlString];
+/**
+ @Status Interoperable
+*/
+- (void)setPassword:(NSString*)password {
+    _CFURLComponentsSetPassword(_cf.get(), static_cast<CFStringRef>(password));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)path {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPath(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPath:(NSString*)path {
+    _CFURLComponentsSetPath(_cf.get(), static_cast<CFStringRef>(path));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)port {
+    return [static_cast<NSNumber*>(_CFURLComponentsCopyPort(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPort:(NSNumber*)port {
+    _CFURLComponentsSetPort(_cf.get(), static_cast<CFNumberRef>(port));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)query {
+    return [static_cast<NSString*>(_CFURLComponentsCopyQuery(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setQuery:(NSString*)query {
+    _CFURLComponentsSetQuery(_cf.get(), static_cast<CFStringRef>(query));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray<NSURLQueryItem*>*)queryItems {
+    // CF returns this as an array of dictionaries, whereas NS expects an array of NSURLQueryItems
+    // Need to do some conversion here
+    NSArray<NSDictionary*>* cfQueryItems = [static_cast<NSArray<NSDictionary*>*>(_CFURLComponentsCopyQueryItems(_cf.get())) autorelease];
+    NSMutableArray<NSURLQueryItem*>* ret = [NSMutableArray arrayWithCapacity:[cfQueryItems count]];
+
+    for (NSDictionary* queryItem in cfQueryItems) {
+        // @"name" and @"value" match keys in CFURLComponents.c
+        [ret addObject:[NSURLQueryItem queryItemWithName:queryItem[@"name"] value:queryItem[@"value"]]];
     }
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setQueryItems:(NSArray<NSURLQueryItem*>*)queryItems {
+    // NS takes a single array of NSURLQueryItem*s here,
+    // whereas CF takes two separate arrays of names and values
+    // Need to convert before passing to CF
+    NSMutableArray<NSString*>* names = [NSMutableArray arrayWithCapacity:[queryItems count]];
+    NSMutableArray<NSString*>* values = [NSMutableArray arrayWithCapacity:[queryItems count]];
+
+    for (NSURLQueryItem* queryItem in queryItems) {
+        [names addObject:[queryItem name]];
+        [values addObject:[queryItem value]];
+    }
+
+    _CFURLComponentsSetQueryItems(_cf.get(), static_cast<CFArrayRef>(names), static_cast<CFArrayRef>(values));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)scheme {
+    return [static_cast<NSString*>(_CFURLComponentsCopyScheme(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setScheme:(NSString*)scheme {
+    _CFURLComponentsSetScheme(_cf.get(), static_cast<CFStringRef>(scheme));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)user {
+    return [static_cast<NSString*>(_CFURLComponentsCopyUser(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setUser:(NSString*)user {
+    _CFURLComponentsSetUser(_cf.get(), static_cast<CFStringRef>(user));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentEncodedFragment {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPercentEncodedFragment(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentEncodedFragment:(NSString*)percentEncodedFragment {
+    _CFURLComponentsSetPercentEncodedFragment(_cf.get(), static_cast<CFStringRef>(percentEncodedFragment));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentEncodedHost {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPercentEncodedHost(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentEncodedHost:(NSString*)percentEncodedHost {
+    _CFURLComponentsSetPercentEncodedHost(_cf.get(), static_cast<CFStringRef>(percentEncodedHost));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentEncodedPassword {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPercentEncodedPassword(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentEncodedPassword:(NSString*)percentEncodedPassword {
+    _CFURLComponentsSetPercentEncodedPassword(_cf.get(), static_cast<CFStringRef>(percentEncodedPassword));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentEncodedPath {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPercentEncodedPath(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentEncodedPath:(NSString*)percentEncodedPath {
+    _CFURLComponentsSetPercentEncodedPath(_cf.get(), static_cast<CFStringRef>(percentEncodedPath));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentEncodedQuery {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPercentEncodedQuery(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentEncodedQuery:(NSString*)percentEncodedQuery {
+    _CFURLComponentsSetPercentEncodedQuery(_cf.get(), static_cast<CFStringRef>(percentEncodedQuery));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentEncodedUser {
+    return [static_cast<NSString*>(_CFURLComponentsCopyPercentEncodedUser(_cf.get())) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentEncodedUser:(NSString*)percentEncodedUser {
+    _CFURLComponentsSetPercentEncodedUser(_cf.get(), static_cast<CFStringRef>(percentEncodedUser));
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    NSURLComponents* ret = [[self class] new];
+    if (ret) {
+        ret->_cf.reset(_CFURLComponentsCreateCopy(kCFAllocatorDefault, _cf.get()));
+    }
+    return ret;
 }
 
 /**
@@ -172,14 +341,6 @@ static const wchar_t* TAG = L"NSURLComponents";
 */
 - (NSString*)description {
     return [[self URL] description];
-}
-
-- (void)dealloc {
-    [_scheme release];
-    [_host release];
-    [_path release];
-    [_queryItems release];
-    [super dealloc];
 }
 
 @end

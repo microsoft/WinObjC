@@ -18,7 +18,6 @@
 #import <Foundation/NSKeyValueCoding.h>
 #import <Starboard/String.h>
 
-#import "NSArrayInternal.h"
 #import "NSDelayedPerform.h"
 #import "NSObject_NSKeyValueArrayAdapter-Internal.h"
 #import "NSObject_NSKeyValueCoding-Internal.h"
@@ -121,28 +120,55 @@ struct objc_ivar* KVCIvarForPropertyName(NSObject* self, const char* propName) {
     return nullptr;
 }
 
-// clang-format off
 SEL KVCGetterForPropertyName(NSObject* self, const char* key) {
-    // The possible getter selectors for a key x are -getX, -x, and -isX.
-    // If we can't find any of these, we fall back to ivar lookup.
-    // Key length is caller-checked.
-    std::vector<SEL (^)()> possibleSelectors {
-        ^SEL{ return sel_registerName(woc::string::format("get%c%s", toupper(key[0]), &key[1]).c_str()); },
-        ^SEL{ return sel_registerName(key); },
-        ^SEL{ return sel_registerName(woc::string::format("is%c%s", toupper(key[0]), &key[1]).c_str()); },
-    };
+    SEL sel = nullptr;
+    auto len = strlen(key);
+    char* buf = (char*)_alloca(3 + len + 1);
+    strcpy_s(buf + 4, len, key + 1);
 
-    Class cls = object_getClass(self);
-    for (auto& possibleSelGenerator : possibleSelectors) {
-        SEL possibleSelector = possibleSelGenerator();
-        if ([cls instancesRespondToSelector:possibleSelector]) {
-            return possibleSelector;
-        }
+    // getExample
+    buf[0] = 'g';
+    buf[1] = 'e';
+    buf[2] = 't';
+    buf[3] = toupper(key[0]);
+
+    sel = sel_getUid(buf);
+    if ([self respondsToSelector:sel]) {
+        return sel;
+    }
+
+    // example
+    sel = sel_getUid(key);
+    if ([self respondsToSelector:sel]) {
+        return sel;
+    }
+
+    // isExample
+    buf[1] = 'i';
+    buf[2] = 's';
+    sel = sel_getUid(buf + 1);
+    if ([self respondsToSelector:sel]) {
+        return sel;
     }
 
     return nullptr;
 }
-// clang-format on
+
+template <typename T>
+static id quickGet(id self, SEL getter) {
+    T ret = ((T(*)(id, SEL))objc_msgSend)(self, getter);
+    return woc::ValueTransformer<T>::get(&ret);
+}
+
+template <>
+id quickGet<id>(id self, SEL getter) {
+    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+}
+
+template <>
+id quickGet<Class>(id self, SEL getter) {
+    return ((id(*)(id, SEL))objc_msgSend)(self, getter);
+}
 
 bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
     if (!getter) {
@@ -153,8 +179,18 @@ bool KVCGetViaAccessor(NSObject* self, SEL getter, id* ret) {
 
     const char* valueType = [sig methodReturnType];
     // We can't box or unbox char* or arbitrary pointers.
-    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?') {
+    if (valueType[0] == '*' || valueType[0] == '^' || valueType[0] == '?' || valueType[0] == ':') {
         return false;
+    }
+
+    if (0
+#define APPLY_TYPE(type, name, capitalizedName, encodingChar) || (valueType[0] == encodingChar && (*ret = quickGet<type>(self, getter)))
+        APPLY_TYPE(id, object, Object, '@')
+        APPLY_TYPE(Class, class, Class, '#')
+#include "type_encoding_cases.h"
+#undef APPLY_TYPE
+            ) {
+        return true;
     }
 
     NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
@@ -314,13 +350,50 @@ static bool tryGetArrayAdapter(id self, const char* key, id* ret) {
 }
 
 SEL KVCSetterForPropertyName(NSObject* self, const char* key) {
-    auto accessorName(woc::string::format("set%c%s:", toupper(key[0]), &key[1]));
-    auto sel = sel_registerName(accessorName.c_str());
-    if ([[self class] instancesRespondToSelector:sel]) {
+    SEL sel = nullptr;
+    auto len = strlen(key);
+    // For the key "example", we must construct the following buffer:
+    // _ _ _ _ x a m p l e _ \0
+    // and fill it with the following characters:
+    // s e t E x a m p l e : \0
+    char* buf = (char*)_alloca(3 + len + 2);
+    strcpy_s(buf + 4, len, key + 1);
+    buf[0] = 's';
+    buf[1] = 'e';
+    buf[2] = 't';
+    buf[3] = toupper(key[0]);
+    buf[3 + len] = ':';
+    buf[3 + len + 1] = '\0';
+    sel = sel_getUid(buf);
+    if ([self respondsToSelector:sel]) {
         return sel;
     }
 
     return nullptr;
+}
+
+template <typename T>
+static bool quickSet(id self, SEL setter, id value, const char* valueType) {
+    uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
+    if (!woc::dataWithTypeFromValue(data, valueType, value)) {
+        return false;
+    }
+
+    T* typedData = (T*)data;
+    ((void (*)(id, SEL, T))objc_msgSend)(self, setter, *typedData);
+    return true;
+}
+
+template <>
+bool quickSet<id>(id self, SEL setter, id value, const char* valueType) {
+    ((void (*)(id, SEL, id))objc_msgSend)(self, setter, value);
+    return true;
+}
+
+template <>
+bool quickSet<Class>(id self, SEL setter, id value, const char* valueType) {
+    ((void (*)(id, SEL, Class))objc_msgSend)(self, setter, static_cast<Class>(value));
+    return true;
 }
 
 bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
@@ -332,17 +405,28 @@ bool KVCSetViaAccessor(NSObject* self, SEL setter, id value) {
 
     // 3 arguments: self, selector, new value.
     if (sig && [sig numberOfArguments] == 3) {
-        NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
-
         const char* valueType = [sig getArgumentTypeAtIndex:2];
-        std::vector<uint8_t> data(objc_sizeof_type(valueType));
-        if (!woc::dataWithTypeFromValue(data.data(), valueType, value)) {
+
+        if (0
+#define APPLY_TYPE(type, name, capitalizedName, encodingChar) \
+    || (valueType[0] == encodingChar && quickSet<type>(self, setter, value, valueType))
+            APPLY_TYPE(id, object, Object, '@')
+            APPLY_TYPE(Class, class, Class, '#')
+#include "type_encoding_cases.h"
+#undef APPLY_TYPE
+                ) {
+            return true;
+        }
+
+        uint8_t* data = static_cast<uint8_t*>(_alloca(objc_sizeof_type(valueType)));
+        if (!woc::dataWithTypeFromValue(data, valueType, value)) {
             return false;
         }
+        NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:sig];
 
         [invocation setTarget:self];
         [invocation setSelector:setter];
-        [invocation setArgument:data.data() atIndex:2];
+        [invocation setArgument:data atIndex:2];
         [invocation invoke];
         return true;
     }

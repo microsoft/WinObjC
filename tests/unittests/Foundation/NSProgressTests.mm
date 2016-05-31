@@ -100,7 +100,7 @@ static const uint64_t work2pendingUnitCount = 30;
 
 @end
 
-TEST(Foundation, NSProgress_UserInfo) {
+TEST(NSProgress, UserInfo) {
     // Nil userInfo as param
     NSProgress* nilUserInfo = [[[NSProgress alloc] initWithParent:nil userInfo:nil] autorelease];
     ASSERT_OBJCNE(nil, [nilUserInfo userInfo]);
@@ -119,7 +119,7 @@ TEST(Foundation, NSProgress_UserInfo) {
     ASSERT_EQ(1, [[actualUserInfo userInfo] count]);
 }
 
-TEST(Foundation, NSProgress_FractionCompleted) {
+TEST(NSProgress, FractionCompleted) {
     NSProgress* userInfo = [[[NSProgress alloc] initWithParent:nil userInfo:nil] autorelease];
     ASSERT_EQ(0, [userInfo totalUnitCount]);
     ASSERT_EQ(0, [userInfo completedUnitCount]);
@@ -130,7 +130,7 @@ TEST(Foundation, NSProgress_FractionCompleted) {
     ASSERT_EQ(0.5, [userInfo fractionCompleted]);
 }
 
-TEST(Foundation, NSProgress_IsIndeterminate) {
+TEST(NSProgress, IsIndeterminate) {
     NSProgress* progress = [[[NSProgress alloc] initWithParent:nil userInfo:nil] autorelease];
     ASSERT_EQ(YES, [progress isIndeterminate]);
 
@@ -144,7 +144,7 @@ TEST(Foundation, NSProgress_IsIndeterminate) {
     ASSERT_EQ(YES, [progress isIndeterminate]);
 }
 
-TEST(Foundation, NSProgress_ChainImplicit) {
+TEST(NSProgress, ChainImplicit) {
     NSProgress* prog1 = [NSProgress progressWithTotalUnitCount:100];
     [prog1 becomeCurrentWithPendingUnitCount:100];
     NSProgress* prog2 = [NSProgress progressWithTotalUnitCount:50];
@@ -174,7 +174,7 @@ TEST(Foundation, NSProgress_ChainImplicit) {
     [prog1 resignCurrent];
 }
 
-TEST(Foundation, NSProgress_TreeImplicit) {
+TEST(NSProgress, TreeImplicit) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     ProgressThreadHelper* progressThreadHelper = [[ProgressThreadHelper new] autorelease];
 
@@ -192,7 +192,7 @@ TEST(Foundation, NSProgress_TreeImplicit) {
     ASSERT_EQ(work1pendingUnitCount + work2pendingUnitCount, [root completedUnitCount]);
 }
 
-TEST(Foundation, NSProgress_TreeExplicit) {
+TEST(NSProgress, TreeExplicit) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
 
     // layer 1 children
@@ -226,7 +226,7 @@ TEST(Foundation, NSProgress_TreeExplicit) {
     ASSERT_EQ(80, [root completedUnitCount]);
 }
 
-TEST(Foundation, NSProgress_CurrentProgress_ThreadLocal) {
+TEST(NSProgress, CurrentProgress_ThreadLocal) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     [root becomeCurrentWithPendingUnitCount:50];
     ProgressThreadHelper* progressThreadHelper = [[ProgressThreadHelper new] autorelease];
@@ -259,7 +259,7 @@ TEST(Foundation, NSProgress_CurrentProgress_ThreadLocal) {
     [root resignCurrent];
 }
 
-ARM_DISABLED_TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
+ARM_DISABLED_TEST(NSProgress, SingleParentEvenAcrossThreads) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     ProgressThreadHelper* progressThreadHelper = [[ProgressThreadHelper new] autorelease];
 
@@ -277,7 +277,7 @@ ARM_DISABLED_TEST(Foundation, NSProgress_SingleParentEvenAcrossThreads) {
     ASSERT_EQ(YES, [progressThreadHelper exceptionWasCaught]);
 }
 
-TEST(Foundation, NSProgress_ResignCurrentAutomaticBehavior) {
+TEST(NSProgress, ResignCurrentAutomaticBehavior) {
     // Become current and resign current without a child in-between should automatically increment by adding the pending units
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
     [root becomeCurrentWithPendingUnitCount:50];
@@ -305,7 +305,7 @@ TEST(Foundation, NSProgress_ResignCurrentAutomaticBehavior) {
     ASSERT_EQ(150, [root completedUnitCount]);
 }
 
-TEST(Foundation, NSProgress_CancelPauseResume) {
+TEST(NSProgress, CancelPauseResume) {
     NSProgress* root = [NSProgress progressWithTotalUnitCount:100];
 
     // Cancellable/Pausable are documented to not actually affect cancelling/pausing
@@ -342,7 +342,7 @@ TEST(Foundation, NSProgress_CancelPauseResume) {
     ASSERT_EQ(YES, resumeCalled);
 }
 
-TEST(Foundation, NSProgress_LocalizedDescription) {
+TEST(NSProgress, LocalizedDescription) {
     // Testing for exact strings is not very robust here, just validate that the strings change/don't change based on input
     NSProgress* progress = [NSProgress progressWithTotalUnitCount:100];
 

@@ -17,6 +17,7 @@
 
 #import <CoreGraphics/CoreGraphicsExport.h>
 #import <CoreGraphics/CGPDFDictionary.h>
+#import <CoreFoundation/CFData.h>
 
 typedef enum { CGPDFDataFormatRaw, CGPDFDataFormatJPEGEncoded, CGPDFDataFormatJPEG2000 } CGPDFDataFormat;
 

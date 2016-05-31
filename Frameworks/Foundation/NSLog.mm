@@ -18,7 +18,7 @@
 #import <Foundation/NSString.h>
 #import <Windows.h>
 #import "NSLogInternal.h"
-#import "NSStringInternal.h"
+#import "StringHelpers.h"
 
 // Only used in Foundation unit tests.
 bool g_isNSLogTestHookEnabled = false;
@@ -28,15 +28,15 @@ bool g_isNSLogTestHookEnabled = false;
 */
 void NSLogv(NSString* format, va_list list) {
     StrongId<NSString> formattedString = [[NSString alloc] initWithFormat:format arguments:list];
-    const wchar_t* wideBuffer = (const wchar_t*)[formattedString _rawTerminatedCharacters];
+    std::wstring wideBuffer = Strings::NarrowToWide<std::wstring>(formattedString);
 
     // This traces to ETW in debug and release modes.
     // This prints to OutputDebugString only in debug mode.
-    TraceVerbose(L"NSLog", L"%ws", wideBuffer);
+    TraceVerbose(L"NSLog", L"%ws", wideBuffer.c_str());
 
 // This prints to OutputDebugString only in release mode.
 #ifndef _DEBUG
-    OutputDebugStringW(wideBuffer);
+    OutputDebugStringW(wideBuffer.c_str());
     OutputDebugStringW(L"\n");
 #endif
 

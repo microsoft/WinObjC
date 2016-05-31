@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNNMobileBroadbandAccount, WNNMobileBroadbandNetwork, WNNMobileBroadbandDeviceInformation, WNNMobileBroadbandPinManager,
     WNNMobileBroadbandUiccApp, WNNNetworkOperatorTetheringAccessPointConfiguration, WNNNetworkOperatorTetheringOperationResult,
@@ -288,7 +288,6 @@ typedef unsigned WNNUssdResultCode;
 #include "WindowsNetworkingConnectivity.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsDevicesSms.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsNetworking.h"
 #include "WindowsDataXmlDom.h"

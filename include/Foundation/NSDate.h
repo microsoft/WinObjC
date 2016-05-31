@@ -26,16 +26,13 @@
 FOUNDATION_EXPORT const NSString* NSSystemClockDidChangeNotification;
 
 FOUNDATION_EXPORT_CLASS
-@interface NSDate : NSObject <NSCopying, NSSecureCoding> {
-    double _curTime;
-}
+@interface NSDate : NSObject <NSCopying, NSSecureCoding>
 
 + (instancetype)date;
 + (instancetype)dateWithTimeIntervalSinceNow:(NSTimeInterval)seconds;
 + (instancetype)dateWithTimeInterval:(NSTimeInterval)seconds sinceDate:(NSDate*)date;
 + (instancetype)dateWithTimeIntervalSinceReferenceDate:(NSTimeInterval)seconds;
 + (instancetype)dateWithTimeIntervalSince1970:(NSTimeInterval)seconds;
-- (instancetype)init;
 - (instancetype)initWithTimeIntervalSinceNow:(NSTimeInterval)seconds;
 - (instancetype)initWithTimeInterval:(NSTimeInterval)seconds sinceDate:(NSDate*)refDate;
 - (instancetype)initWithTimeIntervalSinceReferenceDate:(NSTimeInterval)seconds;
@@ -54,5 +51,5 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)dateByAddingTimeInterval:(NSTimeInterval)seconds;
 - (id)addTimeInterval:(NSTimeInterval)seconds;
 @property (readonly, copy) NSString* description;
-- (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;
+- (NSString*)descriptionWithLocale:(id)locale;
 @end

@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <!--
+        CFString's low CFInfo bits (CFString.c:196)
+        32                            0
+        _ _ _ _ _ _ _ _ _ I I U _ L _ M
+        _ - unknown/na/ignored
+        I - inline string (mask 0x60)
+          0x00 - inline
+          anything else - heap-allocated (don't care how)
+        U - UTF-16 flag (mask 0x10)
+        L - length inline flag (mask 0x4)
+          0x4 - length stored as first character of string
+                length can be 0 and this flag could still be on
+          0x0 - length stored in sizeof(CFIndex) bytes before string
+        M - mutability flag (mask 0x1)
+          mutable strings always have an explicit length, but they may ALSO have
+          a length byte. If so, we treat it as though it were a normal string with
+          a normal length byte.
+    -->
+    <Type Name="__CFString" IncludeView="InlineU16">
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">{((wchar_t*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]su}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((wchar_t*)&amp;variants+1),[variants.inline1.length]su}</DisplayString>
+        <DisplayString>{(((long*)(&amp;variants))+1),[variants.inline1.length]su}</DisplayString>
+
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">((wchar_t*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]su</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((wchar_t*)&amp;variants+1),[variants.inline1.length]su</StringView>
+        <StringView>(((long*)(&amp;variants))+1),[variants.inline1.length]su</StringView>
+    </Type>
+
+    <Type Name="__CFString" IncludeView="InlineU8">
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">{((char*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]na}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)&amp;variants+1),[variants.inline1.length]na}</DisplayString>
+        <DisplayString>{(((long*)(&amp;variants))+1),[variants.inline1.length]na}</DisplayString>
+
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)&amp;variants > 0">((char*)&amp;variants+1),[(unsigned int)*(unsigned char*)&amp;variants]na</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)&amp;variants+1),[variants.inline1.length]na</StringView>
+        <StringView>(((long*)(&amp;variants))+1),[variants.inline1.length]na</StringView>
+    </Type>
+
+    <Type Name="__CFString" IncludeView="HeapU16">
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">{((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]su}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]su}</DisplayString>
+        <DisplayString>{variants.notInlineImmutable1.buffer,[variants.notInlineImmutable1.length]su}</DisplayString>
+
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]su</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]su</StringView>
+        <StringView>(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]su</StringView>
+    </Type>
+
+    <Type Name="__CFString" IncludeView="HeapU8">
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">{((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]na}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">{((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]na}</DisplayString>
+        <DisplayString>{(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]na}</DisplayString>
+
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4 &amp;&amp; *(unsigned char*)(variants.notInlineImmutable1.buffer) > 0">((char*)(variants.notInlineImmutable1.buffer)+1),[(unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer)]na</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x4) == 0x4">((char*)(variants.notInlineImmutable1.buffer)+1),[variants.notInlineImmutable1.length]na</StringView>
+        <StringView>(char*)(variants.notInlineImmutable1.buffer),[variants.notInlineImmutable1.length]na</StringView>
+    </Type>
+
+    <Type Name="__CFString" IncludeView="CF">
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x00">{*this,view(InlineU8)}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x10">{*this,view(InlineU16)}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x00">{*this,view(HeapU8)}</DisplayString>
+        <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x10">{*this,view(HeapU16)}</DisplayString>
+
+        <StringView Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x00">*this,view(InlineU8)</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x10">*this,view(InlineU16)</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x00">*this,view(HeapU8)</StringView>
+        <StringView Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x10) == 0x10">*this,view(HeapU16)</StringView>
+
+        <Expand>
+            <Synthetic Name="[mutable]" Condition="(base._cfinfo[0] &amp; 0x01) == 0x01">
+                <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <Synthetic Name="[length]">
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) == 0x4">{(*(unsigned char*)&amp;variants > 0 ? (unsigned int)*(unsigned char*)&amp;variants : variants.inline1.length),d}</DisplayString>
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) == 0x4">{(*(unsigned char*)(variants.notInlineImmutable1.buffer) > 0 ? (unsigned int)*(unsigned char*)(variants.notInlineImmutable1.buffer) : variants.notInlineImmutable1.length),d}</DisplayString>
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) == 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) != 0x4">{variants.inline1.length,d}</DisplayString>
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0 &amp;&amp; (base._cfinfo[0] &amp; 0x4) != 0x4">{variants.notInlineImmutable1.length,d}</DisplayString>
+            </Synthetic>
+            <Synthetic Name="[encoding]">
+                <DisplayString Condition="(base._cfinfo[0] &amp; 0x60) != 0x00">8-bit</DisplayString>
+                <DisplayString>unicode</DisplayString>
+            </Synthetic>
+        </Expand>
+    </Type>
+
+    <Type Name="_NSCFString">
+        <DisplayString>{*(CoreFoundation.dll!__CFString*)this,view(CF)na}</DisplayString>
+        <StringView>*(CoreFoundation.dll!__CFString*)this,view(CF)na</StringView>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFString*)this,view(CF)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFString*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- NSConstantString is always UTF-8. It is emitted by the compiler. -->
+    <Type Name="NSConstantString">
+        <DisplayString>{c_string,[len]s8}</DisplayString>
+        <StringView>c_string,[len]s8</StringView>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!-- Since any CFStringRef can point to any NSString, we have to go through the NSObject renderer. -->
+    <Type Name="__CFString">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <StringView>*(NSObject*)this,na</StringView>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!--
+        CFNumber's low CFInfo bits (CFNumber.c:483)
+        32                            0
+        _ _ _ _ _ _ _ _ _ _ _ T T T T T
+        _ - unknown/na/ignored
+        T - number type (mask 0x1f)
+
+        The number type is used to look up the canonical number mapping from __CFNumberTypeTable.
+        This determines whether it's a floating point value and how long it is.
+
+        Types 1 - 4 are treated as signed numbers, as that's what they're defined to be.
+    -->
+    <Type Name="__CFNumber" IncludeView="Float">
+        <DisplayString Condition="CoreFoundation.dll!__CFNumberTypeTable[_base._cfinfo[0] &amp; 0x1f].storageBit == 1">{*(double*)&amp;_pad}</DisplayString>
+        <DisplayString>{*(float*)&amp;_pad}</DisplayString>
+    </Type>
+
+    <Type Name="__CFNumber" IncludeView="CF">
+        <DisplayString Condition="CoreFoundation.dll!__CFNumberTypeTable[_base._cfinfo[0] &amp; 0x1f].floatBit == 1">{*this,view(Float)}</DisplayString>
+        <DisplayString Condition="CoreFoundation.dll!__CFNumberTypeTable[_base._cfinfo[0] &amp; 0x1f].storageBit == 1">{(unsigned long long)((CoreFoundation.dll!CFSInt128Struct*)&amp;_pad)->low}</DisplayString>
+        <DisplayString Condition="(_base._cfinfo[0] &amp; 0x1f) &lt;= 4">{*(signed long long*)&amp;_pad}</DisplayString>
+        <DisplayString>{*(unsigned long long*)&amp;_pad}</DisplayString>
+    </Type>
+
+    <Type Name="_NSCFNumber">
+        <DisplayString>@{*(CoreFoundation.dll!__CFNumber*)this,view(CF)na}</DisplayString>
+        <Expand>
+            <!-- Uncomment this if __CFNumber ever gets any synthetic members.
+            <ExpandedItem>*(CoreFoundation.dll!__CFNumber*)this,view(CF)</ExpandedItem>
+            -->
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFNumber*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any CFNumberRef can point to any NSNumber, we have to go through the NSObject renderer. -->
+    <Type Name="__CFNumber">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <Type Name="__CFBoolean" IncludeView="ObjectiveC">
+        <DisplayString Condition="this == CoreFoundation.dll!kCFBooleanFalse">NO</DisplayString>
+        <DisplayString>YES</DisplayString>
+    </Type>
+    
+    <Type Name="__CFBoolean">
+        <DisplayString Condition="this == CoreFoundation.dll!kCFBooleanFalse">FALSE</DisplayString>
+        <DisplayString>TRUE</DisplayString>
+    </Type>
+    
+    <Type Name="_NSCFBoolean">
+        <DisplayString>@{*(CoreFoundation.dll!__CFBoolean*)this,view(ObjectiveC)na}</DisplayString>
+        <Expand>
+            <!-- Uncomment this if __CFBoolean ever gets any synthetic members.
+            <ExpandedItem>*(CoreFoundation.dll!__CFBoolean*)this,view(ObjectiveC)</ExpandedItem>
+            -->
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBoolean*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!--
+        CFArray's low CFInfo bits (CFArray.c:61)
+        32                            0
+        _ _ _ _ _ _ _ _ _ _ _ _ C C T T
+        _ - unknown/na/ignored
+        C - callback type (mask 0xC)
+          0x0 - Null callbacks
+          0x1 - Default CFType callbacks
+          0x3 - Custom Callbacks
+        T - array type (mask 0x3)
+          0x0 - Immutable
+          0x2 - Deque (Mutable)
+        
+        Custom callbacks are stored in a CFArrayCallBacks back-to-back with the array body.
+        This means that for immutable arrays (which store their buckets immediately after themselves),
+        we have to adjust for that size.
+
+        Deque arrays have a leftmost index pointer which we have to account for, but
+        there is less pointer magic, in general. A deque's buckets are stored immediately
+        after the deque as well, but the callbacks don't change that.
+
+        If we're being rendered outside an Objective-C context, display only opaque pointers.
+    -->
+    <Type Name="__CFArray" IncludeView="ObjectiveC;ObjectiveCSimple;CF">
+        <Expand>
+            <Item Name="[size]" ExcludeView="ObjectiveCSimple">_count</Item>
+            <Synthetic Name="[mutable]" Condition="(_base._cfinfo[0] &amp; 0x03) == 0x02" ExcludeView="ObjectiveCSimple">
+                <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <CustomListItems IncludeView="ObjectiveC;ObjectiveCSimple">
+                <Variable Name="isDeque" InitialValue="((_base._cfinfo[0] &amp; 0x3) == 0x2)"/>
+                <Variable Name="deque" InitialValue="(CoreFoundation.dll!__CFArrayDeque*)_store" />
+                <Variable Name="storeIfDeque" InitialValue="isDeque ? (((CoreFoundation.dll!__CFArrayBucket*)(deque+1)) + deque->_leftIdx) : 0" />
+                <Variable Name="hasCallbacks" InitialValue="(_base._cfinfo[0] &amp; 0xc) == 0xc" />
+                <Variable Name="callbackSize" InitialValue="(hasCallbacks ? sizeof(CoreFoundation.dll!CFArrayCallBacks) : 0)" />
+                <Variable Name="buckets" InitialValue="isDeque ? storeIfDeque : (CoreFoundation.dll!__CFArrayBucket*)(((char*)(this+1)) + callbackSize)" />
+                <Variable Name="index" InitialValue="0" />
+                <Size>_count</Size>
+                <Loop>
+                    <Item>(NSObject*)buckets[index]._item,na</Item>
+                    <Exec>index++</Exec>
+                </Loop>
+            </CustomListItems>
+            <CustomListItems ExcludeView="ObjectiveC;ObjectiveCSimple">
+                <Variable Name="isDeque" InitialValue="((_base._cfinfo[0] &amp; 0x3) == 0x2)"/>
+                <Variable Name="deque" InitialValue="(CoreFoundation.dll!__CFArrayDeque*)_store" />
+                <Variable Name="storeIfDeque" InitialValue="isDeque ? (((CoreFoundation.dll!__CFArrayBucket*)(deque+1)) + deque->_leftIdx) : 0" />
+                <Variable Name="hasCallbacks" InitialValue="(_base._cfinfo[0] &amp; 0xc) == 0xc" />
+                <Variable Name="callbackSize" InitialValue="(hasCallbacks ? sizeof(CoreFoundation.dll!CFArrayCallBacks) : 0)" />
+                <Variable Name="buckets" InitialValue="isDeque ? storeIfDeque : (CoreFoundation.dll!__CFArrayBucket*)(((char*)(this+1)) + callbackSize)" />
+                <Variable Name="index" InitialValue="0" />
+                <Size>_count</Size>
+                <Loop>
+                    <Item>(void*)buckets[index]._item,na</Item>
+                    <Exec>index++</Exec>
+                </Loop>
+            </CustomListItems>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFArray">
+        <DisplayString>{*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveCSimple)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveC)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFArray*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any CFArrayRef can point to any NSArray, we have to go through the NSObject renderer. -->
+    <Type Name="__CFArray">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!--
+        CFBasicHash's low CFInfo bits (CFBasicHash.h:73)
+        32                            0
+        _ _ _ _ _ _ _ _ _ M _ _ _ _ _ _
+        _ - unknown/na/ignored
+        M - mutability bit
+          0x0 - mutable
+          0x1 - immutable
+
+        CF Hash tables are refreshingly straightforward.
+        The keys and values are stored in contiguous blocks which can be marked deleted/unused.
+    -->
+    <Type Name="__CFBasicHash" IncludeView="CF;Dictionary;Set">
+        <Expand>
+            <Item Name="[size]">bits.used_buckets</Item>
+            <Synthetic Name="[mutable]" Condition="(base._cfinfo[0] &amp; 0x40) != 0x40">
+                <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <CustomListItems IncludeView="Dictionary">
+                <Variable Name="index" InitialValue="0" />
+                <Variable Name="key" InitialValue="(void*)0" />
+                <Variable Name="value" InitialValue="(void*)0" />
+                <Size>bits.used_buckets</Size>
+                <Loop>
+                    <Exec>key = *((void**)pointers[bits.keys_offset] + index)</Exec>
+                    <Exec>value = *((void**)pointers[0] + index)</Exec>
+                    <Item Condition="value != 0 &amp;&amp; value != ~0UL" Name="{(NSObject*)key}">(NSObject*)value</Item>
+                    <Exec>index++</Exec>
+                </Loop>
+            </CustomListItems>
+            <CustomListItems IncludeView="Set">
+                <Variable Name="index" InitialValue="0" />
+                <Variable Name="key" InitialValue="(void*)0" />
+                <Variable Name="value" InitialValue="(void*)0" />
+                <Size>bits.used_buckets</Size>
+                <Loop>
+                    <Exec>value = *((void**)pointers[0] + index)</Exec>
+                    <Item Condition="value != 0 &amp;&amp; value != ~0UL">(NSObject*)value</Item>
+                    <Exec>index++</Exec>
+                </Loop>
+            </CustomListItems>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFDictionary">
+        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFSet">
+        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any __CFBasicHash can point to any NSDictionary/NSSet, we have to go through the NSObject renderer. -->
+    <Type Name="__CFBasicHash">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!--
+        CFData's low CFInfo bits (CFData.c:61)
+        32                            0
+        _ _ _ _ _ _ _ _ _ _ _ _ _ I M M
+        _ - unknown/na/ignored
+        M - mutability
+          0x00 - immutable
+          0x01 - fixed length, mutable
+          0x11 - variable length, mutable
+        I - bytes stored inline
+    -->
+    <Type Name="__CFData" IncludeView="CF">
+        <DisplayString>{{ binary data, {_length} bytes }}</DisplayString>
+        <Expand>
+            <Item Name="[size]">_length</Item>
+            <Synthetic Name="[mutable]" Condition="(_base._cfinfo[0] &amp; 0x01) == 0x01">
+                <DisplayString>yes</DisplayString>
+            </Synthetic>
+            <Synthetic Condition="(_base._cfinfo[0] &amp; 0x4) != 0x0" Name="[Raw Bytes]">
+                <DisplayString>{(unsigned char*)((((unsigned long long)this + sizeof(CoreFoundation.dll!__CFData) + 15) &amp; ~0xF)),[_length]}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>_length</Size>
+                        <ValuePointer>(char*)(((unsigned long long)this + sizeof(CoreFoundation.dll!__CFData) + 15) &amp; ~0xF)</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Synthetic>
+            <Synthetic Condition="(_base._cfinfo[0] &amp; 0x4) == 0x0" Name="[Raw Bytes]">
+                <DisplayString>{_bytes,[_length]}</DisplayString>
+                <Expand>
+                    <ArrayItems>
+                        <Size>_length</Size>
+                        <ValuePointer>_bytes</ValuePointer>
+                    </ArrayItems>
+                </Expand>
+            </Synthetic>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFData">
+        <DisplayString>{*(CoreFoundation.dll!__CFData*)this,view(CF)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFData*)this,view(CF)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFData*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <!-- Since any __CFData can point to any NSData, we have to go through the NSObject renderer. -->
+    <Type Name="__CFData">
+        <DisplayString>{*(NSObject*)this,na}</DisplayString>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+</AutoVisualizer>

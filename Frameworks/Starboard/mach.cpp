@@ -17,6 +17,8 @@
 #include <Windows.h>
 #include <mach/mach.h>
 #include <StubReturn.h>
+#include <mach/mach_defs.h>
+#include <mach/mach_time.h>
 
 extern "C" {
 /**
@@ -54,6 +56,25 @@ int host_statistics(mach_port_t port, int type, host_info_t dataOut, mach_msg_ty
     } else {
         UNIMPLEMENTED();
     }
+
+    return 0;
+}
+
+static int64_t _mach_get_timebase() {
+    LARGE_INTEGER performanceFrequency;
+    FAIL_FAST_IF(0 == QueryPerformanceFrequency(&performanceFrequency));
+    return performanceFrequency.QuadPart;
+}
+
+static int64_t _mach_frequency = _mach_get_timebase();
+
+kern_return_t mach_timebase_info(mach_timebase_info_t tinfo) {
+    //  mach_absolute_time uses QueryPerformanceCounter which returns
+    //  the absolute number of cycles since boot in microseconds.
+    //
+    // Return a timebase representing the conversion between QPC counts and nanoseconds:
+    // 1,000,000,000 nanoseconds per every n counts.
+    *tinfo = { 1000000000, _mach_frequency };
 
     return 0;
 }

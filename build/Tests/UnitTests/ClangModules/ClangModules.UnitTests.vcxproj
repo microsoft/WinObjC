@@ -19,6 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <!-- Technically, this unit test does not depend on CoreFoundation.  However, we need to address
+         a dependency here to prevent build failure becuase HandleExplicitLibs in sbclang.targets
+         will copy CFCharacterSetBitmaps and CFUniCharPropertyDatabase which is produced by CoreFoundation.vcxproj.
+    -->
+    <ProjectReference Include="..\..\..\CoreFoundation\dll\CoreFoundation.vcxproj">
+      <Project>{81F30AF6-EAC3-4DFA-929A-C25D69E8080B}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Logging\dll\Logging.vcxproj">
       <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
     </ProjectReference>

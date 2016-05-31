@@ -13,6 +13,7 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+#pragma once
 
 #include "machine.h"
 #include "message.h"

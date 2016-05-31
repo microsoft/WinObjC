@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAWSWalletItemSystemStore, WAWSWalletManagerSystem;
 @protocol WAWSIWalletItemSystemStore
@@ -33,10 +33,9 @@ enum _WAWSWalletItemAppAssociation {
 };
 typedef unsigned WAWSWalletItemAppAssociation;
 
+#include "WindowsApplicationModelWallet.h"
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
-#include "WindowsApplicationModelWallet.h"
 
 #import <Foundation/Foundation.h>
 

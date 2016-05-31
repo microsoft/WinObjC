@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDBABluetoothLEManufacturerData, WDBABluetoothLEAdvertisementDataSection, WDBABluetoothLEAdvertisement,
     WDBABluetoothLEAdvertisementBytePattern, WDBABluetoothLEAdvertisementFilter, WDBABluetoothLEAdvertisementWatcherStoppedEventArgs,
@@ -83,9 +83,8 @@ enum _WDBABluetoothLEAdvertisementPublisherStatus {
 typedef unsigned WDBABluetoothLEAdvertisementPublisherStatus;
 
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
-#include "WindowsDevicesBluetooth.h"
 #include "WindowsFoundation.h"
+#include "WindowsDevicesBluetooth.h"
 
 #import <Foundation/Foundation.h>
 

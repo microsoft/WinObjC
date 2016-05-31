@@ -23,10 +23,10 @@
 
 UIKIT_EXPORT_CLASS
 @interface NSLayoutAnchor : NSObject
-- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor STUB_METHOD;
-- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor STUB_METHOD;
-- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutAnchor*)anchor STUB_METHOD;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c STUB_METHOD;
+- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor;
+- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor;
+- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutAnchor*)anchor;
+- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutAnchor*)anchor constant:(CGFloat)c;
 @end

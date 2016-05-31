@@ -18,14 +18,14 @@
 #import <CoreVideo/CoreVideoExport.h>
 #import <CoreFoundation/CFBase.h>
 #import <CoreFoundation/CFDictionary.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreVideo/CVImageBuffer.h>
 #import <CoreFoundation/CFString.h>
 
 typedef UInt64 CVOptionFlags;
 typedef SInt32 CVReturn;
 
-struct CVPlanarComponentInfo{
+struct CVPlanarComponentInfo {
     int32_t offset;
     uint32_t rowBytes;
 };

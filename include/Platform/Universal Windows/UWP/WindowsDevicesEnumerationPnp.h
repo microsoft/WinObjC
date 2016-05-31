@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDEPPnpObjectUpdate, WDEPPnpObjectCollection, WDEPPnpObjectWatcher, WDEPPnpObject;
 @protocol WDEPIPnpObjectUpdate
@@ -39,7 +39,6 @@ enum _WDEPPnpObjectType {
 typedef unsigned WDEPPnpObjectType;
 
 #include "WindowsDevicesEnumeration.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

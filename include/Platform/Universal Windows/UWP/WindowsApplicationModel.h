@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAAppDisplayInfo, WAAppInfo, WASuspendingEventArgs, WASuspendingDeferral, WASuspendingOperation, WAPackageStatus, WAPackageId,
     WAPackage, WADesignMode;
@@ -31,7 +31,6 @@
 #include "WindowsSystem.h"
 #include "WindowsFoundation.h"
 #include "WindowsApplicationModelCore.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsStorage.h"
 

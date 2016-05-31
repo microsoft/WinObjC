@@ -18,7 +18,12 @@
 #import <CoreFoundation/CFAttributedString.h>
 #import <NSRaise.h>
 
+#import "NSCFAttributedString.h"
+#import "BridgeHelpers.h"
+
 @implementation NSMutableAttributedString
+
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableAttributedString, NSMutableAttributedStringPrototype);
 
 /**
  @Status Stub
@@ -92,19 +97,10 @@
 - (void)replaceCharactersInRange:(NSRange)replaceRange withAttributedString:(NSAttributedString*)attributedString {
     [self replaceCharactersInRange:replaceRange withString:[attributedString string]];
 
-    NSRange postReplaceRange = { replaceRange.location, [attributedString length] };
-    [self enumerateAttributesInRange:postReplaceRange
-                             options:0
-                          usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
-                              for (NSString* name in val) {
-                                  [self removeAttribute:name range:postReplaceRange];
-                              }
-                          }];
-
     [attributedString enumerateAttributesInRange:{ 0, [attributedString length] }
                                          options:0
                                       usingBlock:^void(NSDictionary* val, NSRange range, BOOL* stop) {
-                                          [self addAttributes:val range:{ range.location + replaceRange.location, range.length }];
+                                          [self setAttributes:val range:{ range.location + replaceRange.location, range.length }];
                                       }];
 }
 

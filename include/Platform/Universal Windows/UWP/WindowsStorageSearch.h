@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSSContentIndexer, WSSValueAndLanguage, WSSContentIndexerQuery, WSSIndexableContent, WSSQueryOptions, WSSStorageFileQueryResult,
     WSSStorageFolderQueryResult, WSSStorageItemQueryResult, WSSSortEntryVector, WSSStorageLibraryContentChangedTriggerDetails;
@@ -94,7 +94,6 @@ typedef unsigned WSSIndexedState;
 #include "WindowsStorage.h"
 #include "WindowsStorageFileProperties.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsDataText.h"
 #include "WindowsFoundation.h"
 

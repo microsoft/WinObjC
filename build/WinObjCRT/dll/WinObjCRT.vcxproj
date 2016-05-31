@@ -41,6 +41,7 @@
     <LinkWithFoundation>false</LinkWithFoundation>
     <LinkWithStarboard>false</LinkWithStarboard>
     <LinkWithWinObjCRT>false</LinkWithWinObjCRT>
+    <LinkWithLogging>false</LinkWithLogging>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />

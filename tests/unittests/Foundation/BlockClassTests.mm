@@ -18,7 +18,8 @@
 #import <Foundation/Foundation.h>
 #import "NSBlocksInternal.h"
 
-TEST(Foundation, BlockAdapterClass) {
-    void (^block)() = ^{};
+TEST(Blocks, BlockAdapterClass) {
+    void (^block)() = ^{
+    };
     EXPECT_TRUE([static_cast<id>(block) isKindOfClass:[_NSBlockAdapter class]]);
 }

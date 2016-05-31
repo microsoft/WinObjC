@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WWHHttpRequestMessage, WWHHttpResponseMessage, WWHHttpClient, WWHHttpCookie, WWHHttpCookieCollection, WWHHttpMethod,
     WWHHttpTransportInformation, WWHHttpStringContent, WWHHttpBufferContent, WWHHttpStreamContent, WWHHttpFormUrlEncodedContent,
@@ -138,7 +138,6 @@ typedef unsigned WWHHttpResponseMessageSource;
 #include "WindowsSecurityCryptographyCertificates.h"
 #include "WindowsFoundation.h"
 #include "WindowsWebHttpFilters.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsWebHttpHeaders.h"
 

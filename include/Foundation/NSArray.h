@@ -20,7 +20,6 @@
 #import <Foundation/NSFastEnumeration.h>
 #import <Foundation/NSObject.h>
 #import <Foundation/NSKeyValueObserving.h>
-#import <CoreFoundation/CFArray.h>
 
 @class NSString;
 @class NSURL;
@@ -37,15 +36,9 @@ enum {
     NSBinarySearchingInsertionIndex = (1 << 10),
 };
 
-#define __CFARRAY_SIZE_BYTES (0x30)
-
 FOUNDATION_EXPORT_CLASS
-@interface NSArray <__covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding> {
-@public
-    CFArrayRef arr;
-    uint32_t _arraySpace[((__CFARRAY_SIZE_BYTES + 3) & ~3) / 4];
+@interface NSArray <__covariant ObjectType> : NSObject <NSCopying, NSFastEnumeration, NSMutableCopying, NSSecureCoding>{
 }
-
 + (instancetype)array;
 + (instancetype)arrayWithArray:(NSArray<ObjectType>*)anArray;
 + (instancetype)arrayWithContentsOfFile:(NSString*)aPath;
@@ -53,7 +46,6 @@ FOUNDATION_EXPORT_CLASS
 + (instancetype)arrayWithObject:(ObjectType)anObject;
 + (instancetype)arrayWithObjects:(ObjectType)firstObj, ...;
 + (instancetype)arrayWithObjects:(const ObjectType _Nonnull[])objects count:(NSUInteger)count;
-- (instancetype)init;
 - (instancetype)initWithArray:(NSArray<ObjectType>*)anArray;
 - (instancetype)initWithArray:(NSArray<ObjectType>*)array copyItems:(BOOL)flag;
 - (instancetype)initWithContentsOfFile:(NSString*)aPath;
@@ -112,7 +104,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSArray<ObjectType>*)sortedArrayUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 - (NSArray<ObjectType>*)sortedArrayUsingSelector:(SEL)comparator;
 - (NSArray<ObjectType>*)sortedArrayUsingComparator:(NSComparator)cmptr;
-- (NSArray<ObjectType>*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
+- (NSArray<ObjectType>*)sortedArrayWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
 - (NSString*)componentsJoinedByString:(NSString*)separator;
 @property (readonly, copy) NSString* description;
 - (NSString*)descriptionWithLocale:(id)locale STUB_METHOD;

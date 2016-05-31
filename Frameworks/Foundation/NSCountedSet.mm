@@ -15,18 +15,116 @@
 //******************************************************************************
 
 #include "Starboard.h"
-#include "Foundation/NSMutableSet.h"
+#include <Foundation/NSCountedSet.h>
+#include <Foundation/NSMutableDictionary.h>
 
-NSUInteger NSSetTableGetValue(NSSet* set, id object);
+@implementation NSCountedSet {
+@private
+    StrongId<NSMutableSet> _internalSet;
+    StrongId<NSMutableDictionary> _counts; // id -> nsnumber
+}
 
-@implementation NSCountedSet
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithObjects:(id _Nonnull const* _Nullable)objects count:(unsigned)count {
+    if (self = [self initWithCapacity:count]) {
+        for (unsigned int i = 0; i < count; i++) {
+            [self addObject:objects[i]];
+        }
+    }
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCapacity:(unsigned)capacity {
+    if (self = [self init]) {
+        _internalSet = [NSMutableSet setWithCapacity:capacity];
+        _counts = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)countForObject:(id)object {
-    NSUInteger count = NSSetTableGetValue(self, object);
-    return count;
+    NSNumber* count = [_counts objectForKey:object];
+    return count ? [count unsignedIntegerValue] : 0;
+}
+
+/**
+ @Status Interoperable
+*/
+- (unsigned)count {
+    return [_internalSet count];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSEnumerator*)objectEnumerator {
+    return [_internalSet objectEnumerator];
+}
+
+/**
+ @Status Interoperable
+*/
+- (id)member:(id)object {
+    return [_internalSet member:object];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)addObject:(id)object {
+    NSNumber* count = [_counts objectForKey:object];
+    if (count) {
+        [_counts setObject:[NSNumber numberWithInt:[count intValue] + 1] forKey:object];
+    } else {
+        [_internalSet addObject:object];
+        [_counts setObject:@1 forKey:object];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeObject:(id)object {
+    NSNumber* count = [_counts objectForKey:object];
+    if (count) {
+        if ([count isEqual:@1]) {
+            [_internalSet removeObject:object];
+            [_counts removeObjectForKey:object];
+        } else {
+            [_counts setObject:[NSNumber numberWithInt:[count intValue] - 1] forKey:object];
+        }
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)removeAllObjects {
+    [_counts removeAllObjects];
+    [_internalSet removeAllObjects];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)copyWithZone:(NSZone*)zone {
+    return [[[self class] alloc] initWithSet:self];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)mutableCopyWithZone:(NSZone*)zone {
+    // NSCountedSet is derived from NSMutableSet
+    return [self copy];
 }
 
 @end

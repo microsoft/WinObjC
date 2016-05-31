@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXCPItemsChangedEventArgs, WUXCPLayoutInformation, WUXCPGeneratorPositionHelper, WUXCPProgressRingTemplateSettings,
     WUXCPToggleSwitchTemplateSettings, WUXCPProgressBarTemplateSettings, WUXCPSettingsFlyoutTemplateSettings, WUXCPToolTipTemplateSettings,
@@ -169,7 +169,6 @@ typedef unsigned WUXCPFlyoutPlacementMode;
 #include "WindowsUIXamlData.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIXamlControls.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsUIXamlMedia.h"

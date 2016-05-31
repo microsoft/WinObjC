@@ -71,7 +71,8 @@ ComPtr<IJsonValue> _NSJSONToWDJJsonValue(id object, BOOL isTop) {
             THROW_NS_IF_FAILED(jsonArray->Append(jsonValue.Get()));
         }
     } else if ((!isTop) && [object isKindOfClass:[NSNumber class]]) {
-        if (strncmp(@encode(BOOL), [(NSNumber*)object objCType], NSJSONTYPENAMELENGTH)) {
+        // Check if the number is NSCFBoolean
+        if ([object isKindOfClass:[static_cast<NSNumber*>(kCFBooleanTrue) class]]) {
             // NSNumber represents a boolean
             THROW_NS_IF_FAILED(jsonValueStatics->CreateBooleanValue([(NSNumber*)object boolValue], ret.GetAddressOf()));
         } else {

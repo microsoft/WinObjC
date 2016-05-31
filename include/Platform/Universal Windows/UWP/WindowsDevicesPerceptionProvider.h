@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDPPPerceptionFrameProviderInfo, WDPPPerceptionPropertyChangeRequest, WDPPPerceptionFaceAuthenticationGroup,
     WDPPPerceptionControlGroup, WDPPPerceptionCorrelationGroup, WDPPPerceptionFrame, WDPPPerceptionCorrelation,
@@ -31,10 +31,10 @@
     WDPPIPerceptionFrame, WDPPIPerceptionVideoFrameAllocatorFactory, WDPPIPerceptionPropertyChangeRequest,
     WDPPIPerceptionFrameProviderManager, WDPPIPerceptionFrameProvider, WDPPIPerceptionVideoFrameAllocator;
 
-#include "WindowsDevicesPerception.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundationNumerics.h"
 #include "WindowsFoundation.h"
+#include "WindowsDevicesPerception.h"
+#include "WindowsFoundationCollections.h"
 #include "WindowsGraphicsImaging.h"
 #include "WindowsMedia.h"
 // Windows.Devices.Perception.Provider.PerceptionStartFaceAuthenticationHandler

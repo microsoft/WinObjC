@@ -1,0 +1,1256 @@
+LIBRARY CoreFoundation
+    EXPORTS
+        ; WINOBJC: Bridged CoreFoundationAdditions classes. Exported from CF so that both static instances (eg: CFSTR or kCFBooleanTrue) 
+        ; and NS (eg: NSString, NSNumber) instances can make use of it.
+        _OBJC_CLASS__NSCFString DATA
+        __objc_class_name__NSCFString CONSTANT
+        _OBJC_CLASS__NSCFNumber DATA
+        __objc_class_name__NSCFNumber CONSTANT
+        _OBJC_CLASS__NSCFBoolean DATA
+        __objc_class_name__NSCFBoolean CONSTANT
+
+        ; WINOBJC: Additional items added to CF
+        OSHostByteOrder
+        OSReadBigInt16
+        OSReadBigInt32
+        OSSwapBigToHostInt16
+        OSSwapBigToHostInt32
+        OSSwapInt16
+        OSSwapInt32
+        OSSwapLittleToHostInt32
+        arc4random
+        arc4random_uniform
+        mach_timebase_info
+        sysctlbyname
+        _CFURLCopyPasswordNotUnescaped
+
+        ; WINOBJC: Expose a few private CF Helpers
+        _CFAppendPathComponent2
+        _CFAppendPathExtension2
+        _CFRuntimeBridgeTypeToClass
+        _CFStartOfLastPathComponent2
+        _CFStartOfPathExtension2
+        _CFGetSlash
+        _CFGetSlashStr
+        _CFProcessPath
+
+        ; Base Utilities.mm
+        kCFCoreFoundationVersionNumber DATA
+        ; CFRangeMake ; inlined / #defined
+
+        ; Byte-Order Utilities.mm
+        ; CFByteOrderGetCurrent ; inlined
+        ; CFConvertDoubleHostToSwapped ; inlined
+        ; CFConvertDoubleSwappedToHost ; inlined
+        ; CFConvertFloat32HostToSwapped ; inlined
+        ; CFConvertFloat32SwappedToHost ; inlined
+        ; CFConvertFloat64HostToSwapped ; inlined
+        ; CFConvertFloat64SwappedToHost ; inlined
+        ; CFConvertFloatHostToSwapped ; inlined
+        ; CFConvertFloatSwappedToHost ; inlined
+        ; CFSwapInt16 ; inline
+        ; CFSwapInt16BigToHost ; inline
+        ; CFSwapInt16HostToBig ; inline
+        ; CFSwapInt16HostToLittle ; inline
+        ; CFSwapInt16LittleToHost ; inline
+        ; CFSwapInt32 ; inline
+        ; CFSwapInt32BigToHost ; inline
+        ; CFSwapInt32HostToBig ; inline
+        ; CFSwapInt32HostToLittle ; inline
+        ; CFSwapInt32LittleToHost ; inline
+        ; CFSwapInt64 ; inline
+        ; CFSwapInt64BigToHost ; inline
+        ; CFSwapInt64HostToBig ; inline
+        ; CFSwapInt64HostToLittle ; inline
+        ; CFSwapInt64LittleToHost ; inline
+
+        ; CFAllocator.mm
+        kCFAllocatorDefault DATA
+        kCFAllocatorSystemDefault DATA
+        kCFAllocatorMalloc DATA
+        kCFAllocatorMallocZone DATA
+        kCFAllocatorNull DATA
+        kCFAllocatorUseContext DATA
+        CFAllocatorCreate
+        CFAllocatorAllocate
+        CFAllocatorDeallocate
+        CFAllocatorGetPreferredSizeForSize
+        CFAllocatorReallocate
+        CFAllocatorGetDefault
+        CFAllocatorSetDefault
+        CFAllocatorGetContext
+        CFAllocatorGetTypeID
+
+        ; CFArray.mm
+        kCFTypeArrayCallBacks DATA
+        CFArrayCreate
+        CFArrayCreateCopy
+        CFArrayBSearchValues
+        CFArrayContainsValue
+        CFArrayGetCount
+        CFArrayGetCountOfValue
+        CFArrayGetFirstIndexOfValue
+        CFArrayGetLastIndexOfValue
+        CFArrayGetValues
+        CFArrayGetValueAtIndex
+        CFArrayApplyFunction
+        CFArrayGetTypeID
+
+        ; CFAttributedString.mm
+        CFAttributedStringCreate
+        CFAttributedStringCreateCopy
+        CFAttributedStringCreateWithSubstring
+        CFAttributedStringGetLength
+        CFAttributedStringGetString
+        CFAttributedStringGetAttribute
+        CFAttributedStringGetAttributes
+        CFAttributedStringGetAttributeAndLongestEffectiveRange
+        CFAttributedStringGetAttributesAndLongestEffectiveRange
+        CFAttributedStringGetTypeID
+        _CFAttributedStringIsMutable
+
+        ; CFBag.mm
+        kCFTypeBagCallBacks DATA
+        kCFCopyStringBagCallBacks DATA
+        CFBagCreate
+        CFBagCreateCopy
+        CFBagContainsValue
+        CFBagGetCount
+        CFBagGetCountOfValue
+        CFBagGetValue
+        CFBagGetValueIfPresent
+        CFBagGetValues
+        CFBagApplyFunction
+        CFBagGetTypeID
+
+        ; CFBinaryHeap.mm
+        kCFStringBinaryHeapCallBacks DATA
+        CFBinaryHeapAddValue
+        CFBinaryHeapApplyFunction
+        CFBinaryHeapContainsValue
+        CFBinaryHeapCreate
+        CFBinaryHeapCreateCopy
+        CFBinaryHeapGetCount
+        CFBinaryHeapGetCountOfValue
+        CFBinaryHeapGetMinimum
+        CFBinaryHeapGetMinimumIfPresent
+        CFBinaryHeapGetTypeID
+        CFBinaryHeapGetValues
+        CFBinaryHeapRemoveAllValues
+        CFBinaryHeapRemoveMinimumValue
+
+        ; CFBitVector.mm
+        CFBitVectorCreate
+        CFBitVectorCreateCopy
+        CFBitVectorContainsBit
+        CFBitVectorGetBitAtIndex
+        CFBitVectorGetBits
+        CFBitVectorGetCount
+        CFBitVectorGetCountOfBit
+        CFBitVectorGetFirstIndexOfBit
+        CFBitVectorGetLastIndexOfBit
+        CFBitVectorGetTypeID
+
+        ; CFBoolean.mm
+        kCFBooleanTrue DATA
+        kCFBooleanFalse DATA
+        CFBooleanGetTypeID
+        CFBooleanGetValue
+
+        ; CFBundle.mm
+        kCFBundleInfoDictionaryVersionKey DATA
+        kCFBundleExecutableKey DATA
+        kCFBundleIdentifierKey DATA
+        kCFBundleVersionKey DATA
+        kCFBundleDevelopmentRegionKey DATA
+        kCFBundleNameKey DATA
+        kCFBundleLocalizationsKey DATA
+        CFBundleCreate
+        CFBundleCreateBundlesFromDirectory
+        CFBundleGetAllBundles
+        CFBundleGetBundleWithIdentifier
+        CFBundleGetMainBundle
+        CFBundleIsExecutableLoaded
+        CFBundlePreflightExecutable
+        CFBundleLoadExecutable
+        CFBundleLoadExecutableAndReturnError
+        CFBundleUnloadExecutable
+        CFBundleCopyAuxiliaryExecutableURL
+        CFBundleCopyBuiltInPlugInsURL
+        CFBundleCopyExecutableURL
+        CFBundleCopyPrivateFrameworksURL
+        CFBundleCopyResourcesDirectoryURL
+        CFBundleCopySharedFrameworksURL
+        CFBundleCopySharedSupportURL
+        CFBundleCopySupportFilesDirectoryURL
+        CFBundleCloseBundleResourceMap
+        CFBundleCopyResourceURL
+        CFBundleCopyResourceURLInDirectory
+        CFBundleCopyResourceURLsOfType
+        CFBundleCopyResourceURLsOfTypeInDirectory
+        CFBundleCopyResourceURLForLocalization
+        CFBundleCopyResourceURLsOfTypeForLocalization
+        CFBundleOpenBundleResourceFiles
+        CFBundleOpenBundleResourceMap
+        CFBundleCopyBundleLocalizations
+        CFBundleCopyLocalizedString
+        CFBundleCopyLocalizationsForPreferences
+        CFBundleCopyLocalizationsForURL
+        CFBundleCopyPreferredLocalizationsFromArray
+        ; CFCopyLocalizedString ; #defined in header to other export
+        ; CFCopyLocalizedStringFromTable ; #defined in header to other export
+        ; CFCopyLocalizedStringFromTableInBundle ; #defined in header to other export
+        ; CFCopyLocalizedStringWithDefaultValue ; #defined in header to other export
+        CFBundleGetDataPointerForName
+        CFBundleGetDataPointersForNames
+        CFBundleGetFunctionPointerForName
+        CFBundleGetFunctionPointersForNames
+        CFBundleGetPlugIn
+        CFBundleCopyBundleURL
+        CFBundleGetDevelopmentRegion
+        CFBundleGetIdentifier
+        CFBundleGetInfoDictionary
+        CFBundleGetLocalInfoDictionary
+        CFBundleGetValueForInfoDictionaryKey
+        CFBundleCopyInfoDictionaryInDirectory
+        CFBundleCopyInfoDictionaryForURL
+        CFBundleGetPackageInfo
+        CFBundleGetPackageInfoInDirectory
+        CFBundleCopyExecutableArchitectures
+        CFBundleCopyExecutableArchitecturesForURL
+        CFBundleGetVersionNumber
+        CFBundleGetTypeID
+
+        ; CFCalendar.mm
+        CFCalendarCopyCurrent
+        CFCalendarCreateWithIdentifier
+        CFCalendarAddComponents
+        CFCalendarComposeAbsoluteTime
+        CFCalendarDecomposeAbsoluteTime
+        CFCalendarGetComponentDifference
+        CFCalendarGetRangeOfUnit
+        CFCalendarGetOrdinalityOfUnit
+        CFCalendarGetTimeRangeOfUnit
+        CFCalendarGetMaximumRangeOfUnit
+        CFCalendarGetMinimumRangeOfUnit
+        CFCalendarCopyTimeZone
+        CFCalendarSetTimeZone
+        CFCalendarGetIdentifier
+        CFCalendarCopyLocale
+        CFCalendarSetLocale
+        CFCalendarGetFirstWeekday
+        CFCalendarSetFirstWeekday
+        CFCalendarGetMinimumDaysInFirstWeek
+        CFCalendarSetMinimumDaysInFirstWeek
+        CFCalendarGetTypeID
+        _CFCalendarComposeAbsoluteTimeV
+        _CFCalendarDecomposeAbsoluteTimeV
+        _CFCalendarAddComponentsV
+        _CFCalendarGetComponentDifferenceV
+
+        ; CFCharacterSet.mm
+        CFCharacterSetCreateCopy
+        CFCharacterSetCreateInvertedSet
+        CFCharacterSetCreateWithCharactersInRange
+        CFCharacterSetCreateWithCharactersInString
+        CFCharacterSetCreateWithBitmapRepresentation
+        CFCharacterSetGetPredefined
+        CFCharacterSetCreateBitmapRepresentation
+        CFCharacterSetHasMemberInPlane
+        CFCharacterSetIsCharacterMember
+        CFCharacterSetIsLongCharacterMember
+        CFCharacterSetIsSupersetOfSet
+        CFCharacterSetGetTypeID
+
+        ; CFData.mm
+        CFDataCreate
+        CFDataCreateCopy
+        CFDataCreateWithBytesNoCopy
+        CFDataGetBytePtr
+        CFDataGetBytes
+        CFDataGetLength
+        CFDataFind
+        CFDataGetTypeID
+
+        ; CFDate.mm
+        CFDateCompare
+        CFDateCreate
+        CFDateGetAbsoluteTime
+        CFDateGetTimeIntervalSinceDate
+        CFDateGetTypeID
+
+        ; CFDateFormatter.mm
+        kCFDateFormatterIsLenient=kCFDateFormatterIsLenientKey DATA
+        kCFDateFormatterTimeZone=kCFDateFormatterTimeZoneKey DATA
+        kCFDateFormatterCalendarName=kCFDateFormatterCalendarIdentifierKey DATA
+        kCFDateFormatterDefaultFormat=kCFDateFormatterDefaultFormatKey DATA
+        kCFDateFormatterTwoDigitStartDate=kCFDateFormatterTwoDigitStartDateKey DATA
+        kCFDateFormatterDefaultDate=kCFDateFormatterDefaultDateKey DATA
+        kCFDateFormatterCalendar=kCFDateFormatterCalendarKey DATA
+        kCFDateFormatterEraSymbols=kCFDateFormatterEraSymbolsKey DATA
+        kCFDateFormatterMonthSymbols=kCFDateFormatterMonthSymbolsKey DATA
+        kCFDateFormatterShortMonthSymbols=kCFDateFormatterShortMonthSymbolsKey DATA
+        kCFDateFormatterWeekdaySymbols=kCFDateFormatterWeekdaySymbolsKey DATA
+        kCFDateFormatterShortWeekdaySymbols=kCFDateFormatterShortWeekdaySymbolsKey DATA
+        kCFDateFormatterAMSymbol=kCFDateFormatterAMSymbolKey DATA
+        kCFDateFormatterPMSymbol=kCFDateFormatterPMSymbolKey DATA
+        kCFDateFormatterLongEraSymbols=kCFDateFormatterLongEraSymbolsKey DATA
+        kCFDateFormatterVeryShortMonthSymbols=kCFDateFormatterVeryShortMonthSymbolsKey DATA
+        kCFDateFormatterStandaloneMonthSymbols=kCFDateFormatterStandaloneMonthSymbolsKey DATA
+        kCFDateFormatterShortStandaloneMonthSymbols=kCFDateFormatterShortStandaloneMonthSymbolsKey DATA
+        kCFDateFormatterVeryShortStandaloneMonthSymbols=kCFDateFormatterVeryShortStandaloneMonthSymbolsKey DATA
+        kCFDateFormatterVeryShortWeekdaySymbols=kCFDateFormatterVeryShortWeekdaySymbolsKey DATA
+        kCFDateFormatterStandaloneWeekdaySymbols=kCFDateFormatterStandaloneWeekdaySymbolsKey DATA
+        kCFDateFormatterShortStandaloneWeekdaySymbols=kCFDateFormatterShortStandaloneWeekdaySymbolsKey DATA
+        kCFDateFormatterVeryShortStandaloneWeekdaySymbols=kCFDateFormatterVeryShortStandaloneWeekdaySymbolsKey DATA
+        kCFDateFormatterQuarterSymbols=kCFDateFormatterQuarterSymbolsKey DATA
+        kCFDateFormatterShortQuarterSymbols=kCFDateFormatterShortQuarterSymbolsKey DATA
+        kCFDateFormatterStandaloneQuarterSymbols=kCFDateFormatterStandaloneQuarterSymbolsKey DATA
+        kCFDateFormatterShortStandaloneQuarterSymbols=kCFDateFormatterShortStandaloneQuarterSymbolsKey DATA
+        kCFDateFormatterGregorianStartDate=kCFDateFormatterGregorianStartDateKey DATA
+        kCFDateFormatterDoesRelativeDateFormattingKey DATA
+        ; kCFGregorianCalendar DATA ; duplicate
+        CFDateFormatterCreate
+        CFDateFormatterSetFormat
+        CFDateFormatterSetProperty
+        CFDateFormatterCreateDateFromString
+        CFDateFormatterGetAbsoluteTimeFromString
+        CFDateFormatterCreateStringWithAbsoluteTime
+        CFDateFormatterCreateStringWithDate
+        CFDateFormatterCreateDateFormatFromTemplate
+        CFDateFormatterCopyProperty
+        CFDateFormatterGetDateStyle
+        CFDateFormatterGetFormat
+        CFDateFormatterGetLocale
+        CFDateFormatterGetTimeStyle
+        CFDateFormatterGetTypeID
+
+        ; CFDictionary.mm
+        kCFCopyStringDictionaryKeyCallBacks DATA
+        kCFTypeDictionaryKeyCallBacks DATA
+        kCFTypeDictionaryValueCallBacks DATA
+        CFDictionaryCreate
+        CFDictionaryCreateCopy
+        CFDictionaryContainsKey
+        CFDictionaryContainsValue
+        CFDictionaryGetCount
+        CFDictionaryGetCountOfKey
+        CFDictionaryGetCountOfValue
+        CFDictionaryGetKeysAndValues
+        CFDictionaryGetValue
+        CFDictionaryGetValueIfPresent
+        CFDictionaryApplyFunction
+        CFDictionaryGetTypeID
+        _CFDictionaryIsMutable
+
+        ; CFError.mm
+        kCFErrorDomainPOSIX DATA
+        kCFErrorDomainOSStatus DATA
+        kCFErrorDomainMach DATA
+        kCFErrorDomainCocoa DATA
+        kCFErrorLocalizedDescriptionKey DATA
+        kCFErrorLocalizedFailureReasonKey DATA
+        kCFErrorLocalizedRecoverySuggestionKey DATA
+        kCFErrorDescriptionKey DATA
+        kCFErrorUnderlyingErrorKey DATA
+        kCFErrorURLKey DATA
+        kCFErrorFilePathKey DATA
+        CFErrorCreate
+        CFErrorCreateWithUserInfoKeysAndValues
+        CFErrorGetDomain
+        CFErrorGetCode
+        CFErrorCopyUserInfo
+        CFErrorCopyDescription
+        CFErrorCopyFailureReason
+        CFErrorCopyRecoverySuggestion
+        CFErrorGetTypeID
+
+        ; CFFileDescriptor.mm
+        ; HACKHACK: Reference Platform doesn't have an impl of this class.
+        ;
+        ; CFFileDescriptorCreate
+        ; CFFileDescriptorGetNativeDescriptor
+        ; CFFileDescriptorIsValid
+        ; CFFileDescriptorGetContext
+        ; CFFileDescriptorInvalidate
+        ; CFFileDescriptorEnableCallBacks
+        ; CFFileDescriptorDisableCallBacks
+        ; CFFileDescriptorCreateRunLoopSource
+        ; CFFileDescriptorGetTypeID
+
+        ; CFLocale.mm
+        kCFLocaleIdentifier=kCFLocaleIdentifierKey DATA
+        kCFLocaleLanguageCode=kCFLocaleLanguageCodeKey DATA
+        kCFLocaleCountryCode=kCFLocaleCountryCodeKey DATA
+        kCFLocaleScriptCode=kCFLocaleScriptCodeKey DATA
+        kCFLocaleVariantCode=kCFLocaleVariantCodeKey DATA
+        kCFLocaleExemplarCharacterSet=kCFLocaleExemplarCharacterSetKey DATA
+        kCFLocaleCalendarIdentifier=kCFLocaleCalendarIdentifierKey DATA
+        kCFLocaleCalendar=kCFLocaleCalendarKey DATA
+        kCFLocaleCollationIdentifier=kCFLocaleCollationIdentifierKey DATA
+        kCFLocaleUsesMetricSystem=kCFLocaleUsesMetricSystemKey DATA
+        kCFLocaleMeasurementSystem=kCFLocaleMeasurementSystemKey DATA
+        kCFLocaleDecimalSeparator=kCFLocaleDecimalSeparatorKey DATA
+        kCFLocaleGroupingSeparator=kCFLocaleGroupingSeparatorKey DATA
+        kCFLocaleCurrencySymbol=kCFLocaleCurrencySymbolKey DATA
+        kCFLocaleCurrencyCode=kCFLocaleCurrencyCodeKey DATA
+        kCFLocaleCollatorIdentifier=kCFLocaleCollatorIdentifierKey DATA
+        kCFLocaleQuotationBeginDelimiterKey DATA
+        kCFLocaleQuotationEndDelimiterKey DATA
+        kCFLocaleAlternateQuotationBeginDelimiterKey DATA
+        kCFLocaleAlternateQuotationEndDelimiterKey DATA
+        kCFGregorianCalendar=kCFCalendarIdentifierGregorian DATA
+        kCFBuddhistCalendar=kCFCalendarIdentifierBuddhist DATA
+        kCFChineseCalendar=kCFCalendarIdentifierChinese DATA
+        kCFHebrewCalendar=kCFCalendarIdentifierHebrew DATA
+        kCFIslamicCalendar=kCFCalendarIdentifierIslamic DATA
+        kCFIslamicCivilCalendar=kCFCalendarIdentifierIslamicCivil DATA
+        kCFIslamicTabularCalendar=kCFCalendarIdentifierIslamicTabular DATA
+        kCFIslamicUmmAlQuraCalendar=kCFCalendarIdentifierIslamicUmmAlQura DATA
+        kCFJapaneseCalendar=kCFCalendarIdentifierJapanese DATA
+        kCFRepublicOfChinaCalendar=kCFCalendarIdentifierRepublicOfChina DATA
+        kCFPersianCalendar=kCFCalendarIdentifierPersian DATA
+        kCFIndianCalendar=kCFCalendarIdentifierIndian DATA
+        kCFISO8601Calendar=kCFCalendarIdentifierISO8601 DATA
+        kCFLocaleCurrentLocaleDidChangeNotification DATA
+        CFLocaleCopyCurrent
+        CFLocaleCreate
+        CFLocaleCreateCopy
+        CFLocaleGetSystem
+        CFLocaleCopyAvailableLocaleIdentifiers
+        CFLocaleCopyISOCountryCodes
+        CFLocaleCopyISOLanguageCodes
+        CFLocaleCopyISOCurrencyCodes
+        CFLocaleCopyCommonISOCurrencyCodes
+        CFLocaleCopyPreferredLanguages
+        CFLocaleCopyDisplayNameForPropertyValue
+        CFLocaleGetValue
+        CFLocaleGetIdentifier
+        CFLocaleCreateCanonicalLocaleIdentifierFromScriptManagerCodes
+        CFLocaleCreateCanonicalLanguageIdentifierFromString
+        CFLocaleCreateCanonicalLocaleIdentifierFromString
+        CFLocaleCreateComponentsFromLocaleIdentifier
+        CFLocaleCreateLocaleIdentifierFromComponents
+        CFLocaleCreateLocaleIdentifierFromWindowsLocaleCode
+        CFLocaleGetWindowsLocaleCodeFromLocaleIdentifier
+        CFLocaleGetLanguageCharacterDirection
+        CFLocaleGetLanguageLineDirection
+        CFLocaleGetTypeID
+
+        ; CFMachPort.mm
+        ; HACKHACK: Reference Platform doesn't have an impl of this class.
+        ;
+        ; CFMachPortCreate
+        ; CFMachPortCreateWithPort
+        ; CFMachPortInvalidate
+        ; CFMachPortCreateRunLoopSource
+        ; CFMachPortSetInvalidationCallBack
+        ; CFMachPortGetContext
+        ; CFMachPortGetInvalidationCallBack
+        ; CFMachPortGetPort
+        ; CFMachPortIsValid
+        ; CFMachPortGetTypeID
+
+        ; CFMessagePort.mm
+        ; HACKHACK: Reference Platform doesn't have an impl of this class.
+        ;
+        ; CFMessagePortCreateLocal
+        ; CFMessagePortCreateRemote
+        ; CFMessagePortCreateRunLoopSource
+        ; CFMessagePortSetInvalidationCallBack
+        ; CFMessagePortSetName
+        ; CFMessagePortInvalidate
+        ; CFMessagePortSendRequest
+        ; CFMessagePortSetDispatchQueue
+        ; CFMessagePortGetContext
+        ; CFMessagePortGetInvalidationCallBack
+        ; CFMessagePortGetName
+        ; CFMessagePortIsRemote
+        ; CFMessagePortIsValid
+        ; CFMessagePortGetTypeID
+
+        ; CFMutableArray.mm
+        CFArrayAppendArray
+        CFArrayAppendValue
+        CFArrayCreateMutable
+        CFArrayCreateMutableCopy
+        CFArrayExchangeValuesAtIndices
+        CFArrayInsertValueAtIndex
+        CFArrayRemoveAllValues
+        CFArrayRemoveValueAtIndex
+        CFArrayReplaceValues
+        CFArraySetValueAtIndex
+        CFArraySortValues
+        _CFArrayIsMutable
+
+        ; CFMutableAttributedString.mm
+        CFAttributedStringCreateMutable
+        CFAttributedStringCreateMutableCopy
+        CFAttributedStringBeginEditing
+        CFAttributedStringEndEditing
+        CFAttributedStringGetMutableString
+        CFAttributedStringRemoveAttribute
+        CFAttributedStringReplaceString
+        CFAttributedStringReplaceAttributedString
+        CFAttributedStringSetAttribute
+        CFAttributedStringSetAttributes
+
+        ; CFMutableBag.mm
+        CFBagCreateMutable
+        CFBagCreateMutableCopy
+        CFBagAddValue
+        CFBagRemoveAllValues
+        CFBagRemoveValue
+        CFBagReplaceValue
+        CFBagSetValue
+
+        ; CFMutableBitVector.mm
+        CFBitVectorCreateMutable
+        CFBitVectorCreateMutableCopy
+        CFBitVectorFlipBitAtIndex
+        CFBitVectorFlipBits
+        CFBitVectorSetAllBits
+        CFBitVectorSetBitAtIndex
+        CFBitVectorSetBits
+        CFBitVectorSetCount
+
+        ; CFMutableCharacterSet.mm
+        CFCharacterSetCreateMutable
+        CFCharacterSetCreateMutableCopy
+        CFCharacterSetAddCharactersInRange
+        CFCharacterSetAddCharactersInString
+        CFCharacterSetRemoveCharactersInRange
+        CFCharacterSetRemoveCharactersInString
+        CFCharacterSetIntersect
+        CFCharacterSetInvert
+        CFCharacterSetUnion
+        __CFCharacterSetIsMutable
+
+        ; CFMutableData.mm
+        CFDataCreateMutable
+        CFDataCreateMutableCopy
+        CFDataGetMutableBytePtr
+        CFDataAppendBytes
+        CFDataDeleteBytes
+        CFDataReplaceBytes
+        CFDataIncreaseLength
+        CFDataSetLength
+        _CFDataIsMutable
+
+        ; CFMutableDictionary.mm
+        CFDictionaryCreateMutable
+        CFDictionaryCreateMutableCopy
+        CFDictionaryAddValue
+        CFDictionaryRemoveAllValues
+        CFDictionaryRemoveValue
+        CFDictionaryReplaceValue
+        CFDictionarySetValue
+
+        ; CFMutableSet.mm
+        CFSetAddValue
+        CFSetCreateMutable
+        CFSetCreateMutableCopy
+        CFSetRemoveAllValues
+        CFSetRemoveValue
+        CFSetReplaceValue
+        CFSetSetValue
+        _CFSetIsMutable
+
+        ; CFMutableString.mm
+        kCFStringTransformStripCombiningMarks DATA
+        kCFStringTransformToLatin DATA
+        kCFStringTransformFullwidthHalfwidth DATA
+        kCFStringTransformLatinKatakana DATA
+        kCFStringTransformLatinHiragana DATA
+        kCFStringTransformHiraganaKatakana DATA
+        kCFStringTransformMandarinLatin DATA
+        kCFStringTransformLatinHangul DATA
+        kCFStringTransformLatinArabic DATA
+        kCFStringTransformLatinHebrew DATA
+        kCFStringTransformLatinThai DATA
+        kCFStringTransformLatinCyrillic DATA
+        kCFStringTransformLatinGreek DATA
+        kCFStringTransformToXMLHex DATA
+        kCFStringTransformToUnicodeName DATA
+        kCFStringTransformStripDiacritics DATA
+        CFStringAppend
+        CFStringAppendCharacters
+        CFStringAppendCString
+        CFStringAppendFormat
+        CFStringAppendFormatAndArguments
+        CFStringAppendPascalString
+        CFStringCapitalize
+        CFStringCreateMutable
+        CFStringCreateMutableCopy
+        CFStringCreateMutableWithExternalCharactersNoCopy
+        CFStringDelete
+        CFStringFindAndReplace
+        CFStringFold
+        CFStringInsert
+        CFStringLowercase
+        CFStringNormalize
+        CFStringPad
+        CFStringReplace
+        CFStringReplaceAll
+        CFStringSetExternalCharactersNoCopy
+        CFStringTransform
+        CFStringTrim
+        CFStringTrimWhitespace
+        CFStringUppercase
+
+        ; CFNotificationCenter.mm
+        ; HACKHACK: Reference Platform doesn't have an impl of this class.
+        ;
+        ; CFNotificationCenterGetDarwinNotifyCenter
+        ; CFNotificationCenterGetLocalCenter
+        ; CFNotificationCenterPostNotification
+        ; CFNotificationCenterPostNotificationWithOptions
+        ; CFNotificationCenterAddObserver
+        ; CFNotificationCenterRemoveEveryObserver
+        ; CFNotificationCenterRemoveObserver
+        ; CFNotificationCenterGetTypeID
+
+        ; CFNull.mm
+        kCFNull DATA
+        CFNullGetTypeID
+
+        ; CFNumber.mm
+        kCFNumberNaN DATA
+        kCFNumberNegativeInfinity DATA
+        kCFNumberPositiveInfinity DATA
+        CFNumberCreate
+        CFNumberGetByteSize
+        CFNumberGetType
+        CFNumberGetValue
+        CFNumberIsFloatType
+        CFNumberCompare
+        CFNumberGetTypeID
+
+        ; CFNumberFormatter.mm
+        kCFNumberFormatterCurrencyCode=kCFNumberFormatterCurrencyCodeKey DATA
+        kCFNumberFormatterDecimalSeparator=kCFNumberFormatterDecimalSeparatorKey DATA
+        kCFNumberFormatterCurrencyDecimalSeparator=kCFNumberFormatterCurrencyDecimalSeparatorKey DATA
+        kCFNumberFormatterAlwaysShowDecimalSeparator=kCFNumberFormatterAlwaysShowDecimalSeparatorKey DATA
+        kCFNumberFormatterGroupingSeparator=kCFNumberFormatterGroupingSeparatorKey DATA
+        kCFNumberFormatterUseGroupingSeparator=kCFNumberFormatterUseGroupingSeparatorKey DATA
+        kCFNumberFormatterPercentSymbol=kCFNumberFormatterPercentSymbolKey DATA
+        kCFNumberFormatterZeroSymbol=kCFNumberFormatterZeroSymbolKey DATA
+        kCFNumberFormatterNaNSymbol=kCFNumberFormatterNaNSymbolKey DATA
+        kCFNumberFormatterInfinitySymbol=kCFNumberFormatterInfinitySymbolKey DATA
+        kCFNumberFormatterMinusSign=kCFNumberFormatterMinusSignKey DATA
+        kCFNumberFormatterPlusSign=kCFNumberFormatterPlusSignKey DATA
+        kCFNumberFormatterCurrencySymbol=kCFNumberFormatterCurrencySymbolKey DATA
+        kCFNumberFormatterExponentSymbol=kCFNumberFormatterExponentSymbolKey DATA
+        kCFNumberFormatterMinIntegerDigits=kCFNumberFormatterMinIntegerDigitsKey DATA
+        kCFNumberFormatterMaxIntegerDigits=kCFNumberFormatterMaxIntegerDigitsKey DATA
+        kCFNumberFormatterMinFractionDigits=kCFNumberFormatterMinFractionDigitsKey DATA
+        kCFNumberFormatterMaxFractionDigits=kCFNumberFormatterMaxFractionDigitsKey DATA
+        kCFNumberFormatterGroupingSize=kCFNumberFormatterGroupingSizeKey DATA
+        kCFNumberFormatterSecondaryGroupingSize=kCFNumberFormatterSecondaryGroupingSizeKey DATA
+        kCFNumberFormatterRoundingMode=kCFNumberFormatterRoundingModeKey DATA
+        kCFNumberFormatterRoundingIncrement=kCFNumberFormatterRoundingIncrementKey DATA
+        kCFNumberFormatterFormatWidth=kCFNumberFormatterFormatWidthKey DATA
+        kCFNumberFormatterPaddingPosition=kCFNumberFormatterPaddingPositionKey DATA
+        kCFNumberFormatterPaddingCharacter=kCFNumberFormatterPaddingCharacterKey DATA
+        kCFNumberFormatterDefaultFormat=kCFNumberFormatterDefaultFormatKey DATA
+        kCFNumberFormatterMultiplier=kCFNumberFormatterMultiplierKey DATA
+        kCFNumberFormatterPositivePrefix=kCFNumberFormatterPositivePrefixKey DATA
+        kCFNumberFormatterPositiveSuffix=kCFNumberFormatterPositiveSuffixKey DATA
+        kCFNumberFormatterNegativePrefix=kCFNumberFormatterNegativePrefixKey DATA
+        kCFNumberFormatterNegativeSuffix=kCFNumberFormatterNegativeSuffixKey DATA
+        kCFNumberFormatterPerMillSymbol=kCFNumberFormatterPerMillSymbolKey DATA
+        kCFNumberFormatterInternationalCurrencySymbol=kCFNumberFormatterInternationalCurrencySymbolKey DATA
+        kCFNumberFormatterCurrencyGroupingSeparator=kCFNumberFormatterCurrencyGroupingSeparatorKey DATA
+        kCFNumberFormatterIsLenient=kCFNumberFormatterIsLenientKey DATA
+        kCFNumberFormatterUseSignificantDigits=kCFNumberFormatterUseSignificantDigitsKey DATA
+        kCFNumberFormatterMinSignificantDigits=kCFNumberFormatterMinSignificantDigitsKey DATA
+        kCFNumberFormatterMaxSignificantDigits=kCFNumberFormatterMaxSignificantDigitsKey DATA
+        CFNumberFormatterCreate
+        CFNumberFormatterSetFormat
+        CFNumberFormatterSetProperty
+        CFNumberFormatterCreateNumberFromString
+        CFNumberFormatterCreateStringWithNumber
+        CFNumberFormatterCreateStringWithValue
+        CFNumberFormatterGetDecimalInfoForCurrencyCode
+        CFNumberFormatterGetValueFromString
+        CFNumberFormatterCopyProperty
+        CFNumberFormatterGetFormat
+        CFNumberFormatterGetLocale
+        CFNumberFormatterGetStyle
+        CFNumberFormatterGetTypeID
+
+        ; CFPlugIn.mm
+        kCFPlugInDynamicRegistrationKey DATA
+        kCFPlugInDynamicRegisterFunctionKey DATA
+        kCFPlugInUnloadFunctionKey DATA
+        kCFPlugInFactoriesKey DATA
+        kCFPlugInTypesKey DATA
+        CFPlugInCreate
+        CFPlugInInstanceCreate
+        CFPlugInRegisterFactoryFunction
+        CFPlugInRegisterFactoryFunctionByName
+        CFPlugInRegisterPlugInType
+        CFPlugInUnregisterFactory
+        CFPlugInUnregisterPlugInType
+        CFPlugInAddInstanceForFactory
+        CFPlugInFindFactoriesForPlugInType
+        CFPlugInFindFactoriesForPlugInTypeInPlugIn
+        CFPlugInGetBundle
+        CFPlugInGetTypeID
+        CFPlugInIsLoadOnDemand
+        CFPlugInRemoveInstanceForFactory
+        CFPlugInSetLoadOnDemand
+
+        ; CFPlugInInstance.mm
+        CFPlugInInstanceCreateWithInstanceDataSize
+        CFPlugInInstanceGetFactoryName
+        CFPlugInInstanceGetInstanceData
+        CFPlugInInstanceGetInterfaceFunctionTable
+        CFPlugInInstanceGetTypeID
+
+        ; CFPropertyList.mm
+        CFPropertyListCreateWithData
+        CFPropertyListCreateWithStream
+        CFPropertyListCreateDeepCopy
+        CFPropertyListCreateFromXMLData
+        CFPropertyListCreateFromStream
+        CFPropertyListCreateData
+        CFPropertyListWrite
+        CFPropertyListCreateXMLData
+        CFPropertyListWriteToStream
+        CFPropertyListIsValid
+
+        ; CFReadStream.mm
+        CFReadStreamCreateWithBytesNoCopy
+        CFReadStreamCreateWithFile
+        CFReadStreamClose
+        CFReadStreamOpen
+        CFReadStreamRead
+        CFReadStreamScheduleWithRunLoop
+        CFReadStreamUnscheduleFromRunLoop
+        CFReadStreamCopyProperty
+        CFReadStreamGetBuffer
+        CFReadStreamCopyError
+        CFReadStreamGetError
+        CFReadStreamGetStatus
+        CFReadStreamHasBytesAvailable
+        CFReadStreamSetClient
+        CFReadStreamSetProperty
+        CFReadStreamGetTypeID
+
+        ; CFRegularExpression.mm
+        _CFRegularExpressionCreateEscapedPattern
+        _CFRegularExpressionCreateEscapedTemplate
+        _CFRegularExpressionCreate
+        _CFRegularExpressionGetNumberOfCaptureGroups
+        _CFRegularExpressionEnumerateMatchesInString
+        _CFRegularExpressionGetPattern
+        _CFRegularExpressionGetOptions
+
+        ; CFRunLoop.mm
+        kCFRunLoopCommonModes DATA
+        kCFRunLoopDefaultMode DATA
+        CFRunLoopGetCurrent
+        CFRunLoopGetMain
+        CFRunLoopRun
+        CFRunLoopRunInMode
+        CFRunLoopWakeUp
+        CFRunLoopStop
+        CFRunLoopIsWaiting
+        CFRunLoopAddSource
+        CFRunLoopContainsSource
+        CFRunLoopRemoveSource
+        CFRunLoopAddObserver
+        CFRunLoopContainsObserver
+        CFRunLoopRemoveObserver
+        CFRunLoopAddCommonMode
+        CFRunLoopCopyAllModes
+        CFRunLoopCopyCurrentMode
+        CFRunLoopAddTimer
+        CFRunLoopGetNextTimerFireDate
+        CFRunLoopRemoveTimer
+        CFRunLoopContainsTimer
+        CFRunLoopPerformBlock
+        CFRunLoopGetTypeID
+
+        ; CFRunLoopObserver.mm
+        CFRunLoopObserverCreateWithHandler
+        CFRunLoopObserverCreate
+        CFRunLoopObserverDoesRepeat
+        CFRunLoopObserverGetActivities
+        CFRunLoopObserverGetContext
+        CFRunLoopObserverGetOrder
+        CFRunLoopObserverGetTypeID
+        CFRunLoopObserverInvalidate
+        CFRunLoopObserverIsValid
+
+        ; CFRunLoopSource.mm
+        CFRunLoopSourceCreate
+        CFRunLoopSourceGetContext
+        CFRunLoopSourceGetOrder
+        CFRunLoopSourceGetTypeID
+        CFRunLoopSourceInvalidate
+        CFRunLoopSourceIsValid
+        CFRunLoopSourceSignal
+
+        ; CFRunLoopTimer.mm
+        CFRunLoopTimerCreateWithHandler
+        CFRunLoopTimerCreate
+        CFRunLoopTimerDoesRepeat
+        CFRunLoopTimerGetContext
+        CFRunLoopTimerGetInterval
+        CFRunLoopTimerGetNextFireDate
+        CFRunLoopTimerGetOrder
+        CFRunLoopTimerGetTypeID
+        CFRunLoopTimerInvalidate
+        CFRunLoopTimerIsValid
+        CFRunLoopTimerSetNextFireDate
+
+        ; CFSet.mm
+        kCFTypeSetCallBacks DATA
+        kCFCopyStringSetCallBacks DATA
+        CFSetCreate
+        CFSetCreateCopy
+        CFSetContainsValue
+        CFSetGetCount
+        CFSetGetCountOfValue
+        CFSetGetValue
+        CFSetGetValueIfPresent
+        CFSetGetValues
+        CFSetApplyFunction
+        CFSetGetTypeID
+
+        ; CFSocket.mm
+        CFSocketCreate
+        CFSocketCreateConnectedToSocketSignature
+        CFSocketCreateWithNative
+        CFSocketCreateWithSocketSignature
+        CFSocketCopyAddress
+        CFSocketCopyPeerAddress
+        CFSocketDisableCallBacks
+        CFSocketEnableCallBacks
+        CFSocketGetContext
+        CFSocketGetNative
+        CFSocketGetSocketFlags
+        CFSocketSetAddress
+        CFSocketSetSocketFlags
+        CFSocketConnectToAddress
+        CFSocketCreateRunLoopSource
+        CFSocketGetTypeID
+        CFSocketInvalidate
+        CFSocketIsValid
+        CFSocketSendData
+
+        ; CFStream.mm
+        ; kCFStreamErrorDomainNetDB DATA ; HACKHACK: Maybe CFnetworking?
+        ; kCFStreamErrorDomainNetServices DATA ; HACKHACK: Maybe CFnetworking?
+        ; kCFstreamErrorDomainMach DATA ; HACKHACK: claims to be in CFNetworking
+        ; kCFStreamErrorDomainFTP DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
+        ; kCFStreamErrorDomainHTTP DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
+        ; kCFStreamErrorDomainSOCKS DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
+        ; kCFStreamErrorDomainSystemConfiguration DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
+        ; kCFStreamErrorDomainSSL DATA ; HACKHACK: not present. Maybe supposed to be in CFNetowrking?
+        kCFStreamPropertySSLSettings ; HACKHACK: not present. Maybe supposed to be in CFNetowrking? Added Manually since foundation uses it.
+        kCFStreamPropertyAppendToFile DATA
+        kCFStreamPropertyFileCurrentOffset DATA
+        kCFStreamPropertyDataWritten DATA
+        kCFStreamPropertySocketNativeHandle DATA
+        kCFStreamPropertySocketRemoteHostName DATA
+        kCFStreamPropertySocketRemotePortNumber DATA
+        CFStreamCreatePairWithPeerSocketSignature
+        CFStreamCreatePairWithSocketToHost
+        CFStreamCreatePairWithSocket
+        CFStreamCreateBoundPair
+
+        ; CFString.mm
+        ; CFSTR ; #DEFINE
+        CFStringCreateArrayBySeparatingStrings
+        CFStringCreateByCombiningStrings
+        CFStringCreateCopy
+        CFStringCreateFromExternalRepresentation
+        CFStringCreateWithBytes
+        CFStringCreateWithBytesNoCopy
+        CFStringCreateWithCharacters
+        CFStringCreateWithCharactersNoCopy
+        CFStringCreateWithCString
+        CFStringCreateWithCStringNoCopy
+        CFStringCreateWithFormat
+        CFStringCreateWithFormatAndArguments
+        CFStringCreateWithPascalString
+        CFStringCreateWithPascalStringNoCopy
+        CFStringCreateWithSubstring
+        CFStringCreateArrayWithFindResults
+        CFStringFind
+        CFStringFindCharacterFromSet
+        CFStringFindWithOptions
+        CFStringFindWithOptionsAndLocale
+        CFStringGetLineBounds
+        CFStringCompare
+        CFStringCompareWithOptions
+        CFStringCompareWithOptionsAndLocale
+        CFStringHasPrefix
+        CFStringHasSuffix
+        CFStringCreateExternalRepresentation
+        CFStringGetBytes
+        CFStringGetCharacterAtIndex
+        CFStringGetCharacters
+        CFStringGetCharactersPtr
+        ; CFStringGetCharacterFromInlineBuffer ; inlined
+        CFStringGetCString
+        CFStringGetCStringPtr
+        CFStringGetLength
+        CFStringGetPascalString
+        CFStringGetPascalStringPtr
+        CFStringGetRangeOfComposedCharactersAtIndex
+        ; CFStringInitInlineBuffer inline
+        CFStringGetHyphenationLocationBeforeIndex
+        CFStringIsHyphenationAvailableForLocale
+        CFStringConvertEncodingToIANACharSetName
+        CFStringConvertEncodingToNSStringEncoding
+        CFStringConvertEncodingToWindowsCodepage
+        CFStringConvertIANACharSetNameToEncoding
+        CFStringConvertNSStringEncodingToEncoding
+        CFStringConvertWindowsCodepageToEncoding
+        CFStringGetFastestEncoding
+        CFStringGetListOfAvailableEncodings
+        CFStringGetMaximumSizeForEncoding
+        CFStringGetMostCompatibleMacStringEncoding
+        CFStringGetNameOfEncoding
+        CFStringGetSmallestEncoding
+        CFStringGetSystemEncoding
+        CFStringIsEncodingAvailable
+        CFStringGetDoubleValue
+        CFStringGetIntValue
+        CFShowStr
+        CFStringGetTypeID
+        CFStringCreateWithFileSystemRepresentation
+        CFStringGetFileSystemRepresentation
+        CFStringGetMaximumSizeOfFileSystemRepresentation
+        CFStringGetParagraphBounds
+        ; CFStringGetLongCharacterForSurrogatePair ; inline
+        ; CFStringGetSurrogatePairForLongCharacter ; inline
+        ; CFStringIsSurrogateHighCharacter ; inline
+        ; CFStringIsSurrogateLowCharacter ; inline
+        ; __CFConstantStringClassReference ; WINOBJC: Use above _NSCFString export instead.
+
+        ; CFStringTokenizer.mm
+        ; HACKHACK: Reference Platform doesn't have an impl of this class.
+        ;
+        ; CFStringTokenizerCreate
+        ; CFStringTokenizerSetString
+        ; CFStringTokenizerAdvanceToNextToken
+        ; CFStringTokenizerGoToTokenAtIndex
+        ; CFStringTokenizerCopyCurrentTokenAttribute
+        ; CFStringTokenizerGetCurrentTokenRange
+        ; CFStringTokenizerGetCurrentSubTokens
+        ; CFStringTokenizerCopyBestStringLanguage
+        ; CFStringTokenizerGetTypeID
+
+        ; CFTimeZone.mm
+        kCFTimeZoneSystemTimeZoneDidChangeNotification DATA
+        CFTimeZoneCreateWithName
+        CFTimeZoneCreateWithTimeIntervalFromGMT
+        CFTimeZoneCreate
+        CFTimeZoneCopyAbbreviationDictionary
+        CFTimeZoneCopyAbbreviation
+        CFTimeZoneCopyDefault
+        CFTimeZoneCopySystem
+        CFTimeZoneSetDefault
+        CFTimeZoneCopyKnownNames
+        CFTimeZoneResetSystem
+        CFTimeZoneSetAbbreviationDictionary
+        CFTimeZoneGetName
+        CFTimeZoneCopyLocalizedName
+        CFTimeZoneGetSecondsFromGMT
+        CFTimeZoneGetData
+        CFTimeZoneIsDaylightSavingTime
+        CFTimeZoneGetDaylightSavingTimeOffset
+        CFTimeZoneGetNextDaylightSavingTimeTransition
+        CFTimeZoneGetTypeID
+
+        ; CFTree.mm
+        CFTreeCreate
+        CFTreeAppendChild
+        CFTreeInsertSibling
+        CFTreeRemoveAllChildren
+        CFTreePrependChild
+        CFTreeRemove
+        CFTreeSetContext
+        CFTreeSortChildren
+        CFTreeFindRoot
+        CFTreeGetChildAtIndex
+        CFTreeGetChildCount
+        CFTreeGetChildren
+        CFTreeGetContext
+        CFTreeGetFirstChild
+        CFTreeGetNextSibling
+        CFTreeGetParent
+        CFTreeApplyFunctionToChildren
+        CFTreeGetTypeID
+
+        ; CFType.mm
+        CFGetAllocator
+        CFGetRetainCount
+        CFMakeCollectable
+        CFRelease
+        CFRetain
+        CFEqual
+        CFHash
+        CFCopyDescription
+        CFCopyTypeIDDescription
+        CFGetTypeID
+        CFShow
+
+        ; CFURL.mm
+        kCFURLNameKey DATA
+        kCFURLLocalizedNameKey DATA
+        kCFURLPathKey DATA
+        kCFURLIsRegularFileKey DATA
+        kCFURLIsDirectoryKey DATA
+        kCFURLIsSymbolicLinkKey DATA
+        kCFURLIsVolumeKey DATA
+        kCFURLIsPackageKey DATA
+        kCFURLIsSystemImmutableKey DATA
+        kCFURLIsUserImmutableKey DATA
+        kCFURLIsHiddenKey DATA
+        kCFURLHasHiddenExtensionKey DATA
+        kCFURLCreationDateKey DATA
+        kCFURLContentAccessDateKey DATA
+        kCFURLContentModificationDateKey DATA
+        kCFURLAttributeModificationDateKey DATA
+        kCFURLLinkCountKey DATA
+        kCFURLParentDirectoryURLKey DATA
+        kCFURLVolumeURLKey DATA
+        kCFURLTypeIdentifierKey DATA
+        kCFURLLocalizedTypeDescriptionKey DATA
+        kCFURLLabelNumberKey DATA
+        kCFURLLabelColorKey DATA
+        kCFURLLocalizedLabelKey DATA
+        kCFURLEffectiveIconKey DATA
+        kCFURLCustomIconKey DATA
+        kCFURLFileResourceIdentifierKey DATA
+        kCFURLVolumeIdentifierKey DATA
+        kCFURLPreferredIOBlockSizeKey DATA
+        kCFURLIsReadableKey DATA
+        kCFURLIsWritableKey DATA
+        kCFURLIsExecutableKey DATA
+        kCFURLFileSecurityKey DATA
+        kCFURLIsExcludedFromBackupKey DATA
+        kCFURLFileResourceTypeKey DATA
+        kCFURLFileResourceTypeKey DATA
+        kCFURLFileResourceTypeBlockSpecial DATA
+        kCFURLFileResourceTypeCharacterSpecial DATA
+        kCFURLFileResourceTypeDirectory DATA
+        kCFURLFileResourceTypeNamedPipe DATA
+        kCFURLFileResourceTypeRegular DATA
+        kCFURLFileResourceTypeSocket DATA
+        kCFURLFileResourceTypeSymbolicLink DATA
+        kCFURLFileResourceTypeUnknown DATA
+        kCFURLFileAllocatedSizeKey DATA
+        kCFURLFileSizeKey DATA
+        kCFURLIsAliasFileKey DATA
+        kCFURLIsMountTriggerKey DATA
+        kCFURLTotalFileAllocatedSizeKey DATA
+        kCFURLTotalFileSizeKey DATA
+        kCFURLIsUbiquitousItemKey DATA
+        kCFURLUbiquitousItemHasUnresolvedConflictsKey DATA
+        kCFURLUbiquitousItemIsDownloadedKey DATA
+        kCFURLUbiquitousItemIsDownloadingKey DATA
+        kCFURLUbiquitousItemIsUploadedKey DATA
+        kCFURLUbiquitousItemIsUploadingKey DATA
+        kCFURLUbiquitousItemPercentDownloadedKey DATA
+        kCFURLUbiquitousItemPercentUploadedKey DATA
+        kCFURLVolumeNameKey DATA
+        kCFURLVolumeLocalizedNameKey DATA
+        kCFURLVolumeLocalizedFormatDescriptionKey DATA
+        kCFURLVolumeTotalCapacityKey DATA
+        kCFURLVolumeAvailableCapacityKey DATA
+        kCFURLVolumeResourceCountKey DATA
+        kCFURLVolumeResourceCountKey DATA
+        kCFURLVolumeSupportsSymbolicLinksKey DATA
+        kCFURLVolumeSupportsHardLinksKey DATA
+        kCFURLVolumeSupportsJournalingKey DATA
+        kCFURLVolumeIsJournalingKey DATA
+        kCFURLVolumeSupportsSparseFilesKey DATA
+        kCFURLVolumeSupportsZeroRunsKey DATA
+        kCFURLVolumeSupportsCaseSensitiveNamesKey DATA
+        kCFURLVolumeSupportsCasePreservedNamesKey DATA
+        kCFURLVolumeSupportsRootDirectoryDatesKey DATA
+        kCFURLVolumeSupportsVolumeSizesKey DATA
+        kCFURLVolumeSupportsRenamingKey DATA
+        kCFURLVolumeSupportsAdvisoryFileLockingKey DATA
+        kCFURLVolumeSupportsExtendedSecurityKey DATA
+        kCFURLVolumeIsBrowsableKey DATA
+        kCFURLVolumeMaximumFileSizeKey DATA
+        kCFURLVolumeIsEjectableKey DATA
+        kCFURLVolumeIsRemovableKey DATA
+        kCFURLVolumeIsInternalKey DATA
+        kCFURLVolumeIsAutomountedKey DATA
+        kCFURLVolumeIsLocalKey DATA
+        kCFURLVolumeIsReadOnlyKey DATA
+        kCFURLVolumeCreationDateKey DATA
+        kCFURLVolumeURLForRemountingKey DATA
+        kCFURLVolumeUUIDStringKey DATA
+        kCFURLKeysOfUnsetValuesKey DATA
+        kCFURLUbiquitousItemDownloadingErrorKey DATA
+        kCFURLUbiquitousItemDownloadingStatusKey DATA
+        kCFURLUbiquitousItemUploadingErrorKey DATA
+        kCFURLUbiquitousItemDownloadingStatusCurrent DATA
+        kCFURLUbiquitousItemDownloadingStatusDownloaded DATA
+        kCFURLUbiquitousItemDownloadingStatusNotDownloaded DATA
+        kCFURLVolumeSupportsPersistentIDsKey DATA
+        CFURLCopyAbsoluteURL
+        CFURLCreateAbsoluteURLWithBytes
+        CFURLCreateByResolvingBookmarkData
+        CFURLCreateCopyAppendingPathComponent
+        CFURLCreateCopyAppendingPathExtension
+        CFURLCreateCopyDeletingLastPathComponent
+        CFURLCreateCopyDeletingPathExtension
+        ; CFURLCreateFilePathURL ; OSX / embedded only
+        CFURLCreateFileReferenceURL
+        CFURLCreateFromFileSystemRepresentation
+        CFURLCreateFromFileSystemRepresentationRelativeToBase
+        CFURLCreateFromFSRef
+        CFURLCreateWithBytes
+        CFURLCreateWithFileSystemPath
+        CFURLCreateWithFileSystemPathRelativeToBase
+        CFURLCreateWithString
+        CFURLCanBeDecomposed
+        CFURLCopyFileSystemPath
+        CFURLCopyFragment
+        CFURLCopyHostName
+        CFURLCopyLastPathComponent
+        CFURLCopyNetLocation
+        CFURLCopyParameterString
+        CFURLCopyPassword
+        CFURLCopyPath
+        CFURLCopyPathExtension
+        CFURLCopyQueryString
+        CFURLCopyResourceSpecifier
+        CFURLCopyScheme
+        CFURLCopyStrictPath
+        CFURLCopyUserName
+        CFURLGetPortNumber
+        CFURLHasDirectoryPath
+        CFURLIsFileReferenceURL
+        CFURLCreateData
+        CFURLCreateStringByAddingPercentEscapes
+        CFURLCreateStringByReplacingPercentEscapes
+        CFURLCreateStringByReplacingPercentEscapesUsingEncoding
+        CFURLGetFileSystemRepresentation
+        CFURLGetFSRef
+        CFURLGetString
+        CFURLGetBaseURL
+        CFURLGetBytes
+        CFURLGetByteRangeForComponent
+        CFURLGetTypeID
+        CFURLResourceIsReachable
+        CFURLClearResourcePropertyCache
+        CFURLClearResourcePropertyCacheForKey
+        CFURLCopyResourcePropertiesForKeys
+        CFURLCopyResourcePropertyForKey
+        CFURLCreateResourcePropertiesForKeysFromBookmarkData
+        CFURLCreateResourcePropertyForKeyFromBookmarkData
+        CFURLSetResourcePropertiesForKeys
+        CFURLSetResourcePropertyForKey
+        CFURLSetTemporaryResourcePropertyForKey
+        CFURLCreateBookmarkData
+        CFURLCreateBookmarkDataFromFile
+        CFURLWriteBookmarkDataToFile
+        CFURLStartAccessingSecurityScopedResource
+        CFURLStopAccessingSecurityScopedResource
+
+        ; CFUUID.mm
+        CFUUIDCreate
+        CFUUIDCreateFromString
+        CFUUIDCreateFromUUIDBytes
+        CFUUIDCreateWithBytes
+        CFUUIDCreateString
+        CFUUIDGetConstantUUIDWithBytes
+        CFUUIDGetUUIDBytes
+        CFUUIDGetTypeID
+
+        ; CFWriteStream.mm
+        CFWriteStreamCreateWithAllocatedBuffers
+        CFWriteStreamCreateWithBuffer
+        CFWriteStreamCreateWithFile
+        CFWriteStreamClose
+        CFWriteStreamOpen
+        CFWriteStreamWrite
+        CFWriteStreamScheduleWithRunLoop
+        CFWriteStreamUnscheduleFromRunLoop
+        CFWriteStreamCanAcceptBytes
+        CFWriteStreamCopyProperty
+        CFWriteStreamCopyError
+        CFWriteStreamGetError
+        CFWriteStreamGetStatus
+        CFWriteStreamSetClient
+        CFWriteStreamSetProperty
+        CFWriteStreamGetTypeID
+
+        ; Core Foundation URL Access Utilities.mm
+        kCFURLFileExists DATA
+        kCFURLFileDirectoryContents DATA
+        kCFURLFileLength DATA
+        kCFURLFileLastModificationTime DATA
+        kCFURLFilePOSIXMode DATA
+        kCFURLFileOwnerID DATA
+        kCFURLHTTPStatusCode DATA
+        kCFURLHTTPStatusLine DATA
+        CFURLCreateDataAndPropertiesFromResource
+        CFURLCreatePropertyFromResource
+        CFURLDestroyResource
+        CFURLWriteDataAndPropertiesToResource
+
+        ; Preferences Utilities.mm
+        kCFPreferencesAnyApplication DATA
+        kCFPreferencesAnyHost DATA
+        kCFPreferencesAnyUser DATA
+        kCFPreferencesCurrentApplication DATA
+        kCFPreferencesCurrentHost DATA
+        kCFPreferencesCurrentUser DATA
+        CFPreferencesCopyAppValue
+        CFPreferencesCopyKeyList
+        CFPreferencesCopyMultiple
+        CFPreferencesCopyValue
+        CFPreferencesGetAppBooleanValue
+        CFPreferencesGetAppIntegerValue
+        CFPreferencesSetAppValue
+        CFPreferencesSetMultiple
+        CFPreferencesSetValue
+        CFPreferencesAppSynchronize
+        CFPreferencesSynchronize
+        CFPreferencesAddSuitePreferencesToApp
+        CFPreferencesRemoveSuitePreferencesFromApp
+        ; CFPreferencesAppValueIsForced ; HACKHACK: doesn't exist?
+        CFPreferencesCopyApplicationList
+
+        ; Socket Name Server Utilities.mm
+        kCFSocketCommandKey DATA
+        kCFSocketNameKey DATA
+        kCFSocketValueKey DATA
+        kCFSocketResultKey DATA
+        kCFSocketErrorKey DATA
+        kCFSocketRegisterCommand DATA
+        kCFSocketRetrieveCommand DATA
+        CFSocketCopyRegisteredSocketSignature
+        CFSocketCopyRegisteredValue
+        CFSocketGetDefaultNameRegistryPortNumber
+        CFSocketRegisterSocketSignature
+        CFSocketRegisterValue
+        CFSocketSetDefaultNameRegistryPortNumber
+        CFSocketUnregister
+
+        ; Time Utilities.mm
+        kCFAbsoluteTimeIntervalSince1970 DATA
+        kCFAbsoluteTimeIntervalSince1904 DATA
+        CFAbsoluteTimeAddGregorianUnits
+        CFAbsoluteTimeGetCurrent
+        CFAbsoluteTimeGetDayOfWeek
+        CFAbsoluteTimeGetDayOfYear
+        CFAbsoluteTimeGetDifferenceAsGregorianUnits
+        CFAbsoluteTimeGetGregorianDate
+        CFAbsoluteTimeGetWeekOfYear
+        CFGregorianDateGetAbsoluteTime
+        CFGregorianDateIsValid
+

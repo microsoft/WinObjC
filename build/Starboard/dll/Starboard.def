@@ -53,6 +53,7 @@ LIBRARY Starboard
         pthread_attr_destroy
         pthread_attr_init
         pthread_attr_setstacksize
+        pthread_attr_setdetachstate
         pthread_cancel
         pthread_cond_broadcast
         pthread_cond_destroy
@@ -127,15 +128,9 @@ LIBRARY Starboard
         OSSwapLittleToHostInt32
         arc4random
         arc4random_uniform
-        mach_absolute_time
         mach_timebase_info
         sysctlbyname
 
-        EbrLockInit
-        EbrLockDestroy
-        EbrLockEnter
-        EbrLockTryEnter
-        EbrLockLeave
         EbrIncrement
         EbrDecrement
         EbrCompareExchange

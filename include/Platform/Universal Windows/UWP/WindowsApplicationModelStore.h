@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSLicenseInformation, WSListingInformation, WSPurchaseResults, WSProductPurchaseDisplayProperties, WSUnfulfilledConsumable,
     WSProductLicense, WSProductListing, WSCurrentApp, WSCurrentAppSimulator;
@@ -58,7 +58,6 @@ enum _WSFulfillmentResult {
 typedef unsigned WSFulfillmentResult;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorage.h"
 // Windows.ApplicationModel.Store.LicenseChangedEventHandler
 #ifndef __WSLicenseChangedEventHandler__DEFINED

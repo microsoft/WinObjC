@@ -25,9 +25,6 @@
     <None Include="CFNetwork.def" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\lib\CFNetworkLib.vcxproj">
       <Project>{45C3CD35-65B9-43A7-8060-30B8EE1E4F4F}</Project>
     </ProjectReference>

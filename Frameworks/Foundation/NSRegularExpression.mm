@@ -13,35 +13,68 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2016 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See http://swift.org/LICENSE.txt for license information
+// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
 
 #include "Starboard.h"
-#include "Foundation/NSRegularExpression.h"
-#include <unicode/regex.h>
-#include <memory>
-#include <stdlib.h>
+#include <Foundation/NSRegularExpression.h>
+#include "CFRegularExpression.h"
+#include <functional>
 #include <vector>
 
 #import "LoggingNative.h"
 
-@interface NSRegularExpression () {
-    std::unique_ptr<RegexPattern> _icuRegex;
+typedef void (^NSRegularExpressionMatchBlock)(NSTextCheckingResult*, NSMatchingFlags, BOOL*);
+
+class NSRegularExpressionBlockAdapter {
+public:
+    NSRegularExpressionBlockAdapter(NSRegularExpression* regEx, NSRegularExpressionMatchBlock block) {
+        _block = block;
+        _regEx = regEx;
+    }
+
+    void MatchCallback(CFRange* ranges, CFIndex count, _CFRegularExpressionMatchingOptions options, Boolean* stop) {
+        BOOL localStop = NO;
+        if (count > 0 && ranges != nil) {
+            std::vector<NSRange> rangeVector(count);
+            for (CFIndex i = 0; i < count; i++) {
+                rangeVector[i] = NSMakeRange(ranges[i].location, ranges[i].length);
+            }
+
+            _block([NSTextCheckingResult regularExpressionCheckingResultWithRanges:rangeVector.data() count:count regularExpression:_regEx],
+                   static_cast<NSMatchingFlags>(options),
+                   &localStop);
+        } else {
+            _block(nil, static_cast<NSMatchingFlags>(options), &localStop);
+        }
+
+        if (stop) {
+            *stop = (localStop == YES) ? true : false;
+        }
+    }
+
+private:
+    StrongId<NSRegularExpression> _regEx;
+    StrongId<NSRegularExpressionMatchBlock> _block;
+};
+
+static void _matchCallBack(void* context, CFRange* ranges, CFIndex count, _CFRegularExpressionMatchingOptions options, Boolean* stop) {
+    ((NSRegularExpressionBlockAdapter*)(context))->MatchCallback(ranges, count, options, stop);
 }
-@property (readwrite, copy) NSString* pattern;
-@property (readwrite) NSRegularExpressionOptions options;
-@property (readwrite) NSUInteger numberOfCaptureGroups;
+
+@interface NSRegularExpression () {
+    woc::unique_cf<_CFRegularExpressionRef> _cfRegEx;
+}
+
 @end
 
-static StrongId<NSCharacterSet> s_patternMetaCharacters;
-static StrongId<NSCharacterSet> s_templateMetaCharacters;
-
 @implementation NSRegularExpression
-/**
- @Status Interoperable
-*/
-+ (void)initialize {
-    s_patternMetaCharacters = [NSCharacterSet characterSetWithCharactersInString:@"$^*()+/?[{}.\\"];
-    s_templateMetaCharacters = [NSCharacterSet characterSetWithCharactersInString:@"$\\"];
-}
 
 /**
 @Status Interoperable
@@ -50,103 +83,28 @@ static StrongId<NSCharacterSet> s_templateMetaCharacters;
     return [[[self alloc] initWithPattern:pattern options:options error:error] autorelease];
 }
 
-// Helper function for evaluating option and flag membership
-static bool _evaluateOptionOrFlag(NSUInteger expectedOption, NSUInteger userOptions) {
-    return (expectedOption & userOptions) != 0;
-}
-
-static const wchar_t* TAG = L"NSRegularExpression";
-// Helper function for logging an ICU error code.
-static bool _U_LogIfError(UErrorCode status) {
-    if (U_FAILURE(status)) {
-        TraceError(TAG, L"ICU Status Error. Error Code : %hs.", u_errorName(status));
-        return true;
-    }
-    return false;
-}
-
 /**
  @Status Interoperable
 */
 - (instancetype)initWithPattern:(NSString*)pattern options:(NSRegularExpressionOptions)options error:(NSError**)error {
+    CFErrorRef localError = nullptr;
     if (self = [super init]) {
-        _pattern = [pattern copy];
+        _cfRegEx.reset(_CFRegularExpressionCreate(nullptr,
+                                                  static_cast<CFStringRef>(pattern),
+                                                  static_cast<_CFRegularExpressionOptions>(options),
+                                                  &localError));
+    }
 
-        int icuRegexOptions = 0;
-        if (_evaluateOptionOrFlag(NSRegularExpressionCaseInsensitive, options)) {
-            icuRegexOptions |= UREGEX_CASE_INSENSITIVE;
-        }
-        if (_evaluateOptionOrFlag(NSRegularExpressionAllowCommentsAndWhitespace, options)) {
-            icuRegexOptions |= UREGEX_COMMENTS;
-        }
-        if (_evaluateOptionOrFlag(NSRegularExpressionIgnoreMetacharacters, options)) {
-            // TODO - VSO 6264731: UREGEX_LITERAL causes faliures in ICU. Workaround is to use escaped version of pattern.
-
-            // icuRegexOptions |= UREGEX_LITERAL;
-            _pattern = [[NSRegularExpression escapedPatternForString:pattern] retain];
-        }
-        if (_evaluateOptionOrFlag(NSRegularExpressionDotMatchesLineSeparators, options)) {
-            icuRegexOptions |= UREGEX_DOTALL;
-        }
-        if (_evaluateOptionOrFlag(NSRegularExpressionAnchorsMatchLines, options)) {
-            icuRegexOptions |= UREGEX_MULTILINE;
-        }
-        if (_evaluateOptionOrFlag(NSRegularExpressionUseUnixLineSeparators, options)) {
-            icuRegexOptions |= UREGEX_UNIX_LINES;
-        }
-        if (_evaluateOptionOrFlag(NSRegularExpressionUseUnicodeWordBoundaries, options)) {
-            icuRegexOptions |= UREGEX_UWORD;
+    if (localError != nullptr) {
+        [self release];
+        if (error) {
+            *error = static_cast<NSError*>(localError);
         }
 
-        // Create backing ICU regex handle:
-        UStringHolder unicodePattern(_pattern);
-        UErrorCode status = U_ZERO_ERROR;
-        UParseError parseStatus;
-
-        _icuRegex.reset(RegexPattern::compile(unicodePattern.string(), icuRegexOptions, parseStatus, status));
-
-        if (_U_LogIfError(status)) {
-            if (error) {
-                *error = (NSError*)[NSError errorWithDomain:NSCocoaErrorDomain code:2048 userInfo:nil];
-            }
-            [self release];
-            return nil;
-        } else {
-            if (error) {
-                *error = nil;
-            }
-        }
-
-        RegexMatcher* matcher = _icuRegex->matcher(status);
-        _numberOfCaptureGroups = matcher->groupCount();
-        delete matcher;
+        return nil;
     }
 
     return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    [_pattern release];
-
-    [super dealloc];
-}
-
-// Helper function for setting ICU Regex options.
-static void _setMatcherOptions(RegexMatcher& icuRegex, int options) {
-    // Set transparent bounds
-    if (_evaluateOptionOrFlag(NSMatchingWithTransparentBounds, options)) {
-        icuRegex.useTransparentBounds(true);
-    }
-
-    // Without anchoring bounds
-    if (!(_evaluateOptionOrFlag(NSMatchingWithoutAnchoringBounds, options))) {
-        icuRegex.useAnchoringBounds(true);
-    } else {
-        icuRegex.useAnchoringBounds(false);
-    }
 }
 
 /**
@@ -265,76 +223,19 @@ static void _setMatcherOptions(RegexMatcher& icuRegex, int options) {
     return [mutableStr autorelease];
 }
 
-static NSString* _escapeStringForCharacterSet(NSString* string, NSCharacterSet* set) {
-    NSData* dataOfString = [string dataUsingEncoding:NSUTF8StringEncoding];
-    const char* buffer = (const char*)dataOfString.bytes;
-    NSUInteger length = [dataOfString length];
-
-    NSMutableString* returnVal = [NSMutableString stringWithCapacity:length * 2];
-
-    int lastTouchedByteIndex = -1;
-    int i = 0;
-    UChar32 currentCharacter = 0;
-
-    while (i < length) {
-        // Use U8_NEXT to step over code points
-        U8_NEXT(buffer, i, length, currentCharacter);
-        if ([set characterIsMember:currentCharacter]) {
-            if (lastTouchedByteIndex < i - 1) {
-                // Get substring that we can append now up to this point.
-                _appendBufferToNSString(buffer, (lastTouchedByteIndex + 1), (i - lastTouchedByteIndex - 2), returnVal);
-            }
-            lastTouchedByteIndex = i - 1;
-
-            // Append escaped metacharacter
-            [returnVal appendFormat:@"\\%c", currentCharacter];
-        }
-    }
-
-    // If nothing was escaped return original string
-    if (lastTouchedByteIndex == -1) {
-        return string;
-    } else if (lastTouchedByteIndex < length) {
-        // Get the rest of the characters that weren't escaped.
-        // Length is the length everything between i and the last encoded character exclusively.
-        _appendBufferToNSString(buffer, (lastTouchedByteIndex + 1), (length - (lastTouchedByteIndex + 1)), returnVal);
-    }
-
-    return returnVal;
-}
-
 /**
  @Status Interoperable
 */
 + (NSString*)escapedTemplateForString:(NSString*)string {
-    return _escapeStringForCharacterSet(string, s_templateMetaCharacters);
+    return [static_cast<NSString*>(_CFRegularExpressionCreateEscapedTemplate(static_cast<CFStringRef>(string))) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (NSString*)escapedPatternForString:(NSString*)string {
-    return _escapeStringForCharacterSet(string, s_patternMetaCharacters);
+    return [static_cast<NSString*>(_CFRegularExpressionCreateEscapedPattern(static_cast<CFStringRef>(string))) autorelease];
 }
-
-struct CallBackContext {
-    BOOL* stop;
-    void (^block)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop);
-
-    // This callback services NSMatchingProgress where the second argument does not matter.
-    // Two callbacks are serviced with slightly different args, only the first of which we care about.
-    template <typename... Args>
-    static UBool matchCallback(const void* context, Args... args) {
-        // cast context to struct type
-        auto callbackStruct = reinterpret_cast<const CallBackContext*>(context);
-
-        // call block with struct's stop
-        callbackStruct->block(nil, NSMatchingProgress, callbackStruct->stop);
-
-        // return stop...?
-        return !(*callbackStruct->stop);
-    }
-};
 
 /**
  @Status Interoperable
@@ -343,106 +244,14 @@ struct CallBackContext {
                          options:(NSMatchingOptions)options
                            range:(NSRange)range
                       usingBlock:(void (^)(NSTextCheckingResult* result, NSMatchingFlags flags, BOOL* stop))block {
-    UErrorCode status = U_ZERO_ERROR;
+    NSRegularExpressionBlockAdapter adapter(self, block);
 
-    UStringHolder matchStr(string);
-
-    RegexMatcher* matcher = _icuRegex->matcher(matchStr.string(), status);
-    if (_U_LogIfError(status)) {
-        return;
-    }
-
-    BOOL stop = NO;
-    CallBackContext context = { &stop, block };
-
-    // Set callbacks for reporting progress
-    if (options & NSMatchingReportProgress) {
-        matcher->setMatchCallback(&CallBackContext::matchCallback<int32_t>, &context, status);
-        if (_U_LogIfError(status)) {
-            return;
-        }
-
-        matcher->setFindProgressCallback(&CallBackContext::matchCallback<int64_t>, &context, status);
-        if (_U_LogIfError(status)) {
-            return;
-        }
-    }
-
-    NSMatchingFlags flags = 0;
-
-    matcher->region(range.location, range.location + range.length, status);
-
-    if (_U_LogIfError(status)) {
-        return;
-    }
-
-    _setMatcherOptions(*matcher, options);
-
-    bool anchorMatch = _evaluateOptionOrFlag(NSMatchingAnchored, options);
-
-    // Find matches, if match do block
-    while (matcher->find() && !stop) {
-        flags = 0;
-
-        // TODO: ICU 48 does not support find(status) implemented in ICU 55. This is required for accurate NSMatchingInternalError flagging
-        if (_U_LogIfError(status)) {
-            flags |= NSMatchingInternalError;
-            block(nil, flags, &stop);
-        } else {
-            // Create NSTextCheckingResult
-            int startpos = matcher->start(status);
-            if (_U_LogIfError(status)) {
-                block(nil, NSMatchingInternalError, &stop);
-                break;
-            }
-
-            int endpos = matcher->end(status);
-            if (_U_LogIfError(status)) {
-                block(nil, NSMatchingInternalError, &stop);
-                break;
-            }
-
-            NSRange foundRange = NSMakeRange(startpos, endpos - startpos);
-            if (!anchorMatch || (anchorMatch && startpos == range.location)) {
-                NSTextCheckingResult* result = nil;
-
-                std::vector<NSRange> ranges(matcher->groupCount() + 1);
-                for (int i = 0; i <= matcher->groupCount(); i++) {
-                    int start = matcher->start(i, status);
-                    if (_U_LogIfError(status)) {
-                        return;
-                    }
-                    int length = matcher->end(i, status) - start;
-                    if (_U_LogIfError(status)) {
-                        return;
-                    }
-
-                    ranges[i].location = start;
-                    ranges[i].length = length;
-                }
-
-                result = [NSTextCheckingResult regularExpressionCheckingResultWithRanges:ranges.data()
-                                                                                   count:ranges.size()
-                                                                       regularExpression:self];
-
-                if (matcher->requireEnd()) {
-                    flags |= NSMatchingRequiredEnd;
-                }
-
-                if (matcher->hitEnd()) {
-                    flags |= NSMatchingHitEnd;
-                }
-                block(result, flags, &stop);
-            }
-        }
-
-        status = U_ZERO_ERROR;
-    }
-
-    if (_evaluateOptionOrFlag(NSMatchingCompleted, options)) {
-        flags |= NSMatchingCompleted;
-        block(nil, flags, &stop);
-    }
+    _CFRegularExpressionEnumerateMatchesInString(_cfRegEx.get(),
+                                                 static_cast<CFStringRef>(string),
+                                                 static_cast<_CFRegularExpressionMatchingOptions>(options),
+                                                 CFRangeMake(range.location, range.length),
+                                                 (void*)(&adapter),
+                                                 _matchCallBack);
 }
 
 // Internal method for string building in replace calls.
@@ -460,62 +269,107 @@ static void _appendBufferToNSString(const char* string, int start, int length, N
                                inString:(NSString*)string
                                  offset:(NSInteger)offset
                                template:(NSString*)templateStr {
-    NSData* dataOfString = [templateStr dataUsingEncoding:NSUTF8StringEncoding];
-    const char* bytesOfString = (const char*)dataOfString.bytes;
+    static StrongId<NSCharacterSet> s_characterSet = [NSCharacterSet characterSetWithCharactersInString:@"$\\"];
+    NSRange range = [templateStr rangeOfCharacterFromSet:s_characterSet];
 
-    int lastByteIndex = -1;
-    int lengthOfBytes = [dataOfString length];
-    NSMutableString* returnString = [NSMutableString stringWithCapacity:lengthOfBytes];
-    UChar32 currentCharacter = 0;
-    int i = 0;
+    if (range.length > 0) {
+        // Okay this means that the template string for replacement included either escaped characters
+        // that need resolving or back references to a capture group i.e. $0.
+        // First thing to do is determine the maximum number of digits (i.e. 3 for 456) that
+        // need to be scanned through on capture group replacements. The number of ranges is the
+        // maximal number of capture groups.
 
-    while (i < lengthOfBytes) {
-        // Use U8_NEXT to step over code points
-        U8_NEXT(bytesOfString, i, lengthOfBytes, currentCharacter);
-        if (currentCharacter == '$') {
-            const char nextCharacter = bytesOfString[i];
-            if (nextCharacter >= '0' && nextCharacter <= '9') {
-                // Optimized append step to avoid single character string building.
-                if (lastByteIndex != (i - 1)) {
-                    // Append characters from last touched character up to but excluding this capture group
-                    _appendBufferToNSString(bytesOfString, (lastByteIndex + 1), ((i - 1) - (lastByteIndex + 1)), returnString);
-                }
-                char* final = nullptr;
-                unsigned long matchIdx = strtoul(&bytesOfString[i], &final, 10);
+        NSUInteger numberOfDigits = 1;
+        NSUInteger orderOfMagnitude = 10;
+        NSUInteger numberOfRanges = [result numberOfRanges];
 
-                // We want i to represent that we stepped over these decimal characters.
-                i = final - bytesOfString - 1;
-                if (matchIdx <= _numberOfCaptureGroups) {
-                    NSRange range = [result rangeAtIndex:matchIdx];
-                    range.location += offset;
-                    [returnString appendString:[string substringWithRange:range]];
-                }
+        StrongId<NSMutableString> toReturn;
+        toReturn.attach([templateStr mutableCopy]);
 
-                lastByteIndex = i;
-            }
-        } else if (currentCharacter == '\\') {
-            // Append characters up to and excluding the '\'
-            if (lastByteIndex != (i - 1)) {
-                // Get a substring based on the bytes offset by the last touched index to the current index
-                // Length is the length everything between i and the last encoded character exclusively.
-                _appendBufferToNSString(bytesOfString, (lastByteIndex + 1), ((i - 1) - (lastByteIndex + 1)), returnString);
-            }
+        NSUInteger length = [toReturn length];
 
-            // Ignore the escaped '\'
-            lastByteIndex = i - 1;
-            i++;
+        // Hard cap at 20 digits as that is number of digits in 2^64-1
+        while (orderOfMagnitude < numberOfRanges && numberOfDigits < 20) {
+            numberOfDigits += 1;
+            orderOfMagnitude *= 10;
         }
+
+        while (range.length > 0) {
+            unichar c = [toReturn characterAtIndex:range.location];
+            if (c == L'\\') {
+                // To handle an escaped character, remove the '\' and skip past
+                // the next character (range.length = 1 will cause next find to start from after the
+                // escaped character).
+
+                [toReturn deleteCharactersInRange:range];
+                length -= range.length;
+                range.length = 1;
+            } else if (c == L'$') {
+                // To handle a capture group, first figure out which group it belongs to.
+                // To do this, use a cute atoi type routine to chomp along the digits.
+                // Done manually so that the range (in the string) of the digits is known for replacement.
+
+                NSUInteger groupNumber = NSNotFound;
+                NSUInteger index = NSMaxRange(range);
+                while (index < length && index < NSMaxRange(range) + numberOfDigits) {
+                    c = [toReturn characterAtIndex:index];
+                    if (c < L'0' || c > L'9') {
+                        break;
+                    }
+
+                    if (groupNumber == NSNotFound) {
+                        groupNumber = 0;
+                    }
+
+                    groupNumber *= 10;
+                    groupNumber += (static_cast<NSUInteger>(c) - static_cast<NSUInteger>('0'));
+                    index += 1;
+                }
+
+                if (groupNumber != NSNotFound) {
+                    // Valid capture group number. This means that $14 or what have you needs replaced
+                    // with the 14th capture element from the original string. This is kept track of via
+                    // a range in the original string so simply substring it and use that as the replacement
+                    // for the range of "$14" i.e. the rangeToReplace.
+
+                    NSRange rangeToReplace = NSMakeRange(range.location, index - range.location);
+                    NSRange substringRange = NSMakeRange(NSNotFound, 0);
+                    NSString* substring = nil;
+
+                    if (groupNumber < numberOfRanges) {
+                        substringRange = [result rangeAtIndex:groupNumber];
+                    }
+
+                    if (substringRange.location != NSNotFound) {
+                        substringRange.location += offset;
+                    }
+
+                    if (substringRange.location != NSNotFound && substringRange.length > 0) {
+                        substring = [string substringWithRange:substringRange];
+                    }
+
+                    [toReturn replaceCharactersInRange:rangeToReplace withString:substring];
+
+                    length += (substringRange.length - rangeToReplace.length);
+                    range.length = substringRange.length;
+                }
+            }
+
+            // this replacement ends outside the string so all done.
+            if (NSMaxRange(range) > length) {
+                break;
+            }
+
+            // find next $5 or \* replacement starting from end of last one.
+            range = [toReturn rangeOfCharacterFromSet:s_characterSet
+                                              options:0
+                                                range:NSMakeRange(NSMaxRange(range), length - NSMaxRange(range))];
+        }
+        return toReturn.detach();
     }
 
-    if (lastByteIndex == -1) {
-        return [[templateStr copy] autorelease];
-    } else if (lastByteIndex < lengthOfBytes) {
-        // Get the rest of the characters that weren't already appended
-        // Length is the length everything between i and the last modified character.
-        _appendBufferToNSString(bytesOfString, (lastByteIndex + 1), (lengthOfBytes - (lastByteIndex + 1)), returnString);
-    }
-
-    return returnString;
+    // No replacements or complicatedness. Just return the template string as is. Easy mode.
+    return templateStr;
 }
 
 /**
@@ -529,8 +383,8 @@ static void _appendBufferToNSString(const char* string, int start, int length, N
  @Status Interoperable
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    NSString* pattern = [[coder decodeObjectForKey:@"pattern"] retain];
-    NSUInteger options = [coder decodeIntegerForKey:@"options"];
+    NSString* pattern = [coder decodeObjectForKey:@"NS.pattern"];
+    NSUInteger options = [coder decodeIntegerForKey:@"NS.options"];
 
     return [self initWithPattern:pattern options:options error:nullptr];
 }
@@ -539,8 +393,8 @@ static void _appendBufferToNSString(const char* string, int start, int length, N
  @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    [coder encodeObject:_pattern forKey:@"pattern"];
-    [coder encodeInteger:_options forKey:@"options"];
+    [coder encodeObject:[self pattern] forKey:@"NS.pattern"];
+    [coder encodeInteger:[self options] forKey:@"NS.options"];
 }
 
 /**
@@ -548,6 +402,27 @@ static void _appendBufferToNSString(const char* string, int start, int length, N
 */
 + (BOOL)supportsSecureCoding {
     return YES;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)pattern {
+    return static_cast<NSString*>(_CFRegularExpressionGetPattern(_cfRegEx.get()));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSRegularExpressionOptions)options {
+    return static_cast<NSRegularExpressionOptions>(_CFRegularExpressionGetOptions(_cfRegEx.get()));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)numberOfCaptureGroups {
+    return static_cast<NSUInteger>(_CFRegularExpressionGetNumberOfCaptureGroups(_cfRegEx.get()));
 }
 
 @end

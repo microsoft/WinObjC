@@ -20,6 +20,7 @@
 #import <UIKit/UIKit.h>
 
 #import "UIApplicationInternal.h"
+#import <NSBundleInternal.h>
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -67,7 +68,7 @@ using namespace Microsoft::WRL;
         _mediaElement = [WXCMediaElement make];
         _mediaElement.autoPlay = NO;
         _mediaElement.volume = 1.0f;
-        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{0,0,0,0}];
+        _hiddenView = [[_UIHiddenMediaView alloc] initWithFrame:{ 0, 0, 0, 0 }];
         [_hiddenView setNativeElement:_mediaElement];
 
         _lastState = _mediaElement.currentState;
@@ -75,15 +76,15 @@ using namespace Microsoft::WRL;
         // Set up events
         __weak AVAudioPlayer* weakSelf = self;
 
-        [_mediaElement addCurrentStateChangedEvent:^(RTObject* sender, WXRoutedEventArgs* e){
-                [weakSelf _handleMediaElementStateChange:sender args:e];
-            }];
-        [_mediaElement addMediaEndedEvent:^(RTObject* sender, WXRoutedEventArgs* e){
-                [weakSelf _handleMediaElementMediaEnded:sender args:e];
-            }];
-        [_mediaElement addMediaFailedEvent:^(RTObject* sender, WXRoutedEventArgs* e){
-                [weakSelf _handleMediaElementMediaFailed:sender args:e];
-            }];
+        [_mediaElement addCurrentStateChangedEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+            [weakSelf _handleMediaElementStateChange:sender args:e];
+        }];
+        [_mediaElement addMediaEndedEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+            [weakSelf _handleMediaElementMediaEnded:sender args:e];
+        }];
+        [_mediaElement addMediaFailedEvent:^(RTObject* sender, WXRoutedEventArgs* e) {
+            [weakSelf _handleMediaElementMediaFailed:sender args:e];
+        }];
 
         // We utilize the internal popup UIWindow, just to make sure we're always in the Xaml scene graph.
         [[[UIApplication sharedApplication] _popupWindow] addSubview:_hiddenView];
@@ -115,32 +116,17 @@ using namespace Microsoft::WRL;
 - (instancetype)initWithContentsOfURL:(NSURL*)url fileTypeHint:(NSString*)utiString error:(NSError**)outError {
     if (self = [self init]) {
         if (!url) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                           reason:@"Argument 'url' cannot be nil"
-                                         userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Argument 'url' cannot be nil" userInfo:nil];
         }
 
-        _url = url;
-
-        NSString* scheme = [_url scheme];
-        WFUri* mediaUri;
-
-        if (scheme == nil || [scheme isEqualToString:@"file"]) {
-            NSURL* appxurl = [[NSURL alloc] initFileURLWithPath:_url.path];
-
-            TraceInfo(TAG, L"Loading media at file URL: %hs\n", [appxurl.absoluteString UTF8String]);
-
-            // TODO: Implement internal NSURL function to return a valid ms-appx from the bundle path
-            mediaUri = [WFUri makeUri:[NSString stringWithFormat:@"ms-appx://%@", appxurl.path]];
-        } else {
-            mediaUri = [WFUri makeUri:_url.absoluteString];
-        }
+        _url = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:url];
+        WFUri* mediaUri = [WFUri makeUri:_url.absoluteString];
 
         TraceInfo(TAG, L"Loading media at URI: %hs\n", [mediaUri.absoluteUri UTF8String]);
         _mediaElement.source = mediaUri;
 
         if (outError) {
-            // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so 
+            // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so
             // that's not possible.
             *outError = nil;
         }
@@ -153,12 +139,10 @@ using namespace Microsoft::WRL;
  @Status Caveat
  @Notes Never returns an error, fileTypeHint ignored
 */
-- (instancetype)initWithData:(NSData *)data fileTypeHint:(NSString*)utiString error:(NSError**)outError {
+- (instancetype)initWithData:(NSData*)data fileTypeHint:(NSString*)utiString error:(NSError**)outError {
     if (self = [self init]) {
         if (!data) {
-            @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                           reason:@"Argument 'data' cannot be nil"
-                                         userInfo:nil];
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Argument 'data' cannot be nil" userInfo:nil];
         }
 
         _data = data;
@@ -170,7 +154,7 @@ using namespace Microsoft::WRL;
         HRESULT result;
 
         result = BufferFromRawData(&rawBuffer, (unsigned char*)[_data bytes], [_data length]);
-        
+
         if (FAILED(result)) {
             @throw [NSException exceptionWithName:NSGenericException
                                            reason:@"Internal error: Failed to create IBuffer from NSData"
@@ -180,22 +164,27 @@ using namespace Microsoft::WRL;
         buffer.Attach(rawBuffer);
 
         // WARNING: If someone deletes this AVAudioPlayer before the StoreAsync is completed, _data may be released
-        // causing IBuffer to segfault. 
+        // causing IBuffer to segfault.
 
-        // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll 
+        // TODO: subclassed IAsyncOperation<T>s don't get generated correctly in ObjCUWP yet, when that happens it'll
         // open up StoreAsync.
-        IDataWriter* writer = (IDataWriter*)[rw comObj].Get();
+        ComPtr<IDataWriter> writer;
         ComPtr<IAsyncOperation<UInt32>> comp;
+
+        [rw comObj].As(&writer);
+
+        FAIL_FAST_HR_IF_NULL_MSG(E_UNEXPECTED, writer.Get(), "WSSDataWriter does not confrom to IDataWriter");
+
         writer->WriteBuffer(buffer.Get());
         writer->StoreAsync(&comp);
-        
+
         [_mediaElement setSource:stream mimeType:@""];
-        
+
         // TODO: Is this needed?
         [rw detachStream];
 
         if (outError) {
-            // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so 
+            // TODO: Some modicum of failure returns. Right now everything is async and bound to the Xaml thread, so
             // that's not possible.
             *outError = nil;
         }
@@ -206,7 +195,7 @@ using namespace Microsoft::WRL;
 
 - (void)_handleMediaElementStateChange:(RTObject*)sender args:(WXRoutedEventArgs*)e {
     if (_mediaElement.currentState != _lastState) {
-        switch (_mediaElement.currentState) {                
+        switch (_mediaElement.currentState) {
             case WUXMMediaElementStateOpening:
             case WUXMMediaElementStateBuffering:
                 break;
@@ -225,15 +214,15 @@ using namespace Microsoft::WRL;
                         [self.delegate audioPlayerDidFinishPlaying:self successfully:FALSE];
                     }
                 }
-                
+
                 _startTime = nil;
                 _playing = FALSE;
                 break;
 
             case WUXMMediaElementStateStopped:
             case WUXMMediaElementStatePaused:
-                if ((_lastState == WUXMMediaElementStatePlaying)
-                    && [self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
+                if ((_lastState == WUXMMediaElementStatePlaying) &&
+                    [self.delegate respondsToSelector:@selector(audioPlayerDidFinishPlaying:successfully:)]) {
                     [self.delegate audioPlayerDidFinishPlaying:self successfully:TRUE];
                 }
 
@@ -261,9 +250,9 @@ using namespace Microsoft::WRL;
 - (BOOL)play {
     _playing = TRUE;
 
-    // This is to catch the scenario where we play before the media is loaded. 
+    // This is to catch the scenario where we play before the media is loaded.
     // It may be possibile the sound will play erroneously if someone plays, and a short time later pauses and catches
-    // MediaElement in a (Loaded & !Playing) state 
+    // MediaElement in a (Loaded & !Playing) state
     _mediaElement.autoPlay = YES;
 
     [_mediaElement play];
@@ -395,7 +384,7 @@ using namespace Microsoft::WRL;
 */
 - (NSTimeInterval)duration {
     NSTimeInterval interval = (NSTimeInterval)((double)_mediaElement.naturalDuration.timeSpan.duration / c_durationCoef);
-    
+
     // This way sliders will still respond and keep the app operable.
     if (interval == 0) {
         return 1.0;

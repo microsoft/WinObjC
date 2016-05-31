@@ -30,7 +30,7 @@
 }
 @end
 
-TEST(Foundation, Runtime_IVarOffsets) {
+TEST(Runtime, Runtime_IVarOffsets) {
     // This will AV if the runtime/compiler don't handle ivar offsets properly
     [[IVarTestDerived alloc] init];
 }

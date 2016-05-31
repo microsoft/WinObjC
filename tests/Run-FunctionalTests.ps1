@@ -111,7 +111,7 @@ function DeployTests
             $TAEFPackageName = "Microsoft.Windows.Test.Taef"
 
             Write-Host -ForegroundColor Cyan "Installing $TAEFPackageName package - this may take about a minute"
-            if ($TAEFDirectory -eq [string]$null)
+            if ($PackageRootPath -eq [string]$null)
             {
                 deployd -Packages $TAEFPackageName -OnDevice
             }
@@ -231,15 +231,15 @@ if ($WTLOutputDirectory -ne [string]$null)
 {
     if ($TargetingDevice)
     {
+        $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
         $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
+        $argList += " /logFile:$outputRemoteName /enableWttLogging"
     }
     else
     {
         $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
-        $outputRemoteName = $outputLocalName
+        $argList += " /logFile:$outputLocalName /enableWttLogging"
     }
-
-    $argList += " /logFile:$outputRemoteName /enableWttLogging"
 }
 
 

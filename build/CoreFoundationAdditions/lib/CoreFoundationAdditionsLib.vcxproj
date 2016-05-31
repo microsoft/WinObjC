@@ -19,26 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFArray.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFAttributedString.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFAttributedStringInternal.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFBinaryHeap.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFBridgeBase.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFBundle.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFConstants.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFData.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFDictionary.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFNumber.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFRunLoop.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFStream.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFString.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFTime.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFType.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFURL.mm" />
-    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFUUID.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFNumber.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFTemporaryRootObject.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_CFLocaleInternal.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFDictionaryInternal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC8C5D49-060C-4375-904C-FE472C757E58}</ProjectGuid>
@@ -62,9 +49,10 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DHAVE_MACH_ABSOLUTE_TIME=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,10 +64,11 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DHAVE_MACH_ABSOLUTE_TIME=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|arm'">
@@ -90,9 +79,10 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DHAVE_MACH_ABSOLUTE_TIME=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|arm'">
@@ -104,10 +94,11 @@
       <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <ClangCompile>
-      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include</IncludePaths>
-      <AdditionalOptions>-DSTARBOARD_PORT=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
+      <IncludePaths>$(StarboardBasePath)\deps\prebuilt\include;$(StarboardBasePath)\deps\prebuilt\include\icu;$(StarboardBasePath)\Frameworks\include;$(StarboardBasePath)\Frameworks\CoreFoundation\Base.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\AppServices.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Collections.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Error.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Locale.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\NumberDate.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Parsing.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Plugin.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Preferences.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\RunLoop.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\Stream.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\String.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\StringEncodings.SubProj;$(StarboardBasePath)\Frameworks\CoreFoundation\URL.SubProj;</IncludePaths>
+      <AdditionalOptions>-DSTARBOARD_PORT=1 -DCF_BUILDING_CF=1 -DTARGET_OS_WIN32=1 -DDEPLOYMENT_TARGET_WINDOWS=1 -DHAVE_STRUCT_TIMESPEC=1 -DHAVE_MACH_ABSOLUTE_TIME=1 -DINCLUDE_OBJC=1 -DUNICODE -DDISPATCH_NO_LEGACY=1 -D__XSI_VISIBLE=500 -DTARGET_IPHONE_SIMULATOR=0 -D__CONSTANT_CFSTRINGS__=1 %(AdditionalOptions) -Wno-error -Werror=incomplete-implementation -Werror=objc-protocol-property-synthesis -Werror=protocol</AdditionalOptions>
       <OptimizationLevel>Full</OptimizationLevel>
       <PreprocessorDefinitions>NO_STUBS;FOUNDATION_IMPEXP="";COREFOUNDATION_IMPEXP="";OBJC_HOOK="extern __declspec(dllimport)"</PreprocessorDefinitions>
+      <PrefixHeader>$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundation\Base.subproj\CoreFoundation_Prefix.h</PrefixHeader>
     </ClangCompile>
   </ItemDefinitionGroup>
   <ImportGroup Label="ExtensionTargets">

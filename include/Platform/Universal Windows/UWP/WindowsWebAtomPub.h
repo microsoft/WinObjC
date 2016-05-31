@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WWAResourceCollection, WWAWorkspace, WWAServiceDocument, WWAAtomPubClient;
 @protocol WWAIResourceCollection
@@ -29,7 +29,6 @@
 #include "WindowsFoundation.h"
 #include "WindowsSecurityCredentials.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsDataXmlDom.h"
 
 #import <Foundation/Foundation.h>

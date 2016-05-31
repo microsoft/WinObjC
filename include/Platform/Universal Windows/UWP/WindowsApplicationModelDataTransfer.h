@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WADStandardDataFormats, WADDataPackagePropertySetView, WADDataPackagePropertySet, WADDataProviderDeferral, WADDataProviderRequest,
     WADOperationCompletedEventArgs, WADDataPackageView, WADDataPackage, WADHtmlFormatHelper, WADClipboard, WADDataRequestDeferral,
@@ -41,7 +41,6 @@ enum _WADDataPackageOperation {
 typedef unsigned WADDataPackageOperation;
 
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsUI.h"
 #include "WindowsStorage.h"

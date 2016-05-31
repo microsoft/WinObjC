@@ -18,7 +18,6 @@
 #import <CoreText/CoreTextExport.h>
 #import <CoreText/CTFont.h>
 
-#import <CoreFoundation/CFType.h>
 #import <CoreFoundation/CFString.h>
 
 #import <CoreGraphics/CGFont.h>

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGPPrintTaskOptions, WGPStandardPrintTaskOptions, WGPPrintTaskProgressingEventArgs, WGPPrintTaskCompletedEventArgs, WGPPrintTask,
     WGPPrintTaskSourceRequestedDeferral, WGPPrintTaskSourceRequestedArgs, WGPPrintTaskRequestedDeferral, WGPPrintTaskRequest,
@@ -368,7 +368,6 @@ enum _WGPPrintTaskCompletion {
 typedef unsigned WGPPrintTaskCompletion;
 
 #include "WindowsApplicationModelDataTransfer.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 // Windows.Graphics.Printing.PrintTaskSourceRequestedHandler
 #ifndef __WGPPrintTaskSourceRequestedHandler__DEFINED

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMCCameraCaptureUIPhotoCaptureSettings, WMCCameraCaptureUIVideoCaptureSettings, WMCCameraCaptureUI, WMCMediaCaptureFailedEventArgs,
     WMCMediaCapture, WMCMediaCaptureVideoProfileMediaDescription, WMCMediaCaptureVideoProfile, WMCMediaCaptureInitializationSettings,
@@ -166,10 +166,10 @@ typedef unsigned WMCKnownVideoProfile;
 #include "WindowsMediaDevices.h"
 #include "WindowsMediaCore.h"
 #include "WindowsStorage.h"
-#include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsMedia.h"
 #include "WindowsMediaMediaProperties.h"
+#include "WindowsFoundationCollections.h"
+#include "WindowsStorageStreams.h"
 #include "WindowsMediaEffects.h"
 #include "WindowsGraphicsImaging.h"
 // Windows.Media.Capture.MediaCaptureFailedEventHandler

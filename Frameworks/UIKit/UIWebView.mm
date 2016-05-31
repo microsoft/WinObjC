@@ -34,9 +34,7 @@
 @implementation UIWebView {
     id _delegate;
     idretaintype(NSURLRequest) _request;
-    idretaintype(NSURLRequest) _delayLoadURL;
     bool _isLoading;
-    bool _isVisible;
     UIScrollView* _scrollView;
     WXCWebView* _xamlWebControl;
     EventRegistrationToken _xamlLoadCompletedEventCookie;
@@ -81,13 +79,7 @@
     NSString* urlStr = [url absoluteString];
 
     _isLoading = true;
-    _isVisible = true;
-    if (!_isVisible) {
-        _delayLoadURL = urlStr;
-    } else {
-        _delayLoadURL = nil;
-        [_xamlWebControl navigate:[[WFUri makeUri:urlStr] autorelease]];
-    }
+    [_xamlWebControl navigate:[[WFUri makeUri:urlStr] autorelease]];
 }
 
 static void initWebKit(UIWebView* self) {
@@ -157,7 +149,6 @@ static void initWebKit(UIWebView* self) {
 */
 - (void)loadHTMLString:(NSString*)string baseURL:(NSURL*)baseURL {
     _isLoading = true;
-    _delayLoadURL = nil;
 
     NSString* urlStr = [baseURL absoluteString];
     [_xamlWebControl navigateToString:string];
@@ -171,7 +162,6 @@ static void initWebKit(UIWebView* self) {
 - (void)loadData:(NSData*)data MIMEType:(NSString*)mimeType textEncodingName:(NSString*)encoding baseURL:(NSURL*)baseURL {
     UNIMPLEMENTED();
     _isLoading = true;
-    _delayLoadURL = nil;
 
     assert(0 && "loadData:mimeTime:textEncodingName: not implemented");
 }
@@ -272,7 +262,6 @@ static void initWebKit(UIWebView* self) {
  @Status Interoperable
 */
 - (void)dealloc {
-    _delayLoadURL = nil;
     [_xamlWebControl removeLoadCompletedEvent:_xamlLoadCompletedEventCookie];
     [_xamlWebControl removeNavigationStartingEvent:_xamlLoadStartedEventCookie];
     [_xamlWebControl release];

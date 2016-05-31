@@ -28,7 +28,10 @@ param(
 
     [Parameter(HelpMessage="Output Verbosity")]
     [string][ValidateSet("Minimal", "Verbose")]
-    $Verbosity = "Verbose"
+    $Verbosity = "Verbose",
+    
+    [Parameter(HelpMessage="Wont Deploy in ARM. Assumes already deployed bits exist")]
+    [switch] $DontDeploy
 )
 
 $TargetingDevice = ($Platform -eq "ARM")
@@ -90,6 +93,10 @@ function DeployTests($testList)
           putd -recurse $testDirectory\*.dll $testOutputDirectory
           putd -recurse $testDirectory\*.exe $testOutputDirectory
           putd -recurse $testDirectory\*.txt $testOutputDirectory
+          putd -recurse $testDirectory\*.bitmap $testOutputDirectory
+          putd -recurse $testDirectory\*.mapping $testOutputDirectory
+          putd -recurse $testDirectory\*.data $testOutputDirectory
+          putd -recurse $testDirectory\*.plist $testOutputDirectory
         }
     }
     else
@@ -135,7 +142,7 @@ else
 
 if ($TargetingDevice)
 {
-    $TestDstDirectory = "\data\test\bin\islandwood"
+    $TestDstDirectory = "C:\data\test\bin\islandwood"
 }
 else
 {
@@ -161,7 +168,9 @@ if ($ModuleFilter -ne [string]$null) {
 
 Pop-Location
 
-DeployTests $Tests
+if(-not $DontDeploy) {
+  DeployTests $Tests
+}
 
 if (($XMLOutputDirectory -ne [string]$null) -and ((Test-Path -Path $XMLOutputDirectory -PathType Container) -eq 0)) {
     New-Item -ItemType Directory -Path $XMLOutputDirectory

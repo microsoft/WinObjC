@@ -13,7 +13,7 @@
 #define ClSolver_H
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED) && !defined(CONFIG_INLINE_H_INCLUDED)
-#include <cassowary/config-inline.h>
+#include "config-inline.h"
 #define CONFIG_INLINE_H_INCLUDED
 #endif
 
@@ -49,9 +49,9 @@ class ClSolver {
           AddConstraint(pcn);
           return true;
       }
-      catch (const ExCLRequiredFailure &e)
+      catch (const ExCLRequiredFailure&)
         { return false; }
-      catch (const ExCLTooDifficult &e)
+      catch (const ExCLTooDifficult&)
         { return false; }
     }
 
@@ -67,7 +67,7 @@ class ClSolver {
         RemoveConstraint(pcn);
         return true;
       }
-      catch (const ExCLConstraintNotFound &e)
+      catch (const ExCLConstraintNotFound&)
         { return false; }
     }
 
@@ -87,9 +87,9 @@ class ClSolver {
         Solve();
         return true;
       }
-      catch (const ExCLTooDifficult &e)
+      catch (const ExCLTooDifficult&)
         { return false; }
-      catch (const ExCLRequiredFailure &e)
+      catch (const ExCLRequiredFailure&)
         { return false; }
     }
 

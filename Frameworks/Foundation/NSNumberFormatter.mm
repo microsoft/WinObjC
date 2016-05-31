@@ -15,16 +15,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 #import "Starboard.h"
 #import "StubReturn.h"
-#import "Foundation/NSNumberFormatter.h"
-#import "Foundation/NSMutableString.h"
-#import "Foundation/NSNumber.h"
-#import "Foundation/NSAttributedString.h"
-#import "Etc.h"
-#import <stdarg.h>
-#import <cmath>
-#import <unicode/numfmt.h>
-#import <unicode/decimfmt.h>
-#import <unicode/unum.h>
+
+#include <array>
 
 static NSNumberFormatterBehavior _defaultFormatterBehavior = NSNumberFormatterBehavior10_4;
 
@@ -32,48 +24,12 @@ const CFNumberRef kCFNumberNaN = nullptr; // = (CFNumberRef)&_kCFNumberNaN;
 const CFNumberRef kCFNumberNegativeInfinity = nullptr; // = (CFNumberRef)&_kCFNumberNegInf;
 const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNumberPosInf;
 
+CFStringRef kCFNumberFormatterUsesCharacterDirectionKey = static_cast<CFStringRef>(@"kCFNumberFormatterUsesCharacterDirectionKey");
+
 @implementation NSNumberFormatter {
-    icu::DecimalFormat* _formatter;
-
-    // 10.4
-    NSNumberFormatterStyle _numberStyle;
-
-    id _locale;
-    id _multiplier;
-
-    BOOL _alwaysShowsDecimalSeparator;
-    BOOL _isLenient;
-    BOOL _isPartialStringValidationEnabled;
-    BOOL _usesGroupingSeparator;
-
-    NSUInteger _minimumIntegerDigits;
-    BOOL _customMaximumFractionDigits;
-    NSUInteger _maximumFractionDigits;
-
-    id _nilSymbol;
-    id _notANumberSymbol;
-    id _negativePrefix;
-    id _negativeSuffix;
-    id _positivePrefix;
-    id _positiveSuffix;
-
-    id _decimalSeparator;
-    id _currencyCode;
-    id _currencySymbol;
-    id _groupingSeparator;
-    NSUInteger _groupingSize;
-    id _paddingCharacter;
-    id _percentSymbol;
-
-    // 10.0
-    id _attributedStringForNil;
-    id _attributedStringForNotANumber;
-    id _attributedStringForZero;
-    id _roundingBehavior;
-    id _thousandSeparator;
-
-    BOOL _hasThousandSeparators;
-    BOOL _localizesFormat;
+    woc::unique_cf<CFNumberFormatterRef> _cfNumberFormatter;
+    BOOL _wasMaxFractionDigitsSet;
+    BOOL _wasMaxIntegerDigitsSet;
 }
 
 /**
@@ -88,21 +44,10 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 */
 - (instancetype)init {
     if (self = [super init]) {
-        _formatterBehavior = _defaultFormatterBehavior;
-        _numberStyle = NSNumberFormatterNoStyle;
-
-        _thousandSeparator = @",";
-        _decimalSeparator = @".";
-        _currencyDecimalSeparator = @"";
-        /*
-        _attributedStringForNil=[[NSAttributedString allocWithZone:nil] initWithString:@"(null)"];
-        _attributedStringForNotANumber=[[NSAttributedString allocWithZone:nil] initWithString:@"NaN"];
-        _attributedStringForZero=[[NSAttributedString allocWithZone:nil] initWithString:@"0.0"];
-        */
-        _allowsFloats = YES;
-
-        UErrorCode status = U_ZERO_ERROR;
-        _formatter = new icu::DecimalFormat(status);
+        _wasMaxFractionDigitsSet = NO;
+        _wasMaxIntegerDigitsSet = NO;
+        _cfNumberFormatter.reset(
+            CFNumberFormatterCreate(nullptr, static_cast<CFLocaleRef>([NSLocale currentLocale]), kCFNumberFormatterNoStyle));
     }
 
     return self;
@@ -111,321 +56,222 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    [_attributedStringForNil release];
-    [_attributedStringForNotANumber release];
-    [_attributedStringForZero release];
-    delete _formatter;
-    [super dealloc];
+- (void)setCurrencyCode:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterCurrencyCode, reinterpret_cast<CFTypeRef>(value));
 }
 
 /**
  @Status Interoperable
 */
-- (void)setCurrencyCode:(id)currencyCode {
-    id old = _currencyCode;
-    _currencyCode = [currencyCode copy];
-
-    [old release];
-}
-
-/**
- @Status Caveat
- @Notes Default value doesn't take locale into account.
-*/
-- (id)currencyCode {
-    if (_currencyCode == nil) {
-        _currencyCode = @"USD";
-    }
-    return _currencyCode;
+- (NSString*)currencyCode {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterCurrencyCode) autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (void)setNotANumberSymbol:(id)value {
-    @synchronized(self) {
-        if (_notANumberSymbol != value) {
-            [_notANumberSymbol autorelease];
-            _notANumberSymbol = [value copy];
-        }
-    }
+- (void)setNotANumberSymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterNaNSymbol, reinterpret_cast<CFTypeRef>(value));
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)notANumberSymbol {
-    @synchronized(self) {
-        if (_notANumberSymbol == nil) {
-            return @"NaN";
-        }
-
-        return [[_notANumberSymbol retain] autorelease];
-    }
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterNaNSymbol) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setDecimalSeparator:(NSString*)value {
-    value = [value copy];
-    [_decimalSeparator release];
-    _decimalSeparator = value;
-}
-
-/**
- @Status Caveat
- @Notes Default value doesn't take locale into account.
-*/
-- (id)decimalSeparator {
-    return _decimalSeparator;
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterDecimalSeparator, reinterpret_cast<CFTypeRef>(value));
 }
 
 /**
  @Status Interoperable
 */
-- (void)setGroupingSeparator:(id)value {
-    value = [value copy];
-    [_groupingSeparator release];
-    _groupingSeparator = value;
-
-    const DecimalFormatSymbols* orig = _formatter->getDecimalFormatSymbols();
-    DecimalFormatSymbols update(*orig);
-    update.setSymbol(DecimalFormatSymbols::kGroupingSeparatorSymbol, [value UTF8String]);
-    _formatter->setDecimalFormatSymbols(update);
+- (NSString*)decimalSeparator {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterDecimalSeparator) autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (void)setMultiplier:(NSNumber*)number {
-    @synchronized(self) {
-        if (_multiplier != number) {
-            [_multiplier autorelease];
-            _multiplier = [number copy];
-        }
-    }
+- (void)setAlwaysShowsDecimalSeparator:(BOOL)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterAlwaysShowDecimalSeparator,
+                                 value ? kCFBooleanTrue : kCFBooleanFalse);
 }
 
 /**
- @Status Caveat
- @Notes Does not respect division when NSNumber derived from string?
+ @Status Interoperable
+*/
+- (BOOL)alwaysShowsDecimalSeparator {
+    return CFBooleanGetValue(
+        static_cast<CFBooleanRef>(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterAlwaysShowDecimalSeparator)));
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setGroupingSeparator:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterGroupingSeparator, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)groupingSeparator {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterCurrencyGroupingSeparator) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setMultiplier:(NSNumber*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterMultiplier, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
 */
 - (NSNumber*)multiplier {
-    @synchronized(self) {
-        if (_multiplier == nil && self.numberStyle == NSNumberFormatterPercentStyle) {
-            return [NSNumber numberWithInt:100];
-        }
-
-        return [[_multiplier retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (unsigned)maximumFractionDigits {
-    if (_customMaximumFractionDigits)
-        return _maximumFractionDigits;
-
-    if (self.numberStyle == NSNumberFormatterDecimalStyle)
-        return 3;
-
-    return 0;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setPositivePrefix:(NSString*)prefix {
-    @synchronized(self) {
-        if (_positivePrefix != prefix) {
-            [_positivePrefix autorelease];
-            _positivePrefix = [prefix copy];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)positivePrefix {
-    @synchronized(self) {
-        if (_positivePrefix == nil) {
-            return @"";
-        }
-
-        return [[_positivePrefix retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setNegativePrefix:(NSString*)prefix {
-    @synchronized(self) {
-        if (_negativePrefix != prefix) {
-            [_negativePrefix autorelease];
-            _negativePrefix = [prefix copy];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)negativePrefix {
-    @synchronized(self) {
-        if (_negativePrefix == nil) {
-            return @"-";
-        }
-
-        return [[_negativePrefix retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setPositiveSuffix:(NSString*)suffix {
-    @synchronized(self) {
-        if (_positiveSuffix != suffix) {
-            [_positiveSuffix autorelease];
-            _positiveSuffix = [suffix copy];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)positiveSuffix {
-    // Suffixes return the percent symbol if specified
-    @synchronized(self) {
-        if (_positiveSuffix == nil) {
-            if (self.numberStyle == NSNumberFormatterPercentStyle) {
-                return self.percentSymbol;
-            }
-
-            return @"";
-        }
-
-        return [[_positiveSuffix retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setNegativeSuffix:(NSString*)suffix {
-    @synchronized(self) {
-        if (_negativeSuffix != suffix) {
-            [_negativeSuffix autorelease];
-            _negativeSuffix = [suffix copy];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)negativeSuffix {
-    // Suffixes return the percent symbol if specified
-    @synchronized(self) {
-        if (_negativeSuffix == nil) {
-            if (self.numberStyle == NSNumberFormatterPercentStyle) {
-                return self.percentSymbol;
-            }
-
-            return @"";
-        }
-
-        return [[_negativeSuffix retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setPercentSymbol:(NSString*)symbol {
-    @synchronized(self) {
-        if (_percentSymbol != symbol) {
-            [_percentSymbol autorelease];
-            _percentSymbol = [symbol copy];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)percentSymbol {
-    @synchronized(self) {
-        if (_percentSymbol == nil) {
-            return @"%";
-        }
-
-        return [[_percentSymbol retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setUsesGroupingSeparator:(BOOL)value {
-    @synchronized(self) {
-        _formatter->setGroupingUsed(value);
-        _usesGroupingSeparator = value;
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)usesGroupingSeparator {
-    @synchronized(self) {
-        return _usesGroupingSeparator;
-    }
+    return [(NSNumber*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMultiplier) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMaximumFractionDigits:(NSUInteger)value {
-    _formatter->setMaximumFractionDigits(value);
-    _customMaximumFractionDigits = YES;
-    _maximumFractionDigits = value;
+    _wasMaxFractionDigitsSet = YES;
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterMaxFractionDigits,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
 }
 
 /**
  @Status Interoperable
 */
-- (id)groupingSeparator {
-    if (_groupingSeparator == nil) {
-        id check = [self.locale objectForKey:NSLocaleGroupingSeparator];
-
-        if (check != nil)
-            return check;
-
-        return @",";
-    }
-
-    return _groupingSeparator;
+- (NSUInteger)maximumFractionDigits {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMaxFractionDigits))).unsignedIntegerValue;
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)groupingSize {
-    return _groupingSize;
+- (void)setPositivePrefix:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterPositivePrefix, reinterpret_cast<CFTypeRef>(value));
 }
 
 /**
  @Status Interoperable
 */
-- (id)currencySymbol {
-    return _currencySymbol;
+- (NSString*)positivePrefix {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPositivePrefix) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setNegativePrefix:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterNegativePrefix, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)negativePrefix {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterNegativePrefix) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPositiveSuffix:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterPositiveSuffix, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)positiveSuffix {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPositiveSuffix) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setNegativeSuffix:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterNegativeSuffix, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)negativeSuffix {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterNegativeSuffix) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPercentSymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterPercentSymbol, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)percentSymbol {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPercentSymbol) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setUsesGroupingSeparator:(BOOL)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterUseGroupingSeparator,
+                                 (value == YES) ? kCFBooleanTrue : kCFBooleanFalse);
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)usesGroupingSeparator {
+    return CFBooleanGetValue(
+        static_cast<CFBooleanRef>(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterUseGroupingSeparator)));
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setGroupingSize:(NSUInteger)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterGroupingSize,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)groupingSize {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterGroupingSize))).unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setCurrencySymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterGroupingSize, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)currencySymbol {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterCurrencySymbol) autorelease];
 }
 
 /**
@@ -433,9 +279,9 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 */
 - (void)setNilSymbol:(NSString*)symbol {
     @synchronized(self) {
-        if (_nilSymbol != symbol) {
-            [_nilSymbol autorelease];
-            _nilSymbol = [symbol copy];
+        if (self.nilSymbol != symbol) {
+            [self.nilSymbol autorelease];
+            self.nilSymbol = [symbol copy];
         }
     }
 }
@@ -445,54 +291,11 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
 */
 - (NSString*)nilSymbol {
     @synchronized(self) {
-        if (_nilSymbol == nil) {
+        if (self.nilSymbol == nil) {
             return @"";
         }
 
-        return [[_nilSymbol retain] autorelease];
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setGroupingSize:(NSUInteger)value {
-    _formatter->setGroupingSize(value);
-    _groupingSize = value;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setCurrencySymbol:(id)value {
-    value = [value copy];
-    [_currencySymbol release];
-    _currencySymbol = value;
-}
-
-/**
- @Status Interoperable
-*/
-- (void)setPaddingCharacter:(NSString*)value {
-    @synchronized(self) {
-        if (_paddingCharacter != value) {
-            _formatter->setPadCharacter([value UTF8String]);
-            [_paddingCharacter autorelease];
-            _paddingCharacter = [value copy];
-        }
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)paddingCharacter {
-    @synchronized(self) {
-        if (_paddingCharacter == nil) {
-            return @"*";
-        }
-
-        return [[_paddingCharacter retain] autorelease];
+        return self.nilSymbol;
     }
 }
 
@@ -500,217 +303,412 @@ const CFNumberRef kCFNumberPositiveInfinity = nullptr; // = (CFNumberRef)&_kCFNu
  @Status Interoperable
 */
 - (void)setMinimumIntegerDigits:(NSUInteger)value {
-    @synchronized(self) {
-        _formatter->setMinimumIntegerDigits(value);
-        _minimumIntegerDigits = value;
-    }
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterMinIntegerDigits,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
 }
 
 /**
  @Status Interoperable
 */
 - (NSUInteger)minimumIntegerDigits {
-    @synchronized(self) {
-        return _minimumIntegerDigits;
-    }
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMinIntegerDigits))).unsignedIntegerValue;
 }
 
 /**
  @Status Interoperable
 */
-- (id)stringFromNumberNoStyle:(id)number {
-    number = multipliedNumber(number, [self multiplier]);
-
-    id prefix;
-    id suffix;
-
-    if (numberIsNegative(number)) {
-        /*
-        prefix = [self negativePrefix];
-        suffix = [self negativeSuffix];
-        */
-        prefix = @"";
-        suffix = @"";
-    } else {
-        prefix = [self positivePrefix];
-        suffix = [self positiveSuffix];
-    }
-
-    id result;
-
-    result = prefix;
-    result = [result stringByAppendingString:[self _stringFromNumber:number]];
-    result = [result stringByAppendingString:suffix];
-
-    return result;
+- (void)setCurrencyDecimalSeparator:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterCurrencyDecimalSeparator, reinterpret_cast<CFTypeRef>(value));
 }
 
 /**
  @Status Interoperable
 */
-- (id)stringFromNumber10_4:(id)number {
-    switch (self.numberStyle) {
-        case NSNumberFormatterNoStyle:
-            return [self stringFromNumberNoStyle:number];
-
-        case NSNumberFormatterDecimalStyle:
-            return [self stringFromNumberNoStyle:number];
-
-        case NSNumberFormatterCurrencyStyle:
-            return [self stringFromNumberNoStyle:number];
-            break;
-
-        case NSNumberFormatterPercentStyle:
-            return [self stringFromNumberNoStyle:number];
-
-        case NSNumberFormatterScientificStyle:
-            assert(0);
-            break;
-
-        case NSNumberFormatterSpellOutStyle:
-            assert(0);
-            break;
-    }
-
-    return [number description];
+- (NSString*)currencyDecimalSeparator {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterCurrencyDecimalSeparator) autorelease];
 }
 
 /**
- @Status Caveat
- @Notes NSNumberFormatterBehavior10_0 likely crashes.
+ @Status Interoperable
 */
-- (id)stringFromNumber:(id)number {
-    NSNumberFormatterBehavior check = self.formatterBehavior;
+- (void)setExponentSymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterExponentSymbol, reinterpret_cast<CFTypeRef>(value));
+}
 
-    if (check == NSNumberFormatterBehaviorDefault)
-        check = NSNumberFormatterBehavior10_4;
+/**
+ @Status Interoperable
+*/
+- (NSString*)exponentSymbol {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterExponentSymbol) autorelease];
+}
 
-    // VSO 7016320: Method stringFromNumber10_0 does not exist on NSString.
-    if (check == NSNumberFormatterBehavior10_0) {
-        return [self stringFromNumber10_0:number];
-    } else {
-        return [self stringFromNumber10_4:number];
+/**
+ @Status Interoperable
+*/
+- (void)setFormatWidth:(NSUInteger)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterFormatWidth,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)formatWidth {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterFormatWidth))).unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setInternationalCurrencySymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterInternationalCurrencySymbol,
+                                 reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)internationalCurrencySymbol {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterInternationalCurrencySymbol) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setMinusSign:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterMinusSign, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)minusSign {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMinusSign) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPaddingCharacter:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterPaddingCharacter, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)paddingCharacter {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPaddingCharacter) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPerMillSymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterPerMillSymbol, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)perMillSymbol {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPerMillSymbol) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPlusSign:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterPlusSign, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)plusSign {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPlusSign) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setZeroSymbol:(NSString*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterZeroSymbol, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)zeroSymbol {
+    return [(NSString*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterZeroSymbol) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setRoundingIncrement:(NSNumber*)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterRoundingIncrement, reinterpret_cast<CFTypeRef>(value));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)roundingIncrement {
+    return [(NSNumber*)CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterRoundingIncrement) autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setMaximumIntegerDigits:(NSUInteger)value {
+    _wasMaxIntegerDigitsSet = YES;
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterMaxIntegerDigits,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)maximumIntegerDigits {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMaxIntegerDigits))).unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setMaximumSignificantDigits:(NSUInteger)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterMaxSignificantDigits,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)maximumSignificantDigits {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMaxSignificantDigits)))
+        .unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setMinimumFractionDigits:(NSUInteger)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterMinFractionDigits,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)minimumFractionDigits {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMinFractionDigits))).unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setMinimumSignificantDigits:(NSUInteger)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterMinSignificantDigits,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)minimumSignificantDigits {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterMinSignificantDigits)))
+        .unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setSecondaryGroupingSize:(NSUInteger)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterSecondaryGroupingSize,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)secondaryGroupingSize {
+    return ((NSNumber*)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterSecondaryGroupingSize)))
+        .unsignedIntegerValue;
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setLenient:(BOOL)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(), kCFNumberFormatterIsLenient, value ? kCFBooleanTrue : kCFBooleanFalse);
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isLenient {
+    return CFBooleanGetValue(
+        static_cast<CFBooleanRef>(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterIsLenient)));
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setUsesSignificantDigits:(BOOL)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterUseSignificantDigits,
+                                 value ? kCFBooleanTrue : kCFBooleanFalse);
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)usesSignificantDigits {
+    return CFBooleanGetValue(
+        static_cast<CFBooleanRef>(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterUseSignificantDigits)));
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setNumberStyle:(NSNumberFormatterStyle)value {
+    woc::unique_cf<CFNumberFormatterRef> formatterCopy(
+        CFNumberFormatterCreate(nullptr, static_cast<CFLocaleRef>([self locale]), (CFNumberFormatterStyle(value))));
+    _copyPropertiesToFormatter(_cfNumberFormatter.get(), formatterCopy.get(), _wasMaxFractionDigitsSet, _wasMaxIntegerDigitsSet);
+    _cfNumberFormatter.reset(formatterCopy.release());
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumberFormatterStyle)numberStyle {
+    return (NSNumberFormatterStyle)(CFNumberFormatterGetStyle(_cfNumberFormatter.get()));
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setRoundingMode:(NSNumberFormatterRoundingMode)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterRoundingMode,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumberFormatterRoundingMode)roundingMode {
+    return (NSNumberFormatterRoundingMode)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterRoundingMode));
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)setPaddingPosition:(NSNumberFormatterRoundingMode)value {
+    CFNumberFormatterSetProperty(_cfNumberFormatter.get(),
+                                 kCFNumberFormatterPaddingPosition,
+                                 reinterpret_cast<CFTypeRef>([NSNumber numberWithUnsignedInteger:value]));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumberFormatterPadPosition)paddingPosition {
+    return (NSNumberFormatterPadPosition)(CFNumberFormatterCopyProperty(_cfNumberFormatter.get(), kCFNumberFormatterPaddingPosition));
+}
+
+static void _setCFInfinitySymbol(CFNumberFormatterRef formatter, NSString* value) {
+    if (value != nil) {
+        CFNumberFormatterSetProperty(formatter, kCFNumberFormatterInfinitySymbol, reinterpret_cast<CFTypeRef>(value));
+    }
+}
+
+void _copyPropertiesToFormatter(CFNumberFormatterRef source,
+                                CFNumberFormatterRef destination,
+                                BOOL wasMaxFractionDigitsSet,
+                                BOOL wasMaxIntegerDigitsSet) {
+    static std::array<CFStringRef, 37> properties{ kCFNumberFormatterAlwaysShowDecimalSeparator,
+                                                   kCFNumberFormatterCurrencyCode,
+                                                   kCFNumberFormatterCurrencyDecimalSeparator,
+                                                   kCFNumberFormatterCurrencyGroupingSeparator,
+                                                   kCFNumberFormatterCurrencySymbol,
+                                                   kCFNumberFormatterDecimalSeparator,
+                                                   kCFNumberFormatterDefaultFormat,
+                                                   kCFNumberFormatterExponentSymbol,
+                                                   kCFNumberFormatterFormatWidth,
+                                                   kCFNumberFormatterGroupingSeparator,
+                                                   kCFNumberFormatterGroupingSize,
+                                                   kCFNumberFormatterInfinitySymbol,
+                                                   kCFNumberFormatterInternationalCurrencySymbol,
+                                                   kCFNumberFormatterIsLenient,
+                                                   kCFNumberFormatterMaxSignificantDigits,
+                                                   kCFNumberFormatterMinFractionDigits,
+                                                   kCFNumberFormatterMinIntegerDigits,
+                                                   kCFNumberFormatterMinSignificantDigits,
+                                                   kCFNumberFormatterMinusSign,
+                                                   kCFNumberFormatterMultiplier,
+                                                   kCFNumberFormatterNaNSymbol,
+                                                   kCFNumberFormatterNegativePrefix,
+                                                   kCFNumberFormatterNegativeSuffix,
+                                                   kCFNumberFormatterPaddingCharacter,
+                                                   kCFNumberFormatterPaddingPosition,
+                                                   kCFNumberFormatterPerMillSymbol,
+                                                   kCFNumberFormatterPercentSymbol,
+                                                   kCFNumberFormatterPlusSign,
+                                                   kCFNumberFormatterPositivePrefix,
+                                                   kCFNumberFormatterPositiveSuffix,
+                                                   kCFNumberFormatterRoundingIncrement,
+                                                   kCFNumberFormatterRoundingMode,
+                                                   kCFNumberFormatterSecondaryGroupingSize,
+                                                   kCFNumberFormatterUseGroupingSeparator,
+                                                   kCFNumberFormatterUseSignificantDigits,
+                                                   kCFNumberFormatterZeroSymbol,
+                                                   kCFNumberFormatterUsesCharacterDirectionKey };
+
+    for (CFStringRef property : properties) {
+        woc::unique_cf<CFTypeRef> value(CFNumberFormatterCopyProperty(source, property));
+        if (value) {
+            CFNumberFormatterSetProperty(destination, property, value.get());
+        }
+    }
+
+    if (wasMaxFractionDigitsSet) {
+        woc::unique_cf<CFTypeRef> value(CFNumberFormatterCopyProperty(source, kCFNumberFormatterMaxFractionDigits));
+        if (value) {
+            CFNumberFormatterSetProperty(destination, kCFNumberFormatterMaxFractionDigits, value.get());
+        }
+    }
+
+    if (wasMaxIntegerDigitsSet) {
+        woc::unique_cf<CFTypeRef> value(CFNumberFormatterCopyProperty(source, kCFNumberFormatterMaxIntegerDigits));
+        if (value) {
+            CFNumberFormatterSetProperty(destination, kCFNumberFormatterMaxIntegerDigits, value.get());
+        }
     }
 }
 
 /**
- @Status Caveat
- @Notes Not thoroughly implemented.
+ @Status Interoperable
 */
 - (void)setLocale:(NSLocale*)value {
-    @synchronized(self) {
-        if (_locale != value) {
-            [_locale autorelease];
-            _locale = [value copy];
-        }
-    }
+    woc::unique_cf<CFNumberFormatterRef> formatterCopy(
+        CFNumberFormatterCreate(nullptr, static_cast<CFLocaleRef>(value), CFNumberFormatterGetStyle(_cfNumberFormatter.get())));
+    _copyPropertiesToFormatter(_cfNumberFormatter.get(), formatterCopy.get(), _wasMaxFractionDigitsSet, _wasMaxIntegerDigitsSet);
+    _cfNumberFormatter.reset(formatterCopy.release());
 }
 
 /**
- @Status Caveat
+ @Status Interoperable
 */
 - (NSLocale*)locale {
-    @synchronized(self) {
-        if (_locale == nil) {
-            UNIMPLEMENTED();
-            return StubReturn();
-        }
-
-        return [[_locale retain] autorelease];
-    }
-}
-
-- (id)_stringFromNumber:(id)number {
-    static const WORD kUnicodeInfinity = 0x221E;
-    CFNumberRef num = static_cast<CFNumberRef>(number);
-
-    if (num == nil)
-        return [self nilSymbol];
-    else if (num == kCFNumberNaN)
-        return [self notANumberSymbol];
-    else if (num == kCFNumberPositiveInfinity) {
-        id check = [self positiveInfinitySymbol];
-        if (check == nil)
-            check = [NSString stringWithCharacters:&kUnicodeInfinity length:1];
-        return check;
-    } else if (num == kCFNumberNegativeInfinity) {
-        id check = [self negativeInfinitySymbol];
-        if (check == nil) {
-            const WORD codes[2] = { '-', kUnicodeInfinity };
-            check = [NSString stringWithCharacters:codes length:2];
-        }
-        return check;
-    }
-
-    const char* objcType = (const char*)[number objCType];
-
-    if (!objcType || strlen(objcType) != 1) {
-        if (objcType == NULL) {
-            return @"(null)";
-        }
-        objcType = "?";
-    }
-
-    UnicodeString formatted;
-    UErrorCode status = U_ZERO_ERROR;
-
-    switch (*objcType) {
-        case _C_CHR:
-        case _C_SHT:
-        case _C_INT:
-        case _C_LNG: {
-            int val = [number intValue];
-            _formatter->format(val, formatted, status);
-            break;
-        }
-
-        case _C_UCHR:
-        case _C_USHT:
-        case _C_UINT:
-        case _C_ULNG: {
-            // note: int64 can hold all 32-bit unsigned integers so use it (icu doesn't support
-            // formatting unsigned numbers).
-            int64_t val = [number unsignedIntValue];
-            _formatter->format(val, formatted, status);
-            break;
-        }
-
-        case _C_LNG_LNG: {
-            int64_t val = [number longLongValue];
-            _formatter->format(val, formatted, status);
-            break;
-        }
-
-        // This isn't really any good because icu cannot format 128-bit integers, nor can it format unsigned numbers. We
-        // could send it as a double
-        // but that would likely be a bad idea.
-        case _C_ULNG_LNG: {
-            int64_t val = [number unsignedLongLongValue];
-            _formatter->format(val, formatted, status);
-            break;
-        }
-
-        case _C_FLT: {
-            float val = [number floatValue];
-            _formatter->format(val, formatted, status);
-            break;
-        }
-
-        case _C_DBL: {
-            double val = [number doubleValue];
-            _formatter->format(val, formatted, status);
-            break;
-        }
-
-        default:
-            assert(0);
-            // string = [number description];
-            break;
-    }
-
-    assert(U_SUCCESS(status));
-
-    return NSStringFromICU(formatted);
+    return static_cast<NSLocale*>(CFNumberFormatterGetLocale(_cfNumberFormatter.get()));
 }
 
 static id multipliedNumber(id number, id multiplierNumber) {
@@ -728,107 +726,66 @@ static BOOL numberIsNegative(id number) {
 }
 
 /**
- @Status Caveat
- @Notes Doesn't take all format styles into account.
+ @Status Interoperable
 */
-- (NSNumber*)numberFromString:(id)string {
-    if (string == nil)
-        return nil;
+- (NSNumber*)numberFromString:(NSString*)string {
+    CFRange range = CFRangeMake(0, string.length);
 
-    // Do special currency formatting for numbers:
-    if (self.numberStyle == NSNumberFormatterCurrencyStyle) {
-        UErrorCode status = U_ZERO_ERROR;
-        UNumberFormat* nf = unum_open(UNUM_CURRENCY, NULL, -1, NULL, NULL, &status);
-        int offset = 0;
-        UChar currency[4];
-        double amt = unum_parseDoubleCurrency(nf, (const wchar_t*)[string rawCharacters], [string length], &offset, currency, &status);
-        unum_close(nf);
-        return [NSNumber numberWithDouble:amt];
+    return [static_cast<NSNumber*>(
+        CFNumberFormatterCreateNumberFromString(nullptr, _cfNumberFormatter.get(), static_cast<CFStringRef>(string), &range, 0))
+        autorelease];
+}
+
+- (NSString*)stringFromNumber:(NSNumber*)number {
+    if (number == nil) {
+        return self.nilSymbol;
     }
 
-    const char* pString = [string UTF8String];
-    bool isInt = true;
-
-    if (strstr(pString, ".") != NULL) {
-        isInt = false;
-    }
-
-    if (isInt) {
-        __int64 val;
-        char* pEnd;
-        val = _strtoi64(pString, &pEnd, 10);
-        if (pEnd == pString) {
-            return nil;
-        }
-        if (val == static_cast<__int64>(static_cast<int>(val))) {
-            return [NSNumber numberWithInt:(static_cast<int>(val))];
+    if (!_finite(number.floatValue)) {
+        if (number.floatValue > 0) {
+            _setCFInfinitySymbol(_cfNumberFormatter.get(), _positiveInfinitySymbol);
         } else {
-            return [NSNumber numberWithLongLong:val];
-        }
-    } else {
-        double val;
-        char* pEnd;
-        val = strtod(pString, &pEnd);
-        if (pEnd == pString) {
-            return nil;
-        }
-        if (val == static_cast<double>(static_cast<float>(val))) {
-            return [NSNumber numberWithFloat:static_cast<float>(val)];
-        } else {
-            return [NSNumber numberWithDouble:val];
+            _setCFInfinitySymbol(_cfNumberFormatter.get(), _negativeInfinitySymbol);
         }
     }
+
+    return [static_cast<NSString*>(
+        CFNumberFormatterCreateStringWithNumber(nullptr, _cfNumberFormatter.get(), static_cast<CFNumberRef>(number))) autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (id)stringForObjectValue:(id)obj {
-    return [self stringFromNumber:obj];
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)getObjectValue:(out id _Nullable*)objOut forString:(id)str errorDescription:(out NSString* _Nullable*)error {
-    if (objOut) {
-        const char* pVal = [str UTF8String];
-        int val = atoi(pVal);
-        *objOut = [NSNumber numberWithInteger:val];
-    }
-
-    return TRUE;
-}
-
-/**
- @Status Caveat
- @Notes Scientific and SpellOut styles assert, the rest default to NoStyle.
-*/
-+ (id)localizedStringFromNumber:(id)number numberStyle:(NSNumberFormatterStyle)style {
-    id formatter = [self new];
++ (NSString*)localizedStringFromNumber:(NSNumber*)number numberStyle:(NSNumberFormatterStyle)style {
+    NSNumberFormatter* formatter = [self new];
     [formatter setNumberStyle:style];
 
-    id ret = [formatter stringFromNumber:number];
+    NSString* ret = [formatter stringFromNumber:number];
     [formatter release];
 
     return ret;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Unused.
 */
 + (void)setDefaultFormatterBehavior:(NSNumberFormatterBehavior)behavior {
-    UNIMPLEMENTED();
+    _defaultFormatterBehavior = behavior;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes generatesDecimalNumbers should generate an NSDecimalNumber.
 */
 - (BOOL)getObjectValue:(id _Nullable*)anObject forString:(NSString*)aString range:(NSRange*)rangep error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if (anObject) {
+        *anObject = [self numberFromString:[aString substringWithRange:*rangep]];
+    } else {
+        return NO;
+    }
+
+    return YES;
 }
 
 @end

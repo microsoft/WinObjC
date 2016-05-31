@@ -40,6 +40,7 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Media::Animation;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Windows::UI::Xaml::Shapes;
+using namespace Windows::Graphics::Display;
 
 namespace XamlCompositor {
 namespace Controls {
@@ -1261,6 +1262,10 @@ void CALayerXaml::SetOpacity() {
     }
 };
 
+void CALayerXaml::SetZIndex(int zIndex) {
+    __super::SetValue(Canvas::ZIndexProperty, zIndex);
+}
+
 /* Disable for now
 AutomationPeer^ CALayerXaml::OnCreateAutomationPeer()
 {
@@ -1689,14 +1694,24 @@ concurrency::task<CALayerXaml^> EventedStoryboard::SnapshotLayer(CALayerXaml^ la
     }
     else {
         RenderTargetBitmap^ snapshot = ref new RenderTargetBitmap();
+        
         return concurrency::create_task(snapshot->RenderAsync(layer, (int)(layer->CurrentWidth * CALayerXaml::s_screenScale), 0))
             .then([snapshot, layer](concurrency::task<void> result) {
             // Return a new 'copy' layer with the rendered content
             CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
             newLayer->_CopyPropertiesFrom(layer);
+            
+            int width = snapshot->PixelWidth;
+            int height = snapshot->PixelHeight;
+            DisplayInformation^ dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
 
-            newLayer->setContentImage(snapshot, (float)snapshot->PixelWidth, (float)snapshot->PixelHeight, (float)CALayerXaml::s_screenScale);
-            newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
+            newLayer->setContentImage(snapshot, (float)width, (float)height, (float)(CALayerXaml::s_screenScale * dispInfo->RawPixelsPerViewPixel));
+
+            // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
+            // If the UIViewController being transitioned away from has transparent content, the height returned is less the
+            // navigation bar, as though Xaml sizes the buffer to the largest child Visual, and only expands where needed.
+            // Top/bottom switched due to geometric origin of CALayer so read this as UIViewContentModeTopLeft
+            newLayer->SetContentGravity(ContentGravity::BottomLeft);
 
             return newLayer;
         }, concurrency::task_continuation_context::use_current());

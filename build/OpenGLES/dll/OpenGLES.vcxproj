@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Logging\dll\Logging.vcxproj">
-      <Project>{862d36c2-cc83-4d04-b9b8-bef07f479905}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\QuartzCore\dll\QuartzCore.vcxproj">
       <Project>{037B568F-4104-417E-9FB8-B6899E398903}</Project>
     </ProjectReference>

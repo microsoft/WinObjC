@@ -21,7 +21,6 @@
 #import <CoreFoundation/CFArray.h>
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFType.h>
 
 typedef const struct __CTFontCollection* CTFontCollectionRef;
 typedef CFComparisonResult (*CTFontCollectionSortDescriptorsCallback)(CTFontDescriptorRef first, CTFontDescriptorRef second, void* refCon);

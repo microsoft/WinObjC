@@ -122,6 +122,7 @@ public:
 - (CAPrivateInfo*)_priv;
 - (void)_setRootLayer:(BOOL)isRootLayer;
 
+- (void)_setZIndex:(int)zIndex;
 @end
 
 #endif /* _CALAYERPRIVATE_H_ */

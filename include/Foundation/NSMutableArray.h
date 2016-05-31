@@ -49,14 +49,14 @@ FOUNDATION_EXPORT_CLASS
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(ObjectType)anObject;
 - (void)setObject:(ObjectType)anObject atIndexedSubscript:(NSUInteger)index;
 - (void)replaceObjectsAtIndexes:(NSIndexSet*)indexes withObjects:(NSArray<ObjectType>*)objects STUB_METHOD;
-- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray<ObjectType>*)otherArray range:(NSRange)otherRange STUB_METHOD;
-- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray<ObjectType>*)otherArray STUB_METHOD;
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray<ObjectType>*)otherArray range:(NSRange)otherRange;
+- (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray<ObjectType>*)otherArray;
 - (void)setArray:(NSArray<ObjectType>*)otherArray;
 - (void)filterUsingPredicate:(NSPredicate*)predicate;
 - (void)exchangeObjectAtIndex:(NSUInteger)idx1 withObjectAtIndex:(NSUInteger)idx2;
 - (void)sortUsingDescriptors:(NSArray<NSSortDescriptor*>*)sortDescriptors;
 - (void)sortUsingComparator:(NSComparator)cmptr;
-- (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr STUB_METHOD;
+- (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr;
 - (void)sortUsingFunction:(NSInteger (*)(ObjectType, ObjectType, void*))compare context:(void*)context;
 - (void)sortUsingSelector:(SEL)comparator;
 @end

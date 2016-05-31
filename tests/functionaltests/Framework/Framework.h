@@ -20,4 +20,5 @@
 namespace FrameworkHelper {
 
 HRESULT RunOnUIThread(const std::function<void()>& fn);
+HRESULT DisplayRequest(bool keepActive);
 }

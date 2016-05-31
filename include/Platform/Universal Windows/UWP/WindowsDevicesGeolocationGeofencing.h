@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDGGGeofence, WDGGGeofenceMonitor, WDGGGeofenceStateChangeReport;
 @protocol WDGGIGeofenceFactory
@@ -61,7 +61,6 @@ enum _WDGGGeofenceRemovalReason {
 };
 typedef unsigned WDGGGeofenceRemovalReason;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsDevicesGeolocation.h"
 #include "WindowsFoundation.h"
 

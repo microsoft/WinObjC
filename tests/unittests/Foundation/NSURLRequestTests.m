@@ -19,7 +19,7 @@
 #import <Foundation/NSURLRequest.h>
 #import <Foundation/NSURL.h>
 
-TEST(Foundation, NSURLRequest_requestWithURL) {
+TEST(NSURLRequest, requestWithURL) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -30,12 +30,12 @@ TEST(Foundation, NSURLRequest_requestWithURL) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != NULL, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == NULL, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }
 
-TEST(Foundation, NSURLRequest_requestWithURLFull) {
+TEST(NSURLRequest, requestWithURLFull) {
     NSURL* url = [NSURL URLWithString:@"file:///foo/var/"];
 
     ASSERT_TRUE_MSG(url != NULL, "FAILED: url should be non-null!");
@@ -46,12 +46,12 @@ TEST(Foundation, NSURLRequest_requestWithURLFull) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestReturnCacheDataElseLoad.");
     ASSERT_EQ_MSG(20.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 20.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != NULL, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == NULL, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }
 
-TEST(Foundation, NSURLRequest_defaultInit) {
+TEST(NSURLRequest, defaultInit) {
     NSURLRequest* urlRequest = [[NSURLRequest alloc] init];
     ASSERT_TRUE_MSG(urlRequest != NULL, "FAILED: urlRequest should be non-null!");
     ASSERT_OBJCEQ_MSG(NULL, [urlRequest URL], "FAILED: url is not null.");
@@ -59,7 +59,7 @@ TEST(Foundation, NSURLRequest_defaultInit) {
                   [urlRequest cachePolicy],
                   "FAILED:cachePolicy is not NSURLRequestUseProtocolCachePolicy.");
     ASSERT_EQ_MSG(60.0, [urlRequest timeoutInterval], "FAILED: timeoutInterval is not 60.0.");
-    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] != NULL, "FAILED: allHTTPHeaderFields is null.");
+    ASSERT_TRUE_MSG([urlRequest allHTTPHeaderFields] == NULL, "FAILED: allHTTPHeaderFields is not null.");
     ASSERT_OBJCEQ_MSG(@"GET", [urlRequest HTTPMethod], "FAILED: HTTPMethod is not GET.");
     ASSERT_EQ_MSG(YES, [urlRequest HTTPShouldHandleCookies], "FAILED: HTTPShouldHandleCookies is not YES.");
 }

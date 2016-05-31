@@ -19,7 +19,4 @@
 @interface NSString ()
 - (int)_versionStringCompare:(NSString*)compStrAddr;
 - (NSString*)_reverseString;
-- (const void*)_quickStringUsingEncoding:(unsigned long)encoding;
-- (const unichar*)_rawTerminatedCharacters;
-- (void)_longLongValuePtr:(__int64*)ret;
 @end

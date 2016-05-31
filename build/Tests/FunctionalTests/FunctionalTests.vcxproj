@@ -223,6 +223,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLSession.mm">
       <ObjectiveCARC>true</ObjectiveCARC>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSUserDefaultsTests.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\SampleTest.mm" />
   </ItemGroup>
   <ItemGroup>

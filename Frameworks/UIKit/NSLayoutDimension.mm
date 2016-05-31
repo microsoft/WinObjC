@@ -17,86 +17,145 @@
 #import <UIKit/UIKit.h>
 #import <StubReturn.h>
 
+#import "NSLayoutAnchorInternal.h"
+
 @implementation NSLayoutDimension
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [self _validateMayConstrainToAnchor:anchor];
+
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationEqual
+                                           toItem:anchor->_owner
+                                        attribute:anchor->_attr
+                                       multiplier:m
+                                         constant:0.0f];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [self _validateMayConstrainToAnchor:anchor];
+
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationEqual
+                                           toItem:anchor->_owner
+                                        attribute:anchor->_attr
+                                       multiplier:m
+                                         constant:c];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintEqualToConstant:(CGFloat)c {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationEqual
+                                           toItem:nil
+                                        attribute:NSLayoutAttributeNotAnAttribute
+                                       multiplier:1.0f
+                                         constant:c];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [self _validateMayConstrainToAnchor:anchor];
+
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                           toItem:anchor->_owner
+                                        attribute:anchor->_attr
+                                       multiplier:m
+                                         constant:0.0f];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [self _validateMayConstrainToAnchor:anchor];
+
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                           toItem:anchor->_owner
+                                        attribute:anchor->_attr
+                                       multiplier:m
+                                         constant:c];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintGreaterThanOrEqualToConstant:(CGFloat)c {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                           toItem:nil
+                                        attribute:NSLayoutAttributeNotAnAttribute
+                                       multiplier:1.0f
+                                         constant:c];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [self _validateMayConstrainToAnchor:anchor];
+
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationLessThanOrEqual
+                                           toItem:anchor->_owner
+                                        attribute:anchor->_attr
+                                       multiplier:m
+                                         constant:0.0f];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c {
-    UNIMPLEMENTED();
-    return StubReturn();
+    [self _validateMayConstrainToAnchor:anchor];
+
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationLessThanOrEqual
+                                           toItem:anchor->_owner
+                                        attribute:anchor->_attr
+                                       multiplier:m
+                                         constant:c];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSLayoutConstraint*)constraintLessThanOrEqualToConstant:(CGFloat)c {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [NSLayoutConstraint constraintWithItem:self->_owner 
+                                        attribute:self->_attr 
+                                        relatedBy:NSLayoutRelationLessThanOrEqual
+                                           toItem:nil
+                                        attribute:NSLayoutAttributeNotAnAttribute
+                                       multiplier:1.0f
+                                         constant:c];
 }
 
 @end

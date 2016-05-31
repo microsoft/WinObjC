@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXAAutomationProperty, WUXAAnnotationPatternIdentifiers, WUXAAutomationElementIdentifiers, WUXAAutomationProperties,
     WUXADockPatternIdentifiers, WUXADragPatternIdentifiers, WUXADropTargetPatternIdentifiers, WUXAExpandCollapsePatternIdentifiers,
@@ -278,7 +278,6 @@ typedef unsigned WUXAAutomationTextDecorationLineStyle;
 
 #include "WindowsUIXaml.h"
 #include "WindowsUIXamlAutomationPeers.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUICore.h"
 // Windows.UI.Xaml.DependencyPropertyChangedCallback
 #ifndef __WXDependencyPropertyChangedCallback__DEFINED

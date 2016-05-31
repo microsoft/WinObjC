@@ -15,9 +15,7 @@ CMAKE_PATH = None
 ARCH_TO_DIR_NAME = {"Win32": "x86",
                     "Win64": "x64",
                     "ARM" : "ARM"}
-PLATFORM_TO_DIR_NAME = {"Windows8.1": "Windows 8.1",
-                        "WindowsPhone8.1": "Windows Phone 8.1",
-                        "Windows10.0": "Windows Universal"}
+PLATFORM_TO_DIR_NAME = {"Windows10.0": "Universal Windows"}
 
 class Configuration:
 
@@ -55,11 +53,6 @@ class Configuration:
 def create_configurations():
     '''returns list of predefined Configuration objects for builds'''
     configs = [
-        Configuration("Visual Studio 12 2013", "WindowsPhone8.1", "Win32", "WindowsPhone", "8.1"),
-        Configuration("Visual Studio 12 2013", "WindowsPhone8.1", "ARM", "WindowsPhone", "8.1"),
-        Configuration("Visual Studio 12 2013", "Windows8.1", "Win32", "WindowsStore", "8.1"),
-        Configuration("Visual Studio 12 2013", "Windows8.1", "Win64", "WindowsStore", "8.1"),
-        Configuration("Visual Studio 12 2013", "Windows8.1", "ARM", "WindowsStore", "8.1"),
         Configuration("Visual Studio 14 2015", "Windows10.0", "Win32", "WindowsStore", "10.0"),
         Configuration("Visual Studio 14 2015", "Windows10.0", "Win64", "WindowsStore", "10.0"),
         Configuration("Visual Studio 14 2015", "Windows10.0", "ARM", "WindowsStore", "10.0"),

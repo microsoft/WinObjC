@@ -24,15 +24,15 @@
 
 UIKIT_EXPORT_CLASS
 @interface NSLayoutDimension : NSLayoutAnchor
-- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m STUB_METHOD;
-- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintEqualToConstant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m STUB_METHOD;
+- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m ;
+- (NSLayoutConstraint*)constraintEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintEqualToConstant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m;
 - (NSLayoutConstraint*)constraintGreaterThanOrEqualToAnchor:(NSLayoutDimension*)anchor
                                                  multiplier:(CGFloat)m
-                                                   constant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintGreaterThanOrEqualToConstant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m STUB_METHOD;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c STUB_METHOD;
-- (NSLayoutConstraint*)constraintLessThanOrEqualToConstant:(CGFloat)c STUB_METHOD;
+                                                   constant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintGreaterThanOrEqualToConstant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m;
+- (NSLayoutConstraint*)constraintLessThanOrEqualToAnchor:(NSLayoutDimension*)anchor multiplier:(CGFloat)m constant:(CGFloat)c;
+- (NSLayoutConstraint*)constraintLessThanOrEqualToConstant:(CGFloat)c;
 @end

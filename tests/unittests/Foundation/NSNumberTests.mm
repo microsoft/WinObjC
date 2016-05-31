@@ -152,4 +152,54 @@ TEST(NSNumber, Compare) {
     ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithUnsignedLongLong:2352]]);
     ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithChar:'a']]);
     ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithLongLong:-15145] compare:[NSNumber numberWithUnsignedChar:'a']]);
+
+    // Test comparison with negative floating point numbers
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-5.0]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-5.1]]);
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-6.9]]);
+    ASSERT_EQ(NSOrderedSame, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-7.0]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-7.1]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-8.0]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithFloat:-8.1]]);
+
+    // Test comparison with large numbers
+    ASSERT_EQ(NSOrderedAscending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:pow(2, 66)]]);
+    ASSERT_EQ(NSOrderedDescending, [[NSNumber numberWithInt:-7] compare:[NSNumber numberWithDouble:-pow(2, 66)]]);
+}
+
+@interface TestNSNumberSubclass : NSNumber
+@end
+
+@implementation TestNSNumberSubclass {
+    long long _value;
+}
+
+- (instancetype)initWithLongLong:(long long)val {
+    if (self = [super init]) {
+        _value = val;
+    }
+    return self;
+}
+
+- (long long)longLongValue {
+    return _value;
+}
+
+- (const char*)objCType {
+    return @encode(long long);
+}
+
+@end
+
+TEST(NSNumber, Derived_CFNumberGetValue) {
+    long long expected = LLONG_MAX;
+    NSNumber* num = [TestNSNumberSubclass numberWithLongLong:expected];
+
+    long long result;
+    ASSERT_TRUE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongLongType, &result));
+    ASSERT_EQ(expected, result);
+
+    // Too small an output type should fail
+    long tooSmallResult;
+    ASSERT_FALSE(CFNumberGetValue(static_cast<CFNumberRef>(num), kCFNumberLongType, &tooSmallResult));
 }

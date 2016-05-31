@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSMMapAddress, WSMMapLocation, WSMMapRouteManeuver, WSMMapRouteLeg, WSMMapRoute, WSMMapLocationFinderResult, WSMMapRouteFinderResult,
     WSMMapRouteDrivingOptions, WSMMapLocationFinder, WSMMapRouteFinder, WSMMapService, WSMMapManager;
@@ -113,9 +113,8 @@ enum _WSMMapRouteFinderStatus {
 };
 typedef unsigned WSMMapRouteFinderStatus;
 
-#include "WindowsFoundation.h"
 #include "WindowsDevicesGeolocation.h"
-#include "WindowsFoundationCollections.h"
+#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
 

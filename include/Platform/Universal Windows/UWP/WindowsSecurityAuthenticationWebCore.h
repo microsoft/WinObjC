@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSAWCWebTokenRequest, WSAWCWebAuthenticationCoreManager, WSAWCWebProviderError, WSAWCWebTokenResponse, WSAWCWebTokenRequestResult;
 @protocol WSAWCIWebTokenRequest
@@ -46,7 +46,6 @@ enum _WSAWCWebTokenRequestStatus {
 typedef unsigned WSAWCWebTokenRequestStatus;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsSecurityCredentials.h"
 #include "WindowsSystem.h"
 

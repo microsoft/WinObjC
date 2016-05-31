@@ -17,7 +17,7 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSCompoundPredicate_Init) {
+TEST(NSCompoundPredicate, Init) {
     NSCompoundPredicate* compoundPredicate = [[NSCompoundPredicate alloc] init];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
     [compoundPredicate release];
@@ -34,7 +34,7 @@ TEST(Foundation, NSCompoundPredicate_NOTPredicateWithSubpredicate) {
     [predicate release];
 }
 
-TEST(Foundation, NSCompoundPredicate_NOTPredicateWithSubpredicateEval) {
+TEST(NSCompoundPredicate, NOTPredicateWithSubpredicateEval) {
     NSArray* array = @[ @1, @2, @3, @7, @8, @11, @14, @19, @20 ];
 
     NSPredicate* evenNumbersPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -71,7 +71,7 @@ TEST(Foundation, NSCompoundPredicate_ANDPredicateWithSubpredicates) {
     [predicates release];
 }
 
-TEST(Foundation, NSCompoundPredicate__ANDPredicateWithSubpredicatesEval) {
+TEST(NSCompoundPredicate, _ANDPredicateWithSubpredicatesEval) {
     NSArray* array = @[ @1, @1, @1, @1, @1, @0 ];
 
     NSPredicate* predicate1 = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -97,7 +97,7 @@ TEST(Foundation, NSCompoundPredicate__ANDPredicateWithSubpredicatesEval) {
     }
 }
 
-TEST(Foundation, NSCompoundPredicate__ANDPredicateWithSubpredicatesEval2) {
+TEST(NSCompoundPredicate, _ANDPredicateWithSubpredicatesEval2) {
     NSArray* array = @[ @1, @2 ];
 
     NSPredicate* oddPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -122,7 +122,7 @@ TEST(Foundation, NSCompoundPredicate__ANDPredicateWithSubpredicatesEval2) {
     ASSERT_EQ_MSG(YES, [filteredArray count] == 0, "FAILED: AND predicate filter did not work as expected.");
 }
 
-TEST(Foundation, NSCompoundPredicate__ANDPredicateWithSubpredicatesEvalWithNOT) {
+TEST(NSCompoundPredicate, _ANDPredicateWithSubpredicatesEvalWithNOT) {
     NSArray* array = @[ @1, @2 ];
 
     NSPredicate* oddPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -162,7 +162,7 @@ TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicates) {
     [predicates release];
 }
 
-TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEval) {
+TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEval) {
     NSArray* array = @[ @1, @1, @1, @1, @1, @0 ];
 
     NSPredicate* predicate1 = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -187,7 +187,7 @@ TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEval) {
     ASSERT_EQ_MSG(0, [[filteredArray firstObject] integerValue], "FAILED: OR predicate filter did not work as expected.");
 }
 
-TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEval2) {
+TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEval2) {
     NSArray* array = @[ @1, @2, @3, @4, @5, @6 ];
 
     NSPredicate* predicate1 = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -217,7 +217,7 @@ TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEval2) {
     }
 }
 
-TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEvalWithNOT) {
+TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEvalWithNOT) {
     NSArray* array = @[ @1, @2, @3, @4, @5, @6 ];
 
     NSPredicate* predicate1 = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
@@ -251,7 +251,7 @@ TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEvalWithNOT) {
     }
 }
 
-TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEvalWithNOTWithAND) {
+TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEvalWithNOTWithAND) {
     // testing ((!predicate1) || (predicate2 && predicate3) || (predicate4))
 
     NSArray* array = @[ @1, @2, @3, @4, @5, @6, @7 ];
@@ -302,7 +302,7 @@ TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEvalWithNOTWith
     }
 }
 
-TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEvalWithNOTWithAND2) {
+TEST(NSCompoundPredicate, ORPredicateWithSubpredicatesEvalWithNOTWithAND2) {
     // testing (((!predicate1) || (predicate2 && !predicate3) || (predicate4)) && (predicate5))
 
     NSMutableArray* array = [[NSMutableArray alloc] init];
@@ -373,7 +373,7 @@ TEST(Foundation, NSCompoundPredicate_ORPredicateWithSubpredicatesEvalWithNOTWith
     [array release];
 }
 
-TEST(Foundation, NSCompoundPredicate_ArchiveAndUnarchiveObject) {
+TEST(NSCompoundPredicate, ArchiveAndUnarchiveObject) {
     NSCompoundPredicate* compoundPredicate = [[NSCompoundPredicate alloc] init];
     ASSERT_TRUE_MSG(compoundPredicate != nil, "FAILED: compoundPredicate should be non-null!");
 

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDWSWiFiDirectServiceProvisioningInfo, WDWSWiFiDirectServiceSession, WDWSWiFiDirectServiceAutoAcceptSessionConnectedEventArgs,
     WDWSWiFiDirectServiceRemotePortAddedEventArgs, WDWSWiFiDirectServiceSessionDeferredEventArgs, WDWSWiFiDirectServiceSessionRequest,
@@ -92,7 +92,6 @@ enum _WDWSWiFiDirectServiceIPProtocol {
 };
 typedef unsigned WDWSWiFiDirectServiceIPProtocol;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsNetworkingSockets.h"
 #include "WindowsNetworking.h"
