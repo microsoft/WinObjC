@@ -235,6 +235,10 @@ using cacheType = std::list<StrongId<_NSCacheEntry>>;
 
 // invariant: under lock
 - (NSUInteger)_evictEntry:(_NSCacheEntry*)entry force:(bool)force {
+    // Since we're removing potentially the last reference to entry, we need to keep it alive so that
+    // we can poke at its internals.
+    StrongId<_NSCacheEntry> strongEntry(entry);
+
     NSUInteger cost = [entry cost];
 
     id object = entry.object;
@@ -257,6 +261,9 @@ using cacheType = std::list<StrongId<_NSCacheEntry>>;
     _totalCost -= cost;
 
     if (remove) {
+        // std::unordered_map<K, V> will re-hash a value of type K on erase(iterator);
+        // since _cacheEntries holds the owning reference and _iterators does not, we need
+        // to ensure that entry (and therefore entry.key) outlive _cacheEntries' ownership of them.
         const auto found = _iterators.find([entry key]);
         _cacheEntries.erase(found->second);
         _iterators.erase(found);
