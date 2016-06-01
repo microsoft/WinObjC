@@ -1305,9 +1305,6 @@ public:
             std::make_shared<QueuedNodeMovement>(QueuedNodeMovement::Add, node, beforeNode, afterNode, superNode));
     }
 
-    virtual void sortWindowLevels() override {
-    }
-
     virtual void moveNode(const std::shared_ptr<DisplayTransaction>& transaction,
                           DisplayNode* node,
                           DisplayNode* beforeNode,
@@ -1455,9 +1452,6 @@ public:
 
     virtual void ReleaseDisplayTexture(DisplayTexture* tex) override {
         tex->Release();
-    }
-
-    void SortWindowLevels() override {
     }
 
     virtual bool isTablet() override {

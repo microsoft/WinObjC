@@ -2582,18 +2582,25 @@ void UIShutdown() {
     GetCACompositor()->setDeviceSize(newWidth, newHeight);
 
     //  Adjust size of all UIWindows
-    if (_sizeUIWindowToFit) {
-        CGRect curBounds;
-        curBounds.origin.x = 0.0f;
-        curBounds.origin.y = 0.0f;
-        curBounds.size.width = newWidth;
-        curBounds.size.height = newHeight;
-
-        for (UIWindow* current in windows) {
+    CGRect curBounds;
+    curBounds.origin.x = 0.0f;
+    curBounds.origin.y = 0.0f;
+    curBounds.size.width = newWidth;
+    curBounds.size.height = newHeight;
+    bool isFrameSet = false;
+    for (UIWindow* current in windows) {
+        if (current.sizeUIWindowToFit) {
             [current setFrame:curBounds];
+            isFrameSet = true;
         }
+    }
 
+    if (_sizeUIWindowToFit) {
         [popupRotationLayer setFrame:curBounds];
+        isFrameSet = true;
+    }
+
+    if (isFrameSet) {
         [UIApplication viewTreeChanged];
     }
 

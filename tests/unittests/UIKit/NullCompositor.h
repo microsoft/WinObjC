@@ -38,9 +38,6 @@ public:
                                  const std::shared_ptr<DisplayTransaction>& onTransaction) override {
     }
 
-    void sortWindowLevels() override {
-    }
-
     void addNode(const std::shared_ptr<DisplayTransaction>& transaction,
                  DisplayNode* node,
                  DisplayNode* superNode,
@@ -135,8 +132,6 @@ public:
     void ReleaseDisplayTexture(DisplayTexture* tex) override {
     }
 
-    void SortWindowLevels() override {
-    }
     bool isTablet() override {
         return false;
     }
