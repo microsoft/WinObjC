@@ -157,7 +157,10 @@ static id propertyListFromElement(xml_node<>* elem) {
         return dataFromElement(elem);
     } else if (strncmp(elem->name(), "date", elem->name_size()) == 0) {
         Str numStr(elem->value(), elem->value_size());
-        return [NSDate dateWithTimeIntervalSinceReferenceDate:atof(numStr.cstr())];
+        // YYYY '-' MM '-' DD 'T' hh ':' mm ':' ss 'Z'
+        NSDateFormatter* formatter = [[NSDateFormatter new] autorelease];
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'Z'"];
+        return [formatter dateFromString:@(numStr.cstr())];
     } else {
         TraceVerbose(TAG, L"Unrecognized element type!");
     }
