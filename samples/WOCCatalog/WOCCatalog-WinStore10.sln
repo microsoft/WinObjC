@@ -2,16 +2,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{E7759A79-635A-4989-927C-62F84C0EDADA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WOCCatalog", "WOCCatalog", "{BE8F7686-4FDD-426A-9DC7-D6F311C3B3D3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{4D3236FB-F6EC-4605-85D0-714203CA41CA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog-Headers", "WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems", "{E3862D39-D90C-4465-BD69-5DBFA806B04A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{DD605E13-6694-420C-9E19-77C104B83659}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WOCCatalog", "WOCCatalog.vsimporter\WOCCatalog-WinStore10\WOCCatalog.vcxproj", "{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{4D3236FB-F6EC-4605-85D0-714203CA41CA}*SharedItemsImports = 9
-		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{DD605E13-6694-420C-9E19-77C104B83659}*SharedItemsImports = 4
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{E3862D39-D90C-4465-BD69-5DBFA806B04A}*SharedItemsImports = 9
+		WOCCatalog.vsimporter\WOCCatalog-Headers-WinStore10\WOCCatalog-Headers.vcxitems*{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -20,24 +20,24 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DD605E13-6694-420C-9E19-77C104B83659}.Debug|ARM.ActiveCfg = Debug|ARM
-		{DD605E13-6694-420C-9E19-77C104B83659}.Debug|ARM.Build.0 = Debug|ARM
-		{DD605E13-6694-420C-9E19-77C104B83659}.Debug|ARM.Deploy.0 = Debug|ARM
-		{DD605E13-6694-420C-9E19-77C104B83659}.Debug|Win32.ActiveCfg = Debug|Win32
-		{DD605E13-6694-420C-9E19-77C104B83659}.Debug|Win32.Build.0 = Debug|Win32
-		{DD605E13-6694-420C-9E19-77C104B83659}.Debug|Win32.Deploy.0 = Debug|Win32
-		{DD605E13-6694-420C-9E19-77C104B83659}.Release|ARM.ActiveCfg = Release|ARM
-		{DD605E13-6694-420C-9E19-77C104B83659}.Release|ARM.Build.0 = Release|ARM
-		{DD605E13-6694-420C-9E19-77C104B83659}.Release|ARM.Deploy.0 = Release|ARM
-		{DD605E13-6694-420C-9E19-77C104B83659}.Release|Win32.ActiveCfg = Release|Win32
-		{DD605E13-6694-420C-9E19-77C104B83659}.Release|Win32.Build.0 = Release|Win32
-		{DD605E13-6694-420C-9E19-77C104B83659}.Release|Win32.Deploy.0 = Release|Win32
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Debug|ARM.ActiveCfg = Debug|ARM
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Debug|ARM.Build.0 = Debug|ARM
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Debug|ARM.Deploy.0 = Debug|ARM
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Debug|Win32.Build.0 = Debug|Win32
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Debug|Win32.Deploy.0 = Debug|Win32
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Release|ARM.ActiveCfg = Release|ARM
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Release|ARM.Build.0 = Release|ARM
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Release|ARM.Deploy.0 = Release|ARM
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Release|Win32.ActiveCfg = Release|Win32
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Release|Win32.Build.0 = Release|Win32
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}.Release|Win32.Deploy.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4D3236FB-F6EC-4605-85D0-714203CA41CA} = {E7759A79-635A-4989-927C-62F84C0EDADA}
-		{DD605E13-6694-420C-9E19-77C104B83659} = {E7759A79-635A-4989-927C-62F84C0EDADA}
+		{E3862D39-D90C-4465-BD69-5DBFA806B04A} = {BE8F7686-4FDD-426A-9DC7-D6F311C3B3D3}
+		{1D4B8B44-3515-4B37-A0C5-F2D2644DF826} = {BE8F7686-4FDD-426A-9DC7-D6F311C3B3D3}
 	EndGlobalSection
 EndGlobal

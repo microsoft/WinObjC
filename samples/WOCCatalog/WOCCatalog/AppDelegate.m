@@ -41,12 +41,47 @@
 
 @implementation AppDelegate
 
+// Five UIWindow are created. The first four are for testing/demostrating windowLevel property of UIWindow.
+// The level control UIWindow has buttons for changing the windowLevel of blue, red, yellow window.
+// The last UIWindow is the main UIWindow which is for testing/demostrating all other things.
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.levelControlVC = [[WindowLevelControlViewController alloc] init];
+    self.levelControlWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.levelControlWindow.rootViewController = self.levelControlVC;
+    self.levelControlWindow.windowLevel = UIWindowLevelNormal;
+    [self.levelControlWindow makeKeyAndVisible];
 
+    self.redVC = [[BlankWindowViewController alloc] init];
+    self.redVC.view.backgroundColor = [UIColor redColor];
+    CGRect redColorWindowRect = CGRectMake(50, 140, 280, 480);
+    self.redColorWindow = [[UIWindow alloc] initWithFrame:redColorWindowRect];
+    self.redColorWindow.rootViewController = self.redVC;
+    self.redColorWindow.windowLevel = UIWindowLevelNormal + 1.0f;
+    self.redColorWindow.sizeUIWindowToFit = FALSE;
+    [self.redColorWindow makeKeyAndVisible];
+
+    self.blueVC = [[BlankWindowViewController alloc] init];
+    self.blueVC.view.backgroundColor = [UIColor blueColor];
+    CGRect blueColorWindowRect = CGRectMake(50, 160, 280, 50);
+    self.blueColorWindow = [[UIWindow alloc] initWithFrame:blueColorWindowRect];
+    self.blueColorWindow.rootViewController = self.blueVC;
+    self.blueColorWindow.windowLevel = UIWindowLevelNormal + 2.0f;
+    self.blueColorWindow.sizeUIWindowToFit = FALSE;
+    [self.blueColorWindow makeKeyAndVisible];
+
+    self.yellowVC = [[BlankWindowViewController alloc] init];
+    self.yellowVC.view.backgroundColor = [UIColor yellowColor];
+    CGRect yellowColorWindowRect = CGRectMake(80, 160, 220, 420);
+    self.yellowColorWindow = [[UIWindow alloc] initWithFrame:yellowColorWindowRect];
+    self.yellowColorWindow.rootViewController = self.yellowVC;
+    self.yellowColorWindow.windowLevel = UIWindowLevelNormal + 3.0f;
+    self.yellowColorWindow.sizeUIWindowToFit = FALSE;
+    [self.yellowColorWindow makeKeyAndVisible];
+
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     MainViewController* mtvc = [[MainViewController alloc] init];
     self.viewController = (UIViewController*)[[UINavigationController alloc] initWithRootViewController:mtvc];
-
+    self.window.windowLevel = UIWindowLevelNormal + 4.0f;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 

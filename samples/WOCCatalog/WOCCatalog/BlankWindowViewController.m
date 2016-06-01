@@ -14,23 +14,12 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
-#import "WindowLevelControlViewController.h"
 #import "BlankWindowViewController.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@implementation BlankWindowViewController
 
-@property (strong, nonatomic) UIWindow* window;
-@property (strong, nonatomic) UIWindow* levelControlWindow;
-@property (strong, nonatomic) UIWindow* redColorWindow;
-@property (strong, nonatomic) UIWindow* yellowColorWindow;
-@property (strong, nonatomic) UIWindow* blueColorWindow;
-
-@property (strong, nonatomic) UIViewController* viewController;
-@property (strong, nonatomic) WindowLevelControlViewController* levelControlVC;
-@property (strong, nonatomic) BlankWindowViewController* redVC;
-@property (strong, nonatomic) BlankWindowViewController* yellowVC;
-@property (strong, nonatomic) BlankWindowViewController* blueVC;
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
 
 @end
-
