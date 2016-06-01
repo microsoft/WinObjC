@@ -359,6 +359,38 @@ enum {
 static const uint32_t DISPATCH_QUEUE_PRIORITY_BACKGROUND 
     __attribute__((deprecated("DISPATCH_QUEUE_PRIORITY_BACKGROUND has a value of DISPATCH_QUEUE_PRIORITY_LOW instead of INT16_MIN on WinObjC"))) 
         = DISPATCH_QUEUE_PRIORITY_LOW;
+
+/*!
+ * @enum Quality of service classes
+ *
+ * @constant QOS_CLASS_USER_INTERACTIVE
+ * Items dispatched to the queue will run at high priority.
+ *
+ * @constant QOS_CLASS_USER_INITIATED
+ * Items dispatched to the queue will run at high priority.
+ *
+ * @constant QOS_CLASS_DEFAULT
+ * Items dispatched to the queue will run at at the default
+ * priority, after user-initiated and user-interactive tasks,
+ * but before utility or background tasks.
+ *
+ * @constant QOS_CLASS_UTILITY
+ * Items dispatched to the queue will run at low priority.
+ */
+enum {
+	QOS_CLASS_USER_INTERACTIVE = DISPATCH_QUEUE_PRIORITY_HIGH,
+	QOS_CLASS_USER_INITIATED = DISPATCH_QUEUE_PRIORITY_HIGH,
+	QOS_CLASS_DEFAULT = DISPATCH_QUEUE_PRIORITY_DEFAULT,
+
+	// WINOBJC: QOS_CLASS_UTILITY is identical to DISPATCH_QUEUE_PRIORITY_LOW
+	QOS_CLASS_UTILITY = DISPATCH_QUEUE_PRIORITY_LOW,
+
+	MIN_QOS_CLASS_PRIORITY = QOS_CLASS_UTILITY,
+};
+
+static const int32_t QOS_CLASS_BACKGROUND
+    __attribute__((deprecated("QOS_CLASS_BACKGROUND is the same as DISPATCH_QUEUE_PRIORITY_LOW on WinObjC")))
+        = DISPATCH_QUEUE_PRIORITY_LOW;
         
 #define DISPATCH_QUEUE_SERIAL NULL
 
