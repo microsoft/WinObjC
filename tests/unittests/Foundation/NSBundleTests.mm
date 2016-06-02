@@ -27,6 +27,8 @@ TEST(NSBundle, NSBundle_SanityTest) {
     ASSERT_OBJCEQ_MSG(filePath, [bundle bundlePath], @"Expected bundle path does not match the actual path");
 
     ASSERT_OBJCEQ_MSG(fileURL, [bundle bundleURL], @"Expected bundle URL does not match the actual URL");
+
+    ASSERT_EQ_MSG(nil, [NSBundle bundleWithPath:nil], @"Bundle with nil path somehow not nil");
 }
 
 TEST(NSBundle, ClassNamed) {
