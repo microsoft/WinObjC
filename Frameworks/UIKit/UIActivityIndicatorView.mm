@@ -1,4 +1,4 @@
-//******************************************************************************
+﻿//******************************************************************************
 //
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
@@ -31,7 +31,8 @@
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @When UINibUnArchiver have decodeCGrectForKey method. Code needs to be refactored.
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
@@ -46,6 +47,20 @@
         if ([coder containsValueForKey:@"UIActivityIndicatorViewStyle"]) {
             [self setActivityIndicatorViewStyle:(UIActivityIndicatorViewStyle)[coder decodeInt32ForKey:@"UIActivityIndicatorViewStyle"]];
         }
+        CGRect frame = CGRectZero;
+        if ([coder containsValueForKey:@"UIFrameX"]) {
+            frame.origin.x = [coder decodeInt32ForKey:@"UIFrameX"];
+        }
+        if ([coder containsValueForKey:@"UIFrameY"]) {
+            frame.origin.y = [coder decodeInt32ForKey:@"UIFrameY"];
+        }
+        if ([coder containsValueForKey:@"UIFrameWidth"]) {
+            frame.size.width = [coder decodeInt32ForKey:@"UIFrameWidth"];
+        }
+        if ([coder containsValueForKey:@"UIFrameHeight"]) {
+            frame.size.height = [coder decodeInt32ForKey:@"UIFrameHeight"];
+        }
+        [self setFrame:frame];
     }
     return self;
 }

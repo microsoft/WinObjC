@@ -51,6 +51,15 @@ void UIActivityIndicatorView::InitFromStory(XIBObject* obj) {
         }
     }
 
+    XIBObject* rectAttr = FindMember("frame");
+    _frame = { 0, 0, 0, 0 };
+    if (rectAttr) {
+        _frame.x = strtof(rectAttr->getAttrAndHandle("x"), NULL);
+        _frame.y = strtof(rectAttr->getAttrAndHandle("y"), NULL);
+        _frame.width = strtof(rectAttr->getAttrAndHandle("width"), NULL);
+        _frame.height = strtof(rectAttr->getAttrAndHandle("height"), NULL);
+    }
+
     _outputClassName = "UIActivityIndicatorView";
 }
 
@@ -82,4 +91,10 @@ void UIActivityIndicatorView::ConvertStaticMappings(NIBWriter* writer, XIBObject
     if (_tintColor) {
         AddOutputMember(writer, "UITintColor", _tintColor);
     }
+
+    // When UINibUnArchiver have decodeCGrectForKey method.Code needs to be refactored.
+    AddInt(writer, "UIFrameX", (int)_frame.x);
+    AddInt(writer, "UIFrameY", (int)_frame.y);
+    AddInt(writer, "UIFrameWidth", (int)_frame.width);
+    AddInt(writer, "UIFrameHeight", (int)_frame.height);
 }
