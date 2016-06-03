@@ -16,6 +16,7 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#include <complex.h>
 
 struct ArbitrarilyComplexStruct {
 #ifdef _M_ARM
@@ -45,13 +46,13 @@ TEST(NSValue, specializedInstanceIsStillAnNSValue) {
 }
 
 TEST(NSValue, arbitraryStructCanBeStored) {
-    ArbitrarilyComplexStruct acs{ 3.14, 1.9i };
+    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9 * I };
     id val = [NSValue valueWithBytes:&acs objCType:@encode(ArbitrarilyComplexStruct)];
     ASSERT_OBJCNE(nil, val);
 }
 
 TEST(NSValue, arbitraryStructCanBeRetrieved) {
-    ArbitrarilyComplexStruct acs{ 3.14, 1.9i };
+    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9 * I };
     id val = [NSValue valueWithBytes:&acs objCType:@encode(ArbitrarilyComplexStruct)];
     ArbitrarilyComplexStruct acs2{};
     ASSERT_NO_THROW([val getValue:&acs2]);
@@ -60,7 +61,7 @@ TEST(NSValue, arbitraryStructCanBeRetrieved) {
 }
 
 TEST(NSValue, arbitraryStructCanBeSerializedAndDeserialized) {
-    ArbitrarilyComplexStruct acs{ 3.14, 1.9i };
+    ArbitrarilyComplexStruct acs{ { 3.14 }, 1.9 * I };
     id val = [NSValue valueWithBytes:&acs objCType:@encode(ArbitrarilyComplexStruct)];
     id data = [NSKeyedArchiver archivedDataWithRootObject:val];
     id val2 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
