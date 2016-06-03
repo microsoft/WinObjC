@@ -35,10 +35,10 @@ struct UIViewControllerPriv {
     idretaintype(UIViewController) _modalViewController;
     idretaintype(UISearchDisplayController) _searchDisplayController;
     __unsafe_unretained id _presentingViewController, _presentedViewController;
-    __unsafe_unretained id _popoverPresentationController;
+    __unsafe_unretained UIPopoverPresentationController* _popoverPresentationController;
     __unsafe_unretained id _presentationController;
     idretaintype(NSDictionary) _externalObjects;
-    __unsafe_unretained id _parentViewController;
+    __unsafe_unretained UIViewController* _parentViewController;
     idretaintype(NSString) nibName;
     idretaintype(NSBundle) nibBundle;
     idretaintype(NSString) _title;
@@ -56,6 +56,7 @@ struct UIViewControllerPriv {
     UIModalTransitionStyle _modalTransitionStyle;
     BOOL _isRootView;
     idretainp<void (^)(void)> _dismissCompletionBlock;
+    idretainp<void (^)(void)> _presentCompletionBlock;
     idretaintype(UIViewController) _dismissController;
     CGSize _contentSizeForViewInPopover;
     unsigned _edgesForExtendedLayout;
