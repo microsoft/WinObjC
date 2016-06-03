@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WFDTracingStatusChangedEventArgs, WFDAsyncCausalityTracer, WFDRuntimeBrokerErrorSettings, WFDErrorDetails, WFDLoggingOptions,
     WFDLoggingChannelOptions, WFDLoggingFields, WFDLoggingActivity, WFDLoggingChannel, WFDLoggingSession, WFDLogFileGeneratedEventArgs,

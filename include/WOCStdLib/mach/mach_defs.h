@@ -36,6 +36,10 @@ typedef int kern_return_t;
 typedef struct semaphore* semaphore_t;
 typedef int integer_t;
 
+typedef __int64 int64_t;
+typedef unsigned int uint32_t;
+typedef unsigned __int64 uint64_t;
+
 #define KERN_SUCCESS 0
 #define KERN_INVALID_ARGUMENT 1
 #define KERN_FAILURE 2

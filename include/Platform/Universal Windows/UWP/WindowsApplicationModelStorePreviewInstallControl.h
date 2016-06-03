@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WASPIAppInstallStatus, WASPIAppInstallItem, WASPIAppInstallManagerItemEventArgs, WASPIAppInstallManager;
 @protocol WASPIIAppInstallStatus
@@ -61,7 +61,6 @@ enum _WASPIAutoUpdateSetting {
 };
 typedef unsigned WASPIAutoUpdateSetting;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

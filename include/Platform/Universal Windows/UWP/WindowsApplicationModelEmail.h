@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAEEmailMessage, WAEEmailStore, WAEEmailMailbox, WAEEmailConversationReader, WAEEmailQueryOptions, WAEEmailMessageReader,
     WAEEmailConversation, WAEEmailFolder, WAEEmailRecipient, WAEEmailIrmTemplate, WAEEmailIrmInfo, WAEEmailAttachment, WAEEmailMeetingInfo,
@@ -255,7 +255,6 @@ typedef unsigned WAEEmailQuerySearchScope;
 #include "WindowsApplicationModelAppointments.h"
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

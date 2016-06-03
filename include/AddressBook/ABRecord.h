@@ -16,7 +16,7 @@
 #pragma once
 
 #import <AddressBook/AddressBookExport.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFError.h>
 #import <CoreFoundation/CFString.h>
 

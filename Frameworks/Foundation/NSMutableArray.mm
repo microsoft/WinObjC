@@ -16,13 +16,15 @@
 
 #import "Starboard.h"
 #import "StubReturn.h"
-#import "../CoreFoundationAdditions/CFDictionaryInternal.h"
 #import "CoreFoundation/CFArray.h"
-#import "CoreFoundation/CFType.h"
 #import "Foundation/NSMutableArray.h"
-#import "NSArrayInternal.h"
 #import "LoggingNative.h"
-#import "NSMutableArrayInternal.h"
+#import "CFHelpers.h"
+#import "NSRaise.h"
+#import "NSCFArray.h"
+#import "BridgeHelpers.h"
+
+#include <algorithm>
 
 static const wchar_t* TAG = L"NSMutableArray";
 
@@ -30,36 +32,37 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
 
 @implementation NSMutableArray
 
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableArray, NSMutableArrayPrototype);
+
 /**
  @Status Interoperable
 */
-+ (NSMutableArray*)arrayWithCapacity:(NSUInteger)numElements {
-    NSMutableArray* newArray = [self new];
-
-    return [newArray autorelease];
++ (instancetype)arrayWithCapacity:(NSUInteger)numElements {
+    return [[[self alloc] initWithCapacity:numElements] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (NSMutableArray*)initWithCapacity:(NSUInteger)numElements {
-    [self init];
-
-    return self;
+- (instancetype)initWithCapacity:(NSUInteger)numElements {
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeAllObjects {
-    CFArrayRemoveAllValues((CFMutableArrayRef)self);
+    while ([self count] > 0) {
+        [self removeLastObject];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)addObject:(NSObject*)objAddr {
-    CFArrayAppendValue((CFMutableArrayRef)self, (const void*)objAddr);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -69,7 +72,7 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
     NSEnumerator* enumerator = [fromArray objectEnumerator];
 
     for (NSObject* curVal in enumerator) {
-        CFArrayAppendValue((CFMutableArrayRef)self, (const void*)curVal);
+        [self addObject:curVal];
     }
 }
 
@@ -98,7 +101,8 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)insertObject:(NSObject*)objAddr atIndex:(NSUInteger)index {
-    CFArrayInsertValueAtIndex((CFMutableArrayRef)self, index, (const void*)objAddr);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -118,18 +122,8 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)obj {
-    if (object_getClass(self) == [NSMutableArrayConcrete class]) {
-        //  Fastpath
-        CFRange range;
-        range.location = index;
-        range.length = 1;
-        CFArrayReplaceValues((CFMutableArrayRef)self, range, (const void**)&obj, 1);
-    } else {
-        [obj retain];
-        [self removeObjectAtIndex:index];
-        [self insertObject:obj atIndex:index];
-        [obj release];
-    }
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
@@ -210,25 +204,26 @@ using NSCompareFunc = NSInteger (*)(id, id, void*);
  @Status Interoperable
 */
 - (void)removeObjectAtIndex:(NSUInteger)index {
-    CFArrayRemoveValueAtIndex((CFMutableArrayRef)self, index);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeObjectsAtIndexes:(NSIndexSet*)indexSet {
-    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger index, BOOL* stop) {
-        [self removeObjectAtIndex:index];
-    }];
+    [indexSet enumerateIndexesWithOptions:NSEnumerationReverse
+                               usingBlock:^(NSUInteger index, BOOL* stop) {
+                                   [self removeObjectAtIndex:index];
+                               }];
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeLastObject {
-    NSUInteger count = [self count];
-
-    CFArrayRemoveValueAtIndex((CFMutableArrayRef)self, count - 1);
+    // NSMutableArray is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 static void swap(NSMutableArray* self, uint32_t a, uint32_t b) {
@@ -482,16 +477,6 @@ recurse:
 /**
  @Status Interoperable
 */
-+ (NSObject*)allocWithZone:(NSZone*)zone {
-    if (self == [NSMutableArray class])
-        return NSAllocateObject((Class)[NSMutableArrayConcrete class], 0, zone);
-
-    return NSAllocateObject((Class)self, 0, zone);
-}
-
-/**
- @Status Interoperable
-*/
 - (void)filterUsingPredicate:(NSPredicate*)predicate {
     if (predicate == nil) {
         return;
@@ -532,40 +517,51 @@ recurse:
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray range:(NSRange)otherRange {
-    UNIMPLEMENTED();
+    // An inefficient naive implementation would be to remove all objects from aRange,
+    // then insert all objects from otherArray in otherRange.
+    // However, this forces a unnecessary number of array shifts, which are expensive.
+    // As an optimization, do as many direct replacements as possible.
+    NSUInteger replaceEnd = std::min(aRange.length, otherRange.length);
+
+    for (NSUInteger i = 0; i < replaceEnd; i++) {
+        [self replaceObjectAtIndex:(i + aRange.location) withObject:[otherArray objectAtIndex:(i + otherRange.location)]];
+    }
+
+    if (aRange.length < otherRange.length) {
+        // If aRange is smaller than otherRange, insert the remaining elements
+        for (NSUInteger i = aRange.length; i < otherRange.length; i++) {
+            [self insertObject:[otherArray objectAtIndex:(i + otherRange.location)] atIndex:(i + aRange.location)];
+        }
+
+    } else if (aRange.length > otherRange.length) {
+        // If aRange is larger than otherRange, remove excess elements remaining in aRange
+        NSUInteger removeIndex = aRange.location + otherRange.length;
+        for (NSUInteger i = otherRange.length; i < aRange.length; i++) {
+            [self removeObjectAtIndex:removeIndex];
+        }
+    }
+
+    // If ranges are equal, nothing else needs to be done
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (void)replaceObjectsInRange:(NSRange)aRange withObjectsFromArray:(NSArray*)otherArray {
-    UNIMPLEMENTED();
+    [self replaceObjectsInRange:aRange withObjectsFromArray:otherArray range:{ 0, [otherArray count] }];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes Options are currently ignored
 */
 - (void)sortWithOptions:(NSSortOptions)opts usingComparator:(NSComparator)cmptr {
-    UNIMPLEMENTED();
+    [self sortUsingFunction:CFNSBlockCompare context:cmptr];
 }
 
-@end
-
-@implementation NSMutableArrayConcrete
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState*)state objects:(id*)stackBuf count:(NSUInteger)maxCount {
-    return _NSArrayConcreteCountByEnumeratingWithState(self, state);
-}
-
-- (void)dealloc {
-    CFArrayRemoveAllValues((CFArrayRef)self);
-    _CFArrayDestroyInternal((CFArrayRef)self);
-
-    [super dealloc];
-}
 @end

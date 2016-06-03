@@ -18,8 +18,6 @@
 #import <EventKit/EKObject.h>
 #import <EventKit/EventKitExport.h>
 
-#import <CoreFoundation/CFType.h>
-
 #import <Foundation/NSObject.h>
 
 #import <objc\runtime.h>

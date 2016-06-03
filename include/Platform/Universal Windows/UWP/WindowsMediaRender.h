@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 // Windows.Media.Render.AudioRenderCategory
 enum _WMRAudioRenderCategory {

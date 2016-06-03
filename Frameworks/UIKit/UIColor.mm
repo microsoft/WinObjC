@@ -161,12 +161,14 @@ rgb hsv2rgb(hsv in) {
 
 static id _cachedColorsDict;
 
-#define CACHED_COLOR(var, name, ...)                              \
-    if (((var) = [_cachedColorsDict objectForKey:name]) == nil) { \
-        (var) = __VA_ARGS__;                                      \
-        [_cachedColorsDict setObject:(id)(var) forKey:(name)];    \
-    }                                                             \
-    [var retain];
+#define CACHED_COLOR(var, name, ...)                                  \
+    @synchronized(_cachedColorsDict) {                                \
+        if (((var) = [_cachedColorsDict objectForKey:name]) == nil) { \
+            (var) = __VA_ARGS__;                                      \
+            [_cachedColorsDict setObject:(id)(var) forKey:(name)];    \
+        }                                                             \
+    }                                                                 \
+    [[var retain] autorelease];
 
 #define RETURN_CACHED(name, ...)                 \
     {                                            \
@@ -716,7 +718,9 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
  @Status Interoperable
 */
 + (void)initialize {
-    _cachedColorsDict = [NSMutableDictionary new];
+    if (self == [UIColor class]) {
+        _cachedColorsDict = [NSMutableDictionary new];
+    }
 }
 
 /**

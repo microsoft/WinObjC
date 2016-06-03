@@ -166,6 +166,6 @@ public:
     virtual void CGContextSetShadow(CGSize offset, float blur);
 };
 
-#define LOCK_CAIRO() EbrLockEnter(_cairoLock);
-#define UNLOCK_CAIRO() EbrLockLeave(_cairoLock);
-extern EbrLock _cairoLock;
+#define LOCK_CAIRO() pthread_mutex_lock(&_cairoLock);
+#define UNLOCK_CAIRO() pthread_mutex_unlock(&_cairoLock);
+extern pthread_mutex_t _cairoLock;

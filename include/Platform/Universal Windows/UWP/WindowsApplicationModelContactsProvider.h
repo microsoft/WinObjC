@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WACPContactRemovedEventArgs, WACPContactPickerUI;
 @protocol WACPIContactRemovedEventArgs
@@ -33,7 +33,6 @@ enum _WACPAddContactResult {
 };
 typedef unsigned WACPAddContactResult;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModelContacts.h"
 #include "WindowsFoundation.h"
 

@@ -15,6 +15,15 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 // Original - Christopher Lloyd <cjwl@objc.net>
+//
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See http://swift.org/LICENSE.txt for license information
+// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
 
 #include "Starboard.h"
 #include "StubReturn.h"
@@ -506,7 +515,9 @@ typedef unsigned short unichar;
         if ([_skipSet characterIsMember:unicode] == YES) {
             continue;
         }
-        if ([_string compare:string options:compareOption range:NSMakeRange(range.location, range.length)] == 0) {
+        if ([_string compare:string
+                     options:static_cast<NSStringCompareOptions>(compareOption)
+                       range:NSMakeRange(range.location, range.length)] == 0) {
             if (stringp) {
                 *stringp = string;
             }
@@ -531,51 +542,34 @@ typedef unsigned short unichar;
 /**
  @Status Interoperable
 */
-- (BOOL)scanUpToString:(id)string intoString:(NSString**)stringp {
+- (BOOL)scanUpToString:(NSString*)string intoString:(NSString**)intoString {
     int oldLocation = _location;
 
-    UStringHolder s1(_string);
-    UnicodeString str1(s1.string(), _location, s1.string().length() - _location);
+    int length = [_string length];
+    NSStringCompareOptions compareOption = _isCaseSensitive ? NSCaseInsensitiveSearch : 0;
 
-    int length = str1.length();
     if (_skipSet != nil) {
-        NSCharacterSet* charSet = _skipSet;
-        UnicodeSet& set = *charSet->_icuSet;
+        // skip ahead to first valid character forward in the string.
+        NSCharacterSet* invSkipSet = [_skipSet invertedSet];
+        NSRange range = [_string rangeOfCharacterFromSet:invSkipSet options:0 range:NSMakeRange(oldLocation, length - oldLocation)];
+        oldLocation = range.length > 0 ? range.location : length;
+    }
 
-        int pos = set.span(str1, 0, USET_SPAN_CONTAINED);
-        if (pos == length) {
-            _location += length;
-            return NO;
+    NSRange foundRange = [_string rangeOfString:string options:compareOption range:NSMakeRange(oldLocation, length - oldLocation)];
+    if (foundRange.length == 0) {
+        foundRange.location = length;
+    }
+
+    if (oldLocation != foundRange.location) {
+        if (intoString) {
+            *intoString = [_string substringWithRange:NSMakeRange(oldLocation, foundRange.location - oldLocation)];
         }
-        _location += pos;
+
+        _location = foundRange.location;
+        return YES;
     }
 
-    NSRange searchRange = { _location, [_string length] - _location };
-    NSRange foundRange;
-
-    int compareOption = 0;
-    if (!_isCaseSensitive) {
-        compareOption = 1; //  NSCaseInsensitiveSearch
-    }
-
-    foundRange = [_string rangeOfString:string options:compareOption range:searchRange];
-    if (foundRange.location == searchRange.location) {
-        return NO;
-    }
-    if (foundRange.length > 0) {
-        searchRange.length = foundRange.location - _location;
-    }
-
-    if (searchRange.length == 0) {
-        _location = oldLocation;
-        return NO;
-    }
-    if (stringp) {
-        *stringp = [_string substringWithRange:searchRange];
-    }
-    _location += searchRange.length;
-
-    return TRUE;
+    return NO;
 }
 
 /**

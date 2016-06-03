@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WASPStorePreviewSkuInfo, WASPStorePreviewPurchaseResults, WASPStorePreviewProductInfo, WASPStoreHardwareManufacturerInfo,
     WASPStorePreview, WASPStoreConfiguration;
@@ -65,7 +65,6 @@ enum _WASPStoreSystemFeature {
 };
 typedef unsigned WASPStoreSystemFeature;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

@@ -252,4 +252,18 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />
   </ImportGroup>
+  <PropertyGroup>
+    <PrebuiltPath Condition="'$(PrebuiltPath)' == ''">$(WINOBJC_SDK_ROOT)\deps\prebuilt\Universal Windows\$(PlatformTarget)\$(Configuration)\\</PrebuiltPath>
+  </PropertyGroup>
+  <Target Name="CopyContent" AfterTargets="Build">
+    <ItemGroup>
+      <LibraryOutput Include="$(OutDir)\*.lib" />
+      <LibraryOutput Include="$(OutDir)\*.dll" />
+      <LibraryOutput Include="$(OutDir)\*.pdb" />
+      <Headers Include="..\dispatch\*.h" />
+      <Headers Include="..\src\*.h" />
+    </ItemGroup>
+    <Copy DestinationFolder="$(PrebuiltPath)" SkipUnchangedFiles="True" SourceFiles="@(LibraryOutput)" />
+    <Copy DestinationFolder="$(WINOBJC_SDK_ROOT)\deps\prebuilt\include\dispatch\\" SkipUnchangedFiles="True" SourceFiles="@(Headers)" />
+  </Target>
 </Project>

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDUUsbControlRequestType, WDUUsbSetupPacket, WDUUsbDeviceClass, WDUUsbDeviceClasses, WDUUsbDevice, WDUUsbInterface,
     WDUUsbDeviceDescriptor, WDUUsbConfiguration, WDUUsbDescriptor, WDUUsbConfigurationDescriptor, WDUUsbInterfaceDescriptor,
@@ -86,7 +86,6 @@ enum _WDUUsbWriteOptions {
 };
 typedef unsigned WDUUsbWriteOptions;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 

@@ -314,7 +314,7 @@ int WaitForMultipleEvents(neosmart_event_t* events, int count, bool waitAll, uin
             if (milliseconds != (uint64_t)-1) {
                 if (wfmo->WakeupSocket != -1) {
                     pthread_mutex_unlock(&wfmo->Mutex);
-                    struct __ws2_timeval tv;
+                    struct timeval tv;
                     tv.tv_sec = long(milliseconds / 1000);
                     tv.tv_usec = (milliseconds % 1000) * 1000;
                     int selectResult =

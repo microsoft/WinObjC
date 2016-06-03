@@ -17,15 +17,18 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
-TEST(Foundation, NSBundle_SanityTest) {
+TEST(NSBundle, NSBundle_SanityTest) {
     LOG_INFO("NSBundle sanity test: ");
 
-    NSString* filePath = @"F:/temp";
+    NSString* filePath = [NSBundle mainBundle].bundlePath;
+    NSURL* fileURL = [NSURL fileURLWithPath:filePath];
 
     NSBundle* bundle = [NSBundle bundleWithPath:filePath];
-    NSString* updatedFilePath = [filePath stringByAppendingString:@"/"];
-    ASSERT_OBJCEQ_MSG(updatedFilePath, [bundle bundlePath], @"Expected bundle path does not match the actual path");
+    ASSERT_OBJCEQ_MSG(filePath, [bundle bundlePath], @"Expected bundle path does not match the actual path");
 
-    NSURL* updatedFileURL = [NSURL fileURLWithPath:updatedFilePath];
-    ASSERT_OBJCEQ_MSG(updatedFileURL, [bundle bundleURL], @"Expected bundle URL does not match the actual URL");
+    ASSERT_OBJCEQ_MSG(fileURL, [bundle bundleURL], @"Expected bundle URL does not match the actual URL");
+}
+
+TEST(NSBundle, ClassNamed) {
+    ASSERT_OBJCEQ([NSString class], [[NSBundle mainBundle] classNamed:@"NSString"]);
 }

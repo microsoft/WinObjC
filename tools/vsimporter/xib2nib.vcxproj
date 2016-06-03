@@ -94,6 +94,7 @@
     <ClInclude Include="xib2nib\UIButton.h" />
     <ClInclude Include="xib2nib\UICollectionView.h" />
     <ClInclude Include="xib2nib\UICollectionViewCell.h" />
+    <ClInclude Include="xib2nib\UICollectionViewController.h" />
     <ClInclude Include="xib2nib\UIColor.h" />
     <ClInclude Include="xib2nib\UIControl.h" />
     <ClInclude Include="xib2nib\UICustomResource.h" />
@@ -159,6 +160,7 @@
     <ClCompile Include="xib2nib\UIButton.cpp" />
     <ClCompile Include="xib2nib\UICollectionView.cpp" />
     <ClCompile Include="xib2nib\UICollectionViewCell.cpp" />
+    <ClCompile Include="xib2nib\UICollectionViewController.cpp" />
     <ClCompile Include="xib2nib\UIColor.cpp" />
     <ClCompile Include="xib2nib\UIControl.cpp" />
     <ClCompile Include="xib2nib\UICustomResource.cpp" />
@@ -222,12 +224,6 @@
       <Project>{b25dbff1-1138-4413-8dc0-a2eebb4a7c28}</Project>
     </ProjectReference>
     <ProjectReference Include="pugixml.vcxproj">
-      <Project>{07cf01c0-b887-499d-ad9c-799cb6a9fe64}</Project>
-    </ProjectReference>
-    <ProjectReference Include="third-party\PlistCpp\PlistCpp.vcxproj">
-      <Project>{b25dbff1-1138-4413-8dc0-a2eebb4a7c28}</Project>
-    </ProjectReference>
-    <ProjectReference Include="third-party\PlistCpp\third-party\pugixml\scripts\pugixml_vs2015.vcxproj">
       <Project>{07cf01c0-b887-499d-ad9c-799cb6a9fe64}</Project>
     </ProjectReference>
     <ProjectReference Include="WBITelemetry.vcxproj">

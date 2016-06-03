@@ -45,8 +45,9 @@
  @Notes May not be fully implemented
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
-    self = [super initWithCoder:coder];
-    if (self) {
+    if (self = [super initWithCoder:coder]) {
+        self.collectionView = [coder decodeObjectForKey:@"UICollectionView"];
+
         self.layout = [UICollectionViewFlowLayout new];
         self.clearsSelectionOnViewWillAppear = YES;
         _collectionViewControllerFlags.appearsFirstTime = YES;
@@ -58,7 +59,7 @@
  @Status Interoperable
 */
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout*)layout {
-    if ((self = [super init])) {
+    if (self = [super init]) {
         self.layout = layout;
         self.clearsSelectionOnViewWillAppear = YES;
         _collectionViewControllerFlags.appearsFirstTime = YES;
@@ -82,10 +83,12 @@
         self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
 
-    if (_collectionView.delegate == nil)
+    if (_collectionView.delegate == nil) {
         _collectionView.delegate = self;
-    if (_collectionView.dataSource == nil)
+    }
+    if (_collectionView.dataSource == nil) {
         _collectionView.dataSource = self;
+    }
 
     // only create the collection view if it is not already created (by IB)
     if (!_collectionView) {

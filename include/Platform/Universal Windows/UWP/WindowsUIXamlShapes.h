@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXSShape, WUXSEllipse, WUXSLine, WUXSPath, WUXSPolygon, WUXSPolyline, WUXSRectangle;
 @protocol WUXSIShape
@@ -27,7 +27,6 @@
     WUXSIPolygon, WUXSIPolygonStatics, WUXSIPolyline, WUXSIPolylineStatics, WUXSIRectangle, WUXSIRectangleStatics;
 
 #include "WindowsUIXamlMediaAnimation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsApplicationModelDataTransfer.h"
 #include "WindowsUIXamlMedia.h"
 #include "WindowsUIXamlInput.h"

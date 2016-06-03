@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDIPointerDevice, WDIMouseDevice, WDIMouseEventArgs, WDIMouseCapabilities, WDIKeyboardCapabilities, WDITouchCapabilities;
 @class WDIPointerDeviceUsage, WDIMouseDelta;
@@ -36,7 +36,6 @@ enum _WDIPointerDeviceType {
 typedef unsigned WDIPointerDeviceType;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

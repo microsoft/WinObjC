@@ -19,14 +19,13 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDSCCustomSensor, WDSCCustomSensorReading, WDSCCustomSensorReadingChangedEventArgs;
 @protocol WDSCICustomSensorStatics
 , WDSCICustomSensor, WDSCICustomSensorReading, WDSCICustomSensorReadingChangedEventArgs;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

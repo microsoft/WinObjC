@@ -1074,9 +1074,12 @@ static CGRect calcImageRect(UIButton* self, CGRect bounds) {
  @Status Interoperable
 */
 - (CGSize)intrinsicContentSize {
-    CGSize ret;
+    CGSize ret = {0};
+    UIImage* img = _states[UIControlStateNormal].image;
 
-    ret = [_states[UIControlStateNormal].image size];
+    if (img != nil) {
+        ret = [img size];
+    }
 
     if (getTitle(self)) {
         CGSize size;

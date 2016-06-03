@@ -22,6 +22,13 @@
     size_t size;
     const void* data;
     StrongId<NSString> filename;
+    StrongId<NSData> _data;
 }
 - (NSString*)_fileName;
+
+- (instancetype)init;
+- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone;
+- (const void*)bytes;
+- (NSUInteger)length;
+
 @end

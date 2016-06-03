@@ -19,15 +19,13 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMFDetectedFace, WMFFaceTracker, WMFFaceDetector;
 @protocol WMFIDetectedFace
 , WMFIFaceDetector, WMFIFaceDetectorStatics, WMFIFaceTracker, WMFIFaceTrackerStatics;
 
 #include "WindowsGraphicsImaging.h"
-#include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsMedia.h"
 
 #import <Foundation/Foundation.h>

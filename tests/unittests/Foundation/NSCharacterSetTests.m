@@ -20,13 +20,6 @@
 // Every character in NSString* testString must exist in the character set passed in.
 void testCharacter(NSCharacterSet* charSet, NSString* testString) {
     unsigned int stringLength = [testString length];
-    NSInteger charSetLength = [charSet count];
-
-    ASSERT_TRUE_MSG(stringLength == charSetLength,
-                    "FAILED: Character set has different length than expected.\nExpected: %d\nActual: %d",
-                    stringLength,
-                    charSetLength);
-
     for (int i = 0; i < stringLength; i++) {
         unichar current = [testString characterAtIndex:i];
         ASSERT_TRUE_MSG(
@@ -37,7 +30,7 @@ void testCharacter(NSCharacterSet* charSet, NSString* testString) {
 }
 
 // This is for testing whether or not the character set is actually instantiated in the correct way and contains the expected characters.
-TEST(Foundation, NSCharacterSet_SanityTest) {
+TEST(NSCharacterSet, SanityTest) {
     LOG_INFO("NSCharacterSet sanity test: ");
 
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
@@ -112,7 +105,7 @@ TEST(Foundation, NSCharacterSet_SanityTest) {
     testCharacter(lowerCaseEnglishLetters, lowerCaseEnglishLettersString);
 }
 
-TEST(Foundation, NSCharacterSet_MutableCopy) {
+TEST(NSCharacterSet, MutableCopy) {
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
     NSMutableCharacterSet* mutableSet = [alphaNumeric mutableCopy];
     [mutableSet addCharactersInString:@"!"];
@@ -127,7 +120,7 @@ TEST(Foundation, NSCharacterSet_MutableCopy) {
     EXPECT_NO_THROW([mutableSet release]);
 }
 
-TEST(Foundation, NSCharacterSet_InvertTest) {
+TEST(NSCharacterSet, InvertTest) {
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
     NSString* alphaNumericString = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     NSCharacterSet* invertedSet = [alphaNumeric invertedSet];
@@ -137,7 +130,7 @@ TEST(Foundation, NSCharacterSet_InvertTest) {
     ASSERT_EQ(NSNotFound, foundNonAlphaRange.location);
 }
 
-TEST(Foundation, NSCharacterSet_ArchivingUnarchiving) {
+TEST(NSCharacterSet, ArchivingUnarchiving) {
     LOG_INFO("NSCharacterSet archiving and unarchiving test: ");
 
     NSCharacterSet* alphaNumeric = [NSCharacterSet alphanumericCharacterSet];
@@ -155,81 +148,81 @@ TEST(Foundation, NSCharacterSet_ArchivingUnarchiving) {
     testCharacter(characterSetUnarchived, alphaNumericString);
 }
 
-TEST(Foundation, NSCharacterSet_Polymorphic_Creators) {
+TEST(NSCharacterSet, Polymorphic_Creators) {
     // Make sure we get a mutable instance from each of these creators
 
     NSMutableCharacterSet* set = [NSMutableCharacterSet alphanumericCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet capitalizedLetterCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet controlCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet decimalDigitCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet decomposableCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet illegalCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet letterCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet lowercaseLetterCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet newlineCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet nonBaseCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet punctuationCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet symbolCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet uppercaseLetterCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet whitespaceAndNewlineCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet whitespaceCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLFragmentAllowedCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLHostAllowedCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLPasswordAllowedCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLPathAllowedCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLQueryAllowedCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet URLUserAllowedCharacterSet];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet characterSetWithCharactersInString:@"ABCDEFG"];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet characterSetWithRange:NSMakeRange(0, 32)];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet characterSetWithBitmapRepresentation:nil];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 
     set = [NSMutableCharacterSet characterSetWithContentsOfFile:nil];
-    ASSERT_EQ([set class], [NSMutableCharacterSet class]);
+    ASSERT_TRUE([set isKindOfClass:[NSMutableCharacterSet class]]);
 }

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXMVisualTreeHelper, WUXMPartialMediaFailureDetectedEventArgs, WUXMMatrixHelper, WUXMCompositionTarget, WUXMDoubleCollection,
     WUXMFontFamily, WUXMGeometryCollection, WUXMGradientStopCollection, WUXMPathFigureCollection, WUXMPathSegmentCollection,
@@ -207,11 +207,10 @@ enum _WUXMSweepDirection {
 };
 typedef unsigned WUXMSweepDirection;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsUIXaml.h"
-#include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUI.h"
+#include "WindowsUIXamlControlsPrimitives.h"
 #include "WindowsUIXamlMediaMedia3D.h"
 #include "WindowsMediaPlayback.h"
 #include "WindowsUICore.h"

@@ -23,7 +23,7 @@
 #import <CoreFoundation/CFDictionary.h>
 #import <CoreFoundation/CFData.h>
 #import <CoreFoundation/CFString.h>
-#import <CoreFoundation/CFType.h>
+
 #import <CoreFoundation/CFURL.h>
 
 #import <CoreGraphics/CGDataConsumer.h>

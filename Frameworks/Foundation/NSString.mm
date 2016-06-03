@@ -13,376 +13,74 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See http://swift.org/LICENSE.txt for license information
+// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
 
-#import "Starboard.h"
-#import "StubReturn.h"
-#import "CFConstantString.h"
+#include "Starboard.h"
+#include "StubReturn.h"
+#include <Foundation/NSError.h>
+#include <Foundation/NSFileManager.h>
+#include <Foundation/NSString.h>
+#include <Foundation/NSLocale.h>
+#include <Foundation/NSMutableData.h>
+#include <Foundation/NSMutableDictionary.h>
+#include <Foundation/NSRange.h>
+#include <Foundation/NSRegularExpression.h>
+#include <Foundation/NSSet.h>
+#include <CoreFoundation/CoreFoundation.h>
 
-#define U_STATIC_IMPLEMENTATION 1
-#import "unicode/coll.h"
-#import "unicode/ucnv.h"
-#import "unicode/uniset.h"
-#import "unicode/brkiter.h"
-#import "unicode/unistr.h"
-#import <new>
-#import <assert.h>
+#include "ForFoundationOnly.h"
+#include "LoggingNative.h"
+#include "NSCFString.h"
+#include "NSPathUtilitiesInternal.h"
+#include "NSRaise.h"
+#include "CFFoundationInternal.h"
+#include "BridgeHelpers.h"
+#include "NSStringInternal.h"
+#include "NSPathUtilitiesInternal.h"
 
-#import "IcuHelper.h"
-#import <Starboard/String.h>
-#import "LoggingNative.h"
-#import "NSStringInternal.h"
-#import "NSArrayInternal.h"
+#include <vector>
+#include <memory>
+#include <string>
 
 static const wchar_t* TAG = L"NSString";
+
+using FilePathPredicate = bool (^)(NSString*);
 
 NSString* const NSParseErrorException = @"NSParseErrorException";
 NSString* const NSCharacterConversionException = @"NSCharacterConversionException";
 
-enum NSStringType {
-    NSUninitializedString = 0,
-    NSConstructedString_Unicode = 0x7FFFFFFF,
-    NSConstructedString_NoOwn = 0x20,
-};
+id error(id obj, char* buf, const char* error, ...) {
+    TraceError(TAG, L"propertyListFromStrings error: %hs", buf);
 
-struct _ConstructedStringData {
-    icu_48::UnicodeString* str;
-    char* utf8String;
-
-    _ConstructedStringData();
-    ~_ConstructedStringData();
-};
-
-//  All NSString access should be made through self class.  It will upgrade/convert strings
-//  as needed
-_ConstructedStringData::_ConstructedStringData() {
-    str = NULL;
-    utf8String = NULL;
+    return nil;
 }
 
-_ConstructedStringData::~_ConstructedStringData() {
-    if (utf8String) {
-        IwFree(utf8String);
-    }
+static unichar SwapWord(unichar c) {
+    return (c >> 8) | ((c & 0xFF) << 8);
 }
 
-struct ConstStrData {
-    Class isa;
-    const char* c_str;
-    size_t len;
-};
-
-void UStringHolder::initWithString(NSString* str, int location, int length) {
-    static EbrLock _upgradeLock;
-    static bool _upgradeLockSet;
-
-    _destroyStr = NULL;
-
-    if (!_upgradeLockSet) {
-        EbrLockInit(&_upgradeLock);
-        _upgradeLockSet = true;
-    }
-
-    if ([str class] == [CFConstantString class]) {
-        if (str->strType != NSConstructedString_Unicode) {
-            EbrLockEnter(_upgradeLock);
-            //  Contention case
-            if (str->strType == NSConstructedString_Unicode) {
-                EbrLockLeave(_upgradeLock);
-            } else {
-                ConstStrData* constStr = (ConstStrData*)str;
-                _str = new UnicodeString(UnicodeString::fromUTF8(StringPiece((const char*)constStr->c_str, constStr->len)));
-                str->u = new stringData();
-                str->u->ConstructedString.constructedStr = new _ConstructedStringData();
-                str->u->ConstructedString.constructedStr->str = _str;
-                str->u->ConstructedString._hashIsCached = FALSE;
-                str->strType = NSConstructedString_Unicode;
-                EbrLockLeave(_upgradeLock);
-            }
-        }
-    }
-
-    switch (str->strType) {
-        case NSConstructedString_NoOwn:
-            switch (str->u->NoOwnString._encoding) {
-                case NSWindowsCP1251StringEncoding:
-                case NSISOLatin1StringEncoding:
-                case NSASCIIStringEncoding: {
-                    _str = new UnicodeString((char*)str->u->NoOwnString._address, str->u->NoOwnString._length, US_INV);
-                    _destroyStr = _str;
-                    break;
-                }
-
-                case NSUTF8StringEncoding: {
-                    _str = new UnicodeString(
-                        UnicodeString::fromUTF8(StringPiece((char*)str->u->NoOwnString._address, str->u->NoOwnString._length)));
-                    _destroyStr = _str;
-                    break;
-                }
-
-                case NSUTF16LittleEndianStringEncoding:
-                case NSUnicodeStringEncoding: {
-                    _str = new UnicodeString((UChar*)str->u->NoOwnString._address, str->u->NoOwnString._length / 2);
-                    _destroyStr = _str;
-                    break;
-                }
-            }
-            break;
-
-        case NSConstructedString_Unicode:
-            _str = str->u->ConstructedString.constructedStr->str;
-            break;
-
-        default:
-            assert(0);
-            break;
-    }
-
-    if (length != -1 && (length != _str->length() || location != 0)) {
-        if (_subStr == NULL)
-            _subStr = new UnicodeString();
-        _subStr->setTo(false, _str->getBuffer() + location, length);
-        _str = _subStr;
-    }
+static unichar PickWord(unichar c) {
+    return c;
 }
 
-UStringHolder::UStringHolder(id str, int location, int length) : _subStr(0) {
-    if (str == nil) {
-        _str = new UnicodeString("");
-        _destroyStr = _str;
-        return;
-    }
+typedef enum {
+    NEW_LINE = 0x0a,
+    CARRIAGE_RETURN = 0x0d,
+} _NSStringCharacterType;
 
-    if (object_getClass(str) != [NSString class] && object_getClass(str) != [NSMutableString class] &&
-        object_getClass(str) != [CFConstantString class]) {
-        if (![str isKindOfClass:[NSString class]]) {
-            str = [str description];
-        }
-    }
-
-    initWithString((NSString*)str, location, length);
-}
-
-UStringHolder::UStringHolder(NSString* str, int location, int length) : _subStr(NULL) {
-    if (str == nil) {
-        _str = new UnicodeString("");
-        _destroyStr = _str;
-        return;
-    }
-
-    if (![str isKindOfClass:[NSString class]]) {
-        printf("falling back to using description class\n");
-        str = [str description];
-    }
-
-    initWithString((NSString*)str, location, length);
-}
-
-UStringHolder::~UStringHolder() {
-    if (_destroyStr) {
-        delete _destroyStr;
-    }
-    if (_subStr) {
-        delete _subStr;
-    }
-}
-
-UnicodeString& UStringHolder::string() {
-    if (_str == NULL) {
-        //  Very bad!
-        FAIL_FAST_HR_MSG(E_UNEXPECTED, "NSString in invalid state");
-    }
-
-    return *_str;
-}
-
-inline unichar UStringHolder::getChar(int index) {
-    return _str->charAt(index);
-}
-
-void setToUnicode(NSString* inst, UnicodeString& str) {
-    switch (inst->strType) {
-        case NSConstructedString_NoOwn:
-            switch (inst->u->NoOwnString._encoding) {
-                case NSUTF8StringEncoding: {
-                    UErrorCode status = U_ZERO_ERROR;
-                    UConverter* u8cnv = getUTF8Converter();
-
-                    char* targetBegin = (char*)inst->u->NoOwnString._address;
-                    char* targetStart = targetBegin;
-                    char* targetEnd = targetStart + inst->u->NoOwnString._length;
-                    const UChar* sourceBegin = str.getBuffer();
-                    const UChar* sourceStart = sourceBegin;
-                    const UChar* sourceEnd = sourceStart + str.length();
-
-                    ucnv_fromUnicode(u8cnv, &targetStart, targetEnd, &sourceStart, sourceEnd, NULL, TRUE, &status);
-                } break;
-
-                default:
-                    assert(0);
-                    *((char*)0xBAADF00D) = 0;
-                    break;
-            }
-
-        case NSConstructedString_Unicode:
-            inst->u->ConstructedString._hashIsCached = FALSE;
-
-            if (inst->u->ConstructedString.constructedStr->str == &str)
-                break;
-            inst->u->ConstructedString.constructedStr->str->setTo(str);
-            break;
-
-        case NSUninitializedString:
-            inst->u = new stringData();
-            inst->u->ConstructedString.constructedStr = new _ConstructedStringData();
-            inst->u->ConstructedString.constructedStr->str = new UnicodeString(str);
-            inst->u->ConstructedString._hashIsCached = FALSE;
-            inst->strType = NSConstructedString_Unicode;
-            break;
-
-        default:
-            // very bad
-            FAIL_FAST_HR_MSG(E_UNEXPECTED, "Unexpected string type: %u", inst->strType);
-            break;
-    }
-}
-
-int formatPrintfU(WORD* out, int maxLen, const WORD* fmt, va_list pReader);
-
-UnicodeString EbrUnicodePrintf(NSString* format, va_list list) {
-    UStringHolder ufmt(format);
-    const UChar* fmt = ufmt.string().getTerminatedBuffer();
-
-    WORD* strBuf;
-
-    va_list pReaderCopy = list;
-    WORD tempBuf[255];
-
-    int len = formatPrintfU(tempBuf, ((sizeof(tempBuf) / sizeof(WORD)) - 1) | 0x40000000, (WORD*)fmt, list);
-    if (len >= (sizeof(tempBuf) / sizeof(WORD)) - 1) {
-        strBuf = (WORD*)IwMalloc((len + 1) * 2);
-        formatPrintfU(strBuf, len, (WORD*)fmt, pReaderCopy);
-
-        UnicodeString str((UChar*)strBuf, len);
-        IwFree(strBuf);
-
-        return str;
-    } else {
-        UnicodeString str((UChar*)tempBuf, len);
-
-        return str;
-    }
-}
-
-void setToFormat(NSString* inst, NSString* format, va_list list, NSString* string) {
-    UnicodeString str = EbrUnicodePrintf(format, list);
-    setToUnicode(string, str);
-}
-
-@interface NSStringConversion : NSObject {
-@public
-    BYTE _str[4]; //   Extra will be allocated via NSAllocateObject
-}
-@end
-
-@implementation NSStringConversion : NSObject
-
-@end
-
-static void* _conversionTempStr(int size) {
-    NSStringConversion* ret = [NSAllocateObject([NSStringConversion class], size, nil) autorelease];
-
-    return ret->_str;
-}
-
-typedef NSUInteger NSStringCompareOptions;
-
-@implementation NSString : NSObject
-/**
- @Status Interoperable
-*/
-- (id)initWithCoder:(NSCoder*)coder {
-    NSString* str = [coder decodeObjectForKey:@"NS.string"];
-
-    if (str != nil) {
-        return [self initWithString:str];
-    } else {
-        return [self init];
-    }
-}
+@implementation NSString
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithCString:(const char*)cStr {
-    UnicodeString str(cStr, strlen(cStr), US_INV);
-
-    setToUnicode(self, str);
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)init {
-    UnicodeString str;
-
-    setToUnicode(self, str);
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithCString:(const char*)cStr length:(NSUInteger)length {
-    UnicodeString str(cStr, length, US_INV);
-
-    setToUnicode(self, str);
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithUTF8String:(const char*)utf8str {
-    UnicodeString str = UnicodeString::fromUTF8(StringPiece(utf8str));
-    setToUnicode(self, str);
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithFormat:(NSString*)formatStr, ... {
-    va_list reader;
-    va_start(reader, formatStr);
-
-    setToFormat(nil, formatStr, reader, self);
-    va_end(reader);
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
-    setToFormat(nil, formatStr, pReader, self);
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithString:(NSString*)otherStr {
-    UStringHolder s1(otherStr);
-    UnicodeString copy = s1.string();
-
-    setToUnicode(self, copy);
-
-    return self;
-}
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSString, NSStringPrototype);
 
 /**
  @Status Interoperable
@@ -395,21 +93,9 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 - (NSString*)stringByAppendingString:(NSString*)str {
-    if (str == nil) {
-        TraceVerbose(TAG, L"stringByAppendingString: str = nil!");
-        return [self copy];
-    }
-
-    UStringHolder s1(self);
-    UStringHolder s2(str);
-
-    UnicodeString copy = s1.string();
-    copy.append(s2.string());
-
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, copy);
-
-    return [ret autorelease];
+    NSMutableString* mutableCopy = [self mutableCopy];
+    [mutableCopy appendString:str];
+    return [mutableCopy autorelease];
 }
 
 /**
@@ -419,16 +105,9 @@ typedef NSUInteger NSStringCompareOptions;
 - (NSString*)stringByAppendingFormat:(NSString*)formatStr, ... {
     va_list reader;
     va_start(reader, formatStr);
-    UnicodeString str = EbrUnicodePrintf(formatStr, reader);
-    va_end(reader);
 
-    UStringHolder s1(self);
-    UnicodeString copy = s1.string();
-    copy.append(str);
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, copy);
-
-    return [ret autorelease];
+    NSString* formattedString = [[NSString alloc] initWithFormat:formatStr arguments:reader];
+    return [self stringByAppendingString:formattedString];
 }
 
 /**
@@ -436,14 +115,14 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (NSString*)stringByAbbreviatingWithTildeInPath {
     UNIMPLEMENTED();
-    return [[self copy] autorelease];
+    return StubReturn();
 }
 
 /**
  @Status Interoperable
 */
 + (NSString*)string {
-    return @"";
+    return [[self new] autorelease];
 }
 
 /**
@@ -453,8 +132,7 @@ typedef NSUInteger NSStringCompareOptions;
     va_list reader;
     va_start(reader, formatStr);
 
-    NSString* objRet = [self alloc];
-    setToFormat(self, formatStr, reader, objRet);
+    NSString* objRet = [[self alloc] initWithFormat:formatStr arguments:reader];
     va_end(reader);
 
     return [objRet autorelease];
@@ -464,9 +142,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 + (instancetype)stringWithCString:(const char*)str {
-    NSString* ret = [[self alloc] initWithCString:str];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithCString:str] autorelease];
 }
 
 /**
@@ -474,36 +150,87 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available
 */
 + (instancetype)stringWithCString:(const char*)str encoding:(NSStringEncoding)encoding {
-    NSString* ret = [[self alloc] initWithCString:str encoding:encoding];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithCString:str encoding:encoding] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)stringWithUTF8String:(const char*)str {
-    NSString* ret = [[self alloc] initWithUTF8String:str];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithUTF8String:str] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)stringWithCString:(const char*)str length:(NSUInteger)length {
-    NSString* ret = [[self alloc] initWithCString:str length:length];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithCString:str length:length] autorelease];
 }
 
 /**
- @Status Stub
- @Notes Returns NSASCIIStringEncoding
+ @Status Interoperable
 */
-+ (NSStringEncoding)defaultCStringEncoding {
-    UNIMPLEMENTED();
-    return NSASCIIStringEncoding;
++ (instancetype)stringWithCharacters:(const unichar*)bytes length:(unsigned)length {
+    return [[[self alloc] initWithCharacters:bytes length:length] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)init {
+    return [super init];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCString:(const char*)cStr {
+    return [self initWithCString:cStr length:strlen(cStr)];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithCString:(const char*)cStr length:(NSUInteger)length {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithUTF8String:(const char*)utf8str {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFormat:(NSString*)formatStr, ... {
+    va_list reader;
+    va_start(reader, formatStr);
+
+    self = [self initWithFormat:formatStr arguments:reader];
+    va_end(reader);
+
+    return self;
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithString:(NSString*)otherStr {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -511,150 +238,16 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available
 */
 - (instancetype)initWithData:(NSData*)data encoding:(NSStringEncoding)encoding {
-    const char* bytes = (const char*)[data bytes];
-    DWORD length = [data length];
-
-    if (data == nil) {
-        bytes = "";
-        length = 0;
-    } else {
-        bytes = (const char*)[data bytes];
-        length = [data length];
-    }
-
-    UnicodeString uniStr;
-
-    switch (encoding) {
-        case NSUTF8StringEncoding:
-        case NSMacOSRomanStringEncoding: {
-            uniStr = UnicodeString::fromUTF8(StringPiece(bytes, length));
-            break;
-        }
-
-        case NSShiftJISStringEncoding:
-        case NSISOLatin1StringEncoding:
-        case NSISOLatin2StringEncoding:
-        case NSASCIIStringEncoding: {
-            uniStr = UnicodeString(bytes, length, US_INV);
-            break;
-        }
-
-        case NSUnicodeStringEncoding: {
-            uniStr = UnicodeString((const UChar*)bytes, length / 2);
-            break;
-        }
-
-        case NSUTF16BigEndianStringEncoding: {
-            WORD* tmp = (WORD*)IwMalloc(length);
-            WORD* curChar = tmp;
-            memcpy(curChar, bytes, length);
-            int left = length / 2;
-
-            while (left) {
-                *curChar = ((*curChar) & 0xFF) << 8 | ((*curChar) & 0xFF00) >> 8;
-                curChar++;
-                left--;
-            }
-            uniStr = UnicodeString((const UChar*)tmp, length / 2);
-            IwFree(tmp);
-            break;
-        }
-
-        case NSUTF32BigEndianStringEncoding: {
-            DWORD* tmp = (DWORD*)IwMalloc(length);
-            DWORD* curChar = tmp;
-            memcpy(curChar, bytes, length);
-            int left = length / 4;
-
-            while (left) {
-                *curChar =
-                    ((*curChar) & 0xFF) << 24 | ((*curChar) & 0xFF00) << 8 | ((*curChar) & 0xFF0000) >> 8 | ((*curChar) & 0xFF000000) >> 24;
-                curChar++;
-                left--;
-            }
-            uniStr = UnicodeString::fromUTF32((const UChar32*)tmp, length / 4);
-            IwFree(tmp);
-            break;
-        }
-
-        case static_cast<DWORD>(NSUTF32LittleEndianStringEncoding): {
-            uniStr = UnicodeString::fromUTF32((const UChar32*)bytes, length / 4);
-            break;
-        }
-
-        case NSUTF16LittleEndianStringEncoding: {
-            uniStr = UnicodeString((const UChar*)bytes, length / 2);
-            break;
-        }
-
-        default:
-            TraceCritical(TAG, L"Unknown encoding %d", encoding);
-            assert(0);
-    }
-
-    setToUnicode(self, uniStr);
-
-    return self;
+    return [self initWithBytes:[data bytes] length:[data length] encoding:encoding];
 }
 
 /**
  @Status Caveat
  @Notes Limited encodings available
 */
-- (instancetype)initWithBytes:(const void*)bytes length:(NSUInteger)length encoding:(NSStringEncoding)encoding {
-    switch (encoding) {
-        case NSWindowsCP1251StringEncoding:
-        case NSWindowsCP1252StringEncoding:
-        case NSISOLatin1StringEncoding:
-        case NSASCIIStringEncoding: {
-            UnicodeString str(static_cast<const char*>(bytes), length, US_INV);
-
-            setToUnicode(self, str);
-            break;
-        }
-
-        case NSUTF8StringEncoding: {
-            UnicodeString str(UnicodeString::fromUTF8(StringPiece((char*)bytes, length)));
-            setToUnicode(self, str);
-            break;
-        }
-
-        case NSUTF16LittleEndianStringEncoding:
-            TraceWarning(TAG, L"Warning: NSUTF16LittleEndianStringEncoding is being treated as unicode");
-
-        case NSUnicodeStringEncoding: {
-            UnicodeString str((UChar*)bytes, length / 2);
-            setToUnicode(self, str);
-            break;
-        }
-
-        case NSUTF32LittleEndianStringEncoding: {
-            UnicodeString str = UnicodeString::fromUTF32((UChar32*)bytes, length / 4);
-            setToUnicode(self, str);
-            break;
-        }
-
-        case NSUTF16BigEndianStringEncoding: {
-            WORD* pCopy = (WORD*)IwMalloc(length);
-            memcpy(pCopy, bytes, length);
-
-            for (DWORD i = 0; i < length / 2; i++) {
-                pCopy[i] = (pCopy[i] >> 8 | ((WORD)(pCopy[i] << 8)));
-            }
-
-            UnicodeString str((UChar*)pCopy, length / 2);
-            setToUnicode(self, str);
-            IwFree(pCopy);
-            break;
-        }
-
-        default:
-            assert(0);
-            *((char*)0xBAADF00D) = 0;
-            break;
-    }
-
-    return self;
+- (instancetype)initWithBytes:(const void*)bytes length:(unsigned)length encoding:(NSStringEncoding)encoding {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -662,34 +255,19 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available.  CRT types must match when freeWhenDone=YES
 */
 - (instancetype)initWithBytesNoCopy:(void*)bytes
-                             length:(NSUInteger)length
+                             length:(unsigned)length
                            encoding:(NSStringEncoding)encoding
                        freeWhenDone:(BOOL)freeWhenDone {
-    strType = NSConstructedString_NoOwn;
-    u = new stringData();
-    u->NoOwnString._address = (void*)bytes;
-    u->NoOwnString._length = length;
-    u->NoOwnString._encoding = encoding;
-    u->NoOwnString._freeWhenDone = freeWhenDone;
-
-    return self;
-}
-
-/**
- @Status Interoperable
-*/
-+ (instancetype)stringWithCharacters:(const WORD*)bytes length:(unsigned)length {
-    return [[[self alloc] initWithCharacters:bytes length:length] autorelease];
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithCharacters:(const WORD*)bytes length:(NSUInteger)length {
-    UnicodeString str((UChar*)bytes, length);
-
-    setToUnicode(self, str);
-    return self;
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -697,14 +275,8 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes CRT types must match when freeWhenDone=YES
 */
 - (instancetype)initWithCharactersNoCopy:(unichar*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
-    strType = NSConstructedString_NoOwn;
-    u = new stringData();
-    u->NoOwnString._address = (void*)bytes;
-    u->NoOwnString._length = length * 2;
-    u->NoOwnString._encoding = NSUnicodeStringEncoding;
-    u->NoOwnString._freeWhenDone = freeWhenDone != FALSE;
-
-    return self;
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -712,251 +284,59 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings available
 */
 - (instancetype)initWithCString:(const char*)bytes encoding:(NSStringEncoding)encoding {
-    int len = 0;
-
-    switch (encoding) {
-        case NSUTF8StringEncoding:
-        case NSISOLatin1StringEncoding:
-        case NSWindowsCP1252StringEncoding:
-        case NSASCIIStringEncoding:
-        case NSMacOSRomanStringEncoding: {
-            len = strlen(bytes);
-            break;
-        }
-
-        case NSUnicodeStringEncoding: {
-            WORD* curChar = (WORD*)bytes;
-            while (*curChar) {
-                len++;
-                curChar++;
-            }
-            break;
-        }
-
-        default:
-            assert(0);
-    }
-
-    void* characters = const_cast<char*>(bytes);
-    NSData* data = [[NSData alloc] initWithBytesNoCopy:characters length:len freeWhenDone:FALSE];
-    NSString* ret = [self initWithData:data encoding:encoding];
-    [data release];
-
-    return ret;
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithContentsOfFile:(NSString*)path {
-    if (path == nil) {
-        TraceVerbose(TAG, L"NSString: path = nil!");
-        return nil;
-    }
-
-    const char* fileName = (const char*)[path UTF8String];
-    TraceVerbose(TAG, L"NSString:opening %hs", fileName);
-
-    EbrFile* fpIn = EbrFopen(fileName, "rb");
-    if (!fpIn) {
-        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
-        return nil;
-    }
-
-    WORD type = 0;
-    DWORD encoding = NSASCIIStringEncoding;
-    EbrFread(&type, 1, 2, fpIn);
-
-    int bigendian = 0;
-
-    if (type == 0xFEFF) {
-        encoding = NSUnicodeStringEncoding;
-    } else if (type == 0xFFFE) {
-        encoding = NSUnicodeStringEncoding;
-        bigendian = 1;
-        assert(0);
-        *((char*)0xBAADF00D) = 0;
-    } else {
-        EbrFseek(fpIn, 0, SEEK_SET);
-    }
-
-    int cur = EbrFseek(fpIn, 0, SEEK_CUR);
-    EbrFseek(fpIn, 0, SEEK_END);
-    int len = EbrFtell(fpIn);
-    EbrFseek(fpIn, cur, SEEK_SET);
-    char* bytes = (char*)IwMalloc(len);
-
-    len = EbrFread(bytes, 1, len, fpIn);
-    EbrFclose(fpIn);
-
-    NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:len freeWhenDone:FALSE];
-    NSString* ret = [self initWithData:data encoding:encoding];
-    [data release];
-    IwFree(bytes);
-
-    return ret;
+- (unichar)characterAtIndex:(unsigned)index {
+    // NSString is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Caveat
- @Notes atomically parameter not supported
+ @Status Interoperable
 */
-- (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
-    if (!file) {
-        TraceVerbose(TAG, L"WriteToFile: nil!");
-        return FALSE;
-    }
-    UStringHolder s1(self);
-
-    const char* fileName = (const char*)[file UTF8String];
-    TraceVerbose(TAG, L"NSString: writing %hs", fileName);
-
-    EbrFile* fpOut = EbrFopen(fileName, "wb");
-    if (!fpOut) {
-        if (err) {
-            assert(0); //  Write NSError
-        }
-        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
-        return FALSE;
-    }
-
-    switch (encoding) {
-        case NSUTF8StringEncoding:
-        case NSASCIIStringEncoding: {
-            int len = s1.string().length();
-            for (int i = 0; i < len; i++) {
-                WORD out = s1.getChar(i);
-
-                EbrFwrite(&out, 1, 1, fpOut);
-            }
-            break;
-        }
-
-        case NSUnicodeStringEncoding: {
-            int len = s1.string().length();
-
-            EbrFputc(0xFF, fpOut);
-            EbrFputc(0xFE, fpOut);
-            for (int i = 0; i < len; i++) {
-                WORD out = s1.getChar(i);
-
-                EbrFwrite(&out, 2, 1, fpOut);
-            }
-            break;
-        }
-
-        default:
-            assert(0);
-    }
-
-    EbrFclose(fpOut);
-
-    return TRUE;
+- (NSUInteger)length {
+    // NSString is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available.
+ @Status Interoperable
 */
-- (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
-    if (path == nil) {
-        TraceVerbose(TAG, L"initWithContentsOfFile: path = nil!");
-        return nil;
-    }
-
-    const char* fileName = (const char*)[path UTF8String];
-    TraceVerbose(TAG, L"NSString:opening %hs", fileName);
-
-    EbrFile* fpIn = EbrFopen(fileName, "rb");
-    if (!fpIn) {
-        TraceVerbose(TAG, L"Couldn't open file %hs", fileName);
-        if (errorRet) {
-            *errorRet = [objc_getClass("NSError") errorWithDomain:@"File not found" code:100 userInfo:nil];
-        }
-        return nil;
-    }
-
-    int bigendian = 0;
-
-    if (encoding == NSUnicodeStringEncoding) {
-        WORD type = 0;
-        EbrFread(&type, 1, 2, fpIn);
-
-        if (type == 0xFEFF) {
-        } else if (type == 0xFFFE) {
-            bigendian = 1;
-            assert(0);
-            *((char*)0xBAADF00D) = 0;
-        } else {
-            EbrFseek(fpIn, 0, SEEK_SET);
-        }
-    }
-
-    int cur = EbrFseek(fpIn, 0, SEEK_CUR);
-    EbrFseek(fpIn, 0, SEEK_END);
-    int len = EbrFtell(fpIn);
-    EbrFseek(fpIn, cur, SEEK_SET);
-    char* bytes = (char*)IwMalloc(len);
-
-    len = EbrFread(bytes, 1, len, fpIn);
-    EbrFclose(fpIn);
-
-    NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:len freeWhenDone:FALSE];
-    NSString* ret = [self initWithData:data encoding:encoding];
-    [data release];
-    IwFree(bytes);
-
-    return ret;
++ (NSStringEncoding)defaultCStringEncoding {
+    return static_cast<NSStringEncoding>(CFStringConvertEncodingToNSStringEncoding(__CFStringGetEightBitStringEncoding()));
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings supported
+ @Status Interoperable
+ @Notes
 */
-- (NSUInteger)lengthOfBytesUsingEncoding:(NSStringEncoding)encoding {
-    unsigned ret;
+- (unsigned)lengthOfBytesUsingEncoding:(NSStringEncoding)encoding {
+    CFStringEncoding cfEncoding = CFStringConvertNSStringEncodingToEncoding(encoding);
+    CFIndex numBytes = 0;
+    unsigned originalLength = [self length];
+    unsigned convertedLength =
+        __CFStringEncodeByteStream(static_cast<CFStringRef>(self), 0, originalLength, false, cfEncoding, 0, nullptr, 0, &numBytes);
 
-    switch (encoding) {
-        case NSUTF8StringEncoding:
-        case NSASCIIStringEncoding: {
-            UStringHolder s1(self);
-
-            std::string realStr;
-            s1.string().toUTF8String(realStr);
-
-            ret = realStr.length();
-            break;
-        }
-
-        case NSUnicodeStringEncoding: {
-            UStringHolder s1(self);
-
-            ret = s1.string().length();
-            break;
-        }
-
-        default:
-            assert(0);
-    }
-
-    return ret;
+    return (convertedLength != originalLength) ? 0 : numBytes;
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available
+ @Status Interoperable
 */
 + (instancetype)stringWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
-    NSString* ret = [[self alloc] initWithContentsOfFile:path encoding:encoding error:errorRet];
-
-    return [ret autorelease];
+    return [[[self alloc] initWithContentsOfFile:path encoding:encoding error:errorRet] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)stringWithContentsOfURL:(NSURL*)url {
-    return [self stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+    return [[[self alloc] initWithContentsOfURL:url] autorelease];
 }
 
 /**
@@ -975,170 +355,138 @@ typedef NSUInteger NSStringCompareOptions;
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available
+ @Status Interoperable
 */
 + (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
-    NSString* ret = [self alloc];
-
-    if (usedEncoding != nullptr) {
-        *usedEncoding = NSASCIIStringEncoding;
-    }
-
-    TraceVerbose(TAG, L"Encoding: ASCII?");
-    return [[ret initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet] autorelease];
+    return [[[self alloc] initWithContentsOfFile:path usedEncoding:usedEncoding error:errorRet] autorelease];
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings available
+ @Status Interoperable
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)encoding error:(NSError* _Nullable*)error {
+    NSData* data = [NSData dataWithContentsOfURL:url options:0 error:error];
+
+    return _stringFromDataWithEncoding(self, data, encoding);
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
++ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError* _Nullable*)error {
+    return [[[self alloc] initWithContentsOfURL:url usedEncoding:usedEncoding error:error] autorelease];
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError* _Nullable*)error {
+    NSData* data = [NSData dataWithContentsOfURL:url options:0 error:error];
+
+    return _stringFromDataByDeterminingEncoding(self, data, usedEncoding);
+}
+
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (instancetype)initWithContentsOfURL:(NSURL*)url {
+    return [self initWithContentsOfURL:url usedEncoding:nullptr error:nullptr];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithContentsOfFile:(NSString*)path {
+    return [self initWithContentsOfFile:path usedEncoding:nullptr error:nullptr];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)encoding error:(NSError**)errorRet {
+    NSData* data = [NSData dataWithContentsOfFile:path options:0 error:errorRet];
+
+    return _stringFromDataWithEncoding(self, data, encoding);
+}
+
+/**
+ @Status Interoperable
 */
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)usedEncoding error:(NSError**)errorRet {
-    if (usedEncoding != nullptr) {
-        *usedEncoding = NSASCIIStringEncoding;
-    }
+    NSData* data = [NSData dataWithContentsOfFile:path options:0 error:errorRet];
 
-    TraceVerbose(TAG, L"Encoding: ASCII?");
-    return [self initWithContentsOfFile:path encoding:NSASCIIStringEncoding error:errorRet];
-}
-
-- (const void*)_quickStringUsingEncoding:(DWORD)encoding {
-    if (encoding == NSUnicodeStringEncoding) {
-        UStringHolder s1(self);
-
-        if (strType == NSConstructedString_Unicode) {
-            return u->ConstructedString.constructedStr->str->getTerminatedBuffer();
-        }
-    }
-
-    return [self cStringUsingEncoding:encoding];
+    return _stringFromDataByDeterminingEncoding(self, data, usedEncoding);
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings supported
+ @Status Interoperable
 */
 - (const char*)cStringUsingEncoding:(NSStringEncoding)encoding {
-    switch (encoding) {
-        case NSASCIIStringEncoding:
-        case NSNonLossyASCIIStringEncoding:
-        case NSWindowsCP1251StringEncoding:
-        case NSWindowsCP1252StringEncoding:
-        case NSShiftJISStringEncoding:
-        case NSMacOSRomanStringEncoding:
-        case NSUTF8StringEncoding: {
-            UStringHolder s1(self);
+    // Convert to a data and autorelease it to not leak.
+    // One key here is that dataUsingEncoding is NOT null terminated. This means an *almost* identical copy of
+    // that function is implemented to save the copy.
+    int len = [self length];
+    NSUInteger numBytes = 0;
 
-            int len = s1.string().length();
-            NSUInteger numBytes = 0;
+    NSStringEncodingConversionOptions options = static_cast<NSStringEncodingConversionOptions>(0);
 
-            [self getBytes:NULL
-                     maxLength:0x7FFFFFF
-                    usedLength:&numBytes
-                      encoding:encoding
-                       options:0
-                         range:NSMakeRange(0, len)
-                remainingRange:NULL];
+    [self getBytes:nullptr
+             maxLength:0x7FFFFFF
+            usedLength:&numBytes
+              encoding:encoding
+               options:options
+                 range:NSMakeRange(0, len)
+        remainingRange:nullptr];
 
-            if ((object_getClass(self) == [NSString class] || object_getClass(self) == [CFConstantString class]) &&
-                strType == NSConstructedString_Unicode) {
-                if (u->ConstructedString.constructedStr->utf8String == NULL) {
-                    char* pData = (char*)IwMalloc(numBytes + 1);
-                    [self getBytes:pData
-                             maxLength:numBytes
-                            usedLength:NULL
-                              encoding:encoding
-                               options:0
-                                 range:NSMakeRange(0, len)
-                        remainingRange:NULL];
-                    pData[numBytes] = 0;
-                    u->ConstructedString.constructedStr->utf8String = pData;
-                }
+    // Figure out how big the null terminator needs to be. Note this is a little inefficient as the null terminator is almost certainly
+    // smaller than the maximum single character size.
+    NSUInteger bytesToAlloc = numBytes + CFStringGetMaximumSizeForEncoding(1, CFStringConvertNSStringEncodingToEncoding(encoding));
 
-                return u->ConstructedString.constructedStr->utf8String;
-            } else {
-                char* pData = (char*)_conversionTempStr(numBytes + 1);
-                [self getBytes:pData
-                         maxLength:numBytes
-                        usedLength:NULL
-                          encoding:encoding
-                           options:0
-                             range:NSMakeRange(0, len)
-                    remainingRange:NULL];
-                pData[numBytes] = 0;
+    woc::unique_iw<char> data(static_cast<char*>(IwMalloc(bytesToAlloc)));
+    [self getBytes:data.get()
+             maxLength:numBytes
+            usedLength:nullptr
+              encoding:encoding
+               options:options
+                 range:NSMakeRange(0, len)
+        remainingRange:nullptr];
 
-                return pData;
-            }
-        }
+    // pad the end with \0s to make sure null terminator is correct size. Note that this assumes \0 or 0 is the null terminator in
+    // all encodings.
+    memset(data.get() + numBytes, '\0', bytesToAlloc - numBytes);
 
-        case NSUnicodeStringEncoding: {
-            UStringHolder s1(self);
-
-            int len = s1.string().length();
-            const UChar* ptr = s1.string().getTerminatedBuffer();
-            WORD* pData = (WORD*)_conversionTempStr((len + 1) * 2);
-            memcpy(pData, ptr, len * 2);
-            pData[len] = 0;
-
-            return (const char*)pData;
-        }
-
-        case static_cast<DWORD>(NSUTF32LittleEndianStringEncoding): {
-            UStringHolder s1(self);
-
-            DWORD* strRet = (DWORD*)_conversionTempStr((s1.string().length() + 1) * 4);
-            int i, len = s1.string().length();
-
-            for (i = 0; i < len; i++) {
-                strRet[i] = s1.getChar(i);
-            }
-            strRet[i] = 0;
-
-            return (const char*)strRet;
-        }
-
-        default:
-            assert(0);
-            break;
-    }
-
-    return 0;
+    return static_cast<const char*>([[NSData dataWithBytesNoCopy:data.release() length:(bytesToAlloc) freeWhenDone:YES] bytes]);
 }
 
 /**
  @Status Interoperable
 */
 - (NSStringEncoding)fastestEncoding {
-    // Return Unicode encoding as soon as a single non-ASCII character is found. Otherwise, return ASCII encoding.
-    UStringHolder s1(self);
-    icu_48::UnicodeString unicodeString = s1.string();
-    int32_t length = unicodeString.length();
+    return static_cast<NSStringEncoding>(
+        CFStringConvertEncodingToNSStringEncoding(CFStringGetFastestEncoding(static_cast<CFStringRef>(self))));
+}
 
-    for (int32_t i = 0; i < length; i++) {
-        if (unicodeString[i] > 0x7F) {
-            return NSUnicodeStringEncoding;
-        }
-    }
-
-    return NSASCIIStringEncoding;
+/**
+ @Status Interoperable
+*/
+- (NSStringEncoding)smallestEncoding {
+    return static_cast<NSStringEncoding>(
+        CFStringConvertEncodingToNSStringEncoding(CFStringGetSmallestEncoding(static_cast<CFStringRef>(self))));
 }
 
 /**
  @Status Interoperable
 */
 - (const char*)UTF8String {
-    if (strType == NSConstructedString_Unicode) {
-        if (u->ConstructedString.constructedStr->utf8String) {
-            return u->ConstructedString.constructedStr->utf8String;
-        }
-    }
-
     return (const char*)[self cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
 /**
- @Status Caveat
- @Notes options not supported.  Limited encodings supported.
+ @Status Interoperable
+ @Notes
 */
 - (BOOL)getBytes:(void*)buffer
        maxLength:(NSUInteger)maxBuf
@@ -1146,531 +494,205 @@ typedef NSUInteger NSStringCompareOptions;
         encoding:(NSStringEncoding)encoding
          options:(NSStringEncodingConversionOptions)options
            range:(NSRange)range
-  remainingRange:(NSRange*)left {
-    unsigned offset = range.location, length = range.length;
+  remainingRange:(NSRangePointer)left {
+    CFIndex totalBytesWritten = 0;
+    unsigned int numCharsProcessed = 0;
+    CFStringEncoding cfStringEncoding = CFStringConvertNSStringEncodingToEncoding(encoding);
+    BOOL result = true;
+    if ([self length] > 0) {
+        if (CFStringIsEncodingAvailable(cfStringEncoding)) {
+            BOOL lossyOk = ((options & NSStringEncodingConversionAllowLossy) != 0);
+            BOOL externalRep = ((options & NSStringEncodingConversionExternalRepresentation) != 0);
 
-    DWORD outPos = 0;
-    UStringHolder s1(self, offset, length);
-    UnicodeString& subStr = s1.string();
-    BOOL ret = FALSE;
-
-    switch (encoding) {
-        case NSWindowsCP1252StringEncoding:
-        case NSASCIIStringEncoding: {
-            UErrorCode status = U_ZERO_ERROR;
-            UConverter* cnv = getASCIIConverter();
-
-            if (buffer != NULL) {
-                char* targetBegin = (char*)buffer;
-                char* targetStart = targetBegin;
-                char* targetEnd = targetStart + maxBuf;
-                const UChar* sourceBegin = subStr.getBuffer();
-                const UChar* sourceStart = sourceBegin;
-                const UChar* sourceEnd = sourceStart + subStr.length();
-
-                ucnv_fromUnicode(cnv, &targetStart, targetEnd, &sourceStart, sourceEnd, NULL, TRUE, &status);
-
-                if (sourceStart != sourceBegin) {
-                    ret = TRUE;
-                }
-
-                if (usedLength) {
-                    *usedLength = targetStart - targetBegin;
-                }
-                if (left) {
-                    left->location = offset + (sourceStart - sourceBegin);
-                    left->length = s1.string().length() - left->location;
-                }
-            } else {
-                if (usedLength) {
-                    *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
-                }
+            numCharsProcessed = __CFStringEncodeByteStream(static_cast<CFStringRef>(self),
+                                                           range.location,
+                                                           range.length,
+                                                           externalRep,
+                                                           cfStringEncoding,
+                                                           lossyOk ? (encoding == NSASCIIStringEncoding ? 0xFF : 0x3F) : 0,
+                                                           static_cast<unsigned char*>(buffer),
+                                                           buffer != nil ? maxBuf : 0,
+                                                           &totalBytesWritten);
+            if (numCharsProcessed == 0) {
+                result = false;
             }
-        } break;
-
-        case NSUnicodeStringEncoding: {
-            if (buffer != NULL) {
-                UChar* targetBegin = (UChar*)buffer;
-                UChar* targetStart = targetBegin;
-                const UChar* sourceBegin = subStr.getBuffer();
-                const UChar* sourceStart = sourceBegin;
-                const int maxChars = maxBuf / sizeof(UChar);
-
-                int toCopy = maxChars > subStr.length() ? subStr.length() : maxChars;
-                memcpy(targetStart, sourceStart, toCopy * sizeof(UChar));
-                targetStart += toCopy;
-                sourceStart += toCopy;
-
-                if (sourceStart != sourceBegin) {
-                    ret = TRUE;
-                }
-
-                if (usedLength) {
-                    *usedLength = (targetStart - targetBegin) * sizeof(UChar);
-                }
-                if (left) {
-                    left->location = offset + (sourceStart - sourceBegin);
-                    left->length = s1.string().length() - left->location;
-                }
-            } else {
-                if (usedLength) {
-                    *usedLength = subStr.length() * sizeof(UChar);
-                }
-            }
-        } break;
-
-        case NSUTF8StringEncoding: {
-            UErrorCode status = U_ZERO_ERROR;
-            UConverter* cnv = getUTF8Converter();
-
-            if (buffer != NULL) {
-                char* targetBegin = (char*)buffer;
-                char* targetStart = targetBegin;
-                char* targetEnd = targetStart + maxBuf;
-                const UChar* sourceBegin = subStr.getBuffer();
-                const UChar* sourceStart = sourceBegin;
-                const UChar* sourceEnd = sourceStart + subStr.length();
-
-                ucnv_fromUnicode(cnv, &targetStart, targetEnd, &sourceStart, sourceEnd, NULL, TRUE, &status);
-
-                if (sourceStart != sourceBegin) {
-                    ret = TRUE;
-                }
-
-                if (usedLength) {
-                    *usedLength = targetStart - targetBegin;
-                }
-                if (left) {
-                    left->location = offset + (sourceStart - sourceBegin);
-                    left->length = s1.string().length() - left->location;
-                }
-            } else {
-                if (usedLength) {
-                    *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
-                }
-            }
-        } break;
-
-        case NSUTF32BigEndianStringEncoding: {
-            UErrorCode status = U_ZERO_ERROR;
-            UConverter* cnv = getUTF32BEConverter();
-
-            if (buffer != NULL) {
-                char* targetBegin = (char*)buffer;
-                char* targetStart = targetBegin;
-                char* targetEnd = targetStart + maxBuf;
-                const UChar* sourceBegin = subStr.getBuffer();
-                const UChar* sourceStart = sourceBegin;
-                const UChar* sourceEnd = sourceStart + subStr.length();
-
-                ucnv_fromUnicode(cnv, &targetStart, targetEnd, &sourceStart, sourceEnd, NULL, TRUE, &status);
-
-                if (sourceStart != sourceBegin) {
-                    ret = TRUE;
-                }
-
-                if (usedLength) {
-                    *usedLength = targetStart - targetBegin;
-                }
-                if (left) {
-                    left->location = offset + (sourceStart - sourceBegin);
-                    left->length = s1.string().length() - left->location;
-                }
-            } else {
-                if (usedLength) {
-                    *usedLength = ucnv_fromUChars(cnv, NULL, 0, subStr.getBuffer(), subStr.length(), &status);
-                }
-            }
-        } break;
-
-        default:
-            *((char*)0xBAADF00D) = 0;
-            assert(0);
+        } else {
+            result = false;
+        }
     }
-
-    return ret;
+    if (usedLength != nil) {
+        *usedLength = totalBytesWritten;
+    }
+    if (left != nil) {
+        *left = NSMakeRange(range.location + numCharsProcessed, range.length - numCharsProcessed);
+    }
+    return result;
 }
 
 /**
  @Status Interoperable
 */
 - (void)getCharacters:(unichar*)dest range:(NSRange)range {
-    UStringHolder s1(self, range.location, range.length);
-
-    assert(range.length <= (DWORD)s1.string().length());
-
-    UErrorCode error = U_ZERO_ERROR;
-    s1.string().extract((UChar*)dest, range.length, error);
+    for (unsigned int i = 0; i < range.length; i++) {
+        dest[i] = [self characterAtIndex:(i + range.location)];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (void)getCharacters:(unichar*)dest {
-    UStringHolder s1(self);
-
-    [self getCharacters:dest range:NSMakeRange(0, s1.string().length())];
+    [self getCharacters:dest range:NSMakeRange(0, [self length])];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)copyWithZone:(NSZone*)zone {
-    if ([self class] == [NSString class] && strType == NSConstructedString_NoOwn) {
-        // If we don't own the buffer, a deep copy must be made.
-        return [[[self class] alloc] initWithBytes:u->NoOwnString._address length:u->NoOwnString._length encoding:u->NoOwnString._encoding];
-    }
     return [self retain];
 }
 
 /**
  @Status Interoperable
 */
+- (NSMutableString*)mutableCopyWithZone:(NSZone*)zone {
+    return [[NSMutableString alloc] initWithString:self];
+}
+
+/**
+ @Status Interoperable
+*/
 - (instancetype)lowercaseString {
-    UStringHolder s1(self);
-
-    UnicodeString s2 = s1.string();
-    s2.toLower();
-
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, s2);
-
-    return [ret autorelease];
+    return [self lowercaseStringWithLocale:nil];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)capitalizedString {
-    UStringHolder s1(self);
-
-    UnicodeString s2 = s1.string();
-    s2.toTitle(NULL);
-
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, s2);
-
-    return [ret autorelease];
+    return [self capitalizedStringWithLocale:nil];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)uppercaseString {
-    UStringHolder s1(self);
-
-    UnicodeString s2 = s1.string();
-    s2.toUpper();
-
-    //  Fastpath - don't create a new string
-    if (s2 == s1.string()) {
-        if (object_getClass(self) == [CFConstantString class]) {
-            return self;
-        }
-
-        return [[self copy] autorelease];
-    }
-
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, s2);
-
-    return [ret autorelease];
+    return [self uppercaseStringWithLocale:nil];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)stringByDeletingPathExtension {
-    UStringHolder s1(self);
-    int len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
+    CFIndex index = _CFStartOfPathExtension2(static_cast<CFStringRef>(self));
 
-    //  Scan backwards for a dot or slash
-    int curOffset = 0;
-    for (curOffset = len - 1; curOffset >= 0; curOffset--) {
-        if (chars[curOffset] == '.') {
-            UnicodeString piece = UnicodeString(s1.string(), 0, curOffset);
-            NSString* ret = [NSString alloc];
-            setToUnicode(ret, piece);
-            return [ret autorelease];
-        } else if (chars[curOffset] == '/') {
-            break;
+    if (index > 0 && IS_SLASH([self characterAtIndex:index])) {
+        // strip off a trailing slash if the character before the extension is a slash (meaning ends up as path)
+        // special case 0th index though to not convert "/" into ""
+        return [self substringToIndex:index - 1];
+    } else if (index == 0) {
+        // whole string is a path extension. Don't do anything to it unless it ends in a slash and its the not root slash.
+        NSUInteger length = [self length];
+        if (length > 1 && IS_SLASH([self characterAtIndex:(length - 1)])) {
+            return [self substringToIndex:length - 1];
+        } else {
+            return [self copy];
         }
+    } else {
+        return [self substringToIndex:index];
     }
-
-    return self;
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)stringByDeletingLastPathComponent {
-    UStringHolder s1(self);
-    int len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
+    CFIndex index = _CFStartOfLastPathComponent2(static_cast<CFStringRef>(self));
 
-    //  Scan backwards for a slash
-    int curOffset = 0;
-    for (curOffset = len - 1; curOffset >= 0; curOffset--) {
-        if (chars[curOffset] == '/') {
-            if (curOffset == 0) {
-                return @"/";
-            } else {
-                if (curOffset + 1 < len) {
-                    UnicodeString piece = UnicodeString(s1.string(), 0, curOffset);
-                    NSString* ret = [NSString alloc];
-                    setToUnicode(ret, piece);
-                    return [ret autorelease];
-                }
-            }
+    if (index == 0) {
+        if ([self length] > 0 && IS_SLASH([self characterAtIndex:index])) {
+            return _NSGetSlashStr();
+        } else {
+            return @"";
         }
+    } else if (index == 1) {
+        return _NSGetSlashStr();
+    } else {
+        // strip of the trailing slash (where the 2nd to last path component would end)
+        return [self substringToIndex:(index - 1)];
     }
-
-    return @"";
-}
-
-/**
- @Status Interoperable
-*/
-- (unichar)characterAtIndex:(unsigned)index {
-    UStringHolder s1(self);
-    DWORD len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
-
-    assert(index < len);
-
-    return chars[index];
-}
-
-/**
- @Status Interoperable
-*/
-- (const unichar*)rawCharacters {
-    UStringHolder s1(self);
-    return (const unichar*)s1.string().getBuffer();
-}
-
-/**
- @Status Interoperable
-*/
-- (const unichar*)_rawTerminatedCharacters {
-    UStringHolder s1(self);
-    return (const unichar*)s1.string().getTerminatedBuffer();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)stringByAppendingPathComponent:(NSString*)pathStr {
-    UStringHolder s1(self);
-    int len = s1.string().length();
+    NSMutableString* mutableString = [self mutableCopy];
+    _CFAppendPathComponent2(static_cast<CFMutableStringRef>(mutableString), static_cast<CFStringRef>(pathStr));
 
-    if (len == 0) {
-        if (pathStr) {
-            return [NSString stringWithString:pathStr];
-        } else {
-            return @"";
-        }
-    }
-
-    const UChar* chars = s1.string().getBuffer();
-    UStringHolder s2(pathStr);
-    int pathLen = s2.string().length();
-
-    //  Strip trailing slashes
-    int curPos = len - 1;
-    while (curPos >= 0) {
-        if (chars[curPos] != '/') {
-            break;
-        }
-        curPos--;
-    }
-
-    curPos++;
-    UnicodeString subStr(s1.string(), 0, curPos);
-    subStr.append('/');
-
-    //  Strip leading slashes
-    const UChar* pathChars = s2.string().getBuffer();
-    for (curPos = 0; curPos < pathLen; curPos++) {
-        if (pathChars[curPos] != '/')
-            break;
-    }
-
-    UnicodeString pathSubStr(s2.string(), curPos, pathLen - curPos);
-    subStr.append(pathSubStr);
-
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, subStr);
-    return [ret autorelease];
+    return mutableString;
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)stringByAppendingPathExtension:(NSString*)extension {
-    UStringHolder s1(self);
-    int len = s1.string().length();
+    NSMutableString* mutableString = [self mutableCopy];
+    Boolean success = _CFAppendPathExtension2(static_cast<CFMutableStringRef>(mutableString), static_cast<CFStringRef>(extension));
 
-    const UChar* chars = s1.string().getBuffer();
-
-    //  Strip trailing slashes
-    int curPos = len - 1;
-    while (curPos >= 0) {
-        if (chars[curPos] != '/') {
-            break;
-        }
-        curPos--;
-    }
-
-    curPos++;
-    UnicodeString subStr(s1.string(), 0, curPos);
-    subStr.append('.');
-
-    UStringHolder s2(extension);
-    subStr.append(s2.string());
-
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, subStr);
-    return [ret autorelease];
+    return success ? mutableString : nil;
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)hasSuffix:(NSString*)suffixStr {
-    UStringHolder s1(self);
-    UStringHolder s2(suffixStr);
-
-    if (s1.string().endsWith(s2.string())) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
+    return CFStringHasSuffix(static_cast<CFStringRef>(self), static_cast<CFStringRef>(suffixStr));
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)hasPrefix:(NSString*)prefixStr {
-    UStringHolder s1(self);
-    UStringHolder s2(prefixStr);
-
-    if (s2.string().startsWith("fb")) {
-        const char* pStr1 = (const char*)[self UTF8String];
-        const char* pStr2 = (const char*)[prefixStr UTF8String];
-    }
-
-    if (s1.string().startsWith(s2.string())) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
+    return CFStringHasPrefix(static_cast<CFStringRef>(self), static_cast<CFStringRef>(prefixStr));
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)pathExtension {
-    UStringHolder s1(self);
-    int len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
-
-    //  Skip any single trailing slash
-    if (len > 0 && chars[len - 1] == '/') {
-        len--;
-    }
-
-    //  Scan backwards for a dot or slash
-    for (int curOffset = len - 1; curOffset >= 0; curOffset--) {
-        if (chars[curOffset] == '.') {
-            UnicodeString piece = UnicodeString(s1.string(), curOffset + 1, len - curOffset - 1);
-            NSString* ret = [NSString alloc];
-            setToUnicode(ret, piece);
-            return [ret autorelease];
-        } else if (chars[curOffset] == '/') {
-            break;
-        }
-    }
-
-    return @"";
+    return [self substringFromIndex:_CFStartOfPathExtension2(static_cast<CFStringRef>(self))];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)lastPathComponent {
-    UStringHolder s1(self);
-    int len = s1.string().length();
-    const UChar* chars = s1.string().getBuffer();
-    int lastChar = -1;
-
-    //  Scan backwards for a slash
-    int curOffset;
-    for (curOffset = len - 1; curOffset > -1; curOffset--) {
-        if (chars[curOffset] == '/') {
-            if (lastChar != -1) {
-                break;
-            }
-        } else {
-            if (lastChar == -1)
-                lastChar = curOffset;
-        }
-    }
-
-    if (curOffset != -1) {
-        UnicodeString piece = UnicodeString(s1.string(), curOffset + 1, len - curOffset - 1);
-        NSString* ret = [NSString alloc];
-        setToUnicode(ret, piece);
-        return [ret autorelease];
-    } else {
-        return self;
-    }
+    return [self substringFromIndex:_CFStartOfLastPathComponent2(static_cast<CFStringRef>(self))];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)substringToIndex:(NSUInteger)anIndex {
-    UStringHolder s1(self);
-
-    UnicodeString piece = UnicodeString(s1.string(), 0, anIndex);
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, piece);
-    return [ret autorelease];
+    return
+        [static_cast<NSString*>(CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ 0, anIndex })) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)substringFromIndex:(NSUInteger)anIndex {
-    UStringHolder s1(self);
-
-    UnicodeString piece = UnicodeString(s1.string(), anIndex);
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, piece);
-    return [ret autorelease];
+    return [static_cast<NSString*>(
+        CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ anIndex, [self length] - anIndex })) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)substringWithRange:(NSRange)range {
-    UStringHolder s1(self);
-
-    UnicodeString piece = UnicodeString(s1.string(), range.location, range.length);
-    NSString* ret = [NSString alloc];
-    setToUnicode(ret, piece);
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (unsigned)length {
-    UStringHolder s1(self);
-
-    return s1.string().length();
+    return [static_cast<NSString*>(
+        CFStringCreateWithSubstring(nullptr, static_cast<CFStringRef>(self), CFRange{ range.location, range.length })) autorelease];
 }
 
 /**
@@ -1684,163 +706,62 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 - (BOOL)isEqualToString:(NSString*)compStr {
-    if (compStr == nil)
-        return FALSE;
+    RETURN_FALSE_IF(!compStr);
 
-    if (object_getClass(compStr) == [NSString class] || object_getClass(compStr) == [CFConstantString class] ||
-        [compStr isKindOfClass:[NSString class]]) {
-        if (strType == NSConstructedString_Unicode && u->ConstructedString._hashIsCached == TRUE &&
-            compStr->strType == NSConstructedString_Unicode && compStr->u->ConstructedString._hashIsCached == TRUE) {
-            if (u->ConstructedString._hashCache != compStr->u->ConstructedString._hashCache) {
-                return FALSE;
-            }
-        }
-
-        UStringHolder s1(self);
-        return [self compare:(id)compStr options:0 range:NSMakeRange(0, s1.string().length())] == 0;
+    if ([compStr isKindOfClass:[NSString class]]) {
+        return [self compare:compStr options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])] == 0;
     } else {
         return [compStr isEqual:self];
     }
 }
 
 /**
- @Status Stub
- @Notes Forwards to compare:
+ @Status Interoperable
+ @Notes
 */
-- (int)localizedCaseInsensitiveCompare:(NSString*)compStr {
-    UNIMPLEMENTED();
-    UStringHolder s1(self);
-    return [self compare:(id)compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, s1.string().length())];
+- (NSComparisonResult)localizedCaseInsensitiveCompare:(NSString*)compStr {
+    return [self compare:compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self length]) locale:[NSLocale currentLocale]];
 }
 
 /**
  @Status Interoperable
 */
-- (int)caseInsensitiveCompare:(NSString*)compStr {
-    UStringHolder s1(self);
-    return [self compare:(id)compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, s1.string().length())];
+- (NSComparisonResult)caseInsensitiveCompare:(NSString*)compStr {
+    return [self compare:compStr options:NSCaseInsensitiveSearch range:NSMakeRange(0, [self length])];
 }
 
 /**
- @Status Stub
- @Notes Forwards to compare:
+ @Status Interoperable
+ @Notes
 */
-- (int)localizedCompare:(NSString*)compStr {
-    UNIMPLEMENTED();
-    UStringHolder s1(self);
-    return [self compare:(id)compStr options:0 range:NSMakeRange(0, s1.string().length())];
+- (NSComparisonResult)localizedCompare:(NSString*)compStr {
+    return [self compare:compStr
+                 options:static_cast<NSStringCompareOptions>(0)
+                   range:NSMakeRange(0, [self length])
+                  locale:[NSLocale currentLocale]];
 }
 
 /**
  @Status Interoperable
 */
-- (int)compare:(NSString*)compStr {
-    UStringHolder s1(self);
-    return [self compare:(id)compStr options:0 range:NSMakeRange(0, s1.string().length())];
-}
-
-- (int)versionStringCompare:(NSString*)compStrAddr {
-    TraceWarning(TAG, L"Warning: versionStringCompare not implemented");
-    char* str = (char*)[self UTF8String];
-
-    if (compStrAddr == nil) {
-        TraceVerbose(TAG, L"Compare to nil?");
-        return strcmp(str, "");
-    }
-
-    const char* compStr = (const char*)[compStrAddr UTF8String];
-
-    int result = strcmp(str, compStr);
-    if (result < 0)
-        result = -1;
-    if (result > 0)
-        result = 1;
-
-    return result;
+- (NSComparisonResult)compare:(NSString*)compStr {
+    return [self compare:compStr options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])];
 }
 
 /**
- @Status Caveat
- @Notes Only NSCaseInsensitiveSearch, NSAnchoredSearch, NSDiacriticInsensitiveSearch, NSNumericSearch,
-        and NSRegularExpression are supported.
+ @Status Interoperable
+ @Notes
 */
-- (int)compare:(NSString*)compStr options:(NSStringCompareOptions)options {
-    UStringHolder s1(self);
-    return [self compare:compStr options:options range:NSMakeRange(0, s1.string().length())];
+- (NSComparisonResult)compare:(NSString*)compStr options:(NSStringCompareOptions)options {
+    return [self compare:compStr options:options range:NSMakeRange(0, [self length])];
 }
 
 /**
- @Status Caveat
- @Notes Only NSCaseInsensitiveSearch, NSAnchoredSearch, NSDiacriticInsensitiveSearch, NSNumericSearch,
-        and NSRegularExpression are supported.
+ @Status Interoperable
+ @Notes
 */
-- (int)compare:(NSString*)compStrAddr options:(NSStringCompareOptions)options range:(NSRange)range {
-    if (compStrAddr == nil) {
-        return -1;
-    }
-    if (compStrAddr == self) {
-        return 0;
-    }
-
-    if (options == 0) {
-        UStringHolder s1(self, range.location, range.length);
-        UStringHolder s2(compStrAddr);
-
-        int result = s1.string().compare(s2.string());
-        if (result > 0) {
-            return 1;
-        } else if (result < 0) {
-            return -1;
-        }
-        return 0;
-    } else if (options == NSCaseInsensitiveSearch) {
-        UStringHolder s1(self, range.location, range.length);
-        UStringHolder s2(compStrAddr);
-
-        int result = s1.string().caseCompare(s2.string(), 0);
-        if (result > 0) {
-            return 1;
-        } else if (result < 0) {
-            return -1;
-        }
-        return 0;
-    }
-
-    //  32 == Localized search
-    assert((options &
-            ~(NSDiacriticInsensitiveSearch | NSCaseInsensitiveSearch | NSLiteralSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch |
-              NSNumericSearch | 32)) == 0);
-
-    UStringHolder s1(self, range.location, range.length);
-    UStringHolder s2(compStrAddr);
-
-    UErrorCode error = U_ZERO_ERROR;
-    UCollator* collator = getDefaultLocaleCollator();
-
-    if ((options & NSCaseInsensitiveSearch) && (options & NSDiacriticInsensitiveSearch)) {
-        ucol_setStrength(collator, UCOL_PRIMARY);
-    } else if (options & NSCaseInsensitiveSearch) {
-        ucol_setStrength(collator, UCOL_SECONDARY);
-    } else if (options & NSDiacriticInsensitiveSearch) {
-        ucol_setStrength(collator, UCOL_PRIMARY);
-        ucol_setAttribute(collator, UCOL_CASE_LEVEL, UCOL_ON, &error);
-    }
-
-    if (options & NSNumericSearch)
-        ucol_setAttribute(collator, UCOL_NUMERIC_COLLATION, UCOL_ON, &error);
-
-    UCollationResult result =
-        ucol_strcoll(collator, s1.string().getBuffer(), s1.string().length(), s2.string().getBuffer(), s2.string().length());
-
-    if (result == UCOL_EQUAL) {
-        return 0;
-    } else if (result == UCOL_LESS) {
-        return -1;
-    } else if (result == UCOL_GREATER) {
-        return 1;
-    }
-
-    return 0;
+- (NSComparisonResult)compare:(NSString*)compStrAddr options:(NSStringCompareOptions)options range:(NSRange)range {
+    return [self compare:compStrAddr options:options range:range locale:nil];
 }
 
 /**
@@ -1848,14 +769,13 @@ typedef NSUInteger NSStringCompareOptions;
 */
 - (int)intValue {
     char* str = (char*)[self UTF8String];
-
-    return strtol(str, NULL, 10);
+    return strtol(str, nullptr, 10);
 }
 
 /**
  @Status Interoperable
 */
-- (int)integerValue {
+- (NSInteger)integerValue {
     return [self intValue];
 }
 
@@ -1867,22 +787,12 @@ typedef NSUInteger NSStringCompareOptions;
 
     __int64 ret;
 #if defined(WIN32) || defined(WINPHONE)
-    ret = _strtoi64(str, NULL, 10);
+    ret = _strtoi64(str, nullptr, 10);
 #else
-    ret = strtoll(str, NULL, 10);
+    ret = strtoll(str, nullptr, 10);
 #endif
 
     return ret;
-}
-
-- (void)_longLongValuePtr:(__int64*)ret {
-    char* str = (char*)[self UTF8String];
-
-#if defined(WIN32) || defined(WINPHONE)
-    *ret = _strtoi64(str, NULL, 10);
-#else
-    *ret = strtoll(str, NULL, 10);
-#endif
 }
 
 /**
@@ -1891,7 +801,7 @@ typedef NSUInteger NSStringCompareOptions;
 - (float)floatValue {
     char* str = (char*)[self UTF8String];
 
-    float ret = (float)strtod(str, NULL);
+    float ret = (float)strtod(str, nullptr);
 
     return ret;
 }
@@ -1902,7 +812,7 @@ typedef NSUInteger NSStringCompareOptions;
 - (double)doubleValue {
     char* str = (char*)[self UTF8String];
 
-    double ret = strtod(str, NULL);
+    double ret = strtod(str, nullptr);
 
     return ret;
 }
@@ -1910,43 +820,8 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (BOOL)isEqual:(NSString*)objAddr {
-    if (objAddr == self)
-        return TRUE;
-    if (objAddr == nil)
-        return FALSE;
-
-    if (object_getClass(objAddr) == [NSString class] || object_getClass(objAddr) == [NSMutableString class] ||
-        object_getClass(objAddr) == [CFConstantString class]) {
-        if (strType == NSConstructedString_Unicode && u->ConstructedString._hashIsCached == TRUE &&
-            objAddr->strType == NSConstructedString_Unicode && objAddr->u->ConstructedString._hashIsCached == TRUE) {
-            if (u->ConstructedString._hashCache != objAddr->u->ConstructedString._hashCache) {
-                return FALSE;
-            }
-        }
-
-        UStringHolder s1(self);
-        UStringHolder s2(objAddr);
-
-        return (s1.string() == s2.string());
-    }
-    if (objAddr != nil && [objAddr isKindOfClass:[NSString class]]) {
-        return [self isEqualToString:(id)objAddr];
-    }
-
-    return FALSE;
-}
-
-/**
- @Status Interoperable
-*/
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet {
-    UStringHolder s1(self);
-
-    NSRange range;
-    range = [self rangeOfCharacterFromSet:charSet options:0 range:NSMakeRange(0, s1.string().length())];
-
-    return range;
+    return [self rangeOfCharacterFromSet:charSet options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, [self length])];
 }
 
 /**
@@ -1954,12 +829,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
 */
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(NSStringCompareOptions)options {
-    UStringHolder s1(self);
-
-    NSRange range;
-    range = [self rangeOfCharacterFromSet:charSet options:options range:NSMakeRange(0, s1.string().length())];
-
-    return range;
+    return [self rangeOfCharacterFromSet:charSet options:options range:NSMakeRange(0, [self length])];
 }
 
 /**
@@ -1967,55 +837,19 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Only NSCaseInsensitiveSearch, NSBackwardsSearch options supported
 */
 - (NSRange)rangeOfCharacterFromSet:(NSCharacterSet*)charSet options:(NSStringCompareOptions)options range:(NSRange)range {
-    NSRange ret;
+    NSUInteger length = [self length];
+    THROW_NS_IF_FALSE(E_BOUNDS, (range.length <= length) && (range.location <= (length - range.length)));
 
-    UStringHolder s1(self);
-    UnicodeString str1(s1.string(), range.location, range.length);
-    UnicodeSet* set = charSet->_icuSet;
-    bool destroySet = false;
-
-    UErrorCode error = U_ZERO_ERROR;
-    if (options & NSCaseInsensitiveSearch) {
-        UnicodeString curPattern;
-        set->toPattern(curPattern);
-
-        set = new UnicodeSet(curPattern, USET_CASE_INSENSITIVE, NULL, error);
-        destroySet = true;
+    CFRange result{};
+    if (CFStringFindCharacterFromSet(static_cast<CFStringRef>(self),
+                                     static_cast<CFCharacterSetRef>(charSet),
+                                     CFRange{ range.location, range.length },
+                                     options,
+                                     &result)) {
+        return NSMakeRange(result.location, result.length);
     }
 
-    int32_t pos;
-
-    if (options & NSBackwardsSearch) {
-        pos = set->spanBack(str1, INT32_MAX, USET_SPAN_NOT_CONTAINED);
-
-        //  Since we are asking for the span of characters NOT contained
-        //  in the set, it will always return the index of the character
-        //  AFTER the character that was in the set
-        if (pos == 0) {
-            //  Character not found (entire span of the string was characters in the set)
-            //  Assign range.length to signify that the character wasn't found
-            //  (will return NSNotFound, below)
-            pos = range.length;
-        } else {
-            //  Decrement the index by one so that we return the location
-            //  of the character that was in the set
-            pos--;
-        }
-    } else {
-        pos = set->span(str1, 0, USET_SPAN_NOT_CONTAINED);
-    }
-    if (pos == range.length) {
-        ret.length = 0;
-        ret.location = NSNotFound;
-    } else {
-        ret.location = pos + range.location;
-        ret.length = 1;
-    }
-
-    if (destroySet)
-        delete set;
-
-    return ret;
+    return NSMakeRange(NSNotFound, 0);
 }
 
 /**
@@ -2037,8 +871,7 @@ typedef NSUInteger NSStringCompareOptions;
  @Notes Limited encodings supported
 */
 - (BOOL)getCString:(char*)buf maxLength:(NSUInteger)maxLength encoding:(NSStringEncoding)encoding {
-    UStringHolder s1(self);
-    int len = s1.string().length();
+    int len = [self length];
     NSRange usedRange;
 
     unsigned usedLength = 0;
@@ -2046,7 +879,7 @@ typedef NSUInteger NSStringCompareOptions;
              maxLength:maxLength
             usedLength:&usedLength
               encoding:encoding
-               options:0
+               options:static_cast<NSStringEncodingConversionOptions>(0)
                  range:NSMakeRange(0, len)
         remainingRange:&usedRange];
     if (usedLength < maxLength) {
@@ -2054,9 +887,9 @@ typedef NSUInteger NSStringCompareOptions;
     }
 
     if (usedRange.location == len) {
-        return TRUE;
+        return YES;
     } else {
-        return FALSE;
+        return NO;
     }
 }
 
@@ -2064,69 +897,28 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 - (NSArray*)componentsSeparatedByString:(NSString*)separators {
-    UStringHolder s1(self);
-    UStringHolder s2(separators);
-    UnicodeString& str1 = s1.string();
-    UnicodeString& str2 = s2.string();
-    int curPos = 0, len = str1.length();
+    unsigned int len = [self length];
+    NSRange range = [self rangeOfString:separators options:static_cast<NSStringCompareOptions>(0) range:NSMakeRange(0, len)];
 
-    int count = 0;
-
-    for (;;) {
-        int pos = str1.indexOf(str2, curPos);
-        if (pos == -1) {
-            count++;
-            break;
-        }
-
-        count++;
-
-        curPos = pos + str2.length();
-    }
-
-    curPos = 0;
-    id* objects = (id*)IwMalloc(count * sizeof(id));
-    int objOut = 0;
-
-    for (;;) {
-        int pos = str1.indexOf(str2, curPos);
-        if (pos == -1) {
-            //  Add what's left
-            NSString* toAdd = nil;
-
-            if (len - curPos == 0) {
-                toAdd = @"";
-            } else {
-                UnicodeString subStr(str1, curPos, len - curPos);
-                toAdd = [NSString alloc];
-                setToUnicode(toAdd, subStr);
+    if (range.length == 0) {
+        return @[ self ];
+    } else {
+        NSMutableArray* array = [NSMutableArray array];
+        NSRange srange = NSMakeRange(0, len);
+        while (true) {
+            NSRange trange = NSMakeRange(srange.location, range.location - srange.location);
+            [array addObject:[self substringWithRange:trange]];
+            srange.location = range.location + range.length;
+            srange.length = len - srange.location;
+            range = [self rangeOfString:separators options:static_cast<NSStringCompareOptions>(0) range:srange];
+            if (range.length == 0) {
+                break;
             }
-
-            objects[objOut++] = toAdd;
-            break;
         }
 
-        NSString* toAdd = nil;
-
-        if (pos - curPos == 0) {
-            toAdd = @"";
-        } else {
-            UnicodeString subStr(str1, curPos, pos - curPos);
-            toAdd = [NSString alloc];
-            setToUnicode(toAdd, subStr);
-        }
-
-        objects[objOut++] = toAdd;
-
-        curPos = pos + str2.length();
+        [array addObject:[self substringWithRange:srange]];
+        return array;
     }
-
-    NSArray* ret = [NSArray alloc];
-    [ret _initWithObjectsTakeOwnership:objects count:objOut];
-
-    IwFree(objects);
-
-    return [ret autorelease];
 }
 
 /**
@@ -2138,7 +930,7 @@ typedef NSUInteger NSStringCompareOptions;
     NSRange search = NSMakeRange(0, [self length]), patWhere;
 
     do {
-        patWhere = [self rangeOfCharacterFromSet:set options:0 range:search];
+        patWhere = [self rangeOfCharacterFromSet:set options:static_cast<NSStringCompareOptions>(0) range:search];
 
         if (patWhere.length > 0) {
             NSString* piece = [self substringWithRange:NSMakeRange(search.location, patWhere.location - search.location)];
@@ -2158,9 +950,8 @@ typedef NSUInteger NSStringCompareOptions;
  @Status Interoperable
 */
 - (NSString*)stringByReplacingCharactersInRange:(NSRange)range withString:(NSString*)replacement {
-    NSString* ret = [self mutableCopy];
-    [static_cast<NSMutableString*>(ret) replaceCharactersInRange:range withString:replacement];
-    object_setClass(ret, [NSString class]);
+    NSMutableString* ret = [self mutableCopy];
+    [ret replaceCharactersInRange:range withString:replacement];
 
     return [ret autorelease];
 }
@@ -2171,7 +962,10 @@ typedef NSUInteger NSStringCompareOptions;
 - (NSString*)stringByReplacingOccurrencesOfString:(NSString*)target withString:(NSString*)replacement {
     int length = [self length];
 
-    return [self stringByReplacingOccurrencesOfString:target withString:replacement options:0 range:NSMakeRange(0, length)];
+    return [self stringByReplacingOccurrencesOfString:target
+                                           withString:replacement
+                                              options:static_cast<NSStringCompareOptions>(0)
+                                                range:NSMakeRange(0, length)];
 }
 
 /**
@@ -2190,200 +984,115 @@ typedef NSUInteger NSStringCompareOptions;
         subrange = [self rangeOfString:target options:options range:range];
         if (subrange.location == NSNotFound) {
             //  Nothing to replace
-            if (object_getClass(self) == [CFConstantString class]) {
-                return self;
-            }
-
             return [[self copy] autorelease];
         }
     }
 
-    NSString* s = [self mutableCopy];
-    [static_cast<NSMutableString*>(s) replaceOccurrencesOfString:target withString:replacement options:options range:range];
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    [mutableCopy replaceOccurrencesOfString:target withString:replacement options:options range:range];
 
-    NSString* ret = [[s copy] autorelease];
-    [s release];
-    return ret;
+    return [[[NSString alloc] initWithString:mutableCopy] autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)stringByTrimmingCharactersInSet:(NSCharacterSet*)charSet {
-    UStringHolder s1(self);
-    UnicodeString& str1 = s1.string();
-    NSUInteger length = str1.length();
-    UnicodeSet* set = charSet->_icuSet;
+    int trimStart = 0;
+    int trimEnd = [self length];
 
-    int32_t start, end;
-
-    start = set->span(str1, 0, USET_SPAN_CONTAINED);
-    end = set->spanBack(str1, INT32_MAX, USET_SPAN_CONTAINED);
-
-    if (start == 0 && end == length) {
-        //  Nothing to remove
-        if (object_getClass(self) == [CFConstantString class]) {
-            return self;
+    for (; trimStart < [self length]; trimStart++) {
+        if (![charSet characterIsMember:[self characterAtIndex:trimStart]]) {
+            break;
         }
-
-        return [[self copy] autorelease];
     }
 
-    if (end < start) {
-        end = start;
+    if (trimStart == [self length]) {
+        return @"";
+    } else if (trimStart < ([self length] - 1)) {
+        for (; trimEnd > 0; trimEnd--) {
+            if (![charSet characterIsMember:[self characterAtIndex:(trimEnd - 1)]]) {
+                break;
+            }
+        }
+        return [self substringWithRange:NSMakeRange(trimStart, trimEnd - trimStart)];
+    } else {
+        return [self substringWithRange:NSMakeRange(trimStart, 1)];
     }
-
-    return [self substringWithRange:NSMakeRange(start, end - start)];
 }
 
 /**
  @Status Interoperable
 */
 - (NSRange)rangeOfString:(NSString*)subStr {
-    UStringHolder s1(self);
-
-    NSRange checkRange;
-
-    checkRange.location = 0;
-    checkRange.length = s1.string().length();
-
-    NSRange ret;
-    ret = [self rangeOfString:subStr options:0 range:checkRange];
-
-    return ret;
+    return [self rangeOfString:subStr options:static_cast<NSStringCompareOptions>(0)];
 }
 
 /**
- @Status Caveat
- @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
-        and NSRegularExpression are supported.
+ @Status Interoperable
+ @Notes
 */
 - (NSRange)rangeOfString:(NSString*)subStr options:(NSStringCompareOptions)options {
-    UStringHolder s1(self);
-
-    NSRange checkRange;
-
-    checkRange.location = 0;
-    checkRange.length = s1.string().length();
-
-    NSRange ret;
-    ret = [self rangeOfString:subStr options:options range:checkRange];
-
-    return ret;
+    return [self rangeOfString:subStr options:options range:NSMakeRange(0, [self length])];
 }
 
 /**
- @Status Caveat
- @Notes Only NSCaseInsensitiveSearch, NSDiacriticInsensitiveSearch, NSNumericSearch, NSBackwardsSearch,
-        and NSRegularExpression are supported.
+ @Status Interoperable
+ @Notes
 */
 - (NSRange)rangeOfString:(NSString*)subStr options:(NSStringCompareOptions)options range:(NSRange)range {
-    NSRange ret;
+    return [self rangeOfString:subStr options:options range:range locale:nil];
+}
 
-    UStringHolder s1(self);
-    UStringHolder s2(subStr);
+/**
+ @Status Interoperable
+ @Notes
+*/
+- (NSRange)rangeOfString:(NSString*)searchString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(NSLocale*)locale {
+    unsigned int findStringLength = [searchString length];
+    unsigned int length = [self length];
 
-    if (options & NSRegularExpressionSearch) {
-        NSRegularExpressionOptions regOptions = 0;
-        DWORD searchOptions = 0;
+    THROW_NS_IF_FALSE(E_INVALIDARG, (range.length <= length) && (range.location <= (length - range.length)));
 
-        if (options & NSCaseInsensitiveSearch) {
-            regOptions |= NSRegularExpressionCaseInsensitive;
-        }
-        if (options & NSAnchoredSearch) {
-            searchOptions = NSMatchingAnchored;
-        }
-
-        NSRegularExpression* regExp = [[NSRegularExpression alloc] initWithPattern:subStr options:regOptions error:NULL];
-
-        ret = [regExp rangeOfFirstMatchInString:self options:searchOptions range:range];
-        [regExp release];
-
-        return ret;
+    if ((mask & NSRegularExpressionSearch) != 0) {
+        NSRange matchedRange = NSMakeRange(NSNotFound, 0);
+        NSRegularExpressionOptions regexOptions = (0 != (mask & NSCaseInsensitiveSearch)) ? NSRegularExpressionCaseInsensitive : 0;
+        NSMatchingOptions matchingOptions = (0 != (mask & NSAnchoredSearch)) ? NSMatchingAnchored : 0;
+        NSRegularExpression* regularExpression =
+            [NSRegularExpression regularExpressionWithPattern:searchString options:regexOptions error:nullptr];
+        matchedRange = [regularExpression rangeOfFirstMatchInString:self options:matchingOptions range:range];
+        return matchedRange;
     }
 
-    UnicodeString str1 = UnicodeString(s1.string(), range.location, range.length);
-    UnicodeString str2 = s2.string();
-
-    if (options == 0 || options == NSLiteralSearch) {
-        int loc = str1.indexOf(str2);
-
-        if (loc != -1) {
-            ret.location = range.location + loc;
-            ret.length = str2.length();
-        } else {
-            ret.location = NSNotFound;
-            ret.length = 0;
-            return ret;
-        }
-
-        return ret;
+    if (range.length == 0 || findStringLength == 0) { // ??? This last item can't be here for correct Unicode compares
+        return NSMakeRange(NSNotFound, 0);
     }
 
-    assert((options & (~(NSLiteralSearch | NSCaseInsensitiveSearch | NSDiacriticInsensitiveSearch | NSNumericSearch | NSBackwardsSearch |
-                         NSAnchoredSearch))) == 0);
-
-    UErrorCode error = U_ZERO_ERROR;
-    UStringSearch* search = getSearchForOptions(options);
-
-    usearch_reset(search);
-    usearch_setPattern(search, str2.getBuffer(), str2.length(), &error);
-    usearch_setText(search, str1.getBuffer(), str1.length(), &error);
-
-    int matchPos = 0, matchLen = 0;
-
-    if (options & NSBackwardsSearch) {
-        matchPos = usearch_last(search, &error);
-        matchLen = usearch_getMatchedLength(search);
-    } else {
-        matchPos = usearch_first(search, &error);
-        matchLen = usearch_getMatchedLength(search);
+    CFRange result{};
+    if (CFStringFindWithOptionsAndLocale(static_cast<CFStringRef>(self),
+                                         static_cast<CFStringRef>(searchString),
+                                         CFRange{ range.location, range.length },
+                                         mask,
+                                         static_cast<CFLocaleRef>(locale),
+                                         &result)) {
+        return NSMakeRange(result.location, result.length);
     }
 
-    if (matchPos != USEARCH_DONE && matchLen != 0) {
-        ret.location = range.location + matchPos;
-        ret.length = matchLen;
-    } else {
-        ret.location = NSNotFound;
-        ret.length = 0;
-    }
-
-    if (options & NSAnchoredSearch) {
-        if (options & NSBackwardsSearch) {
-            if (ret.location + ret.length != range.location + range.length) {
-                ret.location = NSNotFound;
-                ret.length = 0;
-            }
-        } else {
-            if (ret.location != 0) {
-                ret.location = NSNotFound;
-                ret.length = 0;
-            }
-        }
-    }
-
-    return ret;
+    return NSMakeRange(NSNotFound, 0);
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isAbsolutePath {
-    char* pStr = (char*)[self UTF8String];
-
-    if (pStr[0] != '/') {
-        return FALSE;
-    } else {
-        return TRUE;
-    }
+    return ([self hasPrefix:_NSGetSlashStr()]) || ((_isLetter([self characterAtIndex:0])) && ([self characterAtIndex:1] == ':'));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)pathComponents {
-    NSArray* array = [self componentsSeparatedByString:@"/"];
-    NSMutableArray* ret = [[array mutableCopy] autorelease];
+    NSMutableArray* ret = [[[self componentsSeparatedByString:_NSGetSlashStr()] mutableCopy] autorelease];
 
     int count = [ret count];
     for (int i = 0; i < count; i++) {
@@ -2396,7 +1105,7 @@ typedef NSUInteger NSStringCompareOptions;
                 count--;
                 continue;
             } else {
-                [ret replaceObjectAtIndex:0 withObject:@"/"];
+                [ret replaceObjectAtIndex:0 withObject:_NSGetSlashStr()];
             }
         }
     }
@@ -2405,21 +1114,25 @@ typedef NSUInteger NSStringCompareOptions;
 }
 
 /**
- @Status Caveat
- @Notes Simply returns UTF8 converison
+ @Status Interoperable
+ @Notes
 */
 - (const char*)fileSystemRepresentation {
-    return [self UTF8String];
+    unsigned int maxLength = CFStringGetMaximumSizeOfFileSystemRepresentation(static_cast<CFStringRef>(self));
+
+    // NOTE: this is slightly tricky. the NSData object is autoreleased to "leak" the array out of this calling context without actually
+    // leaking it forever.
+    NSMutableData* data = [NSMutableData dataWithLength:maxLength];
+
+    return ([self getFileSystemRepresentation:(char*)[data bytes] maxLength:[data length]]) ? ((const char*)[data bytes]) : (nullptr);
 }
 
 /**
- @Status Caveat
- @Notes Simply returns UTF8 converison
+ @Status Interoperable
+ @Notes
 */
 - (BOOL)getFileSystemRepresentation:(char*)dest maxLength:(NSUInteger)destMax {
-    strncpy_s(dest, destMax, [self UTF8String], destMax);
-
-    return TRUE;
+    return CFStringGetFileSystemRepresentation(static_cast<CFStringRef>(self), dest, destMax);
 }
 
 /**
@@ -2443,83 +1156,94 @@ typedef NSUInteger NSStringCompareOptions;
 }
 
 /**
- @Status Caveat
- @Notes Limited encodings supported
+ @Status Interoperable
+ @Notes
 */
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding {
-    UStringHolder s1(self);
-    int len = s1.string().length();
-    NSUInteger numBytes = 0;
-
-    [self getBytes:NULL maxLength:0x7FFFFFF usedLength:&numBytes encoding:encoding options:0 range:NSMakeRange(0, len) remainingRange:NULL];
-
-    char* pData = (char*)IwMalloc(numBytes);
-    [self getBytes:pData maxLength:numBytes usedLength:NULL encoding:encoding options:0 range:NSMakeRange(0, len) remainingRange:NULL];
-
-    NSData* ret = [NSData dataWithBytesNoCopy:pData length:numBytes freeWhenDone:TRUE];
-
-    return ret;
+    return [self dataUsingEncoding:encoding allowLossyConversion:NO];
 }
 
 /**
- @Status Stub
- @Notes Forwards to dataUsingEncoding:
+ @Status Interoperable
+ @Notes
 */
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(BOOL)lossy {
-    UNIMPLEMENTED();
-    assert(encoding == NSASCIIStringEncoding || encoding == NSUTF8StringEncoding);
+    int len = [self length];
+    NSUInteger numBytes = 0;
 
-    return [self dataUsingEncoding:encoding];
+    NSStringEncodingConversionOptions options =
+        lossy ? (NSStringEncodingConversionAllowLossy) : static_cast<NSStringEncodingConversionOptions>(0);
+
+    [self getBytes:nullptr
+             maxLength:0x7FFFFFF
+            usedLength:&numBytes
+              encoding:encoding
+               options:options
+                 range:NSMakeRange(0, len)
+        remainingRange:nullptr];
+
+    std::unique_ptr<char[], decltype(&IwFree)> data(static_cast<char*>(IwMalloc(numBytes)), IwFree);
+    [self getBytes:data.get()
+             maxLength:numBytes
+            usedLength:nullptr
+              encoding:encoding
+               options:options
+                 range:NSMakeRange(0, len)
+        remainingRange:nullptr];
+
+    return [NSData dataWithBytesNoCopy:data.release() length:numBytes freeWhenDone:YES];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 - (NSString*)stringByExpandingTildeInPath {
-    UNIMPLEMENTED();
-    return self;
+    if (![self hasPrefix:@"~"]) {
+        return self;
+    }
+
+    NSRange endOfUserName = [self rangeOfString:_NSGetSlashStr()];
+    NSUInteger endIndex = endOfUserName.location == NSNotFound ? [self length] : endOfUserName.location;
+
+    // skip over ~
+    NSString* userName = [self substringWithRange:NSMakeRange(1, endIndex)];
+
+    userName = (userName == nil || [userName isEqualToString:@""]) ? nil : userName;
+
+    // TODO 7292268: NSFileManager doesn't implement this method. Ideally we could check for
+    // specific user's home directories but for WINOBJC it should be the case that everything is
+    // running under the same user so just use the other method for now.
+    // NSString* homeDir = NSHomeDirectoryForUser(userName);
+    NSString* homeDir = NSHomeDirectory();
+
+    if (homeDir == nil) {
+        // Not sure about this case. No homeDir found for user so nothing really to expand to. Just return self with the ~?
+        NSRange trailingSlash = [self rangeOfString:_NSGetSlashStr() options:(NSBackwardsSearch | NSAnchoredSearch)];
+
+        if (trailingSlash.location == NSNotFound) {
+            return self;
+        } else {
+            return [self substringWithRange:NSMakeRange(0, trailingSlash.location)];
+        }
+    }
+
+    NSMutableString* result = [[self mutableCopy] autorelease];
+    [result replaceCharactersInRange:NSMakeRange(0, endIndex) withString:homeDir];
+
+    NSRange trailingSlash = [result rangeOfString:_NSGetSlashStr() options:(NSBackwardsSearch | NSAnchoredSearch)];
+
+    if (trailingSlash.location == NSNotFound) {
+        return result;
+    } else {
+        return [result substringWithRange:NSMakeRange(0, trailingSlash.location)];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)stringByStandardizingPath {
-    NSMutableArray* components = [NSMutableArray arrayWithArray:[self componentsSeparatedByString:@"/"]];
-    int componentsCount = [components count];
-    int lastComponentLen = 0;
-
-    int count = [components count];
-    for (int i = 0; i < count; i++) {
-        id curObj = [components objectAtIndex:i];
-        char* pComponent = (char*)[curObj UTF8String];
-        int componentLength = strlen(pComponent);
-
-        if (componentLength == 0) {
-            if (i == 0) {
-                [components replaceObjectAtIndex:i withObject:@"/"];
-                lastComponentLen = componentLength;
-                continue;
-            }
-
-            if (lastComponentLen == 0) {
-                [components removeObjectAtIndex:i];
-                i--;
-                count--;
-                lastComponentLen = componentLength;
-                continue;
-            }
-        }
-        lastComponentLen = componentLength;
-
-        if (strcmp(pComponent, ".") == 0) {
-            [components removeObjectAtIndex:i];
-            i--;
-            count--;
-            continue;
-        }
-    }
-
-    return [NSString pathWithComponents:components];
+    return [[self stringByExpandingTildeInPath] stringByResolvingSymlinksInPath];
 }
 
 /**
@@ -2532,40 +1256,15 @@ typedef NSUInteger NSStringCompareOptions;
 /**
  @Status Interoperable
 */
-- (NSMutableString*)mutableCopy {
-    return [[NSMutableString alloc] initWithString:self];
-}
-
-id error(id obj, const char* buf, const char* error, ...) {
-    TraceError(TAG, L"propertyListFromStrings error: %hs", buf);
-    // assert(0);
-
-    return nil;
-}
-
-typedef unsigned short unichar;
-
-static unichar SwapWord(unichar c) {
-    return (c >> 8) | ((c & 0xFF) << 8);
-}
-
-static unichar PickWord(unichar c) {
-    return c;
-}
-
-/**
- @Status Interoperable
-*/
 - (NSDictionary*)propertyListFromStringsFileFormat {
-    NSMutableDictionary* ret = [objc_getClass("NSMutableDictionary") new];
-    DWORD length = [self length];
+    NSMutableDictionary* ret = [NSMutableDictionary new];
+    NSUInteger length = [self length];
 
     NSString* key;
     id value;
 
-    UStringHolder s1(self);
     unsigned int index, c, strSize = 0, strMax = 2048;
-    char* strBuf = (char*)IwMalloc(strMax);
+    std::unique_ptr<char[], decltype(&IwFree)> strBuf(static_cast<char*>(IwMalloc(strMax)), IwFree);
 
     enum {
         STATE_WHITESPACE,
@@ -2582,11 +1281,11 @@ static unichar PickWord(unichar c) {
     enum { EXPECT_KEY, EXPECT_EQUAL_SEMI, EXPECT_VAL, EXPECT_SEMI } expect = EXPECT_KEY;
 
     unichar (*mapUC)(unichar);
-    if (s1.getChar(0) == 0xFFFE) {
+    if ([self characterAtIndex:0] == 0xFFFE) {
         // reverse endianness
         mapUC = SwapWord;
         index = 1;
-    } else if (s1.getChar(0) == 0xFEFF) {
+    } else if ([self characterAtIndex:0] == 0xFEFF) {
         // native endianness
         mapUC = PickWord;
         index = 1;
@@ -2596,11 +1295,11 @@ static unichar PickWord(unichar c) {
         index = 0;
     }
 
-    if (mapUC(s1.getChar(length - 1)) == 0x0A)
+    if (mapUC([self characterAtIndex:(length - 1)]) == 0x0A)
         length--;
 
     for (; index < length; index++) {
-        c = mapUC(s1.getChar(index));
+        c = mapUC([self characterAtIndex:index]);
         switch (state) {
             case STATE_WHITESPACE:
                 if (c == '/') {
@@ -2609,7 +1308,7 @@ static unichar PickWord(unichar c) {
                     if (expect == EXPECT_EQUAL_SEMI) {
                         expect = EXPECT_VAL;
                     } else {
-                        return error(ret, strBuf, "unexpected character %02X '%c' at %d", c, c, index);
+                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
                     }
                 } else if (c == ';') {
                     if (expect == EXPECT_SEMI) {
@@ -2622,18 +1321,18 @@ static unichar PickWord(unichar c) {
                         assert(0);
                         //[array addObject:[array lastObject]];
                     } else {
-                        return error(ret, strBuf, "unexpected character %02X '%c' at %d", c, c, index);
+                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
                     }
                 } else if (c == '\"') {
                     if (expect != EXPECT_KEY && expect != EXPECT_VAL) {
-                        return error(ret, strBuf, "unexpected character %02X '%c' at %d", c, c, index);
+                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
                     }
 
                     strSize = 0;
                     state = STATE_STRING;
                 } else if (c > ' ') {
                     if (expect != EXPECT_KEY) {
-                        return error(ret, strBuf, "unexpected character %02X '%c' at %d", c, c, index);
+                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
                     }
 
                     strBuf[0] = c;
@@ -2648,7 +1347,7 @@ static unichar PickWord(unichar c) {
                 } else if (c == '/') {
                     state = STATE_COMMENT_EOL;
                 } else {
-                    return error(ret, strBuf, "unexpected character %02X '%c',after /", c, c);
+                    return error(ret, strBuf.get(), "unexpected character %02X '%c',after /", c, c);
                 }
                 break;
 
@@ -2674,7 +1373,7 @@ static unichar PickWord(unichar c) {
             case STATE_STRING_KEY:
                 switch (c) {
                     case '\"':
-                        return error(ret, strBuf, "unexpected character %02X '%c' at %d", c, c, index);
+                        return error(ret, strBuf.get(), "unexpected character %02X '%c' at %d", c, c, index);
                     case '=':
                         index -= 2;
                     case ' ':
@@ -2685,7 +1384,7 @@ static unichar PickWord(unichar c) {
                 if (c == '\"') {
                     strBuf[strSize] = '\0';
 
-                    NSString* string = [NSString stringWithUTF8String:strBuf];
+                    NSString* string = [NSString stringWithUTF8String:strBuf.get()];
                     if (expect == EXPECT_KEY) {
                         key = string;
                     } else {
@@ -2702,7 +1401,8 @@ static unichar PickWord(unichar c) {
                 } else {
                     if (strSize >= strMax) {
                         strMax *= 2;
-                        strBuf = (char*)IwRealloc(strBuf, strMax);
+                        char* oldPtr = strBuf.release();
+                        strBuf.reset((char*)IwRealloc(oldPtr, strMax));
                     }
                     if (c == '\\') {
                         state = STATE_STRING_SLASH;
@@ -2786,21 +1486,19 @@ static unichar PickWord(unichar c) {
         }
     }
 
-    IwFree(strBuf);
-
     if (state != STATE_WHITESPACE) {
-        return error(ret, NULL, "unexpected EOF\n");
+        return error(ret, nullptr, "unexpected EOF\n");
     }
 
     switch (expect) {
         case EXPECT_EQUAL_SEMI:
-            return error(ret, NULL, "unexpected EOF, expecting = or ;");
+            return error(ret, nullptr, "unexpected EOF, expecting = or ;");
 
         case EXPECT_VAL:
-            return error(ret, NULL, "unexpected EOF, expecting value");
+            return error(ret, nullptr, "unexpected EOF, expecting value");
 
         case EXPECT_SEMI:
-            return error(ret, NULL, "unexpected EOF, expecting ;");
+            return error(ret, nullptr, "unexpected EOF, expecting ;");
 
         default:
             break;
@@ -2809,67 +1507,152 @@ static unichar PickWord(unichar c) {
     return [ret autorelease];
 }
 
-/**
- @Status Interoperable
-*/
-- (unsigned)hash {
-    if (strType == NSConstructedString_Unicode && u->ConstructedString._hashIsCached) {
-        return u->ConstructedString._hashCache;
-    }
-
-    UStringHolder s1(self);
-
-    DWORD hash = s1.string().hashCode();
-    if (strType == NSConstructedString_Unicode) {
-        u->ConstructedString._hashIsCached = TRUE;
-        u->ConstructedString._hashCache = hash;
-    }
-
-    return hash;
+BOOL _isAParagraphSeparatorTypeCharacter(unichar ch) {
+    return (ch == NEW_LINE || ch == CARRIAGE_RETURN || ch == 0x2029);
 }
 
-/**
- @Status Interoperable
-*/
-- (NSString*)stringByPaddingToLength:(NSUInteger)length withString:(NSString*)withString startingAtIndex:(NSUInteger)atIndex {
-    UStringHolder s1(self);
+BOOL _isALineSeparatorTypeCharacter(unichar ch) {
+    return (ch == NEW_LINE || ch == CARRIAGE_RETURN || ch == 0x0085 || ch == 0x2028 || ch == 0x2029);
+}
 
-    NSString* ret = [NSString alloc];
-    if (length < s1.string().length()) {
-        UnicodeString copy = s1.string();
-        copy.truncate(length);
-        setToUnicode(ret, copy);
-        return ret;
+- (unichar)_getCharAtIndex:(NSInteger)index {
+    if (index >= 0 && index < [self length]) {
+        return [self characterAtIndex:index];
+    }
+    return '\0';
+}
+
+- (void)_getBlockStart:(NSUInteger*)startPtr
+                   end:(NSUInteger*)endPtr
+           contentsEnd:(NSUInteger*)contentsEndPtr
+              forRange:(NSRange)range
+  stopAtLineSeparators:(BOOL)line {
+    NSUInteger len = [self length];
+    unichar ch;
+
+    THROW_NS_IF_FALSE(E_INVALIDARG, (range.location <= len) && (NSMaxRange(range) <= len));
+
+    if (range.location == 0 && range.length == len && contentsEndPtr == nil) { // This occurs often
+        if (startPtr) {
+            *startPtr = 0;
+        }
+        if (endPtr) {
+            *endPtr = range.length;
+        }
+        return;
+    }
+    /* Find the starting point first */
+    if (startPtr != nil) {
+        NSUInteger start = 0;
+        if (range.location == 0) {
+            start = 0;
+        } else {
+            // Take care of the special case where start happens to fall right between \r and \n
+            NSInteger index = range.location;
+
+            ch = [self _getCharAtIndex:index];
+            index--;
+            if (([self _getCharAtIndex:index] == CARRIAGE_RETURN) && (ch == NEW_LINE)) {
+                index--;
+            }
+
+            while (true) {
+                if (index < 0) {
+                    start = 0;
+                    break;
+                }
+
+                if (line ? _isALineSeparatorTypeCharacter([self _getCharAtIndex:index]) :
+                           _isAParagraphSeparatorTypeCharacter([self _getCharAtIndex:index])) {
+                    start = index + 1;
+                    break;
+                } else {
+                    index--;
+                }
+            }
+        }
+        *startPtr = start;
     }
 
-    UStringHolder s2(withString);
-    int s2Start = atIndex;
-    UnicodeString copy = s1.string();
-    while (copy.length() < length) {
-        if (s2Start != 0) {
-            UnicodeString s2Str(s2.string(), (int32_t)atIndex);
-            copy.append(s2Str);
+    if (endPtr != nil || contentsEndPtr != nil) {
+        NSUInteger endOfContents = 1;
+        NSUInteger lineSeparatorLength = 1;
+        NSInteger index = NSMaxRange(range) - (range.length > 0 ? 1 : 0);
+        // First look at the last char in the range (if the range is zero length, the char after the range) to see if we're already on or
+        // within a end of line sequence...
+        ch = [self _getCharAtIndex:index];
+
+        if (ch == NEW_LINE) {
+            endOfContents = index;
+            index--;
+            if ([self _getCharAtIndex:index] == CARRIAGE_RETURN) {
+                lineSeparatorLength = 2;
+                endOfContents -= 1;
+            }
         } else {
-            copy.append(s2.string());
+            while (true) {
+                if (line ? _isALineSeparatorTypeCharacter(ch) : _isAParagraphSeparatorTypeCharacter(ch)) {
+                    endOfContents = index; // This is actually end of contentsRange
+                    index++;
+                    if ((ch == CARRIAGE_RETURN) && ([self _getCharAtIndex:index] == NEW_LINE)) {
+                        lineSeparatorLength = 2;
+                    }
+                    break;
+                } else if (index >= len) {
+                    endOfContents = len;
+                    lineSeparatorLength = 0;
+                    break;
+                } else {
+                    index++;
+                    ch = [self _getCharAtIndex:index];
+                }
+            }
+        }
+
+        if (contentsEndPtr) {
+            *contentsEndPtr = endOfContents;
+        }
+        if (endPtr) {
+            *endPtr = endOfContents + lineSeparatorLength;
         }
     }
-    copy.truncate(length);
-    setToUnicode(ret, copy);
-
-    return [ret autorelease];
 }
 
 /**
- @Status Caveat
- @Notes encoding parameter not supported
+ @Status Interoperable
+*/
+- (NSUInteger)hash {
+    return CFStringHashNSString(static_cast<CFStringRef>(self));
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)stringByPaddingToLength:(NSUInteger)newLength withString:(NSString*)padString startingAtIndex:(NSUInteger)padIndex {
+    unsigned int length = [self length];
+
+    if (newLength <= length) { // The simple cases (truncation)
+        return (newLength == length) ? [[self copy] autorelease] : [self substringWithRange:NSMakeRange(0, newLength)];
+    }
+
+    unsigned int padLength = [padString length];
+    THROW_NS_IF_FALSE(E_INVALIDARG, (padLength > 0) && (padIndex < padLength));
+
+    NSMutableString* mutableCopy = [self mutableCopy];
+    CFStringPad(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFStringRef>(padString), newLength, padIndex);
+    return mutableCopy;
+}
+
+/**
+ @Status Interoperable
 */
 - (NSString*)stringByAddingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     NSUInteger i, length = [self length], resultLength = 0;
-    unichar* unicode = (unichar*)IwMalloc(length * 2);
-    unichar* result = (unichar*)IwMalloc(length * 3 * 2);
+    std::unique_ptr<unichar[], decltype(&IwFree)> unicode(static_cast<unichar*>(IwMalloc(length * 2)), IwFree);
+    std::unique_ptr<unichar[], decltype(&IwFree)> result(static_cast<unichar*>(IwMalloc(length * 3 * 2)), IwFree);
     const char* hex = "0123456789ABCDEF";
 
-    [self getCharacters:unicode];
+    [self getCharacters:unicode.get()];
 
     for (i = 0; i < length; i++) {
         unichar code = unicode[i];
@@ -2885,351 +1668,92 @@ static unichar PickWord(unichar c) {
     }
 
     if (length == resultLength) {
-        IwFree(unicode);
-        IwFree(result);
         return self;
     }
 
-    NSString* ret = [NSString stringWithCharacters:result length:resultLength];
-    IwFree(unicode);
-    IwFree(result);
-
+    NSString* ret = [NSString stringWithCharacters:result.get() length:resultLength];
     return ret;
 }
-
-NSString* s_percentEncodedFormat = @"%%%s%X";
-const int s_oneByte = 16;
 
 /**
  @Status Interoperable
 */
 - (NSString*)stringByAddingPercentEncodingWithAllowedCharacters:(NSCharacterSet*)set {
-    NSMutableString* returnValue = [NSMutableString stringWithCapacity:[self length] * 2];
-
-    NSData* dataOfString = [self dataUsingEncoding:NSUTF8StringEncoding];
-    const unsigned char* bytesOfString = (const unsigned char*)dataOfString.bytes;
-    int lastTouchedCharacterIndex = -1;
-    int lengthOfBytes = [dataOfString length];
-
-    for (int i = 0; i < lengthOfBytes; i++) {
-        const unsigned char currentCharacter = bytesOfString[i];
-
-        // Check if multibyte character. Highest order bit in utf8 indicates surrogate pairs.
-        if (currentCharacter & 0x80 || ![set characterIsMember:currentCharacter]) {
-            if (lastTouchedCharacterIndex != (i - 1)) {
-                // Get a substring based on the bytes offset by the last touched index to the current index
-                // Length is the length everything between i and the last encoded character exclusively.
-                NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(bytesOfString + (lastTouchedCharacterIndex + 1))
-                                                                length:(i - (lastTouchedCharacterIndex + 1))
-                                                              encoding:NSUTF8StringEncoding
-                                                          freeWhenDone:false];
-
-                [returnValue appendString:part];
-                [part release];
-            }
-
-            lastTouchedCharacterIndex = i;
-
-            // Append "%XX" where XX is the hex representation of the bytes for the current character.
-            [returnValue appendFormat:s_percentEncodedFormat, (currentCharacter < s_oneByte ? "0" : ""), currentCharacter];
-        }
-    }
-
-    // If we haven't encoded anything.
-    if (lastTouchedCharacterIndex == -1) {
-        return [[self retain] autorelease];
-    } else if (lastTouchedCharacterIndex != lengthOfBytes - 1) {
-        // Get the rest of the characters that weren't encoded.
-        // Length is the length everything between i and the last encoded character exclusively.
-        NSString* part = [[NSString alloc] initWithBytesNoCopy:(void*)(bytesOfString + (lastTouchedCharacterIndex + 1))
-                                                        length:(lengthOfBytes - (lastTouchedCharacterIndex + 1))
-                                                      encoding:NSUTF8StringEncoding
-                                                  freeWhenDone:false];
-
-        [returnValue appendString:part];
-        [part release];
-    }
-
-    return returnValue;
+    return [static_cast<NSString*>(_CFStringCreateByAddingPercentEncodingWithAllowedCharacters(kCFAllocatorDefault,
+                                                                                               static_cast<CFStringRef>(self),
+                                                                                               static_cast<CFCharacterSetRef>(set)))
+        autorelease];
 }
 
 /**
- @Status Caveat
- @Notes Only UTF-8 is supported
+ @Status Interoperable
+ @Notes
 */
 - (NSString*)stringByReplacingPercentEscapesUsingEncoding:(NSStringEncoding)encoding {
     return [static_cast<NSString*>(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(
-        nullptr, reinterpret_cast<CFStringRef>(self), nullptr, CFStringConvertNSStringEncodingToEncoding(encoding))) autorelease];
+        nullptr, static_cast<CFStringRef>(self), CFSTR(""), CFStringConvertNSStringEncodingToEncoding(encoding))) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)stringByRemovingPercentEncoding {
-    // This method always replaces the percent encoded characters with matching UTF8 characters.
-    // Call stringByReplacingPercentEscapesUsingEncoding with NSUTF8StringEncoding option to
-    // to perform the conversion.
-    return [self stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return
+        [static_cast<NSString*>(_CFStringCreateByRemovingPercentEncoding(kCFAllocatorDefault, static_cast<CFStringRef>(self))) autorelease];
 }
 
 /**
- @Status Caveat
- @Notes Always returns YES
+ @Status Interoperable
 */
 - (BOOL)canBeConvertedToEncoding:(NSStringEncoding)encoding {
-    return YES;
+    if (encoding == NSUnicodeStringEncoding || encoding == NSNonLossyASCIIStringEncoding || encoding == NSUTF8StringEncoding) {
+        return YES;
+    }
+
+    unsigned int convertedLength = __CFStringEncodeByteStream(static_cast<CFStringRef>(self),
+                                                              0,
+                                                              [self length],
+                                                              false,
+                                                              CFStringConvertNSStringEncodingToEncoding(encoding),
+                                                              0,
+                                                              nullptr,
+                                                              0,
+                                                              nullptr);
+
+    return ([self length] == convertedLength);
 }
 
 /**
  @Status Interoperable
 */
 - (NSRange)lineRangeForRange:(NSRange)range {
-    NSRange ret;
-    int length = [self length];
-    UStringHolder s1(self);
-
-    //  Scan backwards for cr/lf
-    int start = range.location;
-
-    while (start > 0) {
-        int c = s1.getChar(start);
-
-        if (c == 10 || c == 13) {
-            if (start != range.location)
-                start++;
-            break;
-        }
-
-        start--;
-    }
-
-    ret.location = start;
-
-    //  Scan forward for cr/lf
-    int end = range.location + range.length;
-
-    while (end < length) {
-        int c = s1.getChar(end);
-
-        if (c == 10)
-            break;
-        if (c == 13) {
-            //  Check for crlf
-            if (end < length - 1) {
-                if (s1.getChar(end + 1) == 10) {
-                    end++;
-                }
-            }
-            break;
-        }
-
-        end++;
-    }
-
-    end++;
-    if (end > length)
-        end = length;
-
-    ret.length = end - ret.location;
-
-    return ret;
+    unsigned int start = 0;
+    unsigned int lineEnd = 0;
+    [self getLineStart:&start end:&lineEnd contentsEnd:nil forRange:range];
+    return NSMakeRange(start, lineEnd - start);
 }
 
 /**
  @Status Interoperable
 */
 - (void)getParagraphStart:(NSUInteger*)startp end:(NSUInteger*)endp contentsEnd:(NSUInteger*)contentsEndp forRange:(NSRange)range {
-    UStringHolder s1(self);
-    /*
-    Documentation does not specify exact getParagraphStart: behavior, only mentioning it is similar to getLineStart:
-    The difference is that getParagraphStart: does not delimit on line terminators 0x0085 and 0x2028
-    */
-    NSUInteger start = range.location;
-    NSUInteger end = NSMaxRange(range);
-    NSUInteger contentsEnd = end;
-    NSUInteger length = [self length];
-    enum { scanning, gotR, done } state = scanning;
-
-    for (; start != 0; start--) {
-        unichar check = s1.getChar(start - 1);
-
-        if (check == 0x2028 || check == 0x000A || check == 0x2029)
-            break;
-
-        if (check == 0x000D && s1.getChar(start) != 0x000A)
-            break;
-    }
-
-    for (; end < length && state != done; end++) {
-        unichar check = s1.getChar(end);
-
-        if (state == scanning) {
-            if (check == 0x000D) {
-                contentsEnd = end;
-                state = gotR;
-            } else if (check == 0x000A || check == 0x2029) {
-                contentsEnd = end;
-                state = done;
-            }
-        } else if (state == gotR) {
-            if (check != 0x000A) {
-                end--;
-            }
-            state = done;
-        }
-    }
-
-    if ((end >= length) && (state != done)) {
-        contentsEnd = end;
-    }
-
-    if (startp) {
-        *startp = start;
-    }
-    if (endp) {
-        *endp = end;
-    }
-    if (contentsEndp) {
-        *contentsEndp = contentsEnd;
-    }
+    [self _getBlockStart:startp end:endp contentsEnd:contentsEndp forRange:range stopAtLineSeparators:NO];
 }
 
 /**
  @Status Stub
-*/
-- (NSString*)precomposedStringWithCanonicalMapping {
-    UNIMPLEMENTED();
-    return [self retain];
-}
-
-/**
- @Status Caveat
- @Notes Only NSStringEnumerationByWords supported
+ @Notes
 */
 - (void)enumerateSubstringsInRange:(NSRange)range
                            options:(NSStringEnumerationOptions)options
-                        usingBlock:(void (^)(NSString*, NSRange, NSRange, BOOL*))usingBlock {
-    switch (options) {
-        case NSStringEnumerationByWords: {
-            UErrorCode status = U_ZERO_ERROR;
-            BreakIterator* wordIterator = getWordIterator();
-            UnicodeSet* letters = lettersSet();
-            UStringHolder holder(self, range.location, range.length);
-            UnicodeString text = holder.string();
-            wordIterator->setText(text);
-
-            int lastIterationStart = 0;
-            int lastWordStart = -1;
-            int lastWordEnd = -1;
-            int32_t start = wordIterator->first();
-            BOOL stop = FALSE;
-
-            for (int32_t end = wordIterator->next(); end != BreakIterator::DONE; start = end, end = wordIterator->next()) {
-                UnicodeString word;
-                text.extractBetween(start, end, word);
-
-                if (letters->containsSome(word)) {
-                    if (lastWordStart != -1) {
-                        NSRange substringRange, enclosingRange;
-
-                        substringRange.location = range.location + lastWordStart;
-                        substringRange.length = lastWordEnd - lastWordStart;
-                        enclosingRange.location = range.location + lastIterationStart;
-                        enclosingRange.length = start - lastIterationStart;
-                        UnicodeString subword;
-                        text.extractBetween(lastWordStart, lastWordEnd, subword);
-
-                        NSString* wordStr = [NSString alloc];
-                        setToUnicode(wordStr, subword);
-
-//  [HACK: On win32 we have to reverse the order of the parameters that will be pushed onto the stack]
-#ifdef WIN32
-                        EbrCall(usingBlock[3],
-                                "ddddddd",
-                                usingBlock,
-                                (id)wordStr,
-                                substringRange,
-                                &stop,
-                                enclosingRange.length,
-                                enclosingRange.location);
-#else
-                        // EbrCall(usingBlock[3], "ddddddd", usingBlock, (id) wordStr, substringRange, enclosingRange,
-                        // &stop);
-                        assert(0);
-#endif
-                        [wordStr release];
-
-                        lastIterationStart = start;
-                    }
-
-                    lastWordStart = start;
-                    lastWordEnd = end;
-                }
-
-                if (stop)
-                    break;
-            }
-
-            if (!stop) {
-                if (lastWordStart != -1) {
-                    NSRange substringRange, enclosingRange;
-
-                    substringRange.location = range.location + lastWordStart;
-                    substringRange.length = lastWordEnd - lastWordStart;
-                    enclosingRange.location = range.location + lastIterationStart;
-                    enclosingRange.length = start - lastIterationStart;
-                    UnicodeString subword;
-                    text.extractBetween(lastWordStart, lastWordEnd, subword);
-
-                    NSString* wordStr = [NSString alloc];
-                    setToUnicode(wordStr, subword);
-
-//  [HACK: On win32 we have to reverse the order of the parameters that will be pushed onto the stack]
-#ifdef WIN32
-                    EbrCall(E2H(usingBlock)[3],
-                            "ddddddd",
-                            usingBlock,
-                            (id)wordStr,
-                            substringRange,
-                            H2E(&stop),
-                            enclosingRange.length,
-                            enclosingRange.location);
-#else
-                    // EbrCall(E2H(usingBlock)[3], "ddddddd", usingBlock, (id) wordStr, substringRange, enclosingRange,
-                    // H2E(&stop));
-                    assert(0);
-#endif
-                    [wordStr release];
-                }
-            }
-            wordIterator->setText(UnicodeString());
-        } break;
-
-        default:
-            assert(0);
-            break;
-    }
+                        usingBlock:(void (^)(NSString*, NSRange, NSRange, BOOL*))block {
+    UNIMPLEMENTED();
 }
 
 /**
  @Status Interoperable
 */
 - (void)dealloc {
-    switch (strType) {
-        case NSConstructedString_NoOwn:
-            if (u->NoOwnString._freeWhenDone) {
-                IwFree(u->NoOwnString._address);
-            }
-            break;
-
-        case NSConstructedString_Unicode:
-            delete u->ConstructedString.constructedStr->str;
-            delete u->ConstructedString.constructedStr;
-            break;
-    }
-
-    delete u;
-
     [super dealloc];
 }
 
@@ -3237,138 +1761,104 @@ const int s_oneByte = 16;
  @Status Interoperable
 */
 - (BOOL)boolValue {
-    UStringHolder s1(self);
-    int len = s1.string().length();
-
-    for (int i = 0; i < len; i++) {
-        int c = s1.getChar(i);
-
-        if (c == ' ' || c == '\t' || c == '\r' || c == '+' || c == '-') {
-            continue;
-        }
-
-        switch (c) {
-            case 'Y':
-            case 'y':
-            case 'T':
-            case 't':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                return TRUE;
-
-            default:
-                return FALSE;
-        }
+    NSScanner* scanner = [NSScanner scannerWithString:self];
+    // skip initial whitespace if present
+    [scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:nil];
+    // scan a single optional '+' or '-' character, followed by zeroes
+    if ([scanner scanString:@"+" intoString:nil] == NO) {
+        [scanner scanString:@"-" intoString:nil];
     }
+    // scan any following zeroes
+    [scanner scanCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"0"] intoString:nil];
 
-    return FALSE;
+    // allowable characters are 1-9 y Y t T. It doesn't matter if there are any trailing characters.
+    return [scanner scanCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"tTyY123456789"] intoString:nil];
 }
 
-//  Note: locale ignored
-
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ... {
-    UNIMPLEMENTED();
-    return StubReturn();
+    va_list reader;
+    va_start(reader, locale);
+
+    self = [self initWithFormat:format locale:locale arguments:reader];
+    va_end(reader);
+    return self;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList {
-    UNIMPLEMENTED();
-    return StubReturn();
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
-- (id)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (instancetype)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer {
+    // Derived classes are required to implement this initializer.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Caveat
- @Notes not all encodings are supported, only file URLs supported
+ @Notes atomically parameter not supported
 */
-- (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
-    NSData* data = [[[NSData alloc] initWithContentsOfURL:url options:0 error:error] autorelease];
-    return [self initWithData:data encoding:enc];
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
+    return [self writeToURL:url atomically:atomically encoding:[[self class] defaultCStringEncoding] error:nil];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes atomically parameter not supported
 */
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
+    NSData* data = [static_cast<NSData*>(CFStringCreateExternalRepresentation(kCFAllocatorDefault,
+                                                                              static_cast<CFStringRef>(self),
+                                                                              CFStringConvertNSStringEncodingToEncoding(enc),
+                                                                              0)) autorelease];
+    if (data == nil) {
+        [NSException raise:NSGenericException format:@"unable to write data."];
+    }
+
+    return [data writeToURL:url options:(atomically ? NSDataWritingAtomic : 0) error:error];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes atomically parameter not supported
 */
-- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)atomically {
+    return [self writeToFile:path atomically:atomically encoding:[[self class] defaultCStringEncoding] error:nil];
+}
+
+/**
+ @Status Caveat
+ @Notes atomically parameter not supported
+*/
+- (BOOL)writeToFile:(NSString*)file atomically:(BOOL)atomically encoding:(NSStringEncoding)encoding error:(NSError**)err {
+    NSData* data = [static_cast<NSData*>(CFStringCreateExternalRepresentation(kCFAllocatorDefault,
+                                                                              static_cast<CFStringRef>(self),
+                                                                              CFStringConvertNSStringEncodingToEncoding(encoding),
+                                                                              0)) autorelease];
+    if (data == nil) {
+        [NSException raise:NSGenericException format:@"unable to write data."];
+    }
+
+    return [data writeToFile:file options:(atomically ? NSDataWritingAtomic : 0) error:err];
 }
 
 /**
  @Status Interoperable
  @Notes
 */
-- (instancetype)initWithContentsOfURL:(NSURL*)url {
-    return [self initWithContentsOfURL:url encoding:0 error:nullptr];
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 - (NSUInteger)maximumLengthOfBytesUsingEncoding:(NSStringEncoding)enc {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFStringEncoding cfEnc = CFStringConvertNSStringEncodingToEncoding(enc);
+    CFIndex maxSize = CFStringGetMaximumSizeForEncoding([self length], cfEnc);
+    return (maxSize == kCFNotFound) ? 0 : maxSize;
 }
 
 /**
@@ -3410,91 +1900,136 @@ const int s_oneByte = 16;
  @Status Stub
  @Notes
 */
-- (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange locale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 - (void)enumerateLinesUsingBlock:(void (^)(NSString*, BOOL*))block {
+    [self enumerateSubstringsInRange:NSMakeRange(0, [self length])
+                             options:NSStringEnumerationByLines
+                          usingBlock:^(NSString* substring, NSRange substringRange, NSRange enclosingRange, BOOL* stop) {
+                              block(substring, stop);
+                          }];
     UNIMPLEMENTED();
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (void)getLineStart:(NSUInteger*)startIndex
                  end:(NSUInteger*)lineEndIndex
          contentsEnd:(NSUInteger*)contentsEndIndex
             forRange:(NSRange)aRange {
-    UNIMPLEMENTED();
+    [self _getBlockStart:startIndex end:lineEndIndex contentsEnd:contentsEndIndex forRange:aRange stopAtLineSeparators:YES];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRange)paragraphRangeForRange:(NSRange)aRange {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSUInteger start = 0;
+    NSUInteger parEnd = 0;
+    [self getParagraphStart:&start end:&parEnd contentsEnd:nil forRange:aRange];
+    return NSMakeRange(start, parEnd - start);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFRange range = CFStringGetRangeOfCharacterClusterAtIndex((CFStringRef)self, anIndex, kCFStringComposedCharacterCluster);
+    return NSMakeRange(range.location, range.length);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSRange)rangeOfComposedCharacterSequencesForRange:(NSRange)range {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSUInteger length = [self length];
+    NSUInteger start, end;
+
+    if (range.location == length) {
+        start = length;
+    } else {
+        start = [self rangeOfComposedCharacterSequenceAtIndex:range.location].location;
+    }
+
+    NSUInteger endOfRange = NSMaxRange(range);
+    if (endOfRange == length) {
+        end = length;
+    } else {
+        if (range.length > 0) {
+            endOfRange = endOfRange - 1; // We want 0-length range to be treated same as 1-length range.
+        }
+
+        end = NSMaxRange([self rangeOfComposedCharacterSequenceAtIndex:endOfRange]);
+    }
+
+    return NSMakeRange(start, end - start);
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (id)propertyList {
-    UNIMPLEMENTED();
-    return StubReturn();
+    CFErrorRef error;
+    CFPropertyListRef propertyList = CFPropertyListCreateWithData(kCFAllocatorDefault,
+                                                                  static_cast<CFDataRef>([self dataUsingEncoding:NSUTF8StringEncoding]),
+                                                                  kCFPropertyListImmutable,
+                                                                  NULL,
+                                                                  &error);
+    if (propertyList == NULL) {
+        [NSException raise:NSParseErrorException format:@"unable to parse string into property list. error: %@", error];
+        return nil;
+    }
+
+    return [(id)propertyList autorelease];
 }
 
 /**
- @Status Stub
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(NSString*)objAddr {
+    if (objAddr == self) {
+        return YES;
+    }
+
+    if (objAddr == nil) {
+        return NO;
+    }
+
+    if ([objAddr isKindOfClass:[NSString class]]) {
+        return [self isEqualToString:objAddr];
+    }
+
+    return NO;
+}
+
+/**
+ @Status Interoperable
  @Notes
 */
 - (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(id)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CFStringCompareWithOptionsAndLocale(static_cast<CFStringRef>(self),
+                                               static_cast<CFStringRef>(aString),
+                                               CFRange{ range.location, range.length },
+                                               mask,
+                                               static_cast<CFLocaleRef>(locale));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSComparisonResult)localizedStandardCompare:(NSString*)string {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [self compare:string
+                 options:(NSCaseInsensitiveSearch | NSNumericSearch | NSWidthInsensitiveSearch | NSForcedOrderingSearch)
+                   range:NSMakeRange(0, [self length])
+                  locale:[NSLocale currentLocale]];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 - (NSString*)stringByFoldingWithOptions:(NSStringCompareOptions)options locale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* string = [self mutableCopy];
+    CFStringFold(static_cast<CFMutableStringRef>(string), static_cast<CFStringCompareFlags>(options), static_cast<CFLocaleRef>(locale));
+    return [string autorelease];
 }
 
 /**
@@ -3507,42 +2042,93 @@ const int s_oneByte = 16;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSString*)capitalizedStringWithLocale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringCapitalize(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFLocaleRef>(locale));
+    return mutableCopy;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSString*)lowercaseStringWithLocale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringLowercase(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFLocaleRef>(locale));
+    return mutableCopy;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSString*)uppercaseStringWithLocale:(NSLocale*)locale {
-    UNIMPLEMENTED();
-    return StubReturn();
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringUppercase(static_cast<CFMutableStringRef>(mutableCopy), static_cast<CFLocaleRef>(locale));
+    return mutableCopy;
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
 - (NSUInteger)completePathIntoString:(NSString* _Nonnull*)outputName
                        caseSensitive:(BOOL)flag
                     matchesIntoArray:(NSArray* _Nonnull*)outputArray
                          filterTypes:(NSArray*)filterTypes {
-    UNIMPLEMENTED();
-    return StubReturn();
+    if ([self isEqualToString:@""]) {
+        return 0;
+    }
+
+    NSURL* url = [NSURL fileURLWithPath:self];
+    BOOL searchAllFilesInDirectory = _stringIsPathToDirectory(self);
+    NSString* namePrefix = searchAllFilesInDirectory ? nil : [url lastPathComponent];
+    FilePathPredicate checkFileName = _getFileNamePredicate(namePrefix, flag);
+    FilePathPredicate checkExtension = _getExtensionPredicate(filterTypes, flag);
+
+    NSURL* urlWhereToSearch = searchAllFilesInDirectory ? url : [url URLByDeletingLastPathComponent];
+
+    NSMutableArray* matches = _getNamesAtURL(urlWhereToSearch, @"", checkFileName, checkExtension);
+
+    if ([matches count] == 1) {
+        NSURL* theFoundItem = [NSURL URLWithString:matches[0] relativeToURL:urlWhereToSearch];
+
+        if (CFURLHasDirectoryPath(static_cast<CFURLRef>(theFoundItem))) {
+            matches = _getNamesAtURL(theFoundItem,
+                                     matches[0],
+                                     ^(NSString*) {
+                                         return true;
+                                     },
+                                     checkExtension);
+        }
+    }
+
+    NSString* commonPath = searchAllFilesInDirectory ? self : _ensureLastPathSeparator([self stringByDeletingLastPathComponent]);
+
+    if (searchAllFilesInDirectory) {
+        if (outputName != nullptr) {
+            *outputName = _NSGetSlashStr();
+        }
+    } else {
+        NSString* longestPrefix = _longestCommonPrefix(matches, flag);
+        if (longestPrefix != nil && outputName != nullptr) {
+            *outputName = [commonPath stringByAppendingString:longestPrefix];
+        }
+    }
+
+    if (outputArray != nullptr) {
+        NSMutableArray* toReturn = [NSMutableArray arrayWithCapacity:[matches count]];
+        for (NSString* item in matches) {
+            [toReturn addObject:[commonPath stringByAppendingString:item]];
+        }
+
+        *outputArray = toReturn;
+    }
+
+    return [matches count];
 }
 
 /**
@@ -3580,56 +2166,205 @@ const int s_oneByte = 16;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (instancetype)localizedStringWithFormat:(NSString*)format, ... {
-    UNIMPLEMENTED();
-    return StubReturn();
+    va_list reader;
+    va_start(reader, format);
+    NSString* ret = [[self alloc] initWithFormat:format locale:[NSLocale currentLocale] arguments:reader];
+    va_end(reader);
+
+    return [ret autorelease];
+}
+
+static std::vector<NSStringEncoding> _getNSStringEncodings() {
+    static const CFStringEncoding* cfEncodings = CFStringGetListOfAvailableEncodings();
+
+    std::vector<NSStringEncoding> encodings;
+    int index = 0;
+    while (cfEncodings[index] != kCFStringEncodingInvalidId) {
+        encodings.push_back(static_cast<NSStringEncoding>(CFStringConvertEncodingToNSStringEncoding(cfEncodings[index])));
+        index++;
+    }
+
+    encodings.push_back(static_cast<NSStringEncoding>(0));
+    return encodings;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (const NSStringEncoding*)availableStringEncodings {
-    UNIMPLEMENTED();
-    return StubReturn();
+    static std::vector<NSStringEncoding> ret = _getNSStringEncodings();
+    return static_cast<NSStringEncoding*>(ret.data());
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes not actually localized
 */
 + (NSString*)localizedNameOfStringEncoding:(NSStringEncoding)encoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [static_cast<NSString*>(CFStringGetNameOfEncoding(CFStringConvertNSStringEncodingToEncoding(encoding))) autorelease];
 }
 
 /**
- @Status Stub
- @Notes
-*/
-- (id)mutableCopyWithZone:(NSZone*)zone {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 + (BOOL)supportsSecureCoding {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return YES;
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
+*/
+- (id)initWithCoder:(NSCoder*)coder {
+    NSString* str = [coder decodeObjectOfClass:[NSString class] forKey:@"NS.string"];
+
+    if (str != nil) {
+        return [self initWithString:str];
+    } else {
+        return [self init];
+    }
+}
+
+/**
+ @Status Interoperable
 */
 - (void)encodeWithCoder:(NSCoder*)coder {
-    UNIMPLEMENTED();
+    [coder encodeObject:self forKey:@"NS.string"];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)decomposedStringWithCanonicalMapping {
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormD);
+    return mutableCopy;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)decomposedStringWithCompatibilityMapping {
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormKD);
+    return mutableCopy;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)precomposedStringWithCompatibilityMapping {
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormKC);
+    return mutableCopy;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)precomposedStringWithCanonicalMapping {
+    NSMutableString* mutableCopy = [[self mutableCopy] autorelease];
+    CFStringNormalize(static_cast<CFMutableStringRef>(mutableCopy), kCFStringNormalizationFormC);
+    return mutableCopy;
+}
+
+/**
+ @Status Caveat
+ @Notes: assumes no actual symlinks to resolve
+*/
+- (NSString*)stringByResolvingSymlinksInPath {
+    NSArray* components = [self pathComponents];
+
+    if (nil == components || [components count] == 0) {
+        return self;
+    }
+
+    BOOL isAbsolutePath = [self isAbsolutePath];
+    NSString* resolvedPath = [components objectAtIndex:0];
+
+    for (int i = 1; i < [components count]; i++) {
+        NSString* component = [components objectAtIndex:i];
+        if ([component isEqualToString:@""] || [component isEqualToString:@"."]) {
+            continue;
+        }
+
+        if ([component isEqualToString:@".."] && isAbsolutePath) {
+            resolvedPath = [resolvedPath stringByDeletingLastPathComponent];
+        } else {
+            resolvedPath = [resolvedPath stringByAppendingPathComponent:component];
+        }
+    }
+
+    return resolvedPath;
+}
+
+// CF additions for fast paths.
+- (const char*)_fastCStringContents:(BOOL)something {
+    return nullptr;
+}
+
+- (const UniChar*)_fastCharacterContents {
+    return nullptr;
+}
+
+- (Boolean)_encodingCantBeStoredInEightBitCFString {
+    return true;
+}
+
+- (NSString*)_createSubstringWithRange:(NSRange)range {
+    int len = [self length];
+    NSUInteger numBytes = 0;
+    NSStringEncoding encoding = [self fastestEncoding];
+
+    [self getBytes:nullptr
+             maxLength:0x7FFFFFF
+            usedLength:&numBytes
+              encoding:encoding
+               options:static_cast<NSStringEncodingConversionOptions>(0)
+                 range:range
+        remainingRange:nullptr];
+
+    if (numBytes > 0) {
+        std::vector<unsigned char> bytes(numBytes);
+        [self getBytes:&bytes[0]
+                 maxLength:numBytes
+                usedLength:nullptr
+                  encoding:encoding
+                   options:static_cast<NSStringEncodingConversionOptions>(0)
+                     range:range
+            remainingRange:nullptr];
+
+        return [[NSString alloc] initWithBytes:&bytes[0] length:numBytes encoding:encoding];
+    }
+
+    return [NSString new];
+}
+
+- (CFStringEncoding)_smallestEncodingInCFStringEncoding {
+    return kCFStringEncodingUTF8;
+}
+
+- (CFStringEncoding)_fastestEncodingInCFStringEncoding {
+    // Return Unicode encoding as soon as a single non-ASCII character is found. Otherwise, return ASCII encoding.
+    for (int32_t i = 0; i < [self length]; i++) {
+        if ([self characterAtIndex:i] > 0x7F) {
+            return kCFStringEncodingUnicode;
+        }
+    }
+
+    return kCFStringEncodingASCII;
+}
+
+// For compliance with CF - not sure what differences ought to exist with getCString yet
+- (Boolean)_getCString:(char*)buffer maxLength:(NSUInteger)bufferSize encoding:(NSStringEncoding)encoding {
+    return [self getCString:buffer maxLength:bufferSize encoding:encoding];
+}
+
+- (const wchar_t*)rawCharacters {
+    // TODO 7143070 This is only here for compatibility with projections. remove once we get a new projections.
+    return (const wchar_t*)[self cStringUsingEncoding:NSUTF16StringEncoding];
 }
 
 - (int)_versionStringCompare:(NSString*)compStrAddr {
@@ -3660,8 +2395,8 @@ const int s_oneByte = 16;
         return self;
     }
 
-    char* characters = (char*)malloc(sizeof(char) * (length + 1));
-    [self getCString:characters maxLength:length];
+    std::vector<char> characters(length + 1);
+    [self getCString:&characters[0] maxLength:length];
     for (int i = 0; i < length / 2; ++i) {
         char character = characters[length - i - 1];
         characters[length - i - 1] = characters[i];
@@ -3669,18 +2404,9 @@ const int s_oneByte = 16;
     }
     characters[length] = '\0';
 
-    NSString* ret = [[[NSString alloc] initWithCString:characters] autorelease];
-
-    free(characters);
-    characters = nullptr;
+    NSString* ret = [[[NSString alloc] initWithCString:&characters[0]] autorelease];
 
     return ret;
 }
 
 @end
-
-NSString* NSStringFromICU(const icu_48::UnicodeString& str) {
-    std::string realStr;
-    str.toUTF8String(realStr);
-    return [NSString stringWithUTF8String:realStr.c_str()];
-}

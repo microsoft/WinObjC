@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSCCKeyDerivationParameters, WSCCCryptographicKey, WSCCCryptographicHash, WSCCPersistedKeyProvider,
     WSCCEncryptedAndAuthenticatedData, WSCCCryptographicEngine, WSCCHashAlgorithmProvider, WSCCMacAlgorithmProvider,
@@ -72,8 +72,6 @@ enum _WSCCCryptographicPadding {
 };
 typedef unsigned WSCCCryptographicPadding;
 
-#include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsSecurityCryptographyCertificates.h"
 

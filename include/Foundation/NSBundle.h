@@ -20,7 +20,7 @@
 
 @class NSString;
 @class NSURL;
-@class NSArray;
+@class NSArray<ObjectType>;
 @class NSDictionary;
 @class NSError;
 @class NSSet;
@@ -38,21 +38,18 @@ FOUNDATION_EXPORT NSString* const NSBundleDidLoadNotification;
 FOUNDATION_EXPORT_CLASS
 @interface NSBundle : NSObject
 
++ (NSBundle*)mainBundle;
++ (NSArray<NSBundle*>*)allFrameworks STUB_METHOD;
++ (NSArray<NSBundle*>*)allBundles;
+
 + (instancetype)bundleWithURL:(NSURL*)url;
 + (instancetype)bundleWithPath:(NSString*)fullPath;
-
++ (NSBundle*)bundleForClass:(Class)aClass;
++ (NSBundle*)bundleWithIdentifier:(NSString*)identifier;
 - (instancetype)initWithURL:(NSURL*)url;
 - (instancetype)initWithPath:(NSString*)fullPath;
 
-+ (NSBundle*)bundleForClass:(Class)aClass;
-+ (NSBundle*)bundleWithIdentifier:(NSString*)identifier;
-+ (NSBundle*)mainBundle;
-
-+ (NSArray*)allBundles;
-+ (NSArray*)allFrameworks;
-
-- (Class)classNamed:(NSString*)className;
-@property (readonly) Class principalClass;
+- (NSArray*)loadNibNamed:(NSString*)name owner:(id)owner options:(NSDictionary*)options STUB_METHOD;
 
 + (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension inDirectory:(NSString*)bundlePath;
 - (NSString*)pathForResource:(NSString*)name ofType:(NSString*)extension;
@@ -73,13 +70,17 @@ FOUNDATION_EXPORT_CLASS
             subdirectory:(NSString*)subpath
             localization:(NSString*)localizationName;
 
-+ (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath inBundleWithURL:(NSURL*)bundleURL;
-- (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath localization:(NSString*)localizationName;
-- (NSArray*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath;
++ (NSArray<NSURL*>*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath inBundleWithURL:(NSURL*)bundleURL;
+- (NSArray<NSURL*>*)URLsForResourcesWithExtension:(NSString*)extension
+                                     subdirectory:(NSString*)subpath
+                                     localization:(NSString*)localizationName;
+- (NSArray<NSURL*>*)URLsForResourcesWithExtension:(NSString*)extension subdirectory:(NSString*)subpath;
 
-+ (NSArray*)pathsForResourcesOfType:(NSString*)extension inDirectory:(NSString*)bundlePath;
-- (NSArray*)pathsForResourcesOfType:(NSString*)extension inDirectory:(NSString*)subpath;
-- (NSArray*)pathsForResourcesOfType:(NSString*)extension inDirectory:(NSString*)subpath forLocalization:(NSString*)localizationName;
++ (NSArray<NSString*>*)pathsForResourcesOfType:(NSString*)extension inDirectory:(NSString*)bundlePath;
+- (NSArray<NSString*>*)pathsForResourcesOfType:(NSString*)extension inDirectory:(NSString*)subpath;
+- (NSArray<NSString*>*)pathsForResourcesOfType:(NSString*)extension
+                                   inDirectory:(NSString*)subpath
+                               forLocalization:(NSString*)localizationName;
 
 @property (readonly, copy) NSString* resourcePath;
 @property (readonly, copy) NSURL* appStoreReceiptURL;
@@ -108,26 +109,30 @@ FOUNDATION_EXPORT_CLASS
 
 - (NSString*)localizedStringForKey:(NSString*)key value:(NSString*)value table:(NSString*)tableName;
 
-@property (readonly, copy) NSArray* executableArchitectures;
+@property (readonly, copy) NSArray<NSNumber*>* executableArchitectures;
 
-- (BOOL)preflightAndReturnError:(NSError* _Nullable*)error;
+- (BOOL)preflightAndReturnError:(NSError* _Nullable*)error STUB_METHOD;
 - (BOOL)load;
-- (BOOL)loadAndReturnError:(NSError* _Nullable*)error;
+- (BOOL)loadAndReturnError:(NSError* _Nullable*)error STUB_METHOD;
 
 @property (readonly, getter=isLoaded) BOOL loaded;
 
-- (BOOL)unload;
+- (BOOL)unload STUB_METHOD;
 
-+ (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizationsArray;
-+ (NSArray*)preferredLocalizationsFromArray:(NSArray*)localizationsArray forPreferences:(NSArray*)preferencesArray;
++ (NSArray<NSString*>*)preferredLocalizationsFromArray:(NSArray<NSString*>*)localizationsArray;
++ (NSArray<NSString*>*)preferredLocalizationsFromArray:(NSArray<NSString*>*)localizationsArray
+                                        forPreferences:(NSArray<NSString*>*)preferencesArray;
 
-@property (readonly, copy) NSArray* preferredLocalizations;
+@property (readonly, copy) NSArray<NSString*>* preferredLocalizations;
 @property (readonly, copy) NSString* developmentLocalization;
-@property (readonly, copy) NSArray* localizations;
+@property (readonly, copy) NSArray<NSString*>* localizations;
 @property (readonly, copy) NSDictionary* localizedInfoDictionary;
 
-- (void)setPreservationPriority:(double)priority forTags:(NSSet*)tags;
-- (double)preservationPriorityForTag:(NSString*)tag;
+- (void)setPreservationPriority:(double)priority forTags:(NSSet*)tags STUB_METHOD;
+- (double)preservationPriorityForTag:(NSString*)tag STUB_METHOD;
+
+- (Class)classNamed:(NSString*)className;
+@property (readonly) Class principalClass STUB_PROPERTY;
 
 @end
 

@@ -17,11 +17,15 @@
 #import <Foundation/NSAttributedString.h>
 #import <Foundation/NSMutableAttributedString.h>
 #import <CoreFoundation/CFAttributedString.h>
-#import <NSRaise.h>
+#import "NSRaise.h"
+#import "NSCFAttributedString.h"
+#import "BridgeHelpers.h"
+
 #import <algorithm>
-#import "CFAttributedStringInternal.h"
 
 @implementation NSAttributedString
+
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSAttributedString, NSAttributedStringPrototype);
 
 /**
  @Status Interoperable
@@ -44,39 +48,25 @@
     return NSInvalidAbstractInvocationReturn();
 }
 
-// Override allocWithZone to create the concrete subclass if not subclassed
-+ (instancetype)allocWithZone:(NSZone*)zone {
-    if ((self == [NSAttributedString class]) || (self == [NSMutableAttributedString class]) ||
-        (self == [NSMutableAttributedStringConcrete class])) {
-        return (__bridge NSAttributedString*)_CFAttributedStringCreateEmpty();
-    }
-
-    return NSAllocateObject((Class)self, 0, zone);
-}
-
 /**
  @Status Interoperable
 */
 - (instancetype)initWithString:(NSString*)string {
-    [reinterpret_cast<NSMutableAttributedString*>(self) replaceCharactersInRange:NSMakeRange(0, 0) withString:string];
-    return self;
+    return [self initWithString:string attributes:[[NSDictionary new] autorelease]];
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithAttributedString:(NSAttributedString*)string {
-    [reinterpret_cast<NSMutableAttributedString*>(self) setAttributedString:string];
-    return self;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithString:(NSString*)string attributes:(NSDictionary*)attributes {
-    [reinterpret_cast<NSMutableAttributedString*>(self) replaceCharactersInRange:NSMakeRange(0, 0) withString:string];
-    [reinterpret_cast<NSMutableAttributedString*>(self) setAttributes:attributes range:NSMakeRange(0, [self length])];
-    return self;
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**

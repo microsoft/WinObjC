@@ -22,7 +22,6 @@
 #import "QuartzCore/CAAnimation.h"
 #import "QuartzCore/CALayer.h"
 #import "Foundation/NSMutableDictionary.h"
-#import "CoreFoundation/CFType.h"
 #import "CACompositor.h"
 
 #import "CAAnimationInternal.h"

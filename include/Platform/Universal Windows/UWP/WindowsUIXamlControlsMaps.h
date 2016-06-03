@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXCMMapActualCameraChangedEventArgs, WUXCMMapActualCameraChangingEventArgs, WUXCMMapCustomExperienceChangedEventArgs,
     WUXCMMapElementClickEventArgs, WUXCMMapElementPointerEnteredEventArgs, WUXCMMapElementPointerExitedEventArgs,
@@ -125,10 +125,9 @@ typedef unsigned WUXCMMapWatermarkMode;
 #include "WindowsFoundation.h"
 #include "WindowsUIXamlMediaMedia3D.h"
 #include "WindowsDevicesGeolocation.h"
-#include "WindowsStorageStreams.h"
 #include "WindowsUIXamlMediaAnimation.h"
 #include "WindowsUIXamlControls.h"
-#include "WindowsFoundationCollections.h"
+#include "WindowsStorageStreams.h"
 #include "WindowsUIXaml.h"
 #include "WindowsUIXamlData.h"
 #include "WindowsUI.h"

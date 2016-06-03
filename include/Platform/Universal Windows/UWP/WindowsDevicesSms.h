@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WDSSmsTextMessage2, WDSSmsWapMessage, WDSSmsAppMessage, WDSSmsBroadcastMessage, WDSSmsVoicemailMessage, WDSSmsStatusMessage,
     WDSSmsSendMessageResult, WDSSmsDevice2, WDSSmsMessageReceivedTriggerDetails, WDSSmsFilterRule, WDSSmsFilterRules,
@@ -155,7 +155,6 @@ enum _WDSSmsFilterActionType {
 };
 typedef unsigned WDSSmsFilterActionType;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 

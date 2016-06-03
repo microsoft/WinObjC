@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WGCalendarIdentifiers, WGClockIdentifiers, WGNumeralSystemIdentifiers, WGCurrencyIdentifiers, WGGeographicRegion, WGLanguage,
     WGCalendar, WGApplicationLanguages;
@@ -41,7 +41,6 @@ enum _WGDayOfWeek {
 };
 typedef unsigned WGDayOfWeek;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>

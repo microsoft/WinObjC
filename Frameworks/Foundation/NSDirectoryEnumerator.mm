@@ -101,10 +101,11 @@ static void searchRecursive(const char* rootpath,
                         NSURL* newURL = [NSURL fileURLWithPath:[NSString stringWithCString:fileFullPath.c_str()]];
                         for (NSString* key in keys) {
                             if ([key isEqualToString:NSURLContentModificationDateKey]) {
-                                BOOL ret = [newURL _setProperty:[fileAttributes objectForKey:NSFileModificationDate]
-                                                         forKey:NSURLContentModificationDateKey];
-
-                                assert(ret);
+                                // TODO 7491994: Implement CFURL resourceValue APIs
+                                // BOOL ret = [newURL setResourceValue:[fileAttributes objectForKey:NSFileModificationDate]
+                                //                              forKey:NSURLContentModificationDateKey
+                                //                               error:nil];
+                                // assert(ret);
                             } else {
                                 // TODO: add aditional properties, not needed in 1511.
                             }

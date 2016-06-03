@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXMAKeyTimeHelper, WUXMARepeatBehaviorHelper, WUXMATransitionCollection, WUXMAColorKeyFrameCollection,
     WUXMADoubleKeyFrameCollection, WUXMAObjectKeyFrameCollection, WUXMAPointKeyFrameCollection, WUXMATimelineCollection, WUXMAColorKeyFrame,

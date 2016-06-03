@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WWHHHttpContentHeaderCollection, WWHHHttpRequestHeaderCollection, WWHHHttpResponseHeaderCollection,
     WWHHHttpContentDispositionHeaderValue, WWHHHttpContentCodingHeaderValueCollection, WWHHHttpLanguageHeaderValueCollection,
@@ -57,9 +57,8 @@
     WWHHIHttpContentCodingWithQualityHeaderValueCollection, WWHHIHttpTransferCodingHeaderValueStatics,
     WWHHIHttpTransferCodingHeaderValueFactory, WWHHIHttpTransferCodingHeaderValue, WWHHIHttpTransferCodingHeaderValueCollection;
 
-#include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
+#include "WindowsStorageStreams.h"
 #include "WindowsWebHttp.h"
 #include "WindowsNetworking.h"
 #include "WindowsGlobalization.h"

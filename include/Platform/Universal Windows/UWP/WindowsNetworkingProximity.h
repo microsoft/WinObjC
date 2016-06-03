@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNPProximityMessage, WNPProximityDevice, WNPTriggeredConnectionStateChangedEventArgs, WNPPeerInformation,
     WNPConnectionRequestedEventArgs, WNPPeerWatcher, WNPPeerFinder;
@@ -66,7 +66,6 @@ enum _WNPPeerRole {
 };
 typedef unsigned WNPPeerRole;
 
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 #include "WindowsFoundation.h"
 #include "WindowsNetworking.h"

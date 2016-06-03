@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WACContact, WACContactCardDelayedDataLoader, WACContactStore, WACContactAnnotationStore, WACContactCardOptions,
     WACFullContactCardOptions, WACContactAnnotation, WACContactAnnotationList, WACContactChangeTracker, WACContactChangedEventArgs,

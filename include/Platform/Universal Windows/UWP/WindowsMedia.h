@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMMediaProcessingTriggerDetails, WMVideoFrame, WMAudioBuffer, WMAudioFrame, WMMediaMarkerTypes,
     WMSystemMediaTransportControlsTimelineProperties, WMMusicDisplayProperties, WMVideoDisplayProperties, WMImageDisplayProperties,

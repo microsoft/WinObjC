@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMMMediaRatio, WMMMediaPropertySet, WMMAudioEncodingProperties, WMMMediaEncodingSubtypes, WMMH264ProfileIds, WMMMpeg2ProfileIds,
     WMMVideoEncodingProperties, WMMImageEncodingProperties, WMMContainerEncodingProperties, WMMMediaEncodingProfile;
@@ -84,7 +84,6 @@ enum _WMMMediaMirroringOptions {
 typedef unsigned WMMMediaMirroringOptions;
 
 #include "WindowsStorage.h"
-#include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
 
 #import <Foundation/Foundation.h>

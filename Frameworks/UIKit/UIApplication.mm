@@ -2195,11 +2195,11 @@ static CGPoint findLastSpeed(int finger, float time) {
 static EbrInputEvent g_MouseEventsQueue[MAX_MOUSE_EVENTS];
 static int g_MouseEventsHead = 0, g_MouseEventsTail = 0;
 
-EbrLock g_MouseCrit = EBRLOCK_INITIALIZE;
+pthread_mutex_t g_MouseCrit = PTHREAD_MUTEX_INITIALIZER;
 extern EbrEvent g_NewMouseEvent;
 
 void AddMouseEvent(EbrInputEvent* pEvt) {
-    EbrLockEnter(g_MouseCrit);
+    pthread_mutex_lock(&g_MouseCrit);
 
     bool add = true;
     CGPoint pos = CGPoint::point(pEvt->x, pEvt->y);
@@ -2235,7 +2235,7 @@ void AddMouseEvent(EbrInputEvent* pEvt) {
         }
     }
 
-    EbrLockLeave(g_MouseCrit);
+    pthread_mutex_unlock(&g_MouseCrit);
     EbrEventSignal(g_NewMouseEvent);
 }
 
@@ -2243,7 +2243,7 @@ int GetMouseEvents(EbrInputEvent* pDest, int max) {
     int ret = 0;
     EbrInputEvent* fingerMoves[10] = { 0 };
 
-    EbrLockEnter(g_MouseCrit);
+    pthread_mutex_lock(&g_MouseCrit);
 
     while (max--) {
         if (g_MouseEventsTail != g_MouseEventsHead) {
@@ -2271,7 +2271,7 @@ int GetMouseEvents(EbrInputEvent* pDest, int max) {
         }
     }
 
-    EbrLockLeave(g_MouseCrit);
+    pthread_mutex_unlock(&g_MouseCrit);
 
     return ret;
 }

@@ -21,7 +21,8 @@
 @class NSString;
 @class NSURL;
 @class NSNumber;
-@class NSArray;
+@class NSArray<ObjectType>;
+@class NSURLQueryItem;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSURLComponents : NSObject <NSCopying>
@@ -30,22 +31,22 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)init;
 - (instancetype)initWithString:(NSString*)URLString;
 - (instancetype)initWithURL:(NSURL*)url resolvingAgainstBaseURL:(BOOL)resolve;
-@property (readonly, copy) NSString* string STUB_PROPERTY;
+@property (readonly, copy) NSString* string;
 @property (readonly, copy) NSURL* URL;
-- (NSURL*)URLRelativeToURL:(NSURL*)baseURL STUB_METHOD;
-@property (copy) NSString* fragment STUB_PROPERTY;
+- (NSURL*)URLRelativeToURL:(NSURL*)baseURL;
+@property (copy) NSString* fragment;
 @property (copy) NSString* host;
-@property (copy) NSString* password STUB_PROPERTY;
+@property (copy) NSString* password;
 @property (copy) NSString* path;
-@property (copy) NSNumber* port STUB_PROPERTY;
-@property (copy) NSString* query STUB_PROPERTY;
-@property (copy) NSArray* queryItems;
+@property (copy) NSNumber* port;
+@property (copy) NSString* query;
+@property (copy) NSArray<NSURLQueryItem*>* queryItems;
 @property (copy) NSString* scheme;
-@property (copy) NSString* user STUB_PROPERTY;
-@property (copy) NSString* percentEncodedFragment STUB_PROPERTY;
-@property (copy) NSString* percentEncodedHost STUB_PROPERTY;
-@property (copy) NSString* percentEncodedPassword STUB_PROPERTY;
-@property (copy) NSString* percentEncodedPath STUB_PROPERTY;
-@property (copy) NSString* percentEncodedQuery STUB_PROPERTY;
-@property (copy) NSString* percentEncodedUser STUB_PROPERTY;
+@property (copy) NSString* user;
+@property (copy) NSString* percentEncodedFragment;
+@property (copy) NSString* percentEncodedHost;
+@property (copy) NSString* percentEncodedPassword;
+@property (copy) NSString* percentEncodedPath;
+@property (copy) NSString* percentEncodedQuery;
+@property (copy) NSString* percentEncodedUser;
 @end

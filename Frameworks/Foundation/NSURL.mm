@@ -15,822 +15,202 @@
 //******************************************************************************
 
 #import "Starboard.h"
-#import "StubReturn.h"
 #import "Foundation/NSMutableString.h"
 #import "Foundation/NSMutableArray.h"
 #import "Foundation/NSNumber.h"
 #import "Foundation/NSURL.h"
-#import "Foundation/NSRange.h"
-#import "libxml/uri.h"
-#import "HashFn.h"
-#import "Etc.h"
+#import "NSCFURL.h"
+#import <CoreFoundation/CFURL.h>
+#import <NSRaise.h>
+
+#import "BridgeHelpers.h"
 #import "LoggingNative.h"
-#import "NSURLInternal.h"
+#import "NSPathUtilitiesInternal.h"
+#import "StubReturn.h"
 
-static const wchar_t* TAG = L"NSURL";
-
-#define NSURLMAXLEN SIZE_MAX
+#import <memory>
 
 // Keys that apply to file system URLs.
-NSString* const NSURLAddedToDirectoryDateKey = @"NSURLAddedToDirectoryDateKey";
-NSString* const NSURLAttributeModificationDateKey = @"NSURLAttributeModificationDateKey";
-NSString* const NSURLFileScheme = @"NSURLFileScheme";
-NSString* const NSURLContentAccessDateKey = @"NSURLContentAccessDateKey";
-NSString* const NSURLContentModificationDateKey = @"NSURLContentModificationDateKey";
-NSString* const NSURLCreationDateKey = @"NSURLCreationDateKey";
-NSString* const NSURLCustomIconKey = @"NSURLCustomIconKey";
-NSString* const NSURLDocumentIdentifierKey = @"NSURLDocumentIdentifierKey";
-NSString* const NSURLEffectiveIconKey = @"NSURLEffectiveIconKey";
-NSString* const NSURLFileResourceIdentifierKey = @"NSURLFileResourceIdentifierKey";
-NSString* const NSURLFileResourceTypeKey = @"NSURLFileResourceIdentifierKey";
-NSString* const NSURLFileSecurityKey = @"NSURLFileSecurityKey";
-NSString* const NSURLHasHiddenExtensionKey = @"NSURLHasHiddenExtensionKey";
-NSString* const NSURLIsDirectoryKey = @"NSURLIsDirectoryKey";
-NSString* const NSURLIsExcludedFromBackupKey = @"NSURLIsExcludedFromBackupKey";
-NSString* const NSURLIsExecutableKey = @"NSURLIsExecutableKey";
-NSString* const NSURLIsHiddenKey = @"NSURLIsHiddenKey";
-NSString* const NSURLIsMountTriggerKey = @"NSURLIsMountTriggerKey";
-NSString* const NSURLIsPackageKey = @"NSURLIsPackageKey";
-NSString* const NSURLIsReadableKey = @"NSURLIsReadableKey";
-NSString* const NSURLIsRegularFileKey = @"NSURLIsRegularFileKey";
-NSString* const NSURLIsSymbolicLinkKey = @"NSURLIsSymbolicLinkKey";
-NSString* const NSURLIsSystemImmutableKey = @"NSURLIsSystemImmutableKey";
-NSString* const NSURLIsUserImmutableKey = @"NSURLIsUserImmutableKey";
-NSString* const NSURLIsVolumeKey = @"NSURLIsVolumeKey";
-NSString* const NSURLIsWritableKey = @"NSURLIsWritableKey";
-NSString* const NSURLLabelColorKey = @"NSURLLabelColorKey";
-NSString* const NSURLLabelNumberKey = @"NSURLLabelNumberKey";
-NSString* const NSURLLinkCountKey = @"NSURLLinkCountKey";
-NSString* const NSURLLocalizedLabelKey = @"NSURLLocalizedLabelKey";
-NSString* const NSURLLocalizedNameKey = @"NSURLLocalizedNameKey";
-NSString* const NSURLLocalizedTypeDescriptionKey = @"NSURLLocalizedTypeDescriptionKey";
-NSString* const NSURLNameKey = @"NSURLNameKey";
-NSString* const NSURLParentDirectoryURLKey = @"NSURLParentDirectoryURLKey";
-NSString* const NSURLPathKey = @"NSURLPathKey";
-NSString* const NSURLPreferredIOBlockSizeKey = @"NSURLPreferredIOBlockSizeKey";
-NSString* const NSURLTypeIdentifierKey = @"NSURLTypeIdentifierKey";
-NSString* const NSURLVolumeIdentifierKey = @"NSURLVolumeIdentifierKey";
-NSString* const NSURLVolumeURLKey = @"NSURLVolumeURLKey";
+NSString* const NSURLAddedToDirectoryDateKey = static_cast<NSString*>(kCFURLAddedToDirectoryDateKey);
+NSString* const NSURLAttributeModificationDateKey = static_cast<NSString*>(kCFURLAttributeModificationDateKey);
+NSString* const NSURLFileScheme = @"file";
+NSString* const NSURLContentAccessDateKey = static_cast<NSString*>(kCFURLContentAccessDateKey);
+NSString* const NSURLContentModificationDateKey = static_cast<NSString*>(kCFURLContentModificationDateKey);
+NSString* const NSURLCreationDateKey = static_cast<NSString*>(kCFURLCreationDateKey);
+NSString* const NSURLCustomIconKey = static_cast<NSString*>(kCFURLCustomIconKey);
+NSString* const NSURLDocumentIdentifierKey = static_cast<NSString*>(kCFURLDocumentIdentifierKey);
+NSString* const NSURLEffectiveIconKey = static_cast<NSString*>(kCFURLEffectiveIconKey);
+NSString* const NSURLFileResourceIdentifierKey = static_cast<NSString*>(kCFURLFileResourceIdentifierKey);
+NSString* const NSURLFileResourceTypeKey = static_cast<NSString*>(kCFURLFileResourceIdentifierKey);
+NSString* const NSURLFileSecurityKey = static_cast<NSString*>(kCFURLFileSecurityKey);
+NSString* const NSURLHasHiddenExtensionKey = static_cast<NSString*>(kCFURLHasHiddenExtensionKey);
+NSString* const NSURLIsDirectoryKey = static_cast<NSString*>(kCFURLIsDirectoryKey);
+NSString* const NSURLIsExcludedFromBackupKey = static_cast<NSString*>(kCFURLIsExcludedFromBackupKey);
+NSString* const NSURLIsExecutableKey = static_cast<NSString*>(kCFURLIsExecutableKey);
+NSString* const NSURLIsHiddenKey = static_cast<NSString*>(kCFURLIsHiddenKey);
+NSString* const NSURLIsMountTriggerKey = static_cast<NSString*>(kCFURLIsMountTriggerKey);
+NSString* const NSURLIsPackageKey = static_cast<NSString*>(kCFURLIsPackageKey);
+NSString* const NSURLIsReadableKey = static_cast<NSString*>(kCFURLIsReadableKey);
+NSString* const NSURLIsRegularFileKey = static_cast<NSString*>(kCFURLIsRegularFileKey);
+NSString* const NSURLIsSymbolicLinkKey = static_cast<NSString*>(kCFURLIsSymbolicLinkKey);
+NSString* const NSURLIsSystemImmutableKey = static_cast<NSString*>(kCFURLIsSystemImmutableKey);
+NSString* const NSURLIsUserImmutableKey = static_cast<NSString*>(kCFURLIsUserImmutableKey);
+NSString* const NSURLIsVolumeKey = static_cast<NSString*>(kCFURLIsVolumeKey);
+NSString* const NSURLIsWritableKey = static_cast<NSString*>(kCFURLIsWritableKey);
+NSString* const NSURLLabelColorKey = static_cast<NSString*>(kCFURLLabelColorKey);
+NSString* const NSURLLabelNumberKey = static_cast<NSString*>(kCFURLLabelNumberKey);
+NSString* const NSURLLinkCountKey = static_cast<NSString*>(kCFURLLinkCountKey);
+NSString* const NSURLLocalizedLabelKey = static_cast<NSString*>(kCFURLLocalizedLabelKey);
+NSString* const NSURLLocalizedNameKey = static_cast<NSString*>(kCFURLLocalizedNameKey);
+NSString* const NSURLLocalizedTypeDescriptionKey = static_cast<NSString*>(kCFURLLocalizedTypeDescriptionKey);
+NSString* const NSURLNameKey = static_cast<NSString*>(kCFURLNameKey);
+NSString* const NSURLParentDirectoryURLKey = static_cast<NSString*>(kCFURLParentDirectoryURLKey);
+NSString* const NSURLPathKey = static_cast<NSString*>(kCFURLPathKey);
+NSString* const NSURLPreferredIOBlockSizeKey = static_cast<NSString*>(kCFURLPreferredIOBlockSizeKey);
+NSString* const NSURLTypeIdentifierKey = static_cast<NSString*>(kCFURLTypeIdentifierKey);
+NSString* const NSURLVolumeIdentifierKey = static_cast<NSString*>(kCFURLVolumeIdentifierKey);
+NSString* const NSURLVolumeURLKey = static_cast<NSString*>(kCFURLVolumeURLKey);
 
 // Possible values for the NSURLFileResourceTypeKey key.
-NSString* const NSURLFileResourceTypeNamedPipe = @"NSURLFileResourceTypeNamedPipe";
-NSString* const NSURLFileResourceTypeCharacterSpecial = @"NSURLFileResourceTypeCharacterSpecial";
-NSString* const NSURLFileResourceTypeDirectory = @"NSURLFileResourceTypeDirectory";
-NSString* const NSURLFileResourceTypeBlockSpecial = @"NSURLFileResourceTypeBlockSpecial";
-NSString* const NSURLFileResourceTypeRegular = @"NSURLFileResourceTypeRegular";
-NSString* const NSURLFileResourceTypeSymbolicLink = @"NSURLFileResourceTypeSymbolicLink";
-NSString* const NSURLFileResourceTypeSocket = @"NSURLFileResourceTypeSocket";
-NSString* const NSURLFileResourceTypeUnknown = @"NSURLFileResourceTypeUnknown";
+NSString* const NSURLFileResourceTypeNamedPipe = static_cast<NSString*>(kCFURLFileResourceTypeNamedPipe);
+NSString* const NSURLFileResourceTypeCharacterSpecial = static_cast<NSString*>(kCFURLFileResourceTypeCharacterSpecial);
+NSString* const NSURLFileResourceTypeDirectory = static_cast<NSString*>(kCFURLFileResourceTypeDirectory);
+NSString* const NSURLFileResourceTypeBlockSpecial = static_cast<NSString*>(kCFURLFileResourceTypeBlockSpecial);
+NSString* const NSURLFileResourceTypeRegular = static_cast<NSString*>(kCFURLFileResourceTypeRegular);
+NSString* const NSURLFileResourceTypeSymbolicLink = static_cast<NSString*>(kCFURLFileResourceTypeSymbolicLink);
+NSString* const NSURLFileResourceTypeSocket = static_cast<NSString*>(kCFURLFileResourceTypeSocket);
+NSString* const NSURLFileResourceTypeUnknown = static_cast<NSString*>(kCFURLFileResourceTypeUnknown);
 
 // Keys that apply to properties of files.
-NSString* const NSURLFileSizeKey = @"NSURLFileSizeKey";
-NSString* const NSURLFileAllocatedSizeKey = @"NSURLFileAllocatedSizeKey";
-NSString* const NSURLIsAliasFileKey = @"NSURLIsAliasFileKey";
-NSString* const NSURLTotalFileAllocatedSizeKey = @"NSURLTotalFileAllocatedSizeKey";
-NSString* const NSURLTotalFileSizeKey = @"NSURLTotalFileSizeKey";
+NSString* const NSURLFileSizeKey = static_cast<NSString*>(kCFURLFileSizeKey);
+NSString* const NSURLFileAllocatedSizeKey = static_cast<NSString*>(kCFURLFileAllocatedSizeKey);
+NSString* const NSURLIsAliasFileKey = static_cast<NSString*>(kCFURLIsAliasFileKey);
+NSString* const NSURLTotalFileAllocatedSizeKey = static_cast<NSString*>(kCFURLTotalFileAllocatedSizeKey);
+NSString* const NSURLTotalFileSizeKey = static_cast<NSString*>(kCFURLTotalFileSizeKey);
 
 NSString* const NSThumbnail1024x1024SizeKey = @"NSThumbnail1024x1024SizeKey";
-NSString* const NSURLGenerationIdentifierKey = @"NSURLGenerationIdentifierKey";
-NSString* const NSURLVolumeLocalizedFormatDescriptionKey = @"NSURLVolumeLocalizedFormatDescriptionKey";
-NSString* const NSURLVolumeTotalCapacityKey = @"NSURLVolumeTotalCapacityKey";
-NSString* const NSURLVolumeAvailableCapacityKey = @"NSURLVolumeAvailableCapacityKey";
-NSString* const NSURLVolumeResourceCountKey = @"NSURLVolumeResourceCountKey";
-NSString* const NSURLVolumeSupportsPersistentIDsKey = @"NSURLVolumeSupportsPersistentIDsKey";
-NSString* const NSURLVolumeSupportsSymbolicLinksKey = @"NSURLVolumeSupportsSymbolicLinksKey";
-NSString* const NSURLVolumeSupportsHardLinksKey = @"NSURLVolumeSupportsHardLinksKey";
-NSString* const NSURLVolumeSupportsJournalingKey = @"NSURLVolumeSupportsJournalingKey";
-NSString* const NSURLVolumeIsJournalingKey = @"NSURLVolumeIsJournalingKey";
-NSString* const NSURLVolumeSupportsSparseFilesKey = @"NSURLVolumeSupportsSparseFilesKey";
-NSString* const NSURLVolumeSupportsZeroRunsKey = @"NSURLVolumeSupportsZeroRunsKey";
-NSString* const NSURLVolumeSupportsCaseSensitiveNamesKey = @"NSURLVolumeSupportsCaseSensitiveNamesKey";
-NSString* const NSURLVolumeSupportsCasePreservedNamesKey = @"NSURLVolumeSupportsCasePreservedNamesKey";
-NSString* const NSURLVolumeSupportsRootDirectoryDatesKey = @"NSURLVolumeSupportsRootDirectoryDatesKey";
-NSString* const NSURLVolumeSupportsVolumeSizesKey = @"NSURLVolumeSupportsVolumeSizesKey";
-NSString* const NSURLVolumeSupportsRenamingKey = @"NSURLVolumeSupportsRenamingKey";
-NSString* const NSURLVolumeSupportsAdvisoryFileLockingKey = @"NSURLVolumeSupportsAdvisoryFileLockingKey";
-NSString* const NSURLVolumeSupportsExtendedSecurityKey = @"NSURLVolumeSupportsExtendedSecurityKey";
-NSString* const NSURLVolumeIsBrowsableKey = @"NSURLVolumeIsBrowsableKey";
-NSString* const NSURLVolumeMaximumFileSizeKey = @"NSURLVolumeMaximumFileSizeKey";
-NSString* const NSURLVolumeIsEjectableKey = @"NSURLVolumeIsEjectableKey";
-NSString* const NSURLVolumeIsRemovableKey = @"NSURLVolumeIsRemovableKey";
-NSString* const NSURLVolumeIsInternalKey = @"NSURLVolumeIsInternalKey";
-NSString* const NSURLVolumeIsAutomountedKey = @"NSURLVolumeIsAutomountedKey";
-NSString* const NSURLVolumeIsLocalKey = @"NSURLVolumeIsLocalKey";
-NSString* const NSURLVolumeIsReadOnlyKey = @"NSURLVolumeIsReadOnlyKey";
-NSString* const NSURLVolumeCreationDateKey = @"NSURLVolumeCreationDateKey";
-NSString* const NSURLVolumeURLForRemountingKey = @"NSURLVolumeURLForRemountingKey";
-NSString* const NSURLVolumeUUIDStringKey = @"NSURLVolumeUUIDStringKey";
-NSString* const NSURLVolumeNameKey = @"NSURLVolumeNameKey";
-NSString* const NSURLVolumeLocalizedNameKey = @"NSURLVolumeLocalizedNameKey";
-NSString* const NSURLKeysOfUnsetValuesKey = @"NSURLKeysOfUnsetValuesKey";
-NSString* const NSURLIsUbiquitousItemKey = @"NSURLIsUbiquitousItemKey";
-NSString* const NSURLUbiquitousItemDownloadingErrorKey = @"NSURLUbiquitousItemDownloadingErrorKey";
-NSString* const NSURLUbiquitousItemDownloadingStatusKey = @"NSURLUbiquitousItemDownloadingStatusKey";
-NSString* const NSURLUbiquitousItemHasUnresolvedConflictsKey = @"NSURLUbiquitousItemHasUnresolvedConflictsKey";
-NSString* const NSURLUbiquitousItemIsDownloadedKey = @"NSURLUbiquitousItemIsDownloadedKey";
-NSString* const NSURLUbiquitousItemIsDownloadingKey = @"NSURLUbiquitousItemIsDownloadingKey";
-NSString* const NSURLUbiquitousItemIsUploadedKey = @"NSURLUbiquitousItemIsUploadedKey";
-NSString* const NSURLUbiquitousItemIsUploadingKey = @"NSURLUbiquitousItemIsUploadingKey";
-NSString* const NSURLUbiquitousItemUploadingErrorKey = @"NSURLUbiquitousItemUploadingErrorKey";
+NSString* const NSURLGenerationIdentifierKey = static_cast<NSString*>(kCFURLGenerationIdentifierKey);
+NSString* const NSURLVolumeLocalizedFormatDescriptionKey = static_cast<NSString*>(kCFURLVolumeLocalizedFormatDescriptionKey);
+NSString* const NSURLVolumeTotalCapacityKey = static_cast<NSString*>(kCFURLVolumeTotalCapacityKey);
+NSString* const NSURLVolumeAvailableCapacityKey = static_cast<NSString*>(kCFURLVolumeAvailableCapacityKey);
+NSString* const NSURLVolumeResourceCountKey = static_cast<NSString*>(kCFURLVolumeResourceCountKey);
+NSString* const NSURLVolumeSupportsPersistentIDsKey = static_cast<NSString*>(kCFURLVolumeSupportsPersistentIDsKey);
+NSString* const NSURLVolumeSupportsSymbolicLinksKey = static_cast<NSString*>(kCFURLVolumeSupportsSymbolicLinksKey);
+NSString* const NSURLVolumeSupportsHardLinksKey = static_cast<NSString*>(kCFURLVolumeSupportsHardLinksKey);
+NSString* const NSURLVolumeSupportsJournalingKey = static_cast<NSString*>(kCFURLVolumeSupportsJournalingKey);
+NSString* const NSURLVolumeIsJournalingKey = static_cast<NSString*>(kCFURLVolumeIsJournalingKey);
+NSString* const NSURLVolumeSupportsSparseFilesKey = static_cast<NSString*>(kCFURLVolumeSupportsSparseFilesKey);
+NSString* const NSURLVolumeSupportsZeroRunsKey = static_cast<NSString*>(kCFURLVolumeSupportsZeroRunsKey);
+NSString* const NSURLVolumeSupportsCaseSensitiveNamesKey = static_cast<NSString*>(kCFURLVolumeSupportsCaseSensitiveNamesKey);
+NSString* const NSURLVolumeSupportsCasePreservedNamesKey = static_cast<NSString*>(kCFURLVolumeSupportsCasePreservedNamesKey);
+NSString* const NSURLVolumeSupportsRootDirectoryDatesKey = static_cast<NSString*>(kCFURLVolumeSupportsRootDirectoryDatesKey);
+NSString* const NSURLVolumeSupportsVolumeSizesKey = static_cast<NSString*>(kCFURLVolumeSupportsVolumeSizesKey);
+NSString* const NSURLVolumeSupportsRenamingKey = static_cast<NSString*>(kCFURLVolumeSupportsRenamingKey);
+NSString* const NSURLVolumeSupportsAdvisoryFileLockingKey = static_cast<NSString*>(kCFURLVolumeSupportsAdvisoryFileLockingKey);
+NSString* const NSURLVolumeSupportsExtendedSecurityKey = static_cast<NSString*>(kCFURLVolumeSupportsExtendedSecurityKey);
+NSString* const NSURLVolumeIsBrowsableKey = static_cast<NSString*>(kCFURLVolumeIsBrowsableKey);
+NSString* const NSURLVolumeMaximumFileSizeKey = static_cast<NSString*>(kCFURLVolumeMaximumFileSizeKey);
+NSString* const NSURLVolumeIsEjectableKey = static_cast<NSString*>(kCFURLVolumeIsEjectableKey);
+NSString* const NSURLVolumeIsRemovableKey = static_cast<NSString*>(kCFURLVolumeIsRemovableKey);
+NSString* const NSURLVolumeIsInternalKey = static_cast<NSString*>(kCFURLVolumeIsInternalKey);
+NSString* const NSURLVolumeIsAutomountedKey = static_cast<NSString*>(kCFURLVolumeIsAutomountedKey);
+NSString* const NSURLVolumeIsLocalKey = static_cast<NSString*>(kCFURLVolumeIsLocalKey);
+NSString* const NSURLVolumeIsReadOnlyKey = static_cast<NSString*>(kCFURLVolumeIsReadOnlyKey);
+NSString* const NSURLVolumeCreationDateKey = static_cast<NSString*>(kCFURLVolumeCreationDateKey);
+NSString* const NSURLVolumeURLForRemountingKey = static_cast<NSString*>(kCFURLVolumeURLForRemountingKey);
+NSString* const NSURLVolumeUUIDStringKey = static_cast<NSString*>(kCFURLVolumeUUIDStringKey);
+NSString* const NSURLVolumeNameKey = static_cast<NSString*>(kCFURLVolumeNameKey);
+NSString* const NSURLVolumeLocalizedNameKey = static_cast<NSString*>(kCFURLVolumeLocalizedNameKey);
+NSString* const NSURLKeysOfUnsetValuesKey = static_cast<NSString*>(kCFURLKeysOfUnsetValuesKey);
+NSString* const NSURLIsUbiquitousItemKey = static_cast<NSString*>(kCFURLIsUbiquitousItemKey);
+NSString* const NSURLUbiquitousItemDownloadingErrorKey = static_cast<NSString*>(kCFURLUbiquitousItemDownloadingErrorKey);
+NSString* const NSURLUbiquitousItemDownloadingStatusKey = static_cast<NSString*>(kCFURLUbiquitousItemDownloadingStatusKey);
+NSString* const NSURLUbiquitousItemHasUnresolvedConflictsKey = static_cast<NSString*>(kCFURLUbiquitousItemHasUnresolvedConflictsKey);
+NSString* const NSURLUbiquitousItemIsDownloadedKey = static_cast<NSString*>(kCFURLUbiquitousItemIsDownloadedKey);
+NSString* const NSURLUbiquitousItemIsDownloadingKey = static_cast<NSString*>(kCFURLUbiquitousItemIsDownloadingKey);
+NSString* const NSURLUbiquitousItemIsUploadedKey = static_cast<NSString*>(kCFURLUbiquitousItemIsUploadedKey);
+NSString* const NSURLUbiquitousItemIsUploadingKey = static_cast<NSString*>(kCFURLUbiquitousItemIsUploadingKey);
+NSString* const NSURLUbiquitousItemUploadingErrorKey = static_cast<NSString*>(kCFURLUbiquitousItemUploadingErrorKey);
 NSString* const NSURLUbiquitousItemDownloadRequestedKey = @"NSURLUbiquitousItemDownloadRequestedKey";
 NSString* const NSURLUbiquitousItemContainerDisplayNameKey = @"NSURLUbiquitousItemContainerDisplayNameKey";
-NSString* const NSURLUbiquitousItemPercentUploadedKey = @"NSURLUbiquitousItemPercentUploadedKey";
-NSString* const NSURLUbiquitousItemDownloadingStatusCurrent = @"NSURLUbiquitousItemDownloadingStatusCurrent";
-NSString* const NSURLUbiquitousItemDownloadingStatusDownloaded = @"NSURLUbiquitousItemDownloadingStatusDownloaded";
-NSString* const NSURLUbiquitousItemDownloadingStatusNotDownloaded = @"NSURLUbiquitousItemDownloadingStatusNotDownloaded";
+NSString* const NSURLUbiquitousItemPercentUploadedKey = static_cast<NSString*>(kCFURLUbiquitousItemPercentUploadedKey);
+NSString* const NSURLUbiquitousItemDownloadingStatusCurrent = static_cast<NSString*>(kCFURLUbiquitousItemDownloadingStatusCurrent);
+NSString* const NSURLUbiquitousItemDownloadingStatusDownloaded = static_cast<NSString*>(kCFURLUbiquitousItemDownloadingStatusDownloaded);
+NSString* const NSURLUbiquitousItemDownloadingStatusNotDownloaded =
+    static_cast<NSString*>(kCFURLUbiquitousItemDownloadingStatusNotDownloaded);
 NSString* const NSURLThumbnailDictionaryKey = @"NSURLThumbnailDictionaryKey";
 
-static void StripSlashes(char* pPath) {
-    size_t length = strnlen_s(pPath, NSURLMAXLEN);
-    while (length > 0 && pPath[length - 1] == '/') {
-        pPath[length - 1] = '\0';
-        length--;
-    }
-}
+@implementation NSURL
 
-struct EbrURL {
-    xmlURIPtr uriForAppending() {
-        //  Copy our URI
-        xmlURIPtr ret;
-        xmlChar* copyStr = xmlSaveUri(_uri);
-        ret = xmlParseURIRaw((char*)copyStr, 0);
-        xmlFree(copyStr);
-
-        //  Remove any parameters
-        if (ret->path) {
-            char* param = strstr(ret->path, ";");
-            if (param) {
-                *param = NULL;
-            }
-        }
-
-        return ret;
-    }
-
-    xmlURIPtr _uri;
-    char* _parameters;
-    char* _path;
-    char* _scheme;
-    char* _server;
-    int _port;
-    char* _query;
-    char* _fragment;
-
-    EbrURL* Clone() {
-        //  Copy our URI
-        xmlURIPtr copyUri;
-        xmlChar* copyStr = xmlSaveUri(_uri);
-        copyUri = xmlParseURIRaw((char*)copyStr, 0);
-        xmlFree(copyStr);
-
-        EbrURL* ret = new EbrURL();
-        ret->_uri = copyUri;
-        ret->ProcessURI();
-
-        return ret;
-    }
-
-    void ProcessURI() {
-        if (_path) {
-            IwFree(_path);
-            _path = NULL;
-        }
-        if (_parameters) {
-            IwFree(_parameters);
-            _parameters = NULL;
-        }
-
-        //  Remove parameters and any trailing / from the path we report to the app
-        if (_uri->path) {
-            size_t newSize = strnlen_s(_uri->path, NSURLMAXLEN) + 1;
-            _path = (char*)IwMalloc(newSize);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, newSize, _uri->path) != 0);
-
-            char* params = strstr(_path, ";");
-            if (params != NULL) {
-                *params = 0;
-                params++;
-
-                size_t newParamSize = strnlen_s(params, NSURLMAXLEN) + 1;
-                _parameters = (char*)IwMalloc(newParamSize);
-                FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, newParamSize, params) != 0);
-            }
-
-            //  Remove trailing /, except in "/" case where the path points to root
-            if (strnlen_s(_path, newSize) > 1) {
-                if (_path[strnlen_s(_path, newSize) - 1] == '/') {
-                    _path[strnlen_s(_path, newSize) - 1] = '\0';
-                }
-            }
-        }
-        _scheme = _uri->scheme;
-        _server = _uri->server;
-        _port = _uri->port;
-        if (_port == 0) {
-            _port = -1;
-            if (_uri->scheme && strcmp(_uri->scheme, "http") == 0) {
-                _port = 80;
-            } else if (_uri->scheme && strcmp(_uri->scheme, "https") == 0) {
-                _port = 443;
-            }
-        }
-        _query = _uri->query_raw;
-        _fragment = _uri->fragment;
-    }
-
-    ~EbrURL() {
-        if (_uri) {
-            xmlFreeURI(_uri);
-        }
-
-        if (_parameters) {
-            IwFree(_parameters);
-        }
-
-        if (_path) {
-            IwFree(_path);
-        }
-    }
-
-    EbrURL() {
-        _uri = NULL;
-        _parameters = NULL;
-        _path = NULL;
-        _scheme = NULL;
-        _server = NULL;
-        _port = -1;
-        _query = NULL;
-        _fragment = NULL;
-    }
-
-    EbrURL(const char* pScheme, const char* pHost, const char* pPath) {
-        _uri = NULL;
-        _parameters = NULL;
-        _path = NULL;
-        _scheme = NULL;
-        _server = NULL;
-        _port = -1;
-        _query = NULL;
-        _fragment = NULL;
-
-        _uri = xmlCreateURI();
-
-        if (pScheme) {
-            _uri->scheme = (char*)xmlMalloc(strnlen_s(pScheme, NSURLMAXLEN) + 1);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_uri->scheme, NSURLMAXLEN, pScheme) != 0);
-        }
-        if (pHost) {
-            _uri->server = (char*)xmlMalloc(strnlen_s(pHost, NSURLMAXLEN) + 1);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_uri->server, NSURLMAXLEN, pHost) != 0);
-        }
-        if (pPath) {
-            _uri->path = (char*)xmlMalloc(strnlen_s(pPath, NSURLMAXLEN) + 1);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_uri->path, NSURLMAXLEN, pPath) != 0);
-        }
-        ProcessURI();
-    }
-
-    static char* escape(const char* in, const char* escapeChars) {
-        char* ret = (char*)IwMalloc(strnlen_s(in, NSURLMAXLEN) * 3 + 1);
-        int retLen = 0;
-        int inLen = strnlen_s(in, NSURLMAXLEN);
-        const char* hex = "0123456789ABCDEF";
-
-        for (int i = 0; i < inLen; i++) {
-            const unsigned char inChar = in[i];
-
-            if (!strchr(escapeChars, inChar)) {
-                ret[retLen++] = in[i];
-            } else {
-                ret[retLen++] = '%';
-                ret[retLen++] = hex[(inChar >> 4)];
-                ret[retLen++] = hex[inChar & 0xF];
-            }
-        }
-
-        ret[retLen] = 0;
-        return ret;
-    }
-
-    EbrURL(const char* pStr) {
-        _uri = NULL;
-        _parameters = NULL;
-        _path = NULL;
-        _scheme = NULL;
-        _server = NULL;
-        _port = -1;
-        _query = NULL;
-        _fragment = NULL;
-
-        char* escaped = escape(pStr, "{}\"[]");
-        _uri = xmlParseURI(escaped);
-        if (_uri) {
-            ProcessURI();
-        }
-
-        if (!_uri) {
-            char* str = (char*)xmlPathToURI((xmlChar*)escaped);
-            _uri = xmlParseURI(str);
-            xmlFree(str);
-        }
-
-        IwFree(escaped);
-        if (_uri) {
-            ProcessURI();
-        }
-    }
-
-    void SetBase(EbrURL* url) {
-        xmlURIPtr baseURI = url->uriForAppending();
-        xmlChar* baseURL = xmlSaveUri(baseURI);
-        xmlChar* relativeURL = xmlSaveUri(_uri);
-        xmlFreeURI(_uri);
-
-        xmlChar* newURL = xmlBuildURI(relativeURL, baseURL);
-        _uri = xmlParseURI((char*)newURL);
-
-        xmlFree(baseURL);
-        xmlFree(relativeURL);
-        xmlFree(newURL);
-
-        xmlFreeURI(baseURI);
-        ProcessURI();
-    }
-
-    void SetPath(const char* path, char* params) {
-        char* oldPath = _path;
-        char* oldParams = _parameters;
-
-        _path = NULL;
-        _parameters = NULL;
-
-        int newLen = 16;
-
-        if (path) {
-            _path = (char*)IwMalloc(strnlen_s(path, NSURLMAXLEN) + 1);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_path, NSURLMAXLEN, path) != 0);
-            newLen += strnlen_s(_path, NSURLMAXLEN);
-        }
-        if (params) {
-            _parameters = (char*)IwMalloc(strnlen_s(params, NSURLMAXLEN) + 1);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(_parameters, NSURLMAXLEN, params) != 0);
-            newLen += strnlen_s(params, NSURLMAXLEN);
-        }
-
-        //  Strip out parameter
-        char* newPath = (char*)xmlMalloc(newLen);
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
-        if (path) {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, path) != 0);
-        }
-
-        if (params) {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, ";") != 0);
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, params) != 0);
-        }
-
-        xmlFree(_uri->path);
-        _uri->path = newPath;
-
-        if (oldPath) {
-            IwFree(oldPath);
-        }
-
-        if (oldParams) {
-            IwFree(oldParams);
-        }
-    }
-
-    void AppendPath(char* pPath) {
-        int newLen = 16;
-
-        if (_path) {
-            newLen += strnlen_s(_path, NSURLMAXLEN);
-        }
-
-        if (pPath) {
-            newLen += strnlen_s(pPath, NSURLMAXLEN);
-        }
-
-        //  Strip out parameter
-        char* newPath = (char*)IwMalloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
-        if (_path) {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, _path) != 0);
-        }
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, "/") != 0);
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, pPath) != 0);
-        xmlNormalizeURIPath(newPath);
-
-        SetPath(newPath, _parameters);
-    }
-
-    void AppendExtension(const char* pPath) {
-        int newLen = 2; // size of ".";
-
-        if (_path) {
-            newLen += strnlen_s(_path, NSURLMAXLEN);
-        }
-
-        if (pPath) {
-            newLen += strnlen_s(pPath, NSURLMAXLEN);
-        }
-
-        char* newPath = (char*)IwMalloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
-        if (_path) {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, _path) != 0);
-        }
-
-        if (0 != strcmp(newPath, "/")) {
-            StripSlashes(newPath);
-        }
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, ".") != 0);
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(newPath, newLen, pPath) != 0);
-        SetPath(newPath, _parameters);
-    }
-
-    void DeleteExtension() {
-        int newLen = 1; // size of ""
-        if (_path) {
-            newLen += strnlen_s(_path, NSURLMAXLEN);
-        }
-
-        char* newPath = (char*)IwMalloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
-        if (_path) {
-            size_t lastComponentIndex = 0;
-            size_t extensionIndex = std::string::npos;
-            char* pLastComponent = strrchr(_path, '/');
-            if (pLastComponent) {
-                lastComponentIndex = static_cast<unsigned int>(pLastComponent - _path);
-            }
-
-            char* pExtension = strrchr(_path, '.');
-            if (pExtension) {
-                extensionIndex = static_cast<unsigned int>(pExtension - _path);
-            }
-
-            if (extensionIndex != std::string::npos && extensionIndex > lastComponentIndex) {
-                FAIL_FAST_HR_IF(E_UNEXPECTED, strncpy_s(newPath, newLen, _path, extensionIndex) != 0);
-                newPath[extensionIndex] = '\0';
-            } else {
-                // If no extension exists within the url, simply return without changing _path
-                return;
-            }
-        }
-
-        SetPath(newPath, _parameters);
-    }
-
-    void DeleteLastPathComponent() {
-        int newLen = 5; // size of "/../"
-        if (_path) {
-            newLen += strnlen_s(_path, NSURLMAXLEN);
-        }
-
-        char* newPath = (char*)IwMalloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
-        if (_path) {
-            char* pLastComponent = strrchr(_path, '/');
-            size_t lastComponentIndex = std::string::npos;
-            if (pLastComponent) {
-                lastComponentIndex = static_cast<unsigned int>(pLastComponent - _path);
-            }
-
-            if (lastComponentIndex == 0) {
-                if (1 == strnlen_s(_path, NSURLMAXLEN)) {
-                    // iOS behavior conflicts with documentation in this case.
-                    // The documentation claims "/" is the new path, while actually "/../" is returned.
-                    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "/../") != 0);
-                } else {
-                    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "/") != 0);
-                }
-            } else if (0 == strnlen_s(_path, NSURLMAXLEN)) {
-                // Edge case for when the path is empty
-                FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "../") != 0);
-            } else if (lastComponentIndex != std::string::npos) {
-                FAIL_FAST_HR_IF(E_UNEXPECTED, strncpy_s(newPath, newLen, _path, lastComponentIndex) != 0);
-                newPath[lastComponentIndex] = '\0';
-            }
-        } else {
-            // Edge case for when the path is empty
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "../") != 0);
-        }
-
-        SetPath(newPath, _parameters);
-    }
-
-    void StandardizePath() {
-        NSString* path = [[NSString alloc] initWithUTF8String:_path];
-        const char* standardizedPath = [[path stringByStandardizingPath] UTF8String];
-
-        int newLen = 1; // size of ""
-        if (_path) {
-            newLen += strnlen_s(standardizedPath, NSURLMAXLEN);
-        }
-
-        char* newPath = (char*)IwMalloc(newLen);
-        auto cleanupTemps = wil::ScopeExit([&]() { IwFree(newPath); });
-
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, "") != 0);
-
-        if (standardizedPath) {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(newPath, newLen, standardizedPath) != 0);
-        }
-
-        xmlNormalizeURIPath(newPath);
-        SetPath(newPath, _parameters);
-        [path release];
-    }
-};
-
-@implementation NSURL {
-    struct EbrURL* _uri;
-    struct EbrURL* _fullUri;
-    id _baseURL;
-    idretaint<NSString> _absoluteString;
-    idretaint<NSMutableDictionary> _properties;
-}
-
-static void buildURIs(NSURL* self, const char* pStr, id baseURL) {
-    self->_uri = new EbrURL(pStr);
-
-    if (baseURL != nil) {
-        NSURL* parentURL = baseURL;
-        self->_fullUri = new EbrURL(pStr);
-        self->_fullUri->SetBase(parentURL->_fullUri);
-    } else {
-        self->_fullUri = new EbrURL(pStr);
-    }
-}
-
-static void buildFullURI(NSURL* url, NSURL* base) {
-    if (base != nil) {
-        NSURL* parentURL = base;
-        url->_baseURL = [base retain];
-
-        url->_fullUri = url->_uri->Clone();
-        url->_fullUri->SetBase(parentURL->_fullUri);
-    } else {
-        url->_fullUri = url->_uri->Clone();
-    }
-}
-
-static void initPath(NSURL* url, const char* pScheme, const char* pHost, const char* pPath) {
-    url->_uri = new EbrURL(pScheme, pHost, pPath);
-
-    return;
-}
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSURL, NSURLPrototype);
 
 /**
  @Status Interoperable
 */
 - (instancetype)initWithScheme:(NSString*)scheme host:(NSString*)host path:(NSString*)path {
-    initPath(self, [scheme UTF8String], [host UTF8String], [path UTF8String]);
-    return self;
-}
+    NSString* slash = _NSGetSlashStr();
 
-/**
- @Status Interoperable
-*/
-- (instancetype)initFileURLWithPath:(NSString*)path {
-    if (path == nil) {
-        return nil;
-    }
-
-    NSURL* baseURL = nil;
-    char szBasePath[4096] = "";
-
-    if ([path isAbsolutePath] == FALSE) {
-        EbrGetcwd(szBasePath, sizeof(szBasePath));
-
-        //  Add trailing /
-        if (strnlen_s(szBasePath, NSURLMAXLEN) > 0 && szBasePath[strnlen_s(szBasePath, NSURLMAXLEN) - 1] != '/') {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szBasePath, NSURLMAXLEN, "/") != 0);
-        }
-    }
-
-    const char* pPath = [path UTF8String];
-    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
-    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
-
-    //  Strip trailing /'s
-    while (strnlen_s(szPath, NSURLMAXLEN) > 0 && szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] == '/') {
-        szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] = 0;
-    }
-
-    BOOL isDirectory = FALSE;
-    if (EbrAccess(szPath, 0) == -1 || EbrIsDir(szPath)) {
-        isDirectory = TRUE;
-    }
-
-    IwFree(szPath);
-
-    return [self initFileURLWithPath:path isDirectory:isDirectory];
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initFileURLWithPath:(NSString*)path isDirectory:(BOOL)isDirectory {
-    NSURL* baseURL = nil;
-    char szBasePath[4096] = "";
-
-    if ([path isAbsolutePath] == FALSE) {
-        EbrGetcwd(szBasePath, sizeof(szBasePath));
-
-        //  Add trailing /
-        if (strnlen_s(szBasePath, NSURLMAXLEN) > 0 && szBasePath[strnlen_s(szBasePath, NSURLMAXLEN) - 1] != '/') {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szBasePath, NSURLMAXLEN, "/") != 0);
-        }
-
-        baseURL = [NSURL alloc];
-        initPath(baseURL, "file", "localhost", szBasePath);
-        buildFullURI(baseURL, nil);
-    }
-
-    const char* pPath = [path UTF8String];
-    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
-    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
-
-    //  Strip trailing /'s
-    while (strnlen_s(szPath, NSURLMAXLEN) > 0 && szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] == '/') {
-        szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] = 0;
-    }
-    if (isDirectory) {
-        //  Add trailing /
-        if (strnlen_s(szPath, NSURLMAXLEN) > 0 && szPath[strnlen_s(szPath, NSURLMAXLEN) - 1] != '/') {
-            FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szPath, NSURLMAXLEN, "/") != 0);
-        }
-    }
-
-    if (baseURL == nil) {
-        initPath(self, "file", "localhost", szPath);
+    if ([host length] > 0) {
+        // scheme://host/path
+        return [self initWithString:[NSString stringWithFormat:@"%@:%@%@%@%@%@",
+                                                               scheme,
+                                                               slash,
+                                                               slash,
+                                                               [host stringByAddingPercentEscapesUsingEncoding:[host fastestEncoding]],
+                                                               slash,
+                                                               [path stringByAddingPercentEscapesUsingEncoding:[path fastestEncoding]]]];
     } else {
-        initPath(self, NULL, NULL, szPath);
+        // scheme://path
+        return [self initWithString:[NSString stringWithFormat:@"%@:%@%@%@",
+                                                               scheme,
+                                                               slash,
+                                                               slash,
+                                                               [path stringByAddingPercentEscapesUsingEncoding:[path fastestEncoding]]]];
     }
-
-    IwFree(szPath);
-
-    buildFullURI(self, baseURL);
-
-    // initialize source dictionary for this URL
-    _properties = [NSMutableDictionary dictionary];
-    return self;
 }
 
 /**
  @Status Interoperable
 */
-- (instancetype)initWithString:(NSString*)string {
-    return [self initWithString:string relativeToURL:nil];
-}
-
-/**
- @Status Stub
-*/
-- (NSURL*)fileReferenceURL {
-    UNIMPLEMENTED();
-    return nil;
++ (instancetype)URLWithString:(NSString*)URLString {
+    return [[[self alloc] initWithString:URLString] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (NSURL*)URLByAppendingPathComponent:(id)path {
-    return [self URLByAppendingPathComponent:path isDirectory:FALSE];
+- (instancetype)initWithString:(NSString*)URLString {
+    return [self initWithString:URLString relativeToURL:nil];
 }
 
 /**
  @Status Interoperable
 */
-- (NSURL*)URLByAppendingPathComponent:(id)path isDirectory:(BOOL)isDirectory {
-    if (path == nil) {
-        TraceVerbose(TAG, L"URLByAppendingPathComponent: path is nil!");
-        return nil;
-    }
-
-    NSURL* ret = [[[self class] alloc] init];
-    const char* pPath = [path UTF8String];
-    char* szPath = (char*)IwMalloc(strnlen_s(pPath, NSURLMAXLEN) + 16);
-    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pPath) != 0);
-    StripSlashes(szPath);
-    if (isDirectory) {
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szPath, NSURLMAXLEN, "/") != 0);
-    }
-
-    ret->_uri = _uri->Clone();
-    ret->_uri->AppendPath(szPath);
-    IwFree(szPath);
-    buildFullURI(ret, _baseURL);
-
-    return [ret autorelease];
++ (instancetype)URLWithString:(NSString*)URLString relativeToURL:(NSURL*)baseURL {
+    return [[[self alloc] initWithString:URLString relativeToURL:baseURL] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (NSURL*)URLByAppendingPathExtension:(NSString*)pathExtension {
-    NSURL* ret = [[[self class] alloc] init];
-
-    ret->_uri = _uri->Clone();
-    ret->_uri->AppendExtension([pathExtension UTF8String]);
-    buildFullURI(ret, _baseURL);
-
-    return [ret autorelease];
+- (instancetype)initWithString:(NSString*)URLString relativeToURL:(NSURL*)baseURL {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
  @Status Interoperable
 */
-- (NSURL*)URLByDeletingLastPathComponent {
-    NSURL* ret = [[[self class] alloc] init];
-    ret->_uri = _uri->Clone();
-    ret->_uri->DeleteLastPathComponent();
-    return [ret autorelease];
++ (NSURL*)fileURLWithPath:(NSString*)path isDirectory:(BOOL)isDir {
+    return [[[self alloc] initFileURLWithPath:path isDirectory:isDir] autorelease];
 }
 
 /**
  @Status Interoperable
 */
-- (NSURL*)URLByDeletingPathExtension {
-    NSURL* ret = [[[self class] alloc] init];
-    ret->_uri = _uri->Clone();
-    ret->_uri->DeleteExtension();
-    return [ret autorelease];
-}
-
-/**
- @Status Stub
-*/
-- (NSURL*)URLByResolvingSymlinksInPath {
-    UNIMPLEMENTED();
-    return self;
-}
-
-/**
- @Status Caveat
- @Notes Does not resolve symlinks in path or check /private
- */
-- (NSURL*)URLByStandardizingPath {
-    NSURL* ret = [[[self class] alloc] init];
-    ret->_uri = _uri->Clone();
-    if ([[self scheme] isEqualToString:@"file"]) {
-        ret->_uri->StandardizePath();
-    }
-    return [ret autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)initWithString:(id)string relativeToURL:(id)parent {
-    if (string == nil) {
-        return nil;
-    }
-
-    const char* pURL = [string UTF8String];
-    buildURIs(self, pURL, parent);
-    _baseURL = [parent retain];
-    if (_uri == NULL) {
-        return nil;
-    }
-
-    return self;
-}
-
-- (id)initWithString:(id)string relativeToURL:(id)parent isDirectory:(DWORD)isDirectory {
-    if (string == nil) {
-        return nil;
-    }
-
-    const char* pURL = [string UTF8String];
-    char* szPath = (char*)IwMalloc(strnlen_s(pURL, NSURLMAXLEN) + 16);
-    FAIL_FAST_HR_IF(E_UNEXPECTED, strcpy_s(szPath, NSURLMAXLEN, pURL) != 0);
-    StripSlashes(szPath);
-    if (isDirectory) {
-        FAIL_FAST_HR_IF(E_UNEXPECTED, strcat_s(szPath, NSURLMAXLEN, "/") != 0);
-    }
-
-    buildURIs(self, szPath, parent);
-    IwFree(szPath);
-    _baseURL = [parent retain];
-    if (_uri == NULL) {
-        return nil;
-    }
-
-    return self;
+- (instancetype)initFileURLWithPath:(NSString*)path isDirectory:(BOOL)isDir {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
 }
 
 /**
@@ -843,48 +223,469 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 /**
  @Status Interoperable
 */
-+ (NSURL*)fileURLWithPath:(id)path isDirectory:(BOOL)isDirectory {
-    return [[[self alloc] initFileURLWithPath:path isDirectory:isDirectory] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSURL*)URLWithString:(id)string {
-    return [[[self alloc] initWithString:string] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-+ (NSURL*)URLWithString:(id)string relativeToURL:(id)parent {
-    return [[[self alloc] initWithString:string relativeToURL:parent] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    [_baseURL release];
-    if (_uri) {
-        delete _uri;
+- (instancetype)initFileURLWithPath:(NSString*)path {
+    if (!path) {
+        [NSException raise:NSInvalidArgumentException format:@"initFileURLWithPath: path must not be null"];
     }
 
-    if (_fullUri) {
-        delete _fullUri;
+    if ([path length] > 0) {
+        // This method assumes that path is a directory if it ends with a slash.
+        // If path does not end with a slash, the method examines the file system to determine if path is a file or a directory.
+        if (_stringLooksLikeOrIsPathToDirectory(path)) {
+            // If path exists in the file system and is a directory, the method appends a trailing slash.
+            // (If it already has a trailing slash, leave it alone)
+            return [self initFileURLWithPath:_ensureLastPathSeparator(path) isDirectory:YES];
+        } else {
+            // If path does not exist in the file system, the method assumes that it represents a file and does not append a trailing slash.
+            return [self initFileURLWithPath:path isDirectory:NO];
+        }
     }
 
-    _absoluteString = nil;
-    _properties = nil;
+    [self release];
 
-    [super dealloc];
+    return nil;
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSURL*)fileURLWithPathComponents:(NSArray<NSString*>*)components {
+    return [self fileURLWithPath:[components componentsJoinedByString:_NSGetSlashStr()]];
+}
+
+/**
+ @Status Stub
+*/
++ (instancetype)URLByResolvingAliasFileAtURL:(NSURL*)url options:(NSURLBookmarkResolutionOptions)options error:(NSError* _Nullable*)error {
+    UNIMPLEMENTED();
+    return StubReturn();
+}
+
+/**
+ @Status Caveat
+ @Notes 7491994: CFURL BookmarkData functions are unimplemented
+*/
++ (instancetype)URLByResolvingBookmarkData:(NSData*)bookmarkData
+                                   options:(NSURLBookmarkResolutionOptions)options
+                             relativeToURL:(NSURL*)relativeURL
+                       bookmarkDataIsStale:(BOOL*)isStale
+                                     error:(NSError* _Nullable*)error {
+    return [[[self alloc] initByResolvingBookmarkData:bookmarkData
+                                              options:options
+                                        relativeToURL:relativeURL
+                                  bookmarkDataIsStale:isStale
+                                                error:error] autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes 7491994: CFURL BookmarkData functions are unimplemented
+*/
+- (instancetype)initByResolvingBookmarkData:(NSData*)bookmarkData
+                                    options:(NSURLBookmarkResolutionOptions)options
+                              relativeToURL:(NSURL*)relativeURL
+                        bookmarkDataIsStale:(BOOL*)isStale
+                                      error:(NSError* _Nullable*)error {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
++ (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
+    return [[[self alloc] initFileURLWithFileSystemRepresentation:path isDirectory:isDir relativeToURL:baseURL] autorelease];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSUInteger)hash {
+    return [[self relativeString] hash] + [[[self baseURL] relativeString] hash];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isEqual:(id)anObject {
+    if (self == anObject) {
+        return YES;
+    }
+
+    if (![anObject isKindOfClass:[NSURL class]]) {
+        return NO;
+    }
+
+    NSURL* otherURL = static_cast<NSURL*>(anObject);
+    NSURL* selfBaseURL = [self baseURL];
+    NSURL* otherBaseURL = [otherURL baseURL];
+
+    // Check pointer equality first, in case of nil, which always returns false for isEqual:
+    BOOL baseEqual = (selfBaseURL == otherBaseURL) || ([selfBaseURL isEqual:otherBaseURL]);
+    return baseEqual && [[self relativeString] isEqual:[otherURL relativeString]];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)checkResourceIsReachableAndReturnError:(NSError* _Nullable*)error {
+    if (error) {
+        *error = nil;
+    }
+
+    if (![self isFileURL] && ![self isFileReferenceURL]) {
+        // checkResourceIsReachableAndReturnError return NO for any non-FileURL
+        // according to reference doc
+        if (error) {
+            // TODO: 7492080: standardize the error domain and error code
+            *error = [NSError errorWithDomain:@"NSURL" code:100 userInfo:nil];
+        }
+        return NO;
+    }
+
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self path]];
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isFileReferenceURL {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (BOOL)isFileURL {
+    return [[[self scheme] lowercaseString] isEqualToString:NSURLFileScheme];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)absoluteString {
+    return [[self absoluteURL] relativeString];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)absoluteURL {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)baseURL {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (const char*)fileSystemRepresentation {
+    // A created NSString takes ownership over freeing this
+    std::unique_ptr<char[], decltype(&IwFree)> ret(static_cast<char*>(IwMalloc(MAX_PATH)), IwFree);
+
+    RETURN_NULL_IF_NULL_ALLOC(ret);
+
+    if ([self getFileSystemRepresentation:ret.get() maxLength:MAX_PATH]) {
+        size_t length = strlen(ret.get());
+        NSString* autoreleaseString =
+            [[[NSString alloc] initWithBytesNoCopy:ret.release() length:length encoding:NSUTF8StringEncoding freeWhenDone:YES] autorelease];
+
+        return [autoreleaseString cStringUsingEncoding:NSUTF8StringEncoding];
+    }
+
+    return nullptr;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)fragment {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)host {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)lastPathComponent {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)parameterString {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)password {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)path {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSArray<NSString*>*)pathComponents {
+    // Cannot use [NSString pathComponents] here - [NSURL pathComponents] keeps empty components, while [NSString pathComponents] does not
+    NSArray* components = [[self path] componentsSeparatedByString:_NSGetSlashStr()];
+    NSMutableArray* ret = [NSMutableArray arrayWithCapacity:[components count]];
+
+    for (NSString* component in components) {
+        [ret addObject:[component stringByReplacingPercentEscapesUsingEncoding:[component fastestEncoding]]];
+    }
+
+    return ret;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)pathExtension {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSNumber*)port {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)query {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)relativePath {
+    return [[NSURL URLWithString:[self relativeString]] path];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)relativeString {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)resourceSpecifier {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)scheme {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)standardizedURL {
+    // Cannot use [NSString stringByStandardizingPath] here - NSString has a different notion of path components,
+    // and the function is explictly documented to not work with URLs
+    NSMutableArray* pathComponents = [[[[self absoluteString] componentsSeparatedByString:_NSGetSlashStr()] mutableCopy] autorelease];
+
+    for (size_t i = 0; i < [pathComponents count];) {
+        NSString* pathComponent = static_cast<NSString*>([pathComponents objectAtIndex:i]);
+        if ([pathComponent isEqualToString:@"."]) {
+            [pathComponents removeObjectAtIndex:i];
+        } else if ([pathComponent isEqualToString:@".."]) {
+            [pathComponents removeObjectAtIndex:i]; // Remove ".."
+            if (i > 0) {
+                [pathComponents removeObjectAtIndex:i - 1]; // Remove the dir before ".." - it cancels out with ".."
+                --i; // Since two components were removed, the next component is ++i - 2 = --i
+            }
+            // Since one component was removed, the next component is ++i - 1 = i
+        } else {
+            ++i;
+        }
+    }
+
+    return [NSURL URLWithString:[pathComponents componentsJoinedByString:_NSGetSlashStr()]];
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSString*)user {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)filePathURL {
+    // If the receiver is a file reference URL, this property contains a copy of the URL converted to a file path URL.
+    if ([self isFileReferenceURL]) {
+        return [[[NSURL alloc] initWithScheme:NSURLFileScheme host:[self host] path:[self path]] autorelease];
+    }
+
+    // If the receiver’s URL is a file path URL, this property contains the original URL.
+    if ([self isFileURL]) {
+        return [[self retain] autorelease];
+    }
+
+    // If the original URL is not a file URL, or if the resource is not reachable or no longer exists, this property contains nil.
+    return nil;
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)fileReferenceURL {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByAppendingPathComponent:(NSString*)pathComponent {
+    // Ensure exactly one slash exists between the original URL and pathComponent
+    NSString* originalURL = _ensureLastPathSeparator([self relativeString]);
+    if ([pathComponent hasPrefix:_NSGetSlashStr()]) {
+        pathComponent = [pathComponent substringFromIndex:[_NSGetSlashStr() length]];
+    }
+
+    NSString* newURL = [originalURL stringByAppendingString:pathComponent];
+
+    if (_stringLooksLikeOrIsPathToDirectory(newURL)) {
+        // If path exists in the file system and is a directory, the method appends a trailing slash.
+        // (If it already has a trailing slash, leave it alone)
+        return [self URLByAppendingPathComponent:_ensureLastPathSeparator(pathComponent) isDirectory:YES];
+    } else {
+        // If path does not exist in the file system, the method assumes that it represents a file and does not append a trailing slash.
+        return [self URLByAppendingPathComponent:pathComponent isDirectory:NO];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByAppendingPathComponent:(NSString*)pathComponent isDirectory:(BOOL)isDirectory {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByAppendingPathExtension:(NSString*)pathExtension {
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByDeletingLastPathComponent {
+    // This can probably leverage [NSString stringByDeletingLastPathComponent] in the future, but it is currently marked as Stub
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByDeletingPathExtension {
+    // This can probably leverage [NSString stringByDeletingPathExtension] in the future, but it is currently marked as Stub
+    // This class is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocationReturn();
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByResolvingSymlinksInPath {
+    // This property only works on URLs with the file: scheme
+    if ([[self scheme] isEqualToString:NSURLFileScheme]) {
+        NSString* resolvedPath = [[self path] stringByResolvingSymlinksInPath];
+        return [NSURL fileURLWithPath:resolvedPath];
+    } else {
+        return [[self copy] autorelease];
+    }
+}
+
+/**
+ @Status Interoperable
+*/
+- (NSURL*)URLByStandardizingPath {
+    // This property only works on URLs with the file: scheme
+    if ([[self scheme] isEqualToString:NSURLFileScheme]) {
+        NSString* standardizedPath = [[self path] stringByStandardizingPath];
+        return [NSURL fileURLWithPath:standardizedPath];
+    } else {
+        return [[self copy] autorelease];
+    }
 }
 
 /**
  @Status Interoperable
 */
 - (id)copyWithZone:(NSZone*)zone {
-    return [self retain];
+    return [[NSURL alloc] initWithString:[self relativeString] relativeToURL:[self baseURL]];
 }
 
 /**
@@ -892,13 +693,12 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if ([coder allowsKeyedCoding]) {
-        id path = [coder decodeObjectForKey:@"NS.path"];
+        NSString* path = [coder decodeObjectForKey:@"NS.path"];
 
-        [self initWithString:path relativeToURL:nil];
+        return [self initWithString:path relativeToURL:nil];
 
-        return self;
     } else {
-        assert(0);
+        UNIMPLEMENTED_WITH_MSG("NSURL initWithCoder: with non-keyed NSCoder currently unsupported");
         [self release];
         return nil;
     }
@@ -911,490 +711,154 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 - (void)encodeWithCoder:(NSCoder*)coder {
     if ([coder isKindOfClass:[NSKeyedArchiver class]]) {
         /* [TODO: Encode baseURL as well] */
-        id fullURL = [self absoluteString];
+        NSString* fullURL = [self absoluteString];
         [coder encodeObject:fullURL forKey:@"NS.path"];
     } else {
-        assert(0);
+        UNIMPLEMENTED_WITH_MSG("NSURL encodeWithCoder: with non-NSKeyedArchiver NSCoder currently unsupported");
     }
 }
 
 /**
  @Status Interoperable
 */
-- (unsigned)hash {
-    if (_fullUri->_path) {
-        return murmurHash3(_fullUri->_path, strnlen_s(_fullUri->_path, NSURLMAXLEN), 0x834cba12);
-    }
-    return 0;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)isEqual:(id)other {
-    NSURL* otherURL;
-
-    if (self == other) {
-        return YES;
-    }
-
-    if (![other isKindOfClass:[NSURL class]]) {
-        return NO;
-    }
-
-    return ([[other absoluteString] isEqual:[self absoluteString]]);
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)relativeString {
-    if (!_uri) {
-        return [self absoluteString];
-    } else {
-        char* uriStr = (char*)xmlSaveUri(_uri->_uri);
-        if (uriStr == NULL) {
-            return nil;
-        }
-
-        id ret = [NSString stringWithCString:uriStr];
-        xmlFree(uriStr);
-
-        return ret;
-    }
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)absoluteString {
-    if (_absoluteString == nil) {
-        if (_fullUri) {
-            char* uriStr = (char*)xmlSaveUri(_fullUri->_uri);
-            if (uriStr == NULL) {
-                return nil;
-            }
-
-            _absoluteString = [NSString stringWithCString:uriStr];
-            xmlFree(uriStr);
-        } else {
-            char* uriStr = (char*)xmlSaveUri(_uri->_uri);
-            if (uriStr == NULL) {
-                return nil;
-            }
-
-            _absoluteString = [NSString stringWithCString:uriStr];
-            xmlFree(uriStr);
-        }
-    }
-
-    return (NSString*)_absoluteString;
-}
-
-/**
- @Status Interoperable
-*/
-- (BOOL)checkResourceIsReachableAndReturnError:(NSError**)error {
-    if (error) {
-        *error = nil;
-    }
-
-    if (![self isFileURL]) {
-        // checkResourceIsReachableAndReturnError return NO for any non-FileURL according to reference doc
-        if (error) {
-            // TODO: standardize the error domain and error code
-            *error = [NSError errorWithDomain:@"NSURL" code:100 userInfo:nil];
-        }
-        return NO;
-    }
-
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self path]];
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)resourceSpecifier {
-    char* uriStr = (char*)xmlSaveUri(_fullUri->_uri);
-    if (uriStr == NULL) {
-        return nil;
-    }
-
-    char* schemeSkipped = uriStr;
-    if (_fullUri->_scheme != NULL) {
-        while (*schemeSkipped++) {
-            if (*schemeSkipped == ':') {
-                schemeSkipped++;
-                break;
-            }
-        }
-    }
-    id ret = [NSString stringWithCString:schemeSkipped];
-    xmlFree(uriStr);
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)parameterString {
-    if (!_fullUri->_parameters) {
-        return nil;
-    }
-
-    id ret = [NSString stringWithCString:(char*)_fullUri->_parameters];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)scheme {
-    if (!_fullUri) {
-        return nil;
-    }
-
-    if (!_fullUri->_scheme) {
-        return nil;
-    }
-
-    id ret = [NSString stringWithCString:(char*)_fullUri->_scheme];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)host {
-    if (!_fullUri) {
-        return nil;
-    }
-
-    if (!_fullUri->_server) {
-        return @"";
-    }
-
-    id ret = [NSString stringWithCString:(char*)_fullUri->_server];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)fragment {
-    if (!_fullUri->_fragment) {
-        return nil;
-    }
-
-    id ret = [NSString stringWithCString:(char*)_fullUri->_fragment];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSString*)path {
-    if (!_fullUri) {
-        return nil;
-    }
-
-    if (!_fullUri->_path) {
-        return nil;
-    }
-
-    id ret = [NSString stringWithCString:(char*)_fullUri->_path];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (NSArray*)pathComponents {
-    return [[self path] pathComponents];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)port {
-    if (_fullUri->_port == -1) {
-        return nil;
-    }
-
-    return [NSNumber numberWithInt:_fullUri->_port];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)query {
-    if (!_fullUri->_query) {
-        return nil;
-    }
-
-    id ret = [NSString stringWithCString:(char*)_fullUri->_query];
-
-    return ret;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)relativePath {
-    if (!_uri->_path) {
-        return nil;
-    }
-
-    id ret = [NSString stringWithCString:(char*)_uri->_path];
-
-    return ret;
-}
-
-/**
- @Status stub
- @Notes unlikely we will support FileReferenceURL ever
-*/
-- (BOOL)isFileReferenceURL {
-    UNIMPLEMENTED();
++ (BOOL)supportsSecureCoding {
     return NO;
 }
 
 /**
- @Status Interoperable
+ @Status Caveat
+ @Notes 7491994: CFURL BookmarkData functions are unimplemented
 */
-- (BOOL)isFileURL {
-    if (_fullUri) {
-        if (_fullUri->_scheme == NULL) {
-            if (_fullUri->_path && _fullUri->_path[0] == '/') {
-                return TRUE;
-            }
-        }
-    }
-    return [[self scheme] isEqualToString:@"file"];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)description {
-    return [self absoluteString];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)absoluteURL {
-    if (_baseURL == nil) {
-        return self;
-    }
-
-    return [NSURL URLWithString:[self absoluteString]];
-}
-
-/**
- @Status Stub
-*/
-- (id)standardizedURL {
-    UNIMPLEMENTED();
-    return [[self copy] autorelease];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)lastPathComponent {
-    return [[self path] lastPathComponent];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)pathExtension {
-    return [[self path] pathExtension];
-}
-
-/**
- @Status Interoperable
-*/
-- (id)baseURL {
-    return _baseURL;
-}
-
-/**
- @Status Stub
-*/
-- (BOOL)setResourceValue:(id)value forKey:(id)key error:(NSError**)error {
-    UNIMPLEMENTED();
-    if (error) {
-        *error = nil;
-    }
-
-    return TRUE;
++ (NSData*)bookmarkDataWithContentsOfURL:(NSURL*)bookmarkFileURL error:(NSError* _Nullable*)error {
+    return [static_cast<NSData*>(
+        CFURLCreateBookmarkDataFromFile(NULL, static_cast<CFURLRef>(bookmarkFileURL), reinterpret_cast<CFErrorRef*>(error))) autorelease];
 }
 
 /**
  @Status Caveat
- @Notes there is no property key validitiy check yet
-*/
-- (BOOL)_setProperty:(id)propertyValue forKey:(NSString*)propertyKey {
-    // TODO: do a check if propertyKey is a valid key
-    [_properties setObject:propertyValue forKey:propertyKey];
-
-    return YES;
-}
-
-/**
- @Status Interoperable
-*/
-- (id)propertyForKey:(NSString*)propertyKey {
-    return [_properties objectForKey:propertyKey];
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (BOOL)setResourceValues:(NSDictionary*)keyedValues error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initByResolvingBookmarkData:(NSData*)bookmarkData
-                                    options:(NSURLBookmarkResolutionOptions)options
-                              relativeToURL:(NSURL*)relativeURL
-                        bookmarkDataIsStale:(BOOL*)isStale
-                                      error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Caveat
- @Notes Supported given the url is a file url.
-*/
-- (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxBufferLength {
-    if ([self isFileURL] && buffer) {
-        NSUInteger numBytes = 0;
-        [[self path] getBytes:nullptr
-                    maxLength:maxBufferLength
-                   usedLength:&numBytes
-                     encoding:NSUTF8StringEncoding
-                      options:0
-                        range:NSMakeRange(0, [[self path] length])
-               remainingRange:nullptr];
-
-        if (maxBufferLength < numBytes + 1) {
-            return NO;
-        }
-
-        [[self path] getBytes:buffer
-                    maxLength:maxBufferLength
-                   usedLength:&numBytes
-                     encoding:NSUTF8StringEncoding
-                      options:0
-                        range:NSMakeRange(0, [[self path] length])
-               remainingRange:nullptr];
-
-        buffer[numBytes] = '\0';
-        return YES;
-    }
-
-    return NO;
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initFileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
+ @Notes 7491994: CFURL BookmarkData functions are unimplemented
 */
 - (NSData*)bookmarkDataWithOptions:(NSURLBookmarkCreationOptions)options
-    includingResourceValuesForKeys:(NSArray*)keys
+    includingResourceValuesForKeys:(NSArray<NSString*>*)keys
                      relativeToURL:(NSURL*)relativeURL
                              error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return [static_cast<NSData*>(CFURLCreateBookmarkData(NULL,
+                                                         static_cast<CFURLRef>(self),
+                                                         static_cast<CFURLBookmarkCreationOptions>(options),
+                                                         static_cast<CFArrayRef>(keys),
+                                                         static_cast<CFURLRef>(relativeURL),
+                                                         reinterpret_cast<CFErrorRef*>(error))) autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL BookmarkData functions are unimplemented
+*/
++ (NSDictionary<NSString*, id>*)resourceValuesForKeys:(NSArray<NSString*>*)keys fromBookmarkData:(NSData*)bookmarkData {
+    return [static_cast<NSDictionary<NSString*, id>*>(
+        CFURLCreateResourcePropertiesForKeysFromBookmarkData(NULL, static_cast<CFArrayRef>(keys), static_cast<CFDataRef>(bookmarkData)))
+        autorelease];
+}
+
+/**
+ @Status Caveat
+ @Notes 7491994: CFURL BookmarkData functions are unimplemented
+*/
++ (BOOL)writeBookmarkData:(NSData*)bookmarkData
+                    toURL:(NSURL*)bookmarkFileURL
+                  options:(NSURLBookmarkFileCreationOptions)options
+                    error:(NSError* _Nullable*)error {
+    return CFURLWriteBookmarkDataToFile(static_cast<CFDataRef>(bookmarkData),
+                                        static_cast<CFURLRef>(bookmarkFileURL),
+                                        static_cast<CFURLBookmarkCreationOptions>(options),
+                                        reinterpret_cast<CFErrorRef*>(error));
+}
+
+/**
+ @Status Caveat
+ @Notes 7491994: CFURL SecurityScopedResource functions are unimplemented
 */
 - (BOOL)startAccessingSecurityScopedResource {
-    UNIMPLEMENTED();
-    return StubReturn();
+    return CFURLStartAccessingSecurityScopedResource(static_cast<CFURLRef>(self));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL SecurityScopedResource functions are unimplemented
 */
 - (void)stopAccessingSecurityScopedResource {
-    UNIMPLEMENTED();
+    CFURLStopAccessingSecurityScopedResource(static_cast<CFURLRef>(self));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
 */
-- (BOOL)getResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (BOOL)getResourceValue:(out id _Nullable*)value forKey:(NSString*)key error:(out NSError* _Nullable*)error {
+    return CFURLCopyResourcePropertyForKey(static_cast<CFURLRef>(self),
+                                           static_cast<CFStringRef>(key),
+                                           static_cast<void*>(value),
+                                           reinterpret_cast<CFErrorRef*>(error));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
 */
-- (NSDictionary*)resourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
+- (NSDictionary<NSString*, id>*)resourceValuesForKeys:(NSArray<NSString*>*)keys error:(NSError* _Nullable*)error {
+    return
+        [static_cast<NSDictionary<NSString*, id>*>(CFURLCopyResourcePropertiesForKeys(static_cast<CFURLRef>(self),
+                                                                                      static_cast<CFArrayRef>(keys),
+                                                                                      reinterpret_cast<CFErrorRef*>(error))) autorelease];
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
+*/
+- (BOOL)setResourceValue:(id)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
+    return CFURLSetResourcePropertyForKey(static_cast<CFURLRef>(self),
+                                          static_cast<CFStringRef>(key),
+                                          static_cast<CFTypeRef>(value),
+                                          reinterpret_cast<CFErrorRef*>(error));
+}
+
+/**
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
+*/
+- (BOOL)setResourceValues:(NSDictionary<NSString*, id>*)keyedValues error:(NSError* _Nullable*)error {
+    return CFURLSetResourcePropertiesForKeys(static_cast<CFURLRef>(self),
+                                             static_cast<CFDictionaryRef>(keyedValues),
+                                             reinterpret_cast<CFErrorRef*>(error));
+}
+
+/**
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
 */
 - (void)removeAllCachedResourceValues {
-    UNIMPLEMENTED();
+    CFURLClearResourcePropertyCache(static_cast<CFURLRef>(self));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
 */
 - (void)removeCachedResourceValueForKey:(NSString*)key {
-    UNIMPLEMENTED();
+    CFURLClearResourcePropertyCacheForKey(static_cast<CFURLRef>(self), static_cast<CFStringRef>(key));
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Caveat
+ @Notes 7491994: CFURL ResourceValue functions are unimplemented
 */
 - (void)setTemporaryResourceValue:(id)value forKey:(NSString*)key {
-    UNIMPLEMENTED();
+    CFURLSetTemporaryResourcePropertyForKey(static_cast<CFURLRef>(self), static_cast<CFStringRef>(key), static_cast<CFTypeRef>(value));
 }
 
 /**
  @Status Stub
- @Notes
 */
 - (BOOL)checkPromisedItemIsReachableAndReturnError:(NSError* _Nullable*)error {
     UNIMPLEMENTED();
@@ -1403,7 +867,6 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
 /**
  @Status Stub
- @Notes
 */
 - (BOOL)getPromisedItemResourceValue:(id _Nullable*)value forKey:(NSString*)key error:(NSError* _Nullable*)error {
     UNIMPLEMENTED();
@@ -1412,88 +875,8 @@ static void initPath(NSURL* url, const char* pScheme, const char* pHost, const c
 
 /**
  @Status Stub
- @Notes
 */
-- (NSDictionary*)promisedItemResourceValuesForKeys:(NSArray*)keys error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSURL*)fileURLWithPathComponents:(NSArray*)components {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (instancetype)URLByResolvingAliasFileAtURL:(NSURL*)url options:(NSURLBookmarkResolutionOptions)options error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (instancetype)URLByResolvingBookmarkData:(NSData*)bookmarkData
-                                   options:(NSURLBookmarkResolutionOptions)options
-                             relativeToURL:(NSURL*)relativeURL
-                       bookmarkDataIsStale:(BOOL*)isStale
-                                     error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSURL*)fileURLWithFileSystemRepresentation:(const char*)path isDirectory:(BOOL)isDir relativeToURL:(NSURL*)baseURL {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSData*)bookmarkDataWithContentsOfURL:(NSURL*)bookmarkFileURL error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (NSDictionary*)resourceValuesForKeys:(NSArray*)keys fromBookmarkData:(NSData*)bookmarkData {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (BOOL)writeBookmarkData:(NSData*)bookmarkData
-                    toURL:(NSURL*)bookmarkFileURL
-                  options:(NSURLBookmarkFileCreationOptions)options
-                    error:(NSError* _Nullable*)error {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (BOOL)supportsSecureCoding {
+- (NSDictionary<NSString*, id>*)promisedItemResourceValuesForKeys:(NSArray<NSString*>*)keys error:(NSError* _Nullable*)error {
     UNIMPLEMENTED();
     return StubReturn();
 }

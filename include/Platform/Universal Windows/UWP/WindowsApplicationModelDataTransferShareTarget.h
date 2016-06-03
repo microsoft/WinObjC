@@ -19,14 +19,13 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WADSQuickLink, WADSShareOperation;
 @protocol WADSIQuickLink
 , WADSIShareOperation, WADSIShareOperation2;
 
 #include "WindowsApplicationModelDataTransfer.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsStorageStreams.h"
 
 #import <Foundation/Foundation.h>

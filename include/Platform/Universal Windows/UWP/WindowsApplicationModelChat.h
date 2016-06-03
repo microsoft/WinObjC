@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WACChatMessageTransportConfiguration, WACChatMessage, WACChatMessageChange, WACChatMessageChangeReader, WACChatMessageAttachment,
     WACChatConversationThreadingInfo, WACChatRecipientDeliveryInfo, WACChatMessageChangeTracker, WACChatMessageReader,
@@ -177,7 +177,6 @@ typedef unsigned WACChatItemKind;
 #include "WindowsFoundation.h"
 #include "WindowsMediaMediaProperties.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

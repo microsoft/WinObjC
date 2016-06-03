@@ -18,10 +18,8 @@
 
 #import "LinkedList.h"
 
-class AutoLayoutProperties;
-class ConstraintProperties;
-
 @class UIWindow;
+@class WXFrameworkElement;
 
 class UIViewPrivateState : public LLTreeNode<UIViewPrivateState, UIView> {
 public:
@@ -32,13 +30,25 @@ public:
     BOOL userInteractionEnabled;
     BOOL multipleTouchEnabled;
     UIViewContentMode contentMode;
-    AutoLayoutProperties* layoutProperties;
     id currentTouches;
     id gestures;
     StrongId<NSMutableArray> constraints;
-    StrongId<NSMutableArray> associatedConstraints;
     bool _isChangingParent;
     bool _constraintsNeedUpdate;
+
+    StrongId<NSMutableArray> _layoutGuides;
+    StrongId<NSLayoutDimension> _heightAnchor;
+    StrongId<NSLayoutDimension> _widthAnchor;
+    StrongId<NSLayoutXAxisAnchor> _centerXAnchor;
+    StrongId<NSLayoutXAxisAnchor> _leadingAnchor;
+    StrongId<NSLayoutXAxisAnchor> _leftAnchor;
+    StrongId<NSLayoutXAxisAnchor> _rightAnchor;
+    StrongId<NSLayoutXAxisAnchor> _trailingAnchor;
+    StrongId<NSLayoutYAxisAnchor> _bottomAnchor;
+    StrongId<NSLayoutYAxisAnchor> _centerYAnchor;
+    StrongId<NSLayoutYAxisAnchor> _firstBaselineAnchor;
+    StrongId<NSLayoutYAxisAnchor> _lastBaselineAnchor;
+    StrongId<NSLayoutYAxisAnchor> _topAnchor;
 
     UIViewAutoresizing autoresizingMask;
     CGSize _contentHuggingPriority;
@@ -47,41 +57,36 @@ public:
     BOOL translatesAutoresizingMaskIntoConstraints;
     CGRect _resizeRoundingError;
 
-    UIViewPrivateState() {
+    StrongId<WXFrameworkElement> _xamlInputElement; // The XAML element receiving touch input for this view
+
+    UIViewPrivateState(UIView* owner) {
+        setSelf(owner);
         superview = nil;
         backgroundColor = nil;
         curTouch = nil;
         curTouchEvent = nil;
         curTouchSet = nil;
         tag = 0;
-        userInteractionEnabled = 0;
-        multipleTouchEnabled = 0;
+        userInteractionEnabled = YES;
+        multipleTouchEnabled = NO;
         contentMode = UIViewContentModeScaleToFill;
-        currentTouches = nil;
-        gestures = nil;
-        constraints = nil;
-        associatedConstraints = nil;
-        translatesAutoresizingMaskIntoConstraints = TRUE;
-        layoutProperties = NULL;
+        currentTouches = [[NSMutableArray alloc] initWithCapacity:16];
+        gestures = [NSMutableArray new];
+        constraints.attach([NSMutableArray new]);
+        translatesAutoresizingMaskIntoConstraints = YES;
         _isChangingParent = false;
         _constraintsNeedUpdate = false;
         _contentHuggingPriority.height = 250.0f;
         _contentHuggingPriority.width = 250.0f;
         _contentCompressionResistancePriority.height = 750.0f;
         _contentCompressionResistancePriority.width = 750.0f;
+        _layoutGuides.attach([NSMutableArray new]);
 
-        autoresizingMask = (UIViewAutoresizing)0;
-        autoresizesSubviews = FALSE;
         memset(&_resizeRoundingError, 0, sizeof(_resizeRoundingError));
-    }
-};
 
-class NSLayoutConstraintPrivateState {
-public:
-    NSLayoutConstraintPrivateState() : _constraints(NULL) {
+        autoresizesSubviews = YES;
+        autoresizingMask = UIViewAutoresizingNone;
     }
-
-    ConstraintProperties* _constraints;
 };
 
 // This is a bit of a hack (since didMoveToWindow should only be in UIView-derived classes)
@@ -107,12 +112,10 @@ public:
 - (BOOL)_isEnabled;
 @end
 
-@interface NSLayoutConstraint () {
-    NSLayoutConstraintPrivateState* priv;
-}
-- (NSLayoutConstraintPrivateState*)_privateState;
-- (void)printConstraint;
-+ (void)printConstraints:(NSArray*)constraints;
+@interface NSLayoutConstraint () 
+- (void)_setView:(UIView*)view;
+- (void)_printConstraint;
++ (void)_printConstraints:(NSArray*)constraints;
 @end
 
 @interface _UILayoutGuide : UIView <UILayoutSupport>

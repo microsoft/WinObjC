@@ -14,30 +14,14 @@
 //
 //******************************************************************************
 
-#import "UIKit/UIView.h"
-#import "UIKit/NSLayoutConstraint.h"
-#import "UIViewInternal.h"
+#include <CoreGraphics/CGGeometry.h>
 
 extern "C" bool InitializeAutoLayout();
 
-@protocol AutoLayoutConstraint
+@protocol AutoLayoutable
+
 - (void)autoLayoutAlloc;
 - (void)autoLayoutDealloc;
-- (void)autoLayoutConstraintAddedToView:(UIView*)view;
-- (void)autoLayoutConstraintRemovedFromView;
-@end
+- (CGRect)autoLayoutGetRect;
 
-@interface NSLayoutConstraint (AutoLayout) <AutoLayoutConstraint>
-@end
-
-@protocol AutoLayoutView
-- (void)autoLayoutAlloc;
-- (void)autoLayoutDealloc;
-- (void)autoLayoutLayoutSubviews;
-- (void)autoLayoutInitWithCoder:(NSCoder*)coder;
-- (void)autoLayoutUpdateConstraints;
-@end
-
-@interface UIView (AutoLayout) <AutoLayoutView>
-- (void)invalidateContentSize;
 @end

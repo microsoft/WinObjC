@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WWSSyndicationAttribute, WWSSyndicationNode, WWSSyndicationGenerator, WWSSyndicationText, WWSSyndicationContent, WWSSyndicationLink,
     WWSSyndicationPerson, WWSSyndicationCategory, WWSSyndicationFeed, WWSSyndicationItem, WWSSyndicationClient, WWSSyndicationError;
@@ -62,9 +62,8 @@ enum _WWSSyndicationTextType {
 typedef unsigned WWSSyndicationTextType;
 
 #include "WindowsFoundation.h"
-#include "WindowsSecurityCredentials.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsDataXmlDom.h"
+#include "WindowsSecurityCredentials.h"
 
 #import <Foundation/Foundation.h>
 

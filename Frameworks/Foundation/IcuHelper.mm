@@ -86,10 +86,6 @@ static void destroyRegexPatterns(void* ptr) {
     //_m(dict, "release");
 }
 
-extern "C" {
-extern const char _static_icuData[];
-};
-
 __attribute__((constructor)) void InitICU() {
     //  Setup ICU allocator
     UErrorCode error = U_ZERO_ERROR;
@@ -103,26 +99,6 @@ __attribute__((constructor)) void InitICU() {
     pthread_key_create(&_icuWordIterator, destroyIterator);
     pthread_key_create(&_icuRegexPatterns, destroyRegexPatterns);
     pthread_key_create(&_icuSearch, destroySearch);
-
-    EbrFile* fpICU = EbrFopen("icudt48l.dat", "rb");
-
-    // For now we fall back on the packaged data since it may be useful to have later:
-    if (fpICU) {
-        EbrFseek(fpICU, 0, SEEK_END);
-        int len = EbrFtell(fpICU);
-        EbrFseek(fpICU, 0, SEEK_SET);
-
-        char* icuData = new char[len];
-        EbrFread(icuData, 1, len, fpICU);
-
-        UErrorCode status = U_ZERO_ERROR;
-        udata_setCommonData(icuData, &status);
-        assert(status == U_ZERO_ERROR);
-    } else {
-        UErrorCode status = U_ZERO_ERROR;
-        udata_setCommonData(_static_icuData, &status);
-        assert(status == U_ZERO_ERROR);
-    }
 }
 
 UConverter* getUTF8Converter() {

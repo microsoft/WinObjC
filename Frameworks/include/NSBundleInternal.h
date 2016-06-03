@@ -16,8 +16,8 @@
 
 #pragma once
 
-#import <Foundation/NSRunLoop.h>
+#import <Foundation/NSBundle.h>
 
-@interface NSBundle(Internal)
-+ (void)setMainBundlePath:(NSString*)path;
+@interface NSBundle (Internal)
+- (NSURL*)_msAppxURLForResourceWithURL:(NSURL*)url;
 @end

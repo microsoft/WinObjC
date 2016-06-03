@@ -20,6 +20,7 @@
 #include "LoggingNative.h"
 #include "CALayerXaml.h"
 #include <StringHelpers.h>
+#include <LoggingNative.h>
 #include <algorithm>
 
 using namespace concurrency;
@@ -40,6 +41,9 @@ using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Media::Animation;
 using namespace Windows::UI::Xaml::Media::Imaging;
 using namespace Windows::UI::Xaml::Shapes;
+using namespace Windows::Graphics::Display;
+
+static const wchar_t* TAG = L"CALayerXaml";
 
 namespace XamlCompositor {
 namespace Controls {
@@ -1261,6 +1265,10 @@ void CALayerXaml::SetOpacity() {
     }
 };
 
+void CALayerXaml::SetZIndex(int zIndex) {
+    __super::SetValue(Canvas::ZIndexProperty, zIndex);
+}
+
 /* Disable for now
 AutomationPeer^ CALayerXaml::OnCreateAutomationPeer()
 {
@@ -1433,7 +1441,7 @@ void CALayerXaml::SetTopMost() {
     __super::Background = nullptr;
 }
 
-void CALayerXaml::setContentImage(ImageSource^ source, float width, float height, float scale) {
+void CALayerXaml::SetContentImage(ImageSource^ source, float width, float height, float scale) {
     if (source == nullptr) {
         if (Util::isInstanceOf<LayerContent^>(m_content)) {
             _SetContent(nullptr);
@@ -1446,7 +1454,7 @@ void CALayerXaml::setContentImage(ImageSource^ source, float width, float height
     }
 }
 
-void CALayerXaml::setContentElement(FrameworkElement^ elem, float width, float height, float scale) {
+void CALayerXaml::SetContentElement(FrameworkElement^ elem, float width, float height, float scale) {
     if (elem == nullptr) {
         if (Util::isInstanceOf<LayerContent^>(m_content)) {
             _SetContent(nullptr);
@@ -1690,13 +1698,33 @@ concurrency::task<CALayerXaml^> EventedStoryboard::SnapshotLayer(CALayerXaml^ la
     else {
         RenderTargetBitmap^ snapshot = ref new RenderTargetBitmap();
         return concurrency::create_task(snapshot->RenderAsync(layer, (int)(layer->CurrentWidth * CALayerXaml::s_screenScale), 0))
-            .then([snapshot, layer](concurrency::task<void> result) {
+            .then([snapshot, layer](concurrency::task<void> result) noexcept {
+            try {
+                result.get();
+            } catch (Platform::InvalidArgumentException^ ex) {
+                // Handle exceptions related to invalid layer attribute passed to RenderAsync
+                TraceWarning(TAG,
+                             L"RenderAsync threw InvalidArgumentException exception - [%ld]%s",
+                             ex->HResult,
+                             ex->Message);
+                return (CALayerXaml^)nullptr;
+            }
+
             // Return a new 'copy' layer with the rendered content
             CALayerXaml^ newLayer = CALayerXaml::CreateLayer();
             newLayer->_CopyPropertiesFrom(layer);
 
-            newLayer->setContentImage(snapshot, (float)snapshot->PixelWidth, (float)snapshot->PixelHeight, (float)CALayerXaml::s_screenScale);
-            newLayer->SetContentGravity(ContentGravity::ResizeAspectFill);
+            int width = snapshot->PixelWidth;
+            int height = snapshot->PixelHeight;
+            DisplayInformation^ dispInfo = Windows::Graphics::Display::DisplayInformation::GetForCurrentView();
+
+            newLayer->SetContentImage(snapshot, (float)width, (float)height, (float)(CALayerXaml::s_screenScale * dispInfo->RawPixelsPerViewPixel));
+
+            // There seems to be a bug in Xaml where Render'd layers get sized to their visible content... sort of.
+            // If the UIViewController being transitioned away from has transparent content, the height returned is less the
+            // navigation bar, as though Xaml sizes the buffer to the largest child Visual, and only expands where needed.
+            // Top/bottom switched due to geometric origin of CALayer so read this as UIViewContentModeTopLeft
+            newLayer->SetContentGravity(ContentGravity::BottomLeft);
 
             return newLayer;
         }, concurrency::task_continuation_context::use_current());

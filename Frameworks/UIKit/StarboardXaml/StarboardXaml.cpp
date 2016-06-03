@@ -22,6 +22,7 @@
 
 #include "ApplicationCompositor.h"
 #include "XamlCompositor.h"
+#include "StringHelpers.h"
 #include <LoggingNative.h>
 #include <UIKit\UIKitExport.h>
 #include "..\UIApplicationMainInternal.h"
@@ -137,15 +138,13 @@ int UIApplicationMain(int argc, char* argv[], void* principalClassName, void* de
 
     // Copy the principal and delegate class names into our globals
     if (principalClassName) {
-        uint32_t len = 0;
-        auto rawString = _RawBufferFromNSString(principalClassName, &len);
-        g_principalClassName = ref new Platform::String(rawString, len);
+        auto rawString = _RawBufferFromNSString(principalClassName);
+        g_principalClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
     }
 
     if (delegateClassName) {
-        uint32_t len = 0;
-        auto rawString = _RawBufferFromNSString(delegateClassName, &len);
-        g_delegateClassName = ref new Platform::String(rawString, len);
+        auto rawString = _RawBufferFromNSString(delegateClassName);
+        g_delegateClassName = reinterpret_cast<Platform::String^>(Strings::NarrowToWide<HSTRING>(rawString).Detach());
     }
 
     // Start our application

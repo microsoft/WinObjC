@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WMSVoiceInformation, WMSSpeechSynthesisStream, WMSSpeechSynthesizer;
 @protocol WMSIVoiceInformation
@@ -33,7 +33,6 @@ enum _WMSVoiceGender {
 typedef unsigned WMSVoiceGender;
 
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsFoundation.h"
 #include "WindowsMedia.h"
 

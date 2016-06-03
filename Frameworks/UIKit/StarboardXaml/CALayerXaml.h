@@ -235,6 +235,7 @@ public:
     void Set(Platform::String^ propertyName, Platform::Object^ value);
     Platform::Object^ Get(Platform::String^ propertyName);
     void SetOpacity();
+    void SetZIndex(int zIndex);
     static CALayerXaml^ CreateLayer();
     static void DestroyLayer(CALayerXaml^ layer);
     static void ApplyMagnificationFactor(Windows::UI::Xaml::Controls::Canvas^ windowContainer, float scale, float rotation);
@@ -244,8 +245,8 @@ public:
     void SetupBackground();
     void SetBackgroundColor(float r, float g, float b, float a);
     void SetTopMost();
-    void setContentImage(Windows::UI::Xaml::Media::ImageSource^ source, float width, float height, float scale);
-    void setContentElement(Windows::UI::Xaml::FrameworkElement^ elem, float width, float height, float scale);
+    void SetContentImage(Windows::UI::Xaml::Media::ImageSource^ source, float width, float height, float scale);
+    void SetContentElement(Windows::UI::Xaml::FrameworkElement^ elem, float width, float height, float scale);
 
 protected:
     // Windows::UI::Xaml::Automation::Peers::AutomationPeer^ OnCreateAutomationPeer() override;

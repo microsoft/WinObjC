@@ -113,17 +113,17 @@ FOUNDATION_EXPORT_CLASS
 @interface NSCalendar : NSObject <NSCopying, NSSecureCoding>
 + (NSCalendar*)currentCalendar;
 + (NSCalendar*)autoupdatingCurrentCalendar STUB_METHOD;
-+ (NSCalendar*)calendarWithIdentifier:(NSString*)calendarIdentifierConstant STUB_METHOD;
++ (NSCalendar*)calendarWithIdentifier:(NSString*)calendarIdentifierConstant;
 - (id)initWithCalendarIdentifier:(NSString*)string;
 @property (readonly, copy) NSString* calendarIdentifier;
 @property NSUInteger firstWeekday;
 @property (copy) NSLocale* locale;
-- (NSRange)maximumRangeOfUnit:(NSCalendarUnit)unit STUB_METHOD;
+- (NSRange)maximumRangeOfUnit:(NSCalendarUnit)unit;
 @property NSUInteger minimumDaysInFirstWeek;
-- (NSRange)minimumRangeOfUnit:(NSCalendarUnit)unit STUB_METHOD;
+- (NSRange)minimumRangeOfUnit:(NSCalendarUnit)unit;
 - (NSUInteger)ordinalityOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date;
-- (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date STUB_METHOD;
-- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip forDate:(NSDate*)date STUB_METHOD;
+- (NSRange)rangeOfUnit:(NSCalendarUnit)smaller inUnit:(NSCalendarUnit)larger forDate:(NSDate*)date;
+- (BOOL)rangeOfUnit:(NSCalendarUnit)unit startDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip forDate:(NSDate*)date;
 - (BOOL)rangeOfWeekendStartDate:(NSDate* _Nullable*)datep interval:(NSTimeInterval*)tip containingDate:(NSDate*)date STUB_METHOD;
 @property (copy) NSTimeZone* timeZone;
 - (NSDate*)dateByAddingComponents:(NSDateComponents*)comps toDate:(NSDate*)date options:(NSCalendarOptions)opts;

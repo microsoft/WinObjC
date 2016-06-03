@@ -18,7 +18,6 @@
 #import <CoreText/CoreTextExport.h>
 
 #import <CoreFoundation/CFDictionary.h>
-#import <CoreFoundation/CFType.h>
 
 #import <CoreGraphics/CGAffineTransform.h>
 #import <CoreGraphics/CGContext.h>

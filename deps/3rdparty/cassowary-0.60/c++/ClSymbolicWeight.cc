@@ -13,7 +13,7 @@
 #include "ClSymbolicWeight.h"
 
 #ifdef HAVE_CONFIG_H
-#include <cassowary/config.h>
+#include "config.h"
 #define CONFIG_H_INCLUDED
 #endif
 

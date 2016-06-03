@@ -32,7 +32,7 @@
 
 typedef unsigned short unichar;
 
-enum {
+typedef NS_OPTIONS(NSUInteger, NSStringEnumerationOptions) {
     NSStringEnumerationByLines = 0,
     NSStringEnumerationByParagraphs = 1,
     NSStringEnumerationByComposedCharacterSequences = 2,
@@ -45,7 +45,7 @@ enum {
 
 #define NSMaximumStringLength (INT_MAX - 1)
 
-enum {
+typedef NS_OPTIONS(NSUInteger, NSStringCompareOptions) {
     NSCaseInsensitiveSearch = 1,
     NSLiteralSearch = 2,
     NSBackwardsSearch = 4,
@@ -57,12 +57,15 @@ enum {
     NSRegularExpressionSearch = 1024
 };
 
-enum { NSStringEncodingConversionAllowLossy = 1, NSStringEncodingConversionExternalRepresentation = 2 };
+typedef NS_OPTIONS(NSUInteger, NSStringEncodingConversionOptions) {
+    NSStringEncodingConversionAllowLossy = 1,
+    NSStringEncodingConversionExternalRepresentation = 2
+};
 
 FOUNDATION_EXPORT NSString* const NSParseErrorException;
 FOUNDATION_EXPORT NSString* const NSCharacterConversionException;
 
-enum : unsigned int {
+typedef NS_ENUM(NSUInteger, NSStringEncoding) {
     NSASCIIStringEncoding = 1,
     NSNEXTSTEPStringEncoding = 2,
     NSJapaneseEUCStringEncoding = 3,
@@ -89,34 +92,8 @@ enum : unsigned int {
     NSProprietaryStringEncoding = 65536
 };
 
-typedef NSUInteger NSStringEnumerationOptions;
-typedef NSUInteger NSStringEncoding;
-typedef NSUInteger NSStringEncodingConversionOptions;
-typedef NSUInteger NSStringCompareOptions;
-
-struct _ConstructedStringData;
-struct _ConstructedStringType {
-    uint8_t _hashIsCached;
-    uint8_t align;
-    struct _ConstructedStringData* constructedStr;
-    uint32_t _hashCache;
-};
-struct _NoOwnStringType {
-    uint8_t _freeWhenDone;
-    uint8_t align[2];
-    void* _address;
-    uint32_t _length;
-    uint32_t _encoding;
-};
-
 FOUNDATION_EXPORT_CLASS
 @interface NSString : NSObject <NSCopying, NSMutableCopying, NSSecureCoding> {
-@public
-    union stringData {
-        struct _ConstructedStringType ConstructedString;
-        struct _NoOwnStringType NoOwnString;
-    } * u;
-    uint32_t strType;
 }
 
 + (instancetype)string;
@@ -130,42 +107,39 @@ FOUNDATION_EXPORT_CLASS
 - (instancetype)initWithUTF8String:(const char*)bytes;
 - (instancetype)initWithFormat:(NSString*)format, ...;
 - (instancetype)initWithFormat:(NSString*)format arguments:(va_list)argList;
-- (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ... STUB_METHOD;
-- (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList STUB_METHOD;
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale, ...;
+- (instancetype)initWithFormat:(NSString*)format locale:(id)locale arguments:(va_list)argList;
 - (instancetype)initWithData:(NSData*)data encoding:(NSStringEncoding)encoding;
 + (instancetype)stringWithFormat:(NSString*)format, ...;
-+ (instancetype)localizedStringWithFormat:(NSString*)format, ... STUB_METHOD;
++ (instancetype)localizedStringWithFormat:(NSString*)format, ...;
 + (instancetype)stringWithCharacters:(const unichar*)chars length:(NSUInteger)length;
 + (instancetype)stringWithString:(NSString*)aString;
 + (instancetype)stringWithCString:(const char*)cString encoding:(NSStringEncoding)enc;
 + (instancetype)stringWithUTF8String:(const char*)bytes;
-+ (id)stringWithCString:(const char*)bytes;
-- (id)initWithCString:(const char*)bytes;
-+ (id)stringWithCString:(const char*)bytes length:(NSUInteger)length;
-- (id)initWithCString:(const char*)bytes length:(NSUInteger)length;
-- (id)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer STUB_METHOD;
++ (instancetype)stringWithCString:(const char*)bytes;
+- (instancetype)initWithCString:(const char*)bytes;
++ (instancetype)stringWithCString:(const char*)bytes length:(NSUInteger)length;
+- (instancetype)initWithCString:(const char*)bytes length:(NSUInteger)length;
+- (instancetype)initWithCStringNoCopy:(char*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeBuffer;
 + (instancetype)stringWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (instancetype)initWithContentsOfFile:(NSString*)path encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 + (instancetype)stringWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
 - (instancetype)initWithContentsOfFile:(NSString*)path usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
-+ (id)stringWithContentsOfFile:(NSString*)path;
-- (id)initWithContentsOfFile:(NSString*)path;
++ (instancetype)stringWithContentsOfFile:(NSString*)path;
+- (instancetype)initWithContentsOfFile:(NSString*)path;
 + (instancetype)stringWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
 - (instancetype)initWithContentsOfURL:(NSURL*)url encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
-+ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
-- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error STUB_METHOD;
-+ (id)stringWithContentsOfURL:(NSURL*)url;
-- (id)initWithContentsOfURL:(NSURL*)url;
++ (instancetype)stringWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
+- (instancetype)initWithContentsOfURL:(NSURL*)url usedEncoding:(NSStringEncoding*)enc error:(NSError* _Nullable*)error;
++ (instancetype)stringWithContentsOfURL:(NSURL*)url;
+- (instancetype)initWithContentsOfURL:(NSURL*)url;
 - (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
-- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile STUB_METHOD;
-- (BOOL)writeToURL:(NSURL*)url
-        atomically:(BOOL)useAuxiliaryFile
-          encoding:(NSStringEncoding)enc
-             error:(NSError* _Nullable*)error STUB_METHOD;
-- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically STUB_METHOD;
+- (BOOL)writeToFile:(NSString*)path atomically:(BOOL)useAuxiliaryFile;
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)useAuxiliaryFile encoding:(NSStringEncoding)enc error:(NSError* _Nullable*)error;
+- (BOOL)writeToURL:(NSURL*)url atomically:(BOOL)atomically;
 @property (readonly) NSUInteger length;
 - (NSUInteger)lengthOfBytesUsingEncoding:(NSStringEncoding)enc;
-- (NSUInteger)maximumLengthOfBytesUsingEncoding:(NSStringEncoding)enc STUB_METHOD;
+- (NSUInteger)maximumLengthOfBytesUsingEncoding:(NSStringEncoding)enc;
 - (unichar)characterAtIndex:(NSUInteger)index;
 - (void)getCharacters:(unichar*)buffer;
 - (void)getCharacters:(unichar*)buffer range:(NSRange)aRange;
@@ -203,7 +177,7 @@ FOUNDATION_EXPORT_CLASS
 - (NSRange)rangeOfString:(NSString*)aString;
 - (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask;
 - (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange;
-- (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange locale:(NSLocale*)locale STUB_METHOD;
+- (NSRange)rangeOfString:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)aRange locale:(NSLocale*)locale;
 - (void)enumerateLinesUsingBlock:(void (^)(NSString*, BOOL*))block STUB_METHOD;
 - (void)enumerateSubstringsInRange:(NSRange)range
                            options:(NSStringEnumerationOptions)opts
@@ -217,16 +191,16 @@ FOUNDATION_EXPORT_CLASS
 - (void)getLineStart:(NSUInteger*)startIndex
                  end:(NSUInteger*)lineEndIndex
          contentsEnd:(NSUInteger*)contentsEndIndex
-            forRange:(NSRange)aRange STUB_METHOD;
+            forRange:(NSRange)aRange;
 - (NSRange)lineRangeForRange:(NSRange)aRange;
 - (void)getParagraphStart:(NSUInteger*)startIndex
                       end:(NSUInteger*)endIndex
               contentsEnd:(NSUInteger*)contentsEndIndex
                  forRange:(NSRange)aRange;
-- (NSRange)paragraphRangeForRange:(NSRange)aRange STUB_METHOD;
-- (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex STUB_METHOD;
-- (NSRange)rangeOfComposedCharacterSequencesForRange:(NSRange)range STUB_METHOD;
-- (id)propertyList STUB_METHOD;
+- (NSRange)paragraphRangeForRange:(NSRange)aRange;
+- (NSRange)rangeOfComposedCharacterSequenceAtIndex:(NSUInteger)anIndex;
+- (NSRange)rangeOfComposedCharacterSequencesForRange:(NSRange)range;
+- (id)propertyList;
 - (NSDictionary*)propertyListFromStringsFileFormat;
 - (NSComparisonResult)caseInsensitiveCompare:(NSString*)aString;
 - (NSComparisonResult)localizedCaseInsensitiveCompare:(NSString*)aString;
@@ -234,20 +208,20 @@ FOUNDATION_EXPORT_CLASS
 - (NSComparisonResult)localizedCompare:(NSString*)aString;
 - (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask;
 - (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)range;
-- (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(id)locale STUB_METHOD;
-- (NSComparisonResult)localizedStandardCompare:(NSString*)string STUB_METHOD;
+- (NSComparisonResult)compare:(NSString*)aString options:(NSStringCompareOptions)mask range:(NSRange)range locale:(id)locale;
+- (NSComparisonResult)localizedStandardCompare:(NSString*)string;
 - (BOOL)hasPrefix:(NSString*)aString;
 - (BOOL)hasSuffix:(NSString*)aString;
 - (BOOL)isEqualToString:(NSString*)aString;
 @property (readonly) NSUInteger hash;
-- (NSString*)stringByFoldingWithOptions:(NSStringCompareOptions)options locale:(NSLocale*)locale STUB_METHOD;
+- (NSString*)stringByFoldingWithOptions:(NSStringCompareOptions)options locale:(NSLocale*)locale;
 - (NSString*)commonPrefixWithString:(NSString*)aString options:(NSStringCompareOptions)mask STUB_METHOD;
 @property (readonly, copy) NSString* capitalizedString;
-- (NSString*)capitalizedStringWithLocale:(NSLocale*)locale STUB_METHOD;
+- (NSString*)capitalizedStringWithLocale:(NSLocale*)locale;
 @property (readonly, copy) NSString* lowercaseString;
-- (NSString*)lowercaseStringWithLocale:(NSLocale*)locale STUB_METHOD;
+- (NSString*)lowercaseStringWithLocale:(NSLocale*)locale;
 @property (readonly, copy) NSString* uppercaseString;
-- (NSString*)uppercaseStringWithLocale:(NSLocale*)locale STUB_METHOD;
+- (NSString*)uppercaseStringWithLocale:(NSLocale*)locale;
 @property (readonly, copy) NSString* decomposedStringWithCanonicalMapping;
 @property (readonly, copy) NSString* decomposedStringWithCompatibilityMapping;
 @property (readonly, copy) NSString* precomposedStringWithCanonicalMapping;
@@ -258,9 +232,9 @@ FOUNDATION_EXPORT_CLASS
 @property (readonly) NSInteger integerValue;
 @property (readonly) long long longLongValue;
 @property (readonly) BOOL boolValue;
-+ (const NSStringEncoding*)availableStringEncodings STUB_METHOD;
++ (const NSStringEncoding*)availableStringEncodings;
 + (NSStringEncoding)defaultCStringEncoding;
-+ (NSString*)localizedNameOfStringEncoding:(NSStringEncoding)encoding STUB_METHOD;
++ (NSString*)localizedNameOfStringEncoding:(NSStringEncoding)encoding;
 - (BOOL)canBeConvertedToEncoding:(NSStringEncoding)encoding;
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding;
 - (NSData*)dataUsingEncoding:(NSStringEncoding)encoding allowLossyConversion:(BOOL)flag;
@@ -272,13 +246,13 @@ FOUNDATION_EXPORT_CLASS
 - (NSUInteger)completePathIntoString:(NSString* _Nonnull*)outputName
                        caseSensitive:(BOOL)flag
                     matchesIntoArray:(NSArray* _Nonnull*)outputArray
-                         filterTypes:(NSArray*)filterTypes STUB_METHOD;
+                         filterTypes:(NSArray*)filterTypes;
 @property (readonly) const char* fileSystemRepresentation;
 - (BOOL)getFileSystemRepresentation:(char*)buffer maxLength:(NSUInteger)maxLength;
 @property (readonly, getter=isAbsolutePath) BOOL absolutePath;
 @property (readonly, copy) NSString* lastPathComponent;
 @property (readonly, copy) NSString* pathExtension;
-@property (readonly, copy) NSString* stringByAbbreviatingWithTildeInPath;
+@property (readonly, copy) NSString* stringByAbbreviatingWithTildeInPath STUB_METHOD;
 - (NSString*)stringByAppendingPathComponent:(NSString*)aString;
 - (NSString*)stringByAppendingPathExtension:(NSString*)ext;
 @property (readonly, copy) NSString* stringByDeletingLastPathComponent;
@@ -302,28 +276,4 @@ FOUNDATION_EXPORT_CLASS
                       orthography:(NSOrthography*)orthography
                       tokenRanges:(NSArray* _Nullable*)tokenRanges STUB_METHOD;
 
-// HACKHACK: WinObjC addition
-- (const unichar*)rawCharacters;
 @end
-
-#if defined(STARBOARD_PORT) && defined(__cplusplus)
-namespace icu_48 {
-class UnicodeString;
-}
-class UStringHolder {
-private:
-    icu_48::UnicodeString *_str, *_destroyStr;
-    icu_48::UnicodeString* _subStr;
-
-    void initWithString(NSString* str, int location, int length);
-
-public:
-    UStringHolder(NSString* str, int location = 0, int length = -1);
-    UStringHolder(id str, int location = 0, int length = -1);
-    ~UStringHolder();
-
-    icu_48::UnicodeString& string();
-    inline unichar getChar(int index);
-};
-NSString* NSStringFromICU(const icu_48::UnicodeString& str);
-#endif

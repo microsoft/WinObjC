@@ -19,7 +19,7 @@
 #import <CoreGraphics/CGGeometry.h>
 #import <CoreGraphics/CGColorSpace.h>
 
-ENABLE_IMPLICIT_BRIDGING
+CF_IMPLICIT_BRIDGING_ENABLED
 
 typedef enum { kCGGradientDrawsBeforeStartLocation = (1 << 0), kCGGradientDrawsAfterEndLocation = (1 << 1) } CGGradientDrawingOptions;
 
@@ -33,4 +33,4 @@ COREGRAPHICS_EXPORT CGGradientRef CGGradientRetain(CGGradientRef gradient);
 
 COREGRAPHICS_EXPORT CFTypeID CGGradientGetTypeID() STUB_METHOD;
 
-DISABLE_IMPLICIT_BRIDGING
+CF_IMPLICIT_BRIDGING_DISABLED

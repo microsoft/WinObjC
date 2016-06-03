@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WFPropertyValue, WFDeferral, WFWwwFormUrlDecoder, WFUri, WFWwwFormUrlDecoderEntry, WFMemoryBuffer;
 @class WFPoint, WFSize, WFRect, WFDateTime, WFTimeSpan;
@@ -76,7 +76,6 @@ enum _WFPropertyType {
 };
 typedef unsigned WFPropertyType;
 
-#include "WindowsFoundationCollections.h"
 // Windows.Foundation.AsyncActionCompletedHandler
 #ifndef __WFAsyncActionCompletedHandler__DEFINED
 #define __WFAsyncActionCompletedHandler__DEFINED

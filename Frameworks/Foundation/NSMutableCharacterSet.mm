@@ -19,125 +19,167 @@
 #import "Foundation/NSMutableString.h"
 
 #import "unicode/uniset.h"
+#include "NSRaise.h"
+#include "NSCFCharacterSet.h"
 
 @implementation NSMutableCharacterSet
 
-- (void)_thawICUSetIfNeeded {
-    if (_icuSet->isFrozen()) {
-        UnicodeSet* temp = static_cast<UnicodeSet*>(_icuSet->cloneAsThawed());
-        delete _icuSet;
-        _icuSet = temp;
-    }
++ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSMutableCharacterSet, NSMutableCharacterSetPrototype);
+
++ (instancetype)alphanumericCharacterSet {
+    return [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)removeCharactersInRange:(NSRange)range {
-    [self _thawICUSetIfNeeded];
-    _icuSet->remove(range.location, range.location + range.length - 1);
++ (instancetype)capitalizedLetterCharacterSet {
+    return [[NSCharacterSet capitalizedLetterCharacterSet] mutableCopy];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)invert {
-    [self _thawICUSetIfNeeded];
-    _icuSet->complement();
++ (instancetype)controlCharacterSet {
+    return [[NSCharacterSet controlCharacterSet] mutableCopy];
 }
 
-/**
- @Status Interoperable
-*/
-- (void)addCharactersInString:(NSString*)str {
-    [self _thawICUSetIfNeeded];
++ (instancetype)decimalDigitCharacterSet {
+    return [[NSCharacterSet decimalDigitCharacterSet] mutableCopy];
+}
 
-    UStringHolder s1(str);
-    UnicodeString& str1 = s1.string();
-    int strLen = str1.length();
++ (instancetype)decomposableCharacterSet {
+    return [[NSCharacterSet decomposableCharacterSet] mutableCopy];
+}
 
-    for (int i = 0; i < strLen; i++) {
-        _icuSet->add(str1.charAt(i));
-    }
++ (instancetype)illegalCharacterSet {
+    return [[NSCharacterSet illegalCharacterSet] mutableCopy];
+}
+
++ (instancetype)letterCharacterSet {
+    return [[NSCharacterSet letterCharacterSet] mutableCopy];
+}
+
++ (instancetype)lowercaseLetterCharacterSet {
+    return [[NSCharacterSet lowercaseLetterCharacterSet] mutableCopy];
+}
+
++ (instancetype)newlineCharacterSet {
+    return [[NSCharacterSet newlineCharacterSet] mutableCopy];
+}
+
++ (instancetype)nonBaseCharacterSet {
+    return [[NSCharacterSet nonBaseCharacterSet] mutableCopy];
+}
+
++ (instancetype)punctuationCharacterSet {
+    return [[NSCharacterSet punctuationCharacterSet] mutableCopy];
+}
+
++ (instancetype)symbolCharacterSet {
+    return [[NSCharacterSet symbolCharacterSet] mutableCopy];
+}
+
++ (instancetype)uppercaseLetterCharacterSet {
+    return [[NSCharacterSet uppercaseLetterCharacterSet] mutableCopy];
+}
+
++ (instancetype)whitespaceAndNewlineCharacterSet {
+    return [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
+}
+
++ (instancetype)whitespaceCharacterSet {
+    return [[NSCharacterSet whitespaceCharacterSet] mutableCopy];
+}
+
++ (instancetype)URLFragmentAllowedCharacterSet {
+    return [[NSCharacterSet URLFragmentAllowedCharacterSet] mutableCopy];
+}
+
++ (instancetype)URLHostAllowedCharacterSet {
+    return [[NSCharacterSet URLHostAllowedCharacterSet] mutableCopy];
+}
+
++ (instancetype)URLPasswordAllowedCharacterSet {
+    return [[NSCharacterSet URLPasswordAllowedCharacterSet] mutableCopy];
+}
+
++ (instancetype)URLPathAllowedCharacterSet {
+    return [[NSCharacterSet URLPathAllowedCharacterSet] mutableCopy];
+}
+
++ (instancetype)URLQueryAllowedCharacterSet {
+    return [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+}
+
++ (instancetype)URLUserAllowedCharacterSet {
+    return [[NSCharacterSet URLUserAllowedCharacterSet] mutableCopy];
+}
+
++ (instancetype)characterSetWithCharactersInString:(NSString*)aString {
+    return [[NSCharacterSet characterSetWithCharactersInString:aString] mutableCopy];
+}
+
++ (instancetype)characterSetWithRange:(NSRange)aRange {
+    return [[NSCharacterSet characterSetWithRange:aRange] mutableCopy];
+}
+
++ (instancetype)characterSetWithBitmapRepresentation:(NSData*)data {
+    return [[NSCharacterSet characterSetWithBitmapRepresentation:data] mutableCopy];
+}
+
++ (instancetype)characterSetWithContentsOfFile:(NSString*)path {
+    return [[NSCharacterSet characterSetWithContentsOfFile:path] mutableCopy];
 }
 
 /**
  @Status Interoperable
 */
 - (void)addCharactersInRange:(NSRange)range {
-    [self _thawICUSetIfNeeded];
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
+}
 
-    _icuSet->add(range.location, range.location + range.length - 1);
+/**
+ @Status Interoperable
+*/
+- (void)removeCharactersInRange:(NSRange)range {
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)invert {
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
+}
+
+/**
+ @Status Interoperable
+*/
+- (void)addCharactersInString:(NSString*)str {
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)removeCharactersInString:(NSString*)str {
-    [self _thawICUSetIfNeeded];
-
-    UStringHolder s1(str);
-    UnicodeString& str1 = s1.string();
-    int strLen = str1.length();
-
-    for (int i = 0; i < strLen; i++) {
-        _icuSet->remove(str1.charAt(i));
-    }
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)formUnionWithCharacterSet:(NSCharacterSet*)other {
-    [self _thawICUSetIfNeeded];
-
-    _icuSet->addAll(*other->_icuSet);
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 /**
  @Status Interoperable
 */
 - (void)formIntersectionWithCharacterSet:(NSCharacterSet*)other {
-    [self _thawICUSetIfNeeded];
-
-    _icuSet->retainAll(*other->_icuSet);
-}
-
-/**
- @Status Interoperable
-*/
-- (void)removeCharactersInSet:(NSCharacterSet*)other {
-    [self _thawICUSetIfNeeded];
-
-    _icuSet->removeAll(*other->_icuSet);
-}
-
-/**
- @Status Interoperable
-*/
-- (void)removeAllCharacters {
-    [self _thawICUSetIfNeeded];
-
-    _icuSet->clear();
-}
-
-/**
- @Status Interoperable
-*/
-- (id)copyWithZone:(NSZone*)zone {
-    NSCharacterSet* ret = [NSCharacterSet allocWithZone:zone];
-    ret->_icuSet = new UnicodeSet(*_icuSet);
-
-    return ret;
-}
-
-/**
- @Status Interoperable
- */
-- (NSMutableCharacterSet*)invertedSet {
-    NSMutableCharacterSet* ret = [self mutableCopy];
-    [ret invert];
-    return ret;
+    // NSMutableCharacterSet is a class cluster "interface". A concrete implementation (default or derived) MUST implement this.
+    return NSInvalidAbstractInvocation();
 }
 
 @end

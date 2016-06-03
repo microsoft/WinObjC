@@ -38,6 +38,25 @@ static const wchar_t* TAG = L"CGDataProvider";
     return filename;
 }
 
+- (instancetype)init {
+    return [self initWithBytes:"" length:0];
+}
+
+- (instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
+    if (self = [super init]) {
+        _data.attach([[NSData alloc] initWithBytesNoCopy:bytes length:length freeWhenDone:freeWhenDone]);
+    }
+    return self;
+}
+
+- (const void*)bytes {
+    return [_data bytes];
+}
+
+- (NSUInteger)length {
+    return [_data length];
+}
+
 @end
 
 /**
@@ -45,8 +64,9 @@ static const wchar_t* TAG = L"CGDataProvider";
  @Notes Only supports file:/// URLs
 */
 CGDataProviderRef CGDataProviderCreateWithURL(CFURLRef url) {
-    CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:[url path]];
-    ret->filename = [url path];
+    NSString* path = [static_cast<NSURL*>(url) path];
+    CGDataProvider* ret = [[CGDataProvider alloc] initWithContentsOfFile:path];
+    ret->filename = path;
 
     return ret;
 }

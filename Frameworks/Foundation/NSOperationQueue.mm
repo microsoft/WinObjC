@@ -43,7 +43,7 @@ struct NSOperationQueuePriv {
     NSAtomicListRef myQueues[NSOperationQueuePriority_Count];
 
     id _thread;
-    EbrLock _threadRunningLock;
+    pthread_mutex_t _threadRunningLock;
 
     DWORD _maxConcurrentOperationCount;
     id workAvailable;
@@ -57,6 +57,7 @@ struct NSOperationQueuePriv {
 
     NSOperationQueuePriv() {
         memset(this, 0, sizeof(NSOperationQueuePriv));
+        _threadRunningLock = PTHREAD_MUTEX_INITIALIZER;
     }
 };
 
@@ -172,12 +173,12 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
 
     while (!stop) {
         [self _doMainWork];
-        EbrLockEnter(priv->_threadRunningLock);
+        pthread_mutex_lock(&priv->_threadRunningLock);
         if (![self hasMoreWork]) {
             stop = TRUE;
             priv->_thread = nil;
         }
-        EbrLockLeave(priv->_threadRunningLock);
+        pthread_mutex_unlock(&priv->_threadRunningLock);
     }
     [priv->allWorkDone signal];
 
@@ -234,7 +235,6 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     priv->suspendedCondition = [[NSCondition alloc] init];
     priv->allWorkDone = [[NSCondition alloc] init];
     priv->isSuspended = 0;
-    EbrLockInit(&priv->_threadRunningLock);
 
     return self;
 }
@@ -247,7 +247,6 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     priv->suspendedCondition = [[NSCondition alloc] init];
     priv->allWorkDone = [[NSCondition alloc] init];
     priv->isSuspended = 0;
-    EbrLockInit(&priv->_threadRunningLock);
 
     return self;
 }
@@ -276,13 +275,13 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     NSAtomicListInsert((NSAtomicListRef*)(&priv->queues[priority]), op);
     [priv->workAvailable signal];
 
-    EbrLockEnter(priv->_threadRunningLock);
+    pthread_mutex_lock(&priv->_threadRunningLock);
     if (priv->_thread == nil) {
         priv->_thread = [[NSThread alloc] initWithTarget:self selector:@selector(_workThread) object:nil];
         [priv->_thread start];
         [priv->_thread release];
     }
-    EbrLockLeave(priv->_threadRunningLock);
+    pthread_mutex_unlock(&priv->_threadRunningLock);
 }
 
 /**
@@ -343,7 +342,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [ret addObject:node];
                 curNode = curNode->next;
             }
@@ -352,7 +351,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [ret addObject:node];
                 curNode = curNode->next;
             }
@@ -410,7 +409,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->queues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [node cancel];
                 curNode = curNode->next;
             }
@@ -419,7 +418,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
             NSAtomicListNode* curNode = (NSAtomicListNode*)priv->myQueues[i];
 
             while (curNode != NULL) {
-                id node = (id)(DWORD)curNode->elt;
+                id node = curNode->elt;
                 [node cancel];
                 curNode = curNode->next;
             }
@@ -530,7 +529,7 @@ static BOOL RunOperationFromLists(NSAtomicListRef* listPtr, NSAtomicListRef* sou
     [priv->workAvailable release];
     [priv->suspendedCondition release];
     [priv->allWorkDone release];
-    EbrLockDestroy(priv->_threadRunningLock);
+    pthread_mutex_destroy(&priv->_threadRunningLock);
     delete priv;
 
     [super dealloc];

@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAUSDeviceAccountConfiguration, WAUSUserDataAccountSystemAccessManager;
 @protocol WAUSIDeviceAccountConfiguration
@@ -32,9 +32,6 @@ enum _WAUSDeviceAccountServerType {
     WAUSDeviceAccountServerTypeImap = 2,
 };
 typedef unsigned WAUSDeviceAccountServerType;
-
-#include "WindowsFoundationCollections.h"
-#include "WindowsFoundation.h"
 
 #import <Foundation/Foundation.h>
 

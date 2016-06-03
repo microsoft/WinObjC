@@ -41,6 +41,15 @@ extern "C" {
 #import "LoggingNative.h"
 #import "CGDataProviderInternal.h"
 
+#include <COMIncludes.h>
+#import <DWrite.h>
+#import <wrl/client.h>
+#include <COMIncludes_End.h>
+#import <vector>
+#import <memory>
+using namespace std;
+using namespace Microsoft::WRL;
+
 static const wchar_t* g_logTag = L"UIFont";
 
 FT_Library _fontLib;
@@ -157,14 +166,199 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     return ret;
 }
 
+static wstring _convertLocalizedStringToWideString(IDWriteLocalizedStrings* localizedString) {
+    if (localizedString == NULL) {
+        TraceError(g_logTag, L"The input parameter is invalid.");
+        return wstring();
+    }
+
+    // Get the default locale for this user.
+    wchar_t localeName[LOCALE_NAME_MAX_LENGTH];
+    int defaultLocaleSuccess = GetUserDefaultLocaleName(localeName, LOCALE_NAME_MAX_LENGTH);
+
+    UINT32 index = 0;
+    BOOL exists = false;
+
+    // If the default locale is returned, find that locale name, otherwise use "en-us".
+    if (defaultLocaleSuccess) {
+        if (FAILED(localizedString->FindLocaleName(localeName, &index, &exists))) {
+            TraceError(g_logTag, L"Failed to find the locale name.");
+            return wstring();
+        }
+        if (!exists) {
+            if (FAILED(localizedString->FindLocaleName(L"en-us", &index, &exists))) {
+                TraceError(g_logTag, L"Failed to find the locale name of en-us.");
+                return wstring();
+            }
+        }
+    } else {
+        if (FAILED(localizedString->FindLocaleName(L"en-us", &index, &exists))) {
+            TraceError(g_logTag, L"Failed to find the locale name of en-us.");
+            return wstring();
+        }
+    }
+
+    // If the specified locale doesn't exist, select the first on the list.
+    if (!exists) {
+        index = 0;
+    }
+
+    // Get the string length.
+    UINT32 length = 0;
+    if (FAILED(localizedString->GetStringLength(index, &length))) {
+        TraceError(g_logTag, L"Failed to get the string length.");
+        return wstring();
+    }
+
+    // Get the string.
+    auto wcharString = vector<wchar_t>(length + 1);
+    if (FAILED(localizedString->GetString(index, wcharString.data(), wcharString.size()))) {
+        TraceError(g_logTag, L"Failed to get the string.");
+        return wstring();
+    }
+
+    return wstring(wcharString.data());
+}
+
+static vector<wstring> _getFontFamilyNames() {
+    vector<wstring> fontFamilyNames;
+    ComPtr<IDWriteFactory> dwriteFactory;
+
+    if (FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
+                                   __uuidof(IDWriteFactory),
+                                   reinterpret_cast<IUnknown**>(dwriteFactory.GetAddressOf())))) {
+        TraceError(g_logTag, L"Failed to create DWrite Factory.");
+        return fontFamilyNames;
+    }
+
+    // Get the system font collection.
+    ComPtr<IDWriteFontCollection> fontCollection;
+    if (FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection))) {
+        TraceError(g_logTag, L"Failed to get the system font collection.");
+        return fontFamilyNames;
+    }
+
+    // Get the number of font families in the collection.
+    UINT32 count = 0;
+    count = fontCollection->GetFontFamilyCount();
+
+    auto cleanup = wil::ScopeExit([&fontFamilyNames]() { fontFamilyNames.clear(); });
+
+    for (UINT32 i = 0; i < count; ++i) {
+        // Get the font family.
+        ComPtr<IDWriteFontFamily> fontFamily;
+        if (FAILED(fontCollection->GetFontFamily(i, &fontFamily))) {
+            TraceError(g_logTag, L"Failed to get the font family.");
+            return fontFamilyNames;
+        }
+
+        // Get a list of localized strings for the family name.
+        ComPtr<IDWriteLocalizedStrings> familyNames;
+        if (FAILED(fontFamily->GetFamilyNames(&familyNames))) {
+            TraceError(g_logTag, L"Failed to get the localized strings for the family name.");
+            return fontFamilyNames;
+        }
+        wstring name = _convertLocalizedStringToWideString(familyNames.Get());
+        if (name.length() == 0) {
+            TraceError(g_logTag, L"Failed to convert the localized string to wide string.");
+            return fontFamilyNames;
+        }
+
+        fontFamilyNames.push_back(std::move(name));
+    }
+
+    cleanup.Dismiss();
+
+    return fontFamilyNames;
+}
+
+static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
+    vector<wstring> fontNames;
+    ComPtr<IDWriteFactory> dwriteFactory;
+
+    if (FAILED(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
+                                   __uuidof(IDWriteFactory),
+                                   reinterpret_cast<IUnknown**>(dwriteFactory.GetAddressOf())))) {
+        TraceError(g_logTag, L"Failed to create DWrite Factory.");
+        return fontNames;
+    }
+
+    // Get the system font collection.
+    ComPtr<IDWriteFontCollection> fontCollection;
+    if (FAILED(dwriteFactory->GetSystemFontCollection(&fontCollection))) {
+        TraceError(g_logTag, L"Failed to get the system font collection.");
+        return fontNames;
+    }
+
+    // Get the font family.
+    UINT32 index = 0;
+    BOOL exists = false;
+    if (FAILED(fontCollection->FindFamilyName(familyName, &index, &exists)) || !exists) {
+        TraceError(g_logTag, L"Failed to find the font family name.");
+        return fontNames;
+    }
+
+    ComPtr<IDWriteFontFamily> fontFamily;
+    if (FAILED(fontCollection->GetFontFamily(index, &fontFamily))) {
+        TraceError(g_logTag, L"Failed to get the font family.");
+        return fontNames;
+    }
+
+    ComPtr<IDWriteFontList> fontList;
+    if (FAILED(fontFamily->GetMatchingFonts(DWRITE_FONT_WEIGHT_THIN, DWRITE_FONT_STRETCH_UNDEFINED, DWRITE_FONT_STYLE_NORMAL, &fontList))) {
+        TraceError(g_logTag, L"Failed to get the matching font list.");
+        return fontNames;
+    }
+
+    UINT32 count = 0;
+    count = fontList->GetFontCount();
+
+    auto cleanup = wil::ScopeExit([&fontNames]() { fontNames.clear(); });
+
+    for (UINT32 i = 0; i < count; i++) {
+        ComPtr<IDWriteFont> font;
+        if (FAILED(fontList->GetFont(i, &font))) {
+            TraceError(g_logTag, L"Failed to get the font.");
+            return fontNames;
+        }
+
+        ComPtr<IDWriteLocalizedStrings> fullName;
+        BOOL exist = FALSE;
+        if (FAILED(font->GetInformationalStrings(DWRITE_INFORMATIONAL_STRING_FULL_NAME, &fullName, &exist))) {
+            TraceError(g_logTag, L"Failed to get the font full name.");
+            return fontNames;
+        }
+
+        if (exist) {
+            wstring name = _convertLocalizedStringToWideString(fullName.Get());
+            if (name.length() == 0) {
+                TraceError(g_logTag, L"Failed to convert the localized string to wide string.");
+                return fontNames;
+            }
+            fontNames.push_back(std::move(name));
+        }
+    }
+
+    cleanup.Dismiss();
+
+    return fontNames;
+}
+
 /**
- @Status Stub
+ @Status Interoperable
 */
-+ (NSArray*)familyNames {
-    // The actual implementation may need a lock here if it
-    // does end up accessing the global font lists or caches.
-    UNIMPLEMENTED();
-    return StubReturn();
++ (NSArray<NSString*>*)familyNames {
+    vector<wstring> fontFamilyNames = _getFontFamilyNames();
+
+    NSMutableArray<NSString*>* nameArray = [NSMutableArray<NSString*> array];
+    for (auto& familyName : fontFamilyNames) {
+        NSString* name =
+            [[[NSString alloc] initWithBytes:familyName.c_str() length:familyName.length() * sizeof(wchar_t) encoding:NSUTF16StringEncoding]
+                autorelease];
+        [nameArray addObject:name];
+    }
+
+    return nameArray;
 }
 
 /**
@@ -357,11 +551,24 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
-+ (NSArray*)fontNamesForFamilyName:(NSArray*)name {
-    UNIMPLEMENTED();
-    return [NSArray arrayWithObject:name];
++ (NSArray<NSString*>*)fontNamesForFamilyName:(NSString*)familyName {
+    wchar_t* wcharString = (wchar_t*)[familyName cStringUsingEncoding:NSUTF16StringEncoding];
+    if (wcharString == NULL) {
+        return nil;
+    }
+
+    vector<wstring> fontNames = _getFontNamesForFamilyName(wcharString);
+    NSMutableArray<NSString*>* nameArray = [NSMutableArray<NSString*> array];
+    for (auto& fontName : fontNames) {
+        NSString* name =
+            [[[NSString alloc] initWithBytes:fontName.c_str() length:fontName.length() * sizeof(wchar_t) encoding:NSUTF16StringEncoding]
+                autorelease];
+        [nameArray addObject:name];
+    }
+
+    return nameArray;
 }
 
 void loadFont(UIFont* self) {
@@ -377,6 +584,7 @@ void loadFont(UIFont* self) {
     loadFont(self);
 
     if (_font == nil) {
+        [self release];
         return nil;
     }
 

@@ -30,6 +30,7 @@
 #import "CGColorSpaceInternal.h"
 #import "_CGLifetimeBridgingType.h"
 #include "LoggingNative.h"
+#import <pthread.h>
 
 static const wchar_t* TAG = L"CGContext";
 
@@ -38,7 +39,7 @@ static const wchar_t* TAG = L"CGContext";
 int contextCount = 0;
 static IWLazyClassLookup _LazyUIImage("UIImage"), _LazyUIScreen("UIScreen");
 
-EbrLock _cairoLock = EBRLOCK_INITIALIZE;
+pthread_mutex_t _cairoLock = PTHREAD_MUTEX_INITIALIZER;
 
 @interface CGNSContext : _CGLifetimeBridgingType
 @end

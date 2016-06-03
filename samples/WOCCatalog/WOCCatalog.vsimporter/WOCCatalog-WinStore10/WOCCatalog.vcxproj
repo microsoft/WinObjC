@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -180,6 +180,7 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
+    <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
@@ -248,7 +249,6 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(WINOBJC_SDK_ROOT)\msvc\starboard.targets" />

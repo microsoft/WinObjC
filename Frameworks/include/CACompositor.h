@@ -18,6 +18,7 @@
 #define __CA_COMPOSITOR_H
 
 #include <memory>
+#include "winobjc\winobjc.h"
 
 class DisplayNode;
 class DisplayAnimation;
@@ -39,6 +40,7 @@ public:
     virtual void RequestRedraw() = 0;
 
     virtual DisplayNode* CreateDisplayNode() = 0;
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetXamlLayoutElement(DisplayNode*) = 0;
     virtual std::shared_ptr<DisplayTransaction> CreateDisplayTransaction() = 0;
     virtual void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
                                          const std::shared_ptr<DisplayTransaction>& onTransaction) = 0;

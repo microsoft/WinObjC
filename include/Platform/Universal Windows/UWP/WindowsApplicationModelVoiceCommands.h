@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WAVVoiceCommandDefinition, WAVVoiceCommandDefinitionManager, WAVVoiceCommandContentTile, WAVVoiceCommandUserMessage, WAVVoiceCommand,
     WAVVoiceCommandResponse, WAVVoiceCommandConfirmationResult, WAVVoiceCommandDisambiguationResult, WAVVoiceCommandServiceConnection,
@@ -56,7 +56,6 @@ typedef unsigned WAVVoiceCommandCompletionReason;
 
 #include "WindowsStorage.h"
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsGlobalization.h"
 #include "WindowsMediaSpeechRecognition.h"
 #include "WindowsApplicationModelAppService.h"

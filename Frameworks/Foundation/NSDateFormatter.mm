@@ -13,307 +13,81 @@
 // THE SOFTWARE.
 //
 //******************************************************************************
+// This source file is part of the Swift.org open source project
+//
+// Copyright (c) 2014 - 2015 Apple Inc. and the Swift project authors
+// Licensed under Apache License v2.0 with Runtime Library Exception
+//
+// See http://swift.org/LICENSE.txt for license information
+// See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+//
 
-#import "Starboard.h"
-#import "StubReturn.h"
+#include "Starboard.h"
+#include "StubReturn.h"
+
+#import <CoreFoundation/CFDateFormatter.h>
 #import <Foundation/Foundation.h>
 #import <NSLocaleInternal.h>
-#import <NSCalendarInternal.h>
 #import <NSTimeZoneInternal.h>
-#import <unicode/datefmt.h>
-#import <unicode/dtfmtsym.h>
-#import <unicode/smpdtfmt.h>
-#import <unicode/dtptngen.h>
-#import <functional>
-#import <map>
-#import "LoggingNative.h"
 
-static const wchar_t* TAG = L"NSDateFormatter";
+#include <functional>
+#include <string>
+#include <array>
+#include "LoggingNative.h"
+#include "StringHelpers.h"
 
-static icu::DateFormat::EStyle convertFormatterStyle(NSDateFormatterStyle fmt) {
-    switch (fmt) {
-        case NSDateFormatterShortStyle:
-            return icu::DateFormat::kShort;
-        case NSDateFormatterMediumStyle:
-            return icu::DateFormat::kMedium;
-        case NSDateFormatterLongStyle:
-            return icu::DateFormat::kLong;
-        case NSDateFormatterFullStyle:
-            return icu::DateFormat::kFull;
+void _copyPropertiesToFormatter(CFDateFormatterRef source, CFDateFormatterRef destination) {
+    static std::array<CFStringRef, 29> properties{ kCFDateFormatterIsLenient,
+                                                   kCFDateFormatterTimeZone,
+                                                   kCFDateFormatterCalendarName,
+                                                   kCFDateFormatterDefaultFormat,
+                                                   kCFDateFormatterTwoDigitStartDate,
+                                                   kCFDateFormatterDefaultDate,
+                                                   kCFDateFormatterCalendar,
+                                                   kCFDateFormatterEraSymbols,
+                                                   kCFDateFormatterMonthSymbols,
+                                                   kCFDateFormatterShortMonthSymbols,
+                                                   kCFDateFormatterWeekdaySymbols,
+                                                   kCFDateFormatterShortWeekdaySymbols,
+                                                   kCFDateFormatterAMSymbol,
+                                                   kCFDateFormatterPMSymbol,
+                                                   kCFDateFormatterLongEraSymbols,
+                                                   kCFDateFormatterVeryShortMonthSymbols,
+                                                   kCFDateFormatterStandaloneMonthSymbols,
+                                                   kCFDateFormatterShortStandaloneMonthSymbols,
+                                                   kCFDateFormatterVeryShortStandaloneMonthSymbols,
+                                                   kCFDateFormatterVeryShortWeekdaySymbols,
+                                                   kCFDateFormatterStandaloneWeekdaySymbols,
+                                                   kCFDateFormatterShortStandaloneWeekdaySymbols,
+                                                   kCFDateFormatterVeryShortStandaloneWeekdaySymbols,
+                                                   kCFDateFormatterQuarterSymbols,
+                                                   kCFDateFormatterShortQuarterSymbols,
+                                                   kCFDateFormatterStandaloneQuarterSymbols,
+                                                   kCFDateFormatterShortStandaloneQuarterSymbols,
+                                                   kCFDateFormatterGregorianStartDate,
+                                                   kCFDateFormatterDoesRelativeDateFormattingKey };
 
-        default:
-            TraceVerbose(TAG, L"Unrecognized formatter style, defaulting to UDAT_NONE.");
-        case NSDateFormatterNoStyle:
-            return icu::DateFormat::kNone;
-    }
-}
+    for (const auto& property : properties) {
+        CFTypeRef value = CFAutorelease(CFDateFormatterCopyProperty(source, property));
 
-class ICUPropertyValue {
-public:
-    bool _boolValue;
-    StrongId<NSObject> _objValue;
-
-    ICUPropertyValue() {
-        _boolValue = false;
-    }
-
-    ICUPropertyValue(bool boolValue) {
-        _boolValue = boolValue;
-    }
-
-    ICUPropertyValue(NSObject* obj) {
-        _objValue = obj;
-    }
-
-    ICUPropertyValue(const ICUPropertyValue& copy) {
-        _boolValue = copy._boolValue;
-        _objValue = copy._objValue;
-    }
-};
-
-class ICUPropertyMapper {
-public:
-    enum PropertyTypes {
-        lenient,
-        amSymbol,
-        pmSymbol,
-        shortStandaloneWeekdaySymbols,
-        weekdaySymbols,
-        shortWeekdaySymbols,
-        standaloneWeekdaySymbols,
-        standaloneMonthSymbols,
-        monthSymbols
-    };
-
-private:
-    typedef std::function<void(icu::DateFormat*, ICUPropertyValue&, UErrorCode&)> PropertyFunctor;
-
-public:
-    PropertyFunctor _setProperty;
-    PropertyFunctor _getProperty;
-    PropertyTypes _type;
-
-    ICUPropertyMapper() {
-    }
-
-    ICUPropertyMapper(const PropertyTypes type, const PropertyFunctor& setter, const PropertyFunctor& getter)
-        : _type(type), _setProperty(setter), _getProperty(getter) {
-    }
-
-    ICUPropertyMapper(const ICUPropertyMapper& copy) {
-        _type = copy._type;
-        _getProperty = copy._getProperty;
-        _setProperty = copy._setProperty;
-    }
-};
-
-static NSString* NSStringFromSymbol(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
-    uint32_t len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, NULL, 0, &error);
-    UChar* strValue = (UChar*)IwCalloc(len + 1, sizeof(UChar));
-    error = U_ZERO_ERROR;
-    len = udat_getSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, strValue, len + 1, &error);
-    NSString* ret = [NSString stringWithCharacters:(unichar*)strValue length:len];
-    IwFree(strValue);
-
-    return ret;
-}
-
-static NSArray* NSArrayFromSymbols(icu::DateFormat* formatter, UDateFormatSymbolType symbol, int startIdx, UErrorCode& error) {
-    uint32_t count = udat_countSymbols((UDateFormat*)formatter, symbol);
-
-    NSMutableArray* symbolList = [NSMutableArray array];
-    for (int i = 0; i < count - startIdx; i++) {
-        NSString* string = NSStringFromSymbol(formatter, symbol, i + startIdx, error);
-        if (string == nil || error != U_ZERO_ERROR) {
-            TraceError(TAG, L"Error retrieving symbol 0x%x index %d", symbol, i);
-            return nil;
+        if (value) {
+            CFDateFormatterSetProperty(destination, property, value);
         }
-        [symbolList addObject:string];
-    }
-
-    return symbolList;
-}
-
-static void SetSymbolFromNSString(icu::DateFormat* formatter, NSString* value, UDateFormatSymbolType symbol, int index, UErrorCode& error) {
-    udat_setSymbols((UDateFormat*)formatter, (UDateFormatSymbolType)symbol, index, (UChar*)[value rawCharacters], [value length], &error);
-}
-
-static void SetSymbolsFromNSArray(
-    icu::DateFormat* formatter, NSArray* values, UDateFormatSymbolType symbol, int startIdx, UErrorCode& error) {
-    for (int i = 0; i < [values count]; i++) {
-        NSString* symbolStr = [values objectAtIndex:i];
-
-        udat_setSymbols((UDateFormat*)formatter,
-                        (UDateFormatSymbolType)symbol,
-                        i + startIdx,
-                        (UChar*)[symbolStr rawCharacters],
-                        [symbolStr length],
-                        &error);
     }
 }
-
-static std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyMapper> _icuProperties = {
-    { ICUPropertyMapper::lenient,
-      ICUPropertyMapper(ICUPropertyMapper::lenient,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            udat_setLenient((UDateFormat*)formatter, value._boolValue);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._boolValue = udat_isLenient((UDateFormat*)formatter);
-                        }) },
-
-    { ICUPropertyMapper::amSymbol,
-      ICUPropertyMapper(ICUPropertyMapper::amSymbol,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolFromNSString(formatter, (NSString*)value._objValue, (UDateFormatSymbolType)UDAT_AM_PMS, 0, error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSStringFromSymbol(formatter, (UDateFormatSymbolType)UDAT_AM_PMS, 0, error);
-                        }) },
-
-    { ICUPropertyMapper::pmSymbol,
-      ICUPropertyMapper(ICUPropertyMapper::pmSymbol,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolFromNSString(formatter, (NSString*)value._objValue, (UDateFormatSymbolType)UDAT_AM_PMS, 1, error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSStringFromSymbol(formatter, (UDateFormatSymbolType)UDAT_AM_PMS, 1, error);
-                        }) },
-
-    { ICUPropertyMapper::shortStandaloneWeekdaySymbols,
-      ICUPropertyMapper(ICUPropertyMapper::shortStandaloneWeekdaySymbols,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(formatter,
-                                                  (NSArray*)value._objValue,
-                                                  (UDateFormatSymbolType)UDAT_STANDALONE_SHORT_WEEKDAYS,
-                                                  1,
-                                                  error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue =
-                                NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_SHORT_WEEKDAYS, 1, error);
-                        }) },
-
-    { ICUPropertyMapper::weekdaySymbols,
-      ICUPropertyMapper(ICUPropertyMapper::weekdaySymbols,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_WEEKDAYS, 1, error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_WEEKDAYS, 1, error);
-                        }) },
-
-    { ICUPropertyMapper::shortWeekdaySymbols,
-      ICUPropertyMapper(ICUPropertyMapper::shortWeekdaySymbols,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(formatter,
-                                                  (NSArray*)value._objValue,
-                                                  (UDateFormatSymbolType)UDAT_SHORT_WEEKDAYS,
-                                                  1,
-                                                  error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_SHORT_WEEKDAYS, 1, error);
-                        }) },
-
-    { ICUPropertyMapper::standaloneWeekdaySymbols,
-      ICUPropertyMapper(ICUPropertyMapper::standaloneWeekdaySymbols,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(formatter,
-                                                  (NSArray*)value._objValue,
-                                                  (UDateFormatSymbolType)UDAT_STANDALONE_WEEKDAYS,
-                                                  1,
-                                                  error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_WEEKDAYS, 1, error);
-                        }) },
-
-    { ICUPropertyMapper::standaloneMonthSymbols,
-      ICUPropertyMapper(ICUPropertyMapper::standaloneMonthSymbols,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(formatter,
-                                                  (NSArray*)value._objValue,
-                                                  (UDateFormatSymbolType)UDAT_STANDALONE_MONTHS,
-                                                  0,
-                                                  error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_STANDALONE_MONTHS, 0, error);
-                        }) },
-
-    { ICUPropertyMapper::monthSymbols,
-      ICUPropertyMapper(ICUPropertyMapper::monthSymbols,
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            SetSymbolsFromNSArray(formatter, (NSArray*)value._objValue, (UDateFormatSymbolType)UDAT_MONTHS, 0, error);
-                        },
-                        [](icu::DateFormat* formatter, ICUPropertyValue& value, UErrorCode& error) {
-                            value._objValue = NSArrayFromSymbols(formatter, (UDateFormatSymbolType)UDAT_MONTHS, 0, error);
-                        }) },
-};
 
 @implementation NSDateFormatter {
-    NSDateFormatterStyle _dateStyle;
-    NSDateFormatterStyle _timeStyle;
-    idretaintype(NSString) _dateFormat;
-    BOOL _lenient, _lenientSet;
-    idretaintype(NSLocale) _locale;
-    idretaintype(NSTimeZone) _timeZone;
-    idretaintype(NSCalendar) _calendar;
-
-    icu::DateFormat* _formatter;
-    BOOL _formatterNeedsRebuilding;
-
-    std::map<ICUPropertyMapper::PropertyTypes, ICUPropertyValue> _valueOverrides;
+    woc::unique_cf<CFDateFormatterRef> _cfDateFormatter;
 }
 
 /**
- @Status Caveat
- @Notes options parameter not supported
+ @Status Interoperable
 */
 + (NSString*)dateFormatFromTemplate:(NSString*)dateTemplate options:(NSUInteger)options locale:(NSLocale*)locale {
-    UErrorCode error = U_ZERO_ERROR;
-    icu::Locale* icuLocale = [locale _createICULocale];
-    DateTimePatternGenerator* pg = DateTimePatternGenerator::createInstance(*icuLocale, error);
-    delete icuLocale;
-    UStringHolder strTemplate(dateTemplate);
-
-    UnicodeString strSkeleton = pg->getSkeleton(strTemplate.string(), error);
-    if (U_FAILURE(error)) {
-        delete pg;
-        return nil;
-    }
-
-    UnicodeString pattern = pg->getBestPattern(strSkeleton, error);
-    if (U_FAILURE(error)) {
-        delete pg;
-        return nil;
-    }
-
-    NSString* ret = NSStringFromICU(pattern);
-
-    delete pg;
-
-    return ret;
-}
-
-- (ICUPropertyValue)_getFormatterProperty:(ICUPropertyMapper::PropertyTypes)type {
-    auto pos = _valueOverrides.find(type);
-    if (pos != _valueOverrides.end()) {
-        return pos->second;
-    } else {
-        ICUPropertyValue ret;
-
-        UErrorCode status = U_ZERO_ERROR;
-        _icuProperties[type]._getProperty([self _getFormatter], ret, status);
-
-        return ret;
-    }
-}
-
-- (void)_setFormatterProperty:(ICUPropertyMapper::PropertyTypes)type withValue:(ICUPropertyValue)value {
-    _valueOverrides[type] = value;
-    _formatterNeedsRebuilding = TRUE;
+    return static_cast<NSString*>(CFAutorelease(CFDateFormatterCreateDateFormatFromTemplate(kCFAllocatorSystemDefault,
+                                                                                            static_cast<CFStringRef>(dateTemplate),
+                                                                                            options,
+                                                                                            static_cast<CFLocaleRef>(locale))));
 }
 
 static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehaviorDefault;
@@ -333,56 +107,6 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
     s_defaultFormatterBehavior = behavior;
 }
 
-- (icu::DateFormat*)_getFormatter {
-    if (!_formatter || _formatterNeedsRebuilding) {
-        _formatterNeedsRebuilding = FALSE;
-
-        if (_formatter)
-            delete _formatter;
-
-        UErrorCode status = U_ZERO_ERROR;
-        icu::Locale* icuLocale = [_locale _createICULocale];
-
-        if ([_dateFormat length] > 0) {
-            UStringHolder fmtString(static_cast<NSString*>(_dateFormat));
-
-            _formatter = new SimpleDateFormat(fmtString.string(), *icuLocale, status);
-        } else {
-            // Don't instantiate a date/time formatter if only date or time are expected individually.
-            if (_timeStyle == NSDateFormatterNoStyle && _dateStyle == NSDateFormatterNoStyle) {
-                _formatter = new SimpleDateFormat(NULL, *icuLocale, status);
-            } else if (_timeStyle == NSDateFormatterNoStyle) {
-                _formatter = icu::DateFormat::createDateInstance(convertFormatterStyle(_dateStyle), *icuLocale);
-            } else if (_dateStyle == NSDateFormatterNoStyle) {
-                _formatter = icu::DateFormat::createTimeInstance(convertFormatterStyle(_timeStyle), *icuLocale);
-            } else {
-                _formatter = icu::DateFormat::createDateTimeInstance(convertFormatterStyle(_dateStyle),
-                                                                     convertFormatterStyle(_timeStyle),
-                                                                     *icuLocale);
-            }
-        }
-
-        delete icuLocale;
-
-        //  Set calendar
-        icu::Calendar* calendar = [_calendar _createICUCalendar];
-        _formatter->setCalendar(*calendar);
-        delete calendar;
-
-        //  Set all overridden properties
-        for (auto& curProperty : _valueOverrides) {
-            _icuProperties[curProperty.first]._setProperty(_formatter, curProperty.second, status);
-        }
-
-        //  Set timezone
-        icu::TimeZone* icuTimezone = [_timeZone _createICUTimeZone];
-        _formatter->setTimeZone(*icuTimezone);
-        delete icuTimezone;
-    }
-
-    return _formatter;
-}
-
 /**
  @Status Interoperable
 */
@@ -396,12 +120,12 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 - (instancetype)copyWithZone:(NSZone*)zone {
     NSDateFormatter* copy = [super copyWithZone:zone];
 
-    copy->_dateStyle = _dateStyle;
-    copy->_timeStyle = _timeStyle;
-    copy->_dateFormat = _dateFormat;
-    copy->_locale = _locale;
-    copy->_timeZone = _timeZone;
-    copy->_valueOverrides = _valueOverrides;
+    woc::unique_cf<CFDateFormatterRef> formatterCopy(CFDateFormatterCreate(nullptr,
+                                                                           CFDateFormatterGetLocale(_cfDateFormatter.get()),
+                                                                           CFDateFormatterGetDateStyle(_cfDateFormatter.get()),
+                                                                           CFDateFormatterGetTimeStyle(_cfDateFormatter.get())));
+    _copyPropertiesToFormatter(_cfDateFormatter.get(), formatterCopy.get());
+    copy->_cfDateFormatter.reset(formatterCopy.release());
 
     return copy;
 }
@@ -425,13 +149,11 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
         return nil;
     }
 
-    [super init];
-    _formatter = 0;
-    _dateFormat.attach([format copy]);
-    _locale = locale;
-
-    _timeZone = [NSTimeZone defaultTimeZone];
-    _calendar = [NSCalendar currentCalendar];
+    if (self = [super init]) {
+        _cfDateFormatter.reset(
+            CFDateFormatterCreate(nullptr, static_cast<CFLocaleRef>(locale), kCFDateFormatterNoStyle, kCFDateFormatterNoStyle));
+        CFDateFormatterSetFormat(_cfDateFormatter.get(), static_cast<CFStringRef>(format));
+    }
 
     return self;
 }
@@ -439,201 +161,145 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
 /**
  @Status Interoperable
 */
-- (void)dealloc {
-    _dateFormat = nil;
-    _locale = nil;
-    _timeZone = nil;
-
-    if (_formatter)
-        delete _formatter;
-
-    return [super dealloc];
-}
-
-/**
- @Status Interoperable
-*/
 - (void)setCalendar:(NSCalendar*)cal {
-    if (_calendar == cal)
-        return;
-
-    _calendar = cal;
-    _formatterNeedsRebuilding = TRUE;
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterCalendar, reinterpret_cast<CFTypeRef>(cal));
 }
 
 /**
  @Status Interoperable
 */
 - (NSCalendar*)calendar {
-    return _calendar;
+    return (NSCalendar*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterCalendar)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setTimeZone:(NSTimeZone*)zone {
-    if (_timeZone == zone)
-        return;
-
-    _timeZone = zone;
-    _formatterNeedsRebuilding = TRUE;
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterTimeZone, reinterpret_cast<CFTypeRef>(zone));
 }
 
 /**
  @Status Interoperable
 */
 - (NSTimeZone*)timeZone {
-    return _timeZone;
+    return (NSTimeZone*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterTimeZone)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setLocale:(NSLocale*)locale {
-    if (_locale == locale)
-        return;
-
-    _locale = locale;
-    _formatterNeedsRebuilding = TRUE;
+    woc::unique_cf<CFDateFormatterRef> formatterCopy(CFDateFormatterCreate(nullptr,
+                                                                           static_cast<CFLocaleRef>(locale),
+                                                                           CFDateFormatterGetDateStyle(_cfDateFormatter.get()),
+                                                                           CFDateFormatterGetTimeStyle(_cfDateFormatter.get())));
+    _copyPropertiesToFormatter(_cfDateFormatter.get(), formatterCopy.get());
+    _cfDateFormatter.reset(formatterCopy.release());
 }
 
 /**
  @Status Interoperable
 */
 - (NSLocale*)locale {
-    return _locale;
+    return static_cast<NSLocale*>(CFDateFormatterGetLocale(_cfDateFormatter.get()));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setLenient:(BOOL)lenient {
-    @synchronized(self) {
-        [self _setFormatterProperty:ICUPropertyMapper::lenient withValue:ICUPropertyValue(lenient)];
-    }
+    CFBooleanRef isLenient = lenient ? kCFBooleanTrue : kCFBooleanFalse;
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterIsLenient, reinterpret_cast<CFTypeRef>(isLenient));
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)isLenient {
-    @synchronized(self) {
-        return [self _getFormatterProperty:ICUPropertyMapper::lenient]._boolValue;
-    }
+    return CFBooleanGetValue(
+        reinterpret_cast<CFBooleanRef>(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterIsLenient))));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setDateFormat:(NSString*)format {
-    if (_dateFormat == format)
-        return;
-
-    _dateFormat = format;
-    _formatterNeedsRebuilding = TRUE;
+    CFDateFormatterSetFormat(_cfDateFormatter.get(), static_cast<CFStringRef>(format));
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)dateFormat {
-    return _dateFormat;
+    return static_cast<NSString*>(CFDateFormatterGetFormat(_cfDateFormatter.get()));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setDateStyle:(NSDateFormatterStyle)style {
-    if (_dateStyle == style)
-        return;
-    _dateStyle = style;
-    _formatterNeedsRebuilding = TRUE;
+    woc::unique_cf<CFDateFormatterRef> formatterCopy(CFDateFormatterCreate(nullptr,
+                                                                           CFDateFormatterGetLocale(_cfDateFormatter.get()),
+                                                                           static_cast<CFDateFormatterStyle>(style),
+                                                                           CFDateFormatterGetTimeStyle(_cfDateFormatter.get())));
+    _copyPropertiesToFormatter(_cfDateFormatter.get(), formatterCopy.get());
+    _cfDateFormatter.reset(formatterCopy.release());
 }
 
 /**
  @Status Interoperable
 */
 - (NSDateFormatterStyle)dateStyle {
-    return _dateStyle;
+    return static_cast<NSDateFormatterStyle>(CFDateFormatterGetDateStyle(_cfDateFormatter.get()));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setTimeStyle:(NSDateFormatterStyle)style {
-    if (_timeStyle == style)
-        return;
-    _timeStyle = style;
-    _formatterNeedsRebuilding = TRUE;
+    woc::unique_cf<CFDateFormatterRef> formatterCopy(CFDateFormatterCreate(nullptr,
+                                                                           CFDateFormatterGetLocale(_cfDateFormatter.get()),
+                                                                           CFDateFormatterGetDateStyle(_cfDateFormatter.get()),
+                                                                           static_cast<CFDateFormatterStyle>(style)));
+    _copyPropertiesToFormatter(_cfDateFormatter.get(), formatterCopy.get());
+    _cfDateFormatter.reset(formatterCopy.release());
 }
 
 /**
  @Status Interoperable
 */
 - (NSDateFormatterStyle)timeStyle {
-    return _timeStyle;
+    return static_cast<NSDateFormatterStyle>(CFDateFormatterGetTimeStyle(_cfDateFormatter.get()));
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)stringFromDate:(NSDate*)date {
-    if (date == nil)
-        return nil;
-
-    UnicodeString str;
-
-    [self _getFormatter]->format([date timeIntervalSince1970] * 1000.0, str);
-
-    return NSStringFromICU(str);
+    return static_cast<NSString*>(
+        CFAutorelease(CFDateFormatterCreateStringWithDate(nullptr, _cfDateFormatter.get(), static_cast<CFDateRef>(date))));
 }
 
 /**
  @Status Interoperable
  */
 + (NSString*)localizedStringFromDate:(NSDate*)date dateStyle:(NSDateFormatterStyle)dateStyle timeStyle:(NSDateFormatterStyle)timeStyle {
-    NSString* formattedDate = [self _formatDateForLocale:date
-                                                  locale:[NSLocale currentLocale]
-                                               dateStyle:dateStyle
-                                               timeStyle:timeStyle
-                                                timeZone:[NSTimeZone systemTimeZone]];
-
-    return formattedDate;
-}
-
-+ (NSString*)_formatDateForLocale:(NSDate*)date
-                           locale:(NSLocale*)locale
-                        dateStyle:(NSDateFormatterStyle)dateStyle
-                        timeStyle:(NSDateFormatterStyle)timeStyle
-                         timeZone:(NSTimeZone*)timeZone {
-    static NSDateFormatter* s_formatterForLocale = [[NSDateFormatter alloc] init];
-
-    // Set time zone and locale
-    [s_formatterForLocale setLocale:locale];
-    [s_formatterForLocale setTimeZone:timeZone];
-
-    // Update calendar to use proper time zone
-    NSCalendar* calendar = [s_formatterForLocale calendar];
-    [calendar setTimeZone:timeZone];
-    [s_formatterForLocale setCalendar:calendar];
-
-    s_formatterForLocale.dateStyle = dateStyle;
-    s_formatterForLocale.timeStyle = timeStyle;
-
-    return [s_formatterForLocale stringFromDate:date];
+    woc::unique_cf<CFDateFormatterRef> cfFormatter(CFDateFormatterCreate(nullptr,
+                                                                         static_cast<CFLocaleRef>(CFAutorelease(CFLocaleCopyCurrent())),
+                                                                         static_cast<CFDateFormatterStyle>(dateStyle),
+                                                                         static_cast<CFDateFormatterStyle>(timeStyle)));
+    return static_cast<NSString*>(
+        CFAutorelease(CFDateFormatterCreateStringWithDate(nullptr, cfFormatter.get(), static_cast<CFDateRef>(date))));
 }
 
 /**
  @Status Interoperable
 */
 - (NSDate*)dateFromString:(NSString*)str {
-    UStringHolder uStr(str);
-    UErrorCode status = U_ZERO_ERROR;
-    UDate date = [self _getFormatter]->parse(uStr.string(), status);
-
-    if (!U_SUCCESS(status))
-        return nil;
-    return [NSDate dateWithTimeIntervalSince1970:date / 1000.0];
+    CFRange range = CFRange{ 0, [str length] };
+    return static_cast<NSDate*>(
+        CFAutorelease(CFDateFormatterCreateDateFromString(nullptr, _cfDateFormatter.get(), static_cast<CFStringRef>(str), &range)));
 }
 
 /**
@@ -666,112 +332,112 @@ static NSDateFormatterBehavior s_defaultFormatterBehavior = NSDateFormatterBehav
  @Status Interoperable
 */
 - (void)setAMSymbol:(NSString*)symbol {
-    [self _setFormatterProperty:ICUPropertyMapper::amSymbol withValue:ICUPropertyValue(symbol)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterAMSymbol, reinterpret_cast<CFTypeRef>(symbol));
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)AMSymbol {
-    return (NSString*)[self _getFormatterProperty:ICUPropertyMapper::amSymbol]._objValue;
+    return (NSString*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterAMSymbol)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setPMSymbol:(NSString*)symbol {
-    [self _setFormatterProperty:ICUPropertyMapper::pmSymbol withValue:ICUPropertyValue(symbol)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterPMSymbol, reinterpret_cast<CFTypeRef>(symbol));
 }
 
 /**
  @Status Interoperable
 */
 - (NSString*)PMSymbol {
-    return (NSString*)[self _getFormatterProperty:ICUPropertyMapper::pmSymbol]._objValue;
+    return (NSString*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterPMSymbol)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setShortStandaloneWeekdaySymbols:(NSArray*)symbols {
-    [self _setFormatterProperty:ICUPropertyMapper::shortStandaloneWeekdaySymbols withValue:ICUPropertyValue(symbols)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterShortStandaloneWeekdaySymbols, reinterpret_cast<CFTypeRef>(symbols));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)shortStandaloneWeekdaySymbols {
-    return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::shortStandaloneWeekdaySymbols]._objValue;
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterShortStandaloneWeekdaySymbols)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setWeekdaySymbols:(NSArray*)symbols {
-    [self _setFormatterProperty:ICUPropertyMapper::weekdaySymbols withValue:ICUPropertyValue(symbols)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterWeekdaySymbols, reinterpret_cast<CFTypeRef>(symbols));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)weekdaySymbols {
-    return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::weekdaySymbols]._objValue;
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterWeekdaySymbols)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setShortWeekdaySymbols:(NSArray*)symbols {
-    [self _setFormatterProperty:ICUPropertyMapper::shortWeekdaySymbols withValue:ICUPropertyValue(symbols)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterShortWeekdaySymbols, reinterpret_cast<CFTypeRef>(symbols));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)shortWeekdaySymbols {
-    return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::shortWeekdaySymbols]._objValue;
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterShortWeekdaySymbols)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setStandaloneWeekdaySymbols:(NSArray*)symbols {
-    [self _setFormatterProperty:ICUPropertyMapper::standaloneWeekdaySymbols withValue:ICUPropertyValue(symbols)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneWeekdaySymbols, reinterpret_cast<CFTypeRef>(symbols));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)standaloneWeekdaySymbols {
-    return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::standaloneWeekdaySymbols]._objValue;
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneWeekdaySymbols)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setStandaloneMonthSymbols:(NSArray*)symbols {
-    [self _setFormatterProperty:ICUPropertyMapper::standaloneMonthSymbols withValue:ICUPropertyValue(symbols)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneMonthSymbols, reinterpret_cast<CFTypeRef>(symbols));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)standaloneMonthSymbols {
-    return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::standaloneMonthSymbols]._objValue;
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterStandaloneMonthSymbols)));
 }
 
 /**
  @Status Interoperable
 */
 - (void)setMonthSymbols:(NSArray*)symbols {
-    [self _setFormatterProperty:ICUPropertyMapper::monthSymbols withValue:ICUPropertyValue(symbols)];
+    CFDateFormatterSetProperty(_cfDateFormatter.get(), kCFDateFormatterMonthSymbols, reinterpret_cast<CFTypeRef>(symbols));
 }
 
 /**
  @Status Interoperable
 */
 - (NSArray*)monthSymbols {
-    return (NSArray*)[self _getFormatterProperty:ICUPropertyMapper::monthSymbols]._objValue;
+    return (NSArray*)(CFAutorelease(CFDateFormatterCopyProperty(_cfDateFormatter.get(), kCFDateFormatterMonthSymbols)));
 }
 
 /**

@@ -25,6 +25,7 @@
  *
  * $FreeBSD$
  */
+#pragma once
 
 #ifndef _SYS__TIMEVAL_H_
 #define _SYS__TIMEVAL_H_
@@ -32,23 +33,22 @@
 #include <sys/_types.h>
 
 #ifndef _SUSECONDS_T_DECLARED
-typedef __suseconds_t   suseconds_t;
+typedef __suseconds_t suseconds_t;
 #define _SUSECONDS_T_DECLARED
 #endif
 
-#if 0 //  LIMBO
-#ifndef _TIME_T_DECLARED
-typedef __time_t    time_t;
-#define _TIME_T_DECLARED
-#endif
-#endif
+#pragma push_macro("WIN32")
 
-/*
- * Structure returned by gettimeofday(2) system call, and used in other calls.
- */
-struct timeval {
-        long    tv_sec;         /* seconds */
-        long    tv_usec;        /* and microseconds */
-};
-    
+#include <Winsock2.h>
+#undef far
+#undef near
+#undef FAR
+#undef NEAR
+#define FAR
+#define NEAR
+#undef IN
+#undef OUT
+
+#pragma pop_macro("WIN32")
+
 #endif /* !_SYS__TIMEVAL_H_ */

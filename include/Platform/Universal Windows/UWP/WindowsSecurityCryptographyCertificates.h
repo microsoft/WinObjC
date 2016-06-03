@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSCCCertificate, WSCCCertificateRequestProperties, WSCCUserCertificateEnrollmentManager, WSCCPfxImportParameters,
     WSCCCertificateEnrollmentManager, WSCCKeyAttestationHelper, WSCCCertificateQuery, WSCCCertificateStore, WSCCCertificateStores,
@@ -119,7 +119,6 @@ typedef unsigned WSCCSignatureValidationResult;
 #include "WindowsNetworking.h"
 #include "WindowsFoundation.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
 
 #import <Foundation/Foundation.h>
 

@@ -40,7 +40,7 @@ TEST(NSData, Base64EncodeWithOptions) {
     StrongId<NSData> testData48Chars = [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
     StrongId<NSData> testData49Chars = [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
     StrongId<NSData> testData50Chars = [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
-    StrongId<NSString> testData58Chars =
+    StrongId<NSData> testData58Chars =
         [@"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" dataUsingEncoding:NSUTF8StringEncoding];
 
     // "QUFB" is the base64 encoded representation of "AAA"
@@ -253,17 +253,23 @@ TEST(NSData, MutableDataReplaceTests) {
     // 3. replace used as delete, replacing "789" with null (or length 0) string, effectively delete 789, thus have "hello obj\0123456"
     [mutableData replaceBytesInRange:NSMakeRange(15, 4) withBytes:NULL length:0];
 
-    // 4. replacing ending "123456" with " world", thus have "Hello obj world", notice we used a big range in replacement
-    // to prove it does not have to be the exact range of "123456\0" in order for replacement to succeed, now we should
-    // have "hello obj world\0"
+    // 4. replace ending "123456" with " world", thus have "Hello obj world"
     const char worldBytes[] = " world";
-    [mutableData replaceBytesInRange:NSMakeRange(len + len2 - 2, 100) withBytes:worldBytes length:std::extent<decltype(worldBytes)>::value];
+    [mutableData replaceBytesInRange:NSMakeRange(len + len2 - 2, 7) withBytes:worldBytes length:std::extent<decltype(worldBytes)>::value];
 
     // verify after all replacements, the data should be equal
     ASSERT_OBJCEQ_MSG(originalData, mutableData, "Data should be equal");
 
     // verify descriptions are equal
-    StrongId<NSString> expectedHex = @"<48656C6C 6F206F62 6A20776F 726C6400>";
+    StrongId<NSString> expectedHex = @"<48656c6c 6f206f62 6a20776f 726c6400>";
     ASSERT_OBJCEQ_MSG(expectedHex, [originalData description], "Description must be equal");
     ASSERT_OBJCEQ_MSG(expectedHex, [mutableData description], "Description must be equal");
+}
+
+TEST(NSData, ExpandBeyondCapacity) {
+    NSMutableData* data = [NSMutableData dataWithCapacity:1];
+    std::string stringData = "winobjc";
+
+    [data appendBytes:stringData.data() length:stringData.length()];
+    ASSERT_EQ(stringData.length(), [data length]);
 }

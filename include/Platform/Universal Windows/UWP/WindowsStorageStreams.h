@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WSSDataReaderLoadOperation, WSSDataReader, WSSDataWriterStoreOperation, WSSDataWriter, WSSRandomAccessStream, WSSBuffer,
     WSSRandomAccessStreamReference, WSSFileRandomAccessStream, WSSFileInputStream, WSSFileOutputStream, WSSRandomAccessStreamOverStream,

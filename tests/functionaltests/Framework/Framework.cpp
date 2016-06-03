@@ -22,6 +22,7 @@
 #include <WexTestClass.h>
 
 #include <windows.applicationmodel.core.h>
+#include <windows.system.display.h>
 #include <windows.h>
 #include <windows.ui.core.h>
 #include <wrl/async.h>
@@ -34,8 +35,9 @@
 
 using namespace Microsoft::WRL;
 using namespace ABI::Windows::ApplicationModel::Core;
-using namespace ABI::Windows::UI::Core;
 using namespace ABI::Windows::Foundation;
+using namespace ABI::Windows::System::Display;
+using namespace ABI::Windows::UI::Core;
 
 #define MakeAgileDispatcherCallback Callback<Implements<RuntimeClassFlags<ClassicCom>, IDispatchedHandler, FtmBase>>
 
@@ -133,4 +135,36 @@ HRESULT RunOnUIThread(const std::function<void()>& func) {
 
     return invokeResult;
 }
+
+ComPtr<IDisplayRequest> _CreateDisplayRequest() {
+    ComPtr<IDisplayRequest> displayRequest;
+    THROW_IF_FAILED(
+        Windows::Foundation::ActivateInstance(Wrappers::HStringReference(RuntimeClass_Windows_System_Display_DisplayRequest).Get(),
+                                              &displayRequest));
+    return displayRequest;
 }
+
+ComPtr<IDisplayRequest> _GetDisplayRequestInstance() {
+    static ComPtr<IDisplayRequest> s_displayRequest = _CreateDisplayRequest();
+    return s_displayRequest;
+}
+
+void _DisplayRequestActive() {
+    THROW_IF_FAILED(_GetDisplayRequestInstance()->RequestActive());
+}
+
+void _DisplayRequestRelease() {
+    THROW_IF_FAILED(_GetDisplayRequestInstance()->RequestRelease());
+}
+
+// Helper method to request display to be active or inactive.
+HRESULT DisplayRequest(bool keepActive) {
+    // Note: DisplayRequest only works when run from the ASTA thread.
+    if (keepActive) {
+        return RunOnUIThread(&_DisplayRequestActive);
+    } else {
+        return RunOnUIThread(&_DisplayRequestRelease);
+    }
+}
+
+} // namespace FrameworkHelper

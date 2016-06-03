@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WUXDCurrentChangingEventArgs, WUXDPropertyChangedEventArgs, WUXDBindingExpressionBase, WUXDBindingOperations, WUXDBindingBase,
     WUXDBindingExpression, WUXDCollectionViewSource, WUXDRelativeSource, WUXDBinding, WUXDItemIndexRange;
@@ -58,7 +58,6 @@ enum _WUXDUpdateSourceTrigger {
 typedef unsigned WUXDUpdateSourceTrigger;
 
 #include "WindowsFoundation.h"
-#include "WindowsFoundationCollections.h"
 #include "WindowsUIXamlInterop.h"
 #include "WindowsUIXaml.h"
 #include "WindowsUICore.h"

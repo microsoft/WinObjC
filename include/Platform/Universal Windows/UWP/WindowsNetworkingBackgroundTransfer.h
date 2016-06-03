@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "interopBase.h"
+#include <UWP/interopBase.h>
 
 @class WNBDownloadOperation, WNBUnconstrainedTransferRequestResult, WNBUploadOperation, WNBBackgroundTransferGroup,
     WNBBackgroundTransferCompletionGroup, WNBBackgroundTransferContentPart, WNBResponseInformation, WNBBackgroundDownloader,
@@ -73,10 +73,9 @@ enum _WNBBackgroundTransferBehavior {
 typedef unsigned WNBBackgroundTransferBehavior;
 
 #include "WindowsApplicationModelBackground.h"
-#include "WindowsSecurityCredentials.h"
 #include "WindowsWeb.h"
 #include "WindowsStorageStreams.h"
-#include "WindowsFoundationCollections.h"
+#include "WindowsSecurityCredentials.h"
 #include "WindowsFoundation.h"
 #include "WindowsStorage.h"
 #include "WindowsUINotifications.h"
