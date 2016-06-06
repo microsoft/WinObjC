@@ -597,12 +597,13 @@ typedef NSInteger (*compFuncType)(id, id, void*);
 */
 - (NSArray*)arrayByAddingObjectsFromArray:(NSArray*)arr {
     std::vector<id> objects([self count] + [arr count]);
+    NSUInteger currentIndex = 0;
     for (NSUInteger i = 0; i < [self count]; i++) {
-        objects[i] = [self objectAtIndex:i];
+        objects[currentIndex++] = [self objectAtIndex:i];
     }
 
     for (NSUInteger i = 0; i < [arr count]; i++) {
-        objects[i] = [arr objectAtIndex:i];
+        objects[currentIndex++] = [arr objectAtIndex:i];
     }
 
     return [NSArray arrayWithObjects:objects.data() count:objects.size()];
