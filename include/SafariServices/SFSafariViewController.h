@@ -25,11 +25,13 @@ SAFARISERVICES_EXPORT_CLASS
 @interface SFSafariViewController : UIViewController
 @property (nonatomic, weak) id<SFSafariViewControllerDelegate> delegate;
 
-- (instancetype)initWithURL:(NSURL*)URL STUB_METHOD;
-- (instancetype)initWithURL:(NSURL*)URL entersReaderIfAvailable:(BOOL)entersReaderIfAvailable STUB_METHOD;
-@end
+- (instancetype)initWithNibName:(NSString*)nibName bundle:(NSBundle*)nibBundle NS_UNAVAILABLE;
 
-// Microsoft extensions
-@interface SFSafariViewController (Microsoft)
-- (instancetype)initWithOAuthURL:(NSURL*)URL substituteRedirectURL:(NSURL*)redirectURL;
+- (instancetype)initWithURL:(NSURL*)URL;
+- (instancetype)initWithURL:(NSURL*)URL entersReaderIfAvailable:(BOOL)entersReaderIfAvailable NS_DESIGNATED_INITIALIZER;
+
+// WINOBJC extension: To be used specifically when the view controller will be hosting
+// an OAuth login. This will use the Windows WebAuthenticationBroker UI rather than a
+// generic web view UI.
+- (instancetype)initWithOAuthURL:(NSURL*)URL substituteRedirectURL:(NSURL*)redirectURL NS_DESIGNATED_INITIALIZER;
 @end
