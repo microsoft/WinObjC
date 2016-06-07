@@ -25,7 +25,7 @@
 
 @implementation NSAttributedString
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSAttributedString, NSAttributedStringPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSAttributedString, NSAttributedStringPrototype, CFAttributedStringGetTypeID);
 
 /**
  @Status Interoperable

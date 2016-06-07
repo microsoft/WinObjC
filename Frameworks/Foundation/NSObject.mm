@@ -37,6 +37,8 @@
 
 #import <mutex>
 
+#import "ForFoundationOnly.h"
+
 static BOOL _NSSelectorNotFoundIsNonFatal;
 static const wchar_t* TAG = L"Objective-C";
 
@@ -589,6 +591,10 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
 - (id)autoContentAccessingProxy {
     UNIMPLEMENTED();
     return StubReturn();
+}
+
+- (CFTypeID)_cfTypeID {
+    return CFTypeGetTypeID();
 }
 
 @end

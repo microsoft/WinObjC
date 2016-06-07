@@ -68,7 +68,7 @@ static NSString* _getFormatterSymbol(NSCalendar* self, NSLocale* locale, CFStrin
 
 @implementation NSCalendar
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSCalendar, NSCalendarPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSCalendar, NSCalendarPrototype, CFCalendarGetTypeID);
 
 /**
  @Status Interoperable
