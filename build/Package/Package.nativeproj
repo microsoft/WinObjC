@@ -57,6 +57,7 @@
       <SBBinaries Include="..\..\bin\*.exe" />
       <SBBinaries Include="..\..\bin\*.dll" />
       <SBBinaries Include="..\..\bin\*.vsix" />
+      <SBBinaries Include="..\..\bin\*.pkgdef" />
       <SBLegal Include="..\..\license.txt;..\..\ThirdPartyNotices.txt;..\..\README.md" />
 
       <!-- X86 -->
