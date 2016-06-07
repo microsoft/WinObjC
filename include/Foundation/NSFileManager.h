@@ -90,12 +90,10 @@ FOUNDATION_EXPORT NSString* const NSFileProtectionCompleteUntilFirstUserAuthenti
 
 FOUNDATION_EXPORT NSString* const NSUbiquityIdentityDidChangeNotification;
 
-FOUNDATION_EXPORT NSString* NSHomeDirectoryForUser(NSString* userName) STUB_METHOD;
 FOUNDATION_EXPORT NSString* NSOpenStepRootDirectory() STUB_METHOD;
 
 FOUNDATION_EXPORT_CLASS
 @interface NSFileManager : NSObject
-- (id)init;
 + (NSFileManager*)defaultManager;
 - (NSURL*)URLForDirectory:(NSSearchPathDirectory)directory
                  inDomain:(NSSearchPathDomainMask)domain

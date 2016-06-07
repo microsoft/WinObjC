@@ -113,9 +113,7 @@ static boolean setup_test_paths() {
                       gDirectoryExistsPath = gBaseTemporaryDirectoryPath + gDirectoryExistsName;
                       gDirectoryDoesNotExistPath = gBaseTemporaryDirectoryPath + gDirectoryDoesNotExistName;
 
-                      // TODO 7492530: NSFileManager currentDirectoryPath does not actually return the current directory path
-                      // auto cwd = [NSFileManager defaultManager].currentDirectoryPath;
-                      auto cwd = [NSString stringWithCString:gBaseCurrentWorkingDirectoryPath.data() encoding:NSUTF8StringEncoding];
+                      auto cwd = [NSFileManager defaultManager].currentDirectoryPath;
                       NSURL* cwdURL = [NSURL fileURLWithPath:cwd isDirectory:YES];
                       // 1 for path separator
                       gRelativeOffsetFromBaseCurrentWorkingDirectory = strlen(cwdURL.fileSystemRepresentation) + 1;
@@ -461,20 +459,16 @@ TEST(NSURL, URLByResolvingSymlinksInPath) {
         NSURL* url = [NSURL fileURLWithPath:@"~"];
         ASSERT_OBJCEQ(url, [url copy]);
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
-        // TODO 7492530: NSFileManager currentDirectoryPath does not actually return the current directory path
-        // auto expected =
-        //     [[@"file://" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
-        auto expected = [[NSURL fileURLWithPath:@"."].absoluteString stringByAppendingString:@"~"];
+         auto expected =
+             [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath] stringByAppendingString:@"/~"];
         ASSERT_OBJCEQ_MSG(result, expected, @"URLByResolvingSymlinksInPath resolves relative paths using current working directory.");
     }
 
     {
         NSURL* url = [NSURL fileURLWithPath:@"anysite.com/search"];
         auto result = [url URLByResolvingSymlinksInPath].absoluteString;
-        // TODO 7492530: NSFileManager currentDirectoryPath does not actually return the current directory path
-        // auto expected = [[@"file://" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
-        //     stringByAppendingString:@"/anysite.com/search"];
-        auto expected = [[NSURL fileURLWithPath:@"."].absoluteString stringByAppendingString:@"anysite.com/search"];
+         auto expected = [[@"file:///" stringByAppendingString:[NSFileManager defaultManager].currentDirectoryPath]
+             stringByAppendingString:@"/anysite.com/search"];
         ASSERT_OBJCEQ(result, expected);
     }
 

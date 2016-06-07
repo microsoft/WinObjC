@@ -477,6 +477,7 @@ CF_EXPORT int _NS_rmdir(const char *name);
 CF_EXPORT int _NS_chmod(const char *name, int mode);
 CF_EXPORT int _NS_unlink(const char *name);
 CF_EXPORT char *_NS_getcwd(char *dstbuf, size_t size);     // Warning: this doesn't support dstbuf as null even though 'getcwd' does
+CF_EXPORT int _NS_chdir(const char *name);
 CF_EXPORT char *_NS_getenv(const char *name);
 CF_EXPORT int _NS_rename(const char *oldName, const char *newName);
 CF_EXPORT int _NS_open(const char *name, int oflag, int pmode);
