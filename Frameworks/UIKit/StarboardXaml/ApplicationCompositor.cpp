@@ -29,16 +29,6 @@ using namespace Windows::Foundation;
 using namespace Windows::UI::Core;
 using namespace Windows::System::Threading;
 
-struct StartParameters {
-    int argc;
-    char** argv;
-    std::string principalClassName;
-    std::string delegateClassName;
-    float windowWidth, windowHeight;
-};
-
-StartParameters g_startParams = { 0, nullptr, std::string(), std::string(), 0.0f, 0.0f };
-
 void InitializeApp() {
     // Only init once.
     // No lock needed as this is only called from the UI thread.
@@ -64,27 +54,22 @@ void InitializeApp() {
 }
 
 extern "C" void RunApplicationMain(Platform::String^ principalClassName,
-                                     Platform::String^ delegateClassName,
-                                     float windowWidth,
-                                     float windowHeight) {
+                                   Platform::String^ delegateClassName,
+                                   float windowWidth,
+                                   float windowHeight,
+                                   ActivationType activationType,
+                                   Platform::String^ activationArg) {
     // Perform initialization
     InitializeApp();
 
-    // Store the start parameters to hand off to the run loop
-    g_startParams.argc = 0;
-    g_startParams.argv = nullptr;
-    g_startParams.principalClassName = Strings::WideToNarrow(principalClassName->Data());
-    g_startParams.delegateClassName = Strings::WideToNarrow(delegateClassName->Data());
-    g_startParams.windowWidth = windowWidth;
-    g_startParams.windowHeight = windowHeight;
-
     // Kick off iOS application main startup
-    ApplicationMainStart(g_startParams.argc,
-        g_startParams.argv,
-        g_startParams.principalClassName.c_str(),
-        g_startParams.delegateClassName.c_str(),
-        g_startParams.windowWidth,
-        g_startParams.windowHeight);
+    ApplicationMainStart(
+        Strings::WideToNarrow(principalClassName->Data()).c_str(),
+        Strings::WideToNarrow(delegateClassName->Data()).c_str(),
+        windowWidth,
+        windowHeight,
+        activationType,
+        Strings::WideToNarrow(activationArg->Data()).c_str());
 }
 
 // clang-format off

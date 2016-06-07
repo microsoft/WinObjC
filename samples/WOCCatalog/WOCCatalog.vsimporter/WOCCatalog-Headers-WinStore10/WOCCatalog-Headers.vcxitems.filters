@@ -1,11 +1,23 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{F080C8FB-E1BB-4920-920F-1643A7D8464A}</UniqueIdentifier>
+      <UniqueIdentifier>{06ED1580-2D4E-4B2E-BAC8-897D5EC312D0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BlankWindowViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\WindowLevelControlViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\WindowViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\UIPasteboardViewController.h">
+      <Filter>WOCCatalog</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ShadowViewController.h">
       <Filter>WOCCatalog</Filter>
     </ClInclude>

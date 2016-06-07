@@ -51,7 +51,7 @@ struct insetInfo {
 };
 
 CFMutableDictionaryRef g_imageCache;
-static pthread_mutex_t imageCacheLock = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t imageCacheLock = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  @Status Interoperable
@@ -74,66 +74,6 @@ void UIImageSetLayerContents(CALayer* layer, UIImage* image) {
         [layer setContentsCenter:stretch];
     }
 }
-
-#ifdef UIIMAGE_CACHE_MANAGEMENT
-class imageCacheInfo {
-private:
-    UIImage** _images;
-    DWORD _numImages, _maxImages;
-    DWORD _totalSize;
-
-public:
-    imageCacheInfo() {
-        _images = NULL;
-        _numImages = 0;
-        _maxImages = 0;
-        _totalSize = 0;
-    }
-
-    void addImage(UIImage* image) {
-        if (_numImages + 1 >= _maxImages) {
-            _maxImages += 64;
-            _images = (UIImage**)IwRealloc(_images, sizeof(id) * _maxImages);
-        }
-
-        _images[_numImages] = image;
-        _totalSize += image->m_pImage->Backing()->Width() * image->m_pImage->Backing()->Height();
-        _numImages++;
-    }
-
-    void cullCache() {
-        for (int i = 0; i < _numImages; i++) {
-            if (_totalSize < 16 * 1024) {
-                return;
-            }
-
-            if (CFGetRetainCount(H2E(_images[i]->m_pImage)) == 1) {
-                id cacheName = _images[i]->_cacheName;
-                _totalSize -= _images[i]->m_pImage->Backing()->Width() * _images[i]->m_pImage->Backing()->Height();
-                memmove(&_images[i], &_images[i + 1], sizeof(id) * (_numImages - i - 1));
-                _numImages--;
-                i--;
-                [g_imageCache removeObjectForKey:cacheName];
-
-                continue;
-            }
-        }
-    }
-
-    void removeImage(UIImage* image) {
-        for (int i = 0; i < _numImages; i++) {
-            if (_images[i] == image) {
-                memmove(&_images[i], &_images[i + 1], sizeof(id) * (_numImages - i - 1));
-                _totalSize -= image->m_pImage->Backing()->Width() * image->m_pImage->Backing()->Height();
-                _numImages--;
-                return;
-            }
-        }
-    }
-};
-
-imageCacheInfo imageInfo;
-#endif
 
 @implementation UIImage {
     CGImageRef m_pImage;
@@ -178,10 +118,13 @@ imageCacheInfo imageInfo;
     obj->_scale = image->_scale;
     obj->_imageStretch = image->_imageStretch;
     obj->m_pImage = image->m_pImage;
+    CGImageRetain(obj->m_pImage);
     obj->_cacheName = [name copy];
+    pthread_mutex_lock(&imageCacheLock);
     [(id)g_imageCache setObject:(id)obj forKey:obj->_cacheName];
+    pthread_mutex_unlock(&imageCacheLock);
 
-    return obj;
+    return [obj autorelease];
 }
 
 /**
@@ -204,7 +147,7 @@ imageCacheInfo imageInfo;
         if (fileData) {
             found = [ret initWithData:fileData scale:scale];
             if (found) {
-                found->_cacheImage.attach([UIImage cacheImage:ret withName:pathAddr]);
+                found->_cacheImage = [UIImage cacheImage:ret withName:pathAddr];
             }
         }
     }
@@ -419,10 +362,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     _imageStretch.size.width = 1.0f;
     _imageStretch.size.height = 1.0f;
 
-#ifdef UIIMAGE_CACHE_MANAGEMENT
-    imageInfo.cullCache();
-#endif
-
     NSBundle* bundle = [NSBundle mainBundle];
 
     const char* path = (char*)[pathAddr UTF8String];
@@ -502,6 +441,7 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         }
     }
 
+    pthread_mutex_lock(&imageCacheLock);
     //  Check if it's already loaded
     if (g_imageCache == nil) {
         g_imageCache = CFDictionaryCreateMutable(NULL, 10, &kCFTypeDictionaryKeyCallBacks, NULL);
@@ -519,8 +459,10 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         _scale = cachedImage->_scale;
         _imageStretch = cachedImage->_imageStretch;
         _isFromCache = true;
+        pthread_mutex_unlock(&imageCacheLock);
         return self;
     }
+    pthread_mutex_unlock(&imageCacheLock);
 
     EbrFile* fpIn;
     BYTE in[8] = { 0 };
@@ -545,7 +487,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         }
     } else {
         EbrFile* fpIn;
-        char* in;
 
         fpIn = EbrFopen(pathStr, "rb");
         if (!fpIn) {
@@ -564,17 +505,17 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         }
         EbrFseek(fpIn, 0, SEEK_SET);
 
-        in = (char*)IwMalloc(len);
-        len = EbrFread(in, 1, len, fpIn);
+        auto inBuffer = std::make_unique<char[]>(len);
+        len = EbrFread(inBuffer.get(), 1, len, fpIn);
 
         EbrFclose(fpIn);
 
-        if (!loadTIFF(self, in, len)) {
-            if (!loadGIF(self, in, len)) {
-                if (!loadBMP(self, in, len)) {
+        if (!loadTIFF(self, inBuffer.get(), len)) {
+            if (!loadGIF(self, inBuffer.get(), len)) {
+                if (!loadBMP(self, inBuffer.get(), len)) {
                     TraceVerbose(TAG, L"Unrecognized image");
-                    for (int i = 0; i < 64; i++) {
-                        TraceVerbose(TAG, L"%02x ", in[i]);
+                    for (int i = 0; i < MIN(len, 64); i++) {
+                        TraceVerbose(TAG, L"%02x ", inBuffer[i]);
                         if ((i + 1) % 16 == 0)
                             TraceVerbose(TAG, L"");
                     }
@@ -584,8 +525,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
                 }
             }
         }
-
-        IwFree(in);
     }
 
     if (strstr(pathStr, "@2x") != NULL) {
@@ -598,14 +537,10 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     _imageStretch.size.height = 1.0f;
 
     //  Cache the image
-    _cacheImage.attach([UIImage cacheImage:self withName:[NSString stringWithCString:pathStr]]);
+    _cacheImage = [UIImage cacheImage:self withName:[NSString stringWithCString:pathStr]];
 
     if (pathStr)
         IwFree(pathStr);
-
-#ifdef UIIMAGE_CACHE_MANAGEMENT
-    imageInfo.addImage(self);
-#endif
 
     return self;
 }
@@ -658,21 +593,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
         TraceVerbose(TAG, L"UIImage: imageWithData, data=nil!");
         return nil;
     }
-
-#ifdef UIIMAGE_CACHE_MANAGEMENT
-    id cachePath = [data _filePath];
-    if (cachePath != nil) {
-        UIImage* cachedImage = [g_imageCache objectForKey:cachePath];
-        if (cachedImage != nil) {
-            m_pImage = cachedImage->m_pImage;
-            CFRetain(H2E(m_pImage));
-            _scale = cachedImage->_scale;
-            return self;
-        }
-    }
-
-    imageInfo.cullCache();
-#endif
 
     unsigned char* in = (unsigned char*)[data bytes];
     _scale = scale;
@@ -728,14 +648,6 @@ static bool loadTIFF(UIImage* dest, void* bytes, int length) {
     if (!m_pImage) {
         _deferredImageData.attach([data copy]);
     }
-
-#ifdef UIIMAGE_CACHE_MANAGEMENT
-    if (cachePath != nil) {
-        [g_imageCache setObject:self forKey:cachePath];
-        _cacheName = [cachePath copy];
-        imageInfo.addImage(self);
-    }
-#endif
 
     return self;
 }

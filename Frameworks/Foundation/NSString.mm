@@ -2362,11 +2362,6 @@ static std::vector<NSStringEncoding> _getNSStringEncodings() {
     return [self getCString:buffer maxLength:bufferSize encoding:encoding];
 }
 
-- (const wchar_t*)rawCharacters {
-    // TODO 7143070 This is only here for compatibility with projections. remove once we get a new projections.
-    return (const wchar_t*)[self cStringUsingEncoding:NSUTF16StringEncoding];
-}
-
 - (int)_versionStringCompare:(NSString*)compStrAddr {
     TraceWarning(TAG, L"Warning: versionStringCompare not implemented");
     char* str = (char*)[self UTF8String];

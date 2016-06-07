@@ -2,25 +2,28 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{4172f0b1-faf6-4bb5-9af3-b42ac1f0bd6b}</UniqueIdentifier>
+      <UniqueIdentifier>{54301553-f778-4fb5-9fcb-edb2a27656db}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{01c11b58-751c-43d0-9abc-10ea6150b297}</UniqueIdentifier>
+      <UniqueIdentifier>{dad4880c-6a54-48ec-84eb-87e08bf9708b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Images">
-      <UniqueIdentifier>{5ED7B826-6C4A-459C-B881-01268A942062}</UniqueIdentifier>
+      <UniqueIdentifier>{3B17B161-1BEE-4D63-AC8B-5B52F35FD576}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog">
-      <UniqueIdentifier>{EFC7B6ED-2601-4AD6-ACD8-41F21A9AB6CF}</UniqueIdentifier>
+      <UniqueIdentifier>{4D7F5631-530F-4896-85F5-97190E9C7BBF}</UniqueIdentifier>
     </Filter>
     <Filter Include="WOCCatalog\Supporting Files">
-      <UniqueIdentifier>{60118EC8-288E-4AB4-97F1-1EFC88F458C2}</UniqueIdentifier>
+      <UniqueIdentifier>{336C48A8-4532-495C-93FE-D62005D7E958}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{84C7F1D6-7773-4E2C-BD81-8AAC5F4FC21A}</UniqueIdentifier>
+      <UniqueIdentifier>{28A48E36-B15B-4C9B-8F1E-FF7CAEC11DCD}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="default.rd.xml" />
+    <AppxManifest Include="Package.appxmanifest" />
+    <None Include="WOCCatalog_TemporaryKey.pfx" />
     <Image Include="Assets\LockScreenLogo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
@@ -45,6 +48,9 @@
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\WindowLevelControlViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -60,7 +66,13 @@
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\WindowViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\main.m">
@@ -147,6 +159,9 @@
     <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
+    <ClangCompile Include="..\..\WOCCatalog\BlankWindowViewController.m">
+      <Filter>WOCCatalog</Filter>
+    </ClangCompile>
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m">
       <Filter>WOCCatalog</Filter>
     </ClangCompile>
@@ -201,6 +216,9 @@
     <SBResourceCopy Include="..\..\WOCCatalog\Images\blueButton.png">
       <Filter>Images</Filter>
     </SBResourceCopy>
+    <StoryboardCompile Include="..\..\WOCCatalog\XIBTest.storyboard">
+      <Filter>WOCCatalog</Filter>
+    </StoryboardCompile>
     <SBResourceCopy Include="..\..\WOCCatalog\Images\segment_tools.png">
       <Filter>Images</Filter>
     </SBResourceCopy>

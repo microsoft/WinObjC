@@ -187,6 +187,8 @@ XIBObject* ObjectConverter::ConverterForStoryObject(const char* className, pugi:
     IS_CONVERTER(ret, className, "panGestureRecognizer", UIPanGestureRecognizer)
     IS_CONVERTER(ret, className, "swipeGestureRecognizer", UISwipeGestureRecognizer)
     IS_CONVERTER(ret, className, "tapGestureRecognizer", UITapGestureRecognizer)
+    IS_CONVERTER(ret, className, "pageControl", UIPageControl)
+    IS_CONVERTER(ret, className, "mapView", MKMapView)
     IS_CONVERTER(ret, className, "customObject", ObjectConverterSwapper)
 
     if (ret == NULL) {

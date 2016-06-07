@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23FB26311CD3ED56009020FB /* XIBTest.storyboard */; settings = {ASSET_TAGS = (); }; };
+		23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23FB26311CD3ED56009020FB /* XIBTest.storyboard */; };
 		49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49FF82CE1C18BFED00798804 /* ApplicationViewController.m */; };
 		4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6401F1B712C0B0092921E /* PhotogridViewController.m */; };
 		4ED640231B717E470092921E /* SingleImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED640221B717E470092921E /* SingleImageViewController.m */; };
@@ -41,6 +41,7 @@
 		4EE861F61B5997AD00682BDB /* segment_tools.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861E91B5997AD00682BDB /* segment_tools.png */; };
 		4EE861F71B5997AD00682BDB /* whiteButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EE861EA1B5997AD00682BDB /* whiteButton.png */; };
 		4EE861FA1B5997E400682BDB /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE861F91B5997E400682BDB /* ImagesViewController.m */; };
+		4FAF43091CF67047009F29E8 /* UIPasteboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FAF43081CF67047009F29E8 /* UIPasteboardViewController.m */; };
 		4FBE9F581C0E518B00BF0B87 /* TextDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */; };
 		77D71D9C1C8F5A6800ED26A3 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */; };
 		77D71D9E1C8F5A8C00ED26A3 /* CoreMotionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 77D71D9D1C8F5A8C00ED26A3 /* CoreMotionViewController.mm */; };
@@ -56,6 +57,9 @@
 		8430AAC91BE7F2E500927545 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8430AAC81BE7F2E500927545 /* GLKit.framework */; };
 		AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */; };
 		AF8072C71C86238E00512FB6 /* URLSessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */; };
+		BF6DCE8B1CFF04C4009ECABD /* BlankWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6DCE861CFF04C4009ECABD /* BlankWindowViewController.m */; };
+		BF6DCE8C1CFF04C4009ECABD /* WindowLevelControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6DCE881CFF04C4009ECABD /* WindowLevelControlViewController.m */; };
+		BF6DCE8D1CFF04C4009ECABD /* WindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF6DCE8A1CFF04C4009ECABD /* WindowViewController.m */; };
 		C14942D11C77E1A700C2B67E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14942D01C77E1A700C2B67E /* Accelerate.framework */; };
 		C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */; };
 		D27357F21C6AD0E200CA31C4 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27357F11C6AD0E200CA31C4 /* CoreImage.framework */; };
@@ -137,6 +141,8 @@
 		4EE861EA1B5997AD00682BDB /* whiteButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = whiteButton.png; path = WOCCatalog/Images/whiteButton.png; sourceTree = "<group>"; };
 		4EE861F81B5997E400682BDB /* ImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagesViewController.h; sourceTree = "<group>"; };
 		4EE861F91B5997E400682BDB /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagesViewController.m; sourceTree = "<group>"; };
+		4FAF43071CF67047009F29E8 /* UIPasteboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIPasteboardViewController.h; sourceTree = "<group>"; };
+		4FAF43081CF67047009F29E8 /* UIPasteboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIPasteboardViewController.m; sourceTree = "<group>"; };
 		4FBE9F561C0E518B00BF0B87 /* TextDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextDisplayViewController.h; sourceTree = "<group>"; };
 		4FBE9F571C0E518B00BF0B87 /* TextDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextDisplayViewController.m; sourceTree = "<group>"; };
 		77D71D9B1C8F5A6800ED26A3 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
@@ -161,6 +167,12 @@
 		8430AAC81BE7F2E500927545 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLDownloadCell.mm; sourceTree = "<group>"; };
 		AF8072C51C86238E00512FB6 /* URLSessionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = URLSessionViewController.mm; sourceTree = "<group>"; };
+		BF6DCE851CFF04C4009ECABD /* BlankWindowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlankWindowViewController.h; sourceTree = "<group>"; };
+		BF6DCE861CFF04C4009ECABD /* BlankWindowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlankWindowViewController.m; sourceTree = "<group>"; };
+		BF6DCE871CFF04C4009ECABD /* WindowLevelControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowLevelControlViewController.h; sourceTree = "<group>"; };
+		BF6DCE881CFF04C4009ECABD /* WindowLevelControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowLevelControlViewController.m; sourceTree = "<group>"; };
+		BF6DCE891CFF04C4009ECABD /* WindowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowViewController.h; sourceTree = "<group>"; };
+		BF6DCE8A1CFF04C4009ECABD /* WindowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WindowViewController.m; sourceTree = "<group>"; };
 		C14942D01C77E1A700C2B67E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		C14942D21C77E1EE00C2B67E /* AccelerateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerateViewController.h; sourceTree = "<group>"; };
 		C14942D31C77E1EE00C2B67E /* AccelerateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerateViewController.m; sourceTree = "<group>"; };
@@ -232,6 +244,14 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				BF6DCE851CFF04C4009ECABD /* BlankWindowViewController.h */,
+				BF6DCE861CFF04C4009ECABD /* BlankWindowViewController.m */,
+				BF6DCE871CFF04C4009ECABD /* WindowLevelControlViewController.h */,
+				BF6DCE881CFF04C4009ECABD /* WindowLevelControlViewController.m */,
+				BF6DCE891CFF04C4009ECABD /* WindowViewController.h */,
+				BF6DCE8A1CFF04C4009ECABD /* WindowViewController.m */,
+				4FAF43071CF67047009F29E8 /* UIPasteboardViewController.h */,
+				4FAF43081CF67047009F29E8 /* UIPasteboardViewController.m */,
 				E789B2DF1CC59D3C0044F169 /* ShadowViewController.m */,
 				E789B2DE1CC59D320044F169 /* ShadowViewController.h */,
 				AF8072C41C86238E00512FB6 /* URLDownloadCell.mm */,
@@ -474,12 +494,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EE861DD1B5997A500682BDB /* XamlViewController.m in Sources */,
+				BF6DCE8C1CFF04C4009ECABD /* WindowLevelControlViewController.m in Sources */,
 				4EE861DB1B5997A500682BDB /* ViewController.m in Sources */,
 				4EE861DC1B5997A500682BDB /* WebViewController.m in Sources */,
 				7B2A185A1BB5FF9B0004E097 /* AutoLayoutViewController.m in Sources */,
 				4EE861D11B5997A500682BDB /* ButtonsViewController.m in Sources */,
 				E19F61D21BCE9962005077C5 /* GLKitExampleController.mm in Sources */,
+				BF6DCE8D1CFF04C4009ECABD /* WindowViewController.m in Sources */,
 				7B42BCF51B90ECFE00D45782 /* BezierViewController.m in Sources */,
+				4FAF43091CF67047009F29E8 /* UIPasteboardViewController.m in Sources */,
 				4EE8615B1B5996BF00682BDB /* main.m in Sources */,
 				AF8072C61C86238E00512FB6 /* URLDownloadCell.mm in Sources */,
 				4EE861DA1B5997A500682BDB /* TransitionsViewController.m in Sources */,
@@ -508,6 +531,7 @@
 				E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
 				C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */,
+				BF6DCE8B1CFF04C4009ECABD /* BlankWindowViewController.m in Sources */,
 				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,
 				4EE861D41B5997A500682BDB /* PickersViewController.m in Sources */,
 			);

@@ -31,6 +31,58 @@
 
 static const wchar_t* TAG = L"UIColor";
 
+@interface _UICachedColor : UIColor
+@end
+
+@implementation _UICachedColor
+
+// All instances of UIColor that are created using the named methods, for eg: + (UIColor *)purpleColor, + (UIColor *)brownColor etc, are
+// singletons on reference platform and calling release/autorelease/retain does not actually do anything and the retainCount returns
+// NSUIntegerMax.
+
+/**
+@Status Interoperable
+*/
+- (id)autorelease {
+    return self;
+}
+
+/**
+@Status Interoperable
+*/
+- (id)copyWithZone:(NSZone*)zone {
+    return self;
+}
+
+/**
+@Status Interoperable
+*/
+- (id)retain {
+    return self;
+}
+
+/**
+@Status Interoperable
+*/
+- (oneway void)release {
+}
+
+/**
+@Status Interoperable
+*/
+- (NSUInteger)retainCount {
+    // denotes an object that cannot be released
+    return NSUIntegerMax;
+}
+
+/**
+@Status Interoperable
+*/
+- (void)dealloc {
+}
+
+@end
+
 typedef struct {
     double r; // percent
     double g; // percent
@@ -159,24 +211,6 @@ rgb hsv2rgb(hsv in) {
     return out;
 }
 
-static id _cachedColorsDict;
-
-#define CACHED_COLOR(var, name, ...)                                  \
-    @synchronized(_cachedColorsDict) {                                \
-        if (((var) = [_cachedColorsDict objectForKey:name]) == nil) { \
-            (var) = __VA_ARGS__;                                      \
-            [_cachedColorsDict setObject:(id)(var) forKey:(name)];    \
-        }                                                             \
-    }                                                                 \
-    [[var retain] autorelease];
-
-#define RETURN_CACHED(name, ...)                 \
-    {                                            \
-        id ret;                                  \
-        CACHED_COLOR(ret, @name, ##__VA_ARGS__); \
-        return ret;                              \
-    }
-
 @implementation UIColor {
 @public
     enum BrushType _type;
@@ -201,7 +235,7 @@ static id _cachedColorsDict;
 
     NSString* pattern = [coder decodeObjectForKey:@"UIPatternSelector"];
     if (pattern == nil) {
-        pattern = [coder decodeObjectForKey: @"UISystemColorName"];
+        pattern = [coder decodeObjectForKey:@"UISystemColorName"];
     }
     if (pattern != nil) {
         const char* pPattern = [pattern UTF8String];
@@ -242,126 +276,144 @@ static id _cachedColorsDict;
  @Status Interoperable
 */
 + (UIColor*)grayColor {
-    RETURN_CACHED("gray", [self colorWithRed:0.5f green:0.5f blue:0.5f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)cyanColor {
-    RETURN_CACHED("cyan", [self colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:1.0f blue:1.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)magentaColor {
-    RETURN_CACHED("magenta", [self colorWithRed:1.0f green:0.0f blue:1.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:0.0f blue:1.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)lightGrayColor {
-    RETURN_CACHED("lightGray", [self colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)darkGrayColor {
-    RETURN_CACHED("darkGray", [self colorWithRed:0.25f green:0.25f blue:0.25f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.25f green:0.25f blue:0.25f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)clearColor {
-    RETURN_CACHED("clear", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)blackColor {
-    RETURN_CACHED("black", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)redColor {
-    RETURN_CACHED("red", [self colorWithRed:1.0f green:0.0f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:0.0f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)blueColor {
-    RETURN_CACHED("blue", [self colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:1.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)cornflowerBlueColor {
-    RETURN_CACHED("cornflowerBlue", [self colorWithRed:0.0f green:0.737f blue:0.949f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.737f blue:0.949f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)whiteColor {
-    RETURN_CACHED("white", [self colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)yellowColor {
-    RETURN_CACHED("yellow", [self colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:1.0f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)brownColor {
-    RETURN_CACHED("brown", [self colorWithRed:0.65f green:0.35f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.65f green:0.35f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)greenColor {
-    RETURN_CACHED("green", [self colorWithRed:0.0f green:1.0f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:1.0f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)orangeColor {
-    RETURN_CACHED("orange", [self colorWithRed:1.0f green:0.5f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:1.0f green:0.5f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)purpleColor {
-    RETURN_CACHED("purple", [self colorWithRed:0.7f green:0.2f blue:0.9f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.7f green:0.2f blue:0.9f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)lightTextColor {
-    RETURN_CACHED("lightText", [self colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.75f green:0.75f blue:0.75f alpha:1.0f];
+    return color;
 }
 
 /**
  @Status Interoperable
 */
 + (UIColor*)darkTextColor {
-    RETURN_CACHED("darkText", [self colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]);
+    static UIColor* color = [_UICachedColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f];
+    return color;
 }
 
 /**
@@ -712,15 +764,6 @@ _pattern = (id) CGPatternCreateFromImage(pImg);
     [_image release];
     [_pattern release];
     [super dealloc];
-}
-
-/**
- @Status Interoperable
-*/
-+ (void)initialize {
-    if (self == [UIColor class]) {
-        _cachedColorsDict = [NSMutableDictionary new];
-    }
 }
 
 /**

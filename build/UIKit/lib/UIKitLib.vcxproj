@@ -232,6 +232,14 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPercentDrivenInteractiveTransition.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverBackgroundView.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPopoverController.mm" />
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\WYPopoverController.m">
+      <ObjectiveCARC>true</ObjectiveCARC>
+      <OptimizationLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Disabled</OptimizationLevel>
+      <OptimizationLevel Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Disabled</OptimizationLevel>
+    </ClangCompile>
+    <ClangCompile Include="..\..\..\Frameworks\UIKit\WYStoryboardPopoverSegue.m">
+      <ObjectiveCARC>true</ObjectiveCARC>
+    </ClangCompile>
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPress.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPressesEvent.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\UIPreviewAction.mm" />
@@ -333,6 +341,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationMain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\ApplicationCompositor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\CALayerXaml.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\UIKit\StarboardXaml\StarboardXaml.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C0A51F53-73EE-435D-81D9-FE8FE625C431}</ProjectGuid>

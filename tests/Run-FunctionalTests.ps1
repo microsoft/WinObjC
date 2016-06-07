@@ -185,7 +185,7 @@ if (!$NoCopy)
     if ($TestDirectory -eq "")
     {
         $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-        $TestSrcDirectory = Join-Path $MyPath "..\build\Tests\FunctionalTests\$Platform\$Config\FunctionalTests"
+        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\FunctionalTests"
     }
     else
     {
@@ -231,16 +231,15 @@ if ($WTLOutputDirectory -ne [string]$null)
 {
     if ($TargetingDevice)
     {
-        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
         $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
+        $outputRemoteName = Join-Path -Path $TestDstDirectory -ChildPath $outputFileName
+        $argList += " /logFile:$outputRemoteName /enableWttLogging"
     }
     else
     {
         $outputLocalName = Join-Path -Path $WTLOutputDirectory -ChildPath $outputFileName
-        $outputRemoteName = $outputLocalName
+        $argList += " /logFile:$outputLocalName /enableWttLogging"
     }
-
-    $argList += " /logFile:$outputRemoteName /enableWttLogging"
 }
 
 

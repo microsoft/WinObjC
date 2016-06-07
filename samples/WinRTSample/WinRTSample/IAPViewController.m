@@ -58,28 +58,31 @@ NSString* const kProduct2 = @"product2";
             [WSCurrentAppSimulator reloadSimulatorAsync:result].completed =
                 ^void(RTObject<WFIAsyncAction>* asyncInfo, WFAsyncStatus asyncStatus) {
 
-                    [WSCurrentAppSimulator loadListingInformationAsyncWithSuccess:^void(WSListingInformation* info) {
+                    [WSCurrentAppSimulator
+                        loadListingInformationAsyncWithSuccess:^void(WSListingInformation* info) {
+                            dispatch_async(dispatch_get_main_queue(),
+                            ^{
+                                //This needs to be dispatched on the UI thread since it manipultes the UI.
+                                product1 = [info.productListings objectForKey:@"product1"];
+                                NSString* button1Title = [NSString stringWithFormat:@"Buy %@ (%@)", product1.name, product1.formattedPrice];
+                                UITableViewCell* buttonCell1 = [self makeButton:button1Title selector:@selector(purchaseProduct1:)];
+                                [self->buttons addObject:buttonCell1];
 
-                        product1 = [info.productListings objectForKey:@"product1"];
-                        NSString* button1Title = [NSString stringWithFormat:@"Buy %@ (%@)", product1.name, product1.formattedPrice];
-                        UITableViewCell* buttonCell1 = [self makeButton:button1Title selector:@selector(purchaseProduct1:)];
-                        [self->buttons addObject:buttonCell1];
+                                product2 = [info.productListings objectForKey:@"product2"];
+                                NSString* button2Title = [NSString stringWithFormat:@"Buy %@ (%@)", product2.name, product2.formattedPrice];
+                                UITableViewCell* buttonCell2 = [self makeButton:button2Title selector:@selector(purchaseProduct2:)];
+                                [self->buttons addObject:buttonCell2];
 
-                        product2 = [info.productListings objectForKey:@"product2"];
-                        NSString* button2Title = [NSString stringWithFormat:@"Buy %@ (%@)", product2.name, product2.formattedPrice];
-                        UITableViewCell* buttonCell2 = [self makeButton:button2Title selector:@selector(purchaseProduct2:)];
-                        [self->buttons addObject:buttonCell2];
+                                UITableView* tableView = self.tableView;
 
-                        UITableView* tableView = self.tableView;
-
-                        NSArray* insertIndexPaths = [NSArray
-                            arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:1], [NSIndexPath indexPathForRow:1 inSection:1], nil];
-                        [tableView beginUpdates];
-                        [tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationRight];
-                        [tableView endUpdates];
-                        outputTextView.text = @"Purchase something";
-
-                    }
+                                NSArray* insertIndexPaths = [NSArray
+                                arrayWithObjects:[NSIndexPath indexPathForRow:0 inSection:1], [NSIndexPath indexPathForRow:1 inSection:1], nil];
+                                [tableView beginUpdates];
+                                [tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+                                [tableView endUpdates];
+                                outputTextView.text = @"Purchase something";
+                            });
+                        }
                         failure:^(NSError* err) {
                             NSLog(@"Hit error %@ when attempting to load listing information!", err);
                         }];

@@ -16,6 +16,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ControlsViewController : UITableViewController
+@interface ControlsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end

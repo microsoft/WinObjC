@@ -18,7 +18,6 @@
 #import <StubReturn.h>
 
 #include "Platform/EbrPlatform.h"
-#include "EbrRemoteNotifications.h"
 
 #include "CoreFoundation/CFArray.h"
 #include "CoreGraphics/CGContext.h"
@@ -279,10 +278,6 @@ static idretaintype(WSDDisplayRequest) _screenActive;
     if (sharedApplication != nil) {
         return sharedApplication;
     }
-
-#ifdef SUPPORT_REMOTE_NOTIFICATIONS
-    EbrInitRemoteNotifications();
-#endif
 
     sharedApplication = [super alloc];
 
@@ -1243,9 +1238,6 @@ static void printViews(id curView, int level) {
 */
 - (void)registerForRemoteNotificationTypes:(UIRemoteNotificationType)types withId:(id)identifier {
     UNIMPLEMENTED();
-#ifdef SUPPORT_REMOTE_NOTIFICATIONS
-    EbrRegisterForRemoteNotifications(identifier);
-#endif
 }
 
 /**
@@ -1623,6 +1615,25 @@ static void _sendMemoryWarningToViewControllers(UIView* subview) {
     if (url != nil) {
         [UIApplication _launchedWithURL:url];
     }
+}
+
+- (void)_sendNotificationReceivedEvent:(NSString*)notificationData {
+    NSMutableDictionary* data = [NSMutableDictionary dictionary];
+    [data setValue:notificationData forKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+
+    // As there is now way to distinguish remote notification from local, calling both delegates here for now.
+    if ([self.delegate respondsToSelector:@selector(didReceiveRemoteNotification:fetchCompletionHandler:)]) {
+        [self.delegate didReceiveRemoteNotification:data
+                             fetchCompletionHandler:^{
+                                 // TODO::
+                                 // todo-nithishm-05262016 - Implement logic to invoke a application trigger here.
+                             }];
+    } else if ([self.delegate respondsToSelector:@selector(didReceiveRemoteNotification:)]) {
+        [self.delegate didReceiveRemoteNotification:data];
+    }
+
+    // TODO::
+    // todo-nithishm-05262016 - Implement UILocalNotification and call LocalNotification delegate here.
 }
 
 - (void)_sendHighMemoryWarning {
@@ -2582,18 +2593,25 @@ void UIShutdown() {
     GetCACompositor()->setDeviceSize(newWidth, newHeight);
 
     //  Adjust size of all UIWindows
-    if (_sizeUIWindowToFit) {
-        CGRect curBounds;
-        curBounds.origin.x = 0.0f;
-        curBounds.origin.y = 0.0f;
-        curBounds.size.width = newWidth;
-        curBounds.size.height = newHeight;
-
-        for (UIWindow* current in windows) {
+    CGRect curBounds;
+    curBounds.origin.x = 0.0f;
+    curBounds.origin.y = 0.0f;
+    curBounds.size.width = newWidth;
+    curBounds.size.height = newHeight;
+    bool isFrameSet = false;
+    for (UIWindow* current in windows) {
+        if (current.sizeUIWindowToFit) {
             [current setFrame:curBounds];
+            isFrameSet = true;
         }
+    }
 
+    if (_sizeUIWindowToFit) {
         [popupRotationLayer setFrame:curBounds];
+        isFrameSet = true;
+    }
+
+    if (isFrameSet) {
         [UIApplication viewTreeChanged];
     }
 

@@ -252,6 +252,7 @@
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIApplication.m" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\UIViewTest.mm" />
     <ClangCompile Include="..\..\..\..\tests\unittests\UIKit\NSValue+UIKitAdditionsTests.mm" />
+    <ClangCompile Include="UIColorTests.mm" />
     <ClangCompile Include="UIFontTests.mm" />
   </ItemGroup>
   <ItemGroup>

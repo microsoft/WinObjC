@@ -15,8 +15,13 @@
 //******************************************************************************
 #pragma once
 
-// IOS application main startup path
-extern "C" int ApplicationMainStart(
-    int argc, char* argv[], const char* principalName, const char* delegateName, float windowWidth, float windowHeight);
+#include "StarboardXaml.h"
 
+// IOS application main startup path
+extern "C" int ApplicationMainStart(const char* principalName,
+                                    const char* delegateName,
+                                    float windowWidth,
+                                    float windowHeight,
+                                    ActivationType activationType,
+                                    const char* activationArg);
 void SetTemporaryFolder(const char* folder);

@@ -22,7 +22,7 @@ static const CGFloat c_width = 260;
 static const CGFloat c_height = 40;
 
 @implementation TextFieldsViewController {
-@private 
+@private
     NSMutableArray* _textFields;
 }
 

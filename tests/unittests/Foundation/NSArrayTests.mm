@@ -259,3 +259,7 @@ TEST(NSArray, ExpandBeyondCapacity) {
 
     ASSERT_EQ(expectedCount, [array count]);
 }
+
+TEST(NSArray, AddingObjects) {
+    assertArrayContents([@[@1, @2] arrayByAddingObjectsFromArray:@[@3, @4]], @1, @2, @3, @4, nil);
+}

@@ -18,3 +18,4 @@
 extern "C" int UIApplicationMainLoop();
 extern "C" void UIApplicationMainHandleHighMemoryUsageEvent();
 extern "C" void UIApplicationMainHandleWindowVisibilityChangeEvent(bool isVisible);
+extern "C" void UIApplicationMainHandleToastNotificationEvent(const char* notificationData);

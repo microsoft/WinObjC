@@ -37,8 +37,6 @@ UIWindow* m_pMainWindow = NULL;
 
 UIWindow* _curKeyWindow = nil;
 
-static float curWindowLevel = 1.0f;
-
 NSString* const UIWindowDidBecomeVisibleNotification = @"UIWindowDidBecomeVisibleNotification";
 NSString* const UIWindowDidBecomeHiddenNotification = @"UIWindowDidBecomeHiddenNotification";
 NSString* const UIWindowDidBecomeKeyNotification = @"UIWindowDidBecomeKeyNotification";
@@ -118,6 +116,7 @@ static void initInternal(UIWindow* self, CGRect pos) {
     GetCACompositor()->setNodeTopMost((DisplayNode*)[ourLayer _presentationNode], true);
 
     [self setWindowLevel:UIWindowLevelNormal];
+    [self setSizeUIWindowToFit:[[UIApplication displayMode] sizeUIWindowToFit]];
 
     [[UIApplication sharedApplication] _popupWindow];
 }

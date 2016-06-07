@@ -35,6 +35,7 @@
 
 @protocol UIAdaptivePresentationControllerDelegate;
 
+UIKIT_EXPORT_CLASS
 @interface UIPresentationController : NSObject <UIAppearanceContainer, UIContentContainer, UIFocusEnvironment, UITraitEnvironment>
 
 - (instancetype)initWithPresentedViewController:(UIViewController*)presentedViewController
