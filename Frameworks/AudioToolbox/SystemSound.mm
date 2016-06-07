@@ -72,9 +72,7 @@ void _handleMediaEndedEvent();
     if (self = [super init]) {
         _systemSoundID = systemSoundID;
 
-        // __bridge casting not supported yet for conversions between NSURL* and CFURLRef. Using static_cast instead.
-        // NSURL* url = (__bridge NSURL*)inFileURL;
-        NSURL* url = static_cast<NSURL*>(inFileURL);
+        NSURL* url = (__bridge NSURL*)inFileURL;
         NSString* scheme = [url scheme];
 
         if (scheme == nil || [scheme isEqualToString:@"file"]) {
