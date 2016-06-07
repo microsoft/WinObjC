@@ -17,11 +17,12 @@
 #import "ControlsViewController.h"
 #import "PopoverViewController.h"
 
-static const int POPOVERCONTROL_ROW = 4;
-static const int MODALFORMSHEET_ROW = 5;
+static const int MODALFORMSHEET_ROW = 4;
 
 @interface ControlsViewController ()
 
+@property (nonatomic, strong) UIButton* leftPopoverButton;
+@property (nonatomic, strong) UIButton* rightPopoverButton;
 @property (nonatomic) BOOL resizeModal;
 
 @end
@@ -30,6 +31,35 @@ static const int MODALFORMSHEET_ROW = 5;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    UIBarButtonItem* popoverButton = [[UIBarButtonItem alloc] initWithTitle:@"Popover" style:UIBarButtonItemStyleBordered target:self action:@selector(pressedPopoverBarButton:)];
+    self.navigationItem.rightBarButtonItem = popoverButton;
+
+    CGRect tableFrame = self.view.bounds;
+    tableFrame.size.height -= 100;
+    tableFrame.origin.y += 100;
+    UITableView* tableView = [[UITableView alloc] initWithFrame:tableFrame];
+    [self.view addSubview:tableView];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+
+    const CGFloat buttonHeight = 50;
+    const CGFloat buttonWidth = 175;
+    const CGFloat buttonOriginOffset = 25;
+
+    self.leftPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.leftPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
+    [self.leftPopoverButton setTitle:@"Popover (left arrow direction)" forState:UIControlStateNormal];
+    [self.leftPopoverButton setFrame:CGRectMake(buttonOriginOffset, buttonOriginOffset, buttonWidth, buttonHeight)];
+    [self.leftPopoverButton addTarget:self action:@selector(pressedPopoverButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.leftPopoverButton];
+
+    self.rightPopoverButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.rightPopoverButton.titleLabel.font = [UIFont systemFontOfSize:11];
+    [self.rightPopoverButton setTitle:@"Popover (up arrow direction)" forState:UIControlStateNormal];
+    [self.rightPopoverButton setFrame:CGRectMake(self.view.bounds.size.width - buttonOriginOffset - buttonWidth, buttonOriginOffset, buttonWidth, buttonHeight)];
+    [self.rightPopoverButton addTarget:self action:@selector(pressedPopoverButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.rightPopoverButton];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -110,11 +140,6 @@ static const int MODALFORMSHEET_ROW = 5;
         cell.textLabel.text = @"UIProgressView";
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-    } else if (indexPath.row == POPOVERCONTROL_ROW) {
-        // UIPopoverPresentationController
-
-        cell.textLabel.text = @"UIPopupPresentationController (press to launch)";
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     } else if (indexPath.row == MODALFORMSHEET_ROW) {
         // form sheet modal
 
@@ -138,7 +163,7 @@ static const int MODALFORMSHEET_ROW = 5;
 }
 
 - (NSIndexPath*)tableView:(UITableView*)tableView willSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (indexPath.row == POPOVERCONTROL_ROW || indexPath.row == MODALFORMSHEET_ROW) {
+    if (indexPath.row == MODALFORMSHEET_ROW) {
         return indexPath;
     }
 
@@ -146,25 +171,7 @@ static const int MODALFORMSHEET_ROW = 5;
 }
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath*)indexPath {
-    if (indexPath.row == POPOVERCONTROL_ROW) {
-        // Note: presenting a UIViewController with the UIModalPresentationStyle of Popover does not yet present the view controller
-        // as a popover. UIPopoverController has been depricated in ios9.0.
-        // This work will need to be completed as part of UIPopoverPresentationController work.
-        PopoverViewController* popover = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
-
-        assert(popover.popoverPresentationController == nil);
-
-        popover.modalPresentationStyle = UIModalPresentationPopover;
-        // Present the view controller using the popover style.
-        [self presentViewController:popover animated:YES completion:nil];
-
-        assert(popover.popoverPresentationController != nil);
-        // Get the popover presentation controller and configure it.
-        UIPopoverPresentationController* presentationController = [popover popoverPresentationController];
-        presentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft | UIPopoverArrowDirectionRight;
-        presentationController.sourceView = self.view;
-        presentationController.sourceRect = CGRectMake(100, 100, 100, 100);
-    } else if (indexPath.row == MODALFORMSHEET_ROW) {
+    if (indexPath.row == MODALFORMSHEET_ROW) {
         UIViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
         viewController.modalPresentationStyle = UIModalPresentationFormSheet;
 
@@ -180,6 +187,52 @@ static const int MODALFORMSHEET_ROW = 5;
 
 - (void)toggleResizeModal {
     self.resizeModal = !self.resizeModal;
+}
+
+- (void)pressedPopoverButton:(UIButton*)sender {
+    PopoverViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
+    viewController.modalPresentationStyle = UIModalPresentationPopover;
+
+    assert(viewController.popoverPresentationController == nil);
+
+    viewController.modalPresentationStyle = UIModalPresentationPopover;
+    viewController.preferredContentSize = CGSizeMake(500, 500);
+
+    [self presentViewController:viewController animated:YES completion:^{
+        assert(viewController.numViewEventsFired == 3);
+    }];
+
+    assert(viewController.popoverPresentationController != nil);
+
+    UIPopoverPresentationController* presentationController = [viewController popoverPresentationController];
+    presentationController.sourceView = sender;
+    presentationController.sourceRect = sender.frame;
+
+    // test different popover arrow directions
+    if (sender == self.leftPopoverButton) {
+        presentationController.permittedArrowDirections = UIPopoverArrowDirectionLeft;
+    } else {
+        presentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;
+    }
+}
+
+- (void)pressedPopoverBarButton:(UIBarButtonItem*)sender {
+    PopoverViewController* viewController = [[PopoverViewController alloc] initWithImage:[UIImage imageNamed:@"photo1.jpg"]];
+    viewController.modalPresentationStyle = UIModalPresentationPopover;
+
+    assert(viewController.popoverPresentationController == nil);
+
+    viewController.modalPresentationStyle = UIModalPresentationPopover;
+    viewController.preferredContentSize = CGSizeMake(300, 300);
+
+    [self presentViewController:viewController animated:YES completion:^{
+        assert(viewController.numViewEventsFired == 3);
+    }];
+
+    assert(viewController.popoverPresentationController != nil);
+
+    UIPopoverPresentationController* presentationController = [viewController popoverPresentationController];
+    presentationController.barButtonItem = sender;
 }
 
 @end

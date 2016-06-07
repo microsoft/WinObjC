@@ -45,7 +45,7 @@ enum : NSUInteger {
 };
 typedef NSUInteger UIPopoverArrowDirection;
 
-@class UIView, UIPopoverController, UIBarButtonItem, UIPopoverView;
+@class UIView, UIPopoverController, UIBarButtonItem;
 @protocol UIPopoverControllerDelegate;
 
 UIKIT_EXPORT_CLASS
@@ -70,6 +70,9 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, readonly, getter=isPopoverVisible) BOOL popoverVisible;
 @property (nonatomic, copy) NSArray* passthroughViews;
 @property (nonatomic, readonly) UIPopoverArrowDirection popoverArrowDirection;
-@property (nonatomic, copy) UIColor* backgroundColor STUB_PROPERTY;
+
+@property (nonatomic, copy) UIColor* backgroundColor;
+@property (nonatomic, readwrite) UIEdgeInsets popoverLayoutMargins;
+@property (nonatomic, readwrite, retain) Class popoverBackgroundViewClass;
 
 @end

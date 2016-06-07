@@ -36,8 +36,11 @@
 }
 
 - (void)dismissViewController {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        assert(self.numViewEventsFired == 5);
+    }];
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -74,6 +77,8 @@
     scrollView.zoomScale = minimumScale;
 
     imageView.center = CGPointMake(scrollView.contentSize.width * 0.5, scrollView.contentSize.height * 0.5);
+
+    self.numViewEventsFired += 1;
 }
 
 - (void)createLayout {
@@ -132,6 +137,26 @@
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView*)scrollView withView:(UIView*)view atScale:(CGFloat)scale {
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.numViewEventsFired += 1;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.numViewEventsFired += 1;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.numViewEventsFired += 1;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.numViewEventsFired += 1;
 }
 
 @end
