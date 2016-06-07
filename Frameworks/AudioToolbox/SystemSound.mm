@@ -20,7 +20,8 @@
 #import <Starboard.h>
 #import <UWP/WindowsMediaPlayback.h>
 #import <mutex>
-#include <NSLogging.h>
+#import <NSBundleInternal.h>
+#import <NSLogging.h>
 #import "AssertARCEnabled.h"
 
 #include <COMIncludes.h>
@@ -72,20 +73,9 @@ void _handleMediaEndedEvent();
     if (self = [super init]) {
         _systemSoundID = systemSoundID;
 
-        NSURL* url = (__bridge NSURL*)inFileURL;
-        NSString* scheme = [url scheme];
-
-        if (scheme == nil || [scheme isEqualToString:@"file"]) {
-            NSURL* appxurl = [[NSURL alloc] initFileURLWithPath:url.path];
-
-            TraceInfo(TAG, L"Loading media at file URL: %hs\n", [appxurl.absoluteString UTF8String]);
-
-            _mediaUri = [WFUri makeUri:[NSString stringWithFormat:@"ms-appx://%@", appxurl.path]];
-        } else {
-            _mediaUri = [WFUri makeUri:url.absoluteString];
-
-            TraceInfo(TAG, L"Loading media at URI: %hs\n", [_mediaUri.absoluteUri UTF8String]);
-        }
+        NSURL* url = [[NSBundle mainBundle] _msAppxURLForResourceWithURL:(__bridge NSURL*)inFileURL];
+        _mediaUri = [WFUri makeUri:url.absoluteString];
+        TraceInfo(TAG, L"Loading media at URI: %hs\n", [_mediaUri.absoluteUri UTF8String]);  
     }
 
     return self;
