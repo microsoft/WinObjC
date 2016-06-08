@@ -64,10 +64,9 @@ __pragma(clang diagnostic pop) \
     return nullptr; \
 } \
  \
--(Class)classForCoder { \
+- (Class)classForCoder { \
   return [NSBridgedType class];\
 }
-
 // clang-format on
 
 // Helper macro for prototype classes - they must not be retained or released
@@ -77,11 +76,11 @@ __pragma(clang diagnostic pop) \
         return self;                           \
     }                                          \
                                                \
-    -(oneway void)release {                    \
+    -(oneway void)release{                     \
         /* No-op, prototypes are singletons */ \
     }                                          \
                                                \
-    -(id)autorelease {                         \
+        - (id)autorelease {                    \
         return self;                           \
     }
 
@@ -129,12 +128,20 @@ static inline bool shouldUseConcreteClass(Class self, Class base, Class derived)
         return [super allocWithZone:zone];                                                                   \
     }
 
+// Helper macro for base classes
+#define BASE_CLASS_REQUIRED_IMPLS(NSBridgedType, NSBridgedPrototypeType, CFTypeIDFunc) \
+    +ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSBridgedType, NSBridgedPrototypeType);        \
+                                                                                       \
+    -(CFTypeID)_cfTypeID {                                                             \
+        return CFTypeIDFunc();                                                         \
+    }
+
 #define BRIDGED_COLLECTION_FAST_ENUMERATION(CFBridgedType)                                                                           \
     (NSUInteger) countByEnumeratingWithState : (NSFastEnumerationState*)state objects : (id*)stackBuf count : (NSUInteger)maxCount { \
         return _##CFBridgedType##FastEnumeration((CFBridgedType##Ref)self, state, stackBuf, maxCount);                               \
     }
 
 #define BRIDGED_THROW_IF_IMMUTABLE(ISMutableFN, CFBridgedType) \
-    if (!ISMutableFN((CFBridgedType)self)) { \
-        [self doesNotRecognizeSelector:_cmd]; \
+    if (!ISMutableFN((CFBridgedType)self)) {                   \
+        [self doesNotRecognizeSelector:_cmd];                  \
     }

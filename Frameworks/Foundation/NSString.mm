@@ -80,7 +80,7 @@ typedef enum {
 /**
  @Status Interoperable
 */
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSString, NSStringPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
 /**
  @Status Interoperable

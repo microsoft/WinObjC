@@ -47,7 +47,7 @@ FOUNDATION_EXPORT_CLASS
 + (NSData*)dataWithPropertyList:(id)plist
                          format:(NSPropertyListFormat)format
                         options:(NSPropertyListWriteOptions)opt
-                          error:(NSError* _Nullable*)error STUB_METHOD;
+                          error:(NSError* _Nullable*)error;
 + (NSInteger)writePropertyList:(id)plist
                       toStream:(NSOutputStream*)stream
                         format:(NSPropertyListFormat)format
@@ -61,7 +61,7 @@ FOUNDATION_EXPORT_CLASS
                      options:(NSPropertyListReadOptions)opt
                       format:(NSPropertyListFormat*)format
                        error:(NSError* _Nullable*)error STUB_METHOD;
-+ (BOOL)propertyList:(id)plist isValidForFormat:(NSPropertyListFormat)format STUB_METHOD;
++ (BOOL)propertyList:(id)plist isValidForFormat:(NSPropertyListFormat)format;
 + (NSData*)dataFromPropertyList:(id)plist format:(NSPropertyListFormat)format errorDescription:(NSString* _Nullable*)errorString;
 + (id)propertyListFromData:(NSData*)data
           mutabilityOption:(NSPropertyListMutabilityOptions)opt

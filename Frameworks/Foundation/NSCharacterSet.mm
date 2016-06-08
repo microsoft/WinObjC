@@ -25,7 +25,7 @@
 
 @implementation NSCharacterSet
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSCharacterSet, NSMutableCharacterSetPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSCharacterSet, NSMutableCharacterSetPrototype, CFCharacterSetGetTypeID);
 
 /**
  @Status Interoperable
@@ -178,14 +178,16 @@
  @Status Interoperable
 */
 + (instancetype)characterSetWithCharactersInString:(NSString*)aString {
-    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(nullptr, static_cast<CFStringRef>(aString))) autorelease];
+    return
+        [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInString(nullptr, static_cast<CFStringRef>(aString))) autorelease];
 }
 
 /**
  @Status Interoperable
 */
 + (instancetype)characterSetWithRange:(NSRange)aRange {
-    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInRange(nullptr, CFRange{ aRange.location, aRange.length })) autorelease];
+    return [static_cast<NSCharacterSet*>(CFCharacterSetCreateWithCharactersInRange(nullptr, CFRange{ aRange.location, aRange.length }))
+        autorelease];
 }
 
 /**

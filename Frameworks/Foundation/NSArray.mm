@@ -17,13 +17,11 @@
 #include "Starboard.h"
 #include "StubReturn.h"
 #include "CFHelpers.h"
-#include "NSPropertyListReader.h"
 #include "Foundation/NSMutableArray.h"
 #include "Foundation/NSMutableData.h"
 #include "Foundation/NSEnumerator.h"
 #include "Foundation/NSKeyedArchiver.h"
 #include "Foundation/NSArray.h"
-#include "NSXMLPropertyList.h"
 #include "NSEnumeratorInternal.h"
 #include "NSPropertyListWriter_binary.h"
 #include "CoreFoundation/CFArray.h"
@@ -39,11 +37,9 @@
 
 static const wchar_t* TAG = L"NSArray";
 
-@class NSXMLPropertyList, NSPropertyListReader, NSPropertyListWriter_Binary;
-
 @implementation NSArray
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSArray, NSArrayPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSArray, NSArrayPrototype, CFArrayGetTypeID);
 
 /**
  @Status Interoperable
@@ -741,7 +737,7 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
     }
 
     if ([self count] > 0) {
-        [s deleteCharactersInRange:{[s length] - 2, 2}];
+        [s deleteCharactersInRange:{[s length] - 2, 2 }];
     }
 
     [s appendString:@")"];

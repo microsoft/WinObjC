@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		143EAE4E1D075DD50068D90F /* UserDefaultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */; };
 		23FB26321CD3ED56009020FB /* XIBTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23FB26311CD3ED56009020FB /* XIBTest.storyboard */; };
 		49FF82CF1C18BFED00798804 /* ApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 49FF82CE1C18BFED00798804 /* ApplicationViewController.m */; };
 		4ED640201B712C0B0092921E /* PhotogridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED6401F1B712C0B0092921E /* PhotogridViewController.m */; };
@@ -85,6 +86,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		143EAE4C1D075DD50068D90F /* UserDefaultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsViewController.h; sourceTree = "<group>"; };
+		143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsViewController.m; sourceTree = "<group>"; };
 		23FB26311CD3ED56009020FB /* XIBTest.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = XIBTest.storyboard; sourceTree = "<group>"; };
 		49FF82CE1C18BFED00798804 /* ApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationViewController.m; sourceTree = "<group>"; };
 		49FF82D01C18BFF700798804 /* ApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationViewController.h; sourceTree = "<group>"; };
@@ -244,6 +247,8 @@
 		4EE861571B5996BF00682BDB /* WOCCatalog */ = {
 			isa = PBXGroup;
 			children = (
+				143EAE4C1D075DD50068D90F /* UserDefaultsViewController.h */,
+				143EAE4D1D075DD50068D90F /* UserDefaultsViewController.m */,
 				BF6DCE851CFF04C4009ECABD /* BlankWindowViewController.h */,
 				BF6DCE861CFF04C4009ECABD /* BlankWindowViewController.m */,
 				BF6DCE871CFF04C4009ECABD /* WindowLevelControlViewController.h */,
@@ -530,6 +535,7 @@
 				F01C225B1C1A54450007FF0B /* TaskInfoViewController.m in Sources */,
 				E789B2E01CC59D3C0044F169 /* ShadowViewController.m in Sources */,
 				4EE861D91B5997A500682BDB /* ToolbarsViewController.m in Sources */,
+				143EAE4E1D075DD50068D90F /* UserDefaultsViewController.m in Sources */,
 				C14942D41C77E1EE00C2B67E /* AccelerateViewController.m in Sources */,
 				BF6DCE8B1CFF04C4009ECABD /* BlankWindowViewController.m in Sources */,
 				4EE861D71B5997A500682BDB /* TextFieldsViewController.m in Sources */,

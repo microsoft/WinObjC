@@ -992,6 +992,40 @@ TEST(KVO, RemoveWithDuplicateContext) { // Test adding duplicate contexts
     [pool release];
 }
 
+TEST(KVO, RemoveOneOfTwoObservers) { // Test adding duplicate contexts
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    TestKVOObject* observed = [[[TestKVOObject alloc] init] autorelease];
+    TestKVOObserver* observer = [[[TestKVOObserver alloc] init] autorelease];
+    TestKVOObserver* observer2 = [[[TestKVOObserver alloc] init] autorelease];
+
+    [observed addObserver:observer
+               forKeyPath:@"basicObjectProperty"
+                  options:NSKeyValueObservingOptionNew
+                  context:nullptr];
+    [observed addObserver:observer2
+               forKeyPath:@"basicObjectProperty"
+                  options:NSKeyValueObservingOptionNew
+                  context:nullptr];
+
+    observed.basicObjectProperty = @"";
+
+    EXPECT_EQ_MSG([observer numberOfObservedChanges], 1, "There should be one observed change per observer.");
+    EXPECT_EQ_MSG([observer2 numberOfObservedChanges], 1, "There should be one observed change per observer.");
+
+    [observed removeObserver:observer2 forKeyPath:@"basicObjectProperty"];
+
+    observed.basicObjectProperty = @"";
+
+    EXPECT_EQ_MSG([observer numberOfObservedChanges],
+                  2,
+                  "There should be one additional observed change; the removal should have only removed the second observer.");
+
+    EXPECT_EQ([observer2 numberOfObservedChanges], 1);
+
+    [observed removeObserver:observer forKeyPath:@"basicObjectProperty"];
+    [pool release];
+}
+
 TEST(KVO, RemoveUnregistered) { // Test removing an urnegistered observer[observed removeObserver:observer
     // forKeyPath:@"basicObjectProperty" context:reinterpret_cast<void*>(1)];
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];

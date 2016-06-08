@@ -41,6 +41,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <LinkWithFoundation>false</LinkWithFoundation>
     <LinkWithStarboard>false</LinkWithStarboard>
+    <StarboardLinkObjCRuntime>false</StarboardLinkObjCRuntime>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />

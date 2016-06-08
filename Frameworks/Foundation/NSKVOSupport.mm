@@ -66,7 +66,9 @@ NSString* const NSKeyValueChangeNotificationIsPriorKey = @"NSKeyValueChangeNotif
 #pragma region Keypath Observer
 @interface _NSKVOKeypathObserver () {
     long _changeDepth;
+    void* _rawObserver;
 }
+@property (nonatomic, readonly) void* _rawObserver;
 @end
 
 @implementation _NSKVOKeypathObserver
@@ -78,6 +80,7 @@ NSString* const NSKeyValueChangeNotificationIsPriorKey = @"NSKeyValueChangeNotif
     if (self = [super init]) {
         _object = object;
         objc_storeWeak(&_observer, observer);
+        _rawObserver = _observer;
         _keypath = [keypath copy];
         _options = options;
         _context = context;
@@ -94,6 +97,13 @@ NSString* const NSKeyValueChangeNotificationIsPriorKey = @"NSKeyValueChangeNotif
 
 - (id)observer {
     return objc_loadWeak(&_observer);
+}
+
+- (void*)_rawObserver {
+    // We might need to remove an observer during its own deallocation;
+    // We therefore need the ability to grab the raw observer pointer during
+    // deregistration.
+    return _rawObserver;
 }
 
 - (bool)pushWillChange {
@@ -374,7 +384,7 @@ static void _removeKeypathObserver(id object, NSString* keypath, id observer, vo
     _NSKVOObservationInfo* observationInfo = (_NSKVOObservationInfo*)[object observationInfo];
     for (_NSKVOKeyObserver* keyObserver in [observationInfo observersForKey:key]) {
         _NSKVOKeypathObserver* keypathObserver = keyObserver.keypathObserver;
-        if ([keypathObserver.keypath isEqual:keypath] && keypathObserver.object == object &&
+        if (keypathObserver._rawObserver == observer && keypathObserver.object == object && [keypathObserver.keypath isEqual:keypath] &&
             (!context || keypathObserver.context == context)) {
             _removeKeyObserver(keyObserver);
             return;
