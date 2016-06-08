@@ -33,10 +33,13 @@
 #include <vector>
 #include <functional>
 
+@interface NSCFCalendar : NSCalendar
+@end
+
 #pragma region NSCalendarPrototype
 @implementation NSCalendarPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFCalendar)
 
 - (instancetype)initWithCalendarIdentifier:(NSString*)identifier {
     return reinterpret_cast<NSCalendarPrototype*>(
@@ -163,9 +166,6 @@ static NSDateComponents* _descriptionToComponents(NSCalendar* self, NSCalendarUn
 
     return comps;
 }
-
-@interface NSCFCalendar : NSCalendar
-@end
 
 @implementation NSCFCalendar
 

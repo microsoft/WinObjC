@@ -33,7 +33,7 @@ enum { kCFNumberSInt128Type = 17 };
 
 @implementation NSNumberPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
 
 // Helper macro for NSNumberPrototype initializers (signed)
 // Var args are the signature of the initializer

@@ -23,10 +23,13 @@
 #include <CoreFoundation/CFCharacterSet.h>
 #include <Foundation/NSData.h>
 
+@interface NSCFCharacterSet : NSMutableCharacterSet
+@end
+
 #pragma region NSCharacterSetPrototype
 @implementation NSCharacterSetPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFCharacterSet)
 
 - (_Nullable instancetype)init {
     return reinterpret_cast<NSCharacterSetPrototype*>(
@@ -39,7 +42,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma region NSMutableCharacterSetPrototype
 @implementation NSMutableCharacterSetPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFCharacterSet)
 
 - (_Nullable instancetype)init {
     return reinterpret_cast<NSMutableCharacterSetPrototype*>(CFCharacterSetCreateMutable(kCFAllocatorDefault));
@@ -49,9 +52,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCFCharacterSet
-
-@interface NSCFCharacterSet : NSMutableCharacterSet
-@end
 
 @implementation NSCFCharacterSet
 
