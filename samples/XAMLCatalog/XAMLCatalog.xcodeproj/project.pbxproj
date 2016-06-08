@@ -8,43 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */; settings = {ASSET_TAGS = (); }; };
-		231415151CED3C1900B7F7C6 /* AccelerateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414C91CED3C1900B7F7C6 /* AccelerateViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415161CED3C1900B7F7C6 /* AlertsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414CB1CED3C1900B7F7C6 /* AlertsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415181CED3C1900B7F7C6 /* ApplicationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414CF1CED3C1900B7F7C6 /* ApplicationViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415191CED3C1900B7F7C6 /* AutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414D11CED3C1900B7F7C6 /* AutoLayoutViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314151A1CED3C1900B7F7C6 /* BasicAnimationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414D31CED3C1900B7F7C6 /* BasicAnimationViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314151B1CED3C1900B7F7C6 /* BezierViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414D51CED3C1900B7F7C6 /* BezierViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314151C1CED3C1900B7F7C6 /* BezierViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 231414D61CED3C1900B7F7C6 /* BezierViewController.xib */; settings = {ASSET_TAGS = (); }; };
-		2314151D1CED3C1900B7F7C6 /* ButtonsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414D81CED3C1900B7F7C6 /* ButtonsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314151E1CED3C1900B7F7C6 /* ControlsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414DA1CED3C1900B7F7C6 /* ControlsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314151F1CED3C1900B7F7C6 /* CoreMotionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 231414DC1CED3C1900B7F7C6 /* CoreMotionViewController.mm */; settings = {ASSET_TAGS = (); }; };
-		231415201CED3C1900B7F7C6 /* DisplayModeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414DE1CED3C1900B7F7C6 /* DisplayModeViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415211CED3C1900B7F7C6 /* FoundationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414E01CED3C1900B7F7C6 /* FoundationsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415221CED3C1900B7F7C6 /* GLKitExampleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 231414E21CED3C1900B7F7C6 /* GLKitExampleController.mm */; settings = {ASSET_TAGS = (); }; };
-		231415231CED3C1900B7F7C6 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 231414E31CED3C1900B7F7C6 /* Images */; settings = {ASSET_TAGS = (); }; };
-		231415241CED3C1900B7F7C6 /* ImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414E51CED3C1900B7F7C6 /* ImagesViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415271CED3C1900B7F7C6 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414E91CED3C1900B7F7C6 /* MainViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415291CED3C1900B7F7C6 /* OpenGLES11Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414ED1CED3C1900B7F7C6 /* OpenGLES11Controller.m */; settings = {ASSET_TAGS = (); }; };
-		2314152A1CED3C1900B7F7C6 /* OpenGLES20Controller.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414EF1CED3C1900B7F7C6 /* OpenGLES20Controller.m */; settings = {ASSET_TAGS = (); }; };
-		2314152B1CED3C1900B7F7C6 /* PageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414F11CED3C1900B7F7C6 /* PageViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314152C1CED3C1900B7F7C6 /* PhotogridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414F31CED3C1900B7F7C6 /* PhotogridViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314152D1CED3C1900B7F7C6 /* PickersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414F51CED3C1900B7F7C6 /* PickersViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314152E1CED3C1900B7F7C6 /* PopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414F71CED3C1900B7F7C6 /* PopoverViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314152F1CED3C1900B7F7C6 /* SearchBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414F91CED3C1900B7F7C6 /* SearchBarViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415301CED3C1900B7F7C6 /* SegmentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414FB1CED3C1900B7F7C6 /* SegmentsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415311CED3C1900B7F7C6 /* ShadowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414FD1CED3C1900B7F7C6 /* ShadowViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415321CED3C1900B7F7C6 /* SingleImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231414FF1CED3C1900B7F7C6 /* SingleImageViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415331CED3C1900B7F7C6 /* TaskInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415011CED3C1900B7F7C6 /* TaskInfoViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415341CED3C1900B7F7C6 /* TextDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415031CED3C1900B7F7C6 /* TextDisplayViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415351CED3C1900B7F7C6 /* TextFieldsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415051CED3C1900B7F7C6 /* TextFieldsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415361CED3C1900B7F7C6 /* ToolbarsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415071CED3C1900B7F7C6 /* ToolbarsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415371CED3C1900B7F7C6 /* TransitionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415091CED3C1900B7F7C6 /* TransitionsViewController.m */; settings = {ASSET_TAGS = (); }; };
-		231415381CED3C1900B7F7C6 /* URLDownloadCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2314150B1CED3C1900B7F7C6 /* URLDownloadCell.mm */; settings = {ASSET_TAGS = (); }; };
-		231415391CED3C1900B7F7C6 /* URLSessionViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2314150D1CED3C1900B7F7C6 /* URLSessionViewController.mm */; settings = {ASSET_TAGS = (); }; };
-		2314153A1CED3C1900B7F7C6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2314150F1CED3C1900B7F7C6 /* ViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314153B1CED3C1900B7F7C6 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415111CED3C1900B7F7C6 /* WebViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314153C1CED3C1900B7F7C6 /* XamlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 231415131CED3C1900B7F7C6 /* XamlViewController.m */; settings = {ASSET_TAGS = (); }; };
-		2314153D1CED3C1900B7F7C6 /* XIBTest.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 231415141CED3C1900B7F7C6 /* XIBTest.storyboard */; settings = {ASSET_TAGS = (); }; };
 		6EEB8A381CE4F4050021021E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A371CE4F4050021021E /* main.m */; };
 		6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3A1CE4F4050021021E /* AppDelegate.m */; };
 		6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3D1CE4F4050021021E /* ProgrammaticViewController.m */; };
@@ -55,77 +18,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		231414C81CED3C1900B7F7C6 /* AccelerateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccelerateViewController.h; path = ../../WOCCatalog/WOCCatalog/AccelerateViewController.h; sourceTree = "<group>"; };
-		231414C91CED3C1900B7F7C6 /* AccelerateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccelerateViewController.m; path = ../../WOCCatalog/WOCCatalog/AccelerateViewController.m; sourceTree = "<group>"; };
-		231414CA1CED3C1900B7F7C6 /* AlertsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlertsViewController.h; path = ../../WOCCatalog/WOCCatalog/AlertsViewController.h; sourceTree = "<group>"; };
-		231414CB1CED3C1900B7F7C6 /* AlertsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AlertsViewController.m; path = ../../WOCCatalog/WOCCatalog/AlertsViewController.m; sourceTree = "<group>"; };
-		231414CE1CED3C1900B7F7C6 /* ApplicationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplicationViewController.h; path = ../../WOCCatalog/WOCCatalog/ApplicationViewController.h; sourceTree = "<group>"; };
-		231414CF1CED3C1900B7F7C6 /* ApplicationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApplicationViewController.m; path = ../../WOCCatalog/WOCCatalog/ApplicationViewController.m; sourceTree = "<group>"; };
-		231414D01CED3C1900B7F7C6 /* AutoLayoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutoLayoutViewController.h; path = ../../WOCCatalog/WOCCatalog/AutoLayoutViewController.h; sourceTree = "<group>"; };
-		231414D11CED3C1900B7F7C6 /* AutoLayoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AutoLayoutViewController.m; path = ../../WOCCatalog/WOCCatalog/AutoLayoutViewController.m; sourceTree = "<group>"; };
-		231414D21CED3C1900B7F7C6 /* BasicAnimationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BasicAnimationViewController.h; path = ../../WOCCatalog/WOCCatalog/BasicAnimationViewController.h; sourceTree = "<group>"; };
-		231414D31CED3C1900B7F7C6 /* BasicAnimationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BasicAnimationViewController.m; path = ../../WOCCatalog/WOCCatalog/BasicAnimationViewController.m; sourceTree = "<group>"; };
-		231414D41CED3C1900B7F7C6 /* BezierViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BezierViewController.h; path = ../../WOCCatalog/WOCCatalog/BezierViewController.h; sourceTree = "<group>"; };
-		231414D51CED3C1900B7F7C6 /* BezierViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BezierViewController.m; path = ../../WOCCatalog/WOCCatalog/BezierViewController.m; sourceTree = "<group>"; };
-		231414D61CED3C1900B7F7C6 /* BezierViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = BezierViewController.xib; path = ../../WOCCatalog/WOCCatalog/BezierViewController.xib; sourceTree = "<group>"; };
-		231414D71CED3C1900B7F7C6 /* ButtonsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ButtonsViewController.h; path = ../../WOCCatalog/WOCCatalog/ButtonsViewController.h; sourceTree = "<group>"; };
-		231414D81CED3C1900B7F7C6 /* ButtonsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ButtonsViewController.m; path = ../../WOCCatalog/WOCCatalog/ButtonsViewController.m; sourceTree = "<group>"; };
-		231414D91CED3C1900B7F7C6 /* ControlsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlsViewController.h; path = ../../WOCCatalog/WOCCatalog/ControlsViewController.h; sourceTree = "<group>"; };
-		231414DA1CED3C1900B7F7C6 /* ControlsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ControlsViewController.m; path = ../../WOCCatalog/WOCCatalog/ControlsViewController.m; sourceTree = "<group>"; };
-		231414DB1CED3C1900B7F7C6 /* CoreMotionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreMotionViewController.h; path = ../../WOCCatalog/WOCCatalog/CoreMotionViewController.h; sourceTree = "<group>"; };
-		231414DC1CED3C1900B7F7C6 /* CoreMotionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CoreMotionViewController.mm; path = ../../WOCCatalog/WOCCatalog/CoreMotionViewController.mm; sourceTree = "<group>"; };
-		231414DD1CED3C1900B7F7C6 /* DisplayModeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayModeViewController.h; path = ../../WOCCatalog/WOCCatalog/DisplayModeViewController.h; sourceTree = "<group>"; };
-		231414DE1CED3C1900B7F7C6 /* DisplayModeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DisplayModeViewController.m; path = ../../WOCCatalog/WOCCatalog/DisplayModeViewController.m; sourceTree = "<group>"; };
-		231414DF1CED3C1900B7F7C6 /* FoundationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FoundationsViewController.h; path = ../../WOCCatalog/WOCCatalog/FoundationsViewController.h; sourceTree = "<group>"; };
-		231414E01CED3C1900B7F7C6 /* FoundationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FoundationsViewController.m; path = ../../WOCCatalog/WOCCatalog/FoundationsViewController.m; sourceTree = "<group>"; };
-		231414E11CED3C1900B7F7C6 /* GLKitExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLKitExampleController.h; path = ../../WOCCatalog/WOCCatalog/GLKitExampleController.h; sourceTree = "<group>"; };
-		231414E21CED3C1900B7F7C6 /* GLKitExampleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GLKitExampleController.mm; path = ../../WOCCatalog/WOCCatalog/GLKitExampleController.mm; sourceTree = "<group>"; };
-		231414E31CED3C1900B7F7C6 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Images; path = ../../WOCCatalog/WOCCatalog/Images; sourceTree = "<group>"; };
-		231414E41CED3C1900B7F7C6 /* ImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagesViewController.h; path = ../../WOCCatalog/WOCCatalog/ImagesViewController.h; sourceTree = "<group>"; };
-		231414E51CED3C1900B7F7C6 /* ImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImagesViewController.m; path = ../../WOCCatalog/WOCCatalog/ImagesViewController.m; sourceTree = "<group>"; };
-		231414E81CED3C1900B7F7C6 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = ../../WOCCatalog/WOCCatalog/MainViewController.h; sourceTree = "<group>"; };
-		231414E91CED3C1900B7F7C6 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = ../../WOCCatalog/WOCCatalog/MainViewController.m; sourceTree = "<group>"; };
-		231414EC1CED3C1900B7F7C6 /* OpenGLES11Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES11Controller.h; path = ../../WOCCatalog/WOCCatalog/OpenGLES11Controller.h; sourceTree = "<group>"; };
-		231414ED1CED3C1900B7F7C6 /* OpenGLES11Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenGLES11Controller.m; path = ../../WOCCatalog/WOCCatalog/OpenGLES11Controller.m; sourceTree = "<group>"; };
-		231414EE1CED3C1900B7F7C6 /* OpenGLES20Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES20Controller.h; path = ../../WOCCatalog/WOCCatalog/OpenGLES20Controller.h; sourceTree = "<group>"; };
-		231414EF1CED3C1900B7F7C6 /* OpenGLES20Controller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenGLES20Controller.m; path = ../../WOCCatalog/WOCCatalog/OpenGLES20Controller.m; sourceTree = "<group>"; };
-		231414F01CED3C1900B7F7C6 /* PageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageViewController.h; path = ../../WOCCatalog/WOCCatalog/PageViewController.h; sourceTree = "<group>"; };
-		231414F11CED3C1900B7F7C6 /* PageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PageViewController.m; path = ../../WOCCatalog/WOCCatalog/PageViewController.m; sourceTree = "<group>"; };
-		231414F21CED3C1900B7F7C6 /* PhotogridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhotogridViewController.h; path = ../../WOCCatalog/WOCCatalog/PhotogridViewController.h; sourceTree = "<group>"; };
-		231414F31CED3C1900B7F7C6 /* PhotogridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PhotogridViewController.m; path = ../../WOCCatalog/WOCCatalog/PhotogridViewController.m; sourceTree = "<group>"; };
-		231414F41CED3C1900B7F7C6 /* PickersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PickersViewController.h; path = ../../WOCCatalog/WOCCatalog/PickersViewController.h; sourceTree = "<group>"; };
-		231414F51CED3C1900B7F7C6 /* PickersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PickersViewController.m; path = ../../WOCCatalog/WOCCatalog/PickersViewController.m; sourceTree = "<group>"; };
-		231414F61CED3C1900B7F7C6 /* PopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PopoverViewController.h; path = ../../WOCCatalog/WOCCatalog/PopoverViewController.h; sourceTree = "<group>"; };
-		231414F71CED3C1900B7F7C6 /* PopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PopoverViewController.m; path = ../../WOCCatalog/WOCCatalog/PopoverViewController.m; sourceTree = "<group>"; };
-		231414F81CED3C1900B7F7C6 /* SearchBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchBarViewController.h; path = ../../WOCCatalog/WOCCatalog/SearchBarViewController.h; sourceTree = "<group>"; };
-		231414F91CED3C1900B7F7C6 /* SearchBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchBarViewController.m; path = ../../WOCCatalog/WOCCatalog/SearchBarViewController.m; sourceTree = "<group>"; };
-		231414FA1CED3C1900B7F7C6 /* SegmentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentsViewController.h; path = ../../WOCCatalog/WOCCatalog/SegmentsViewController.h; sourceTree = "<group>"; };
-		231414FB1CED3C1900B7F7C6 /* SegmentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SegmentsViewController.m; path = ../../WOCCatalog/WOCCatalog/SegmentsViewController.m; sourceTree = "<group>"; };
-		231414FC1CED3C1900B7F7C6 /* ShadowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShadowViewController.h; path = ../../WOCCatalog/WOCCatalog/ShadowViewController.h; sourceTree = "<group>"; };
-		231414FD1CED3C1900B7F7C6 /* ShadowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShadowViewController.m; path = ../../WOCCatalog/WOCCatalog/ShadowViewController.m; sourceTree = "<group>"; };
-		231414FE1CED3C1900B7F7C6 /* SingleImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SingleImageViewController.h; path = ../../WOCCatalog/WOCCatalog/SingleImageViewController.h; sourceTree = "<group>"; };
-		231414FF1CED3C1900B7F7C6 /* SingleImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SingleImageViewController.m; path = ../../WOCCatalog/WOCCatalog/SingleImageViewController.m; sourceTree = "<group>"; };
-		231415001CED3C1900B7F7C6 /* TaskInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskInfoViewController.h; path = ../../WOCCatalog/WOCCatalog/TaskInfoViewController.h; sourceTree = "<group>"; };
-		231415011CED3C1900B7F7C6 /* TaskInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskInfoViewController.m; path = ../../WOCCatalog/WOCCatalog/TaskInfoViewController.m; sourceTree = "<group>"; };
-		231415021CED3C1900B7F7C6 /* TextDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextDisplayViewController.h; path = ../../WOCCatalog/WOCCatalog/TextDisplayViewController.h; sourceTree = "<group>"; };
-		231415031CED3C1900B7F7C6 /* TextDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextDisplayViewController.m; path = ../../WOCCatalog/WOCCatalog/TextDisplayViewController.m; sourceTree = "<group>"; };
-		231415041CED3C1900B7F7C6 /* TextFieldsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextFieldsViewController.h; path = ../../WOCCatalog/WOCCatalog/TextFieldsViewController.h; sourceTree = "<group>"; };
-		231415051CED3C1900B7F7C6 /* TextFieldsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TextFieldsViewController.m; path = ../../WOCCatalog/WOCCatalog/TextFieldsViewController.m; sourceTree = "<group>"; };
-		231415061CED3C1900B7F7C6 /* ToolbarsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarsViewController.h; path = ../../WOCCatalog/WOCCatalog/ToolbarsViewController.h; sourceTree = "<group>"; };
-		231415071CED3C1900B7F7C6 /* ToolbarsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbarsViewController.m; path = ../../WOCCatalog/WOCCatalog/ToolbarsViewController.m; sourceTree = "<group>"; };
-		231415081CED3C1900B7F7C6 /* TransitionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransitionsViewController.h; path = ../../WOCCatalog/WOCCatalog/TransitionsViewController.h; sourceTree = "<group>"; };
-		231415091CED3C1900B7F7C6 /* TransitionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TransitionsViewController.m; path = ../../WOCCatalog/WOCCatalog/TransitionsViewController.m; sourceTree = "<group>"; };
-		2314150A1CED3C1900B7F7C6 /* URLDownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URLDownloadCell.h; path = ../../WOCCatalog/WOCCatalog/URLDownloadCell.h; sourceTree = "<group>"; };
-		2314150B1CED3C1900B7F7C6 /* URLDownloadCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = URLDownloadCell.mm; path = ../../WOCCatalog/WOCCatalog/URLDownloadCell.mm; sourceTree = "<group>"; };
-		2314150C1CED3C1900B7F7C6 /* URLSessionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = URLSessionViewController.h; path = ../../WOCCatalog/WOCCatalog/URLSessionViewController.h; sourceTree = "<group>"; };
-		2314150D1CED3C1900B7F7C6 /* URLSessionViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = URLSessionViewController.mm; path = ../../WOCCatalog/WOCCatalog/URLSessionViewController.mm; sourceTree = "<group>"; };
-		2314150E1CED3C1900B7F7C6 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../../WOCCatalog/WOCCatalog/ViewController.h; sourceTree = "<group>"; };
-		2314150F1CED3C1900B7F7C6 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../../WOCCatalog/WOCCatalog/ViewController.m; sourceTree = "<group>"; };
-		231415101CED3C1900B7F7C6 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebViewController.h; path = ../../WOCCatalog/WOCCatalog/WebViewController.h; sourceTree = "<group>"; };
-		231415111CED3C1900B7F7C6 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebViewController.m; path = ../../WOCCatalog/WOCCatalog/WebViewController.m; sourceTree = "<group>"; };
-		231415121CED3C1900B7F7C6 /* XamlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XamlViewController.h; path = ../../WOCCatalog/WOCCatalog/XamlViewController.h; sourceTree = "<group>"; };
-		231415131CED3C1900B7F7C6 /* XamlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XamlViewController.m; path = ../../WOCCatalog/WOCCatalog/XamlViewController.m; sourceTree = "<group>"; };
-		231415141CED3C1900B7F7C6 /* XIBTest.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = XIBTest.storyboard; path = ../../WOCCatalog/WOCCatalog/XIBTest.storyboard; sourceTree = "<group>"; };
 		2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = XAMLCatalog.storyboard; sourceTree = "<group>"; };
 		6EEB8A331CE4F4050021021E /* XAMLCatalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XAMLCatalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EEB8A371CE4F4050021021E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -154,84 +46,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		231414C71CED3BE200B7F7C6 /* LegacyControls */ = {
-			isa = PBXGroup;
-			children = (
-				231414E31CED3C1900B7F7C6 /* Images */,
-				231414C81CED3C1900B7F7C6 /* AccelerateViewController.h */,
-				231414C91CED3C1900B7F7C6 /* AccelerateViewController.m */,
-				231414CA1CED3C1900B7F7C6 /* AlertsViewController.h */,
-				231414CB1CED3C1900B7F7C6 /* AlertsViewController.m */,
-				231414CE1CED3C1900B7F7C6 /* ApplicationViewController.h */,
-				231414CF1CED3C1900B7F7C6 /* ApplicationViewController.m */,
-				231414D01CED3C1900B7F7C6 /* AutoLayoutViewController.h */,
-				231414D11CED3C1900B7F7C6 /* AutoLayoutViewController.m */,
-				231414D21CED3C1900B7F7C6 /* BasicAnimationViewController.h */,
-				231414D31CED3C1900B7F7C6 /* BasicAnimationViewController.m */,
-				231414D41CED3C1900B7F7C6 /* BezierViewController.h */,
-				231414D51CED3C1900B7F7C6 /* BezierViewController.m */,
-				231414D61CED3C1900B7F7C6 /* BezierViewController.xib */,
-				231414D71CED3C1900B7F7C6 /* ButtonsViewController.h */,
-				231414D81CED3C1900B7F7C6 /* ButtonsViewController.m */,
-				231414D91CED3C1900B7F7C6 /* ControlsViewController.h */,
-				231414DA1CED3C1900B7F7C6 /* ControlsViewController.m */,
-				231414DB1CED3C1900B7F7C6 /* CoreMotionViewController.h */,
-				231414DC1CED3C1900B7F7C6 /* CoreMotionViewController.mm */,
-				231414DD1CED3C1900B7F7C6 /* DisplayModeViewController.h */,
-				231414DE1CED3C1900B7F7C6 /* DisplayModeViewController.m */,
-				231414DF1CED3C1900B7F7C6 /* FoundationsViewController.h */,
-				231414E01CED3C1900B7F7C6 /* FoundationsViewController.m */,
-				231414E11CED3C1900B7F7C6 /* GLKitExampleController.h */,
-				231414E21CED3C1900B7F7C6 /* GLKitExampleController.mm */,
-				231414E41CED3C1900B7F7C6 /* ImagesViewController.h */,
-				231414E51CED3C1900B7F7C6 /* ImagesViewController.m */,
-				231414E81CED3C1900B7F7C6 /* MainViewController.h */,
-				231414E91CED3C1900B7F7C6 /* MainViewController.m */,
-				231414EC1CED3C1900B7F7C6 /* OpenGLES11Controller.h */,
-				231414ED1CED3C1900B7F7C6 /* OpenGLES11Controller.m */,
-				231414EE1CED3C1900B7F7C6 /* OpenGLES20Controller.h */,
-				231414EF1CED3C1900B7F7C6 /* OpenGLES20Controller.m */,
-				231414F01CED3C1900B7F7C6 /* PageViewController.h */,
-				231414F11CED3C1900B7F7C6 /* PageViewController.m */,
-				231414F21CED3C1900B7F7C6 /* PhotogridViewController.h */,
-				231414F31CED3C1900B7F7C6 /* PhotogridViewController.m */,
-				231414F41CED3C1900B7F7C6 /* PickersViewController.h */,
-				231414F51CED3C1900B7F7C6 /* PickersViewController.m */,
-				231414F61CED3C1900B7F7C6 /* PopoverViewController.h */,
-				231414F71CED3C1900B7F7C6 /* PopoverViewController.m */,
-				231414F81CED3C1900B7F7C6 /* SearchBarViewController.h */,
-				231414F91CED3C1900B7F7C6 /* SearchBarViewController.m */,
-				231414FA1CED3C1900B7F7C6 /* SegmentsViewController.h */,
-				231414FB1CED3C1900B7F7C6 /* SegmentsViewController.m */,
-				231414FC1CED3C1900B7F7C6 /* ShadowViewController.h */,
-				231414FD1CED3C1900B7F7C6 /* ShadowViewController.m */,
-				231414FE1CED3C1900B7F7C6 /* SingleImageViewController.h */,
-				231414FF1CED3C1900B7F7C6 /* SingleImageViewController.m */,
-				231415001CED3C1900B7F7C6 /* TaskInfoViewController.h */,
-				231415011CED3C1900B7F7C6 /* TaskInfoViewController.m */,
-				231415021CED3C1900B7F7C6 /* TextDisplayViewController.h */,
-				231415031CED3C1900B7F7C6 /* TextDisplayViewController.m */,
-				231415041CED3C1900B7F7C6 /* TextFieldsViewController.h */,
-				231415051CED3C1900B7F7C6 /* TextFieldsViewController.m */,
-				231415061CED3C1900B7F7C6 /* ToolbarsViewController.h */,
-				231415071CED3C1900B7F7C6 /* ToolbarsViewController.m */,
-				231415081CED3C1900B7F7C6 /* TransitionsViewController.h */,
-				231415091CED3C1900B7F7C6 /* TransitionsViewController.m */,
-				2314150A1CED3C1900B7F7C6 /* URLDownloadCell.h */,
-				2314150B1CED3C1900B7F7C6 /* URLDownloadCell.mm */,
-				2314150C1CED3C1900B7F7C6 /* URLSessionViewController.h */,
-				2314150D1CED3C1900B7F7C6 /* URLSessionViewController.mm */,
-				2314150E1CED3C1900B7F7C6 /* ViewController.h */,
-				2314150F1CED3C1900B7F7C6 /* ViewController.m */,
-				231415101CED3C1900B7F7C6 /* WebViewController.h */,
-				231415111CED3C1900B7F7C6 /* WebViewController.m */,
-				231415121CED3C1900B7F7C6 /* XamlViewController.h */,
-				231415131CED3C1900B7F7C6 /* XamlViewController.m */,
-				231415141CED3C1900B7F7C6 /* XIBTest.storyboard */,
-			);
-			name = LegacyControls;
-			sourceTree = "<group>";
-		};
 		2324634F1CE69E2C00B7AAE4 /* UIKitControls */ = {
 			isa = PBXGroup;
 			children = (
@@ -271,7 +85,6 @@
 				6EEB8A3F1CE4F4050021021E /* StoryBoardViewController.h */,
 				6EEB8A401CE4F4050021021E /* StoryBoardViewController.m */,
 				6EEB8A361CE4F4050021021E /* Supporting Files */,
-				231414C71CED3BE200B7F7C6 /* LegacyControls */,
 				2324634F1CE69E2C00B7AAE4 /* UIKitControls */,
 				2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */,
 			);
@@ -344,9 +157,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				231415231CED3C1900B7F7C6 /* Images in Resources */,
-				2314151C1CED3C1900B7F7C6 /* BezierViewController.xib in Resources */,
-				2314153D1CED3C1900B7F7C6 /* XIBTest.storyboard in Resources */,
 				6EEB8A461CE4F4050021021E /* Assets.xcassets in Resources */,
 				230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */,
 			);
@@ -359,45 +169,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2314153A1CED3C1900B7F7C6 /* ViewController.m in Sources */,
-				2314153B1CED3C1900B7F7C6 /* WebViewController.m in Sources */,
-				231415151CED3C1900B7F7C6 /* AccelerateViewController.m in Sources */,
-				231415391CED3C1900B7F7C6 /* URLSessionViewController.mm in Sources */,
-				2314151F1CED3C1900B7F7C6 /* CoreMotionViewController.mm in Sources */,
 				6EEB8A411CE4F4050021021E /* StoryBoardViewController.m in Sources */,
-				231415201CED3C1900B7F7C6 /* DisplayModeViewController.m in Sources */,
-				2314152F1CED3C1900B7F7C6 /* SearchBarViewController.m in Sources */,
-				2314153C1CED3C1900B7F7C6 /* XamlViewController.m in Sources */,
-				2314152E1CED3C1900B7F7C6 /* PopoverViewController.m in Sources */,
-				2314151D1CED3C1900B7F7C6 /* ButtonsViewController.m in Sources */,
-				231415211CED3C1900B7F7C6 /* FoundationsViewController.m in Sources */,
-				2314152D1CED3C1900B7F7C6 /* PickersViewController.m in Sources */,
-				231415341CED3C1900B7F7C6 /* TextDisplayViewController.m in Sources */,
-				231415241CED3C1900B7F7C6 /* ImagesViewController.m in Sources */,
-				231415361CED3C1900B7F7C6 /* ToolbarsViewController.m in Sources */,
-				231415351CED3C1900B7F7C6 /* TextFieldsViewController.m in Sources */,
 				6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */,
-				231415221CED3C1900B7F7C6 /* GLKitExampleController.mm in Sources */,
-				231415331CED3C1900B7F7C6 /* TaskInfoViewController.m in Sources */,
-				231415161CED3C1900B7F7C6 /* AlertsViewController.m in Sources */,
-				2314152B1CED3C1900B7F7C6 /* PageViewController.m in Sources */,
-				231415271CED3C1900B7F7C6 /* MainViewController.m in Sources */,
-				231415291CED3C1900B7F7C6 /* OpenGLES11Controller.m in Sources */,
-				2314152A1CED3C1900B7F7C6 /* OpenGLES20Controller.m in Sources */,
-				231415301CED3C1900B7F7C6 /* SegmentsViewController.m in Sources */,
-				231415181CED3C1900B7F7C6 /* ApplicationViewController.m in Sources */,
-				2314151A1CED3C1900B7F7C6 /* BasicAnimationViewController.m in Sources */,
-				2314151E1CED3C1900B7F7C6 /* ControlsViewController.m in Sources */,
-				231415311CED3C1900B7F7C6 /* ShadowViewController.m in Sources */,
 				6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */,
-				231415191CED3C1900B7F7C6 /* AutoLayoutViewController.m in Sources */,
 				6EEB8A5C1CE54B4E0021021E /* UIActivityIndicatorViewController.m in Sources */,
-				2314151B1CED3C1900B7F7C6 /* BezierViewController.m in Sources */,
-				2314152C1CED3C1900B7F7C6 /* PhotogridViewController.m in Sources */,
 				6EEB8A381CE4F4050021021E /* main.m in Sources */,
-				231415371CED3C1900B7F7C6 /* TransitionsViewController.m in Sources */,
-				231415321CED3C1900B7F7C6 /* SingleImageViewController.m in Sources */,
-				231415381CED3C1900B7F7C6 /* URLDownloadCell.mm in Sources */,
 				6EEB8A561CE546A80021021E /* MenuTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

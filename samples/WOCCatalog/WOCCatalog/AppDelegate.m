@@ -57,7 +57,11 @@
     self.redColorWindow = [[UIWindow alloc] initWithFrame:redColorWindowRect];
     self.redColorWindow.rootViewController = self.redVC;
     self.redColorWindow.windowLevel = UIWindowLevelNormal + 1.0f;
-    self.redColorWindow.sizeUIWindowToFit = FALSE;
+
+#ifdef WINOBJC
+    self.redColorWindow.sizeUIWindowToFit = NO;
+#endif
+
     [self.redColorWindow makeKeyAndVisible];
 
     self.blueVC = [[BlankWindowViewController alloc] init];
@@ -66,7 +70,11 @@
     self.blueColorWindow = [[UIWindow alloc] initWithFrame:blueColorWindowRect];
     self.blueColorWindow.rootViewController = self.blueVC;
     self.blueColorWindow.windowLevel = UIWindowLevelNormal + 2.0f;
-    self.blueColorWindow.sizeUIWindowToFit = FALSE;
+
+#ifdef WINOBJC
+    self.blueColorWindow.sizeUIWindowToFit = NO;
+#endif
+
     [self.blueColorWindow makeKeyAndVisible];
 
     self.yellowVC = [[BlankWindowViewController alloc] init];
@@ -75,7 +83,11 @@
     self.yellowColorWindow = [[UIWindow alloc] initWithFrame:yellowColorWindowRect];
     self.yellowColorWindow.rootViewController = self.yellowVC;
     self.yellowColorWindow.windowLevel = UIWindowLevelNormal + 3.0f;
-    self.yellowColorWindow.sizeUIWindowToFit = FALSE;
+
+#ifdef WINOBJC
+    self.yellowColorWindow.sizeUIWindowToFit = NO;
+#endif
+
     [self.yellowColorWindow makeKeyAndVisible];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

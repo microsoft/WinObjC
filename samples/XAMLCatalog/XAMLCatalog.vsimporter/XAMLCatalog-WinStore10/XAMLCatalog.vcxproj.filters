@@ -2,25 +2,22 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>{a7cb410d-f73a-454d-9dee-1194e590a284}</UniqueIdentifier>
+      <UniqueIdentifier>{5e1d8c21-db75-4ac7-ab6a-ee6d67dfc350}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>{4a4f8948-9407-4c15-9433-8ccb52452eab}</UniqueIdentifier>
+      <UniqueIdentifier>{f8a58446-c727-4df3-b062-8df026def734}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog">
-      <UniqueIdentifier>{00439A69-1646-460B-BFFC-7C4E0B123946}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="XAMLCatalog\LegacyControls">
-      <UniqueIdentifier>{B6554273-FE67-4DFC-B30F-39154BF061D2}</UniqueIdentifier>
+      <UniqueIdentifier>{BC24BAA8-953E-4351-B79A-F5DF3A97D3FC}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\Supporting Files">
-      <UniqueIdentifier>{381A52BC-B742-49CC-9457-9FDB6C51FD4F}</UniqueIdentifier>
+      <UniqueIdentifier>{62830486-8C8B-489A-B90B-14016E5818BE}</UniqueIdentifier>
     </Filter>
     <Filter Include="XAMLCatalog\UIKitControls">
-      <UniqueIdentifier>{F70DE354-4F3F-4FAA-BD55-5362537DBD59}</UniqueIdentifier>
+      <UniqueIdentifier>{7A1519BB-8DC7-4102-B2E0-329B37EB9C12}</UniqueIdentifier>
     </Filter>
     <Filter Include="Xcode Variable Files">
-      <UniqueIdentifier>{0A169AE4-7748-44D6-B5D5-EF1D70A34857}</UniqueIdentifier>
+      <UniqueIdentifier>{7BA1840E-EF4D-48B8-BA07-2BAF6CC5849F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,141 +45,30 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\WebViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\AccelerateViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\URLSessionViewController.mm">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\CoreMotionViewController.mm">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m">
       <Filter>XAMLCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\DisplayModeViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\SearchBarViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\XamlViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PopoverViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ButtonsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\FoundationsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PickersViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TextDisplayViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ImagesViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ToolbarsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TextFieldsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\GLKitExampleController.mm">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TaskInfoViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\AlertsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PageViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\MainViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\OpenGLES11Controller.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\OpenGLES20Controller.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\SegmentsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ApplicationViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\BasicAnimationViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ControlsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ShadowViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m">
       <Filter>XAMLCatalog</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\AutoLayoutViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m">
       <Filter>XAMLCatalog\UIKitControls</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\BezierViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PhotogridViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\main.m">
       <Filter>XAMLCatalog\Supporting Files</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TransitionsViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\SingleImageViewController.m">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </ClangCompile>
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\URLDownloadCell.mm">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
     </ClangCompile>
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m">
       <Filter>XAMLCatalog</Filter>
     </ClangCompile>
-    <SBResourceCopy Include="..\..\..\WOCCatalog\WOCCatalog\Images">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </SBResourceCopy>
-    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard">
-      <Filter>XAMLCatalog</Filter>
-    </StoryboardCompile>
-    <XibCompile Include="..\..\..\WOCCatalog\WOCCatalog\BezierViewController.xib">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </XibCompile>
-    <StoryboardCompile Include="..\..\..\WOCCatalog\WOCCatalog\XIBTest.storyboard">
-      <Filter>XAMLCatalog\LegacyControls</Filter>
-    </StoryboardCompile>
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets">
       <Filter>XAMLCatalog</Filter>
     </AssetCatalogCompile>
+    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard">
+      <Filter>XAMLCatalog</Filter>
+    </StoryboardCompile>
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist" />
     <Text Include="XAMLCatalog-Debug-xcvars.txt">
       <Filter>Xcode Variable Files</Filter>

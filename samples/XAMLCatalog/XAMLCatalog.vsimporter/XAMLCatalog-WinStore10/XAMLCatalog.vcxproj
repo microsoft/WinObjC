@@ -30,7 +30,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{4ECB1922-D8FB-4D9D-BE6D-7084402C3BDE}</ProjectGuid>
+    <ProjectGuid>{365DDC7D-A411-418B-85D0-BE5EEEE34F22}</ProjectGuid>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -181,51 +181,14 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\WebViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\AccelerateViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\URLSessionViewController.mm" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\CoreMotionViewController.mm" />
     <ClangCompile Include="..\..\XAMLCatalog\StoryBoardViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\DisplayModeViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\SearchBarViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\XamlViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PopoverViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ButtonsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\FoundationsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PickersViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TextDisplayViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ImagesViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ToolbarsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\AppDelegate.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\GLKitExampleController.mm" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TaskInfoViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\AlertsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PageViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\MainViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\OpenGLES11Controller.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\OpenGLES20Controller.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\SegmentsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ApplicationViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\BasicAnimationViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ControlsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\ShadowViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\ProgrammaticViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\AutoLayoutViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\UIActivityIndicatorViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\BezierViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\PhotogridViewController.m" />
     <ClangCompile Include="..\..\XAMLCatalog\main.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\TransitionsViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\SingleImageViewController.m" />
-    <ClangCompile Include="..\..\..\WOCCatalog\WOCCatalog\URLDownloadCell.mm" />
     <ClangCompile Include="..\..\XAMLCatalog\MenuTableViewController.m" />
-    <SBResourceCopy Include="..\..\..\WOCCatalog\WOCCatalog\Images" />
-    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
-    <XibCompile Include="..\..\..\WOCCatalog\WOCCatalog\BezierViewController.xib" />
-    <StoryboardCompile Include="..\..\..\WOCCatalog\WOCCatalog\XIBTest.storyboard" />
     <AssetCatalogCompile Include="..\..\XAMLCatalog\Assets.xcassets" />
+    <StoryboardCompile Include="..\..\XAMLCatalog\XAMLCatalog.storyboard" />
     <SBInfoPlistCopy Include="..\..\XAMLCatalog\Info.plist">
       <ExcludedFromBuild Condition="'$(Configuration)'=='Debug'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)'=='Release'">false</ExcludedFromBuild>
