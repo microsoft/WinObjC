@@ -31,7 +31,7 @@
 
 @implementation NSLocalePrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFLocale)
 
 - (instancetype)init {
     return [self initWithLocaleIdentifier:@""];

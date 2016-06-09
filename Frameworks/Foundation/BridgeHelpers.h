@@ -70,18 +70,22 @@ __pragma(clang diagnostic pop) \
 // clang-format on
 
 // Helper macro for prototype classes - they must not be retained or released
-#define PROTOTYPE_CLASS_REQUIRED_IMPLS         \
-    -(id)retain {                              \
-        /* No-op, prototypes are singletons */ \
-        return self;                           \
-    }                                          \
-                                               \
-    -(oneway void)release{                     \
-        /* No-op, prototypes are singletons */ \
-    }                                          \
-                                               \
-        - (id)autorelease {                    \
-        return self;                           \
+#define PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFClass) \
+    +(void)initialize {                           \
+        [NSCFClass self];                         \
+    }                                             \
+                                                  \
+    -(id)retain {                                 \
+        /* No-op, prototypes are singletons */    \
+        return self;                              \
+    }                                             \
+                                                  \
+    -(oneway void)release{                        \
+        /* No-op, prototypes are singletons */    \
+    }                                             \
+                                                  \
+        - (id)autorelease {                       \
+        return self;                              \
     }
 
 // Helper to determine if a concrete class should be used.

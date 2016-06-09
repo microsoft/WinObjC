@@ -32,10 +32,13 @@ static CFArrayCallBacks _NSCFArrayCallBacks = {
     _NSCFCallbackEquals,
 };
 
+@interface NSCFArray : NSMutableArray
+@end
+
 #pragma region NSArrayPrototype
 @implementation NSArrayPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFArray)
 
 - (instancetype)init {
     return [self initWithObjects:nil count:0];
@@ -50,7 +53,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 @implementation NSMutableArrayPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFArray)
 
 - (instancetype)init {
     return [self initWithObjects:nil count:0];
@@ -73,9 +76,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCFArray
-@interface NSCFArray : NSMutableArray
-@end
-
 @implementation NSCFArray
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFArrayRef, CFArrayGetTypeID, NSArray, NSCFArray)

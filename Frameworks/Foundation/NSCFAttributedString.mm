@@ -22,10 +22,13 @@
 
 #import <algorithm>
 
+@interface NSCFAttributedString : NSMutableAttributedString
+@end
+
 #pragma region NSAttributedStringPrototype
 @implementation NSAttributedStringPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFAttributedString)
 
 - (_Nullable instancetype)init {
     return [self initWithString:@"" attributes:nil];
@@ -48,7 +51,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma region NSMutableAttributedStringPrototype
 @implementation NSMutableAttributedStringPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFAttributedString)
 
 - (_Nullable instancetype)init {
     return [self initWithString:@"" attributes:nil];
@@ -75,9 +78,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCF Bridged Class
-@interface NSCFAttributedString : NSMutableAttributedString
-@end
-
 @implementation NSCFAttributedString
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFAttributedStringRef, CFAttributedStringGetTypeID, NSAttributedString, NSCFAttributedString)

@@ -21,10 +21,13 @@
 #include <CoreFoundation/CFData.h>
 #include "BridgeHelpers.h"
 
+@interface NSCFData : NSMutableData
+@end
+
 #pragma region NSDataPrototype
 @implementation NSDataPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
 
 - (_Nullable instancetype)init {
     return [self initWithBytes:"" length:0];
@@ -41,7 +44,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma region NSMutableDataPrototype
 @implementation NSMutableDataPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
 
 - (_Nullable instancetype)init {
     return [self initWithCapacity:0];
@@ -70,9 +73,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCF Bridged Class
-@interface NSCFData : NSMutableData
-@end
-
 @implementation NSCFData
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDataRef, CFDataGetTypeID, NSData, NSCFData)
