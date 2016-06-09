@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="141affcc-db48-49b8-befe-db45425604ef"
-    Publisher="CN=brianlam"
+    Name="46c77b35-bed0-4ae7-a5f4-a28b5824494b"
+    Publisher="islandwood"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="141affcc-db48-49b8-befe-db45425604ef" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="46c77b35-bed0-4ae7-a5f4-a28b5824494b" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>WOCCatalog</DisplayName>
-    <PublisherDisplayName>brianlam</PublisherDisplayName>
+    <PublisherDisplayName>ziweihe</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -24,7 +24,7 @@
   </Dependencies>
 
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
 
   <Applications>

@@ -98,5 +98,8 @@ class XIBAccessibilityArray : public XIBArray
     void EmitObject(NIBWriter *writer);
 };
 
+// Distinguish between XIB3 format and Storyboard since we write out intermediate NIB files in the storyboard code path
+// These methods are used only when dealing with storyboard (.storyboard) files
+bool IsStoryboardConversion();
 std::string GetOutputFilename(const char *filename);
 #endif

@@ -185,7 +185,7 @@ if (!$NoCopy)
     if ($TestDirectory -eq "")
     {
         $MyPath = (get-item $MyInvocation.MyCommand.Path).Directory.FullName;
-        $TestSrcDirectory = Join-Path $MyPath "..\build\Tests\FunctionalTests\$Platform\$Config\FunctionalTests"
+        $TestSrcDirectory = Join-Path $MyPath "..\build\$Platform\$Config\FunctionalTests"
     }
     else
     {

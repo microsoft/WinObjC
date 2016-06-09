@@ -95,5 +95,6 @@ UIKIT_EXPORT_CLASS
 @property (nonatomic, retain) UIScreen* screen STUB_PROPERTY;
 @property (nonatomic, assign) UIWindowLevel windowLevel;
 @property (nonatomic, retain) UIViewController* rootViewController;
+@property (nonatomic) BOOL sizeUIWindowToFit;
 
 @end

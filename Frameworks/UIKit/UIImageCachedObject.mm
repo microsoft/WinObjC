@@ -18,11 +18,17 @@
 #include "UIImageCachedObject.h"
 
 extern CFMutableDictionaryRef g_imageCache;
+extern pthread_mutex_t imageCacheLock;
 
 @implementation UIImageCachedObject
 - (void)dealloc {
+    pthread_mutex_lock(&imageCacheLock);
     [(id)g_imageCache removeObjectForKey:_cacheName];
+    pthread_mutex_unlock(&imageCacheLock);
     [_cacheName release];
+    if (m_pImage) {
+        CGImageRelease(m_pImage);
+    }
 
     [super dealloc];
 }

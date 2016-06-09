@@ -33,9 +33,18 @@
 
 #include "..\WBITelemetry\WBITelemetry.h"
 
-static char _g_outputDirectory[4096];
+// These globals should only be employed when dealing with storyboard files (.storyboard)
+// They are only set once when we determine that the input format is a storyboard
+bool g_isStoryboard = false;
+static char g_outputDirectory[4096];
+
+bool IsStoryboardConversion()
+{
+    return g_isStoryboard;
+}
+
 std::string GetOutputFilename(const char* filename) {
-    std::string ret = std::string(_g_outputDirectory) + "\\" + std::string(filename);
+    std::string ret = std::string(g_outputDirectory) + "\\" + std::string(filename);
 
     return ret;
 }
@@ -230,12 +239,6 @@ void ConvertXIBToNib(FILE* fpOut, pugi::xml_document& doc) {
 }
 
 int main(int argc, char* argv[]) {
-#if 0
-    argv[1] = "input.xib";
-    argv[2] = "output.nib";
-    argc = 3;
-#endif
-
     TELEMETRY_INIT(L"AIF-47606e3a-4264-4368-8f7f-ed6ec3366dca");
 
     if (checkTelemetryOptIn())
@@ -289,7 +292,9 @@ int main(int argc, char* argv[]) {
             printf("Unable to create directory %s err=%d\n", argv[2], errno);
             return -1;
         }
-        strcpy(_g_outputDirectory, argv[2]);
+
+        g_isStoryboard = true;
+        strcpy_s(g_outputDirectory, arraySize(g_outputDirectory), argv[2]);
         ConvertStoryboard(doc);
     } else if (strstr(type, ".XIB") != NULL) {
         if (argc < 3) {

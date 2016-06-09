@@ -417,6 +417,12 @@ inline size_t length(const char* string) {
     return ::strlen(string);
 }
 
+// Checks if the string is empty
+template <typename T>
+bool IsEmpty(T& string) {
+    return Private::StringTraits<T>::IsEmpty(string);
+}
+
 // Find and replace substrings in a string
 template <typename TSource, typename TFind, typename TReplace>
 void FindAndReplace(TSource& source, const TFind& find, const TReplace& replace) {

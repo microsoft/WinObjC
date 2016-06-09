@@ -14,5 +14,8 @@
 //
 //******************************************************************************
 
-bool EbrRegisterForRemoteNotifications(id identifier);
-void EbrInitRemoteNotifications();
+#import <UIKit/UIKit.h>
+
+@interface BlankWindowViewController : UIViewController {
+}
+@end

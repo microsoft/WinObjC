@@ -25,19 +25,25 @@
 
 @interface NSValue (UIKitAdditions)
 - (id)initWithCGSize:(CGSize)value;
+- (id)initWithCGVector:(CGVector)value;
 - (id)initWithCGPoint:(CGPoint)value;
 - (id)initWithCGRect:(CGRect)value;
 - (id)initWithUIOffset:(UIOffset)value;
 - (id)initWithCATransform3D:(CATransform3D)value;
 - (id)initWithCGAffineTransform:(CGAffineTransform)value;
+- (id)initWithUIEdgeInsets:(UIEdgeInsets)value;
 + (NSValue*)valueWithCGSize:(CGSize)value;
++ (NSValue*)valueWithCGVector:(CGVector)value;
 + (NSValue*)valueWithCGPoint:(CGPoint)value;
 + (NSValue*)valueWithCGRect:(CGRect)value;
 + (NSValue*)valueWithUIOffset:(UIOffset)value;
 + (NSValue*)valueWithCATransform3D:(CATransform3D)value;
-+ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)transform;
++ (NSValue*)valueWithCGAffineTransform:(CGAffineTransform)value;
++ (NSValue*)valueWithUIEdgeInsets:(UIEdgeInsets)value;
 - (CGSize)sizeValue;
 - (CGSize)CGSizeValue;
+- (CGVector)vectorValue;
+- (CGVector)CGVectorValue;
 - (CGPoint)pointValue;
 - (CGPoint)CGPointValue;
 - (CGRect)rectValue;
@@ -46,4 +52,6 @@
 - (CATransform3D)CATransform3DValue;
 - (CGAffineTransform)affineTransformValue;
 - (CGAffineTransform)CGAffineTransformValue;
+- (UIEdgeInsets)edgeInsetsValue;
+- (UIEdgeInsets)UIEdgeInsetsValue;
 @end

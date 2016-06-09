@@ -924,6 +924,12 @@ extern CFAllocatorRef __CFAllocatorGetAllocator(CFTypeRef);
 
 CFAllocatorRef CFGetAllocator(CFTypeRef cf) {
     if (NULL == cf) return kCFAllocatorSystemDefault;
+
+    // WINOBJC: Return something reasonable for ObjC objects
+    if (!__CF_IsCFObject(cf)) {
+        return kCFAllocatorDefault;
+    }
+
     if (__kCFAllocatorTypeID_CONST == __CFGenericTypeID_inline(cf)) {
     return __CFAllocatorGetAllocator(cf);
     }

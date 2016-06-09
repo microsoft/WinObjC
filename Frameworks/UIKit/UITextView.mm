@@ -68,23 +68,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 }
 
 - (void)_setText:(NSString*)text {
-    NSMutableDictionary* attributes = [NSMutableDictionary dictionary];
-    attributes[NSFontAttributeName] = [self font];
-    if (_textColor != nil) {
-        attributes[NSForegroundColorAttributeName] = _textColor;
+    if (![[self _text] isEqualToString:text]) {
+        [self _resetAttributedString:text];
     }
-
-    NSAttributedString* newString = [[NSAttributedString alloc] initWithString:text attributes:attributes];
-    [_layoutManager.textStorage beginEditing];
-    [_layoutManager.textStorage setAttributedString:newString];
-    [_layoutManager.textStorage endEditing];
 }
 
 - (NSString*)_text {
     NSString* ret = [_layoutManager.textStorage string];
-
-    if ([ret length] == 0)
+    if ([ret length] == 0) {
         return @"";
+    }
 
     return ret;
 }
@@ -102,13 +95,16 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _layoutManager.delegate = self;
     _layoutManager.textStorage = [NSTextStorage new];
 
-    [self _setText:[coder decodeObjectForKey:@"UIText"]];
     _textColor = [coder decodeObjectForKey:@"UITextColor"];
     if (_textColor == nil) {
         _textColor = [UIColor blackColor];
     }
 
     _font = [coder decodeObjectForKey:@"UIFont"];
+    if (_font == nil) {
+        _font = [UIFont defaultFont];
+    }
+
     _alignment = (UITextAlignment)[coder decodeInt32ForKey:@"UITextAlignment"];
     _undoManager.attach([NSUndoManager new]);
     if ([coder containsValueForKey:@"UIEditable"]) {
@@ -126,6 +122,9 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
     _marginSize = 10.0f;
 
     [self _adjustTextLayerSize:FALSE];
+
+    // this will take care of regenerating the attributed string 
+    [self _setText:[coder decodeObjectForKey:@"UIText"]];
 
     return self;
 }
@@ -261,13 +260,35 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
 #endif
 }
 
+- (void)_resetAttributedString:(NSString *)newString {
+    // re-generate attributed string using current style-reatled properties
+    NSMutableDictionary* attributes = [NSMutableDictionary dictionary];
+    attributes[NSFontAttributeName] = _font;
+    attributes[NSForegroundColorAttributeName] = _textColor;
+
+    // more style-related properties should be included here as we adding support for them
+    // currently supported properties include font, text and textColor.
+
+    NSAttributedString* attributedString;
+    if (newString == nil) {
+        attributedString = [[NSAttributedString alloc] initWithString:[self _text] attributes:attributes];
+    } else {
+        attributedString = [[NSAttributedString alloc] initWithString:newString attributes:attributes];
+    }
+
+    [self setAttributedText:attributedString];
+}
+
 /**
  @Status Interoperable
 */
 - (void)setTextColor:(UIColor*)color {
-    _textColor = color;
-    [self.textStorage setDefaultAttribute:color forKey:NSForegroundColorAttributeName];
-    [self _adjustTextLayerSize:FALSE];
+    if (![_textColor isEqual:color]) {
+        _textColor = color;
+        [self.textStorage setDefaultAttribute:color forKey:NSForegroundColorAttributeName];
+        [self _adjustTextLayerSize:FALSE];
+        [self _resetAttributedString:nil];
+    }
 }
 
 /**
@@ -281,9 +302,12 @@ static const float INPUTVIEW_DEFAULT_HEIGHT = 200.f;
  @Status Interoperable
 */
 - (void)setFont:(UIFont*)font {
-    _font = font;
-    [self.textStorage setDefaultAttribute:font forKey:NSFontAttributeName];
-    [self _adjustTextLayerSize:FALSE];
+    if ([_font isEqual:font]) {
+        _font = font;
+        [self.textStorage setDefaultAttribute:font forKey:NSFontAttributeName];
+        [self _adjustTextLayerSize:FALSE];
+        [self _resetAttributedString:nil];
+    }
 }
 
 /**

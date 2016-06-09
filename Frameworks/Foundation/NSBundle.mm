@@ -178,6 +178,11 @@ static NSString* _pathFromNSURL(NSURL* url) {
  @Status Interoperable
 */
 - (instancetype)initWithPath:(NSString*)path {
+    if (path == nil) {
+        [self release];
+        return nil;
+    }
+
     return [self initWithURL:[NSURL fileURLWithPath:path]];
 }
 

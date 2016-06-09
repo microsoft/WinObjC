@@ -158,12 +158,12 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     Method original, swizzle;
     
     original = class_getInstanceMethod(self, @selector(pushViewController:animated:));
-    swizzle = class_getInstanceMethod(self, @selector(sizzled_pushViewController:animated:));
+    swizzle = class_getInstanceMethod(self, @selector(winobjc_swizzled_pushViewController:animated:));
     
     method_exchangeImplementations(original, swizzle);
     
     original = class_getInstanceMethod(self, @selector(setViewControllers:animated:));
-    swizzle = class_getInstanceMethod(self, @selector(sizzled_setViewControllers:animated:));
+    swizzle = class_getInstanceMethod(self, @selector(winobjc_swizzled_setViewControllers:animated:));
     
     method_exchangeImplementations(original, swizzle);
 }
@@ -223,7 +223,7 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 #endif
 }
 
-- (void)sizzled_pushViewController:(UIViewController *)aViewController animated:(BOOL)aAnimated
+- (void)winobjc_swizzled_pushViewController:(UIViewController *)aViewController animated:(BOOL)aAnimated
 {
     if (self.isEmbedInPopover)
     {
@@ -236,7 +236,7 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
         [self setContentSize:contentSize];
     }
     
-    [self sizzled_pushViewController:aViewController animated:aAnimated];
+    [self winobjc_swizzled_pushViewController:aViewController animated:aAnimated];
     
     if (self.isEmbedInPopover)
     {
@@ -245,7 +245,7 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     }
 }
 
-- (void)sizzled_setViewControllers:(NSArray *)aViewControllers animated:(BOOL)aAnimated
+- (void)winobjc_swizzled_setViewControllers:(NSArray *)aViewControllers animated:(BOOL)aAnimated
 {
     NSUInteger count = [aViewControllers count];
     
@@ -261,7 +261,7 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     }
 #endif
     
-    [self sizzled_setViewControllers:aViewControllers animated:aAnimated];
+    [self winobjc_swizzled_setViewControllers:aViewControllers animated:aAnimated];
     
     if (self.isEmbedInPopover && count > 0)
     {
@@ -289,13 +289,13 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 #pragma clang diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated"
     original = class_getInstanceMethod(self, @selector(setContentSizeForViewInPopover:));
-    swizzle = class_getInstanceMethod(self, @selector(sizzled_setContentSizeForViewInPopover:));
+    swizzle = class_getInstanceMethod(self, @selector(winobjc_swizzled_setContentSizeForViewInPopover:));
     method_exchangeImplementations(original, swizzle);
 #pragma clang diagnostic pop
     
 #ifdef WY_BASE_SDK_7_ENABLED
     original = class_getInstanceMethod(self, @selector(setPreferredContentSize:));
-    swizzle = class_getInstanceMethod(self, @selector(sizzled_setPreferredContentSize:));
+    swizzle = class_getInstanceMethod(self, @selector(winobjc_swizzled_setPreferredContentSize:));
     
     if (original != NULL) {
         method_exchangeImplementations(original, swizzle);
@@ -303,9 +303,9 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 #endif
 }
 
-- (void)sizzled_setContentSizeForViewInPopover:(CGSize)aSize
+- (void)winobjc_swizzled_setContentSizeForViewInPopover:(CGSize)aSize
 {
-    [self sizzled_setContentSizeForViewInPopover:aSize];
+    [self winobjc_swizzled_setContentSizeForViewInPopover:aSize];
     
     if ([self isKindOfClass:[UINavigationController class]] == NO && self.navigationController != nil)
     {
@@ -316,9 +316,9 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     }
 }
 
-- (void)sizzled_setPreferredContentSize:(CGSize)aSize
+- (void)winobjc_swizzled_setPreferredContentSize:(CGSize)aSize
 {
-    [self sizzled_setPreferredContentSize:aSize];
+    [self winobjc_swizzled_setPreferredContentSize:aSize];
     
     if ([self isKindOfClass:[UINavigationController class]] == NO && self.navigationController != nil)
     {

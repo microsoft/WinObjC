@@ -22,6 +22,10 @@
     return [self initWithBytes:(void*)&value objCType:@encode(CGSize)];
 }
 
+- (id)initWithCGVector:(CGVector)value {
+    return [self initWithBytes:(void*)&value objCType:@encode(CGVector)];
+}
+
 - (id)initWithCGPoint:(CGPoint)value {
     return [self initWithBytes:(void*)&value objCType:@encode(CGPoint)];
 }
@@ -42,8 +46,16 @@
     return [self initWithBytes:(void*)&value objCType:@encode(CGAffineTransform)];
 }
 
+- (id)initWithUIEdgeInsets:(UIEdgeInsets)value {
+    return [self initWithBytes:(void*)&value objCType:@encode(UIEdgeInsets)];
+}
+
 + (NSValue*)valueWithCGSize:(CGSize)value {
     return [[[self alloc] initWithCGSize:value] autorelease];
+}
+
++ (NSValue*)valueWithCGVector:(CGVector)value {
+    return [[[self alloc] initWithCGVector:value] autorelease];
 }
 
 + (NSValue*)valueWithCGPoint:(CGPoint)value {
@@ -66,6 +78,10 @@
     return [[[self alloc] initWithCGAffineTransform:value] autorelease];
 }
 
++ (NSValue*)valueWithUIEdgeInsets:(UIEdgeInsets)value {
+    return [[[self alloc] initWithUIEdgeInsets:value] autorelease];
+}
+
 - (CGSize)sizeValue {
     CGSize val;
     [self getValue:&val];
@@ -77,6 +93,19 @@
     [self getValue:&val];
     return val;
 }
+
+- (CGVector)vectorValue {
+    CGVector val;
+    [self getValue:&val];
+    return val;
+}
+
+- (CGVector)CGVectorValue {
+    CGVector val;
+    [self getValue:&val];
+    return val;
+}
+
 - (CGPoint)pointValue {
     CGPoint val;
     [self getValue:&val];
@@ -121,6 +150,18 @@
 
 - (CGAffineTransform)CGAffineTransformValue {
     CGAffineTransform val;
+    [self getValue:&val];
+    return val;
+}
+
+- (UIEdgeInsets)edgeInsetsValue {
+    UIEdgeInsets val;
+    [self getValue:&val];
+    return val;
+}
+
+- (UIEdgeInsets)UIEdgeInsetsValue {
+    UIEdgeInsets val;
     [self getValue:&val];
     return val;
 }

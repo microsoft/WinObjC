@@ -52,6 +52,8 @@ using namespace Microsoft::WRL;
 
 static const wchar_t* g_logTag = L"UIFont";
 
+NSString* const c_defaultFontName = @"Helvetica";
+
 FT_Library _fontLib;
 FT_MemoryRec_ _fontMemory;
 NSMutableDictionary* _fontList;
@@ -106,22 +108,13 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     }
 
     //  Lookup the filename
-    char* _faceName = (char*)[faceName UTF8String];
     id filename = [_fontList objectForKey:faceName];
-    if (filename == nil)
-        filename = @"C:/Windows/Fonts/SegoeUI.ttf";
-
     if (filename == nil) {
-        if (strcmp(_faceName, "Helvetica")) {
-            TraceVerbose(g_logTag, L"*** FONT NOT FOUND: %hs -- falling back to Helvetica. ***", _faceName);
-            filename = [_fontList objectForKey:@"Helvetica"];
-        }
-
-        if (filename == nil)
-            return nullptr;
+        filename = @"C:/Windows/Fonts/SegoeUI.ttf";
     }
 
 #if defined(USE_ROBOTO_FONT)
+    char* _faceName = (char*)[faceName UTF8String];
     if ((strstr(_faceName, "Bold") != NULL || strstr(_faceName, "Heavy") != NULL) &&
         (strstr(_faceName, "Italic") != NULL || strstr(_faceName, "Oblique") != NULL)) {
         filename = @"/fonts/Roboto-BoldItalic.ttf";
@@ -132,13 +125,13 @@ static FT_Face getFace(id faceName, bool sizing, UIFont* fontInfo = nil) {
     } else {
         filename = @"/fonts/Roboto-Regular.ttf";
     }
+
     if (![[NSFileManager defaultManager] fileExistsAtPath:filename]) {
         filename = @"/fonts/Helvetica.ttf";
     }
-    if (strstr(_faceName, "Condensed") != NULL) {
-        if (fontInfo != nil) {
-            fontInfo->_horizontalScale = 0.85f;
-        }
+
+    if ((strstr(_faceName, "Condensed") != NULL) && (fontInfo != nil)) {
+        fontInfo->_horizontalScale = 0.85f;
     }
 #endif
 
@@ -393,8 +386,8 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
 
     if (err != 0) {
         TraceError(g_logTag, L"Error loading font");
-        ret->_font = getFace(@"Helvetica", false);
-        ret->_sizingFont = getFace(@"Helvetica", true);
+        ret->_font = getFace(c_defaultFontName, false);
+        ret->_sizingFont = getFace(c_defaultFontName, true);
     }
     // assert(err == 0);
 
@@ -433,9 +426,9 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
     }
 
     if (name == nil) {
-        TraceWarning(g_logTag, L"Warning: Font name is nil!");
-        ret->_font = getFace(@"Helvetica", false, ret);
-        ret->_sizingFont = getFace(@"Helvetica", true, ret);
+        TraceWarning(g_logTag, L"Warning: Font name is nil, fall back to Helvetic!");
+        ret->_font = getFace(c_defaultFontName, false, ret);
+        ret->_sizingFont = getFace(c_defaultFontName, true, ret);
     } else {
         ret->_font = getFace(name, false, ret);
         ret->_sizingFont = getFace(name, true, ret);
@@ -491,7 +484,7 @@ static vector<wstring> _getFontNamesForFamilyName(wchar_t* familyName) {
 + (UIFont*)systemFontOfSize:(float)size {
     // TODO 5785385: Using clumsy fontWithDescriptor to initialize here, so that _descriptor is initialized
     // Clean this up a bit once fontDescriptor gets better support
-    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:@"Helvetica" size:size] size:size];
+    UIFont* ret = [self fontWithDescriptor:[UIFontDescriptor fontDescriptorWithName:c_defaultFontName size:size] size:size];
 
     return ret;
 }
@@ -578,6 +571,11 @@ void loadFont(UIFont* self) {
 
 - (NSObject*)initWithCoder:(NSCoder*)coder {
     _name = [coder decodeObjectForKey:@"UIFontName"];
+    if ([_name length] < 1) {
+        // fallback to default if could not find a font name
+        _name = c_defaultFontName;
+    } 
+
     _size = [coder decodeFloatForKey:@"UIFontPointSize"];
     _horizontalScale = 1.0f;
 

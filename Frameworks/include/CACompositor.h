@@ -45,8 +45,6 @@ public:
     virtual void QueueDisplayTransaction(const std::shared_ptr<DisplayTransaction>& transaction,
                                          const std::shared_ptr<DisplayTransaction>& onTransaction) = 0;
 
-    virtual void sortWindowLevels() = 0;
-
     virtual void addNode(const std::shared_ptr<DisplayTransaction>& transaction,
                          DisplayNode* node,
                          DisplayNode* superNode,
@@ -115,7 +113,6 @@ public:
     virtual void RetainDisplayTexture(DisplayTexture* tex) = 0;
     virtual void ReleaseDisplayTexture(DisplayTexture* tex) = 0;
 
-    virtual void SortWindowLevels() = 0;
     virtual bool isTablet() = 0;
     virtual float screenWidth() = 0;
     virtual float screenHeight() = 0;
