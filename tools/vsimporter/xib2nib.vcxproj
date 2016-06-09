@@ -120,6 +120,7 @@
     <ClInclude Include="xib2nib\UISegment.h" />
     <ClInclude Include="xib2nib\UISegmentedControl.h" />
     <ClInclude Include="xib2nib\UISlider.h" />
+    <ClInclude Include="xib2nib\UIStackView.h" />
     <ClInclude Include="xib2nib\UIStepper.h" />
     <ClInclude Include="xib2nib\UIStoryboardSegue.h" />
     <ClInclude Include="xib2nib\UISwipeGestureRecognizer.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="xib2nib\UISegment.cpp" />
     <ClCompile Include="xib2nib\UISegmentedControl.cpp" />
     <ClCompile Include="xib2nib\UISlider.cpp" />
+    <ClCompile Include="xib2nib\UIStackView.cpp" />
     <ClCompile Include="xib2nib\UIStepper.cpp" />
     <ClCompile Include="xib2nib\UIStoryboardSegue.cpp" />
     <ClCompile Include="xib2nib\UISwipeGestureRecognizer.cpp" />

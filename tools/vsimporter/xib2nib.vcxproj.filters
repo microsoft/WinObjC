@@ -207,6 +207,9 @@
     <ClInclude Include="xib2nib\UICollectionViewController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="xib2nib\UIStackView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xib2nib\NIBWriter.cpp">
@@ -402,6 +405,9 @@
       <Filter>Source Files\UIKit</Filter>
     </ClCompile>
     <ClCompile Include="xib2nib\UICollectionViewController.cpp">
+      <Filter>Source Files\UIKit</Filter>
+    </ClCompile>
+    <ClCompile Include="xib2nib\UIStackView.cpp">
       <Filter>Source Files\UIKit</Filter>
     </ClCompile>
   </ItemGroup>

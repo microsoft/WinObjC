@@ -15,27 +15,14 @@
 //******************************************************************************
 
 #pragma once
-#include "UIControl.h"
 
-class UIFont;
+#include "UIView.h"
 
-class UITextField :
-    public UIControl
+class UIStackView :
+    public UIView
 {
-private:
-    CGSize _shadowOffset;
-    const char *_text;
-    const char *_placeholder;
-    int _borderStyle;
-    XIBObject *_textColor;
-    UIFont *_font;
-    int _autoCorrectionType;
-    int _returnKeyType;
-    bool _clearsOnBeginEditing;
-    CGSize _clearButtonOffset;
-
 public:
-    UITextField();
+    UIStackView();
 
     virtual void InitFromXIB(XIBObject *obj);
     virtual void InitFromStory(XIBObject *obj);
