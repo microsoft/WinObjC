@@ -121,16 +121,32 @@
  @Status Interoperable
 */
 - (instancetype)initWithSet:(NSSet*)set {
+    return [self initWithSet:set copyItems:NO];
+}
+
+/**
+ @Status Interoperable
+*/
+- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
     NSUInteger count = [set count];
     id* objects = (id*)IwMalloc(count * sizeof(id));
     NSUInteger i = 0;
+    id obj;
 
     for (id curObj in set) {
         assert(i < count);
-        objects[i++] = curObj;
+        obj = flag ? [curObj copy] : curObj;
+        objects[i++] = obj;
     }
 
     NSSet* ret = [self initWithObjects:objects count:count];
+
+    if (flag) {
+        for (NSUInteger i = 0; i < count; ++i) {
+            [objects[i] release];
+        }
+    }
+
     IwFree(objects);
 
     return ret;
@@ -446,15 +462,6 @@
  @Notes
 */
 - (NSSet*)setByAddingObjectsFromArray:(NSArray*)other {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-- (instancetype)initWithSet:(NSSet*)set copyItems:(BOOL)flag {
     UNIMPLEMENTED();
     return StubReturn();
 }
