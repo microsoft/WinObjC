@@ -21,67 +21,15 @@
 #include "CoreGraphics/CGPath.h"
 #include "CFBridgeBase.h"
 
-enum pathComponentType {
-    pathComponentRectangle,
-    pathComponentMove,
-    pathComponentLineTo,
-    pathComponentArcToPoint,
-    pathComponentQuadCurve,
-    pathComponentBezierCurve,
-    pathComponentCurve,
-    pathComponentEllipseInRect,
-    pathComponentClose,
-    pathComponentArcAngle,
-};
-
-typedef struct {
-    float x1, y1, x2, y2;
-    float radius;
-} arcToPoint;
-
-typedef struct {
-    float x, y, startAngle, endAngle;
-    float radius;
-    BOOL clockwise;
-} arcAngle;
-
-struct curveToPoint {
-    float x1, y1; // tangent from start
-    float x2, y2; // tangent to end
-    float x, y; // end pos
-};
-
-struct quadCurveToPoint {
-    float cpx, cpy;
-    float x, y;
-};
-
-struct ellipseInRect {
-    CGRect rect;
-};
-
-typedef struct {
-    pathComponentType type;
-
-    union {
-        CGRect rect;
-        CGPoint point;
-        arcToPoint atp;
-        curveToPoint ctp;
-        ellipseInRect eir;
-        quadCurveToPoint qtp;
-        arcAngle aa;
-    };
-} pathComponent;
 
 struct __CGPath : public CFBridgeBase<__CGPath> {
-    pathComponent* _components;
+	CGPathElement* _components;
     NSUInteger _count;
     NSUInteger _max;
 
     ~__CGPath();
     void _getBoundingBox(CGRect* rectOut);
-    void _applyPath(CGContextRef context);
+	void _applyPath(CGContextRef context);
 };
 
 COREGRAPHICS_EXPORT CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding);

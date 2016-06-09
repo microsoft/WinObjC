@@ -59,6 +59,12 @@ public:
 
 __CGPath::~__CGPath() {
     if (_components) {
+		for (unsigned i = 0; i < _count; i++) {
+			CGPoint * points = _components[i].points;
+			if( points ){
+				IwFree(points);
+			}
+		}
         IwFree(_components);
     }
 }
@@ -66,62 +72,36 @@ __CGPath::~__CGPath() {
 void __CGPath::_applyPath(CGContextRef context) {
     for (unsigned i = 0; i < _count; i++) {
         switch (_components[i].type) {
-            case pathComponentRectangle:
-                CGContextAddRect(context, _components[i].rect);
+
+            case kCGPathElementMoveToPoint:
+                TraceVerbose(TAG, L"Move to %d, %d", (int)_components[i].points[0].x, (int)_components[i].points[0].y);
+                CGContextMoveToPoint(context, _components[i].points[0].x, _components[i].points[0].y);
                 break;
 
-            case pathComponentMove:
-                TraceVerbose(TAG, L"Move to %d, %d", (int)_components[i].point.x, (int)_components[i].point.y);
-                CGContextMoveToPoint(context, _components[i].point.x, _components[i].point.y);
+            case kCGPathElementAddLineToPoint:
+                TraceVerbose(TAG, L"Line to %d, %d", (int)_components[i].points[0].x, (int)_components[i].points[0].y);
+                CGContextAddLineToPoint(context, _components[i].points[0].x, _components[i].points[0].y);
                 break;
 
-            case pathComponentLineTo:
-                TraceVerbose(TAG, L"Line to %d, %d", (int)_components[i].point.x, (int)_components[i].point.y);
-                CGContextAddLineToPoint(context, _components[i].point.x, _components[i].point.y);
-                break;
-
-            case pathComponentArcToPoint:
-                CGContextAddArcToPoint(context,
-                                       _components[i].atp.x1,
-                                       _components[i].atp.y1,
-                                       _components[i].atp.x2,
-                                       _components[i].atp.y2,
-                                       _components[i].atp.radius);
-                break;
-
-            case pathComponentArcAngle:
-                CGContextAddArc(context,
-                                _components[i].aa.x,
-                                _components[i].aa.y,
-                                _components[i].aa.radius,
-                                _components[i].aa.startAngle,
-                                _components[i].aa.endAngle,
-                                _components[i].aa.clockwise);
-                break;
-
-            case pathComponentCurve:
+            case kCGPathElementAddCurveToPoint:
                 CGContextAddCurveToPoint(context,
-                                         _components[i].ctp.x1,
-                                         _components[i].ctp.y1,
-                                         _components[i].ctp.x2,
-                                         _components[i].ctp.y2,
-                                         _components[i].ctp.x,
-                                         _components[i].ctp.y);
+                                         _components[i].points[0].x,
+                                         _components[i].points[0].y,
+                                         _components[i].points[1].x,
+                                         _components[i].points[1].y,
+                                         _components[i].points[2].x,
+                                         _components[i].points[2].y);
                 break;
 
-            case pathComponentEllipseInRect:
-                CGContextAddEllipseInRect(context, _components[i].eir.rect);
+            case kCGPathElementAddQuadCurveToPoint:
+				 CGContextAddQuadCurveToPoint(context,
+                                             _components[i].points[0].x,
+                                             _components[i].points[0].y,
+                                             _components[i].points[1].x,
+                                             _components[i].points[1].y);
                 break;
 
-            case pathComponentQuadCurve:
-                CGContextAddQuadCurveToPoint(context,
-                                             _components[i].qtp.cpx,
-                                             _components[i].qtp.cpy,
-                                             _components[i].qtp.x,
-                                             _components[i].qtp.y);
-                break;
-
-            case pathComponentClose:
+            case kCGPathElementCloseSubpath:
                 CGContextClosePath(context);
                 break;
 
@@ -137,39 +117,23 @@ void __CGPath::_getBoundingBox(CGRect* rectOut) {
 
     for (unsigned i = 0; i < _count; i++) {
         switch (_components[i].type) {
-            case pathComponentMove:
-            case pathComponentLineTo:
-                bbox.addPoint(_components[i].point.x, _components[i].point.y);
+            case kCGPathElementMoveToPoint:
+            case kCGPathElementAddLineToPoint:
+                bbox.addPoint(_components[i].points[0].x, _components[i].points[0].y);
                 break;
 
-            case pathComponentArcToPoint:
-                bbox.addPoint(_components[i].atp.x1, _components[i].atp.y1);
-                bbox.addPoint(_components[i].atp.x2, _components[i].atp.y2);
+            case kCGPathElementAddCurveToPoint:
+                bbox.addPoint(_components[i].points[0].x, _components[i].points[0].y);
+                bbox.addPoint(_components[i].points[1].x, _components[i].points[1].y);
+                bbox.addPoint(_components[i].points[2].x, _components[i].points[2].y);
                 break;
 
-            case pathComponentCurve:
-                bbox.addPoint(_components[i].ctp.x1, _components[i].ctp.y1);
-                bbox.addPoint(_components[i].ctp.x2, _components[i].ctp.y2);
-                bbox.addPoint(_components[i].ctp.x, _components[i].ctp.y);
+            case kCGPathElementAddQuadCurveToPoint:
+                bbox.addPoint(_components[i].points[0].x, _components[i].points[0].y);
+                bbox.addPoint(_components[i].points[1].x, _components[i].points[1].y);
                 break;
 
-            case pathComponentArcAngle:
-                bbox.addPoint(_components[i].aa.x - _components[i].aa.radius, _components[i].aa.y - _components[i].aa.radius);
-                bbox.addPoint(_components[i].aa.x + _components[i].aa.radius, _components[i].aa.y + _components[i].aa.radius);
-                break;
-
-            case pathComponentQuadCurve:
-                bbox.addPoint(_components[i].qtp.cpx, _components[i].qtp.cpy);
-                bbox.addPoint(_components[i].qtp.x, _components[i].qtp.y);
-                break;
-
-            case pathComponentEllipseInRect:
-                bbox.addPoint(_components[i].eir.rect.origin.x, _components[i].eir.rect.origin.y);
-                bbox.addPoint(_components[i].eir.rect.origin.x + _components[i].eir.rect.size.width,
-                              _components[i].eir.rect.origin.y + _components[i].eir.rect.size.height);
-                break;
-
-            case pathComponentClose:
+            case kCGPathElementCloseSubpath:
                 break;
 
             default:
@@ -214,8 +178,8 @@ CGMutablePathRef CGPathCreateMutableCopy(CGPathRef path) {
     auto ret = __CGPath::alloc(nil);
     ret->_max = path->_max;
     ret->_count = path->_count;
-    ret->_components = (pathComponent*)IwRealloc(ret->_components, ret->_max * sizeof(pathComponent));
-    memcpy(ret->_components, path->_components, path->_count * sizeof(pathComponent));
+    ret->_components = (CGPathElement*)IwRealloc(ret->_components, ret->_max * sizeof(CGPathElement));
+    memcpy(ret->_components, path->_components, path->_count * sizeof(CGPathElement));
     return ret;
 }
 
@@ -239,45 +203,130 @@ void CGPathAddLineToPoint(CGMutablePathRef path, const CGAffineTransform* m, flo
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (CGPathElement*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(CGPathElement));
     }
 
-    pathObj->_components[pathObj->_count].type = pathComponentLineTo;
-    pathObj->_components[pathObj->_count].point.x = x;
-    pathObj->_components[pathObj->_count].point.y = y;
+    pathObj->_components[pathObj->_count].type = kCGPathElementAddLineToPoint;
+	
+	pathObj->_components[pathObj->_count].points = (CGPoint*)IwCalloc(1, sizeof(CGPoint));
+	pathObj->_components[pathObj->_count].points[0] = {x, y};
 
     pathObj->_count++;
 }
+
+CGFloat _CGPathControlPointOffsetMultiplier(CGFloat angle){
+	return ( 4.0 / 3.0 ) * tan( angle / 4.0 );
+}
+
 
 /**
  @Status Caveat
  @Notes transform property not supported
 */
-void CGPathAddArcToPoint(CGMutablePathRef path, const CGAffineTransform* m, float x1, float y1, float x2, float y2, float radius) {
-    if (m) {
-        assert(0);
+void CGPathAddArcToPoint(CGMutablePathRef path, 
+						 const CGAffineTransform* m,
+						 float x1, 
+						 float y1, 
+						 float x2, 
+						 float y2, 
+						 float radius) {
+
+
+	bool isEmpty = CGPathIsEmpty(path);
+
+	if( isEmpty ){
+		return;
+	}
+
+    CGPoint curPathPosition = CGPathGetCurrentPoint(path);
+
+    double x0, y0;
+    double dx0, dy0, dx2, dy2, xl0, xl2;
+    double san, n0x, n0y, n2x, n2y, t;
+
+    x0 = curPathPosition.x;
+    y0 = curPathPosition.y;
+
+    dx0 = x0 - x1;
+    dy0 = y0 - y1;
+    xl0 = sqrt(dx0 * dx0 + dy0 * dy0);
+    if (xl0 == 0)
+        return;
+
+    dx2 = x2 - x1;
+    dy2 = y2 - y1;
+    xl2 = sqrt(dx2 * dx2 + dy2 * dy2);
+
+    san = dx2 * dy0 - dx0 * dy2;
+    if (san == 0) {
+        CGPathAddLineToPoint(path, m, x1, y1);
+        return;
     }
 
-    CGPathRef pathObj = path;
-
-    if (pathObj->_count + 1 >= pathObj->_max) {
-        pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+    if (san < 0) {
+        n0x = -dy0 / xl0;
+        n0y = dx0 / xl0;
+        n2x = dy2 / xl2;
+        n2y = -dx2 / xl2;
+    } else {
+        n0x = dy0 / xl0;
+        n0y = -dx0 / xl0;
+        n2x = -dy2 / xl2;
+        n2y = dx2 / xl2;
     }
+    t = (dx2 * n2y - dx2 * n0y - dy2 * n2x + dy2 * n0x) / san;
+    CGPathAddArc(	path,
+					m,
+					(float)(x1 + radius * (t * dx0 + n0x)),
+                    (float)(y1 + radius * (t * dy0 + n0y)),
+                    radius,
+                    (float)atan2(-n0y, -n0x),
+                    (float)atan2(-n2y, -n2x),
+                    (san < 0));
 
-    pathObj->_components[pathObj->_count].type = pathComponentArcToPoint;
-    pathObj->_components[pathObj->_count].atp.x1 = x1;
-    pathObj->_components[pathObj->_count].atp.y1 = y1;
-    pathObj->_components[pathObj->_count].atp.x2 = x2;
-    pathObj->_components[pathObj->_count].atp.y2 = y2;
-    pathObj->_components[pathObj->_count].atp.radius = radius;
-
-    pathObj->_count++;
 }
 
+void _CGPathAddArc(CGMutablePathRef path,
+                  const CGAffineTransform* m,
+                  CGFloat x,
+                  CGFloat y,
+                  CGFloat radius,
+                  CGFloat startAngle,
+                  CGFloat endAngle,
+                  bool clockwise) {
+		
+    CGFloat delta = endAngle - startAngle;
+    
+   if ( (fabs(delta) > M_PI_2) && (fabs((M_PI_2 - fabs(delta))) > 0.0001)){
+        
+        CGFloat midAngle = startAngle + (M_PI_2 * (delta < 0 ? -1.0 : 1.0));
+
+        _CGPathAddArc(path, m, x, y, radius, startAngle, midAngle, clockwise);
+        _CGPathAddArc(path, m, x, y, radius, midAngle, endAngle, clockwise);
+        return;
+    }
+    
+    CGPoint arcStartRelative = CGPointMake( (cos(startAngle) * radius), (sin(startAngle) * radius));
+    CGPoint arcEndRelative = CGPointMake( (cos(endAngle) * radius), (sin(endAngle) * radius));
+    
+    CGPoint arcStart = CGPointMake(arcStartRelative.x + x, arcStartRelative.y + y);
+    CGPoint arcEnd = CGPointMake(arcEndRelative.x + x, arcEndRelative.y + y);
+    
+    CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(delta);
+    
+	CGPathAddCurveToPoint(path,
+						  m,
+						  arcStart.x - (offsetMultiplier * arcStartRelative.y),
+						  arcStart.y + (offsetMultiplier * arcStartRelative.x),
+						  arcEnd.x + (offsetMultiplier * arcEndRelative.y),
+						  arcEnd.y - (offsetMultiplier * arcEndRelative.x),
+						  arcEnd.x,
+						  arcEnd.y);
+}
+
+
 /**
- @Status Caveat
- @Notes transform property not supported
+ @Status Interoperable
 */
 void CGPathAddArc(CGMutablePathRef path,
                   const CGAffineTransform* m,
@@ -287,25 +336,35 @@ void CGPathAddArc(CGMutablePathRef path,
                   CGFloat startAngle,
                   CGFloat endAngle,
                   bool clockwise) {
-    assert(!m);
+				
+				 
+    startAngle = fmod(startAngle, 2.0 * M_PI);
+    if(startAngle < 0){
+        startAngle += 2.0f * M_PI;
+	}
+    
+    endAngle = fmod(endAngle, 2.0 * M_PI);
+    if(endAngle < 0){
+        endAngle += 2.0f * M_PI;
+	}
+    
+    CGPoint arcStart = CGPointMake((cos(startAngle) * radius) + x, (sin(startAngle) * radius) + y);
+    
+	if (!CGPathIsEmpty(path)){
+		CGPathAddLineToPoint(path, m, arcStart.x, arcStart.y);
+	}else{
+		CGPathMoveToPoint(path, m, arcStart.x, arcStart.y);
+	}
 
-    CGPathRef pathObj = path;
+    if(clockwise && endAngle > startAngle){
+        startAngle+= 2 * M_PI;
+    }else if(!clockwise && startAngle > endAngle){
+        endAngle += 2 * M_PI;
+	}
 
-    if (pathObj->_count + 1 >= pathObj->_max) {
-        pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
-    }
-
-    pathObj->_components[pathObj->_count].type = pathComponentArcAngle;
-    pathObj->_components[pathObj->_count].aa.x = x;
-    pathObj->_components[pathObj->_count].aa.y = y;
-    pathObj->_components[pathObj->_count].aa.radius = radius;
-    pathObj->_components[pathObj->_count].aa.startAngle = startAngle;
-    pathObj->_components[pathObj->_count].aa.endAngle = endAngle;
-    pathObj->_components[pathObj->_count].aa.clockwise = clockwise;
-
-    pathObj->_count++;
+	_CGPathAddArc(path, m, x, y, radius, startAngle, endAngle, clockwise);
 }
+
 
 /**
  @Status Interoperable
@@ -327,12 +386,12 @@ void CGPathMoveToPoint(CGMutablePathRef path, const CGAffineTransform* m, float 
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (CGPathElement*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(CGPathElement));
     }
 
-    pathObj->_components[pathObj->_count].type = pathComponentMove;
-    pathObj->_components[pathObj->_count].point.x = x;
-    pathObj->_components[pathObj->_count].point.y = y;
+    pathObj->_components[pathObj->_count].type = kCGPathElementMoveToPoint;
+	pathObj->_components[pathObj->_count].points = (CGPoint*)IwCalloc(1, sizeof(CGPoint));
+	pathObj->_components[pathObj->_count].points[0] = {x, y};
 
     pathObj->_count++;
 }
@@ -355,23 +414,6 @@ void CGPathAddLines(CGMutablePathRef path, const CGAffineTransform* m, CGPoint* 
  @Status Interoperable
 */
 void CGPathAddRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
-    if (m) {
-        rect = CGRectApplyAffineTransform(rect, *m);
-    }
-
-    /*
-    CGPathRef pathObj = path;
-
-    if ( pathObj->_count + 1 >= pathObj->_max ) {
-    pathObj->_max += 32;
-    pathObj->_components = (pathComponent *) IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
-    }
-
-    pathObj->_components[pathObj->_count].type = pathComponentRectangle;
-    pathObj->_components[pathObj->_count].rect = rect;
-
-    pathObj->_count ++;
-    */
 
     CGPathMoveToPoint(path, m, CGRectGetMinX(rect), CGRectGetMinY(rect));
 
@@ -390,17 +432,17 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
 
     if (pathObj->_count + copyObj->_count >= pathObj->_max) {
         pathObj->_max += copyObj->_count;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (CGPathElement*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(CGPathElement));
     }
 
     for (unsigned i = 0; i < copyObj->_count; i++) {
-        pathComponent c = copyObj->_components[i];
+        CGPathElement c = copyObj->_components[i];
 
         if (m) {
             switch (c.type) {
-                case pathComponentMove:
-                case pathComponentLineTo:
-                    c.point = CGPointApplyAffineTransform(c.point, *m);
+                case kCGPathElementMoveToPoint:
+                case kCGPathElementAddLineToPoint:
+                    c.points[0] = CGPointApplyAffineTransform(c.points[0], *m);
                     break;
                 default:
                     // Append the path anyway, without transforming.
@@ -413,31 +455,33 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
     }
 }
 
+
 /**
- @Status Caveat
- @Notes transform property not supported
+ @Status Interoperable
 */
 void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
-    CGPathCloseSubpath(path);
 
-    if (m) {
-        assert(0);
-    }
+	CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(M_PI_2);// (4.0/3.0)*tan(M_PI/8.0);
+    
+    CGFloat xControlPointOffset = offsetMultiplier * CGRectGetWidth(rect)/2.0;
+    CGFloat yControlPointOffset = offsetMultiplier * CGRectGetHeight(rect)/2.0;
+    
+    CGFloat minX = CGRectGetMinX(rect);
+    CGFloat midX = CGRectGetMidX(rect);
+    CGFloat maxX = CGRectGetMaxX(rect);
+    
+    CGFloat minY = CGRectGetMinY(rect);
+    CGFloat midY = CGRectGetMidY(rect);
+    CGFloat maxY = CGRectGetMaxY(rect);
+    
+    CGPathMoveToPoint(path, m, maxX, midY);
 
-    CGPathRef pathObj = path;
+	CGPathAddCurveToPoint(path, m, maxX, midY + yControlPointOffset, midX + xControlPointOffset, maxY, midX, maxY);
+	CGPathAddCurveToPoint(path, m, midX - xControlPointOffset, maxY, minX, midY + yControlPointOffset, minX, midY);
+	CGPathAddCurveToPoint(path, m, minX, midY - yControlPointOffset, midX - xControlPointOffset, minY, midX, minY);
+	CGPathAddCurveToPoint(path, m, midX + xControlPointOffset, minY, maxX, midY - yControlPointOffset, maxX, midY);
 
-    if (pathObj->_count + 1 >= pathObj->_max) {
-        pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
-    }
-
-    pathObj->_components[pathObj->_count].type = pathComponentEllipseInRect;
-    pathObj->_components[pathObj->_count].eir.rect = rect;
-
-    pathObj->_count++;
-
-    CGPathCloseSubpath(path);
-    CGPathMoveToPoint(path, m, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height / 2.0f);
+	CGPathCloseSubpath(path);
 }
 
 /**
@@ -448,11 +492,12 @@ void CGPathCloseSubpath(CGMutablePathRef path) {
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (CGPathElement*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(CGPathElement));
     }
 
-    pathObj->_components[pathObj->_count].type = pathComponentClose;
-
+    pathObj->_components[pathObj->_count].type = kCGPathElementCloseSubpath;
+	
+    pathObj->_components[pathObj->_count].points = NULL;
     pathObj->_count++;
 }
 
@@ -507,23 +552,22 @@ void CGPathAddQuadCurveToPoint(CGMutablePathRef path, const CGAffineTransform* m
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (CGPathElement*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(CGPathElement));
     }
 
     int count = pathObj->_count;
 
-    pathObj->_components[count].type = pathComponentQuadCurve;
-    pathObj->_components[count].qtp.cpx = cp.x;
-    pathObj->_components[count].qtp.cpy = cp.y;
-    pathObj->_components[count].qtp.x = p.x;
-    pathObj->_components[count].qtp.y = p.y;
+    pathObj->_components[count].type = kCGPathElementAddQuadCurveToPoint;
+	
+	pathObj->_components[count].points = (CGPoint*)IwCalloc(2, sizeof(CGPoint));
+    pathObj->_components[pathObj->_count].points[0] = cp;
+    pathObj->_components[pathObj->_count].points[1] = p;
 
     pathObj->_count++;
 }
 
 /**
  @Status Interoperable
- @Notes
 */
 void CGPathAddCurveToPoint(
     CGMutablePathRef path, const CGAffineTransform* m, CGFloat cp1x, CGFloat cp1y, CGFloat cp2x, CGFloat cp2y, CGFloat x, CGFloat y) {
@@ -541,18 +585,16 @@ void CGPathAddCurveToPoint(
 
     if (pathObj->_count + 1 >= pathObj->_max) {
         pathObj->_max += 32;
-        pathObj->_components = (pathComponent*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(pathComponent));
+        pathObj->_components = (CGPathElement*)IwRealloc(pathObj->_components, pathObj->_max * sizeof(CGPathElement));
     }
 
     int count = pathObj->_count;
 
-    pathObj->_components[count].type = pathComponentCurve;
-    pathObj->_components[count].ctp.x1 = cp1.x;
-    pathObj->_components[count].ctp.y1 = cp1.y;
-    pathObj->_components[count].ctp.x2 = cp2.x;
-    pathObj->_components[count].ctp.y2 = cp2.y;
-    pathObj->_components[count].ctp.x = end.x;
-    pathObj->_components[count].ctp.y = end.y;
+    pathObj->_components[count].type = kCGPathElementAddCurveToPoint;
+	pathObj->_components[count].points = (CGPoint*)IwCalloc(3, sizeof(CGPoint));
+    pathObj->_components[count].points[0] = cp1;
+    pathObj->_components[count].points[1] = cp2;
+    pathObj->_components[count].points[2] = end;
 
     pathObj->_count++;
 }
@@ -616,11 +658,13 @@ void CGPathAddRoundedRect(
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 void CGPathApply(CGPathRef path, void* info, CGPathApplierFunction function) {
-    UNIMPLEMENTED();
+    for (unsigned i = 0; i < path->_count; i++) {
+        CGPathElement c = path->_components[i];
+		function(info, &c);
+	}
 }
 
 /**
@@ -689,12 +733,26 @@ bool CGPathEqualToPath(CGPathRef path1, CGPathRef path2) {
 }
 
 /**
- @Status Stub
- @Notes
+ @Status Interoperable
 */
 CGPoint CGPathGetCurrentPoint(CGPathRef path) {
-    UNIMPLEMENTED();
-    return StubReturn();
+	
+	if (path->_count > 0){
+		 CGPathElement c = path->_components[path->_count-1];
+		 switch(c.type){
+			case kCGPathElementMoveToPoint:
+			case kCGPathElementAddLineToPoint:
+				return c.points[0];
+			case kCGPathElementAddQuadCurveToPoint:
+				return c.points[1];
+			case kCGPathElementAddCurveToPoint:
+				return c.points[2];
+			default:
+				return CGPointZero;
+		 }
+	}
+
+    return CGPointZero;
 }
 
 /**
@@ -857,24 +915,24 @@ CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padd
 
     for (unsigned i = 0; i < path->_count; i++) {
         switch (path->_components[i].type) {
-            case pathComponentMove:
+            case kCGPathElementMoveToPoint:
                 if (!startPointSet) {
-                    startPoint = path->_components[i].point;
+                    startPoint = path->_components[i].points[0];
                     startPointSet = true;
                 }
-                curPoint = path->_components[i].point;
+                curPoint = path->_components[i].points[0];
                 break;
 
-            case pathComponentLineTo:
+            case kCGPathElementAddLineToPoint:
                 if (!startPointSet) {
-                    startPoint = path->_components[i].point;
+                    startPoint = path->_components[i].points[0];
                     startPointSet = true;
                 }
-                s.AddLine(curPoint, path->_components[i].point);
-                curPoint = path->_components[i].point;
+                s.AddLine(curPoint, path->_components[i].points[0]);
+                curPoint = path->_components[i].points[0];
                 break;
 
-            case pathComponentClose:
+            case kCGPathElementCloseSubpath:
                 if (startPointSet) {
                     s.AddLine(curPoint, startPoint);
                 }
