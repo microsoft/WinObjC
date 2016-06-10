@@ -23,31 +23,22 @@
     
     self.view.autoresizesSubviews = TRUE;
     self.view.backgroundColor = [UIColor whiteColor];
-    [self tableView].allowsSelection = NO;
+    self.tableView.separatorColor = [UIColor clearColor];
+    self.tableView.allowsSelection = NO;
+    self.tableView.scrollEnabled = NO;
 
     self.title = @"Pickers";
     
     // PICKER VIEW
-    
-    self.datePickerView = [[UIDatePicker alloc] initWithFrame:CGRectZero];
+    self.datePickerView = [[UIDatePicker alloc] init];
     self.datePickerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.datePickerView.datePickerMode = UIDatePickerModeDate;
-    
-    // note we are using CGRectZero for the dimensions of our picker view,
-    // this is because picker views have a built in optimum size,
-    // you just need to set the correct origin in your view.
-    //
-    // position the picker at the bottom
-    CGSize pickerSize = [self.view sizeThatFits:CGSizeZero];
-    self.datePickerView.frame = [self calcFrameForPicker:pickerSize];
-    
     self.datePickerView.hidden = YES;
     [self.view addSubview: self.datePickerView];
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
     return 1;
 }
 
@@ -77,31 +68,6 @@
                    forControlEvents:UIControlEventValueChanged];
         
         [cell addSubview: segmentedControl];
-        
-    } else if (indexPath.row == 1) {
-        // UIDatePicker
-        
-        self.datePickerView = [[UIDatePicker alloc] initWithFrame:CGRectZero];
-        self.datePickerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-        self.datePickerView.datePickerMode = UIDatePickerModeDate;
-        
-        // note we are using CGRectZero for the dimensions of our picker view,
-        // this is because picker views have a built in optimum size,
-        // you just need to set the correct origin in your view.
-        //
-        // position the picker at the bottom
-        CGSize pickerSize = [cell sizeThatFits:CGSizeZero];
-        self.datePickerView.frame = [self calcFrameForPicker:pickerSize];
-        
-        self.datePickerView.hidden = YES;
-        //[self.view addSubview:self.datePickerView];
-        [cell addSubview: self.datePickerView];
-        
-    } else if (indexPath.row == 2) {
-        
-    }
-    else if (indexPath.row == 3) {
-        
     }
     
     return cell;
@@ -120,29 +86,25 @@
             self.datePickerView.datePickerMode = UIDatePickerModeTime;
             self.datePickerView.hidden = NO;
             break;
-            
-        case 2:
-            break;
-            
-            default:
+
+        default:
             break;
     }
 }
 
-- (CGRect)calcFrameForPicker:(CGSize)size
+- (CGRect)calcFrameForPicker
 {
-    CGRect screenRect = [[UIScreen mainScreen] applicationFrame];
-    CGRect pickerRect = CGRectMake( 0.0,
-                                   100.0,
-                                   size.width,
-                                   size.height-100.0);
+    CGRect tableRect = self.view.bounds;
+    CGRect pickerRect = CGRectMake(0.0,
+                                   50.0,
+                                   tableRect.size.width,
+                                   tableRect.size.height-50.0);
     return pickerRect;
 }
 
 -(void) viewWillLayoutSubviews
 {
-    CGSize pickerSize = [self.view sizeThatFits:CGSizeZero];
-    self.datePickerView.frame = [self calcFrameForPicker:pickerSize];
+    self.datePickerView.frame = [self calcFrameForPicker];
 }
 
 @end
