@@ -1,65 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-
   <!-- Primitive/Runtime Types -->
   <Type Name="objc_selector">
     <DisplayString Condition="((libobjc2.dll!objc_selector*)this)->index &lt; libobjc2.dll!selector_count">@selector({libobjc2.dll!selector_list[((libobjc2.dll!objc_selector*)this)->index]->value,s8b})</DisplayString>
     <DisplayString>@selector({((libobjc2.dll!objc_selector*)this)->name,s8b})</DisplayString>
     <Expand HideRawView="true">
       <Item Name="[Type Encoding]">((libobjc2.dll!objc_selector*)this)->types,s8b</Item>
-    </Expand>
-  </Type>
-
-  <!-- Object Types -->
-  <Type Name="NSNumber">
-    <DisplayString Optional="true" Condition="_objCType[0] == 'c'">@{_val.charValue} (char)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'i'">@{_val.intValue} (int)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 's'">@{_val.shortValue} (short)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'l'">@{_val.longValue}L (long)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'q'">@{_val.longLongValue}LL (long long)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'C'">@{_val.unsignedCharValue} (unsigned char)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'I'">@{_val.unsignedIntValue} (unsigned int)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'S'">@{_val.unsignedShortValue} (unsigned short)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'L'">@{_val.unsignedLongValue}UL (unsigned long)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'Q'">@{_val.unsignedLongLongValue}ULL (unsigned long long)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'f'">@{_val.floatValue}f (float)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'd'">@{_val.doubleValue} (double)</DisplayString>
-    <DisplayString Optional="true" Condition="_objCType[0] == 'B'">@{(bool)_val.charValue} (bool)</DisplayString>
-    <DisplayString>@{_val.unsignedLongLongValue,h} (unknown type `{_objCType,s8b}')</DisplayString>
-  </Type>
-
-  <Type Name="NSString">
-    <DisplayString Condition="strType == 0x7fffffff">{((Foundation.dll!_ConstructedStringData*)u->ConstructedString.constructedStr)->str,na}</DisplayString>
-    <DisplayString>{u,s8}</DisplayString>
-    <StringView Condition="strType == 0x7fffffff">((Foundation.dll!_ConstructedStringData*)u->ConstructedString.constructedStr)->str,na</StringView>
-    <StringView>u,s8</StringView>
-  </Type>
-
-  <Type Name="icu_48::UnicodeString">
-    <DisplayString Condition="fFlags == kUsingStackBuffer">{(wchar_t*)fUnion.fStackBuffer,[fShortLength]na}</DisplayString>
-    <DisplayString Condition="fFlags == kRefCounted &amp;&amp; fShortLength &gt;=0 &amp;&amp; fShortLength &lt;= 127">{fUnion.fFields.fArray,[fShortLength]na}</DisplayString>
-    <DisplayString Condition="fFlags == kRefCounted">{fUnion.fFields.fArray,[fUnion.fFields.fLength]na}</DisplayString>
-    <StringView Condition="fFlags == kUsingStackBuffer">(wchar_t*)fUnion.fStackBuffer,[fShortLength]na</StringView>
-    <StringView Condition="fFlags == kRefCounted &amp;&amp; fShortLength &gt;=0 &amp;&amp; fShortLength &lt;=127">fUnion.fFields.fArray,[fShortLength]na</StringView>
-    <StringView Condition="fFlags == kRefCounted">fUnion.fFields.fArray,[fUnion.fFields.fLength]na</StringView>
-  </Type>
-
-  <Type Name="NSData">
-    <AlternativeType Name="NSMutableData"/>
-    <DisplayString Condition="_length &gt; 0 &amp;&amp; _bytes[0] &gt;= 32 &amp;&amp; _bytes[0] &lt; 128">{{ binary data (printable), {_length} characters }}</DisplayString>
-    <DisplayString>{{ binary data, {_length} bytes }}</DisplayString>
-    <StringView Condition="_length &gt; 0 &amp;&amp; _bytes[0] &gt;= 32 &amp;&amp; _bytes[0] &lt; 128">_bytes,[_length]s8</StringView>
-    <Expand>
-      <Item Name="[Length]">_length</Item>
-      <Synthetic Name="[Raw Bytes]">
-        <DisplayString>{(unsigned char*)_bytes,[_length]}</DisplayString>
-        <Expand>
-          <ArrayItems>
-            <Size>_length</Size>
-            <ValuePointer>_bytes</ValuePointer>
-          </ArrayItems>
-        </Expand>
-      </Synthetic>
     </Expand>
   </Type>
 
@@ -97,64 +43,6 @@
     </Expand>
   </Type>
 
-  <Type Name="NSArrayConcrete">
-    <AlternativeType Name="NSMutableArrayConcrete"/>
-    <Expand>
-      <ArrayItems>
-        <Size>arr->objCount</Size>
-        <ValuePointer Condition="arr->heapAlloced">arr->contents.heap.objsArray</ValuePointer>
-        <ValuePointer>arr->contents.objs</ValuePointer>
-      </ArrayItems>
-    </Expand>
-  </Type>
-
-  <Type Name="std::vector&lt;std::pair&lt;void const*, void const*&gt;, *&gt;" IncludeView="NSDictionaryOpenBucket">
-    <!-- We can't currently visualize the std::vector<std::pair<void*,void*>> for a chained key properly. -->
-    <DisplayString>{{ {_Mypair._Myval2._Mylast - _Mypair._Myval2._Myfirst} items }}</DisplayString>
-    <Expand>
-      <ArrayItems>
-        <Size>_Mypair._Myval2._Mylast - _Mypair._Myval2._Myfirst</Size>
-        <ValuePointer>_Mypair._Myval2._Myfirst</ValuePointer>
-      </ArrayItems>
-    </Expand>
-  </Type>
-
-  <Type Name="NSDictionary">
-    <AlternativeType Name="NSMutableDictionary"/>
-    <DisplayString Condition="dict-&gt;numKeys != 1">{{ dictionary, {dict->numKeys} items }}</DisplayString>
-    <DisplayString>{{ dictionary, 1 item }}</DisplayString>
-    <Expand HideRawView="false">
-      <Item Name="[capacity]">dict->n_buckets</Item>
-      <CustomListItems>
-        <Variable Name="i" InitialValue="0"/>
-        <Variable Name="mi" InitialValue="dict->vals->manyItems"/>
-        <Loop>
-          <If Condition="i &gt;= dict-&gt;n_buckets">
-            <Break/>
-          </If>
-          <If Condition="(((int*)dict-&gt;flags)[i&gt;&gt;4] &gt;&gt; ((i &amp; 0xf) &lt;&lt; 1) &amp; 2) == 0">
-            <If Condition="dict->vals[i].manyItems != 0">
-              <Exec>mi = dict->vals[i].manyItems</Exec>
-              <Item Name="[bucket {i}]">mi,view(NSDictionaryOpenBucket)</Item>
-            </If>
-            <Else>
-              <Item Name="{(Foundation.dll!NSObject*)dict->vals[i].singleKey,na}">(Foundation.dll!NSObject*)dict->vals[i].singleValue</Item>
-            </Else>
-          </If>
-          <Exec>i++</Exec>
-        </Loop>
-      </CustomListItems>
-    </Expand>
-  </Type>
-
-  <Type Name="NSError">
-    <DisplayString>{_domain,na}: {_description,na}</DisplayString>
-  </Type>
-
-  <Type Name="NSException">
-    <DisplayString>{_name,na}: {_reason,na}</DisplayString>
-  </Type>
-
   <Type Name="NSObject">
     <!-- Don't include the description and debug description node in the preview string (via auto-expansion).  The display string should just show the first three
     members of the objects, as it would if this natvis entry did not exist.-->
@@ -173,5 +61,4 @@
       <ExpandedItem>*this,!</ExpandedItem>
     </Expand>
   </Type>
-  
 </AutoVisualizer>
