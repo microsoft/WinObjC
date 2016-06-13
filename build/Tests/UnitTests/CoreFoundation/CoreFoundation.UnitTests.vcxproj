@@ -232,6 +232,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFUUIDTests.m" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFURLTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFAttributedStringTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\CoreFoundation\CFStringTokenizerTests.m" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
