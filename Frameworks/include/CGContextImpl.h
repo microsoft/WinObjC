@@ -153,6 +153,7 @@ public:
     virtual void CGContextClipToRect(CGRect rect);
 
     virtual void CGContextBeginTransparencyLayer(id auxInfo);
+    virtual void CGContextBeginTransparencyLayerWithRect(CGRect rect, id auxInfo);
     virtual void CGContextEndTransparencyLayer();
 
     virtual void CGContextSetGrayStrokeColor(float gray, float alpha);

@@ -59,7 +59,7 @@ __CGContext::__CGContext(CGImageRef pDest) {
 #ifdef DEBUG_CONTEXT_COUNT
     TraceVerbose(TAG, L"contextCount: %d", contextCount);
 #endif
-    object_setClass((id) this, [CGNSContext class]);
+    object_setClass((id)this, [CGNSContext class]);
     scale = 1.0f;
     _backing = pDest->Backing()->CreateDrawingContext(this);
 }
@@ -753,18 +753,16 @@ void CGContextAddLines(CGContextRef pContext, const CGPoint* pt, unsigned count)
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextBeginTransparencyLayer(CGContextRef ctx, CFDictionaryRef auxInfo) {
-    UNIMPLEMENTED();
     ctx->Backing()->CGContextBeginTransparencyLayer((id)auxInfo);
 }
 
 /**
- @Status Stub
+ @Status Interoperable
 */
 void CGContextEndTransparencyLayer(CGContextRef ctx) {
-    UNIMPLEMENTED();
     ctx->Backing()->CGContextEndTransparencyLayer();
 }
 
@@ -1131,11 +1129,11 @@ void CGContextBeginPage(CGContextRef c, const CGRect* mediaBox) {
 }
 
 /**
- @Status Stub
+ @Status Interoperable
  @Notes
 */
-void CGContextBeginTransparencyLayerWithRect(CGContextRef c, CGRect rect, CFDictionaryRef auxInfo) {
-    UNIMPLEMENTED();
+void CGContextBeginTransparencyLayerWithRect(CGContextRef ctx, CGRect rect, CFDictionaryRef auxInfo) {
+    ctx->Backing()->CGContextBeginTransparencyLayerWithRect(rect, (id)auxInfo);
 }
 
 /**

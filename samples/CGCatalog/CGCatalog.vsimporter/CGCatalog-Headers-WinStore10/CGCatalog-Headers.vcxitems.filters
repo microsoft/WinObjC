@@ -30,6 +30,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.h">
       <Filter>CGCatalog\Samples</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.h">
+      <Filter>CGCatalog\Samples</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.h">
       <Filter>CGCatalog\Samples</Filter>
     </ClInclude>

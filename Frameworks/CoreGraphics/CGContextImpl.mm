@@ -694,6 +694,9 @@ void CGContextImpl::CGContextClipToRect(CGRect rect) {
 void CGContextImpl::CGContextBeginTransparencyLayer(id auxInfo) {
 }
 
+void CGContextImpl::CGContextBeginTransparencyLayerWithRect(CGRect rect, id auxInfo) {
+}
+
 void CGContextImpl::CGContextEndTransparencyLayer() {
 }
 

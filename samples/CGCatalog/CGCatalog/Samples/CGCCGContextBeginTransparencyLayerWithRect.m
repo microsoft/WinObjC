@@ -14,71 +14,76 @@
 //
 //******************************************************************************
 
-#import "CGCCGContextBeginEndTransparencyLayer.h"
+#import "CGCCGContextBeginTransparencyLayerWithRect.h"
 
-@interface TransparencyView : UIView
+@interface TransparencyViewRect : UIView
 
 @end
 
-@implementation TransparencyView
+@implementation TransparencyViewRect
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGFloat maxWidth = rect.size.width;
     CGFloat maxHeight = rect.size.height;
-
+    
     // White background
     CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-    CGContextFillRect(context, CGRectMake(0, 0, maxWidth, maxHeight));
-
+    CGContextFillRect(context, rect);
+    
     // Rect Size
     CGFloat rectWidth = maxWidth / 2.0;
     CGFloat rectHeight = rectWidth;
-
+    
     // Draw background rect
     CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
-    CGContextFillRect(context, CGRectMake(rectWidth / 2 - 25, maxHeight / 2 - rectHeight / 2 - 25, rectWidth + 25, rectHeight + 25));
-
+    CGRect aRect = CGRectMake(rectWidth / 2 - 25, maxHeight / 2 - rectHeight / 2 - 25, rectWidth + 25, rectHeight + 25);
+    CGContextFillRect(context, aRect);
+    
     // Note: Shadow or Alpha would be better test samples for this, but are not fully implemented yet in the bridge.
     // TODO: Use Shadow or Alpha instead of BlendMode when supported by the bridge
     // Enable shadow
     /*CGSize shadowOffset = CGSizeMake(10, 20);
-    CGContextSetShadow(context, shadowOffset, 10);*/
+     CGContextSetShadow(context, shadowOffset, 10);*/
     // Set composite alpha of the transparency layer
     // CGContextSetAlpha(context, 0.5);
-
+    
     CGContextSetBlendMode(context, kCGBlendModeHue);
-
+    
     // Begin Transparency
-    CGContextBeginTransparencyLayer(context, NULL);
-
+    CGRect bRect = CGRectInset(aRect, 10, 10);
+    CGContextBeginTransparencyLayerWithRect(context, bRect, NULL);
+    
     CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
-    CGContextFillRect(context, CGRectMake(rectWidth / 2 + 25, maxHeight / 2 - rectHeight / 2 - 50, rectWidth, rectHeight));
+    CGRect cRect = CGRectMake(rectWidth / 2 + 25, maxHeight / 2 - rectHeight / 2 - 50, rectWidth, rectHeight);
+    CGContextFillRect(context, cRect);
     CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
-    CGContextFillRect(context, CGRectMake(rectWidth / 2 - 25, maxHeight / 2 - rectHeight / 2 + 25, rectWidth, rectHeight));
+    CGRect dRect = CGRectMake(rectWidth / 2 - 25, maxHeight / 2 - rectHeight / 2 + 25, rectWidth, rectHeight);
+    CGContextFillRect(context, dRect);
     CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
-    CGContextFillRect(context, CGRectMake(rectWidth / 2 - 50, maxHeight / 2 - rectHeight / 2, rectWidth, rectHeight));
-
+    CGRect eRect = CGRectMake(rectWidth / 2 - 50, maxHeight / 2 - rectHeight / 2, rectWidth, rectHeight);
+    CGContextFillRect(context, eRect);
+    
     // End Transparency
     CGContextEndTransparencyLayer(context);
 }
 
 @end
 
-@interface CGCCGContextBeginEndTransparencyLayer ()
+@interface CGCCGContextBeginTransparencyLayerWithRect ()
 
-@property (strong, nonatomic, nullable) TransparencyView* customView;
+@property (strong, nonatomic, nullable) TransparencyViewRect* customView;
 
 @end
 
-@implementation CGCCGContextBeginEndTransparencyLayer
+@implementation CGCCGContextBeginTransparencyLayerWithRect
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     self.view.backgroundColor = [UIColor whiteColor];
-
-    self.customView = [[TransparencyView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    
+    self.customView = [[TransparencyViewRect alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     [self.view addSubview:self.customView];
 }
 

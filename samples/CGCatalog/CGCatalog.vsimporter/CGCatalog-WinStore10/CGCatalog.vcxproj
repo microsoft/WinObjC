@@ -188,6 +188,7 @@
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\AppDelegate.m" />
     <ClangCompile Include="..\..\CGCatalog\CGCBaseViewController.m" />
+    <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\Samples\CGCCGPathApplyViewController.m" />
     <ClangCompile Include="..\..\CGCatalog\main.m" />

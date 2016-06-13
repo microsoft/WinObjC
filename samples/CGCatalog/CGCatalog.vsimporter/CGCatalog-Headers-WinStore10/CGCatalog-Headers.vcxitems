@@ -16,6 +16,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGBitmapContentViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginEndTransparencyLayer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextBeginTransparencyLayerWithRect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextSetPatternPhase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\CGCatalog\Samples\CGCCGContextReplacePathWithStrokedPath.h" />
   </ItemGroup>
