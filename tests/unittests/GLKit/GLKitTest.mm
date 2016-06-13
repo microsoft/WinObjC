@@ -55,11 +55,11 @@ NSString* stripSource(NSString* s, NSString* searchStr) {
 }
 
 int countOccurrences(NSString* s, NSString* searchStr) {
-	int count = 0;
+    int count = 0;
 
-	NSRange r;
-	r.location = 0;
-	r.length = s.length;
+    NSRange r;
+    r.location = 0;
+    r.length = s.length;
 
     while ((r = [s rangeOfString:searchStr options:static_cast<NSStringCompareOptions>(0) range:r]).location != NSNotFound) {
         count++;
