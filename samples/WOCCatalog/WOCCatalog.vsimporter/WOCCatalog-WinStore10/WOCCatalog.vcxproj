@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM">
@@ -30,7 +30,7 @@
     <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.10586.0</WindowsTargetPlatformMinVersion>
     <Keyword>IslandwoodProj</Keyword>
-    <ProjectGuid>{1D4B8B44-3515-4B37-A0C5-F2D2644DF826}</ProjectGuid>
+    <ProjectGuid>{2B371F33-8F49-4B8E-8FE6-E7046BBD2FF4}</ProjectGuid>
     <WINOBJC_SDK_ROOT Condition="'$(WINOBJC_SDK_ROOT)' == ''">..\..\..\..</WINOBJC_SDK_ROOT>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -181,15 +181,12 @@
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
-    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\XamlViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\WindowLevelControlViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\WebViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\AutoLayoutViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ButtonsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\GLKitExampleController.mm" />
-    <ClangCompile Include="..\..\WOCCatalog\WindowViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\BezierViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\UIPasteboardViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\main.m" />
@@ -219,8 +216,8 @@
     <ClangCompile Include="..\..\WOCCatalog\TaskInfoViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ShadowViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\ToolbarsViewController.m" />
+    <ClangCompile Include="..\..\WOCCatalog\UserDefaultsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\AccelerateViewController.m" />
-    <ClangCompile Include="..\..\WOCCatalog\BlankWindowViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\TextFieldsViewController.m" />
     <ClangCompile Include="..\..\WOCCatalog\PickersViewController.m" />
     <SBResourceCopy Include="..\..\WOCCatalog\Images\photo9.jpg" />

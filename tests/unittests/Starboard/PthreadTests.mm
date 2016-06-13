@@ -1,6 +1,6 @@
 //******************************************************************************
 //
-// Copyright (c) 2015 Microsoft Corporation. All rights reserved.
+// Copyright (c) 2016 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
 //
@@ -14,8 +14,16 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#include <TestFramework.h>
+#include <pthread.h>
 
-@interface WindowViewController : UITableViewController
-
-@end
+TEST(pthread, create_destroy) {
+    ASSERT_NO_THROW(pthread_mutex_destroy(NULL));
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    ASSERT_NO_THROW(pthread_mutex_destroy(&mutex));
+    pthread_mutex_lock(&mutex);
+    pthread_mutex_unlock(&mutex);
+    ASSERT_NE((int)mutex, PTHREAD_MUTEX_INITIALIZER);
+    ASSERT_NO_THROW(pthread_mutex_destroy(&mutex));
+    ASSERT_EQ((int)mutex, PTHREAD_MUTEX_INITIALIZER);
+}

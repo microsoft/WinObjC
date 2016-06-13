@@ -5,13 +5,11 @@
     <ItemsRootNamespace>WOCCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <Keyword>IslandwoodProj</Keyword>
-    <ItemsProjectGuid>{E3862D39-D90C-4465-BD69-5DBFA806B04A}</ItemsProjectGuid>
-    <SharedGUID>{79B09D7A-E296-4939-9618-D23740DE62FE}</SharedGUID>
+    <ItemsProjectGuid>{23D15392-643F-4482-940E-49780A265A58}</ItemsProjectGuid>
+    <SharedGUID>{64DD2FB9-5D8C-4FBC-8159-68B00C4D35DB}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\BlankWindowViewController.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\WindowLevelControlViewController.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\WindowViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\UserDefaultsViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\UIPasteboardViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\ShadowViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\WOCCatalog\CoreMotionViewController.h" />

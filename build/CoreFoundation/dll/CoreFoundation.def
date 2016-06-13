@@ -34,6 +34,8 @@ LIBRARY CoreFoundation
         _CFGetSlash
         _CFGetSlashStr
         _CFProcessPath
+        _CFURLCreateCurrentDirectoryURL
+        _NS_chdir
 
         ; Base Utilities.mm
         kCFCoreFoundationVersionNumber DATA
@@ -1202,6 +1204,7 @@ LIBRARY CoreFoundation
         CFURLCreatePropertyFromResource
         CFURLDestroyResource
         CFURLWriteDataAndPropertiesToResource
+        CFCopyHomeDirectoryURL
 
         ; Preferences Utilities.mm
         kCFPreferencesAnyApplication DATA

@@ -125,3 +125,15 @@ TEST(NSFileManager, EnumateDirectoryUsingURL) {
     // ASSERT_TRUE_MSG(actualModificationDate != nil, "failed to get ModificationDate from %@", targetFileURL);
     // ASSERT_OBJCEQ_MSG(expectedModificationDate, actualModificationDate, "failed to check modification date for %@", targetFileURL);
 }
+
+TEST(NSFileManager, ChangeDirectory) {
+    NSFileManager* manager = [NSFileManager defaultManager];
+    NSString* originalPath = [manager currentDirectoryPath];
+
+    NSString* parentPath = [[[NSURL fileURLWithPath:originalPath] URLByDeletingLastPathComponent] path];
+    ASSERT_TRUE([manager changeCurrentDirectoryPath:parentPath]);
+
+    NSString* currentPath = [manager currentDirectoryPath];
+    ASSERT_OBJCNE_MSG(originalPath, currentPath, "Expected change in current directory");
+    ASSERT_OBJCEQ_MSG(parentPath, currentPath, "Expected current directory to change to parentPath");
+}

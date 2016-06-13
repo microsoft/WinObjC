@@ -50,6 +50,8 @@ using namespace Windows::Foundation;
 #define CSIDL_APPDATA 0x001a
 #define CSIDL_LOCAL_APPDATA 0x001c
 
+// WINOBJC: Export CFCopyHomeDirectoryURL declaration needed in this translation unit
+#include "CFUtilities.h""
 
 #endif
 
@@ -335,7 +337,8 @@ Wrappers::HString GetAppDataPath(bool localAppData) {
     return toReturn;
 }
 
-CFURLRef CFCopyHomeDirectoryURL(void) {
+// WINOBJC: export for foundation use
+CF_EXPORT CFURLRef CFCopyHomeDirectoryURL(void) {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_FREEBSD
     uid_t euid;
     __CFGetUGIDs(&euid, NULL);
