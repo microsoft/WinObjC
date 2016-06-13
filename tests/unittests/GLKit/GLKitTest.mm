@@ -40,8 +40,9 @@ NSString* stripSource(NSString* s, NSString* searchStr) {
     while ((r = [s rangeOfString:searchStr]).location != NSNotFound) {
         NSRange searchRange;
         searchRange.location = r.location + r.length;
-        searchRange.length = s.length;
-        NSRange endRange = [s rangeOfString:@"\n" options:0 range:searchRange];
+        searchRange.length = s.length - searchRange.location;
+        NSRange endRange = [s rangeOfString:@"\n" options:static_cast<NSStringCompareOptions>(0) range:searchRange];
+
         if (endRange.location != NSNotFound) {
             r.length = endRange.location - r.location;
         } else {
@@ -54,13 +55,13 @@ NSString* stripSource(NSString* s, NSString* searchStr) {
 }
 
 int countOccurrences(NSString* s, NSString* searchStr) {
-    int count = 0;
+	int count = 0;
 
-    NSRange r;
-    r.location = 0;
-    r.length = s.length;
+	NSRange r;
+	r.location = 0;
+	r.length = s.length;
 
-    while ((r = [s rangeOfString:searchStr options:0 range:r]).location != NSNotFound) {
+    while ((r = [s rangeOfString:searchStr options:static_cast<NSStringCompareOptions>(0) range:r]).location != NSNotFound) {
         count++;
 
         r.location = r.location + r.length;
