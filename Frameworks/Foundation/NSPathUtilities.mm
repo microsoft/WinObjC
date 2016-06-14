@@ -15,10 +15,13 @@
 //******************************************************************************
 
 #include "StubReturn.h"
-#include "Foundation/Foundation.h"
-#include "Foundation/NSObjCRuntime.h"
-#include "Foundation/NSArray.h"
-#include "Foundation/NSPathUtilities.h"
+#include <Foundation/Foundation.h>
+#include <Foundation/NSObjCRuntime.h>
+#include <Foundation/NSArray.h>
+#include <Foundation/NSPathUtilities.h>
+#include <CoreFoundation/CFUtilities.h>
+#include "CFFoundationInternal.h"
+#include "CFPriv.h"
 
 #include "Platform/EbrPlatform.h"
 
@@ -178,9 +181,17 @@ NSArray* NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory dir, NSSearch
 
 /**
  @Status Interoperable
+ @Notes current user only
+*/
+NSString* NSHomeDirectoryForUser(NSString* userName) {
+    return [[static_cast<NSURL*>(CFCopyHomeDirectoryURLForUser(static_cast<CFStringRef>(userName))) autorelease] path];
+}
+
+/**
+ @Status Interoperable
 */
 NSString* NSHomeDirectory(void) {
-    return [NSString stringWithFormat:@"%hs", EbrGetWritableFolder()];
+    return [[static_cast<NSURL*>(CFCopyHomeDirectoryURL()) autorelease] path];
 }
 
 NSString* temporaryDirectory = @"/tmp";

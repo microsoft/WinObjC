@@ -50,6 +50,8 @@ using namespace Windows::Foundation;
 #define CSIDL_APPDATA 0x001a
 #define CSIDL_LOCAL_APPDATA 0x001c
 
+// WINOBJC: Export CFCopyHomeDirectoryURL declaration needed in this translation unit
+#include "CFUtilities.h""
 
 #endif
 
@@ -240,6 +242,7 @@ static CFURLRef _CFCopyHomeDirURLForUser(struct passwd *upwd, bool fallBackToHom
 
 CF_PRIVATE CFStringRef _CFStringCreateHostName(void) {
     char myName[CFMaxHostNameSize];
+    __CFSocketInitializeWinSock(); // WINOBJC: ensure winsock is initialized, otherwise gethostname will fail.
 
     // return @"" instead of nil a la CFUserName() and Ali Ozer
     if (0 != gethostname(myName, CFMaxHostNameSize)) myName[0] = '\0';
@@ -334,7 +337,8 @@ Wrappers::HString GetAppDataPath(bool localAppData) {
     return toReturn;
 }
 
-CFURLRef CFCopyHomeDirectoryURL(void) {
+// WINOBJC: export for foundation use
+CF_EXPORT CFURLRef CFCopyHomeDirectoryURL(void) {
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_EMBEDDED_MINI || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_FREEBSD
     uid_t euid;
     __CFGetUGIDs(&euid, NULL);
@@ -511,51 +515,7 @@ CF_EXPORT CFMutableStringRef _CFCreateApplicationRepositoryPath(CFAllocatorRef a
         CFRelease(str);
     }
 
-    /*
-    // UniChar szPath[MAX_PATH];
-
-
-    // get the current path to the data repository: CSIDL_APPDATA (roaming) or CSIDL_LOCAL_APPDATA (nonroaming)
-    
-    if (S_OK == SHGetFolderPathW(NULL, nFolder, NULL, 0, (wchar_t *) szPath)) {
-    CFStringRef directoryPath;
-    
-    // make it a CFString
-    directoryPath = CFStringCreateWithCharacters(alloc, szPath, strlen_UniChar(szPath));
-    if (directoryPath) {
-        CFBundleRef bundle;
-        CFStringRef bundleName;
-        CFStringRef completePath;
-        
-        // attempt to get the bundle name
-        bundle = CFBundleGetMainBundle();
-        if (bundle) {
-        bundleName = (CFStringRef)CFBundleGetValueForInfoDictionaryKey(bundle, kCFBundleNameKey);
-        }
-        else {
-        bundleName = NULL;
-        }
-        
-        if (bundleName) {
-        // the path will be "<directoryPath>\Apple Computer\<bundleName>\" if there is a bundle name
-        completePath = CFStringCreateWithFormat(alloc, NULL, CFSTR("%@\\Apple Computer\\%@\\"), directoryPath, bundleName);
-        }
-        else {
-        // or "<directoryPath>\Apple Computer\" if there is no bundle name.
-        completePath = CFStringCreateWithFormat(alloc, NULL, CFSTR("%@\\Apple Computer\\"), directoryPath);
-        }
-
-        CFRelease(directoryPath);
-
-        // make a mutable copy to return
-        if (completePath) {
-        result = CFStringCreateMutableCopy(alloc, 0, completePath);
-        CFRelease(completePath);
-        }
-    }
-    }
-    */
-
+    CFStringAppend(result, _CFGetSlashStr());
     return ( result );
 
 }

@@ -52,6 +52,7 @@
     <LinkWithFoundation>false</LinkWithFoundation>
     <LinkWithStarboard>false</LinkWithStarboard>
     <LinkWithLogging>false</LinkWithLogging>
+    <StarboardLinkObjCRuntime>false</StarboardLinkObjCRuntime>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(StarboardBasePath)\msvc\sdk-build.props" />

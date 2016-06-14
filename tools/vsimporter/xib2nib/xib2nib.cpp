@@ -326,7 +326,6 @@ int main(int argc, char* argv[]) {
     }
 
     TELEMETRY_EVENT_DATA(L"Xib2NibFinish", fName.filename());
-
     TELEMETRY_FLUSH();
 
     exit(0);

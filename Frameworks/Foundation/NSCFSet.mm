@@ -32,10 +32,13 @@ static CFSetCallBacks _NSCFSetCallBacks = {
     _NSCFCallbackHash,
 };
 
+@interface NSCFSet : NSMutableSet
+@end
+
 #pragma region NSSetPrototype
 @implementation NSSetPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFSet)
 
 - (_Nullable instancetype)init {
     return [self initWithObjects:nil count:0];
@@ -53,7 +56,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 @implementation NSMutableSetPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFSet)
 
 - (_Nullable instancetype)init {
     return [self initWithObjects:nil count:0];
@@ -74,9 +77,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 @end
 #pragma endregion
-
-@interface NSCFSet : NSMutableSet
-@end
 
 #pragma region NSCF Bridged Class
 @implementation NSCFSet

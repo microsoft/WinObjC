@@ -14,8 +14,27 @@
 //
 //******************************************************************************
 
-#import <UIKit/UIKit.h>
+#include "UIStackView.h"
 
-@interface WindowLevelControlViewController : UIViewController
+UIStackView::UIStackView()
+{
+}
 
-@end
+void UIStackView::InitFromXIB(XIBObject *obj)
+{
+    UIView::InitFromXIB(obj);
+
+    _outputClassName = "UIStackView";
+}
+
+void UIStackView::InitFromStory(XIBObject *obj)
+{
+    UIView::InitFromStory(obj);
+
+    _outputClassName = "UIStackView";
+}
+
+void UIStackView::ConvertStaticMappings(NIBWriter *writer, XIBObject *obj)
+{
+    UIView::ConvertStaticMappings(writer, obj);
+}

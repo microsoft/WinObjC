@@ -1,5 +1,8 @@
 /*===---- tgmath.h - Standard header for type generic math ----------------===*\
  *
+ * Based on Clang 3.7 - clang/lib/Headers/tgmath.h - Commit 75883618
+ * https://github.com/llvm-mirror/clang/blob/75883618c9d91fbabe20350c875fce48f519ada6/lib/Headers/tgmath.h
+ *
  * Copyright (c) 2009 Howard Hinnant
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,10 +29,10 @@
 #define __TGMATH_H
 
 /* C99 7.22 Type-generic math <tgmath.h>. */
-#include <math.h>
+#include <cmath>
 
-/* C++ handles type genericity with overloading in math.h. */
-#ifndef __cplusplus
+/* Type genericity for C++ is handled with overloading in cmath. */
+#if !defined(__cplusplus) && !defined(RC_INVOKED)
 #include <complex.h>
 
 #define _TG_ATTRSp __attribute__((__overloadable__))
@@ -490,7 +493,7 @@ static double _Complex
 
 static long double _Complex
     _TG_ATTRS
-    __tg_pow(long double _Complex __x, long double _Complex __y) 
+    __tg_pow(long double _Complex __x, long double _Complex __y)
     {return cpowl(__x, __y);}
 
 #undef pow
@@ -1370,5 +1373,5 @@ static long double
 #undef _TG_ATTRSp
 #undef _TG_ATTRS
 
-#endif /* __cplusplus */
+#endif /* !defined(__cplusplus) && !defined(RC_INVOKED) */
 #endif /* __TGMATH_H */

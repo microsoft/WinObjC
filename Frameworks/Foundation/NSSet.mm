@@ -30,7 +30,7 @@
 
 @implementation NSSet
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSSet, NSSetPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSSet, NSSetPrototype, CFSetGetTypeID);
 
 /**
  @Status Interoperable

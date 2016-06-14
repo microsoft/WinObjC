@@ -16,6 +16,8 @@
 
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
+#import <Corefoundation/CFBase.h>
+#import <Corefoundation/CFPreferences.h>
 
 TEST(NSUserDefaults, Basic) {
     NSUserDefaults* userDefault = [NSUserDefaults standardUserDefaults];
@@ -55,4 +57,25 @@ TEST(NSUserDefaults, KVCArray) {
     EXPECT_TRUE([[[NSUserDefaults standardUserDefaults] objectForKey:@"nonexistentPreference"] containsObject:@"Another"]);
 
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+CF_EXPORT void CFPreferencesFlushCaches(void);
+
+TEST(NSUserDefaults, Flush) {
+    [[NSUserDefaults standardUserDefaults] setObject:@"Cheddar" forKey:@"FavoriteCheese"];
+    CFPreferencesFlushCaches();
+
+    NSString* actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
+    EXPECT_OBJCEQ(@"Cheddar", actualCheese);
+    [[NSUserDefaults standardUserDefaults] setObject:@"Swiss" forKey:@"FavoriteCheese"];
+    actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
+    EXPECT_OBJCEQ(@"Swiss", actualCheese);
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"FavoriteCheese"];
+    actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
+    EXPECT_OBJCEQ(nil, actualCheese);
+    CFPreferencesFlushCaches();
+    actualCheese = [[NSUserDefaults standardUserDefaults] stringForKey:@"FavoriteCheese"];
+    EXPECT_OBJCEQ(nil, actualCheese);
+    [[NSUserDefaults standardUserDefaults] setObject:@"Cheddar" forKey:@"FavoriteCheese"];
+    CFPreferencesFlushCaches();
 }

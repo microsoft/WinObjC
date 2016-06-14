@@ -17,6 +17,11 @@
 #include <TestFramework.h>
 #import <Foundation/Foundation.h>
 
+TEST(NSOperation, NSOperationDealloc) {
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    ASSERT_NO_THROW([queue release]);
+}
+
 TEST(NSOperation, NSOperation) {
     NSOperationQueue* queue = [[NSOperationQueue alloc] init];
 

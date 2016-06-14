@@ -116,15 +116,18 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSLocale.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\TestNSNumberFormatter.mm">
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSNumberFormatter.mm">
       <Filter>ReferenceFoundation</Filter>
     </ClangCompile>
-    <ClangCompile Include="..\..\..\..\tests\unittests\Foundation\ReferenceFoundation\TestNSLocale.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSLocale.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileHandleTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSPropertyList.mm">
+      <Filter>ReferenceFoundation</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt" />
-    <Text Include="..\..\..\tests\unittests\Foundation\NSFileHandleTestFile.txt" />
+    <Text Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileManagerUT.txt" />
+    <Text Include="$(StarboardBasePath)\tests\unittests\Foundation\NSFileHandleTestFile.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ReferenceFoundation">

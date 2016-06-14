@@ -333,6 +333,7 @@
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSObject_KeyValueObservationTests.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSNumberFormatter.mm" />
     <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\NSCacheTests.mm" />
+    <ClangCompile Include="$(StarboardBasePath)\tests\unittests\Foundation\ReferenceFoundation\TestNSPropertyList.mm" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\tests\unittests\Foundation\NSFileManagerUT.txt">

@@ -17,6 +17,7 @@
 #import "FoundationsViewController.h"
 #import "TaskInfoViewController.h"
 #import "URLSessionViewController.h"
+#import "UserDefaultsViewController.h"
 
 @interface FoundationsViewController ()
 
@@ -31,6 +32,8 @@
     [self addMenuItemViewController:[[TaskInfoViewController alloc] init] andTitle:@"task_info"];
 
     [self addMenuItemViewController:[[URLSessionViewController alloc] init] andTitle:@"URL Session"];
+
+    [self addMenuItemViewController:[[UserDefaultsViewController alloc] init] andTitle:@"UserDefaults"];
 }
 
 - (void)didReceiveMemoryWarning {

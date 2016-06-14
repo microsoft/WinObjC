@@ -54,7 +54,7 @@ using namespace Windows::Foundation;
 
 @implementation NSData
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSData, NSDataPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSData, NSDataPrototype, CFDataGetTypeID);
 
 /**
  @Status Interoperable

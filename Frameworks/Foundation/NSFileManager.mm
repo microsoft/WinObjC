@@ -33,6 +33,8 @@
 #import <errno.h>
 #import "LoggingNative.h"
 #import "NSDirectoryEnumeratorInternal.h"
+#import "CFFoundationInternal.h"
+#import "ForFoundationOnly.h"
 
 static const wchar_t* TAG = L"NSFileManager";
 
@@ -84,10 +86,7 @@ NSString* const NSFileProtectionComplete = @"NSFileProtectionComplete";
 NSString* const NSFileProtectionCompleteUnlessOpen = @"NSFileProtectionCompleteUnlessOpen";
 NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileProtectionCompleteUntilFirstUserAuthentication";
 
-@implementation NSFileManager {
-    // instance variable to keep current directory path.
-    idretaint<NSString> _currentDirectoryPath;
-}
+@implementation NSFileManager
 
 // Creating a File Manager
 
@@ -98,17 +97,6 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     static id defaultManager = [[self alloc] init];
 
     return defaultManager;
-}
-
-/**
- @Status Interoperable
-*/
-- (instancetype)init {
-    if (self = [super init]) {
-        // on init, current Directory path is specified as NSHomeDirectory() for current working directory
-        _currentDirectoryPath = NSHomeDirectory();
-    }
-    return self;
 }
 
 // Locating System Directories
@@ -843,16 +831,15 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
  @Status Interoperable
 */
 - (BOOL)changeCurrentDirectoryPath:(NSString*)path {
-    _currentDirectoryPath = path;
-
-    const char* pathAddress = [path UTF8String];
-    EbrChdir(pathAddress);
-
-    return TRUE;
+    
+    return (0 == _NS_chdir([path UTF8String]));
 }
 
+/**
+ @Status Interoperable
+*/
 - (NSString*)currentDirectoryPath {
-    return _currentDirectoryPath;
+    return [[static_cast<NSURL*>(_CFURLCreateCurrentDirectoryURL(kCFAllocatorDefault)) autorelease] path];
 }
 
 // Deprecated Methods
@@ -1011,24 +998,7 @@ NSString* const NSFileProtectionCompleteUntilFirstUserAuthentication = @"NSFileP
     return ret;
 }
 
-/**
- @Status Interoperable
-*/
-- (void)dealloc {
-    _currentDirectoryPath = nil;
-    [super dealloc];
-}
-
 @end
-
-/**
- @Status Stub
- @Notes
-*/
-NSString* NSHomeDirectoryForUser(NSString* userName) {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
 
 /**
  @Status Stub

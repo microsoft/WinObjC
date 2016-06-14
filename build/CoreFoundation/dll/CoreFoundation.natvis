@@ -235,14 +235,6 @@
         </Expand>
     </Type>
 
-    <Type Name="NSCFArray">
-        <DisplayString>{*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveCSimple)na}</DisplayString>
-        <Expand>
-            <ExpandedItem>*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveC)</ExpandedItem>
-            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFArray*)this,!</Item>
-        </Expand>
-    </Type>
-
     <!-- Since any CFArrayRef can point to any NSArray, we have to go through the NSObject renderer. -->
     <Type Name="__CFArray">
         <DisplayString>{*(NSObject*)this,na}</DisplayString>
@@ -295,22 +287,6 @@
         </Expand>
     </Type>
 
-    <Type Name="NSCFDictionary">
-        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)na}</DisplayString>
-        <Expand>
-            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)</ExpandedItem>
-            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
-        </Expand>
-    </Type>
-
-    <Type Name="NSCFSet">
-        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)na}</DisplayString>
-        <Expand>
-            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)</ExpandedItem>
-            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
-        </Expand>
-    </Type>
-
     <!-- Since any __CFBasicHash can point to any NSDictionary/NSSet, we have to go through the NSObject renderer. -->
     <Type Name="__CFBasicHash">
         <DisplayString>{*(NSObject*)this,na}</DisplayString>
@@ -355,14 +331,6 @@
                     </ArrayItems>
                 </Expand>
             </Synthetic>
-        </Expand>
-    </Type>
-
-    <Type Name="NSCFData">
-        <DisplayString>{*(CoreFoundation.dll!__CFData*)this,view(CF)na}</DisplayString>
-        <Expand>
-            <ExpandedItem>*(CoreFoundation.dll!__CFData*)this,view(CF)</ExpandedItem>
-            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFData*)this,!</Item>
         </Expand>
     </Type>
 

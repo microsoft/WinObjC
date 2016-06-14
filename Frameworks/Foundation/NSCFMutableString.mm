@@ -25,7 +25,7 @@
 
 @implementation NSMutableStringPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
 
 - (instancetype)init {
     return [self initWithCapacity:0];

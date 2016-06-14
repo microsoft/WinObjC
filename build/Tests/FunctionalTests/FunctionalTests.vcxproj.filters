@@ -38,6 +38,9 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSURLSession.mm">
       <Filter>Tests</Filter>
     </ClangCompile>
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\tests\functionaltests\Tests\NSBundleTests.mm">
+      <Filter>Tests</Filter>
+    </ClangCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -23,8 +23,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 #import "Foundation/NSMutableDictionary.h"
 #import "Foundation/NSData.h"
 #import "Foundation/NSValue.h"
-#import "NSPropertyListReader.h"
-#import "NSXMLPropertyList.h"
 #import "NSCoderInternal.h"
 #import <stack>
 #import <memory>
@@ -91,19 +89,7 @@ static NSString* _NSUnarchiverEncounteredInvalidClassExceptionExpectedClasses =
 
     _nameToReplacementClass.attach([NSMutableDictionary new]);
 
-    char* bytes = (char*)[data bytes];
-    if (memcmp(bytes, "<?xml", 5) == 0) {
-        bool returnNow = false;
-
-        if (returnNow) {
-            return nil;
-        }
-        _propertyList = [NSXMLPropertyList propertyListFromData:data];
-    } else {
-        NSPropertyListReaderA read;
-        read.init(data);
-        _propertyList = read.read();
-    }
+    _propertyList = [NSPropertyListSerialization propertyListWithData:data options:0 format:nullptr error:nullptr];
     _objects = [_propertyList objectForKey:@"$objects"];
     _plistStack.attach([NSMutableArray new]);
 

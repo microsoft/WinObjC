@@ -273,3 +273,14 @@ TEST(NSData, ExpandBeyondCapacity) {
     [data appendBytes:stringData.data() length:stringData.length()];
     ASSERT_EQ(stringData.length(), [data length]);
 }
+
+TEST(NSData, MutableCopyExpandBeyondCapacity) {
+    std::string originalData = "original";
+    NSData* data = [NSData dataWithBytes:originalData.data() length:originalData.length()];
+    NSMutableData* mutableData = [data mutableCopy];
+    std::string appendData = "append";
+
+    [mutableData appendBytes:appendData.data() length:appendData.length()];
+    ASSERT_EQ(appendData.length() + originalData.length(), [mutableData length]);
+    ASSERT_EQ(originalData.length(), [data length]);
+}

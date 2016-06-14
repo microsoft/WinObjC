@@ -22,11 +22,14 @@
 
 #import <StubReturn.h>
 
+@interface NSCFURL : NSURL
+@end
+
 #pragma region NSURLPrototype
 
 @implementation NSURLPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFURL)
 
 - (instancetype)initWithString:(NSString*)URLString relativeToURL:(NSURL*)baseURL {
     return reinterpret_cast<NSURLPrototype*>(
@@ -71,9 +74,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCFURL
-@interface NSCFURL : NSURL
-@end
-
 @implementation NSCFURL
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFURLRef, CFURLGetTypeID, NSURL, NSCFURL)

@@ -142,7 +142,7 @@ NSString* const NSURLThumbnailDictionaryKey = @"NSURLThumbnailDictionaryKey";
 
 @implementation NSURL
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSURL, NSURLPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSURL, NSURLPrototype, CFURLGetTypeID);
 
 /**
  @Status Interoperable

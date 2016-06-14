@@ -46,6 +46,7 @@
       <MSVCFiles Include="..\..\msvc\*.xml" />
       <MSVCFiles Include="..\..\msvc\*.dll" />
       <MSVCFiles Include="..\..\msvc\*.cpp" />
+      <MSVCObjCRTFiles Include="..\..\msvc\objcrt\*.cpp" />
       <SBIncludes Include="..\..\include\**\*" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zlib.h" />
       <SBIncludes Include="..\..\deps\prebuilt\include\zconf.h" />
@@ -57,6 +58,7 @@
       <SBBinaries Include="..\..\bin\*.exe" />
       <SBBinaries Include="..\..\bin\*.dll" />
       <SBBinaries Include="..\..\bin\*.vsix" />
+      <SBBinaries Include="..\..\bin\*.pkgdef" />
       <SBLegal Include="..\..\license.txt;..\..\ThirdPartyNotices.txt;..\..\README.md" />
 
       <!-- X86 -->
@@ -187,6 +189,8 @@
     <Copy SourceFiles="@(StarboardTemplates)" DestinationFiles="@(StarboardTemplates->'$(SBPackageDir)msvc\vsimporter-templates\%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying MSBuild files to destination" />
     <Copy SourceFiles="@(MSVCFiles)" DestinationFiles="@(MSVCFiles->'$(SBPackageDir)msvc\%(OutputFileName)%(Extension)')" />
+    <Message Importance="high" Text="Copying ObjC Runtime Support files to destination" />
+    <Copy SourceFiles="@(MSVCObjCRTFiles)" DestinationFiles="@(MSVCObjCRTFiles->'$(SBPackageDir)msvc\objcrt\%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying x86 lib files to destination" />
     <Copy SourceFiles="@(SBLibsWin10Win32)" DestinationFiles="@(SBLibsWin10Win32->'$(SBPackageDir)lib\Universal Windows\%(OutputDirectory)\%(Filename)%(Extension)')" />
     <Message Importance="high" Text="Copying ARM lib files to destination" />

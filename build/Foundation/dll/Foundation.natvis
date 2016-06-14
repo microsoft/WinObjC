@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <!-- NSConstantString is always UTF-8. It is emitted by the compiler. -->
+    <Type Name="NSConstantString">
+        <DisplayString>{c_string,[len]s8}</DisplayString>
+        <StringView>c_string,[len]s8</StringView>
+        <Expand HideRawView="true">
+            <ExpandedItem>*(NSObject*)this</ExpandedItem>
+        </Expand>
+    </Type>
+
+    <!-- Bridged Types -->
+    <Type Name="NSCFArray">
+        <DisplayString>{*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveCSimple)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFArray*)this,view(ObjectiveC)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFArray*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFDictionary">
+        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Dictionary)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFSet">
+        <DisplayString>{*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFBasicHash*)this,view(Set)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFBasicHash*)this,!</Item>
+        </Expand>
+    </Type>
+
+    <Type Name="NSCFData">
+        <DisplayString>{*(CoreFoundation.dll!__CFData*)this,view(CF)na}</DisplayString>
+        <Expand>
+            <ExpandedItem>*(CoreFoundation.dll!__CFData*)this,view(CF)</ExpandedItem>
+            <Item Name="[CoreFoundation Object]">*(CoreFoundation.dll!__CFData*)this,!</Item>
+        </Expand>
+    </Type>
+    <!-- End Bridged Types -->
+
+    <Type Name="NSException">
+        <DisplayString>{_name,na}: {_reason,na}</DisplayString>
+    </Type>
+</AutoVisualizer>

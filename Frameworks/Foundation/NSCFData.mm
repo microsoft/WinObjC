@@ -21,10 +21,13 @@
 #include <CoreFoundation/CFData.h>
 #include "BridgeHelpers.h"
 
+@interface NSCFData : NSMutableData
+@end
+
 #pragma region NSDataPrototype
 @implementation NSDataPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
 
 - (_Nullable instancetype)init {
     return [self initWithBytes:"" length:0];
@@ -32,7 +35,8 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 
 - (_Nullable instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
     CFAllocatorRef deallocator = freeWhenDone ? kCFAllocatorDefault : kCFAllocatorNull;
-    return reinterpret_cast<NSDataPrototype*>(static_cast<NSData*>((CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, reinterpret_cast<const byte*>(bytes), length, deallocator))));
+    return reinterpret_cast<NSDataPrototype*>(static_cast<NSData*>(
+        (CFDataCreateWithBytesNoCopy(kCFAllocatorDefault, reinterpret_cast<const byte*>(bytes), length, deallocator))));
 }
 
 @end
@@ -41,7 +45,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma region NSMutableDataPrototype
 @implementation NSMutableDataPrototype
 
-PROTOTYPE_CLASS_REQUIRED_IMPLS
+PROTOTYPE_CLASS_REQUIRED_IMPLS(NSCFData)
 
 - (_Nullable instancetype)init {
     return [self initWithCapacity:0];
@@ -50,7 +54,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 - (_Nullable instancetype)initWithBytesNoCopy:(void*)bytes length:(NSUInteger)length freeWhenDone:(BOOL)freeWhenDone {
     // NSMutableData is documented to make a copy of the input data on the reference platform,
     // despite of the name of this initializer
-    NSMutableData* data =  static_cast<NSMutableData*>(CFDataCreateMutable(kCFAllocatorDefault, 0));
+    NSMutableData* data = static_cast<NSMutableData*>(CFDataCreateMutable(kCFAllocatorDefault, 0));
     [data appendBytes:bytes length:length];
 
     // NSMutableData is documented to free the bytes immediately, if specified, unlike the immutable version,
@@ -70,9 +74,6 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS
 #pragma endregion
 
 #pragma region NSCF Bridged Class
-@interface NSCFData : NSMutableData
-@end
-
 @implementation NSCFData
 
 BRIDGED_CLASS_REQUIRED_IMPLS(CFDataRef, CFDataGetTypeID, NSData, NSCFData)
@@ -120,7 +121,8 @@ BRIDGED_CLASS_REQUIRED_IMPLS(CFDataRef, CFDataGetTypeID, NSData, NSCFData)
 }
 
 - (NSObject*)mutableCopyWithZone:(NSZone*)zone {
-    return reinterpret_cast<NSCFData*>(static_cast<NSMutableData*>(CFDataCreateMutableCopy(nullptr, [self length], static_cast<CFMutableDataRef>(self))));
+    return reinterpret_cast<NSCFData*>(
+        static_cast<NSMutableData*>(CFDataCreateMutableCopy(nullptr, 0, static_cast<CFMutableDataRef>(self))));
 }
 
 @end

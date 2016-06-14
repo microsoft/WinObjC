@@ -47,7 +47,7 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
 
 @implementation NSError
 
-+ ALLOC_PROTOTYPE_SUBCLASS_WITH_ZONE(NSError, NSErrorPrototype);
+BASE_CLASS_REQUIRED_IMPLS(NSError, NSErrorPrototype, CFErrorGetTypeID);
 
 /**
  @Status Interoperable
@@ -151,10 +151,8 @@ NSString* const NSURLErrorFailingURLPeerTrustErrorKey = @"NSURLErrorFailingURLPe
         return NO;
     }
 
-    return ([[self domain] isEqual:[other domain]] &&
-        [self code] == [other code] &&
-        [[self userInfo] isEqual:[other userInfo]] &&
-        [[self localizedDescription] isEqual:[other localizedDescription]]);
+    return ([[self domain] isEqual:[other domain]] && [self code] == [other code] && [[self userInfo] isEqual:[other userInfo]] &&
+            [[self localizedDescription] isEqual:[other localizedDescription]]);
 }
 
 /**
