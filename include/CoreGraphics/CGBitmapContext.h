@@ -43,6 +43,6 @@ COREGRAPHICS_EXPORT CGContextRef CGBitmapContextCreateWithData(void* data,
     CGBitmapContextReleaseDataCallback releaseCallback,
     void* releaseInfo) STUB_METHOD;
 
-COREGRAPHICS_EXPORT CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef self) STUB_METHOD;
-COREGRAPHICS_EXPORT size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) STUB_METHOD;
+COREGRAPHICS_EXPORT CGBitmapInfo CGBitmapContextGetBitmapInfo(CGContextRef self);
+COREGRAPHICS_EXPORT size_t CGBitmapContextGetBitsPerPixel(CGContextRef context);
 COREGRAPHICS_EXPORT CGColorSpaceRef CGBitmapContextGetColorSpace(CGContextRef context) STUB_METHOD;
