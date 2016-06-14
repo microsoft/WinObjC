@@ -16,10 +16,13 @@
 
 #include <CoreFoundation/CFStringTokenizer.h>
 #include <unicode/ubrk.h>
-#include "CFInternal.h"
 #include <IwMalloc.h>
 #include <memory>
 #include <Starboard/SmartTypes.h>
+#include <CFInternal.h>
+#include <LoggingNative.h>
+
+static const wchar_t* TAG = L"CFStringTokenizer";
 
 typedef struct __CFStringTokenizer {
     CFRuntimeBase _base;
@@ -105,7 +108,7 @@ CFStringTokenizerRef CFStringTokenizerCreate(
     }
 
     if (err != U_ZERO_ERROR) {
-        CFLog(kCFLogLevelWarning, CFSTR("Create:UErrorCode:%d"), err);
+        TraceVerbose(TAG, L"Create:UErrorCode:%d", err);
     }
 
     CFStringTokenizerSetString((CFStringTokenizerRef)cfTokenizer.get(), string, range);
@@ -136,7 +139,7 @@ void CFStringTokenizerSetString(CFStringTokenizerRef tokenizer, CFStringRef stri
     UErrorCode err = U_ZERO_ERROR;
     ubrk_setText(cfTokenizer->_iterator.get(), cfTokenizer->_str.get(), range.length, &err);
     if (err != U_ZERO_ERROR) {
-        CFLog(kCFLogLevelWarning, CFSTR("setText:UErrorCode:%d"), err);
+        TraceVerbose(TAG, L"setString:UErrorCode:%d", err);
     }
 }
 
