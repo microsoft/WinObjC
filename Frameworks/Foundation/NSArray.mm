@@ -665,6 +665,10 @@ static CFComparisonResult _CFComparatorFunctionFromComparator(const void* val1, 
                                             _CFComparatorFunctionFromComparator,
                                             &comparator);
 
+    if (index >= [self count] && (options & NSBinarySearchingInsertionIndex)) {
+        return index;
+    }
+
     if (([self count] > 0) && ([[self objectAtIndex:index] isEqual:obj])) {
         if (options & NSBinarySearchingFirstEqual) {
             while (NSLocationInRange(index - 1, range)) {
