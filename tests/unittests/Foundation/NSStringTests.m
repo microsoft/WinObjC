@@ -576,3 +576,19 @@ TEST(NSString, PathExtensions) {
     string = @"/tmp/random.foo.tiff";
     ASSERT_TRUE([string.pathExtension isEqualToString:@"tiff"]);
 }
+
+TEST(NSString, Exceptions) {
+    NSRange range{ 100, 10 };
+
+    EXPECT_ANY_THROW([@"hello" characterAtIndex:10]);
+
+    unichar buffer[1024];
+    EXPECT_ANY_THROW([@"hello" getCharacters:&buffer[0] range:range]);
+
+    EXPECT_ANY_THROW([[[@"hello" mutableCopy] autorelease] replaceCharactersInRange:range withString:@"boom"]);
+
+    EXPECT_ANY_THROW([(NSMutableString*)@"hello" replaceCharactersInRange:range withString:@"boom"]);
+
+    NSString* immutableFormattedString = [NSString stringWithFormat:@"Hello %p", buffer];
+    EXPECT_ANY_THROW([(NSMutableString*)immutableFormattedString replaceCharactersInRange:range withString:@"boom"]);
+}

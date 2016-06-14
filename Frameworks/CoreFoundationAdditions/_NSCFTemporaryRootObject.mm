@@ -16,4 +16,8 @@
 #include "_NSCFTemporaryRootObject.h"
 
 @implementation _NSCFTemporaryRootObject
+- (void)doesNotRecognizeSelector:(SEL)selector {
+    // According to the reference platform documentation, this method must never return.
+    abort();
+}
 @end

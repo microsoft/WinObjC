@@ -23,6 +23,10 @@
 #include "BridgeHelpers.h"
 #include "ForFoundationOnly.h"
 
+CFStringRef _NSCFStringCopyDescription(void* cfTypeRef, const void* locInfo) {
+    return (CFStringRef)[[static_cast<id>(cfTypeRef) description] copy];
+}
+
 @implementation NSStringPrototype
 
 PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
@@ -45,7 +49,7 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
 
 - (instancetype)initWithFormat:(id)formatStr arguments:(va_list)pReader {
     return reinterpret_cast<NSStringPrototype*>(static_cast<NSString*>(
-        CFStringCreateWithFormatAndArguments(kCFAllocatorDefault, nullptr, static_cast<CFStringRef>(formatStr), pReader)));
+        _CFStringCreateWithFormatAndArgumentsAux(kCFAllocatorDefault, &_NSCFStringCopyDescription, nullptr, static_cast<CFStringRef>(formatStr), pReader)));
 }
 
 - (instancetype)initWithBytes:(const void*)bytes length:(NSUInteger)length encoding:(NSStringEncoding)encoding {
@@ -89,12 +93,12 @@ PROTOTYPE_CLASS_REQUIRED_IMPLS(NSObject)
     CFStringRef str;
 
     if (locale == nil) {
-        str = CFStringCreateWithFormatAndArguments(nullptr, nullptr, static_cast<CFStringRef>(format), argList);
+        str = _CFStringCreateWithFormatAndArgumentsAux(nullptr, &_NSCFStringCopyDescription, nullptr, static_cast<CFStringRef>(format), argList);
     } else if ([locale isKindOfClass:[NSLocale class]] || [locale isKindOfClass:[NSDictionary class]]) {
-        str = CFStringCreateWithFormatAndArguments(kCFAllocatorDefault,
-                                                   static_cast<CFDictionaryRef>(locale),
-                                                   static_cast<CFStringRef>(format),
-                                                   argList);
+        str = _CFStringCreateWithFormatAndArgumentsAux(kCFAllocatorDefault, &_NSCFStringCopyDescription,
+                                                       static_cast<CFDictionaryRef>(locale),
+                                                       static_cast<CFStringRef>(format),
+                                                       argList);
     } else {
         [NSException raise:NSInvalidArgumentException format:@"Locale parameter must be a NSLocale or a NSDictionary."];
     }

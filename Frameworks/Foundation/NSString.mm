@@ -82,6 +82,24 @@ typedef enum {
 */
 BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
 
+// Exception methods for _NSCFString
+- (void)_raiseBoundsExceptionForSelector:(SEL)selector andIndex:(NSUInteger)index {
+    [NSException raise:NSRangeException
+                format:@"-[NSString %@]: Index %lu out of bounds; string length %lu",
+                       NSStringFromSelector(selector),
+                       (unsigned long)index,
+                       (unsigned long)self.length];
+}
+
+- (void)_raiseBoundsExceptionForSelector:(SEL)selector andRange:(NSRange)range {
+    [NSException raise:NSRangeException
+                format:@"-[NSString %@]: Range {%lu, %lu} out of bounds; string length %lu",
+                       NSStringFromSelector(selector),
+                       (unsigned long)range.location,
+                       (unsigned long)range.length,
+                       (unsigned long)self.length];
+}
+
 /**
  @Status Interoperable
 */
