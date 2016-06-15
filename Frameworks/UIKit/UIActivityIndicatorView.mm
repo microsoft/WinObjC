@@ -36,7 +36,7 @@
 */
 - (instancetype)initWithCoder:(NSCoder*)coder {
     if (self = [super initWithCoder:coder]) {
-        [self _commonInit];
+        [self _UIActivityIndicatorView_initInternal];
 
         if ([coder containsValueForKey:@"UIHidesWhenStopped"]) {
             [self setHidesWhenStopped:[coder decodeInt32ForKey:@"UIHidesWhenStopped"]];
@@ -88,7 +88,7 @@
 */
 - (instancetype)initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyle)style {
     if (self = [super initWithFrame:CGRectMake(0, 0, 0, 0)]) {
-        [self _commonInit];
+        [self _UIActivityIndicatorView_initInternal];
         [self setActivityIndicatorViewStyle:style];
     }
     return self;
@@ -99,7 +99,7 @@
 */
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self _commonInit];
+        [self _UIActivityIndicatorView_initInternal];
     }
     return self;
 }
@@ -118,7 +118,7 @@
     [super setFrame:frame];
 }
 
-- (void)_commonInit {
+- (void)_UIActivityIndicatorView_initInternal {
     _progressRing = [WXCProgressRing make];
     [self setNativeElement:_progressRing];
     _isAnimating = FALSE;

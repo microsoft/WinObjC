@@ -5,8 +5,8 @@
     <ItemsRootNamespace>XAMLCatalog_Headers</ItemsRootNamespace>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <Keyword>IslandwoodProj</Keyword>
-    <ItemsProjectGuid>{168899D4-299A-483A-9A01-586571BB4632}</ItemsProjectGuid>
-    <SharedGUID>{8EBAD9E0-3560-4AB8-B09D-19B777477C91}</SharedGUID>
+    <ItemsProjectGuid>{69ECB19A-37E8-4C67-B81F-E8505840258D}</ItemsProjectGuid>
+    <SharedGUID>{2CFABD83-3596-4845-8B7F-A1B5AFF48D27}</SharedGUID>
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\AppDelegate.h" />
@@ -15,6 +15,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\StoryBoardViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIActivityIndicatorViewController.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UISliderViewController.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)..\..\XAMLCatalog\UIToolbarViewController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

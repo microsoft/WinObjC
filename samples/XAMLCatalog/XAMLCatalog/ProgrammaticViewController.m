@@ -17,6 +17,7 @@
 #import "ProgrammaticViewController.h"
 #import "UIActivityIndicatorViewController.h"
 #import "UISliderViewController.h"
+#import "UIToolbarViewController.h"
 
 @implementation ProgrammaticViewController
 
@@ -28,6 +29,9 @@
 
     // UISlider
     [self addMenuItemViewController:[[UISliderViewController alloc] init] andTitle:@"UISlider"];
+
+    // UIToolbar
+    [self addMenuItemViewController:[[UIToolbarViewController alloc] init] andTitle:@"UIToolbar"];
 }
 
 - (void)didReceiveMemoryWarning {

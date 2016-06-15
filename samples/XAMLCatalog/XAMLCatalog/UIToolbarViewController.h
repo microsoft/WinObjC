@@ -14,16 +14,8 @@
 //
 //******************************************************************************
 
-#pragma once
-#include "UIView.h"
-class UIToolbar : public UIView {
-public:
-    XIBArray* _items;
-    int _style;
+#import <UIKit/UIKit.h>
 
-    UIToolbar();
-    virtual void Awaken();
-    virtual void InitFromXIB(XIBObject* obj);
-    virtual void InitFromStory(XIBObject* obj);
-    virtual void ConvertStaticMappings(NIBWriter* writer, XIBObject* obj);
-};
+@interface UIToolbarViewController : UIViewController
+
+@end

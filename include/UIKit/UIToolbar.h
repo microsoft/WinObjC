@@ -30,9 +30,10 @@
 
 #pragma once
 
-#import "UIView.h"
 #import "UIInterface.h"
+#import "UIView.h"
 #import <UIKit/UIBarButtonItem.h>
+#import <UIKit/UIToolbarDelegate.h>
 
 typedef enum {
     UIToolbarPositionAny = 0,
@@ -43,13 +44,18 @@ typedef enum {
 UIKIT_EXPORT_CLASS
 @interface UIToolbar : UIView
 
+@property (nonatomic, copy) NSArray* items;
 - (void)setItems:(NSArray*)items animated:(BOOL)animated;
-- (void)setBackgroundImage:(UIImage*)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics;
 
 @property (nonatomic) UIBarStyle barStyle;
-@property (nonatomic, retain) UIColor* tintColor;
-@property (nonatomic, retain) UIColor* barTintColor STUB_PROPERTY;
-@property (nonatomic, copy) NSArray* items;
-@property (nonatomic, assign, getter=isTranslucent) BOOL translucent STUB_PROPERTY;
+@property (nonatomic, strong) UIColor* tintColor;
+@property (nonatomic, strong) UIColor* barTintColor;
+@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
+@property (nullable, nonatomic, assign) id<UIToolbarDelegate> delegate STUB_PROPERTY;
+
+- (UIImage*)backgroundImageForToolbarPosition:(UIBarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
+- (void)setBackgroundImage:(UIImage*)backgroundImage forToolbarPosition:(UIToolbarPosition)topOrBottom barMetrics:(UIBarMetrics)barMetrics STUB_METHOD;
+- (UIImage*)shadowImageForToolbarPosition:(UIBarPosition)topOrBottom STUB_METHOD;
+- (void)setShadowImage:(UIImage*)shadowImage forToolbarPosition:(UIBarPosition)topOrBottom STUB_METHOD;
 
 @end

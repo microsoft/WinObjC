@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */; settings = {ASSET_TAGS = (); }; };		
+		230C2CD41CEE839C0095E3E5 /* XAMLCatalog.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2324634D1CE69DC600B7AAE4 /* XAMLCatalog.storyboard */; };
 		6EEB8A381CE4F4050021021E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A371CE4F4050021021E /* main.m */; };
 		6EEB8A3B1CE4F4050021021E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3A1CE4F4050021021E /* AppDelegate.m */; };
 		6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A3D1CE4F4050021021E /* ProgrammaticViewController.m */; };
@@ -16,6 +16,7 @@
 		6EEB8A561CE546A80021021E /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A551CE546A80021021E /* MenuTableViewController.m */; };
 		6EEB8A5C1CE54B4E0021021E /* UIActivityIndicatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EEB8A5B1CE54B4E0021021E /* UIActivityIndicatorViewController.m */; };
 		82E63A5E1D07905D005C0993 /* UISliderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82E63A5D1D07905D005C0993 /* UISliderViewController.m */; };		
+		B8C2EF851D1107F9009B70AC /* UIToolbarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C2EF841D1107F9009B70AC /* UIToolbarViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,8 @@
 		6EEB8A5B1CE54B4E0021021E /* UIActivityIndicatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIActivityIndicatorViewController.m; sourceTree = "<group>"; };
 		82E63A5C1D07905D005C0993 /* UISliderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UISliderViewController.h; sourceTree = "<group>"; };
 		82E63A5D1D07905D005C0993 /* UISliderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISliderViewController.m; sourceTree = "<group>"; };		
+		B8C2EF831D1107F9009B70AC /* UIToolbarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIToolbarViewController.h; sourceTree = "<group>"; };
+		B8C2EF841D1107F9009B70AC /* UIToolbarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIToolbarViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +59,8 @@
 				82E63A5D1D07905D005C0993 /* UISliderViewController.m */,
 				6EEB8A5A1CE54B4E0021021E /* UIActivityIndicatorViewController.h */,
 				6EEB8A5B1CE54B4E0021021E /* UIActivityIndicatorViewController.m */,
+				B8C2EF831D1107F9009B70AC /* UIToolbarViewController.h */,
+				B8C2EF841D1107F9009B70AC /* UIToolbarViewController.m */,
 			);
 			name = UIKitControls;
 			sourceTree = "<group>";
@@ -179,6 +184,7 @@
 				6EEB8A3E1CE4F4050021021E /* ProgrammaticViewController.m in Sources */,
 				6EEB8A5C1CE54B4E0021021E /* UIActivityIndicatorViewController.m in Sources */,
 				82E63A5E1D07905D005C0993 /* UISliderViewController.m in Sources */,
+				B8C2EF851D1107F9009B70AC /* UIToolbarViewController.m in Sources */,
 				6EEB8A381CE4F4050021021E /* main.m in Sources */,
 				6EEB8A561CE546A80021021E /* MenuTableViewController.m in Sources */,
 			);
