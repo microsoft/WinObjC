@@ -72,9 +72,9 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
  @Notes
 */
 size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
-	 CGImageRef imageRef = context->Backing()->DestImage();
-	 size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
-     return bitsPerComponent;
+    CGImageRef imageRef = context->Backing()->DestImage();
+    size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
+    return bitsPerComponent;
 }
 
 /**
