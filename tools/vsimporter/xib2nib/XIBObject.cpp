@@ -274,7 +274,7 @@ void XIBObject::ScanStoryObjects(pugi::xml_node node) {
     _converter = NULL;
     _id = getAttrAndHandle("id");
     _className = node.name();
-    _isStory = IsStoryboardConversion();
+    _isStory = true;
 
     //  Go through all child nodes
     for (pugi::xml_node curNode : _node.children()) {
