@@ -72,9 +72,9 @@ CGImageAlphaInfo CGBitmapContextGetAlphaInfo(CGContextRef context) {
  @Notes
 */
 size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
-	  CGImageRef imageRef = context->Backing()->DestImage();
-	  size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
-      return bitsPerComponent;
+	 CGImageRef imageRef = context->Backing()->DestImage();
+	 size_t bitsPerComponent = CGImageGetBitsPerComponent(imageRef);
+     return bitsPerComponent;
 }
 
 /**
@@ -83,10 +83,10 @@ size_t CGBitmapContextGetBitsPerComponent(CGContextRef context) {
  Expect returns of 24 bits on Islandwood where 32 bits is expected on iOS.
 */
 size_t CGBitmapContextGetBitsPerPixel(CGContextRef context) {
-	CGImageRef imageRef = context->Backing()->DestImage();
-	size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
-	size_t bitesPerCompoenent = CGBitmapContextGetBitsPerComponent(context);
-	return bytesPerPixel * bitesPerCompoenent;
+    CGImageRef imageRef = context->Backing()->DestImage();
+    size_t bytesPerPixel = imageRef->Backing()->BytesPerPixel();
+    size_t bitsPerByte = 8;
+    return bytesPerPixel * bitsPerByte;
 }
 
 /**
