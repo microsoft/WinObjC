@@ -20,6 +20,7 @@
 
 #ifdef __OBJC__
 #import <Foundation/NSString.h>
+#import <NSStringInternal.h>
 #include <COMIncludes.h>
 #endif
 
@@ -350,6 +351,11 @@ std::string WideToNarrow(const TString& value) {
 template <typename TString, unsigned int TCodePage = CP_UTF8>
 static NSString* WideToNSString(const TString& value) {
     return Private::StringTraits<NSString*>::NarrowToWide(WideToNarrow(value), TCodePage);
+}
+
+template <>
+NSString* WideToNSString<HSTRING>(const HSTRING& value) {
+    return [NSString _stringWithHSTRING:value];
 }
 
 #endif
