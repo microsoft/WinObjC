@@ -284,14 +284,23 @@ static id _NSWeakLoad(id obj) {
  @Status Interoperable
 */
 + (BOOL)instancesRespondToSelector:(SEL)selector {
-    return class_respondsToSelector(self, selector);
+    BOOL responds = class_respondsToSelector(self, selector);
+    return responds || [self resolveInstanceMethod:selector];
+}
+
+/**
+ @Status Interoperable
+*/
++ (BOOL)respondsToSelector:(SEL)selector {
+    BOOL responds = class_respondsToSelector(object_getClass(self), selector);
+    return responds || [self resolveClassMethod:selector];
 }
 
 /**
  @Status Interoperable
 */
 - (BOOL)respondsToSelector:(SEL)selector {
-    return class_respondsToSelector(object_getClass(self), selector);
+    return [object_getClass(self) instancesRespondToSelector:selector];
 }
 
 /**
@@ -369,12 +378,35 @@ static long _throwUnrecognizedSelectorException(id self, Class isa, SEL sel) {
 /**
  @Status Interoperable
 */
++ (BOOL)resolveClassMethod:(SEL)name {
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
++ (BOOL)resolveInstanceMethod:(SEL)name {
+    return NO;
+}
+
+/**
+ @Status Interoperable
+*/
 - (id)forwardingTargetForSelector:(SEL)selector {
     return nil;
 }
 
 static id _NSForwardingDestination(id object, SEL selector) {
-    if (class_respondsToSelector(object_getClass(object), @selector(forwardingTargetForSelector:))) {
+    Class cls = object_getClass(object);
+    if (class_isMetaClass(cls) && class_respondsToSelector(cls, @selector(resolveClassMethod:)) && [object resolveClassMethod:selector]) {
+        return object;
+    }
+
+    if (class_respondsToSelector(object_getClass(cls), @selector(resolveInstanceMethod:)) && [cls resolveInstanceMethod:selector]) {
+        return object;
+    }
+
+    if (class_respondsToSelector(cls, @selector(forwardingTargetForSelector:))) {
         return [(NSObject*)object forwardingTargetForSelector:selector];
     }
     return nil;
@@ -570,25 +602,7 @@ static struct objc_slot* _NSSlotForward(id object, SEL selector) {
  @Status Stub
  @Notes
 */
-+ (BOOL)resolveClassMethod:(SEL)name {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
 - (BOOL)isProxy {
-    UNIMPLEMENTED();
-    return StubReturn();
-}
-
-/**
- @Status Stub
- @Notes
-*/
-+ (BOOL)resolveInstanceMethod:(SEL)name {
     UNIMPLEMENTED();
     return StubReturn();
 }
