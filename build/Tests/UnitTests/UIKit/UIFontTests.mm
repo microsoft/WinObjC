@@ -53,3 +53,17 @@ TEST(UIFontTest, FontNamesForFamilyName) {
         ASSERT_TRUE_MSG([obj isKindOfClass:[NSString class]], "Failed: Incorrect object type in fontNames.");
     }
 }
+
+TEST(UIFontTest, CopyWithZone) {
+    UIFont* font = [UIFont fontWithName:@"SegoeUI" size:22];
+    NSUInteger count = [font retainCount];
+
+    id newFont = [font copy];
+    NSUInteger newCount = [font retainCount];
+
+    ASSERT_TRUE_MSG([newFont isKindOfClass:[UIFont class]], "Failed: Incorrect object type.");
+    ASSERT_TRUE_MSG(font == newFont, "Failed: newFont is not the same as font.");
+    ASSERT_TRUE_MSG(newCount == count + 1, "Failed: font retainCount did not increase by 1 after it is copied.");
+
+    [newFont release];
+}

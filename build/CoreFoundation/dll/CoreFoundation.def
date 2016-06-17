@@ -937,17 +937,15 @@ LIBRARY CoreFoundation
         ; __CFConstantStringClassReference ; WINOBJC: Use above _NSCFString export instead.
 
         ; CFStringTokenizer.mm
-        ; HACKHACK: Reference Platform doesn't have an impl of this class.
-        ;
-        ; CFStringTokenizerCreate
-        ; CFStringTokenizerSetString
-        ; CFStringTokenizerAdvanceToNextToken
-        ; CFStringTokenizerGoToTokenAtIndex
+        CFStringTokenizerCreate
+        CFStringTokenizerSetString
+        CFStringTokenizerAdvanceToNextToken
+        CFStringTokenizerGoToTokenAtIndex
         ; CFStringTokenizerCopyCurrentTokenAttribute
-        ; CFStringTokenizerGetCurrentTokenRange
+        CFStringTokenizerGetCurrentTokenRange
         ; CFStringTokenizerGetCurrentSubTokens
         ; CFStringTokenizerCopyBestStringLanguage
-        ; CFStringTokenizerGetTypeID
+        CFStringTokenizerGetTypeID
 
         ; CFTimeZone.mm
         kCFTimeZoneSystemTimeZoneDidChangeNotification DATA

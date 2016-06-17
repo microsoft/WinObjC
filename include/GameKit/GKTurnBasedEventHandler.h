@@ -18,8 +18,10 @@
 #import <GameKit/GameKitExport.h>
 #import <Foundation/NSObject.h>
 
+@protocol GKTurnBasedEventHandlerDelegate;
+
 GAMEKIT_EXPORT_CLASS
 @interface GKTurnBasedEventHandler : NSObject <NSObject>
 + (GKTurnBasedEventHandler*)sharedTurnBasedEventHandler STUB_METHOD;
-@property (assign, nonatomic) NSObject* delegate STUB_PROPERTY;
+@property (assign, nonatomic) NSObject<GKTurnBasedEventHandlerDelegate>* delegate STUB_PROPERTY;
 @end

@@ -23,6 +23,7 @@
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFTemporaryRootObject.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.mm" />
     <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_CFLocaleInternal.mm" />
+    <ClangCompile Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\CFStringTokenizer.mm" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)..\..\..\Frameworks\CoreFoundationAdditions\_NSCFString.h" />

@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <unordered_set>
 #include <vector>
+#include <algorithm>
 
 NSString* const NSUndefinedKeyException = @"NSUndefinedKeyException";
 NSString* const NSTargetObjectUserInfoKey = @"NSTargetObjectUserInfoKey";

@@ -661,7 +661,11 @@ BASE_CLASS_REQUIRED_IMPLS(NSString, NSStringPrototype, CFStringGetTypeID);
  @Status Interoperable
 */
 - (instancetype)pathExtension {
-    return [self substringFromIndex:_CFStartOfPathExtension2(static_cast<CFStringRef>(self))];
+    CFIndex index = _CFStartOfPathExtension2(static_cast<CFStringRef>(self));
+    if (index <= 0) {
+        return static_cast<NSString*>(CFSTR(""));
+    }
+    return [self substringFromIndex:(index + 1)];
 }
 
 /**
