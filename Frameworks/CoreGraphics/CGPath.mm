@@ -455,14 +455,12 @@ void CGPathAddPath(CGMutablePathRef path, const CGAffineTransform* m, CGPathRef 
     }
 }
 
-
 /**
  @Status Interoperable
 */
 void CGPathAddEllipseInRect(CGMutablePathRef path, const CGAffineTransform* m, CGRect rect) {
+    CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(M_PI_2);
 
-	CGFloat offsetMultiplier = _CGPathControlPointOffsetMultiplier(M_PI_2);// (4.0/3.0)*tan(M_PI/8.0);
-    
     CGFloat xControlPointOffset = offsetMultiplier * CGRectGetWidth(rect)/2.0;
     CGFloat yControlPointOffset = offsetMultiplier * CGRectGetHeight(rect)/2.0;
     
