@@ -1,5 +1,6 @@
 //******************************************************************************
 //
+// Copyright (c) 2016 Intel Corporation. All rights reserved.
 // Copyright (c) 2015 Microsoft Corporation. All rights reserved.
 //
 // This code is licensed under the MIT License (MIT).
@@ -314,9 +315,9 @@ CATransform3D CATransform3DTranslate(CATransform3D cur, float x, float y, float 
  @Status Interoperable
 */
 CATransform3D CATransform3DConcat(CATransform3D a, CATransform3D b) {
-    b.MultiplyBy(&a);
+    a.MultiplyBy(&b);
     
-    return b;
+    return a;
 }
 
 /**
