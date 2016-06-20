@@ -128,10 +128,7 @@
     for (NSDictionary* curItem in _informationLabels) {
         UITableViewCell* cell = curItem[@"Cell"];
         UILabel* label = (UILabel*)cell.accessoryView;
-
-        label.text = [UIApplication.displayMode valueForKey:curItem[@"ValueName"]];
-        cell.textLabel.text = curItem[@"LabelName"];
-        cell.detailTextLabel.text = curItem[@"ValueName"];
+        label.text = [self getLabelTextFromValue:[UIApplication.displayMode valueForKey:curItem[@"ValueName"]]];
     }
 
     fixedWidth.text = [NSString stringWithFormat:@"%.1f", UIApplication.displayMode.fixedWidth];
@@ -352,7 +349,7 @@
 
     _informationLabels = @[
         [@{ @"LabelName" : @"Current App Size",
-            @"ValueName" : @"currentSize" } mutableCopy],
+            @"ValueName" : @"currentSize" }  mutableCopy],
 
         [@{ @"LabelName" : @"Current App Magnfication",
             @"ValueName" : @"currentMagnification" } mutableCopy],
@@ -371,19 +368,19 @@
 
         [@{ @"LabelName" : @"Host Screen Size (Inches)",
             @"ValueName" : @"hostScreenSizeInches" } mutableCopy],
-
     ];
 
     for (NSMutableDictionary* curItem in _informationLabels) {
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 20)];
-        label.text = [UIApplication.displayMode valueForKey:curItem[@"ValueName"]];
         label.adjustsFontSizeToFitWidth = TRUE;
+        label.text = [self getLabelTextFromValue:[UIApplication.displayMode valueForKey:curItem[@"ValueName"]]];
+
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MenuCell"];
         cell.accessoryView = label;
         cell.textLabel.text = curItem[@"LabelName"];
         cell.detailTextLabel.text = curItem[@"ValueName"];
+
         [self.rows addObject:cell];
-        curItem[@"Cell"] = cell;
     }
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -392,6 +389,23 @@
                                                object:nil];
 
     return self;
+}
+
+// WOCCatalog cannot rely on [NSValue description] to return a readable string because it may box up structs and
+// other non-NSObject types and display their memory address instead of a friendly string. 
+// As a workaround to generate a readable label, we determine the type at runtime and convert on a per-type basis.
+- (NSString*) getLabelTextFromValue:(NSValue*)labelValue{
+    NSString* labelText;
+
+    NSString* type = [NSString stringWithCString:[labelValue objCType]];
+    if ([type hasPrefix:@"{CGSize="]) {
+        CGSize labelSize = [labelValue CGSizeValue];
+        labelText = NSStringFromCGSize(labelSize);
+    } else {
+        labelText = [labelValue description];
+    }
+
+    return labelText;
 }
 
 - (void)viewDidLoad {
