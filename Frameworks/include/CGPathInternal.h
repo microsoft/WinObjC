@@ -28,7 +28,7 @@ struct __CGPath : public CFBridgeBase<__CGPath> {
 
     ~__CGPath();
     void _getBoundingBox(CGRect* rectOut);
-	void _applyPath(CGContextRef context);
+    void _applyPath(CGContextRef context);
 };
 
 COREGRAPHICS_EXPORT CGRect _CGPathFitRect(CGPathRef pathref, CGRect rect, CGSize maxSize, float padding);
