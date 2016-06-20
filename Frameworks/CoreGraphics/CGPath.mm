@@ -59,11 +59,11 @@ public:
 
 __CGPath::~__CGPath() {
     if (_components) {
-		for (unsigned i = 0; i < _count; i++) {
-			CGPoint * points = _components[i].points;
-			if( points ){
-				IwFree(points);
-			}
+        for (unsigned i = 0; i < _count; i++) {
+            CGPoint* points = _components[i].points;
+            if (points) {
+                IwFree(points);
+            }
 		}
         IwFree(_components);
     }

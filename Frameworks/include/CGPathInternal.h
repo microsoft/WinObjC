@@ -21,9 +21,8 @@
 #include "CoreGraphics/CGPath.h"
 #include "CFBridgeBase.h"
 
-
 struct __CGPath : public CFBridgeBase<__CGPath> {
-	CGPathElement* _components;
+    CGPathElement* _components;
     NSUInteger _count;
     NSUInteger _max;
 
