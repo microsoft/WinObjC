@@ -77,6 +77,7 @@ public:
     virtual void setNodeTopWindowLevel(DisplayNode* node, float level) = 0;
 
     virtual DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) = 0;
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetBitmapForCGImage(CGImageRef img) = 0;
     virtual DisplayTexture* CreateDisplayTextureForText() = 0;
     virtual void SetTextDisplayTextureParams(DisplayTexture* texture,
                                              id font,

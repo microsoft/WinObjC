@@ -296,6 +296,14 @@ public:
     void SetNodeContent(DisplayNode* node, float width, float height, float scale) {
         node->SetContents(_xamlImage, width, height, scale);
     }
+
+    // Add accessor for private variable so that other classes can access it.
+    Microsoft::WRL::ComPtr<IInspectable> GetXamlImage() {
+        Microsoft::WRL::ComPtr<IUnknown> xamlImage(static_cast<IUnknown*>(_xamlImage));
+        Microsoft::WRL::ComPtr<IInspectable> inspectableNode;
+        xamlImage.As(&inspectableNode);
+        return inspectableNode;
+    }
 };
 
 class DisplayTextureText : public DisplayTextureXamlGlyphs {
@@ -1370,6 +1378,13 @@ public:
         SetCachedDisplayTextureForImage(img, ret);
         CGImageRelease(img);
         return ret;
+    }
+
+    virtual Microsoft::WRL::ComPtr<IInspectable> GetBitmapForCGImage(CGImageRef img) override {
+        DisplayTextureContent* content = new DisplayTextureContent(img);
+        Microsoft::WRL::ComPtr<IInspectable> inspectableNode(content->GetXamlImage());
+        delete content;
+        return inspectableNode;
     }
 
     DisplayTexture* CreateWritableBitmapTexture32(int width, int height) override {

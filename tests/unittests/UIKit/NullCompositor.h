@@ -81,6 +81,11 @@ public:
     DisplayTexture* GetDisplayTextureForCGImage(CGImageRef img, bool create) override {
         return nullptr;
     }
+
+    Microsoft::WRL::ComPtr<IInspectable> GetBitmapForCGImage(CGImageRef img) override {
+        return nullptr;
+    }
+
     DisplayTexture* CreateDisplayTextureForText() override {
         return nullptr;
     }
